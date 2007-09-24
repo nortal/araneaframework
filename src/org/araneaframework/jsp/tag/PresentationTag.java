@@ -86,6 +86,11 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	 * Callback: get default css class for tag or <code>null</code>.
 	 */
 	protected String getStyleClass() throws JspException  {
+		return calculateStyleClass(baseStyleClass, styleClass);
+	}
+
+	/** @since 1.1 */
+	public static final String calculateStyleClass(String baseStyleClass, String styleClass) {
 		StringBuffer result = new StringBuffer();
 		if (baseStyleClass != null) {
 			result.append(baseStyleClass);

@@ -42,8 +42,8 @@ public class ProxyEventListener implements EventListener {
     try {               
       eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] {});
       
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + eventHandlerName + "()' of class '" + eventTarget.getClass().getName() + "'.");
+      if (log.isTraceEnabled()) {
+        log.trace("Calling method '" + eventHandlerName + "()' of class '" + eventTarget.getClass().getName() + "'.");
       }
       eventHandler.invoke(eventTarget, new Object[] {});
                     
@@ -54,8 +54,8 @@ public class ProxyEventListener implements EventListener {
     try {               
       eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { String.class });
       
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + eventHandlerName + "(String)' of class '" + eventTarget.getClass().getName() + "'.");
+      if (log.isTraceEnabled()) {
+        log.trace("Calling method '" + eventHandlerName + "(String)' of class '" + eventTarget.getClass().getName() + "'.");
       }
       eventHandler.invoke(eventTarget, new Object[] { eventParameter });                
       
@@ -66,7 +66,7 @@ public class ProxyEventListener implements EventListener {
       StringBuffer logMessage = new StringBuffer().append("ProxyEventListener").append(eventTarget instanceof org.araneaframework.Component ? 
       		  " '"+((org.araneaframework.Component)eventTarget).getScope() + "'" :
       		  "");
-      logMessage.append(" cannot deliver action as no action listeners were registered for the event id '");
+      logMessage.append(" cannot deliver event as no event listeners were registered for the event id '");
       logMessage.append(eventId).append("'!").append(Assert.thisToString(eventTarget));
       log.warn(logMessage);
     }

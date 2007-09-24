@@ -30,3 +30,8 @@ Aranea.ModalBox.show = function() {
 		}
 	);
 }
+
+Aranea.ModalBox.close = function() {
+	if (Modalbox)
+		Modalbox.hide();
+}

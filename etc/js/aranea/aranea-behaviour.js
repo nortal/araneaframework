@@ -19,6 +19,7 @@
  * Behaviour rules required for Aranea JSP to work correctly.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
+ 
 function setFormElementContext(el) {
   var span = $(el).ancestors().find(function(element) {
   	return element.tagName.toUpperCase() == 'SPAN';
@@ -29,18 +30,26 @@ function setFormElementContext(el) {
   }
 }
 
-function setFormElementValidation(el){
-	if(!araneaPage().getAjaxValidation())
-	  return;
+function formElementValidationActionCall(el) {
+  var extraParams = new Hash();
+  var elId = el.getAttribute("id");
+  extraParams[elId] = el.value;
+  araneaPage().action(el, 'bgValidate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
+}
 
-	var ajaxValidationHandler = new AraneaPage.AjaxValidationRegionHandler(el);
-	var elId = el.getAttribute("id");
-	var actionValidate = function(event) {
-        extraParams = new Hash();
-        extraParams[elId] = el.value;
-		araneaPage().action(el, 'validate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
-	};
-	Event.observe(elId, 'change', actionValidate);
+/** @since 1.1 */
+function setFormElementValidation(el){
+  if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate')))
+    return;
+
+    if (($(el).hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true'))
+      return;
+
+  var elId = el.getAttribute("id");
+  var actionValidate = function(event) {
+    aranea_formElementValidationActionCall(el);
+  };
+  Event.observe(elId, 'change', actionValidate);
 }
 
 function setCloningUrl(el) {
@@ -152,6 +161,7 @@ var aranea_rules = {
   
   'a.aranea-tab-link' : function(el) {
     setToolTip(el);
+    setCloningUrl(el);
   }
 };
 

@@ -10,24 +10,19 @@
 		<ui:form id="form">
 
 			<tui:componentHeader>
-				<tui:componentName>Modal dialog demo</tui:componentName>
+				<tui:componentName><fmt:message key="modal.demo.title"/></tui:componentName>
 			</tui:componentHeader>
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
-				 <p>
-		      		There are times when one needs to prevent users from wandering around in parallel usecases, 
-		      		shooting themselves in the foot at the go. Aranea provides a way to present all fully-functional Aranea 
-		      		components in modal dialogs (aka <i>overlay</i>), allowing user to complete a parallel usecase or just respond
-		      		to an alert. This avoids the need to open additional browser windows that are often blocked by modern 
-		      		browsers or might just go unnoticed by user. 
-			    </p>
-			    
+				<c:if test="${!widget.nested}">
+					 <p>
+						<fmt:message key="modal.demo.intro"/>
+				    </p>
+			    </c:if>
+
 			    <p>
-			    	Start another identical widget by clicking on a "Start next" or "Start next in overlay" buttons. Once
-			    	the modal dialog (overlay mode) is activated, both buttons will act identically. When overlay completes (this 
-			    	will happen when "Return to previous" button is used in activated overlay where there are no more flows
-			    	that are running inside overlay), user is returned to main usecase.
+					<fmt:message key="modal.demo.howto"/>
 			    </p>
 
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
@@ -107,13 +102,13 @@
 
 				<!-- pure design tag -->
 				<tui:componentActions>
-					<ui:eventButton eventId="nextFlow" labelId="#Start next"/>
-					<ui:eventButton eventId="nextFlowOverlay" labelId="#Start next in overlay"/>
+					<ui:eventButton eventId="nextFlow" labelId="modal.demo.startnext"/>
+					<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>
 					<c:if test="${widget.nested}">
-						<ui:eventButton eventId="return" labelId="#Return to previous"/>
+						<ui:eventButton eventId="return" labelId="modal.demo.previous"/>
 					</c:if>
 				</tui:componentActions>
 			</tui:component>

@@ -9,19 +9,16 @@
     <ui:form id="testform">
 
       <tui:componentHeader>
-        <tui:componentName>Autocomplete (suggestion) demo</tui:componentName>
+        <tui:componentName><fmt:message key="ac.demo.title"/></tui:componentName>
       </tui:componentHeader>
 
       <tui:component>
       	<p>
-      		It is well known fact that users do not know what they really want. With input suggestions, you can help
-      		them to overcome their initial cluelessness and maybe learn correct spelling of long words :)
+			<fmt:message key="ac.demo.intro"/>
 	    </p>
 	        
 	    <p>
-	       When you type at least one character in input field below, browser will ask the server for suggested completions
-	       (which in this case are country names). User is by no means tied to suggested inputs though, 'Mägi-Karabahh'
-	       is as feasible input to below text-field as any other.
+	    	<fmt:message key="ac.demo.howto"/>
 	    </p>
 
 	    <br/>
@@ -45,7 +42,7 @@
         </tui:componentForm>
 
         <tui:componentActions>
-          <ui:eventButton eventId="test" labelId="#Test"/>
+          <ui:eventButton eventId="test" labelId="common.Submit"/>
         </tui:componentActions>
       </tui:component>
     </ui:form>

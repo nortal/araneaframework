@@ -27,7 +27,10 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -36,6 +39,8 @@ import org.araneaframework.uilib.form.visitor.FormElementVisitor;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
+  /** @since 1.1 */
+  public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
   //*******************************************************************
   // FIELDS
@@ -45,7 +50,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   protected Map properties;
   
   protected boolean converted = false;
-  protected boolean validated = false;  
+  protected boolean validated = false;
+  protected Boolean backgroundValidation = null;
   
   private Set errors;
   
@@ -59,7 +65,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
       constraint.setEnvironment(getConstraintEnvironment());
   }
 
-/**
+  /**
    * Returns all properties of the element as a map (string -&gt; string).
    * 
    * @return all properties as a map.
@@ -220,6 +226,22 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   public Object getValue() {
     return null;
   }
+  
+  /** @since 1.1 */
+  public void setBackgroundValidation(boolean b) {
+    this.backgroundValidation = Boolean.valueOf(b);
+  }
+
+  /** @since 1.1 */
+  public boolean isBackgroundValidation() {
+    if (this.backgroundValidation == null) {
+      FormContext fctx = ((FormContext) getEnvironment().getEntry(FormContext.class));
+      if (fctx != null)
+        return fctx.isBackgroundValidation();
+      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    }
+    return this.backgroundValidation.booleanValue();
+  }
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
@@ -309,16 +331,16 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel{
-    
     private Map properties;
 
     /**
      * Takes a outer class snapshot.     
      */
     public ViewModel() {
-      this.properties = GenericFormElement.this.properties;
+      Map m  = GenericFormElement.this.properties;
+      this.properties = m == null ? m : Collections.unmodifiableMap(m);
     }
-    
+
     /**
      * Returns form element properties.
      * @return form element properties.

@@ -21,10 +21,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -92,7 +95,12 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
-
+    
+    if (this.backgroundValidation && 
+    		!ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment())))
+      JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
+    
+    
     for (Iterator i = customAttributes.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry attribute = (Map.Entry) i.next();
       

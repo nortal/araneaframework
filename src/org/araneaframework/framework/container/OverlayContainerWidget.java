@@ -91,8 +91,9 @@ public class OverlayContainerWidget extends BaseApplicationWidget implements Ove
   }
 
   protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY))
-      overlay._getWidget().render(output);
+    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
+        overlay._getWidget().render(output);
+    }
     else
       main._getWidget().render(output);
   }

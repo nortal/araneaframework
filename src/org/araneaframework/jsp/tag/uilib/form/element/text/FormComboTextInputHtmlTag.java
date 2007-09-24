@@ -17,8 +17,8 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
@@ -54,7 +54,7 @@ public class FormComboTextInputHtmlTag extends FormTextInputHtmlTag {
 		ComboTextControl.ViewModel model = (org.araneaframework.uilib.form.control.ComboTextControl.ViewModel) viewModel;
 		Map r = super.getCustomAttributes(model);
 
-		List l = model.getPredefinedInputs();
+		Collection l = model.getPredefinedInputs();
 		StringBuffer sb = new StringBuffer();
 		for (Iterator i=l.iterator(); i.hasNext(); ) {
 			sb.append(i.next());

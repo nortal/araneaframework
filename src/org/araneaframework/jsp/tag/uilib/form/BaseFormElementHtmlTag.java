@@ -60,6 +60,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	
 	protected boolean events = true;
 	protected boolean validateOnEvent = false;
+	protected boolean backgroundValidation = false;
 		
 	protected String accessKey;
 	
@@ -110,6 +111,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 		
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getFullFieldId());
+		
+		backgroundValidation = fe.isBackgroundValidation();
 
 		// Continue
 		return EVAL_BODY_INCLUDE;		
@@ -127,7 +130,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		formViewModel = null;
 		formElementViewModel = null;
 		controlViewModel = null;
-	}	
+		backgroundValidation = false;
+	}
 
 	/* ***********************************************************************************
 	 * Tag attributes

@@ -49,7 +49,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		
 		beastSelectionControl = new SelectControl();
 		/* SelectControls can be added DisplayItems, one by one ... */
-		beastSelectionControl.addItem(new DisplayItem(null, "-choose-"));
+		beastSelectionControl.addItem(new DisplayItem(null, t("select.choose")));
 		/* or whole collections of value objects, which must have getters for specified value
          * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
          * both value and displayString must be of String class */
@@ -86,8 +86,8 @@ public class DemoComplexForm extends TemplateBaseWidget {
 					}
 					
 					// finally add both beast group description and beast selection control to this widget.  
-					complexForm.addElement("concreteBeastControl","#Choose " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
-					complexForm.addElement("selectedBeastDesc", "#Description", new DisplayControl(), new StringData(), false);
+					complexForm.addElement("concreteBeastControl", "#"+ t("common.Choose")+ " " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
+					complexForm.addElement("selectedBeastDesc", "#"+ t("common.Description"), new DisplayControl(), new StringData(), false);
 					// if not dealing with beanforms, form element values are typically set this way
 					complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
 				}
@@ -95,7 +95,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		});
 		
 		complexForm = new FormWidget();
-		complexForm.addElement("beastSelection", "#Nature's Beasts", beastSelectionControl, new StringData(), false);
+		complexForm.addElement("beastSelection", "natures.beasts", beastSelectionControl, new StringData(), false);
 		
 		addWidget("complexForm", complexForm);
 	}

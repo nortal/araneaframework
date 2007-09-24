@@ -28,7 +28,7 @@ import org.araneaframework.OutputData;
  * @since 1.0.11
  */
 public class ProxyActionListener implements ActionListener {
-  public static final Log log = LogFactory.getLog(ProxyActionListener.class);
+  private static final Log log = LogFactory.getLog(ProxyActionListener.class);
 
   protected Object actionTarget;
 

@@ -17,6 +17,8 @@
 package org.araneaframework.uilib.form;
 
 import java.io.Writer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Assert;
@@ -33,6 +35,7 @@ import org.araneaframework.http.util.JsonObject;
  */
 public class FormElementValidationActionListener extends StandardActionListener {
   public static final String FORM_VALIDATION_REGION_KEY = "aranea-formvalidation";
+  protected static final Log log = LogFactory.getLog(FormElementValidationActionListener.class);
 
   private GenericFormElement baseFormElement;
   public FormElementValidationActionListener(GenericFormElement baseFormElement) {
@@ -41,6 +44,11 @@ public class FormElementValidationActionListener extends StandardActionListener 
   }
 
   public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    if (!isValidationEnabled() && log.isWarnEnabled()) {
+      log.warn("Validation listener of '" + this.baseFormElement.getScope() + "' was invoked although validation not enbled. Skipping response.");
+      return;
+    }
+
     boolean valid = baseFormElement.convertAndValidate();
     Writer out = ((HttpOutputData) output).getWriter();
 
@@ -63,7 +71,11 @@ public class FormElementValidationActionListener extends StandardActionListener 
     }
   }
   
-  protected void writeRegion(Writer out, String name, String content) throws Exception {
+  private boolean isValidationEnabled() {
+    return baseFormElement.isBackgroundValidation();
+  }
+
+protected void writeRegion(Writer out, String name, String content) throws Exception {
 	out.write(name);
     out.write("\n");
     out.write(Integer.toString(content.length()));

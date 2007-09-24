@@ -111,7 +111,7 @@ public class FormUtil {
 	
 	// Form elements
 	
-	public static FormElement createElement(String label, Control control, Data data, boolean mandatory) throws Exception {
+	public static FormElement createElement(String label, Control control, Data data, boolean mandatory) {
 	    FormElement result = new FormElement();	    
 	    result.setLabel(label);
 	    result.setMandatory(mandatory);    

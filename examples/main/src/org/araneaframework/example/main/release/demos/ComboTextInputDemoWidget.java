@@ -32,17 +32,16 @@ public class ComboTextInputDemoWidget extends TemplateBaseWidget {
 		control.addPredefinedInput("Priit Potter");
 		
 		control.addPredefinedInput("Tuuli Semevsky");
-		control.addPredefinedInput("Tuuli Semevsky");
 		control.addPredefinedInput("Andre Krull");
 
-	    form.addElement("comboInput", "#ComboInputLabel", control, new StringData(), false);
+	    form.addElement("comboInput", "combo.demo.fieldinput", control, new StringData(), false);
 
 		addWidget("form", form);
 	  }
 	  
 	  public void handleEventSubmit() throws Exception {
 		  if (form.convertAndValidate()) {
-			  getMessageCtx().showInfoMessage("Text value is: " + (form.getValueByFullName("comboInput")));
+			  getMessageCtx().showInfoMessage( t("combo.submitmessage") + " " + (form.getValueByFullName("comboInput")));
 		  }
 	  }
 }

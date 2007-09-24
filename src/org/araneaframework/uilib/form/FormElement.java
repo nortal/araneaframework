@@ -210,12 +210,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   public void setMandatory(boolean mandatory) {
     this.mandatory = mandatory;
   }
-  
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************
 
-  
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -250,7 +245,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
     super.handleAction(input, output);
-    if (control != null)
+    if (control != null && !getActionId(input).equals(SEAMLESS_VALIDATION_ACTION_ID))
       control._getService().action(null, input, output);
   }
   
@@ -288,14 +283,13 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
-    
-    addActionListener("validate", new FormElementValidationActionListener(this));
+    addActionListener(SEAMLESS_VALIDATION_ACTION_ID, new FormElementValidationActionListener(this));
   }
-  
+
   protected void destroy() throws Exception {
     if (getControl() != null) 
       getControl()._getComponent().destroy();
-  }	  
+  }
 
   /**
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
@@ -368,6 +362,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	}
 
 	/**
+	 * When this returns true, 
      * @since 1.1
      */
     protected boolean isIgnoreEvents() {
@@ -375,16 +370,15 @@ public class FormElement extends GenericFormElement implements FormElementContex
     }
 
     /**
+     * When set 
      * @since 1.1
      */
     protected void setIgnoreEvents(boolean ignoreEvents) {
       this.ignoreEvents = ignoreEvents;
     }
-  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
-  
 
   /**
    * Represents a simple form element view model.

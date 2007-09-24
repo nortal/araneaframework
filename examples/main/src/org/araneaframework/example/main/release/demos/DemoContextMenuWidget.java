@@ -52,15 +52,15 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
 
     simpleForm = new FormWidget();
 
-    FormElement el = simpleForm.createElement("#Textbox", new TextControl(), new StringData(), false);
+    FormElement el = simpleForm.createElement("common.Textbox", new TextControl(), new StringData(), false);
     simpleForm.addElement("textbox1", el);
 
     // and here we add form elements to form without the extra step taken previously. 
-    simpleForm.addElement("checkbox1", "#Checkbox", new CheckboxControl(), new BooleanData(), false);
+    simpleForm.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
     simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
     simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
     simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
-    simpleForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), false);
+    simpleForm.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
     // sets initial value of form element
     simpleForm.setValueByFullName("dateTime", new Date());
@@ -68,7 +68,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
     ButtonControl button = new ButtonControl();
     button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
     // add the button to form. As the button does not hold any value, Data will be null.
-    simpleForm.addElement("button", "#Button", button, null, false);
+    simpleForm.addElement("button", "common.Button", button, null, false);
 
     // the usual, add the created widget to main widget.
     addWidget("simpleForm", simpleForm);
@@ -90,18 +90,8 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
    * at the end of the request.
    */
   public void handleEventTestSimpleForm() throws Exception {
-    // if form is not invalid, do not try to show form element values 
-    // (error messages are added automatically to the messagecontext 
-    // though, user will not be without feedback)
     if (simpleForm.convertAndValidate()) {
-      // long way to check form element value ...
-      getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
-      // and a shorter one
-      getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
-      getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
-      getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
-      getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
-      getMessageCtx().showInfoMessage("Number value is: " + simpleForm.getValueByFullName("number"));
+      getMessageCtx().showInfoMessage(t("common.form.valid"));
     }
   }
 }

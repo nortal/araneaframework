@@ -166,14 +166,17 @@ public class BodyHtmlTag extends PresentationTag {
     out.write("'));");
   }
   
-  
-  /** Writes script that configures client-side ajax validation of forms. */
+  /** 
+   * Writes script that sets the whether Uilib {@link org.araneaframework.uilib.form.FormWidget}'s should be validated
+   * seamlessly on the background with the actions or not.
+   * 
+   * @see {@link ConfigurationContext#BACKGROUND_FORM_VALIDATION}
+   * @since 1.1 */
   protected void writeAjaxValidationScript(Writer out) throws JspException, IOException {
-    String ajaxValidation = (String) getConfiguration().getEntry(ConfigurationContext.AJAX_FORM_VALIDATION);
-    if("false".equals(ajaxValidation)) {
-      out.write("_ap.setAjaxValidation(false);");
-    }
+    Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
+    out.write("_ap.setBackgroundValidation(" + String.valueOf(validationEnabled) +");");
   }
+
   /**
    * Writes the scripts immediately following the closing of &lt;body&gt; tag.
    */

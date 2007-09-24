@@ -19,9 +19,11 @@ package org.araneaframework.uilib.form;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
+import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
@@ -33,17 +35,32 @@ import org.araneaframework.uilib.util.NameUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormWidget extends GenericFormElement {
-
+public class FormWidget extends GenericFormElement implements FormContext {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-
   protected LinkedMap elements = new LinkedMap();
 
   //*********************************************************************
+  //* INTERNAL METHODS
+  //*********************************************************************  	
+	
+  protected void init() throws Exception {
+    super.init();
+    
+    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
+      Map.Entry element = (Map.Entry) i.next();
+      addWidget(element.getKey(), (Widget) element.getValue());
+    }
+  }
+  
+  //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
+
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), FormContext.class, this);
+  }
 
   public void clearErrors() {
 	  super.clearErrors();
@@ -197,7 +214,7 @@ public class FormWidget extends GenericFormElement {
   public Map getElements() {
     return new LinkedMap(elements);
   }
-  
+
   /**
    * Calls {@link GenericFormElement#convert()} for all contained elements.
    */
@@ -436,20 +453,7 @@ public class FormWidget extends GenericFormElement {
   	
   	el.getData().setValue(value);
   }
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-	
-  protected void init() throws Exception {
-    super.init();
-    
-    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
-      Map.Entry element = (Map.Entry) i.next();
-      addWidget(element.getKey(), (Widget) element.getValue());
-    }
-  }
-  
+
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
@@ -457,7 +461,7 @@ public class FormWidget extends GenericFormElement {
   public Object getViewModel() {
     return new ViewModel();
   }
-	
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************  
@@ -469,8 +473,6 @@ public class FormWidget extends GenericFormElement {
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {
-    
-
     /**
      * Returns the <code>Map</code> with element views.
      * @return the <code>Map</code> with element views.

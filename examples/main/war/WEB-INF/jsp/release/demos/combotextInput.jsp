@@ -8,11 +8,14 @@
 		<ui:form id="form">
 
 			<tui:componentHeader>
-				<tui:componentName>Combo text input</tui:componentName>
+				<tui:componentName><fmt:message key="ComboTextInput"/></tui:componentName>
 			</tui:componentHeader>
 
 			<tui:component>
-			
+				<p>
+					<fmt:message key="combo.intro"/>
+				</p>
+
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 					<ui:row>
 						<ui:cell />
@@ -34,7 +37,7 @@
 
 				<!-- pure design tag -->
 				<tui:componentActions>
-					<ui:eventButton eventId="submit" labelId="#Submit"/>
+					<ui:eventButton eventId="submit" labelId="common.Submit"/>
 				</tui:componentActions>
 			</tui:component>
 

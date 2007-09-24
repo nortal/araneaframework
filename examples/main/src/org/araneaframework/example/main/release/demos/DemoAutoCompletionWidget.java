@@ -35,19 +35,21 @@ public class DemoAutoCompletionWidget extends BaseUIWidget {
     	new OnChangeEventListener() {
     		public void onChange() throws Exception {
     			form.convertAndValidate();
-    			getMessageCtx().showInfoMessage("Changed, value is " + form.getValueByFullName("acinput") );
+    			getMessageCtx().showInfoMessage(
+    					t("release.ac.onchangetext") +" " + form.getValueByFullName("acinput") 
+    			);
     		}
     	}
     );
 
-    form.addElement("acinput", "#Country", actc, new StringData(), false);
+    form.addElement("acinput", "common.Country", actc, new StringData(), false);
 
     addWidget("testform", form);
   }
   
   public void handleEventTest() throws Exception {
     if (form.convertAndValidate()) {
-      getMessageCtx().showInfoMessage("Country submitted: " + form.getValueByFullName("acinput"));
+    	getMessageCtx().showInfoMessage(t("release.ac.submitvalid") +" " + form.getValueByFullName("acinput")); 
     }
   }
   
