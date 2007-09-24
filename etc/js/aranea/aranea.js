@@ -447,6 +447,7 @@ function DefaultAraneaOverlaySubmitter(form) {
    	    overlayDuration: 0.0,
    	    resizeDuration: 0.0,
    	    afterLoad: function(content) {
+          araneaPage().debug("Content = " + content);
    	      if (content == '') {
    	        //Modalbox.hide();
             var systemForm = araneaPage().getSystemForm();

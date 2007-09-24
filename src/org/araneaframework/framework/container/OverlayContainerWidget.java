@@ -29,6 +29,8 @@ import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -91,8 +93,9 @@ public class OverlayContainerWidget extends BaseApplicationWidget implements Ove
   }
 
   protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY))
-      overlay._getWidget().render(output);
+    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
+        overlay._getWidget().render(output);
+    }
     else
       main._getWidget().render(output);
   }
