@@ -34,7 +34,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 	private BeanFormListWidget editableRows;
 
 	//Plays the role of a sequence
-	private Long lastId = Long.valueOf(0);
+	private Long lastId =  new Long(0);
 
 	{
 		Random rn = new Random();
@@ -52,7 +52,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
 			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));
 			friends.add(friend);
-			lastId = Long.valueOf(lastId.longValue() + 1);
+			lastId = new Long(lastId.longValue() + 1);
 		}
 
 		for (int i = 0; i <  ExampleData.females.length; i++) {
@@ -62,7 +62,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
 			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));
 			friends.add(friend);
-			lastId = Long.valueOf(lastId.longValue() + 1);
+			lastId = new Long(lastId.longValue() + 1);
 		}
 	}
 
