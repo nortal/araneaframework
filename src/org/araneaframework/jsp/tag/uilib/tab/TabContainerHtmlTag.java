@@ -1,4 +1,4 @@
-package org.araneaframework.jsp.tag.uilib.newtab;
+package org.araneaframework.jsp.tag.uilib.tab;
 
 import java.io.Writer;
 import java.util.ArrayList;
