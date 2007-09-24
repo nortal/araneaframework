@@ -44,7 +44,7 @@ public class TabWidget extends BaseApplicationWidget {
 
 	}
 
-	protected void enableTab() {
+	public void enableTab() {
 		disabled = false;
 		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY)) {
 			enableWidget(CONTENT_WIDGET_KEY);
@@ -53,7 +53,7 @@ public class TabWidget extends BaseApplicationWidget {
 		}
 	}
 
-	protected void disableTab() {
+	public void disableTab() {
 		disabled = true;
 		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY))
 			disableWidget(CONTENT_WIDGET_KEY);
