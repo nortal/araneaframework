@@ -106,7 +106,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 
 		// validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
 		if (!viewModel.isOnChangeEventRegistered() && backgroundValidation) {
-			JspUtil.writeAttribute(out, "onchange", "aranea_formElementValidationActionCall(this)");
+			JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
 		}
 
 	    if (this.backgroundValidation && 

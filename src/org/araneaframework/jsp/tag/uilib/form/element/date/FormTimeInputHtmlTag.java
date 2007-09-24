@@ -103,7 +103,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     	String s = name + ".select2";
     	String es = "$('" + s + "')";
     	String ns =  "$('" + name + "')";
-    	String vcall = "aranea_formElementValidationActionCall(" + ns + ");";
+    	String vcall = "formElementValidationActionCall(" + ns + ");";
     	out.write("Event.observe(" + es + ", 'change', function(event) {" + vcall + "});");
     }
     
@@ -135,7 +135,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     	String s = name + ".select1";
     	String es = "$('" + name + "')";
     	String ns =  "$('" + s + "')";
-    	String vcall = "aranea_formElementValidationActionCall(" + es + ");";
+    	String vcall = "formElementValidationActionCall(" + es + ");";
     	out.write("Event.observe(" + ns + ", 'change', function(event) {" + vcall + "});");
     }
     
@@ -180,7 +180,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     
     // validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
     if (!viewModel.isOnChangeEventRegistered() && !disabled && backgroundValidation) {
-    	JspUtil.writeAttribute(out, "onchange", "aranea_formElementValidationActionCall(this)");
+    	JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
     }
 
     StringBuffer onBlur = new StringBuffer();

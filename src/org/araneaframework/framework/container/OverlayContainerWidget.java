@@ -29,8 +29,6 @@ import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
-import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.util.ServletUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)

@@ -242,22 +242,22 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	
 	// filter with form element
 	
-	public FilterHelper like() throws Exception {
+	public FilterHelper like() {
 		return this.helper.like(fieldId);
 	}
-	public FilterHelper like(String valueId) throws Exception {
+	public FilterHelper like(String valueId) {
 		return this.helper.like(fieldId, valueId);
 	}
-	public FilterHelper like(Control control) throws Exception {
+	public FilterHelper like(Control control) {
 		return this.helper.like(fieldId, control);
 	}
-	public FilterHelper like(String valueId, Control control) throws Exception {
+	public FilterHelper like(String valueId, Control control) {
 		return this.helper.like(fieldId, valueId, control);
 	}
-	public FilterHelper like(FormElement element) throws Exception {
+	public FilterHelper like(FormElement element) {
 		return this.helper.like(fieldId, element);
 	}
-	public FilterHelper like(String valueId, FormElement element) throws Exception {
+	public FilterHelper like(String valueId, FormElement element) {
 		return this.helper.like(fieldId, valueId, element);
 	}
 	

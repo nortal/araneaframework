@@ -95,20 +95,20 @@ public abstract class RangeInRangeFilter extends BaseRangeInRangeFilter {
 		return filter;
 	}
 	
-	public static void addToForm(FilterContext ctx, String lowId, String highId, FormElement lowElement, FormElement highElement) throws Exception {
+	public static void addToForm(FilterContext ctx, String lowId, String highId, FormElement lowElement, FormElement highElement) {
 		ctx.getForm().addElement(lowId, lowElement);
 		ctx.getForm().addElement(highId, highElement);
 		FormUtil.addConstraint(ctx.getForm(),
 				new RangeConstraint(lowElement, highElement, true));
 	}
 	
-	public static void addToForm(FilterContext ctx, String lowId, String highId, Control lowControl, Control highControl) throws Exception {
+	public static void addToForm(FilterContext ctx, String lowId, String highId, Control lowControl, Control highControl) {
 		addToForm(ctx, lowId, highId,
 				FilterFormUtil.createElement(ctx, lowId, lowControl),
 				FilterFormUtil.createElement(ctx, highId, highControl));
 	}
 	
-	public static void addToForm(FilterContext ctx, String lowId, String highId) throws Exception {
+	public static void addToForm(FilterContext ctx, String lowId, String highId) {
 		addToForm(ctx, lowId, highId,
 				FilterFormUtil.createElement(ctx, lowId),
 				FilterFormUtil.createElement(ctx, highId));

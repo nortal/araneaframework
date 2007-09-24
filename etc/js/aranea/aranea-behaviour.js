@@ -19,6 +19,7 @@
  * Behaviour rules required for Aranea JSP to work correctly.
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
+ 
 function setFormElementContext(el) {
   var span = $(el).ancestors().find(function(element) {
   	return element.tagName.toUpperCase() == 'SPAN';
@@ -29,7 +30,7 @@ function setFormElementContext(el) {
   }
 }
 
-function aranea_formElementValidationActionCall(el) {
+function formElementValidationActionCall(el) {
   var extraParams = new Hash();
   var elId = el.getAttribute("id");
   extraParams[elId] = el.value;
