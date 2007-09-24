@@ -7,7 +7,7 @@ import org.araneaframework.uilib.tab.TabWidget;
 
 /** 
  *  @jsp.tag
- *   name = "newtabBody"
+ *   name = "tabBody"
  *   body-content = "empty"
  *   description = "This tag includes current tab." 
  *   

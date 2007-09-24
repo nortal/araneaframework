@@ -22,7 +22,7 @@ import org.araneaframework.uilib.util.NameUtil;
 
 /**
  * @jsp.tag 
- *  name = "newtabContainer" 
+ *  name = "tabContainer" 
  * 	body-content =  "JSP" 
  *  description = "Displays all tabs of the current tab container"
  *  
