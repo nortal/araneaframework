@@ -2,8 +2,8 @@ package org.araneaframework.jsp.tag.uilib.newtab;
 
 import java.io.Writer;
 import org.araneaframework.jsp.tag.include.WidgetIncludeTag;
-import org.araneaframework.uilib.newtab.TabContainerWidget;
-import org.araneaframework.uilib.newtab.TabWidget;
+import org.araneaframework.uilib.tab.TabContainerWidget;
+import org.araneaframework.uilib.tab.TabWidget;
 
 /** 
  *  @jsp.tag

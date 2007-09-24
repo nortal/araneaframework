@@ -5,8 +5,8 @@ import org.araneaframework.example.main.web.demo.DemoComplexForm;
 import org.araneaframework.example.main.web.demo.DemoMultiSelect;
 import org.araneaframework.example.main.web.misc.RedirectingWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
-import org.araneaframework.uilib.newtab.TabContainerWidget;
-import org.araneaframework.uilib.newtab.TabWidget;
+import org.araneaframework.uilib.tab.TabContainerWidget;
+import org.araneaframework.uilib.tab.TabWidget;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)

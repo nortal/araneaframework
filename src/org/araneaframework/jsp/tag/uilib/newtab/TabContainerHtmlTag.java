@@ -16,8 +16,8 @@ import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
-import org.araneaframework.uilib.newtab.TabContainerWidget;
-import org.araneaframework.uilib.newtab.TabWidget;
+import org.araneaframework.uilib.tab.TabContainerWidget;
+import org.araneaframework.uilib.tab.TabWidget;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
