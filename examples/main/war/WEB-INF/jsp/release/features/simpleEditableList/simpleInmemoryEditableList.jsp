@@ -5,22 +5,54 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
 		<tui:componentHeader>
-			<tui:componentName>In memory editable List demo</tui:componentName>
+			<tui:componentName><fmt:message key="sed.title"/></tui:componentName>
 		</tui:componentHeader>
-
+		
 		<ui:list id="list">
 			<ui:formList>
 			<tui:component>
 			
 			<tui:componentList>
+					<tui:componentListHeader/>
+					
+					<ui:listFilter>
+						<ui:row styleClass="filter">
+							<ui:cell>
+								<ui:textInput id="sex" size="1"/>
+							</ui:cell>
+	
+							<ui:cell width="80px">
+								<ui:textInput id="forename"/>
+							</ui:cell>
+	
+							<ui:cell>
+								<ui:textInput id="surname" size="20"/>
+							</ui:cell>
+							
+							<ui:cell>
+								<ui:textInput id="country"/>
+							</ui:cell>
+							
+							<ui:cell>
+								<ui:listFilterButton/>
+								<br/>
+								<ui:listFilterClearButton/>
+							</ui:cell>
+						</ui:row>
 
+					</ui:listFilter>
 				
 					<ui:formListRows>
 						<ui:row>
 							<c:choose>
 								<c:when test="${formRow.open}">
+									<ui:formElement id="sex">
+										<ui:cell>
+											<ui:textInput size="1"/>
+										</ui:cell>
+									</ui:formElement>
 									<ui:formElement id="forename">
-										<ui:cell styleClass="right">
+										<ui:cell styleClass="right" width="80px">
 											<ui:textInput styleClass="right"/>
 										</ui:cell>
 									</ui:formElement>
@@ -29,33 +61,38 @@
 											<ui:textInput />
 										</ui:cell>
 									</ui:formElement>
-									<ui:formElement id="sex">
-										<ui:cell>
-											<ui:textInput/>
-										</ui:cell>
-									</ui:formElement>
+									<ui:cell>
+										<ui:textInput id="country"/>
+									</ui:cell>
 								</c:when>
 								<c:otherwise>
-									<ui:cell styleClass="right">
+									<ui:cell>
+										<c:out value="${row.sex}" />
+									</ui:cell>
+									<ui:cell styleClass="right" width="80px">
 										<c:out value="${row.forename}" />
 									</ui:cell>
 									<ui:cell>
 										<c:out value="${row.surname}" />
 									</ui:cell>
 									<ui:cell>
-										<c:out value="${row.sex}" />
+										<c:out value="${row.country}" />
 									</ui:cell>
 								</c:otherwise>
 							</c:choose>
 							<ui:cell width="0">
 								<ui:linkButton id="editSave" showLabel="false">
 									<tui:image code="buttonChange" />
+									<fmt:message var="cblbl" key="common.Edit"/>
+									<ui:tooltip element="${formFullId}.editSave" text="${cblbl}"/>
 								</ui:linkButton>
 
 								<c:if test="${formRow.open}">
 									<ui:linkButton id="delete" showLabel="false">
 										<tui:image code="buttonDelete" />
 									</ui:linkButton>
+									<fmt:message var="rblbl" key="common.Remove"/>
+									<ui:tooltip element="${formFullId}.delete" text="${rblbl}"/>
 								</c:if>
 							</ui:cell>
 						</ui:row>
@@ -63,22 +100,30 @@
 
 					<ui:formListAddForm>
 						<ui:row>
-							<ui:cell styleClass="center">
+								<ui:formElement id="sex">
+								<ui:cell>
+									<ui:textInput size="1" />
+								</ui:cell>
+							</ui:formElement>
+						
+							<ui:cell styleClass="center" width="80px">
 								<ui:textInput id="forename" />
 							</ui:cell>
 							<ui:formElement id="surname">
 								<ui:cell>
-									<ui:textInput size="40" />
+									<ui:textInput size="20" />
 								</ui:cell>
 							</ui:formElement>
-							<ui:formElement id="sex">
+							
+							<ui:formElement id="country">
 								<ui:cell>
-									<ui:textInput size="5" />
+									<ui:textInput />
 								</ui:cell>
 							</ui:formElement>
+
 							<ui:cell width="0">
 								<ui:linkButton id="add" showLabel="false">
-									<tui:image code="buttonAdd" />
+									<button id="addFormAddbutton"><fmt:message key="button.add"/></button>
 								</ui:linkButton>
 							</ui:cell>
 						</ui:row>

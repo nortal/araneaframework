@@ -2,22 +2,28 @@ package org.araneaframework.example.main.release.features;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
 import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.BeanFormWidget;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.constraint.BaseFieldConstraint;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.FormRowHandler;
 import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
-import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.util.FormUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 	private static final long serialVersionUID = 1L;
@@ -32,22 +38,29 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 
 	{
 		Random rn = new Random();
+		List allSuggestions = new ArrayList();
+
+		for (Iterator i = Arrays.asList(Locale.getISOCountries()).iterator(); i.hasNext(); ) {
+			allSuggestions.add(new Locale("en", (String)i.next()).getDisplayCountry(Locale.ENGLISH));
+		}
 
 		for (int i = 0; i <  ExampleData.males.length; i++) {
-			Friend friend = new Friend();
+			Client friend = new Client();
 			friend.setForename(ExampleData.males[i]);
 			friend.setId(lastId);
 			friend.setSex("M");
 			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));
 			friends.add(friend);
 			lastId = Long.valueOf(lastId.longValue() + 1);
 		}
 
 		for (int i = 0; i <  ExampleData.females.length; i++) {
-			Friend friend = new Friend();
+			Client friend = new Client();
 			friend.setForename(ExampleData.females[i]);
 			friend.setSex ("F");
 			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));
 			friends.add(friend);
 			lastId = Long.valueOf(lastId.longValue() + 1);
 		}
@@ -64,33 +77,25 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 
 		/* PersonMO class is already familiar from form examples. 
        FormRowHandler class that will handle the different row operations. */
-		list = new EditableBeanListWidget(new FriendEditableRowHandler(), Friend.class);
+		list = new EditableBeanListWidget(new FriendEditableRowHandler(), Client.class);
 		this.formList = list.getFormList();
 		addWidget("list", list);
 		list.setOrderableByDefault(true);
-		list.addField("id", "#Id", false);
+		//list.addField("id", "#Id", false);
 		/* Filtering by fields other than ID is enabled. */
-		list.addField("forename", "#First name").like();
-		list.addField("surname", "#Last name").like();
-		list.addField("sex", "#Phone no").like();		
+		list.addField("sex", "sed.Sex").like();		
+		list.addField("forename", "sed.Forename").like();
+		list.addField("surname", "sed.Surname").like();
+		list.addField("country", "common.Country").like();
 		list.addField("dummy", null, false);
 
-		list.setDataProvider(buildListDataProvider());
-	}
-
-
-	protected ListDataProvider buildListDataProvider() throws Exception {
-		return dataProvider;
-	}
-
-	protected FormRowHandler buildFormRowHandler() throws Exception {
-		return new FriendEditableRowHandler();
+		list.setDataProvider(dataProvider);
 	}
 
 	private class DataProvider extends MemoryBasedListDataProvider {
 		private static final long serialVersionUID = 1L;
 		protected DataProvider() {
-			super(Friend.class);
+			super(Client.class);
 		}
 		public List loadData() throws Exception {
 			return friends;
@@ -102,16 +107,15 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 
 		public FriendEditableRowHandler() {}
 
-
 		public Object getRowKey(Object rowData) {
-			return ((Friend) rowData).getId();
+			return ((Client) rowData).getId();
 		}
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			Friend rowData = (Friend) ((BeanFormWidget)editableRow.getForm()).writeToBean(new Friend());
+			Client rowData = (Client) ((BeanFormWidget)editableRow.getForm()).writeToBean(new Client());
 			rowData.setId((Long) editableRow.getKey());
 
-			Friend toModify = (Friend) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", editableRow.getKey()));
+			Client toModify = (Client) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", editableRow.getKey()));
 			toModify.edit(rowData);
 
 			editableRow.close();
@@ -119,14 +123,14 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 
 		public void deleteRow(Object key) throws Exception {
 			Long id = (Long) key;
-			Friend toRemove = (Friend) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", id));
+			Client toRemove = (Client) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", id));
 			friends.remove(toRemove);
 			
 			list.getDataProvider().refreshData();
 		}
 
 		public void addValidRow(FormWidget addForm) throws Exception {
-			Friend newFriend = (Friend) (((BeanFormWidget)addForm).writeToBean(new Friend()));
+			Client newFriend = (Client) (((BeanFormWidget)addForm).writeToBean(new Client()));
 			friends.add(newFriend);
 			list.getDataProvider().refreshData();
 			formList.resetAddForm();
@@ -150,18 +154,39 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 		}
 
 		private void addCommonFormFields(BeanFormWidget form) throws Exception {
-			form.addBeanElement("forename", "#String field", new TextControl(), true);
-			form.addBeanElement("surname", "#Long field", new TextControl(),  true);
-			form.addBeanElement("sex", "#Boolean field", new TextControl(), true);
+			form.addElement("sex", buildSexElement());
+			form.addBeanElement("forename", "sed.Forename", new TextControl(), true);
+			form.addBeanElement("surname", "sed.Surname", new TextControl(),  true);
+			form.addBeanElement("country", "common.Country", new TextControl(), true);
+		}
+	}
+	
+	private FormElement buildSexElement() {
+		FormElement result = FormUtil.createElement("sed.Sex", new TextControl(), new StringData(), true);
+		result.setConstraint(new SexConstraint());
+
+		return result;
+	}
+	private class SexConstraint extends BaseFieldConstraint {
+		public SexConstraint() {}
+
+		protected void validateConstraint() throws Exception {
+			String value = (String) getValue();
+			if (!("m".equals(value.toLowerCase()) || "f".equals(value.toLowerCase()))) {
+				addError(
+						MessageUtil.localizeAndFormat("sed.sexcon.ermsg", t(getLabel()), getEnvironment()));
+			}
 		}
 	}
 
-	public static class Friend implements Serializable {
+	public static class Client implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private Long id;
 		private String sex;
 		private String forename;
 		private String surname;
+		private String country;
+		
 		public Long getId() {
 			return id;
 		}
@@ -187,7 +212,13 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 			this.surname = surname;
 		}
 		
-		public void edit(Friend f) {
+		public String getCountry() {
+			return country;
+		}
+		public void setCountry(String country) {
+			this.country = country;
+		}
+		public void edit(Client f) {
 			setSurname(f.surname);
 			setForename(f.forename);
 			setSex(f.sex);
