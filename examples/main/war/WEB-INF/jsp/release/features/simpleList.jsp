@@ -16,6 +16,8 @@
 	        </tui:componentHeader>
 	        
 			<tui:component>
+			<p>
+			</p>
 				
 			<p>
 				<fmt:message key="simple.list.rolistintro"/>

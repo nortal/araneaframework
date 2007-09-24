@@ -12,6 +12,10 @@
 			<ui:formList>
 			<tui:component>
 			
+			<p>
+				<fmt:message key="sed.howtonavigate"/>
+			</p>
+			
 			<tui:componentList>
 					<tui:componentListHeader/>
 					
@@ -84,7 +88,14 @@
 								<ui:linkButton id="editSave" showLabel="false">
 									<tui:image code="buttonChange" />
 									<fmt:message var="cblbl" key="common.Edit"/>
-									<ui:tooltip element="${formFullId}.editSave" text="${cblbl}"/>
+									<c:if test="${not formRow.open}">
+									  <fmt:message var="cblbl" key="common.Edit"/>
+									  <ui:tooltip element="${formFullId}.editSave" text="${cblbl}"/>
+									</c:if>
+									<c:if test="${formRow.open}">
+									  <fmt:message var="cblbl" key="button.save"/>
+									  <ui:tooltip element="${formFullId}.editSave" text="${cblbl}"/>
+									</c:if>
 								</ui:linkButton>
 
 								<c:if test="${formRow.open}">
