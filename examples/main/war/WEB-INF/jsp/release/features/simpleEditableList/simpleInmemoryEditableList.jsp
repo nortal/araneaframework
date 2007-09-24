@@ -13,6 +13,10 @@
 			<tui:component>
 			
 			<p>
+				<fmt:message key="sed.intro"/>
+			</p>
+			
+			<p>
 				<fmt:message key="sed.howtonavigate"/>
 			</p>
 			

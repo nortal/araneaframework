@@ -2,7 +2,6 @@ package org.araneaframework.uilib.newtab;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.ClassUtils;

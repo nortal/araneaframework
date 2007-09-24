@@ -16,7 +16,7 @@ import org.araneaframework.uilib.newtab.TabWidget;
  */
 public class TabBodyTag extends WidgetIncludeTag {
 	protected int doStartTag(Writer out) throws Exception {   
-		TabContainerWidget tabContainerWidget = (TabContainerWidget) requireContextEntry(TabContainerTag.TAB_CONTAINER_WIDGET);
+		TabContainerWidget tabContainerWidget = (TabContainerWidget) requireContextEntry(TabContainerHtmlTag.TAB_CONTAINER_WIDGET);
 		String tabContentWidgetId = 
 			tabContainerWidget.getScope().getId().toString() + "." + 
 			tabContainerWidget.getSelectedTab().getScope().getId().toString() + "." + TabWidget.CONTENT_WIDGET_KEY;

@@ -31,11 +31,11 @@ import org.araneaframework.uilib.util.NameUtil;
  *  
  *  @since 1.1
  */
-public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface {
+public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInterface {
 	protected String style = null;
 	protected String styleClass = null;
 	protected String baseStyleClass = "aranea-tabs";
-	protected boolean useUpdateRegions = false;
+	protected boolean registerUpdateRegions = false;
 	protected UpdateRegionHtmlTag updateRegionTag;
 	
 	/** Context entry key for {@link TabContainerWidget} rendered by this tag. */
@@ -87,7 +87,7 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 	}
 
 	protected void writeUpdateRegionStart() throws JspException {
-		if (useUpdateRegions) {
+		if (registerUpdateRegions) {
 			updateRegionTag = new UpdateRegionHtmlTag();
 			registerSubtag(updateRegionTag);
 			updateRegionTag.setGlobalId(NameUtil.getFullName(fullId, TAB_CONTAINER_UPDATE_REGION_NAME));
@@ -96,7 +96,7 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 	}
 
 	protected void writeUpdateRegionEnd() throws JspException {
-		if (useUpdateRegions) {
+		if (registerUpdateRegions) {
 			executeEndTagAndUnregister(updateRegionTag);
 		}
 		updateRegionTag = null;	
@@ -120,7 +120,7 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 	        JspUtil.writeAttribute(out, "class", TAB_LINK_CLASS);
 	        
 	        UiUpdateEvent event;
-	        if (useUpdateRegions) {
+	        if (registerUpdateRegions) {
 	        	List updateRegionNames = new ArrayList(1);
 	        	updateRegionNames.add(NameUtil.getFullName(fullId, TAB_CONTAINER_UPDATE_REGION_NAME));
 	        	event = new UiUpdateEvent(TabContainerWidget.TAB_SELECT_EVENT_ID, fullId, tab.getScope().getId().toString(), updateRegionNames);
@@ -187,7 +187,7 @@ public class TabContainerTag extends BaseWidgetTag implements StyledTagInterface
 	 *   required = "false"
 	 *   description = "Boolean specifying whether the tab selection events should invoke partial render or full render. Default is false (full render)."
 	 */
-	public void setUseUpdateRegions(String useUpdateRegions) throws JspException {
-		this.useUpdateRegions = ((Boolean) evaluate("useupdateRegions", useUpdateRegions, Boolean.class)).booleanValue();
+	public void setRegisterUpdateRegions(String registerUpdateRegions) throws JspException {
+		this.registerUpdateRegions = ((Boolean) evaluate("registerUpdateRegions", registerUpdateRegions, Boolean.class)).booleanValue();
 	}
 }
