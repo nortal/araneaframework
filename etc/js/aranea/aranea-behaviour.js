@@ -47,7 +47,7 @@ function setFormElementValidation(el){
 
   var elId = el.getAttribute("id");
   var actionValidate = function(event) {
-    aranea_formElementValidationActionCall(el);
+    formElementValidationActionCall(el);
   };
   Event.observe(elId, 'change', actionValidate);
 }
