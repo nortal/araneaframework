@@ -61,7 +61,9 @@ public class TabWidget extends BaseApplicationWidget {
 
 	/* PUBLIC GETTERS*/
 	public String getLabel() {
-		return EnvironmentUtil.requireLocalizationContext(getEnvironment()).localize(labelId);
+        if (labelId != null)
+		  return EnvironmentUtil.requireLocalizationContext(getEnvironment()).localize(labelId);
+        return null;
 	}
 
 	public Widget getLabelWidget() {

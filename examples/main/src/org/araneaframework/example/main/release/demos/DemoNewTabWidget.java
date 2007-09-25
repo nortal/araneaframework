@@ -25,7 +25,6 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 	    containerWidget.addWidget("4", new TabWidget("#Multi Select demo", new DemoMultiSelect()));
 	    
 	    containerWidget.disableWidget("3");
-	    
 	    //containerWidget.removeWidget("1");
 	}
 }
