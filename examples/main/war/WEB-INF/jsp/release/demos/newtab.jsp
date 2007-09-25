@@ -3,9 +3,7 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt" xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
 
-	<ui:tabContainer id="tabContainer">
-		<ui:tabBody/>
-	</ui:tabContainer>
+    <ui:tabs id="tabContainer"/>
 
 	<p>
 		<fmt:message key="tabs.intro"/>

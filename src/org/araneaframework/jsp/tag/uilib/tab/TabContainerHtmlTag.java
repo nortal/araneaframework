@@ -38,10 +38,12 @@ import org.araneaframework.uilib.util.NameUtil;
  * @jsp.tag 
  *  name = "tabContainer" 
  * 	body-content =  "JSP" 
- *  description = "Displays all tabs of the current tab container"
+ *  description = "Writes out tabs. Content should include &lt;ui:tabBody&gt; tag."
  *  
  *  @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
  *  @author Taimo Peelo (taimo@araneaframework.org)
+ *  
+ *  @see TabContainerWidget
  *  
  *  @since 1.1
  */
