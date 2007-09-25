@@ -52,12 +52,12 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
      // ensure restoration of scroll position
      out.write("_ap.addSystemLoadEvent(function() { var form = _ap.getSystemForm();" +
     		" if (form." +  WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + " && form."+WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ") "+
-     		"scrollToCoordinates("+x + ","+y+");});");
+     		"Aranea.UI.scrollToCoordinates("+x + ","+y+");});");
     		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + ".value, " +
      		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ".value);});");
      
      // ensure that the scroll coordinates are submitted with request
-     out.write("_ap.addSubmitCallback(function() {saveScrollCoordinates()});");
+     out.write("_ap.addSubmitCallback(function() {Aranea.UI.saveScrollCoordinates()});");
      out.write("</script>");
    }
 }
