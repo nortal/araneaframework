@@ -24,11 +24,15 @@ package org.araneaframework;
  */
 public class AraneaVersion {
   public static String getTitle() {
-    return AraneaVersion.class.getPackage().getImplementationTitle();
+    Package p = AraneaVersion.class.getPackage();
+    if (p == null) return null;
+    return p.getImplementationTitle();
   }
   
   public static String getVersion() {
-    return AraneaVersion.class.getPackage().getImplementationVersion();
+    Package p = AraneaVersion.class.getPackage();
+    if (p == null) return null;
+    return p.getImplementationVersion();
   }
   
   public static void main(String[] args) {
