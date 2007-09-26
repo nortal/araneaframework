@@ -25,7 +25,7 @@ import org.araneaframework.uilib.tab.TabContainerWidget;
  * @jsp.tag 
  *  name = "tabs" 
  * 	body-content = "empty" 
- *  description = "Writes out tabs and the active tab's content."
+ *  description = "Writes out tabs' labels and the active tab content."
  * 
  *  @author Taimo Peelo (taimo@araneaframework.org)
  *  
