@@ -18,13 +18,25 @@ package org.araneaframework.uilib.tab;
 
 import java.io.Serializable;
 import java.util.Map;
+import org.araneaframework.Widget;
+import org.araneaframework.core.WidgetFactory;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface TabContainerContext extends Serializable {
-	TabWidget selectTab(String id);
-	TabWidget getSelectedTab();
+    void addTab(String id, String labelId, Widget contentWidget);
+    void addTab(String id, Widget labelWidget, Widget contentWidget);
+    void addTab(String id, String labelId, WidgetFactory contentWidgetFactory);
+    void addTab(String id, Widget labelWidget, WidgetFactory contentWidgetFactory);
+
+    void removeTab(String id);
+
+    void disableTab(String id);
+    void enableTab(String id);
+
+	Widget selectTab(String id);
+	Widget getSelectedTab();
 	
 	boolean isTabSelected(String id);
 	
