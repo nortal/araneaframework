@@ -95,7 +95,7 @@ var aranea_rules = {
   'a.aranea-link-button' : function(el) {
     setCloningUrl(el);
   },
-  
+
   'a.aranea-link' : function(el) {
     setCloningUrl(el);
   },
@@ -111,7 +111,13 @@ var aranea_rules = {
     setFormElementContext(el);
     setFormElementValidation(el);
   },
-  
+
+  'input.aranea-combo' : function(el) {
+    applyCharacterFilter(el);
+    setFormElementContext(el);
+    setFormElementValidation(el);
+  },
+
   'input.aranea-float' : function(el) {
     applyCharacterFilter(el);
     setFormElementContext(el);

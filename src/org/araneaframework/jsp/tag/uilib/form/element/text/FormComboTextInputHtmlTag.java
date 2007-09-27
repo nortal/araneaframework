@@ -36,6 +36,10 @@ import org.araneaframework.uilib.form.control.TextControl.ViewModel;
  *   description = "Form text input field, represents UiLib &quot;ComboTextControl&quot;."
  */
 public class FormComboTextInputHtmlTag extends FormTextInputHtmlTag {
+	{
+		baseStyleClass = "aranea-comboselect";
+	}
+	
 	protected int doEndTag(Writer out) throws Exception {
 		super.doEndTag(out);
 
@@ -43,13 +47,17 @@ public class FormComboTextInputHtmlTag extends FormTextInputHtmlTag {
 		JspUtil.writeAttribute(out, "type", "text/javascript");
 		JspUtil.writeCloseStartTag(out);
 
-		out.write("createEditableSelect($('" + this.getFullFieldId() + "'));");
-		
+		writeSelectInitializationScript(out);
+
 		JspUtil.writeEndTag(out, "script");
 
         return EVAL_PAGE;
 	}
 	
+	protected void writeSelectInitializationScript(Writer out) throws Exception {
+		out.write("ieCompatCreateEditableSelect($('" + this.getFullFieldId() + "'));");
+	}
+
 	protected Map getCustomAttributes(ViewModel viewModel) {
 		ComboTextControl.ViewModel model = (org.araneaframework.uilib.form.control.ComboTextControl.ViewModel) viewModel;
 		Map r = super.getCustomAttributes(model);
