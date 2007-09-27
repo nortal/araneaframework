@@ -38,9 +38,9 @@ Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE =
 Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE = 
     new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>');
 Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE = 
-    new Template('araneaContextMenu.hide(); araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', \'#{param}\', null, null);');
+    new Template('araneaContextMenu.hide(); araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', null, null, null);');
 Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE = 
-    new Template('araneaContextMenu.hide(); araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', \'#{param}\', null, function() {}, null);');
+    new Template('araneaContextMenu.hide(); araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', null, null, function() {}, null);');
 Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
   if (menu.label) {
     var entrytemplate = Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE;

@@ -42,6 +42,10 @@
   <files content-type="text/javascript" group="debugScripts">
     <file path="js/log4javascript/log4javascript.js" />
   </files>
+  
+  <files content-type="text/javascript">
+    <file path="js/calendar/calendar-et.js"/>
+  </files>
 
   <files content-type="image/gif">
     <file path="gfx/ico_calendar.gif" />

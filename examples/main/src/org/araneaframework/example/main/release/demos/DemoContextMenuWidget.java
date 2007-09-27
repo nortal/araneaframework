@@ -74,10 +74,10 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
     addWidget("simpleForm", simpleForm);
 
     ContextMenuItem menu = new ContextMenuItem();
-    menu.addMenuItem(new ContextMenuItem("Submit", new ContextMenuEventEntry("testSimpleForm", this, null)));
+    menu.addMenuItem(new ContextMenuItem("Submit", new ContextMenuEventEntry("testSimpleForm", this)));
 
     ContextMenuItem subMenu = menu.addMenuItem(new ContextMenuItem("Submenu"));
-    subMenu.addMenuItem(new ContextMenuItem("Submit from submenu", new ContextMenuEventEntry("testSimpleForm", this, "xyz")));
+    subMenu.addMenuItem(new ContextMenuItem("Submit from submenu", new ContextMenuEventEntry("testSimpleForm", this)));
 
     ContextMenuWidget contextMenuWidget = new ContextMenuWidget(menu);
 
