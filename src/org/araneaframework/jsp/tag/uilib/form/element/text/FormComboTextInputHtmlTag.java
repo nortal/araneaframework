@@ -55,7 +55,7 @@ public class FormComboTextInputHtmlTag extends FormTextInputHtmlTag {
 	}
 	
 	protected void writeSelectInitializationScript(Writer out) throws Exception {
-		out.write("ieCompatCreateEditableSelect($('" + this.getFullFieldId() + "'));");
+		out.write("ieCompatCreateEditableSelect('" + this.getFullFieldId() + "');");
 	}
 
 	protected Map getCustomAttributes(ViewModel viewModel) {

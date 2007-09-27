@@ -118,7 +118,7 @@ function highlightSelectBoxOption()
 }
 
 function ieCompatCreateEditableSelect(dest) {
-  var f = function() { createEditableSelect($(dest)); };
+  var f = function() { createEditableSelect(dest); };
   if (Prototype.Browser.IE) {
     araneaPage().addClientLoadEvent(f);
   } else {
@@ -128,6 +128,7 @@ function ieCompatCreateEditableSelect(dest) {
 
 function createEditableSelect(dest)
 {
+    dest = $(dest);
 	dest.className='selectBoxInput';
 	var div = document.createElement('DIV');
 	div.style.styleFloat = 'left';

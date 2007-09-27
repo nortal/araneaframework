@@ -89,6 +89,7 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 			JspUtil.writeOpenStartTag(out, "div");
 			JspUtil.writeAttribute(out, "class", getTabStyleClass(tabwidget));
+			JspUtil.writeCloseStartTag_SS(out);
 
 			writeTablink(out, tabwidget);
 

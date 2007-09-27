@@ -48,7 +48,7 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
      JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_X_KEY, x != null ? x : "0");
      JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY, y != null ? y : "0");
 
-     out.write("<script>");
+     out.write("<script type=\"text/javascript\">");
      // ensure restoration of scroll position
      out.write("_ap.addSystemLoadEvent(function() { var form = _ap.getSystemForm();" +
     		" if (form." +  WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + " && form."+WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ") "+
