@@ -147,7 +147,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     if (localeChangeListeners == null)
       localeChangeListeners = new ArrayList();
 
-    ComponentUtil.addListenerComponent(listener, new DestroyerComponent(listener));
+    ComponentUtil.addListenerComponent(listener, new LocaleChangeListenerDestroyerComponent(listener));
     localeChangeListeners.add(listener);
   }
 
@@ -156,7 +156,6 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     if (listener == null || localeChangeListeners == null)
     return false;
 
-    // TODO: maybe remove the destroy listener?
     return localeChangeListeners.remove(listener);
   }
 
@@ -170,10 +169,10 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
   }
   
-  private static final class DestroyerComponent extends BaseComponent {
+  private static final class LocaleChangeListenerDestroyerComponent extends BaseComponent {
     private final LocaleChangeListener listener;
 
-    private DestroyerComponent(LocaleChangeListener listener) {
+    private LocaleChangeListenerDestroyerComponent(LocaleChangeListener listener) {
       this.listener = listener;
     }
 

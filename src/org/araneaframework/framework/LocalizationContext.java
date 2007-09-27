@@ -72,9 +72,10 @@ public interface LocalizationContext extends Serializable {
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
    */
   public String getMessage(String code, Object[] args);
-  
+
   /** @since 1.1 */
   public void addLocaleChangeListener(LocaleChangeListener listener);
+  /** @since 1.1 */
   public boolean removeLocaleChangeListener(LocaleChangeListener listener);
 
   /** @since 1.1 */
