@@ -1666,7 +1666,7 @@ el.click();</programlisting>
       <literal>escape</literal>.</para>
     </sect2>
 
-    <!--  textinput,autoCompleteTextInput,textdisplay -->
+    <!--  textinput,autoCompleteTextInput,textdisplay, comboTextInput -->
 
     <sect2>
       <title>&lt;ui:textInput&gt;</title>
@@ -1814,6 +1814,70 @@ el.click();</programlisting>
         </informaltable>
 
 		<emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
+      </sect3>
+    </sect2>
+    
+     <sect2 id="comboTextInput">
+      <title>&lt;ui:comboTextInput&gt;</title>
+
+      <para>Form text input field, represents <literal>ComboTextControl</literal>.
+      This is an input field combined with Select&mdash;it allows end-user to enter text
+      into field or select some predefined value from provided list of values.
+      It is rendered in HTML with <literal>&lt;input type="text"
+      ...&gt;</literal> tag plus custom select component. Default
+      <literal>styleClass="aranea-text"</literal>.</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>size</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Maximum length of accepted text (in
+                characters).</entry>
+              </row>
+
+              <row>
+                <entry>onChangePrecondition</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Precondition for deciding whether registered onchange
+                event should go server side or not. If left unspecified, this
+                is considered to be <literal>true</literal>. For this tag,
+                <emphasis>onchange</emphasis> event is simulated with
+                <emphasis>onblur</emphasis>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+
+        <emphasis>Also see <xref linkend="common-formelement-attributes"/>.</emphasis>
       </sect3>
     </sect2>
 

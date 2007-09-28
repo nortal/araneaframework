@@ -1866,8 +1866,6 @@ class MyServlet extends BaseAraneaDispatcherServlet {
           <colspec colwidth="3*" />
 
           <tbody>
-            <!-- TODO: this is not true anymore, araneaRootFlowContainer
-            is ordinary StandardFlowContainerWidget -->
             <row>
               <entry align="right"><emphasis role="bold">Java
               class:</emphasis></entry>
@@ -1942,6 +1940,86 @@ class MyServlet extends BaseAraneaDispatcherServlet {
         </tgroup>
       </informaltable>
     </sect2>
+    
+       <!--  -->
+    
+     <sect2 id="overlayContext">
+      <title>Overlay container.</title>
+
+      <informaltable frame="topbot">
+        <tgroup cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="3*" />
+
+          <tbody>
+            <row>
+              <entry align="right"><emphasis role="bold">Java
+              class:</emphasis></entry>
+
+              <entry><literal>OverlayContainerWidget</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Default configuration
+              name:</emphasis></entry>
+
+              <entry><literal>araneaOverlayContainer</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis
+              role="bold">Provides:</emphasis></entry>
+
+              <entry><literal>OverlayContext</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Depends
+              on:</emphasis></entry>
+
+              <entry>-</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>Supports running processes in &quot;overlay&quot; layer (in parallel FlowContext of the same session thread). Allows
+      construction of modal dialogs and modal processes.</para>
+
+      <informaltable>
+        <tgroup cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <thead>
+            <row>
+              <entry>Injectable properties</entry>
+
+              <entry>Description</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>main<para><literal>Widget</literal> </para></entry>
+
+              <entry>Widget corresponding to main process running outside overlay.</entry>
+            </row>
+            
+             <row>
+              <entry>overlay
+              <para><literal>FlowContextWidget</literal> </para></entry>
+
+              <entry>Component responsible for running processes in overlay layer.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </sect2>
+    
+    <!--  -->
 
     <!-- sect3 id="StandardContainers">
         <title>StandardContainerService, StandardContainerWidget</title>

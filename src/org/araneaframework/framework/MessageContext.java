@@ -106,7 +106,7 @@ public interface MessageContext extends UpdateRegionProvider {
   public void showWarningMessage(String message);
 
   /**
-   * Hides an error message from user.
+   * Hides a warning message from user.
    * @since 1.1
    */
   public void hideWarningMessage(String message);
@@ -117,7 +117,7 @@ public interface MessageContext extends UpdateRegionProvider {
   public void showInfoMessage(String message);
   
   /**
-   * Hides an error message from user.
+   * Hides an info message from user.
    * @since 1.1
    */
   public void hideInfoMessage(String message);

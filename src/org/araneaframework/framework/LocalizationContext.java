@@ -58,8 +58,6 @@ public interface LocalizationContext extends Serializable {
    */
   public ResourceBundle getResourceBundle(Locale locale);
   
-  
-  
   /**
    * Localizes the code and uses it to format the message with the passed arguments. 
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
