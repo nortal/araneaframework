@@ -856,6 +856,24 @@ private void handleEventSave() {
     </sect2>
   </sect1>
 
+	<!-- the validation -->
+	<sect2 id="formvalidation">
+		<title>Form validation</title>
+		
+		<para>
+			As already mentioned, form validation is mostly explicit, by default the values will be just read from 
+			request without any parsing, conversion or validation. Validation will be performed after call to
+			<literal>FormWidget.convertAndValidate()</literal>.
+		</para>
+		
+		<para>
+			It is also possible to configure forms to be validated in the background, as end-user is filling it.
+			Background validation is enabled by calling <literal>FormWidget.setBackgroundValidation(true)</literal>. This
+			performs XMLHttp requests (using Aranea Action API) to server each time when user moves from changed form field 
+			to another. Background validation takes place on server-side and is implicit.
+		</para>
+	</sect2>
+
   <sect1>
     <title>Forms JSP Tags</title>
 
