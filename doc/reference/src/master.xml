@@ -12,7 +12,7 @@
 	<!ENTITY javascript               SYSTEM "javascript.xml">
 	<!ENTITY uilibwidgets               SYSTEM "uilibwidgets.xml">
 	<!ENTITY trees               SYSTEM "trees.xml">
-	<!ENTITY trees               SYSTEM "tabs.xml">
+	<!ENTITY tabs               SYSTEM "tabs.xml">
 ]>
 
 <!--

@@ -89,6 +89,12 @@ public interface TabContainerContext extends Serializable {
 	 * @return whether specified tab is currently active (selected).
 	 */
 	boolean isTabSelected(String id);
+
+	/**
+	 * Returns the currently selected tab as a widget. Widget's type is implementation specific,
+	 * as a rule it cannot be expected to be of the same type as added tab's content widget.
+	 */
+	Widget getSelectedTab();
 	
 	/**
 	 * Returns all the tabs present in this {@link TabContainerContext}. Keys in the map are tab
