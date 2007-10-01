@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2007.08.31    | Aranea 1.1-M4
+2007.10.01    | Aranea 1.1-M4
 
 Features and Improvements
     setInputFilter() method has been added to various Controls                | See #486
@@ -8,10 +8,16 @@ Features and Improvements
     All Aranea JSP <ui:*button> tags now recognize 'tabindex' attribute       | See #473
     New ListItemsData constructor -- ListItemsData(List itemRange, Long count)| See #494
     Bundled Prototype JS library was upgraded from 1.5.1 -> 1.5.1.1           | See #489
-    Support for background server-side form validation (while filling form)   | See change #502, #511
-    Tab widget was added (TabContainerWidget)                                 | See change #466
+    Support for background server-side form validation (while filling form)   | See change #502, #511                                                                              
+    Tab widget (TabContainerWidget) was added to Uilib                        | See change #466, #516, #522
+    A hybrid of text input and select, ComboTextControl was added to Uilib    | See #483
     Support for right-click menu (ContextMenuWidget)                          | See #487
     <ui:tooltip> tag was added                                                | See #497
+    Added support for running processes in modal overlay layer                | See change #388, #515
+    The 'root' flow container now is distinguished by additional              | See 
+    'RootFlowContext' environment entry                                       |     #508
+    LocalizationContext now accepts LocaleChangeListeners                     | See #525, #253
+    Documentation updates and some outdated information removal               | See change #522
 
 Bugfixes
     BeanFormWidget writeToBean (old readBean()) destroying content of subform | See #420
@@ -19,11 +25,17 @@ Bugfixes
     Rare NPE in ListSqlHelper.getDatabase(Filter|Order)Params was removed     | See #249
     examples/serviceHelloName had stopped working                             | See #510
     BaseTag.getConfiguration() always returned NULL                           | See #380
+    disableWidget()/enableWidget() do not throw exceptions when called on     | See
+    already disabled/enabled widgets                                          |     #519
+    BaseApplicationWidget erronously tried to route update() to children who  | See
+    were not widgets (to components and services too)                         |     #524
     
 Deprecation & API changes
-    BeanFormWidget.readFromBean() replaces deprecated writeBean().            | See 
+    BeanFormWidget.readFromBean() replaces deprecated writeBean().            | See
     BeanFormWidget.writeToBean() replaces deprecated readBean().              |   #447
     We are sorry that old methods were named so confusingly unintuitively.    | & #474
+    'throws Exception' was removed from FormWidget.addElement* signatures     | See #512
+    'throws Exception' was removed ListWidget's FilterHelper.* signatures     | See change #515
 ---------------------------------------------------------------------------------------------
 2007.06.22    | Aranea 1.1-M3
 
@@ -35,7 +47,7 @@ Features and Improvements
 
 Bugfixes
     Update regions caused NPE sometimes when active flow was ended in request | See #432
-    Demos->Advanced->Advanced popups last component did not work              | See #424 
+    Demos->Advanced->Advanced popups last component did not work              | See #424
 ---------------------------------------------------------------------------------------------
 2007.06.12    | Aranea 1.1-M2
 

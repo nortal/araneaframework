@@ -440,6 +440,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
     
     /**
+     * @return unique child key for contained {@link Widget}. 
      * @since 1.1
      */
     public String getName() {

@@ -5,6 +5,9 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.filter.NotRenderedMessage;
 
 /**
+ * This filter resets all {@link org.araneaframework.framework.core.RenderStateAware} components
+ * render state to unrendered prior to calling render on its children.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @since 1.1

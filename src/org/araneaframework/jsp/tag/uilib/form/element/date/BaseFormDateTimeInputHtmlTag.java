@@ -142,7 +142,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	 */
 	protected String getTimeSelectScript(String selectId, Integer value, int valueCount) {
 	    StringBuffer sb = new StringBuffer();
-	    sb.append("addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
+	    sb.append("Aranea.UI.addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
 	    sb.append(value != null ? value.toString():"null").append(");");
 
 	    return sb.toString();
@@ -156,7 +156,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
           return onChangePrecondition;
         String timeInputRef = "document.getElementById('" + timeInputId + "')";
 	    String precondition =  
-	    		"return isChanged('" + timeInputId + "')"+
+	    		"return Aranea.UI.isChanged('" + timeInputId + "')"+
 	    		" && ((" + timeInputRef + ".value.length==5) || (" + timeInputRef + ".value.length==0))"
 	    		;
 	    return precondition;
@@ -246,7 +246,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeCloseStartTag(out);
 		
 		StringBuffer script = new StringBuffer();
-		script.append("calendarSetup('");
+		script.append("Aranea.UI.calendarSetup('");
 		script.append(id);
 		script.append("', '");
 		script.append(format);

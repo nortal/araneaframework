@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.uilib.tab;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.Assert;
+import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.StyledTagInterface;
+import org.araneaframework.jsp.tag.include.WidgetIncludeTag;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -38,10 +42,12 @@ import org.araneaframework.uilib.util.NameUtil;
  * @jsp.tag 
  *  name = "tabContainer" 
  * 	body-content =  "JSP" 
- *  description = "Displays all tabs of the current tab container"
+ *  description = "Writes out tabs' labels. Content should include &lt;ui:tabBody&gt; tag."
  *  
  *  @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
  *  @author Taimo Peelo (taimo@araneaframework.org)
+ *  
+ *  @see TabContainerWidget
  *  
  *  @since 1.1
  */
@@ -83,6 +89,7 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 			JspUtil.writeOpenStartTag(out, "div");
 			JspUtil.writeAttribute(out, "class", getTabStyleClass(tabwidget));
+			JspUtil.writeCloseStartTag_SS(out);
 
 			writeTablink(out, tabwidget);
 
@@ -122,34 +129,74 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 	protected void writeTablink(Writer out, TabWidget tab) throws Exception {
 		JspUtil.writeStartTag(out, "div");
-		
-	    if (tab.isTabDisabled()) {
-	        JspUtil.writeOpenStartTag(out, "a");
-	        JspUtil.writeCloseStartTag_SS(out);
-	        JspUtil.writeEscaped(out, tab.getLabel());
-	        JspUtil.writeEndTag(out, "a");
-	      } else {
-	        JspUtil.writeOpenStartTag(out, "a");
-	        JspUtil.writeAttribute(out, "href", "#");
-	        JspUtil.writeAttribute(out, "class", TAB_LINK_CLASS);
-
-	        UiUpdateEvent event;
-	        if (registerUpdateRegions) {
-	        	List updateRegionNames = new ArrayList(1);
-	        	updateRegionNames.add(NameUtil.getFullName(fullId, TAB_CONTAINER_UPDATE_REGION_NAME));
-	        	event = new UiUpdateEvent(TabContainerWidget.TAB_SELECT_EVENT_ID, fullId, tab.getScope().getId().toString(), updateRegionNames);
-	        } else {
-	        	event = new UiUpdateEvent(TabContainerWidget.TAB_SELECT_EVENT_ID, fullId, tab.getScope().getId().toString()); 
-	        }
-	        JspUtil.writeEventAttributes(out, event);
-
-	        JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
-
-	        JspUtil.writeCloseStartTag_SS(out);
-	        JspUtil.writeEscaped(out, tab.getLabel());
-	        JspUtil.writeEndTag_SS(out, "a");
-	      }
+	    writeTabLabel(out, tab);
 	    JspUtil.writeEndTag(out, "div");
+	}
+
+	protected void writeTabLabel(Writer out, TabWidget tab) throws Exception {
+		if (tab.getLabel() != null) {
+			renderTabTextLabel(out, tab);
+		} else if (tab.getLabelWidget() != null) {
+			renderTabWidgetLabel(out, tab);
+		} else { 
+			throw new AraneaJspException("Unable to determine label or labelwidget for TabWidget '" + tab.getScope().toString() + "'.");
+		}
+	}
+
+	protected void renderTabWidgetLabel(Writer out, TabWidget tab) throws Exception {
+		String labelWidgetFullId = tab.getLabelWidget().getScope().toString();
+		String contextWidgetFullId = getContextWidgetFullId();
+
+		if (labelWidgetFullId.startsWith(contextWidgetFullId)) {
+			WidgetIncludeTag includeTag = new WidgetIncludeTag();
+			String labelWidgetRelativeId = labelWidgetFullId.substring(contextWidgetFullId.length());
+			includeTag.setId(labelWidgetRelativeId);
+			registerAndExecuteStartTag(includeTag);
+			executeEndTagAndUnregister(includeTag);
+		} else {
+			throw new AraneaJspException("Unable to determine id of labelWidget '" + labelWidgetFullId  + "' relative to contextwidget '" + contextWidgetFullId + "'.");
+		}
+	}
+
+	protected void renderTabTextLabel(Writer out, TabWidget tab) throws Exception {
+		if (tab.isTabDisabled()) {
+	        renderDisabledTabTextLabel(out, tab);
+	    } else {
+	        renderEnabledTabTextLabel(out, tab);
+	    }
+	}
+
+	protected void renderEnabledTabTextLabel(Writer out, TabWidget tab) throws IOException {
+		JspUtil.writeOpenStartTag(out, "a");
+		JspUtil.writeAttribute(out, "href", "#");
+		JspUtil.writeAttribute(out, "class", TAB_LINK_CLASS);
+
+		UiEvent event = getTabSelectionEvent(tab);
+		JspUtil.writeEventAttributes(out, event);
+		JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+
+		JspUtil.writeCloseStartTag_SS(out);
+		JspUtil.writeEscaped(out, tab.getLabel());
+		JspUtil.writeEndTag_SS(out, "a");
+	}
+	
+	protected void renderDisabledTabTextLabel(Writer out, TabWidget tab) throws IOException {
+		JspUtil.writeOpenStartTag(out, "a");
+		JspUtil.writeCloseStartTag_SS(out);
+		JspUtil.writeEscaped(out, tab.getLabel());
+		JspUtil.writeEndTag(out, "a");
+	}
+
+	protected UiEvent getTabSelectionEvent(TabWidget tab) {
+		UiUpdateEvent result;
+		if (registerUpdateRegions) {
+			List updateRegionNames = new ArrayList(1);
+			updateRegionNames.add(NameUtil.getFullName(fullId, TAB_CONTAINER_UPDATE_REGION_NAME));
+			result = new UiUpdateEvent(TabContainerWidget.TAB_SELECT_EVENT_ID, fullId, tab.getScope().getId().toString(), updateRegionNames);
+		} else {
+			result = new UiUpdateEvent(TabContainerWidget.TAB_SELECT_EVENT_ID, fullId, tab.getScope().getId().toString()); 
+		}
+		return result;
 	}
 
 	protected String getTabStyleClass(TabWidget tabwidget) {

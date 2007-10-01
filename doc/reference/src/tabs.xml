@@ -1,0 +1,137 @@
+<sect1 id="tabs">
+	<title>Tabs</title>
+     Tabs provide the tabbed interface for switching between different content. 
+
+    <sect2 id="TabContainerWidget">
+		<title>TabContainerWidget</title>
+		
+		<para>
+		<literal>TabContainerWidget</literal> manages widgets that are to be displayed and manipulated in separate tabs.
+		It provides basic operations like adding, removing, disabling, enabling and switching between tabs. 
+		Its main operation mode is stateful, where switching between tabs preserves state in inactive tabs. It can be 
+		made to operate statelessly (or with custom state management) by constructing new tab with <literal>WidgetFactory</literal>
+		instead of <literal>Widget</literal>.
+		</para>
+
+		<para>
+		Following methods are available for adding tabs:
+<programlisting role="java">void addTab(String id, String labelId, Widget contentWidget);
+void addTab(String id, Widget labelWidget, Widget contentWidget);
+void addTab(String id, String labelId, WidgetFactory contentWidgetFactory);
+void addTab(String id, Widget labelWidget, WidgetFactory contentWidgetFactory);</programlisting>
+		</para>
+		
+		<para>
+			And for common tab operations:
+<programlisting role="java">boolean removeTab(String id);
+boolean disableTab(String id);
+boolean enableTab(String id);
+boolean selectTab(String id);</programlisting>
+		</para>
+
+		<para>
+			For its children, TabContainerWidget is accessible from <literal>Environment</literal> as <literal>TabContainerContext</literal>.
+		</para>
+	
+    </sect2>
+    
+    <sect2 id="TabJsptags">
+    	<title>Tab JSP tags</title>
+    	
+    	<sect3 id="uitabcontainer">
+    		<title>&lt;ui:tabContainer&gt;</title>
+    		<para>
+    			Opens the tab container context and renders the labels for all tabs inside this container.
+    		</para>
+    		
+    		  <sect4 id="uitabcontainerattrs">
+        <title>Attributes</title>
+
+        <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of the tab container widget.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect4>
+    	</sect3>
+    	
+    	<sect3 id="uitabbody">
+    		<title>&lt;ui:tabBody&gt;</title>
+    		<para>
+    			Renders the body of currently active (selected) tab. Must be used inside tab container context.
+    		</para>
+    	</sect3>
+
+    	<sect3 id="uitabs">
+    		<title>&lt;ui:tabs&gt;</title>
+    		<para>
+    			Renders specified tab container fully&mdash;writes out tab labels and active tab's content.
+    		</para>
+    		
+      <sect4 id="uitabsattrs">
+        <title>Attributes</title>
+
+        <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of the tab container widget.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect4>
+    	</sect3>
+    	
+    	<sect3 id="tabtagexamples">
+    		<title>Usage of tab tags in JSP templates.</title>
+<programlisting role="xml"><![CDATA[<ui:tabs id="tabContainer"/>
+
+<!-- equivalent to previous, but one could add custom content before and after tab body -->
+<ui:tabContainer id="tabContainer">
+  <ui:tabBody/>
+</ui:tabContainer>
+]]></programlisting>	
+    	</sect3>
+    </sect2>
+</sect1>

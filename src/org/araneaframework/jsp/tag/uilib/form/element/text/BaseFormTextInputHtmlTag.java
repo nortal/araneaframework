@@ -112,9 +112,9 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     if (events && viewModel.isOnChangeEventRegistered()) {
       // We use "onblur" to simulate the textbox's "onchange" event
       // this is _not_ good, but there seems to be no other way
-      JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
+      JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
       if (onChangePrecondition == null)
-    	  onChangePrecondition = "return isChanged('" + name + "');";
+    	  onChangePrecondition = "return Aranea.UI.isChanged('" + name + "');";
       this.writeSubmitScriptForUiEvent(out, "onblur", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
     }
     JspUtil.writeAttributes(out, attributes);

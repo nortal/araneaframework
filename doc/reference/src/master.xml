@@ -10,7 +10,9 @@
 	<!ENTITY forms               SYSTEM "forms.xml">	
 	<!ENTITY lists               SYSTEM "lists.xml">
 	<!ENTITY javascript               SYSTEM "javascript.xml">
+	<!ENTITY uilibwidgets               SYSTEM "uilibwidgets.xml">
 	<!ENTITY trees               SYSTEM "trees.xml">
+	<!ENTITY tabs               SYSTEM "tabs.xml">
 ]>
 
 <!--
@@ -65,7 +67,7 @@
     &jsp;
     &forms;
     &lists;
-    &trees;
+    &uilibwidgets;
     &integration;
     &javascript;
 </book>

@@ -25,10 +25,12 @@ import org.araneaframework.uilib.tab.TabWidget;
  *  @jsp.tag
  *   name = "tabBody"
  *   body-content = "empty"
- *   description = "This tag includes current tab." 
- *   
+ *   description = "Writes out currently active tab content. It is meant to be used inside &lt;ui:tabContainer&gt; tag." 
+ * 
  * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * 
+ * @see TabContainerWidget
  */
 public class TabBodyTag extends WidgetIncludeTag {
 	protected int doStartTag(Writer out) throws Exception {   

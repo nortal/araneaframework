@@ -39,8 +39,6 @@ var selectBoxIds = 0;
 var currentlyOpenedOptionBox = false;
 var editableSelect_activeArrow = false;
 
-
-
 function selectBox_switchImageUrl()
 {
 	if(this.src.indexOf(arrowImage())>=0){
@@ -48,8 +46,6 @@ function selectBox_switchImageUrl()
 	}else{
 		this.src = this.src.replace(arrowImageOver(),arrowImage());
 	}
-
-
 }
 
 function selectBox_showOptions()
@@ -121,8 +117,18 @@ function highlightSelectBoxOption()
 
 }
 
+function ieCompatCreateEditableSelect(dest) {
+  var f = function() { createEditableSelect(dest); };
+  if (Prototype.Browser.IE) {
+    araneaPage().addClientLoadEvent(f);
+  } else {
+    f();
+  }
+}
+
 function createEditableSelect(dest)
 {
+    dest = $(dest);
 	dest.className='selectBoxInput';
 	var div = document.createElement('DIV');
 	div.style.styleFloat = 'left';
@@ -149,7 +155,7 @@ function createEditableSelect(dest)
 	var optionDiv = document.createElement('DIV');
 	optionDiv.id = 'selectBoxOptions' + selectBoxIds;
 	optionDiv.className='selectBoxOptionContainer';
-	optionDiv.style.width = div.offsetWidth + 'px'; // -2
+	optionDiv.style.width = div.offsetWidth-2 + 'px';
 	div.appendChild(optionDiv);
 
 /*
@@ -172,7 +178,7 @@ function createEditableSelect(dest)
 			anOption.innerHTML = options[no];
 			anOption.className='selectBoxAnOption';
 			anOption.onclick = selectOptionValue;
-			anOption.style.width = optionDiv.style.width.replace('px','') + 'px'; // -2
+			anOption.style.width = optionDiv.style.width.replace('px','')-2 + 'px';
 			anOption.onmouseover = highlightSelectBoxOption;
 			optionDiv.appendChild(anOption);
 			optionsTotalHeight = optionsTotalHeight + anOption.offsetHeight;

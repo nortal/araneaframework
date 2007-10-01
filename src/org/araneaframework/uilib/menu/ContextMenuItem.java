@@ -73,8 +73,6 @@ public class ContextMenuItem implements Serializable {
 			jsonObject.setStringProperty("target", menuEntry.getTarget() != null ? menuEntry.getTarget().getScope().toString() : "null");
 			jsonObject.setStringProperty("type", menuEntry.getHappeningType());
 			jsonObject.setStringProperty("id", menuEntry.getHappeningId().toString());
-			String param = menuEntry.getHappeningParam();
-			jsonObject.setStringProperty("param", param != null ? param : "");
 		} 
 		if (subMenu != null) {
 			jsonObject.setProperty("submenu", menuMapToJsonArray(subMenu).toString());
@@ -100,17 +98,15 @@ public class ContextMenuItem implements Serializable {
 		private Widget target = null;
 		protected Object happeningId = null;
 		protected String happeningType = null;
-		protected String happeningParam = null;
 		
 		protected ContextMenuEntry(Object happeningId, String happeningType) {
 			this.happeningId = happeningId;
 			this.happeningType = happeningType;
 		}
 		
-		protected ContextMenuEntry(Object happeningId, String happeningType, Widget target, String happeningParam) {
+		protected ContextMenuEntry(Object happeningId, String happeningType, Widget target) {
 			this(happeningId, happeningType);
 			this.target = target;
-			this.happeningParam = happeningParam;
 		}
 
 		public Object getHappeningId() {
@@ -121,24 +117,20 @@ public class ContextMenuItem implements Serializable {
 			return happeningType;
 		}
 
-		public String getHappeningParam() {
-			return happeningParam;
-		}
-
 		public Widget getTarget() {
 			return target;
 		}
 	}
 	
 	public static class ContextMenuActionEntry extends ContextMenuEntry {
-		public ContextMenuActionEntry(Object actionId, Widget target, String actionParam) {
-			super(actionId, ACTION, target, actionParam);
+		public ContextMenuActionEntry(Object actionId, Widget target) {
+			super(actionId, ACTION, target);
 		}
 	}
 
 	public static class ContextMenuEventEntry extends ContextMenuEntry {
-		public ContextMenuEventEntry(Object eventId, Widget target, String eventParam) {
-			super(eventId, EVENT, target, eventParam);
+		public ContextMenuEventEntry(Object eventId, Widget target) {
+			super(eventId, EVENT, target);
 		}
 	}
 }

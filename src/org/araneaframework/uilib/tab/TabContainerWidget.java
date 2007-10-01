@@ -29,10 +29,12 @@ import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Scope;
+import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.WidgetFactory;
 
 /**
  * This class represents a UI widget that contains tabs ({@link TabWidget})s.
@@ -78,7 +80,6 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	/* ********************************************
 	 * TabContainerContext IMPL
 	 **********************************************/
-	
 	public TabContainerWidget() {
 		tabs = new LinkedMap();
 	}
@@ -87,18 +88,50 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		tabs = new TreeMap(comparator);
 	}
 
-	public TabWidget getSelectedTab() {
-		return selected;
+	public void addTab(String id, String labelId, Widget contentWidget) {
+		addWidget(id, new TabWidget(labelId, contentWidget));
 	}
 
-	public TabWidget selectTab(String id) {
+	public void addTab(String id, String labelId, WidgetFactory contentWidgetFactory) {
+		addWidget(id, new TabWidget(labelId, contentWidgetFactory));
+	}
+
+	public void addTab(String id, Widget labelWidget, Widget contentWidget) {
+		addWidget(id, new TabWidget(labelWidget, contentWidget));
+	}
+
+	public void addTab(String id, Widget labelWidget, WidgetFactory contentWidgetFactory) {
+		addWidget(id, new TabWidget(labelWidget, contentWidgetFactory));
+	}
+
+	public boolean disableTab(String id) {
+		disableWidget(id);
+		return tabs.containsKey(id);
+	}
+
+	public boolean enableTab(String id) {
+		enableWidget(id);
+		return tabs.containsKey(id);
+	}
+
+	public boolean removeTab(String id) {
+		boolean result = tabs.containsKey(id);
+		removeWidget(id);
+		return result;
+	}
+
+	public boolean selectTab(String id) {
+		if (selected != null) {
+			selected.deleselectTab();
+		}
+		
 		if (!StringUtils.isEmpty(id)) {
 			selected = (TabWidget) tabs.get(id);
 			selected.enableTab();
 		} else
 			selected = null;
 
-		return selected;
+		return selected != null;
 	}
 
 	public boolean isTabSelected(String id) {
@@ -108,7 +141,11 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
 		return id.equals(selected.getScope().getId());
 	}
-	
+
+	public Widget getSelectedTab() {
+		return selected;
+	}
+
 	public Map getTabs() {
 		return Collections.unmodifiableMap(tabs);
 	}

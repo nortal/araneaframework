@@ -6,6 +6,7 @@ import org.araneaframework.Scope;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.WidgetFactory;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
@@ -23,10 +24,16 @@ public class TabWidget extends BaseApplicationWidget {
 	protected String labelId;
 	protected Widget labelWidget;
 	protected Widget tabContentWidget;
+	protected WidgetFactory tabContentWidgetFactory;
 	protected boolean disabled = false;
-
+	
+	/* CONSTRUCTORS of all kinds */
 	protected TabWidget(Widget tabContentWidget) {
 		this.tabContentWidget = tabContentWidget;
+	}
+	
+	protected TabWidget(WidgetFactory tabContentWidgetFactory) {
+		this.tabContentWidgetFactory = tabContentWidgetFactory;
 	}
 	
 	public TabWidget(String labelId, Widget tabContentWidget) {
@@ -39,17 +46,26 @@ public class TabWidget extends BaseApplicationWidget {
 		this.labelWidget = labelWidget;
 	}
 	
-	/* LIFECYCLE methods */
-	protected void init() throws Exception {
-
+	public TabWidget (String labelId, WidgetFactory tabContentWidgetFactory) {
+		this(tabContentWidgetFactory);
+		this.labelId = labelId;
+	}
+	
+	public TabWidget (Widget labelWidget, WidgetFactory tabContentWidgetFactory) {
+		this(tabContentWidgetFactory);
+		this.labelWidget = labelWidget;
 	}
 
+	/* enabling/disabling/deselecting */
 	public void enableTab() {
 		disabled = false;
 		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY)) {
 			enableWidget(CONTENT_WIDGET_KEY);
 		} else if (!_getChildren().containsKey(CONTENT_WIDGET_KEY)) {
-			addWidget(CONTENT_WIDGET_KEY, tabContentWidget);
+            if (isStateless())
+            	addWidget(CONTENT_WIDGET_KEY, tabContentWidgetFactory.buildWidget(getEnvironment()));
+            else
+            	addWidget(CONTENT_WIDGET_KEY, tabContentWidget);
 		}
 	}
 
@@ -58,10 +74,18 @@ public class TabWidget extends BaseApplicationWidget {
 		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY))
 			disableWidget(CONTENT_WIDGET_KEY);
 	}
+	
+	public void deleselectTab() {
+		if (isStateless()) {
+			removeWidget(CONTENT_WIDGET_KEY);
+		}
+	}
 
-	/* PUBLIC GETTERS*/
+	/* PUBLIC GETTERS */
 	public String getLabel() {
-		return EnvironmentUtil.requireLocalizationContext(getEnvironment()).localize(labelId);
+        if (labelId != null)
+		  return EnvironmentUtil.requireLocalizationContext(getEnvironment()).localize(labelId);
+        return null;
 	}
 
 	public Widget getLabelWidget() {
@@ -80,6 +104,10 @@ public class TabWidget extends BaseApplicationWidget {
 		if (!isInitialized())
 			return false;
 		return getTabContainerContext().isTabSelected(getScope().getId().toString());
+	}
+
+	public boolean isStateless() {
+		return tabContentWidgetFactory != null;
 	}
 
 	/* ****************** COMPONENT LIFECYCLE METHODS ************************** */

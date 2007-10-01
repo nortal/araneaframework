@@ -142,7 +142,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     out.write("<select id=\"" + name + ".select2\" name=\""
         + name
         + ".select2\" onChange=\"" +
-        fillXJSCallConstructor("fillTimeText", name)
+        fillXJSCallConstructor("Aranea.UI.fillTimeText", name)
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
     if (disabled)
@@ -168,7 +168,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     out.write("<select id=\"" + name + ".select1\" name=\""
         + name
         + ".select1\" onChange=\"" + 
-        fillXJSCallConstructor("fillTimeText", name)
+        fillXJSCallConstructor("Aranea.UI.fillTimeText", name)
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
     if (disabled)
       out.write(" disabled=\"true\"");
@@ -209,7 +209,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
-        JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
+        JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getTimeInputOnChangePrecondition(name+".time"));
     	out.write(" ");
@@ -218,7 +218,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     StringBuffer onBlur = new StringBuffer();
     if (showTimeSelect) 
-      onBlur.append(fillXJSCallConstructor("fillTimeSelect", name) + ";");
+      onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name) + ";");
     if (!disabled && events && viewModel.isOnChangeEventRegistered())
       onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onBlur", onBlur.toString());

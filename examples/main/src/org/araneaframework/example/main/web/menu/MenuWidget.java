@@ -76,6 +76,7 @@ import org.araneaframework.uilib.support.FlowCreator;
  */
 public class MenuWidget extends TemplateMenuWidget  {
   private static final long serialVersionUID = 1L;
+private MenuItem araneaMenu;
 
   public MenuWidget(Widget topWidget) throws Exception {
 	super(topWidget);
@@ -97,11 +98,14 @@ public class MenuWidget extends TemplateMenuWidget  {
     reset(null);
     menu.clearSelection();
   }  
+  
+  public MenuItem getAraneaMenu() {
+	  return araneaMenu;
+  }
 	
 	protected MenuItem buildMenu() throws Exception {
 		MenuItem result = new MenuItem();
-		MenuItem araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
-		
+		araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
 		// Aranea 1.1 features/demos
 		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
