@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2007.09.29    | Aranea 1.1-M4
+2007.10.01    | Aranea 1.1-M4
 
 Features and Improvements
     setInputFilter() method has been added to various Controls                | See #486

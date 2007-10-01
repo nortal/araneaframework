@@ -80,7 +80,6 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	/* ********************************************
 	 * TabContainerContext IMPL
 	 **********************************************/
-	
 	public TabContainerWidget() {
 		tabs = new LinkedMap();
 	}
@@ -105,23 +104,23 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		addWidget(id, new TabWidget(labelWidget, contentWidgetFactory));
 	}
 
-	public void disableTab(String id) {
+	public boolean disableTab(String id) {
 		disableWidget(id);
+		return tabs.containsKey(id);
 	}
 
-	public void enableTab(String id) {
+	public boolean enableTab(String id) {
 		enableWidget(id);
+		return tabs.containsKey(id);
 	}
 
-	public void removeTab(String id) {
+	public boolean removeTab(String id) {
+		boolean result = tabs.containsKey(id);
 		removeWidget(id);
+		return result;
 	}
 
-	public Widget getSelectedTab() {
-		return selected;
-	}
-
-	public Widget selectTab(String id) {
+	public boolean selectTab(String id) {
 		if (selected != null) {
 			selected.deleselectTab();
 		}
@@ -132,7 +131,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		} else
 			selected = null;
 
-		return selected;
+		return selected != null;
 	}
 
 	public boolean isTabSelected(String id) {

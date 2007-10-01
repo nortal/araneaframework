@@ -1,0 +1,38 @@
+<sect1 id="tabs">
+	<title>Tabs</title>
+     Tabs provide the tabbed interface for switching between different content. 
+
+    <sect2 id="TabContainerWidget">
+		<title>TabContainerWidget</title>
+		
+		<para>
+		<literal>TabContainerWidget</literal> manages widgets that are to be displayed and manipulated in separate tabs.
+		It provides basic operations like adding, removing, disabling, enabling and switching between tabs. 
+		Its main operation mode is stateful, where switching between tabs preserves state in inactive tabs.
+		</para>
+		
+		<para>
+			Main methods of <literal>TabContainerContext</literal>
+		</para>
+		
+<programlisting role="java">public interface TabContainerContext extends Serializable {
+    void addTab(String id, String labelId, Widget contentWidget);
+    void addTab(String id, Widget labelWidget, Widget contentWidget);
+    void addTab(String id, String labelId, WidgetFactory contentWidgetFactory);
+    void addTab(String id, Widget labelWidget, WidgetFactory contentWidgetFactory);
+
+    void removeTab(String id);
+
+    void disableTab(String id);
+    void enableTab(String id);
+
+	Widget selectTab(String id);
+	Widget getSelectedTab();
+	
+	boolean isTabSelected(String id);
+	
+	Map getTabs();
+}</programlisting>
+		
+    </sect2>
+</sect1>
