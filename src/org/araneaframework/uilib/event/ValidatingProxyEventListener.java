@@ -8,6 +8,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.EventListener;
+import org.araneaframework.core.util.ProxiedHandlerUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
@@ -51,31 +52,35 @@ public final class ValidatingProxyEventListener implements EventListener {
     Method eventHandler;
     // lets try to find a handle method with a bean argument
     try {
-      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { modelType });
+      eventHandler = ProxiedHandlerUtil.getEventHandler((String) eventId, eventTarget, new Class[] { modelType });
 
-      log.debug("Calling method '" + eventHandlerName + "(" + modelType.getName() + ")' of class '"
-          + eventTarget.getClass().getName() + "'.");
+      if (log.isDebugEnabled()) {
+    	  log.debug("Calling method '" + eventHandlerName + "(" + modelType.getName() + ")' of class '"
+    			  + eventTarget.getClass().getName() + "'.");
+      }
       eventHandler.invoke(eventTarget, new Object[] { bean });
 
       return;
-    }
-    catch (NoSuchMethodException e) {/* OK */
+    } catch (NoSuchMethodException e) {/* OK */
     }
 
     // lets try to find a method with a bean and a String type argument
     try {
-      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { modelType, String.class });
+      eventHandler = ProxiedHandlerUtil.getEventHandler((String) eventId, eventTarget, new Class[] { modelType, String.class });
 
-      log.debug("Calling method '" + eventHandlerName + "(" + modelType.getName() + ", String)' of class '"
+      if (log.isDebugEnabled()) {
+        log.debug("Calling method '" + eventHandlerName + "(" + modelType.getName() + ", String)' of class '"
           + eventTarget.getClass().getName() + "'.");
+      }
       eventHandler.invoke(eventTarget, new Object[] { bean, eventParameter });
 
       return;
-    }
-    catch (NoSuchMethodException e) {/* OK */
+    } catch (NoSuchMethodException e) {/* OK */
     }
 
-    log.warn("Widget '" + eventTarget.getScope() +
-        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
+    if (log.isWarnEnabled()) {
+      log.warn("Widget '" + eventTarget.getScope() +
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget));
+    }
   }
 }

@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.ProxiedHandlerUtil;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
@@ -36,24 +37,24 @@ public class ProxyOnChangeEventListener implements OnChangeEventListener {
   }
   
   public void onChange() throws Exception {
-    String eventHandlerName = "handleEvent" + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
-    
     Method eventHandler;
     // lets try to find a handle method with an empty argument
     try {
-      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] {});
+      eventHandler = ProxiedHandlerUtil.getEventHandler(eventId, eventTarget);
       eventHandler.invoke(eventTarget, new Object[] {});
       return;
     } catch (NoSuchMethodException e) {/*OK*/}
     
     // lets try to find a method with a String type argument
     try {
-      eventHandler = eventTarget.getClass().getMethod(eventHandlerName, new Class[] { String.class });
+      eventHandler = ProxiedHandlerUtil.getEventHandler(eventId, eventTarget, new Class[] { String.class });
       eventHandler.invoke(eventTarget, new Object[] { null });
       return;
     } catch (NoSuchMethodException e) {/*OK*/}
-    
-    log.warn("Widget '" + eventTarget.getScope() +
-        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget)); 
+
+    if (log.isWarnEnabled()) {
+    	log.warn("Widget '" + eventTarget.getScope() +
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!" + Assert.thisToString(eventTarget));
+    }
   }
 }
