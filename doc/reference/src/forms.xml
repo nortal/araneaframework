@@ -854,9 +854,8 @@ private void handleEventSave() {
       <literal>FormElement</literal> <literal>Control</literal> value type to
       <literal>FormElement</literal> <literal>Data</literal> type.</para>
     </sect2>
-  </sect1>
-
-	<!-- the validation -->
+    
+    	<!-- the validation -->
 	<sect2 id="formvalidation">
 		<title>Form validation</title>
 		
@@ -873,6 +872,7 @@ private void handleEventSave() {
 			to another. Background validation takes place on server-side and is implicit.
 		</para>
 	</sect2>
+  </sect1>
 
   <sect1>
     <title>Forms JSP Tags</title>
