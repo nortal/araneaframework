@@ -25,6 +25,7 @@ import org.araneaframework.uilib.form.control.TimeControl;
  */
 public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   protected boolean showTimeSelect = true;
+  protected boolean surroundingTable = true; 
 
   {
     baseStyleClass = "aranea-time";
@@ -38,9 +39,8 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
 
-    // Write
-    out
-        .write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
+    if (surroundingTable)
+    	out.write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
     this.writeTimeInput(out, name, name, viewModel.getSimpleValue(),
         localizedLabel, timeInputSize, viewModel.isDisabled(),
         accessKey);
@@ -71,7 +71,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
     }
 
-    out.write("</td></tr></table>\n");
+    if (surroundingTable) out.write("</td></tr></table>\n");
 
     super.doEndTag(out);
     return EVAL_PAGE;
@@ -216,5 +216,17 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    */
   public void setShowTimeSelect(String showTimeSelect) throws JspException {
     this.showTimeSelect = ((Boolean) evaluate("showTimeSelect", showTimeSelect, Boolean.class)).booleanValue();
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Boolean, specifying whether HTML &lt;table&;gt;'s should be rendered to around this time input. Default is true."
+   * 
+   * @since 1.1
+   */
+  public void setSurroundingTable(String surroundingTable) throws JspException {
+    this.surroundingTable = ((Boolean) evaluate("surroundingTable", surroundingTable, Boolean.class)).booleanValue();
   }
 }
