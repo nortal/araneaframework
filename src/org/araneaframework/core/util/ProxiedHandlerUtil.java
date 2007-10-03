@@ -53,7 +53,12 @@ public abstract class ProxiedHandlerUtil {
 
 	private static Method getHandler(String handlerPrefix, String eventId, Object eventTarget, Class [] params) throws SecurityException, NoSuchMethodException {
 		String eventHandlerName = handlerPrefix + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
-		Method result = eventTarget.getClass().getDeclaredMethod(eventHandlerName, params);
+		Method result = null;
+		try {
+			result = eventTarget.getClass().getDeclaredMethod(eventHandlerName, params);
+		} catch (NoSuchMethodException e) {
+			result = eventTarget.getClass().getMethod(eventHandlerName, params);
+		}
 		if (!result.isAccessible()) result.setAccessible(true);
 		return result;
 	}
