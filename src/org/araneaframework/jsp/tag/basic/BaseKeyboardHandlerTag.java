@@ -113,7 +113,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	if (StringUtils.isBlank(scope)) scope = "";
 	
 	JspUtil.writeStartTag(out, "script");
-	out.write("uiRegisterKeypressHandler('");
+	out.write("Aranea.KB.registerKeypressHandler('");
 	out.write(scope);
 	out.write("', ");
 	out.write(keyCode);

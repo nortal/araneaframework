@@ -15,7 +15,7 @@
 **/
 
 /**
- * Aranea event handlers.
+ * Aranea keyboard event handlers.
  * 
  * The functions presented here are invoked from Aranea JSP tags.
  * Therefore you CAN'T be too liberal with them unless you know what you are doing.
@@ -35,7 +35,96 @@
  *   - helper structure for holding registered handlers (UiHandlerRegistry)
  */
  
+// Parts of code lifted from http://www.openjs.com/scripts/events/keyboard_shortcuts/
+// shortcut library (version 1.00.A by Binny V A) distributed under BSD license.
+ 
  // ------------------------------- Keyboard Events ---------------------------------- //
+ 
+ 
+/** @since 1.1 */
+Aranea.KB = {};
+
+//NOTE by TP: this actually is only correct for one keyboard layout only...
+/** @since 1.1 */
+Aranea.KB.special_keys = {
+	'esc':27,
+	'escape':27,
+	'tab':9,
+	'space':32,
+	'return':13,
+	'enter':13,
+	'backspace':8,
+
+	'scrolllock':145,
+	'scroll_lock':145,
+	'scroll':145,
+	'capslock':20,
+	'caps_lock':20,
+	'caps':20,
+	'numlock':144,
+	'num_lock':144,
+	'num':144,
+	
+	'pause':19,
+	'break':19,
+	
+	'insert':45,
+	'home':36,
+	'delete':46,
+	'end':35,
+	
+	'pageup':33,
+	'page_up':33,
+	'pu':33,
+
+	'pagedown':34,
+	'page_down':34,
+	'pd':34,
+
+	'left':37,
+	'up':38,
+	'right':39,
+	'down':40,
+
+	'f1':112,
+	'f2':113,
+	'f3':114,
+	'f4':115,
+	'f5':116,
+	'f6':117,
+	'f7':118,
+	'f8':119,
+	'f9':120,
+	'f10':121,
+	'f11':122,
+	'f12':123
+};
+
+
+//Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
+//NOTE by TP: this actually is only correct for one keyboard layout only...
+/** @since 1.1 */
+Aranea.KB.shift_nums = {
+	"`":"~",
+	"1":"!",
+	"2":"@",
+	"3":"#",
+	"4":"$",
+	"5":"%",
+	"6":"^",
+	"7":"&",
+	"8":"*",
+	"9":"(",
+	"0":")",
+	"-":"_",
+	"=":"+",
+	";":":",
+	"'":"\"",
+	",":"<",
+	".":">",
+	"/":"?",
+	"\\":"|"
+}
  
  /**
   * This function will receive all keypress events from all form elements
@@ -44,8 +133,8 @@
   *     event  - the event object
   *     formElementId - full (unique) id of the element that received the event.
   */
- function uiHandleKeypress(event, formElementId) {
- 	 // Check the keyCode
+/** @since 1.1 */
+Aranea.KB.handleKeypress = function (event, formElementId) {
  	 if (!event) return;
 
  	 var keyCode;
@@ -70,7 +159,7 @@
 
  	 return result;
 }
-
+var uiHandleKeypress = Aranea.KB.handleKeypress;
 
  /**
   * Registers a handler for the keypress event.
@@ -82,36 +171,31 @@
   *     handler       - function(event, formElementId) to receive the notification.
   *                     function's return value determines whether it allows other handlers to be invoked.
   *                     when it is false, the called handler is the last one to be invoked.
-  */ 
- function uiRegisterKeypressHandler(elementPrefix, keyCode, handler) {
- 
-    // if elementPrefix is '', we register a global keypress handler.
-    if (elementPrefix == '') {
-      if (document.addEventListener) { // W3C/Mozilla
-      	 document.addEventListener('keydown', function(event) { if (event.which == keyCode) handler(event, ''); }, false);
-      }
-      else { // IE
-         document.attachEvent('onkeydown', function() { if (window.event.keyCode == keyCode) handler(window.event, ''); });
-      }
+  */
+/** @since 1.1 */
+Aranea.KB.registerKeypressHandler = function(elementPrefix, keyCode, handler) {
+   // if elementPrefix is '', we register a global keypress handler.
+   if (elementPrefix == '') {
+      Event.observe(document, "keydown", function(event) {if (event.which == keyCode) handler(event, '');});
     }
     else {
       // else we just store it in the registry
-	 		uiKeypressHandlerRegistry.addHandler(elementPrefix, keyCode, handler);
+      uiKeypressHandlerRegistry.addHandler(elementPrefix, keyCode, handler);
     }
  }
-
+var uiRegisterKeypressHandler = Aranea.KB.registerKeypressHandler;
 
  /** 
   * A map: keyCode -> list of (elementPrefix, handler) to store handlers and invoke them.
   */
- function UiHandlerRegistry() {
+Aranea.KB.UiHandlerRegistry = function() {
    this.handlers = new Object(); // This maps from keyCode to array of pairs (elementPrefix, handler)
  }
  
  /** 
   * Adds a new handler to the registry
   */
- UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCode, handler) {
+Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCode, handler) {
    var newHandler = {
         elementPrefix: elementPrefix,
         handler: handler
@@ -132,7 +216,7 @@
   * Invokes all handlers registered for given keycode and with matching elementprefix.
   * if a handler returns false, the remaining handlers are not invoked
   */
- UiHandlerRegistry.prototype.invokeHandlers = function(element, keyCode, event) {
+ Aranea.KB.UiHandlerRegistry.prototype.invokeHandlers = function(element, keyCode, event) {
    var handlers = this.handlers[keyCode];
    if (handlers){
     var length = handlers.length;
@@ -147,17 +231,17 @@
    }
  }
  
- /**
-  * This variable will hold the handlers for the Keypress event.
-  */
- var uiKeypressHandlerRegistry = new UiHandlerRegistry();
+/**
+ * This variable will hold the handlers for the Keypress event.
+ */
+var uiKeypressHandlerRegistry = new Aranea.KB.UiHandlerRegistry();
 
 var aranea_keyboardinputfilter_last_keydown_keycode = null;
 /** 
  * Returns the function that stops received keyboard event 
  * propagation if the input was not allowed by filter. 
  * @since 1.0.11 */
-function getKeyboardInputFilterFunction(filter) {
+Aranea.KB.getKeyboardInputFilterFunction = function(filter) {
   var f = function(kev) {
   	araneaPage().getLogger().debug(kev.type + " detected!" + "event.charCode="+kev.charCode+", event.keyCode="+kev.keyCode+".");
   	araneaPage().getLogger().debug("ctrlKey="+kev.ctrlKey + " altKey="+kev.altKey + " kev.metaKey=" + kev.metaKey);
@@ -200,6 +284,94 @@ function getKeyboardInputFilterFunction(filter) {
   }
 
   return f;
-}
+};
+
+var getKeyboardInputFilterFunction = Aranea.KB.getKeyboardInputFilterFunction;
 
 window['aranea-keyboard.js'] = true;
+
+//////////////////////////
+
+function shortcut(shortcut,callback,opt) {
+	//Provide a set of default options
+	var default_options = {
+		'type':'keydown',
+		'propagate':false,
+		'target':document
+	}
+	if(!opt) opt = default_options;
+	else {
+		for(var dfo in default_options) {
+			if(typeof opt[dfo] == 'undefined') opt[dfo] = default_options[dfo];
+		}
+	}
+
+	var ele = opt.target
+	if(typeof opt.target == 'string') ele = document.getElementById(opt.target);
+	var ths = this;
+
+	//The function to be called at keypress
+	var func = function(e) {
+		e = e || window.event;
+
+		//Find Which key is pressed
+		if (e.keyCode) code = e.keyCode;
+		else if (e.which) code = e.which;
+		var character = String.fromCharCode(code).toLowerCase();
+
+		var keys = shortcut.toLowerCase().split("+");
+		//Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
+		var kp = 0;
+		
+
+		//Special Keys - and their codes
+
+
+		for(var i=0; k=keys[i],i<keys.length; i++) {
+			//Modifiers
+			if(k == 'ctrl' || k == 'control') {
+				if(e.ctrlKey) kp++;
+
+			} else if(k ==  'shift') {
+				if(e.shiftKey) kp++;
+
+			} else if(k == 'alt') {
+					if(e.altKey) kp++;
+
+			} else if(k.length > 1) { //If it is a special key
+				if(Aranea.KB.special_keys[k] == code) kp++;
+
+			} else { //The special keys did not match
+				if(character == k) kp++;
+				else {
+					if(Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
+						character = Aranea.KB.shift_nums[character]; 
+						if(character == k) kp++;
+					}
+				}
+			}
+		}
+
+		if(kp == keys.length) {
+			callback(e);
+
+			if(!opt['propagate']) { //Stop the event
+				//e.cancelBubble is supported by IE - this will kill the bubbling process.
+				e.cancelBubble = true;
+				e.returnValue = false;
+
+				//e.stopPropagation works only in Firefox.
+				if (e.stopPropagation) {
+					e.stopPropagation();
+					e.preventDefault();
+				}
+				return false;
+			}
+		}
+	}
+
+	//Attach the function with the event	
+	if(ele.addEventListener) ele.addEventListener(opt['type'], func, false);
+	else if(ele.attachEvent) ele.attachEvent('on'+opt['type'], func);
+	else ele['on'+opt['type']] = func;
+}

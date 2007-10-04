@@ -215,7 +215,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * and in other cases taken as empty string.
 	 */
 	public static final String createHandlerToInvokeJavascriptEvent(String fullElementId, String event) {
-		return "function() { " + "return document.getElementById('" + fullElementId + "')." + event + "(); }";
+		return "function() { " + "return $('" + fullElementId + "')." + event + "(); }";
 	}
 
 	/**
