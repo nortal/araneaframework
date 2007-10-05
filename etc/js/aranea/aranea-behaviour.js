@@ -42,8 +42,8 @@ function setFormElementValidation(el){
   if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate')))
     return;
 
-    if (($(el).hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true'))
-      return;
+  if (($(el).hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true'))
+    return;
 
   var elId = el.getAttribute("id");
   var actionValidate = function(event) {
