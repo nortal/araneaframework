@@ -361,8 +361,8 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 				else {
 					if(Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
 						character = Aranea.KB.shift_nums[character]; 
-						if(character == k) { kp++;
-							araneaPage().debug("Detected shifted key");
+						if(character == k) { 
+							kp++;
 						}
 					}
 				}
