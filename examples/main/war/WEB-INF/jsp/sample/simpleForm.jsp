@@ -116,6 +116,8 @@
 				<ui:keyboardHandler keyCombo="ctrl+f12" handler="function() { alert('yay for all! global handler works');}"/>
 				<ui:keyboardHandler keyCombo="alt+j" handler="function() { alert('yay for all! global handler works');}"/>
 				<ui:keyboardHandler scope="${formFullId}.number" keyCombo="alt+k" handler="function() { alert('xxx : form handler works!'); }"/>
+				
+				<ui:keyboardHandler scope="${formFullId}" keyCombo="ctrl+p" handler="function() { alert('== another : form handler works!'); }"/>
 
 				<!-- pure design tag -->
 				<tui:componentActions>
