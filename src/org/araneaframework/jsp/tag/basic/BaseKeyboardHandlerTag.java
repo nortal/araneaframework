@@ -43,6 +43,8 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
   protected String intKey;
   protected String key;
   
+  protected String keyCombo;
+  
 	//
 	// Attributes
 	//
@@ -56,6 +58,17 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	 */
 	public void setKeyCode(String keyCode) throws JspException {
 		this.keyCode = (String) evaluateNotNull("keyCode", keyCode, String.class);
+	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Keycode to which the event must be triggered. 13 means enter.
+          Either keyCode or key must be specified, but not both." 
+	 */
+	public void setKeyCombo(String keyCombo) throws JspException {
+		this.keyCombo = (String) evaluateNotNull("keyCombo", keyCombo, String.class);
 	}
 	
 	/**
@@ -92,10 +105,10 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 		intKey = (key == null && keyCode == null) ? defaultKey : key;
 		intKeyCode = (key == null && keyCode == null) ? defaultKeyCode : keyCode;
 		
-		if (!(intKeyCode == null ^ intKey == null)) 
-			throw new JspException("Either key or keyCode must be specified for a keyboard handler tag.");
+		if (!(intKeyCode == null ^ intKey == null) && !(intKey == null ^ keyCombo == null)) 
+			throw new JspException("Either key or keyCode or keyCombo must be specified for a keyboard handler tag.");
 		
-		if (intKeyCode == null) {
+		if (intKeyCode == null && keyCombo == null) {
 			int iKeyCode = keyToKeyCode(intKey);
 			if (iKeyCode == 0) throw new JspException("Invalid key alias specified (" + key + ")");
 			intKeyCode = String.valueOf(iKeyCode);
@@ -123,6 +136,21 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	JspUtil.writeEndTag_SS(out, "script");
   }
   
+  public static final void writeRegisterKeycomboHandlerScript(Writer out, String scope, String keyCombo, String handler) throws JspException, IOException {
+	  if (StringUtils.isBlank(handler)) throw new JspException("handler may not be empty in the KeyboardHandlerHtmlTag");
+	  if (StringUtils.isBlank(scope)) scope = "";
+
+	  JspUtil.writeStartTag(out, "script");
+	  out.write("Aranea.KB.registerKeyComboHandler('");
+	  out.write(scope);
+	  out.write("', new String('");
+	  out.write(keyCombo);
+	  out.write("'), ");
+	  JspUtil.writeEscaped(out, handler);
+	  out.write(");\n");
+	  JspUtil.writeEndTag_SS(out, "script");
+  }
+
   /**
    * Translates a "key alias" to its key-code.
    * Under key-code we mean the keyboard code reported by the javascript

@@ -112,6 +112,8 @@
 					</ui:row>
 
 				</tui:componentForm>
+				
+				<ui:keyboardHandler keyCombo="ctrl+f1" handler="function() { alert('yay for all!');}"/>
 
 				<!-- pure design tag -->
 				<tui:componentActions>

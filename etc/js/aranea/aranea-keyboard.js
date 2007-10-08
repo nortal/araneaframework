@@ -174,19 +174,18 @@ var uiHandleKeypress = Aranea.KB.handleKeypress;
   */
 /** @since 1.1 */
 Aranea.KB.registerKeypressHandler = function(elementPrefix, keyCode, handler) {
-  if (typeof keyCode == 'number') { // Aranea 1.0 way
-    // if elementPrefix is '', we register a global keypress handler.
-    if (elementPrefix == '') {
+  // if elementPrefix is '', we register a global keypress handler.
+  if (elementPrefix == '') {
+    if (typeof keyCode == 'number')
       Event.observe(document, "keydown", function(event) {if (event.which == keyCode) handler(event, '');});
-    }
-    else {
-      // else we just store it in the registry
-      uiKeypressHandlerRegistry.addHandler(elementPrefix, keyCode, handler);
-    }
-  } else { // Aranea 1.1 way
-  	 var x = new Aranea.KB.NewHandler(shortcut, callback);
+    else
+      Event.observe(document, "keydown", function(event) { handler(event, '');});
   }
- }
+  else {
+    // else we just store it in the registry
+    uiKeypressHandlerRegistry.addHandler(elementPrefix, keyCode, handler);
+  }
+};
 var uiRegisterKeypressHandler = Aranea.KB.registerKeypressHandler;
 
  /** 
@@ -214,7 +213,7 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
       // this is the first handler in the list
    	  this.handlers[keyCode] = new Array(newHandler);
    }
- }
+ };
  
  /**
   * Invokes all handlers registered for given keycode and with matching elementprefix.
@@ -233,7 +232,7 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
 	     }
 	  }
    }
- }
+ };
  
 /**
  * This variable will hold the handlers for the Keypress event.
@@ -292,89 +291,64 @@ Aranea.KB.getKeyboardInputFilterFunction = function(filter) {
 
 var getKeyboardInputFilterFunction = Aranea.KB.getKeyboardInputFilterFunction;
 
-window['aranea-keyboard.js'] = true;
-
-//////////////////////////
-
-function shortcut(shortcut,callback,opt) {
-	//Provide a set of default options
-	var default_options = {
-		'type':'keydown',
-		'propagate':false,
-		'target':document
-	}
-	if(!opt) opt = default_options;
-	else {
-		for(var dfo in default_options) {
-			if(typeof opt[dfo] == 'undefined') opt[dfo] = default_options[dfo];
-		}
-	}
-
-	var ele = opt.target;
+Aranea.KB.NewHandler = function(shortcut, callback) {
+    var f2 = function(event, element) {//
+	  	var e = event;
 	
-	if(typeof opt.target == 'string') ele = document.getElementById(opt.target);
-	var ths = this;
-
-    var func = new Aranea.KB.NewHandler(shortcut, callback);
-	//Attach the function with the event	
-	if(ele.addEventListener) ele.addEventListener(opt['type'], func, false);
-	else if(ele.attachEvent) ele.attachEvent('on'+opt['type'], func);
-	else ele['on'+opt['type']] = func;
-}
-
-Aranea.KB.NewHandler = Class.create();
-Aranea.KB.NewHandler.prototype = {
-  initialize: function(shortcut, callback) {
-    this.shortcut = shortcut;
-    this.callback = callback;
-  },
-  
-  invocation: function(event) {
-  	var e = event;
-
-	//Find Which key is pressed
-	if (e.keyCode) code = e.keyCode;
-	else if (e.which) code = e.which;
-	var character = String.fromCharCode(code).toLowerCase();
-
-	var keys = shortcut.toLowerCase().split("+");
-	//Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
-	var kp = 0;
-
-	//Special Keys - and their codes
-
-	for(var i=0; k=keys[i],i<keys.length; i++) {
-		//Modifiers
-		if(k == 'ctrl' || k == 'control') {
-			if(e.ctrlKey) kp++;
-
-		} else if(k ==  'shift') {
-			if(e.shiftKey) kp++;
-
-		} else if(k == 'alt') {
-				if(e.altKey) kp++;
-
-		} else if(k.length > 1) { //If it is a special key
-			if(Aranea.KB.special_keys[k] == code) kp++;
-
-		} else { //The special keys did not match
-			if(character == k) kp++;
-			else {
-				if(Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
-					character = Aranea.KB.shift_nums[character]; 
-					if(character == k) kp++;
+		//Find Which key is pressed
+		if (e.keyCode) code = e.keyCode;
+		else if (e.which) code = e.which;
+		var character = String.fromCharCode(code).toLowerCase();
+	
+		var keys = shortcut.toLowerCase().split("+");
+		//Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
+		var kp = 0;
+	
+		//Special Keys - and their codes
+	
+		for(var i=0; k=keys[i],i<keys.length; i++) {
+			//Modifiers
+			if(k == 'ctrl' || k == 'control') {
+				if(e.ctrlKey) kp++;
+	
+			} else if(k ==  'shift') {
+				if(e.shiftKey) kp++;
+	
+			} else if(k == 'alt') {
+					if(e.altKey) kp++;
+	
+			} else if(k.length > 1) { //If it is a special key
+				if(Aranea.KB.special_keys[k] == code) kp++;
+	
+			} else { //The special keys did not match
+				if(character == k) kp++;
+				else {
+					if(Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
+						character = Aranea.KB.shift_nums[character]; 
+						if(character == k) kp++;
+					}
 				}
 			}
 		}
-	}
 
-	if(kp == keys.length) {
-		callback(e);
+		if(kp == keys.length) {
+			callback(e);
+	
+			//if(!opt['propagate']) { //Stop the event
+				Event.stop(e);
+				return false;
+			//}
+		}
+      
+    }; //
+  
+  return f2;
+};
 
-		//if(!opt['propagate']) { //Stop the event
-			Event.stop(e);
-			return false;
-		//}
-	}
-  }
-}
+Aranea.KB.registerKeyComboHandler = function(elementPrefix, keyCombo, handler) {
+  var extraHandler = new Aranea.KB.NewHandler(keyCombo, handler);
+  araneaPage().debug("Combo " + keyCombo + " this = "  + Object.inspect(this));
+  Aranea.KB.registerKeypressHandler(elementPrefix, keyCombo, extraHandler);
+};
+
+window['aranea-keyboard.js'] = true;

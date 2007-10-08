@@ -26,7 +26,7 @@ function setFormElementContext(el) {
   });
 
   if (span && el.name) {
-    Event.observe(span, 'keydown', function(ev) { return uiHandleKeypress(ev, el.name);});
+    Event.observe(span, 'keydown', function(ev) { return Aranea.KB.handleKeypress(ev, el.name);});
   }
 }
 
