@@ -143,9 +143,9 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	  JspUtil.writeStartTag(out, "script");
 	  out.write("Aranea.KB.registerKeyComboHandler('");
 	  out.write(scope);
-	  out.write("', new String('");
+	  out.write("', '");
 	  out.write(keyCombo);
-	  out.write("'), ");
+	  out.write("', ");
 	  JspUtil.writeEscaped(out, handler);
 	  out.write(");\n");
 	  JspUtil.writeEndTag_SS(out, "script");

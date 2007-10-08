@@ -154,10 +154,11 @@ Aranea.KB.handleKeypress = function (event, formElementId) {
  	 	if (result == false) {
  			event.cancelBubble = true;
  			event.returnValue = false;
+ 			return false;
  	 	}
  	 }
 
- 	 return result;
+ 	 return true;
 }
 var uiHandleKeypress = Aranea.KB.handleKeypress;
 
@@ -179,7 +180,7 @@ Aranea.KB.registerKeypressHandler = function(elementPrefix, keyCode, handler) {
     if (typeof keyCode == 'number')
       Event.observe(document, "keydown", function(event) {if (event.which == keyCode) handler(event, '');});
     else
-      Event.observe(document, "keydown", function(event) { handler(event, '');});
+      Event.observe(document, "keydown", function(event) { handler(event, '');}, true);
   }
   else {
     // else we just store it in the registry
@@ -295,6 +296,8 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
     var f2 = function(event, element) {//
 	  	var e = event;
 	
+		araneaPage().debug("Running keyboard handler for combo '"+shortcut+ "'");
+	
 		//Find Which key is pressed
 		if (e.keyCode) code = e.keyCode;
 		else if (e.which) code = e.which;
@@ -309,23 +312,29 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 		for(var i=0; k=keys[i],i<keys.length; i++) {
 			//Modifiers
 			if(k == 'ctrl' || k == 'control') {
-				if(e.ctrlKey) kp++;
-	
+				if(e.ctrlKey) { kp++;
+				araneaPage().debug("Detected CTRL"); }
 			} else if(k ==  'shift') {
-				if(e.shiftKey) kp++;
-	
+				if(e.shiftKey) { kp++;
+				araneaPage().debug("Detected SHIFT"); }
 			} else if(k == 'alt') {
-					if(e.altKey) kp++;
-	
+				if(e.altKey)  { 
+					kp++ ;
+					araneaPage().debug("Detected SHIFT");
+				}
 			} else if(k.length > 1) { //If it is a special key
-				if(Aranea.KB.special_keys[k] == code) kp++;
+				if(Aranea.KB.special_keys[k] == code) { kp++;
+					araneaPage().debug("Detected special key");
+				}
 	
 			} else { //The special keys did not match
 				if(character == k) kp++;
 				else {
 					if(Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
 						character = Aranea.KB.shift_nums[character]; 
-						if(character == k) kp++;
+						if(character == k) { kp++;
+							araneaPage().debug("Detected shifted key");
+						}
 					}
 				}
 			}
@@ -333,13 +342,15 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 
 		if(kp == keys.length) {
 			callback(e);
+			araneaPage().debug("Ably captured keyboard event and exectued handler.");
 	
 			//if(!opt['propagate']) { //Stop the event
-				Event.stop(e);
-				return false;
+				//Event.stop(e);
+				return true;
 			//}
 		}
-      
+		
+		return true;
     }; //
   
   return f2;
@@ -347,7 +358,7 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 
 Aranea.KB.registerKeyComboHandler = function(elementPrefix, keyCombo, handler) {
   var extraHandler = new Aranea.KB.NewHandler(keyCombo, handler);
-  araneaPage().debug("Combo " + keyCombo + " this = "  + Object.inspect(this));
+  araneaPage().debug("Registered key combo handler for '" + keyCombo + "'");
   Aranea.KB.registerKeypressHandler(elementPrefix, keyCombo, extraHandler);
 };
 
