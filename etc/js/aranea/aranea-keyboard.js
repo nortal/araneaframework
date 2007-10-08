@@ -143,9 +143,9 @@ Aranea.KB.handleKeypress = function (event, formElementId) {
  	 
  	 var result = true;
  	 try {
-	 	 result = uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);	 	 
+	 	 result = uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);
  	 }
- 	 catch (e) { 	
+ 	 catch (e) {
         //Keyboard handler errors may be thrown after AJAX region updates.
  	  	window.status = "Keyboard handler error (non-critical): " + e;
  	 }
@@ -194,6 +194,7 @@ var uiRegisterKeypressHandler = Aranea.KB.registerKeypressHandler;
   */
 Aranea.KB.UiHandlerRegistry = function() {
    this.handlers = new Object(); // This maps from keyCode to array of pairs (elementPrefix, handler)
+   this.elementPrefixes = new Object();
  }
  
  /** 
@@ -205,6 +206,17 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
         handler: handler
    };
    
+   // if not number, register handler by element prefix only, handler itself must determine whether it should be invoked or not
+   if (typeof keyCode != 'number') {
+     if (this.handlers[elementPrefix]) {
+     	var a = this.handlers[elementPrefix];
+     	a[a.length] = newHandler;
+     } else {
+   	  this.handlers[elementPrefix] = new Array(newHandler);
+     }
+     return;
+   }
+
    if (this.handlers[keyCode]) { 
    	  // add handler to list
    	  var a = this.handlers[keyCode];
@@ -220,15 +232,40 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
   * Invokes all handlers registered for given keycode and with matching elementprefix.
   * if a handler returns false, the remaining handlers are not invoked
   */
- Aranea.KB.UiHandlerRegistry.prototype.invokeHandlers = function(element, keyCode, event) {
-   var handlers = this.handlers[keyCode];
-   if (handlers){
-    var length = handlers.length;
-	  for (i = length-1; i >= 0; i--){
-         var handlerFunction = handlers[i].handler;
-         var elementPrefix   = handlers[i].elementPrefix;
-         if (elementPrefix == element.substring(0, elementPrefix.length)) {
-            var result = handlerFunction(event, element);
+ Aranea.KB.UiHandlerRegistry.prototype.invokeHandlers = function(elementName, keyCode, event) {
+   var keyHandlers = this.handlers[keyCode];
+   var elHandlers = null;
+   
+   var elPrefix = elementName;
+   while (1) {
+   	 if (this.handlers[elPrefix]) {
+       elHandlers = this.handlers[elPrefix];
+       break;
+   	 }
+   	 var i = elPrefix.lastIndexOf('.');
+   	 if (i < 0) break;
+
+   	 var elPrefix = elPrefix.substring(0, i);
+   }
+   
+   if (elHandlers) {
+   	 var length = elHandlers.length;
+   	 for (var i = length-1; i >= 0; i--){
+         var handlerFunction = elHandlers[i].handler;
+         var elementPrefix   = elHandlers[i].elementPrefix;
+         handlerFunction(event, elementName);
+	  }
+
+	  return;
+   }
+   
+   if (keyHandlers){
+    var length = keyHandlers.length;
+	  for (var i = length-1; i >= 0; i--){
+         var handlerFunction = keyHandlers[i].handler;
+         var elementPrefix   = keyHandlers[i].elementPrefix;
+         if (elementPrefix == elementName.substring(0, elementPrefix.length)) {
+            var result = handlerFunction(event, elementName);
             return result;
 	     }
 	  }
