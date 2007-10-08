@@ -35,7 +35,7 @@
  *   - helper structure for holding registered handlers (UiHandlerRegistry)
  */
  
-// Parts of code lifted from http://www.openjs.com/scripts/events/keyboard_shortcuts/
+// Parts of code from http://www.openjs.com/scripts/events/keyboard_shortcuts/
 // shortcut library (version 1.00.A by Binny V A) distributed under BSD license.
  
  // ------------------------------- Keyboard Events ---------------------------------- //
@@ -330,10 +330,8 @@ Aranea.KB.getKeyboardInputFilterFunction = function(filter) {
 var getKeyboardInputFilterFunction = Aranea.KB.getKeyboardInputFilterFunction;
 
 Aranea.KB.NewHandler = function(shortcut, callback) {
-    var f2 = function(event, element) {//
+    var f2 = function(event, element) {
 	  	var e = event;
-	
-		araneaPage().debug("Running keyboard handler for combo '"+shortcut+ "'");
 	
 		//Find Which key is pressed
 		if (e.keyCode) code = e.keyCode;
@@ -349,21 +347,15 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 		for(var i=0; k=keys[i],i<keys.length; i++) {
 			//Modifiers
 			if(k == 'ctrl' || k == 'control') {
-				if(e.ctrlKey) { kp++;
-				araneaPage().debug("Detected CTRL"); }
+				if(e.ctrlKey) { kp++; }
 			} else if(k ==  'shift') {
-				if(e.shiftKey) { kp++;
-				araneaPage().debug("Detected SHIFT"); }
+				if(e.shiftKey) { kp++; }
 			} else if(k == 'alt') {
 				if(e.altKey)  { 
 					kp++ ;
-					araneaPage().debug("Detected SHIFT");
 				}
 			} else if(k.length > 1) { //If it is a special key
-				if(Aranea.KB.special_keys[k] == code) { kp++;
-					araneaPage().debug("Detected special key");
-				}
-	
+				if(Aranea.KB.special_keys[k] == code) { kp++; }
 			} else { //The special keys did not match
 				if(character == k) kp++;
 				else {
@@ -378,8 +370,8 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 		}
 
 		if(kp == keys.length) {
+			araneaPage().debug("Executing keyboard handler for keycombo '" + shortcut + "'.");
 			callback(e);
-			araneaPage().debug("Ably captured keyboard event and exectued handler.");
 	
 			//if(!opt['propagate']) { //Stop the event
 				//Event.stop(e);
@@ -388,14 +380,13 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 		}
 		
 		return true;
-    }; //
+    };
   
   return f2;
 };
 
 Aranea.KB.registerKeyComboHandler = function(elementPrefix, keyCombo, handler) {
   var extraHandler = new Aranea.KB.NewHandler(keyCombo, handler);
-  araneaPage().debug("Registered key combo handler for '" + keyCombo + "'");
   Aranea.KB.registerKeypressHandler(elementPrefix, keyCombo, extraHandler);
 };
 

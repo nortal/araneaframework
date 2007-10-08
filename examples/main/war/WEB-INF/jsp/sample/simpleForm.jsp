@@ -118,6 +118,7 @@
 				<ui:keyboardHandler scope="${formFullId}.number" keyCombo="alt+k" handler="function() { alert('xxx : form handler works!'); }"/>
 				
 				<ui:keyboardHandler scope="${formFullId}" keyCombo="ctrl+p" handler="function() { alert('== another : form handler works!'); }"/>
+				<ui:keyboardHandler scope="${formFullId}" keyCombo="z" handler="function() { alert('z i8ndeded'); }"/>
 
 				<!-- pure design tag -->
 				<tui:componentActions>
