@@ -122,7 +122,11 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 		String handler = createHandlerToCallEvent(pageContext, event);
 
 		// Write out.
-		KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);				
+		if (intKeyCode != null)
+			KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);
+		else if (keyCombo != null)
+			writeRegisterKeycomboHandlerScript(out, scope, keyCombo, handler);
+
 		return SKIP_BODY;
 	}
   

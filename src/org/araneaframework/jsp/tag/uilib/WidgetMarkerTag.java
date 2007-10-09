@@ -38,7 +38,7 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		JspUtil.writeOpenStartTag(out, "span");
+		JspUtil.writeOpenStartTag(out, "div");
 		JspUtil.writeAttribute(out, "class", MARKERCLASS);
 		JspUtil.writeAttribute(out, AraneaAttributes.WIDGET_ID, widget.getScope().toString());
 		JspUtil.writeCloseStartTag(out);
@@ -47,7 +47,7 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {
-		JspUtil.writeEndTag(out, "span");
+		JspUtil.writeEndTag(out, "div");
 		return super.doEndTag(out);
 	}
 }

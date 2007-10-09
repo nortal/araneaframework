@@ -74,29 +74,11 @@ public class BeanFormWidget extends FormWidget {
   public FormElement addBeanElement(String elementName, String labelId, Control control, Object initialValue, boolean mandatory) {
     return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), initialValue, mandatory);
   }
-  
-  /**
-   * Writes values from this {@link BeanFormWidget} into bean. 
-   * @deprecated use {@link BeanFormWidget#writeToBean(Object)} instead
-   * @return bean filled with form data
-   */
-  public Object readBean(Object bean) {
-    return writeToBean(bean);
-  }
-  
+
   public Object writeToBean(Object bean) {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(bean);
     return bean;
-  }
-
-  /**
-   * Reads values from bean into this {@link BeanFormWidget}.
-   * @deprecated use {@link BeanFormWidget#readBean(Object)} instead
-   * @param bean
-   */
-  public void writeBean(Object bean) {
-    readFromBean(bean);
   }
   
   public void readFromBean(Object bean) {

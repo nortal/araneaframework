@@ -122,7 +122,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
       FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData, rowForm) , "popupButton");
       rowForm.addActionListener("testAction", new TestActionListener());
-      rowForm.writeBean(rowData);
+      rowForm.readFromBean(rowData);
     }
 
     public void initAddForm(FormWidget addForm) throws Exception {
@@ -241,7 +241,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
     public void onFinish(Object returnValue) { 
       rowObject.setName(returnValue.toString());
-      form.writeBean(rowObject);
+      form.readFromBean(rowObject);
     } 
   }
 

@@ -50,7 +50,8 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
 
   /**
    * Set the name of the language, it must be a <b>valid ISO Language Code</b>. See the
-   * language name in {@link Locale}.
+   * language name in {@link Locale}. This method should only be used when <i>country</i>
+   * and <i>variant</i> are not important at all, otherwise {@link #setLocale(Locale)} must be used.
    */
   public void setLanguageName(String languageName) {
     Assert.notNullParam(languageName, "languageName");
