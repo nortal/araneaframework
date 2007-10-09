@@ -8,7 +8,7 @@ import org.araneaframework.example.main.web.demo.DemoComplexForm;
  */
 public class EasyAJAXUpdateRegionsWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
-		addWidget("1", new EasyAjaxDemoWidget("release/features/easyAjax/HttpRequest"));
+		addWidget("1", new EasyAjaxDemoWidget("release/features/easyAjax/HttpRequest", "Complex_Form_HTTP"));
 		addWidget("2", new EasyAjaxDemoWidget("release/features/easyAjax/XMLHttpRequest", "Complex_Form"));
 		setViewSelector("release/features/easyAjax/easyAjaxUpdateRegions");
 	}
