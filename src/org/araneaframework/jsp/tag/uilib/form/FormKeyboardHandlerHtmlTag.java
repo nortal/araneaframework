@@ -196,9 +196,14 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 			else
 				scope = scope + "." + subscope;
 		}
-
+		
+		
 		// Write out.
-		KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
+		if (intKeyCode != null)
+			KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
+		else if (keyCombo != null)
+			writeRegisterKeycomboHandlerScript(out, scope, keyCombo, intHandler);
+
 		return SKIP_BODY;
 	}
 
