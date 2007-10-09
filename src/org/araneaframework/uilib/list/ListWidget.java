@@ -156,15 +156,19 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @param dataProvider the {@link ListDataProvider}used to fill the list with data.
 	 * @throws Exception 
 	 */
-	public void setDataProvider(ListDataProvider dataProvider) throws Exception {
+	public void setDataProvider(ListDataProvider dataProvider) {
 		if (this.dataProvider != null)
 			this.dataProvider.removeDataUpdateListener(dataProviderDataUpdateListener);
 
 		this.dataProvider = dataProvider;
 		this.dataProvider.addDataUpdateListener(dataProviderDataUpdateListener);
 
-		if (isInitialized()) {			
-			initDataProvider();
+		try {
+			if (isInitialized()) {
+				initDataProvider();
+			}
+		} catch (Exception e) {
+			ExceptionUtil.uncheckException(e);
 		}
 
 		fireChange();
