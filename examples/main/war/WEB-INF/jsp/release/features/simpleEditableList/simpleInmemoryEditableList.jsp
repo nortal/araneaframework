@@ -4,6 +4,26 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
+		<script type="text/javascript">
+					function demo(event, elementName, f) {
+						var source = Event.element(event);
+						var maybeTD = source.ancestors()[1];
+						if (maybeTD.tagName.toLowerCase() == 'td') {
+						  var sibling = f(maybeTD)[0];
+						  if (sibling &amp;&amp; sibling.tagName.toLowerCase() == 'td') {
+						    var input = sibling.descendants().find(
+						       function(element) {
+		    	                 return element.tagName.toLowerCase() == 'input';
+		                       });
+		
+		                    if (input)
+		                      input.focus();
+						  }
+						}
+					}
+				</script>
+
+	
 		<tui:componentHeader>
 			<tui:componentName><fmt:message key="sed.title"/></tui:componentName>
 		</tui:componentHeader>
@@ -47,6 +67,16 @@
 								<ui:listFilterClearButton/>
 							</ui:cell>
 						</ui:row>
+						
+				<ui:keyboardHandler 
+					scope="${formFullId}" 
+					keyCombo="alt+left" 
+					handler="function(e,el) { demo(e, el, Element.previousSiblings); Event.stop(e); return false;}"/>
+					
+				<ui:keyboardHandler 
+					scope="${formFullId}" 
+					keyCombo="alt+right" 
+					handler="function(e,el) { demo(e, el, Element.nextSiblings); Event.stop(e); return false;}"/>
 
 					</ui:listFilter>
 				
