@@ -22,9 +22,12 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetUtil;
+import org.araneaframework.uilib.form.FormElement;
 
 
 /**
@@ -38,6 +41,9 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Represents localizable label."
  */
 public class FormSimpleLabelHtmlTag extends PresentationTag {
+  /** @since 1.1 */
+  public static final String LABEL_SPAN_PREFIX = "label-";
+
   public final static String ASTERISK_STYLE = "aranea-label-asterisk";
   
   protected boolean showColon = true;
@@ -136,7 +142,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       // Find surrounding form's id
       String formId = (String)JspUtil.requireContextEntry(pageContext, FormTag.FORM_FULL_ID_KEY);
       // XXX: even if formElementContext JS should be invoked when writing label, formelement should not be marked as present
-      BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext, "label-");
+      BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext, LABEL_SPAN_PREFIX);
       fullFormElementId = formId + "." + formElementId;
     }
 
@@ -172,6 +178,23 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     if (formElementId != null) {
       BaseFormElementHtmlTag.writeFormElementContextClose(out);
     }
+    
+    if (fullFormElementId != null) {
+      ApplicationWidget contextWidget = JspWidgetUtil.getContextWidget(pageContext);
+      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, fullFormElementId.substring(contextWidget.getScope().toString().length()));
+      
+      writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
+    }
+  }
+
+  private static void writeFormElementValidityMarkers(Writer out, boolean valid, String spanId) throws Exception {
+    JspUtil.writeOpenStartTag(out, "script");
+    JspUtil.writeAttribute(out, "type", "text/javascript");
+    JspUtil.writeCloseStartTag(out);
+
+    out.write("Aranea.UI.markFEContentStatus(" + valid + ", $('" +spanId + "'));");
+
+    JspUtil.writeEndTag_SS(out, "script");
   }
 
   public static void writeSelectLabel(Writer out, String label, String styleClass) throws JspException, IOException {

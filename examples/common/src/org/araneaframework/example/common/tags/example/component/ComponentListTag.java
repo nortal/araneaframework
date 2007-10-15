@@ -16,10 +16,7 @@
 
 package org.araneaframework.example.common.tags.example.component;
 
-import java.io.Writer;
-import org.araneaframework.example.common.tags.ErrorMarkingCellClassProviderDecorator;
 import org.araneaframework.jsp.tag.layout.LayoutHtmlTag;
-import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -36,12 +33,5 @@ public class ComponentListTag extends LayoutHtmlTag {
   {
     styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
     rowClasses = JspUtil.parseMultiValuedAttribute(" ," + COMPONENT_LIST_EVEN_ROW_CLASS);
-  }
-  
-  protected int doStartTag(Writer out) throws Exception {
-    int result = super.doStartTag(out);
-    addContextEntry(CellClassProvider.KEY, new ErrorMarkingCellClassProviderDecorator(this, pageContext));
-
-    return result;
   }
 }

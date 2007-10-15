@@ -835,14 +835,9 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
 
     var inputSpan = this.getParentSpan(formelement);
     var labelSpan = this.getLabelSpan(formelement);
-
-    if(result.valid){
-      if (inputSpan) inputSpan.removeClassName("error");
-      if (labelSpan) labelSpan.removeClassName("error");
-    } else {
-      if (inputSpan) inputSpan.addClassName("error");
-      if (labelSpan) labelSpan.addClassName("error");
-    }
+    
+    Aranea.UI.markFEContentStatus(result.valid, inputSpan);
+    Aranea.UI.markFEContentStatus(result.valid, labelSpan);
   },
 
   getParentSpan: function(formelement) {

@@ -136,4 +136,33 @@ Aranea.UI.scrollToCoordinates = function(x, y) {
 };
 var scrollToCoordinates = Aranea.UI.scrollToCoordinates;
 
+/**
+ * CSS class applied to form elements that are not valid.
+ * @since 1.1 */
+Aranea.UI.InvalidFormElementClass = "aranea-invalid-formelement";
+
+/** 
+ * @param valid boolean specifying whether content in form element is valid
+ * @param el HTML node that contains form element (most often this would be span)
+ * @since 1.1 
+ * */
+Aranea.UI.markFEContentStatus = function(valid, el) {
+  if (el) 	
+    el = $(el);
+  else
+    return;
+
+  var element = el;
+  var parentTagName = element.parentNode.tagName.toLowerCase();
+  if (parentTagName == 'td' || parentTagName == 'th') {
+    element = element.parentNode;
+  }
+
+  if (valid) {
+  	$(element).removeClassName(Aranea.UI.InvalidFormElementClass);
+  } else {
+  	$(element).addClassName(Aranea.UI.InvalidFormElementClass);
+  }
+};
+
 window['aranea-ui.js'] = true;
