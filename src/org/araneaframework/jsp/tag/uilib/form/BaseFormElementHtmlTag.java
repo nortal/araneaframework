@@ -125,7 +125,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected int doEndTag(Writer out) throws Exception {
 		if (hasElementContextSpan) {
 			writeFormElementContextClose(out);
-			writeFormElementValidityMarkers(out);
+			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
 		}
 		return super.doEndTag(out);
 	}
@@ -274,14 +274,14 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	public static void writeFormElementContextClose(Writer out) throws IOException{
 		JspUtil.writeEndTag_SS(out, "span");
 	}
-
-
-	protected void writeFormElementValidityMarkers(Writer out) throws IOException {
+	
+	/** @since 1.1 */
+	public static void writeFormElementValidityMarkers(Writer out, boolean valid, String spanId) throws Exception {
 		JspUtil.writeOpenStartTag(out, "script");
 		JspUtil.writeAttribute(out, "type", "text/javascript");
 		JspUtil.writeCloseStartTag(out);
 
-		out.write("Aranea.UI.markFEContentStatus(" + formElementViewModel.isValid() + ", $('" + FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId + "'));");
+		out.write("Aranea.UI.markFEContentStatus(" + valid + ", $('" +spanId + "'));");
 
 		JspUtil.writeEndTag_SS(out, "script");
 	}

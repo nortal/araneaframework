@@ -183,18 +183,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       ApplicationWidget contextWidget = JspWidgetUtil.getContextWidget(pageContext);
       FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, fullFormElementId.substring(contextWidget.getScope().toString().length()));
       
-      writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
+      BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
-  }
-
-  private static void writeFormElementValidityMarkers(Writer out, boolean valid, String spanId) throws Exception {
-    JspUtil.writeOpenStartTag(out, "script");
-    JspUtil.writeAttribute(out, "type", "text/javascript");
-    JspUtil.writeCloseStartTag(out);
-
-    out.write("Aranea.UI.markFEContentStatus(" + valid + ", $('" +spanId + "'));");
-
-    JspUtil.writeEndTag_SS(out, "script");
   }
 
   public static void writeSelectLabel(Writer out, String label, String styleClass) throws JspException, IOException {
