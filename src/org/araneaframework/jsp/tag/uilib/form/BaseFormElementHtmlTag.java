@@ -41,6 +41,9 @@ import org.araneaframework.uilib.form.FormWidget;
  * @author Oleg Mürk
  */
 public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
+	/** @since 1.1 */
+	public static final String FORMELEMENT_SPAN_PREFIX = "fe-span-";
+
 	protected String formFullId;
 	
 	protected FormWidget.ViewModel formViewModel;
@@ -120,8 +123,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 
 	protected int doEndTag(Writer out) throws Exception {
-		if (hasElementContextSpan) 
+		if (hasElementContextSpan) {
 			writeFormElementContextClose(out);
+			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
+		}
 		return super.doEndTag(out);
 	}
 	
@@ -232,7 +237,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	}
 	
   public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
-    writeFormElementContextOpen(out, fullFormId, elementId, isPresent, pageContext, "fe-span-");
+    writeFormElementContextOpen(out, fullFormId, elementId, isPresent, pageContext, FORMELEMENT_SPAN_PREFIX);
   }
 	/** 
 	 * Write a span with random id around the element, and register this span with javascript 
@@ -268,6 +273,17 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public static void writeFormElementContextClose(Writer out) throws IOException{
 		JspUtil.writeEndTag_SS(out, "span");
+	}
+	
+	/** @since 1.1 */
+	public static void writeFormElementValidityMarkers(Writer out, boolean valid, String spanId) throws Exception {
+		JspUtil.writeOpenStartTag(out, "script");
+		JspUtil.writeAttribute(out, "type", "text/javascript");
+		JspUtil.writeCloseStartTag(out);
+
+		out.write("Aranea.UI.markFEContentStatus(" + valid + ", $('" +spanId + "'));");
+
+		JspUtil.writeEndTag_SS(out, "script");
 	}
 
 	/**
