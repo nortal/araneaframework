@@ -14,34 +14,39 @@
  * limitations under the License.
 **/
 
-function onWindowUnload() {
-  closeOpenedPopupWindows();
-}
+/** @since 1.1 */
+Aranea = Aranea ? Aranea : {};
+Aranea.Popups = {};
 
-/* Behaviour when click made in parent window closes popups is just 
- * too confusing and unexpected, so turn it off. */
-/* 
-if (window['aranea.js'])
-  araneaPage().addSystemUnLoadEvent(onWindowUnload);
-*/
+/** @deprecated 
+    @useless */
+function onWindowUnload() {
+  Aranea.Popups.closeOpenedPopupWindows();
+}
 
 //popup maps
-var popups = new Object();
+Aranea.Popups.popups = new Object();
 
 // popup properties, used for all types of popups
-var popupProperties = new Object();
+Aranea.Popups.popupProperties = new Object();
 
 // opened windows
-var openedPopupWindows = new Object();
+Aranea.Popups.openedPopupWindows = new Object();
 
-function addPopup(popupId, windowProperties, url) {
-  popups[popupId] = popupId;
-  popupProperties[popupId] = new Object();
-  popupProperties[popupId].windowProperties = windowProperties;
-  popupProperties[popupId].url = url;
-}
+/* @since 1.1 **/
+Aranea.Popups.addPopup = function(popupId, windowProperties, url) {
+  Aranea.Popups.popups[popupId] = popupId;
+  Aranea.Popups.popupProperties[popupId] = new Object();
+  Aranea.Popups.popupProperties[popupId].windowProperties = windowProperties;
+  Aranea.Popups.popupProperties[popupId].url = url;
+};
 
-function submitThreadCloseRequest(win) {
+/* @deprecated
+   @since 1.0 **/
+var addPopup = Aranea.Popups.addPopup;
+
+/* @since 1.1 **/
+Aranea.Popups.submitThreadCloseRequest = function(win) {
   if (win && win.document) {
     var systemForm = null;
     for (var i = 0; i < win.document.forms.length; i++) {
@@ -57,48 +62,79 @@ function submitThreadCloseRequest(win) {
       win.araneaPage().event_6(systemForm, null, null, null, null, null);
     }
   }
-}
+};
 
-function closeOpenedPopupWindows() {
-  for (var popupId in openedPopupWindows) {
-    var w = openedPopupWindows[popupId];
+/* @deprecated
+   @since 1.0 **/
+var submitThreadCloseRequest = Aranea.Popups.submitThreadCloseRequest;
+
+/* @since 1.1 **/
+Aranea.Popups.closeOpenedPopupWindows = function() {
+  for (var popupId in Aranea.Popups.openedPopupWindows) {
+    var w = Aranea.Popups.openedPopupWindows[popupId];
     if (w) {
-      submitThreadCloseRequest(w);
+      Aranea.Popups.submitThreadCloseRequest(w);
       w.close();
     }
   }
-}
+};
 
-function openPopup(popupId) {
-  var w = window.open(popupProperties[popupId].url, popupId, popupProperties[popupId].windowProperties);
+/* @deprecated
+   @since 1.0 **/
+var closeOpenedPopupWindows = Aranea.Popups.closeOpenedPopupWindows;
+
+/* @since 1.1 **/
+Aranea.Popups.openPopup = function(popupId) {
+  var w = window.open(Aranea.Popups.popupProperties[popupId].url, popupId, Aranea.Popups.popupProperties[popupId].windowProperties);
   if (w) {
-    openedPopupWindows[popupId] = w;
+    Aranea.Popups.openedPopupWindows[popupId] = w;
     w.focus();
   }
-}
+};
+var openPopup = Aranea.Popups.openPopup;
 
-function processPopups() {
-  for (var popupId in popups) {
-    openPopup(popupId, popupProperties[popupId]);
+/* @since 1.1 **/
+Aranea.Popups.processPopups = function() {
+  for (var popupId in Aranea.Popups.popups) {
+    Aranea.Popups.openPopup(popupId, Aranea.Popups.popupProperties[popupId]);
   }
-  popups = new Object();
-  popupProperties = new Object();
-}
+  Aranea.Popups.popups = new Object();
+  Aranea.Popups.popupProperties = new Object();
+};
 
-function applyReturnValue(value, elementId) {
+/* @deprecated
+   @since 1.0 **/
+var processPopups = Aranea.Popups.processPopups;
+
+/* @since 1.1 **/
+Aranea.Popups.applyReturnValue = function(value, elementId) {
   if (window.opener) {
   	window.opener.document.getElementById(elementId).value = value;
   }
-}
+};
 
-function reloadParentWindow(url) {
+/* @deprecated
+   @since 1.0 **/
+var applyReturnValue = Aranea.Popups.applyReturnValue;
+
+/* @since 1.1 **/
+Aranea.Popups.reloadParentWindow = function(url) {
   if (window.opener) {
     window.opener.document.location.href=url;
   }
-}
+};
 
-function closeWindow(delay) {
+/** @deprecated
+    @since 1.0 */
+var reloadParentWindow = Aranea.Popups.reloadParentWindow;
+
+/* @since 1.1 **/
+Aranea.Popups.delayedCloseWindow = function(delay) {
   setTimeout('window.close()', delay);
-}
+};
+
+/* @deprecated
+   @since 1.0 **/
+var closeWindow = Aranea.Popups.delayedCloseWindow; 
 
 window['aranea-popups.js'] = true;

@@ -44,8 +44,8 @@ public class ApplyReturnValueService extends BaseService implements ClientSideRe
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		String script = 
-			    "applyReturnValue('" + value + "', '" + widgetId +"');" + 
-			    "closeWindow(50);";
+			    "Aranea.Popups.applyReturnValue('" + value + "', '" + widgetId +"');" + 
+			    "Aranea.Popups.delayedCloseWindow(50);";
 
 		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
 		String responseStr = 

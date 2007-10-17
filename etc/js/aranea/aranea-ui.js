@@ -36,6 +36,9 @@ Aranea.UI.calendarSetup = function(inputFieldId, dateFormat, alignment) {
     electric     : false
   });
 };
+
+/* @deprecated
+   @since 1.0 **/
 var calendarSetup = Aranea.UI.calendarSetup;
 
 /* fillTime*() and addOptions() functions are used in *timeInputs 
@@ -49,6 +52,9 @@ Aranea.UI.fillTimeText = function(el, hourSelect, minuteSelect) {
     $(el).value=$(hourSelect).value+':'+$(minuteSelect).value;
   }
 };
+
+/* @deprecated
+   @since 1.0 **/
 var fillTimeText = Aranea.UI.fillTimeText;
 
 /** @since 1.1 */
@@ -61,6 +67,9 @@ Aranea.UI.fillTimeSelect = function(timeInput, hourSelect, minuteSelect) {
   $(hourSelect).value=hourValue;
   $(minuteSelect).value=minuteValue;
 };
+
+/* @deprecated
+   @since 1.0 **/
 var fillTimeSelect = Aranea.UI.fillTimeSelect;
 
 // Adds options empty,0-(z-1) to select with option x preselected. Used for
@@ -80,12 +89,18 @@ Aranea.UI.addOptions = function(selectName, z, x) {
     select.appendChild(opt);
   }
 };
+
+/* @deprecated
+   @since 1.0 **/
 var addOptions = Aranea.UI.addOptions;
 
 /** @since 1.1 */
 Aranea.UI.saveValue = function(element) {
   $(element).oldValue = $(element).value; 
 };
+
+/* @deprecated
+   @since 1.0 **/
 var saveValue = Aranea.UI.saveValue;
 
 /** @since 1.1 */
@@ -98,6 +113,9 @@ Aranea.UI.isChanged = function(elementId) {
   }
   return (el.oldValue != el.value);
 };
+
+/* @deprecated
+   @since 1.0 **/
 var isChanged = Aranea.UI.isChanged;
 
 //--------------- Scroll position saving/restoring --------------//
@@ -128,12 +146,18 @@ Aranea.UI.saveScrollCoordinates = function() {
 		form['windowScrollY'].value = y;
 	}
 };
+
+/* @deprecated
+   @since 1.0 **/
 var saveScrollCoordinates = Aranea.UI.saveScrollCoordinates;
 
 /** @since 1.1 */
 Aranea.UI.scrollToCoordinates = function(x, y) {
   window.scrollTo(x, y);	
 };
+
+/* @deprecated
+   @since 1.0 **/
 var scrollToCoordinates = Aranea.UI.scrollToCoordinates;
 
 /**
