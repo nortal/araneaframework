@@ -25,7 +25,7 @@ import org.araneaframework.core.ProxyEventListener;
  * {@link ProxyActionListener}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
- * @since 1.1
+ * @since 1.0.12
  */
 public abstract class ProxiedHandlerUtil {
 	private static final Class[] EMTPY_CLASS_ARRAY = new Class[] {};

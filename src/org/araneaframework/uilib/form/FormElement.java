@@ -311,7 +311,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
     }
 
     if (getData() != null && isValid()) {
-      getData().setValue(newDataValue);
+      // converting should not affect Control's value -- so setDataValue() instead of setValue() 
+      getData().setDataValue(newDataValue);
     }
   }
 	

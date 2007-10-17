@@ -44,13 +44,13 @@ public class LoginWidget extends BaseUIWidget {
 		addWidget("loginForm", form);
 	}
 
-	public void handleEventLogin() throws Exception {
+	private void handleEventLogin() throws Exception {
 		if (form.convertAndValidate()) {
 			// validate login, start root flow
 		}
 	}
 
-	public void handleEventJustLetMeIn() throws Exception {
+	private void handleEventJustLetMeIn() throws Exception {
 		getFlowCtx().replace(new RootWidget(), null);
 	}
 }

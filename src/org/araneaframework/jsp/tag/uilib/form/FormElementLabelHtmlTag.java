@@ -42,7 +42,7 @@ public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
         derivedId,
         pageContext,
         showColon,
-        accessKey
+        accessKey, getStyle()
     );
 
     return EVAL_BODY_INCLUDE;    
