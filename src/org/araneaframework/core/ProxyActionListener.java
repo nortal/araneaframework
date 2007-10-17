@@ -17,10 +17,12 @@
 package org.araneaframework.core;
 
 import java.lang.reflect.Method;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -37,15 +39,15 @@ public class ProxyActionListener implements ActionListener {
   }
 
   public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-    String actionParameter = (String) input.getGlobalData().get(ApplicationWidget.ACTION_PARAMETER_KEY);    
-    String actionHandlerName = "handleAction" + ((String) actionId).substring(0, 1).toUpperCase() + ((String) actionId).substring(1);
-
+    String actionParameter = (String) input.getGlobalData().get(ApplicationWidget.ACTION_PARAMETER_KEY);
+    
     Method actionHandler;
     // lets try to find a handle method with an empty argument
     try {
-      actionHandler = actionTarget.getClass().getMethod(actionHandlerName, new Class[] {});
+      actionHandler = ProxiedHandlerUtil.getActionHandler((String)actionId, actionTarget);
 
       if (log.isDebugEnabled()) {
+    	String actionHandlerName = "handleAction" + ((String) actionId).substring(0, 1).toUpperCase() + ((String) actionId).substring(1);
         log.debug("Calling method '" + actionHandlerName + "()' of class '" + actionTarget.getClass().getName() + "'.");
       }
       actionHandler.invoke(actionTarget, new Object[] {});
@@ -55,9 +57,10 @@ public class ProxyActionListener implements ActionListener {
 
     // lets try to find a method with a String type argument
     try {               
-      actionHandler = actionTarget.getClass().getMethod(actionHandlerName, new Class[] { String.class });
+      actionHandler = ProxiedHandlerUtil.getActionHandler((String)actionId, actionTarget, new Class[] { String.class }); 
 
       if (log.isDebugEnabled()) {
+    	String actionHandlerName = "handleAction" + ((String) actionId).substring(0, 1).toUpperCase() + ((String) actionId).substring(1);
         log.debug("Calling method '" + actionHandlerName + "(String)' of class '" + actionTarget.getClass().getName() + "'.");
       }
       actionHandler.invoke(actionTarget, new Object[] { actionParameter });                

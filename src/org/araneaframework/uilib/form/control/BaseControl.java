@@ -61,7 +61,9 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   }
 
   /**
-   * Sets the control value. Preffered way to set it is using the DataItem.
+   * Sets the raw control value (as it was read from request/written to response).
+   * It is usually set by {@link org.araneaframework.uilib.form.Converter} when
+   * value of {@link FormElement} that owns this {@link BaseControl} changes.
    * 
    * @param value control value.
    * @see #getRawValue()
