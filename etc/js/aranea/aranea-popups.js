@@ -14,8 +14,8 @@
  * limitations under the License.
 **/
 
+var Aranea = Aranea ? Aranea : {};
 /** @since 1.1 */
-Aranea = Aranea ? Aranea : {};
 Aranea.Popups = {};
 
 /** @deprecated 
