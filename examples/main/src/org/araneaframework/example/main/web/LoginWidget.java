@@ -61,7 +61,7 @@ public class LoginWidget extends TemplateBaseWidget {
 	}
 	
 	// implementation of the login handler
-	public void handleEventLogin() throws Exception {
+	private void handleEventLogin() throws Exception {
 		/* convertAndValidate() fails if data found from form does not 
 		 * satisfy the restrictions laid on it. If that is the case, 
 		 * we ignore received event. There is only one restriction -
@@ -81,7 +81,7 @@ public class LoginWidget extends TemplateBaseWidget {
 	 * promptly replaces login widget with root widget - allowing
 	 * user to start work with real examples. Demonstrates
 	 * simple flow navigation. */ 
-	public void handleEventBypass() throws Exception {
+	private void handleEventBypass() throws Exception {
 		getFlowCtx().replace(new RootWidget(), null);
 	}
 }

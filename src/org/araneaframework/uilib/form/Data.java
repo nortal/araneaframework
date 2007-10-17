@@ -74,21 +74,35 @@ public class Data implements java.io.Serializable, FormElementAware {
    * @param value {@link Data} value.
    */
   public void setValue(Object value) {
-    final Object val = value;
-
+    setDataValue(value);
+    setControlValue(value);
+  }
+  
+  /**
+   * Sets the value of this {@link Data} without modifying underlying {@link Control}.
+   * This is used on {@link FormElement} conversion&mdash;which should not affect {@Control} values
+   * read from request. 
+   *  
+   * @since 1.0.12 */
+  public void setDataValue(Object value) {
     if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
       throw new DataItemTypeViolatedException(getValueType(), value.getClass());
-    
-    this.value = value;
 
+    this.value = value;
+  }
+
+  /** 
+   * Sets the value of {@link Control} that is associated with {@link FormElement} which owns this {@link Data}.
+   * @since 1.0.12 */
+  public void setControlValue(final Object value) {
     if (feCtx != null) {
       feCtx.addInitEvent(new Event() {
-		public void run() {
+        public void run() {
           // TODO:this is dangerous in case Data value is set before FE is associated with Control
           if (feCtx.getControl() != null) {
-            feCtx.getControl().setRawValue(feCtx.getConverter().reverseConvert(val));
+            feCtx.getControl().setRawValue(feCtx.getConverter().reverseConvert(value));
           }
-		}
+        }
       });
     }
   }

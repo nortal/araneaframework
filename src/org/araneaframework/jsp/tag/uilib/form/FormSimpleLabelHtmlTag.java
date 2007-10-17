@@ -53,7 +53,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     String accessKey = JspUtil.getResourceStringOrNull(pageContext, accessKeyId);
     writeLabel(out, JspUtil.getResourceString(pageContext, labelId), mandatory,
         getStyleClass(),
-        forElementId, pageContext, showColon, accessKey);
+        forElementId, pageContext, showColon, accessKey, getStyle());
 
     return EVAL_BODY_INCLUDE;    
   }
@@ -117,6 +117,9 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * STATIC label writing functions
    * ***********************************************************************************/
 
+  /**
+   * @deprecated Use {@link #writeLabel(Writer,String,boolean,String,String,PageContext,boolean,String,String)} instead
+   */
   public static void writeLabel(
       Writer out, 
       String label, 
@@ -126,6 +129,19 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       PageContext pageContext, 
       boolean showColon, 
       String accessKey) throws Exception{
+		writeLabel(out, label, mandatory, styleClass, formElementId,
+				pageContext, showColon, accessKey, null);
+	}
+
+  public static void writeLabel(
+      Writer out, 
+      String label, 
+      boolean mandatory, 
+      String styleClass,
+      String formElementId, 
+      PageContext pageContext, 
+      boolean showColon, 
+      String accessKey, String style) throws Exception{
 
     // Allow accessKey only if it is one-character long
     if (accessKey != null && accessKey.length() != 1) accessKey = null;
@@ -151,6 +167,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     // Write <span class=..>
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", styleClass);
+    JspUtil.writeAttribute(out, "style", style);
     JspUtil.writeCloseStartTag_SS(out);
 
     // Write <label ...>
