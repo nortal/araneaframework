@@ -62,7 +62,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 		return menuWidget;
 	}
 
-	public void logout() throws Exception {
+	public void logout() {
 		getFlowCtx().replace(new LoginWidget(), null);
 	}
 }

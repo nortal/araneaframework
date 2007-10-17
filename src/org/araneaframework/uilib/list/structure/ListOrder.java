@@ -32,8 +32,8 @@ import org.araneaframework.uilib.list.OrderInfo;
  */
 public interface ListOrder extends Serializable {
 	
-	void init(Environment env) throws Exception;
-	void destroy() throws Exception;
+	void init(Environment env);
+	void destroy();
 
 	/**
 	 * Builds <code>ComparatorExpression</code> from this

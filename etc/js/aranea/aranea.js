@@ -355,7 +355,7 @@ AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAli
       araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(
           url,
-          { method: 'get' }
+          { method: 'post' }
       );
     } else {
       araneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");

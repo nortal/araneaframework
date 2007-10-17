@@ -67,7 +67,7 @@ public class LikeFilter extends BaseFieldFilter {
 		// private
 	}
 	
-	public void init(Environment env) throws Exception {
+	public void init(Environment env) {
 		ConfigurationContext cfg = (ConfigurationContext) env.getEntry(ConfigurationContext.class);
 		if (cfg != null) {
 			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);

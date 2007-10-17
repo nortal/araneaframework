@@ -38,6 +38,6 @@ public interface UpdateRegionProvider extends Serializable {
    *         <code>null</code> value, then that region is not included in
    *         response.
    */
-  Map getRegions() throws Exception;
+  Map getRegions();
 
 }
