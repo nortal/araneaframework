@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.framework.LocalizationContext;
-import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
@@ -17,7 +17,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * @author Steven Jentson (steven@webmedia.ee)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class DemoAutoCompletionWidget extends BaseUIWidget {
+public class DemoAutoCompletionWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   private FormWidget form;
   
