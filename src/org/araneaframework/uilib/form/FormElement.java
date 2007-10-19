@@ -23,6 +23,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.RenderStateAware;
@@ -210,7 +211,21 @@ public class FormElement extends GenericFormElement implements FormElementContex
   public void setMandatory(boolean mandatory) {
     this.mandatory = mandatory;
   }
-
+  
+  /**
+   * Sets the action listener that deals with background validation of form. It should
+   * be used when custom background validation logic or behaviour is wanted.
+   * Just for using default {@link FormElementValidationActionListener}, only
+   * {@link FormElement#setBackgroundValidation(boolean)} needs to be called with
+   * parameter <code>true</code>.
+   *  
+   * @param actionListener custom listener that should handle validation of this {@link FormElement}
+   * @since 1.1
+   */
+  public void setBackgroundValidationListener(ActionListener actionListener) {
+    clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
+    addActionListener(SEAMLESS_VALIDATION_ACTION_ID, actionListener);
+  }
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -230,7 +245,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getWidget().update(input);
     }
   }
-	  
+
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (!isDisabled() && isRendered()) {
       super.action(path, input, output);
@@ -283,7 +298,17 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
-    addActionListener(SEAMLESS_VALIDATION_ACTION_ID, new FormElementValidationActionListener(this));
+    setBackgroundValidationListener(getDefaultBackgroundValidationListener());
+  }
+
+  /**
+   * Returns new instance of {@link FormElementValidationActionListener} tied to 
+   * this {@link FormElement}.
+   * 
+   * @since 1.1
+   */
+  protected FormElementValidationActionListener getDefaultBackgroundValidationListener() {
+   return new FormElementValidationActionListener(this);
   }
 
   protected void destroy() throws Exception {

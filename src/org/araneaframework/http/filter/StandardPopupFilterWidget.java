@@ -343,7 +343,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /**
    * @since 1.1
    */
-  public Map getRegions() throws Exception {
+  public Map getRegions() {
     Map popups = getPopups();
     if (popups == null || popups.isEmpty())
       return null;

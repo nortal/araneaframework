@@ -50,7 +50,7 @@ public class MultiFieldOrder implements ListOrder {
 		return getFieldOrder(field) != null;
 	}
 
-	public void clearFieldOrders() throws Exception {
+	public void clearFieldOrders() {
 		for (Iterator i = orders.values().iterator(); i.hasNext();) {
 			ListOrder order = (ListOrder) i.next();
 			order.destroy();
@@ -58,14 +58,14 @@ public class MultiFieldOrder implements ListOrder {
 		}
 	}
 
-	public void init(Environment env) throws Exception {
+	public void init(Environment env) {
 		for (Iterator i = orders.values().iterator(); i.hasNext();) {
 			ListOrder order = (ListOrder) i.next();
 			order.init(env);
 		}
 	}
 
-	public void destroy() throws Exception {
+	public void destroy() {
 		clearFieldOrders();
 	}
 

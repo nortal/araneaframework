@@ -31,7 +31,6 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
-import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.util.JsonArray;
 import org.araneaframework.http.util.JsonObject;
 
@@ -217,7 +216,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   /**
    * @since 1.1
    */
-  public Map getRegions() throws Exception {
+  public Map getRegions() {
     JsonObject messagesByType = new JsonObject();
     Map messageMap = getMessages();
     if (messageMap != null) {

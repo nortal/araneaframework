@@ -355,7 +355,7 @@ AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAli
       araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(
           url,
-          { method: 'get' }
+          { method: 'post' }
       );
     } else {
       araneaPage().getLogger().warn("Prototype library not accessible, service keepalive calls cannot be made.");
@@ -794,12 +794,12 @@ AraneaPage.PopupRegionHandler.prototype = {
   process: function(content) {
     var popups = content.evalJSON();
     this.openPopups(popups);
-    araneaPage().addSystemLoadEvent(processPopups);
+    araneaPage().addSystemLoadEvent(Aranea.Popups.processPopups);
   },
 
   openPopups: function(popups) {
     popups.each(function(popup) {
-      addPopup(popup.popupId, popup.windowProperties, popup.url);
+      Aranea.Popups.addPopup(popup.popupId, popup.windowProperties, popup.url);
     });
   }
 };
@@ -870,6 +870,6 @@ _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */
-var Aranea = {};
+var Aranea = Aranea ? Aranea : {};
 
 window['aranea.js'] = true;

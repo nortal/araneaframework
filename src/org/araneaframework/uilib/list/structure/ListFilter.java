@@ -29,6 +29,6 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
  * otherwise).
  */
 public interface ListFilter extends ExpressionBuilder {
-	void init(Environment env) throws Exception;
-	void destroy() throws Exception;
+	void init(Environment env);
+	void destroy();
 }

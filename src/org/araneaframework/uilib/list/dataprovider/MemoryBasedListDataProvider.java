@@ -32,6 +32,7 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.core.util.ExceptionUtil;
 
 
 /**
@@ -191,9 +192,13 @@ public abstract class MemoryBasedListDataProvider implements ListDataProvider {
 	/**
 	 * Refreshes the data, including reordering and refiltering.
 	 */
-	public void refreshData() throws Exception {
+	public void refreshData() {
 		log.debug("Loading all data");
-		this.allData = loadData();
+		try {
+			this.allData = loadData();
+		} catch (Exception e) {
+			ExceptionUtil.uncheckException(e);
+		}
 		this.doFilter = true;
 		this.doOrder = true;
 		

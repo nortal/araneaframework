@@ -55,9 +55,9 @@ public class SimpleFieldOrder implements FieldOrder {
 		this.comparator = comparator;
 	}
 
-	public void init(Environment env) throws Exception {}	
+	public void init(Environment env)  {}	
 	
-	public void destroy() throws Exception {}
+	public void destroy() {}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
 		if (this.fieldId == null) {

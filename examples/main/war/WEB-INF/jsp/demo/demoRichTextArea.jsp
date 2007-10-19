@@ -12,17 +12,15 @@
                     <ui:richTextarea cols="100" rows="20"/>
 				</ui:formElement>
 
-
 				<ui:formElement id="button">
 					<ui:button/>
 				</ui:formElement>
 			</tui:component>
 		</ui:form>
-		
-			<div style="border-style: solid; border-width: 1px; padding: 7px">
-				<c:out value="${viewData.preview}" escapeXml="false" />
-			</div>
-				
-		
+
+		<div style="border-style: solid; border-width: 1px; padding: 7px">
+			<c:out value="${viewData.preview}" escapeXml="false" />
+		</div>
+
 	</ui:widgetContext>
 </jsp:root>

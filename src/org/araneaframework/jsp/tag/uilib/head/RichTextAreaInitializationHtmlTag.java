@@ -20,9 +20,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
-import org.araneaframework.jsp.tag.fileimport.ImportScriptsHtmlTag;
 import org.araneaframework.jsp.tag.uilib.form.element.text.FormRichTextAreaHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -44,18 +42,15 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
 	
 	protected int doStartTag(Writer out) throws Exception {
-		String url = FileImportUtil.getImportString(MCE_JS, pageContext.getRequest());
-		ImportScriptsHtmlTag.writeHtmlScriptsInclude(out,  url);
-		
 		setName("script");
-		
+
 		super.doStartTag(out);
 		
 		JspUtil.writeAttribute(out, "language", "javascript");
 		JspUtil.writeAttribute(out, "type", "text/javascript");
 		JspUtil.writeCloseStartTag(out);
-		out.write("tinyMCE.init({\n");
-		
+		out.write("var AraneaTinyMCEInit = function() { tinyMCE.init({\n");
+
 		setDefaultSettings();
 		
 		return EVAL_BODY_INCLUDE;
@@ -74,8 +69,8 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 
 	protected int doEndTag(Writer out) throws Exception {
 		writeAttributes(out);
-		out.write("});\n");
-		
+		out.write("}); " + "};\n");
+		out.write("var AraneaTinyMCELoaded = function() { return window['js/tiny_mce/tiny_mce.js']; };");
 		JspUtil.writeEndTag(out, "script");
 		
 		return EVAL_PAGE;
