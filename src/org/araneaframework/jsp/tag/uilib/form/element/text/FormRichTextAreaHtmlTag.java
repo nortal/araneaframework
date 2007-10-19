@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.FileImportUtil;
+import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -54,11 +55,17 @@ public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 		JspUtil.writeCloseStartTag(out);
 
 		String scriptFile = FileImportUtil.getImportString(MCE_JS, pageContext.getRequest());
-		String scriptToExecute = "tinyMCEInitScript";
-		String scriptLoadCondition = "tinymceloadcondition";
+		String scriptToExecute = "AraneaTinyMCEInit";
+		String scriptLoadCondition = "AraneaTinyMCELoaded";
 		String interval = "10";
+		
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.setStringProperty("scriptFile", scriptFile);
+		jsonObject.setProperty("scriptToExecute", scriptToExecute);
+		jsonObject.setProperty("loadedCondition", scriptLoadCondition);
+		jsonObject.setProperty("executionTryInterval", interval);
 
-		out.write("Aranea.ScriptLoader.loadLazily('"+ scriptFile + "', "+ scriptToExecute+ ", "+ scriptLoadCondition + ", "+ interval + ");");
+		out.write("Aranea.ScriptLoader.loadHeadScript("+ jsonObject.toString() + ");");
 
 		JspUtil.writeEndTag(out, "script");
 		out.write("\n");

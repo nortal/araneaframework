@@ -21,8 +21,13 @@
 var Aranea = Aranea ? Aranea : {};
 Aranea.ScriptLoader = {};
 
-// TODO: what happens when script never loads (closure executed forever?)
-Aranea.ScriptLoader.loadLazily = function(scriptFile, scriptToExecute, loadedCondition, executionTryInterval) {
+// TODO: when requested script never loads and executable script is defined, closure executes forever.
+Aranea.ScriptLoader.loadHeadScript = function(options) {
+  var scriptFile = options.scriptFile;
+  var scriptToExecute = options.scriptToExecute;
+  var loadedCondition = options.loadedCondition;
+  var executionTryInterval = options.executionTryInterval ? options.executionTryInterval : 10;
+
   if (loadedCondition())
     return;
 
@@ -30,7 +35,7 @@ Aranea.ScriptLoader.loadLazily = function(scriptFile, scriptToExecute, loadedCon
   var scriptFileElement = document.createElement('script');
   scriptFileElement.type = 'text/javascript';
   scriptFileElement.src = scriptFile;
-  head.appendChild(script);
+  head.appendChild(scriptFileElement);
 
   // if the script that should be executed after content of scriptFile is defined,
   // try to execute it when the script has fully loaded
@@ -41,56 +46,18 @@ Aranea.ScriptLoader.loadLazily = function(scriptFile, scriptToExecute, loadedCon
 
     self[uniqueScriptId] = function () {
       if (loadedCondition()) {
-      
+        araneaPage().debug("Executing " + uniqueScriptId);
+        scriptToExecute();
       } else {
+        araneaPage().debug("Scheduling '" + uniqueScriptId + "' for later execution.");
         setTimeout("self['"+uniqueScriptId+"']()", executionTryInterval);
       }
     }
+    
+    var executableScriptElement = document.createElement('script');
+    executableScriptElement.type = 'text/javascript';
+    executableScriptElement.innerHTML = "self['"+uniqueScriptId+"']();";
+    head.appendChild(executableScriptElement);
   }
 };
 
-var tinymceloadcondition = function() {
-  return window['js/tiny_mce/tiny_mce.js'];
-}
-
-var tinyMCEInitScript = function() {
-  tinyMCE.init({ 
-    editor_selector : 'richTextEditor', 
-    mode : 'textareas', 
-    theme : 'advanced', 
-    theme_advanced_buttons1 : 'bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink,code', 
-    theme_advanced_buttons3 : '', 
-    theme_advanced_toolbar_location: 'top', 
-    theme_advanced_toolbar_align: 'top', 
-    theme_advanced_path_location : 'bottom', 
-    extended_valid_elements : 'a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]'
-  });
-}
-
-function ensureScriptIsLoaded() {
-   if (window['js/tiny_mce/tiny_mce.js']) {
-     return;
-   }
-
-   var head = document.getElementsByTagName("head")[0];
-   var script = document.createElement('script');
-   script.id = 'daaa';
-   script.type = 'text/javascript';
-   script.src = araneaPage().getServletURL() + '/fileimporter/js/tiny_mce/tiny_mce.js';
-   head.appendChild(script);
-
-   var script2 =  document.createElement('script');
-   script2.type = 'text/javascript';
-   
-   var initScript = "tinyMCE.init({ editor_selector : 'richTextEditor' , mode : 'textareas', theme : 'advanced', theme_advanced_buttons1 : 'bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink,code', theme_advanced_buttons3 : '', theme_advanced_toolbar_location: 'top', theme_advanced_toolbar_align: 'top', theme_advanced_path_location : 'bottom', extended_valid_elements : 'a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]'});";
-   
-   self.tinyMCELazyInitializationFunction = function() {
-     if (tinyMCE) {
-       eval(initScript);
-     } else {
-       setTimeout("self.tinyMCELazyInitializationFunction();", 50);
-     }
-   }  
-
-   head.appendChild(script2);
-}
