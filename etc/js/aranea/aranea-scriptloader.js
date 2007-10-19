@@ -46,10 +46,10 @@ Aranea.ScriptLoader.loadHeadScript = function(options) {
 
     self[uniqueScriptId] = function () {
       if (loadedCondition()) {
-        araneaPage().debug("Executing " + uniqueScriptId);
+        if (araneaPage) araneaPage().debug("Executing " + uniqueScriptId);
         scriptToExecute();
       } else {
-        araneaPage().debug("Scheduling '" + uniqueScriptId + "' for later execution.");
+        if (araneaPage) araneaPage().debug("Scheduling '" + uniqueScriptId + "' for execution after " + executionTryInterval + "ms.");
         setTimeout("self['"+uniqueScriptId+"']()", executionTryInterval);
       }
     }

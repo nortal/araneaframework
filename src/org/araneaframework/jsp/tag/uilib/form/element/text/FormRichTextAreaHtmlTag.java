@@ -44,12 +44,12 @@ public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 	}
 
 	protected int doStartTag(Writer out) throws Exception {
-		ensureScriptLoaded(out);
+		initializeRichEditor(out);
 		
 		return super.doStartTag(out);
 	}
 
-	private void ensureScriptLoaded(Writer out) throws Exception  {
+	protected void initializeRichEditor(Writer out) throws Exception  {
 		JspUtil.writeOpenStartTag(out, "script");
 		JspUtil.writeAttribute(out, "type", "text/javascript");
 		JspUtil.writeCloseStartTag(out);
