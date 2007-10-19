@@ -21,17 +21,34 @@
  */
 
 Aranea.ModalBox = {};
+Aranea.ModalBox.ModalBoxFileName = 'js/modalbox/modalbox.js';
+
 Aranea.ModalBox.show = function() {
-	Modalbox.show(
-		_ap.getSubmitURL(_ap.getSystemForm().araTopServiceId.value, _ap.getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
-		{
-			overlayClose: false, 
+  var showfunc = function() { 
+    Modalbox.show(
+      _ap.getSubmitURL(_ap.getSystemForm().araTopServiceId.value, _ap.getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
+	      {
+	 		overlayClose: false, 
 			width: 800
-		}
-	);
-}
+		  }
+	  );
+  };
+
+  var importname = AraneaPage.getFileImportString(Aranea.ModalBox.ModalBoxFileName);
+  var modalboxloaded = function() { return window[Aranea.ModalBox.ModalBoxFileName]; };
+  
+  Aranea.ScriptLoader.loadHeadScript({
+  	scriptFile: importname, 
+  	scriptToExecute : null, 
+  	loadedCondition : modalboxloaded, 
+  	executionTryInterval: 10
+  });
+  
+  var lazyshow = Aranea.ScriptLoader.createPeriodicalConditionalExecutor(showfunc, modalboxloaded, 10);
+  lazyshow();
+};
 
 Aranea.ModalBox.close = function() {
 	if (Modalbox)
 		Modalbox.hide();
-}
+};

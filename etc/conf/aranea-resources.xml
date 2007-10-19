@@ -36,7 +36,6 @@
     <file path="js/calendar/calendar-en.js" />
     <file path="js/calendar/calendar-setup.js" />
 
-    <file path="js/modalbox/modalbox.js"/>
     <file path="js/prototip/prototip.js"/>
   </files>
 
@@ -44,7 +43,9 @@
     <file path="js/log4javascript/log4javascript.js" />
   </files>
   
+  <!-- other scripts that should not be omnipresent but which must be accessible to fileimporter -->
   <files content-type="text/javascript">
+    <file path="js/modalbox/modalbox.js"/>
     <file path="js/calendar/calendar-et.js"/>
   </files>
 

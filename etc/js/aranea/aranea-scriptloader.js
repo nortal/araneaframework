@@ -16,6 +16,7 @@
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  */
 
 var Aranea = Aranea ? Aranea : {};
@@ -52,8 +53,8 @@ Aranea.ScriptLoader.loadHeadScript = function(options) {
         if (araneaPage) araneaPage().debug("Scheduling '" + uniqueScriptId + "' for execution after " + executionTryInterval + "ms.");
         setTimeout("self['"+uniqueScriptId+"']()", executionTryInterval);
       }
-    }
-    
+    };
+
     var executableScriptElement = document.createElement('script');
     executableScriptElement.type = 'text/javascript';
     executableScriptElement.innerHTML = "self['"+uniqueScriptId+"']();";
@@ -61,3 +62,16 @@ Aranea.ScriptLoader.loadHeadScript = function(options) {
   }
 };
 
+Aranea.ScriptLoader.createPeriodicalConditionalExecutor = function(f, loadedCondition, interval) {
+  var later = function(f) { setTimeout(f, interval); };
+
+  var once = function() {
+    if (loadedCondition()) {
+      f();
+    } else {
+      later(once);
+    }
+  };
+
+  return once;
+};

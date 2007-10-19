@@ -384,6 +384,11 @@ AraneaPage.getRandomRequestId = function() {
   return Math.round(100000*Math.random());
 };
 
+/** @since 1.1 */
+AraneaPage.getFileImportString = function(filename) {
+  return araneaPage().getServletURL() + "/fileimporter/" + filename;
+};
+
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
