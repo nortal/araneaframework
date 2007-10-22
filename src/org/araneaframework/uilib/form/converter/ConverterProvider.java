@@ -20,10 +20,17 @@ import java.io.Serializable;
 import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
+import org.araneaframework.uilib.form.FormElement;
 
 /**
- * Since 1.1 this interface is <code>Serializable</code>.
+ * Provides access to registered {@link Converter}s. 
+ * 
+ * Since 1.1 this interface extends <code>Serializable</code>.
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * 
+ * @see Converter
+ * @see ConverterFactory
+ * @see FormElement#convert()
  */
 public interface ConverterProvider extends Serializable {
   /**
