@@ -57,11 +57,14 @@ Aranea.ScriptLoader.loadHeadScript = function(options) {
 
     var executableScriptElement = document.createElement('script');
     executableScriptElement.type = 'text/javascript';
-    // innerHTML might depending on context not work in IE
-    //var node = document.createTextNode("self['"+uniqueScriptId+"']();");
-    //executableScriptElement.appendChild(node);
+    var script = "self['"+uniqueScriptId+"']();";
+    if (Prototype.Browser.IE) {
+      executableScriptElement.text = script;
+    } else { 
+      var node = document.createTextNode(script);
+      executableScriptElement.appendChild(node);
+    }
     head.appendChild(executableScriptElement);
-    Element.update(executableScriptElement, "self['"+uniqueScriptId+"']();");
   }
 };
 
