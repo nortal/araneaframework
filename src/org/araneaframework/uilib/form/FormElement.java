@@ -23,8 +23,10 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.core.RenderStateAware;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -38,7 +40,7 @@ import org.araneaframework.uilib.util.Event;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormElement extends GenericFormElement implements FormElementContext {
+public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -133,7 +135,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * @param control {@link Control}.
    * @throws Exception 
    */
-  public void setControl(Control control) throws Exception {
+  public void setControl(Control control) {
     Assert.notNullParam(control, "control");
     
     this.control = control;
@@ -210,11 +212,20 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.mandatory = mandatory;
   }
   
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************
-
-  
+  /**
+   * Sets the action listener that deals with background validation of form. It should
+   * be used when custom background validation logic or behaviour is wanted.
+   * Just for using default {@link FormElementValidationActionListener}, only
+   * {@link FormElement#setBackgroundValidation(boolean)} needs to be called with
+   * parameter <code>true</code>.
+   *  
+   * @param actionListener custom listener that should handle validation of this {@link FormElement}
+   * @since 1.1
+   */
+  public void setBackgroundValidationListener(ActionListener actionListener) {
+    clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
+    addActionListener(SEAMLESS_VALIDATION_ACTION_ID, actionListener);
+  }
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -233,10 +244,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
       //Read the control
       getControl()._getWidget().update(input);
     }
-    
-    rendered = false;
   }
-	  
+
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (!isDisabled() && isRendered()) {
       super.action(path, input, output);
@@ -250,8 +259,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
-    this.rendered = true;
-    if (control != null)
+    super.handleAction(input, output);
+    if (control != null && !getActionId(input).equals(SEAMLESS_VALIDATION_ACTION_ID))
       control._getService().action(null, input, output);
   }
   
@@ -289,12 +298,23 @@ public class FormElement extends GenericFormElement implements FormElementContex
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
+    setBackgroundValidationListener(getDefaultBackgroundValidationListener());
   }
-  
+
+  /**
+   * Returns new instance of {@link FormElementValidationActionListener} tied to 
+   * this {@link FormElement}.
+   * 
+   * @since 1.1
+   */
+  protected FormElementValidationActionListener getDefaultBackgroundValidationListener() {
+   return new FormElementValidationActionListener(this);
+  }
+
   protected void destroy() throws Exception {
     if (getControl() != null) 
       getControl()._getComponent().destroy();
-  }	  
+  }
 
   /**
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
@@ -316,7 +336,8 @@ public class FormElement extends GenericFormElement implements FormElementContex
     }
 
     if (getData() != null && isValid()) {
-      getData().setValue(newDataValue);
+      // converting should not affect Control's value -- so setDataValue() instead of setValue() 
+      getData().setDataValue(newDataValue);
     }
   }
 	
@@ -353,13 +374,21 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  }
 	  
 	  /**
-	   * Marks status of this {@link GenericFormElement} rendered.
+	   * Marks status of this {@link FormElement} rendered.
 	   */
 	  public void rendered() {
-	    this.rendered = true;
+	    _setRendered(true);
 	  }
 
-    /**
+	/**
+	 * @since 1.1
+	 */
+	public void _setRendered(boolean rendered) {
+		this.rendered = rendered;
+	}
+
+	/**
+	 * When this returns true, 
      * @since 1.1
      */
     protected boolean isIgnoreEvents() {
@@ -367,16 +396,16 @@ public class FormElement extends GenericFormElement implements FormElementContex
     }
 
     /**
+     * When set 
      * @since 1.1
      */
     protected void setIgnoreEvents(boolean ignoreEvents) {
       this.ignoreEvents = ignoreEvents;
     }
-  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
-  
+
   /**
    * Represents a simple form element view model.
    * 

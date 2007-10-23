@@ -22,11 +22,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -35,6 +39,8 @@ import org.araneaframework.uilib.form.visitor.FormElementVisitor;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
+  /** @since 1.1 */
+  public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
   //*******************************************************************
   // FIELDS
@@ -44,7 +50,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   protected Map properties;
   
   protected boolean converted = false;
-  protected boolean validated = false;  
+  protected boolean validated = false;
+  protected Boolean backgroundValidation = null;
   
   private Set errors;
   
@@ -58,7 +65,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
       constraint.setEnvironment(getConstraintEnvironment());
   }
 
-/**
+  /**
    * Returns all properties of the element as a map (string -&gt; string).
    * 
    * @return all properties as a map.
@@ -131,7 +138,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    * @return whether the element is valid.
    */
-  public boolean convertAndValidate() throws Exception  {
+  public boolean convertAndValidate() {
     convert();
     return validate();
   }  
@@ -140,18 +147,22 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * Converts the element value from control to data item
    */
-  public void convert()  throws Exception {
-    converted = false;  
-    validated = false;
-    
-    if (!isAlive())
-      return;
+  public void convert() {
+    try {
+      converted = false;  
+      validated = false;
+		
+      if (!isAlive())
+        return;
 
-    clearErrors();
+      clearErrors();
 
-    convertInternal();
-  	
-  	converted = isValid();
+      convertInternal();
+		
+      converted = isValid();
+	} catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+	}
   }
     
   
@@ -159,15 +170,21 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * Validates the element.
    * 
    * @return whether the element is valid.
-   * @throws Exception 
    */
-  public boolean validate() throws Exception {
-  	validated = false;  	  	
+  public boolean validate() {
+    boolean valid = false;
+    try {
+  	  validated = false;  	  	
   	
-  	boolean valid = validateInternal();
+  	  valid = validateInternal();
     
-  	validated = valid;  	
-  	return valid;
+  	  validated = valid;
+  	  return valid;
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+
+    return valid;
   }
   
   /**
@@ -208,6 +225,22 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   public Object getValue() {
     return null;
+  }
+  
+  /** @since 1.1 */
+  public void setBackgroundValidation(boolean b) {
+    this.backgroundValidation = Boolean.valueOf(b);
+  }
+
+  /** @since 1.1 */
+  public boolean isBackgroundValidation() {
+    if (this.backgroundValidation == null) {
+      FormContext fctx = ((FormContext) getEnvironment().getEntry(FormContext.class));
+      if (fctx != null)
+        return fctx.isBackgroundValidation();
+      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    }
+    return this.backgroundValidation.booleanValue();
   }
   //*********************************************************************
   //* ABSTRACT METHODS
@@ -298,16 +331,16 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel{
-    
     private Map properties;
 
     /**
      * Takes a outer class snapshot.     
      */
     public ViewModel() {
-      this.properties = GenericFormElement.this.properties;
+      Map m  = GenericFormElement.this.properties;
+      this.properties = m == null ? m : Collections.unmodifiableMap(m);
     }
-    
+
     /**
      * Returns form element properties.
      * @return form element properties.

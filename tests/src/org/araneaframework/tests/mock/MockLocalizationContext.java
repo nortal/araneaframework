@@ -56,4 +56,13 @@ public class MockLocalizationContext implements LocalizationContext {
     throw new NotImplementedException();
   }
 
+  public void addLocaleChangeListener(LocaleChangeListener listener) {
+	// TODO Auto-generated method stub
+	  throw new NotImplementedException();
+  }
+
+  public boolean removeLocaleChangeListener(LocaleChangeListener listener) {
+	// TODO Auto-generated method stub
+	throw new NotImplementedException();
+  }
 }

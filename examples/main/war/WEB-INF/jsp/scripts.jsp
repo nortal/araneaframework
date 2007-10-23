@@ -6,13 +6,16 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt"
 	version="1.2">
 	
+		<ui:importStyles group="defaultStyles" media="screen"/>
+
 		<ui:importStyles file="styles/_styles_global.css" media="all"/>
 		<ui:importStyles file="styles/_styles_new.css" media="screen" />
 		<ui:importStyles file="styles/_styles_screen.css" media="screen"/>
 		<ui:importStyles file="styles/_styles_print.css" media="print" />
-		<ui:importStyles group="defaultStyles" media="screen"/>
+		<ui:importStyles file="css/aranea/comboselect.css" media="screen" />
 
 		<ui:importScripts/>
+		<ui:importScripts file="js/calendar/calendar-et.js" />
 
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
@@ -20,7 +23,11 @@
 		<!-- Enables stand-alone javascript logging
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
-			araneaPage().setDefaultLogger();
+			if (window.console) {
+			  araneaPage().setFirebugLogger();
+			} else if (window['log4javascript/log4javascript.js']) {
+			  araneaPage().setDefaultLogger();
+			}
 		</script>
         -->
 

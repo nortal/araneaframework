@@ -17,6 +17,7 @@
 package org.araneaframework.framework.filter;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -26,8 +27,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseComponent;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ClassLoaderUtil;
+import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
 
@@ -43,10 +46,12 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   private static final Log log = LogFactory.getLog(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;
+  private List localeChangeListeners;
 
   /**
    * Set the name of the language, it must be a <b>valid ISO Language Code</b>. See the
-   * language name in {@link Locale}.
+   * language name in {@link Locale}. This method should only be used when <i>country</i>
+   * and <i>variant</i> are not important at all, otherwise {@link #setLocale(Locale)} must be used.
    */
   public void setLanguageName(String languageName) {
     Assert.notNullParam(languageName, "languageName");
@@ -69,8 +74,14 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   public void setLocale(Locale currentLocale) {
     Assert.notNullParam(currentLocale, "currentLocale");
     
-    log.debug("Current locale switched to: '" + currentLocale + "'.");
-    this.currentLocale = currentLocale;
+    if (!currentLocale.equals(getLocale())) {
+      if (log.isDebugEnabled()) {
+        log.debug("Current locale switched to: '" + currentLocale + "'.");
+      }
+      Locale old = getLocale();
+      this.currentLocale = currentLocale;
+      notifyLocaleChangeListeners(old, getLocale());
+    }
   }
   
   protected Environment getChildEnvironment() {
@@ -127,5 +138,50 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
     
     return MessageFormat.format(message, args);
+  }
+  
+  /** @since 1.1 */
+  public void addLocaleChangeListener(final LocaleChangeListener listener) {
+    if (listener == null)
+      return;
+
+    if (localeChangeListeners == null)
+      localeChangeListeners = new ArrayList();
+
+    ComponentUtil.addListenerComponent(listener, new LocaleChangeListenerDestroyerComponent(listener));
+    localeChangeListeners.add(listener);
+  }
+
+  /** @since 1.1 */
+  public boolean removeLocaleChangeListener(LocaleChangeListener listener) {
+    if (listener == null || localeChangeListeners == null)
+    return false;
+
+    return localeChangeListeners.remove(listener);
+  }
+
+  /** @since 1.1 */
+  protected void notifyLocaleChangeListeners(Locale oldLocale, Locale newLocale) {
+    if (localeChangeListeners != null) {
+      for (Iterator i = localeChangeListeners.iterator(); i.hasNext();) {
+        LocaleChangeListener listener = (LocaleChangeListener) i.next();
+        listener.onLocaleChange(oldLocale, newLocale);
+      }
+    }
+  }
+  
+  private static final class LocaleChangeListenerDestroyerComponent extends BaseComponent {
+    private final LocaleChangeListener listener;
+
+    private LocaleChangeListenerDestroyerComponent(LocaleChangeListener listener) {
+      this.listener = listener;
+    }
+
+    protected void destroy() throws Exception {
+      LocalizationContext context = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+      if (context != null) {
+        context.removeLocaleChangeListener(listener);
+      }
+    }
   }
 }

@@ -24,5 +24,5 @@ import java.io.Serializable;
 public interface SecurityContext extends Serializable {
   boolean hasPrivilege(String privilege);
   
-  void logout() throws Exception;
+  void logout();
 }

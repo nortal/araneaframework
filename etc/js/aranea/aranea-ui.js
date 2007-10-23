@@ -18,8 +18,10 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
-/** DateInput's calendar setup function. See js/calendar/calendar-setup.js for details. */
-function calendarSetup(inputFieldId, dateFormat, alignment) {
+/** @since 1.1 */
+Aranea.UI = {};
+/** @since 1.1 */
+Aranea.UI.calendarSetup = function(inputFieldId, dateFormat, alignment) {
   var CALENDAR_BUTTON_ID_SUFFIX = "_cbutton"; // comes from BaseFormDateTimeInputHtmlTag
   var align = alignment == null ? "Br" : alignment;
   Calendar.setup({
@@ -33,32 +35,47 @@ function calendarSetup(inputFieldId, dateFormat, alignment) {
     align        : align,
     electric     : false
   });
-}
+};
+
+/* @deprecated
+   @since 1.0 **/
+var calendarSetup = Aranea.UI.calendarSetup;
 
 /* fillTime*() and addOptions() functions are used in *timeInputs 
  * for hour and minute inputs/selects. */
-function fillTimeText(el, hourSelect, minuteSelect) {
-  if (document.getElementById(hourSelect).value=='' && document.getElementById(minuteSelect).value=='') {
-    document.getElementById(el).value='';
+/** @since 1.1 */
+Aranea.UI.fillTimeText = function(el, hourSelect, minuteSelect) {
+  if ($(hourSelect).value=='' && $(minuteSelect).value=='') {
+    $(el).value='';
   }
   else {
-    document.getElementById(el).value=document.getElementById(hourSelect).value+':'+document.getElementById(minuteSelect).value;
+    $(el).value=$(hourSelect).value+':'+$(minuteSelect).value;
   }
-}
+};
 
-function fillTimeSelect(timeInput, hourSelect, minuteSelect) {
-  timestr = document.getElementById(timeInput).value;
+/* @deprecated
+   @since 1.0 **/
+var fillTimeText = Aranea.UI.fillTimeText;
+
+/** @since 1.1 */
+Aranea.UI.fillTimeSelect = function(timeInput, hourSelect, minuteSelect) {
+  timestr = $(timeInput).value;
   separatorPos = timestr.indexOf(':');
   hours = timestr.substr(0, separatorPos);
   hourValue = hours.length==1 ? '0'+hours : hours;
-  minuteValue = timestr.substr(separatorPos+1, document.getElementById(timeInput).value.length);
-  document.getElementById(hourSelect).value=hourValue;
-  document.getElementById(minuteSelect).value=minuteValue;
-}
+  minuteValue = timestr.substr(separatorPos+1, $(timeInput).value.length);
+  $(hourSelect).value=hourValue;
+  $(minuteSelect).value=minuteValue;
+};
+
+/* @deprecated
+   @since 1.0 **/
+var fillTimeSelect = Aranea.UI.fillTimeSelect;
 
 // Adds options empty,0-(z-1) to select with option x preselected. Used for
 // *timeInput hour and minute selects.
-function addOptions(selectName, z, x) {
+/** @since 1.1 */
+Aranea.UI.addOptions = function(selectName, z, x) {
   var select=document.getElementsByName(selectName).item(0);
   var emptyOpt=document.createElement("option");
   emptyOpt.setAttribute("value", "");
@@ -71,24 +88,39 @@ function addOptions(selectName, z, x) {
     opt.appendChild(node);
     select.appendChild(opt);
   }
-}
+};
 
-function saveValue(element) {
-  element.oldValue = element.value; 
-}
+/* @deprecated
+   @since 1.0 **/
+var addOptions = Aranea.UI.addOptions;
 
-function isChanged(elementId) {
-  var el = document.getElementById(elementId);
+/** @since 1.1 */
+Aranea.UI.saveValue = function(element) {
+  $(element).oldValue = $(element).value; 
+};
+
+/* @deprecated
+   @since 1.0 **/
+var saveValue = Aranea.UI.saveValue;
+
+/** @since 1.1 */
+Aranea.UI.isChanged = function(elementId) {
+  var el = $(elementId);
   if (!el.oldValue) {
   	if (el.value != '')
       return true;
     return false;
   }
   return (el.oldValue != el.value);
-}
+};
+
+/* @deprecated
+   @since 1.0 **/
+var isChanged = Aranea.UI.isChanged;
 
 //--------------- Scroll position saving/restoring --------------//
-function saveScrollCoordinates() {
+/** @since 1.1 */
+Aranea.UI.saveScrollCoordinates = function() {
 	var x, y;
 
 	if (document.documentElement && document.documentElement.scrollTop) {
@@ -113,10 +145,48 @@ function saveScrollCoordinates() {
 	if (form.windowScrollY) {
 		form['windowScrollY'].value = y;
 	}
-} 
+};
 
-function scrollToCoordinates(x, y) {
-	window.scrollTo(x, y);
-} 
+/* @deprecated
+   @since 1.0 **/
+var saveScrollCoordinates = Aranea.UI.saveScrollCoordinates;
+
+/** @since 1.1 */
+Aranea.UI.scrollToCoordinates = function(x, y) {
+  window.scrollTo(x, y);	
+};
+
+/* @deprecated
+   @since 1.0 **/
+var scrollToCoordinates = Aranea.UI.scrollToCoordinates;
+
+/**
+ * CSS class applied to form elements that are not valid.
+ * @since 1.1 */
+Aranea.UI.InvalidFormElementClass = "aranea-invalid-formelement";
+
+/** 
+ * @param valid boolean specifying whether content in form element is valid
+ * @param el HTML node that contains form element (most often this would be span)
+ * @since 1.1 
+ * */
+Aranea.UI.markFEContentStatus = function(valid, el) {
+  if (el) 	
+    el = $(el);
+  else
+    return;
+
+  var element = el;
+  var parentTagName = element.parentNode.tagName.toLowerCase();
+  if (parentTagName == 'td' || parentTagName == 'th') {
+    element = element.parentNode;
+  }
+
+  if (valid) {
+  	$(element).removeClassName(Aranea.UI.InvalidFormElementClass);
+  } else {
+  	$(element).addClassName(Aranea.UI.InvalidFormElementClass);
+  }
+};
 
 window['aranea-ui.js'] = true;

@@ -88,11 +88,10 @@ public class DateTimeControl extends BaseControl {
     return "Timestamp";
   }
 
-  /**
-   * 
-   */
   public boolean isRead() {
-    return timeControl.isRead() || dateControl.isRead();
+    // if date is not present, control cannot have valid value -- see comment
+    // in addTimeToDate() method
+    return dateControl.isRead();
   }
   
   /**

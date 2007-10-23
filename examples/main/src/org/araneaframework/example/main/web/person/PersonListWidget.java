@@ -23,6 +23,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
@@ -90,7 +91,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventAdd(String eventParameter) throws Exception {
-		getFlowCtx().start(new PersonAddEditWidget(), new FlowContext.Handler() {
+		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
 			public void onFinish(Object returnValue) throws Exception {
@@ -118,7 +119,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		if (!selectOnly) {
 			PersonViewWidget newFlow = new PersonViewWidget(id);
-			getFlowCtx().start(newFlow);
+		getFlowCtx().start(newFlow, null, null);
 		} else {
 			getFlowCtx().finish(id);
 		}

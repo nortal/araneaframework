@@ -19,6 +19,7 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.araneaframework.core.ApplicationComponent;
 
 /**
  * A context for providing localization via exposing the current
@@ -41,9 +42,7 @@ public interface LocalizationContext extends Serializable {
    * Sets the current session locale.
    */
   public void setLocale(Locale locale);
-  
-  
-  
+
   /**
    * Localizes a string returning one that corresponds to the current locale.
    */
@@ -59,8 +58,6 @@ public interface LocalizationContext extends Serializable {
    */
   public ResourceBundle getResourceBundle(Locale locale);
   
-  
-  
   /**
    * Localizes the code and uses it to format the message with the passed arguments. 
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
@@ -72,5 +69,15 @@ public interface LocalizationContext extends Serializable {
    * Localizes the code and uses it to format the message with the passed arguments. 
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
    */
-  public String getMessage(String code, Object[] args);  
+  public String getMessage(String code, Object[] args);
+
+  /** @since 1.1 */
+  public void addLocaleChangeListener(LocaleChangeListener listener);
+  /** @since 1.1 */
+  public boolean removeLocaleChangeListener(LocaleChangeListener listener);
+
+  /** @since 1.1 */
+  public static interface LocaleChangeListener extends ApplicationComponent {
+	  void onLocaleChange(Locale oldLocale, Locale newLocale);
+  }
 }

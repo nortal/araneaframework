@@ -22,9 +22,12 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.jsp.util.JspWidgetUtil;
+import org.araneaframework.uilib.form.FormElement;
 
 
 /**
@@ -38,6 +41,9 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Represents localizable label."
  */
 public class FormSimpleLabelHtmlTag extends PresentationTag {
+  /** @since 1.1 */
+  public static final String LABEL_SPAN_PREFIX = "label-";
+
   public final static String ASTERISK_STYLE = "aranea-label-asterisk";
   
   protected boolean showColon = true;
@@ -53,7 +59,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     String accessKey = JspUtil.getResourceStringOrNull(pageContext, accessKeyId);
     writeLabel(out, JspUtil.getResourceString(pageContext, labelId), mandatory,
         getStyleClass(),
-        forElementId, pageContext, showColon, accessKey);
+        forElementId, pageContext, showColon, accessKey, getStyle());
 
     return EVAL_BODY_INCLUDE;    
   }
@@ -117,6 +123,9 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * STATIC label writing functions
    * ***********************************************************************************/
 
+  /**
+   * @deprecated Use {@link #writeLabel(Writer,String,boolean,String,String,PageContext,boolean,String,String)} instead
+   */
   public static void writeLabel(
       Writer out, 
       String label, 
@@ -126,6 +135,19 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       PageContext pageContext, 
       boolean showColon, 
       String accessKey) throws Exception{
+		writeLabel(out, label, mandatory, styleClass, formElementId,
+				pageContext, showColon, accessKey, null);
+	}
+
+  public static void writeLabel(
+      Writer out, 
+      String label, 
+      boolean mandatory, 
+      String styleClass,
+      String formElementId, 
+      PageContext pageContext, 
+      boolean showColon, 
+      String accessKey, String style) throws Exception{
 
     // Allow accessKey only if it is one-character long
     if (accessKey != null && accessKey.length() != 1) accessKey = null;
@@ -136,7 +158,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       // Find surrounding form's id
       String formId = (String)JspUtil.requireContextEntry(pageContext, FormTag.FORM_FULL_ID_KEY);
       // XXX: even if formElementContext JS should be invoked when writing label, formelement should not be marked as present
-      BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext);
+      BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext, LABEL_SPAN_PREFIX);
       fullFormElementId = formId + "." + formElementId;
     }
 
@@ -151,6 +173,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     // Write <span class=..>
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", styleClass);
+    JspUtil.writeAttribute(out, "style", style);
     JspUtil.writeCloseStartTag_SS(out);
 
     // Write <label ...>
@@ -171,6 +194,13 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
 
     if (formElementId != null) {
       BaseFormElementHtmlTag.writeFormElementContextClose(out);
+    }
+    
+    if (fullFormElementId != null) {
+      ApplicationWidget contextWidget = JspWidgetUtil.getContextWidget(pageContext);
+      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, fullFormElementId.substring(contextWidget.getScope().toString().length()));
+      
+      BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
   }
 

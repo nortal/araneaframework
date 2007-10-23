@@ -41,7 +41,8 @@ import org.araneaframework.uilib.form.FormWidget;
  * @author Oleg Mürk
  */
 public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
-	public final static String COUNTER_KEY = "org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag.KEY";
+	/** @since 1.1 */
+	public static final String FORMELEMENT_SPAN_PREFIX = "fe-span-";
 
 	protected String formFullId;
 	
@@ -62,6 +63,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	
 	protected boolean events = true;
 	protected boolean validateOnEvent = false;
+	protected boolean backgroundValidation = false;
 		
 	protected String accessKey;
 	
@@ -93,7 +95,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		fe.rendered();
 
 		formElementViewModel = 
-			(FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+			(FormElement.ViewModel) fe._getViewable().getViewModel();   
 
 		// Get control	
 		controlViewModel = (formElementViewModel).getControl();
@@ -112,6 +114,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 		
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getFullFieldId());
+		
+		backgroundValidation = fe.isBackgroundValidation();
 
 		// Continue
 		return EVAL_BODY_INCLUDE;		
@@ -119,8 +123,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
 
 	protected int doEndTag(Writer out) throws Exception {
-		if (hasElementContextSpan) 
+		if (hasElementContextSpan) {
 			writeFormElementContextClose(out);
+			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
+		}
 		return super.doEndTag(out);
 	}
 	
@@ -129,7 +135,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		formViewModel = null;
 		formElementViewModel = null;
 		controlViewModel = null;
-	}	
+		backgroundValidation = false;
+	}
 
 	/* ***********************************************************************************
 	 * Tag attributes
@@ -229,15 +236,18 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		writeFormElementContextOpen(out, fullFormId, elementId, true, pageContext);
 	}
 	
+  public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
+    writeFormElementContextOpen(out, fullFormId, elementId, isPresent, pageContext, FORMELEMENT_SPAN_PREFIX);
+  }
 	/** 
 	 * Write a span with random id around the element, and register this span with javascript 
-	 * (done by external behaviour scripts, span functions as keyboard handler).
+	 * (done by external behavior scripts, span functions as keyboard handler).
 	 * Default implementation does not use any parameters except <code>Writer</code> and <code>PageContext</code>.
 	 */
 
-	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext) throws Exception{
+	public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent, PageContext pageContext, String idPrefix) throws Exception{
 		//  Enclose the element in a <span id=someuniqueid>
-		String spanId = "fe-span-" + fullFormId + "." + elementId;
+		String spanId = idPrefix + fullFormId + "." + elementId;
 
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "id", spanId);
@@ -263,6 +273,17 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 */
 	public static void writeFormElementContextClose(Writer out) throws IOException{
 		JspUtil.writeEndTag_SS(out, "span");
+	}
+	
+	/** @since 1.1 */
+	public static void writeFormElementValidityMarkers(Writer out, boolean valid, String spanId) throws Exception {
+		JspUtil.writeOpenStartTag(out, "script");
+		JspUtil.writeAttribute(out, "type", "text/javascript");
+		JspUtil.writeCloseStartTag(out);
+
+		out.write("Aranea.UI.markFEContentStatus(" + valid + ", $('" +spanId + "'));");
+
+		JspUtil.writeEndTag_SS(out, "script");
 	}
 
 	/**

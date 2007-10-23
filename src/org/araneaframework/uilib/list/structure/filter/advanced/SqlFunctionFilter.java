@@ -148,15 +148,15 @@ public abstract class SqlFunctionFilter extends BaseFilter {
 	
 	// add to form
 	
-	public static void addToForm(FilterContext ctx, String id, FormElement element) throws Exception {
+	public static void addToForm(FilterContext ctx, String id, FormElement element) {
 		ctx.getForm().addElement(id, element);
 	}
 	
-	public static void addToForm(FilterContext ctx, String id, Control control) throws Exception {
+	public static void addToForm(FilterContext ctx, String id, Control control) {
 		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control));
 	}
 	
-	public static void addToForm(FilterContext ctx, String id) throws Exception {
+	public static void addToForm(FilterContext ctx, String id) {
 		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id));
 	}
 

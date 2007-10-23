@@ -997,7 +997,6 @@ if (fileUploadExt.uploadSucceeded()) {
   public interface Interface extends Serializable {
     public void update(InputData data) throws Exception;
     public void event(Path path, InputData input) throws Exception;
-    public void process() throws Exception;
     public void render(OutputData output) throws Exception;
   } 
 }</programlisting></para>
@@ -1032,33 +1031,13 @@ if (fileUploadExt.uploadSucceeded()) {
         <listitem>
            
 
-          <literal>process()</literal>
-
-           —this method is called on all the widgets in the hierarchy. It allows widgets to process the result of 
-
-          <literal>event()</literal>
-
-           and 
-
-          <literal>update()</literal>
-
-           calls before rendering. 
-        </listitem>
-
-        <listitem>
-           
-
           <literal>render()</literal>
 
            —the way this method is called depends on how widgets are rendered (see 
 
           <xref linkend="components-render" />
 
-           ). It may be called only after 
-
-          <literal>process()</literal>
-
-           and may be called more than once (or not at all) during one request-response cycle. 
+           ). It may be called more than once (or not at all) during one request-response cycle. 
         </listitem>
       </orderedlist></para>
 
@@ -1332,18 +1311,13 @@ msgCtx.showInfoMessage("Hello world!");</programlisting></para>
       <literal>BaseApplicationWidget</literal> has the following methods that
       may be overridden to allow this processing:</para>
 
-      <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}
-protected void handleProcess() throws Exception {}</programlisting></para>
+      <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}</programlisting></para>
 
       <para><literal>handleUpdate()</literal> is called before event listeners
       are notified and allows to read and save request data preparing it for
       the event. More importantly, this method is called even when no event is
       sent to the current widget allowing one to submit some data to any
-      widget. <literal>handleProcess()</literal> is called after the event
-      listeners are notified and again is called event if current widgets
-      receives no events at all. It allows to prepare the widget for
-      rendering, post-processing the request results without concern whether
-      or not events have been delivered.</para>
+      widget.</para>
     </sect2>
 
     <sect2>
@@ -1508,22 +1482,40 @@ setViewSelector("myWidget/form");
                 message)</literal></entry>
 
                 <entry>Shows a message <literal>message</literal> of type
-                <literal>type</literal> to the user. Message is cleared after
-                the user sees it once.</entry>
+                <literal>type</literal> to the user.</entry>
               </row>
+              
+               <row>
+                <entry><literal>showMessages(String type, Set&lt;String&gt; messages)</literal></entry>
 
+                <entry>Shows messages of type <literal>type</literal> to the user.</entry>
+              </row>
+              
               <row>
                 <entry><literal>showInfoMessage(String
                 message)</literal></entry>
 
                 <entry>Shows an error message to the user.</entry>
               </row>
+              
+             <row>
+                <entry><literal>hideInfoMessage(String
+                message)</literal></entry>
 
+                <entry>Hides an info message from user.</entry>
+              </row>
+              
               <row>
                 <entry><literal>showWarningMessage(String
                 message)</literal></entry>
 
                 <entry>Shows a warning message to the user.</entry>
+              </row>
+              
+              <row>
+                <entry><literal>hideWarningMessage(String message)</literal></entry>
+
+                <entry>Hides a warning message from user.</entry>
               </row>
 
               <row>
@@ -1532,7 +1524,13 @@ setViewSelector("myWidget/form");
 
                 <entry>Shows an informative message to the user.</entry>
               </row>
+              
+              <row>
+                <entry><literal>hideErrorMessage(String message)</literal></entry>
 
+                <entry>Hides an error message from user.</entry>
+              </row>
+              
               <row>
                 <entry><literal>clearMessages()</literal></entry>
 
@@ -1547,6 +1545,19 @@ setViewSelector("myWidget/form");
                 type <literal>type</literal> to the user. The message will be
                 shown until hidden explicitly.</entry>
               </row>
+              
+              <row>
+                <entry><literal>hideMessage(String type, String message);</literal></entry>
+
+                <entry>Removes a message <literal>message</literal> of type <literal>type</literal>.</entry>
+              </row>
+              
+          	<row>
+                <entry><literal>hideMessages(String type, Set&lt;String&gt; messages);</literal></entry>
+				<entry>Removes messages of type <literal>type</literal>.</entry>
+              </row>
+              
+              hideMessages(String type, Set messages);
 
               <row>
                 <entry><literal>hidePermanentMessage(String
@@ -1566,6 +1577,13 @@ setViewSelector("myWidget/form");
                 <entry><literal>clearAllMessages()</literal></entry>
 
                 <entry>Clears all messages (both permanent and usual).</entry>
+              </row>
+              
+              <row>
+                <entry><literal>Map&lt;String, Collection&gt; getMessages()</literal></entry>
+
+                <entry>Returns all present messages as a Map. Keys of the Map are the different message types encountered so far and under the keys 
+                are the messages in a Collection.</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1673,6 +1691,19 @@ getMessageCtx().showInfoMessage(message);
                 message cannot be resolved uses
                 <literal>defaultMessage</literal> instead.</entry>
               </row>
+              
+            <row>
+                <entry><literal>void addLocaleChangeListener(LocaleChangeListener listener);</literal></entry>
+
+                <entry>Registers a listener that will be notified when locale is changed.</entry>
+            </row>
+            
+             <row>
+                <entry><literal>boolean removeLocaleChangeListener(LocaleChangeListener listener)</literal></entry>
+                
+                <entry>Removes a registered listener so that it will not be notified of locale changes anymore. Returns
+                whether the listener was found to be present and actually removed.</entry>
+            </row>
             </tbody>
           </tgroup>
         </informaltable></para>

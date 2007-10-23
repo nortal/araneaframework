@@ -17,12 +17,11 @@
 
 package org.araneaframework.uilib.form.formlist;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -82,8 +81,8 @@ public abstract class BaseFormListWidget extends GenericFormElement {
   }
 
 	/**
-	 * Returns <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
-	 * @return <code>Map&lt;Object key, EditableRow&gt;</code> of initialized editable rows.
+	 * Returns <code>Map&lt;Object key, FormRow&gt;</code> of initialized editable rows.
+	 * @return <code>Map&lt;Object key, FormRow&gt;</code> of initialized editable rows.
 	 */
 	public Map getFormRows() {
     for (Iterator i = getRows().iterator(); i.hasNext();) {
@@ -220,17 +219,14 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	 * @param key row key.
 	 */
 	public void saveRow(Object key) {
-		Map rowsToSave = new HashMap();
-
 		FormRow editableRow = (FormRow) getFormRows().get(key);
-		rowsToSave.put(editableRow.getKey(), editableRow);
 
-    try {
-      formRowHandler.saveRows(rowsToSave);      
-    }
-    catch (Exception e1) {
-      throw ExceptionUtil.uncheckException(e1);
-    }
+		try {
+			formRowHandler.saveRows(Collections.singletonMap(editableRow.getKey(), editableRow));      
+		}
+		catch (Exception e1) {
+			throw ExceptionUtil.uncheckException(e1);
+		}
 	}		
 
 	/**
@@ -238,17 +234,14 @@ public abstract class BaseFormListWidget extends GenericFormElement {
 	 * @param key row key.
 	 */
 	public void deleteRow(Object key) {
-		Set rowsToDelete = new HashSet(1);		
+		getFormRows().remove(key);
 
-		rowsToDelete.add(key);
-    getFormRows().remove(key);
-    
-    try {
-      formRowHandler.deleteRows(rowsToDelete);
-    }
-    catch (Exception e1) {
-      throw ExceptionUtil.uncheckException(e1);
-    }		
+		try {
+			formRowHandler.deleteRows(Collections.singleton(key));
+		}
+		catch (Exception e1) {
+			throw ExceptionUtil.uncheckException(e1);
+		}		
 	}	
 
 	/**

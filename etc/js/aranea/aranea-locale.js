@@ -20,12 +20,12 @@
  
 AraneaLocale = function(lang, cntry) {
   var language = lang;
-  this.getLanguage = function() { return language; }
-  this.setLanguage = function(lang) { language = lang; }
+  this.getLanguage = function() { return language; };
+  this.setLanguage = function(lang) { language = lang; };
 
   var country = cntry;
-  this.getCountry = function() { return country; }
-  this.setCountry = function(cntry) { country = cntry; }
-}
+  this.getCountry = function() { return country; };
+  this.setCountry = function(cntry) { country = cntry; };
+};
 
 window['aranea-locale.js'] = true;

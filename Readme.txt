@@ -1,5 +1,5 @@
 *****************************************
-* THE ARANEA FRAMEWORK, release 1.1-M1  *
+* THE ARANEA FRAMEWORK, release 1.1-M5  *
 *    http://www.araneaframework.org/    *
 *****************************************
 

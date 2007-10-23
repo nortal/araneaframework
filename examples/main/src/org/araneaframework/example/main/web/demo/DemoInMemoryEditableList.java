@@ -108,7 +108,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
 			//Reading data
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).readBean(editableRow.getRow()); 
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).writeToBean(editableRow.getRow()); 
 
 			//Saving data
 			inMemoryHelper.update(editableRow.getKey(), rowData);
@@ -121,7 +121,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 		}
 
 		public void addValidRow(FormWidget addForm) throws Exception {
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).readBean(new DataDTO()); 
+			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).writeToBean(new DataDTO()); 
 
 			inMemoryHelper.add(rowData);
 		}
@@ -138,7 +138,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 			ButtonControl deleteButton = FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
 			deleteButton.addOnClickEventListener(listener);
 
-			rowForm.writeBean(row);
+			rowForm.readFromBean(row);
 			editableRow.getForm().markBaseState();
 		}
 

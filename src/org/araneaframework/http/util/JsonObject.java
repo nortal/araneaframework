@@ -45,7 +45,6 @@ public class JsonObject implements Serializable {
    */
   public void setProperty(String name, String value) {
     Assert.notNullParam(name, "name");
-    Assert.notNullParam(value, "value");
     if (buf.length() > 1)
       buf.append(',');
     buf.append('"');
@@ -66,16 +65,15 @@ public class JsonObject implements Serializable {
    */
   public void setStringProperty(String name, String value) {
     Assert.notNullParam(name, "name");
-    Assert.notNullParam(value, "value");
     if (buf.length() > 1)
       buf.append(',');
     buf.append('"');
     buf.append(StringEscapeUtils.escapeJavaScript(name));
     buf.append('"');
     buf.append(':');
-    buf.append('"');
-    buf.append(StringEscapeUtils.escapeJavaScript(value));
-    buf.append('"');
+    if (value != null) buf.append('"');
+    buf.append(StringEscapeUtils.escapeJavaScript(String.valueOf(value)));
+    if (value != null) buf.append('"');
   }
 
   /**

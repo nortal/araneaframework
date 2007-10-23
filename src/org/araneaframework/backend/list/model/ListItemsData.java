@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class ListItemsData implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +28,15 @@ public class ListItemsData implements Serializable {
 	protected List itemRange;
 
 	protected Long totalCount;
+	
+	/** @since 1.0.11 */
+	public ListItemsData() {}
+	
+	/** @since 1.0.11 */
+	public ListItemsData(List itemRange, Long totalCount) {
+		this.itemRange = itemRange;
+		this.totalCount = totalCount;
+	}
 
 	/**
 	 * @return Returns the itemRange.

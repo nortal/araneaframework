@@ -136,6 +136,12 @@ table.form tr.error td { background: url(../gfx/i14.gif); color: #f61901; }
 table.form tr.error td * { color: #f61901; }
 table.form td.error { background: url(../gfx/i14.gif); color: #f61901; }
 table.form td.error * { color: #f61901; }
+
+table.form tr.aranea-invalid-formelement td { background: url(../gfx/i14.gif); color: #f61901; }
+table.form tr.aranea-invalid-formelement td * { color: #f61901; }
+table.form td.aranea-invalid-formelement { background: url(../gfx/i14.gif); color: #f61901; }
+table.form td.aranea-invalid-formelement * { color: #f61901; }
+
 table.form .submit { font-size: 80%; padding: 0 5px 1px 5px; overflow: visible; margin-top: -1px; cursor: pointer; }
 table.form .limit { color: #bcc2b2; }
 table.form .req { color: #f61901; }
@@ -155,8 +161,14 @@ table.form .small { width: 100px; }
 table.form tr.cols4 .max { width: 200px; }
 table.form tr.cols4 .norm { width: 150px; }
 
+span.error { background: url(../gfx/i14.gif); color: #f61901; }
+span.error * { color: #f61901; }
+span.aranea-invalid-formelement { background: url(../gfx/i14.gif); color: #f61901; }
+span.aranea-invalid-formelement * { color: #f61901; }
+
 /* Error cells in data table just mark input red */
 table td.error * { color: #f61901; }
+table td.aranea-invalid-formelement * { color: #f61901; }
 
 /* Page actions */
 

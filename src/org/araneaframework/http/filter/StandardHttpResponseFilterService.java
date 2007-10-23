@@ -17,11 +17,16 @@
 
 package org.araneaframework.http.filter;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import javax.servlet.ServletResponse;
+import javax.servlet.ServletResponseWrapper;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -35,6 +40,8 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardHttpResponseFilterService extends BaseFilterService {
+  private static final Log log = LogFactory.getLog(StandardHttpResponseFilterService.class);
+
   private String contentType = "text/html; charset=UTF-8";
   private boolean cacheable = false;
   private long cacheHoldingTime = 3600000;
@@ -87,6 +94,36 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
     }
     
     response.setContentType(contentType);
+    log.trace("response.characterEncoding: " + response.getCharacterEncoding());
+
+    int idx = contentType.indexOf(';');
+    if (idx > 0) {
+      // the encoding is set, looking for the charset...
+      idx = contentType.indexOf("charset=", idx + 1);
+      if (idx > 0) {
+        String encoding = contentType.substring(idx + 8);
+        if (!encoding.equals(response.getCharacterEncoding())) {
+          // the encoding didn't change, applying hack...
+          ServletResponse r = ((ServletResponseWrapper) response).getResponse();
+          // detecting Weblogic...
+          Method method = null;
+          try {
+            method = r.getClass().getMethod("getDelegate", null);
+          } catch (NoSuchMethodException e) {
+          }
+          if (method != null) {
+            log.debug("Applying Weblogic hack to set the response character encoding...");
+            HttpServletResponse delegate = (HttpServletResponse) method.invoke(r, null);
+            if (delegate != null) {
+              delegate.setContentType(contentType);
+            }
+          }
+          if (!encoding.equals(response.getCharacterEncoding())) {
+            log.warn("Unable to change the character encoding.");
+          }
+        }
+      }
+    }
     
     if (!cacheable) {
       response.setHeader("Pragma", "no-cache");       

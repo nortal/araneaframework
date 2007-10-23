@@ -1,5 +1,79 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.10.01    | Aranea 1.1-M4
+
+Features and Improvements
+    setInputFilter() method has been added to various Controls                | See #486
+    ProxyActionListener was added (analogous to ProxyEventListener)           | See #490
+    All Aranea JSP <ui:*button> tags now recognize 'tabindex' attribute       | See #473
+    New ListItemsData constructor -- ListItemsData(List itemRange, Long count)| See #494
+    Bundled Prototype JS library was upgraded from 1.5.1 -> 1.5.1.1           | See #489
+    Support for background server-side form validation (while filling form)   | See change #502, #511                                                                              
+    Tab widget (TabContainerWidget) was added to Uilib                        | See change #466, #516, #522
+    A hybrid of text input and select, ComboTextControl was added to Uilib    | See #483
+    Support for right-click menu (ContextMenuWidget)                          | See #487
+    <ui:tooltip> tag was added                                                | See #497
+    Added support for running processes in modal overlay layer                | See change #388, #515
+    The 'root' flow container now is distinguished by additional              | See 
+    'RootFlowContext' environment entry                                       |     #508
+    LocalizationContext now accepts LocaleChangeListeners                     | See #525, #253
+    Documentation updates and some outdated information removal               | See change #522
+
+Bugfixes
+    BeanFormWidget writeToBean (old readBean()) destroying content of subform | See #420
+    FormWidget restoreBaseState() did not work correctly                      | See #507
+    Rare NPE in ListSqlHelper.getDatabase(Filter|Order)Params was removed     | See #249
+    examples/serviceHelloName had stopped working                             | See #510
+    BaseTag.getConfiguration() always returned NULL                           | See #380
+    disableWidget()/enableWidget() do not throw exceptions when called on     | See
+    already disabled/enabled widgets                                          |     #519
+    BaseApplicationWidget erronously tried to route update() to children who  | See
+    were not widgets (to components and services too)                         |     #524
+    
+Deprecation & API changes
+    BeanFormWidget.readFromBean() replaces deprecated writeBean().            | See
+    BeanFormWidget.writeToBean() replaces deprecated readBean().              |   #447
+    We are sorry that old methods were named so confusingly unintuitively.    | & #474
+    'throws Exception' was removed from FormWidget.addElement* signatures     | See #512
+    'throws Exception' was removed ListWidget's FilterHelper.* signatures     | See change #515
+---------------------------------------------------------------------------------------------
+2007.06.22    | Aranea 1.1-M3
+
+Features and Improvements
+    Aranea specific request parameters got prefixes ('araTransactionId', ...) | See
+    There were some name clashes otherwise in integration projects.           |     change #414	
+    TcdAndTldMerger is bundled inside aranea.jar                              | See #434
+    Some minor documentation updates                                          | See change #426, #448
+
+Bugfixes
+    Update regions caused NPE sometimes when active flow was ended in request | See #432
+    Demos->Advanced->Advanced popups last component did not work              | See #424
+---------------------------------------------------------------------------------------------
+2007.06.12    | Aranea 1.1-M2
+
+Features and Improvements
+    FormWidget addElement methods accept hierarchical element identifiers     | See #171
+    Convenience constructors added to composite constraints                   | See change #370
+    Convenience start() methods added to FlowContext                          | See #391
+    MenuItem allows starting new flows from MenuItem 'holders'                | See change #395
+    <ui:messages> tag allows setting HTML div id ('divId' attribute)          | See #384
+    Component interface now includes isAlive() method                         | See #382
+    Framework does not depend on Log4j anymore (uses commons-logging)         | See #377
+    Bundled TinyMCE was upgraded to 2.1.1.1                                   | See change #418
+    Bundled script.aculo.us scripts were upgraded to 1.7.1_beta3              | See change #418
+
+Bugfixes
+    <ui:link> did not work due to attached javascript                         | See #399
+    <ui:tree> did not honor renderer set by TreeWidget.setRetrender()         | See #357
+    List ordering broke in 1.1-M1 every now and then                          | See #389
+    ListWidget broke when ListDataProvider was used directly                  | See #402
+    Convert on uninitialized FormElement's threw NPE (incompatible with 1.0)  | See #400
+    BackendListDataProvider threw NPE when logging was activated              | See #403
+    Exception was thrown when requested to update nonexisting updateregion    | See #406
+    Messages were not updated on client side when they disappeared on server  | See #416
+    FormElement's outside updateregions ignored subsequent request after      | See 
+    partial rendering                                                         |     #411
+---------------------------------------------------------------------------------------------
 2007.05.03    | Aranea 1.1-M1
 
 Features and Improvements

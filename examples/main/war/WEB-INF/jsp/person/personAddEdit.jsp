@@ -77,7 +77,7 @@
 				<!-- template design tag -->
 				<tui:componentActions>
 					<!-- Sends all form data and calls "save" event (handleEventSave) -->
-					<ui:eventButton eventId="save" labelId="#Add" />
+					<ui:eventButton eventId="save" labelId="#OK" />
 					<!-- Sends all form data and calls "cancel" event (handleEventCancel) -->
 					<ui:eventButton eventId="cancel" labelId="#Cancel" />
 				</tui:componentActions>

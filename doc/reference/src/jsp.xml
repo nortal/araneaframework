@@ -57,117 +57,32 @@
 &lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
   xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
-  &lt;ui:root&gt;
-    &lt;ui:viewPort&gt;
-      &lt;html&gt;
-        &lt;head&gt;
-          &lt;title&gt;Aranea Template Application&lt;/title&gt;
-          
-          &lt;ui:importScripts/&gt;      
-          &lt;ui:importStyles/&gt;      
+  &lt;ui:widgetContext&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Aranea Template Application&lt;/title&gt;
+         
+        &lt;ui:importScripts/&gt;      
+        &lt;ui:importStyles/&gt;      
    
-        &lt;/head&gt;
+      &lt;/head&gt;
     
-          &lt;ui:body&gt;
-            &lt;ui:systemForm method="POST"&gt;
-              &lt;h1&gt;Aranea Template Application&lt;/h1&gt;
+        &lt;ui:body&gt;
+          &lt;ui:systemForm method="POST"&gt;
+            &lt;h1&gt;Aranea Application&lt;/h1&gt;
               
-              &lt;ui:messages/&gt;
+            &lt;ui:messages/&gt;
 
-              &lt;ui:widgetInclude id="root"/&gt;
-            &lt;/ui:systemForm&gt;
+            &lt;ui:widgetInclude id="root"/&gt;
+          &lt;/ui:systemForm&gt;
           
-        &lt;/ui:body&gt;   
-      &lt;/html&gt;
-    &lt;/ui:viewPort&gt;
-  &lt;/ui:root&gt;
+      &lt;/ui:body&gt;   
+    &lt;/html&gt;
+  &lt;/ui:widgetContext&gt;
 &lt;/jsp:root&gt;
 </programlisting> Next are described all these tags except
     &lt;ui:widgetInclude&gt;, which is described in the following
     section.</para>
-
-    <sect2>
-      <title>&lt;ui:root&gt;</title>
-
-      <para>This tag should always be the root of any Aranea template JSP. Its
-      main function is to allow JSP access the controller.</para>
-
-      <sect3>
-        <title>Variables</title>
-
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="2*" />
-
-            <colspec colwidth="5*" />
-
-            <colspec align="center" colwidth="2*" />
-
-            <thead>
-              <row>
-                <entry>Variable</entry>
-                <entry>Description</entry>
-                <entry>Type</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry>outputData</entry>
-
-                <entry>The <literal>org.araneaframework.OutputData</literal>
-                that represents the current response.</entry>
-
-                <entry><literal>org.araneaframework.OutputData</literal></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </sect3>
-    </sect2>
-
-    <sect2>
-      <title>&lt;ui:viewPort&gt;</title>
-
-      <para>This tag should be immediately under the &lt;ui:root&gt; tag for
-      any application that uses widgets. It allows widgets to be rendered and
-      included.</para>
-      
-            <sect3>
-        <title>Variables</title>
-
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="2*" />
-
-            <colspec colwidth="5*" />
-
-            <colspec align="center" colwidth="2*" />
-
-            <thead>
-              <row>
-                <entry>Variable</entry>
-                <entry>Description</entry>
-                <entry>Type</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry>outputData</entry>
-
-                <entry>The <literal>org.araneaframework.OutputData</literal>
-                that represents the current response.</entry>
-
-                <entry><literal>org.araneaframework.OutputData</literal></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </sect3>
-      
-      
-    </sect2>
 
     <sect2>
       <title>&lt;ui:importScripts&gt;</title>
@@ -543,6 +458,13 @@
 
                 <entry>CSS class applied to rendered messages, default being
                 <literal>aranea-messages</literal>.</entry>
+              </row>
+              
+               <row>
+                <entry>divId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Sets the id of the HTML <emphasis>&lt;div&gt;</emphasis> inside which the messages are rendered.
+                If left unspecified, no id is assigned.</entry>
               </row>
               
               <row>
@@ -1397,6 +1319,14 @@
                 go server side or not. If left unspecified, this is considered
                 to be <literal>true</literal>.</entry>
               </row>
+              
+               <row>
+                <entry>tabindex</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
@@ -2179,6 +2109,55 @@
     </sect2>
 
      
+     <sect2 id="tooltiphtmltag">
+      <title>&lt;ui:tooltip&gt;</title>
+
+      <para>Defines tooltip that is shown when web application user hovers mouse over element to which the tooltip is attached.</para>
+      
+      <para>
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Applicable to:</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>element</entry>
+
+                <entry>
+                  <emphasis>yes</emphasis>
+                </entry>
+
+                <entry>HTML id of DOM element that is target of the tooltip.</entry>
+              </row>
+              
+             <row>
+                <entry>text</entry>
+
+                <entry>
+                  <emphasis>yes</emphasis>
+                </entry>
+
+                <entry>Tooltip content.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </para>
+    </sect2>
 
     <sect2>
       <title>&lt;ui:basicButton&gt;</title>
@@ -2701,7 +2680,62 @@ public class DummyTag extends BaseTag {
       lot of memory unless resources are deallocated.</para>
     </sect2>
 
-     
+         <sect2 id="tagattributeinheritance">
+      <title>Inheriting tag attributes from base tags.</title>
+      <para>
+      	Custom tags extending Aranea tags are able to accept all supertag attributes,
+      	but these must be also defined in TLD, otherwise the JSP containers
+      	will complain. As some base tags may be abstract, information about
+      	their attributes cannot be deduced from Aranea JSP standard TLD. 
+      	To address this problem, Aranea distribution does the following: 
+      	aranea.jar and aranea-jsp.jar include the file META-INF/aranea-standard.tcd
+      	(<emphasis>TCD</emphasis> stands for <emphasis>Tag Class Descriptor</emphasis>)
+      	which includes the attribute information for all Aranea Standard JSP classes.
+      	To make use of this information, one first generates TLD for custom tag classes and then
+      	merges the TCD information into it. It is done with <literal>org.araneaframework.buildutil.TcdAndTldMerger</literal>
+      	utility included in aranea.jar (since 1.0.10, previously it had to be compiled separately after downloading distribution).
+      	All custom compiled tag classes as well as Aranea JSP tag classes must be available on classpath when using this utility.
+      </para>
+      
+      <para>
+        Example of using the <literal>TcdAndTldMerger</literal> utility:
+      </para>
+      
+      <para>
+<programlisting role="xml"><![CDATA[<target name="tld">
+  <!-- generate TLD without parent attribute information -->
+  <webdoclet destdir="somedir" force="false" >
+    <fileset dir="${src.dir}" includes="**/*Tag.java"/>
+
+    <jsptaglib validatexml="true"
+      shortName="shortName"
+      filename="filename.tld"
+      uri="customuri"
+      description="description"
+    />
+  </webdoclet>
+
+  <!-- invoke the TcdAndTldMerger utility -->
+  <java classname="org.araneaframework.buildutil.TcdAndTldMerger" fork="true">
+    <arg value="META-INF/aranea-standard.tcd"/>    <!-- Tag class descriptor to merge with -->
+    <arg value="somedir/filename.tld"/>            <!-- Source TLD -->
+    <arg value="somedir/filename.tld"/>            <!-- Destination TLD -->
+    <classpath>
+    <path refid="araneaclasspath"/>
+      <path refid="compiledcustomtagclasses"/>
+      <path refid="varia">
+    </classpath>
+  </java>
+
+</target>]]></programlisting>
+      </para>
+      
+      <para>
+      When running given target, one should see messages similar to following:
+<programlisting role="java"><![CDATA[8 attributes for 'custom.RandomTag' found from 'org.araneaframework.jsp.tag.presentation.PresentationTag'.]]>
+</programlisting>
+</para>
+      </sect2>
 
     <sect2>
       <title>Widgets and events</title>

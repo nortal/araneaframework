@@ -42,7 +42,6 @@
         <antcall target="pdf"/>
         <antcall target="html"/>
         <antcall target="html-single"/>
-        <antcall target="copy-shared"/>
     </target>
 
 
@@ -87,7 +86,7 @@
         </java>
     </target>
 
-    <target name="pdf" depends="pdf-normal,pdf-customized"
+    <target name="pdf" depends="pdf-normal,pdf-customized,copy-shared"
             description="Generates the PDF documentation only for a age (set ">
         <!-- House keeping,delete temporary files. -->
         <delete failonerror="false">
@@ -96,7 +95,7 @@
         <delete  dir="${build.dir}/pdf/images"/>
     </target>
 
-    <target name="html"
+    <target name="html" depends="copy-shared"
             description="Generates the HTML documentation only for a age (set ">
 
         <mkdir dir="${build.dir}/html/"/>
@@ -115,7 +114,7 @@
     		<delete dir="${build.dir}/html/conf"/>
     </target>
 
-    <target name="html-single"
+    <target name="html-single" depends="copy-shared"
         description="Generates the single-page HTML documentation only for a age (set ">
 
         <mkdir dir="${build.dir}/html_single/"/>

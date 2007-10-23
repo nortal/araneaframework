@@ -26,6 +26,10 @@ import java.io.Serializable;
  * @since 1.1
  */
 public interface UpdateRegionContext extends Serializable {
+  /**
+   * The request key for update regions that should be processed by this {@link UpdateRegionContext}.
+   */
+  public static final String UPDATE_REGIONS_KEY = "updateRegions";
 
   /**
    * Disable updateregion filter during this request only. Already rendered data
@@ -44,33 +48,5 @@ public interface UpdateRegionContext extends Serializable {
    * @param widgetId id of the widget that will render the document region
    */
   void addDocumentRegion(String documentRegionId, String widgetId);
-
-  /**
-   * Add a handler for custom region.
-   * 
-   * @param name
-   *          handler name. Javascript handler with the same name will be called
-   *          in client-side.
-   * @param handler
-   *          handler
-   */
-  void addRegionHandler(String name, RegionHandler handler);
-
-  /**
-   * A way to pass custom data back to client-side via AJAX requests.
-   */
-  interface RegionHandler extends Serializable {
-
-    /**
-     * Will be called only when updateregion filter is activated on AJAX
-     * requests.
-     * 
-     * @return content that will be passed to Javascript region handler in
-     *         client-side. If <code>null</code> is returned, then Javascript
-     *         region handler will not be called.
-     */
-    String getContent() throws Exception;
-
-  }
 
 }

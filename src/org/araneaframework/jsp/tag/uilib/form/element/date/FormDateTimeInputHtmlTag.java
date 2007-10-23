@@ -8,6 +8,7 @@ import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -141,7 +142,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     out.write("<select id=\"" + name + ".select2\" name=\""
         + name
         + ".select2\" onChange=\"" +
-        fillXJSCallConstructor("fillTimeText", name)
+        fillXJSCallConstructor("Aranea.UI.fillTimeText", name)
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
     if (disabled)
@@ -167,7 +168,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     out.write("<select id=\"" + name + ".select1\" name=\""
         + name
         + ".select1\" onChange=\"" + 
-        fillXJSCallConstructor("fillTimeText", name)
+        fillXJSCallConstructor("Aranea.UI.fillTimeText", name)
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
     if (disabled)
       out.write(" disabled=\"true\"");
@@ -193,6 +194,10 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   protected void writeTimeInput(Writer out, String name, String value,
       String label, Long size, boolean disabled) throws Exception {
     DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
+
+    if (viewModel.getTimeViewModel().getInputFilter() != null) {
+    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getTimeViewModel().getInputFilter().getCharacterFilter());
+	}
 	  
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", name + ".time");
@@ -204,7 +209,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
-        JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
+        JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getTimeInputOnChangePrecondition(name+".time"));
     	out.write(" ");
@@ -213,7 +218,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     StringBuffer onBlur = new StringBuffer();
     if (showTimeSelect) 
-      onBlur.append(fillXJSCallConstructor("fillTimeSelect", name) + ";");
+      onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name) + ";");
     if (!disabled && events && viewModel.isOnChangeEventRegistered())
       onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onBlur", onBlur.toString());
@@ -245,10 +250,15 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 			DateControl.ViewModel viewModel) throws Exception {
 		DateTimeControl.ViewModel dateTimeViewModel = ((DateTimeControl.ViewModel) controlViewModel);
 		// Write input tag
+		
+	    if (dateTimeViewModel.getDateViewModel().getInputFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getInputFilter().getCharacterFilter());
+		}
+		
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
 		JspUtil.writeAttribute(out, "name", name);
-		JspUtil.writeAttribute(out, "class", getStyleClass());
+		JspUtil.writeAttribute(out, "class", styleClass);
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "type", "text");
 		JspUtil.writeAttribute(out, "value", value);	

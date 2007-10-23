@@ -30,8 +30,8 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class RootWidget extends BaseUIWidget implements SecurityContext {
-	  private static final long serialVersionUID = 1L;
-  private MenuWidget menuWidget;
+	private static final long serialVersionUID = 1L;
+	private MenuWidget menuWidget;
 	private Widget topWidget;
 
 	public RootWidget() {}
@@ -42,9 +42,12 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 
 	protected void init() throws Exception {
 		menuWidget = new MenuWidget(topWidget);
-		topWidget = null;
 		addWidget("menu", menuWidget);
 		setViewSelector("root");
+		
+		if (topWidget == null)
+			menuWidget.selectMenuItem("Aranea_1_1");
+		topWidget = null;
 	}
 
 	protected Environment getChildWidgetEnvironment() throws Exception {
@@ -59,7 +62,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 		return menuWidget;
 	}
 
-	public void logout() throws Exception {
+	public void logout() {
 		getFlowCtx().replace(new LoginWidget(), null);
 	}
 }

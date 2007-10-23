@@ -51,15 +51,15 @@ public class LikeFilter extends BaseFieldFilter {
 		return filter;
 	}
 	
-	public static void addToForm(FilterContext ctx, String id, FormElement element) throws Exception {
+	public static void addToForm(FilterContext ctx, String id, FormElement element) {
 		ctx.getForm().addElement(id, element);
 	}
 	
-	public static void addToForm(FilterContext ctx, String id, Control control) throws Exception {
+	public static void addToForm(FilterContext ctx, String id, Control control) {
 		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control, new StringData()));
 	}
 
-	public static void addToForm(FilterContext ctx, String id) throws Exception {
+	public static void addToForm(FilterContext ctx, String id) {
 		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, new TextControl(), new StringData()));
 	}
 
@@ -67,7 +67,7 @@ public class LikeFilter extends BaseFieldFilter {
 		// private
 	}
 	
-	public void init(Environment env) throws Exception {
+	public void init(Environment env) {
 		ConfigurationContext cfg = (ConfigurationContext) env.getEntry(ConfigurationContext.class);
 		if (cfg != null) {
 			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);

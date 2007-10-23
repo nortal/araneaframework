@@ -28,13 +28,13 @@ public abstract class MultiFilter implements ListFilter {
 	
 	protected List children = new ArrayList();
 	
-	public void init(Environment env) throws Exception {
+	public void init(Environment env) {
 		for (Iterator i = children.iterator(); i.hasNext();) {
 			ListFilter filter = (ListFilter) i.next();
 			filter.init(env);
 		}
 	}
-	public void destroy() throws Exception {
+	public void destroy() {
 		clearFilters();
 	}
 	public MultiFilter addFilter(ListFilter filter) {
@@ -44,7 +44,7 @@ public abstract class MultiFilter implements ListFilter {
 	public List getFilters() {
 		return this.children;
 	}
-	public void clearFilters() throws Exception {
+	public void clearFilters() {
 		for (Iterator i = children.iterator(); i.hasNext();) {
 			ListFilter filter = (ListFilter) i.next();
 			filter.destroy();

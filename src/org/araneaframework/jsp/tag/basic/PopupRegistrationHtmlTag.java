@@ -43,7 +43,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
-      out.write("_ap.addSystemLoadEvent(processPopups);\n");
+      out.write("_ap.addSystemLoadEvent(Aranea.Popups.processPopups);\n");
 
       addPopups(out, popups);
       JspUtil.writeEndTag(out, "script");
@@ -62,7 +62,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
     String serviceId = (String)popup.getKey();
     PopupServiceInfo serviceInfo = (PopupServiceInfo)popup.getValue();
 
-    out.write("addPopup('"  + serviceId + "'");
+    out.write("Aranea.Popups.addPopup('"  + serviceId + "'");
     out.write(", '");
     out.write(serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString():"");
     out.write("', '");

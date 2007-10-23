@@ -116,6 +116,6 @@ var AraneaTree = {
 		};
 	}
 
-}
+};
 
 window['aranea-tree.js'] = true;
