@@ -121,7 +121,7 @@ protected void writeOptions(Writer out, OptionModel optionModel,String selectedV
 	  
 	  for(Iterator i = optionModelMap.entrySet().iterator(); i.hasNext();) {
 		  Map.Entry entry = (Map.Entry)i.next();
-		  String value = optionModel.getValueEncoder().getValue(entry.getValue());
+		  String value = optionModel.getValueEncoder().encode(entry.getValue());
 		  String label = optionModel.getDisplayEncoder().getDisplay(entry.getValue());
 
 		  JspUtil.writeOpenStartTag(out, "option");

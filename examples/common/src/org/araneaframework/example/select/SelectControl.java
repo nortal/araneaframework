@@ -132,7 +132,7 @@ public class SelectControl extends StringValueControl {
 
 		public String getSimpleValue() {
 			// XXX: which option group?????
-			return SelectControl.this.optionModel.getValueEncoder().getValue(SelectControl.this.getRawValue());
+			return SelectControl.this.optionModel.getValueEncoder().encode(SelectControl.this.getRawValue());
 		}
 	}  
 }

@@ -42,7 +42,7 @@ public interface OptionModel extends Serializable {
 	DisplayEncoder getDisplayEncoder();
 	
 	interface ValueEncoder extends Serializable {
-		String getValue(Object o);
+		String encode(Object o);
 	}
 
 	interface DisplayEncoder extends Serializable {

@@ -32,7 +32,7 @@ public class StandardOptionModel implements OptionModel {
 	}
 	
 	public void addOption(Object option) {
-		this.options.put(getValueEncoder().getValue(option), option);
+		this.options.put(getValueEncoder().encode(option), option);
 	}
 
 	public void addOptions(Collection options) {
@@ -96,7 +96,7 @@ public class StandardOptionModel implements OptionModel {
 	}
 
 	public boolean removeOption(Object option) {
-		return this.options.remove(getValueEncoder().getValue(option)) != null;
+		return this.options.remove(getValueEncoder().encode(option)) != null;
 	}
 
 	public void removeOptions(Collection options) {
@@ -149,7 +149,7 @@ public class StandardOptionModel implements OptionModel {
 	protected static class BasicValueEncoder implements ValueEncoder {
 		private static final long serialVersionUID = 1L;
 
-		public String getValue(Object o) {
+		public String encode(Object o) {
 			return String.valueOf(o.hashCode());
 		}
 	}

@@ -33,7 +33,7 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		personSelectControl.getModel().setValueAndDisplayEncoder(new X());
 		
 		form = new FormWidget();
-		//form.addElement("tstelement", "#noalble", new StraightSelectControl(), new  StringData(), false);
+		form.addElement("tstelement", "#noalble", new StraightSelectControl(), new  StringData(), false);
 		form.addElement("nt", "#new text", new StraightTextControl(), new StringData(), null, true);
 		
 		personSelect = form.createElement("#Persons", personSelectControl, new ObjectData(), false);
@@ -68,11 +68,11 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 		groupedPersonSelect = form.createElement("#Persons", new SelectControl(optionModel), new ObjectData(), false);
 		((SelectControl)groupedPersonSelect.getControl()).getModel().setValueAndDisplayEncoder(new X());
 		
-//		form.addElement("personSelect", personSelect);
-//		form.addElement("groupedPersonSelect", groupedPersonSelect);
+		form.addElement("personSelect", personSelect);
+		form.addElement("groupedPersonSelect", groupedPersonSelect);
 		
-		personSelect.setDisabled(true);
-		groupedPersonSelect.setDisabled(true);
+		personSelect.setDisabled(false);
+		groupedPersonSelect.setDisabled(false);
 
 		addWidget("form", form);
 	}
@@ -82,9 +82,9 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 	}
 	
 	public void handleEventSubmit() throws Exception {
-		//form.convert();
-		
-		//getMessageCtx().showInfoMessage(new ReflectionToStringBuilder(groupedPersonSelect.getValue()).toString());
+		form.convert();
+
+        getMessageCtx().showInfoMessage(new ReflectionToStringBuilder(groupedPersonSelect.getValue()).toString());
 	}
 	
 	private static class X implements ValueAndDisplayEncoder {
@@ -92,7 +92,7 @@ public class NewSelectDemoWidget extends TemplateBaseWidget {
 			return ((PersonMO)o).getName();
 		}
 
-		public String getValue(Object o) {
+		public String encode(Object o) {
 			if (o == null)
 				return null;
 			

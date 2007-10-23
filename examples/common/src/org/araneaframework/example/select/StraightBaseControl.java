@@ -100,6 +100,8 @@ public class StraightBaseControl extends BaseApplicationWidget implements Contro
 		if (value instanceof Collection) {
 			clientValue = (Collection) value;
 		} else {
+            if (clientValue == null)
+              clientValue = new ArrayList(1);
 			clientValue.clear();
 			clientValue.add(value);
 		}

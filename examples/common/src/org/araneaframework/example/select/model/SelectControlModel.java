@@ -42,7 +42,7 @@ public class SelectControlModel implements SelectModel {
 	}
 	
 	public static class ToStringSelectValueAdapter implements ValueEncoder {
-		public String getValue(Object object) {
+		public String encode(Object object) {
 			return object.toString();
 		}
 	}
