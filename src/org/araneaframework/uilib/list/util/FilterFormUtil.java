@@ -35,8 +35,7 @@ public class FilterFormUtil {
 	public static final String TEMPORARY_LABEL = "";
 	public static final String DO_NOT_LOCALIZE_PREFIX = "#"; 
 	
-	public static FormElement createElement(FilterContext ctx, String id)
-		throws Exception {
+	public static FormElement createElement(FilterContext ctx, String id) {
 		Class type = ctx.getFieldType(id);
 		FormElement result = FormUtil.createElement(TEMPORARY_LABEL,
 				FormUtil.createControl(type),
@@ -46,7 +45,7 @@ public class FilterFormUtil {
 	}
 	
 	public static FormElement createElement(FilterContext ctx, String id,
-			Control control) throws Exception {
+			Control control) {
 		FormElement result = FormUtil.createElement(TEMPORARY_LABEL, control,
 				FormUtil.createData(ctx.getFieldType(id)), false);
 		setLabel(ctx, result, id);
@@ -54,7 +53,7 @@ public class FilterFormUtil {
 	}
 	
 	public static FormElement createElement(FilterContext ctx, String id,
-			Control control, Data data) throws Exception {
+			Control control, Data data) {
 		FormElement result = FormUtil.createElement(TEMPORARY_LABEL, control, data, false); 
 		setLabel(ctx, result, id);
 		return result;

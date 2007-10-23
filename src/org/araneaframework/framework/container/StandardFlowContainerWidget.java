@@ -37,6 +37,7 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.FlowContextWidget;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -44,7 +45,7 @@ import org.araneaframework.framework.FlowContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContext {
+public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContextWidget {
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
@@ -64,6 +65,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    * The top callable widget.
    */
   protected Widget top;
+  protected boolean finishable = true;
   
   private Map nestedEnvironmentEntries = new HashMap();
   private Map nestedEnvEntryStacks = new HashMap();
@@ -89,6 +91,22 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   
   public void setTop(Widget topWidget) {
     this.top = topWidget;
+  }
+
+  
+  /**
+   * Determines whether this {@link StandardFlowContainerWidget} will ever
+   * return control to {@link FlowContext} higher in the {@link org.araneaframework.Component}
+   * hierarchy. If such {@link FlowContext} exists and finishable is set to true, this
+   * {@link StandardFlowContainerWidget} will return control to it when last running flow
+   * inside it is finished ({@see FlowContext#finish(Object)}) or canceled ({@see FlowContext#cancel()}).
+   * 
+   * Default is <code>true</code>.
+   * @param finishable
+   * @since 1.1
+   */
+  public void setFinishable(boolean finishable) {
+    this.finishable = finishable;
   }
 
   public void start(Widget flow) {
@@ -180,7 +198,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
       }
-    }                
+    }
+
+    if (finishable && callStack.size() == 0) {
+      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
+      if (parentFlowContainer != null) {
+        parentFlowContainer.finish(returnValue);
+      }
+    }
   }
 
   public void cancel() {
@@ -204,7 +229,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
     catch (Exception e) {
       throw ExceptionUtil.uncheckException(e);
-    }   
+    }
+
+    if (finishable && callStack.size() == 0) {
+      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
+      if (parentFlowContainer != null) {
+        parentFlowContainer.cancel();
+      }
+    }
   }
   
   public FlowContext.FlowReference getCurrentReference() {
@@ -408,6 +440,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
     
     /**
+     * @return unique child key for contained {@link Widget}. 
      * @since 1.1
      */
     public String getName() {

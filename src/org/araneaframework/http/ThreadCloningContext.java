@@ -27,5 +27,5 @@ import java.io.Serializable;
  */
 public interface ThreadCloningContext extends Serializable {
   /** key indicating that incoming request is requesting cloning of the current session thread */
-  public static final String CLONING_REQUEST_KEY = "pleaseClone";
+  public static final String CLONING_REQUEST_KEY = "araPleaseClone";
 }

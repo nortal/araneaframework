@@ -16,9 +16,9 @@
 
 package org.araneaframework.framework;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import org.araneaframework.http.UpdateRegionProvider;
 
 /**
  * A context for adding messages to a central pool of messages for later 
@@ -41,8 +41,10 @@ import java.util.Set;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public interface MessageContext extends Serializable {
-  
+public interface MessageContext extends UpdateRegionProvider {
+  /** @since 1.1 */
+  public static final String MESSAGE_REGION_KEY = "messages";
+
   /**
    * A message type indicating its an error message. 
    */
@@ -56,8 +58,8 @@ public interface MessageContext extends Serializable {
   /**
    * A message type indicating its an info message.
    */
-  public static final String INFO_TYPE = "info";  
-  
+  public static final String INFO_TYPE = "info";
+
   /**
    * Shows a message <code>message</code> of type <code>type</code> to the user. 
    * Message is cleared after the user sees it once.
@@ -104,7 +106,7 @@ public interface MessageContext extends Serializable {
   public void showWarningMessage(String message);
 
   /**
-   * Hides an error message from user.
+   * Hides a warning message from user.
    * @since 1.1
    */
   public void hideWarningMessage(String message);
@@ -115,7 +117,7 @@ public interface MessageContext extends Serializable {
   public void showInfoMessage(String message);
   
   /**
-   * Hides an error message from user.
+   * Hides an info message from user.
    * @since 1.1
    */
   public void hideInfoMessage(String message);

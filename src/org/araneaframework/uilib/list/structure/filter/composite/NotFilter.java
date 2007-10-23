@@ -28,10 +28,10 @@ public class NotFilter implements ListFilter {
 	public NotFilter(ListFilter filter) {
 		this.filter = filter;
 	}
-	public void init(Environment env) throws Exception {
+	public void init(Environment env) {
 		this.filter.init(env);
 	}
-	public void destroy() throws Exception {
+	public void destroy() {
 		this.filter.destroy();
 	}
 	public Expression buildExpression(Map data) {

@@ -45,6 +45,7 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttribute(out, "border", "0");
 		JspUtil.writeAttribute(out, "href", "#");
+		JspUtil.writeAttribute(out, "tabindex", tabindex);
 		if (event.getId() != null) {
 		  JspUtil.writeEventAttributes(out, event);
 		  JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -24,6 +25,7 @@ import org.araneaframework.uilib.form.control.TimeControl;
  */
 public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   protected boolean showTimeSelect = true;
+  protected boolean surroundingTable = true; 
 
   {
     baseStyleClass = "aranea-time";
@@ -37,9 +39,8 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
 
-    // Write
-    out
-        .write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
+    if (surroundingTable)
+    	out.write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
     this.writeTimeInput(out, name, name, viewModel.getSimpleValue(),
         localizedLabel, timeInputSize, viewModel.isDisabled(),
         accessKey);
@@ -70,7 +71,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
     }
 
-    out.write("</td></tr></table>\n");
+    if (surroundingTable) out.write("</td></tr></table>\n");
 
     super.doEndTag(out);
     return EVAL_PAGE;
@@ -79,7 +80,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
     TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
     out.write("<select id=\"" + name + ".select2\" name=\"" + name + ".select2\" onChange=\""
-        + fillXJSCallConstructor("fillTimeText", name, name + ".select1", name + ".select2")
+        + fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name + ".select1", name + ".select2")
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
     if (disabled)
@@ -96,6 +97,15 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     JspUtil.writeStartTag_SS(out, "script");
     out.write(getTimeSelectScript(name+".select2", minute, 60));
+    
+    if (!disabled && backgroundValidation) {
+    	String s = name + ".select2";
+    	String es = "$('" + s + "')";
+    	String ns =  "$('" + name + "')";
+    	String vcall = "formElementValidationActionCall(" + ns + ");";
+    	out.write("Event.observe(" + es + ", 'change', function(event) {" + vcall + "});");
+    }
+    
     JspUtil.writeEndTag_SS(out, "script");
 
     JspUtil.writeEndTag_SS(out, "select");
@@ -104,7 +114,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   protected void writeHourSelect(Writer out, String name, boolean disabled, Integer hour) throws IOException {
     TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
     out.write("<select id=\"" + name + ".select1\" name=\"" + name + ".select1\" onChange=\""
-        + fillXJSCallConstructor("fillTimeText", name, name + ".select1", name + ".select2")
+        + fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name + ".select1", name + ".select2")
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
     if (disabled)
       out.write(" disabled=\"true\"");
@@ -119,6 +129,15 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     JspUtil.writeStartTag_SS(out, "script");
     out.write(getTimeSelectScript(name+".select1", hour, 24));
+    
+    if (!disabled && backgroundValidation) {
+    	String s = name + ".select1";
+    	String es = "$('" + name + "')";
+    	String ns =  "$('" + s + "')";
+    	String vcall = "formElementValidationActionCall(" + es + ");";
+    	out.write("Event.observe(" + ns + ", 'change', function(event) {" + vcall + "});");
+    }
+    
     JspUtil.writeEndTag_SS(out, "script");
     
     JspUtil.writeEndTag_SS(out, "select");
@@ -146,18 +165,26 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
+    
+    if (backgroundValidation)
+      JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
 
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
-        JspUtil.writeAttribute(out, "onfocus", "saveValue(this)");
+        JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getTimeInputOnChangePrecondition(name));
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
+    
+    // validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
+    if (!viewModel.isOnChangeEventRegistered() && !disabled && backgroundValidation) {
+    	JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
+    }
 
     StringBuffer onBlur = new StringBuffer();
     if (showTimeSelect)
-    	onBlur.append(fillXJSCallConstructor("fillTimeSelect", name, name +".select1", name + ".select2") + ";");
+    	onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name, name +".select1", name + ".select2") + ";");
     if (!disabled && events && viewModel.isOnChangeEventRegistered())
     	onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onblur", onBlur.toString());
@@ -189,5 +216,17 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    */
   public void setShowTimeSelect(String showTimeSelect) throws JspException {
     this.showTimeSelect = ((Boolean) evaluate("showTimeSelect", showTimeSelect, Boolean.class)).booleanValue();
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Boolean, specifying whether HTML &lt;table&;gt;'s should be rendered to around this time input. Default is true."
+   * 
+   * @since 1.1
+   */
+  public void setSurroundingTable(String surroundingTable) throws JspException {
+    this.surroundingTable = ((Boolean) evaluate("surroundingTable", surroundingTable, Boolean.class)).booleanValue();
   }
 }

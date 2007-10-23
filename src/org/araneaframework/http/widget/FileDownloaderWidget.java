@@ -21,7 +21,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
-import org.araneaframework.http.service.FileDownloaderService;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 
@@ -67,7 +66,7 @@ public class FileDownloaderWidget extends DownloaderWidget {
   
   /** Used internally to extract only file name from supplied filename (no file path). */
   protected String normalizeFileName(String fileName) {
-    return FileDownloaderService.staticNormalizeFileName(fileName);
+    return FileDownloaderWidget.staticNormalizeFileName(fileName);
   }
 
   // as IE (6) provides full names for uploaded files, we use some heuristics

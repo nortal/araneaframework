@@ -315,12 +315,17 @@ public abstract class BaseComponent implements Component {
     
     _checkCall();
     
-    if (!_getChildren().containsKey(key)) {
+    boolean enabled = _getChildren().containsKey(key);
+    boolean disabled = _getDisabledChildren().containsKey(key);
+    
+    if (!enabled && !disabled) {
       throw new NoSuchComponentException(key);
     }
     
-    ((Component) _getChildren().get(key))._getComponent().disable();
-    _getDisabledChildren().put(key, _getChildren().remove(key));    
+    if (enabled) {
+      ((Component) _getChildren().get(key))._getComponent().disable();
+      _getDisabledChildren().put(key, _getChildren().remove(key));
+    }
   }
   
   /**
@@ -334,12 +339,17 @@ public abstract class BaseComponent implements Component {
     
     _checkCall();
     
-    if (!_getDisabledChildren().containsKey(key)) {
+    boolean enabled = _getChildren().containsKey(key);
+    boolean disabled = _getDisabledChildren().containsKey(key);
+    
+    if (!disabled && !enabled) {
       throw new NoSuchComponentException(key);
     }
-        
-    _getChildren().put(key, _getDisabledChildren().remove(key));
-    ((Component) _getChildren().get(key))._getComponent().enable();
+
+    if (disabled) {
+      _getChildren().put(key, _getDisabledChildren().remove(key));
+      ((Component) _getChildren().get(key))._getComponent().enable();
+    }
   }
   
   /**
@@ -372,7 +382,7 @@ public abstract class BaseComponent implements Component {
     if (children == null || isDead())
       return;
     
-    Iterator ite = (new HashMap(_getChildren())).keySet().iterator();
+    Iterator ite = (new LinkedMap(_getChildren())).keySet().iterator();
     while(ite.hasNext()) {
       Object key = ite.next();
 

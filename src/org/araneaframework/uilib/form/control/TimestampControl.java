@@ -18,6 +18,9 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
@@ -30,7 +33,7 @@ import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class TimestampControl extends EmptyStringNullableControl {
+public abstract class TimestampControl extends EmptyStringNullableControl implements FilteredInputControl {
   
   //*********************************************************************
   // FIELDS
@@ -43,6 +46,8 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   protected String dateTimeOutputPattern;
 
   protected boolean confOverridden = false;
+  
+  private InputFilter inputFilter;
   
   //*********************************************************************
   // CONSTRUCTORS
@@ -58,7 +63,16 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
     this.dateTimeOutputPattern = defaultOutputFormat;
   }  
 
-  
+  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return inputFilter;
+  }
+
+  /** @since 1.0.11 */
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
+  }
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -77,16 +91,30 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
     	return new Timestamp(result.getDate().getTime());
     }
     
-    addError(
+    addWrongTimeFormatError();
+    
+    if (parameterValue != null && getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+    	addError(
+    		MessageUtil.localizeAndFormat(
+    		getInputFilter().getInvalidInputMessage(), 
+    		MessageUtil.localize(getLabel(), getEnvironment()), 
+    		getInputFilter().getCharacterFilter(), 
+    		getEnvironment()));
+    }
+
+    return null;
+  }
+
+  /** @since 1.1 */ 
+  protected void addWrongTimeFormatError() {
+	addError(
         MessageUtil.localizeAndFormat(
         UiLibMessages.WRONG_DATE_FORMAT, 
         MessageUtil.localize(getLabel(), getEnvironment()),
         dateTimeInputPattern,
-        getEnvironment()));          
-    
-    return null;
+        getEnvironment()));
   }
-  
+
   /**
    * Used by {@link TimestampControl#fromRequest(String)} to convert value
    * read from request to a <code>Date</code> in default <code>TimeZone</code>
@@ -123,16 +151,22 @@ public abstract class TimestampControl extends EmptyStringNullableControl {
   
   public class ViewModel extends EmptyStringNullableControl.ViewModel {
     private String dateTimeOutputPattern;
+    private InputFilter inputFilter;
     
     /**
      * Takes an outer class snapshot.     
      */
     public ViewModel() {
       this.dateTimeOutputPattern = TimestampControl.this.dateTimeOutputPattern;
+      this.inputFilter = TimestampControl.this.getInputFilter();
     }
     
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
       return new SimpleDateFormat(dateTimeOutputPattern);
+    }
+    
+    public InputFilter getInputFilter() {
+      return this.inputFilter;
     }
   }
 }

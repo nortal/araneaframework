@@ -258,6 +258,7 @@
 		<file path="js/tiny_mce/plugins/inlinepopups/images/window_minimize.gif"/>
 		<file path="js/tiny_mce/plugins/inlinepopups/images/spacer.gif"/>
 		<file path="js/tiny_mce/plugins/inlinepopups/images/window_resize.gif"/>
+		<file path="js/tiny_mce/plugins/save/images/cancel.gif"/>
 		<file path="js/tiny_mce/plugins/save/images/save.gif"/>
 		<file path="js/tiny_mce/plugins/devkit/images/flip_down.gif"/>
 		<file path="js/tiny_mce/plugins/devkit/images/flip_up.gif"/>

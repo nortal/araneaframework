@@ -28,6 +28,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.SequenceHelper;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * List widget sequence footer tag.
@@ -195,11 +196,11 @@ public class ComponentListFooterTag extends PresentationTag {
     JspUtil.writeAttribute(out, "class", infoStyleClass);
     JspUtil.writeCloseStartTag(out);
 
-    out.write("Showing [");
+    out.write(MessageUtil.localize("common.Showing", getEnvironment()) + " [");
     out.write(new Long(firstShown).toString());
     out.write("-");
     out.write(new Long(lastShown).toString());
-    out.write("]. Total ");
+    out.write("]. " + MessageUtil.localize("common.Total", getEnvironment()) + " ");
     JspUtil.writeEscaped(out, new Long(totalItemCount).toString());
     out.write(". ");
 

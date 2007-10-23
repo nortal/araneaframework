@@ -19,9 +19,10 @@ package org.araneaframework.jsp.tag.form;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.SystemFormContext;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -68,7 +69,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     return config.getSubmitCharset();
   }
 
-  protected String getFormAction() {
-    return ((HttpServletRequest) pageContext.getRequest()).getContextPath() + ((HttpServletRequest) pageContext.getRequest()).getServletPath();
+  protected String getFormAction() throws JspException {
+    return ((HttpInputData) getOutputData().getInputData()).getContainerURL();
   }
 }

@@ -196,9 +196,14 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 			else
 				scope = scope + "." + subscope;
 		}
-
+		
+		
 		// Write out.
-		KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
+		if (intKeyCode != null)
+			KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
+		else if (keyCombo != null)
+			writeRegisterKeycomboHandlerScript(out, scope, keyCombo, intHandler);
+
 		return SKIP_BODY;
 	}
 
@@ -215,7 +220,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * and in other cases taken as empty string.
 	 */
 	public static final String createHandlerToInvokeJavascriptEvent(String fullElementId, String event) {
-		return "function() { " + "return document.getElementById('" + fullElementId + "')." + event + "(); }";
+		return "function() { " + "return $('" + fullElementId + "')." + event + "(); }";
 	}
 
 	/**

@@ -27,6 +27,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 
 /**
  * Aranea HTML body tag. 
@@ -101,6 +102,7 @@ public class BodyHtmlTag extends PresentationTag {
     writeServletURLScript(out);
     writeLocaleScript(out);
     writeKeepAliveRegistrationScripts(out);
+    writeAjaxValidationScript(out);
 
     writeAdditionalAfterBodyStartScripts(out);
 
@@ -164,6 +166,17 @@ public class BodyHtmlTag extends PresentationTag {
     out.write("'));");
   }
   
+  /** 
+   * Writes script that sets the whether Uilib {@link org.araneaframework.uilib.form.FormWidget}'s should be validated
+   * seamlessly on the background with the actions or not.
+   * 
+   * @see {@link ConfigurationContext#BACKGROUND_FORM_VALIDATION}
+   * @since 1.1 */
+  protected void writeAjaxValidationScript(Writer out) throws JspException, IOException {
+    Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
+    out.write("_ap.setBackgroundValidation(" + String.valueOf(validationEnabled) +");");
+  }
+
   /**
    * Writes the scripts immediately following the closing of &lt;body&gt; tag.
    */
@@ -178,13 +191,13 @@ public class BodyHtmlTag extends PresentationTag {
   }
   
   /**
-   * Called before closing the script tag immidiately following the HTML &lt;body&gt; start, use for
+   * Called before closing the script tag immediately following the HTML &lt;body&gt; start, use for
    * additional client-side page (AraneaPage) initialization.
    */
   protected void writeAdditionalAfterBodyStartScripts(Writer out) throws Exception {}
   
   /**
-   * Called before closing the script tag immidiately following the HTML &lt;body&gt; start, use for
+   * Called before closing the script tag immediately following the HTML &lt;body&gt; start, use for
    * additional client-side page (AraneaPage) initialization.
    */
   protected void writeAdditionalAfterBodyEndScripts(Writer out) throws Exception {

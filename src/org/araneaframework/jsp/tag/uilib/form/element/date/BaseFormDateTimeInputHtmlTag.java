@@ -20,10 +20,13 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TimeControl;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -78,6 +81,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			String styleClass,
 			String accessKey,      
 			DateControl.ViewModel viewModel) throws Exception {
+	    if (viewModel.getInputFilter() != null) {
+	      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+	    }
+
 		// Write input tag
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
@@ -96,10 +103,19 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
-		
+
+		// validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
+		if (!viewModel.isOnChangeEventRegistered() && backgroundValidation) {
+			JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
+		}
+
+	    if (this.backgroundValidation && 
+	    		!ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment())))
+          JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
+
 		JspUtil.writeAttributes(out, attributes);    
 		JspUtil.writeCloseStartEndTag_SS(out);
-		
+
 		if (!disabled) {
 
 			JspUtil.writeOpenStartTag(out, "a");
@@ -126,7 +142,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	 */
 	protected String getTimeSelectScript(String selectId, Integer value, int valueCount) {
 	    StringBuffer sb = new StringBuffer();
-	    sb.append("addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
+	    sb.append("Aranea.UI.addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
 	    sb.append(value != null ? value.toString():"null").append(");");
 
 	    return sb.toString();
@@ -140,7 +156,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
           return onChangePrecondition;
         String timeInputRef = "document.getElementById('" + timeInputId + "')";
 	    String precondition =  
-	    		"return isChanged('" + timeInputId + "')"+
+	    		"return Aranea.UI.isChanged('" + timeInputId + "')"+
 	    		" && ((" + timeInputRef + ".value.length==5) || (" + timeInputRef + ".value.length==0))"
 	    		;
 	    return precondition;
@@ -196,6 +212,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
       String styleClass,
 			String accessKey,
 			TimeControl.ViewModel viewModel) throws Exception {
+	    if (viewModel.getInputFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+		}
+
 		// Write input tag
 		JspUtil.writeOpenStartTag(out, "input");
 		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
@@ -213,6 +233,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
 		}
 		
+	    if (backgroundValidation)
+          JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
+		
 		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);
 	}
@@ -223,7 +246,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeCloseStartTag(out);
 		
 		StringBuffer script = new StringBuffer();
-		script.append("calendarSetup('");
+		script.append("Aranea.UI.calendarSetup('");
 		script.append(id);
 		script.append("', '");
 		script.append(format);

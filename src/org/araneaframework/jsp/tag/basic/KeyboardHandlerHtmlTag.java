@@ -76,7 +76,10 @@ public class KeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);
+		if (intKeyCode != null)
+			writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);
+		else if (keyCombo != null)
+			writeRegisterKeycomboHandlerScript(out, scope, keyCombo, handler);
 		return SKIP_BODY;
 	}
 }

@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp;
 
+import org.araneaframework.uilib.ConfigurationContext;
+
 /**
  * Non-standard-HTML attributes added to specific HTML tags to define
  * Aranea event and content model information.
@@ -27,6 +29,11 @@ public abstract class AraneaAttributes {
 	
   /** Attribute identifying Aranea system form */
   public static final String SYSTEM_FORM = "arn-systemForm";
+  /**
+   * Attribute attached to Aranea component markers for identification of component. 
+   * @since 1.1
+   * */
+  public static final String WIDGET_ID = "arn-widgetId";
 
   /** Event related non-standard HTML tag attributes */
   public interface Event {
@@ -36,4 +43,15 @@ public abstract class AraneaAttributes {
      public static final String UPDATE_REGIONS = "arn-updrgns";
      public static final String CONDITION = "arn-evntCond";
   }
+  
+  /** @since 1.0.11 */
+  public interface FilteredInputControl {
+    public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
+  }
+  
+  /**
+   * This attribute will be present on the form elements whose which should be validated on-the-fly.
+   * (Default is set with {@link ConfigurationContext} entry {@link ConfigurationContext#BACKGROUND_FORM_VALIDATION}.
+   * @since 1.1 */
+  public static final String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
 }

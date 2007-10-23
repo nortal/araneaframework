@@ -2,8 +2,9 @@ body { background: #f4f4f4 url(../gfx/i02.gif) 77px 0 repeat-x; }
 
 /* Tooltip */
 
-#tooltip { display: none; position: absolute; width: 150px; }
-#tooltipInner { padding: 10px; }
+.tooltip { width: 150px; color: #fff;}
+.tooltip .title { background: #A61001; font: italic 17px Georgia, serif; padding: 5px;}
+.tooltip .content { background: #C61001; font: 11px Arial, Helvetica, sans-serif; padding: 5px;} 
 
 /* Main framework */
 
@@ -121,3 +122,25 @@ div.autocompletediv ul li {
 	height:15px;
 	cursor:pointer;
 }
+
+div.aranea-tabs div { background: url(../gfx/bg14.gif) no-repeat; float: left; margin-top: 2px; } 
+div.aranea-tabs div div { background: url(../gfx/bg17.gif) right top no-repeat; }
+div.aranea-tabs div div A { color: #1F476E; }
+/*
+div.aranea-tabs div.active { background: url(../gfx/bg15.gif) no-repeat; float: left; margin-top: 2px; }
+div.aranea-tabs div.active div { background: url(../gfx/bg16.gif) right top no-repeat; }
+div.aranea-tabs div.active div A { color: #1F476E; }
+div.aranea-tabs div.passive { background: url(../gfx/bg18.gif) no-repeat; float: left; margin-top: 2px; }
+div.aranea-tabs div.passive div { background: url(../gfx/bg19.gif) right top no-repeat; }
+div.aranea-tabs div.passive div A { color: #aaaaaa; }
+*/
+div.aranea-tabs A { display: block; padding: 5px 15px 5px 15px; }
+
+div.aranea-clear { clear: both; font-size: 1px; line-height: 0px; float: none !important; line-width: 0px; width: 0px; }
+
+div.aranea-tabs div.aranea-active-tab { background: url(../gfx/bg15.gif) no-repeat; float: left; margin-top: 2px; }
+div.aranea-tabs div.aranea-active-tab div { background: url(../gfx/bg16.gif) right top no-repeat; }
+div.aranea-tabs div.aranea-active-tab div A { color: #1F476E; }
+div.aranea-tabs div.aranea-disabled-tab { background: url(../gfx/bg18.gif) no-repeat; float: left; margin-top: 2px; }
+div.aranea-tabs div.aranea-disabled-tab div { background: url(../gfx/bg19.gif) right top no-repeat; }
+div.aranea-tabs div.aranea-disabled-tab div A { color: #aaaaaa; }

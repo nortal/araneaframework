@@ -19,9 +19,11 @@ package org.araneaframework.uilib.form;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
+import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
@@ -33,17 +35,32 @@ import org.araneaframework.uilib.util.NameUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormWidget extends GenericFormElement {
-
+public class FormWidget extends GenericFormElement implements FormContext {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-
   protected LinkedMap elements = new LinkedMap();
 
   //*********************************************************************
+  //* INTERNAL METHODS
+  //*********************************************************************  	
+	
+  protected void init() throws Exception {
+    super.init();
+    
+    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
+      Map.Entry element = (Map.Entry) i.next();
+      addWidget(element.getKey(), (Widget) element.getValue());
+    }
+  }
+  
+  //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
+
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), FormContext.class, this);
+  }
 
   public void clearErrors() {
 	  super.clearErrors();
@@ -83,7 +100,7 @@ public class FormWidget extends GenericFormElement {
    * @param element added element
    * @param afterId element id after which contained element should be added
    */
-  public void addElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+  public void addElementAfter(String id, GenericFormElement element, String afterId) {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(afterId, "afterId");
     Assert.notNullParam(element, "element");
@@ -103,7 +120,7 @@ public class FormWidget extends GenericFormElement {
    * @param element added element
    * @param beforeId element id before which contained element should be added
    */
-  public void addElementBefore(String id, GenericFormElement element, String beforeId) throws Exception {
+  public void addElementBefore(String id, GenericFormElement element, String beforeId) {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(beforeId, "beforeId");
     Assert.notNullParam(element, "element");
@@ -115,7 +132,7 @@ public class FormWidget extends GenericFormElement {
     form.addFlatElementBefore(id, element, NameUtil.getShortestSuffix(beforeId));
   }
 
-  private void addFlatElementAfter(String id, GenericFormElement element, String afterId) throws Exception {
+  private void addFlatElementAfter(String id, GenericFormElement element, String afterId) {
     Assert.isTrue(afterId.indexOf(".") == -1, "addFlatElementAfter() method does not accept nested 'afterId'");
     LinkedMap newElements = new LinkedMap();
 
@@ -164,7 +181,7 @@ public class FormWidget extends GenericFormElement {
    * @param element contained element.
    * @param id element id
    */
-  public void addElement(String id, GenericFormElement element) throws Exception {
+  public void addElement(String id, GenericFormElement element) {
     Assert.notEmptyParam(id, "id");
     Assert.notNullParam(element, "element");
     
@@ -180,9 +197,8 @@ public class FormWidget extends GenericFormElement {
 
   /**
    * Removes a contained element by its name.
-   * @throws Exception 
    */
-  public void removeElement(String id) throws Exception {
+  public void removeElement(String id) {
     Assert.notEmptyParam(id, "id");
 
     elements.remove(id);
@@ -198,7 +214,7 @@ public class FormWidget extends GenericFormElement {
   public Map getElements() {
     return new LinkedMap(elements);
   }
-  
+
   /**
    * Calls {@link GenericFormElement#convert()} for all contained elements.
    */
@@ -275,7 +291,7 @@ public class FormWidget extends GenericFormElement {
    * 
    * @return created subform
    */
-  public FormWidget addSubForm(String id) throws Exception {
+  public FormWidget addSubForm(String id) {
     Assert.notEmptyParam(id, "id");
     
   	FormWidget result = new FormWidget();
@@ -293,7 +309,7 @@ public class FormWidget extends GenericFormElement {
    * @param mandatory whether the element must be filled in
    * @return {@link FormElement} with given configuration
    */
-  public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
+  public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) {
     if (data != null)
       data.setValue(initialValue);
     return createElement(labelId, control, data, mandatory); 
@@ -309,7 +325,7 @@ public class FormWidget extends GenericFormElement {
    * @param mandatory whether the element must be present in request.
    * @return {@link FormElement} with given configuration
    */
-  public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) throws Exception {
+  public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) {
     Assert.notNullParam(control, "control");
     
     FormElement result = new FormElement();
@@ -333,7 +349,7 @@ public class FormWidget extends GenericFormElement {
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
-  public FormElement addElement(String elementName, String labelId, Control control, Data data, boolean mandatory) throws Exception {
+  public FormElement addElement(String elementName, String labelId, Control control, Data data, boolean mandatory) {
   	FormElement result = createElement(labelId, control, data, mandatory);
     addElement(elementName, result);
     return result;
@@ -348,7 +364,7 @@ public class FormWidget extends GenericFormElement {
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
-  public FormElement addElement(String elementName, String labelId, Control control, Data data, Object initialValue, boolean mandatory) throws Exception {
+  public FormElement addElement(String elementName, String labelId, Control control, Data data, Object initialValue, boolean mandatory) {
   	FormElement result = createElement(labelId, control, data, initialValue, mandatory);
     addElement(elementName, result);
     return result;
@@ -437,20 +453,7 @@ public class FormWidget extends GenericFormElement {
   	
   	el.getData().setValue(value);
   }
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-	
-  protected void init() throws Exception {
-    super.init();
-    
-    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
-      Map.Entry element = (Map.Entry) i.next();
-      addWidget(element.getKey(), (Widget) element.getValue());
-    }
-  }
-  
+
   /**
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
@@ -458,7 +461,7 @@ public class FormWidget extends GenericFormElement {
   public Object getViewModel() {
     return new ViewModel();
   }
-	
+  
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************  
@@ -470,8 +473,6 @@ public class FormWidget extends GenericFormElement {
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {
-    
-
     /**
      * Returns the <code>Map</code> with element views.
      * @return the <code>Map</code> with element views.

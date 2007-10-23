@@ -10,7 +10,9 @@
 	<!ENTITY forms               SYSTEM "forms.xml">	
 	<!ENTITY lists               SYSTEM "lists.xml">
 	<!ENTITY javascript               SYSTEM "javascript.xml">
+	<!ENTITY uilibwidgets               SYSTEM "uilibwidgets.xml">
 	<!ENTITY trees               SYSTEM "trees.xml">
+	<!ENTITY tabs               SYSTEM "tabs.xml">
 ]>
 
 <!--
@@ -36,7 +38,7 @@
         <titleabbrev>Aranea</titleabbrev>
 				<subtitle>Reference Manual</subtitle>
 
-        <releaseinfo>Version 1.1-M1 (Work In Progress)</releaseinfo>
+        <releaseinfo>Version 1.1-M4 (Work In Progress)</releaseinfo>
         <authorgroup>
 					<author>
 						<firstname>Jevgeni</firstname>
@@ -65,7 +67,7 @@
     &jsp;
     &forms;
     &lists;
-    &trees;
+    &uilibwidgets;
     &integration;
     &javascript;
 </book>

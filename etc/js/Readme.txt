@@ -16,6 +16,16 @@ This folder contains scripts needed by Aranea Uilib.
 - Required for using Uilib controls and tags that support autocompletion.
 - License is MIT-style license, details at http://script.aculo.us/
 
+* prototip/*
+- tooltip library, based on prototype. If script.aculo.us scripts are present
+  these can be used for additional UI effects.
+- http://www.nickstakenburg.com/projects/prototip/
+- Creative Commons Attribution 3.0 License
+
+* modalbox/*
+- http://okonet.ru/projects/modalbox/
+- MIT license
+
 * prototype/*
 - http://www.prototypejs.org/
 - License is MIT-style license, details at http://www.prototypejs.org/license

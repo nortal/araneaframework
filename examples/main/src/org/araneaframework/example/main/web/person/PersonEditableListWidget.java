@@ -144,7 +144,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			 * currently holding row object data -- it is either FormWidget or BeanFormWidget, as
 			 * in our case we are using EditableBeanListWidget that holds row data in BeanFormWidgets,
 			 * we can cast the return type accordingly. */
-			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).readBean(new PersonMO());
+			PersonMO rowData = (PersonMO) ((BeanFormWidget)editableRow.getForm()).writeToBean(new PersonMO());
 			rowData.setId((Long) editableRow.getKey());
 			
 			// Save modified object.
@@ -163,7 +163,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 		
 		// Implementation of method that should save ADDED rows which data passes validation.
 		public void addValidRow(FormWidget addForm) throws Exception {
-			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).readBean(new PersonMO()));
+			PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).writeToBean(new PersonMO()));
 			getGeneralDAO().add(rowData);
 			list.getDataProvider().refreshData();
 			// this callback must be made here!
@@ -185,7 +185,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			/* A button that deletes this row and its data (calls deleteRow()). */
 			FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
 
-			rowForm.writeBean(rowData);
+			rowForm.readFromBean(rowData);
 		}
 		
 		// Called to initialize a blank row meant for adding new records.
