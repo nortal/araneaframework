@@ -201,6 +201,14 @@ function AraneaPage() {
       submitCallbacks[systemFormId].execute();
     }
   };
+
+  this.e = function(eventOptions) {
+    if (eventOptions) {
+
+    } else {
+      this.getLogger().fatal("Cannot submit event, no event options specified.");
+    }
+  };
   
   this.event = function(element) {
     if (this.isSubmitted() || !this.isLoaded())
