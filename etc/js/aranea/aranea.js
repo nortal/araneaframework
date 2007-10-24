@@ -202,12 +202,24 @@ function AraneaPage() {
     }
   };
 
+  /**
+   * @eventOptions hash containing following
+   *     element    : DOM element that generated event
+   *     systemform : the form to be submitted (when left submitted, systemForm surrounding element is used)
+   *     eventid    : id of generated event
+   *     eventparam :
+   *     eventcond  :
+   *     eventupdateregions : 
+   *
+   * @since 1.1 */
+  // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
   this.e = function(eventOptions) {
     if (eventOptions) {
-
+      eventOptions.
     } else {
       this.getLogger().fatal("Cannot submit event, no event options specified.");
     }
+    // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
   };
   
   this.event = function(element) {
@@ -401,8 +413,10 @@ AraneaPage.getFileImportString = function(filename) {
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
 };
-/** @since 1.1 */
-AraneaPage.findSystemForm = function() {
+
+/** TODO: badly named, should be deprecated. 
+  *@since 1.1 */
+AraneaPage.findSystemForm = function(element) {
   araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
     function(element) {
       return $(element).hasAttribute('arn-systemForm');
