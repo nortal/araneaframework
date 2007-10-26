@@ -215,7 +215,7 @@ function AraneaPage() {
   // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
   this.e = function(eventOptions) {
     if (eventOptions) {
-      eventOptions.
+      //eventOptions.
     } else {
       this.getLogger().fatal("Cannot submit event, no event options specified.");
     }
