@@ -3,7 +3,6 @@ package org.araneaframework.example.main.release.demos;
 import java.util.Random;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData;
-import org.araneaframework.example.main.release.features.SimpleInMemoryEditableList.Client;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ComboTextControl;
 import org.araneaframework.uilib.form.data.StringData;

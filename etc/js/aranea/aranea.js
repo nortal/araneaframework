@@ -309,7 +309,7 @@ function AraneaPage() {
       url += '&araServiceActionParameter=' + actionParam;
     if (sync != undefined && !sync)
       url += '&araSync=false';
-      
+
     return url;
   };
 

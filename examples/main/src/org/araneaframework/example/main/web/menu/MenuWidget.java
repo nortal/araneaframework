@@ -24,6 +24,7 @@ import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
 import org.araneaframework.example.main.release.demos.ComboTextInputDemoWidget;
+import org.araneaframework.example.main.release.demos.DemoActionPollWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
 import org.araneaframework.example.main.release.demos.DemoNewTabWidget;
@@ -117,7 +118,8 @@ private MenuItem araneaMenu;
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoNewTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
-		
+		araneaMenu.addMenuItem(new MenuItem("Serverside_Polling", DemoActionPollWidget.class));
+
 		// "Management"
 		result.addMenuItem(null, new MenuItem("Management")); {
 			result.addMenuItem("Management", new MenuItem("Persons"));
