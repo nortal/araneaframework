@@ -36,7 +36,6 @@ function formElementValidationActionCall(el) {
 
 /** @since 1.1 */
 function setFormElementValidation(el){
-  araneaPage().debug("setFormElementValidation() called for " + el.tagName);
   if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate'))) {
     return;
   }

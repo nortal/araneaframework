@@ -152,8 +152,7 @@ Aranea.KB.handleKeypress = function (event, formElementId) {
  	 
  	 if (result != undefined) {
  	 	if (result == false) {
- 			event.cancelBubble = true;
- 			event.returnValue = false;
+            Event.stop(event);
  			return false;
  	 	}
  	 }
@@ -201,30 +200,32 @@ Aranea.KB.UiHandlerRegistry = function() {
   * Adds a new handler to the registry
   */
 Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCode, handler) {
-   var newHandler = {
+   var traditionalHandler = {
         elementPrefix: elementPrefix,
         handler: handler
    };
    
-   // if not number, register handler by element prefix only, handler itself must determine whether it should be invoked or not
+   // if not number, register handler by element prefix only
+   // NB! that means handler itself must determine whether it should be invoked or not
+   // for any event that activates it!
    if (typeof keyCode != 'number') {
      if (this.handlers[elementPrefix]) {
      	var a = this.handlers[elementPrefix];
-     	a[a.length] = newHandler;
+     	a[a.length] = traditionalHandler;
      } else {
-   	  this.handlers[elementPrefix] = new Array(newHandler);
+        this.handlers[elementPrefix] = new Array(traditionalHandler);
      }
+     // Do not register by 'keycode' handler.
      return;
    }
 
+   // old-fashioned by-keycode registered handler
    if (this.handlers[keyCode]) { 
-   	  // add handler to list
    	  var a = this.handlers[keyCode];
-   	  a[a.length] = newHandler;
+   	  a[a.length] = traditionalHandler;
    }
    else {
-      // this is the first handler in the list
-   	  this.handlers[keyCode] = new Array(newHandler);
+   	  this.handlers[keyCode] = new Array(traditionalHandler);
    }
  };
  
@@ -249,19 +250,21 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
    }
    
    if (elHandlers) {
-   	 var length = elHandlers.length;
-   	 for (var i = length-1; i >= 0; i--){
+   	 var elhlen = elHandlers.length;
+   	 var executed = false;
+   	 for (var i = elhlen-1; i >= 0; i--){
          var handlerFunction = elHandlers[i].handler;
          var elementPrefix   = elHandlers[i].elementPrefix;
-         handlerFunction(event, elementName);
+         araneaPage().debug('handlerFunction is now being invoked. : \n' + handlerFunction);
+         executed = handlerFunction(event, elementName) || executed;
 	  }
 
-	  return;
+	  //return;
    }
-   
+
    if (keyHandlers){
-    var length = keyHandlers.length;
-	  for (var i = length-1; i >= 0; i--){
+    var elhlen = keyHandlers.length;
+	  for (var i = elhlen-1; i >= 0; i--){
          var handlerFunction = keyHandlers[i].handler;
          var elementPrefix   = keyHandlers[i].elementPrefix;
          if (elementPrefix == elementName.substring(0, elementPrefix.length)) {
@@ -329,7 +332,7 @@ Aranea.KB.getKeyboardInputFilterFunction = function(filter) {
 
 var getKeyboardInputFilterFunction = Aranea.KB.getKeyboardInputFilterFunction;
 
-Aranea.KB.NewHandler = function(shortcut, callback) {
+Aranea.KB.KeyComboHandler = function(shortcut, callback) {
     var f2 = function(event, element) {
 	  	var e = event;
 	
@@ -379,14 +382,14 @@ Aranea.KB.NewHandler = function(shortcut, callback) {
 			//}
 		}
 		
-		return true;
+		return false;
     };
   
   return f2;
 };
 
 Aranea.KB.registerKeyComboHandler = function(elementPrefix, keyCombo, handler) {
-  var extraHandler = new Aranea.KB.NewHandler(keyCombo, handler);
+  var extraHandler = new Aranea.KB.KeyComboHandler(keyCombo, handler);
   Aranea.KB.registerKeypressHandler(elementPrefix, keyCombo, extraHandler);
 };
 

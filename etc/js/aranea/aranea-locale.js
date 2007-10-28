@@ -18,7 +18,7 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
  
-AraneaLocale = function(lang, cntry) {
+var AraneaLocale = function(lang, cntry) {
   var language = lang;
   this.getLanguage = function() { return language; };
   this.setLanguage = function(lang) { language = lang; };

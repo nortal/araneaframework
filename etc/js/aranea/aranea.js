@@ -164,7 +164,7 @@ function AraneaPage() {
   var clientLoadEvents = new AraneaEventStore();
   var systemUnLoadEvents = new AraneaEventStore();
   
-  submitCallbacks = new Object();
+  this.submitCallbacks = new Object();
 
   this.addSystemLoadEvent = function(event) { systemLoadEvents.add(event); }
   this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
@@ -186,19 +186,19 @@ function AraneaPage() {
 
   // General callbacks executed before each submit of the specified system form.
   this.addSystemFormSubmitCallback = function(systemFormId, callback) {
-    if (!submitCallbacks[systemFormId]) {
-      submitCallbacks[systemFormId] = new AraneaEventStore();
+    if (!this.submitCallbacks[systemFormId]) {
+      this.submitCallbacks[systemFormId] = new AraneaEventStore();
     }
-    submitCallbacks[systemFormId].add(callback);
+    this.submitCallbacks[systemFormId].add(callback);
   };
 
   this.executeCallbacks = function(systemFormId) {
-    if (submitCallbacks['callbacks']) {
-      submitCallbacks['callbacks'].execute();
+    if (this.submitCallbacks['callbacks']) {
+      this.submitCallbacks['callbacks'].execute();
     }
 
-    if (submitCallbacks[systemFormId]) {
-      submitCallbacks[systemFormId].execute();
+    if (this.submitCallbacks[systemFormId]) {
+      this.submitCallbacks[systemFormId].execute();
     }
   };
 
@@ -890,7 +890,7 @@ AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgrou
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
-_ap = new AraneaPage();
+var _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);

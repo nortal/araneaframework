@@ -10,6 +10,26 @@
        examples/main/war/WEB-INF/jsp/editableList.jsp
   -->
   <ui:widgetContext>
+  
+  		<script type="text/javascript">
+					function demo(event, elementName, f) {
+						var source = Event.element(event);
+						var maybeTD = source.ancestors()[1];
+						if (maybeTD.tagName.toLowerCase() == 'td') {
+						  var sibling = f(maybeTD)[0];
+						  if (sibling &amp;&amp; sibling.tagName.toLowerCase() == 'td') {
+						    var input = sibling.descendants().find(
+						       function(element) {
+		    	                 return element.tagName.toLowerCase() == 'input';
+		                       });
+		
+		                    if (input)
+		                      input.focus();
+						  }
+						}
+					}
+				</script>
+  
 
     <!-- Start the list context ... -->
     <ui:list id="list">
@@ -66,6 +86,16 @@
                     <ui:listFilterButton/>
                   </ui:cell>
                 </ui:row>
+                
+               	<ui:keyboardHandler 
+					scope="${formFullId}" 
+					keyCombo="alt+left" 
+					handler="function(e,el) { demo(e, el, Element.previousSiblings); Event.stop(e); return false;}"/>
+					
+				<ui:keyboardHandler 
+					scope="${formFullId}" 
+					keyCombo="alt+right" 
+					handler="function(e,el) { demo(e, el, Element.nextSiblings); Event.stop(e); return false;}"/>
               </ui:listFilter>					
 
               <!-- Editable list rows. This tag usage is similar to ui:listRows;

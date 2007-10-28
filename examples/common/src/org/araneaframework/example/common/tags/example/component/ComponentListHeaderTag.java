@@ -18,12 +18,15 @@ package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.layout.LayoutRowHtmlTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
+import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.list.ListWidget;
@@ -45,12 +48,20 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
   public final static String ORDER_EVENT_ID = "order";
   public final static String COMPONENT_LIST_STYLE_CLASS = "data";
   
+  private String updateRegions;
+  private String globalUpdateRegions;
+  
+  private List updateRegionNames;    
+  
   public ComponentListHeaderTag() {
     styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
   }
   
   protected int doStartTag(Writer out) throws Exception {
+    this.updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+
     super.doStartTag(out);
+    
     writeHeader(out);
     return EVAL_BODY_INCLUDE;
   }
@@ -97,7 +108,7 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
           }
         }
         
-        UiEvent orderEvent = new UiUpdateEvent(ORDER_EVENT_ID, listId, columnViewModel.getId());
+        UiEvent orderEvent = new UiUpdateEvent(ORDER_EVENT_ID, listId, columnViewModel.getId(), updateRegionNames);
       
         JspUtil.writeOpenStartTag(out, "a");
         JspUtil.writeAttribute(out, "class", "aranea-link-button");  
@@ -118,4 +129,24 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
     }
     JspUtil.writeEndTag(out, "tr");
   }
+  
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
+	 */	
+	public void setUpdateRegions(String updateRegions) throws JspException {
+		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+	}
+	
+	/**
+	 * @jsp.attribute
+	 *   type = "java.lang.String"
+	 *   required = "false"
+	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
+	 */	
+	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+	}  
 }

@@ -5,7 +5,7 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
 		<script type="text/javascript">
-					function demo(event, elementName, f) {
+					var demo = function(event, elementName, f) {
 						var source = Event.element(event);
 						var maybeTD = source.ancestors()[1];
 						if (maybeTD.tagName.toLowerCase() == 'td') {
@@ -20,7 +20,7 @@
 		                      input.focus();
 						  }
 						}
-					}
+					};
 				</script>
 
 	
@@ -41,6 +41,8 @@
 			</p>
 			
 			<tui:componentList>
+					<ui:updateRegionRows id="simpleInmemorylistBody">
+
 					<tui:componentListHeader/>
 					
 					<ui:listFilter>
@@ -62,9 +64,9 @@
 							</ui:cell>
 							
 							<ui:cell>
-								<ui:listFilterButton/>
+								<ui:listFilterButton updateRegions="simpleInmemorylistBody,${listId}lfooter"/>
 								<br/>
-								<ui:listFilterClearButton/>
+								<ui:listFilterClearButton updateRegions="simpleInmemorylistBody,${listId}lfooter"/>
 							</ui:cell>
 						</ui:row>
 						
@@ -167,16 +169,18 @@
 							</ui:formElement>
 
 							<ui:cell width="0">
-								<ui:linkButton id="add" showLabel="false">
+								<ui:linkButton id="add" showLabel="false" updateRegions="simpleInmemorylistBody,${listId}lfooter">
 									<button id="addFormAddbutton"><fmt:message key="button.add"/></button>
 								</ui:linkButton>
 							</ui:cell>
 						</ui:row>
 					</ui:formListAddForm>
-				
+					</ui:updateRegionRows>
 			</tui:componentList>
 			
-			<tui:componentListFooter/>
+			<ui:updateRegion id="${listId}lfooter">
+				<tui:componentListFooter updateRegions="simpleInmemorylistBody,${listId}lfooter"/>
+			</ui:updateRegion>
 		</tui:component>
 		
 		</ui:formList>
