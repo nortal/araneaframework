@@ -295,7 +295,7 @@ function AraneaPage() {
       url += '&araThreadServiceId=' + threadServiceId;
   
   	if(extraParams)    
-     url += '&' + $H(extraParams).toQueryString();
+     url += '&' + extraParams;
 
     return url;
   };
@@ -321,7 +321,7 @@ function AraneaPage() {
   this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
     if (window['prototype/prototype.js']) {
       options = Object.extend({
-        method: 'get',
+        method: 'post',
         onComplete: actionCallback,
         onException: AraneaPage.handleRequestException
       }, options);

@@ -80,6 +80,8 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
 		if (events && viewModel.isOnChangeEventRegistered())
 			this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, "onChanged", "", updateRegionNames);
+		
+		writeBackgroundValidationAttribute(out);
 
 		JspUtil.writeCloseStartEndTag_SS(out);
 
