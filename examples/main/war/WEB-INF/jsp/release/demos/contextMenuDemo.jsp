@@ -5,7 +5,7 @@
 	xmlns:fmt="http://java.sun.com/jstl/fmt" version="1.2">
 	<ui:widgetContext>
 		<tui:componentHeader>
-			<tui:componentName><fmt:message key="sed.title"/></tui:componentName>
+			<tui:componentName><fmt:message key="context.menu.compheader"/></tui:componentName>
 		</tui:componentHeader>
 		
 		<ui:list id="list">
@@ -43,9 +43,7 @@
 			<br/>
 			
 			<tui:componentList>
-					<ui:updateRegionRows id="listBodyUpdateRegion">
-
-					<tui:componentListHeader updateRegions="listBodyUpdateRegion,${listId}lfooter"/>
+					<tui:componentListHeader/>
 					
 					<ui:listFilter>
 						<ui:row styleClass="filter">
@@ -66,45 +64,44 @@
 							</ui:cell>
 							
 							<ui:cell>
-								<ui:listFilterButton updateRegions="listBodyUpdateRegion,${listId}lfooter"/>
+								<ui:listFilterButton />
 								<br/>
-								<ui:listFilterClearButton updateRegions="listBodyUpdateRegion,${listId}lfooter"/>
+								<ui:listFilterClearButton />
 							</ui:cell>
 						</ui:row>
 						
 					</ui:listFilter>
 				
 					
-						<ui:listRows>
-							<ui:widgetMarker id="list" tag="tbody">
-							<ui:row id="${listFullId}.row${rowRequestId}">
-	
-								<ui:cell>
-									<c:out value="${row.sex}" />
-								</ui:cell>
-								<ui:cell styleClass="right" width="80px">
-									<c:out value="${row.forename}" />
-								</ui:cell>
-								<ui:cell>
-									<c:out value="${row.surname}" />
-								</ui:cell>
-								<ui:cell>
-									<c:out value="${row.country}" />
-								</ui:cell>
-								
-								<ui:cell width="0"></ui:cell>
-								
-							</ui:row>
-							</ui:widgetMarker>
-						</ui:listRows>
-						<ui:contextMenu id="list.cmenu"/>
-					
-					</ui:updateRegionRows>
+					<ui:listRows>
+						<ui:widgetMarker id="list" tag="tbody">
+						<ui:row id="${listFullId}.row${rowRequestId}">
+
+							<ui:cell>
+								<c:out value="${row.sex}" />
+							</ui:cell>
+							<ui:cell styleClass="right" width="80px">
+								<c:out value="${row.forename}" />
+							</ui:cell>
+							<ui:cell>
+								<c:out value="${row.surname}" />
+							</ui:cell>
+							<ui:cell>
+								<c:out value="${row.country}" />
+							</ui:cell>
+							
+							<ui:cell width="0"></ui:cell>
+							
+						</ui:row>
+						</ui:widgetMarker>
+					</ui:listRows>
+					<ui:contextMenu id="list.cmenu"/>
+
 			</tui:componentList>
 			
 			
 			<ui:updateRegion id="${listId}lfooter">
-				<tui:componentListFooter updateRegions="listBodyUpdateRegion,${listId}lfooter"/>
+				<tui:componentListFooter/>
 			</ui:updateRegion>
 		</tui:component>
 		

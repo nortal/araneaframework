@@ -18,34 +18,17 @@ package org.araneaframework.example.main.release.demos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import org.araneaframework.InputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData;
 import org.araneaframework.example.main.release.features.ExampleData.Client;
-import org.araneaframework.uilib.event.ProxyOnClickEventListener;
-import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.control.ButtonControl;
-import org.araneaframework.uilib.form.control.CheckboxControl;
-import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.DateTimeControl;
-import org.araneaframework.uilib.form.control.FloatControl;
-import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.control.TimeControl;
-import org.araneaframework.uilib.form.data.BigDecimalData;
-import org.araneaframework.uilib.form.data.BooleanData;
-import org.araneaframework.uilib.form.data.DateData;
-import org.araneaframework.uilib.form.data.StringData;
+import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
-import org.araneaframework.uilib.list.util.FormUtil;
 import org.araneaframework.uilib.menu.ContextMenuItem;
 import org.araneaframework.uilib.menu.ContextMenuWidget;
 import org.araneaframework.uilib.menu.ContextMenuItem.ContextMenuEventEntry;
@@ -53,7 +36,7 @@ import org.araneaframework.uilib.menu.ContextMenuItem.ContextMenuEventEntry;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class DemoContextMenuWidget extends TemplateBaseWidget {
+public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleChangeListener {
 	protected List friends = new ArrayList();
 
 	private MemoryBasedListDataProvider dataProvider = new DataProvider();
@@ -101,8 +84,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
 		setViewSelector("release/demos/contextMenuDemo");
 
 		createList();
-		
-		list.addWidget("cmenu", createListContextMenu());
+		attachContextMenu();
 	}
 
 	private void createList() {
@@ -128,23 +110,28 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
 		}
 	}
 	
-  private ContextMenuWidget createListContextMenu() throws Exception {
-//    ButtonControl button = new ButtonControl();
-//    button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
-    // add the button to form. As the button does not hold any value, Data will be null.
-
+  private ContextMenuWidget createListContextMenu() {
     ContextMenuItem menu = new ContextMenuItem();
-    menu.addMenuItem(new ContextMenuItem("Modify", new ContextMenuEventEntry("modifyRecord", this, "cMenuparameterSupplier")));
-    menu.addMenuItem(new ContextMenuItem("Change sex", new ContextMenuEventEntry("changeSex", this, "cMenuparameterSupplier")));
-    menu.addMenuItem(new ContextMenuItem("Delete", new ContextMenuEventEntry("deleteRecord", this, "cMenuparameterSupplier")));
+    menu.addMenuItem(new ContextMenuItem(getL10nCtx().localize("common.View"), new ContextMenuEventEntry("viewRecord", this, "cMenuparameterSupplier")));
+    menu.addMenuItem(new ContextMenuItem(getL10nCtx().localize("context.menu.ChangeSex"), new ContextMenuEventEntry("changeSex", this, "cMenuparameterSupplier")));
+    menu.addMenuItem(new ContextMenuItem(getL10nCtx().localize("common.Remove"), new ContextMenuEventEntry("deleteRecord", this, "cMenuparameterSupplier")));
 
     ContextMenuWidget contextMenuWidget = new ContextMenuWidget(menu);
     
     return contextMenuWidget;
   }
+  
+  public void onLocaleChange(Locale oldLocale, Locale newLocale) {
+    attachContextMenu();
+  }
 
-  private void handleEventModifyRecord(String param) {
+  private void attachContextMenu() {
+	list.addWidget("cmenu", createListContextMenu());
+  }
+
+  private void handleEventViewRecord(String param) {
 	  Client c = (Client) list.getRowFromRequestId(param);
+	  getFlowCtx().start(new ClientViewWidget(c));
   }
   
   private void handleEventChangeSex(String param) {
@@ -154,6 +141,6 @@ public class DemoContextMenuWidget extends TemplateBaseWidget {
   
   private void handleEventDeleteRecord(String param) {
 	  Client c = (Client) list.getRowFromRequestId(param);
-	  
+	  friends.remove(c);
   }
 }
