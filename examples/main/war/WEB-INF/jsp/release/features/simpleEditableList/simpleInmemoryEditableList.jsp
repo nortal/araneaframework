@@ -43,7 +43,7 @@
 			<tui:componentList>
 					<ui:updateRegionRows id="simpleInmemorylistBody">
 
-					<tui:componentListHeader/>
+					<tui:componentListHeader updateRegions="simpleInmemorylistBody,${listId}lfooter"/>
 					
 					<ui:listFilter>
 						<ui:row styleClass="filter">
@@ -121,7 +121,7 @@
 								</c:otherwise>
 							</c:choose>
 							<ui:cell width="0">
-								<ui:linkButton id="editSave" showLabel="false">
+								<ui:linkButton id="editSave" showLabel="false" updateRegions="simpleInmemorylistBody">
 									<tui:image code="buttonChange" />
 									<fmt:message var="cblbl" key="common.Edit"/>
 									<c:if test="${not formRow.open}">
@@ -135,7 +135,7 @@
 								</ui:linkButton>
 
 								<c:if test="${formRow.open}">
-									<ui:linkButton id="delete" showLabel="false">
+									<ui:linkButton id="delete" showLabel="false" updateRegions="simpleInmemorylistBody,${listId}lfooter">
 										<tui:image code="buttonDelete" />
 									</ui:linkButton>
 									<fmt:message var="rblbl" key="common.Remove"/>

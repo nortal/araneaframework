@@ -193,11 +193,14 @@ function AraneaPage() {
   };
 
   this.executeCallbacks = function(systemFormId) {
+    logger.trace('Request for submit callback execution was received.\n'); 
     if (this.submitCallbacks['callbacks']) {
+      logger.trace('General submit callbacks executing.\n'); 
       this.submitCallbacks['callbacks'].execute();
     }
 
     if (this.submitCallbacks[systemFormId]) {
+      logger.trace('Submit callbacks executing.\n');
       this.submitCallbacks[systemFormId].execute();
     }
   };
@@ -275,7 +278,11 @@ function AraneaPage() {
         return false;
       }
     }
-    
+
+    if (typeof eventParam == "function") {
+		eventParam = eventParam();
+    }
+
     if (systemForm) {
       this.executeCallbacks(systemForm['id']);
     }

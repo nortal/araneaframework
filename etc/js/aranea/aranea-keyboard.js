@@ -255,7 +255,6 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
    	 for (var i = elhlen-1; i >= 0; i--){
          var handlerFunction = elHandlers[i].handler;
          var elementPrefix   = elHandlers[i].elementPrefix;
-         araneaPage().debug('handlerFunction is now being invoked. : \n' + handlerFunction);
          executed = handlerFunction(event, elementName) || executed;
 	  }
 

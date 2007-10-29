@@ -287,7 +287,7 @@ if (araneaPage && typeof araneaPage == "function") {
   };
 
   araneaPage().addSubmitCallback(clearTips);
-  Ajax.Responders.register({ onCreate: clearTips });
+  Ajax.Responders.register({ onCreate: clearTips, onSuccess: clearTips });
 }
 
 window['prototip/prototip.js'] = true;

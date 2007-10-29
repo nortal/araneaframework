@@ -73,6 +73,7 @@ public class ContextMenuItem implements Serializable {
 			jsonObject.setStringProperty("target", menuEntry.getTarget() != null ? menuEntry.getTarget().getScope().toString() : "null");
 			jsonObject.setStringProperty("type", menuEntry.getHappeningType());
 			jsonObject.setStringProperty("id", menuEntry.getHappeningId().toString());
+			jsonObject.setProperty("param", menuEntry.getHappeningParamDetector());
 		} 
 		if (subMenu != null) {
 			jsonObject.setProperty("submenu", menuMapToJsonArray(subMenu).toString());
@@ -98,6 +99,7 @@ public class ContextMenuItem implements Serializable {
 		private Widget target = null;
 		protected Object happeningId = null;
 		protected String happeningType = null;
+		protected String happeningParamDetector = "function() { return null; }";
 		
 		protected ContextMenuEntry(Object happeningId, String happeningType) {
 			this.happeningId = happeningId;
@@ -108,7 +110,13 @@ public class ContextMenuItem implements Serializable {
 			this(happeningId, happeningType);
 			this.target = target;
 		}
-
+		
+		protected ContextMenuEntry(Object happeningId, String happeningType, Widget target, String happeningParamDetector) {
+			this(happeningId, happeningType);
+			this.target = target;
+			this.happeningParamDetector = happeningParamDetector;
+		}
+		
 		public Object getHappeningId() {
 			return happeningId;
 		}
@@ -116,9 +124,13 @@ public class ContextMenuItem implements Serializable {
 		public String getHappeningType() {
 			return happeningType;
 		}
-
+		
 		public Widget getTarget() {
 			return target;
+		}
+
+		public String getHappeningParamDetector() {
+			return happeningParamDetector;
 		}
 	}
 	
@@ -126,11 +138,19 @@ public class ContextMenuItem implements Serializable {
 		public ContextMenuActionEntry(Object actionId, Widget target) {
 			super(actionId, ACTION, target);
 		}
+		
+		public ContextMenuActionEntry(Object actionId, Widget target, String happeningParamDetector) {
+			super(actionId, ACTION, target, happeningParamDetector);
+		}
 	}
 
 	public static class ContextMenuEventEntry extends ContextMenuEntry {
 		public ContextMenuEventEntry(Object eventId, Widget target) {
 			super(eventId, EVENT, target);
+		}
+		
+		public ContextMenuEventEntry(Object eventId, Widget target, String happeningParamDetector) {
+			super(eventId, EVENT, target, happeningParamDetector);
 		}
 	}
 }
