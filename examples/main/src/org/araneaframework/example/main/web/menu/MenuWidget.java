@@ -28,6 +28,7 @@ import org.araneaframework.example.main.release.demos.DemoActionPollWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
 import org.araneaframework.example.main.release.demos.DemoNewTabWidget;
+import org.araneaframework.example.main.release.demos.FriendlyUpdateDemoWidget;
 import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.release.demos.SimpleTreeWidget;
 import org.araneaframework.example.main.release.features.EasyAJAXUpdateRegionsWidget;
@@ -110,6 +111,7 @@ private MenuItem araneaMenu;
 		// Aranea 1.1 features/demos
 		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
+		araneaMenu.addMenuItem(new MenuItem("Cooperative_Form", FriendlyUpdateDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("SimpleEditableList", SimpleInMemoryEditableList.class));
