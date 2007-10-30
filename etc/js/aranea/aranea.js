@@ -208,17 +208,49 @@ function AraneaPage() {
   /**
    * @eventOptions hash containing following
    *     element    : DOM element that generated event
-   *     systemform : the form to be submitted (when left submitted, systemForm surrounding element is used)
-   *     eventid    : id of generated event
-   *     eventparam :
-   *     eventcond  :
-   *     eventupdateregions : 
+   *     systemForm : the form to be submitted (when left submitted, systemForm surrounding element is used)
+   *     eventId    : id of generated event
+   *     eventParam : 
+   *     eventCondition  : 
+   *     eventUpdateregions : 
    *
    * @since 1.1 */
   // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
   this.e = function(eventOptions) {
+    if (this.isSubmitted() || !this.isLoaded()) {
+      return false;
+    }
+
     if (eventOptions) {
-      //eventOptions.
+      eventOptions.each(function(pair) {
+        var k = pair.key;
+        var v = pair.value;
+        if (typeof v == "function" && k != 'eventCondition') {
+          eventOptions[k] = v(eventOptions.element);
+        }
+      });
+
+      // if event precondition check returns false, no submit will take place
+      if (eventOptions.eventCondition) {
+        var f = new Function("element", preCondition);
+        if (!f(eventOptions.element)) {
+          return false;
+        }
+      }
+
+      var systemFormFinder = function(domelement) {
+        $(element).ancestors().find(function(domelement) {
+          return domelement.tagName.toLowerCase() == 'form' && domelement.hasAttribute('arn-systemForm');
+        });
+      };
+
+      eventOptions.systemForm = eventOptions.systemForm ? eventOptions.systemForm : systemFormFinder(eventOptions.element);
+
+      if (systemForm) {
+        this.executeCallbacks(systemForm['id']);
+      }
+
+      return (this.findSubmitter(element, systemForm)).event(element);
     } else {
       this.getLogger().fatal("Cannot submit event, no event options specified.");
     }
@@ -278,9 +310,9 @@ function AraneaPage() {
         return false;
       }
     }
-
-    if (typeof eventParam == "function") {
-		eventParam = eventParam();
+    
+    if (typeof eventParam == 'function') {
+      eventParam = eventParam();
     }
 
     if (systemForm) {
