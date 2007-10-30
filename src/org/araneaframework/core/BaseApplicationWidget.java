@@ -32,6 +32,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
@@ -117,9 +118,12 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       if (viewDataOnce != null)
         viewData.putAll(viewDataOnce);
     }
-    
-    
-    
+
+    /** @since 1.1 */
+    public Scope getScope() {
+    	return BaseApplicationWidget.this.getScope();
+    }
+
     public Map getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }

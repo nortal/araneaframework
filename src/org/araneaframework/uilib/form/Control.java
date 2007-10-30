@@ -20,6 +20,7 @@
 package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
+import org.araneaframework.Scope;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -84,7 +85,6 @@ public interface Control extends Widget, Viewable, FormElementAware {
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public interface ViewModel extends Serializable {
-
     /**
      * Returns control type.
      * @return control type.
@@ -97,5 +97,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
     
     public boolean isDisabled();
 
+    /** @since 1.1 */
+    public Scope getScope();
   }
 }

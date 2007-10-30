@@ -60,6 +60,10 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 		
 		for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
 			DisplayItem displayItem = (DisplayItem) i.next();
+			String radioId = viewModel.getScope().toString() + displayItem.getValue();
+
+			item.setHtmlId(radioId);
+			label.setRadioId(radioId);
 			
 			if (labelBefore) writeLabel(label, derivedId, displayItem.getValue());
 			
@@ -67,6 +71,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 			
 			item.setId(derivedId);
 			item.setValue(displayItem.getValue());
+			item.setHtmlId(radioId);
+			
 			item.setEvents(events ? "true" : "false");
 			item.setValidateOnEvent(validateOnEvent ? "true" : "false");
 			if (updateRegions != null)

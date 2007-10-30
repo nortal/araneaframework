@@ -40,6 +40,8 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
  */
 public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 	protected String value;
+	/** @since 1.1 */
+	protected String htmlId;
 
 	{
 		baseStyleClass = "aranea-multi-checkbox";
@@ -63,6 +65,7 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 			throw new AraneaJspException("Value '" + value + "' not found in values list.");
 
 		JspUtil.writeOpenStartTag(out, "input");
+		JspUtil.writeAttribute(out, "id", htmlId);
 		JspUtil.writeAttribute(out, "name", name);
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
@@ -100,6 +103,17 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 	public void setValue(String value) throws JspException  {
 		this.value = (String)evaluateNotNull("value", value, String.class);
 	}
+	
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Sets the HTML id of this checkbox button."
+   * @since 1.1
+   */
+  public void setHtmlId(String htmlId) throws JspException  {
+    this.htmlId = (String)evaluate("htmlId", htmlId, String.class);
+  }
 }
 
 
