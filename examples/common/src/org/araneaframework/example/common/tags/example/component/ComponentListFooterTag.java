@@ -18,12 +18,14 @@ package org.araneaframework.example.common.tags.example.component;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspScriptUtil;
+import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.list.ListWidget;
@@ -73,6 +75,12 @@ public class ComponentListFooterTag extends PresentationTag {
   protected String showPartial = "demo.showPartial";
 
   protected String noDataStringId = ComponentListFooterTag.DEFAULT_NO_DATA_STRING_ID;
+  
+  // update regions 
+  private String updateRegions;
+  private String globalUpdateRegions;
+  
+  private List updateRegionNames; 
 
   public ComponentListFooterTag() {
     styleClass = "pages";
@@ -80,6 +88,8 @@ public class ComponentListFooterTag extends PresentationTag {
 
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
+    
+    this.updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 
     // Get list data
     listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
@@ -218,11 +228,8 @@ public class ComponentListFooterTag extends PresentationTag {
     JspUtil.writeEndTag(out, "div"); //info
   }
   
-    protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws IOException, JspException {
-    UiEvent event = new UiUpdateEvent();
-    event.setId(eventId);
-    event.setParam(eventParam);
-    event.setTarget(listId);
+  protected void writeOpenEventLink(Writer out, String eventId, String eventParam, boolean enabled, String styleClass) throws Exception {
+    UiEvent event = createListEvent(eventId, eventParam);
 
     JspUtil.writeOpenStartTag(out, "a");
     if (enabled) {
@@ -242,6 +249,15 @@ public class ComponentListFooterTag extends PresentationTag {
       JspScriptUtil.writeEmptyEventAttribute(out, "onclick");
     JspUtil.writeCloseStartTag_SS(out);         
   }
+
+  protected UiEvent createListEvent(String eventId, String eventParam) {
+    UiUpdateEvent event = new UiUpdateEvent();
+    event.setId(eventId);
+    event.setParam(eventParam);
+    event.setTarget(listId);
+    event.setUpdateRegionNames(updateRegionNames);
+    return event;
+  }
   
   protected UiEvent getShowSliceEvent() {
     UiEvent result = new UiUpdateEvent();
@@ -256,4 +272,24 @@ public class ComponentListFooterTag extends PresentationTag {
     result.setTarget(listId);
     return result;
   }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
+   */  
+  public void setUpdateRegions(String updateRegions) throws JspException {
+    this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
+   */  
+  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+  }  
 }

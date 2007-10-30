@@ -23,6 +23,7 @@ import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
 import org.araneaframework.Message;
+import org.araneaframework.Scope;
 import org.araneaframework.Viewable;
 import org.araneaframework.core.util.ExceptionUtil;
 
@@ -36,6 +37,13 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
   // PROTECTED CLASSES
   //*******************************************************************
   protected class ViewModel implements ApplicationComponent.ComponentViewModel {
+    /**
+     * @see ApplicationComponent.ComponentViewModel#getScope() 
+     * @since 1.1 */
+    public Scope getScope() {
+      return BaseApplicationComponent.this.getScope();
+    }
+
     public Map getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }

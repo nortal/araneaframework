@@ -79,6 +79,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onchange");
     }
     JspUtil.writeAttributes(out, attributes);
+    writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartTag(out);
 
     // Write items

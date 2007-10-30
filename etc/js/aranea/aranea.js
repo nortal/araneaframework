@@ -164,7 +164,7 @@ function AraneaPage() {
   var clientLoadEvents = new AraneaEventStore();
   var systemUnLoadEvents = new AraneaEventStore();
   
-  submitCallbacks = new Object();
+  this.submitCallbacks = new Object();
 
   this.addSystemLoadEvent = function(event) { systemLoadEvents.add(event); }
   this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
@@ -186,20 +186,75 @@ function AraneaPage() {
 
   // General callbacks executed before each submit of the specified system form.
   this.addSystemFormSubmitCallback = function(systemFormId, callback) {
-    if (!submitCallbacks[systemFormId]) {
-      submitCallbacks[systemFormId] = new AraneaEventStore();
+    if (!this.submitCallbacks[systemFormId]) {
+      this.submitCallbacks[systemFormId] = new AraneaEventStore();
     }
-    submitCallbacks[systemFormId].add(callback);
+    this.submitCallbacks[systemFormId].add(callback);
   };
 
   this.executeCallbacks = function(systemFormId) {
-    if (submitCallbacks['callbacks']) {
-      submitCallbacks['callbacks'].execute();
+    logger.trace('Request for submit callback execution was received.\n'); 
+    if (this.submitCallbacks['callbacks']) {
+      logger.trace('General submit callbacks executing.\n'); 
+      this.submitCallbacks['callbacks'].execute();
     }
 
-    if (submitCallbacks[systemFormId]) {
-      submitCallbacks[systemFormId].execute();
+    if (this.submitCallbacks[systemFormId]) {
+      logger.trace('Submit callbacks executing.\n');
+      this.submitCallbacks[systemFormId].execute();
     }
+  };
+
+  /**
+   * @eventOptions hash containing following
+   *     element    : DOM element that generated event
+   *     systemForm : the form to be submitted (when left submitted, systemForm surrounding element is used)
+   *     eventId    : id of generated event
+   *     eventParam : 
+   *     eventCondition  : 
+   *     eventUpdateregions : 
+   *
+   * @since 1.1 */
+  // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
+  this.e = function(eventOptions) {
+    if (this.isSubmitted() || !this.isLoaded()) {
+      return false;
+    }
+
+    if (eventOptions) {
+      eventOptions.each(function(pair) {
+        var k = pair.key;
+        var v = pair.value;
+        if (typeof v == "function" && k != 'eventCondition') {
+          eventOptions[k] = v(eventOptions.element);
+        }
+      });
+
+      // if event precondition check returns false, no submit will take place
+      if (eventOptions.eventCondition) {
+        var f = new Function("element", preCondition);
+        if (!f(eventOptions.element)) {
+          return false;
+        }
+      }
+
+      var systemFormFinder = function(domelement) {
+        $(element).ancestors().find(function(domelement) {
+          return domelement.tagName.toLowerCase() == 'form' && domelement.hasAttribute('arn-systemForm');
+        });
+      };
+
+      eventOptions.systemForm = eventOptions.systemForm ? eventOptions.systemForm : systemFormFinder(eventOptions.element);
+
+      if (systemForm) {
+        this.executeCallbacks(systemForm['id']);
+      }
+
+      return (this.findSubmitter(element, systemForm)).event(element);
+    } else {
+      this.getLogger().fatal("Cannot submit event, no event options specified.");
+    }
+    // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
   };
   
   this.event = function(element) {
@@ -256,6 +311,10 @@ function AraneaPage() {
       }
     }
     
+    if (typeof eventParam == 'function') {
+      eventParam = eventParam();
+    }
+
     if (systemForm) {
       this.executeCallbacks(systemForm['id']);
     }
@@ -275,7 +334,7 @@ function AraneaPage() {
       url += '&araThreadServiceId=' + threadServiceId;
   
   	if(extraParams)    
-     url += '&' + $H(extraParams).toQueryString();
+     url += '&' + extraParams;
 
     return url;
   };
@@ -289,7 +348,7 @@ function AraneaPage() {
       url += '&araServiceActionParameter=' + actionParam;
     if (sync != undefined && !sync)
       url += '&araSync=false';
-      
+
     return url;
   };
 
@@ -301,7 +360,7 @@ function AraneaPage() {
   this.action_6 = function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
     if (window['prototype/prototype.js']) {
       options = Object.extend({
-        method: 'get',
+        method: 'post',
         onComplete: actionCallback,
         onException: AraneaPage.handleRequestException
       }, options);
@@ -384,12 +443,19 @@ AraneaPage.getRandomRequestId = function() {
   return Math.round(100000*Math.random());
 };
 
+/** @since 1.1 */
+AraneaPage.getFileImportString = function(filename) {
+  return araneaPage().getServletURL() + "/fileimporter/" + filename;
+};
+
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
 };
-/** @since 1.1 */
-AraneaPage.findSystemForm = function() {
+
+/** TODO: badly named, should be deprecated. 
+  *@since 1.1 */
+AraneaPage.findSystemForm = function(element) {
   araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
     function(element) {
       return $(element).hasAttribute('arn-systemForm');
@@ -863,7 +929,7 @@ AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgrou
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
-_ap = new AraneaPage();
+var _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);

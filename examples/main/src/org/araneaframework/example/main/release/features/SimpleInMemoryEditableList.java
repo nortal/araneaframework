@@ -1,6 +1,5 @@
 package org.araneaframework.example.main.release.features;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -45,7 +44,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 		}
 
 		for (int i = 0; i <  ExampleData.males.length; i++) {
-			Client friend = new Client();
+			ExampleData.Client friend = new ExampleData.Client();
 			friend.setForename(ExampleData.males[i]);
 			friend.setId(lastId);
 			friend.setSex("M");
@@ -56,7 +55,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 		}
 
 		for (int i = 0; i <  ExampleData.females.length; i++) {
-			Client friend = new Client();
+			ExampleData.Client friend = new ExampleData.Client();
 			friend.setForename(ExampleData.females[i]);
 			friend.setSex ("F");
 			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
@@ -77,7 +76,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 
 		/* PersonMO class is already familiar from form examples. 
        FormRowHandler class that will handle the different row operations. */
-		list = new EditableBeanListWidget(new FriendEditableRowHandler(), Client.class);
+		list = new EditableBeanListWidget(new FriendEditableRowHandler(), ExampleData.Client.class);
 		this.formList = list.getFormList();
 		addWidget("list", list);
 		list.setOrderableByDefault(true);
@@ -95,7 +94,7 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 	private class DataProvider extends MemoryBasedListDataProvider {
 		private static final long serialVersionUID = 1L;
 		protected DataProvider() {
-			super(Client.class);
+			super(ExampleData.Client.class);
 		}
 		public List loadData() throws Exception {
 			return friends;
@@ -108,14 +107,14 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 		public FriendEditableRowHandler() {}
 
 		public Object getRowKey(Object rowData) {
-			return ((Client) rowData).getId();
+			return ((ExampleData.Client) rowData).getId();
 		}
 
 		public void saveValidRow(FormRow editableRow) throws Exception {
-			Client rowData = (Client) ((BeanFormWidget)editableRow.getForm()).writeToBean(new Client());
+			ExampleData.Client rowData = (ExampleData.Client) ((BeanFormWidget)editableRow.getForm()).writeToBean(new ExampleData.Client());
 			rowData.setId((Long) editableRow.getKey());
 
-			Client toModify = (Client) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", editableRow.getKey()));
+			ExampleData.Client toModify = (ExampleData.Client) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", editableRow.getKey()));
 			toModify.edit(rowData);
 
 			editableRow.close();
@@ -123,14 +122,14 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 
 		public void deleteRow(Object key) throws Exception {
 			Long id = (Long) key;
-			Client toRemove = (Client) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", id));
+			ExampleData.Client toRemove = (ExampleData.Client) CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", id));
 			friends.remove(toRemove);
 			
 			list.getDataProvider().refreshData();
 		}
 
 		public void addValidRow(FormWidget addForm) throws Exception {
-			Client newFriend = (Client) (((BeanFormWidget)addForm).writeToBean(new Client()));
+			ExampleData.Client newFriend = (ExampleData.Client) (((BeanFormWidget)addForm).writeToBean(new ExampleData.Client()));
 			friends.add(newFriend);
 			list.getDataProvider().refreshData();
 			formList.resetAddForm();
@@ -176,52 +175,6 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 				addError(
 						MessageUtil.localizeAndFormat("sed.sexcon.ermsg", t(getLabel()), getEnvironment()));
 			}
-		}
-	}
-
-	public static class Client implements Serializable {
-		private static final long serialVersionUID = 1L;
-		private Long id;
-		private String sex;
-		private String forename;
-		private String surname;
-		private String country;
-		
-		public Long getId() {
-			return id;
-		}
-		public void setId(Long id) {
-			this.id = id;
-		}
-		public String getForename() {
-			return forename;
-		}
-		public void setForename(String forename) {
-			this.forename = forename;
-		}
-		public String getSex() {
-			return sex;
-		}
-		public void setSex(String sex) {
-			this.sex = sex;
-		}
-		public String getSurname() {
-			return surname;
-		}
-		public void setSurname(String surname) {
-			this.surname = surname;
-		}
-		
-		public String getCountry() {
-			return country;
-		}
-		public void setCountry(String country) {
-			this.country = country;
-		}
-		public void edit(Client f) {
-			setSurname(f.surname);
-			setForename(f.forename);
-			setSex(f.sex);
 		}
 	}
 }

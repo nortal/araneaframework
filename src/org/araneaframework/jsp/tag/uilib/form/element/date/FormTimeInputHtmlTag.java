@@ -166,8 +166,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     
-    if (backgroundValidation)
-      JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, "true");
+    writeBackgroundValidationAttribute(out);
 
     if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");

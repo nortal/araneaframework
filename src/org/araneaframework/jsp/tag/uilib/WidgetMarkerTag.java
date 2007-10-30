@@ -35,10 +35,12 @@ import org.araneaframework.jsp.util.JspUtil;
 public class WidgetMarkerTag extends BaseWidgetTag {
 	public static final String MARKERCLASS = "widgetMarker";
 	
+	protected String tag = null;
+	
 	public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
-		JspUtil.writeOpenStartTag(out, "div");
+		JspUtil.writeOpenStartTag(out, tag == null ? "div" : tag);
 		JspUtil.writeAttribute(out, "class", MARKERCLASS);
 		JspUtil.writeAttribute(out, AraneaAttributes.WIDGET_ID, widget.getScope().toString());
 		JspUtil.writeCloseStartTag(out);
@@ -47,7 +49,17 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 	}
 	
 	protected int doEndTag(Writer out) throws Exception {
-		JspUtil.writeEndTag(out, "div");
+		JspUtil.writeEndTag(out, tag == null ? "div" : tag);
 		return super.doEndTag(out);
 	}
+	
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "UiLib widget id." 
+   */
+  public void setTag(String tag) throws Exception {
+    this.tag = (String) evaluateNotNull("tag", tag, String.class);
+  }
 }

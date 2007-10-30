@@ -652,6 +652,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public List getItemRange() {
 		if (itemRange == null || this.checkChanged() || sequenceHelper.checkChanged() || typeHelper.checkChanged() || filterHelper.checkChanged()) {
 			refreshCurrentItemRange();
+
+            // trigger all checks to reliably reset the change status of the list. 
+			this.checkChanged();
+			sequenceHelper.checkChanged();
+			typeHelper.checkChanged();
+			filterHelper.checkChanged();
 		}
 
 		return this.itemRange;

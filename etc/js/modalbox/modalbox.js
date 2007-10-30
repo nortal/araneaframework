@@ -526,3 +526,5 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
     this.element.setStyle(d);
   }
 });
+
+window['js/modalbox/modalbox.js'] = true;
