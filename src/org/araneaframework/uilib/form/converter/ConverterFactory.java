@@ -31,7 +31,8 @@ import org.araneaframework.uilib.support.ConverterKey;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
  */
 public class ConverterFactory implements ConverterProvider {
-  protected static ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
+  /** @since 1.1 */
+  public static final ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
   protected final Map converters = new HashMap();
 
   protected ConverterFactory() {

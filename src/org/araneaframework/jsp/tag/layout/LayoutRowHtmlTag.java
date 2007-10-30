@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -32,8 +31,6 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutRowHtmlTag extends BaseLayoutRowTag {
-  protected String id;
-
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -55,15 +52,5 @@ public class LayoutRowHtmlTag extends BaseLayoutRowTag {
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "tr");
     return super.doEndTag(out);
-  }
-  
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout."
-   */
-  public void setId(String id) throws JspException {
-    this.id =(String)evaluate("id", id, String.class);
   }
 }

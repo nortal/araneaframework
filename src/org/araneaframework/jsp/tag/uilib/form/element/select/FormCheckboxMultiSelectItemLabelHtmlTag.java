@@ -83,7 +83,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "The HTML id radio button to which this label belongs."
+   *   description = "The HTML id of checkbox to which this label belongs."
    * @since 1.1 
    */
   public void setCheckboxId(String checkboxId) throws JspException  {

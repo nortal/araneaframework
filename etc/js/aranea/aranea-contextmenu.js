@@ -38,9 +38,9 @@ Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE =
 Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE = 
     new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>');
 Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE = 
-    new Template('araneaContextMenu.hide(); araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, null);');
+    new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, null); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE = 
-    new Template('araneaContextMenu.hide(); araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, function() {}, null);');
+    new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, function() {}, null); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
   if (menu.label) {
     var entrytemplate = Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE;
@@ -134,7 +134,7 @@ Aranea.ContextMenu.prototype = {
   },
 
   hide: function(event) {
-    //this.triggeringElement = null;
+    this.triggeringElement = null;
   	// if event occurred in context menu itself, menu should be cleared by its own handlers
     if (event && ($(Event.element(event))).descendantOf($(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID)))
       return true;

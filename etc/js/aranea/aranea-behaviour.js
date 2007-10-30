@@ -31,6 +31,7 @@ function setFormElementContext(el) {
 }
 
 function formElementValidationActionCall(el) {
+  // element serialization here is crucial, otherwise multi-valued controls only submit the most recent value
   araneaPage().action(el, 'bgValidate', el.id, null, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, $(el).serialize(true));
 }
 
