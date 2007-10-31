@@ -6,19 +6,12 @@
   version="1.2">
 
   <ui:widgetContext>
-    <div id="pollingdiv">
-       <p>Event calendar</p>
-       
-       <table id="ptable">
-       	<tr><td/><td/></tr>
-       </table>
-    </div>
-
     <script type="text/javascript">
         var widgetId = '<c:out value="${widgetId}" />';
     	var pollingUpdater = function(request, response) {
     	  var text = request.responseText;
-    	  new Insertion.Bottom($('ptable'), text);
+    	  if (text != 'NOTHING')
+    	    pollAddErrorMessage(text);
         };
 
 		var pollingAction = function() {
@@ -26,6 +19,12 @@
 		};
 
 		setInterval(pollingAction, 3000);
+		
+		var pollAddErrorMessage = function(msg) {
+		   var errdiv = Element.getElementsByClassName(document.body, 'msg-error')[0];
+		   new Insertion.Bottom(errdiv, msg);
+		   errdiv.show();
+		};
     </script>
   </ui:widgetContext>
 </jsp:root>

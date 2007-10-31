@@ -23,7 +23,7 @@
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 					<ui:updateRegionRows id="compFormRegion">
 					<ui:row>
-						<ui:formElement id="arknumber">
+						<ui:formElement id="arkNumber">
 							<ui:cell>
 								<ui:label />
 							</ui:cell>
@@ -96,6 +96,7 @@
 				
 				<!-- pure design tag -->
 				<tui:componentActions>
+					<ui:eventButton eventId="resetCompanyForm" labelId="ufriendly.cform.reset" updateRegions="compFormRegion"/>
 					<ui:eventButton eventId="fetchData" labelId="ufriendly.component.getdata" updateRegions="compFormRegion"/>
 				</tui:componentActions>
 				

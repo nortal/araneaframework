@@ -52,14 +52,16 @@ public class ComboTextInputDemoWidget extends TemplateBaseWidget {
 		control.addPredefinedInput("Tuuli Semevsky");
 		control.addPredefinedInput("Andre Krull");
 		
-
-		for (int c = 1 ; c < 3; c++) {
-			for (int i = 0; i <  ExampleData.males.length; i++) {
+	    int j = 0;
+		for (int c = 1 ; c < 100 && j < 1000; c++) {
+			for (int i = 0; i <  ExampleData.males.length && j < 1000; i++) {
 				control.addPredefinedInput(ExampleData.males[i] + " " + ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+				j++;
 			}
-
-			for (int i = 0; i <  ExampleData.females.length; i++) {
+			
+			for (int i = 0; i <  ExampleData.females.length && j < 1000; i++) {
 				control.addPredefinedInput(ExampleData.females[i] + " " + ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+				j++;
 			}
 		}
 	}

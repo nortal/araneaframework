@@ -1,0 +1,98 @@
+This document very briefly describes what one might need to change when upgrading Aranea
+version from 1.0 to 1.1 in a web application.
+
+GENERAL
+-handleProcess() callback should be searched manually and removed, it is not called anymore
+-process() too, when super.process() not called from it, no compilation errors are produced
+
+-The method clean() is undefined for the type Data
++remove the Data.clean() call, it should not be necessary
+
+-The method getScope() is undefined for the type InputData
++usually replaced with Component.getScope().toPath() method
+
+-BeanFormWidget.readBean() undefined: change to (no, this is not a typo)
++BeanFormWidget.writeToBean()
+
+-BeanFormWidget.writeBean() undefined: change to (no, this is not a typo)  
++BeanFormWidget.readFromBean() 
+
+-widget's render overriden with something like
+-protected void render(OutputData output) throws Exception {
+-	output.pushScope("widget");
+-	try {
+-		widget._getWidget().render(output);
+-	} finally {
+-		output.popScope();
+-	}
+-}
++widget._getWidget().render(output);
+
+-StandardContainerWidget.EVENT_PATH_KEY
++ApplicationWidget.EVENT_PATH_KEY
+
+-OutputData.pushAttribute
++should be rare and conventional usecases should be replacable with Environment entries
+
+-explicit process calls
++when called on standard widgets or components, should just be removed
+
+-ServletUtil.include -- search for all calls
++most calls should be replaced with 
+  include(String filePath, ApplicationWidget widget, OutputData output) 
+  include(String filePath, Environment env, OutputData output, ApplicationWidget widget)
+
+-StandardFlowContainerWidgets were a holy cow in Aranea 1.0, meaning that when flowcontainer
+ became empty (happens when FlowContext.finish() is invoked on only active flow in container), 
+ flowcontainer still lived on. Aranea 1.1 has a concept of /finishable/ 
+ StandardFlowContainerWidget -- these return the control to parent flow container when they
+ are emptied, allowing for convenient wrapping of whole usecases. The topmost flow container
+ has no parent and thus never goes away, containers lower in the hierarchy that should remain
+ active when all flows inside have finished (ie MenuWidget) should have their finishable field
+ set to true.
++setFinishable(true) in situations where it is desired (exactly like 1.0 StandardFlowContainerWidget)
+
+UILIB Tags
+-The method getScopedFullFieldId() is undefined for the type extending some tag extending some formelement tag
++use getFullFieldId() method, getScopedFullFieldId() does not exist anymore
+
+-FormTag.FORM_SCOPED_FULL_ID_KEY
++FormTag.FORM_FULL_ID_KEY
+
+-requireEntry(zzz) where zzz is nonexistant
++on times where it was just used as safety check, it can just be removed
+
+-The method getWidgetFromContext(String id, PageContext) is undefined for the type JspWidgetUtil	
++ JspWidgetUtil.traverseToSubWidget(getContextWidget(), id)
+
+-ListFilterImpl.init(Environment env) throws Exception 
++ListFilterImpl.init(Environment env) // ListFilter interface throw clause was removed
+
+-ListFilterImpl.destroy() throws Exception 
++ListFilterImpl.destroy() // ListFilter interface throw clause was removed
+
+-ListOrderImpl.init(Environment env) throws Exception 
++ListOrderImpl.init(Environment env) // ListOrder interface throw clause was removed
+
+-ListOrderImpl.destroy() throws Exception 
++ListOrderImpl.destroy() // ListOrder interface throw clause was removed
+
+JSP templates
+-ui:root, ui:viewPort references
++just remove them
+
+-globalWidgetInclude
++find a way to replace this with widgetInclude
+
+-search for outputData.attributes references
++replace as applicable. Sometimes the best way to refactor is to create new tag that outputs
+ things found in OutputData before, acquiring them from Environment or anywhere else.
++in rare cases they can be just replaced with setting request attributes directly (this is
+ not encouraged!)
+
+-${systemFormId} references
++when in scripts, can just be replaced with _ap.getSystemForm().id
++document.${systemFormId} is replace with just _ap.getSystemForm() in scripts
+
+-${viewPort....}
++Pass data some other way: through Environment, Widget's viewData, request scoped attributes ...

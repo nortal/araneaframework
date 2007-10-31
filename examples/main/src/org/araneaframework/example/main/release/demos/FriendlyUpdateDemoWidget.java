@@ -30,20 +30,24 @@ import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData;
+import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
+import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.LongData;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class FriendlyUpdateDemoWidget extends TemplateBaseWidget {
+public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements LocaleChangeListener {
 	private BeanFormWidget companyForm;
 	private BeanFormWidget invoiceForm;
+	private FormElement firmElement;
 	
 	static List allCountries = new ArrayList();
 	
@@ -55,6 +59,8 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget {
 
 	protected void init() throws Exception {
 		setViewSelector("release/demos/friendlyUpdateDemo");
+		getL10nCtx().addLocaleChangeListener(this);
+		
 		companyForm = buildCompanyForm();
 		invoiceForm = buildInvoiceForm();
 
@@ -73,12 +79,12 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget {
 
 	private BeanFormWidget buildCompanyForm() {
 		BeanFormWidget result = new BeanFormWidget(Firm.class);
-		result.addElement("arknumber", "ufriendly.component.centralfirmid", new NumberControl(), new LongData(), true);
+		result.addElement("arkNumber", "ufriendly.component.centralfirmid", new NumberControl(), new LongData(), true);
 		result.addBeanElement("registryAddress", "ufriendly.component.registryaddress", new TextControl(),  false);
 		result.addBeanElement("postalAddress", "ufriendly.component.postaladdress", new TextControl(),  false);
 		result.addBeanElement("bankAccount", "ufriendly.component.bankaccount", new TextControl(),  false);
 		result.addBeanElement("vatNumber", "ufriendly.component.vatidentifier", new NumberControl(), false);
-		result.addBeanElement("firmType", "ufriendly.component.vatidentifier", new SelectControl(), false);
+		firmElement = result.addBeanElement("firmType", "ufriendly.component.firmtype", buildFirmTypeSelect(), false);
 		
 		return result;
 	}
@@ -101,6 +107,10 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget {
 		}
 	}
 	
+	private void handleEventResetCompanyForm() throws Exception {
+		companyForm.readFromBean(new Firm());
+	}
+	
 	private Firm generateFirm(Long arkNumber) {
 		Firm result = new Firm();
 		result.setArkNumber(arkNumber);
@@ -118,15 +128,33 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget {
 		String registryhouse = String.valueOf(rnd.nextInt(500));
 		String postalhouse = String.valueOf(rnd.nextInt(200));
 
-		result.setRegistryAddress(registryCountry + " " + registryStreet + "-" + registryhouse);
-		result.setPostalAddress(postalCountry + " " + postalStreet + "-" + postalhouse);
-		result.setVatNumber(new Long(rnd.nextLong()));
-		result.setFirmType(new Integer(rnd.nextInt(3)));
+		result.setRegistryAddress(registryStreet + "-" + registryhouse + ", " + registryCountry);
+		result.setPostalAddress(postalStreet + "-" + postalhouse + ", " + postalCountry);
+		result.setVatNumber(new Long(Math.abs(rnd.nextLong())));
+		result.setFirmType(new Integer(rnd.nextInt(3) + 1));
 
 		return result;
 	}
+	
+	private SelectControl buildFirmTypeSelect() {
+		SelectControl result = new SelectControl();
+		
+		result.addItem(new DisplayItem("0", t("select.choose")));
+		result.addItem(new DisplayItem("1", t("ufriendly.public.limited")));
+		result.addItem(new DisplayItem("2", t("ufriendly.npo")));
+		result.addItem(new DisplayItem("3", t("ufriendly.private.limited")));
 
-	private static class Firm implements Serializable {
+		return result;
+	}
+	
+	public void onLocaleChange(Locale oldLocale, Locale newLocale) {
+		Object value = firmElement.getControl().getRawValue();
+		SelectControl c = buildFirmTypeSelect();
+		c.setRawValue(value);
+		firmElement.setControl(c);
+	}
+
+	public static class Firm implements Serializable {
 		private Long arkNumber;
 		private String registryAddress;
 		private String postalAddress;

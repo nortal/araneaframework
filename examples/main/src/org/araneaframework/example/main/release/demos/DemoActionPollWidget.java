@@ -24,6 +24,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -40,23 +41,17 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
 
 		public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
 			int random = rn.nextInt(100);
-			
-			String change = "";
-
 			lastRandom = random;
 			
 			HttpOutputData httpOutput = (HttpOutputData) output;
+			String s = "NOTHING";
 			
-			String s = 
-				"<tr>"+ 
-					"<td>" + new SimpleDateFormat("HH:mm.ss").format(new Date()) + "</td>" +
-					"<td>" + random + "</td>" +
-				"</tr>";
-			
+			if (rn.nextInt(3) == 1) {
+				s = MessageUtil.localizeAndFormat("poll.taskmsg", new Object[] { String.valueOf(random),  new SimpleDateFormat("HH:mm.ss").format(new Date()) } , getEnvironment()) + "<br/>"; 
+			}
+
 			httpOutput.setContentType("text/xml");
 			httpOutput.getWriter().write(s);
-			
-			
 		}
 	}
 }
