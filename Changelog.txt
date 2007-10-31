@@ -1,5 +1,34 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.10.31    | Aranea 1.1-M5
+
+Features and Improvements
+    Proxy*Listeners are able to invoke private & protected handleXXX* methods | See #526
+    Support for key combinations and meta keys in JSP keyboard handler tags   | See #472
+
+    setInputFilter() method has been added to various Controls                | See #486
+    ProxyActionListener was added (analogous to ProxyEventListener)           | See #490
+    All Aranea JSP <ui:*button> tags now recognize 'tabindex' attribute       | See #473
+    New ListItemsData constructor -- ListItemsData(List itemRange, Long count)| See #494
+    Bundled Prototype JS library was upgraded from 1.5.1 -> 1.5.1.1           | See #489
+    Support for background server-side form validation (while filling form)   | See change #502, #511                                                                              
+    Tab widget (TabContainerWidget) was added to Uilib                        | See change #466, #516, #522
+    A hybrid of text input and select, ComboTextControl was added to Uilib    | See #483
+    Support for right-click menu (ContextMenuWidget)                          | See #487
+    <ui:tooltip> tag was added                                                | See #497
+    Added support for running processes in modal overlay layer                | See change #388, #515
+    The 'root' flow container now is distinguished by additional              | See 
+    'RootFlowContext' environment entry                                       |     #508
+    LocalizationContext now accepts LocaleChangeListeners                     | See #525, #253
+    Documentation updates and some outdated information removal               | See change #522
+
+Bugfixes
+    BeanFormWidget writeToBean (old readBean()) destroying content of subform | See #420
+    FormWidget restoreBaseState() did not work correctly                      | See #507
+
+Deprecation & API changes
+    Deprecated BeanFormWidget.writeBean() & readBean() were removed           | See #474
+
 2007.10.01    | Aranea 1.1-M4
 
 Features and Improvements
