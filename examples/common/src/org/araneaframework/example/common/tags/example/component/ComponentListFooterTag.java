@@ -260,14 +260,16 @@ public class ComponentListFooterTag extends PresentationTag {
   }
   
   protected UiEvent getShowSliceEvent() {
-    UiEvent result = new UiUpdateEvent();
+    UiUpdateEvent result = new UiUpdateEvent();
     result.setId(SHOW_SLICE_EVENT_ID);
+    result.setUpdateRegionNames(updateRegionNames);
     result.setTarget(listId);
     return result;
   }
   
   protected UiEvent getShowAllEvent() {
-    UiEvent result = new UiUpdateEvent();
+    UiUpdateEvent result = new UiUpdateEvent();
+    result.setUpdateRegionNames(updateRegionNames);
     result.setId(SHOW_ALL_EVENT_ID);
     result.setTarget(listId);
     return result;

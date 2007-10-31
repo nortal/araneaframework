@@ -134,7 +134,7 @@ Aranea.ContextMenu.prototype = {
   },
 
   hide: function(event) {
-    this.triggeringElement = null;
+    //this.triggeringElement = null;
   	// if event occurred in context menu itself, menu should be cleared by its own handlers
     if (event && ($(Event.element(event))).descendantOf($(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID)))
       return true;

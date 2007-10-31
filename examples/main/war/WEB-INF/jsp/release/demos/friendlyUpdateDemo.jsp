@@ -96,6 +96,7 @@
 				
 				<!-- pure design tag -->
 				<tui:componentActions>
+					<ui:eventButton eventId="resetCompanyForm" labelId="ufriendly.cform.reset" updateRegions="compFormRegion"/>
 					<ui:eventButton eventId="fetchData" labelId="ufriendly.component.getdata" updateRegions="compFormRegion"/>
 				</tui:componentActions>
 				

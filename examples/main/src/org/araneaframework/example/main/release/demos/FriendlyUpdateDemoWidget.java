@@ -107,6 +107,10 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		}
 	}
 	
+	private void handleEventResetCompanyForm() throws Exception {
+		companyForm.readFromBean(new Firm());
+	}
+	
 	private Firm generateFirm(Long arkNumber) {
 		Firm result = new Firm();
 		result.setArkNumber(arkNumber);
@@ -126,8 +130,8 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 
 		result.setRegistryAddress(registryStreet + "-" + registryhouse + ", " + registryCountry);
 		result.setPostalAddress(postalStreet + "-" + postalhouse + ", " + postalCountry);
-		result.setVatNumber(new Long(rnd.nextLong()));
-		result.setFirmType(new Integer(rnd.nextInt(4)));
+		result.setVatNumber(new Long(Math.abs(rnd.nextLong())));
+		result.setFirmType(new Integer(rnd.nextInt(3) + 1));
 
 		return result;
 	}

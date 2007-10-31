@@ -33,7 +33,10 @@ Aranea.ModalBox.show = function() {
 		  }
 	  );
   };
+  
+  showfunc();
 
+  /* TODO: lazyload
   var importname = AraneaPage.getFileImportString(Aranea.ModalBox.ModalBoxFileName);
   var modalboxloaded = function() { return window[Aranea.ModalBox.ModalBoxFileName]; };
   
@@ -45,7 +48,7 @@ Aranea.ModalBox.show = function() {
   });
   
   var lazyshow = Aranea.ScriptLoader.createPeriodicalConditionalExecutor(showfunc, modalboxloaded, 10);
-  lazyshow();
+  lazyshow(); */
 };
 
 Aranea.ModalBox.close = function() {
