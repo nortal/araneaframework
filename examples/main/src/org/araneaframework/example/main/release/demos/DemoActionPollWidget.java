@@ -46,7 +46,7 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
 			HttpOutputData httpOutput = (HttpOutputData) output;
 			String s = "NOTHING";
 			
-			if (rn.nextInt(10) > 0) {
+			if (rn.nextInt(3) == 1) {
 				s = MessageUtil.localizeAndFormat("poll.taskmsg", new Object[] { String.valueOf(random),  new SimpleDateFormat("HH:mm.ss").format(new Date()) } , getEnvironment()) + "<br/>"; 
 			}
 

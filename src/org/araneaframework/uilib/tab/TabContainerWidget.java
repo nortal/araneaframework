@@ -153,7 +153,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	 * TabRegistrationContext IMPL
 	 **********************************************/
 	/**
-	 * @see org.araneaframework.uilib.newtab.TabRegistrationContext#registerTab(org.araneaframework.uilib.newtab.TabWidget)
+	 * @see org.araneaframework.uilib.tab.TabRegistrationContext#registerTab(org.araneaframework.uilib.tab.TabWidget)
 	 */
 	public TabWidget registerTab(TabWidget tabWidget) {
 		boolean first = tabs.isEmpty();
@@ -164,7 +164,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	}
 	
 	/**
-	 * @see org.araneaframework.uilib.newtab.TabRegistrationContext#unregisterTab(org.araneaframework.uilib.newtab.TabWidget)
+	 * @see org.araneaframework.uilib.tab.TabRegistrationContext#unregisterTab(org.araneaframework.uilib.tab.TabWidget)
 	 */
 	public TabWidget unregisterTab(TabWidget tabWidget) {
 		TabWidget result = (TabWidget) tabs.remove(tabWidget.getScope().getId().toString());
