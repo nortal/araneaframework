@@ -52,7 +52,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeEventAttributes(out, event);
 
-    if (disabled != null) 
+    if (Boolean.valueOf(disabled).booleanValue())
       out.write(" disabled=\"disabled\" ");
 
     if (event.getId() != null) {
