@@ -52,7 +52,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeEventAttributes(out, event);
 
-    if (Boolean.valueOf(disabled).booleanValue())
+    if (isDisabled())
       out.write(" disabled=\"disabled\" ");
 
     if (event.getId() != null) {
@@ -67,7 +67,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
       JspUtil.writeCloseStartEndTag(out);
 
     return EVAL_BODY_INCLUDE;    
-  }    
+  }
 
   protected int doEndTag(Writer out) throws Exception {
     if (renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON)) {
