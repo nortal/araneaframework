@@ -564,11 +564,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         logmsg += ': ' + transport.status + ' ' + transport.statusText;
         araneaPage().getLogger().debug(logmsg);
         AraneaPage.processResponse(transport.responseText);
-        
-        // because prototype delays execution of loaded scripts,
-        // immediate execution is not guaranteed to succeed -- thus the delay
         AraneaPage.init();
-        setTimeout(araneaPage().onload, 30);
       } else {
         logmsg += 'Partial rendering: received erroneous response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
@@ -578,6 +574,15 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         document.write(transport.responseText);
         document.close();
       }
+    },
+    onComplete: function() {
+      // because prototype's Element.update|replace delay execution of scripts,
+      // immediate execution of onload() is not guaranteed to be correct
+      var f = function() {
+      	araneaPage().onload();
+      };
+      // -- force the delay here
+      setTimeout(f, 30);
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();
