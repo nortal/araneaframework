@@ -564,8 +564,11 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         logmsg += ': ' + transport.status + ' ' + transport.statusText;
         araneaPage().getLogger().debug(logmsg);
         AraneaPage.processResponse(transport.responseText);
+        
+        // because prototype delays execution of loaded scripts,
+        // immediate execution is not guaranteed to succeed -- thus the delay
         AraneaPage.init();
-        araneaPage().onload();
+        setTimeout(araneaPage().onload(), 30);
       } else {
         logmsg += 'Partial rendering: received erroneous response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
@@ -630,7 +633,7 @@ Object.extend(AraneaPage, {
    */
   processResponse: function(responseText) {
     var text = new Text(responseText);
-    text.readLine(); // responseId
+    var responseId = text.readLine();
     this.receivedRegionCounters = new Hash();
     while (!text.isEmpty()) {
       var key = text.readLine();
