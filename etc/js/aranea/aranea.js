@@ -568,7 +568,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         // because prototype delays execution of loaded scripts,
         // immediate execution is not guaranteed to succeed -- thus the delay
         AraneaPage.init();
-        setTimeout(araneaPage().onload(), 30);
+        setTimeout(araneaPage().onload, 30);
       } else {
         logmsg += 'Partial rendering: received erroneous response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
