@@ -17,6 +17,7 @@
 package org.araneaframework.backend.list.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +25,9 @@ import java.util.List;
  */
 public class ListItemsData implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	public static final ListItemsData EMPTY =
+		new ListItemsData(Collections.EMPTY_LIST, new Long(0L));
 
 	protected List itemRange;
 
