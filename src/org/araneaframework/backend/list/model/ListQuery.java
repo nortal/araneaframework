@@ -17,8 +17,11 @@
 package org.araneaframework.backend.list.model;
 
 import java.io.Serializable;
+import java.util.Map;
+
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.uilib.list.OrderInfo;
 
 
 public class ListQuery implements Serializable {
@@ -28,8 +31,12 @@ public class ListQuery implements Serializable {
 	protected Long itemRangeStart;	
 	protected Long itemRangeCount;
 	
+	protected Map filterInfo;
+	protected OrderInfo orderInfo;
+	
 	protected Expression filterExpression;	
 	protected ComparatorExpression orderExpression;
+	
 	
 	public Expression getFilterExpression() {
 		return this.filterExpression;
@@ -54,5 +61,17 @@ public class ListQuery implements Serializable {
 	}
 	public void setOrderExpression(ComparatorExpression orderExpression) {
 		this.orderExpression = orderExpression;
+	}
+	public Map getFilterInfo() {
+		return filterInfo;
+	}
+	public void setFilterInfo(Map filterInfo) {
+		this.filterInfo = filterInfo;
+	}
+	public OrderInfo getOrderInfo() {
+		return orderInfo;
+	}
+	public void setOrderInfo(OrderInfo orderInfo) {
+		this.orderInfo = orderInfo;
 	}
 }

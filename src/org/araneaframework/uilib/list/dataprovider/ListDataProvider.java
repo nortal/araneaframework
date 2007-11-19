@@ -17,9 +17,11 @@
 package org.araneaframework.uilib.list.dataprovider;
 
 import java.io.Serializable;
-import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.backend.list.memorybased.Expression;
+import java.util.Map;
+
 import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.uilib.list.OrderInfo;
+import org.araneaframework.uilib.list.structure.ListStructure;
 
 
 
@@ -43,18 +45,39 @@ public interface ListDataProvider extends Serializable {
 	public void destroy() throws Exception;
 
 	/**
-	 * This method should be used to receive the filter of the list.
+	 * This method should be used to store the structure of the list.  
 	 * 
-	 * @param filterExpression the filter of the list.
+	 * @param listStructure the structure of the list.
 	 */
-	public void setFilterExpression(Expression filterExpression);
-
+	public void setListStructure(ListStructure listStructure);
+	
+	/**
+	 * This method should be used to receive the filter of the list. 
+	 * 
+	 * @param filterInfo the filter of the list.
+	 */
+	public void setFilterInfo(Map filterInfo);
+	
 	/**
 	 * This method should be used to receive the current ordering info.
 	 * 
-	 * @param orderExpression the current ordering info.
+	 * @param orderInfo the current ordering info.
 	 */
-	public void setOrderExpression(ComparatorExpression orderExpression);
+	public void setOrderInfo(OrderInfo orderInfo);
+	
+//	/**
+//	 * This method should be used to receive the filter of the list.
+//	 * 
+//	 * @param filterExpression the filter of the list.
+//	 */
+//	public void setFilterExpression(Expression filterExpression);
+//
+//	/**
+//	 * This method should be used to receive the current ordering info.
+//	 * 
+//	 * @param orderExpression the current ordering info.
+//	 */
+//	public void setOrderExpression(ComparatorExpression orderExpression);
 
 
 	/**

@@ -25,11 +25,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
-import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -42,17 +41,14 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
 import org.araneaframework.uilib.form.control.ButtonControl;
-import org.araneaframework.uilib.form.reader.MapFormReader;
-import org.araneaframework.uilib.form.reader.MapFormWriter;
 import org.araneaframework.uilib.list.dataprovider.ListDataProvider;
 import org.araneaframework.uilib.list.structure.ListField;
 import org.araneaframework.uilib.list.structure.ListFilter;
-import org.araneaframework.uilib.list.structure.ListOrder;
 import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.list.structure.filter.FieldFilterHelper;
 import org.araneaframework.uilib.list.structure.filter.FilterHelper;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
-import org.araneaframework.uilib.list.util.MapUtil;
+import org.araneaframework.uilib.list.util.ListUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.Event;
 
@@ -65,7 +61,7 @@ import org.araneaframework.uilib.util.Event;
  * configured.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv
  */
 public class ListWidget extends BaseUIWidget implements ListContext {
 
@@ -531,8 +527,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @return <code>Map</code> containing filter information.
 	 */
 	public Map getFilterInfo() {
-		MapFormReader mapFormReader = new MapFormReader(this.form);
-		return mapFormReader.getMap();
+		return ListUtil.readFilterInfo(this.form);
 	}
 
 	/**
@@ -546,19 +541,13 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 			if (isInitialized()) {
 				propagateListDataProviderWithFilter(filterInfo);				
 			}
-			MapFormWriter mapFormWriter = new MapFormWriter();
-			mapFormWriter.writeForm(this.form, filterInfo);
+			ListUtil.writeFilterInfo(this.form, filterInfo);
 		}
 	}
 
 	private void propagateListDataProviderWithFilter(Map filterInfo) {
 		if (this.dataProvider != null) {
-			ListFilter filter = getListStructure().getListFilter();
-			Expression filterExpr = null;
-			if (filter != null) {
-				filterExpr = filter.buildExpression(MapUtil.convertToPlainMap(filterInfo));
-			}
-			this.dataProvider.setFilterExpression(filterExpr);			
+			this.dataProvider.setFilterInfo(filterInfo);
 		}
 	}
 
@@ -597,10 +586,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	protected void propagateListDataProviderWithOrderInfo(OrderInfo orderInfo) {
-		ListOrder order = getListStructure().getListOrder();
-		ComparatorExpression orderExpr = order != null ? order.buildComparatorExpression(orderInfo) : null;
-		this.dataProvider.setOrderExpression(orderExpr);
-		
+		if (this.dataProvider != null) {
+			this.dataProvider.setOrderInfo(orderInfo);
+		}
 		fireChange();
 	}
 
@@ -767,6 +755,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	protected void initDataProvider() throws Exception {
+		this.dataProvider.setListStructure(getListStructure());
 		propagateListDataProviderWithOrderInfo(getOrderInfo());
 		propagateListDataProviderWithFilter(getFilterInfo());		
 		this.dataProvider.init();
@@ -978,8 +967,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected void filter() throws Exception {
 		if (form.convertAndValidate() && form.isStateChanged()) {
 
-			MapFormReader mapFormReader = new MapFormReader(form);
-			Map filterInfo = mapFormReader.getMap();
+			Map filterInfo = ListUtil.readFilterInfo(form);
 
 			propagateListDataProviderWithFilter(filterInfo);
 

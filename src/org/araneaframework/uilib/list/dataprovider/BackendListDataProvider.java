@@ -19,6 +19,7 @@ package org.araneaframework.uilib.list.dataprovider;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -32,7 +33,7 @@ import org.araneaframework.backend.list.model.ListQuery;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class BackendListDataProvider implements ListDataProvider {
+public abstract class BackendListDataProvider extends BaseListDataProvider {
 	private static final Log log = LogFactory.getLog(BackendListDataProvider.class);
 	private Set dataUpdateListeners = new HashSet(1);
 	
@@ -137,6 +138,8 @@ public abstract class BackendListDataProvider implements ListDataProvider {
 			ListQuery query = new ListQuery();
 			query.setItemRangeStart(startIdx);
 			query.setItemRangeCount(count);
+			query.setFilterInfo(this.filterInfo);
+			query.setOrderInfo(this.orderInfo);
 			query.setFilterExpression(this.filterExpr);
 			query.setOrderExpression(this.orderExpr);			
 			this.lastItemRange = getItemRange(query);

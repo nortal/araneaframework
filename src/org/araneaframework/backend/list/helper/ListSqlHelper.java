@@ -27,7 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -44,6 +46,7 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
+import org.araneaframework.backend.list.sqlexpr.SqlExpressionUtil;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
@@ -97,6 +100,9 @@ public abstract class ListSqlHelper {
 
 	protected SqlExpression filterSqlExpr;
 	protected SqlExpression orderSqlExpr;
+	
+	private boolean filterSqlExprInited = false;
+	private boolean orderSqlExprInited = false;
 
 	// ITEM RANGE
 
@@ -449,16 +455,17 @@ public abstract class ListSqlHelper {
 	 *         "ORDER BY" clause.
 	 */
 	protected SqlExpression getOrderSqlExpression() {
-		if (this.orderSqlExpr != null) {
+		if (orderSqlExprInited) {
 			return this.orderSqlExpr;
 		}
 
-		if (this.orderExpr == null) {
-			return null;
+		if (this.orderExpr != null) {
+			StandardCompExprToSqlExprBuilder builder = createOrderSqlExpressionBuilder();
+			builder.setMapper(createExpressionBuilderResolver());
+			this.orderSqlExpr = SqlExpressionUtil.toSql(this.orderExpr, builder);
 		}
-		StandardCompExprToSqlExprBuilder builder = createOrderSqlExpressionBuilder();
-		builder.setMapper(createExpressionBuilderResolver());
-		this.orderSqlExpr = builder.buildSqlExpression(this.orderExpr);
+		
+		orderSqlExprInited = true;
 		return this.orderSqlExpr;
 	}
 
@@ -470,17 +477,18 @@ public abstract class ListSqlHelper {
 	 *         "WHERE" clause.
 	 */
 	protected SqlExpression getFilterSqlExpression() {
-		if (this.filterSqlExpr != null) {
+		if (filterSqlExprInited) {
 			return this.filterSqlExpr;
 		}
-
-		if (this.filterExpr == null) {
-			return null;
+		
+		if (this.filterExpr != null) {
+			StandardExpressionToSqlExprBuilder builder = createFilterSqlExpressionBuilder();
+			builder.setMapper(createExpressionBuilderResolver());
+			builder.setConverter(createExpressionBuilderConverter());
+			this.filterSqlExpr = SqlExpressionUtil.toSql(this.filterExpr, builder);
 		}
-		StandardExpressionToSqlExprBuilder builder = createFilterSqlExpressionBuilder();
-		builder.setMapper(createExpressionBuilderResolver());
-		builder.setConverter(createExpressionBuilderConverter());
-		this.filterSqlExpr = builder.buildSqlExpression(this.filterExpr);
+		
+		filterSqlExprInited = true;
 		return this.filterSqlExpr;
 	}
 	
