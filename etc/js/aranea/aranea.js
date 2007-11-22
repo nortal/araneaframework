@@ -542,6 +542,12 @@ function DefaultAraneaAJAXSubmitter(form) {
   };
 }
 
+/**
+ * The delay after which Ajax.Request onComplete expects all the DOM updates 
+ * to have taken place, in milliseconds.
+ * @since 1.1 */
+DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay=30;
+
 DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
   systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
   systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
@@ -582,7 +588,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       	araneaPage().onload();
       };
       // -- force the delay here
-      setTimeout(f, 30);
+      setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();

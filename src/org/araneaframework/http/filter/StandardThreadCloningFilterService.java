@@ -50,6 +50,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   private static final Log log = LogFactory.getLog(StandardThreadCloningFilterService.class);
   private Long timeToLive;
   private boolean initializeChildren = true;
+  private transient byte[] threadSnapshot;
 
   public StandardThreadCloningFilterService() {
     super();
@@ -83,10 +84,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (cloningRequested(input))
+    if (cloningRequested(input)) {
       redirect(cloningAction(path, input, output));
+    } else if (snapshotRequested(input)) {
+      takeSnapshot((RelocatableService)childService);
+    }
     else
       super.action(path, input, output);
+    this.threadSnapshot = null;
   }
   
   protected String cloningAction(Path path, InputData input, OutputData output) throws Exception {
@@ -94,7 +99,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
       log.debug("Attempting to clone current thread ('" + getThreadServiceCtx().getCurrentId() + "').");
 
     RelocatableService clone = clone((RelocatableService)childService);
-    String cloneServiceId = startClone(clone);
+    String cloneServiceId = startClonedThread(clone);
     clone._getService().action(path, input, output);
     
     // return URL where cloned service resides
@@ -112,14 +117,20 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
    * @return clone (without {@link org.araneaframework.Environment}) of given {@link RelocatableService}.
    */
   protected RelocatableService clone(RelocatableService service) throws Exception {
+    this.threadSnapshot = takeSnapshot(service);
+	ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(this.threadSnapshot));
+    return (RelocatableService) ois.readObject();
+  }
+
+  protected byte[] takeSnapshot(RelocatableService service) {
     Relocatable.Interface relocatable = service._getRelocatable();
 	Environment env = relocatable.getCurrentEnvironment();
+	relocatable.overrideEnvironment(null);
+	
+	byte[] result = SerializationUtils.serialize(service);
+	relocatable.overrideEnvironment(env);
 
-    relocatable.overrideEnvironment(null);
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(SerializationUtils.serialize(service)));
-    relocatable.overrideEnvironment(env);
-
-    return (RelocatableService) ois.readObject();
+	return result;
   }
 
   /** Wraps the cloned service in a new StandardThreadCloningFilterService, attaches it to {@link ThreadContext}.
@@ -127,8 +138,11 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
    * <li> created service should not be decorated relocatable again, because <code>clone</code> is relocatable already</li> 
    * <li> new StandardThreadCloningFilterService's childService may not be reinited!</li>
    * </ul>
+   * 
+   * This method is public and part of {@link ThreadCloningContext} interface since Aranea 1.1.
+   * 
    * @return thread id assigned to wrapped service  */ 
-  protected String startClone(RelocatableService clone) throws Exception {
+  public String startClonedThread(RelocatableService clone) {
     StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false);
     String cloneServiceId = RandomStringUtils.randomAlphabetic(12);
     
@@ -141,7 +155,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     return cloneServiceId;
   }
 
-  private void startThreadService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
+  public byte[] acquireThreadSnapshot() {
+    if (this.threadSnapshot == null && log.isWarnEnabled()) {
+      log.warn("Ineffective call to acquireSerializedThread(), no thread snapshot present. Request is probably missing required parameters.");
+    }
+	return this.threadSnapshot;
+  }
+
+private void startThreadService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
     if (timeToLive == null)
       threadCtx.addService(cloneServiceId, cloneService);
     else
@@ -150,6 +171,10 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
 
   protected boolean cloningRequested(InputData input) throws Exception {
     return input.getGlobalData().get(ThreadCloningContext.CLONING_REQUEST_KEY) != null;
+  }
+
+  protected boolean snapshotRequested(InputData input) throws Exception {
+    return input.getGlobalData().get(ThreadCloningContext.CLONE_ONLY_REQUEST_KEY) != null;
   }
 
   protected String getRequestURL() {

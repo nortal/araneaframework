@@ -17,6 +17,10 @@
 package org.araneaframework.http;
 
 import java.io.Serializable;
+import org.araneaframework.Service;
+import org.araneaframework.Relocatable.RelocatableService;
+import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.framework.ThreadContext;
 
 /**
  * Service that clones currently running session thread upon request and sends a response
@@ -26,6 +30,51 @@ import java.io.Serializable;
  * @author Taimo Peelo
  */
 public interface ThreadCloningContext extends Serializable {
-  /** key indicating that incoming request is requesting cloning of the current session thread */
+  /** 
+   * Request parameter key which presence indicates that incoming request is requesting 
+   * cloning of the current session thread. Presence of this should mean that current 
+   * thread is cloned and then cloned thread is immediately opened in a new browser window. 
+   * */
   public static final String CLONING_REQUEST_KEY = "araPleaseClone";
+  
+  /**
+   * Request parameter key which presence indicates that incoming request is requesting
+   * cloning of the current session thread. Presence of this should mean that snapshot
+   * of current thread is made before request is routed to child {@link Service}. Cloned
+   * thread is not attached to thread router (no new window with cloned thread will be opened).
+   * Snapshot can be acquired during the request by calling 
+   */
+  public static final String CLONE_ONLY_REQUEST_KEY = "araCloneOnly";
+
+  /** 
+   * Attaches clone as new thread level service (see {@link ThreadContext}). It assumes that
+   * the service is already initialized and thus will not attempt to reinitialize it (as
+   * using {@link ManagedServiceContext#addService(Object, org.araneaframework.Service)} would
+   * try to do).
+   *  
+   * @param clone cloned service to start as new session level thread
+   * @return identifier of created session thread
+   * 
+   * @since 1.1
+   */
+  public String startClonedThread(RelocatableService clone);
+
+  /**
+   * Returns the snapshot of current thread, made before child  {@link Service} has had the 
+   * chance to process the request. Only applicable when request contained either 
+   * {@link ThreadCloningContext#CLONE_ONLY_REQUEST_KEY} or {@link ThreadCloningContext#CLONING_REQUEST_KEY} parameter.
+   * 
+   * Deserialization of the snapshot could be done as follows:
+   * <p>
+   * <code>
+   *   ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(acquireSerializedThread()));
+   *   RelocatableService clone = (RelocatableService) ois.readObject();
+   * </code>
+   * </p>
+   * 
+   * Snapshot may then be started as cloned thread with {@link ThreadCloningContext#startClonedThread(RelocatableService)}.  
+   * 
+   * @return serialized snapshot of current thread or <code>null</code>
+   */
+  public byte[] acquireThreadSnapshot();
 }

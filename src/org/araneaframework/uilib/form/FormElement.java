@@ -137,9 +137,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   public void setControl(Control control) {
     Assert.notNullParam(control, "control");
     
-    if (this.control != null && this.control.isAlive()) {
-      this.control._getComponent().destroy();
-    }
+    destroyControl();
 
     this.control = control;
     
@@ -147,6 +145,13 @@ public class FormElement extends GenericFormElement implements FormElementContex
     
     if (isInitialized())
       control._getComponent().init(getScope(), getEnvironment());
+  }
+
+  /** @since 1.1 */
+  protected void destroyControl() {
+    if (this.control != null && this.control.isAlive()) {
+      this.control._getComponent().destroy();
+    }
   }
 
   /**
@@ -315,8 +320,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
 
   protected void destroy() throws Exception {
-    if (getControl() != null) 
-      getControl()._getComponent().destroy();
+    destroyControl();
   }
 
   /**
