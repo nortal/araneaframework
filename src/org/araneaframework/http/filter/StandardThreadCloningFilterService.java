@@ -32,6 +32,7 @@ import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.RelocatableDecorator;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.core.BaseFilterService;
@@ -87,7 +88,8 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     if (cloningRequested(input)) {
       redirect(cloningAction(path, input, output));
     } else if (snapshotRequested(input)) {
-      takeSnapshot((RelocatableService)childService);
+      this.threadSnapshot = takeSnapshot((RelocatableService)childService);
+      super.action(path, input, output);
     }
     else
       super.action(path, input, output);
@@ -109,8 +111,12 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   protected void redirect(String location) throws Exception {
 	((HttpOutputData) getOutputData()).sendRedirect(location);
   }
+  
+  protected Environment getChildEnvironment() {
+    return new StandardEnvironment(super.getChildEnvironment(), ThreadCloningContext.class, this);
+  }
 
-  /**
+/**
    * Clones given {@link org.araneaframework.Relocatable.RelocatableService}. 
    * Clone is created by first serializing and then deserializing given <code>service</code>.
    * Created clone does not have {@link org.araneaframework.Environment}.
