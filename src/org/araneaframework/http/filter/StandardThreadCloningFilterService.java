@@ -156,7 +156,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
       log.debug("Attaching the cloned thread as '" + cloneServiceId + "'.");
     
     startThreadService(getThreadServiceCtx(), wrappedClone, cloneServiceId);
-    clone._getRelocatable().overrideEnvironment(wrappedClone.getEnvironment());
+    clone._getRelocatable().overrideEnvironment(wrappedClone.getChildEnvironment());
     
     return cloneServiceId;
   }
@@ -168,7 +168,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
 	return this.threadSnapshot;
   }
 
-private void startThreadService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
+  private void startThreadService(ThreadContext threadCtx, StandardThreadCloningFilterService cloneService, String cloneServiceId) {
     if (timeToLive == null)
       threadCtx.addService(cloneServiceId, cloneService);
     else

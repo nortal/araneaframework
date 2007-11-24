@@ -42,7 +42,10 @@ public interface ThreadCloningContext extends Serializable {
    * cloning of the current session thread. Presence of this should mean that snapshot
    * of current thread is made before request is routed to child {@link Service}. Cloned
    * thread is not attached to thread router (no new window with cloned thread will be opened).
-   * Snapshot can be acquired during the request by calling 
+   * Snapshot can be acquired during the same request by calling 
+   * {@link ThreadCloningContext#acquireThreadSnapshot()}.
+   * 
+   * @since 1.1 
    */
   public static final String CLONE_ONLY_REQUEST_KEY = "araCloneOnly";
 
@@ -72,9 +75,11 @@ public interface ThreadCloningContext extends Serializable {
    * </code>
    * </p>
    * 
-   * Snapshot may then be started as cloned thread with {@link ThreadCloningContext#startClonedThread(RelocatableService)}.  
+   * Snapshot may then be started as cloned thread with {@link ThreadCloningContext#startClonedThread(RelocatableService)}.
    * 
    * @return serialized snapshot of current thread or <code>null</code>
+   * 
+   * @since 1.1
    */
   public byte[] acquireThreadSnapshot();
 }
