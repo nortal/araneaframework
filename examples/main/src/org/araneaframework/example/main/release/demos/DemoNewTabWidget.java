@@ -42,8 +42,6 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 	    	classfield.setAccessible(true);
 	    	Class clazz = (Class) classfield.get(menuItem);
 
-	    	System.out.println(clazz.getName());
-	    	
 	    	containerWidget.addTab((String)entry.getKey(), menuItem.getLabel(), (Widget)clazz.newInstance());
 	    	if (this.getClass().equals(clazz))
 	    		containerWidget.disableTab((String)entry.getKey());
