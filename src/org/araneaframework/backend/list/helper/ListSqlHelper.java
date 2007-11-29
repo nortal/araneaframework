@@ -716,7 +716,7 @@ public abstract class ListSqlHelper {
 			sb.append(")");
 			sb.append(getDatabaseFilterWith(" AND ", ""));
 		}
-		if (customWhereSql == null) {
+		if (customOrderbySql == null) {
 			sb.append(getDatabaseOrderWith(" ORDER BY ", ""));	
 		} else {
 			sb.append(" ORDER BY ");
