@@ -16,6 +16,8 @@
 
 package org.araneaframework.framework.container;
 
+import java.util.Map;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
@@ -32,16 +34,48 @@ import org.araneaframework.framework.FlowContext.Handler;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
+ * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public class OverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
+  /**
+   * <p> 
+   * Map containing the default overlay presentation options. 
+   * Default values are as follows:</p>
+   * <ul>
+   *   <li>method: post</li>
+   *   <li>overlayClose: false</li>
+   *   <li>width: 800</li>
+   *   <li>slideDownDuration: 0.0</li>
+   *   <li>slideUpDuration: 0.0</li>
+   *   <li>overlayDuration: 0.0</li>
+   *   <li>resizeDuration: 0.0</li>
+   * </ul>
+   */
+  public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
   private static final String OVERLAY_REQUEST_KEY = "araOverlay";
 
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";
+  
+  protected Map presentationOptions = new LinkedMap();
 
   private Widget main;
   private FlowContextWidget overlay;
+  
+  static {
+    DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
+    DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
+    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", Double.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", Double.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", Double.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", Double.valueOf(0.0));
+  }
+
+  {
+    presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
+  }
 
   public void setMain(Widget main) {
     this.main = main;
@@ -121,5 +155,14 @@ public class OverlayContainerWidget extends BaseApplicationWidget implements Ove
 
   public void start(Widget flow) {
     overlay.start(flow);
+  }
+
+  /* The presentation options of this overlay. */
+  public Map getOverlayOptions() {
+    return presentationOptions;
+  }
+
+  public void setOverlayOptions(Map presentationOptions) {
+    this.presentationOptions = presentationOptions; 
   }
 }

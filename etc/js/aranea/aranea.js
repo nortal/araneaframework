@@ -125,7 +125,10 @@ function AraneaPage() {
   /** @since 1.1 */
   this.getSystemForm = function() { return systemForm; };
   /** @since 1.1 */
-  this.setSystemForm = function(_systemForm) { systemForm = _systemForm; };
+  this.setSystemForm = function(_systemForm) {
+    this.debug("AraneaPage: Setting systemform to: " + _systemForm);
+    systemForm = _systemForm;
+  };
 
   /** @since 1.1 */
   this.setSystemFormEncoding = function(encoding) {
@@ -500,31 +503,11 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
-
-   	Modalbox.show(
-   	  systemForm.readAttribute('action') + '?araOverlay',
-   	  {
-   	    method: 'post',
-   	    params: systemForm.serialize(true),
-   	    overlayClose: false,
-   	    width: 800,
-   	    slideDownDuration: 0.0,
-   	    slideUpDuration: 0.0,
-   	    overlayDuration: 0.0,
-   	    resizeDuration: 0.0,
-   	    afterLoad: function(content) {
-          araneaPage().debug("Content = " + content);
-   	      if (content == '') {
-   	        //Modalbox.hide();
-            var systemForm = araneaPage().getSystemForm();
-            if (systemForm.transactionId)
-              systemForm.transactionId.value = 'override';
-            return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
-   	      }
-        }
-   	  }
-   	);
-   	return false;
+    
+    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad}; 
+    Object.extend(options, Aranea.ModalBox.Options || {});
+    Modalbox.show(systemForm.readAttribute('action') + '?araOverlay', options);
+    return false;
   };
 }
 
