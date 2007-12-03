@@ -93,6 +93,9 @@ Tip.prototype = {
       display: 'none'
     });
 
+    // make all tips accessible by style class
+    Element.addClassName(this.wrapper, "prototip-tooltip-wrapper");
+
     // IE select fix
     if (Prototype.Browser.IE) {
       this.underlay = document.createElement('iframe');
@@ -282,12 +285,16 @@ Function.prototype.safeBind = function() {
 }
 
 if (araneaPage && typeof araneaPage == "function") {
+  // See task 548
   var clearTips = function() {
-    Tips.tips.all(function(tip){ Tips.remove(tip.element); })
+    Tips.tips.all(function(tip){ Tips.remove(tip.element); });
+    var tipdivs = $$('div.prototip-tooltip-wrapper');
+    tipdivs.each(function(node) {
+      document.body.removeChild(node);
+    });
   };
 
-  araneaPage().addSubmitCallback(clearTips);
-  Ajax.Responders.register({ onCreate: clearTips, onSuccess: clearTips });
+  Ajax.Responders.register({ onCreate: clearTips, onComplete: clearTips });
 }
 
 window['prototip/prototip.js'] = true;

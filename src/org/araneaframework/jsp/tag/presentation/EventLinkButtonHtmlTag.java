@@ -40,11 +40,16 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "href", "#");
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeEventAttributes(out, event);
 
-    if (event.getId() != null)
-      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    if (!isDisabled()) {
+      JspUtil.writeAttribute(out, "tabindex", tabindex);
+      JspUtil.writeEventAttributes(out, event);
+
+      if (event.getId() != null)
+        JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    } else {
+      JspUtil.writeAttribute(out, "onclick", "return false;");
+    }
 
     JspUtil.writeCloseStartTag_SS(out);    
 

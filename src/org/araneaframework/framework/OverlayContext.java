@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework;
 
+import java.util.Map;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.framework.FlowContext.Configurator;
@@ -27,6 +28,9 @@ import org.araneaframework.framework.FlowContext.Handler;
  */
 public interface OverlayContext {
   boolean isOverlayActive();
+  
+  void setOverlayOptions(Map options);
+  Map getOverlayOptions();
 
   /** FlowContext delegate methods */
   void replace(Widget flow, Configurator configurator);
