@@ -75,7 +75,7 @@ Modalbox.Methods = {
 		//Adding event observers
 		this.hide = this.hide.bindAsEventListener(this);
 		this.close = this._hide.bindAsEventListener(this);
-		this.kbdHandler = this.kbdHandler.bindAsEventListener(this);
+		//this.kbdHandler = this.kbdHandler.bindAsEventListener(this);
 		this._initObservers();
 
 		this.initialized = true; // Mark as initialized
@@ -279,13 +279,13 @@ Modalbox.Methods = {
 	_initObservers: function(){
 		//Event.observe(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.observe(this.MBoverlay, "click", this.hide);
-		Event.observe(document, "keypress", Modalbox.kbdHandler );
+		//TODO: maybe restore Event.observe(document, "keypress", Modalbox.kbdHandler );
 	},
 	
 	_removeObservers: function(){
 		//Event.stopObserving(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.stopObserving(this.MBoverlay, "click", this.hide);
-		Event.stopObserving(document, "keypress", Modalbox.kbdHandler );
+		//TODO: maybe restore Event.stopObserving(document, "keypress", Modalbox.kbdHandler );
 	},
 	
 	_loadAfterResize: function() {
