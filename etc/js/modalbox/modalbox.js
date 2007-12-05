@@ -17,6 +17,7 @@ Modalbox.Methods = {
 	overrideAlert: false, // Override standard browser alert message with ModalBox
 	focusableElements: new Array(),
 	options: {
+                title : null,
 		//title: "ModalBox Window", // Title of the ModalBox window
 		overlayClose: true, // Close modal box by clicking on overlay
 		width: 500, // Default width in px
@@ -62,6 +63,7 @@ Modalbox.Methods = {
 		]);
 		
 		// If title isn't given, the header will not displayed 
+                Element.extend(this.MBheader);
 		if(!this.options.title) this.MBheader.hide();
 		
 		// Inserting into DOM
@@ -89,7 +91,8 @@ Modalbox.Methods = {
 		this.content = content;
 		this.setOptions(options);
 		
-		Element.update(this.MBcaption, this.options.title); // Updating title of the MB
+		if (this.options.title)
+			Element.update(this.MBcaption, this.options.title); // Updating title of the MB
 		
 		if(this.MBwindow.style.display == "none") { // First modal box appearing
 			this._appear();
