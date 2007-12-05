@@ -77,7 +77,7 @@ Modalbox.Methods = {
 		//Adding event observers
 		this.hide = this.hide.bindAsEventListener(this);
 		this.close = this._hide.bindAsEventListener(this);
-		//this.kbdHandler = this.kbdHandler.bindAsEventListener(this);
+		this.kbdHandler = this.kbdHandler.bindAsEventListener(this);
 		this._initObservers();
 
 		this.initialized = true; // Mark as initialized
@@ -282,13 +282,13 @@ Modalbox.Methods = {
 	_initObservers: function(){
 		//Event.observe(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.observe(this.MBoverlay, "click", this.hide);
-		//TODO: maybe restore Event.observe(document, "keypress", Modalbox.kbdHandler );
+		Event.observe(document, "keypress", Modalbox.kbdHandler );
 	},
 	
 	_removeObservers: function(){
 		//Event.stopObserving(this.MBclose, "click", this.close);
 		if(this.options.overlayClose) Event.stopObserving(this.MBoverlay, "click", this.hide);
-		//TODO: maybe restore Event.stopObserving(document, "keypress", Modalbox.kbdHandler );
+		Event.stopObserving(document, "keypress", Modalbox.kbdHandler );
 	},
 	
 	_loadAfterResize: function() {
@@ -320,6 +320,7 @@ Modalbox.Methods = {
 	kbdHandler: function(e) {
 		var node = Event.element(e);
 		switch(e.keyCode) {
+			/*
 			case Event.KEY_TAB:
 				Event.stop(e);
 				if(!e.shiftKey) { //Focusing in direct order
@@ -339,7 +340,7 @@ Modalbox.Methods = {
 						this.focusableElements[this.currFocused].focus();
 					}
 				}
-				break;
+				break; */
 			/*			
 			case Event.KEY_ESC:
 				if(this.active) this._hide(e);
@@ -350,6 +351,7 @@ Modalbox.Methods = {
 			case 0: // For Gecko browsers compatibility
 				if(e.which == 32) this._preventScroll(e);
 				break;
+			/*
 			case Event.KEY_UP:
 			case Event.KEY_DOWN:
 			case Event.KEY_PAGEDOWN:
@@ -361,7 +363,7 @@ Modalbox.Methods = {
 					Event.stop(e);
 				else if( (node.tagName.toLowerCase() == "input" && ["submit", "button"].include(node.type)) || (node.tagName.toLowerCase() == "a") )
 					Event.stop(e);
-				break;
+				break;*/
 		}
 	},
 	
