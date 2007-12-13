@@ -17,7 +17,7 @@ Modalbox.Methods = {
 	overrideAlert: false, // Override standard browser alert message with ModalBox
 	focusableElements: new Array(),
 	options: {
-		title: "ModalBox Window", // Title of the ModalBox window
+		//title: "ModalBox Window", // Title of the ModalBox window
 		overlayClose: true, // Close modal box by clicking on overlay
 		width: 500, // Default width in px
 		height: 90, // Default height in px
@@ -29,7 +29,7 @@ Modalbox.Methods = {
 		inactiveFade: true, // Fades MB window on inactive state
 		transitions: false, // Toggles transition effects. Transitions are disabled by default
 		loadingString: "Please wait. Loading...", // Default loading string message
-		closeString: "Close window", // Default title attribute for close window link
+		//closeString: "Close window", // Default title attribute for close window link
 		params: {},
 		method: 'get' // Default Ajax request method
 	},

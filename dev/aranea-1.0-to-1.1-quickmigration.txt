@@ -89,7 +89,12 @@ JSP templates
  things found in OutputData before, acquiring them from Environment or anywhere else.
 +in rare cases they can be just replaced with setting request attributes directly (this is
  not encouraged!)
-
+ 
+-<ui:eventButton disabled="whatever"/>
++On migration, all present <ui:eventButton> 'disabled' attributes should be set to "true".
+ because 'disabled' attribute presence in 1.0 always disabled event button, regardless of
+ attribute value. In 1.1, only "true" (case insensitive) value disables event button.
+ 
 -${systemFormId} references
 +when in scripts, can just be replaced with _ap.getSystemForm().id
 +document.${systemFormId} is replace with just _ap.getSystemForm() in scripts
