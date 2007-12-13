@@ -102,6 +102,11 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	// * DATABASE MAPPING AND CONVERTERS
 	// *********************************************************************	
 	
+	/**
+	 * Add additional "set" of fields.
+	 * 
+	 * @see Fields
+	 */
 	public void addFields(Fields newFields) {
 		// Update "fields"
 		if (fields == null) {
@@ -119,10 +124,24 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 		}
 	}
 	
+	/**
+	 * Add additional naming strategy.
+	 * <p>
+	 * The given <code>namingStrategy</code> is added as last in the context of {@link OrNamingStrategy}.
+	 * 
+	 * @see NamingStrategy
+	 */
 	public void addNamingStrategy(NamingStrategy namingStrategy) {
 		addNamingStrategy(namingStrategy, false);
 	}
 	
+	/**
+	 * Add additional naming strategy.
+	 * <p>
+	 * The given <code>namingStrategy</code> is added as first in the context of {@link OrNamingStrategy}.
+	 * 
+	 * @see NamingStrategy
+	 */
 	public void addNamingStrategyAsFirst(NamingStrategy namingStrategy) {
 		addNamingStrategy(namingStrategy, true);
 	}
