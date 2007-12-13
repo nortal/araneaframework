@@ -57,8 +57,9 @@ public class PrefixMapNamingStrategy extends StandardNamingStrategy {
 	 * @param fieldNamePrefix prefix of the field name (can also be <code>null</code>).
 	 * @param columnNamePrefix prefix of the database column name (can also be <code>null</code>).
 	 */
-	public void addPrefix(String fieldNamePrefix, String columnNamePrefix) {
+	public PrefixMapNamingStrategy addPrefix(String fieldNamePrefix, String columnNamePrefix) {
 		customPrefixes.put(fieldNamePrefix, columnNamePrefix);
+		return this;
 	}
 
 	protected String resolvePrefix(String fieldNamePrefix) {

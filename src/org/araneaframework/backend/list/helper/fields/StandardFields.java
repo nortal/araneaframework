@@ -108,72 +108,78 @@ public class StandardFields implements Fields {
 		return new StandardFields(this, NameUtil.getFullName(this.globalPrefix, globalPrefix));
 	}
 	
-	public void addField(String prefix, String field) {
+	public StandardFields addField(String prefix, String field) {
 		fields.add(addPrefix(prefix, field));
+		return this;
 	}
 	
-	public void removeField(String prefix, String field) {
+	public StandardFields removeField(String prefix, String field) {
 		fields.remove(addPrefix(prefix, field));
+		return this;
 	}
 	
-	public void addFields(String prefix, Collection fields) {
+	public StandardFields addFields(String prefix, Collection fields) {
 		this.fields.addAll(addPrefix(prefix, fields));
+		return this;
 	}
 	
-	public void removeFields(String prefix, Collection fields) {
+	public StandardFields removeFields(String prefix, Collection fields) {
 		this.fields.removeAll(addPrefix(prefix, fields));
+		return this;
 	}
 	
-	public void addFields(String prefix, String[] fields) {
+	public StandardFields addFields(String prefix, String[] fields) {
 		this.fields.addAll(addPrefix(prefix, Arrays.asList(fields)));
+		return this;
 	}
 	
-	public void removeFields(String prefix, String[] fields) {
+	public StandardFields removeFields(String prefix, String[] fields) {
 		this.fields.removeAll(addPrefix(prefix, Arrays.asList(fields)));
+		return this;
 	}
 	
-	public void addField(String field) {
-		addField(null, field);
+	public StandardFields addField(String field) {
+		return addField(null, field);
 	}
 	
-	public void removeField(String field) {
-		removeField(null, field);
+	public StandardFields removeField(String field) {
+		return removeField(null, field);
 	}
 	
-	public void addFields(ListStructure structure) {
-		addFields(structure.getFields().keySet());
+	public StandardFields addFields(ListStructure structure) {
+		return addFields(structure.getFields().keySet());
 	}
 	
-	public void addFields(Collection fields) {
-		addFields(null, fields);
+	public StandardFields addFields(Collection fields) {
+		return addFields(null, fields);
 	}
 	
-	public void removeFields(Collection fields) {
-		removeFields(null, fields);
+	public StandardFields removeFields(Collection fields) {
+		return removeFields(null, fields);
 	}
 	
-	public void addFields(String[] fields) {
-		addFields(null, fields);
+	public StandardFields addFields(String[] fields) {
+		return addFields(null, fields);
 	}
 	
-	public void removeFields(String[] fields) {
-		removeFields(null, fields);
+	public StandardFields removeFields(String[] fields) {
+		return removeFields(null, fields);
 	}	
 	
-	public void addFields(Class beanClass) {
-		addFields(null, beanClass);
+	public StandardFields addFields(Class beanClass) {
+		return addFields(null, beanClass);
 	}
 	
-	public void removeFields(Class beanClass) {
-		removeFields(null, beanClass);
+	public StandardFields removeFields(Class beanClass) {
+		return removeFields(null, beanClass);
 	}
 	
-	public void addFields(String prefix, Class beanClass) {
-		addFields(prefix, BeanUtil.getFields(beanClass));
+	public StandardFields addFields(String prefix, Class beanClass) {
+		return addFields(prefix, BeanUtil.getFields(beanClass));
 	}
 	
-	public void removeFields(String prefix, Class beanClass) {
-		removeFields(prefix, BeanUtil.getFields(beanClass));
+	public StandardFields removeFields(String prefix, Class beanClass) {
+		return removeFields(prefix, BeanUtil.getFields(beanClass));
 	}
 
 	public Collection getNames() {
