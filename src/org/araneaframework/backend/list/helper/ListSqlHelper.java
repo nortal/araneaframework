@@ -23,25 +23,24 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.helper.fields.ConcatFields;
 import org.araneaframework.backend.list.helper.fields.Fields;
 import org.araneaframework.backend.list.helper.fields.StandardFields;
-import org.araneaframework.backend.list.helper.naming.DefaultNamingStrategy;
+import org.araneaframework.backend.list.helper.naming.MappingNamingStrategyAndFields;
 import org.araneaframework.backend.list.helper.naming.NamingStrategy;
 import org.araneaframework.backend.list.helper.naming.OrNamingStrategy;
 import org.araneaframework.backend.list.helper.naming.PrefixMapNamingStrategy;
+import org.araneaframework.backend.list.helper.reader.ConverterBasedColumnReader;
 import org.araneaframework.backend.list.helper.reader.DefaultResultSetColumnReader;
 import org.araneaframework.backend.list.helper.reader.ResultSetColumnReader;
-import org.araneaframework.backend.list.helper.reader.StandardResultSetColumnReader;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.uilib.list.util.Converter;
 
 
 /**
- * This class provides an SQL based implementation of the list. It takes care of
+ * This class provides a standard SQL based implementation of the list. It takes care of
  * the filtering, ordering and returning data to the web components.
- * Implementations should override abstract methods noted in those methods.
- * <p>
- * Note, that all operations on items are made on the list of "processed", that
- * is ordered and filtered items.
- * <p>
+ * 
+ * 
+ * 
+ * @see BaseListSqlHelper
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
@@ -55,11 +54,11 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	// *******************************************************************
 
 	protected StandardFields standardFields;
-	protected DefaultNamingStrategy defaultNamingStrategy;
+	protected MappingNamingStrategyAndFields mappingNamingStrategyAndFields;
 	protected PrefixMapNamingStrategy prefixMapNamingStrategy;
 	
 	protected StandardValueConverter standardValueConverter;
-	protected StandardResultSetColumnReader standardResultSetColumnReader;
+	protected ConverterBasedColumnReader converterBasedColumnReader;
 	
 
 	// *********************************************************************
@@ -96,13 +95,16 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 		super(dataSource, query);
 	}
 	
+	protected void init() {
+		super.init();
+		getPrefixMapNamingStrategy();	// Add naming strategy
+	}
+	
 	// *********************************************************************
 	// * DATABASE MAPPING AND CONVERTERS
 	// *********************************************************************	
 	
-	// Standard implementation
-	
-	protected void addFields(Fields newFields) {
+	public void addFields(Fields newFields) {
 		// Update "fields"
 		if (fields == null) {
 			fields = newFields;
@@ -117,6 +119,14 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 			concat.add(newFields);
 			fields = concat;
 		}
+	}
+	
+	public void addNamingStrategy(NamingStrategy namingStrategy) {
+		addNamingStrategy(namingStrategy, false);
+	}
+	
+	public void addNamingStrategyAsFirst(NamingStrategy namingStrategy) {
+		addNamingStrategy(namingStrategy, true);
 	}
 	
 	protected void addNamingStrategy(NamingStrategy newNamingStrategy, boolean first) {
@@ -135,12 +145,11 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 		else {
 			NamingStrategy old = namingStrategy;
 			OrNamingStrategy or = new OrNamingStrategy();
+			or.add(old);
 			if (first) {
-				or.add(old);
-				or.add(newNamingStrategy);
+				or.addFirst(newNamingStrategy); 
 			} else {
 				or.add(newNamingStrategy);
-				or.add(old);
 			}
 			namingStrategy = or;
 		}
@@ -150,6 +159,9 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 		this.standardFields = standardFields;
 	}
 	
+	/**
+	 * @return standard implementation of list of fields.
+	 */
 	public StandardFields getStandardFields() {
 		if (standardFields == null) {
 			standardFields = new StandardFields();
@@ -158,17 +170,17 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 		return standardFields;
 	}
 	
-	public void setDefaultNamingStrategy(DefaultNamingStrategy defaultNamingStrategy) {
-		this.defaultNamingStrategy = defaultNamingStrategy;
+	public void setMappingNamingStrategyAndFields(MappingNamingStrategyAndFields mappingNamingStrategyAndFields) {
+		this.mappingNamingStrategyAndFields = mappingNamingStrategyAndFields;
 	}
 	
-	public DefaultNamingStrategy getDefaultNamingStrategy() {
-		if (defaultNamingStrategy == null) {
-			defaultNamingStrategy = new DefaultNamingStrategy();
-			addFields(defaultNamingStrategy);
-			addNamingStrategy(defaultNamingStrategy, true);
+	public MappingNamingStrategyAndFields getMappingNamingStrategyAndFields() {
+		if (mappingNamingStrategyAndFields == null) {
+			mappingNamingStrategyAndFields = new MappingNamingStrategyAndFields();
+			addFields(mappingNamingStrategyAndFields);
+			addNamingStrategyAsFirst(mappingNamingStrategyAndFields);
 		}
-		return defaultNamingStrategy;
+		return mappingNamingStrategyAndFields;
 	}
 	
 	public void setPrefixMapNamingStrategy(
@@ -179,7 +191,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	public PrefixMapNamingStrategy getPrefixMapNamingStrategy() {
 		if (prefixMapNamingStrategy == null) {
 			prefixMapNamingStrategy = new PrefixMapNamingStrategy();
-			addNamingStrategy(prefixMapNamingStrategy, false);
+			addNamingStrategy(prefixMapNamingStrategy);
 		}
 		return prefixMapNamingStrategy;
 	}
@@ -196,18 +208,18 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 		return standardValueConverter;
 	}
 	
-	public void setStandardResultSetColumnReader(
-			StandardResultSetColumnReader standardResultSetColumnReader) {
-		this.standardResultSetColumnReader = standardResultSetColumnReader;
+	public void setConverterBasedColumnReader(
+			ConverterBasedColumnReader converterBasedColumnReader) {
+		this.converterBasedColumnReader = converterBasedColumnReader;
 	}
 
-	public StandardResultSetColumnReader getStandardResultSetColumnReader() {
-		if (standardResultSetColumnReader == null) {
+	public ConverterBasedColumnReader getConverterBasedColumnReader() {
+		if (converterBasedColumnReader == null) {
 			ResultSetColumnReader defaultResultSetColumnReader = DefaultResultSetColumnReader.getInstance();
-			standardResultSetColumnReader = new StandardResultSetColumnReader(defaultResultSetColumnReader);
-			resultSetColumnReader = standardResultSetColumnReader; 
+			converterBasedColumnReader = new ConverterBasedColumnReader(defaultResultSetColumnReader);
+			resultSetColumnReader = converterBasedColumnReader; 
 		}
-		return standardResultSetColumnReader;
+		return converterBasedColumnReader;
 	}
 
 	/**
@@ -263,7 +275,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 * @see BeanResultReader
 	 */
 	public void addResultSetDeconverterForColumn(String columnName, Converter converter) {
-		getStandardResultSetColumnReader().addResultSetDeconverterForColumn(columnName, converter);
+		getConverterBasedColumnReader().addResultSetDeconverterForColumn(columnName, converter);
 	}
 	
 	// Mappings
@@ -282,7 +294,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 * @see #addMapping(String, String, String)
 	 */
 	public void addDatabaseFieldMapping(String fieldName, String columnName) {
-		getDefaultNamingStrategy().addDatabaseFieldMapping(fieldName, columnName);
+		getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName);
 	}
 	
 	/**
@@ -301,7 +313,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 * @see #addDatabaseFieldMapping(String, String)
 	 */
 	public void addMapping(String fieldName, String columnName, String columnAlias) {
-		getDefaultNamingStrategy().addMapping(fieldName, columnName, columnAlias);
+		getMappingNamingStrategyAndFields().addMapping(fieldName, columnName, columnAlias);
 	}
 	
 	/**
@@ -321,6 +333,6 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 * @see #addDatabaseFieldMapping(String, String)
 	 */	
 	public void addMapping(String fieldName, String columnName) {
-		getDefaultNamingStrategy().addMapping(fieldName, columnName);
+		getMappingNamingStrategyAndFields().addMapping(fieldName, columnName);
 	}
 }

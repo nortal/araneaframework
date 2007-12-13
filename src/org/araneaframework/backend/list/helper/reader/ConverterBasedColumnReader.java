@@ -24,14 +24,23 @@ import org.araneaframework.uilib.list.util.Converter;
 
 /**
  * ResultSetColumnReader that can have custom converters for each column.
+ * <p>
+ * This implementation wraps an existing {@link ResultSetColumnReader}
+ * by adding additional behavior if a certain column is being read. 
+ * </p>
+ * To add a custom converter for a column use method
+ * {@link #addResultSetDeconverterForColumn(String, Converter)}.
+ * For that column {@link Converter#reverseConvert(Object)} is invoked
+ * and {@link Converter#getDestinationType()} is used as a Java type
+ * retrieved from the {@link ResultSet}.
  * 
  * @author Rein Raudjärv
  */
-public class StandardResultSetColumnReader extends FilterResultSetColumnReader {
+public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
 
 	private final Map converters = new HashMap();
 	
-	public StandardResultSetColumnReader(ResultSetColumnReader child) {
+	public ConverterBasedColumnReader(ResultSetColumnReader child) {
 		super(child);
 	}
 	

@@ -26,6 +26,10 @@ import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * Default implementation of ResultSetColumnReader.
+ * <p>
+ * For each Java type the respectful "get" method is used of the {@link ResultSet}.
+ * For {@link java.util.Date} an instance of that class is returned (not a {@link java.sql.Date}).
+ * If unsupported Java type is used a runtime exception is thrown.
  * 
  * @see ResultSetColumnReader
  * 

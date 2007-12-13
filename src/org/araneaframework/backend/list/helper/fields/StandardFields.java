@@ -35,7 +35,8 @@ import org.araneaframework.uilib.util.NameUtil;
  * <ul>
  * <li>one by one</li>
  * <li>as a list</li>
- * <li>as a Bean Class (all fields are listed using reflection)</li>
+ * <li>using a {@link ListStructure} (all fields defined in the list)</li>
+ * <li>using a Bean Class (all fields are listed using reflection)</li>
  * </ul>
  * <p>
  * For each add/remove call a <b>prefix</b >can be set.

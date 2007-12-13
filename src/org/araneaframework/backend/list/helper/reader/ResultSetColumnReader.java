@@ -21,6 +21,9 @@ import java.sql.ResultSet;
 
 /**
  * ResultSet column reader.
+ * <p>
+ * Method {@link #readFromResultSet(String, ResultSet, Class)} reads the
+ * column <code>columnName</code> and converts it into the given <code>javaType</code>.
  * 
  * @see ResultSet
  * @see DefaultResultSetColumnReader

@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.helper.naming;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
- * Standard naming strategy for field names and column names.
+ * Standard naming conventions between list fields and database columns.
  * <p>
  * Field names are transformed into database column names as following:<br/>
  * <ul>
@@ -27,11 +27,23 @@ import org.araneaframework.uilib.util.NameUtil;
  * <li>All dots in the prefix and suffix are converted into underscores.
  * <li>Before each upper case letter followed by lower case an underscore is inserted.
  * </ul>
+ * E.g:
+ * <pre>
+ *   firstName -> first_name
+ *   location.address -> location.address
+ *   client.group.id -> client_group.id
+ * </pre>
  * Field names are transformed into database column aliases as following:<br/><br/>
  * <ul>
  * <li>All dots are converted into underscores.
  * <li>Before each upper case letter followed by lower case an underscore is inserted.
  * </ul>
+ * E.g:
+ * <pre>
+ *   lastName -> last_name
+ *   location.address -> location_address
+ *   client.group.id -> client_group_id
+ * </pre>
  * </p>
  * 
  * @author Rein Raudjärv

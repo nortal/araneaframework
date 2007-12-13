@@ -29,12 +29,15 @@ import org.araneaframework.backend.list.helper.fields.Fields;
 
 
 /**
- * Default naming strategy for variables and database fields.
+ * Naming conventions and list of fields provider which is based on mappings. 
  * <p>
- * This implementation corresponds to the {@link ListSqlHelper} methods up to the version 1.1-M5.
+ * Each list field must be added together with it's corresponding column name (and alias).
  * </p>
  * <p>
- * The following methods were removed:
+ * This implementation is based on the {@link ListSqlHelper} methods up to Aranea MVC 1.1-M5.
+ * </p>
+ * <p>
+ * The following methods were removed due to their stupidity:
  * <ul>
  * <li><code>addDatabaseFieldMapping(String, String, String)</code></li>
  * <li><code>addResultSetMapping(String, String)</code></li>
@@ -42,13 +45,13 @@ import org.araneaframework.backend.list.helper.fields.Fields;
  * </ul>
  * 
  * @see NamingStrategy
- * @see ListSqlHelper#getDefaultNamingStrategy()
+ * @see ListSqlHelper#getMappingNamingStrategyAndFields()
  * 
  * @author Rein Raudjärv
  */
-public class DefaultNamingStrategy implements NamingStrategy, Fields {
+public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
 
-	private static final Log log = LogFactory.getLog(DefaultNamingStrategy.class);
+	private static final Log log = LogFactory.getLog(MappingNamingStrategyAndFields.class);
 	
 	/** Field name --> Database column name (not all these fields have to be in <code>SELECT</code>) */
 	private Map fieldToColumnName = new HashMap();

@@ -20,7 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Prefix mapping naming strategy for field names and column names.
+ * Improved naming conventions between list fields and database columns
+ * which enables to defined custom prefixes for database column names.
+ * <p>
+ * If one is using multiple tables (with aliases) in one SELECT,
+ * {@link #addPrefix(String, String)} should be called to transform list field names
+ * correspondingly into database column names.
+ * </p>
  * <p>
  * Field names are transformed into database column names as following:<br/>
  * <ul>

@@ -27,7 +27,7 @@ import org.araneaframework.uilib.list.util.Converter;
 
 /**
  * ValueConverter that has a map of Value names and their <code>Converter</code>
- * objects. 
+ * objects.
  * 
  * @see Converter
  * 

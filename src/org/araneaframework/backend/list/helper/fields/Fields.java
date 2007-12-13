@@ -19,14 +19,14 @@ package org.araneaframework.backend.list.helper.fields;
 import java.util.Collection;
 
 import org.araneaframework.backend.list.helper.ListSqlHelper;
-import org.araneaframework.backend.list.helper.naming.DefaultNamingStrategy;
+import org.araneaframework.backend.list.helper.naming.MappingNamingStrategyAndFields;
 
 /**
  * List of field names provider for SQL Helper.
  * 
  * @see ListSqlHelper#getFields()
  * @see StandardFields
- * @see DefaultNamingStrategy
+ * @see MappingNamingStrategyAndFields
  * @see ConcatFields
  * 
  * @author Rein Raudjärv

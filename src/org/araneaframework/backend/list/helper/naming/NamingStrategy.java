@@ -19,14 +19,14 @@ package org.araneaframework.backend.list.helper.naming;
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 
 /**
- * Naming conventions for ListSqlHelper.
+ * Naming conventions between list fields and database columns.
  * <p>
  * Method {@link #fieldToColumnName(String)} converts field names into column names.
  * Method {@link #fieldToColumnAlias(String)} converts field names into column aliases.
  * 
  * @see ListSqlHelper#getNamingStrategy()
  * @see StandardNamingStrategy
- * @see DefaultNamingStrategy
+ * @see MappingNamingStrategyAndFields
  * 
  * @author Rein Raudjärv
  */
