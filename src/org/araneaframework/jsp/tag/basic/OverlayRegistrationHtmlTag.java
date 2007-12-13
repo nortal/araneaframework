@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -31,7 +32,6 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "TODO"
  */
 public class OverlayRegistrationHtmlTag extends BaseTag {
-
   protected int doEndTag(Writer out) throws Exception {
     OverlayContext overlayCtx = (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
 
@@ -39,11 +39,15 @@ public class OverlayRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
-      out.write("_ap.addClientLoadEvent(Aranea.ModalBox.show);\n");
+      out.write("Aranea.ModalBox.Options = " + getOverlayOptions(overlayCtx) + ";");
+      out.write("_ap.addClientLoadEvent(function() { Aranea.ModalBox.show(Aranea.ModalBox.Options);});\n");
       JspUtil.writeEndTag(out, "script");
     }
 
     return super.doEndTag(out);
   }
-
+  
+  protected JsonObject getOverlayOptions(OverlayContext overlayContext) {
+    return new JsonObject(overlayContext.getOverlayOptions());
+  }
 }

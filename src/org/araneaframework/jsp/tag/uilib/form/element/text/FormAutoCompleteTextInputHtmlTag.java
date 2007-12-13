@@ -53,12 +53,14 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", "ACdiv." + getFullFieldId());
     JspUtil.writeAttribute(out, "class", divClass);
+    // hide div to avoid flicker that occurs otherwise when new Ajax.AutoCompleter is finally created
+    JspUtil.writeAttribute(out, "style", "display:none;");
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEndTag(out, "div");
 
     StringBuffer acRequestUrl = constructACUrl();
 
-   	JspUtil.writeStartTag_SS(out, "script");
+    JspUtil.writeStartTag_SS(out, "script type=\"text/javascript\"");
    	out.write(constructACRegistrationScript(viewModel, acRequestUrl));
    	JspUtil.writeEndTag(out, "script");
 
