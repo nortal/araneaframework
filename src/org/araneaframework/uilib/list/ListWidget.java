@@ -150,7 +150,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Sets the {@link ListDataProvider}used to fill the list with data.
 	 * 
 	 * @param dataProvider the {@link ListDataProvider}used to fill the list with data.
-	 * @throws Exception 
 	 */
 	public void setDataProvider(ListDataProvider dataProvider) {
 		if (this.dataProvider != null)
@@ -228,8 +227,6 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	/**
 	 * Resets the sequence, starting at first page with all defaults.
-	 * 
-	 * @throws Exception if item range refreshing doesn't succeed.
 	 */
 	public void resetSequence() {
 		this.sequenceHelper = createSequenceHelper();
@@ -402,9 +399,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	/**
 	 * Removes all list orders.
-	 * @throws Exception 
 	 */
-	public void clearOrders() throws Exception {
+	public void clearOrders() {
 		getListStructure().clearOrders();
 	}	
 
@@ -421,7 +417,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	/**
 	 * Removes all list filters.
 	 */
-	public void clearFilters() throws Exception {
+	public void clearFilters() {
 		getListStructure().clearFilters();
 	}
 
@@ -534,9 +530,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Sets the filter information to list data provider and filter form.
 	 * 
 	 * @param filterInfo <code>Map</code> containing filter information.
-	 * @throws Exception 
 	 */
-	public void setFilterInfo(Map filterInfo) throws Exception {  	
+	public void setFilterInfo(Map filterInfo) {  	
 		if (filterInfo != null) {
 			if (isInitialized()) {
 				propagateListDataProviderWithFilter(filterInfo);				
@@ -783,9 +778,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Returns {@link ViewModel}- list widget view model.
 	 * 
 	 * @return {@link ViewModel}- list widget view model.
-	 * @throws Exception 
 	 */
-	public Object getViewModel() throws Exception {
+	public Object getViewModel() {
 		return new ViewModel();
 	}
 
@@ -1059,7 +1053,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		 * Takes a snapshot of outer class state.
 		 * @throws Exception 
 		 */
-		protected ViewModel() throws Exception {      
+		protected ViewModel() {      
 			this.itemRange = ListWidget.this.getItemRange();
 			this.sequence = ListWidget.this.sequenceHelper.getViewModel();
 			this.listStructure = ListWidget.this.listStructure.getViewModel();

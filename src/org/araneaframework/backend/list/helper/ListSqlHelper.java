@@ -38,8 +38,6 @@ import org.araneaframework.uilib.list.util.Converter;
  * This class provides a standard SQL based implementation of the list. It takes care of
  * the filtering, ordering and returning data to the web components.
  * 
- * 
- * 
  * @see BaseListSqlHelper
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
