@@ -136,6 +136,7 @@ public abstract class BackendListDataProvider extends BaseListDataProvider {
 				&& count != this.lastCount || count != null
 				&& this.lastCount != null && !count.equals(this.lastCount)) {
 			ListQuery query = new ListQuery();
+			query.setListStructure(listStructure);
 			query.setItemRangeStart(startIdx);
 			query.setItemRangeCount(count);
 			query.setFilterInfo(this.filterInfo);

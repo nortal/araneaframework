@@ -15,6 +15,7 @@
 **/
 package org.araneaframework.uilib.list.util;
 
+import java.util.Comparator;
 import java.util.Map;
 
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -31,28 +32,52 @@ import org.araneaframework.uilib.form.reader.MapFormWriter;
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.structure.ListFilter;
 import org.araneaframework.uilib.list.structure.ListOrder;
+import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
+import org.araneaframework.uilib.list.structure.order.SimpleFieldOrder;
+import org.araneaframework.uilib.list.util.comparator.NullComparator;
+import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
 
 /**
- * Methods for filter form and
- * creating lazy expressions from list filter, order and corresponding info.
+ * Util methods for Aranea Lists.
+ * <p>
+ * There are following methods:
+ * <ul>
+ * <li>Filter form to filter info transformation and vice-versa</li>
+ * <li>Creating lazy expressions from list filter, order and corresponding info</li>
+ * <li>ListOrder reading</li>
+ * </ul>
  * 
  * @author Rein Raudjärv
  */
-public class ListUtil {
+public abstract class ListUtil {
 	
+	/**
+	 * Retrieves filter info corresponding to the <code>form</code> specified.
+	 */
 	public static Map readFilterInfo(FormWidget form) {
 		MapFormReader mapFormReader = new MapFormReader(form);
 		Map hierarchyMap = mapFormReader.getMap();
 		return MapUtil.convertToPlainMap(hierarchyMap);
 	}
 	
+	/**
+	 * Applies filter info into the <code>form</code> specified.
+	 */
 	public static void writeFilterInfo(FormWidget form, Map info) {
 		Map hierarchyMap = MapUtil.convertToHierachyMap(info);
 		MapFormWriter mapFormWriter = new MapFormWriter();
 		mapFormWriter.writeForm(form, hierarchyMap);
 	}
 
+	/**
+	 * Creates a lazy-initialized {@link Expression} corresponding to
+	 * the static {@link ListFilter} and request-dependent <code>info</code>.
+	 * <p>
+	 * Expression is actually created when
+	 * {@link Expression#evaluate(org.araneaframework.backend.list.memorybased.expression.VariableResolver)}
+	 * is first invoked.
+	 */
 	public static Expression toExpression(final ListFilter filter, final Map info) {
 		Expression result = null;
 		if (filter != null) {
@@ -71,6 +96,14 @@ public class ListUtil {
 		return result;
 	}
 
+	/**
+	 * Creates a lazy-initialized {@link ComparatorExpression} corresponding to
+	 * the static {@link ListOrder} and request-dependent <code>info</code>.
+	 * <p>
+	 * ComparatorExpression is actually created when
+	 * {@link ComparatorExpression#compare(org.araneaframework.backend.list.memorybased.expression.VariableResolver, org.araneaframework.backend.list.memorybased.expression.VariableResolver)}
+	 * is first invoked.
+	 */	
 	public static ComparatorExpression toComparatorExpression(final ListOrder order, final OrderInfo info) {
 		ComparatorExpression result = null;
 		if (order != null) {
@@ -88,5 +121,35 @@ public class ListUtil {
 		}
 		return result;
 	}
+	
+	/**
+	 * Returns a {@link SimpleFieldOrder} corresponding to its field <code>id</code>. 
+	 */
+	public static SimpleFieldOrder getFieldOrder(ListOrder listOrder, String id) {
+		if (listOrder instanceof SimpleFieldOrder) {
+			SimpleFieldOrder fieldOrder = (SimpleFieldOrder) listOrder;
+			return id.equals(fieldOrder.getFieldId()) ? fieldOrder : null;
+		} else if (listOrder instanceof MultiFieldOrder) {
+			MultiFieldOrder multiOrder = (MultiFieldOrder) listOrder;
+			return (SimpleFieldOrder) multiOrder.getFieldOrder(id);
+		}
+		return null;	// not found
+	}
+	
+	/**
+	 * Returns <code>true</code> if the corresponding <code>fieldOrder</code>
+	 * is comparing {@link String} objects ignoring their case.
+	 */
+	public static boolean isIgnoreCase(SimpleFieldOrder fieldOrder) {
+		System.out.println("Is ignore case?: " + fieldOrder.getFieldId() + "; " + fieldOrder.getComparator());
+		Comparator comparator = fieldOrder.getComparator();
+		if (comparator instanceof NullComparator) {
+			comparator = ((NullComparator) comparator).getNotNullComparator();
+		}
+		if (comparator instanceof StringComparator) {
+			return ((StringComparator) comparator).getIgnoreCase();
+		}
+		return false; // by default
+	}	
 	
 }

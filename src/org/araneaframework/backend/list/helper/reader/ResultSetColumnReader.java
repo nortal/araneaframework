@@ -20,6 +20,11 @@ import java.sql.ResultSet;
 
 
 /**
+ * ResultSet column reader.
+ * 
+ * @see ResultSet
+ * @see DefaultResultSetColumnReader
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ResultSetColumnReader {
@@ -28,8 +33,9 @@ public interface ResultSetColumnReader {
    * This method should read some custom Java Object from the given <code>ResultSet</code> column.
    * @param columnName column in <code>ResultSet</code>.
    * @param resultSet JDBC result set.
-   * @param javaType TODO
+   * @param javaType java type to read to.
    * @return Custom Java Object from the given <code>ResultSet</code> column.
    */
-  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
+  Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
+  
 }
