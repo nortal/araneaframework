@@ -135,7 +135,6 @@ private MenuItem araneaMenu;
 			}));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Memory", PersonEditableListWidget.Memory.class));
 			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));
-			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_HibernateBackend", PersonEditableListWidget.HihbernateBackend.class));
 			
 			result.addMenuItem("Management", new MenuItem("Companies"));
 			result.addMenuItem("Management.Companies", new MenuItem("View_Edit", CompanyListWidget.class));

@@ -25,7 +25,6 @@ import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.data.PersonListDAO;
-import org.araneaframework.example.main.business.data.PersonListHibernateDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
@@ -122,28 +121,6 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 			}
 			protected ListItemsData getItemRange(ListQuery query) throws Exception {
 				return ((PersonListDAO) getBeanFactory().getBean("personListDAO")).getItems(query);
-			}
-		}
-	}
-	
-	public static class HihbernateBackend extends PersonEditableListWidget {
-		private static final long serialVersionUID = 1L;
-
-		protected ListDataProvider buildListDataProvider() throws Exception {
-			return new DataProvider();
-		}
-
-		protected FormRowHandler buildFormRowHandler() throws Exception {
-			return new PersonEditableRowHandler();
-		}
-
-		private class DataProvider extends BackendListDataProvider {
-			private static final long serialVersionUID = 1L;
-			protected DataProvider() {
-				super(false);
-			}
-			protected ListItemsData getItemRange(ListQuery query) throws Exception {
-				return ((PersonListHibernateDAO) getBeanFactory().getBean("personListHibernateDAO")).getItems(query);
 			}
 		}
 	}

@@ -57,10 +57,6 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
-	<bean id="personListHibernateDAO" class="org.araneaframework.example.main.business.data.PersonListHibernateDAO">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-
 	<!-- Transactions -->
 	
   	<bean id="autoProxyCreator"
