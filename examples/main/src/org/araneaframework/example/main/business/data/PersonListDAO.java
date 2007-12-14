@@ -38,12 +38,18 @@ public class PersonListDAO {
 	public ListItemsData getItems(ListQuery request) {
 		ListSqlHelper helper = new HSqlListSqlHelper(this.dataSource, request);
 
-		helper.addMapping("id", "ID");
-		helper.addMapping("name", "NAME");
-		helper.addMapping("surname", "SURNAME");
-		helper.addMapping("phone", "PHONE");
-		helper.addMapping("birthdate", "BIRTHDATE");
-		helper.addMapping("salary", "SALARY");
+		// version A
+		
+		helper.getStandardFields().addFields(request.getListStructure()).removeField("dummy");
+		
+		// version B
+		
+//		helper.addMapping("id", "ID");
+//		helper.addMapping("name", "NAME");
+//		helper.addMapping("surname", "SURNAME");
+//		helper.addMapping("phone", "PHONE");
+//		helper.addMapping("birthdate", "BIRTHDATE");
+//		helper.addMapping("salary", "SALARY");
 
 		helper.setSimpleSqlQuery("person");
 		return helper.execute(PersonMO.class);

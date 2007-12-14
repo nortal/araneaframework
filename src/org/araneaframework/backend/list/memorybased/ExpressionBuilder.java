@@ -22,10 +22,13 @@ import java.util.Map;
 
 /**
  * General interface for objects that can create an expression.
+ * <p>
+ * Transforms a Map into an Expression.
  * 
  * @see Expression
+ * @see ExpressionFactory
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv
  */
 public interface ExpressionBuilder extends Serializable {
 	/**

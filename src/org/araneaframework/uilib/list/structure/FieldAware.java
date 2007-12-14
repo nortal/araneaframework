@@ -24,7 +24,9 @@ import org.araneaframework.uilib.list.structure.order.FieldOrder;
  * General interface for objects that are aware of one field.
  * 
  * @see FieldFilter
- * @see FieldOrder 
+ * @see FieldOrder
+ *  
+ * @author Rein Raudjärv
  */
 public interface FieldAware {
 	/**

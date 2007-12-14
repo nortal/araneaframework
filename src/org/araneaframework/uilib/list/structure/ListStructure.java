@@ -153,7 +153,7 @@ public class ListStructure extends BaseListStructure {
 		return getMultiFieldOrder().getFieldOrder(field);
 	}
 	
-	public void clearOrders() throws Exception {
+	public void clearOrders() {
 		getMultiFieldOrder().clearFieldOrders();
 	}
 	
@@ -183,7 +183,7 @@ public class ListStructure extends BaseListStructure {
 		return null;
 	}
 	
-	public void clearFilters() throws Exception {
+	public void clearFilters() {
 		getAndFilter().clearFilters();
 	}
 }
