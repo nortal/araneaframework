@@ -35,6 +35,8 @@ import org.araneaframework.uilib.list.util.Converter;
  * retrieved from the {@link ResultSet}.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
 

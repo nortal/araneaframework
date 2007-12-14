@@ -31,6 +31,7 @@ public class ListItemsData implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	/** @since 1.1 */
 	public static final ListItemsData EMPTY =
 		new ListItemsData(Collections.EMPTY_LIST, new Long(0L));
 

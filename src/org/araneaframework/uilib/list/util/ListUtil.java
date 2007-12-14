@@ -26,6 +26,7 @@ import org.araneaframework.backend.list.memorybased.compexpr.LazyComparatorExpre
 import org.araneaframework.backend.list.memorybased.compexpr.NopComparatorExpression;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
+import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.reader.MapFormReader;
 import org.araneaframework.uilib.form.reader.MapFormWriter;
@@ -43,12 +44,14 @@ import org.araneaframework.uilib.list.util.comparator.StringComparator;
  * <p>
  * There are following methods:
  * <ul>
- * <li>Filter form to filter info transformation and vice-versa</li>
+ * <li><b>Filter form</b> to <b>filter info</b> transformation and vice-versa</li>
  * <li>Creating lazy expressions from list filter, order and corresponding info</li>
- * <li>ListOrder reading</li>
+ * <li>Reading ListOrder</li>
  * </ul>
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public abstract class ListUtil {
 	
@@ -75,7 +78,7 @@ public abstract class ListUtil {
 	 * the static {@link ListFilter} and request-dependent <code>info</code>.
 	 * <p>
 	 * Expression is actually created when
-	 * {@link Expression#evaluate(org.araneaframework.backend.list.memorybased.expression.VariableResolver)}
+	 * {@link Expression#evaluate(VariableResolver)}
 	 * is first invoked.
 	 */
 	public static Expression toExpression(final ListFilter filter, final Map info) {
@@ -83,7 +86,9 @@ public abstract class ListUtil {
 		if (filter != null) {
 			ExpressionFactory factory = new ExpressionFactory() {
 				private static final long serialVersionUID = 1L;
+				
 				public Expression createExpression() {
+					// Build the expression
 					Expression expr = filter.buildExpression(info);
 					if (expr == null) {
 						expr = new AlwaysTrueExpression();
@@ -101,7 +106,7 @@ public abstract class ListUtil {
 	 * the static {@link ListOrder} and request-dependent <code>info</code>.
 	 * <p>
 	 * ComparatorExpression is actually created when
-	 * {@link ComparatorExpression#compare(org.araneaframework.backend.list.memorybased.expression.VariableResolver, org.araneaframework.backend.list.memorybased.expression.VariableResolver)}
+	 * {@link ComparatorExpression#compare(VariableResolver, VariableResolver)}
 	 * is first invoked.
 	 */	
 	public static ComparatorExpression toComparatorExpression(final ListOrder order, final OrderInfo info) {
@@ -109,7 +114,9 @@ public abstract class ListUtil {
 		if (order != null) {
 			ComparatorExpressionFactory factory = new ComparatorExpressionFactory() {
 				private static final long serialVersionUID = 1L;
+				
 				public ComparatorExpression createComparatorExpression() {
+					// Build the expression
 					ComparatorExpression expr = order.buildComparatorExpression(info);
 					if (expr == null) {
 						return new NopComparatorExpression();
@@ -123,13 +130,16 @@ public abstract class ListUtil {
 	}
 	
 	/**
-	 * Returns a {@link SimpleFieldOrder} corresponding to its field <code>id</code>. 
+	 * Returns static ordering info about specified field <code>id</code>.
 	 */
 	public static SimpleFieldOrder getFieldOrder(ListOrder listOrder, String id) {
 		if (listOrder instanceof SimpleFieldOrder) {
+			// Whole ordering is about one field
 			SimpleFieldOrder fieldOrder = (SimpleFieldOrder) listOrder;
 			return id.equals(fieldOrder.getFieldId()) ? fieldOrder : null;
-		} else if (listOrder instanceof MultiFieldOrder) {
+		}
+		else if (listOrder instanceof MultiFieldOrder) {
+			// There are multiple fields that can be ordered
 			MultiFieldOrder multiOrder = (MultiFieldOrder) listOrder;
 			return (SimpleFieldOrder) multiOrder.getFieldOrder(id);
 		}
@@ -141,15 +151,17 @@ public abstract class ListUtil {
 	 * is comparing {@link String} objects ignoring their case.
 	 */
 	public static boolean isIgnoreCase(SimpleFieldOrder fieldOrder) {
-		System.out.println("Is ignore case?: " + fieldOrder.getFieldId() + "; " + fieldOrder.getComparator());
 		Comparator comparator = fieldOrder.getComparator();
+		
+		// Unwrap NullComparator
 		if (comparator instanceof NullComparator) {
 			comparator = ((NullComparator) comparator).getNotNullComparator();
 		}
+		
 		if (comparator instanceof StringComparator) {
 			return ((StringComparator) comparator).getIgnoreCase();
 		}
-		return false; // by default
-	}	
+		return false; // no String -> no case
+	}
 	
 }

@@ -26,6 +26,8 @@ import org.araneaframework.core.Assert;
  * @see ColumnAliasVariableResolver
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class ColumnNameVariableResolver implements VariableResolver {
 	

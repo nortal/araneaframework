@@ -27,6 +27,8 @@ import java.sql.ResultSet;
  * 
  * @see ResultSet
  * @see DefaultResultSetColumnReader
+ * @see ConverterBasedColumnReader
+ * @see BooleanColumnReader
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

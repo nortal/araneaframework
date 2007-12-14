@@ -65,6 +65,8 @@ import org.araneaframework.core.util.ExceptionUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * 
+ * @since 1.1
  */
 public abstract class BaseListSqlHelper {
 

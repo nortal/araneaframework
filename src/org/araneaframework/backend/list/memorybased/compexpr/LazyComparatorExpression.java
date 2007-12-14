@@ -25,6 +25,8 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
  * ComparatorExpression that is initialized lazily.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class LazyComparatorExpression implements ComparatorExpression {
 

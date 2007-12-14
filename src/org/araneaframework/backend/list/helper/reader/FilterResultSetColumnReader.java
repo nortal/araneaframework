@@ -22,6 +22,8 @@ import java.sql.ResultSet;
  * Filter implementation of {@link ResultSetColumnReader}.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class FilterResultSetColumnReader implements ResultSetColumnReader {
 

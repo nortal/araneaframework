@@ -18,17 +18,20 @@ package org.araneaframework.uilib.list.dataprovider;
 
 import java.util.Map;
 
-import org.araneaframework.backend.list.memorybased.ComparatorExpression;
-import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.list.util.ListUtil;
 
-
 /**
  * Data provider base implementation that accepts expressions.
  * 
+ * @see ListDataProvider
+ * @see MemoryBasedListDataProvider
+ * @see BackendListDataProvider
+ * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public abstract class BaseListDataProvider implements ListDataProvider {
 
@@ -49,18 +52,5 @@ public abstract class BaseListDataProvider implements ListDataProvider {
 		this.orderInfo = orderInfo;
 		setOrderExpression(ListUtil.toComparatorExpression(listStructure.getListOrder(), orderInfo));
 	}
-	
-	/**
-	 * This method should be used to receive the filter of the list.
-	 * 
-	 * @param filterExpression the filter of the list.
-	 */
-	public abstract void setFilterExpression(Expression filterExpression);
 
-	/**
-	 * This method should be used to receive the current ordering info.
-	 * 
-	 * @param orderExpression the current ordering info.
-	 */
-	public abstract void setOrderExpression(ComparatorExpression orderExpression);	
 }

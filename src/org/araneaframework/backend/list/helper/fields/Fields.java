@@ -30,6 +30,8 @@ import org.araneaframework.backend.list.helper.naming.MappingNamingStrategyAndFi
  * @see ConcatFields
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public interface Fields {
 

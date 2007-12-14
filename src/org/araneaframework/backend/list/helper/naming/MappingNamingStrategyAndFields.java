@@ -48,6 +48,8 @@ import org.araneaframework.backend.list.helper.fields.Fields;
  * @see ListSqlHelper#getMappingNamingStrategyAndFields()
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
 

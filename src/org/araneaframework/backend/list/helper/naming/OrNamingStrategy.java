@@ -25,6 +25,8 @@ import java.util.List;
  * first child that gives a not-null value.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class OrNamingStrategy implements NamingStrategy {
 	

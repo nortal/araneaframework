@@ -47,6 +47,8 @@ import org.araneaframework.uilib.util.NameUtil;
  * </p>
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class StandardNamingStrategy implements NamingStrategy {
 

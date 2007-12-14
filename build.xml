@@ -65,7 +65,6 @@
 		<path id="classpath">
 			<fileset dir="${lib.dir}/default/" includes="*.jar"/>
 			<fileset dir="${lib.dir}/j2ee/" includes="*.jar"/>
-			<fileset dir="${lib.dir}/hibernate/" includes="*.jar"/>
 		</path>
 	</target>
 	

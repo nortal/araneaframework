@@ -18,20 +18,23 @@ package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
 
-
-
 /**
  * Comparator Expression factory.
  * 
  * @see ComparatorExpression
+ * @see LazyComparatorExpression
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public interface ComparatorExpressionFactory extends Serializable {
+	
 	/**
 	 * Creates a new ComparatorExpression.
 	 * 
 	 * @return new ComparatorExpression.
 	 */
 	ComparatorExpression createComparatorExpression(); 
+
 }

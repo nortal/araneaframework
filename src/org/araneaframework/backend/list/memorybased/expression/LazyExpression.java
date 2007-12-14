@@ -24,6 +24,8 @@ import org.araneaframework.backend.list.memorybased.ExpressionFactory;
  * Expression that is initialized lazily.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class LazyExpression implements Expression {
 	

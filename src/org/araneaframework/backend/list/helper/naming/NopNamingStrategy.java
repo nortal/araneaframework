@@ -18,13 +18,21 @@ package org.araneaframework.backend.list.helper.naming;
 
 
 /**
+ * NamingStrategy implementation which does not alter the names.
+ * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class NopNamingStrategy implements NamingStrategy {
 	
-	public static NamingStrategy INSTNACE = new NopNamingStrategy();
+	protected static NamingStrategy INSTNACE = new NopNamingStrategy();
 	
-	private NopNamingStrategy() {}
+	public static NamingStrategy getInstance() {
+		return INSTNACE;
+	}
+	
+	protected NopNamingStrategy() {}
 	
 	public String beanFieldToResultSetColumnName(String beanField) {
 		return beanField;

@@ -59,6 +59,8 @@ import org.araneaframework.uilib.util.NameUtil;
  * @see ListSqlHelper#getStandardFields()
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class StandardFields implements Fields {
 

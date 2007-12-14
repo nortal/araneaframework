@@ -27,6 +27,8 @@ import java.util.List;
  * that combine the results of its children.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class ConcatFields implements Fields {
 	

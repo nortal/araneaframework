@@ -24,6 +24,8 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
  * ComparatorExpression that does nothing.
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class NopComparatorExpression implements ComparatorExpression {
 

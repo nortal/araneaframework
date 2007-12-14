@@ -18,17 +18,20 @@ package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
 
-
+import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
 
 /**
  * Expression factory.
  * 
  * @see Expression
- * @see ExpressionBuilder
+ * @see LazyExpression
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public interface ExpressionFactory extends Serializable {
+	
 	/**
 	 * Creates a new Expression.
 	 * 

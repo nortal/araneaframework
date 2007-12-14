@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.backend.list.helper;
 
@@ -32,9 +32,11 @@ import org.araneaframework.uilib.list.util.Converter;
  * @see Converter
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class StandardValueConverter implements ValueConverter {
-	
+
 	/** Value name --> Converter that is used by convert() method */
 	private final Map converters = new HashMap();
 
@@ -50,7 +52,7 @@ public class StandardValueConverter implements ValueConverter {
 			// No Converter registered
 			return value.getValue();
 		}
-		
+
 		// Convert
 		return converter.convert(value.getValue());
 	}

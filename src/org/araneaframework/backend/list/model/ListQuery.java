@@ -36,21 +36,26 @@ public class ListQuery implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private ListStructure listStructure;
+	/** @since 1.1 */
+	protected ListStructure listStructure;
 	
-	private Map filterInfo;
-	private OrderInfo orderInfo;
+	/** @since 1.1 */
+	protected Map filterInfo;
+	/** @since 1.1 */
+	protected OrderInfo orderInfo;
 	
-	private Expression filterExpression;	
-	private ComparatorExpression orderExpression;
+	protected Expression filterExpression;	
+	protected ComparatorExpression orderExpression;
 	
-	private Long itemRangeStart;	
-	private Long itemRangeCount;
+	protected Long itemRangeStart;	
+	protected Long itemRangeCount;
 	
 	/**
 	 * Returns the {@link ListStructure}used to describe the list.
 	 * 
 	 * @return the {@link ListStructure}used to describe the list.
+	 * 
+	 * @since 1.1 
 	 */	
 	public ListStructure getListStructure() {
 		return listStructure;
@@ -58,6 +63,8 @@ public class ListQuery implements Serializable {
 	
 	/**
 	 * Sets the {@link ListStructure} used to describe the list.
+	 * 
+	 * @since 1.1 
 	 */	
 	public void setListStructure(ListStructure listStructure) {
 		this.listStructure = listStructure;
@@ -67,6 +74,8 @@ public class ListQuery implements Serializable {
 	 * Returns the filter info of the list.
 	 * 
 	 * @see #getFilterExpression()
+	 * 
+	 * @since 1.1 
 	 */	
 	public Map getFilterInfo() {
 		return filterInfo;
@@ -74,6 +83,8 @@ public class ListQuery implements Serializable {
 	
 	/**
 	 * Sets the filter info of the list. 
+	 * 
+	 * @since 1.1 
 	 */	
 	public void setFilterInfo(Map filterInfo) {
 		this.filterInfo = filterInfo;
@@ -83,6 +94,8 @@ public class ListQuery implements Serializable {
 	 * Returns the order info the list.
 	 * 
 	 * @see #getOrderExpression()
+	 * 
+	 * @since 1.1 
 	 */
 	public OrderInfo getOrderInfo() {
 		return orderInfo;
@@ -90,6 +103,8 @@ public class ListQuery implements Serializable {
 	
 	/**
 	 * Sets the order info the list.
+	 * 
+	 * @since 1.1 
 	 */
 	public void setOrderInfo(OrderInfo orderInfo) {
 		this.orderInfo = orderInfo;

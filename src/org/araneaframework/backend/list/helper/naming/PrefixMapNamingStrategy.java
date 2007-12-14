@@ -46,6 +46,8 @@ import java.util.Map;
  * @see StandardNamingStrategy
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class PrefixMapNamingStrategy extends StandardNamingStrategy {
 

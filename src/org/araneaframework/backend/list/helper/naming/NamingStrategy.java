@@ -26,9 +26,13 @@ import org.araneaframework.backend.list.helper.ListSqlHelper;
  * 
  * @see ListSqlHelper#getNamingStrategy()
  * @see StandardNamingStrategy
+ * @see PrefixMapNamingStrategy
  * @see MappingNamingStrategyAndFields
+ * @see OrNamingStrategy
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public interface NamingStrategy {
 

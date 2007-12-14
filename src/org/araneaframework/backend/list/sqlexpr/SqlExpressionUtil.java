@@ -23,12 +23,19 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 
 /**
- * Sql Expression Utils.
+ * SQL Expression methods.
+ * 
+ * @see SqlExpression
  * 
  * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
 public class SqlExpressionUtil {
 
+	/**
+	 * Builds {@link SqlExpression} based on {@link Expression}.
+	 */
 	public static SqlExpression toSql(Expression expression, ExpressionToSqlExprBuilder builder) {
 		SqlExpression result = null;
 		if (expression == null) {
@@ -41,6 +48,9 @@ public class SqlExpressionUtil {
 		return result;
 	}
 
+	/**
+	 * Builds {@link SqlExpression} based on {@link ComparatorExpression}.
+	 */
 	public static SqlExpression toSql(ComparatorExpression expression, CompExprToSqlExprBuilder builder) {
 		SqlExpression result = null;
 		if (expression == null) {

@@ -19,7 +19,10 @@ package org.araneaframework.uilib.list.dataprovider;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.araneaframework.backend.list.memorybased.ComparatorExpression;
+import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
+import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.structure.ListStructure;
 
@@ -30,7 +33,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  * {@link org.araneaframework.uilib.list.ListWidget}to retrieve the list data.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Rein Raudjärv
  */
 public interface ListDataProvider extends Serializable {
 
@@ -52,33 +55,54 @@ public interface ListDataProvider extends Serializable {
 	public void setListStructure(ListStructure listStructure);
 	
 	/**
-	 * This method should be used to receive the filter of the list. 
+	 * This method should be used to receive the current filter info.
+	 * <p>
+	 * The corresponding {@link Expression} is constructed <b>lazily</b>.
+	 * </p>
+	 * <p>
+	 * The same {@link Map} instance can be modified at the back-end
+	 * using the method {@link ListQuery#getFilterInfo()} before the
+	 * actual {@link Expression} is constructed.
 	 * 
 	 * @param filterInfo the filter of the list.
+	 * 
+	 * @since 1.1
 	 */
 	public void setFilterInfo(Map filterInfo);
 	
 	/**
 	 * This method should be used to receive the current ordering info.
+	 * <p>
+	 * The corresponding {@link ComparatorExpression} is constructed <b>lazily</b>.
+	 * </p>
+	 * <p>
+	 * The same {@link OrderInfo} instance can be modified at the back-end
+	 * using the method {@link ListQuery#getOrderInfo()} before the
+	 * actual {@link ComparatorExpression} is constructed.
 	 * 
 	 * @param orderInfo the current ordering info.
+	 * 
+	 * @since 1.1
 	 */
 	public void setOrderInfo(OrderInfo orderInfo);
 	
-//	/**
-//	 * This method should be used to receive the filter of the list.
-//	 * 
-//	 * @param filterExpression the filter of the list.
-//	 */
-//	public void setFilterExpression(Expression filterExpression);
-//
-//	/**
-//	 * This method should be used to receive the current ordering info.
-//	 * 
-//	 * @param orderExpression the current ordering info.
-//	 */
-//	public void setOrderExpression(ComparatorExpression orderExpression);
+	/**
+	 * This method receives the filter info expression explicitly.
+	 * 
+	 * @param filterExpression the filter of the list.
+	 * 
+	 * @see #setFilterInfo(Map)
+	 */
+	public void setFilterExpression(Expression filterExpression);
 
+	/**
+	 * This method receives the ordering info expression explicitly.
+	 * 
+	 * @param orderExpression the current ordering info.
+	 * 
+	 * @see #setOrderInfo(OrderInfo)
+	 */
+	public void setOrderExpression(ComparatorExpression orderExpression);
 
 	/**
 	 * This method should synchronize the list data provider data with the storage, if any
