@@ -786,49 +786,43 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
       <para><classname>ListQuery</classname> is a simple JavaBean that holds
       the following properties: <variablelist spacing="compact">
           <varlistentry>
+            <term>List structure (since 1.1)</term>
+            <listitem>
+            	The structure of the list contains all the list fields
+            	and static information about the filtering and ordering.
+            	(It is constructed once as the <classname>ListWidget</classname> is defined.)
+            </listitem>
+          </varlistentry>
+          
+          <varlistentry>
             <term>List item range indexes</term>
-
             <listitem>
                This is 0-based start index and items count ( 
-
               <classname>Long</classname>
-
                objects) that define the range. By default, lists are shown by pages. Although all items can be shown at once also. Then the start index is zero and items count is omitted. 
             </listitem>
           </varlistentry>
 
           <varlistentry>
-            <term>Filter expression</term>
-
+            <term>Filter and order info (since 1.1)</term>
             <listitem>
-               This could be thought as an abstraction of previously defined bunch of 
-
-              <classname>ListFilter</classname>
-
-               objects that are provided with the bound values from 
-
-              <emphasis>filter form</emphasis>
-
-               . This is a basis of constructing a SQL 
-
-              <literal>WHERE</literal>
-
-               clause later. 
+               These contain the current filter and ordering data as instances of
+               <classname>Map</classname> and <classname>OrderInfo</classname>.
             </listitem>
           </varlistentry>
 
           <varlistentry>
-            <term>Order expression</term>
-
+            <term>Filter and order expressions</term>
             <listitem>
-               This could be thought as an abstraction of previously defined ordered columns that are provided with the current ordering condition. This is a basis of constructing a SQL 
-
-              <literal>ORDER BY</literal>
-
-               clause later. 
+               These could be thought as an abstraction
+               of SQL expressions which are constructed using the info described above
+               (even the same instances). 
+               These expressions will be used in the
+               <literal>WHERE</literal> and <literal>ORDER BY</literal> clauses.
             </listitem>
           </varlistentry>
-        </variablelist> Generally, this whole object is just passed to
+        </variablelist>
+        Generally, this whole object is just passed to
       <classname>org.araneaframework.backend.list.helper.ListSqlHelper</classname>
       class that is used to generate SQL statements and fetching the results
       from database. Latter is hold in <classname>ListItemsData</classname>
@@ -1195,79 +1189,48 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
         <para>The following list covers the terms that are used when
         configuring <code>ListSqlHelper</code>: <variablelist>
+        
             <varlistentry>
-              <term>Expression variable</term>
-
+              <term>List field</term>
               <listitem>
-                 Variables can be thought as list columns that are used in filtering and ordering the list. Variable's name can be for example 'Birthday'. 
+                 Each list has a set of fields (or columns) that are displayed.
+                 All fields are listed up in the <code>SELECT</code> clause.
+                 Some of them can be used for filtering and ordering as well.
+                 Field name can be e.g "birthday" or "group.name".
               </listitem>
             </varlistentry>
 
             <varlistentry>
               <term>Expression value</term>
-
               <listitem>
-                 Values are the temporary information in the list filtering. '1980-08-21' is a value. 'Birthday_start' is a name of a value. In simple cases each variable matches with one value. In case of the range filter two different values (start and end of the range) are used. Also one value can be used together with two or more variables. A value identifier is used for optional converting before using it in a query. This is done by adding a 
+                 Values are the temporary information in the list filtering. '1980-08-21' is a value.
+                 'Birthday_start' is a name of that value.
+                 In simple cases one list field matches with one value.
+                 In case of the range filter two different values (start and end of the range) are used.
+                 Also one value can be used together with two or more fields.
+                 A value identifier is used for optional converting before using it in a query.
+                 This is done by adding a <code>Converter</code> object to <code>ListSqlHelper</code>.
+                 E.g. booleans have to be converted into numeric (0 or 1) values. 
+              </listitem>
+            </varlistentry>            
 
-                <code>Converter</code>
-
-                 object to 
-
-                <code>ListSqlHelper</code>
-
-                 . E.g. booleans have to be converted into numeric (0 or 1) values. 
+            <varlistentry>
+              <term>Database column</term>
+              <listitem>
+                 Database column can be for example 'age' or 'company.name' as well as 'MAX(price)' or '(SELECT(COUNT(*) FROM document WHERE userId = user.id)' (an inner SELECT) - any expression that is part of a SQL string. 
               </listitem>
             </varlistentry>
 
             <varlistentry>
-              <term>Database field</term>
-
+              <term>Database column alias</term>
               <listitem>
-                 Database field can be for example 'age' or 'company.name' as well as 'MAX(price)' or '(SELECT(COUNT(*) FROM document WHERE userId = user.id)' (an inner SELECT) - any expression that is part of a SQL string. 
-              </listitem>
-            </varlistentry>
-
-            <varlistentry>
-              <term>Database field alias</term>
-
-              <listitem>
-                 Database field alias is for example 'name', 'total_price' etc. It's just an identifier not a whole expression. In 
-
+                 Database field alias is for example 'name', 'total_price' etc.
+                 It's just an identifier not a whole expression.
+                 In 
                 <code>ListSqlHelper</code>
-
                  one can assign an alias for each database field or have it automatically generated. The result of a query is a table - a 
-
                 <code>ResultSet</code>
-
                  - which columns have the same names as the aliases in the query. An alias can also be used in a custom filter condition (WHERE clause) to identify the same database field or expression that was added in the SELECT clause. 
-              </listitem>
-            </varlistentry>
-
-            <varlistentry>
-              <term>ResultSet column</term>
-
-              <listitem>
-                 
-
-                <code>ResultSet</code>
-
-                 is a table that is retrieved from database as a result of executing the query. Generally all the columns that where added in a SELECT can be retrieved from the ResultSet by their aliases. But the ResultSet can also contain additional database-specific data such as 
-
-                <code>rownum</code>
-
-                 etc. ResultSet column can also be assigned a 
-
-                <code>Converter</code>
-
-                 . E.g. to convert numeric value into a Boolean. Here is the Converter used reversely. 
-              </listitem>
-            </varlistentry>
-
-            <varlistentry>
-              <term>Bean field</term>
-
-              <listitem>
-                 Bean field (or property) is for example 'phone' or 'address.city' that is an instance field of a Java object. During the ResultSet reading new instance of the given type is created and its fields are propagated with values. E.g. 'phone' is assigned by calling setPhone(String phone), 'address.city' is assigned by calling setAddress(new Address()) (if getAddress() == null) and getAddress().setCity(String city). 
               </listitem>
             </varlistentry>
           </variablelist></para>
@@ -1289,58 +1252,31 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
               <tbody>
                 <row>
-                  <entry><literal>addMapping(String variable, String dbField,
-                  String dbAlias, String beanField)</literal></entry>
-
-                  <entry>Adds mapping between expression variable, database
-                  field and Bean field. Database field alias and Bean field
-                  are assigned manually.</entry>
+                  <entry><literal>addMapping(String fieldName, String columnName, String columnAlias)</literal></entry>
+                  <entry>
+                  Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
+                  and <emphasis>column alias</emphasis> mapping.
+                  A given field is also listed in the <code>SELECT</code> clause.
+                  </entry>
                 </row>
 
                 <row>
-                  <entry><literal>addMapping(String variable, String dbField,
-                  String dbAlias)</literal></entry>
-
-                  <entry>Adds mapping between expression variable, database
-                  field and Bean field. Database field alias is assigned
-                  manually. Bean field is assigned the same as the
-                  variable.</entry>
+                  <entry><literal>addMapping(String fieldName, String columnName)</literal></entry>
+                  <entry>
+                  Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
+                  and <emphasis>column alias</emphasis> mapping.
+                  A given field is also listed in the <code>SELECT</code> clause.
+                  The corresponding <emphasis>column alias</emphasis> is generated automatically.
+                  </entry>
                 </row>
 
                 <row>
-                  <entry><literal>addMapping(String variable, String
-                  dbField)</literal></entry>
-
-                  <entry>Adds mapping between expression variable, database
-                  field and Bean field. Database field alias is generated
-                  automatically. Bean field is assigned the same as the
-                  variable. (mostly used)</entry>
-                </row>
-
-                <row>
-                  <entry><literal>addDatabaseFieldMapping(String variable,
-                  String dbField, String dbAlias)</literal></entry>
-
-                  <entry>Adds mapping between expression variable and database
-                  field. Database field alias is assigned manually.</entry>
-                </row>
-
-                <row>
-                  <entry><literal>addDatabaseFieldMapping(String variable,
-                  String dbField)</literal></entry>
-
-                  <entry>Adds mapping between expression variable and database
-                  field. Database field alias is generated
-                  automatically.</entry>
-                </row>
-
-                <row>
-                  <entry><literal>addResultSetMapping(String rsColumn, String
-                  beanField)</literal></entry>
-
-                  <entry>Adds mapping between <code>ResultSet</code> column
-                  (matches with database field alias) and Bean field. (rarely
-                  used)</entry>
+                  <entry><literal>addDatabaseFieldMapping(String fieldName, String columnName)</literal></entry>
+                  <entry>
+                  Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
+                  mapping.
+                  A given field is not listed in the <code>SELECT</code> clause.
+                  </entry>
                 </row>
               </tbody>
             </tgroup>
@@ -1374,7 +1310,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                   beanField, Converter converter)</literal></entry>
 
                   <entry>Adds deconverter for <code>ResultSet</code> column by
-                  Bean field that is mapped with that Column.</entry>
+                  list field that is mapped with that Column.</entry>
                 </row>
 
                 <row>
@@ -1389,6 +1325,114 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
           </informaltable></para>
       </sect3>
     </sect2>
+    
+    <sect3>
+        <title>ListSqlHelper naming strategies</title>
+
+        <para>Since Aranea MVC 1.1 ListSqlHelper also support naming strategies.
+        This means that one do not need to define database column names and aliases
+        for all list fields.
+        Instead only list fields are listed up and they can be transformed into
+        database column names and aliases using a <emphasis>strategy</emphasis>.
+        </para>
+<para>A <emphasis>strategy</emphasis> is defined by the following interface. 
+<classname>NamingStrategy</classname>. <programlisting role="java">public interface NamingStrategy {
+
+	String fieldToColumnName(String fieldName);
+	
+	String fieldToColumnAlias(String fieldName);
+	
+}</programlisting></para>
+		<para>
+			To set or get a <emphasis>strategy</emphasis> use methods
+			<code>ListSqlHelper.setNamingStrategy(NamingStrategy namingStrategy)</code> or
+			<code>ListSqlHelper.getNamingStrategy()</code> respectfully.
+		</para>
+		<para>
+        The standard implementation <classname>StandardNamingStrategy</classname>
+        adds underscores to all names (e.g. "firstName" -> "first_name").
+        
+        For an alias all dots are converted into underscores
+        (e.g. "parent.friend.age" -> "parent_friend_age").
+        For a name all dots except the last are converted into underscores
+        (e.g. "parent.friend.age" -> "parent_friend.age", so "parent_friend" is expected to be a table alias).
+        </para>
+        <para>
+        	If one wishes to define table aliases for the naming strategy
+        	<classname>PrefixMapNamingStrategy</classname> (enabled by default) can be used.
+        	By using method <code>addPrefix(String fieldNamePrefix, String columnNamePrefix)</code>
+        	one can add a custom prefix for database columns and aliases.
+        	An instance of <classname>PrefixMapNamingStrategy</classname> can be retrieved by
+        	method <code>ListSqlHelper.getPrefixMapNamingStrategy()</code>.
+        </para>
+        <para>
+        	As naming strategies still expect a set of list fields to be defined
+        	there is a way to add list fields without any mappings. 
+        </para>
+<para>A set of fields are provided by following interface.
+<programlisting role="java">public interface Fields {
+
+	Collection getNames();
+	
+}</programlisting></para>
+		<para>
+			To set or get a <emphasis>fields provider</emphasis> use methods
+			<code>ListSqlHelper.setFields(Fields fields)</code> or
+			<code>ListSqlHelper.getFields()</code> respectfully.
+		</para>
+		<para>
+			A standard implementation <classname>StandardFields</classname>
+			enables to add fields using the following methods.
+		</para>
+        <para><informaltable frame="all">
+            <tgroup cols="2">
+              <colspec colwidth="2*" />
+              <colspec colwidth="3*" />
+
+              <thead>
+                <row>
+                  <entry>Method</entry>
+                  <entry>Purpose</entry>
+                </row>
+              </thead>
+
+              <tbody>
+                <row>
+                  <entry><literal>addField(String field)</literal></entry>
+                  <entry>Adds a field by its name.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addFields(String[] fields)</literal></entry>
+                  <entry>Adds a set of fields by their names.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addFields(Collection fields)</literal></entry>
+                  <entry>Adds a set of fields by their names.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addFields(Class beanClass)</literal></entry>
+                  <entry>Adds all the fields of the Bean class.</entry>
+                </row>
+
+                <row>
+                  <entry><literal>addFields(ListStructure structure)</literal></entry>
+                  <entry>Adds all the fields defined in the <emphasis>list structure</emphasis>.</entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </informaltable></para>
+          <para>
+          		There are also corresponding methods to add fields using a prefix and
+          		methods to remove the fields (using a prefix or not).
+          </para>
+          <para>
+          		To get the <classname>StandardFields</classname> call
+          		<code>ListSqlHelper.getStandardFields()</code>.
+          </para>
+    </sect3>
   </sect1>
 
   <sect1>

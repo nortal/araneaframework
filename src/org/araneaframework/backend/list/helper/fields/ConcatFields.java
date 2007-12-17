@@ -19,6 +19,7 @@ package org.araneaframework.backend.list.helper.fields;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 
@@ -42,7 +43,9 @@ public class ConcatFields implements Fields {
 	}
 
 	public Collection getNames() {
-		Collection result = new ArrayList();
+		// Concatenate all fields without duplicating any name
+		Collection result = new LinkedHashSet();
+		
 		for (Iterator it = children.iterator(); it.hasNext();) {
 			Fields child = (Fields) it.next(); 
 			result.addAll(child.getNames());
