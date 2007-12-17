@@ -17,13 +17,16 @@
 package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.Comparator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Variable;
+import org.araneaframework.backend.list.memorybased.compexpr.LazyComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.MultiComparatorExpression;
+import org.araneaframework.backend.list.memorybased.compexpr.NopComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.ReverseComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
@@ -43,6 +46,8 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 	protected VariableResolver mapper;
 
 	public StandardCompExprToSqlExprBuilder() {
+		addTranslator(NopComparatorExpression.class, new NopComparatorTranslator());
+		addTranslator(LazyComparatorExpression.class, new LazyComparatorTranslator());
 		addTranslator(MultiComparatorExpression.class, new MultiComparatorTranslator());
 		addTranslator(VariableComparatorExpression.class, new VariableComparatorTranslator());
 		addTranslator(ReverseComparatorExpression.class, new ReverseComparatorTranslator());
@@ -55,6 +60,22 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 	protected String resolveVariable(Variable variable) {
 		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
 	}
+	
+	// NopComparatorExpression must be the root
+	static class NopComparatorTranslator implements CompExprToSqlExprTranslator {
+		public SqlExpression translate(ComparatorExpression expr,
+				CompExprToSqlExprBuilder builder) {
+			return null;
+		}
+	}
+	
+	class LazyComparatorTranslator implements CompExprToSqlExprTranslator {
+		public SqlExpression translate(ComparatorExpression expr,
+				CompExprToSqlExprBuilder builder) {
+			LazyComparatorExpression lazyExpr = (LazyComparatorExpression) expr;
+			return buildSqlExpression(lazyExpr.getComparatorExpression());
+		}
+	}	
 	
 	static class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
 		protected SqlExpression translateParent(ComparatorExpression expr, SqlExpression[] sqlChildren) {
