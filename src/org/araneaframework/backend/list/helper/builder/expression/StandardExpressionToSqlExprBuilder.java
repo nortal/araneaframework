@@ -24,6 +24,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
+import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
@@ -65,6 +66,7 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	protected ValueConverter converter; 
 	
 	public StandardExpressionToSqlExprBuilder() {
+		addTranslator(LazyExpression.class, new LazyTranslator());
 		addTranslator(ValueExpression.class, new ValueTranslator());
 		addTranslator(VariableExpression.class, new VariableTranslator());
 		addTranslator(AlwaysTrueExpression.class, new AlwaysTrueTranslator());
@@ -95,6 +97,15 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 	
 	protected String resolveVariable(Variable variable) {
 		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
+	}
+	
+	// lazy
+	
+	class LazyTranslator implements ExprToSqlExprTranslator {
+		public SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder) {
+			LazyExpression lazyExpr = (LazyExpression) expr;
+			return buildSqlExpression(lazyExpr.getExpression());
+		}
 	}
 	
 	// constant

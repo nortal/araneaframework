@@ -47,7 +47,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class MemoryBasedListDataProvider implements ListDataProvider {
+public abstract class MemoryBasedListDataProvider extends BaseListDataProvider {
 	private static final Log log = LogFactory.getLog(MemoryBasedListDataProvider.class);
 	private Set dataUpdateListeners = new HashSet(1);
 	
