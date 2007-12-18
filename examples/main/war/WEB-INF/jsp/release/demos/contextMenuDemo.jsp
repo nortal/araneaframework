@@ -23,10 +23,8 @@
 					  var rrr = trid.substring(lfId.length+4);
 					  return rrr;
 					} else {
-					  
-					}
 
-					//return null;
+					}
 				};
 			</script>
 		
@@ -75,24 +73,24 @@
 					
 					<ui:listRows>
 						<ui:widgetMarker id="list" tag="tbody">
-						<ui:row id="${listFullId}.row${rowRequestId}">
+							<ui:row id="${listFullId}.row${rowRequestId}">
+	
+								<ui:cell>
+									<c:out value="${row.sex}" />
+								</ui:cell>
+								<ui:cell styleClass="right" width="80px">
+									<c:out value="${row.forename}" />
+								</ui:cell>
+								<ui:cell>
+									<c:out value="${row.surname}" />
+								</ui:cell>
+								<ui:cell>
+									<c:out value="${row.country}" />
+								</ui:cell>
 
-							<ui:cell>
-								<c:out value="${row.sex}" />
-							</ui:cell>
-							<ui:cell styleClass="right" width="80px">
-								<c:out value="${row.forename}" />
-							</ui:cell>
-							<ui:cell>
-								<c:out value="${row.surname}" />
-							</ui:cell>
-							<ui:cell>
-								<c:out value="${row.country}" />
-							</ui:cell>
-							
-							<ui:cell width="0"></ui:cell>
-							
-						</ui:row>
+								<ui:cell width="0"/>
+
+							</ui:row>
 						</ui:widgetMarker>
 					</ui:listRows>
 					<ui:contextMenu id="list.cmenu"/>

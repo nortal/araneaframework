@@ -540,7 +540,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
       <para>Although all of the core Aranea abstractions are independent of
       the Servlet API and web in general, we also provide a way to manipulate
-      low-level HTTP constructs. To that goal we provide to interfaces,
+      low-level HTTP constructs. To that goal we provide two interfaces,
       <literal>HttpInputData</literal> and <literal>HttpOutputData</literal>,
       which extend respectively <literal>InputData</literal> and
       <literal>OutputData</literal>.</para>

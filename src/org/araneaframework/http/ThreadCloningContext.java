@@ -63,8 +63,8 @@ public interface ThreadCloningContext extends Serializable {
   public String startClonedThread(RelocatableService clone);
 
   /**
-   * Returns the snapshot of current thread, made before child  {@link Service} has had the 
-   * chance to process the request. Only applicable when request contained either 
+   * Returns the snapshot of current thread, made before child {@link Service} of {@link ThreadCloningContext} 
+   * implementation has had the chance to process the request. Only applicable when request contained either 
    * {@link ThreadCloningContext#CLONE_ONLY_REQUEST_KEY} or {@link ThreadCloningContext#CLONING_REQUEST_KEY} parameter.
    * 
    * Deserialization of the snapshot could be done as follows:

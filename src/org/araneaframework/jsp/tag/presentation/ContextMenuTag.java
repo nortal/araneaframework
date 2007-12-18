@@ -28,7 +28,8 @@ import org.araneaframework.uilib.util.NameUtil;
  * @jsp.tag
  *   name = "contextMenu"
  *   body-content = "empty"
- *   description = "TODO"
+ *   description = "Registers context menu with given identifier. Context menu will be rendered in supported browsers
+ *   (IE & Mozilla based browsers) when mouse right-click is made on widget associated with particular context menu widget."
  */
 public class ContextMenuTag extends WidgetTag {
 	public int doStartTag(Writer out) throws Exception {

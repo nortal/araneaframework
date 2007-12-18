@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
+import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData;
 import org.araneaframework.example.main.release.features.ExampleData.Client;
@@ -142,7 +144,8 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
   }
   
   private void handleEventDeleteRecord(String param) {
-	  Client c = (Client) list.getRowFromRequestId(param);
-	  friends.remove(c);
+	  final Client c = (Client) list.getRowFromRequestId(param);
+	  friends.remove(CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", c.getId())));
+	  list.refresh();
   }
 }
