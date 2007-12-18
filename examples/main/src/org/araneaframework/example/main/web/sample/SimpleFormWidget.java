@@ -21,9 +21,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.constraint.AfterTodayConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.constraint.ReverseConstraint;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -79,8 +77,6 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
     // sets initial value of form element
     simpleForm.setValueByFullName("dateTime", new Date());
-    
-    simpleForm.getElementByFullName("date").setConstraint(new ReverseConstraint(new AfterTodayConstraint(false), "dadadadad"));
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
