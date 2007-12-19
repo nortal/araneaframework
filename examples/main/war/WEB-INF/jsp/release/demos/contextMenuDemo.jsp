@@ -16,6 +16,8 @@
                   
                 var lfId = '<c:out value="${listFullId}"/>';
 			
+				// this function supplies the event parameter for context menu event
+			    // taking place inside a list widget -- a list row's id.
 				var cMenuparameterSupplier = function() {
 					if (araneaContextMenu.getTriggeringElement()) {
 					  var tablerow = locateRow(araneaContextMenu.getTriggeringElement())
@@ -93,7 +95,7 @@
 							</ui:row>
 						</ui:widgetMarker>
 					</ui:listRows>
-					<ui:contextMenu id="list.cmenu"/>
+					<ui:contextMenu id="list.contextmenu"/>
 
 			</tui:componentList>
 			

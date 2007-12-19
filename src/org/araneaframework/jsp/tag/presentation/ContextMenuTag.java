@@ -53,7 +53,7 @@ public class ContextMenuTag extends WidgetTag {
 
 		return SKIP_BODY;
 	}
-	
+
 	protected void writeContextMenu(Writer out, ContextMenuItem menu) throws Exception {
 		out.write(menu.toJSON().toString());
 	}

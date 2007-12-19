@@ -24,15 +24,12 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
 
-
 /**
- * This class manages all events. It is used by widgets to manage their events.
+ * This class manages onchange and onclick events of {@link Control}s that support those types of events.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class StandardControlEventListenerAdapter implements EventListener {
-  
   private static final Log log = LogFactory.getLog(StandardControlEventListenerAdapter.class);
 
   private Collection onClickEventListeners;
@@ -52,6 +49,11 @@ public class StandardControlEventListenerAdapter implements EventListener {
   public void clearOnChangeEventListeners() {
     if (onChangeEventListeners != null)
       onChangeEventListeners.clear();
+  }
+  
+  /** @since 1.1 */
+  public void removeOnChangeEventListener(OnChangeEventListener listener) {
+    onChangeEventListeners.remove(listener);
   }
 
   /**
@@ -77,6 +79,11 @@ public class StandardControlEventListenerAdapter implements EventListener {
   public void clearOnClickEventListeners() {
     if (onClickEventListeners != null)
       onClickEventListeners.clear();
+  }
+  
+  /** @since 1.1 */
+  public void removeOnClickEventListener(OnClickEventListener listener) {
+    onClickEventListeners.remove(listener);
   }
 
   /**

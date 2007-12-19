@@ -489,7 +489,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   
   /**
    * Removes the listener from the Widget's eventlisteners.
-   * @param listener the EventListener being added
+   * @param listener the EventListener to remove
    * @see #addEventListener
    */
   public void removeEventListener(EventListener listener) {

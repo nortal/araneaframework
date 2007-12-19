@@ -130,7 +130,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
   }
 
   private void attachContextMenu() {
-	list.addWidget("cmenu", createListContextMenu());
+	list.addWidget("contextmenu", createListContextMenu());
   }
 
   private void handleEventViewRecord(String param) {
