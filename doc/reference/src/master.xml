@@ -13,6 +13,7 @@
 	<!ENTITY uilibwidgets               SYSTEM "uilibwidgets.xml">
 	<!ENTITY trees               SYSTEM "trees.xml">
 	<!ENTITY tabs               SYSTEM "tabs.xml">
+	<!ENTITY ctxtmenu               SYSTEM "ctxtmenu.xml">
 ]>
 
 <!--

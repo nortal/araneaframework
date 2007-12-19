@@ -1103,7 +1103,7 @@ if (fileUploadExt.uploadSucceeded()) {
       <literal>enableWidget("myChildWidget")</literal>.</para>
     </sect2>
 
-    <sect2>
+    <sect2 id="EventListeners">
       <title>Event Listeners</title>
 
       <para>Registering event listeners allows widgets to subscribe to some
