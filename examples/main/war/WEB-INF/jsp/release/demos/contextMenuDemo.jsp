@@ -42,6 +42,8 @@
 			
 			<br/>
 			
+			<ui:updateRegion id="listregion">
+			
 			<tui:componentList>
 					<tui:componentListHeader/>
 					
@@ -75,6 +77,7 @@
 					
 					<ui:listRows>
 						<ui:widgetMarker id="list" tag="tbody">
+							<!-- give each row unique id, so that event source row object can be determined by cMenuparameterSupplier -->
 							<ui:row id="${listFullId}.row${rowRequestId}">
 	
 								<ui:cell>
@@ -95,14 +98,16 @@
 							</ui:row>
 						</ui:widgetMarker>
 					</ui:listRows>
-					<ui:contextMenu id="list.contextmenu"/>
+					<ui:contextMenu id="list.contextmenu" updateRegions="listregion"/>
 
 			</tui:componentList>
-			
 			
 			<ui:updateRegion id="${listId}lfooter">
 				<tui:componentListFooter/>
 			</ui:updateRegion>
+			
+			</ui:updateRegion>
+
 		</tui:component>
 		
 		</ui:list>

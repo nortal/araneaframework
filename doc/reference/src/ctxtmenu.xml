@@ -104,6 +104,16 @@ root.addMenuItem(secondEntry);
                 <entry><emphasis>yes</emphasis></entry>
                 <entry>ID of the <literal>ContextMenuWidget</literal></entry>
               </row>
+              <row>
+                <entry>updateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Regions which should be updated when context menu event has been processed.</entry>
+              </row>
+              <row>
+                <entry>globalUpdateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Global regions which should be updated when context menu event has been processed.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
