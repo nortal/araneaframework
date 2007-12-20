@@ -171,8 +171,11 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   }
 
   /**
-   * Returns <code>true</code> iff Spring web application context is present.
-   * This method may only be called after {@link AraneaSpringDispatcherServlet#init()} has run.
+   * Returns <code>true</code> iff Spring web application context is present. When
+   * web application context is present, dispatcher servlet will use it, instead of
+   * creating new BeanFactory itself. 
+   * 
+   * This method should only be called after {@link AraneaSpringDispatcherServlet#init()} has run.
    * @since 1.1
    */
   protected boolean isSpringWebPresent() {

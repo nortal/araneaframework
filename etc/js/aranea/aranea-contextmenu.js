@@ -69,14 +69,14 @@ Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
 };
 
 Aranea.ContextMenuHolder = Class.create();
-Aranea.ContextMenuHolder.setOptions = function(menu) {
+Aranea.ContextMenuHolder.setMenuOptions = function(menu) {
   if (menu.submenu) {
     Object.extend(menu.submenu, menu.options);
     $A(menu.submenu).each(function(entry) {
       Object.extend(entry, menu.options);
     });
 
-    Aranea.ContextMenuHolder.setOptions(menu.submenu);
+    Aranea.ContextMenuHolder.setMenuOptions(menu.submenu);
   }
 };
 Aranea.ContextMenuHolder.prototype = {
@@ -90,7 +90,7 @@ Aranea.ContextMenuHolder.prototype = {
     this.menus[widgetId].options = Object.extend({
       updateRegions: function() { return null; },
     }, options || {});
-    Aranea.ContextMenuHolder.setOptions(this.menus[widgetId]);
+    Aranea.ContextMenuHolder.setMenuOptions(this.menus[widgetId]);
   },
 
   getMenus: function() {
@@ -99,8 +99,6 @@ Aranea.ContextMenuHolder.prototype = {
 };
 
 Aranea.ContextMenu = Class.create();
-Aranea.ContextMenu.getUpdateRegions = function(regions) { return function () { return regions; } };
-
 Aranea.ContextMenu.prototype = {
   contextMenuHolder: null,
   triggeringElement: null,
