@@ -317,6 +317,14 @@ function AraneaPage() {
     if (typeof eventParam == 'function') {
       eventParam = eventParam();
     }
+    
+    if (typeof eventPrecondition == 'function') {
+      eventPrecondition = eventPrecondition();
+    }
+
+    if (typeof eventUpdateRegions == 'function') {
+      eventUpdateRegions = eventUpdateRegions();
+    }
 
     if (systemForm) {
       this.executeCallbacks(systemForm['id']);

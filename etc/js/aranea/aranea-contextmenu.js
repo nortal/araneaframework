@@ -38,7 +38,7 @@ Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE =
 Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE = 
     new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>');
 Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE = 
-    new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, null); araneaContextMenu.hide();');
+    new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE = 
     new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, function() {}, null); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
@@ -69,14 +69,28 @@ Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
 };
 
 Aranea.ContextMenuHolder = Class.create();
+Aranea.ContextMenuHolder.setMenuOptions = function(menu) {
+  if (menu.submenu) {
+    Object.extend(menu.submenu, menu.options);
+    $A(menu.submenu).each(function(entry) {
+      Object.extend(entry, menu.options);
+    });
+
+    Aranea.ContextMenuHolder.setMenuOptions(menu.submenu);
+  }
+};
 Aranea.ContextMenuHolder.prototype = {
   menus: {},
 
   initialize: function() {
   },
 
-  addMenu: function(widgetId, value) {
-    this.menus[widgetId] = value;
+  addMenu: function(widgetId, menu, options) {
+    this.menus[widgetId] = menu;
+    this.menus[widgetId].options = Object.extend({
+      updateRegions: function() { return null; },
+    }, options || {});
+    Aranea.ContextMenuHolder.setMenuOptions(this.menus[widgetId]);
   },
 
   getMenus: function() {

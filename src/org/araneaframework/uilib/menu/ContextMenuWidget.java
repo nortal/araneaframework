@@ -18,6 +18,8 @@ package org.araneaframework.uilib.menu;
 import org.araneaframework.core.BaseApplicationWidget;
 
 /**
+ * Context menu widget.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */

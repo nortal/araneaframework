@@ -14,6 +14,8 @@ import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.tab.TabContainerWidget;
 
 /**
+ * Demonstrates usage of tabs&mdash;{@link TabContainerWidget}.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoNewTabWidget extends TemplateBaseWidget {
@@ -43,6 +45,7 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 	    	Class clazz = (Class) classfield.get(menuItem);
 
 	    	containerWidget.addTab((String)entry.getKey(), menuItem.getLabel(), (Widget)clazz.newInstance());
+	    	// show tab for current widget too, if it was found from menu: but disable it
 	    	if (this.getClass().equals(clazz))
 	    		containerWidget.disableTab((String)entry.getKey());
 	    }

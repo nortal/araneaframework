@@ -16,6 +16,8 @@
                   
                 var lfId = '<c:out value="${listFullId}"/>';
 			
+				// this function supplies the event parameter for context menu event
+			    // taking place inside a list widget -- a list row's id.
 				var cMenuparameterSupplier = function() {
 					if (araneaContextMenu.getTriggeringElement()) {
 					  var tablerow = locateRow(araneaContextMenu.getTriggeringElement())
@@ -23,10 +25,8 @@
 					  var rrr = trid.substring(lfId.length+4);
 					  return rrr;
 					} else {
-					  
-					}
 
-					//return null;
+					}
 				};
 			</script>
 		
@@ -41,6 +41,8 @@
 			</p>
 			
 			<br/>
+			
+			<ui:updateRegion id="listregion">
 			
 			<tui:componentList>
 					<tui:componentListHeader/>
@@ -75,34 +77,37 @@
 					
 					<ui:listRows>
 						<ui:widgetMarker id="list" tag="tbody">
-						<ui:row id="${listFullId}.row${rowRequestId}">
+							<!-- give each row unique id, so that event source row object can be determined by cMenuparameterSupplier -->
+							<ui:row id="${listFullId}.row${rowRequestId}">
+	
+								<ui:cell>
+									<c:out value="${row.sex}" />
+								</ui:cell>
+								<ui:cell styleClass="right" width="80px">
+									<c:out value="${row.forename}" />
+								</ui:cell>
+								<ui:cell>
+									<c:out value="${row.surname}" />
+								</ui:cell>
+								<ui:cell>
+									<c:out value="${row.country}" />
+								</ui:cell>
 
-							<ui:cell>
-								<c:out value="${row.sex}" />
-							</ui:cell>
-							<ui:cell styleClass="right" width="80px">
-								<c:out value="${row.forename}" />
-							</ui:cell>
-							<ui:cell>
-								<c:out value="${row.surname}" />
-							</ui:cell>
-							<ui:cell>
-								<c:out value="${row.country}" />
-							</ui:cell>
-							
-							<ui:cell width="0"></ui:cell>
-							
-						</ui:row>
+								<ui:cell width="0"/>
+
+							</ui:row>
 						</ui:widgetMarker>
 					</ui:listRows>
-					<ui:contextMenu id="list.cmenu"/>
+					<ui:contextMenu id="list.contextmenu" updateRegions="listregion"/>
 
 			</tui:componentList>
-			
 			
 			<ui:updateRegion id="${listId}lfooter">
 				<tui:componentListFooter/>
 			</ui:updateRegion>
+			
+			</ui:updateRegion>
+
 		</tui:component>
 		
 		</ui:list>

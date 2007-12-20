@@ -22,10 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
+import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData;
 import org.araneaframework.example.main.release.features.ExampleData.Client;
 import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
@@ -128,12 +131,15 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
   }
 
   private void attachContextMenu() {
-	list.addWidget("cmenu", createListContextMenu());
+	list.addWidget("contextmenu", createListContextMenu());
   }
 
   private void handleEventViewRecord(String param) {
 	  Client c = (Client) list.getRowFromRequestId(param);
 	  getFlowCtx().start(new ClientViewWidget(c));
+	  // XXX: this is a hack to work around the shortcoming of partial rendering -- namely when flow is switched,
+	  // the regions that are supposed to be updated are of course lost and old flow remains on end-user screen
+	  ((UpdateRegionContext)getEnvironment().getEntry(UpdateRegionContext.class)).disableOnce();
   }
   
   private void handleEventChangeSex(String param) {
@@ -142,7 +148,8 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
   }
   
   private void handleEventDeleteRecord(String param) {
-	  Client c = (Client) list.getRowFromRequestId(param);
-	  friends.remove(c);
+	  final Client c = (Client) list.getRowFromRequestId(param);
+	  friends.remove(CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", c.getId())));
+	  list.refresh();
   }
 }
