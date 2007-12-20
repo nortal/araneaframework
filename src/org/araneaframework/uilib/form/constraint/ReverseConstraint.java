@@ -97,5 +97,4 @@ public class ReverseConstraint extends  BaseConstraint {
 		super.setEnvironment(environment);
 		toReverse.setEnvironment(environment);
 	}
-	
 }
