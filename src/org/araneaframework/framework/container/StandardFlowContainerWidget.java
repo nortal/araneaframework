@@ -99,7 +99,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    * return control to {@link FlowContext} higher in the {@link org.araneaframework.Component}
    * hierarchy. If such {@link FlowContext} exists and finishable is set to true, this
    * {@link StandardFlowContainerWidget} will return control to it when last running flow
-   * inside it is finished ({@see FlowContext#finish(Object)}) or canceled ({@see FlowContext#cancel()}).
+   * inside it is finished ({@link FlowContext#finish(Object)}) or canceled ({@link FlowContext#cancel()}).
    * 
    * Default is <code>true</code>.
    * @param finishable

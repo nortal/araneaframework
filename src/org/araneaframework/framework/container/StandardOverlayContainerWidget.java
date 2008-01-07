@@ -37,7 +37,7 @@ import org.araneaframework.framework.FlowContext.Handler;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class OverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
+public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
   /**
    * <p> 
    * Map containing the default overlay presentation options. 

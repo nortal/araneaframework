@@ -25,7 +25,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.core.EventListener;
 
 /**
- * This class manages onchange and onclick events of {@link Control}s that support those types of events.
+ * This class manages onchange and onclick events of {@link org.araneaframework.uilib.form.Control}s that support those types of events.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
