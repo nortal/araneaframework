@@ -137,6 +137,14 @@
       </varlistentry>
 
       <varlistentry>
+        <term>Uilib widgets</term>
+
+        <listitem>
+          <para>This chapter looks at various other Uilib widgets and explains their use.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
         <term>Third-party Integration</term>
 
         <listitem>

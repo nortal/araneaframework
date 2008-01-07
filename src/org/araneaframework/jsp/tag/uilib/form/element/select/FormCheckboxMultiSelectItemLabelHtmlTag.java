@@ -21,6 +21,7 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.tag.uilib.form.FormSimpleLabelHtmlTag;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 
 
@@ -38,6 +39,7 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
  */
 public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   protected String value;
+  protected String checkboxId;
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -48,16 +50,10 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
     if (viewModel.getSelectItemByValue(value) == null) 
       throw new AraneaJspException("Value '" + value + "' not found in values list.");    
 
-    String label =  viewModel.getSelectItemByValue(value).getDisplayString();    
-
-    FormSimpleLabelHtmlTag.writeSelectLabel(
-        out, 
-        label, 
-        getStyleClass()
-    );    
+    writeLabel(out, viewModel.getSelectItemByValue(value).getDisplayString());
     return EVAL_BODY_INCLUDE;    
   }
-
+  
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -66,6 +62,32 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
    */
   public void setValue(String value) throws JspException  {
     this.value = (String)evaluateNotNull("value", value, String.class);
+  }
+  
+  /** @since 1.1 */
+  public void writeLabel(Writer out, String label) throws Exception {
+    JspUtil.writeOpenStartTag(out, "span");
+    JspUtil.writeAttribute(out, "class", getStyleClass());
+    JspUtil.writeCloseStartTag_SS(out);
+
+    JspUtil.writeOpenStartTag(out, "label");
+    JspUtil.writeAttribute(out, "for", checkboxId);
+    JspUtil.writeCloseStartTag_SS(out);
+    JspUtil.writeEscaped(out, label);
+    JspUtil.writeEndTag_SS(out, "label");
+
+    JspUtil.writeEndTag(out, "span");
+  }
+  
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "The HTML id of checkbox to which this label belongs."
+   * @since 1.1 
+   */
+  public void setCheckboxId(String checkboxId) throws JspException  {
+    this.checkboxId = (String)evaluate("checkboxId", checkboxId, String.class);
   }
 }
 

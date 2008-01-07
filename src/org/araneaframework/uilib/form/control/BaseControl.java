@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form.control;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Scope;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -221,6 +222,11 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
       this.label = BaseControl.this.getLabel();
     }
     
+    /** @since 1.1 */
+    public Scope getScope() {
+      return BaseControl.this.getScope();
+    }
+    
     /**
      * Returns control type.
      * @return control type.
@@ -228,8 +234,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     public String getControlType() {
       return controlType;     
     }
-    
-    
+
     /**
      * Returns whether the control is mandatory.
      * @return whether the control is mandatory.

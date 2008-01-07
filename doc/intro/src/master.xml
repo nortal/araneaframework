@@ -74,7 +74,7 @@
   
   public void handleEventHello() throws Exception {
     String name = 
-      (String) getCurrentInput().getGlobalData().get("name");
+      (String) getInputData().getGlobalData().get("name");
     getFlowCtx().replace(new HelloWidget(name), null);
   }  
 }</programlisting>
@@ -114,7 +114,7 @@
     <literal>handleEventHello()</literal> method.</para>
 
     <para>When that will occur the first line of
-    <literal>handleEventHello()</literal> method <programlisting role="java">String name = (String) getCurrentInput().getGlobalData().get("name");</programlisting></para>
+    <literal>handleEventHello()</literal> method <programlisting role="java">String name = (String) getInputData().getGlobalData().get("name");</programlisting></para>
 
     <para>will read the data submitted by the form input field "name" (this is
     not the way it is done usually in Aranea, but using forms would complicate
@@ -615,7 +615,7 @@ public class HelloWidget extends BaseUIWidget {
   
   public void handleEventHello() throws Exception {
     String name = 
-      (String) getCurrentInput().getGlobalData().get("name");
+      (String) getInputData().getGlobalData().get("name");
     callback.nameSelected("name");
   }  
 }</programlisting>

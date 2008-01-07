@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.widget;
 
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -30,15 +31,22 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class DownloaderWidget extends BaseApplicationWidget {
-
   protected byte[] data;
   protected String contentType;
+  protected Map headers;
 
   public DownloaderWidget(byte[] data, String contentType) {
     Assert.notNullParam(data, "data");
     Assert.notEmptyParam(contentType, "contentType");
     this.data = data;
     this.contentType = contentType;
+  }
+  
+  /** @since 1.1 */
+  public DownloaderWidget(byte[] data, Map headers) {
+    Assert.notNullParam(data, "data");
+    this.data = data;
+    this.headers = headers;
   }
 
   public byte[] getData() {
@@ -47,6 +55,11 @@ public class DownloaderWidget extends BaseApplicationWidget {
 
   public String getContentType() {
     return contentType;
+  }
+  
+  /** @since 1.1 */
+  public Map getHeaders() {
+    return headers;
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {

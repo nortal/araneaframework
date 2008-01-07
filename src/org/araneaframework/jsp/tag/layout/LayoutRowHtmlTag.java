@@ -45,6 +45,7 @@ public class LayoutRowHtmlTag extends BaseLayoutRowTag {
   protected void writeRowAttributes(Writer out) throws Exception {
     addAttribute("class",  getStyleClass());
     addAttribute("style",  getStyle());
+    addAttribute("id", id);
     JspUtil.writeAttributes(out, attributes);
   }
 

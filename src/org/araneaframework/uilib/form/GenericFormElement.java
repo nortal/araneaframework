@@ -145,7 +145,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   
   
   /**
-   * Converts the element value from control to data item
+   * Converts the value from {@link Control}s to {@link Data}.
    */
   public void convert() {
     try {

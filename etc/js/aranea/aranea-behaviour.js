@@ -31,19 +31,19 @@ function setFormElementContext(el) {
 }
 
 function formElementValidationActionCall(el) {
-  var extraParams = new Hash();
-  var elId = el.getAttribute("id");
-  extraParams[elId] = el.value;
-  araneaPage().action(el, 'bgValidate', elId, el.value, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, extraParams);
+  // element serialization here is crucial, otherwise multi-valued controls only submit the most recent value
+  araneaPage().action(el, 'bgValidate', el.id, null, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, $(el).serialize(true));
 }
 
 /** @since 1.1 */
 function setFormElementValidation(el){
-  if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate')))
+  if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate'))) {
     return;
+  }
 
-  if (($(el).hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true'))
+  if (($(el).hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true')) {
     return;
+  }
 
   var elId = el.getAttribute("id");
   var actionValidate = function(event) {
@@ -138,22 +138,27 @@ var aranea_rules = {
   
   'input.aranea-checkbox' : function(el) {
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
 
   'select.aranea-multi-select' : function(el) {
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-multi-checkbox' : function(el) {
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-radio' : function(el) {
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
 
   'select.aranea-select' : function(el) {
     setFormElementContext(el);
+    setFormElementValidation(el);
   },
   
   'input.aranea-file-upload' : function(el) {

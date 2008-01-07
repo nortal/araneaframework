@@ -120,6 +120,10 @@
     actual application-specific code. A component has (possibly persistent)
     state, life cycle, environment and a messaging mechanism. <programlisting
     role="java">public interface Component extends Serializable {
+  public Scope getScope();             /** @since 1.1 */
+  public Environment getEnvironment(); /** @since 1.1 */
+  public boolean isAlive();            /** @since 1.1 */
+
   public Component.Interface _getComponent();
 
   public interface Interface extends Serializable {
@@ -192,6 +196,15 @@
     basic synchronization). A base class for application development
     <literal>org.araneaframework.core.BaseApplicationComponent</literal> is
     also available.</para>
+    
+    <para>
+    	<literal>Component</literal> methods not dealing with lifecycle or messaging are accessible 
+    	without getting at <literal>Component.Interface</literal>. <literal>Component.getScope()</literal> 
+    	returns scoped identifier that uniquely identifies that <literal>Component</literal> in component
+    	hierarchy. <literal>Component.getEnvironment()</literal> returns information of <literal>Environment</literal> 
+    	in which <literal>Component</literal> lives and <literal>Component.isAlive()</literal> allows
+    	component to check whether it is living at all :). 
+    </para>
 
     <sect2>
       <title>Composite Pattern and Paths</title>
@@ -443,76 +456,22 @@ myEvent.send(null, rootComponent);
     which hides away the Servlet API and allows us to run Aranea on different
     containers (e.g. in a portlet or behind a web service).</para>
 
-    <para>Both <literal>InputData</literal> and <literal>OutputData</literal>
-    have a <emphasis>scope</emphasis>, which is information about the path to
-    the current component. When they are propagated through the component
-    hierarchy the following methods are used to construct the scope:</para>
-
-    <para><informaltable frame="topbot">
-        <tgroup cols="2">
-          <colspec colwidth="1*" />
-
-          <colspec colwidth="2*" />
-
-          <thead>
-            <row>
-              <entry align="left">Method</entry>
-
-              <entry align="left">Description</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry><literal>pushScope(Object step)</literal></entry>
-
-              <entry>Adds child identifier to the end of the current scope,
-              should <emphasis>always</emphasis> be used before the call to
-              the child.</entry>
-            </row>
-
-            <row>
-              <entry><literal>Object popScope()</literal></entry>
-
-              <entry>Removes the last identifier from the scope, should
-              <emphasis>always</emphasis> be used a call to a child.</entry>
-            </row>
-
-            <row>
-              <entry><literal>Path getScope()</literal></entry>
-
-              <entry>Returns the current scope as a
-              <literal>Path.</literal></entry>
-            </row>
-
-            <row>
-              <entry><literal>restoreScope(Path scope)</literal></entry>
-
-              <entry>Restore the scope back to a previously saved one.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable></para>
-
-    <note>
-      <para>These methods should be used only when using
-      <emphasis>Composite</emphasis> components, as framework components are
-      scoped differently.<literal></literal></para>
-    </note>
-
-    <para><literal>InputData</literal> also provides access to the data sent
+    <para><literal>InputData</literal> provides access to the data sent
     to the component. This data comes in two flavours: <itemizedlist
         spacing="compact">
         <listitem>
            
 
-          <literal>getScopedData()</literal>
+          <literal>getScopedData(Path scope)</literal>
 
            returns a 
 
           <literal>java.util.Map</literal>
 
-           with the data sent specially to this component, which is associated with the current scope. 
+           with the data sent specially to <literal>component</literal>, which unique identifier in
+           the component hierarchy is <literal>scope</literal>. To get at this data, one can
+           use construction <literal>inputData.getScopedData(getScope().toPath())</literal> from 
+           a component. 
         </listitem>
 
         <listitem>
@@ -527,84 +486,28 @@ myEvent.send(null, rootComponent);
            with the data sent to the application generally. 
         </listitem>
       </itemizedlist> In case Aranea is running on top of a servlet both these
-    maps will contain only <literal>String</literal>s (or in case you
-    submitted more than one value for a specific key it may contain a
-    <literal>String[]</literal>). In case of the usual path and scope
-    implementation (as dot-separated strings) <emphasis>global data</emphasis>
+    maps will contain only <literal>String</literal>s. If one wants to access
+    multi-valued parameters in servlet environment <literal>StandardServletInputData.getParameterValues(String name)</literal>
+    method should be used (returns <literal>String</literal> array).
+
+    In case of the usual path and scope implementation (as dot-separated strings) <emphasis>global data</emphasis>
     will contain the submitted parameters with no dots in them and
     <emphasis>scoped data</emphasis> will contain the parameters prefixed with
     the current component scope string.</para>
-<!--
-    <para>The main function of <literal>OutputData</literal> is to propagate
-    attributes that are used when delegating rendering to a templating engine
-    or by children to access some general information during rendering. The
-    following methods are used to propagate these attributes:</para>
+    
+    <para>Analogically <literal>OutputData</literal> is Aranea abstraction for response. <literal>HttpOutputData</literal> being
+    the subinterface and <literal>StandardServletOutputData</literal> implementation for servlet environments.</para>
 
-    <informaltable frame="topbot">
-      <tgroup cols="2">
-        <colspec colwidth="1*" />
-
-        <colspec colwidth="2*" />
-
-        <thead>
-          <row>
-            <entry align="left">Method</entry>
-
-            <entry align="left">Description</entry>
-          </row>
-        </thead>
-
-        <tbody>
-          <row>
-            <entry><literal>pushAttribute(Object key, Object
-            value)</literal></entry>
-
-            <entry>Registers the attribute <literal>value</literal> under the
-            key <literal>key</literal>. If some other component have already
-            propagated an attribute under this key, then it will be temporary
-            overridden.</entry>
-          </row>
-
-          <row>
-            <entry><literal>Object popAttribute(Object key)</literal></entry>
-
-            <entry>Deregisters the attribute from under the key
-            <literal>key</literal>. If the attribute was temporary overridden
-            it will restore the previous attribute value.</entry>
-          </row>
-
-          <row>
-            <entry><literal>Object getAttribute(Object key)</literal></entry>
-
-            <entry>Returns the last object registered under key
-            <literal>key</literal>.</entry>
-          </row>
-
-          <row>
-            <entry><literal>Map getAttributes()</literal></entry>
-
-            <entry>Returns all currently registered attributes.</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
--->
-    <para>Finally, as <literal>InputData</literal> and
+    <para>As <literal>InputData</literal> and
     <literal>OutputData</literal> are typically connected, they can be
     retrieved from the other <literal>*Data</literal> structure using
     correspondingly <literal>getOutputData()</literal> and
     <literal>getInputData()</literal> methods.</para>
 
-    <warning>
-      <para>Since the sibling <literal>*Data</literal> structure is not
-      propagated through the component hierarchy is not guaranteed to be
-      scoped correctly!</para>
-    </warning>
-
     <sect2>
       <title>Extensions</title>
 
-      <para>InputData an OutputData both implement a way to extend their
+      <para>Both InputData and OutputData implement a way to extend their
       functionality without wrapping or extending the objects themselves. This
       is achieved by providing the following two methods:</para>
 
@@ -637,7 +540,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
       <para>Although all of the core Aranea abstractions are independent of
       the Servlet API and web in general, we also provide a way to manipulate
-      low-level HTTP constructs. To that goal we provide to interfaces,
+      low-level HTTP constructs. To that goal we provide two interfaces,
       <literal>HttpInputData</literal> and <literal>HttpOutputData</literal>,
       which extend respectively <literal>InputData</literal> and
       <literal>OutputData</literal>.</para>
@@ -972,7 +875,12 @@ if (fileUploadExt.uploadSucceeded()) {
           <term>Synchronized</term>
 
           <listitem>
-             The widget is always accessed by a single thread, therefore there is never any need to think about synchronization. One can assume that there is only one user using the application and program to service this user without any concern for concurrency. 
+             The widget is <emphasis>almost</emphasis> always accessed by a single thread, therefore there is rarely 
+             any need to think about synchronization. Usually one can assume that there is only one user 
+             using the widget at any time and program to service this user without any concern for concurrency.
+             There is only one exception to this: one of the default <literal>Widget</literal> implementations
+             is <literal>BaseApplicationWidget</literal> which allows registration of action listeners (see 
+             <xref linkend="actionlisteners"/>) which can be invoked asynchronously when so desired.
           </listitem>
         </varlistentry>
 
@@ -1037,7 +945,8 @@ if (fileUploadExt.uploadSucceeded()) {
 
           <xref linkend="components-render" />
 
-           ). It may be called more than once (or not at all) during one request-response cycle. 
+           ). It may be called more than once (or not at all) during one request-response cycle. Typically it is called
+           once for each widget that has a rendering template defined.
         </listitem>
       </orderedlist></para>
 
@@ -1073,12 +982,9 @@ if (fileUploadExt.uploadSucceeded()) {
 
               <literal>render()</literal>
 
-               method optionally rendering children as well. The data for rendering will be drawn from the widget fields as well as (possibly) 
-
-              <literal>OutputData</literal>
-
-               attributes. 
-            </listitem>
+               method optionally rendering children as well. The data for rendering will be drawn from the widget fields, children and
+               widget <literal>Environment</literal>.
+			</listitem>
           </varlistentry>
 
           <varlistentry>
@@ -1156,7 +1062,8 @@ if (fileUploadExt.uploadSucceeded()) {
       <para>As one can see, every added child has an identifier which should
       be unique among its siblings. This identifier is used when rendering and
       sending events to the widget in question, to identify it among its
-      peers.</para>
+      peers. Together with widget's parents identifiers this forms a unique identifier (<emphasis>scope</emphasis>)
+      of widget in the component hierarchy.</para>
 
       <para>Typically, children are added when created:</para>
 
@@ -1196,7 +1103,7 @@ if (fileUploadExt.uploadSucceeded()) {
       <literal>enableWidget("myChildWidget")</literal>.</para>
     </sect2>
 
-    <sect2>
+    <sect2 id="EventListeners">
       <title>Event Listeners</title>
 
       <para>Registering event listeners allows widgets to subscribe to some
@@ -1263,16 +1170,23 @@ public void handleEventMyEvent(String parameter) {
       your own global event listener.</para>
     </sect2>
     
-        <sect2>
+   <sect2 id="actionlisteners">
       <title>Action Listeners</title>
-       <para>Registering action listeners allows widgets to subscribe to some
+      <para>Registering action listeners allows widgets to subscribe to some
       specific user generated actions. Actions differ from events in that
       widget lifecycle execution for whole component tree is not triggered
       upon request&mdash;actions are just sent to the receiving widget's <emphasis>ActionListener</emphasis>, 
       which is SOLELY responsible for generating the whole response. For rich UI components this allows a quick
       conversations with server, without requiring full form submits and generating whole view.
       </para>
-      
+
+	<para>Actions are handled by the classes extending <literal>org.araneaframework.core.ActionListener</literal>
+<programlisting role="java">public interface ActionListener extends Serializable {
+  public void processAction(Object actionId, InputData input, OutputData output) throws Exception;
+}</programlisting> and their registration is analogous to event listeners:
+<programlisting role="java">addActionListener("actionId", new SomeActionListener());</programlisting>
+	</para>
+	
  </sect2>
 
     <sect2 id="widgets-environment">
@@ -1290,9 +1204,7 @@ msgCtx.showInfoMessage("Hello world!");</programlisting></para>
       their interface <literal>Class</literal> object as key. All framework
       services in Aranea are accessible only using the environment.</para>
 
-      <para>To find out more about <literal>InputData</literal> and
-      <literal>OutputData</literal> see <xref
-      linkend="core-environment" /></para>
+      <para>To find out more about <literal>Environment</literal> see <xref linkend="core-environment" /></para>
     </sect2>
 
     <sect2>
@@ -1307,8 +1219,7 @@ msgCtx.showInfoMessage("Hello world!");</programlisting></para>
       less.</para>
 
       <para>In addition to event processing it is sometimes useful to do some
-      kind of pre- and post-processing. The
-      <literal>BaseApplicationWidget</literal> has the following methods that
+      kind of preprocessing. The <literal>BaseApplicationWidget</literal> has the following method that
       may be overridden to allow this processing:</para>
 
       <para><programlisting role="java">protected void handleUpdate(InputData input) throws Exception {}</programlisting></para>
@@ -1695,13 +1606,13 @@ getMessageCtx().showInfoMessage(message);
             <row>
                 <entry><literal>void addLocaleChangeListener(LocaleChangeListener listener);</literal></entry>
 
-                <entry>Registers a listener that will be notified when locale is changed.</entry>
+                <entry>Registers a listener (<literal>Component</literal>) that will be notified when locale is changed.</entry>
             </row>
             
              <row>
                 <entry><literal>boolean removeLocaleChangeListener(LocaleChangeListener listener)</literal></entry>
                 
-                <entry>Removes a registered listener so that it will not be notified of locale changes anymore. Returns
+                <entry>Unregisters listener (<literal>Component</literal>) so that it will not be notified of locale changes anymore. Returns
                 whether the listener was found to be present and actually removed.</entry>
             </row>
             </tbody>

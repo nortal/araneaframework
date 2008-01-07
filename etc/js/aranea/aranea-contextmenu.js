@@ -38,9 +38,9 @@ Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE =
 Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE = 
     new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>');
 Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE = 
-    new Template('araneaContextMenu.hide(); araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', null, null, null);');
+    new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE = 
-    new Template('araneaContextMenu.hide(); araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', null, null, function() {}, null);');
+    new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, function() {}, null); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
   if (menu.label) {
     var entrytemplate = Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE;
@@ -69,14 +69,28 @@ Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
 };
 
 Aranea.ContextMenuHolder = Class.create();
+Aranea.ContextMenuHolder.setMenuOptions = function(menu) {
+  if (menu.submenu) {
+    Object.extend(menu.submenu, menu.options);
+    $A(menu.submenu).each(function(entry) {
+      Object.extend(entry, menu.options);
+    });
+
+    Aranea.ContextMenuHolder.setMenuOptions(menu.submenu);
+  }
+};
 Aranea.ContextMenuHolder.prototype = {
   menus: {},
 
   initialize: function() {
   },
 
-  addMenu: function(widgetId, value) {
-    this.menus[widgetId] = value;
+  addMenu: function(widgetId, menu, options) {
+    this.menus[widgetId] = menu;
+    this.menus[widgetId].options = Object.extend({
+      updateRegions: function() { return null; },
+    }, options || {});
+    Aranea.ContextMenuHolder.setMenuOptions(this.menus[widgetId]);
   },
 
   getMenus: function() {
@@ -87,6 +101,7 @@ Aranea.ContextMenuHolder.prototype = {
 Aranea.ContextMenu = Class.create();
 Aranea.ContextMenu.prototype = {
   contextMenuHolder: null,
+  triggeringElement: null,
 
   initialize: function(contextMenuHolder) {
     this.contextMenuHolder = contextMenuHolder;
@@ -99,8 +114,8 @@ Aranea.ContextMenu.prototype = {
     return node;
   },
   
-  acquireWidgetId: function(element) {
-  	var widgetMarker = AraneaPage.findWidgetMarker(element);
+  acquireWidgetId: function(triggeredElement) {
+  	var widgetMarker = AraneaPage.findWidgetMarker(triggeredElement);
   	var widgetId = null;
   	if (widgetMarker)
       widgetId = (widgetMarker.readAttribute('arn-widgetId'));
@@ -112,9 +127,12 @@ Aranea.ContextMenu.prototype = {
     if (this.contextMenuHolder.getMenus().length == 0)
       return;
 
-  	var widgetId = this.acquireWidgetId(Event.element(event));
-    if (!widgetId)
+    this.triggeringElement = Event.element(event);
+  	var widgetId = this.acquireWidgetId(this.triggeringElement);
+    if (!widgetId) {
+      this.triggeringElement = null;
       return;
+    }
 
     var r = this.buildMenu(widgetId);
     var x = Event.pointerX(event);
@@ -123,12 +141,14 @@ Aranea.ContextMenu.prototype = {
     r.style.top = y+'px';
     r.style.left = x+'px';
     var div = Aranea.ContextMenuHTMLBuilder.createMenuDIV();
+    
     div.appendChild(r);
     div.show();
     Event.stop(event);
   },
 
   hide: function(event) {
+    //this.triggeringElement = null;
   	// if event occurred in context menu itself, menu should be cleared by its own handlers
     if (event && ($(Event.element(event))).descendantOf($(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID)))
       return true;
@@ -138,6 +158,10 @@ Aranea.ContextMenu.prototype = {
       z.removeChild(x.first());
     }
     if (z) z.hide();
+  },
+  
+  getTriggeringElement: function() {
+    return this.triggeringElement;
   }
 };
 

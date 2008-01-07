@@ -1,5 +1,34 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2007.10.31    | Aranea 1.1-M5
+
+Features and Improvements
+    Proxy*Listeners are able to invoke private & protected handleXXX* methods | See #526
+    Support for key combinations and meta keys in JSP keyboard handler tags   | See #472
+    Standardized invalid form element marking                                 | See #534
+    FormElement.convert() never changes Control content                       | See #529
+    Some scripts are now only loaded on-demand (rich editor)                  | See #162
+    <ui:radioSelect/> and <ui:checkboxMultiSelect/> support selection         | See 
+    by clicking on radio/checkbox labels                                      |     #541
+    ConverterFactory changed to support class extension easily                | See #295
+
+    Documentation updates -- no out-of-date or plain wrong information should | See  
+    have remained in 1.1 reference manual. Still incomplete though.           |  change #538
+
+    Aranea 1.1 examples updated                                               | See change #538
+
+Bugfixes
+    FormElementLabelHtmlTag.setStyle(String) did not apply to HTML            | See #533
+    Fixed circular lazyness problem causing too many refreshes in ListWidget  | See #540
+
+Deprecation & API changes
+	Deprecated BeanFormWidget.writeBean() & readBean() were removed           | See #474
+	Removed throw clauses from                                                | --------
+	                           MemoryBasedListDataprovider.refreshData()      |   
+	                           UpdateRegionProvider.getRegions()              | See
+	                           ListOrder.init(), ListOrder.destroy()          |   #137
+	                           ListFilter.init(), ListFilter.destroy()        | --------
+---------------------------------------------------------------------------------------------
 2007.10.01    | Aranea 1.1-M4
 
 Features and Improvements

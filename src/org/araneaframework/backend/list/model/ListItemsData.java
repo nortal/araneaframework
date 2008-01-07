@@ -17,17 +17,27 @@
 package org.araneaframework.backend.list.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
+ * Back-end list query results.
+ *
+ * @see ListQuery
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ListItemsData implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
+	/** @since 1.1 */
+	public static final ListItemsData EMPTY =
+		new ListItemsData(Collections.EMPTY_LIST, new Long(0L));
 
-	protected List itemRange;
+	private List itemRange;
 
-	protected Long totalCount;
+	private Long totalCount;
 	
 	/** @since 1.0.11 */
 	public ListItemsData() {}

@@ -42,10 +42,34 @@
 						</ui:cell>
 					</ui:formElement>
 				</ui:row>
+				
+				<ui:row>
+					<ui:formElement id="meetingroom">
+						<ui:cell>
+							<ui:label/>
+						</ui:cell>
+						<ui:cell colspan="3">
+							<ui:select/>								
+						</ui:cell>
+					</ui:formElement>
+				</ui:row>
+						
+				<ui:row>
+					<ui:formElement id="attendees">
+						<ui:cell>
+							<ui:label/>
+						</ui:cell>
+						<ui:cell colspan="3">
+							<ui:multiSelect/>								
+						</ui:cell>
+					</ui:formElement>
+				</ui:row>
+				
+				
 				</tui:componentForm>
 				
 				<tui:componentActions>
-					<ui:eventButton labelId="common.Submit" eventId="dummy" eventTarget="${formFullId}"/>
+					<ui:eventButton labelId="common.Submit" eventId="submit" eventTarget="${formFullId}"/>
 				</tui:componentActions>
 			</tui:component>
 		</ui:form>
@@ -78,10 +102,32 @@
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
+					
+					<ui:row>
+						<ui:formElement id="meetingroom">
+							<ui:cell>
+								<ui:label/>
+							</ui:cell>
+							<ui:cell colspan="3">
+								<ui:select/>								
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+							
+					<ui:row>
+						<ui:formElement id="attendees">
+							<ui:cell>
+								<ui:label/>
+							</ui:cell>
+							<ui:cell colspan="3">
+								<ui:multiSelect/>								
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
 
 				</tui:componentForm>
 				<tui:componentActions>
-					<ui:eventButton labelId="common.Submit" eventId="dummy" eventTarget="${formFullId}"/>
+					<ui:eventButton labelId="common.Submit" eventId="submit" eventTarget="${formFullId}"/>
 				</tui:componentActions>
 			</tui:component>
 		</ui:form>

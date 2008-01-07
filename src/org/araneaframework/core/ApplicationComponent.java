@@ -21,6 +21,7 @@ import java.util.Map;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
+import org.araneaframework.Scope;
 import org.araneaframework.Viewable;
 
 /**
@@ -39,6 +40,9 @@ public interface ApplicationComponent extends Component, Serializable, Composite
    * A model based on which a view can be constructed.
    */
   public interface ComponentViewModel extends Serializable {
+    /** @since 1.1 */
+    public Scope getScope();
+
     /**
      * Return component's child components.
      */

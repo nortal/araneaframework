@@ -86,7 +86,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     isSpringWebPresent = 
     	isSpringWebPresent ? WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null : isSpringWebPresent;
     
-    if (isSpringWebPresent) {
+    if (isSpringWebPresent()) {
       //Getting the Spring loaded main web application context
       webCtx  = WebApplicationContextUtils.getWebApplicationContext(getServletContext());        
       beanFactory = ((ConfigurableApplicationContext) webCtx).getBeanFactory();           
@@ -163,10 +163,22 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   protected Map getEnvironmentEntries() { 
     Map result = new HashMap();
     result.put(BeanFactory.class, beanFactory);   
-    if (isSpringWebPresent) {
+    if (isSpringWebPresent()) {
       result.put(ApplicationContext.class, webCtx);
       result.put(WebApplicationContext.class, webCtx);
     }
     return result;
+  }
+
+  /**
+   * Returns <code>true</code> iff Spring web application context is present. When
+   * web application context is present, dispatcher servlet will use it, instead of
+   * creating new BeanFactory itself. 
+   * 
+   * This method should only be called after {@link AraneaSpringDispatcherServlet#init()} has run.
+   * @since 1.1
+   */
+  protected boolean isSpringWebPresent() {
+    return isSpringWebPresent;
   }
 }

@@ -133,17 +133,25 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * Sets {@link Control}.
    * 
    * @param control {@link Control}.
-   * @throws Exception 
    */
   public void setControl(Control control) {
     Assert.notNullParam(control, "control");
     
+    destroyControl();
+
     this.control = control;
     
     control.setFormElementCtx(this);
     
     if (isInitialized())
       control._getComponent().init(getScope(), getEnvironment());
+  }
+
+  /** @since 1.1 */
+  protected void destroyControl() {
+    if (this.control != null && this.control.isAlive()) {
+      this.control._getComponent().destroy();
+    }
   }
 
   /**
@@ -312,8 +320,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   }
 
   protected void destroy() throws Exception {
-    if (getControl() != null) 
-      getControl()._getComponent().destroy();
+    destroyControl();
   }
 
   /**

@@ -49,11 +49,10 @@
   <sect1 id="systemTags">
     <title>System Tags</title>
 
-    <para>Aranea JSP rendering should start from some root JSP (called
-    <emphasis>JSP template</emphasis>) that will include the root widgets. To
+    <para>Aranea JSP rendering should start from some root JSP (<emphasis>root template</emphasis>) that will 
+    include the root widget(s) (which typically are some kind of flowcontainers or menus). To
     support widgets and other custom tags one needs to make sure that the
-    template looks something like this: <programlisting role="xml">
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    template looks something like this: <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
   xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
@@ -79,8 +78,7 @@
       &lt;/ui:body&gt;   
     &lt;/html&gt;
   &lt;/ui:widgetContext&gt;
-&lt;/jsp:root&gt;
-</programlisting> Next are described all these tags except
+&lt;/jsp:root&gt;</programlisting> Next are described all these tags except
     &lt;ui:widgetInclude&gt;, which is described in the following
     section.</para>
 
@@ -170,7 +168,7 @@
       The filter provides the functionality of reading files from the jars on
       the server.</para>
 
-      <para>If no attributes specified, the default group of css files are
+      <para>If no are attributes specified, the default group of css files are
       loaded.</para>
 
       <sect3>
@@ -230,7 +228,8 @@
       <para>This tag will render an HTML &lt;body&gt; tag with Aranea JSP
       specific <emphasis>onload</emphasis> and <emphasis>onunload</emphasis>
       events attached. It usually writes out some other page initialization
-      scripts too, depending on the circumstances.</para>
+      scripts too, depending on the circumstances. It must be present in
+      a JSP template, otherwise most client-side functionality will cease to function.</para>
 
       <sect3>
         <title>Attributes</title>
@@ -687,6 +686,17 @@
                 'return', 'escape', 'backspace', 'tab', 'shift', 'control',
                 'space', 'f1', 'f2', ..., 'f12'.</entry>
               </row>
+              
+              <row>
+                <entry>keyCombo</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Key combination, which should trigger the event. It can
+                is specified with key aliases separated with &quot;+&quot; signs.
+                For example "ctrl+alt+f1", "alt+r" etc.</entry>
+              </row>
+              
             </tbody>
           </tgroup>
         </informaltable></para>
@@ -802,6 +812,16 @@
                 on a US keyboard), a space (' '), or one of the following:
                 'return', 'escape', 'backspace', 'tab', 'shift', 'control',
                 'space', 'f1', 'f2', ..., 'f12'.</entry>
+              </row>
+              
+              <row>
+                <entry>keyCombo</entry>
+
+                <entry><emphasis>no</emphasis></entry>
+
+                <entry>Key combination, which should trigger the event. It can
+                is specified with key aliases separated with &quot;+&quot; signs.
+                For example "ctrl+alt+f1", "alt+r" etc.</entry>
               </row>
             </tbody>
           </tgroup>

@@ -38,6 +38,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
 public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   protected String value;
   protected String onChangePrecondition;
+  protected String htmlId;
 
   {
     baseStyleClass = "aranea-radio";
@@ -66,6 +67,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     }
     
     JspUtil.writeOpenStartTag(out, "input");
+    JspUtil.writeAttribute(out, "id", htmlId);
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
@@ -99,6 +101,17 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     this.value = (String)evaluateNotNull("value", value, String.class);
   }
   
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "The HTML id this radio button."
+   * @since 1.1
+   */
+  public void setHtmlId(String htmlId) throws JspException  {
+    this.htmlId = (String)evaluate("htmlId", htmlId, String.class);
+  }
+
   /**
    * @jsp.attribute
    *   type = "java.lang.String"

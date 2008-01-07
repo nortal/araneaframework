@@ -1,0 +1,197 @@
+<sect1 id="contextmenu">
+	<title>Context Menu</title>
+     Context menu is the menu that pops up when mouse right-click is made 
+     on some item (widget) in an UI.
+
+    <sect2 id="ContextMenuWidget_ContextMenuItem">
+		<title>ContextMenuWidget &amp; ContextMenuItem</title>
+
+		<para>
+			Widget that represents context menu content is called <literal>ContextMenuWidget</literal>. By convention, it is
+			usually added to component hierarchy as a child of the widget for which it provides context menu.
+<programlisting role="java">widgetWithContextMenu.addWidget("contextmenu", new ContextMenuWidget(...));</programlisting>	
+		</para>
+		
+		<para>
+			<literal>ContextMenuWidget</literal> sole constructor has a single <literal>ContextMenuItem</literal> parameter.
+			<literal>ContextMenuItem</literal> is a hierarchical container for menu items, consisting of menu entries and entry
+			labels. There are two types of menu entries: <literal>ContextMenuEventEntry</literal> and <literal>ContextMenuActionEntry</literal> 
+			&mdash;which respectively produce events (see  <xref linkend="EventListeners" />) or actions (see <xref linkend="actionlisteners" />)  
+			upon selection of context menu item. Except for produced event type, these entries are constructed identically.
+			
+			Creating context menu entry which tries to invoke widget event listener of <literal>someWidget</literal> without supplying
+			any event parameters is done as follows:<programlisting role="java">ContextMenuEntry entry = new ContextMenuEventEntry("someEvent", someWidget);</programlisting>
+		</para>
+		
+		<para>
+			When menu entry produced event requires some parameters, 
+			javascript function must be defined that returns desired parameters. When left undefined,
+			<literal>function() { return null; }</literal> is used. Sample javascript function which always
+			returns value of some fixed DOM element as event parameter looks like this:
+<programlisting role="javascript">var contextMenuEventParameterSupplier = function() {
+  // make sure that function call was really triggered by menu selection
+  if (araneaContextMenu.getTriggeringElement()) {
+    // supply value of DOM element 'someElement' as event parameter
+    return $('someElement').value;
+  }
+  return null;
+};</programlisting>
+		</para>
+		
+		<para>Corresponding menu entry which detects and submits event parameters is created similarly to previous:
+		<programlisting role="java">ContextMenuEntry entry = new ContextMenuEventEntry("someEvent", someWidget, "contextMenuEventParameterSupplier");</programlisting>
+		</para>
+		
+		<para>
+			Whole construction of single multi-element and multi-level <literal>ContextMenuWidget</literal> will look similar to this:
+<programlisting role="java">ContextMenuItem root = new ContextMenuItem();
+// entry that produces event when clicked on
+ContextMenuItem firstEntry = 
+  new ContextMenuItem(
+    getL10nCtx().localize("someLabel"), // label 
+    new ContextMenuEventEntry("someEvent", this));
+// entry that just functions as submenu
+ContextMenuItem secondEntry = new ContextMenuItem(getL10nCtx().localize("submenu"));
+// action producing entry in a submenu
+ContextMenuItem thirdEntry = 
+  new ContextMenuItem(
+    getL10nCtx().localize("someOtherLabel"), 
+    new ContextMenuActionEntry("someAction", this, "contextMenuActionParameterSupplier"));
+secondEntry.addMenuItem(thirdEntry);
+root.addMenuItem(firstEntry);
+root.addMenuItem(secondEntry);
+</programlisting>
+		</para>
+
+    </sect2>
+    
+    <sect2 id="ContextMenuJSP">
+    	<title>Rendering context menus with JSP template</title>
+    	
+    	To get functional context menus on client-side, template must define the sections belonging to a widget which has the context
+    	menu and register the context menu. Context menus are known to work in Internet Explorer and Mozilla Firefox browsers.
+
+    	<sect3 id="uicontextmenu">
+    		<title>&lt;ui:contextMenu&gt;</title>
+    		<para>
+    			Registers the context menu in current template for widget with <literal>id</literal>.
+    		</para>
+    		
+    		  <sect4 id="uicontextmenuattrs">
+        <title>Attributes</title>
+
+        <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of the <literal>ContextMenuWidget</literal></entry>
+              </row>
+              <row>
+                <entry>updateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Regions which should be updated when context menu event has been processed.</entry>
+              </row>
+              <row>
+                <entry>globalUpdateRegions</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Global regions which should be updated when context menu event has been processed.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect4>
+    	</sect3>
+
+    	<para>
+    	As one widget might be rendered in separate sections in a template, all these sections need to be identified so that
+    	correct context menu can be detected at all times. This is done with <literal>&lt;ui:widgetMarker&gt;</literal> tag
+    	surrounding the widget sections.
+    	</para>
+    	
+    	    	<sect3 id="uiwidgetmarker">
+
+    		<title>&lt;ui:widgetMarker&gt;</title>
+    		<para>
+    			Defines the surrounded section as belonging to a widget with <code>id</code>. It writes out some
+    			HTML tag with <literal>class</literal> attribute value set to <literal>widgetMarker</literal>.
+    		</para>
+    		
+    		  <sect4 id="uiwidgetmarkerattrs">
+        <title>Attributes</title>
+
+        <informaltable frame="topbot">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+
+                <entry>Required</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>id</entry>
+                <entry><emphasis>yes</emphasis></entry>
+                <entry>ID of the widget which section is surrounded by this marker tag.</entry>
+              </row>
+              <row>
+                <entry>tag</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>HTML tag to render the marker with. Default is HTML <literal>div</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect4>
+    	</sect3>
+    	
+    	    	<sect3 id="contextmenuexamples">
+    		<title>Example: JSP template containing context menu.</title>
+<programlisting role="xml"><![CDATA[<!-- Defines context menu for a ListWidget "list" -->
+<ui:list id="list">
+  <ui:listFilter> ... </ui:listFilter>
+  <ui:listRows>
+    <!-- marker surrounding widget with identifier "list" -->  
+    <ui:widgetMarker id="list" tag="tbody">
+      <ui:row id="${listFullId}.row${rowRequestId}">
+		<!-- cells -->
+      </ui:row>
+	</ui:widgetMarker>
+  </ui:listRows>
+
+  <!-- Context menu widget with conventional id -->
+  <ui:contextMenu id="list.contextmenu"/>
+</ui:list>
+]]></programlisting>	
+    	</sect3>
+
+	</sect2>    	
+    	
+</sect1>

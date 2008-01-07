@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
@@ -33,6 +34,8 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 
 /**
@@ -63,6 +66,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	
 	protected boolean events = true;
 	protected boolean validateOnEvent = false;
+	/** @since 1.1 */
 	protected boolean backgroundValidation = false;
 		
 	protected String accessKey;
@@ -138,6 +142,20 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		backgroundValidation = false;
 	}
 
+    /**
+     * Writes out an attribute that correctly configures background validation for formelement rendered with this tag.
+     * Note that when application wide validation settings are the same as for that formelement, no attribute is 
+     * written out. 
+     * 
+     * IMPL: writes out arn-bgValidate='booleanvalue' when necessary. 
+     * 
+     * @since 1.1 */
+    protected void writeBackgroundValidationAttribute(Writer out) throws Exception {
+      if (this.backgroundValidation != 
+            ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))) {
+        JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, String.valueOf(this.backgroundValidation));
+      }
+    }
 	/* ***********************************************************************************
 	 * Tag attributes
 	 * ***********************************************************************************/
