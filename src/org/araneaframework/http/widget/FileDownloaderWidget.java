@@ -16,6 +16,8 @@
 
 package org.araneaframework.http.widget;
 
+import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -47,6 +49,11 @@ public class FileDownloaderWidget extends DownloaderWidget {
     super(fileContent, contentType);
     Assert.notEmptyParam(fileName, "fileName");
     this.fileName = normalizeFileName(fileName);
+  }
+
+  /** @since 1.1 */
+  public FileDownloaderWidget(byte[] fileContent, Map headers) {
+    super(fileContent, headers);
   }
   
   /**
@@ -94,7 +101,13 @@ public class FileDownloaderWidget extends DownloaderWidget {
     super.action(path, input, output);
 
     HttpServletResponse response = ServletUtil.getResponse(output);
-    response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
+    if (headers != null) {
+      for (Iterator i = headers.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry)i.next();
+        response.setHeader((String)entry.getKey(), (String)entry.getValue());
+      }
+    } else
+      response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
 
     close();
   }

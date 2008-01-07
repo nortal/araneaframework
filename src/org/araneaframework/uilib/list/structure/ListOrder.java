@@ -29,6 +29,8 @@ import org.araneaframework.uilib.list.OrderInfo;
  * <code>VariableResolvers</code> provides).
  * 
  * @see org.araneaframework.uilib.list.OrderInfo
+ * 
+ * @author Rein Raudjärv
  */
 public interface ListOrder extends Serializable {
 	

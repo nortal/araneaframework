@@ -80,7 +80,7 @@ public class Data implements java.io.Serializable, FormElementAware {
   
   /**
    * Sets the value of this {@link Data} without modifying underlying {@link Control}.
-   * This is used on {@link FormElement} conversion&mdash;which should not affect {@Control} values
+   * This is used on {@link FormElement} conversion&mdash;which should not affect {@link Control} values
    * read from request. 
    *  
    * @since 1.0.12 */

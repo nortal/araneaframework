@@ -20,6 +20,16 @@ import java.sql.ResultSet;
 
 
 /**
+ * ResultSet column reader.
+ * <p>
+ * Method {@link #readFromResultSet(String, ResultSet, Class)} reads the
+ * column <code>columnName</code> and converts it into the given <code>javaType</code>.
+ * 
+ * @see ResultSet
+ * @see DefaultResultSetColumnReader
+ * @see ConverterBasedColumnReader
+ * @see BooleanColumnReader
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ResultSetColumnReader {
@@ -28,8 +38,9 @@ public interface ResultSetColumnReader {
    * This method should read some custom Java Object from the given <code>ResultSet</code> column.
    * @param columnName column in <code>ResultSet</code>.
    * @param resultSet JDBC result set.
-   * @param javaType TODO
+   * @param javaType java type to read to.
    * @return Custom Java Object from the given <code>ResultSet</code> column.
    */
-  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
+  Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
+  
 }

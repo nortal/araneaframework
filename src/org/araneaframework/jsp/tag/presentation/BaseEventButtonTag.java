@@ -59,6 +59,11 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
     return result;
   }
   
+  /** @since 1.1 */
+  protected boolean isDisabled() {
+    return Boolean.valueOf(disabled).booleanValue();
+  }
+  
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/  

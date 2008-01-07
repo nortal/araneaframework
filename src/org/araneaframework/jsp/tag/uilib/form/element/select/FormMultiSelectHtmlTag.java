@@ -70,6 +70,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     if (viewModel.isDisabled())
       JspUtil.writeAttribute(out, "disabled", "true");
     JspUtil.writeAttributes(out, attributes);
+    writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartTag(out);      
     
     for(Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {

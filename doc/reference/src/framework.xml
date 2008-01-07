@@ -251,9 +251,9 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
      return root;
    }
-}</programlisting> And one can then use such a servlet to configure Aranea in
-      a web application as usually replacing the standard dispatcher servlet
-      with our custom one.</para>
+}</programlisting> One can then use such a servlet to configure Aranea in
+      a web application as by replacing the standard dispatcher servlet
+      with the custom one in <literal>WEB-INF/web.xml</literal>.</para>
     </sect2>
   </sect1>
 
@@ -262,8 +262,9 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
     <para>Aranea framework is made up of the same Components, Services and
     Widgets that are also used to develop Aranea applications. Each component
-    performs a single well-defined function and may depend on other components
-    only via Environment. The framework components mostly fall in one of the
+    performs a single well-defined function and depends on its parents only
+    through the <literal>Environment</literal> where component lives. The
+    framework components mostly fall in one of the
     three following categories:</para>
 
     <para><variablelist>
@@ -271,15 +272,14 @@ class MyServlet extends BaseAraneaDispatcherServlet {
           <term>Filter</term>
 
           <listitem>
-            <para>Filter components are the simplest. The component contains a
+            <para>Filter components are the simplest. The component (typically <literal>Service</literal>, see <xref linkend="core-services"/>) contains a
             single unnamed child and implements the
             <emphasis>Filter</emphasis> pattern by either passing each call to
             the child or not. However in addition it may enrich the child's
             environment with contexts and provide more functionality like
             exception handling or synchronization. Typical examples of filters
             are localization filter (provides a localization context),
-            synchronization filter (synchronizes on
-            <literal>action()</literal> method) and transactional filter that
+            synchronization filter (synchronizes on <literal>action()</literal> method) and transactional filter that
             does not let through double submits.</para>
           </listitem>
         </varlistentry>
@@ -859,7 +859,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Java
               class:</emphasis></entry>
 
-              <entry><literal>StandardCriticalExceptionHandlingFilterService</literal></entry>
+              <entry><literal>StandardFileUploadFilterService</literal></entry>
             </row>
 
             <row>
@@ -1274,7 +1274,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     </sect2>
 
     <sect2 id="araneaSerializingAudit">
-      <title>Serialization Control Filter</title>
+      <title>Component Serialization Auditing Filter</title>
 
       <informaltable frame="topbot">
         <tgroup cols="2">
@@ -1315,7 +1315,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
         </tgroup>
       </informaltable>
 
-      <para>Serializes the the session during the request routing. This filter
+      <para>Always serializes the the session during the request routing. This filter
       helps to be aware of serializing issues during development as when the
       session does not serialize, exception is always thrown. In production
       configuration, this filter should never be enabled, thus it is disabled

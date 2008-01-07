@@ -17,6 +17,9 @@
 package org.araneaframework.http.util;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.core.Assert;
 
@@ -32,6 +35,17 @@ public class JsonObject implements Serializable {
 
   public JsonObject() {
     buf.append('{');
+  }
+  
+  public JsonObject(Map map) {
+    this();
+    for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Entry) i.next();
+      if (entry.getValue() instanceof String)
+        setStringProperty(entry.getKey().toString(), (String)entry.getValue());
+      else
+        setProperty(entry.getKey().toString(), String.valueOf(entry.getValue()));
+    }
   }
 
   /**
@@ -85,5 +99,4 @@ public class JsonObject implements Serializable {
     buf.deleteCharAt(buf.length() - 1);
     return string;
   }
-
 }

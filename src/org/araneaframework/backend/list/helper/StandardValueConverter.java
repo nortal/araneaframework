@@ -12,50 +12,48 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.backend.list.helper;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.memorybased.expression.Value;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.util.Converter;
 
 
 /**
  * ValueConverter that has a map of Value names and their <code>Converter</code>
- * objects. It also has a global <code>Converter</code> which is used by
- * default.
+ * objects.
+ * 
+ * @see Converter
+ * 
+ * @author Rein Raudjärv
+ * 
+ * @since 1.1
  */
-public class ConverterManager implements ValueConverter {
-	private Converter globalConverter = null;
+public class StandardValueConverter implements ValueConverter {
 
-	private Map converters = new HashMap();
-
-	public void addGlobalConverter(Converter converter) {
-		this.globalConverter = converter;
-	}
+	/** Value name --> Converter that is used by convert() method */
+	private final Map converters = new HashMap();
 
 	public void addConverter(String valueName, Converter converter) {
+		Assert.notNullParam(converter, "converter");
 		this.converters.put(valueName, converter);
 	}
 
 	public Object convert(Value value) {
-		if (this.globalConverter == null && this.converters.size() == 0) {
-			throw new RuntimeException("No converters provided");
+		// Find Converter
+		Converter converter = (Converter) this.converters.get(value.getName());
+		if (converter == null) {
+			// No Converter registered
+			return value.getValue();
 		}
-		String name = value.getName();
-		if (name != null) {
-			Converter converter = (Converter) this.converters.get(name);
-			if (converter != null) {
-				return converter.convert(value.getValue());
-			}
-		}
-		if (this.globalConverter != null) {
-			return this.globalConverter.convert(value.getValue());
-		}
-		throw new RuntimeException("Either converter for value with name "
-				+ name + " nor global converter provided");
+
+		// Convert
+		return converter.convert(value.getValue());
 	}
 }

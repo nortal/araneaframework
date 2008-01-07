@@ -28,29 +28,34 @@
 
 				<!-- Body -->
 				<tui:componentList>
+					<ui:updateRegionRows id="simpleListBody">
 
 					<!-- Title -->
-					<tui:componentListHeader/>
+					<tui:componentListHeader updateRegions="simpleListBody, ${listId}lfooter"/>
 
-					<!-- Body -->
-					<ui:listRows>
-						<ui:row>
-							<ui:cell>
-								<c:out value="${row.booleanValue}" />
-							</ui:cell>
-							<ui:cell>
-								<c:out value="${row.stringValue}" />
-							</ui:cell>
-							<ui:cell>
-								<c:out value="${row.longValue}" />
-							</ui:cell>
-						</ui:row>
-					</ui:listRows>
+						<!-- Body -->
+						<ui:listRows>
+							<ui:row>
+								<ui:cell width="33%">
+									<c:out value="${row.booleanValue}" />
+								</ui:cell>
+								<ui:cell width="33%">
+									<c:out value="${row.stringValue}" />
+								</ui:cell>
+								<ui:cell width="33%">
+									<c:out value="${row.longValue}" />
+								</ui:cell>
+							</ui:row>
+						</ui:listRows>
+
+					</ui:updateRegionRows>
 
 				</tui:componentList>
 
 				<!-- Sequence -->
-				<tui:componentListFooter/>
+				<ui:updateRegion id="${listId}lfooter">
+					<tui:componentListFooter updateRegions="simpleListBody, ${listId}lfooter"/>
+				</ui:updateRegion>
 
 			</tui:component>
 		</ui:list>

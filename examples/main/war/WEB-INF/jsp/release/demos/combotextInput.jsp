@@ -25,12 +25,12 @@
 								<ui:label/>
 							</ui:cell>
 	
-							<ui:cell>
+							<ui:cell width="50%">
 								<ui:comboTextInput/>
 							</ui:cell>
 						</ui:formElement>
 
-						<ui:cell />
+						<ui:cell width="0"/>
 					</ui:row>
 
 				</tui:componentForm>

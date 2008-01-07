@@ -1,6 +1,8 @@
 package org.araneaframework.example.main.release.demos;
 
+import java.util.Random;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.release.features.ExampleData;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ComboTextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -17,6 +19,22 @@ public class ComboTextInputDemoWidget extends TemplateBaseWidget {
 
 		form = new FormWidget();
 		ComboTextControl control = new ComboTextControl();
+		
+		addPredefinedNameInputs(control);
+
+	    form.addElement("comboInput", "combo.demo.fieldinput", control, new StringData(), false);
+
+		addWidget("form", form);
+	  }
+	  
+	  public void handleEventSubmit() throws Exception {
+		  if (form.convertAndValidate()) {
+			  getMessageCtx().showInfoMessage( t("combo.submitmessage") + " " + (form.getValueByFullName("comboInput")));
+		  }
+	  }
+
+	private void addPredefinedNameInputs(ComboTextControl control) {
+		Random rn = new Random();
 
 		control.addPredefinedInput("Raido Türk");
 		control.addPredefinedInput("Lauri Tulmin");
@@ -33,15 +51,18 @@ public class ComboTextInputDemoWidget extends TemplateBaseWidget {
 		
 		control.addPredefinedInput("Tuuli Semevsky");
 		control.addPredefinedInput("Andre Krull");
-
-	    form.addElement("comboInput", "combo.demo.fieldinput", control, new StringData(), false);
-
-		addWidget("form", form);
-	  }
-	  
-	  public void handleEventSubmit() throws Exception {
-		  if (form.convertAndValidate()) {
-			  getMessageCtx().showInfoMessage( t("combo.submitmessage") + " " + (form.getValueByFullName("comboInput")));
-		  }
-	  }
+		
+	    int j = 0;
+		for (int c = 1 ; c < 100 && j < 1000; c++) {
+			for (int i = 0; i <  ExampleData.males.length && j < 1000; i++) {
+				control.addPredefinedInput(ExampleData.males[i] + " " + ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+				j++;
+			}
+			
+			for (int i = 0; i <  ExampleData.females.length && j < 1000; i++) {
+				control.addPredefinedInput(ExampleData.females[i] + " " + ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+				j++;
+			}
+		}
+	}
 }

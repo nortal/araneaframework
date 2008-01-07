@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.service;
 
+import java.util.Map;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.http.widget.FileDownloaderWidget;
 import org.araneaframework.uilib.support.FileInfo;
@@ -36,11 +37,15 @@ public class FileDownloaderService extends FileDownloaderWidget {
   public FileDownloaderService(byte[] fileContent, String contentType, String fileName) {
     super(fileContent, contentType, fileName);
   }
+  
+  /** @since 1.1 */
+  public FileDownloaderService(byte[] fileContent, Map headers) {
+    super(fileContent, headers);
+  }
 
   protected void close() {
     //Ensure that allow to download only once...
     ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
     mngCtx.close(mngCtx.getCurrentId());
   }
-
 }

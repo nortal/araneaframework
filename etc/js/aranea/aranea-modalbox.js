@@ -21,17 +21,45 @@
  */
 
 Aranea.ModalBox = {};
-Aranea.ModalBox.show = function() {
-	Modalbox.show(
-		_ap.getSubmitURL(_ap.getSystemForm().araTopServiceId.value, _ap.getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
-		{
-			overlayClose: false, 
-			width: 800
-		}
+Aranea.ModalBox.ModalBoxFileName = 'js/modalbox/modalbox.js';
+Aranea.ModalBox.Options = null;
+
+Aranea.ModalBox.show = function(options) {
+  var showfunc = function() {
+  Modalbox.show(
+      araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value, araneaPage().getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
+      options
 	);
-}
+  };
+
+  showfunc();
+
+  /* TODO: lazyload
+  var importname = AraneaPage.getFileImportString(Aranea.ModalBox.ModalBoxFileName);
+  var modalboxloaded = function() { return window[Aranea.ModalBox.ModalBoxFileName]; };
+  
+  Aranea.ScriptLoader.loadHeadScript({
+  	scriptFile: importname, 
+  	scriptToExecute : null, 
+  	loadedCondition : modalboxloaded, 
+  	executionTryInterval: 10
+  });
+  
+  var lazyshow = Aranea.ScriptLoader.createPeriodicalConditionalExecutor(showfunc, modalboxloaded, 10);
+  lazyshow(); */
+};
+
+Aranea.ModalBox.afterLoad = function(content) {
+  araneaPage().debug("Content = " + content);
+  if (content == '') {
+    var systemForm = araneaPage().getSystemForm();
+    if (systemForm.transactionId)
+      systemForm.transactionId.value = 'override';
+    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+  }
+};
 
 Aranea.ModalBox.close = function() {
 	if (Modalbox)
 		Modalbox.hide();
-}
+};

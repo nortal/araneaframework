@@ -23,6 +23,9 @@ import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorE
 import org.araneaframework.uilib.list.OrderInfo;
 
 
+/**
+ * @author Rein Raudjärv
+ */
 public class SimpleFieldOrder implements FieldOrder {
 
 	private static final long serialVersionUID = 1L;

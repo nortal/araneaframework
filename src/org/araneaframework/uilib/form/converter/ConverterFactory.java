@@ -31,9 +31,9 @@ import org.araneaframework.uilib.support.ConverterKey;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
  */
 public class ConverterFactory implements ConverterProvider {
-  protected static final Map converters = new HashMap();
-
-  private static ConverterProvider instance = null;
+  /** @since 1.1 */
+  public static final ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
+  protected final Map converters = new HashMap();
 
   protected ConverterFactory() {
     //String -> Type
@@ -97,18 +97,17 @@ public class ConverterFactory implements ConverterProvider {
   }
 
   /**
-   * Returns an instance of a <code>ConverterFactory</code>. This method is here to siplify the configuration of the
+   * Returns an instance of a <code>ConverterFactory</code>. This method is here to simplify the configuration of the
    * <code>ConverterFactory</code> in future.
    * 
    * @return an instance of a <code>ConverterFactory</code>.
    */
-  public static synchronized ConverterProvider getInstance(ConfigurationContext configuration) {
-    if (instance == null) {
-      ConverterProvider confConverterProvider = (ConverterProvider) configuration.getEntry(
-          ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
-      instance = confConverterProvider == null ? new ConverterFactory() : confConverterProvider;
+  public static ConverterProvider getInstance(ConfigurationContext configuration) {
+    ConverterProvider confConverterProvider = (ConverterProvider) configuration.getEntry(ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
+    if (confConverterProvider == null) {
+      confConverterProvider = DEFAULT_CONVERTER_FACTORY;
     }
-    
-    return instance;
+
+    return confConverterProvider;
   }
 }

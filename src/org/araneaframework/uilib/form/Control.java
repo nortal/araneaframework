@@ -20,8 +20,10 @@
 package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
+import org.araneaframework.Scope;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
+import org.araneaframework.uilib.form.control.BaseControl;
 
 /**
  * {@link Control} is the widget that does the actual parsing and reading of the request 
@@ -61,7 +63,8 @@ public interface Control extends Widget, Viewable, FormElementAware {
   public Object getRawValue();
 
   /**
-   * Sets the control value. Preferred way to set it is using the {@link org.araneaframework.uilib.form.Data}.
+   * Sets the control value. It is usually set by {@link org.araneaframework.uilib.form.Converter} when
+   * value of {@link FormElement} (this is stored in {@link Data}) that owns this {@link BaseControl} changes.
    * 
    * @param value control value.
    * @see #getRawValue()
@@ -85,7 +88,6 @@ public interface Control extends Widget, Viewable, FormElementAware {
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public interface ViewModel extends Serializable {
-
     /**
      * Returns control type.
      * @return control type.
@@ -98,5 +100,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
     
     public boolean isDisabled();
 
+    /** @since 1.1 */
+    public Scope getScope();
   }
 }

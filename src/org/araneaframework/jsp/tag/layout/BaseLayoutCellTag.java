@@ -27,6 +27,11 @@ import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
  */
 public abstract class BaseLayoutCellTag extends PresentationTag {
   protected boolean overrideLayout = true;
+  
+  /**
+   * HTML id of the cell. 
+   * @since 1.1 */
+  protected String id;
 
   protected int doStartTag(Writer out) throws Exception {
     return EVAL_BODY_INCLUDE;
@@ -61,5 +66,16 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
    */
   public void setOverrideLayout(String overrideLayout) throws JspException {
     this.overrideLayout = ((Boolean)evaluate("overrideLayout", overrideLayout, Boolean.class)).booleanValue();
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "HTML id of this row."
+   * @since 1.1
+   */
+  public void setId(String id) throws JspException {
+    this.id =(String)evaluate("id", id, String.class);
   }
 }

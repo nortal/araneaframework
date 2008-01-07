@@ -32,6 +32,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -86,6 +87,11 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   public class ViewModel implements ApplicationService.ServiceViewModel {
+    /** @since 1.1 */
+    public Scope getScope() {
+    	return BaseApplicationService.this.getScope();
+    }
+
     /**
      * Returns the children of this StandardService.
      */

@@ -179,8 +179,7 @@ public class AutomaticFormElementUtil {
   }
   
   /**
-   * Assigns the default editable (aka input) tags to all of the elements of the form.
-   * @param form parent form or composite element.
+   * Assigns the default editable (aka input) tags to given form element.
    * @since 1.0.7
    */
   public static void setFormElementDefaultEditableTag(FormElement element) {
@@ -188,8 +187,7 @@ public class AutomaticFormElementUtil {
   }
   
   /**
-   * Assigns the default editable (aka input) tags to all of the elements of the form.
-   * @param form parent form or composite element.
+   * Assigns the default editable (aka input) tags to given form element.
    * @since 1.0.7
    */
   public static void setFormElementDefaultDisplayTag(FormElement element) {
