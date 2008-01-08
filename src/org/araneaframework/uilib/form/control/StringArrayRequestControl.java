@@ -81,9 +81,9 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   public void convert() {
     if (innerData != null)
-      value = fromRequestParameters((String[]) innerData);
+    	setRawValue(fromRequestParameters((String[]) innerData));
     else
-      value = null;
+    	setRawValue(null);
   }
 
   /**
@@ -101,7 +101,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
           getEnvironment()));        
     }
 
-    if (value != null) {
+    if (getRawValue() != null) {
       validateNotNull();
     }
   }

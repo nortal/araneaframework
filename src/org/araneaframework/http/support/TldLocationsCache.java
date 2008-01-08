@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.engine;
+package org.araneaframework.http.support;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -29,12 +31,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.jsp.engine.xml.ParserUtils;
-import org.araneaframework.jsp.engine.xml.TreeNode;
 
 /**
  * A container for all tag libraries that are defined "globally"
@@ -345,7 +348,7 @@ public class TldLocationsCache {
                 if (!name.endsWith(".tld")) continue;
                 InputStream stream = jarFile.getInputStream(entry);
                 try {
-                    String uri = getUriFromTld(resourcePath, stream);
+                    String uri = getUriFromTld(stream);
                     // Add implicit map entry only if its uri is not already
                     // present in the map
                     if (uri != null && mappings.get(uri) == null) {
@@ -411,7 +414,7 @@ public class TldLocationsCache {
                 InputStream stream = ctxt.getResourceAsStream(path);
                 String uri = null;
                 try {
-                    uri = getUriFromTld(path, stream);
+                    uri = getUriFromTld(stream);
                 } finally {
                     if (stream != null) {
                         try {
@@ -434,19 +437,33 @@ public class TldLocationsCache {
      * Returns the value of the uri element of the given TLD, or null if the
      * given TLD does not contain any such element.
      */
-    private String getUriFromTld(String resourcePath, InputStream in) 
-        throws AraneaRuntimeException
+    private String getUriFromTld(InputStream in) throws IOException
     {
-        // Parse the tag library descriptor at the specified resource path
-        TreeNode tld = new ParserUtils().parseXMLDocument(resourcePath, in);
-        TreeNode uri = tld.findChild("uri");
-        if (uri != null) {
-            String body = uri.getBody();
-            if (body != null)
-                return body;
+      // Parse the tag library descriptor at the specified resource path
+      String regex = "<uri>(.*)</uri>";
+      
+      InputStreamReader inR = new InputStreamReader(in);        
+      StringBuffer result = new StringBuffer();
+      char[] buf = new char[1024];
+      int n;
+      
+      try {
+        while ((n = inR.read(buf)) != -1) {
+          result.append(buf, 0, n);
         }
-
+      } 
+      finally {
+        inR.close();
+      }
+      
+      Pattern pattern = Pattern.compile(regex);
+      Matcher m = pattern.matcher(result);
+      if (m.find() && m.groupCount() == 1) {
+        return m.group(1);
+      }
+      else {
         return null;
+      }
     }
 
     /*

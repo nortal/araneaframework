@@ -169,8 +169,10 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   /**
    * Returns whether the control is disabled.
    * @return whether the control is disabled
+   * 
+   * @since 1.1 this method is public and part of {@link Control} interface
    */
-  protected boolean isDisabled() {
+  public boolean isDisabled() {
     return feCtx.isDisabled();
   }
   

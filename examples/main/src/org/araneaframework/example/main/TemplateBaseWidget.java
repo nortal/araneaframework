@@ -20,7 +20,7 @@ import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.Scope;
 import org.araneaframework.example.common.framework.ViewSelectorAware;
-import org.araneaframework.example.main.business.data.GeneralDAO;
+import org.araneaframework.example.main.business.data.IGeneralDAO;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.integration.spring.SpringInjectionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
@@ -44,8 +44,8 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
     return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
   }
   
-  public GeneralDAO getGeneralDAO() {
-    return (GeneralDAO) getBeanFactory().getBean("generalDAO");
+  public IGeneralDAO getGeneralDAO() {
+    return (IGeneralDAO) getBeanFactory().getBean("generalDAO");
   }
 
   public String getViewSelector() {

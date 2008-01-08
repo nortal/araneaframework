@@ -27,64 +27,30 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class GeneralDAO extends HibernateDaoSupport {
+public class GeneralDAO extends HibernateDaoSupport implements IGeneralDAO {
 
-	/**
-	 * Reads an object with specified class and Id. Returned object can be casted
-	 * into specified class afterwards.
-	 * 
-	 * @param clazz
-	 *          object's class.
-	 * @param id
-	 *          object's Id.
-	 * @return object with the specified Id and class.
-	 */
+	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#getById(java.lang.Class, java.lang.Long) */
 	public GeneralMO getById(Class clazz, Long id) {
 		return (GeneralMO) getHibernateTemplate().get(clazz, id);
 	}
 
-	/**
-	 * Reads all objects with specified class. Returned objects can be casted into
-	 * specified class afterwards.
-	 * 
-	 * @param clazz
-	 *          objects' class.
-	 * @return all objects with the specified class.
-	 */
+	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#getAll(java.lang.Class) */
 	public List getAll(Class clazz) {
 		return getHibernateTemplate().find("from " + clazz.getName());
 	}
 
-	/**
-	 * Stores a new object and returns its Id.
-	 * 
-	 * @param object
-	 *          object.
-	 * @return object's Id.
-	 */
+	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#add(org.araneaframework.example.main.business.model.GeneralMO) */
 	public Long add(GeneralMO object) {
 		getHibernateTemplate().save(object);
 		return object.getId();
 	}
 
-	/**
-	 * Stores an existing object.
-	 * 
-	 * @param object
-	 *          object.
-	 */
+	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#edit(org.araneaframework.example.main.business.model.GeneralMO) */
 	public void edit(GeneralMO object) {
 		getHibernateTemplate().update(object);
 	}
 
-	/**
-	 * Removes an object with specified class and Id.
-	 * 
-	 * @param clazz
-	 *          object's class.
-	 * @param id
-	 *          object's Id.
-	 */
+	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#remove(java.lang.Class, java.lang.Long) */
 	public void remove(Class clazz, Long id) {
 		getHibernateTemplate().delete(getById(clazz, id));
 	}
