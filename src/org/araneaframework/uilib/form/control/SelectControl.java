@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
 import org.apache.commons.collections.Transformer;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.FormElement;
@@ -71,7 +70,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   /**
    * Adds the display-items corresponding to the given value and label fields in Value Object.
    * 
-   * @param valueObjects <code>Collection</code> of Value Objects.
+   * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
    * @param valueName the name of the Value Object field corresponding to the value of the select
    * item.
    * @param labelName the name of the Value Object field corresponding to the label of the select
@@ -79,22 +78,62 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @deprecated use {@link SelectControl#addItemsFromBeanCollection(Collection, String, String) instead 
    */
-  public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
-    DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
+  public void addDisplayItems(Collection beanCollection, String valueName, String labelName) {
+    addItemsFromBeanCollection(beanCollection, valueName, labelName);
   }
-  
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link SelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueName name of bean field that determines {@link DisplayItem}s <code>value</code>
+   * @param displayStringName name of bean field that determines {@link DisplayItem}s <code>displayString</code>
+   * 
+   * @since 1.1
+   */
   public void addItemsFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayStringName);
   }
-  
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link SelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueName name of bean field that determines {@link DisplayItem}s <code>value</code>
+   * @param displayTransformer Transformer producing label ({@link DisplayItem}s <code>displayString</code>) for a bean
+   * 
+   * @since 1.1
+   */
   public void addItemsFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayTransformer);
   }
-  
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link SelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueTransformer Transformer producing value ({@link DisplayItem#getValue()}) from a bean.
+   * @param displayStringName name of bean field that determines {@link DisplayItem}s <code>displayString</code>
+   * 
+   * @since 1.1
+   */
   public void addItemsFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayStringName);
   }
-  
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link SelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueTransformer Transformer producing value ({@link DisplayItem#getValue()}) from a bean.
+   * @param displayTransformer Transformer producing label (displayString) from a bean
+   * 
+   * @since 1.1
+   */
   public void addItemsFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayTransformer);
   }
@@ -239,8 +278,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
       for (Iterator i = selectItems.iterator(); i.hasNext(); ) {
       	DisplayItem displayItem = (DisplayItem) i.next();
       	selectItemMap.put(displayItem.getValue(), displayItem);
-      }      
-                 
+      }
     }         
     
     /**

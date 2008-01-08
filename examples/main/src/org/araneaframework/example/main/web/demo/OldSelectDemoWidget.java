@@ -10,7 +10,6 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.util.DisplayItemUtil;
 
 public class OldSelectDemoWidget extends TemplateBaseWidget {
 	private static final long serialVersionUID = 1L;
@@ -25,20 +24,16 @@ public class OldSelectDemoWidget extends TemplateBaseWidget {
 
 		List persons = generalDAO.getAll(PersonMO.class);
 		SelectControl personSelectControl = new SelectControl();
-		
-		DisplayItemUtil.addItemsFromBeanCollection(personSelectControl, persons, "id", new Transformer() {
+
+		personSelectControl.addItemsFromBeanCollection(persons, "id", new Transformer() {
 			public Object transform(Object o) {
-				PersonMO p = (PersonMO) o;
-				return p.getName() + " " + p.getSurname();
+				return ((PersonMO) o).getName() + " " + ((PersonMO) o).getSurname();
 			}
 		});
 
 		form = new FormWidget();
-		
 		personSelect = form.createElement("#Persons", personSelectControl, new StringData(), false);
-
 		form.addElement("personSelect", personSelect);
-		
 		personSelect.setDisabled(false);
 
 		addWidget("form", form);
@@ -53,6 +48,9 @@ public class OldSelectDemoWidget extends TemplateBaseWidget {
 
         Object value = form.getValueByFullName("personSelect");
 		getMessageCtx().showInfoMessage(new ReflectionToStringBuilder(value).toString());
+		
+		((SelectControl)personSelect.getControl()).getSelectedItem();
+		// now that is bad
         getMessageCtx().showInfoMessage("Corresponding object: " + 
         		new ReflectionToStringBuilder(generalDAO.getById(PersonMO.class, new Long((String)value))).toString());
 	}

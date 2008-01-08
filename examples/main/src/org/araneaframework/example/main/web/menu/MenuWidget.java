@@ -53,7 +53,6 @@ import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
 import org.araneaframework.example.main.web.demo.DemoRadioSelect;
 import org.araneaframework.example.main.web.demo.DemoRichTextForm;
 import org.araneaframework.example.main.web.demo.FilteredInputDemoWidget;
-import org.araneaframework.example.main.web.demo.NewSelectDemoWidget;
 import org.araneaframework.example.main.web.demo.OldSelectDemoWidget;
 import org.araneaframework.example.main.web.list.MultiListWidget;
 import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
@@ -124,7 +123,6 @@ private MenuItem araneaMenu;
 		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Serverside_Polling", DemoActionPollWidget.class));
 
-		araneaMenu.addMenuItem(new MenuItem("#Ultimate", NewSelectDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("#NonUltimate", OldSelectDemoWidget.class));
 		
 		// "Management"

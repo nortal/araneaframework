@@ -19,8 +19,6 @@ package org.araneaframework.uilib.support;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 
-
-
 /**
  * Represents one item in the combo-box of the select element.
  * <p>
@@ -28,7 +26,6 @@ import org.araneaframework.uilib.form.control.SelectControl;
  * Each item is characterized by its value and label.
  *
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class DisplayItem implements java.io.Serializable {
   /**
@@ -86,11 +83,11 @@ public class DisplayItem implements java.io.Serializable {
     return value;
   }
   
-	public boolean isDisabled() {
-		return disabled;
-	}
+  public boolean isDisabled() {
+    return disabled;
+  }
 	
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+  public void setDisabled(boolean disabled) {
+    this.disabled = disabled;
+  }
 }
