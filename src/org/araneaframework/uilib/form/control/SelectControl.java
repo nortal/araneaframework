@@ -16,12 +16,15 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.swing.plaf.basic.BasicTreeUI.SelectionModelPropertyChangeHandler;
+import org.apache.commons.collections.Transformer;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
@@ -57,7 +60,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   /**
    * Adds a display-items to the element.
    * 
-   * @param items the items to be added.
+   * @param items Collection&lt;DisplayItem&gt; the items to be added.
    */
   public void addItems(Collection items) {
     Assert.noNullElementsParam(items, "items");
@@ -73,10 +76,28 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * item.
    * @param labelName the name of the Value Object field corresponding to the label of the select
    * item.
+   * 
+   * @deprecated use {@link SelectControl#addItemsFromBeanCollection(Collection, String, String) instead 
    */
   public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
-  }    
+  }
+  
+  public void addItemsFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayStringName);
+  }
+  
+  public void addItemsFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayTransformer);
+  }
+  
+  public void addItemsFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayStringName);
+  }
+  
+  public void addItemsFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayTransformer);
+  }
 
   /**
    * Clears the list of select-items.
@@ -110,6 +131,42 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
     return index >= 0 ? (DisplayItem)getDisplayItems().get(index) : null; 
   }
   
+  public SelectControl setModel(SelectModel model) {
+    
+    return this;
+  }
+  
+  public static interface SelectModel extends Serializable {
+    void getObject(String value);
+  }
+  
+  public static interface ObjectTranslator extends Serializable {
+    String getDisplayString(Object o);
+    String getValue(Object o);
+  }
+  
+  public static class CollectionSelectModel implements SelectModel {
+    protected Collection c;
+    protected Transformer vt;
+    protected Transformer dt;
+	  
+    public CollectionSelectModel(Collection c, ObjectTranslator t) {
+      this.c = c;
+    }
+    
+    public void setValueTransformer(Transformer t) {
+    	this.vt =t ;
+    }
+    
+    public void setDisplayTransformer(Transformer t) {
+    	this.dt =t;
+    }
+ 	  
+	public void getObject(String value) {
+      
+	}
+  }
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	

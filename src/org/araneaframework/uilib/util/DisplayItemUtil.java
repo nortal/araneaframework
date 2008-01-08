@@ -16,10 +16,12 @@
 
 package org.araneaframework.uilib.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import org.apache.commons.collections.Transformer;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.support.DisplayItem;
@@ -30,7 +32,6 @@ import org.araneaframework.uilib.support.DisplayItem;
  * {@link org.araneaframework.uilib.form.control.MultiSelectControl}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class DisplayItemUtil implements java.io.Serializable {
 
@@ -41,23 +42,67 @@ public class DisplayItemUtil implements java.io.Serializable {
   /**
    * Adds the select items corresponding to the given value and label fields in Value Object.
    * 
-   * @param valueObjects <code>Collection</code> of Value Objects.
-   * @param valueName the name of the Value Object field corresponding to the value of the select item.
-   * @param displayStringName the name of the Value Object field corresponding to the display string of the select item.
+   * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
+   * @param valueName the name of the bean field corresponding to the value of the select item.
+   * @param displayStringName the name of the bean field corresponding to the displayed string (label) of the select item.
    */
-  public static void addItemsFromBeanCollection(DisplayItemContainer displayItems, Collection valueObjects, String valueName, String displayStringName) {
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItems, Collection beanCollection, String valueName, String displayStringName) {
     Assert.notNullParam(displayItems, "displayItems");
-    Assert.noNullElementsParam(valueObjects, "valueObjects");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
     Assert.notEmptyParam(valueName, "valueName");
     Assert.notEmptyParam(displayStringName, "displayStringName");
     
-    if (valueObjects.size() == 0) return;
-    BeanMapper beanMapper = new BeanMapper(valueObjects.iterator().next().getClass());
+    if (beanCollection.size() == 0) return;
+    BeanMapper beanMapper = new BeanMapper(beanCollection.iterator().next().getClass());
+    
+    Transformer valueTransformer = new BeanToPropertyValueTransformer(beanMapper, valueName);
+    Transformer displayTransformer = new BeanToPropertyValueTransformer(beanMapper, displayStringName);
+    addItemsFromBeanCollection(displayItems, beanCollection, valueTransformer, displayTransformer);
+  }
 
-    for (Iterator i = valueObjects.iterator(); i.hasNext();) {
+  /** 
+   * @since 1.1
+   */
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItems, Collection beanCollection, String valueName, Transformer displayTransformer) {
+    Assert.notNullParam(displayItems, "displayItems");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
+    Assert.notEmptyParam(valueName, "valueName");
+    Assert.notNullParam(displayTransformer, "displayTransformer");
+    
+    if (beanCollection.size() == 0) return;
+    BeanMapper beanMapper = new BeanMapper(beanCollection.iterator().next().getClass());
+    Transformer valueTransformer = new BeanToPropertyValueTransformer(beanMapper, valueName);
+    addItemsFromBeanCollection(displayItems, beanCollection, valueTransformer, displayTransformer);
+  }
+  
+  /** 
+   * @since 1.1
+   */
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItems, Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+    Assert.notNullParam(displayItems, "displayItems");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
+    Assert.notNullParam(valueTransformer, "valueTransformer");
+    Assert.notEmptyParam(displayStringName, "displayStringName");
+    
+    if (beanCollection.size() == 0) return;
+    BeanMapper beanMapper = new BeanMapper(beanCollection.iterator().next().getClass());
+    Transformer displayTransformer = new BeanToPropertyValueTransformer(beanMapper, displayStringName);
+    addItemsFromBeanCollection(displayItems, beanCollection, valueTransformer, displayTransformer);
+  }
+
+  /**
+   * @since 1.1
+   */
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+    if (beanCollection == null || beanCollection.size() == 0) return;
+
+    Assert.notNullParam(displayItemContainer, "displayItems");
+    Assert.notNullParam(valueTransformer, "valueTransformer");
+    Assert.notNullParam(displayTransformer, "displayTransformer");
+
+    for (Iterator i = beanCollection.iterator(); i.hasNext();) {
       Object vo = i.next();
-      displayItems.addItem(new DisplayItem(beanMapper.getFieldValue(vo, valueName).toString(), beanMapper.getFieldValue(vo,
-          displayStringName).toString()));
+      displayItemContainer.addItem(new DisplayItem((String)valueTransformer.transform(vo), (String)displayTransformer.transform(vo)));
     }
   }
   
@@ -131,4 +176,18 @@ public class DisplayItemUtil implements java.io.Serializable {
 		return -1;
 	}      
   
+  private static class BeanToPropertyValueTransformer implements Transformer, Serializable {
+	private static final long serialVersionUID = 1L;
+	private BeanMapper bm;
+    private String propertyName;
+    
+    public BeanToPropertyValueTransformer(final BeanMapper beanMapper, final String propertyName) {
+      this.bm = beanMapper;
+      this.propertyName = propertyName;
+    }
+
+    public Object transform(Object bean) {
+      return bm.getFieldValue(bean, propertyName).toString();
+    }
+  }
 }
