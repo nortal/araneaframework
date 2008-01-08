@@ -54,7 +54,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		/* or whole collections of value objects, which must have getters for specified value
          * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
          * both value and displayString must be of String class */
-		beastSelectionControl.addItemsFromBeanCollection(getSelectItems(), "sampleValue", "sampleDisplayString");
+		beastSelectionControl.addFromBeanCollection(getSelectItems(), "sampleValue", "sampleDisplayString");
 
 		/* Adds the onChange event listener to selectControl */
 		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
