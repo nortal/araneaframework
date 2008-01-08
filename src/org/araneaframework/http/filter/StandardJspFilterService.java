@@ -35,7 +35,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.support.CachingEntityResolver;
-import org.araneaframework.jsp.engine.TldLocationsCache;
+import org.araneaframework.http.support.TldLocationsCache;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.w3c.dom.Document;

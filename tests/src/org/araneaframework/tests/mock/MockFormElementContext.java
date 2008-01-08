@@ -19,6 +19,8 @@ package org.araneaframework.tests.mock;
 import java.util.HashSet;
 import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.uilib.form.Control;
+import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
 
 /**
@@ -80,7 +82,17 @@ public class MockFormElementContext implements FormElementContext {
     return errors;
   }
   
-  public void addError(String error) {
+  public Control getControl() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public Converter getConverter() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+public void addError(String error) {
      getErrors().add(error);
   }
   

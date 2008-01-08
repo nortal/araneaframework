@@ -66,7 +66,7 @@ public class DisplayControl extends BaseControl {
      */    
     public ViewModel() {
       //XXX: hack emulating process()
-      innerData = DisplayControl.this.value;
+      innerData = DisplayControl.this.getRawValue();
       this.value = innerData;
     }       
     

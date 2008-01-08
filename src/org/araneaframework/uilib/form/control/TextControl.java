@@ -110,8 +110,8 @@ public class TextControl extends StringValueControl implements FilteredInputCont
     super.validateNotNull();
     
     if (textType.equals(TextType.NUMBER_ONLY)) {
-    	for (int i = 0; i < ((String) value).length(); i++) {
-    		if (!Character.isDigit(((String) value).charAt(i))) {
+    	for (int i = 0; i < ((String) getRawValue()).length(); i++) {
+    		if (!Character.isDigit(((String) getRawValue()).charAt(i))) {
           addError(
               MessageUtil.localizeAndFormat(
               UiLibMessages.NOT_A_NUMBER, 
@@ -122,7 +122,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
     	}
     }
     else if (textType.equals(TextType.EMAIL)) {
-      if (!ValidationUtil.isEmail((String) value)) {
+      if (!ValidationUtil.isEmail((String) getRawValue())) {
         addError(
             MessageUtil.localizeAndFormat(
             UiLibMessages.NOT_AN_EMAIL, 
