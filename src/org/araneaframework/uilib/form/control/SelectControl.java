@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.control;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -168,42 +167,6 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
 
     int index = getValueIndex((String)ctx.getValue());
     return index >= 0 ? (DisplayItem)getDisplayItems().get(index) : null; 
-  }
-  
-  public SelectControl setModel(SelectModel model) {
-    
-    return this;
-  }
-  
-  public static interface SelectModel extends Serializable {
-    void getObject(String value);
-  }
-  
-  public static interface ObjectTranslator extends Serializable {
-    String getDisplayString(Object o);
-    String getValue(Object o);
-  }
-  
-  public static class CollectionSelectModel implements SelectModel {
-    protected Collection c;
-    protected Transformer vt;
-    protected Transformer dt;
-	  
-    public CollectionSelectModel(Collection c, ObjectTranslator t) {
-      this.c = c;
-    }
-    
-    public void setValueTransformer(Transformer t) {
-    	this.vt =t ;
-    }
-    
-    public void setDisplayTransformer(Transformer t) {
-    	this.dt =t;
-    }
- 	  
-	public void getObject(String value) {
-      
-	}
   }
 
   //*********************************************************************

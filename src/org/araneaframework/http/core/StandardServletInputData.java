@@ -119,7 +119,7 @@ public class StandardServletInputData implements HttpInputData {
       return Collections.unmodifiableMap(result);  
     }
     else {
-      return Collections.unmodifiableMap(Collections.EMPTY_MAP);
+      return Collections.EMPTY_MAP;
     }
   }
 

@@ -40,7 +40,7 @@ public class DisplayItem implements java.io.Serializable {
   protected boolean disabled;
 
   /**
-   * Creates a new instance of <code>SelectElementItem</code>.
+   * Creates a new instance of {@link DisplayItem}.
    *
    * @param displayString the label (or other string to show) of the item.
    * @param value the value of the item.
@@ -50,7 +50,7 @@ public class DisplayItem implements java.io.Serializable {
   }
   
   /**
-   * Creates a new instance of <code>SelectElementItem</code>.
+   * Creates a new instance of {@link DisplayItem}.
    *
    * @param displayString the label (or other string to show) of the item.
    * @param value the value of the item.
