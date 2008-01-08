@@ -2,6 +2,12 @@ This document very briefly describes what one might need to change when upgradin
 version from 1.0 to 1.1 in a web application.
 
 GENERAL
+-org.araneaframework.jsp.engine package is gone. 
++Engine (LightweightJspServlet) itself does not exist anymore, just use containers JSP
+ engine (or try out JSPWeaver -- http://www.zeroturnaround.com/jsp-weaver/). Classes from 
+ package that were used by other parts of the framework can be found from 
+ org.araneaframework.http.support (TldLocationsCache, ParserUtils, ... ). 
+
 -handleProcess() callback should be searched manually and removed, it is not called anymore
 -process() too, when super.process() not called from it, no compilation errors are produced
 
