@@ -76,10 +76,10 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * @param labelName the name of the Value Object field corresponding to the label of the select
    * item.
    * 
-   * @deprecated use {@link SelectControl#addItemsFromBeanCollection(Collection, String, String) instead 
+   * @deprecated use {@link SelectControl#addFromBeanCollection(Collection, String, String)} instead 
    */
   public void addDisplayItems(Collection beanCollection, String valueName, String labelName) {
-    addItemsFromBeanCollection(beanCollection, valueName, labelName);
+    addFromBeanCollection(beanCollection, valueName, labelName);
   }
 
   /**
@@ -92,7 +92,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addItemsFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
+  public void addFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayStringName);
   }
 
@@ -106,7 +106,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addItemsFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
+  public void addFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayTransformer);
   }
 
@@ -120,7 +120,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addItemsFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayStringName);
   }
 
@@ -134,7 +134,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addItemsFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayTransformer);
   }
 

@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections.Transformer;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DisplayItemContainer;
@@ -94,10 +95,68 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * item.
    * @param labelName the name of the Value Object field corresponding to the label of the select
    * item.
+   * 
+   * @deprecated use {@link MultiSelectControl#addFromBeanCollection(Collection, String, String)} instead
    */
   public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
-  }  
+  }
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link MultiSelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueName name of bean field that determines {@link DisplayItem}s <code>value</code>
+   * @param displayStringName name of bean field that determines {@link DisplayItem}s <code>displayString</code>
+   * 
+   * @since 1.1
+   */
+  public void addFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayStringName);
+  }
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link MultiSelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueName name of bean field that determines {@link DisplayItem}s <code>value</code>
+   * @param displayTransformer Transformer producing label ({@link DisplayItem}s <code>displayString</code>) for a bean
+   * 
+   * @since 1.1
+   */
+  public void addFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayTransformer);
+  }
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link MultiSelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueTransformer Transformer producing value ({@link DisplayItem#getValue()}) from a bean.
+   * @param displayStringName name of bean field that determines {@link DisplayItem}s <code>displayString</code>
+   * 
+   * @since 1.1
+   */
+  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayStringName);
+  }
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
+   * these to this {@link MultiSelectControl}.
+   * 
+   * @param beanCollection <code>Collection</code> of beans
+   * @param valueTransformer Transformer producing value ({@link DisplayItem#getValue()}) from a bean.
+   * @param displayTransformer Transformer producing label (displayString) from a bean
+   * 
+   * @since 1.1
+   */
+  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+    DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayTransformer);
+  }
   
   /**
    * Returns "List&lt;String&gt;".
