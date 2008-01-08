@@ -382,6 +382,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  
 	  /**
 	   * Marks status of this {@link FormElement} rendered.
+	   * Only rendered {@link FormElement}s may read the data from subsequent request.
 	   */
 	  public void rendered() {
 	    _setRendered(true);
