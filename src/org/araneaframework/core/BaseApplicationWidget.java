@@ -242,8 +242,8 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     
     List listener = eventListeners == null ? null : (List)eventListeners.get(eventId);  
     
-    if (log.isDebugEnabled()) {
-      log.debug("Delivering event '" + eventId + "' to widget '" + getClass().getName() + "'");
+    if (log.isTraceEnabled()) {
+      log.trace("Delivering event '" + eventId + "' to widget '" + getScope() + "', type: '" + getClass().getName() + "'");
     }
     
     try {
@@ -262,18 +262,19 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       }
     }
     catch (Exception e) {
-      throw new EventException(this, getScope().toString(), eventId, e);
+      throw new EventException(this, String.valueOf(getScope()), eventId, e);
     }
-
+    
     if (log.isWarnEnabled()) {
       log.warn("Widget '" + getScope() +
-         "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"  + Assert.thisToString(this));
+        "' cannot deliver event as no event listeners were registered for the event id '" + eventId + "'!"  + Assert.thisToString(this));
     }
+
   }
-  
+
   /**
-   * If path hasNextStep() routes to the correct child, otherwise calls the
-   * appropriate listener.
+   * If {@link Path#hasNext()} routes to the action to child, otherwise calls the
+   * appropriate {@link ActionListener}.
    */ 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
@@ -312,6 +313,10 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
 
     if (log.isTraceEnabled()) {
       log.trace("Delivering action '" + actionId +"' to service '" + getClass() + "'");
+    }
+    
+    if (log.isTraceEnabled()) {
+      log.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName() + "'");
     }
     
     if (listener != null && listener.size() > 0) {

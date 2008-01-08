@@ -100,7 +100,7 @@ public abstract class ServletUtil {
     if (widget != null) {
       setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
-      String fullId = widget.getScope().toString();
+      String fullId = widget.getScope() != null ? widget.getScope().toString() : null;
       ApplicationWidget.WidgetViewModel viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
       setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetTag.WIDGET_ID_KEY, fullId);

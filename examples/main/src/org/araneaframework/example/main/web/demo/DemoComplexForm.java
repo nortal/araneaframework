@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +54,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		/* or whole collections of value objects, which must have getters for specified value
          * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
          * both value and displayString must be of String class */
-		beastSelectionControl.addDisplayItems(getSelectItems(), "sampleValue", "sampleDisplayString");
+		beastSelectionControl.addFromBeanCollection(getSelectItems(), "sampleValue", "sampleDisplayString");
 
 		/* Adds the onChange event listener to selectControl */
 		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
@@ -111,27 +112,21 @@ public class DemoComplexForm extends TemplateBaseWidget {
 		return list;
 	}
 
+	private static final String[] birds = new String[] {"Chicken", "Goose", "Duck", "Swan"};
+	private static final String[] animals = new String[] {"Piglet", "Pooh", "Tiger", "Cangaroo"};
+	private static final String[] fishes = new String[] {"Willy", "Nemo", "Dory", "Marlin"};
+	private static final String[] dragons = new String[] {"Smaug", "Chrysophylax", "Devon & Cornwall"};
+
 	private Collection getMultiSelectItems(String selectItem) {
 		List result = new ArrayList();
 		if (selectItem.equals("Bird")) {
-			result.add("Chicken");
-			result.add("Goose");
-			result.add("Duck");
-			result.add("Swan");
+			result.addAll(Arrays.asList(birds));
 		} else if (selectItem.equals("Animal")) {
-			result.add("Piglet");
-			result.add("Pooh");
-			result.add("Tiger");
-			result.add("Cangaroo");
+			result.addAll(Arrays.asList(animals));
 		} else if (selectItem.equals("Fish")) {
-			result.add("Willy");
-			result.add("Nemo");
-			result.add("Dory");
-			result.add("Marlin");
+			result.addAll(Arrays.asList(fishes));
 		} else if (selectItem.equals("Dragon")) {
-			result.add("Smaug");
-			result.add("Chrysophylax");
-			result.add("Devon & Cornwall");
+			result.addAll(Arrays.asList(dragons));
 		}
 
 		return result;
