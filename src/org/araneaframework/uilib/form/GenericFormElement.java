@@ -207,6 +207,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
     getMutableErrors().add(error);
     getMessageContext().showMessage(MessageContext.ERROR_TYPE, error);
+
+    //XXX: remove following code
+    getMessageContext().showMessage(getScope().toString(), error);
   }
 
   public void addErrors(Set errors) {
