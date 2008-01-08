@@ -21,14 +21,15 @@
        <title>TreeWidget &amp; TreeNodeWidget</title>
            <para>
            	<classname>org.araneaframework.uilib.tree.TreeWidget</classname> allows representation of hierarchical data in a manner that has become 
-			traditional in GUIs, as an expandable tree. <literal>TreeWidget</literal> represents trees' root node, which is special 
-			in that it is not really rendered on-screen but serves as point where child nodes are attached. Child nodes of <literal>TreeWidget</literal>
-			are either attached by the programmer or acquired from associated <literal>TreeDataProvider</literal>.
+			traditional in GUIs, as an expandable/collapsable tree. <literal>TreeWidget</literal> represents trees' root node, which is special 
+			in that it is not usually really rendered on-screen but serves as point where child nodes are attached. 
+			Child nodes of <literal>TreeWidget</literal>
+			are <literal>TreeNodeWidget</literal>s acquired from associated <literal>TreeDataProvider</literal> or could be attached by the developer.
 			The <literal>TreeWidget</literal> supports expanding and collapsing of all those nodes.
            </para>
            
            <para>
-           <literal>TreeDataProvider</literal> is a simple interface with ability to return the data under given tree node.
+           <literal>TreeDataProvider</literal> is a simple interface with ability to return data belonging to any given node of the tree.
 <programlisting role="java">public interface TreeDataProvider extends Serializable {
   /**
    * Returns a list of child nodes for specified parent node.
@@ -36,7 +37,7 @@
   List&lt;TreeNodeWidget&gt; getChildren(TreeNodeContext parent);
 
   /**
-   * Returns if the specified tree node has any children.
+   * Returns whether the specified tree node has any children.
    */
   boolean hasChildren(TreeNodeContext parent);
 }</programlisting>
@@ -46,10 +47,13 @@
            	As is apparent from the definition of <literal>TreeDataProvider</literal>, descendants of the <literal>TreeWidget</literal>
            	that are to be presented in a tree, must be of type <literal>TreeNodeWidget</literal>. <literal>TreeNodeWidget</literal>
            	is the superclass of <literal>TreeWidget</literal> that also has child nodes and will be rendered too. Node rendering is done with
-           	display widget that is passed to <literal>TreeNodeWidget</literal> in its constructor.
+           	display widget that is passed to <literal>TreeNodeWidget</literal> in its constructor. 
            	
-<programlisting role="java">public TreeNodeWidget(Widget display);
+<programlisting role="java">/** Childless collapsed node, rendered by display widget. */
+public TreeNodeWidget(Widget display);
+/** Node with children. Expanded by default. */
 public TreeNodeWidget(Widget display, List nodes);
+/** Node with children, expand/collapse state can be set with corresponding flag. */
 public TreeNodeWidget(Widget display, List nodes, boolean collapsed);
 </programlisting>
 
