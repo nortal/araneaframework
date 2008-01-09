@@ -453,6 +453,11 @@ public class FormWidget extends GenericFormElement implements FormContext {
   	
   	el.getData().setValue(value);
   }
+  
+  public void addError(String error) {
+    getMessageCtx().showErrorMessage(error);
+    super.addError(error);
+  }
 
   /**
    * Returns {@link ViewModel}.

@@ -18,9 +18,11 @@ package org.araneaframework.example.main.web.sample;
 
 import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.LocalFormElementValidationErrorRenderer;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;

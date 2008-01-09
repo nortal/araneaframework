@@ -33,7 +33,9 @@ import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.Event;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
@@ -41,6 +43,8 @@ import org.araneaframework.uilib.util.Event;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
+  public static final String ERROR_RENDERER_PROPERY_KEY = "FormElementValidationErrorRenderer";
+
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -220,6 +224,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.mandatory = mandatory;
   }
   
+  public void addError(String error) {
+    super.addError(error);
+    getFormElementValidationErrorRenderer().addError(this, error);
+  }
+
   /**
    * Sets the action listener that deals with background validation of form. It should
    * be used when custom background validation logic or behaviour is wanted.
@@ -234,6 +243,25 @@ public class FormElement extends GenericFormElement implements FormElementContex
     clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
     addActionListener(SEAMLESS_VALIDATION_ACTION_ID, actionListener);
   }
+  
+  /** @since 1.1 */
+  public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
+    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    if (result == null) {
+      result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERY_KEY);
+    }
+
+    if (result == null)
+      return StandardFormElementValidationErrorRenderer.INSTANCE;
+
+    return result;
+  }
+
+  /** @since 1.1 */
+  public void setFormElementValidationErrorRenderer(FormElementValidationErrorRenderer renderer) {
+    setProperty(ERROR_RENDERER_PROPERY_KEY, renderer);
+  }
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	

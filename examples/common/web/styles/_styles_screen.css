@@ -144,3 +144,11 @@ div.aranea-tabs div.aranea-active-tab div A { color: #1F476E; }
 div.aranea-tabs div.aranea-disabled-tab { background: url(../gfx/bg18.gif) no-repeat; float: left; margin-top: 2px; }
 div.aranea-tabs div.aranea-disabled-tab div { background: url(../gfx/bg19.gif) right top no-repeat; }
 div.aranea-tabs div.aranea-disabled-tab div A { color: #aaaaaa; }
+
+TABLE.form TD.error P,
+TABLE.form TR.error TD P {
+	margin: 0;
+	padding: .5em 0;
+	color: #cc0a0a;
+	line-height: normal;
+}

@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -206,10 +205,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     Assert.notEmptyParam(error, "error");
 
     getMutableErrors().add(error);
-    getFormElementValidationErrorRenderer().addError(this, error);
-
-    //XXX: remove following code
-    getMessageContext().showMessage(getScope().toString(), error);
   }
 
   public void addErrors(Set errors) {
@@ -244,16 +239,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     }
     return this.backgroundValidation.booleanValue();
   }
-  
-  /** @since 1.1 */
-  public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
-    if (result == null) {
-      return StandardFormElementValidationErrorRenderer.INSTANCE;
-    }
 
-    return result;
-  }
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
@@ -297,10 +283,11 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   //* INTERNAL METHODS
   //*********************************************************************
 
-  private MessageContext getMessageContext() {
+  /** @since 1.1 this method is protected (private before 1.1). */
+  protected MessageContext getMessageCtx() {
     return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
   }
-    
+
   /**
    * Converts the element value from control to data item
    * @throws Exception 
