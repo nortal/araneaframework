@@ -65,20 +65,20 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 	// fact that everything you add to FormWidget is a FormElement.
 
 	// createElement(String labelId, Control control, Data data, boolean mandatory)
-//    FormElement el = simpleForm.createElement("common.Textbox", new TextControl(), new StringData(), false);
-//    simpleForm.addElement("textbox1", el);
+    FormElement el = simpleForm.createElement("common.Textbox", new TextControl(), new StringData(), false);
+    simpleForm.addElement("textbox1", el);
     
     // and here we add form elements to form without the extra step taken previously. 
-//    simpleForm.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
-//    simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
-//    simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
-//    simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
+    simpleForm.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
+    simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
+    simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
+    simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
     simpleForm.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
     // require the number input field to be filled. It could have been achieved already
     // on formelement creation by setting mandatory attribute to true
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
     // sets initial value of form element
-//    simpleForm.setValueByFullName("dateTime", new Date());
+    simpleForm.setValueByFullName("dateTime", new Date());
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
@@ -102,7 +102,12 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // though, user will not be without feedback)
     if (simpleForm.convertAndValidate()) {
     	// long way to check form element value ...
-
+    	getMessageCtx().showInfoMessage("Checkbox value is: " + ((FormElement) simpleForm.getElement("checkbox1")).getData().getValue());
+    	// and a shorter one
+    	getMessageCtx().showInfoMessage("Textbox value is: " + simpleForm.getValueByFullName("textbox1"));
+    	getMessageCtx().showInfoMessage("DateTime value is: " + simpleForm.getValueByFullName("dateTime"));
+    	getMessageCtx().showInfoMessage("Time value is: " + simpleForm.getValueByFullName("time"));
+    	getMessageCtx().showInfoMessage("Date value is: " + simpleForm.getValueByFullName("date"));
     	getMessageCtx().showInfoMessage("Number value is: " + simpleForm.getValueByFullName("number"));
     }
   }

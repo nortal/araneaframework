@@ -121,7 +121,7 @@ public class FileUploadControl extends BaseControl {
   }
 
   public void convert() {
-    setRawValue(innerData);
+    value = innerData;
     
     if (!uploadSucceeded) {
       Long sizeLimit = ((FileUploadContext) getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
