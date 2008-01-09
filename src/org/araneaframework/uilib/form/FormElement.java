@@ -43,7 +43,8 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
-  public static final String ERROR_RENDERER_PROPERY_KEY = "FormElementValidationErrorRenderer";
+  /** @since 1.1 */
+  public static final String ERROR_RENDERER_PROPERTY_KEY = "FormElementValidationErrorRenderer";
 
   //*******************************************************************
   // FIELDS
@@ -248,7 +249,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
     FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
     if (result == null) {
-      result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERY_KEY);
+      result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
     }
 
     if (result == null)
@@ -259,7 +260,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 
   /** @since 1.1 */
   public void setFormElementValidationErrorRenderer(FormElementValidationErrorRenderer renderer) {
-    setProperty(ERROR_RENDERER_PROPERY_KEY, renderer);
+    setProperty(ERROR_RENDERER_PROPERTY_KEY, renderer);
   }
 
   //*********************************************************************

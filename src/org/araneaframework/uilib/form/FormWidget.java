@@ -455,8 +455,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
   
   public void addError(String error) {
-    getMessageCtx().showErrorMessage(error);
     super.addError(error);
+    getMessageCtx().showErrorMessage(error);
   }
 
   /**
