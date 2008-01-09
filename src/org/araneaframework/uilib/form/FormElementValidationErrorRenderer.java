@@ -23,6 +23,8 @@ import java.io.Serializable;
  * @since 1.1
  */
 public interface FormElementValidationErrorRenderer extends Serializable {
+  public static final String ERRORS_PROPERTY_KEY = "FormElementValidationErrors";
+
   void addError(GenericFormElement element, String error);
   void clearErrors(GenericFormElement element);
 }

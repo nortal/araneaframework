@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -37,6 +36,7 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -136,12 +136,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
 			
 			//XXX: remove following code
-			
-			MessageContext messageContext = (MessageContext) getEnvironment().getEntry(MessageContext.class);
-
-			Map msgmap = (Map) messageContext.getMessages();
-			if (msgmap != null) {
-				Collection messages = (Collection) msgmap.get(formElementViewModel.getScope().toString());
+		
+			Map properties = formElementViewModel.getProperties();
+			if (properties != null) {
+				Collection messages = (Collection) properties.get(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
 				if (messages != null) {
 					out.write("<p>");
 					for (Iterator i = messages.iterator(); i.hasNext(); ) {

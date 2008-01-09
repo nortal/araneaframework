@@ -229,6 +229,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
     super.addError(error);
     getFormElementValidationErrorRenderer().addError(this, error);
   }
+  
+  public void clearErrors() {
+    getFormElementValidationErrorRenderer().clearErrors(this);
+    super.clearErrors();
+  }
 
   /**
    * Sets the action listener that deals with background validation of form. It should

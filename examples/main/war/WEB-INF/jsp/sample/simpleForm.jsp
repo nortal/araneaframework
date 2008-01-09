@@ -33,7 +33,72 @@
 
 					<!-- As we can insert rows now, we do just that. -->
 					<ui:row>
-						<ui:cell colspan="2"/>
+						<!-- ... we can insert cells too! As we defined componentForm rowClass 
+							to be cols4  we should insert 4 cells here... -->
+						<ui:cell>
+							<!-- label is formelement centric tag. As we are inside the form 
+							already, we provide it with form element id and corresponding 
+							form element label will be shown -->
+							<ui:label id="checkbox1" />
+						</ui:cell>
+
+						<ui:cell>
+							<!-- This is another approach to providing information about
+								form element that tag should apply to - instead providing
+								form element id to every single tag, tags could be enclosed
+								inside single formElement tag.
+							 -->
+							<ui:formElement id="checkbox1">
+								<!-- will draw a checkbox tied to form element with id "checkbox1" -->
+								<ui:checkbox/>
+							</ui:formElement>
+						</ui:cell>
+
+						<ui:cell>
+							<ui:label id="textbox1" />
+						</ui:cell>
+
+						<ui:cell>
+							<!-- As "textbox1" is TextControl, we choose the corresponding tag to render it -->
+							<ui:textInput id="textbox1"/>
+						</ui:cell>
+					</ui:row>
+
+					<!-- another row, and we just keep on going until all form elements have been described. -->
+					<ui:row>
+						<ui:formElement id="dateTime">
+							<ui:cell>
+							    <!-- "dateTime" label -->
+								<ui:label />
+							</ui:cell>
+
+							<ui:cell>
+          						<!-- "dateTime" input field -->
+								<ui:dateTimeInput/>
+							</ui:cell>
+						</ui:formElement>
+
+						<ui:formElement id="time">
+							<ui:cell>
+								<ui:label />
+							</ui:cell>
+
+							<ui:cell>
+								<ui:timeInput />
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+
+					<ui:row>
+						<ui:formElement id="date">
+							<ui:cell>
+								<ui:label />
+							</ui:cell>
+
+							<ui:cell>
+								<ui:dateInput />
+							</ui:cell>
+						</ui:formElement>
 
 						<ui:formElement id="number">
 							<ui:cell>
@@ -48,6 +113,13 @@
 
 				</tui:componentForm>
 				
+<!--				<ui:keyboardHandler keyCombo="ctrl+f12" handler="function() { alert('yay for all! global handler works');}"/>-->
+<!--				<ui:keyboardHandler keyCombo="alt+j" handler="function() { alert('yay for all! global handler works');}"/>-->
+<!--				<ui:keyboardHandler scope="${formFullId}.number" keyCombo="alt+k" handler="function() { alert('xxx : form handler works!'); }"/>-->
+<!--				-->
+<!--				<ui:keyboardHandler scope="${formFullId}" keyCombo="ctrl+p" handler="function() { alert('== another : form handler works!'); }"/>-->
+<!--				<ui:keyboardHandler scope="${formFullId}" keyCombo="z" handler="function() { alert('z i8ndeded'); }"/>-->
+
 				<!-- pure design tag -->
 				<tui:componentActions>
 					<ui:formElement id="button">
