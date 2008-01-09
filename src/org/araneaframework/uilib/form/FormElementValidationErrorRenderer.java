@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 **/
+
 package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public interface FormContext extends Serializable {
-  boolean isBackgroundValidation();
-  Map getProperties(); 
+public interface FormElementValidationErrorRenderer extends Serializable {
+  void addError(GenericFormElement element, String error);
+  void clearErrors(GenericFormElement element);
 }

@@ -206,7 +206,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     Assert.notEmptyParam(error, "error");
 
     getMutableErrors().add(error);
-    getMessageContext().showMessage(MessageContext.ERROR_TYPE, error);
+    getFormElementValidationErrorRenderer().addError(this, error);
 
     //XXX: remove following code
     getMessageContext().showMessage(getScope().toString(), error);
@@ -222,7 +222,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * Clears element errors.
    */
   public void clearErrors() {  
-    getMessageContext().hideMessages(MessageContext.ERROR_TYPE, getErrors());
     errors = null;
   }
 
@@ -244,6 +243,16 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
       return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
     }
     return this.backgroundValidation.booleanValue();
+  }
+  
+  /** @since 1.1 */
+  public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
+    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    if (result == null) {
+      return StandardFormElementValidationErrorRenderer.INSTANCE;
+    }
+
+    return result;
   }
   //*********************************************************************
   //* ABSTRACT METHODS

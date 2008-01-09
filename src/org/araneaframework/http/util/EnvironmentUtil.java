@@ -19,6 +19,7 @@ package org.araneaframework.http.util;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 
@@ -69,4 +70,12 @@ public abstract class EnvironmentUtil {
   public static FlowContext requireFlowContext(Environment env) {
     return (FlowContext)env.requireEntry(FlowContext.class);
   }
+  
+  public static MessageContext getMessageContext(Environment env) {
+    return (MessageContext)env.getEntry(MessageContext.class);
+  }
+
+  public static MessageContext requireMessageContext(Environment env) {
+    return (MessageContext)env.requireEntry(MessageContext.class);
+  } 
 }
