@@ -81,9 +81,9 @@ public abstract class StringArrayRequestControl extends BaseControl {
    */
   public void convert() {
     if (innerData != null)
-    	setRawValue(fromRequestParameters((String[]) innerData));
+      value = fromRequestParameters((String[]) innerData);
     else
-    	setRawValue(null);
+      value = null;
   }
 
   /**
