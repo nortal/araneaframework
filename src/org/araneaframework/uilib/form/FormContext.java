@@ -16,11 +16,13 @@
 package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public interface FormContext extends Serializable {
-  public boolean isBackgroundValidation();
+  boolean isBackgroundValidation();
+  Map getProperties(); 
 }

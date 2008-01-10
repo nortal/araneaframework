@@ -24,8 +24,8 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardConfiguration implements ConfigurationContext {
-  private Map confEntries = new HashMap();  
-  
+  private Map confEntries = new HashMap();
+
   public Object getEntry(String entryName) {
     return confEntries.get(entryName);
   }

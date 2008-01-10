@@ -43,11 +43,13 @@
   </bean>
   
   <bean id="simpleTreeMessageFactory" class="org.araneaframework.example.main.message.ExampleSimpleTreeMessageFactory"/>
+  <bean id="overlayDemoMessageFactory" class="org.araneaframework.example.main.message.ExampleOverlayDemoMessageFactory"/>
   <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
     id="araneaMountingFilter" singleton="false">
     <property name="mounts">
       <map>
         <entry key="simpleTree" value-ref="simpleTreeMessageFactory"/>
+        <entry key="overlayDemo" value-ref="overlayDemoMessageFactory"/>
       </map>
     </property>
   </bean> 

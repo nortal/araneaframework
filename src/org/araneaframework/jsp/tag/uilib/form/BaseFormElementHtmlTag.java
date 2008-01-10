@@ -130,10 +130,23 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		if (hasElementContextSpan) {
 			writeFormElementContextClose(out);
 			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
+			writeFormElementValidationErrorMessages(out);
 		}
+
 		return super.doEndTag(out);
 	}
-	
+
+	/**
+	 * @since 1.1
+	 */
+	protected void writeFormElementValidationErrorMessages(Writer out) throws JspException, AraneaJspException, IOException {
+		if (!formElementViewModel.isValid()) {
+		    FormWidget form = (FormWidget)requireContextEntry(FormTag.FORM_KEY);
+		    String errors = formElementViewModel.getFormElementValidationErrorRenderer().getClientRenderText(((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId)));
+		    out.write(errors);
+		}
+	}
+
 	public void doFinally() {
 		super.doFinally();
 		formViewModel = null;

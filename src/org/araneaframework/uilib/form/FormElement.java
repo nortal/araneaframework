@@ -33,7 +33,9 @@ import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.Event;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
@@ -41,6 +43,12 @@ import org.araneaframework.uilib.util.Event;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
+  /** 
+   * The property key for custom {@link FormElementValidationErrorRenderer} that may be set
+   * for this {@link FormElement}.
+   * @since 1.1 */
+  public static final String ERROR_RENDERER_PROPERTY_KEY = "FormElementValidationErrorRenderer";
+
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -220,6 +228,16 @@ public class FormElement extends GenericFormElement implements FormElementContex
     this.mandatory = mandatory;
   }
   
+  public void addError(String error) {
+    super.addError(error);
+    getFormElementValidationErrorRenderer().addError(this, error);
+  }
+  
+  public void clearErrors() {
+    getFormElementValidationErrorRenderer().clearErrors(this);
+    super.clearErrors();
+  }
+
   /**
    * Sets the action listener that deals with background validation of form. It should
    * be used when custom background validation logic or behaviour is wanted.
@@ -234,6 +252,27 @@ public class FormElement extends GenericFormElement implements FormElementContex
     clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
     addActionListener(SEAMLESS_VALIDATION_ACTION_ID, actionListener);
   }
+  
+  /**
+   * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced by this {@link FormElement}.
+   * @since 1.1 */
+  public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
+    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    if (result == null) {
+      result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
+    }
+
+    if (result == null)
+      return StandardFormElementValidationErrorRenderer.INSTANCE;
+
+    return result;
+  }
+
+  /** @since 1.1 */
+  public void setFormElementValidationErrorRenderer(FormElementValidationErrorRenderer renderer) {
+    setProperty(ERROR_RENDERER_PROPERTY_KEY, renderer);
+  }
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
@@ -382,6 +421,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  
 	  /**
 	   * Marks status of this {@link FormElement} rendered.
+	   * Only rendered {@link FormElement}s may read the data from subsequent request.
 	   */
 	  public void rendered() {
 	    _setRendered(true);
@@ -453,6 +493,14 @@ public class FormElement extends GenericFormElement implements FormElementContex
      */
     public String getLabel() {
       return this.label;
+    }
+    
+    /**
+     * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced 
+     * by {@link FormElement} represented by this {@link FormElement.ViewModel}
+     * @since 1.1 */
+    public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
+      return FormElement.this.getFormElementValidationErrorRenderer();
     }
     
     /**

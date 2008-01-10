@@ -133,7 +133,7 @@
     </property>
   </bean>
   
-   <bean class="org.araneaframework.framework.container.OverlayContainerWidget" id="araneaOverlayContainer" singleton="false">
+   <bean class="org.araneaframework.framework.container.StandardOverlayContainerWidget" id="araneaOverlayContainer" singleton="false">
      <property name="main" ref="araneaRootFlowContainer"/>
      <property name="overlay" ref="araneaOverlayRootContainer"/>
    </bean>

@@ -32,7 +32,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
 	public static ConfigurationContext getConfigurationContext(Environment env) {
 		return (ConfigurationContext) env.getEntry(ConfigurationContext.class);
 	}
-	
+
 	public static FormContext getFormContext(Environment env) {
 		return (FormContext) env.getEntry(FormContext.class);
 	}

@@ -53,8 +53,8 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   /**
-   * Creates a new {@link TreeWidget} instance with a data provider. Tree nodes
-   * are self-openable (plus sign is shown in front of every node).
+   * Creates a new {@link TreeWidget} instance which will acquire the
+   * tree data from supplied {@link TreeDataProvider}.
    * 
    * @param dataProvider
    *          tree data provider.

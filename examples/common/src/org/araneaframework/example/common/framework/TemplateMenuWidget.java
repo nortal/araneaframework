@@ -62,7 +62,6 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
 		public void onChange() throws Exception {
 			if (langSelect.convertAndValidate()) {
 				String lang = (String) langSelect.getValue();
-				langSelect.setValue(lang);
 				getL10nCtx().setLocale(new Locale(lang, ""));
 			}
 		}

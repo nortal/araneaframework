@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -206,7 +205,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     Assert.notEmptyParam(error, "error");
 
     getMutableErrors().add(error);
-    getMessageContext().showMessage(MessageContext.ERROR_TYPE, error);
   }
 
   public void addErrors(Set errors) {
@@ -219,7 +217,6 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * Clears element errors.
    */
   public void clearErrors() {  
-    getMessageContext().hideMessages(MessageContext.ERROR_TYPE, getErrors());
     errors = null;
   }
 
@@ -242,6 +239,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     }
     return this.backgroundValidation.booleanValue();
   }
+
   //*********************************************************************
   //* ABSTRACT METHODS
   //*********************************************************************
@@ -285,10 +283,11 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   //* INTERNAL METHODS
   //*********************************************************************
 
-  private MessageContext getMessageContext() {
+  /** @since 1.1 this method is protected (private before 1.1). */
+  protected MessageContext getMessageCtx() {
     return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
   }
-    
+
   /**
    * Converts the element value from control to data item
    * @throws Exception 

@@ -1726,5 +1726,65 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       <para>For standard implementation, please see <xref
       linkend="araneaRootFlowContainer" /></para>
     </sect2>
+    
+    <sect2 id="OverlayContext">
+      <title>OverlayContext</title>
+      
+       <para>
+      Supports running processes in "overlay" (in parallel <literal>FlowContext</literal> of the same session thread). 
+      It is used to allow construction of modal dialogs and modal processes. To start process inside overlay, one
+      calls one of the <literal>OverlayContext.start(...)</literal> methods</para>.
+
+      <para>
+       <literal>OverlayContext</literal> provides the <literal>replace*</literal>, <literal>start*</literal> and <literal>reset*</literal>
+      methods that act analogously to <literal>FlowContext</literal> corresponding methods, but affect only overlayed 
+      process. Additionally, following methods are available:
+      </para>
+      
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="1*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>boolean isOverlayActive()</literal></entry>
+                <entry>Returns whether some overlayed process is active.</entry>
+              </row>
+              
+              <row>
+                <entry><literal>setOverlayOptions(Map options)</literal></entry>
+                <entry>Sets the presentation options for overlayed processes.</entry>
+              </row>
+
+              <row>
+                <entry><literal>Map getOverlayOptions()</literal></entry>
+                <entry>Returns the map with current presentation options for overlayed processes.</entry>
+              </row>
+
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </para>
+      
+      <para>
+        Standard implementation of <literal>OverlayContext</literal> is described in
+        <xref linkend="StandardOverlayContainerWidget"/>.
+      </para>
+      
+      <para>
+
+      </para>
+
+    </sect2>
   </sect1>
 </chapter>

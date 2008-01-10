@@ -40,7 +40,7 @@ Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE =
 Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE = 
     new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE = 
-    new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, function() {}, null); araneaContextMenu.hide();');
+    new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, #{actionCallback}, function() {}, null); araneaContextMenu.hide();');
 Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
   if (menu.label) {
     var entrytemplate = Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE;
@@ -89,6 +89,7 @@ Aranea.ContextMenuHolder.prototype = {
     this.menus[widgetId] = menu;
     this.menus[widgetId].options = Object.extend({
       updateRegions: function() { return null; },
+      actionCallback: function() {},
     }, options || {});
     Aranea.ContextMenuHolder.setMenuOptions(this.menus[widgetId]);
   },

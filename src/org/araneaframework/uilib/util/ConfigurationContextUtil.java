@@ -16,6 +16,7 @@
 package org.araneaframework.uilib.util;
 
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -32,5 +33,10 @@ public abstract class ConfigurationContextUtil {
   public static Long getDefaultListItemsOnPage(ConfigurationContext cctx) {
     Long l = (Long) cctx.getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
     return l;
+  }
+  
+  public static FormElementValidationErrorRenderer getFormElementValidationErrorRenderer(ConfigurationContext cctx) {
+    FormElementValidationErrorRenderer r = (FormElementValidationErrorRenderer) cctx.getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
+    return r;
   }
 }

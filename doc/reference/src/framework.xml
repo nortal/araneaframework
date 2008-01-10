@@ -1943,7 +1943,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     
        <!--  -->
     
-     <sect2 id="overlayContext">
+     <sect2 id="StandardOverlayContainerWidget">
       <title>Overlay container.</title>
 
       <informaltable frame="topbot">
@@ -1957,7 +1957,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis role="bold">Java
               class:</emphasis></entry>
 
-              <entry><literal>OverlayContainerWidget</literal></entry>
+              <entry><literal>StandardOverlayContainerWidget</literal></entry>
             </row>
 
             <row>
