@@ -189,4 +189,13 @@ Aranea.UI.markFEContentStatus = function(valid, el) {
   }
 };
 
+/**
+ * Attaches validation errors directly to formelement on client-side.
+ * @since 1.1
+ */
+Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
+  if (el) el = $(el); else return;
+  if (el) new Insertion.Bottom(el, html);
+}
+
 window['aranea-ui.js'] = true;

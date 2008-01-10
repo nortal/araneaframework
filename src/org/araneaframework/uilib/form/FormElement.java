@@ -490,6 +490,11 @@ public class FormElement extends GenericFormElement implements FormElementContex
       return this.label;
     }
     
+    /** @since 1.1 */
+    public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
+      return FormElement.this.getFormElementValidationErrorRenderer();
+    }
+    
     /**
      * Returns whether the element is valid.
      * @return whether the element is valid.

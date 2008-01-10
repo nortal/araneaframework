@@ -20,19 +20,27 @@ import org.araneaframework.framework.MessageContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
+ * Form element validation error renderer which sends {@link FormElement} error messages to standard
+ * {@link MessageContext}.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public class StandardFormElementValidationErrorRenderer implements FormElementValidationErrorRenderer {
-	public static final StandardFormElementValidationErrorRenderer INSTANCE = new StandardFormElementValidationErrorRenderer();
-	
-	public void addError(GenericFormElement element, String error) {
-		MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
-		messageCtx.showMessage(MessageContext.ERROR_TYPE, error);
-	}
+  private static final long serialVersionUID = 1L;
+  public static final StandardFormElementValidationErrorRenderer INSTANCE = new StandardFormElementValidationErrorRenderer();
 
-	public void clearErrors(GenericFormElement element) {
-		MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
-		messageCtx.hideMessages(MessageContext.ERROR_TYPE, element.getErrors());
-	}
+  public void addError(FormElement element, String error) {
+    MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
+    messageCtx.showMessage(MessageContext.ERROR_TYPE, error);
+  }
+
+  public void clearErrors(FormElement element) {
+    MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
+    messageCtx.hideMessages(MessageContext.ERROR_TYPE, element.getErrors());
+  }
+
+  public String getClientRenderText(FormElement element) {
+    return "";
+  }
 }

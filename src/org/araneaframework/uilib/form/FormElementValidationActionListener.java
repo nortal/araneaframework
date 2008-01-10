@@ -37,8 +37,8 @@ public class FormElementValidationActionListener extends StandardActionListener 
   public static final String FORM_VALIDATION_REGION_KEY = "aranea-formvalidation";
   protected static final Log log = LogFactory.getLog(FormElementValidationActionListener.class);
 
-  private GenericFormElement baseFormElement;
-  public FormElementValidationActionListener(GenericFormElement baseFormElement) {
+  private FormElement baseFormElement;
+  public FormElementValidationActionListener(FormElement baseFormElement) {
     Assert.notNullParam(this, baseFormElement, "baseFormElement");
     this.baseFormElement = baseFormElement;
   }
@@ -59,6 +59,11 @@ public class FormElementValidationActionListener extends StandardActionListener 
     object.setStringProperty("formElementId", baseFormElement.getScope().toString());
     object.setProperty("valid", String.valueOf(valid));
     
+    // Process error messages indirectly attached to validated formelement
+    String clientRenderText = baseFormElement.getFormElementValidationErrorRenderer().getClientRenderText(baseFormElement);
+    if (clientRenderText != null && clientRenderText.length() > 0)
+	  object.setStringProperty("clientRenderText", clientRenderText);
+
     writeRegion(out, FormElementValidationActionListener.FORM_VALIDATION_REGION_KEY, object.toString());
     
     MessageContext messageContext = (MessageContext) baseFormElement.getEnvironment().getEntry(MessageContext.class);

@@ -19,19 +19,13 @@ package org.araneaframework.uilib.core;
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.form.LocalFormElementValidationErrorRenderer;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardConfiguration implements ConfigurationContext {
   private Map confEntries = new HashMap();
-  
-  {
-	  // XXX: remove after testing done
-	  confEntries.put(ConfigurationContext.FORMELEMENT_ERROR_RENDERER, LocalFormElementValidationErrorRenderer.INSTANCE);
-  }
-  
+
   public Object getEntry(String entryName) {
     return confEntries.get(entryName);
   }

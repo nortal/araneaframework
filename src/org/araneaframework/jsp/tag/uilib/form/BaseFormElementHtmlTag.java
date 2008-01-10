@@ -18,10 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.AraneaAttributes;
@@ -36,7 +33,6 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -134,24 +130,23 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		if (hasElementContextSpan) {
 			writeFormElementContextClose(out);
 			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
-			
-			//XXX: remove following code
-		
-			Map properties = formElementViewModel.getProperties();
-			if (properties != null) {
-				Collection messages = (Collection) properties.get(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
-				if (messages != null) {
-					out.write("<p>");
-					for (Iterator i = messages.iterator(); i.hasNext(); ) {
-						out.write(i.next().toString());
-					}
-					out.write("</p>");
-				}
-			}
+			writeFormElementValidationErrorMessages(out);
 		}
+
 		return super.doEndTag(out);
 	}
-	
+
+	/**
+	 * @since 1.1
+	 */
+	protected void writeFormElementValidationErrorMessages(Writer out) throws JspException, AraneaJspException, IOException {
+		if (!formElementViewModel.isValid()) {
+		    FormWidget form = (FormWidget)requireContextEntry(FormTag.FORM_KEY);
+		    String errors = formElementViewModel.getFormElementValidationErrorRenderer().getClientRenderText(((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId)));
+		    out.write(errors);
+		}
+	}
+
 	public void doFinally() {
 		super.doFinally();
 		formViewModel = null;

@@ -19,12 +19,47 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 
 /**
+ * Interface through which {@link org.araneaframework.uilib.form.FormElement}s
+ * register the error messages produced by failed validation.
+ * 
+ * @see org.araneaframework.uilib.form.StandardFormElementValidationErrorRenderer
+ * @see org.araneaframework.uilib.form.LocalFormElementValidationErrorRenderer
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public interface FormElementValidationErrorRenderer extends Serializable {
+  /**
+   * {@link org.araneaframework.uilib.form.FormElement} property key (see 
+   * {@link org.araneaframework.uilib.form.FormElement#getProperty(Object)}) under which validation errors may be stored.
+   */
   public static final String ERRORS_PROPERTY_KEY = "FormElementValidationErrors";
+  
+  /**
+   * Style class which should be present on all DOM elements which contain the rendered errors. 
+   */
+  public static final String RENDERED_FORMELEMENTERROR_STYLECLASS = "aranea-formelementerrors";
 
-  void addError(GenericFormElement element, String error);
-  void clearErrors(GenericFormElement element);
+  /**
+   * Called by {@link org.araneaframework.uilib.form.FormElement#addError(String)} to register validation errors. 
+   * @param element element which produced the validation error
+   * @param error detailed error message
+   */
+  void addError(FormElement element, String error);
+
+  /**
+   * Called by {@link org.araneaframework.uilib.form.FormElement#clearErrors()} to clear validation errors.
+   * @param element element which errors should be cleared
+   */
+  void clearErrors(FormElement element);
+
+  /**
+   * Returns client side script capable of rendering errors in desired format. This should
+   * be in form that can be directly appended to rendered HTML and should be enclosed in 
+   * HTML &lt;script&gt; tags.
+   * 
+   * When the errors are rendered with some other mechanism, returns <code>null</code> or empty String.
+   *  
+   * @return script capable of rendering errors in desired format */
+  String getClientRenderText(FormElement element);
 }

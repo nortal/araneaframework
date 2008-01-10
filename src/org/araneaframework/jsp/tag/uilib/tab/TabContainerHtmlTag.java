@@ -86,14 +86,7 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 		for (Iterator i = tabs.iterator(); i.hasNext();) {
 			TabWidget tabwidget = (TabWidget) i.next();
-
-			JspUtil.writeOpenStartTag(out, "div");
-			JspUtil.writeAttribute(out, "class", getTabStyleClass(tabwidget));
-			JspUtil.writeCloseStartTag_SS(out);
-
-			writeTablink(out, tabwidget);
-
-			JspUtil.writeEndTag(out, "div");
+			writeTab(out, tabwidget);
 		}
 
 		writeClearanceDiv(out);
@@ -101,7 +94,17 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 		return EVAL_BODY_INCLUDE;
 	}
-	
+
+	protected void writeTab(Writer out, TabWidget tabwidget) throws Exception {
+		JspUtil.writeOpenStartTag(out, "div");
+		JspUtil.writeAttribute(out, "class", getTabStyleClass(tabwidget));
+		JspUtil.writeCloseStartTag_SS(out);
+
+		writeTablink(out, tabwidget);
+
+		JspUtil.writeEndTag(out, "div");
+	}
+
 	protected int doEndTag(Writer out) throws Exception {
 		writeUpdateRegionEnd();
 		return super.doEndTag(out);

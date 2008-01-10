@@ -909,6 +909,17 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
     
     Aranea.UI.markFEContentStatus(result.valid, inputSpan);
     Aranea.UI.markFEContentStatus(result.valid, labelSpan);
+    
+    if (result.valid || result.clientRenderText) {
+      document.getElementsByClassName('aranea-formelementerrors ' + result.formElementId).each(
+        function(e) { e.remove() }
+      );
+    } 
+
+    if (result.clientRenderText) {
+      // invoke the supplied client side error-message renderer
+      result.clientRenderText.evalScripts();
+    }
   },
 
   getParentSpan: function(formelement) {
