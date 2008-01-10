@@ -99,8 +99,8 @@ public interface ConfigurationContext extends Serializable {
   public static final String BACKGROUND_FORM_VALIDATION = "uilib.widgets.forms.seamless.validation";
   
   /**
-   * This property should be set to the class which stores the validation errors produced by failed formelement
-   * validations. By default they are stored in {@link org.araneaframework.framework.MessageContext}.
+   * This property should be set to the class which stores the errors produced by failed {@link org.araneaframework.uilib.form.FormElement}
+   * validations. When this property is not set, {@link org.araneaframework.uilib.form.StandardFormElementValidationErrorRenderer} is used.
    */
   public static final String FORMELEMENT_ERROR_RENDERER = "uilib.widgets.forms.formelement.error.renderer";
 

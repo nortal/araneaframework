@@ -191,6 +191,8 @@ Aranea.UI.markFEContentStatus = function(valid, el) {
 
 /**
  * Attaches validation errors directly to formelement on client-side.
+ * @param el DOM element which accepts validation messages as children
+ * @param html HTML content (error messages prerendered serverside)
  * @since 1.1
  */
 Aranea.UI.appendLocalFEValidationMessages = function(el, html) {

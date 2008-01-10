@@ -24,6 +24,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.InvalidFormElementNameException;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
@@ -63,6 +64,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   public void clearErrors() {
+	  getMessageCtx().hideMessages(MessageContext.ERROR_TYPE, getErrors());
 	  super.clearErrors();
 	  for (Iterator i = getElements().values().iterator(); i.hasNext();) {
 		 ((GenericFormElement) i.next()).clearErrors();

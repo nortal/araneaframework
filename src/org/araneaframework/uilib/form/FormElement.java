@@ -43,7 +43,10 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
-  /** @since 1.1 */
+  /** 
+   * The property key for custom {@link FormElementValidationErrorRenderer} that may be set
+   * for this {@link FormElement}.
+   * @since 1.1 */
   public static final String ERROR_RENDERER_PROPERTY_KEY = "FormElementValidationErrorRenderer";
 
   //*******************************************************************
@@ -250,7 +253,9 @@ public class FormElement extends GenericFormElement implements FormElementContex
     addActionListener(SEAMLESS_VALIDATION_ACTION_ID, actionListener);
   }
   
-  /** @since 1.1 */
+  /**
+   * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced by this {@link FormElement}.
+   * @since 1.1 */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
     FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
     if (result == null) {
@@ -490,7 +495,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
       return this.label;
     }
     
-    /** @since 1.1 */
+    /**
+     * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced 
+     * by {@link FormElement} represented by this {@link FormElement.ViewModel}
+     * @since 1.1 */
     public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
       return FormElement.this.getFormElementValidationErrorRenderer();
     }

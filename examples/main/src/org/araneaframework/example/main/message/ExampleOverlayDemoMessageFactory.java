@@ -10,6 +10,9 @@ import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
 import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
+/**
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
 public class ExampleOverlayDemoMessageFactory implements MessageFactory {
 	public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
 		return new SeriesMessage(new Message[] {
