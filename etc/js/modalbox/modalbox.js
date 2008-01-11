@@ -205,8 +205,8 @@ Modalbox.Methods = {
 						onComplete: function(transport) {
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
-							response.extractScripts().map(function(script) { 
-								return eval(script.replace("<!--", "").replace("// -->", ""));
+							response.extractScripts().map(function(script) {
+							    return eval(script.replace("<!--", "").replace("// -->", ""));
 							}.bind(window));
 							this._putContent(transport.responseText);
  							AraneaPage.findSystemForm();
