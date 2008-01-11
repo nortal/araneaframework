@@ -209,6 +209,7 @@ Modalbox.Methods = {
 								return eval(script.replace("<!--", "").replace("// -->", ""));
 							}.bind(window));
 							this._putContent(transport.responseText);
+ 							AraneaPage.findSystemForm();
 						}.bind(this)
 					});
 					
