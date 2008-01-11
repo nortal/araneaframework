@@ -210,6 +210,11 @@ Modalbox.Methods = {
 							}.bind(window));
 							this._putContent(transport.responseText);
  							AraneaPage.findSystemForm();
+							var f = function() {
+								araneaPage().onload();
+							};
+							// -- force the delay here
+							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
 						}.bind(this)
 					});
 					
