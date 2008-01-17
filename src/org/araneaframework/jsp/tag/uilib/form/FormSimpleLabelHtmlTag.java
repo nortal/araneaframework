@@ -22,12 +22,12 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormWidget;
 
 
 /**
@@ -197,9 +197,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     }
     
     if (fullFormElementId != null) {
-      ApplicationWidget contextWidget = JspWidgetUtil.getContextWidget(pageContext);
-      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, fullFormElementId.substring(contextWidget.getScope().toString().length()));
-      
+      FormWidget contextWidget = (FormWidget) JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
+      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, formElementId);
       BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
   }
