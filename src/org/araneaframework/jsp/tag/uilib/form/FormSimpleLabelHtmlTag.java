@@ -92,7 +92,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Whether a colon (":") is draw after the label." 
+   *   description = "Whether a colon (":") is shown after the label." 
    */
   public void setShowColon(String showColon) throws JspException {
     this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
