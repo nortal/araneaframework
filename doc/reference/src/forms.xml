@@ -3430,7 +3430,8 @@ el.click();</programlisting>
       can be dynamically associated with some JSP tag in Java code and then
       rendered with <literal>&lt;ui:automaticFormElement&gt;</literal> tag
       which uses associated tag to render
-      <literal>FormElement</literal>.</para>
+      <literal>FormElement</literal>.
+      </para>
 
       <sect3>
         <title>Attributes</title>
@@ -3442,8 +3443,12 @@ el.click();</programlisting>
         <title>Examples</title>
 
         <para>In Java code, setting tag that should rendering element is done
-        by setting <literal>FormElement</literal> property. <programlisting
+        by either setting <literal>FormElement</literal> property or preferably by using <literal>AutomaticFormElementUtil</literal>
+        utility which makes the code slightly less verbose. Following lines of code all do the same thing:
+        <programlisting
         role="java">element.setProperty(FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY, new FormElementViewSelector(tag, attributes));
+AutomaticFormElementUtil.setFormElementViewSelector(element, new FormElementViewSelector(tag, attributes));
+AutomaticFormElementUtil.setFormElementTag(element, tag, attributes);
 </programlisting></para>
 
         <para><programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
