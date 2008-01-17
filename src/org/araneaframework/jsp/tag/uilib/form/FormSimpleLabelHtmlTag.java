@@ -197,8 +197,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     }
     
     if (fullFormElementId != null) {
-      FormWidget contextWidget = (FormWidget) JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
-      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, formElementId);
+      FormWidget formWidget = (FormWidget) JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
+      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(formWidget, formElementId);
       BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
   }
