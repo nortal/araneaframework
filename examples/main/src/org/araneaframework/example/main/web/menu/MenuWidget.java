@@ -23,7 +23,6 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
-import org.araneaframework.example.main.release.demos.ComboTextInputDemoWidget;
 import org.araneaframework.example.main.release.demos.DemoActionPollWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
@@ -119,7 +118,6 @@ private MenuItem araneaMenu;
 		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoNewTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
-		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Serverside_Polling", DemoActionPollWidget.class));
 
 		// "Management"
