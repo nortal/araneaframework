@@ -105,7 +105,12 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
 				form.convertAndValidate();
 			}
 		});
+
 		return form;
+	}
+
+	private void handleEventReturn() {
+      getFlowCtx().cancel();
 	}
 
 	private SelectControl buildRoomSelect() {

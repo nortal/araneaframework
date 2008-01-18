@@ -411,7 +411,7 @@
       </sect3>
     </sect2>
 
-    <sect2>
+    <sect2 id="uimessagesjsp" xreflabel="&lt;ui:messages&gt;">
       <title>&lt;ui:messages&gt;</title>
 
       <para>This tag will render messages of given type if they are present in

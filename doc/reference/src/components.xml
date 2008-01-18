@@ -1510,7 +1510,8 @@ setViewSelector("myWidget/form");
 
       <para>For information on implementation of the
       <literal>MessageContext</literal> see <xref
-      linkend="araneaMessagingFilter" />.</para>
+      linkend="araneaMessagingFilter" />. For standard JSP tag which renders <literal>MessageContext</literal>
+      messages to response, see <xref linkend="uimessagesjsp"/>.</para>
     </sect2>
 
     <sect2 id="LocalizationContext">

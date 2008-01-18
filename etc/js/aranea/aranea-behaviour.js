@@ -21,12 +21,14 @@
  */
  
 function setFormElementContext(el) {
+  if (el.formElementContextBehaviourAttached) return;
   var span = $(el).ancestors().find(function(element) {
   	return element.tagName.toUpperCase() == 'SPAN';
   });
 
   if (span && el.name) {
     Event.observe(span, 'keydown', function(ev) { return Aranea.KB.handleKeypress(ev, el.name);});
+    el.formElementContextBehaviourAttached = true;
   }
 }
 
@@ -37,6 +39,7 @@ function formElementValidationActionCall(el) {
 
 /** @since 1.1 */
 function setFormElementValidation(el){
+  if (el.formElementValidationBehaviourAttached) return;
   if(!araneaPage().getBackgroundValidation() && !($(el).hasAttribute('arn-bgValidate'))) {
     return;
   }
@@ -50,9 +53,11 @@ function setFormElementValidation(el){
     formElementValidationActionCall(el);
   };
   Event.observe(elId, 'change', actionValidate);
+  el.formElementValidationBehaviourAttached = true;
 }
 
 function setCloningUrl(el) {
+  if (el.cloningUrlBehaviourAttached) return;
   var eventId = el.getAttribute('arn-evntId');
   var eventParam = el.getAttribute('arn-evntPar');
   var eventTarget = el.getAttribute('arn-trgtwdgt');
@@ -70,6 +75,7 @@ function setCloningUrl(el) {
     url += "&araWidgetEventPath="+ eventTarget;
       
   el['href'] = url;
+  el.cloningUrlBehaviourAttached = true;
 }
 
 function applyCharacterFilter(el) {
@@ -84,6 +90,7 @@ function applyCharacterFilter(el) {
   }
 }
 
+/** TODO: if this is not used, probably*/
 function setToolTip(el){
   var toolTip = $(el).getAttribute("arn-toolTip");
   if (!toolTip) return;

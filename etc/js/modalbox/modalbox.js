@@ -211,6 +211,7 @@ Modalbox.Methods = {
 							this._putContent(transport.responseText);
  							AraneaPage.findSystemForm();
 							var f = function() {
+                                _ap.addSystemLoadEvent(AraneaPage.init);
 								araneaPage().onload();
 							};
 							// -- force the delay here
