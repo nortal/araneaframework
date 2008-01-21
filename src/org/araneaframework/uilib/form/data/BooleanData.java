@@ -26,5 +26,6 @@ import org.araneaframework.uilib.form.Data;
 public class BooleanData extends Data {
   public BooleanData() {
     super(Boolean.class);
+    setValue(Boolean.FALSE);
   }
 }

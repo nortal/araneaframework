@@ -1,6 +1,10 @@
 package org.araneaframework.example.main.release.demos;
 
+import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.time.DateUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.framework.OverlayContext;
@@ -55,7 +59,8 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
     // on formelement creation by setting mandatory attribute to true
     form.getElement("number").setConstraint(new NotEmptyConstraint());
     // sets initial value of form element
-    form.setValueByFullName("dateTime", new Date());
+
+	form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));
 
 	// now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
@@ -63,7 +68,20 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
 	// add the button to form. As the button does not hold any value, Data will be null.
 	form.addElement("button", "common.Submit", button, null, false);
-    
+	
+	form.markBaseState();
+	
+    class X implements Predicate, Serializable {
+		public boolean evaluate(Object obj) {
+			form.convert();
+			boolean stateChanged = form.isStateChanged();
+			getMessageCtx().showInfoMessage("Predicate was evaluated to " + stateChanged);
+			return stateChanged;
+		}
+    }
+
+	getFlowEventAutoConfirmationContext().setConfirmationCondition(new X());
+
     // the usual, add the created widget to main widget.
 	addWidget("form", form);
   }

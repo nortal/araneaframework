@@ -17,8 +17,10 @@ package org.araneaframework.core.util;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.araneaframework.Component;
+import org.araneaframework.Environment;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.core.StandardScope;
 
 /**
@@ -49,9 +51,29 @@ public abstract class ComponentUtil {
     while (target._getComposite().getChildren().get(key) != null) {
       key = LISTENER_KEY + RandomUtils.nextLong();
     }
-    
-    listener._getComponent().init(new StandardScope(key, target.getScope()), target.getChildEnvironment());
-    
+
+    Environment env = target.isAlive() ? target.getChildEnvironment() : new LateBindingChildEnvironment(target);
+    listener._getComponent().init(new StandardScope(key, target.getScope()), env);
+
     target._getComposite().attach(key, listener);    
+  }
+
+  private static class LateBindingChildEnvironment implements Environment {
+    private static final long serialVersionUID = 1L;
+    private ApplicationComponent component;
+
+    public LateBindingChildEnvironment(ApplicationComponent component) {
+      this.component = component;
+    }
+
+    public Object getEntry(Object key) {
+      // Fail with NPE when component still not initialized at the time of accessing entry
+      return component.getChildEnvironment().getEntry(key); 
+    }
+
+    public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException {
+      // Fail with NPE when component still not initialized at the time of accessing entry
+      return component.getChildEnvironment().requireEntry(key);
+    }
   }
 }

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import org.apache.commons.collections.Closure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -38,6 +39,8 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
+import org.araneaframework.framework.FlowEventAutoConfirmationContext;
+import org.araneaframework.uilib.core.FlowEventConfirmationWidget;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -67,6 +70,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected Widget top;
   protected boolean finishable = true;
   
+  protected Widget flowEventConfirmationWidget;
+
   private Map nestedEnvironmentEntries = new HashMap();
   private Map nestedEnvEntryStacks = new HashMap();
 
@@ -92,7 +97,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void setTop(Widget topWidget) {
     this.top = topWidget;
   }
-
   
   /**
    * Determines whether this {@link StandardFlowContainerWidget} will ever
@@ -133,7 +137,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
     callStack.addFirst(frame);
     
-    addWidget(frame.getName(), flow);
+    addFrameWidget(frame);
 
     if (configurator != null) {
       try {
@@ -150,66 +154,24 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public void replace(Widget flow, Configurator configurator) {
-    Assert.notNullParam(flow, "flow");
-    
-    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler(), previousFrame);
-    
-    if (log.isDebugEnabled())
-      log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
-        "' with flow '" + flow.getClass().getName() + "'");
-    
-    removeWidget(previousFrame.getName());
-    
-    callStack.addFirst(frame);    
-    
-    addWidget(frame.getName(), flow);
-    
-    if (configurator != null) {
-      try {
-        configurator.configure(flow);
-      }
-      catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
-    }
+    doReplace(flow, configurator);
   }
 
   public void finish(Object returnValue) {
-    if (callStack.size() == 0)
-      throw new EmptyCallStackException();
-    
-    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
-    
-    if (log.isDebugEnabled())
-      log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
-    
-    removeWidget(previousFrame.getName());
-    if (frame != null) {
-      _getChildren().put(frame.getName(), frame.getWidget());
-      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
-    }
-    
-    if (previousFrame.getHandler() != null) {
-      try {
-        previousFrame.getHandler().onFinish(returnValue);
-      }
-      catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
-    }
-
-    if (finishable && callStack.size() == 0) {
-      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
-      if (parentFlowContainer != null) {
-        parentFlowContainer.finish(returnValue);
-      }
-    }
+    doFinish(returnValue);
   }
 
   public void cancel() {
-    if (callStack.size() == 0)
+    if (shouldConfirm()) {
+      doConfirm(new CancelClosure());
+    } else {
+      doCancel();
+    }
+  }
+
+  /** @since 1.1 */
+  protected void doCancel() {
+	if (callStack.size() == 0)
       throw new EmptyCallStackException();
     
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
@@ -243,29 +205,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   	return new FlowReference();
   }
   
-  private LinkedList getEnvEntryStack(Object entryId) {
-    LinkedList envEntryStack = (LinkedList) nestedEnvEntryStacks.get(entryId);
-    
-    if (envEntryStack == null) {
-      envEntryStack = new LinkedList();
-      nestedEnvEntryStacks.put(entryId, envEntryStack);
-    }
-    
-    return envEntryStack;
-  }
-  
-  private void pushGlobalEnvEntry(Object entryId, Object envEntry) {
-    getEnvEntryStack(entryId).addFirst(envEntry);
-    
-    refreshGlobalEnvironment();
-  }
-  
-  private void popGlobalEnvEntry(Object entryId) {
-    getEnvEntryStack(entryId).removeFirst();
-    
-    refreshGlobalEnvironment();
-  }
-  
   public void addNestedEnvironmentEntry(ApplicationWidget scope, final Object entryId, Object envEntry) {
     Assert.notNullParam(scope, "scope");
     Assert.notNullParam(entryId, "entryId");
@@ -285,28 +224,15 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   public void reset(final EnvironmentAwareCallback callback) {
-    if (log.isDebugEnabled())
-      log.debug("Resetting flows '" + callStack + "'");
-    
-    for (Iterator i = callStack.iterator(); i.hasNext();) {
-      CallFrame frame = (CallFrame) i.next();
-      
-      _getChildren().put(frame.getName(), frame.getWidget());
-      removeWidget(frame.getName());
-    }
-    
-    callStack.clear();
-    
-    if (callback != null) try {
-      callback.call(getChildWidgetEnvironment());
-    }
-    catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
+    if (shouldConfirm()) {
+	  doConfirm(new ResetClosure(callback));
+    } else {
+      doReset(callback);
     }
   }
-  
+
   //*******************************************************************
-  // PROTECTED METHODS
+  // PROTECTED LIFECYCLE METHODS
   //*******************************************************************
   
   protected void init() throws Exception {
@@ -344,8 +270,148 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     CallFrame frame = (CallFrame) callStack.getFirst();
     
     getWidget(frame.getName())._getWidget().render(output);
+    if (flowEventConfirmationWidget != null)
+     flowEventConfirmationWidget._getWidget().render(output);
   }
   
+  //*******************************************************************
+  // IMPL SPECIFIC PROTECTED METHODS
+  //*******************************************************************
+  protected void putLocalEnvironmentEntries(Map nestedEnvironmentEntries) {
+    nestedEnvironmentEntries.put(FlowContext.class, this);
+  }
+  
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(getEnvironment(), nestedEnvironmentEntries);
+  }
+  
+  /**
+   * Returns a new CallFrame constructed of the callable, configurator and handler.
+   */
+  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler, CallFrame previous) {
+    return new CallFrame(callable, configurator, handler, previous);
+  }
+
+  /**
+   * Activates the widget represented by the {@link CallFrame}. 
+   * @since 1.1 */
+  protected void addFrameWidget(CallFrame frame) {
+    final Widget flow = frame.getWidget();
+    addNestedEnvironmentEntry((ApplicationWidget) flow, FlowEventAutoConfirmationContext.class, new FlowEventAutoConfirmationContextImpl());
+	addWidget(frame.getName(), flow);
+  }
+
+  /** @since 1.1 */
+  protected boolean shouldConfirm() {
+    LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
+    if (envEntryStack.isEmpty()) 
+      return false;
+
+	FlowEventAutoConfirmationContext ctx = (FlowEventAutoConfirmationContext) envEntryStack.getFirst();
+    if (ctx.getCondition() != null) {
+      return ctx.getCondition().evaluate(((CallFrame)callStack.getFirst()).getWidget());
+    }
+    return false;
+  }
+  
+  protected void doConfirm(Closure navigationEventClosure) {
+    flowEventConfirmationWidget = new FlowEventConfirmationWidget("Do it now?", navigationEventClosure);
+    addWidget("flowEventConfirmationWidget", flowEventConfirmationWidget);
+    
+    LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
+    FlowEventAutoConfirmationContext ctx = (FlowEventAutoConfirmationContext) envEntryStack.getFirst();
+    ctx.askConfirmation(navigationEventClosure);
+  }
+  
+  protected void removeFlowEventConfirmationWidget() {
+    removeWidget("flowEventConfirmationWidget");
+    flowEventConfirmationWidget = null;
+  }
+  
+  /** @since 1.1 */
+  protected void doReset(final EnvironmentAwareCallback callback) {
+	if (log.isDebugEnabled())
+      log.debug("Resetting flows '" + callStack + "'");
+    
+    for (Iterator i = callStack.iterator(); i.hasNext();) {
+      CallFrame frame = (CallFrame) i.next();
+      
+      _getChildren().put(frame.getName(), frame.getWidget());
+      removeWidget(frame.getName());
+    }
+    
+    callStack.clear();
+    
+    if (callback != null) try {
+      callback.call(getChildWidgetEnvironment());
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
+  }
+  
+  protected void doFinish(Object returnValue) {
+	if (callStack.size() == 0)
+      throw new EmptyCallStackException();
+    
+    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
+    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    
+    if (log.isDebugEnabled())
+      log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
+    
+    removeWidget(previousFrame.getName());
+    if (frame != null) {
+      _getChildren().put(frame.getName(), frame.getWidget());
+      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
+    }
+    
+    if (previousFrame.getHandler() != null) {
+      try {
+        previousFrame.getHandler().onFinish(returnValue);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
+    }
+
+    if (finishable && callStack.size() == 0) {
+      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
+      if (parentFlowContainer != null) {
+        parentFlowContainer.finish(returnValue);
+      }
+    }
+  }
+  
+  protected void doReplace(Widget flow, Configurator configurator) {
+	Assert.notNullParam(flow, "flow");
+    
+    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
+    CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler(), previousFrame);
+    
+    if (log.isDebugEnabled())
+      log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + 
+        "' with flow '" + flow.getClass().getName() + "'");
+    
+    removeWidget(previousFrame.getName());
+    
+    callStack.addFirst(frame);    
+    
+    addFrameWidget(frame);
+
+    if (configurator != null) {
+      try {
+        configurator.configure(flow);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
+    }
+  }
+
+  //*******************************************************************
+  // PRIVATE METHODS
+  //*******************************************************************
   private void refreshGlobalEnvironment() {
     nestedEnvironmentEntries.clear();
     
@@ -361,20 +427,28 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
     }    
   }
-  
-  protected void putLocalEnvironmentEntries(Map nestedEnvironmentEntries) {
-    nestedEnvironmentEntries.put(FlowContext.class, this);
+
+  private LinkedList getEnvEntryStack(Object entryId) {
+    LinkedList envEntryStack = (LinkedList) nestedEnvEntryStacks.get(entryId);
+    
+    if (envEntryStack == null) {
+      envEntryStack = new LinkedList();
+      nestedEnvEntryStacks.put(entryId, envEntryStack);
+    }
+    
+    return envEntryStack;
   }
   
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(getEnvironment(), nestedEnvironmentEntries);
+  private void pushGlobalEnvEntry(Object entryId, Object envEntry) {
+    getEnvEntryStack(entryId).addFirst(envEntry);
+    
+    refreshGlobalEnvironment();
   }
   
-  /**
-   * Returns a new CallFrame constructed of the callable, configurator and handler.
-   */
-  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler, CallFrame previous) {
-    return new CallFrame(callable, configurator, handler, previous);
+  private void popGlobalEnvEntry(Object entryId) {
+    getEnvEntryStack(entryId).removeFirst();
+    
+    refreshGlobalEnvironment();
   }
   
   //*******************************************************************
@@ -382,10 +456,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   //*******************************************************************
   
   protected class FlowReference implements FlowContext.FlowReference {
-  	private int currentDepth = StandardFlowContainerWidget.this.callStack.size();
+    private int currentDepth = StandardFlowContainerWidget.this.callStack.size();
   	
-		public void reset(EnvironmentAwareCallback callback) throws Exception {
-			Iterator i = callStack.iterator();
+    public void reset(EnvironmentAwareCallback callback) throws Exception {
+      Iterator i = callStack.iterator();
       while (i.hasNext() && callStack.size() > currentDepth) {
         CallFrame frame = (CallFrame) i.next();
         
@@ -402,7 +476,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
 
       callback.call(getChildWidgetEnvironment());
-		}  	
+    }  	
   }
   
   /**
@@ -454,5 +528,63 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
   protected LinkedList getCallStack() {
     return callStack;
+  }
+  
+  /* Protected Closure classes for executing flow navigation events from callbacks. */
+  /** @since 1.1 */
+  protected class CancelClosure implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
+
+	public void execute(Object obj) {
+      doCancel();
+      removeFlowEventConfirmationWidget();
+    }
+  }
+
+  /** @since 1.1 */
+  protected class ResetClosure implements Closure, Serializable {
+	private static final long serialVersionUID = 1L;
+    protected EnvironmentAwareCallback callback;
+    
+    public ResetClosure(EnvironmentAwareCallback callback) {
+      this.callback = callback;
+    }
+
+    public void execute(Object obj) {
+      doReset(callback);
+      removeFlowEventConfirmationWidget();
+    }
+  }
+  
+  /** @since 1.1 */
+  protected class FinishClosure implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
+    protected Object result;
+    
+    public FinishClosure(Object result) {
+      this.result = result;
+    }
+
+    public void execute(Object obj) {
+      doFinish(result);
+      removeFlowEventConfirmationWidget();
+    }
+  }
+
+  /** @since 1.1 */
+  protected class ReplaceClosure implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
+    protected Widget flow;
+    protected Configurator configurator;
+
+    public ReplaceClosure(Widget flow, Configurator configurator) {
+      this.flow = flow;
+      this.configurator = configurator;
+    }
+
+    public void execute(Object obj) {
+      doReplace(flow, configurator);
+      removeFlowEventConfirmationWidget();
+    }
   }
 }

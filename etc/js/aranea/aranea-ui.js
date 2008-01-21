@@ -198,6 +198,11 @@ Aranea.UI.markFEContentStatus = function(valid, el) {
 Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
   if (el) el = $(el); else return;
   if (el) new Insertion.Bottom(el, html);
-}
+};
+
+/** @since 1.1 */
+Aranea.UI.flowEventConfirm = function(eventTarget, message) {
+  araneaPage().event_6(araneaPage().getSystemForm(), "flowEventConfirmation", eventTarget, window.confirm(message), null, null);
+};
 
 window['aranea-ui.js'] = true;
