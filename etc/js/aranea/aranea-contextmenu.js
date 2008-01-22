@@ -87,10 +87,10 @@ Aranea.ContextMenuHolder.prototype = {
 
   addMenu: function(widgetId, menu, options) {
     this.menus[widgetId] = menu;
-    this.menus[widgetId].options = Object.extend({
-      updateRegions: function() { return null; },
-      actionCallback: function() {},
-    }, options || {});
+    var src = new Object();
+    src.updateRegions = function() { return null; };
+    src.actionCallback = Prototype.emptyFunction;
+    this.menus[widgetId].options = Object.extend(src, options || {});
     Aranea.ContextMenuHolder.setMenuOptions(this.menus[widgetId]);
   },
 
