@@ -39,8 +39,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
-	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
-	
+
 	protected int doStartTag(Writer out) throws Exception {
 		setName("script");
 

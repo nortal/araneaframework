@@ -65,7 +65,10 @@ public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 		jsonObject.setProperty("loadedCondition", scriptLoadCondition);
 		jsonObject.setProperty("executionTryInterval", interval);
 
-		out.write("Aranea.ScriptLoader.loadHeadScript("+ jsonObject.toString() + ");");
+		String loadScript = "Aranea.ScriptLoader.loadHeadScript("+ jsonObject.toString() + ");";
+		String onLoadScript = "_ap.addSystemLoadEvent(function() {" + loadScript + "});";
+
+		out.write("if (Prototype.Browser.IE ) {" + onLoadScript + " } else { " + loadScript + " } ");
 
 		JspUtil.writeEndTag(out, "script");
 		out.write("\n");
