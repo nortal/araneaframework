@@ -176,8 +176,14 @@ var uiHandleKeypress = Aranea.KB.handleKeypress;
 Aranea.KB.registerKeypressHandler = function(elementPrefix, keyCode, handler) {
   // if elementPrefix is '', we register a global keypress handler.
   if (elementPrefix == '') {
-    if (typeof keyCode == 'number')
-      Event.observe(document, "keydown", function(event) {if (event.which == keyCode) handler(event, '');});
+    if (typeof keyCode == 'number') {
+      var f = function(event) { 
+        if ((event.which && (event.which == keyCode)) || (event.keyCode && (event.keyCode == keyCode))) { 
+          handler(event, '');
+        }
+      };
+      Event.observe(document, "keydown", f);
+    }
     else
       Event.observe(document, "keydown", function(event) { handler(event, '');}, true);
   }

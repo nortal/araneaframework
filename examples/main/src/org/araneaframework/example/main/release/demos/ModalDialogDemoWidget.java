@@ -5,9 +5,11 @@ import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.time.DateUtils;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.container.FlowEventAutoConfirmationContextImpl;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -71,7 +73,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	
 	form.markBaseState();
 	
-    class X implements Predicate, Serializable {
+	class X implements Predicate, Serializable {
 		public boolean evaluate(Object obj) {
 			form.convert();
 			boolean stateChanged = form.isStateChanged();
@@ -80,7 +82,24 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 		}
     }
 
-	getFlowEventAutoConfirmationContext().setConfirmationCondition(new X());
+	final X xp = new X();
+	
+	class ConfCondition extends FlowEventAutoConfirmationContextImpl.DefaultConfirmationCondition {
+      public Predicate getCancelPredicate() {
+        return xp;
+      }
+	}
+	
+	///XXX useless
+	class AskingClosure implements Predicate, Serializable {
+		public boolean evaluate(Object obj) {
+			ApplicationWidget activeFlow = (ApplicationWidget) obj;
+			
+			return false;
+		}
+	}
+
+	getFlowEventAutoConfirmationContext().setConfirmationCondition(new ConfCondition());
 
     // the usual, add the created widget to main widget.
 	addWidget("form", form);

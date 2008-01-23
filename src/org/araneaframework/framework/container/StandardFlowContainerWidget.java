@@ -22,24 +22,30 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.functors.ChainedClosure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
+import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.FlowEventAutoConfirmationContext;
+import org.araneaframework.framework.FlowEventAutoConfirmationContext.ConfirmationCondition;
 import org.araneaframework.uilib.core.FlowEventConfirmationWidget;
 
 /**
@@ -122,31 +128,13 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public void start(Widget flow, Configurator configurator, Handler handler) {
-    Assert.notNullParam(flow, "flow");
-
-    CallFrame previous = callStack.size() == 0 ? null : (CallFrame) callStack.getFirst();
-    CallFrame frame = makeCallFrame(flow, configurator, handler, previous);
-    
-    if (log.isDebugEnabled())
-      log.debug("Starting flow '" + flow.getClass().getName() +"'");
-    
-    if (previous != null && _getChildren().get(previous.getName()) != null) {
-      ((Widget) getChildren().get(previous.getName()))._getComponent().disable();
-      _getChildren().remove(previous.getName());
+    FlowEventAutoConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
+    ConfirmationCondition condition = confirmationCtx != null ? confirmationCtx.getCondition() : null;
+	if (condition != null && shouldConfirm(condition.getStartPredicate())) {
+      doConfirm(new StartClosure(flow, configurator, handler));
+    } else {
+      doStart(flow, configurator, handler);
     }
-    
-    callStack.addFirst(frame);
-    
-    addFrameWidget(frame);
-
-    if (configurator != null) {
-      try {
-        configurator.configure(flow);
-      }
-      catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
-    }    
   }
 
   public void replace(Widget flow) {
@@ -154,53 +142,46 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public void replace(Widget flow, Configurator configurator) {
-    doReplace(flow, configurator);
+	FlowEventAutoConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
+	ConfirmationCondition condition = confirmationCtx != null ? confirmationCtx.getCondition() : null;
+    if (condition != null && shouldConfirm(condition.getReplacePredicate())) {
+      doConfirm(new ReplaceClosure(flow, configurator));
+    } else {
+      doReplace(flow, configurator);
+    }
   }
 
   public void finish(Object returnValue) {
-    doFinish(returnValue);
+	FlowEventAutoConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
+	ConfirmationCondition condition = confirmationCtx != null ? confirmationCtx.getCondition() : null;
+    if (condition != null && shouldConfirm(condition.getFinishPredicate())) {
+      doConfirm(new FinishClosure(returnValue));
+    } else {
+      doFinish(returnValue);
+    }
   }
 
   public void cancel() {
-    if (shouldConfirm()) {
+	FlowEventAutoConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
+	ConfirmationCondition condition = confirmationCtx != null ? confirmationCtx.getCondition() : null;
+    if (condition != null && shouldConfirm(condition.getCancelPredicate())) {
       doConfirm(new CancelClosure());
     } else {
       doCancel();
     }
   }
 
-  /** @since 1.1 */
-  protected void doCancel() {
-	if (callStack.size() == 0)
-      throw new EmptyCallStackException();
-    
-    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
-    
-    if (log.isDebugEnabled())
-      log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
-    
-    removeWidget(previousFrame.getName());
-    if (frame != null) {
-      _getChildren().put(frame.getName(), frame.getWidget());    
-      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
-    }
-    
-    if (previousFrame.getHandler() != null) try {
-      previousFrame.getHandler().onCancel();
-    }
-    catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-
-    if (finishable && callStack.size() == 0) {
-      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
-      if (parentFlowContainer != null) {
-        parentFlowContainer.cancel();
-      }
+  public void reset(final EnvironmentAwareCallback callback) {
+	FlowEventAutoConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
+	ConfirmationCondition condition = confirmationCtx != null ? confirmationCtx.getCondition() : null;
+	
+    if (condition != null && shouldConfirm(condition.getResetPredicate())) {
+	  doConfirm(new ResetClosure(callback));
+    } else {
+      doReset(callback);
     }
   }
-  
+
   public FlowContext.FlowReference getCurrentReference() {
   	return new FlowReference();
   }
@@ -223,14 +204,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     return callStack.size() != 0;
   }
   
-  public void reset(final EnvironmentAwareCallback callback) {
-    if (shouldConfirm()) {
-	  doConfirm(new ResetClosure(callback));
-    } else {
-      doReset(callback);
-    }
-  }
-
   //*******************************************************************
   // PROTECTED LIFECYCLE METHODS
   //*******************************************************************
@@ -271,7 +244,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
     getWidget(frame.getName())._getWidget().render(output);
     if (flowEventConfirmationWidget != null)
-     flowEventConfirmationWidget._getWidget().render(output);
+      flowEventConfirmationWidget._getWidget().render(output);
   }
   
   //*******************************************************************
@@ -291,6 +264,15 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler handler, CallFrame previous) {
     return new CallFrame(callable, configurator, handler, previous);
   }
+  
+  /** @since 1.1 */
+  protected FlowEventAutoConfirmationContext getActiveFlowEventAutoConfirmationContext() {
+    LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
+    if (envEntryStack.isEmpty()) 
+      return null;
+
+    return (FlowEventAutoConfirmationContext) envEntryStack.getFirst();
+  }
 
   /**
    * Activates the widget represented by the {@link CallFrame}. 
@@ -302,25 +284,25 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   /** @since 1.1 */
-  protected boolean shouldConfirm() {
-    LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
-    if (envEntryStack.isEmpty()) 
-      return false;
-
-	FlowEventAutoConfirmationContext ctx = (FlowEventAutoConfirmationContext) envEntryStack.getFirst();
-    if (ctx.getCondition() != null) {
-      return ctx.getCondition().evaluate(((CallFrame)callStack.getFirst()).getWidget());
+  protected boolean shouldConfirm(Predicate p) {
+    if (p != null) {
+      return p.evaluate(((CallFrame)callStack.getFirst()).getWidget());
     }
     return false;
   }
   
-  protected void doConfirm(Closure navigationEventClosure) {
-    flowEventConfirmationWidget = new FlowEventConfirmationWidget("Do it now?", navigationEventClosure);
+  /** @since 1.1 */
+  protected void doConfirm(Closure onNavigationConfirmed) {
+    FlowEventConfirmationEventListener navigationConfirmationListener = new FlowEventConfirmationEventListener();
+    ConfirmationCleanupClosure unconfirmed = new ConfirmationCleanupClosure(navigationConfirmationListener);
+	ChainedClosure confirmed = new ChainedClosure(new Closure[] {onNavigationConfirmed, unconfirmed } );
+    navigationConfirmationListener.setPositive(confirmed);
+    navigationConfirmationListener.setNegative(unconfirmed);
+  
+	addEventListener("flowEventConfirmation", navigationConfirmationListener);
+
+    flowEventConfirmationWidget = new FlowEventConfirmationWidget("Do it now?");
     addWidget("flowEventConfirmationWidget", flowEventConfirmationWidget);
-    
-    LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
-    FlowEventAutoConfirmationContext ctx = (FlowEventAutoConfirmationContext) envEntryStack.getFirst();
-    ctx.askConfirmation(navigationEventClosure);
   }
   
   protected void removeFlowEventConfirmationWidget() {
@@ -350,6 +332,36 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
   }
   
+  /** @since 1.1 */
+  protected void doStart(Widget flow, Configurator configurator, Handler handler) {
+	Assert.notNullParam(flow, "flow");
+
+    CallFrame previous = callStack.size() == 0 ? null : (CallFrame) callStack.getFirst();
+    CallFrame frame = makeCallFrame(flow, configurator, handler, previous);
+    
+    if (log.isDebugEnabled())
+      log.debug("Starting flow '" + flow.getClass().getName() +"'");
+    
+    if (previous != null && _getChildren().get(previous.getName()) != null) {
+      ((Widget) getChildren().get(previous.getName()))._getComponent().disable();
+      _getChildren().remove(previous.getName());
+    }
+    
+    callStack.addFirst(frame);
+    
+    addFrameWidget(frame);
+
+    if (configurator != null) {
+      try {
+        configurator.configure(flow);
+      }
+      catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
+    }
+  }
+  
+  /** @since 1.1 */
   protected void doFinish(Object returnValue) {
 	if (callStack.size() == 0)
       throw new EmptyCallStackException();
@@ -383,6 +395,39 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
   }
   
+  /** @since 1.1 */
+  protected void doCancel() {
+	if (callStack.size() == 0)
+      throw new EmptyCallStackException();
+    
+    CallFrame previousFrame = (CallFrame) callStack.removeFirst();
+    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    
+    if (log.isDebugEnabled())
+      log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
+    
+    removeWidget(previousFrame.getName());
+    if (frame != null) {
+      _getChildren().put(frame.getName(), frame.getWidget());    
+      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
+    }
+    
+    if (previousFrame.getHandler() != null) try {
+      previousFrame.getHandler().onCancel();
+    }
+    catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
+
+    if (finishable && callStack.size() == 0) {
+      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
+      if (parentFlowContainer != null) {
+        parentFlowContainer.cancel();
+      }
+    }
+  }
+
+  /** @since 1.1 */
   protected void doReplace(Widget flow, Configurator configurator) {
 	Assert.notNullParam(flow, "flow");
     
@@ -407,6 +452,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
         throw ExceptionUtil.uncheckException(e);
       }
     }
+  }
+  
+  protected LinkedList getCallStack() {
+    return callStack;
   }
 
   //*******************************************************************
@@ -526,10 +575,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
   }
 
-  protected LinkedList getCallStack() {
-    return callStack;
-  }
-  
   /* Protected Closure classes for executing flow navigation events from callbacks. */
   /** @since 1.1 */
   protected class CancelClosure implements Closure, Serializable {
@@ -537,7 +582,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
 	public void execute(Object obj) {
       doCancel();
-      removeFlowEventConfirmationWidget();
     }
   }
 
@@ -552,7 +596,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     public void execute(Object obj) {
       doReset(callback);
-      removeFlowEventConfirmationWidget();
     }
   }
   
@@ -567,7 +610,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     public void execute(Object obj) {
       doFinish(result);
-      removeFlowEventConfirmationWidget();
     }
   }
 
@@ -584,7 +626,59 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     public void execute(Object obj) {
       doReplace(flow, configurator);
-      removeFlowEventConfirmationWidget();
     }
+  }
+  
+  /** @since 1.1 */
+  protected class StartClosure implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
+    protected Widget flow;
+    protected Configurator configurator;
+    protected Handler handler;
+
+    public StartClosure(Widget flow, Configurator configurator, Handler handler) {
+      this.flow = flow;
+      this.configurator = configurator;
+      this.handler = handler;
+    }
+
+    public void execute(Object obj) {
+      doReplace(flow, configurator);
+    }
+  }
+	  
+  /** @since 1.1 */
+  protected static class FlowEventConfirmationEventListener extends StandardEventListener {
+    private static final long serialVersionUID = 1L;
+	private Closure positive, negative;
+	  
+	public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+      boolean b = Boolean.valueOf(eventParam).booleanValue();
+      (b ? positive : negative).execute(null);
+	}
+
+    public void setPositive(Closure positive) {
+      this.positive = positive;
+    }
+
+    public void setNegative(Closure negative) {
+      this.negative = negative;
+    }
+  }
+  
+  /** @since 1.1 */
+  protected class ConfirmationCleanupClosure implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
+	protected EventListener listener;
+
+    public ConfirmationCleanupClosure(EventListener listener) {
+      Assert.notNull(listener);
+      this.listener = listener;
+    }
+
+	public void execute(Object obj) {
+      removeEventListener(listener);
+      removeFlowEventConfirmationWidget();
+	}
   }
 }
