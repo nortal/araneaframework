@@ -18,7 +18,7 @@
 		<!-- <ui:importScripts file="js/calendar/calendar-et.js" />-->
 
 		<!-- Enables firebug js console logging, if firebug present -->
-<!--		<script type="text/javascript">araneaPage().setFirebugLogger();</script>-->
+		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 		
 		<!-- Enables stand-alone javascript logging
 		<ui:importScripts group="debugScripts"/>
