@@ -36,7 +36,7 @@ import org.araneaframework.backend.list.helper.builder.compexpr.StandardCompExpr
 import org.araneaframework.backend.list.helper.builder.expression.StandardExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.helper.fields.ConcatFields;
 import org.araneaframework.backend.list.helper.fields.Fields;
-import org.araneaframework.backend.list.helper.naming.ColumnAliasVariableResolver;
+import org.araneaframework.backend.list.helper.naming.ColumnNameVariableResolver;
 import org.araneaframework.backend.list.helper.naming.NamingStrategy;
 import org.araneaframework.backend.list.helper.naming.OrNamingStrategy;
 import org.araneaframework.backend.list.helper.reader.DefaultResultSetColumnReader;
@@ -1090,7 +1090,7 @@ public abstract class BaseListSqlHelper {
 	 */
 	protected VariableResolver createExpressionBuilderResolver() {
 		if (variableResolver == null) {
-			return new ColumnAliasVariableResolver(namingStrategy);
+			return new ColumnNameVariableResolver(namingStrategy);
 		}
 		return variableResolver;
 	}
