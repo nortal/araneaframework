@@ -1,8 +1,6 @@
 package org.araneaframework.framework.container;
 
-import java.io.Serializable;
 import org.apache.commons.collections.Predicate;
-import org.araneaframework.core.Assert;
 import org.araneaframework.framework.FlowEventAutoConfirmationContext;
 
 /**
@@ -11,18 +9,19 @@ import org.araneaframework.framework.FlowEventAutoConfirmationContext;
  */
 public class FlowEventAutoConfirmationContextImpl implements FlowEventAutoConfirmationContext {
   private static final long serialVersionUID = 1L;
-  protected ConfirmationCondition condition;
-  
-  public void setConfirmationCondition(ConfirmationCondition condition) {
-    Assert.isInstanceOf(Serializable.class, condition, "Confirmation condition predicate must implement java.io.Serializable");
-    this.condition = condition;
+  protected FlowEventConfirmationHandler handler;
+
+  public void setFlowEventConfirmationHandler(FlowEventConfirmationHandler handler) {
+    this.handler = handler;
   }
   
-  public ConfirmationCondition getCondition() {
-    return condition;
+  public FlowEventConfirmationHandler getFlowEventConfirmationHandler() {
+    return this.handler;
   }
-  
-  public static class DefaultConfirmationCondition implements FlowEventAutoConfirmationContext.ConfirmationCondition {
+
+  public static class NoopConfirmationCondition implements FlowEventAutoConfirmationContext.ConfirmationCondition {
+	private static final long serialVersionUID = 1L;
+
 	public Predicate getCancelPredicate() {
 		return null;
 	}
@@ -43,4 +42,6 @@ public class FlowEventAutoConfirmationContextImpl implements FlowEventAutoConfir
 		return null;
 	}
   }
+
+
 }

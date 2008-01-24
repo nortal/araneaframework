@@ -3,12 +3,19 @@ package org.araneaframework.example.main.release.demos;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.functors.NOPClosure;
 import org.apache.commons.lang.time.DateUtils;
-import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.InputData;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
+import org.araneaframework.framework.FlowEventAutoConfirmationContext;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.FlowEventAutoConfirmationContext.ConfirmationCondition;
 import org.araneaframework.framework.container.FlowEventAutoConfirmationContextImpl;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
@@ -84,7 +91,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 
 	final X xp = new X();
 	
-	class ConfCondition extends FlowEventAutoConfirmationContextImpl.DefaultConfirmationCondition {
+	class ConfCondition extends FlowEventAutoConfirmationContextImpl.NoopConfirmationCondition {
       public Predicate getCancelPredicate() {
         return xp;
       }
@@ -93,13 +100,20 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	///XXX useless
 	class AskingClosure implements Predicate, Serializable {
 		public boolean evaluate(Object obj) {
-			ApplicationWidget activeFlow = (ApplicationWidget) obj;
+			BaseApplicationWidget activeFlow = (BaseApplicationWidget) obj;
+			BaseApplicationWidget fc = (BaseApplicationWidget) getFlowCtx();
+
+			FlowEventConfirmationEventListener confirmationListener = new FlowEventConfirmationEventListener();
+			activeFlow.addEventListener(FlowEventAutoConfirmationContext.CONFIRMATION_EVENT_LISTENER_ID, confirmationListener);
 			
+//			confirmationListener.setNegative(negative);
+//			confirmationListener.setPositive(negative);
+//getOutputData().
 			return false;
 		}
 	}
 
-	getFlowEventAutoConfirmationContext().setConfirmationCondition(new ConfCondition());
+	getFlowEventAutoConfirmationContext().setFlowEventConfirmationHandler(new StandardFlowEventConfirmationHandler(new ConfCondition(), NOPClosure.INSTANCE));
 
     // the usual, add the created widget to main widget.
 	addWidget("form", form);
@@ -114,12 +128,12 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   }
   
   public void handleEventNextFlow() throws Exception {
-      getFlowCtx().start(new ModalDialogDemoWidget(true));
+    getFlowCtx().start(new ModalDialogDemoWidget(true));
   }
   
   public void handleEventReturn() throws Exception {
     if (isNested())
-    	getFlowCtx().cancel();
+      getFlowCtx().cancel();
   }
 
   public boolean isNested() {
@@ -128,5 +142,53 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   
   public OverlayContext getOverlayCtx() {
     return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+  }
+  
+  /// temporary testing hacks
+  
+  protected static class FlowEventConfirmationEventListener extends StandardEventListener {
+    private static final long serialVersionUID = 1L;
+	private Closure positive, negative;
+	  
+	public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+      boolean b = Boolean.valueOf(eventParam).booleanValue();
+      (b ? positive : negative).execute(null);
+	}
+
+    public void setPositive(Closure positive) {
+      this.positive = positive;
+    }
+
+    public void setNegative(Closure negative) {
+      this.negative = negative;
+    }
+  }
+  
+  protected static class StandardFlowEventConfirmationHandler implements FlowEventAutoConfirmationContext.FlowEventConfirmationHandler {
+    private static final long serialVersionUID = 1L;
+	private ConfirmationCondition conditionProvider;
+	private Closure onConfirm;
+
+    public StandardFlowEventConfirmationHandler(ConfirmationCondition conditionProvider, Closure onConfirm) {
+      setConfirmationCondition(conditionProvider);
+      setOnConfirm(onConfirm);
+    }
+
+    public void setConfirmationCondition(ConfirmationCondition conditionProvider) {
+      this.conditionProvider = conditionProvider;   
+    }
+
+    public void setOnConfirm(Closure onConfirm) {
+      Assert.isInstanceOf(Serializable.class, onConfirm, "onConfirm Closure must implement java.io.Serializable");
+      this.onConfirm = onConfirm;
+    }
+    
+    public Closure getOnConfirm() {
+      return this.onConfirm;
+    }
+
+    public ConfirmationCondition getConfirmationCondition() {
+      return conditionProvider;
+    }
   }
 }
