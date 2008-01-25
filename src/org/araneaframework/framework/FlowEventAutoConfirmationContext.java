@@ -5,12 +5,18 @@ import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
 
 /**
+ * Allows setting of {@link FlowEventConfirmationHandler} for flow navigation events,
+ * to conditionally execute some callbacks before end-user requested flow navigation 
+ * events take place.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public interface FlowEventAutoConfirmationContext extends Serializable {
+  /** Preferred identifier for event listener which receives confirmation events from client side. */
   String CONFIRMATION_EVENT_LISTENER_ID = "flowEventConfirmation";
 
+  /***/
   void setFlowEventConfirmationHandler(FlowEventConfirmationHandler handler);
   FlowEventConfirmationHandler getFlowEventConfirmationHandler();
 

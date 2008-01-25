@@ -20,28 +20,26 @@ public class FlowEventAutoConfirmationContextImpl implements FlowEventAutoConfir
   }
 
   public static class NoopConfirmationCondition implements FlowEventAutoConfirmationContext.ConfirmationCondition {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public Predicate getCancelPredicate() {
-		return null;
-	}
+    public Predicate getCancelPredicate() {
+      return null;
+    }
 
-	public Predicate getFinishPredicate() {
-		return null;
-	}
+    public Predicate getFinishPredicate() {
+      return null;
+    }
 
-	public Predicate getReplacePredicate() {
-		return null;
-	}
+    public Predicate getReplacePredicate() {
+      return null;
+    }
 
-	public Predicate getResetPredicate() {
-		return null;
-	}
+    public Predicate getResetPredicate() {
+      return null;
+    }
 
-	public Predicate getStartPredicate() {
-		return null;
-	}
+    public Predicate getStartPredicate() {
+      return null;
+    }
   }
-
-
 }

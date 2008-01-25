@@ -223,14 +223,13 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
       FormWidgetFinderMessage msg = new FormWidgetFinderMessage();
       msg.send(null, flow);
       List forms = msg.getAllForms();
-      
-      msgCtx.showInfoMessage("Forms found " + forms.size() + " from widget" + flowObject);
+
       for (Iterator i = forms.iterator(); i.hasNext();) {
         FormWidget fw = (FormWidget) i.next();
         fw.markBaseState();
       }
       
-      msgCtx.showInfoMessage("Form data was changed. Navigate again to confirm intentions.");
+      msgCtx.showInfoMessage("Form data was changed since last save. Repeat navigation event to confirm your intentions.");
     }
   }
   
