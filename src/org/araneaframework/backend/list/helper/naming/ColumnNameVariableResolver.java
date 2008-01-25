@@ -41,7 +41,7 @@ public class ColumnNameVariableResolver implements VariableResolver {
 	}
 
 	public Object resolve(Variable variable) {
-		return namingStrategy.fieldToColumnAlias(variable.getName());
+		return namingStrategy.fieldToColumnName(variable.getName());
 	}
 
 }
