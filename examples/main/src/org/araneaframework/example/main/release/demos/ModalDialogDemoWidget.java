@@ -1,19 +1,27 @@
 package org.araneaframework.example.main.release.demos;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.functors.NOPClosure;
 import org.apache.commons.lang.time.DateUtils;
+import org.araneaframework.Component;
 import org.araneaframework.InputData;
+import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
+import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowEventAutoConfirmationContext;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowEventAutoConfirmationContext.ConfirmationCondition;
 import org.araneaframework.framework.container.FlowEventAutoConfirmationContextImpl;
@@ -52,9 +60,9 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
    * Builds the form.
    */
   protected void init() throws Exception {
-	setViewSelector("release/demos/modalDialog");
+	  setViewSelector("release/demos/modalDialog");
 
-	form = new FormWidget();
+    form = new FormWidget();
 
     FormElement el = form.createElement("common.Textbox", new TextControl(), new StringData(), false);
     form.addElement("textbox1", el);
@@ -113,7 +121,9 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 		}
 	}
 
-	getFlowEventAutoConfirmationContext().setFlowEventConfirmationHandler(new StandardFlowEventConfirmationHandler(new ConfCondition(), NOPClosure.INSTANCE));
+	StandardFlowEventConfirmationHandler confirmationHandler = new StandardFlowEventConfirmationHandler(new ConfCondition());
+	confirmationHandler.setDoConfirm(new StandardConfirmFlowEventClosure());
+  getFlowEventAutoConfirmationContext().setFlowEventConfirmationHandler(confirmationHandler);
 
     // the usual, add the created widget to main widget.
 	addWidget("form", form);
@@ -166,10 +176,11 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   
   protected static class StandardFlowEventConfirmationHandler implements FlowEventAutoConfirmationContext.FlowEventConfirmationHandler {
     private static final long serialVersionUID = 1L;
-	private ConfirmationCondition conditionProvider;
-	private Closure onConfirm;
+	  private ConfirmationCondition conditionProvider;
+	  private Closure onConfirm;
+	  private Closure doConfirm;
 
-    public StandardFlowEventConfirmationHandler(ConfirmationCondition conditionProvider, Closure onConfirm) {
+    public StandardFlowEventConfirmationHandler(ConfirmationCondition conditionProvider) {
       setConfirmationCondition(conditionProvider);
       setOnConfirm(onConfirm);
     }
@@ -186,9 +197,52 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
     public Closure getOnConfirm() {
       return this.onConfirm;
     }
+    
+    public void setDoConfirm(Closure doConfirm) {
+      Assert.isInstanceOf(Serializable.class, doConfirm, "doConfirm Closure must implement java.io.Serializable");
+      this.doConfirm = doConfirm;
+    }
+
+    public Closure getDoConfirm() {
+      return doConfirm;
+    }
 
     public ConfirmationCondition getConfirmationCondition() {
       return conditionProvider;
     }
+  }
+  
+  protected static class StandardConfirmFlowEventClosure implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
+
+    public void execute(Object flowObject) {
+      Widget flow = (Widget) flowObject;
+      FlowContext fCtx = (FlowContext) flow.getEnvironment().requireEntry(FlowContext.class);
+      MessageContext msgCtx = (MessageContext) flow.getEnvironment().requireEntry(MessageContext.class);
+
+      FormWidgetFinderMessage msg = new FormWidgetFinderMessage();
+      msg.send(null, flow);
+      List forms = msg.getAllForms();
+      
+      msgCtx.showInfoMessage("Forms found " + forms.size() + " from widget" + flowObject);
+      for (Iterator i = forms.iterator(); i.hasNext();) {
+        FormWidget fw = (FormWidget) i.next();
+        fw.markBaseState();
+      }
+      
+      msgCtx.showInfoMessage("Form data was changed. Navigate again to confirm intentions.");
+    }
+  }
+  
+  private static class FormWidgetFinderMessage extends BroadcastMessage {
+    List formList = new ArrayList();
+
+    protected void execute(Component component) throws Exception {
+      if (component instanceof org.araneaframework.uilib.form.FormWidget) {
+        formList.add(component);
+      }
+    }
+
+    public List getAllForms() { return formList; }
   }
 }

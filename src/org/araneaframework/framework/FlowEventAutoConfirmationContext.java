@@ -25,6 +25,9 @@ public interface FlowEventAutoConfirmationContext extends Serializable {
 	  */
     void setOnConfirm(Closure p);
     Closure getOnConfirm();
+    
+    void setDoConfirm(Closure p);
+    Closure getDoConfirm();
   }
 
   interface ConfirmationCondition extends Serializable {
