@@ -50,7 +50,9 @@ Aranea.ModalBox.show = function(options) {
 };
 
 Aranea.ModalBox.afterLoad = function(content) {
+  // if no content is returned, overlay has been closed.
   if (content == '') {
+    AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.transactionId)
       systemForm.transactionId.value = 'override';
