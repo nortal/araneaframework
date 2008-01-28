@@ -17,6 +17,7 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import org.apache.commons.collections.Closure;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
@@ -33,6 +34,17 @@ import org.araneaframework.core.ApplicationWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FlowContext extends Serializable {
+  /** @since 1.1 */ 
+  int START = 1;
+  /** @since 1.1 */
+  int FINISH = 2;
+  /** @since 1.1 */
+  int CANCEL = 3;
+  /** @since 1.1 */
+  int REPLACE = 4;
+  /** @since 1.1 */
+  int RESET = 5;
+
   /** 
    * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
    * {@link #cancel()}.
@@ -114,6 +126,9 @@ public interface FlowContext extends Serializable {
      */
     public void reset(EnvironmentAwareCallback callback) throws Exception;
   }
+ 
+  void addTransitionListener(TransitionListener listener);
+  void removeTransitionListener(TransitionListener listener);
 
   /**
    * Callback that will be run when flow has finished some way. 
@@ -128,5 +143,23 @@ public interface FlowContext extends Serializable {
    */
   public interface Configurator extends Serializable {
     public void configure(Widget flow) throws Exception;
+  }
+  
+  /**
+   * Receives notifications about flow transitions.
+   * 
+   * @author Taimo Peelo (taimo@araneaframework.org)
+   * @since 1.1
+   */
+  interface TransitionListener extends Serializable {
+    /**
+     * @param eventType <code>FlowContext.START<code> .. <code>FlowContext.RESET<code>
+     * @param activeFlow active flow at the moment of transition
+     * @param onTransitionConfirmed <code>Serializable</code> closure that would be executed for transition to take effect
+     * @return whether the transition should be immediately performed or not (when false is returned, this
+     *         {@link TransitionListener} usually should perform transition sometime later by executing
+     *         the supplied <code>onTransitionConfirmed</code> <code>Closure</code>.
+     */
+    boolean beforeTransition(int eventType, Widget activeFlow, Closure onTransitionConfirmed);
   }
 }

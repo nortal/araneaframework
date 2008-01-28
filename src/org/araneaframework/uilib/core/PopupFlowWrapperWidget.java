@@ -167,4 +167,12 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   protected PopupWindowContext getOpenerPopupContext() {
     return (PopupWindowContext)((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
   }
+
+  public void addTransitionListener(TransitionListener listener) {
+    //XXX:
+  }
+
+  public void removeTransitionListener(TransitionListener listener) {
+    //XXX:
+  }
 }

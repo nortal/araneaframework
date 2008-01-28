@@ -17,9 +17,11 @@
 package org.araneaframework.framework.container;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
@@ -41,6 +43,7 @@ import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.FlowEventConfirmationContext;
+import org.araneaframework.framework.FlowContext.TransitionListener;
 import org.araneaframework.framework.FlowEventConfirmationContext.ConfirmationCondition;
 import org.araneaframework.framework.FlowEventConfirmationContext.FlowEventConfirmationHandler;
 
@@ -71,6 +74,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    */
   protected Widget top;
   protected boolean finishable = true;
+  protected List transitionListeners;
 
   private Map nestedEnvironmentEntries = new HashMap();
   private Map nestedEnvEntryStacks = new HashMap();
@@ -122,6 +126,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public void start(Widget flow, Configurator configurator, Handler handler) {
+    notifyTransitionListeners(FlowContext.START, new StartClosure(flow, configurator, handler));
+
     FlowEventConfirmationHandler confirmationHandler = getActiveFlowEventConfirmationHandler();
     ConfirmationCondition condition = confirmationHandler != null ? confirmationHandler.getConfirmationCondition() : null;
 	  if (condition != null && shouldConfirm(condition.getStartPredicate())) {
@@ -177,6 +183,17 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     } else {
       doReset(callback);
     }
+  }
+  
+  public void addTransitionListener(TransitionListener listener) {
+    if (transitionListeners == null) {
+      transitionListeners = new ArrayList();
+    }
+    transitionListeners.add(listener);
+  }
+  
+  public void removeTransitionListener(TransitionListener listener) {
+    transitionListeners.remove(listener);
   }
 
   public FlowContext.FlowReference getCurrentReference() {
@@ -253,6 +270,17 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     return new StandardEnvironment(getEnvironment(), nestedEnvironmentEntries);
   }
   
+  protected void notifyTransitionListeners(int eventType, Closure onTransitionConfirmed) {
+    if (transitionListeners != null) {
+      for (Iterator i = transitionListeners.iterator(); i.hasNext(); ) {
+        TransitionListener listener = (TransitionListener) i.next();
+        CallFrame activeCallFrame = getActiveCallFrame();
+        Widget activeFlow = activeCallFrame != null ? activeCallFrame.getWidget() : null;
+        listener.beforeTransition(eventType, activeFlow, onTransitionConfirmed);
+      }
+    }
+  }
+  
   /**
    * Returns a new CallFrame constructed of the callable, configurator and handler.
    */
@@ -273,6 +301,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected FlowEventConfirmationContext.FlowEventConfirmationHandler getActiveFlowEventConfirmationHandler() {
     FlowEventConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
     return confirmationCtx != null ? confirmationCtx.getFlowEventConfirmationHandler() : null;
+  }
+  
+  protected CallFrame getActiveCallFrame() {
+    return callStack.size() == 0 ? null : (CallFrame) callStack.getFirst();
   }
 
   /**
@@ -326,7 +358,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected void doStart(Widget flow, Configurator configurator, Handler handler) {
 	Assert.notNullParam(flow, "flow");
 
-    CallFrame previous = callStack.size() == 0 ? null : (CallFrame) callStack.getFirst();
+    CallFrame previous = getActiveCallFrame();
     CallFrame frame = makeCallFrame(flow, configurator, handler, previous);
     
     if (log.isDebugEnabled())
@@ -357,7 +389,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       throw new EmptyCallStackException();
     
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    CallFrame frame = getActiveCallFrame();
     
     if (log.isDebugEnabled())
       log.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
@@ -391,7 +423,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       throw new EmptyCallStackException();
     
     CallFrame previousFrame = (CallFrame) callStack.removeFirst();
-    CallFrame frame = callStack.size() > 0 ? (CallFrame) callStack.getFirst() : null;
+    CallFrame frame = getActiveCallFrame();
     
     if (log.isDebugEnabled())
       log.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
@@ -570,7 +602,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected class CancelClosure implements Closure, Serializable {
     private static final long serialVersionUID = 1L;
 
-	public void execute(Object obj) {
+	  public void execute(Object obj) {
       doCancel();
     }
   }
