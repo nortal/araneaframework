@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.functors.ChainedClosure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -266,7 +265,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   
   /** @since 1.1 */
   protected FlowEventAutoConfirmationContext getActiveFlowEventAutoConfirmationContext() {
-	// TODO: verify correctness (only gets the evironment entry available to active flow)
+    //TODO: verify correctness (only gets the evironment entry available to active flow)
     LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
     if (envEntryStack.isEmpty()) 
       return null;
@@ -300,9 +299,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected void doConfirm(Closure onNavigationConfirmed) {
     FlowEventAutoConfirmationContext flowEventConfirmationCtx = getActiveFlowEventAutoConfirmationContext();
     FlowEventConfirmationHandler confirmationHandler = flowEventConfirmationCtx.getFlowEventConfirmationHandler();
-    Closure explicitOnConfirm = confirmationHandler.getOnConfirm();
-    Closure finalOnConfirm = explicitOnConfirm == null ? onNavigationConfirmed : new ChainedClosure(new Closure[] {explicitOnConfirm, onNavigationConfirmed});
-    confirmationHandler.setOnConfirm(finalOnConfirm);
+    confirmationHandler.setOnConfirm(onNavigationConfirmed);
     confirmationHandler.getDoConfirm().execute(((CallFrame)callStack.getFirst()).getWidget());
   }
   

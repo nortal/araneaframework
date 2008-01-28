@@ -13,10 +13,8 @@ import org.araneaframework.Component;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.StandardEventListener;
-import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.framework.FlowContext;
@@ -104,22 +102,6 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
         return xp;
       }
 	}
-	
-	///XXX useless
-	class AskingClosure implements Predicate, Serializable {
-		public boolean evaluate(Object obj) {
-			BaseApplicationWidget activeFlow = (BaseApplicationWidget) obj;
-			BaseApplicationWidget fc = (BaseApplicationWidget) getFlowCtx();
-
-			FlowEventConfirmationEventListener confirmationListener = new FlowEventConfirmationEventListener();
-			activeFlow.addEventListener(FlowEventAutoConfirmationContext.CONFIRMATION_EVENT_LISTENER_ID, confirmationListener);
-			
-//			confirmationListener.setNegative(negative);
-//			confirmationListener.setPositive(negative);
-//getOutputData().
-			return false;
-		}
-	}
 
 	StandardFlowEventConfirmationHandler confirmationHandler = new StandardFlowEventConfirmationHandler(new ConfCondition());
 	confirmationHandler.setDoConfirm(new StandardConfirmFlowEventClosure());
@@ -182,7 +164,6 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 
     public StandardFlowEventConfirmationHandler(ConfirmationCondition conditionProvider) {
       setConfirmationCondition(conditionProvider);
-      setOnConfirm(onConfirm);
     }
 
     public void setConfirmationCondition(ConfirmationCondition conditionProvider) {

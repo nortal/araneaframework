@@ -19,8 +19,10 @@ public class FlowEventAutoConfirmationContextImpl implements FlowEventAutoConfir
     return this.handler;
   }
 
+  /** @since 1.1 */
   public static class NoopConfirmationCondition implements FlowEventAutoConfirmationContext.ConfirmationCondition {
     private static final long serialVersionUID = 1L;
+    public static final NoopConfirmationCondition INSTANCE = new NoopConfirmationCondition();
 
     public Predicate getCancelPredicate() {
       return null;
