@@ -18,11 +18,11 @@ import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext;
+import org.araneaframework.framework.FlowEventConfirmationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.OverlayContext;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext.ConfirmationCondition;
-import org.araneaframework.framework.container.FlowEventAutoConfirmationContextImpl;
+import org.araneaframework.framework.FlowEventConfirmationContext.ConfirmationCondition;
+import org.araneaframework.framework.container.FlowEventConfirmationContextImpl;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -97,7 +97,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 
 	final X xp = new X();
 	
-	class ConfCondition extends FlowEventAutoConfirmationContextImpl.NoopConfirmationCondition {
+	class ConfCondition extends FlowEventConfirmationContextImpl.NoopConfirmationCondition {
       public Predicate getCancelPredicate() {
         return xp;
       }
@@ -156,7 +156,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
     }
   }
   
-  protected static class StandardFlowEventConfirmationHandler implements FlowEventAutoConfirmationContext.FlowEventConfirmationHandler {
+  protected static class StandardFlowEventConfirmationHandler implements FlowEventConfirmationContext.FlowEventConfirmationHandler {
     private static final long serialVersionUID = 1L;
 	  private ConfirmationCondition conditionProvider;
 	  private Closure onConfirm;

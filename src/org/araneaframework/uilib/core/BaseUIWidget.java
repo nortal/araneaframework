@@ -23,7 +23,7 @@ import org.araneaframework.Scope;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext;
+import org.araneaframework.framework.FlowEventConfirmationContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.MountContext;
@@ -80,8 +80,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
     return (OverlayContext) getEnvironment().getEntry(OverlayContext.class);
   }
   
-  protected FlowEventAutoConfirmationContext getFlowEventAutoConfirmationContext() {
-    return (FlowEventAutoConfirmationContext) getEnvironment().getEntry(FlowEventAutoConfirmationContext.class);
+  protected FlowEventConfirmationContext getFlowEventAutoConfirmationContext() {
+    return (FlowEventConfirmationContext) getEnvironment().getEntry(FlowEventConfirmationContext.class);
   }
   
   /**

@@ -1,15 +1,15 @@
 package org.araneaframework.framework.container;
 
 import org.apache.commons.collections.Predicate;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext;
+import org.araneaframework.framework.FlowEventConfirmationContext;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class FlowEventAutoConfirmationContextImpl implements FlowEventAutoConfirmationContext {
+public class FlowEventConfirmationContextImpl implements FlowEventConfirmationContext {
   private static final long serialVersionUID = 1L;
-  protected FlowEventConfirmationHandler handler;
+  private FlowEventConfirmationHandler handler;
 
   public void setFlowEventConfirmationHandler(FlowEventConfirmationHandler handler) {
     this.handler = handler;
@@ -20,7 +20,7 @@ public class FlowEventAutoConfirmationContextImpl implements FlowEventAutoConfir
   }
 
   /** @since 1.1 */
-  public static class NoopConfirmationCondition implements FlowEventAutoConfirmationContext.ConfirmationCondition {
+  public static class NoopConfirmationCondition implements FlowEventConfirmationContext.ConfirmationCondition {
     private static final long serialVersionUID = 1L;
     public static final NoopConfirmationCondition INSTANCE = new NoopConfirmationCondition();
 

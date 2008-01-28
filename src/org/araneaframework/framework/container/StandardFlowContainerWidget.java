@@ -28,24 +28,21 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
-import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext.ConfirmationCondition;
-import org.araneaframework.framework.FlowEventAutoConfirmationContext.FlowEventConfirmationHandler;
+import org.araneaframework.framework.FlowEventConfirmationContext;
+import org.araneaframework.framework.FlowEventConfirmationContext.ConfirmationCondition;
+import org.araneaframework.framework.FlowEventConfirmationContext.FlowEventConfirmationHandler;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -264,17 +261,17 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   /** @since 1.1 */
-  protected FlowEventAutoConfirmationContext getActiveFlowEventAutoConfirmationContext() {
+  protected FlowEventConfirmationContext getActiveFlowEventAutoConfirmationContext() {
     //TODO: verify correctness (only gets the evironment entry available to active flow)
-    LinkedList envEntryStack = getEnvEntryStack(FlowEventAutoConfirmationContext.class);
+    LinkedList envEntryStack = getEnvEntryStack(FlowEventConfirmationContext.class);
     if (envEntryStack.isEmpty()) 
       return null;
 
-    return (FlowEventAutoConfirmationContext) envEntryStack.getFirst();
+    return (FlowEventConfirmationContext) envEntryStack.getFirst();
   }
   
-  protected FlowEventAutoConfirmationContext.FlowEventConfirmationHandler getActiveFlowEventConfirmationHandler() {
-    FlowEventAutoConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
+  protected FlowEventConfirmationContext.FlowEventConfirmationHandler getActiveFlowEventConfirmationHandler() {
+    FlowEventConfirmationContext confirmationCtx = getActiveFlowEventAutoConfirmationContext();
     return confirmationCtx != null ? confirmationCtx.getFlowEventConfirmationHandler() : null;
   }
 
@@ -283,7 +280,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    * @since 1.1 */
   protected void addFrameWidget(CallFrame frame) {
     final Widget flow = frame.getWidget();
-    addNestedEnvironmentEntry((ApplicationWidget) flow, FlowEventAutoConfirmationContext.class, new FlowEventAutoConfirmationContextImpl());
+    addNestedEnvironmentEntry((ApplicationWidget) flow, FlowEventConfirmationContext.class, new FlowEventConfirmationContextImpl());
     addWidget(frame.getName(), flow);
   }
 
@@ -297,7 +294,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   
   /** @since 1.1 */
   protected void doConfirm(Closure onNavigationConfirmed) {
-    FlowEventAutoConfirmationContext flowEventConfirmationCtx = getActiveFlowEventAutoConfirmationContext();
+    FlowEventConfirmationContext flowEventConfirmationCtx = getActiveFlowEventAutoConfirmationContext();
     FlowEventConfirmationHandler confirmationHandler = flowEventConfirmationCtx.getFlowEventConfirmationHandler();
     confirmationHandler.setOnConfirm(onNavigationConfirmed);
     confirmationHandler.getDoConfirm().execute(((CallFrame)callStack.getFirst()).getWidget());
@@ -638,40 +635,5 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     public void execute(Object obj) {
       doReplace(flow, configurator);
     }
-  }
-	  
-  /** @since 1.1 */
-  protected static class FlowEventConfirmationEventListener extends StandardEventListener {
-    private static final long serialVersionUID = 1L;
-	private Closure positive, negative;
-	  
-	public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-      boolean b = Boolean.valueOf(eventParam).booleanValue();
-      (b ? positive : negative).execute(null);
-	}
-
-    public void setPositive(Closure positive) {
-      this.positive = positive;
-    }
-
-    public void setNegative(Closure negative) {
-      this.negative = negative;
-    }
-  }
-  
-  /** @since 1.1 */
-  protected class ConfirmationCleanupClosure implements Closure, Serializable {
-    private static final long serialVersionUID = 1L;
-	protected EventListener listener;
-
-    public ConfirmationCleanupClosure(EventListener listener) {
-      Assert.notNull(listener);
-      this.listener = listener;
-    }
-
-	public void execute(Object obj) {
-      removeEventListener(listener);
-      //removeFlowEventConfirmationWidget();
-	}
   }
 }

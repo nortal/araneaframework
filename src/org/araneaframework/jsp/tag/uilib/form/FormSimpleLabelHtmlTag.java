@@ -82,7 +82,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Whether the label should display the asterisk, "false" by default." 
+   *   description = "Whether the label should display the asterisk, <code>false<code> by default." 
    */
   public void setShowMandatory(String mandatory) throws JspException {
     this.mandatory = ((Boolean)(evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
@@ -92,7 +92,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Whether a colon (":") is shown after the label." 
+   *   description = "Whether a colon (&quot;:&quot;) is shown after the label." 
    */
   public void setShowColon(String showColon) throws JspException {
     this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
