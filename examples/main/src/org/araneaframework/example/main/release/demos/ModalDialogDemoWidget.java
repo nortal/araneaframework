@@ -1,28 +1,11 @@
 package org.araneaframework.example.main.release.demos;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.commons.collections.Closure;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.time.DateUtils;
-import org.araneaframework.Component;
-import org.araneaframework.InputData;
-import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.BroadcastMessage;
-import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
-import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.FlowEventConfirmationContext;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.OverlayContext;
-import org.araneaframework.framework.FlowEventConfirmationContext.ConfirmationCondition;
-import org.araneaframework.framework.container.FlowEventConfirmationContextImpl;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -83,29 +66,6 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
 	// add the button to form. As the button does not hold any value, Data will be null.
 	form.addElement("button", "common.Submit", button, null, false);
-	
-	form.markBaseState();
-	
-	class X implements Predicate, Serializable {
-		public boolean evaluate(Object obj) {
-			form.convert();
-			boolean stateChanged = form.isStateChanged();
-			getMessageCtx().showInfoMessage("Predicate was evaluated to " + stateChanged);
-			return stateChanged;
-		}
-    }
-
-	final X xp = new X();
-	
-	class ConfCondition extends FlowEventConfirmationContextImpl.NoopConfirmationCondition {
-      public Predicate getCancelPredicate() {
-        return xp;
-      }
-	}
-
-	StandardFlowEventConfirmationHandler confirmationHandler = new StandardFlowEventConfirmationHandler(new ConfCondition());
-	confirmationHandler.setDoConfirm(new StandardConfirmFlowEventClosure());
-  getFlowEventAutoConfirmationContext().setFlowEventConfirmationHandler(confirmationHandler);
 
     // the usual, add the created widget to main widget.
 	addWidget("form", form);
@@ -134,95 +94,5 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   
   public OverlayContext getOverlayCtx() {
     return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
-  }
-  
-  /// temporary testing hacks
-  
-  protected static class FlowEventConfirmationEventListener extends StandardEventListener {
-    private static final long serialVersionUID = 1L;
-	private Closure positive, negative;
-	  
-	public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-      boolean b = Boolean.valueOf(eventParam).booleanValue();
-      (b ? positive : negative).execute(null);
-	}
-
-    public void setPositive(Closure positive) {
-      this.positive = positive;
-    }
-
-    public void setNegative(Closure negative) {
-      this.negative = negative;
-    }
-  }
-  
-  protected static class StandardFlowEventConfirmationHandler implements FlowEventConfirmationContext.FlowEventConfirmationHandler {
-    private static final long serialVersionUID = 1L;
-	  private ConfirmationCondition conditionProvider;
-	  private Closure onConfirm;
-	  private Closure doConfirm;
-
-    public StandardFlowEventConfirmationHandler(ConfirmationCondition conditionProvider) {
-      setConfirmationCondition(conditionProvider);
-    }
-
-    public void setConfirmationCondition(ConfirmationCondition conditionProvider) {
-      this.conditionProvider = conditionProvider;   
-    }
-
-    public void setOnConfirm(Closure onConfirm) {
-      Assert.isInstanceOf(Serializable.class, onConfirm, "onConfirm Closure must implement java.io.Serializable");
-      this.onConfirm = onConfirm;
-    }
-    
-    public Closure getOnConfirm() {
-      return this.onConfirm;
-    }
-    
-    public void setDoConfirm(Closure doConfirm) {
-      Assert.isInstanceOf(Serializable.class, doConfirm, "doConfirm Closure must implement java.io.Serializable");
-      this.doConfirm = doConfirm;
-    }
-
-    public Closure getDoConfirm() {
-      return doConfirm;
-    }
-
-    public ConfirmationCondition getConfirmationCondition() {
-      return conditionProvider;
-    }
-  }
-  
-  protected static class StandardConfirmFlowEventClosure implements Closure, Serializable {
-    private static final long serialVersionUID = 1L;
-
-    public void execute(Object flowObject) {
-      Widget flow = (Widget) flowObject;
-      FlowContext fCtx = (FlowContext) flow.getEnvironment().requireEntry(FlowContext.class);
-      MessageContext msgCtx = (MessageContext) flow.getEnvironment().requireEntry(MessageContext.class);
-
-      FormWidgetFinderMessage msg = new FormWidgetFinderMessage();
-      msg.send(null, flow);
-      List forms = msg.getAllForms();
-
-      for (Iterator i = forms.iterator(); i.hasNext();) {
-        FormWidget fw = (FormWidget) i.next();
-        fw.markBaseState();
-      }
-      
-      msgCtx.showInfoMessage("Form data was changed since last save. Repeat navigation event to confirm your intentions.");
-    }
-  }
-  
-  private static class FormWidgetFinderMessage extends BroadcastMessage {
-    List formList = new ArrayList();
-
-    protected void execute(Component component) throws Exception {
-      if (component instanceof org.araneaframework.uilib.form.FormWidget) {
-        formList.add(component);
-      }
-    }
-
-    public List getAllForms() { return formList; }
   }
 }

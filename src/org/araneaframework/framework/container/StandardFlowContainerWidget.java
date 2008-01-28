@@ -280,7 +280,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    * @since 1.1 */
   protected void addFrameWidget(CallFrame frame) {
     final Widget flow = frame.getWidget();
-    addNestedEnvironmentEntry((ApplicationWidget) flow, FlowEventConfirmationContext.class, new FlowEventConfirmationContextImpl());
+    addNestedEnvironmentEntry((ApplicationWidget) flow, FlowEventConfirmationContext.class, new StandardFlowEventConfirmationContextImpl());
     addWidget(frame.getName(), flow);
   }
 

@@ -51,7 +51,9 @@ public interface FlowEventConfirmationContext extends Serializable {
 
     /** 
      * Sets the closure executed when {@link ConfirmationCondition} predicate for flow event 
-     * returns <code>true</code>. Closure should 
+     * returns <code>true</code>. <code>doConfirm.execute(obj)</code> receives active flow object
+     * as parameter.
+     * 
      * @param doConfirm <code>Serializable</code> <code>Closure</code> */
     void setDoConfirm(Closure doConfirm);
     Closure getDoConfirm();
