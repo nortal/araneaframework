@@ -126,8 +126,10 @@ public interface FlowContext extends Serializable {
      */
     public void reset(EnvironmentAwareCallback callback) throws Exception;
   }
- 
+
+  /** @since 1.1 */ 
   void setTransitionHandler(TransitionHandler listener);
+  /** @since 1.1 */ 
   TransitionHandler getTransitionHandler();
 
   /**
@@ -146,7 +148,7 @@ public interface FlowContext extends Serializable {
   }
   
   /**
-   * Handles flow transitions.
+   * Performs the flow transitions in {@link FlowContext}.
    * 
    * @author Taimo Peelo (taimo@araneaframework.org)
    * @since 1.1
@@ -154,14 +156,11 @@ public interface FlowContext extends Serializable {
   interface TransitionHandler extends Serializable {
     /**
      * @param eventType <code>FlowContext.START<code> .. <code>FlowContext.RESET<code>
-     * @param activeFlow active flow at the moment of transition
-     * @param transition <code>Serializable</code> closure that would be executed for transition to take effect
-     * @return whether the transition should be immediately performed or not (when false is returned, this
-     *         {@link TransitionHandler} usually should perform transition sometime later by executing
-     *         the supplied <code>onTransitionConfirmed</code> <code>Closure</code>.
+     * @param activeFlow active flow at the moment of transition request
+     * @param transition <code>Serializable</code> closure that needs to be executed for transition to happen
      */
     void beforeTransition(int eventType, Widget activeFlow, Closure transition);
-    
+
     void doTransition();
   }
 }
