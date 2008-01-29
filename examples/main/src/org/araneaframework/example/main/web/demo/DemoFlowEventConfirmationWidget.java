@@ -17,23 +17,13 @@
 package org.araneaframework.example.main.web.demo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.time.DateUtils;
-import org.araneaframework.Component;
-import org.araneaframework.Widget;
-import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.framework.FlowEventConfirmationContext;
-import org.araneaframework.framework.MessageContext;
-import org.araneaframework.framework.container.StandardFlowEventConfirmationContextImpl;
-import org.araneaframework.framework.container.StandardFlowEventConfirmationHandler;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
+import org.araneaframework.uilib.flowcontext.transitionhandler.CancelConfirmingTransitionHandler;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
@@ -67,11 +57,17 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
     this.nested = isNested;
   }
 
+  private void registerCancelConfirmationHandler() {
+    getFlowCtx().setTransitionHandler(new CancelConfirmingTransitionHandler(this, new UnsavedFlowDataPredicate(), "Form contains unsaved data. Continue?"));
+  }
+
   /**
    * Builds the form.
    */
   protected void init() throws Exception {
     setViewSelector("demo/flowEventConfirm");
+    
+    registerCancelConfirmationHandler();
 
     form = new FormWidget();
 
@@ -99,34 +95,14 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
 
     form.markBaseState();
     
-    // define the predicate which is evaluated to confirm flow navigation 
-    class X implements Predicate, Serializable {
-      public boolean evaluate(Object obj) {
-        form.convert();
-        return form.isStateChanged();
-      }
-    }
-    final X xp = new X();
-
-    // define the condition for cancel() only
-    class ConfCondition extends StandardFlowEventConfirmationContextImpl.NoopConfirmationCondition {
-      public Predicate getCancelPredicate() {
-        return xp;
-      }
-    }
-
-    StandardFlowEventConfirmationHandler confirmationHandler = new StandardFlowEventConfirmationHandler(new ConfCondition());
-    confirmationHandler.setDoConfirm(new SampleDoConfirmFlowEventClosure());
-    getFlowEventAutoConfirmationContext().setFlowEventConfirmationHandler(confirmationHandler);
-
     // the usual, add the created widget to main widget.
     addWidget("form", form);
   }
 
   public void handleEventTestSimpleForm() throws Exception {
     form.convertAndValidate();
+    form.markBaseState();
   }
-
 
   public void handleEventNextFlow() throws Exception {
     getFlowCtx().start(new DemoFlowEventConfirmationWidget(true));
@@ -140,37 +116,13 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
   public boolean isNested() {
     return nested;
   }
-
-  /* executed on cancel() when ConfirmationCondition#getCancelPredicate evaluates to true */
-  protected static class SampleDoConfirmFlowEventClosure implements Closure, Serializable {
+  
+  private class UnsavedFlowDataPredicate implements Predicate, Serializable {
     private static final long serialVersionUID = 1L;
 
-    public void execute(Object flowObject) {
-      Widget flow = (Widget) flowObject;
-      MessageContext msgCtx = (MessageContext) flow.getEnvironment().requireEntry(MessageContext.class);
-
-      FormWidgetFinderMessage msg = new FormWidgetFinderMessage();
-      msg.send(null, flow);
-      List forms = msg.getAllForms();
-
-      for (Iterator i = forms.iterator(); i.hasNext();) {
-        FormWidget fw = (FormWidget) i.next();
-        fw.markBaseState();
-      }
-
-      msgCtx.showInfoMessage("Form data was changed since last save. Repeat navigation event to confirm your intentions.");
+    public boolean evaluate(Object obj) {
+      form.convert();
+      return form.isStateChanged();
     }
-  }
-
-  private static class FormWidgetFinderMessage extends BroadcastMessage {
-    List formList = new ArrayList();
-
-    protected void execute(Component component) throws Exception {
-      if (component instanceof org.araneaframework.uilib.form.FormWidget) {
-        formList.add(component);
-      }
-    }
-
-    public List getAllForms() { return formList; }
   }
 }

@@ -25,7 +25,8 @@
 					<ui:registerScrollHandler/>
 					<ui:registerPopups/>
 					<ui:registerOverlay/>
-	
+					<ui:registerConfirmation/>
+
 					<!-- Renders the menu on top of the screen -->
 					<jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
 					<div class="stripe1"><ui:nbsp/></div>

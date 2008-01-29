@@ -16,9 +16,7 @@
 package org.araneaframework.framework;
 
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
-import org.araneaframework.Path;
-import org.araneaframework.Widget;
+import org.araneaframework.Scope;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
@@ -27,19 +25,21 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @since 1.1
  */
 public class StandardConfirmationFilterWidget extends BaseFilterWidget implements ConfirmationContext {
-  private String confirmationMessage;
-
-  public void registerConfirmation(Widget confirmationTarget, String confirmationMessage) {
-    this.confirmationMessage = confirmationMessage;
+  private static final long serialVersionUID = 1L;
+  private String message;
+  private Scope scope;
+  
+  public void setConfirmation(Scope confirmationScope, String confirmationMessage) {
+    this.scope = confirmationScope;
+    this.message = confirmationMessage;
   }
 
   public String getConfirmationMessage() {
-    return confirmationMessage;
+    return message;
   }
 
-  public boolean confirmationSuccessful() {
-    String confirmationValue = (String)getInputData().getGlobalData().get(ConfirmationContext.CONFIRMATION_RESULT_KEY);
-    return Boolean.valueOf(confirmationValue).booleanValue();
+  public Scope getConfirmationScope() {
+    return scope;
   }
 
   protected Environment getChildWidgetEnvironment() {

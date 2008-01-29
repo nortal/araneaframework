@@ -170,11 +170,11 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 		return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
 	}
 
-  public void addTransitionListener(TransitionListener listener) {
-    // TODO Auto-generated method stub
+  public void setTransitionHandler(TransitionHandler handler) {
+    getFlowCtx().setTransitionHandler(handler);
   }
 
-  public void removeTransitionListener(TransitionListener listener) {
-    // TODO Auto-generated method stub
+  public TransitionHandler getTransitionHandler() {
+    return getFlowCtx().getTransitionHandler();
   }
 }
