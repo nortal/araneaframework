@@ -203,8 +203,10 @@ Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
 /**
  * This function may be used to let end-user confirm flow navigation events.
  * @since 1.1 */
-Aranea.UI.flowEventConfirm = function(eventTarget, message) {
-  araneaPage().event_6(araneaPage().getSystemForm(), "flowEventConfirmation", eventTarget, "" + window.confirm(message), null, null);
+Aranea.UI.flowEventConfirm = function(message) {
+  var confirmationResult = "" + window.confirm(message);
+  araneaPage().getSystemForm().confirmationContextConfirmationResult.value = confirmationResult;
+  araneaPage().event_6(araneaPage().getSystemForm());
 };
 
 /** @since 1.1 */

@@ -17,18 +17,18 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.Scope;
+import org.apache.commons.collections.Closure;
 
 /**
  * Simple confirmation context&mdash;expects immediate user confirmation
- * for going through with some event.
+ * for going through with some event (expressed as closure).
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public interface ConfirmationContext extends Serializable {
-  void setConfirmation(Scope confirmationScope, String confirmationMessage);
+  String CONFIRMATION_RESULT_KEY = "confirmationContextConfirmationResult";
   
+  void confirm(Closure onConfirmClosure, String message);
   String getConfirmationMessage();
-  Scope getConfirmationScope();
 }

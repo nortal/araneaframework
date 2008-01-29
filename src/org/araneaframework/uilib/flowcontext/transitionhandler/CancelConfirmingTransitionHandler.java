@@ -36,9 +36,9 @@ import org.araneaframework.framework.container.StandardFlowContainerWidget;
  * @since 1.1
  */
 public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidget.StandardTransitionHandler {
-  private final BaseApplicationWidget flow;
   private static final long serialVersionUID = 1L;
-  private boolean doTransition = true;
+  
+  private final BaseApplicationWidget flow;
   private Predicate shouldConfirm;
   private String confirmationMessage;
 
@@ -50,21 +50,16 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     this.confirmationMessage = confirmationMessage;
   }
 
-  public void doTransition() {
-    if (doTransition) super.doTransition();
-    // do nothing, someone somewhere must execute transition closure whenever appropriate
+  public  void doTransition(int transitionType, Widget activeFlow, Closure transition) {
+    if (transitionType == FlowContext.TRANSITIONS_CANCEL && shouldConfirm.evaluate(activeFlow)) {
+      ConfirmationContext ctx = requireConfirmationContext(activeFlow);
+      ctx.confirm(transition, confirmationMessage);
+    } else
+      super.doTransition(transitionType, activeFlow, transition);
   }
 
-  public void beforeTransition(int transitionType, Widget activeFlow, Closure transition) {
-    if (transitionType == FlowContext.TRANSITIONS_CANCEL && shouldConfirm.evaluate(activeFlow)) {
-      doTransition = false;
-      ConfirmationContext ctx = (ConfirmationContext) activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
-      ctx.setConfirmation(activeFlow.getScope(), confirmationMessage);
-      BaseApplicationWidget flow = ((BaseApplicationWidget)activeFlow);
-      flow.addEventListener("flowEventConfirmation", new UserTransitionConfirmationListener((BaseApplicationWidget)flow, transition));
-      return;
-    }
-    doTransition = true;
-    super.beforeTransition(transitionType, activeFlow, transition);
+  protected ConfirmationContext requireConfirmationContext(Widget activeFlow) {
+    ConfirmationContext ctx = (ConfirmationContext) activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
+    return ctx;
   }
 }

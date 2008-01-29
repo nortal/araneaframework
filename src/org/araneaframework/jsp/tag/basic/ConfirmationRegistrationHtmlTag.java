@@ -35,11 +35,10 @@ public class ConfirmationRegistrationHtmlTag extends BaseTag {
     ConfirmationContext ctx = (ConfirmationContext) getEnvironment().getEntry(ConfirmationContext.class);
     String message = ctx != null ? ctx.getConfirmationMessage() : null;
     if (message != null) {
-      tag.setEvent("Aranea.UI.flowEventConfirm('" + ctx.getConfirmationScope().toString() + "', '" +  message + "');");
+      tag.setEvent("Aranea.UI.flowEventConfirm('" + message + "');");
+      registerAndExecuteStartTag(tag);
+      executeEndTagAndUnregister(tag);
     }
-
-    registerAndExecuteStartTag(tag);
-    executeEndTagAndUnregister(tag);
 
     return SKIP_BODY;
   }

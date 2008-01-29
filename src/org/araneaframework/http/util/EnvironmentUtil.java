@@ -20,6 +20,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 
@@ -77,5 +78,13 @@ public abstract class EnvironmentUtil {
 
   public static MessageContext requireMessageContext(Environment env) {
     return (MessageContext)env.requireEntry(MessageContext.class);
-  } 
+  }
+  
+  public static SystemFormContext getSystemFormContext(Environment env) {
+    return (SystemFormContext)env.getEntry(SystemFormContext.class);
+  }
+  
+  public static SystemFormContext requireSystemFormContext(Environment env) {
+    return (SystemFormContext)env.requireEntry(SystemFormContext.class);
+  }
 }

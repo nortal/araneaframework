@@ -266,8 +266,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   
   /** @since 1.1 */
   protected void doTransition(TransitionHandler transitionHandler, int transitionType, Closure closure) {
-    transitionHandler.beforeTransition(transitionType, getActiveFlow(), closure);
-    transitionHandler.doTransition();
+    transitionHandler.doTransition(transitionType, getActiveFlow(), closure);
   }
 
   /** @since 1.1 */
@@ -618,25 +617,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   
   public static class StandardTransitionHandler implements FlowContext.TransitionHandler {
     private static final long serialVersionUID = 1L;
-    private Closure pendingTransition;
-    protected Widget activeFlow;
 
-    public void beforeTransition(int transitionType, Widget activeFlow, Closure transition) {
-      this.activeFlow = activeFlow;
-      setPendingTransition(transition);
-    }
-    
-    public void doTransition() {
-      getPendingTransition().execute(activeFlow);
-      setPendingTransition(null);
-    }
-
-    protected Closure getPendingTransition() {
-      return pendingTransition;
-    }
-
-    protected void setPendingTransition(Closure pendingTransition) {
-      this.pendingTransition = pendingTransition;
+    public void doTransition(int transitionType, Widget activeFlow, Closure transition) {
+      transition.execute(activeFlow);
     }
   }
 }

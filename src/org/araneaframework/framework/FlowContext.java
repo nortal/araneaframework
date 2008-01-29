@@ -159,8 +159,6 @@ public interface FlowContext extends Serializable {
      * @param activeFlow active flow at the moment of transition request
      * @param transition <code>Serializable</code> closure that needs to be executed for transition to happen
      */
-    void beforeTransition(int eventType, Widget activeFlow, Closure transition);
-
-    void doTransition();
+    void doTransition(int eventType, Widget activeFlow, Closure transition);
   }
 }

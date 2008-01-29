@@ -15,10 +15,16 @@
 **/
 package org.araneaframework.framework;
 
+import java.io.Serializable;
+import org.apache.commons.collections.Closure;
 import org.araneaframework.Environment;
-import org.araneaframework.Scope;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -26,20 +32,51 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  */
 public class StandardConfirmationFilterWidget extends BaseFilterWidget implements ConfirmationContext {
   private static final long serialVersionUID = 1L;
+  private Closure closure;
   private String message;
-  private Scope scope;
+
+  // PUBLIC API
+  public void confirm(Closure onConfirmClosure, String message) {
+    Assert.isInstanceOfParam(Serializable.class, onConfirmClosure, "onConfirmClosure");
+    Assert.notNullParam(this, message, "message");
+    this.closure = onConfirmClosure;
+    this.message = message;
+  }
   
-  public void setConfirmation(Scope confirmationScope, String confirmationMessage) {
-    this.scope = confirmationScope;
-    this.message = confirmationMessage;
+  // IMPLEMENTATION 
+  
+  protected void removeConfirmation() {
+    this.closure = null;
+    this.message = null;
   }
 
   public String getConfirmationMessage() {
     return message;
   }
 
-  public Scope getConfirmationScope() {
-    return scope;
+  protected boolean isActive() {
+    return closure != null;
+  }
+
+  protected void event(Path path, InputData input) throws Exception {
+    if (isActive()) {
+      String confirmationResult = (String) input.getGlobalData().get(ConfirmationContext.CONFIRMATION_RESULT_KEY);
+
+      if ("true".equalsIgnoreCase(confirmationResult)) {
+        closure.execute(null);
+        removeConfirmation();
+      } else if ("false".equalsIgnoreCase(confirmationResult)) {
+        removeConfirmation();
+      }
+    }
+
+    super.event(path, input);
+  }
+
+  protected void render(OutputData output) throws Exception {
+    SystemFormContext systemFormContext = EnvironmentUtil.requireSystemFormContext(getEnvironment());
+    systemFormContext.addField(ConfirmationContext.CONFIRMATION_RESULT_KEY, "");
+    super.render(output);
   }
 
   protected Environment getChildWidgetEnvironment() {
