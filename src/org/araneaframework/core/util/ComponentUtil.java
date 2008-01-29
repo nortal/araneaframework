@@ -58,6 +58,7 @@ public abstract class ComponentUtil {
     target._getComposite().attach(key, listener);    
   }
 
+  // allows adding listener components to not yet initialized components by failing lazily
   private static class LateBindingChildEnvironment implements Environment {
     private static final long serialVersionUID = 1L;
     private ApplicationComponent component;
@@ -67,13 +68,19 @@ public abstract class ComponentUtil {
     }
 
     public Object getEntry(Object key) {
-      // Fail with NPE when component still not initialized at the time of accessing entry
-      return component.getChildEnvironment().getEntry(key); 
+      return getDelegateEnvironment().getEntry(key); 
     }
 
     public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException {
-      // Fail with NPE when component still not initialized at the time of accessing entry
-      return component.getChildEnvironment().requireEntry(key);
+      return getDelegateEnvironment().requireEntry(key);
+    }
+
+    private Environment getDelegateEnvironment() {
+      Environment result = component.getChildEnvironment();
+      if (result == null) {
+        throw new IllegalStateException(getClass().getName() + " does not yet have access to environment.");
+      }
+      return result;
     }
   }
 }

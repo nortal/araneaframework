@@ -21,14 +21,13 @@ import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 
 /**
  * {@link FlowContext.TransitionHandler} with some special confirmation handling for 
- * {@link FlowContext#TRANSITIONS_CANCEL} events. It attaches event listener to active
+ * {@link FlowContext#TRANSITION_CANCEL} events. It attaches event listener to active
  * flow when its cancellation request is received and asks user to confirm the action 
  * whenever the predicate <code>shouldConfirm</code> evaluates to <code>true</code>. 
  * 
@@ -37,13 +36,11 @@ import org.araneaframework.framework.container.StandardFlowContainerWidget;
  */
 public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidget.StandardTransitionHandler {
   private static final long serialVersionUID = 1L;
-  
-  private final BaseApplicationWidget flow;
   private Predicate shouldConfirm;
   private String confirmationMessage;
 
-  public CancelConfirmingTransitionHandler(BaseApplicationWidget activeFlow, Predicate shouldConfirm, String confirmationMessage) {
-    this.flow = activeFlow;
+  public CancelConfirmingTransitionHandler(Predicate shouldConfirm, String confirmationMessage) {
+    Assert.notNullParam(this, shouldConfirm, "shouldConfirm");
     Assert.isInstanceOf(Serializable.class, shouldConfirm, "shouldConfirm Predicate must implement java.io.Serializable");
     Assert.notNullParam(this, confirmationMessage, "confirmationMessage");
     this.shouldConfirm = shouldConfirm;
@@ -51,7 +48,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   public  void doTransition(int transitionType, Widget activeFlow, Closure transition) {
-    if (transitionType == FlowContext.TRANSITIONS_CANCEL && shouldConfirm.evaluate(activeFlow)) {
+    if (transitionType == FlowContext.TRANSITION_CANCEL && shouldConfirm.evaluate(activeFlow)) {
       ConfirmationContext ctx = requireConfirmationContext(activeFlow);
       ctx.confirm(transition, confirmationMessage);
     } else

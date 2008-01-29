@@ -35,15 +35,15 @@ import org.araneaframework.core.ApplicationWidget;
  */
 public interface FlowContext extends Serializable {
   /** @since 1.1 */ 
-  int TRANSITIONS_START = 1;
+  int TRANSITION_START = 1;
   /** @since 1.1 */
-  int TRANSITIONS_FINISH = 2;
+  int TRANSITION_FINISH = 2;
   /** @since 1.1 */
-  int TRANSITIONS_CANCEL = 3;
+  int TRANSITION_CANCEL = 3;
   /** @since 1.1 */
-  int TRANSITIONS_REPLACE = 4;
+  int TRANSITION_REPLACE = 4;
   /** @since 1.1 */
-  int TRANSITIONS_RESET = 5;
+  int TRANSITION_RESET = 5;
 
   /** 
    * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 

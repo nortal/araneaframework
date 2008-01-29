@@ -120,7 +120,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void start(Widget flow, Configurator configurator, Handler handler) {
     TransitionHandler transitionHandler = getTransitionHandler();
     StartClosure startClosure = new StartClosure(flow, configurator, handler);
-    doTransition(transitionHandler, FlowContext.TRANSITIONS_START, startClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_START, startClosure);
   }
 
   public void replace(Widget flow) {
@@ -130,25 +130,25 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void replace(Widget flow, Configurator configurator) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ReplaceClosure replaceClosure = new ReplaceClosure(flow, configurator);
-    doTransition(transitionHandler, FlowContext.TRANSITIONS_REPLACE, replaceClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_REPLACE, replaceClosure);
   }
 
   public void finish(Object returnValue) {
     TransitionHandler transitionHandler = getTransitionHandler();
     FinishClosure finishClosure = new FinishClosure(returnValue);
-    doTransition(transitionHandler, FlowContext.TRANSITIONS_FINISH, finishClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_FINISH, finishClosure);
   }
 
   public void cancel() {
     TransitionHandler transitionHandler = getTransitionHandler();
     CancelClosure cancelClosure = new CancelClosure();
-    doTransition(transitionHandler, FlowContext.TRANSITIONS_CANCEL, cancelClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_CANCEL, cancelClosure);
   }
 
   public void reset(final EnvironmentAwareCallback callback) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ResetClosure resetClosure = new ResetClosure(callback);
-    doTransition(transitionHandler, FlowContext.TRANSITIONS_RESET, resetClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_RESET, resetClosure);
   }
 
   public TransitionHandler getTransitionHandler() {

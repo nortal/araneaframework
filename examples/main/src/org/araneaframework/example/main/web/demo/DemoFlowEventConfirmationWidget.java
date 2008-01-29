@@ -58,7 +58,7 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
   }
 
   private void registerCancelConfirmationHandler() {
-    getFlowCtx().setTransitionHandler(new CancelConfirmingTransitionHandler(this, new UnsavedFlowDataPredicate(), "Form contains unsaved data. Continue?"));
+    getFlowCtx().setTransitionHandler(new CancelConfirmingTransitionHandler(new UnsavedFlowDataPredicate(), "Form contains unsaved data. Continue?"));
   }
 
   /**

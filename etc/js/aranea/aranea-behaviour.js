@@ -90,7 +90,7 @@ function applyCharacterFilter(el) {
   }
 }
 
-/** TODO: if this is not used, probably*/
+/** TODO: this is not really used in current behaviour rules (only by tooltip tag) */
 function setToolTip(el){
   var toolTip = $(el).getAttribute("arn-toolTip");
   if (!toolTip) return;

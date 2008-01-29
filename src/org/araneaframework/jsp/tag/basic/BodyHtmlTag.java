@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -103,10 +104,22 @@ public class BodyHtmlTag extends PresentationTag {
     writeLocaleScript(out);
     writeKeepAliveRegistrationScripts(out);
     writeAjaxValidationScript(out);
+    writeConfirmationScript(out);
 
     writeAdditionalAfterBodyStartScripts(out);
 
     JspUtil.writeEndTag(out, "script");
+  }
+
+  /** @since 1.1 */
+  protected void writeConfirmationScript(Writer out) throws Exception {
+    ConfirmationContext ctx = (ConfirmationContext) getEnvironment().getEntry(ConfirmationContext.class);
+    if (ctx == null) return;
+
+    String message = ctx.getConfirmationMessage();
+    if (message != null) {
+      out.write("_ap.addClientLoadEvent(function(){ Aranea.UI.flowEventConfirm('" + message + "');});");
+    }
   }
 
   /** Writes scripts that register client-side keepalive events for server-side expiring services. */
