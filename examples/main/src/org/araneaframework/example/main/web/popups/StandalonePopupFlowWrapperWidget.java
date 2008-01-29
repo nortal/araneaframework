@@ -33,7 +33,6 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
-import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.URLUtil;
@@ -170,4 +169,12 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 		m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
 		return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
 	}
+
+  public void setTransitionHandler(TransitionHandler handler) {
+    getFlowCtx().setTransitionHandler(handler);
+  }
+
+  public TransitionHandler getTransitionHandler() {
+    return getFlowCtx().getTransitionHandler();
+  }
 }

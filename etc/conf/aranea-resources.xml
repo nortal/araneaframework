@@ -26,7 +26,6 @@
     <file path="js/aranea/aranea-behaviour.js" />
     <file path="js/aranea/aranea-popups.js" />
     <file path="js/aranea/aranea-modalbox.js" />
-    <file path="js/aranea/aranea-comboselect.js"/>
 
     <file path="js/scriptaculous/builder.js" />
     <file path="js/scriptaculous/effects.js" />

@@ -181,9 +181,19 @@ Modalbox.Methods = {
 			}.bind(this), 1);
 			
 		}
-		
 	},
 	
+	resizeToContent: function(options){
+        // Resizes the modalbox window to the actual content height.
+        // This might be useful to resize modalbox after some content modifications which were changed ccontent height.
+
+        var byHeight = this.options.height - this.MBwindow.offsetHeight;
+        if(byHeight != 0) {
+            if(options) this.setOptions(options); // Passing callbacks
+            Modalbox.resize(0, byHeight);
+        }
+    },
+
 	_update: function() { // Updating MB in case of wizards
 		Element.update(this.MBcontent, "");
 		this.MBcontent.appendChild(this.MBloading);
@@ -205,10 +215,17 @@ Modalbox.Methods = {
 						onComplete: function(transport) {
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
-							response.extractScripts().map(function(script) { 
-								return eval(script.replace("<!--", "").replace("// -->", ""));
+							response.extractScripts().map(function(script) {
+							    return eval(script.replace("<!--", "").replace("// -->", ""));
 							}.bind(window));
 							this._putContent(transport.responseText);
+ 							AraneaPage.findSystemForm();
+							var f = function() {
+                                _ap.addSystemLoadEvent(AraneaPage.init);
+								araneaPage().onload();
+							};
+							// -- force the delay here
+							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
 						}.bind(this)
 					});
 					
@@ -419,7 +436,7 @@ Modalbox.Methods = {
 	},
 	
 	_setPosition: function () {
-		//Element.setStyle(this.MBwindow, {left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
+        //$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
         this.MBwindow.style.left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px";
         this.MBwindow.style.top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2 ) + "px";
 	},

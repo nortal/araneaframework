@@ -198,6 +198,105 @@ Aranea.UI.markFEContentStatus = function(valid, el) {
 Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
   if (el) el = $(el); else return;
   if (el) new Insertion.Bottom(el, html);
-}
+};
+
+/**
+ * This function may be used to let end-user confirm flow navigation events.
+ * @since 1.1 */
+Aranea.UI.flowEventConfirm = function(message) {
+  var confirmationResult = "" + window.confirm(message);
+  araneaPage().getSystemForm().confirmationContextConfirmationResult.value = confirmationResult;
+  araneaPage().event_6(araneaPage().getSystemForm());
+};
+
+/** @since 1.1 */
+Aranea.UI.TinyMCEScriptLoadCount = 0;
+/** @since 1.1 */
+Aranea.UI.TinyMCELoadScript = function(url) {
+  var i;
+
+  for (i=0; i<this.loadedFiles.length; i++) {
+    if (this.loadedFiles[i] == url)
+      return;
+  }
+
+  if (tinyMCE.settings.strict_loading_mode) {
+    this.pendingFiles[this.pendingFiles.length] = url;
+  } else {
+    var head = document.getElementsByTagName("head")[0];
+    var scriptFileElement = document.createElement('script');
+    scriptFileElement.type = 'text/javascript';
+    scriptFileElement.src = url;
+    if (url.length < 1) alert(url);
+    head.appendChild(scriptFileElement);
+    
+    if (Prototype.Browser.IE) {
+      Aranea.UI.TinyMCEScriptLoadCount++;
+      scriptFileElement.onreadystatechange = function () {
+         if (this.readyState === 'loaded' || this.readyState === 'complete') {
+           Aranea.UI.TinyMCEScriptLoadCount--;
+         }
+       };
+    }
+  }
+
+  this.loadedFiles[this.loadedFiles.length] = url;
+};
+
+/** @since 1.1 */
+Aranea.UI.TinyMCECSSLoadCount = 0;
+/** @since 1.1 */
+Aranea.UI.TinyMCELoadCSS = function(url) {
+  var ar = url.replace(/\s+/, '').split(',');
+  var lflen = 0, csslen = 0, skip = false;
+  var x = 0, i = 0, nl, le;
+
+  for (x = 0,csslen = ar.length; x<csslen; x++) {
+	if (ar[x] != null && ar[x] != 'null' && ar[x].length > 0) {
+		/* Make sure it doesn't exist. */
+		for (i=0, lflen=this.loadedFiles.length; i<lflen; i++) {
+			if (this.loadedFiles[i] == ar[x]) {
+				skip = true;
+				break;
+			}
+		}
+
+		if (!skip) {
+			if (tinyMCE.settings.strict_loading_mode) {
+				nl = document.getElementsByTagName("head");
+
+				le = document.createElement('link');
+				le.setAttribute('href', ar[x]);
+				le.setAttribute('rel', 'stylesheet');
+				le.setAttribute('type', 'text/css');
+
+				nl[0].appendChild(le);			
+			} else {
+				var head = document.getElementsByTagName("head")[0];
+    			var cssFileElement = document.createElement('link');
+    			cssFileElement.href = ar[x];
+    			cssFileElement.rel = "stylesheet";
+    			cssFileElement.type = "text/css";
+    			head.appendChild(cssFileElement);
+    			
+    			if (Prototype.Browser.IE) {
+			      Aranea.UI.TinyMCECSSLoadCount++;
+			      cssFileElement.onreadystatechange = function () {
+			         if (this.readyState === 'loaded' || this.readyState === 'complete') {
+			           Aranea.UI.TinyMCECSSLoadCount--;
+			         }
+			       };
+    			}
+		    }
+
+			this.loadedFiles[this.loadedFiles.length] = ar[x];
+		}
+	}
+  }
+};
+
+Aranea.UI.TinyMCEFilesLoaded = function() {
+  return 0 == Aranea.UI.TinyMCECSSLoadCount && 0 == Aranea.UI.TinyMCEScriptLoadCount;
+};
 
 window['aranea-ui.js'] = true;

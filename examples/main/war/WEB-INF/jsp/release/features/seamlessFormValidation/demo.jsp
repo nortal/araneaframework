@@ -27,7 +27,7 @@
 							<ui:label/>
 						</ui:cell>
 						<ui:cell colspan="3">
-							<ui:dateInput/>								
+							<ui:dateInput/>
 						</ui:cell>
 					</ui:formElement>
 				</ui:row>
@@ -128,6 +128,7 @@
 				</tui:componentForm>
 				<tui:componentActions>
 					<ui:eventButton labelId="common.Submit" eventId="submit" eventTarget="${formFullId}"/>
+					<ui:eventButton labelId="common.Return" eventId="return"/>
 				</tui:componentActions>
 			</tui:component>
 		</ui:form>

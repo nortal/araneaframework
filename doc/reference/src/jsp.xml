@@ -320,7 +320,8 @@
       impose this idiom and one may just as well submit using
       <emphasis>GET</emphasis>, define system forms in widgets and use usual
       HTML links instead of JavaScript. See <xref linkend="systemTags" /> for
-      usage example.</para>
+      usage example and <xref linkend="StandardSystemFormFilterService"/> about a
+      filter that provides some essential hidden fields.</para>
 
       <sect3>
         <title>Attributes</title>
@@ -410,7 +411,7 @@
       </sect3>
     </sect2>
 
-    <sect2>
+    <sect2 id="uimessagesjsp" xreflabel="&lt;ui:messages&gt;">
       <title>&lt;ui:messages&gt;</title>
 
       <para>This tag will render messages of given type if they are present in

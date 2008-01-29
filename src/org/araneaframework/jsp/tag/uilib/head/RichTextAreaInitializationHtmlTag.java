@@ -39,8 +39,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
-	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
-	
+
 	protected int doStartTag(Writer out) throws Exception {
 		setName("script");
 
@@ -69,8 +68,9 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 
 	protected int doEndTag(Writer out) throws Exception {
 		writeAttributes(out);
+
 		out.write("}); " + "};\n");
-		out.write("var AraneaTinyMCELoaded = function() { return window['js/tiny_mce/tiny_mce.js']; };");
+		out.write("var AraneaTinyMCELoaded = function() { var r = window['js/tiny_mce/tiny_mce.js']; if (r) { tinyMCE.loadScript = Aranea.UI.TinyMCELoadScript; tinyMCE.loadCSS = Aranea.UI.TinyMCELoadCSS;  } return r; };");
 		JspUtil.writeEndTag(out, "script");
 		
 		return EVAL_PAGE;

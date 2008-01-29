@@ -298,6 +298,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
             to distinguish among major application parts by some attribute
             (like component corresponding to a user session, or one of the
             popup window of current user).</para>
+            
+			<!-- TODO: refer to some routers -->
           </listitem>
         </varlistentry>
 
@@ -315,7 +317,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
         </varlistentry>
       </variablelist></para>
 
-    <para>The frameworks itself is assembled using a hieararchy of components
+    <para>The frameworks itself is assembled using a hierarchy of components
     (this hierarchy is mostly flat, except for the routers and application
     components). The hierarchy is arrange simply by containment, with each
     component containing its chidren as fields as illustrated on <xref
@@ -2019,7 +2021,62 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       </informaltable>
     </sect2>
     
-    <!--  -->
+    <!--  systemformcontext -->
+
+    <sect2 id="StandardSystemFormFilterService">
+      <title>System form field storage filter.</title>
+
+      <informaltable frame="topbot">
+        <tgroup cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="3*" />
+
+          <tbody>
+            <row>
+              <entry align="right"><emphasis role="bold">Java
+              class:</emphasis></entry>
+
+              <entry><literal>StandardSystemFormFilterService</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Default configuration
+              name:</emphasis></entry>
+
+              <entry><literal>araneaSystemFormFilter</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis
+              role="bold">Provides:</emphasis></entry>
+
+              <entry><literal>SystemFormContext</literal> (for adding/examining managed form fields).</entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Depends
+              on:</emphasis></entry>
+
+              <entry><literal>TopServiceContext</literal>, <literal>ThreadContext</literal></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>Stores system form fields that will be written out when <literal>&lt;ui:systemForm&gt;</literal> tag is used. 
+      Form fields that indicate service levels (<code>topServiceId</code> and <code>threadServiceId</code>) are
+      always automatically added to every response by this implementation.</para>
+
+	<para>
+		This filter does not have any special injectable properties (except the usual <literal>childService</literal>).
+		<literal>SystemFormContext</literal> interface is accessible from the <literal>Environment</literal>
+		when this filter is present in the hierarchy and provides <literal>addField(String key, String value);</literal>
+		and <literal>Map getFields();</literal> methods for managing special form fields. See also information 
+		about <xref linkend="systemForm"/> tag.
+	</para>
+	</sect2>
+	
 
     <!-- sect3 id="StandardContainers">
         <title>StandardContainerService, StandardContainerWidget</title>
@@ -2093,6 +2150,8 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       StandardServiceAdapterWidget
       StandardWidgetAdapterService
       PathInfoServiceContainerService -->
+      
+    <!--  Routers like top, session, thread -->
   </sect1>
 
   <sect1>

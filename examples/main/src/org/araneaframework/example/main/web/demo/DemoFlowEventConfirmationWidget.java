@@ -1,13 +1,29 @@
-package org.araneaframework.example.main.release.demos;
+/**
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
 
+package org.araneaframework.example.main.web.demo;
+
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.time.DateUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.web.OverlayRootWidget;
-import org.araneaframework.framework.OverlayContext;
-import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
+import org.araneaframework.uilib.flowcontext.transitionhandler.CancelConfirmingTransitionHandler;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
@@ -24,24 +40,34 @@ import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
+ * Demonstrates the basic usage of {@link FlowEventConfirmationContext} by registering a cancel()
+ * precondition and appropriate doConfirm closure. onConfirm is left undefined, b/c defined doConfirm 
+ * does not interact with application end-user.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class ModalDialogDemoWidget extends TemplateBaseWidget {
-   private static final long serialVersionUID = 1L;
-   private FormWidget form;
-   private boolean nested = false;
-   
-   public ModalDialogDemoWidget() {}
-   
-   private ModalDialogDemoWidget(boolean isNested) {
-     this.nested = isNested;
-   }
+public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
+  private static final long serialVersionUID = 1L;
+  private FormWidget form;
+  private boolean nested = false;
+
+  public DemoFlowEventConfirmationWidget() {}
+
+  private DemoFlowEventConfirmationWidget(boolean isNested) {
+    this.nested = isNested;
+  }
+
+  private void registerCancelConfirmationHandler() {
+    getFlowCtx().setTransitionHandler(new CancelConfirmingTransitionHandler(new UnsavedFlowDataPredicate(), "Form contains unsaved data. Continue?"));
+  }
 
   /**
    * Builds the form.
    */
   protected void init() throws Exception {
-	  setViewSelector("release/demos/modalDialog");
+    setViewSelector("demo/flowEventConfirm");
+    
+    registerCancelConfirmationHandler();
 
     form = new FormWidget();
 
@@ -58,41 +84,45 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
     form.getElement("number").setConstraint(new NotEmptyConstraint());
     // sets initial value of form element
 
-	form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));
+    form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));
 
-	// now we construct a button, that is also Control. Reason why we cannot just add it
+    // now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
     ButtonControl button = new ButtonControl();
-	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
-	// add the button to form. As the button does not hold any value, Data will be null.
-	form.addElement("button", "common.Submit", button, null, false);
+    button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
+    // add the button to form. As the button does not hold any value, Data will be null.
+    form.addElement("button", "common.Submit", button, null, false);
 
+    form.markBaseState();
+    
     // the usual, add the created widget to main widget.
-	addWidget("form", form);
+    addWidget("form", form);
   }
 
   public void handleEventTestSimpleForm() throws Exception {
     form.convertAndValidate();
+    form.markBaseState();
   }
-  
-  public void handleEventNextFlowOverlay() throws Exception {
-    getOverlayCtx().start(new OverlayRootWidget(new StandardFlowContainerWidget(new ModalDialogDemoWidget(true))));
-  }
-  
+
   public void handleEventNextFlow() throws Exception {
-    getFlowCtx().start(new ModalDialogDemoWidget(true));
+    getFlowCtx().start(new DemoFlowEventConfirmationWidget(true));
   }
-  
+
   public void handleEventReturn() throws Exception {
     if (isNested())
       getFlowCtx().cancel();
   }
 
   public boolean isNested() {
-	  return nested;
+    return nested;
   }
   
-  public OverlayContext getOverlayCtx() {
-    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+  private class UnsavedFlowDataPredicate implements Predicate, Serializable {
+    private static final long serialVersionUID = 1L;
+
+    public boolean evaluate(Object obj) {
+      form.convert();
+      return form.isStateChanged();
+    }
   }
 }

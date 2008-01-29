@@ -22,12 +22,12 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormWidget;
 
 
 /**
@@ -82,7 +82,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Whether the label should display the asterisk, "false" by default." 
+   *   description = "Whether the label should display the asterisk, <code>false<code> by default." 
    */
   public void setShowMandatory(String mandatory) throws JspException {
     this.mandatory = ((Boolean)(evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
@@ -92,7 +92,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   description = "Whether a colon (":") is draw after the label." 
+   *   description = "Whether a colon (&quot;:&quot;) is shown after the label." 
    */
   public void setShowColon(String showColon) throws JspException {
     this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
@@ -197,9 +197,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     }
     
     if (fullFormElementId != null) {
-      ApplicationWidget contextWidget = JspWidgetUtil.getContextWidget(pageContext);
-      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(contextWidget, fullFormElementId.substring(contextWidget.getScope().toString().length()));
-      
+      FormWidget formWidget = (FormWidget) JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
+      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(formWidget, formElementId);
       BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
   }

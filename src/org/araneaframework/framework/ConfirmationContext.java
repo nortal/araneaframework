@@ -12,20 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
-package org.araneaframework.uilib.form.data;
+package org.araneaframework.framework;
 
-import org.araneaframework.uilib.form.Data;
-
+import java.io.Serializable;
+import org.apache.commons.collections.Closure;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * Simple confirmation context&mdash;expects immediate user confirmation
+ * for going through with some event (expressed as closure).
  * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  */
-public class BooleanData extends Data {
-  public BooleanData() {
-    super(Boolean.class);
-    setValue(Boolean.FALSE);
-  }
+public interface ConfirmationContext extends Serializable {
+  String CONFIRMATION_RESULT_KEY = "confirmationContextConfirmationResult";
+  
+  void confirm(Closure onConfirmClosure, String message);
+  String getConfirmationMessage();
 }

@@ -17,7 +17,10 @@
 package org.araneaframework.core;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 
 /**
@@ -81,5 +84,30 @@ public class StandardEnvironment extends BaseEnvironment {
     }
     
     return parentEnv.getEntry(key);
+  }
+
+  public String toString() {
+    return toString(0);
+  }
+  
+  private static final String space = " ";
+  private static final String lf = "\n";
+  private String toString(int pad) {
+    String padding = StringUtils.leftPad("", pad, space);
+    StringBuffer result = new StringBuffer();
+
+    if (entries != null) {
+      for (Iterator i = entries.entrySet().iterator(); i.hasNext();) {
+        Map.Entry e = (Map.Entry) i.next();
+        result.append(padding + e.getKey() + "=" + ObjectUtils.identityToString(e.getValue()) + lf);
+      }
+    }
+
+    if (parentEnv instanceof StandardEnvironment) {
+      result.append(((StandardEnvironment)parentEnv).toString(pad+(space.length()*2)));
+    }
+
+    result.append("\n");
+    return result.toString();
   }
 }

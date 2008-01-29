@@ -88,7 +88,7 @@ public class BeanFormWidgetTest extends TestCase {
 
 		FlatBean bean = (FlatBean) form.writeToBean(new FlatBean());
 		
-		assertEquals(new Integer(100), Integer.valueOf(bean.getA()));
+		assertEquals(new Integer(100), new Integer(bean.getA()));
 		assertEquals(new String("newString"), bean.getS());
 	}
 	
@@ -119,9 +119,9 @@ public class BeanFormWidgetTest extends TestCase {
 		
 		bean = (HierarhicalBean) form.writeToBean(bean);
 		
-		assertEquals(new Integer(100), Integer.valueOf(bean.getA()));
+		assertEquals(new Integer(100), new Integer(bean.getA()));
 		assertEquals(new String("newString"), bean.getS());
-		assertEquals(new Integer(200), Integer.valueOf(bean.getSubFlatBean().getA()));
+		assertEquals(new Integer(200), new Integer(bean.getSubFlatBean().getA()));
 		assertEquals(new String("value"), bean.getSubFlatBean().getS());
 	}
 }

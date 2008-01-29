@@ -17,6 +17,7 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import org.apache.commons.collections.Closure;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
@@ -33,6 +34,17 @@ import org.araneaframework.core.ApplicationWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface FlowContext extends Serializable {
+  /** @since 1.1 */ 
+  int TRANSITION_START = 1;
+  /** @since 1.1 */
+  int TRANSITION_FINISH = 2;
+  /** @since 1.1 */
+  int TRANSITION_CANCEL = 3;
+  /** @since 1.1 */
+  int TRANSITION_REPLACE = 4;
+  /** @since 1.1 */
+  int TRANSITION_RESET = 5;
+
   /** 
    * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
    * {@link #cancel()}.
@@ -92,16 +104,21 @@ public interface FlowContext extends Serializable {
   public void reset(EnvironmentAwareCallback callback);
   
   /**
-   * Returns a reference to the current flow that can be used later to manipulate the current flow. 
+   * Returns a reference to the current flow that can be used later to manipulate the current flow.
+   * @deprecated to be removed in Aranea 2.0. Also see {@link FlowReference}
    */
   public FlowReference getCurrentReference();
-  
+
   /**
    * Adds an environment entry that is visible in all subflows.
    */
   public void addNestedEnvironmentEntry(ApplicationWidget scope, final Object entryId, Object envEntry);
 
-  
+  /** 
+   * This is unused -- only implementation is a protected class StandardFlowContainerWidget.FlowReference
+   * FlowReference.reset() is not called from anywhere and is duplicate of FlowContext.reset() anyway.
+   * @deprecated to be removed in Aranea 2.0 
+   */
   public interface FlowReference extends Serializable {
     /**
      * Resets the flow stack up to the referred flow and provides the callback with the local environment
@@ -109,7 +126,12 @@ public interface FlowContext extends Serializable {
      */
     public void reset(EnvironmentAwareCallback callback) throws Exception;
   }
-  
+
+  /** @since 1.1 */ 
+  void setTransitionHandler(TransitionHandler listener);
+  /** @since 1.1 */ 
+  TransitionHandler getTransitionHandler();
+
   /**
    * Callback that will be run when flow has finished some way. 
    */
@@ -123,5 +145,20 @@ public interface FlowContext extends Serializable {
    */
   public interface Configurator extends Serializable {
     public void configure(Widget flow) throws Exception;
+  }
+  
+  /**
+   * Performs the flow transitions in {@link FlowContext}.
+   * 
+   * @author Taimo Peelo (taimo@araneaframework.org)
+   * @since 1.1
+   */
+  interface TransitionHandler extends Serializable {
+    /**
+     * @param eventType <code>FlowContext.START<code> .. <code>FlowContext.RESET<code>
+     * @param activeFlow active flow at the moment of transition request
+     * @param transition <code>Serializable</code> closure that needs to be executed for transition to happen
+     */
+    void doTransition(int eventType, Widget activeFlow, Closure transition);
   }
 }

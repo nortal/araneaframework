@@ -23,7 +23,6 @@ import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.release.ReleaseWidget;
-import org.araneaframework.example.main.release.demos.ComboTextInputDemoWidget;
 import org.araneaframework.example.main.release.demos.DemoActionPollWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.example.main.release.demos.DemoContextMenuWidget;
@@ -46,6 +45,7 @@ import org.araneaframework.example.main.web.demo.DemoDisplayForm;
 import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList;
 import org.araneaframework.example.main.web.demo.DemoFileUpload;
+import org.araneaframework.example.main.web.demo.DemoFlowEventConfirmationWidget;
 import org.araneaframework.example.main.web.demo.DemoFormList;
 import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
 import org.araneaframework.example.main.web.demo.DemoMultiSelect;
@@ -119,7 +119,6 @@ private MenuItem araneaMenu;
 		araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoNewTabWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
-		araneaMenu.addMenuItem(new MenuItem("ComboTextInput", ComboTextInputDemoWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Serverside_Polling", DemoActionPollWidget.class));
 
 		// "Management"
@@ -160,6 +159,7 @@ private MenuItem araneaMenu;
       sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
+      sampleMenu.addMenuItem("Advanced", new MenuItem("Flow_Navigation_Confirmation", DemoFlowEventConfirmationWidget.class));
       advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
       
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));

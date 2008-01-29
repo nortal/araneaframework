@@ -26,7 +26,7 @@ Aranea.ModalBox.Options = null;
 
 Aranea.ModalBox.show = function(options) {
   var showfunc = function() {
-  Modalbox.show(
+    Modalbox.show(
       araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value, araneaPage().getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
       options
 	);
@@ -50,16 +50,16 @@ Aranea.ModalBox.show = function(options) {
 };
 
 Aranea.ModalBox.afterLoad = function(content) {
-  araneaPage().debug("Content = " + content);
+  // if no content is returned, overlay has been closed.
   if (content == '') {
+    AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.transactionId)
       systemForm.transactionId.value = 'override';
-    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+    return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 
 Aranea.ModalBox.close = function() {
-	if (Modalbox)
-		Modalbox.hide();
+	if (Modalbox) Modalbox.hide();
 };

@@ -1510,7 +1510,8 @@ setViewSelector("myWidget/form");
 
       <para>For information on implementation of the
       <literal>MessageContext</literal> see <xref
-      linkend="araneaMessagingFilter" />.</para>
+      linkend="araneaMessagingFilter" />. For standard JSP tag which renders <literal>MessageContext</literal>
+      messages to response, see <xref linkend="uimessagesjsp"/>.</para>
     </sect2>
 
     <sect2 id="LocalizationContext">
@@ -1733,7 +1734,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
        <para>
       Supports running processes in "overlay" (in parallel <literal>FlowContext</literal> of the same session thread). 
       It is used to allow construction of modal dialogs and modal processes. To start process inside overlay, one
-      calls one of the <literal>OverlayContext.start(...)</literal> methods</para>.
+      calls one of the <literal>OverlayContext.start(...)</literal> methods.</para>
 
       <para>
        <literal>OverlayContext</literal> provides the <literal>replace*</literal>, <literal>start*</literal> and <literal>reset*</literal>
