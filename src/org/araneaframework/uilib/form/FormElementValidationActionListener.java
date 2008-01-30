@@ -67,7 +67,7 @@ public class FormElementValidationActionListener extends StandardActionListener 
     writeRegion(out, FormElementValidationActionListener.FORM_VALIDATION_REGION_KEY, object.toString());
     
     MessageContext messageContext = (MessageContext) baseFormElement.getEnvironment().getEntry(MessageContext.class);
-    if(messageContext != null && (messageContext instanceof UpdateRegionProvider)) {
+    if(messageContext != null) {
       UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
 
       // TODO: general mechanism for writing out UpdateRegions from actions

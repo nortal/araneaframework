@@ -25,11 +25,10 @@ package org.araneaframework.backend.list.helper.naming;
  * @since 1.1
  */
 public class NopNamingStrategy implements NamingStrategy {
-	
-	protected static NamingStrategy INSTNACE = new NopNamingStrategy();
+	protected static final NamingStrategy INSTANCE = new NopNamingStrategy();
 	
 	public static NamingStrategy getInstance() {
-		return INSTNACE;
+		return INSTANCE;
 	}
 	
 	protected NopNamingStrategy() {}

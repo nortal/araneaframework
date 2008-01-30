@@ -210,7 +210,7 @@ public class FormRWTest extends TestCase {
     log.debug("Map read from form: " + readMap);
     
     Map subTestVoMap = (Map) readMap.get("subTestVO");
-    assertNull("Boolean value read properly", readMap.get("booleanValue"));
+    assertEquals(Boolean.FALSE, readMap.get("booleanValue"));
     assertNull("String value read properly", readMap.get("stringValue"));
     assertNull("Long value read properly", readMap.get("longValue"));
     
