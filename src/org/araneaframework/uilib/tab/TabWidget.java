@@ -58,15 +58,15 @@ public class TabWidget extends BaseApplicationWidget {
 
 	/* enabling/disabling/deselecting */
 	public void enableTab() {
-		disabled = false;
-		if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY)) {
-			enableWidget(CONTENT_WIDGET_KEY);
-		} else if (!_getChildren().containsKey(CONTENT_WIDGET_KEY)) {
-            if (isStateless())
-            	addWidget(CONTENT_WIDGET_KEY, tabContentWidgetFactory.buildWidget(getEnvironment()));
-            else
-            	addWidget(CONTENT_WIDGET_KEY, tabContentWidget);
-		}
+	  disabled = false;
+	  if (_getDisabledChildren().containsKey(CONTENT_WIDGET_KEY)) {
+	    enableWidget(CONTENT_WIDGET_KEY);
+	  } else if (!_getChildren().containsKey(CONTENT_WIDGET_KEY)) {
+	    if (isStateless())
+	      addWidget(CONTENT_WIDGET_KEY, tabContentWidgetFactory.buildWidget(getEnvironment()));
+	    else
+	      addWidget(CONTENT_WIDGET_KEY, tabContentWidget);
+	  }
 	}
 
 	public void disableTab() {

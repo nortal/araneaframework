@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class OrNamingStrategy implements NamingStrategy {
 	
-	private final List children = new LinkedList();;
+	private final List children = new LinkedList();
 	
 	public void add(NamingStrategy namingStrategy) {
 		children.add(namingStrategy);

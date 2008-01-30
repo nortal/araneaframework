@@ -1,5 +1,40 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2008.01.31    | Aranea 1.1-M6
+
+Features and Improvements
+    ThreadCloningContext has acquired public API for session thread cloning   | See #558
+    OverlayContext acquired methods for setting overlay options               | See #563
+    StandardControlEventListenerAdapter has new remove*EventListener methods  | See #193
+    <ui:contextMenu/> supports updateregions                                  | See #547
+    Most behaviours are added to DOM elements only once                       | See #591
+
+    Added FormElementValidationErrorRenderers for rendering form element      | See
+    validation messages in a customized way (i.e directly at invalid element) |     #574
+
+    Flow navigation now uses TransitionHandlers. This allows for i.e asking   | See
+    user to confirm when navigating away from flow containing unsaved data    |     #560
+
+    ListSqlHelper now supports NamingStrategies for conversion between field  | See
+    identifiers and database column identifiers and query aliases             |     #543
+
+    Documentation updates
+    
+Bugfixes
+    ListSqlHelper.setSimpleSqlQuery had bug with using custom 'where' clause  | See #561
+    Timing issues with updateregion processing were worked around             | See #556
+    Default calendar CSS left it hidden behind modal dialog in overlay        | See #551
+    Tooltips were permanently smothered on screen after AJAX requests         | See #548
+    FormSimpleLabelHtmlTag sometimes failed to correctly find element label   | See #593
+    IE threw JS errors when using global scoped keyboard handler              | See #592
+    aranea-contextmenu.js failed with script parsing error in IE              | See #586
+    araneaPage().getSystemForm() returned wrong value when overlay was active | See #576
+
+Deprecation & API changes
+    Deprecated FlowContext FlowReference interface and getReference() method  | See change #578
+    org.araneaframework.jsp.engine package was removed                        | See change #394
+
+---------------------------------------------------------------------------------------------
 2007.10.31    | Aranea 1.1-M5
 
 Features and Improvements
