@@ -63,7 +63,6 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
       String confirmationResult = (String) input.getGlobalData().get(ConfirmationContext.CONFIRMATION_RESULT_KEY);
 
       if ("true".equalsIgnoreCase(confirmationResult)) {
-        // TODO: StandardFlowContainerWidget passes active flow here
         closure.execute(null);
         removeConfirmation();
       } else if ("false".equalsIgnoreCase(confirmationResult)) {

@@ -163,27 +163,26 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 			
 			if (fileURL != null || fileInputStream != null) {
 				InputStream inputStream = null;
+
+				try {
+				  inputStream = fileInputStream != null ? fileInputStream : fileURL.openStream();
+
+          if (inputStream!=null) {
+          	int length = 0;
+          	byte[] bytes = new byte[1024];
+          	do {
+          		length = inputStream.read(bytes);
+          		if (length==-1) break;
+          		out.write(bytes, 0, length);
+          	} while (length!=-1);
+          }
+        } finally {
+          inputStream.close();
+        }
 				
-				if (fileInputStream != null) {
-					inputStream = fileInputStream;
-				} 
-				else {
-					inputStream = fileURL.openStream();
-				}
-				
-				log.debug("Loading "+fileName);
-				if (inputStream!=null) {
-					int length = 0;
-					byte[] bytes = new byte[1024];
-					do {
-						length = inputStream.read(bytes);
-						if (length==-1) break;
-						out.write(bytes, 0, length);
-					} while (length!=-1);
-				}
 			}
 			else {
-				log.warn("Unable to locate resource '"+fileName+"'");
+			  if (log.isWarnEnabled()) log.warn("Unable to locate resource '"+fileName+"'");
 				throw new FileNotFoundException("Unable to locate resource '"+fileName+"'");
 			}
 		}

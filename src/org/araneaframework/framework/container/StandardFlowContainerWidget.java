@@ -39,6 +39,7 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
+import org.araneaframework.http.WindowScrollPositionContext;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
@@ -619,7 +620,33 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     private static final long serialVersionUID = 1L;
 
     public void doTransition(int transitionType, Widget activeFlow, Closure transition) {
+      notifyScrollContext(transitionType, activeFlow);
       transition.execute(activeFlow);
+    }
+
+    protected void notifyScrollContext(int transitionType, Widget activeFlow) {
+      if (activeFlow == null) return;
+      WindowScrollPositionContext scrollCtx = (WindowScrollPositionContext) activeFlow.getEnvironment().getEntry(WindowScrollPositionContext.class);
+      if (scrollCtx != null) {
+        switch (transitionType) {
+          case FlowContext.TRANSITION_START: 
+            scrollCtx.push();
+            break;
+  
+          case FlowContext.TRANSITION_FINISH:
+          case FlowContext.TRANSITION_CANCEL:
+            scrollCtx.pop();
+            break;
+  
+          case FlowContext.TRANSITION_REPLACE:
+            scrollCtx.resetCurrent();
+            break;
+  
+          case FlowContext.TRANSITION_RESET:
+            scrollCtx.reset();
+            break;
+        }
+      }
     }
   }
 }

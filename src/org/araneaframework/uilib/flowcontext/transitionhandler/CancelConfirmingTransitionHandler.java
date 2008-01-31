@@ -47,10 +47,11 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     this.confirmationMessage = confirmationMessage;
   }
 
-  public  void doTransition(int transitionType, Widget activeFlow, Closure transition) {
+  public  void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
     if (transitionType == FlowContext.TRANSITION_CANCEL && shouldConfirm.evaluate(activeFlow)) {
       ConfirmationContext ctx = requireConfirmationContext(activeFlow);
-      ctx.confirm(transition, confirmationMessage);
+      Closure parameterizedTransition = new ParameterizedTransition(transitionType, activeFlow, transition);
+      ctx.confirm(parameterizedTransition, confirmationMessage);
     } else
       super.doTransition(transitionType, activeFlow, transition);
   }
@@ -58,5 +59,22 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   protected ConfirmationContext requireConfirmationContext(Widget activeFlow) {
     ConfirmationContext ctx = (ConfirmationContext) activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
     return ctx;
+  }
+
+  private final class ParameterizedTransition implements Closure {
+    private final Closure transition;
+    private final Widget activeFlow;
+    private int transitionType;
+
+    private ParameterizedTransition(int transitionType, Widget activeFlow, Closure transition) {
+      this.transitionType = transitionType;
+      this.transition = transition;
+      this.activeFlow = activeFlow;
+    }
+
+    public void execute(Object obj) {
+      notifyScrollContext(transitionType, activeFlow);
+      transition.execute(activeFlow);
+    }
   }
 }

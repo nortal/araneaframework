@@ -39,8 +39,6 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
   }
 
   public void onClick() throws Exception {
-    String eventHandlerName = "handleEvent" + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
-
     Method eventHandler;
     // lets try to find a handle method with an empty argument
     try {

@@ -16,9 +16,11 @@
 
 package org.araneaframework.uilib.list.structure.filter.field;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
@@ -28,9 +30,7 @@ import org.araneaframework.uilib.util.Event;
 
 
 public class EqualFilter extends BaseFieldFilter {
-
 	private static final long serialVersionUID = 1L;
-	
 	private Comparator comparator;
 	
 	public static EqualFilter getInstance(final FilterContext ctx, final String fieldId, String valueId) {
@@ -74,6 +74,7 @@ public class EqualFilter extends BaseFieldFilter {
 	}
 
 	public void setComparator(Comparator comparator) {
+    Assert.isInstanceOfParam(this, Serializable.class, comparator, "comparator");
 		this.comparator = comparator;
 	}
 

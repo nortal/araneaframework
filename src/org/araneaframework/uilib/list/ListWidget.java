@@ -868,9 +868,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Handles showing all records.
 	 */
 	protected class ShowAllEventHandler  extends StandardEventListener {
-
 		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
-			sequenceHelper.showFullPages();      
+		  filter();
+      sequenceHelper.showFullPages();
 		}
 	}
 
@@ -878,9 +878,9 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Handles showing only current records.
 	 */
 	protected class ShowSliceEventHandler extends StandardEventListener {
-
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {      
-			sequenceHelper.showDefaultPages();  
+		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		  filter();
+      sequenceHelper.showDefaultPages();
 		}
 	}
 

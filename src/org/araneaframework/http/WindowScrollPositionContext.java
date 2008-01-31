@@ -21,21 +21,40 @@ import java.io.Serializable;
 /**
  * Filter that takes care of saving and restoring the browser window scroll position
  * between requests.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
-
 public interface WindowScrollPositionContext extends Serializable {
-
   public static final String WINDOW_SCROLL_X_KEY = "windowScrollX";
   public static final String WINDOW_SCROLL_Y_KEY = "windowScrollY";
 
-  /** Resets the scroll coordinates. Typically it should be called when new flow is started. */
+  /** Resets all remembered the scroll coordinates. 
+   * ({@link WindowScrollPositionContext#pop()} will not have any further effect). */
   void reset();
   
-  /** Returns the currently saved horizontal scroll coordinate. */
-  public String getX();
-  /** Returns the currently saved vertical scroll coordinate. */
-  public String getY();
+  /** 
+   * Resets currently active scroll coordinates. 
+   * @since 1.1
+   */
+  void resetCurrent();
   
+  /** 
+   * Resets the current scroll coordinates, which can be restored with {@link WindowScrollPositionContext#pop}. 
+   * @since 1.1
+   */
+  void push();
+  
+  /** 
+   * Restores the previously pushed scroll coordinates. 
+   * @since 1.1
+   * */
+  void pop();
+
+  /** Returns the current horizontal scroll coordinate. */
+  public String getX();
+  /** Returns the current vertical scroll coordinate. */
+  public String getY();
+
   /** 
    * Sets new horizontal and vertical scroll coordinates. 
    * @param x horizontal scroll coordinate

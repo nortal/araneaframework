@@ -127,9 +127,13 @@ public interface FlowContext extends Serializable {
     public void reset(EnvironmentAwareCallback callback) throws Exception;
   }
 
-  /** @since 1.1 */ 
-  void setTransitionHandler(TransitionHandler listener);
-  /** @since 1.1 */ 
+  /** 
+   * Sets the {@link TransitionHandler} which performs the flow navigation.
+   * @since 1.1 */ 
+  void setTransitionHandler(TransitionHandler handler);
+  /**
+   * Returns currently active {@link TransitionHandler} 
+   * @since 1.1 */ 
   TransitionHandler getTransitionHandler();
 
   /**
