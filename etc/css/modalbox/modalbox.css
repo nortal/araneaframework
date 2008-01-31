@@ -6,7 +6,9 @@
 	z-index: 98;
 	background-color: #000!important;
 }
-/* #MB_overlay[id] { position: fixed; } */
+
+/* this causes cursor to disapper in windows FF 2.0.0.11 */
+#MB_overlay[id] { position: fixed; }
 
 #MB_window {
 	position:absolute;

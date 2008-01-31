@@ -219,6 +219,8 @@ Modalbox.Methods = {
 							    return eval(script.replace("<!--", "").replace("// -->", ""));
 							}.bind(window));
 							this._putContent(transport.responseText);
+							// again -- for correct centering
+							this._setPosition();
  							AraneaPage.findSystemForm();
 							var f = function() {
                                 _ap.addSystemLoadEvent(AraneaPage.init);

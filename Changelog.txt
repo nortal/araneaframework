@@ -8,15 +8,14 @@ Features and Improvements
     StandardControlEventListenerAdapter has new remove*EventListener methods  | See #193
     <ui:contextMenu/> supports updateregions                                  | See #547
     Most behaviours are added to DOM elements only once                       | See #591
-
     Added FormElementValidationErrorRenderers for rendering form element      | See
     validation messages in a customized way (i.e directly at invalid element) |     #574
-
     Flow navigation now uses TransitionHandlers. This allows for i.e asking   | See
     user to confirm when navigating away from flow containing unsaved data    |     #560
-
     ListSqlHelper now supports NamingStrategies for conversion between field  | See
     identifiers and database column identifiers and query aliases             |     #543
+    When WindowScrollPositionContext is present, flow transitions will store  | See 
+    scroll position context separately for each flow                          |     #588
 
     Documentation updates
     
