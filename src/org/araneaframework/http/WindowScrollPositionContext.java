@@ -21,6 +21,8 @@ import java.io.Serializable;
 /**
  * Filter that takes care of saving and restoring the browser window scroll position
  * between requests.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface WindowScrollPositionContext extends Serializable {
   public static final String WINDOW_SCROLL_X_KEY = "windowScrollX";
