@@ -38,6 +38,7 @@ import org.araneaframework.example.main.web.FooterWidget;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.contract.ContractListWidget;
+import org.araneaframework.example.main.web.course.RSSFeedReaderWidget;
 import org.araneaframework.example.main.web.demo.DemoAutomaticFormElement;
 import org.araneaframework.example.main.web.demo.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.DemoComplexForm;
@@ -152,6 +153,7 @@ private MenuItem araneaMenu;
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("RadioSelect", DemoRadioSelect.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("demo_automaticForm_title", DemoAutomaticFormElement.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("#RSS", RSSFeedReaderWidget.class));
 
       
       MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
