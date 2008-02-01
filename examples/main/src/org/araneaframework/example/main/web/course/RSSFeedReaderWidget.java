@@ -55,6 +55,8 @@ public class RSSFeedReaderWidget extends TemplateBaseWidget {
   private void handleEventAddFeed(String param) throws Exception {
     if (feedAddForm.convertAndValidate()) {
       FeedInfo fi = parseFeed((String)feedAddForm.getValueByFullName("newFeedUrl"));
+      feeds.add(fi);
+      rssFeedList.refresh();
     }
   }
 

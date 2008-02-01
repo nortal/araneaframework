@@ -33,24 +33,27 @@
 	               		
 	               		<tui:componentForm>
 	               			<ui:row>
-		               		<ui:form id="feedAddForm">
-		               			<ui:formElement id="newFeedUrl">
-			               			<ui:cell>
-			               				<ui:label/>
-			               			</ui:cell>
+			               		<ui:form id="feedAddForm">
+			               			<ui:formElement id="newFeedUrl">
+				               			<ui:cell>
+				               				<ui:label/>
+				               			</ui:cell>
+				               			
+				               			<ui:cell>
+				               				<ui:textInput/>
+				               			</ui:cell>
+			               			</ui:formElement>
 			               			
 			               			<ui:cell>
-			               				<ui:textInput/>
-			               			</ui:cell>
-		               			</ui:formElement>
-		               		</ui:form>
+			               			<ui:button id="addFeedButton"/>
+			               			</ui:cell> 
+			               		</ui:form>
+			               					               		
 		               		</ui:row>
 		               	</tui:componentForm>
 		               	
 	               	 </ui:list>
-	               	 
 
-              
                 <!-- pure design tag -->
                 <tui:componentActions>
                     
