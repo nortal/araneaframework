@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -62,9 +61,6 @@ public class RSSFeedReaderWidget extends TemplateBaseWidget {
 
     List oldfeeds = (user != null) ? getFeedDAO().findByUser(user) : getFeedDAO().findByUserName(userName);
     
-    System.out.println(new ReflectionToStringBuilder(oldfeeds).toString());
-    System.out.println(oldfeeds.iterator().next());
-
     for (Iterator feedIterator = oldfeeds.iterator(); feedIterator.hasNext();) {
       feeds.add(parseFeed(((FeedMO)feedIterator.next()).getUrl()));
     }
@@ -118,7 +114,6 @@ public class RSSFeedReaderWidget extends TemplateBaseWidget {
     feedItemList.setDataProvider(new FeedItemListDataProvider(fi.getFeedItems()));
     
     RSSItem item = (RSSItem) fi.getFeedItems().iterator().next();
-    System.out.println(item.toString()); 
     item.getAuthor();
     
     feedItemList.addField("author", "#Author");
