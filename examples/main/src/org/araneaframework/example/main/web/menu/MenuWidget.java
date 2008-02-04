@@ -35,44 +35,9 @@ import org.araneaframework.example.main.release.features.SeamlessFormValidationD
 import org.araneaframework.example.main.release.features.SimpleInMemoryEditableList;
 import org.araneaframework.example.main.release.features.SimpleListWidget;
 import org.araneaframework.example.main.web.FooterWidget;
-import org.araneaframework.example.main.web.company.CompanyListWidget;
-import org.araneaframework.example.main.web.contract.ContractAddEditWidget;
-import org.araneaframework.example.main.web.contract.ContractListWidget;
 import org.araneaframework.example.main.web.course.RSSFeedReaderWidget;
-import org.araneaframework.example.main.web.demo.DemoAutomaticFormElement;
-import org.araneaframework.example.main.web.demo.DemoCheckboxList;
-import org.araneaframework.example.main.web.demo.DemoComplexForm;
-import org.araneaframework.example.main.web.demo.DemoDisplayForm;
-import org.araneaframework.example.main.web.demo.DemoDisplayableEditableList;
-import org.araneaframework.example.main.web.demo.DemoEmbeddedDisplayableEditableList;
-import org.araneaframework.example.main.web.demo.DemoFileUpload;
-import org.araneaframework.example.main.web.demo.DemoFlowEventConfirmationWidget;
-import org.araneaframework.example.main.web.demo.DemoFormList;
-import org.araneaframework.example.main.web.demo.DemoInMemoryEditableList;
-import org.araneaframework.example.main.web.demo.DemoMultiSelect;
-import org.araneaframework.example.main.web.demo.DemoOnChangeListenersWidget;
-import org.araneaframework.example.main.web.demo.DemoRadioSelect;
-import org.araneaframework.example.main.web.demo.DemoRichTextForm;
-import org.araneaframework.example.main.web.demo.FilteredInputDemoWidget;
-import org.araneaframework.example.main.web.list.MultiListWidget;
-import org.araneaframework.example.main.web.list.SimpleSubBeanListWidget;
-import org.araneaframework.example.main.web.misc.AjaxRequestErrorWidget;
-import org.araneaframework.example.main.web.misc.EventErrorWidget;
-import org.araneaframework.example.main.web.misc.InitErrorWidget;
-import org.araneaframework.example.main.web.misc.RedirectingWidget;
-import org.araneaframework.example.main.web.misc.RenderErrorWidget;
-import org.araneaframework.example.main.web.person.PersonEditableListWidget;
-import org.araneaframework.example.main.web.person.PersonListWidget;
-import org.araneaframework.example.main.web.popups.DemoAdvancedPopupUsageWidget;
-import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
-import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
-import org.araneaframework.example.main.web.sample.SamplePopupWidget;
-import org.araneaframework.example.main.web.sample.SimpleFormWidget;
-import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
-import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.MenuItem;
-import org.araneaframework.uilib.support.FlowCreator;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -88,13 +53,20 @@ private MenuItem araneaMenu;
   protected void init() throws Exception {
     super.init();
     
+    if (getSecurityContext().getUser() != null)
+      getMenu().addMenuItem(new MenuItem("RSS", RSSFeedReaderWidget.class));
+    
     addWidget("footer", new FooterWidget());
     addEventListener("logout", new ProxyEventListener(this));
     addEventListener("mainPage", new ProxyEventListener(this));
   }
   
   public void handleEventLogout() throws Exception {
-    ((SecurityContext) getEnvironment().requireEntry(SecurityContext.class)).logout();
+    getSecurityContext().logout();
+  }
+
+  private SecurityContext getSecurityContext() {
+    return ((SecurityContext) getEnvironment().requireEntry(SecurityContext.class));
   }
   
   public void handleEventMainPage() throws Exception {
@@ -122,78 +94,7 @@ private MenuItem araneaMenu;
 		araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Serverside_Polling", DemoActionPollWidget.class));
 
-		// "Management"
-		result.addMenuItem(null, new MenuItem("Management")); {
-			result.addMenuItem("Management", new MenuItem("Persons"));
-			// example use of simple FlowCreator
-			result.addMenuItem("Management.Persons", new MenuItem("View_Add", new FlowCreator() {
-				        private static final long serialVersionUID = 1L;
 
-        public Widget createFlow() {
-					return new PersonListWidget(true);
-				}
-			}));
-			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Memory", PersonEditableListWidget.Memory.class));
-			result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));
-			
-			result.addMenuItem("Management", new MenuItem("Companies"));
-			result.addMenuItem("Management.Companies", new MenuItem("View_Edit", CompanyListWidget.class));
-			
-			result.addMenuItem("Management", new MenuItem("Contracts"));
-			result.addMenuItem("Management.Contracts", new MenuItem("View_Edit", ContractListWidget.class));
-			result.addMenuItem("Management.Contracts", new MenuItem("Add", ContractAddEditWidget.class));
-		}
-		
-    // Another way of adding menuitems is available
-    MenuItem sampleMenu = result.addMenuItem(new MenuItem("Demos")); {
-      sampleMenu.addMenuItem(new MenuItem("Simple"));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("RadioSelect", DemoRadioSelect.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("demo_automaticForm_title", DemoAutomaticFormElement.class));
-      sampleMenu.addMenuItem("Simple", new MenuItem("#RSS", RSSFeedReaderWidget.class));
-
-      
-      MenuItem advDemos = sampleMenu.addMenuItem(new MenuItem("Advanced"));
-      sampleMenu.addMenuItem("Advanced", new MenuItem("File_Upload", DemoFileUpload.class));
-      sampleMenu.addMenuItem("Advanced", new MenuItem("Complex_Form", DemoComplexForm.class));
-      sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
-      sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
-      sampleMenu.addMenuItem("Advanced", new MenuItem("Flow_Navigation_Confirmation", DemoFlowEventConfirmationWidget.class));
-      advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
-      
-      advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
-      advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
-      
-      MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
-      formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));
-      formListMenu.addMenuItem(new MenuItem("Editable_List", DemoFormList.class));
-      formListMenu.addMenuItem(new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
-      formListMenu.addMenuItem(new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
-      formListMenu.addMenuItem(new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
-      formListMenu.addMenuItem(new MenuItem("Embedded_Form_List", DemoEmbeddedDisplayableEditableList.class));
-      
-      
-      sampleMenu.addMenuItem(new MenuItem("Lists"));
-      sampleMenu.addMenuItem("Lists", new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
-      sampleMenu.addMenuItem("Lists", new MenuItem("Multi_List", MultiListWidget.class));
-
-      MenuItem treeMenu = sampleMenu.addMenuItem(new MenuItem("Trees"));
-      treeMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
-      treeMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
-      treeMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
-    } 
-    
-    MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc")); {
-      errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
-      errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
-      errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
-      errorMenu.addMenuItem(new MenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class));
-      errorMenu.addMenuItem(new MenuItem("Redirecting", RedirectingWidget.class));
-    }   
-		
 		return result;
 	}
   

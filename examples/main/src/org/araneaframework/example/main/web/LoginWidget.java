@@ -16,8 +16,11 @@
 
 package org.araneaframework.example.main.web;
 
+import java.util.List;
 import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.business.model.UserMO;
+import org.araneaframework.example.main.web.course.RegistrationWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
@@ -32,6 +35,15 @@ public class LoginWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   /* Widget we will create and attach to this widget. */
 	private FormWidget form;
+	private String initMsg;
+	
+	public LoginWidget(){}
+	
+	
+	public LoginWidget(String message)
+	{
+	  this.initMsg = message;
+	}
 
 	protected void init() throws Exception {
 		/* Sets the view selector that will be used for rendering this widget. 
@@ -58,30 +70,35 @@ public class LoginWidget extends TemplateBaseWidget {
 
 		// attach created form to our widget. 
 		addWidget("loginForm", form);
+		
+		if (initMsg != null) getMessageCtx().showInfoMessage(initMsg);
 	}
 	
 	// implementation of the login handler
 	private void handleEventLogin() throws Exception {
-		/* convertAndValidate() fails if data found from form does not 
-		 * satisfy the restrictions laid on it. If that is the case, 
-		 * we ignore received event. There is only one restriction -
-		 * username field must not be empty. */
 		if (form.convertAndValidate()) {
-			// find out the username supplied
 			String username = (String) form.getValueByFullName("username");
 			String password = (String) form.getValueByFullName("password");
-			/* Add the message about wrong credentials to message context. 
-			 * Messages will be shown to user upon exiting this event. */
+			
+			List l  = getUserDAO().findByName(username);
+			
+			if (l.isEmpty()) {
+			  getMessageCtx().showErrorMessage("No such user '" + username + "'");
+			  return;
+			}
+			
+			UserMO user = (UserMO) l.iterator().next();
+			
+			if (user.getPassword().equals(password)) {
+			  getFlowCtx().replace(new RootWidget(user));
+			  return;
+			}
+
 			getMessageCtx().showErrorMessage("User '" + username + "'" + " not allowed to log in with password '" + password + "'");
-			// do nothing (do not let anyone in :))
 		}
 	}
 	
-	/* Successful login event - does not check supplied credentials, 
-	 * promptly replaces login widget with root widget - allowing
-	 * user to start work with real examples. Demonstrates
-	 * simple flow navigation. */ 
-	private void handleEventBypass() throws Exception {
-		getFlowCtx().replace(new RootWidget(), null);
+	private void handleEventRegisterAccount() throws Exception {
+		getFlowCtx().replace(new RegistrationWidget(), null);
 	}
 }

@@ -20,6 +20,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
+import org.araneaframework.example.main.business.model.UserMO;
 import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
@@ -33,20 +34,25 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 	private static final long serialVersionUID = 1L;
 	private MenuWidget menuWidget;
 	private Widget topWidget;
+	private UserMO activeUser;
 
 	public RootWidget() {}
 
 	public RootWidget(Widget topWidget) {
 		this.topWidget = topWidget;
 	}
+	
+	 public RootWidget(UserMO activeUser) {
+	    this.activeUser = activeUser;
+	  }
 
 	protected void init() throws Exception {
 		menuWidget = new MenuWidget(topWidget);
 		addWidget("menu", menuWidget);
 		setViewSelector("root");
 		
-		if (topWidget == null)
-			menuWidget.selectMenuItem("Aranea_1_1");
+		if (topWidget == null && activeUser != null)
+			menuWidget.selectMenuItem("RSS");
 		topWidget = null;
 	}
 
@@ -65,4 +71,8 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 	public void logout() {
 		getFlowCtx().replace(new LoginWidget(), null);
 	}
+
+  public UserMO getUser() {
+    return activeUser;
+  }
 }

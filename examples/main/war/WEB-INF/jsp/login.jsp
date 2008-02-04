@@ -17,7 +17,7 @@
                         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                         <!-- Include script and style definitions from another file -->
                         <jsp:include page="scripts.jsp"/>
-                        <title>Aranea Template Application Login Screen</title>
+                        <title>RSS Feed Reader Login Screen</title>
                     </head>
 
                     <ui:body>
@@ -63,9 +63,9 @@
 		                                            	<!-- Render buttons that will submit all systemForm data, 
 		                                            		and tie them with events defined in TemplateLoginWidget.
 		                                            	 -->
-		                                                <ui:eventButton eventId="login" labelId="#Login"/>
-		                                                <ui:eventButton id="bypassButton" eventId="bypass" labelId="#Bypass login"/>
-    		                                          	<ui:formEnterKeyboardHandler fullElementId="bypassButton"/>
+		                                                <ui:eventButton eventId="registerAccount" labelId="#Create account"/>
+		                                                <ui:eventButton id="loginButton" eventId="login" labelId="#Login"/>
+    		                                          	<ui:formEnterKeyboardHandler fullElementId="loginButton"/>
 		                                            </div>
 		
 		                                            <div class="clear1"><ui:nbsp/></div>

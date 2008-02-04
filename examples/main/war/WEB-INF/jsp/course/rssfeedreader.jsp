@@ -6,7 +6,8 @@
       version="1.2">
 
        <ui:widgetContext>
-              <!-- Label -->
+       		<c:if test="${not empty widget.children['feedAddForm']}">
+
               <tui:componentHeader>
                    <tui:componentName>Add Feed</tui:componentName>
               </tui:componentHeader>
@@ -33,12 +34,27 @@
             			</ui:cell> 
             					               		
            			</ui:row>
+           			
+           			<ui:row>
+           				<ui:cell colspan="4" style="align:center;">
+           					Read-only subscription view:
+           					<ui:link href="${viewData.publicFeedViewURL}"><c:out value="${viewData.publicFeedViewURL}"/></ui:link>
+           				</ui:cell>
+           			</ui:row>
+           			
            		  </ui:form>
            		  </tui:componentForm>
            		</tui:component>
+           		
+
+  			
+           		
+           </c:if>
 		               		
            	 <tui:componentHeader>
-                   <tui:componentName>List of registered feeds</tui:componentName>
+                   <tui:componentName>List of registered feeds <c:if test="${not empty viewData.userName}"> for user <c:out value="${viewData.userName}"/> </c:if> 
+                   </tui:componentName>
+                  
               </tui:componentHeader>
 
               <tui:component>
@@ -48,14 +64,20 @@
 	               			<tui:componentListHeader/>
 	               			
 	               			<ui:listRows>
-	               				<ui:row>
+	               				
+	               				<ui:row id="$row">
 	               					<ui:cell>
+	               					<ui:listRowLinkButton eventId="viewFeedDetails">
 										<c:out value="${row.feedUrl}"/>
+									</ui:listRowLinkButton>
 	               					</ui:cell>
 	                					<ui:cell>
-	                					<c:out value="${row.feedDescription}"/>
+	                					<ui:listRowLinkButton eventId="viewFeedDetails">
+	                						<c:out value="${row.feedDescription}"/>
+	                					</ui:listRowLinkButton>
 	               					</ui:cell>
 	               					<ui:cell/>
+	               					
 	               				</ui:row>
 	               			</ui:listRows>
 	
@@ -68,6 +90,48 @@
                 </tui:componentActions>
 
               </tui:component>
+              
+         <c:if test="${not empty widget.children['feedItemList']}">
+         
+         <tui:componentHeader>
+         	<tui:componentName><c:out value="${viewData.detailedFeedTitle}"/></tui:componentName>
+         </tui:componentHeader>
+         
+         <tui:component>
+                   	<ui:list id="feedItemList">
+	               		<tui:componentList>
+	               			<tui:componentListHeader/>
+	               			
+	               			<ui:listRows>
+	               				
+	               				<ui:row>
+	               					<ui:cell>
+										<c:out value="${row.doublinCoreElements['dc:creator']}"/>
+	               					</ui:cell>
+	               				
+	               					<ui:cell>
+										<c:out value="${row.title}"/>
+	               					</ui:cell>
+	               					
+	               				
+	               					<ui:cell>
+	               						<!-- escapeXML false is dangerous but nice - expect to see p0rn soon :) -->
+										<c:out value="${row.description}" escapeXml="false"/>
+	               					</ui:cell>
+	               					
+	               					<ui:cell>
+	               						<ui:listRowLinkButton eventId="gotoArticle">Go to article</ui:listRowLinkButton>
+	               					</ui:cell>
+
+	               				</ui:row>
+	               			</ui:listRows>
+
+	               		</tui:componentList>
+	               	 </ui:list>
+         
+         </tui:component>
+         
+         </c:if>
                
        </ui:widgetContext>
 </jsp:root>

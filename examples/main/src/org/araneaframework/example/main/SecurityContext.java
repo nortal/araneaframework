@@ -17,12 +17,14 @@
 package org.araneaframework.example.main;
 
 import java.io.Serializable;
+import org.araneaframework.example.main.business.model.UserMO;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface SecurityContext extends Serializable {
   boolean hasPrivilege(String privilege);
+  UserMO getUser();
   
   void logout();
 }

@@ -3,19 +3,8 @@
 
 <beans>
   <bean id="araneaApplicationStart"
-    class="org.araneaframework.example.main.web.RootWidget"
+    class="org.araneaframework.example.main.web.LoginWidget"
     singleton="false"/>
-  
-  <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
-    id="araneaMountFilter" singleton="false">
-    <property name="mounts">
-      <map>
-        <entry key="person">
-          <bean class="org.araneaframework.example.main.message.ExamplePersonMountMessageFactory" singleton="false"/>
-        </entry>
-      </map>
-    </property>
-  </bean>
   
   <!-- Set the limits for file uploads. -->
   <bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
@@ -42,14 +31,13 @@
     </property>
   </bean>
   
-  <bean id="simpleTreeMessageFactory" class="org.araneaframework.example.main.message.ExampleSimpleTreeMessageFactory"/>
-  <bean id="overlayDemoMessageFactory" class="org.araneaframework.example.main.message.ExampleOverlayDemoMessageFactory"/>
+  <bean id="rssReadOnlyMessageFactory" class="org.araneaframework.example.main.message.PublicRssSubscriptionAccessMessageFactory"/>
+
   <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
     id="araneaMountingFilter" singleton="false">
     <property name="mounts">
       <map>
-        <entry key="simpleTree" value-ref="simpleTreeMessageFactory"/>
-        <entry key="overlayDemo" value-ref="overlayDemoMessageFactory"/>
+        <entry key="rssReadOnly" value-ref="rssReadOnlyMessageFactory"/>
       </map>
     </property>
   </bean> 

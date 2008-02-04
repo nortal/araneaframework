@@ -37,6 +37,8 @@
                         </div>
                     </c:forEach>
                     
+                    <ui:eventLinkButton eventId="logout" labelId="label.logout"/>
+                    
                     <div class="item">
                     	<ui:form id="form">
 	                    	<ui:select id="langSelect"/>
