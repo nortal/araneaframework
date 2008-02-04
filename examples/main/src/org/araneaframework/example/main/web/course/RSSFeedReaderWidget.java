@@ -42,7 +42,7 @@ public class RSSFeedReaderWidget extends TemplateBaseWidget {
     addWidget("rssFeedList", rssFeedList);
     rssFeedList.setDataProvider(new FileListDataProvider());
     feedAddForm = new FormWidget();
-    feedAddForm.addElement("newFeedUrl", "#Add new feed", new TextControl(), new StringData(), true);
+    feedAddForm.addElement("newFeedUrl", "#Feed URL", new TextControl(), new StringData(), true);
     feedAddForm.getElementByFullName("newFeedUrl").setConstraint(new URLConstraint());
     
     ButtonControl button = new ButtonControl();
@@ -97,7 +97,7 @@ public class RSSFeedReaderWidget extends TemplateBaseWidget {
         try {
           URL u = new URL((String)getValue());
         } catch (MalformedURLException e) {
-          addError("Field '" + getLabel() + "' does not contain valid URL.");
+          addError("Field '" + t(getLabel()) + "' does not contain valid URL.");
         }
       }
     }
