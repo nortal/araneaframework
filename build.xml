@@ -290,12 +290,12 @@
 		
 		<jar destfile="${dist.dir}/aranea.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
-			  <include name="org/araneaframework/**/*"/>	
+			  <include name="org/**/*"/>	
 			</fileset>
 			<fileset dir="src">
-			  <include name="org/araneaframework/**/*"/>	
+			  <include name="org/**/*"/>	
 			</fileset>
-			
+
 			<fileset dir="etc" excludes="build/,src/"/>
 
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
