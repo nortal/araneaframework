@@ -39,6 +39,12 @@ public interface UpdateRegionContext extends Serializable {
   void disableOnce();
 
   /**
+   * Adds the region which should be rendered and included in the current response.
+   * @param documentRegionId fully qualified update region id
+   */
+  void addRenderedRegion(String documentRegionId);
+  
+  /**
    * Notify that a document region is rendered by the specified widget. The list
    * of document regions is cleared before every full render. Updateregion tags
    * should always call this, so that when updateregion filter is invoked, it is

@@ -18,9 +18,11 @@ package org.araneaframework.http.filter;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang.StringUtils;
@@ -59,6 +61,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   private String characterEncoding = "UTF-8";
   private Map documentRegions = new HashMap();
+  private List renderedRegions = new ArrayList();
   private boolean disabled = false;
 
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
@@ -80,13 +83,24 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     Assert.notEmptyParam(widgetId, "widgetId");
     documentRegions.put(documentRegionId, widgetId);
   }
+  
+  public void addRenderedRegion(String documentRegionId) {
+    renderedRegions.add(documentRegionId);
+  }
 
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), UpdateRegionContext.class, this);
   }
 
   protected void render(OutputData output) throws Exception {
-    String regionNames = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY); 
+    String string = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    StringBuffer regionNames = new StringBuffer(string);
+    
+    if (!renderedRegions.isEmpty()) {
+      for (Iterator i = renderedRegions.iterator(); i.hasNext();) {
+        regionNames.append(",").append(i.next());
+      }
+    }
 
     if(regionNames == null) {
       documentRegions.clear();
@@ -103,7 +117,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       Map regionContents = null;
       if (!disabled) {
         // Parse widget and region ids
-        Map regionIdsByWidgetId = parseRegionNames(regionNames);
+        Map regionIdsByWidgetId = parseRegionNames(regionNames.toString());
         // Render widgets
         regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
       }
@@ -127,6 +141,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     finally {
       arUtil.commit();
       disabled = false;
+      renderedRegions.clear();
     }
   }
 
