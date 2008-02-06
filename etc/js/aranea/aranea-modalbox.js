@@ -47,5 +47,5 @@ Aranea.ModalBox.afterLoad = function(content) {
 };
 
 Aranea.ModalBox.close = function() {
-	if (Modalbox) Modalbox.hide();
+  if (Modalbox) Modalbox.hide();
 };

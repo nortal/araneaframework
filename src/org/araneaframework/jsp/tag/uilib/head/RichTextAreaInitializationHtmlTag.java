@@ -72,7 +72,7 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 
 		out.write("}); " + "};\n");
 		JspUtil.writeEndTag(out, "script");
-		
+
 		return EVAL_PAGE;
 	}
 	
