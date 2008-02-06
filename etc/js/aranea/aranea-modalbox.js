@@ -33,20 +33,6 @@ Aranea.ModalBox.show = function(options) {
   };
 
   showfunc();
-
-  /* TODO: lazyload
-  var importname = AraneaPage.getFileImportString(Aranea.ModalBox.ModalBoxFileName);
-  var modalboxloaded = function() { return window[Aranea.ModalBox.ModalBoxFileName]; };
-  
-  Aranea.ScriptLoader.loadHeadScript({
-  	scriptFile: importname, 
-  	scriptToExecute : null, 
-  	loadedCondition : modalboxloaded, 
-  	executionTryInterval: 10
-  });
-  
-  var lazyshow = Aranea.ScriptLoader.createPeriodicalConditionalExecutor(showfunc, modalboxloaded, 10);
-  lazyshow(); */
 };
 
 Aranea.ModalBox.afterLoad = function(content) {

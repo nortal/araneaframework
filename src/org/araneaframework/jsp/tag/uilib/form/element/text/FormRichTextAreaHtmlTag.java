@@ -18,8 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.http.util.FileImportUtil;
-import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -37,8 +35,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 	public static final String EDITOR_SELECTOR = "richTextEditor";
-	private static final String MCE_JS = "js/tiny_mce/tiny_mce.js";
-	
+
 	protected String getStyleClass() throws JspException  {
 		return EDITOR_SELECTOR;
 	}
@@ -51,26 +48,9 @@ public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 
 	protected void initializeRichEditor(Writer out) throws Exception  {
 		JspUtil.writeOpenStartTag(out, "script");
-		JspUtil.writeAttribute(out, "type", "text/javascript");
-		JspUtil.writeCloseStartTag(out);
-
-		String scriptFile = FileImportUtil.getImportString(MCE_JS, pageContext.getRequest());
-		String scriptToExecute = "AraneaTinyMCEInit";
-		String scriptLoadCondition = "AraneaTinyMCELoaded";
-		String interval = "10";
-		
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.setStringProperty("scriptFile", scriptFile);
-		jsonObject.setProperty("scriptToExecute", scriptToExecute);
-		jsonObject.setProperty("loadedCondition", scriptLoadCondition);
-		jsonObject.setProperty("executionTryInterval", interval);
-
-		String loadScript = "Aranea.ScriptLoader.loadHeadScript("+ jsonObject.toString() + ");";
-		String onLoadScript = "_ap.addSystemLoadEvent(function() {" + loadScript + "});";
-
-		out.write("if (Prototype.Browser.IE ) {" + onLoadScript + " } else { " + loadScript + " } ");
-
-		JspUtil.writeEndTag(out, "script");
-		out.write("\n");
+    JspUtil.writeAttribute(out, "type", "text/javascript");
+    JspUtil.writeCloseStartTag_SS(out);
+    out.write("AraneaTinyMCEInit();");
+    JspUtil.writeEndTag(out, "script");
 	}
 }

@@ -15,6 +15,7 @@
 		<ui:importStyles file="css/aranea/comboselect.css" media="screen" />
 
 		<ui:importScripts/>
+		<ui:importScripts file="js/tiny_mce/tiny_mce_src.js"/>
 		<!-- <ui:importScripts file="js/calendar/calendar-et.js" />-->
 
 		<!-- Enables firebug js console logging, if firebug present -->

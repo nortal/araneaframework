@@ -492,6 +492,9 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
   systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
+  // copy the content of rich editors to corresponding HTML textinputs/textareas
+  if (tinyMCE) { tinyMCE.triggerSave(); }
+
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({

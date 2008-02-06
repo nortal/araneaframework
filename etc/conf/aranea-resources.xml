@@ -18,7 +18,6 @@
     <file path="js/aranea/aranea.js" />
     <file path="js/aranea/aranea-ui.js" />
     <file path="js/aranea/aranea-contextmenu.js"/>
-    <file path="js/aranea/aranea-scriptloader.js"/>
 
     <file path="js/aranea/aranea-keyboard.js" />
     <file path="js/aranea/aranea-util.js" />

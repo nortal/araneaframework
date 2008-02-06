@@ -93,8 +93,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   protected void render(OutputData output) throws Exception {
-    String string = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
-    StringBuffer regionNames = new StringBuffer(string);
+    String regionsFromRequest = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
     
     if (!renderedRegions.isEmpty()) {
       for (Iterator i = renderedRegions.iterator(); i.hasNext();) {
@@ -102,7 +102,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       }
     }
 
-    if(regionNames == null) {
+    if(regionNames.length() == 0) {
       documentRegions.clear();
       super.render(output);
       disabled = false;
