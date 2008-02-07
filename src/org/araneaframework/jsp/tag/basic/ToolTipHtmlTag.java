@@ -34,6 +34,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class ToolTipHtmlTag extends BaseTag {
 	protected String element;
 	protected String text;
+	protected String options;
 
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
@@ -41,7 +42,10 @@ public class ToolTipHtmlTag extends BaseTag {
 		JspUtil.writeOpenStartTag(out, "script");
 		JspUtil.writeAttribute(out, "type", "text/javascript");
 		JspUtil.writeCloseStartTag_SS(out);
-		out.write("new Tip($('" + element + "'), \"" + text + "\");");
+		out.write("new Tip($('" + element + "'), \"" + text + "\"");
+		if (options != null)
+		out.write(", " + options);
+		out.write(");");
 		JspUtil.writeEndTag(out, "script");
 		return SKIP_BODY;
 	}
@@ -64,5 +68,15 @@ public class ToolTipHtmlTag extends BaseTag {
 	 */
 	public void setText(String text) throws JspException {
 		this.text = (String) evaluate("text", text, String.class);
+	}
+	
+	 /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details)." 
+   */
+	public void setOptions(String options) throws JspException {
+	  this.options = (String) evaluate("options", options, String.class);
 	}
 }

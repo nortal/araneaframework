@@ -1719,10 +1719,31 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 
       <para></para>
 
-      <para>Finally <literal>FlowContext</literal> also allows to replace the
+      <para><literal>FlowContext</literal> also allows to replace the
       current flow instead of deactivating it by using the
       <literal>replace()</literal> method and to cancel the current flow by
       using the <literal>cancel()</literal> method.</para>
+      
+      <para>
+      	Transitions between the flows are performed by <literal>FlowContext.TransitionHandler</literal>s.
+      	
+<programlisting role="java">interface TransitionHandler extends Serializable {
+   /**
+    * @param eventType FlowContext.START .. FlowContext.RESET
+    * @param activeFlow active flow at the moment of transition request
+    * @param transition Serializable closure that needs to be executed for transition to happen
+    */
+   void doTransition(int eventType, Widget activeFlow, Closure transition);
+}</programlisting>
+      </para>
+      
+      <para>
+        After initialization, each flow may set the <literal>TransitionHandler</literal> which will
+        handle navigation events performed while flow which set the <literal>TransitionHandler</literal> 
+        is active. This can be used to customize navigation logic&mdash;i.e. ask for confirmations 
+        when navigating away from flow containing unsaved data, restore window scroll position when
+        returning to caller flow or checking for privileges before starting the next flow.
+      </para>
 
       <para>For standard implementation, please see <xref
       linkend="araneaRootFlowContainer" /></para>

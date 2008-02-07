@@ -64,15 +64,15 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 		
 		attributes.put("mode", "textareas");
 		attributes.put("theme", "simple");
+		attributes.put("strict_loading_mode", Boolean.TRUE);
 	}
 
 	protected int doEndTag(Writer out) throws Exception {
 		writeAttributes(out);
 
 		out.write("}); " + "};\n");
-		out.write("var AraneaTinyMCELoaded = function() { var r = window['js/tiny_mce/tiny_mce.js']; if (r) { tinyMCE.loadScript = Aranea.UI.TinyMCELoadScript; tinyMCE.loadCSS = Aranea.UI.TinyMCELoadCSS;  } return r; };");
 		JspUtil.writeEndTag(out, "script");
-		
+
 		return EVAL_PAGE;
 	}
 	
@@ -84,9 +84,8 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 			
 			StringBuffer buf = new StringBuffer("\t");
 			buf.append(entry.getKey());
-			buf.append(" : \"");
-			buf.append(entry.getValue());
-			buf.append("\"");
+			buf.append(" : ");
+			buf.append(entry.getValue() instanceof String ? '"' + (String)entry.getValue() + '"' : entry.getValue().toString());
 			if (ite.hasNext())
 				buf.append(",\n");
 			

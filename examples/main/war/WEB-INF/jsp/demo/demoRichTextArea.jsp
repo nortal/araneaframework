@@ -13,14 +13,17 @@
 				</ui:formElement>
 
 				<ui:formElement id="button">
-					<ui:button/>
+					<ui:button updateRegions="preview"/>
 				</ui:formElement>
 			</tui:component>
 		</ui:form>
-
-		<div style="border-style: solid; border-width: 1px; padding: 7px">
-			<c:out value="${viewData.preview}" escapeXml="false" />
-		</div>
+		
+		
+		<ui:updateRegion id="preview">
+			<div style="border-style: solid; border-width: 1px; padding: 7px">
+				<c:out value="${viewData.preview}" escapeXml="false" />
+			</div>
+		</ui:updateRegion>
 
 	</ui:widgetContext>
 </jsp:root>

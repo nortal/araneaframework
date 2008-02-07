@@ -30,6 +30,7 @@ var Tips = {
 }
 
 var Tip = Class.create();
+Tip.defaultClassName = "tooltip";
 Tip.prototype = {
 
   initialize: function(element, content) {
@@ -39,7 +40,7 @@ Tip.prototype = {
     this.content = content;
 
     this.options = Object.extend({
-      className: 'tooltip',
+      className: Tip.defaultClassName,
       duration: 0.3,					// duration of the effect
       effect: false,					// false, 'appear' or 'blind'
       hook: false,						// { element: {'topLeft|topRight|bottomLeft|bottomRight'}, tip: {'topLeft|topRight|bottomLeft|bottomRight'}

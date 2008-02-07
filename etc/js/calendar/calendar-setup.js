@@ -107,8 +107,16 @@ Calendar.setup = function (params) {
 		var update = (cal.dateClicked || p.electric);
 		if (update && p.inputField) {
 			p.inputField.value = cal.date.print(p.ifFormat);
-			if (typeof p.inputField.onchange == "function")
-				p.inputField.onchange();
+			if (typeof p.inputField.onchange == "function") {
+			    var inputFieldId = p.inputField.id;
+			    var nf = function() { 
+			      var inpf = $(inputFieldId);
+			      inpf.onchange.bind(inpf);
+			      inpf.value=cal.date.print(p.ifFormat);
+			      inpf.onchange(); 
+			    };
+		    	nf();
+		    }
 		}
 		if (update && p.displayArea)
 			p.displayArea.innerHTML = cal.date.print(p.daFormat);

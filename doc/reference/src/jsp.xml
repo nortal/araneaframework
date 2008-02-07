@@ -2174,6 +2174,18 @@
 
                 <entry>Tooltip content.</entry>
               </row>
+              
+             <row>
+                <entry>options</entry>
+
+                <entry>
+                  <emphasis>no</emphasis>
+                </entry>
+
+                <entry>Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details).</entry>
+              </row>
+
+
             </tbody>
           </tgroup>
         </informaltable>
