@@ -10,6 +10,7 @@ Features and Improvements
 
 Bugfixes
     timeinputs were too narrow in IE when using update regions                | See #604
+    Removed the lazy script loading facilities (problems with IE + TinyMCE)   | See change #599
 
 2008.01.31    | Aranea 1.1-M6
 
