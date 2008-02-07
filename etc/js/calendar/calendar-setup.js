@@ -108,8 +108,14 @@ Calendar.setup = function (params) {
 		if (update && p.inputField) {
 			p.inputField.value = cal.date.print(p.ifFormat);
 			if (typeof p.inputField.onchange == "function") {
-			    var nf = function() { p.inputField.onchange() }.bind(p.inputField);
-                nf();
+			    var inputFieldId = p.inputField.id;
+			    var nf = function() { 
+			      var inpf = $(inputFieldId);
+			      inpf.onchange.bind(inpf);
+			      inpf.value=cal.date.print(p.ifFormat);
+			      inpf.onchange(); 
+			    };
+		    	nf();
 		    }
 		}
 		if (update && p.displayArea)

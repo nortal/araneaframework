@@ -88,6 +88,8 @@ Aranea.UI.addOptions = function(selectName, z, x) {
     opt.appendChild(node);
     select.appendChild(opt);
   }
+  // IE otherwise sets select width wrong when updating DOM
+  if (Prototype.Browser.IE) select.style.visibility='visible';
 };
 
 /* @deprecated
