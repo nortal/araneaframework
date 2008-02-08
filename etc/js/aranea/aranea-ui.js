@@ -207,7 +207,7 @@ Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
  * @since 1.1 */
 Aranea.UI.flowEventConfirm = function(message) {
   var confirmationResult = "" + window.confirm(message);
-  araneaPage().getSystemForm().confirmationContextConfirmationResult.value = confirmationResult;
+  araneaPage().getSystemForm().araConfirmationContextConfirmationResult.value = confirmationResult;
   araneaPage().event_6(araneaPage().getSystemForm());
 };
 
