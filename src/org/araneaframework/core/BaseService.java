@@ -30,8 +30,8 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public abstract class BaseService extends BaseComponent implements Service {
   
-  protected InputData currentInputData;
-  protected OutputData currentOutputData;
+  protected transient InputData currentInputData;
+  protected transient OutputData currentOutputData;
 
   public Service.Interface _getService() {
     return new ServiceImpl();

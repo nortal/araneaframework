@@ -27,7 +27,7 @@ import org.apache.commons.collections.Closure;
  * @since 1.1
  */
 public interface ConfirmationContext extends Serializable {
-  String CONFIRMATION_RESULT_KEY = "confirmationContextConfirmationResult";
+  String CONFIRMATION_RESULT_KEY = "araConfirmationContextConfirmationResult";
   
   void confirm(Closure onConfirmClosure, String message);
   String getConfirmationMessage();

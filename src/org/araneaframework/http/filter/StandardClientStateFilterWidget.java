@@ -23,14 +23,17 @@ import org.apache.commons.collections.Buffer;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.RelocatableDecorator;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
+import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.util.EncodingUtil;
 
 /**
@@ -40,19 +43,8 @@ import org.araneaframework.http.util.EncodingUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
-public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
+public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget, ClientStateContext {
   private static final Log log = LogFactory.getLog(StandardClientStateFilterWidget.class);
-
-  /**
-   * Global parameter key for the client state form input.
-   */
-  public static final String CLIENT_STATE = "araClientState";
-
-  /**
-   * Global parameter key for the version of the client state form input.
-   */
-  public static final String CLIENT_STATE_VERSION = "araClientStateVersion";
-
   private Buffer digestSet = new CircularFifoBuffer(10);
 
   private boolean compress = false;
@@ -63,13 +55,17 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 
       byte[] lastDigest = Base64.decode((String)input.getGlobalData().get(CLIENT_STATE_VERSION)+"");
 
-      if (!digestSet.contains(new Digest(lastDigest)))
-        throw new SecurityException("Invalid session digest!");	
-      if (!EncodingUtil.checkDigest(state.getBytes(), lastDigest))
+      if (!digestSet.contains(new Digest(lastDigest))) {
+        // this is most likely the case when session has expired
+        throw new SecurityException("Invalid session digest!");
+      }
+      if (!EncodingUtil.checkDigest(state.getBytes(), lastDigest)) {
+        // probably an evil hacker :)
         throw new SecurityException("Invalid session state!");
+      }
 
       childWidget = (RelocatableWidget)EncodingUtil.decodeObjectBase64(state, compress);
-      ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
+      ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
     }
   }
 
@@ -80,27 +76,36 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 
   protected void render(OutputData output) throws Exception {
     refreshClientState(output.getInputData());
+    
+    // state changes in render (rendered flags for formelements)
+    super.render(output);
+    
+    childWidget = null;
+  }
 
+  /* (non-Javadoc)
+   * @see org.araneaframework.http.filter.ClientStateContext#addSystemFormState()
+   */
+  public void addSystemFormState() throws Exception {
+    Environment env = ((RelocatableWidget) childWidget)._getRelocatable().getCurrentEnvironment();
+    
     ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(null);
 
     String base64 = EncodingUtil.encodeObjectBase64(this.childWidget, compress);
-
-    log.debug("Serialized client state size: " + base64.length());
 
     byte[] lastDigest = EncodingUtil.buildDigest(base64.getBytes());
 
     String clientStateVersion = Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES);
     digestSet.add(new Digest(lastDigest));
 
-    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getEnvironment());
-
+    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(env);
+    
     SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(CLIENT_STATE, base64);
     systemFormContext.addField(CLIENT_STATE_VERSION, clientStateVersion);
- 
-    super.render(output);
-
-    childWidget = null;
+    
+    if (log.isTraceEnabled())
+      log.trace("Size of serialized client state is : " + base64.length() + ", stateVersion id = " + clientStateVersion);
   }
 
   /**
@@ -140,5 +145,9 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
    */
   public void setCompress(boolean compress) {
     this.compress = compress;
+  }
+
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), ClientStateContext.class, this);
   }
 }

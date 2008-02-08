@@ -16,12 +16,14 @@
 
 package org.araneaframework.jsp.tag.form;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.SystemFormContext;
+import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.util.JspUtil;
@@ -46,11 +48,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     super.doStartTag(out);
 
     // Hidden fields: preset
-    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
-    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
-    }
+    writeSystemFormFields(out);
 
     // Hidden fields: to be set
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
@@ -59,6 +57,21 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
 
     // Continue
     return EVAL_BODY_INCLUDE;
+  }
+  
+  protected int doEndTag(Writer out) throws Exception {
+    ClientStateContext ctx= (ClientStateContext) getEnvironment().getEntry(ClientStateContext.class);
+    ctx.addSystemFormState();
+    writeSystemFormFields(out);
+    return super.doEndTag(out);
+  }
+
+  private void writeSystemFormFields(Writer out) throws JspException, IOException {
+    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
+    }
   }
   
   /* ***********************************************************************************
