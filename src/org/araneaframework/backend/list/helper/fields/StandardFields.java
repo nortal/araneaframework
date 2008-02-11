@@ -16,6 +16,7 @@
 
 package org.araneaframework.backend.list.helper.fields;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,6 +31,9 @@ import org.araneaframework.uilib.util.NameUtil;
 
 /**
  * List of fields standard implementation.
+ * <p>
+ * All the fields are presented both in the <code>SELECT</code> and in the {@link ResultSet}.
+ * </p>
  * <p>
  * Fields can be added/removed either:
  * <ul>
@@ -186,6 +190,10 @@ public class StandardFields implements Fields {
 	}
 
 	public Collection getNames() {
+		return fields;
+	}
+
+	public Collection getResultSetNames() {
 		return fields;
 	}
 	

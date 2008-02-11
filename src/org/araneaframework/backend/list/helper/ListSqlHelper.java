@@ -16,6 +16,8 @@
 
 package org.araneaframework.backend.list.helper;
 
+import java.sql.ResultSet;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -296,28 +298,74 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	}
 	
 	// Mappings
-
+	
 	/**
 	 * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
 	 * <p>
-	 * A given field is not listed in the <code>SELECT</code> clause.
+	 * A given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
 	 * 
 	 * @param fieldName
 	 *            field name.
 	 * @param columnName
 	 *            database column name.
+	 * @param columnAlias
+	 *            database column alias.      
 	 *            
-	 * @see #addMapping(String, String)
 	 * @see #addMapping(String, String, String)
+	 * @see #addMapping(String, String)
+	 * @see #addDatabaseFieldMapping(String, String)
+	 * @see #addResultSetMapping(String, String)
+	 */
+	public void addDatabaseFieldMapping(String fieldName, String columnName, String columnAlias) {
+		getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName, columnAlias);
+	}
+	
+	/**
+	 * Adds a <b>field name</b> to database <b>column name</b> mapping.
+	 * <p>
+	 * A given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
+	 * </p>
+	 * <p>
+	 * The corresponding <b>column alias</b> is generated automatically.
+	 * 
+	 * @param fieldName
+	 *            field name.
+	 * @param columnName
+	 *            database column name.
+	 *          
+	 * @see #addMapping(String, String, String)
+	 * @see #addMapping(String, String)
+	 * @see #addDatabaseFieldMapping(String, String, String)
+	 * @see #addResultSetMapping(String, String)
 	 */
 	public void addDatabaseFieldMapping(String fieldName, String columnName) {
 		getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName);
 	}
 	
 	/**
+	 * Adds a <b>field name</b> to database <b>column alias</b> mapping.
+	 * <p>
+	 * A given field is not listed in the <code>SELECT</code> but is read from the {@link ResultSet}.
+	 * </p>
+	 * 
+	 * @param fieldName
+	 *            field name.
+	 * @param columnAlias
+	 *            database column name in the result set.
+	 *            
+	 * @see #addMapping(String, String, String)
+	 * @see #addMapping(String, String)
+	 * @see #addDatabaseFieldMapping(String, String, String)
+	 * @see #addDatabaseFieldMapping(String, String)
+	 */	
+	public void addResultSetMapping(String fieldName, String columnAlias) {
+		getMappingNamingStrategyAndFields().addResultSetMapping(fieldName, columnAlias);
+	}
+	
+	/**
 	 * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
 	 * <p>
-	 * A given field is also listed in the <code>SELECT</code> clause.
+	 * A given field is listed in the <code>SELECT</code> and is read from the {@link ResultSet}.
 	 * 
 	 * @param fieldName
 	 *            field name.
@@ -327,16 +375,18 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 *            database column alias.
 	 *
 	 * @see #addMapping(String, String)
+	 * @see #addDatabaseFieldMapping(String, String, String)
 	 * @see #addDatabaseFieldMapping(String, String)
+	 * @see #addResultSetMapping(String, String)
 	 */
 	public void addMapping(String fieldName, String columnName, String columnAlias) {
 		getMappingNamingStrategyAndFields().addMapping(fieldName, columnName, columnAlias);
 	}
 	
 	/**
-	 * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
+	 * Adds a <b>field name</b> to database <b>column name</b>.
 	 * <p>
-	 * A given field is also listed in the <code>SELECT</code> clause.
+	 * A given field is listed in the <code>SELECT</code> and is read from the {@link ResultSet}.
 	 * </p>
 	 * <p>
 	 * The corresponding <b>column alias</b> is generated automatically.
@@ -347,9 +397,12 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 *            database column name.
 	 *
 	 * @see #addMapping(String, String, String)
+	 * @see #addDatabaseFieldMapping(String, String, String)
 	 * @see #addDatabaseFieldMapping(String, String)
+	 * @see #addResultSetMapping(String, String)
 	 */	
 	public void addMapping(String fieldName, String columnName) {
 		getMappingNamingStrategyAndFields().addMapping(fieldName, columnName);
 	}
+
 }

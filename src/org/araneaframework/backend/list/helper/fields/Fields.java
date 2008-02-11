@@ -16,6 +16,7 @@
 
 package org.araneaframework.backend.list.helper.fields;
 
+import java.sql.ResultSet;
 import java.util.Collection;
 
 import org.araneaframework.backend.list.helper.ListSqlHelper;
@@ -23,6 +24,15 @@ import org.araneaframework.backend.list.helper.naming.MappingNamingStrategyAndFi
 
 /**
  * List of field names provider for SQL Helper.
+ * <p>
+ * These names correspond to bean fields (e.g. "name", "age", "address.town"].
+ * </p>
+ * <p>
+ * There are two lists of fields:
+ * <ul>
+ * <li>fields presented in <code>SELECT</code> - returned by {@link #getNames()}</li>
+ * <li>Fields read from the {@link ResultSet} - returned by {@link #getResultSetNames()}</li>
+ * </ul>
  * 
  * @see ListSqlHelper#getFields()
  * @see StandardFields
@@ -36,16 +46,17 @@ import org.araneaframework.backend.list.helper.naming.MappingNamingStrategyAndFi
 public interface Fields {
 
 	/**
-	 * Return the list of field names.
-	 * <p>
-	 * All these fields are used in <code>SELECT</code> clause
-	 * and read from the result set.
-	 * </p>
-	 * <p>
-	 * E.g. ["name", "age", "address.town"]
+	 * Return the list of fields used in <code>SELECT</code>.
 	 * 
-	 * @return List&lt;String&gt; the list of field names.
+	 * @return List&lt;String&gt; the names of the fields used in SELECT.
 	 */
 	Collection getNames();
+	
+	/**
+	 * Return the list of fields read from the {@link ResultSet}.
+	 * 
+	 * @return List&lt;String&gt; the names of the fields read from the {@link ResultSet}.
+	 */
+	Collection getResultSetNames();	
 	
 }

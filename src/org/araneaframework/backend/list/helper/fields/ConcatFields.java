@@ -26,6 +26,10 @@ import java.util.List;
 /**
  * Composite implementation of {@link Fields}
  * that combine the results of its children.
+ * <p>
+ * The concatenation of all fields are returned with no duplications.
+ * 
+ * @see Fields
  * 
  * @author Rein Raudjärv
  * 
@@ -49,6 +53,17 @@ public class ConcatFields implements Fields {
 		for (Iterator it = children.iterator(); it.hasNext();) {
 			Fields child = (Fields) it.next(); 
 			result.addAll(child.getNames());
+		}
+		return result;
+	}
+
+	public Collection getResultSetNames() {
+		// Concatenate all fields without duplicating any name
+		Collection result = new LinkedHashSet();
+		
+		for (Iterator it = children.iterator(); it.hasNext();) {
+			Fields child = (Fields) it.next(); 
+			result.addAll(child.getResultSetNames());
 		}
 		return result;
 	}
