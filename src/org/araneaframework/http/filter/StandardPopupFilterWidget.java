@@ -172,18 +172,32 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     }
 
     try {
-      getServiceCtx(ThreadContext.class).close(id);
+      closePopupThread(id);
     } catch (Exception e) {
       log.warn("Attempt to close registered popup service with ID '" + id + "' has failed with exception : ." + e);
       return false;
     } finally {
-      allPopups.remove(id);
-      popups.remove(id);
+      removePopup(id);
     }
 
     if (log.isDebugEnabled())
       log.debug("Popup service with identifier '" + id + "' was closed");
     return true;
+  }
+
+  /**
+   * @since 1.1
+   */
+  public void removePopup(String id) {
+    allPopups.remove(id);
+    popups.remove(id);
+  }
+
+  /**
+   * @since 1.1
+   */
+  protected void closePopupThread(String id) {
+    getServiceCtx(ThreadContext.class).close(id);
   }
   
   public Widget getOpener() {
