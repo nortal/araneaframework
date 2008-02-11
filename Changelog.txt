@@ -6,12 +6,13 @@ Features and Improvements
     'options' attribute for <ui:tooltip> tag                                  | See #605
     Support adding rendered update regions on serverside (UpdateRegionContext)| See #601
     TinyMCE updated to 3.0 + updateregion support fixed                       | See #587, #602
-    Documented FlowContext.TranslationHandler in reference manual             | See #606
+    Documented FlowContext.TransitionHandler in reference manual              | See #606
 
 Bugfixes
     timeinputs were too narrow in IE when using update regions                | See #604
     Removed the lazy script loading facilities (problems with IE + TinyMCE)   | See change #599
 
+---------------------------------------------------------------------------------------------
 2008.01.31    | Aranea 1.1-M6
 
 Features and Improvements
