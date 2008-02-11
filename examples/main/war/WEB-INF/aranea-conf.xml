@@ -64,6 +64,7 @@
   <bean class="org.araneaframework.http.filter.StandardClientStateFilterWidget" 
     id="araneaClientStateFilter" singleton="false">
   	<property name="compress" value="true"/>
+  	<property name="serverSideStorage" value="true"/>
   </bean>
   
   <bean id="araneaWidgetFilters" singleton="false" 

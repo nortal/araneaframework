@@ -26,6 +26,7 @@ import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
+import org.araneaframework.http.ClientStateContext.State;
 import org.araneaframework.jsp.util.JspUtil;
 
 
@@ -61,8 +62,15 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   
   protected int doEndTag(Writer out) throws Exception {
     ClientStateContext ctx= (ClientStateContext) getEnvironment().getEntry(ClientStateContext.class);
-    ctx.addSystemFormState();
-    writeSystemFormFields(out);
+    if (ctx != null) {
+      State state = ctx.registerState();
+      if (state != null) {
+        JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE_VERSION, state.getStateVersion());
+        if (!ctx.isServerSideStorage())
+          JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE, state.getState().toString());          
+      }
+    }
+    
     return super.doEndTag(out);
   }
 

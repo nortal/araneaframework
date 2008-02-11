@@ -18,9 +18,12 @@ package org.araneaframework.http.filter;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 import net.iharder.base64.Base64;
 import org.apache.commons.collections.Buffer;
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
+import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -30,8 +33,8 @@ import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FilterWidget;
-import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.util.EncodingUtil;
@@ -42,23 +45,64 @@ import org.araneaframework.http.util.EncodingUtil;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget, ClientStateContext {
   private static final Log log = LogFactory.getLog(StandardClientStateFilterWidget.class);
-  private Buffer digestSet = new CircularFifoBuffer(10);
-
+  public static final int MAX_STORED_STATES = 10;
+  
+  private boolean serverSideStorage = false;
   private boolean compress = false;
+  
+  private Buffer digestSet;
+  private Map states;
+  private int maxStoredStates = 0;
+  
+  {
+    if (maxStoredStates == 0)
+      maxStoredStates = MAX_STORED_STATES;
+
+    digestSet = new CircularFifoBuffer(maxStoredStates);
+    states = new LRUMap(maxStoredStates);
+  }
+  
+  public void setServerSideStorage(boolean serverSideStorage) {
+    this.serverSideStorage = serverSideStorage;
+  }
 
   private void refreshClientState(InputData input) throws Exception {
     if (childWidget == null) {
-      String state = (String)input.getGlobalData().get(CLIENT_STATE);
+      String state = isServerSideStorage() ? 
+          (String)states.get(getStateVersionFromInput(input)) : (String)input.getGlobalData().get(CLIENT_STATE);  
 
-      byte[] lastDigest = Base64.decode((String)input.getGlobalData().get(CLIENT_STATE_VERSION)+"");
+      byte[] lastDigest = Base64.decode(getStateVersionFromInput(input)+"");
+      
+      // probably some unpleasant refresh. When client-side storage, there is nothing much we can do.
+      // When server-side storage -- use the latest state 
+      if (lastDigest == null) {
+        if (serverSideStorage) {
+         String mostRecentDigest = Base64.encodeBytes((byte[])digestSet.get(), Base64.DONT_BREAK_LINES);
+         state = (String) states.get(mostRecentDigest);
+        } else {
+          // TODO: recover and show at least some information to the user
+        }
+      }
 
       if (!digestSet.contains(new Digest(lastDigest))) {
         // this is most likely the case when session has expired
-        throw new SecurityException("Invalid session digest!");
+        throw new SecurityException("Invalid session digest -- '" + Base64.encodeBytes(lastDigest, Base64.DONT_BREAK_LINES) + "'!");
+      } else {
+        // figure out which position the digestSet has
+        if (!digestSet.get().equals(new Digest(lastDigest))) {
+          int j = 0;
+          for (Iterator i = digestSet.iterator(); i.hasNext(); ) {
+            if (i.next().equals(new Digest(lastDigest)))
+              log.debug("---------------- Client side navigation to cached page #" + j + " detected.");
+            j++;
+          }
+        }
       }
+
       if (!EncodingUtil.checkDigest(state.getBytes(), lastDigest)) {
         // probably an evil hacker :)
         throw new SecurityException("Invalid session state!");
@@ -67,6 +111,10 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
       childWidget = (RelocatableWidget)EncodingUtil.decodeObjectBase64(state, compress);
       ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
     }
+  }
+
+  private String getStateVersionFromInput(InputData input) {
+    return (String)input.getGlobalData().get(CLIENT_STATE_VERSION);
   }
 
   protected void update(InputData input) throws Exception {
@@ -82,11 +130,20 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
     
     childWidget = null;
   }
+  
+  public State registerState() {
+    try {
+      return internalRegisterState();
+    } catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
+  }
+  
+  public boolean isServerSideStorage() {
+    return serverSideStorage;
+  }
 
-  /* (non-Javadoc)
-   * @see org.araneaframework.http.filter.ClientStateContext#addSystemFormState()
-   */
-  public void addSystemFormState() throws Exception {
+  protected State internalRegisterState() throws Exception {
     Environment env = ((RelocatableWidget) childWidget)._getRelocatable().getCurrentEnvironment();
     
     ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(null);
@@ -99,13 +156,15 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
     digestSet.add(new Digest(lastDigest));
 
     ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(env);
+
+    if (isServerSideStorage())
+      states.put(clientStateVersion, base64);
     
-    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
-    systemFormContext.addField(CLIENT_STATE, base64);
-    systemFormContext.addField(CLIENT_STATE_VERSION, clientStateVersion);
-    
-    if (log.isTraceEnabled())
-      log.trace("Size of serialized client state is : " + base64.length() + ", stateVersion id = " + clientStateVersion);
+    if (log.isDebugEnabled()) {
+      log.debug("Registered client state version: " + clientStateVersion);
+    }
+
+    return new State(base64, clientStateVersion);
   }
 
   /**
@@ -137,6 +196,14 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
       }
       return result;			
     }
+  }
+
+  public void addClientNavigationListener(ClientNavigationListener listener) {
+    
+  }
+
+  public void removeClientNavigationListener(ClientNavigationListener listener) {
+    
   }
 
   /**
