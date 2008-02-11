@@ -122,7 +122,7 @@ public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
 	}
 	
 	/**
-	 * Adds a <b>field name</b> to database <b>column name</b> mapping.
+	 * Adds a <b>field name</b> to database <b>column alias</b> mapping.
 	 * <p>
 	 * A given field is not listed in the <code>SELECT</code> but is read from the {@link ResultSet}.
 	 * </p>
