@@ -186,6 +186,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   /**
+   * Only removes the popup from the view of this {@link StandardPopupFilterWidget}, retains the servicing session thread.
    * @since 1.1
    */
   public void removePopup(String id) {
