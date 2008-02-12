@@ -493,7 +493,9 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
   // copy the content of rich editors to corresponding HTML textinputs/textareas
-  if (tinyMCE) { tinyMCE.triggerSave(); }
+  if (window.tinyMCE) { 
+    window.tinyMCE.triggerSave(); 
+  }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
   AraneaPage.showLoadingMessage();
