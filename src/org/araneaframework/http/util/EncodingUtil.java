@@ -66,7 +66,7 @@ public abstract class EncodingUtil {
 	
 		return new String(baos.toByteArray(), "UTF-8");
 	}
-
+	
 	/**
 	 * Base64 decodes the value, optionally decompresses it and then deserializes it. For
 	 * the decompression GZip is expected.

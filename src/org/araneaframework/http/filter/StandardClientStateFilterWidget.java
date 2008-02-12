@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.RelocatableDecorator;
@@ -38,6 +39,7 @@ import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.util.EncodingUtil;
+import org.araneaframework.http.util.RelocatableUtil;
 
 /**
  * A filter providing saving the state on the client side. On every render
@@ -100,6 +102,8 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
               log.debug("---------------- Client side navigation to cached page #" + j + " detected.");
             j++;
           }
+        } else {
+          log.debug("---------------- Normal sequential application navigation detected");
         }
       }
 
@@ -115,6 +119,28 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
 
   private String getStateVersionFromInput(InputData input) {
     return (String)input.getGlobalData().get(CLIENT_STATE_VERSION);
+  }
+  
+  // request to widget was propagated as action
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    String clientStateVersion = getStateVersionFromInput(input);
+
+    // get the child as usual
+    refreshClientState(input);
+    // perform the action
+    super.action(path, input, output);
+
+    if (isServerSideStorage()) {
+      // update the state registered with given digest (client state version)
+      byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget)childWidget);
+      String base64SerializedChild = Base64.encodeBytes(serializedChild);
+      states.put(clientStateVersion, base64SerializedChild);
+    } else {
+      // TODO: handle somehow client state update too -- maybe some JS in X-JSON header that would always be 
+      // interpreted? Unsolved right now.
+    }
+
+    childWidget = null;
   }
 
   protected void update(InputData input) throws Exception {
@@ -196,14 +222,6 @@ public class StandardClientStateFilterWidget extends BaseFilterWidget implements
       }
       return result;			
     }
-  }
-
-  public void addClientNavigationListener(ClientNavigationListener listener) {
-    
-  }
-
-  public void removeClientNavigationListener(ClientNavigationListener listener) {
-    
   }
 
   /**

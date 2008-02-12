@@ -1,21 +1,16 @@
 package org.araneaframework.http;
 
+import java.io.Serializable;
 import org.araneaframework.core.ApplicationComponent;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
- * @since 1.2
  */
-public interface ClientStateContext {
-  /**
-   * Global parameter key for the client state form input.
-   */
-  public static final String CLIENT_STATE = "araClientState";
-
-  /**
-   * Global parameter key for the version of the client state form input.
-   */
-  public static final String CLIENT_STATE_VERSION = "araClientStateVersion";
+public interface StateVersioningContext extends Serializable {
+  /** Key for request parameter that holds state (if parameter present). */
+  public static final String STATE_KEY = "araClientState";
+  /** Key for request parameter that holds state identifier (if parameter present). */
+  public static final String STATE_ID_KEY = "araClientStateId";
 
   /**
    * Registers versioned state at the moment of calling this method.
@@ -29,26 +24,33 @@ public interface ClientStateContext {
    * @return whether the state versions are held on server
    */
   public boolean isServerSideStorage();
-  
+
   /**
    * @author Taimo Peelo (taimo@araneaframework.org)
    * @since 1.2
    */
   public static class State {
     private Object state;
-    private String stateVersion;
+    private String stateId;
     public State(Object state, String stateVersion) {
       this.state = state;
-      this.stateVersion = stateVersion;
+      this.stateId = stateVersion;
     }
     public Object getState() {
       return state;
     }
-    public String getStateVersion() {
-      return stateVersion;
+    public String getStateId() {
+      return stateId;
     }
   }
 
+  /**
+   * Interface that should be implemented by {@link  org.araneaframework.Component}s 
+   * who wish to be notified when client uses browser history mechanism for navigating
+   * application states.
+   * 
+   * @author Taimo Peelo (taimo@araneaframework.org)
+   */
   public interface ClientNavigationAware extends ApplicationComponent {
     public void onClientNavigation(String param);
   }
