@@ -1,23 +1,33 @@
 package org.araneaframework.http;
 
-import java.io.Serializable;
 import org.araneaframework.core.ApplicationComponent;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public interface StateVersioningContext extends Serializable {
+public interface StateVersioningContext extends UpdateRegionProvider {
   /** Key for request parameter that holds state (if parameter present). */
   public static final String STATE_KEY = "araClientState";
   /** Key for request parameter that holds state identifier (if parameter present). */
   public static final String STATE_ID_KEY = "araClientStateId";
+  
+  /** Key for */
+  public static final String STATE_VERSIONING_UPDATE_REGION_KEY = "araStateVersionRegion";
 
   /**
-   * Registers versioned state at the moment of calling this method.
-   * @return snapshot of versioned state
+   * Saves state at the moment of calling this method.
+   * State will have a generated id.
+   * @return snapshot of saved state
    */
-  public State registerState();
-  
+  public State saveState();
+
+  /**
+   * Saves state at the moment of calling this method. State will
+   * have a supplied <code>stateId</code>
+   * @return snapshot of saved state
+   */
+  public State saveState(String stateId);
+
   /**
    * Returns whether the state versions are held on server. If not, and implementation
    * is active in a component hierarchy it means that state is only present on client-side.
@@ -32,9 +42,9 @@ public interface StateVersioningContext extends Serializable {
   public static class State {
     private Object state;
     private String stateId;
-    public State(Object state, String stateVersion) {
+    public State(Object state, String stateId) {
       this.state = state;
-      this.stateId = stateVersion;
+      this.stateId = stateId;
     }
     public Object getState() {
       return state;

@@ -67,12 +67,16 @@
   	<property name="serverSideStorage" value="true"/>
   </bean>
   
+  <bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" singleton="false">
+  	<property name="serverSideStorage" value="true"/>
+  </bean>
+  
   <bean id="araneaWidgetFilters" singleton="false" 
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
     <property name="childWidget" ref="araneaOverlayContainer"/>
     <property name="filterChain">
       <list>
-      	<ref bean="araneaClientStateFilter"/>      
+      	<ref bean="araneaStateVersioningFilter"/>
         <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
         <ref bean="araneaUpdateRegionFilter"/>

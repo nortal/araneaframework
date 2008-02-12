@@ -894,6 +894,30 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
 
+
+/**
+ * Versioned state region handler.
+ * @since 1.2
+ */
+AraneaPage.VersionedStateRegionHandler = Class.create();
+AraneaPage.VersionedStateRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var systemForm = araneaPage().getSystemForm();
+    var json = content.evalJSON();
+    if (json.araClientStateId) {
+      systemForm.araClientStateId.value = json.araClientStateId;
+    }
+    if (json.araClientState) {
+      systemForm.araClientState.value = json.araClientState;
+    }
+  }
+};
+AraneaPage.addRegionHandler('araStateVersionRegion', new AraneaPage.VersionedStateRegionHandler());
+
+
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
 var _ap = new AraneaPage();

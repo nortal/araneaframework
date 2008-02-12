@@ -23,10 +23,10 @@ import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.SystemFormContext;
-import org.araneaframework.http.ClientStateContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.ClientStateContext.State;
+import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.StateVersioningContext.State;
 import org.araneaframework.jsp.util.JspUtil;
 
 
@@ -61,17 +61,23 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   }
   
   protected int doEndTag(Writer out) throws Exception {
-    ClientStateContext ctx= (ClientStateContext) getEnvironment().getEntry(ClientStateContext.class);
+    writeVersionedStateInfo(out);
+    return super.doEndTag(out);
+  }
+
+  /**
+   * @since 1.2
+   */
+  protected void writeVersionedStateInfo(Writer out) throws Exception {
+    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
     if (ctx != null) {
-      State state = ctx.registerState();
+      State state = ctx.saveState();
       if (state != null) {
-        JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE_VERSION, state.getStateVersion());
+        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_KEY, state.getStateId());
         if (!ctx.isServerSideStorage())
-          JspUtil.writeHiddenInputElement(out, ClientStateContext.CLIENT_STATE, state.getState().toString());          
+          JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_KEY, state.getState().toString());          
       }
     }
-    
-    return super.doEndTag(out);
   }
 
   private void writeSystemFormFields(Writer out) throws JspException, IOException {

@@ -27,6 +27,7 @@ import java.security.MessageDigest;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import net.iharder.base64.Base64;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * Provides base64 encoding, decoding methods, generating a digest and checking the digest methods.
@@ -92,10 +93,14 @@ public abstract class EncodingUtil {
 	 * @return A byte[] array representing the SHA hash.
 	 * @throws Exception
 	 */
-	public static byte[] buildDigest(byte[] data) throws Exception {
-		MessageDigest dgst = MessageDigest.getInstance("SHA");
-		dgst.update(data);		
-		return dgst.digest();
+	public static byte[] buildDigest(byte[] data) {
+	  try {
+		  MessageDigest dgst = MessageDigest.getInstance("SHA");
+		  dgst.update(data);		
+		  return dgst.digest();
+	  } catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
 	}
 
 	/**

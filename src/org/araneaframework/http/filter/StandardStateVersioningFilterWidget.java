@@ -1,14 +1,26 @@
 package org.araneaframework.http.filter;
 
 import java.util.Map;
+import net.iharder.base64.Base64;
 import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.collections.map.SingletonMap;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Widget;
+import org.araneaframework.Relocatable.RelocatableWidget;
+import org.araneaframework.core.RelocatableDecorator;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.util.EncodingUtil;
+import org.araneaframework.http.util.JsonObject;
+import org.araneaframework.http.util.RelocatableUtil;
 
 /**
  * Filter that supports Aranea state versioning.
@@ -28,6 +40,18 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   private int maxVersionedStates = DEFAULT_MAX_STATES_STORED;
   protected LRUMap versionedStates = new LRUMap(DEFAULT_MAX_STATES_STORED);
   
+  /* Overrides for BaseFilterWidget methods */
+  /**
+   * Sets the child to <code>childWidget</code> decorated with {@link RelocatableDecorator}.
+   */
+  public void setChildWidget(Widget childWidget) {
+    this.childWidget = new RelocatableDecorator(childWidget);
+  }
+  
+  protected Environment getChildWidgetEnvironment() {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), StateVersioningContext.class, this);
+  }
+
   /* INJECTORS/SETTERS */
   public void setServerSideStorage(boolean b) {
     serverSideStorage = b;
@@ -80,24 +104,62 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
   
   /** Chooses the appropriate state and restores it. */
-  protected void restoreState(InputData input) {
+  protected void restoreState(InputData input) throws Exception {
     // state already restored (usually the case when update/event/render all get called)
     if (childWidget != null) return;
     
-    validateState(input);
+    byte[] serializedState = getState(input);
+    childWidget = (Widget) SerializationUtils.deserialize(serializedState);
+    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
   }
-  
-  private byte[] validateState(InputData input) {
+
+  /**
+   * Gets the serialized state for current request.
+   * @throws Exception if state is invalid for some reason
+   */
+  private byte[] getState(InputData input) throws Exception {
     String requestStateId = getStateId(input);
+    
+    if (log.isDebugEnabled())
+      log.debug("Received service request for versioned component hierarchy '" + requestStateId + "'.");
+    
     if (!versionedStates.containsKey(requestStateId)) {
       throw new IllegalStateException("Invalid/inaccessible state identifier received from request.");
     }
+    
+    if (serverSideStorage)
+      return (byte[]) versionedStates.get(requestStateId);
+    
+    // get and verify state submitted by client
+    String state = (String)input.getGlobalData().get(StateVersioningContext.STATE_KEY);
+    byte[] decodedState = Base64.decode(state);
+    byte[] stateDigest = (byte[]) versionedStates.get(requestStateId);
+    
+    if (!EncodingUtil.checkDigest(decodedState, stateDigest))
+      throw new IllegalStateException("Client side state digest invalid.");
 
-    return (byte[]) versionedStates.get(requestStateId);
+    return decodedState;
   }
 
+  /**
+   * Returns the state id (under key {@link StateVersioningContext#STATE_ID_KEY} from current request.
+   */
   protected String getStateId(InputData input) {
     return (String) input.getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
+  }
+  
+  /* UpdateRegionProvider IMPLEMENTATION */
+  public Map getRegions() {
+    // do not create new state -- instead update the current one
+    State currentState = saveState(getStateId(getInputData()));
+
+    JsonObject stateRegion = new JsonObject();
+
+    stateRegion.setStringProperty(StateVersioningContext.STATE_ID_KEY, currentState.getStateId());
+    if (!isServerSideStorage())
+      stateRegion.setStringProperty(STATE_KEY, currentState.getState().toString());
+
+    return new SingletonMap(StateVersioningContext.STATE_VERSIONING_UPDATE_REGION_KEY, stateRegion.toString());
   }
 
   /* 
@@ -107,7 +169,27 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     return serverSideStorage;
   }
 
-  public State registerState() {
-    return null;
+  /** @return current state with new random identifier*/
+  public State saveState() {
+    return saveState(RandomStringUtils.randomAlphanumeric(30));
+  }
+
+  /** 
+   * Acquires current state and when server-side state versioning is used, stores that for later use.
+   * When this {@link StandardStateVersioningFilterWidget} is configured to hold state on client, it
+   * will only register state identifier and state checksums, returned state must be saved by someone else.
+   * @return current state with supplied identifier
+   */
+  public State saveState(String stateId) {
+    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget);
+    String b64Child = Base64.encodeBytes(serializedChild, Base64.DONT_BREAK_LINES);
+    versionedStates.put(stateId, isServerSideStorage() ? serializedChild : EncodingUtil.buildDigest(serializedChild));
+    State result = new State(isServerSideStorage() ? (Object)serializedChild : (Object)b64Child, stateId);
+
+    if (log.isDebugEnabled()) {
+      log.debug("Registered client state version: " + stateId);
+    }
+
+    return result;
   }
 }
