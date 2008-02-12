@@ -308,15 +308,6 @@ function AraneaPage() {
     if (sync != undefined && !sync)
       url += '&araSync=false';
 
-    // base64 encoding includes '=' usually, which messes with get parameters
-    if (this.getSystemForm() && this.getSystemForm()['araClientStateVersion']) {
-      url += "&araClientStateVersion="+this.getSystemForm()['araClientStateVersion'].value;
-    }
-    
-    if (this.getSystemForm() && this.getSystemForm()['araClientState']) {
-      url += "&araClientState="+this.getSystemForm()['araClientState'].value;
-    }
-
     return url;
   };
 
