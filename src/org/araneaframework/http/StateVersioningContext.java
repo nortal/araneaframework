@@ -36,6 +36,12 @@ public interface StateVersioningContext extends UpdateRegionProvider {
    */
   public boolean isServerSideStorage();
 
+  /** 
+   * Expires all non-current versioned states. Should be called when current flow has completed some 
+   * truly irreversible operation -- i.e calling remote service to bill a credit card etc etc. 
+   */
+  public void expire();
+
   /**
    * @author Taimo Peelo (taimo@araneaframework.org)
    * @since 1.2
@@ -56,13 +62,13 @@ public interface StateVersioningContext extends UpdateRegionProvider {
   }
 
   /**
-   * Interface that should be implemented by {@link  org.araneaframework.Component}s 
+   * Interface that should be implemented by {@link org.araneaframework.Component}s 
    * who wish to be notified when client uses browser history mechanism for navigating
    * application states.
    * 
    * @author Taimo Peelo (taimo@araneaframework.org)
    */
   public interface ClientNavigationAware extends ApplicationComponent {
-    public void onClientNavigation(String param);
+    public void onClientNavigation();
   }
 }

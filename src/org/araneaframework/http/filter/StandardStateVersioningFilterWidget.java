@@ -8,12 +8,14 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
+import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
@@ -24,6 +26,7 @@ import org.araneaframework.http.util.RelocatableUtil;
 
 /**
  * Filter that supports Aranea state versioning.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.2
  */
@@ -39,6 +42,15 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   private boolean serverSideStorage;
   private int maxVersionedStates = DEFAULT_MAX_STATES_STORED;
+  
+  /** State identifier of last component hierarchy serviced by this filter. */
+  protected String lastStateId = null;
+
+  /** 
+   * Map of states versioning system keeps track of. When using client side state storage,
+   * this map consists of <code>Map&lt;String stateId, byte[] stateSHA1Digest&gt;</code>.
+   * When using server-side state storage <code>Map&lt;String stateId, byte[] serializedState&gt;</code> 
+   * */
   protected LRUMap versionedStates = new LRUMap(DEFAULT_MAX_STATES_STORED);
   
   /* Overrides for BaseFilterWidget methods */
@@ -82,7 +94,14 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   /* Service methods */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (log.isDebugEnabled())
+      log.debug("StandardStateVersioningFilterWidget is routing widget action.");
+    
+    restoreState(input);
     super.action(path, input, output);
+    // if server-side storage, update the current state
+    if (isServerSideStorage()) saveState(getStateId(input));
+    // TODO: otherwise???
   }
 
   /* Widget methods */
@@ -104,7 +123,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
   }
   
-  /** Chooses the appropriate state and restores it. */
+  /** 
+   * Chooses the appropriate state and restores it. 
+   * Calls {@link StandardStateVersioningFilterWidget#notifyClientNavigationAwareComponents()} when appropriate. 
+   */
   protected void restoreState(InputData input) throws Exception {
     // state already restored (usually the case when update/event/render all get called)
     if (childWidget != null) return;
@@ -112,6 +134,11 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     byte[] serializedState = getState(input);
     childWidget = (Widget) SerializationUtils.deserialize(serializedState);
     ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
+    
+    String requestStateId = getStateId(input);
+    if (lastStateId != null && !lastStateId.equals(requestStateId) && requestStateId != null)
+      notifyClientNavigationAwareComponents();
+    lastStateId = requestStateId;
   }
 
   /**
@@ -124,16 +151,19 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (log.isDebugEnabled())
       log.debug("Received service request for versioned component hierarchy '" + requestStateId + "'.");
     
+    if (requestStateId == null)
+      requestStateId = lastStateId;
+    
     if (!versionedStates.containsKey(requestStateId)) {
-      throw new IllegalStateException("Invalid/inaccessible state identifier received from request.");
+        throw new IllegalStateException("Invalid state identifier received from request.");
     }
     
     if (serverSideStorage)
       return (byte[]) versionedStates.get(requestStateId);
     
     // get and verify state submitted by client
-    String state = (String)input.getGlobalData().get(StateVersioningContext.STATE_KEY);
-    byte[] decodedState = Base64.decode(state);
+    String suppliedState = (String)input.getGlobalData().get(StateVersioningContext.STATE_KEY);
+    byte[] decodedState = Base64.decode(suppliedState);
     byte[] stateDigest = (byte[]) versionedStates.get(requestStateId);
     
     if (!EncodingUtil.checkDigest(decodedState, stateDigest))
@@ -148,7 +178,15 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected String getStateId(InputData input) {
     return (String) input.getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
   }
-  
+
+  /** 
+   * Notifies descendants which implement {@link StateVersioningContext.ClientNavigationAware} when
+   * state which was previously stored and modified by later actions becomes active again. 
+   */
+  protected void notifyClientNavigationAwareComponents() {
+    ClientNavigationNotifierMessage.INSTANCE.send(null, childWidget);
+  }
+
   /* UpdateRegionProvider IMPLEMENTATION */
   public Map getRegions() {
     // do not create new state -- instead update the current one
@@ -184,6 +222,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   public State saveState(String stateId) {
     byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget);
     String b64Child = Base64.encodeBytes(serializedChild, Base64.DONT_BREAK_LINES);
+
     versionedStates.put(stateId, isServerSideStorage() ? serializedChild : EncodingUtil.buildDigest(serializedChild));
     State result = new State(isServerSideStorage() ? (Object)serializedChild : (Object)b64Child, stateId);
 
@@ -191,6 +230,24 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       log.debug("Registered client state version: " + stateId);
     }
 
+    lastStateId = stateId;
     return result;
+  }
+  
+  public void expire() {
+    versionedStates.clear();
+  }
+
+  /* PROTECTED CLASSES */
+  protected static class ClientNavigationNotifierMessage extends BroadcastMessage {
+    public static final ClientNavigationNotifierMessage INSTANCE = new ClientNavigationNotifierMessage();
+
+    protected void execute(Component component) throws Exception {
+      System.out.println("detected client side navigation event");
+      if (component instanceof ClientNavigationAware) {
+        ClientNavigationAware comp = (ClientNavigationAware) component;
+        comp.onClientNavigation();
+      }
+    }
   }
 }

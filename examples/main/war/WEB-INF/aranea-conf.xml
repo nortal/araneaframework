@@ -58,19 +58,14 @@
   
   <bean class="org.araneaframework.http.filter.StandardHttpResponseFilterService" 
     id="araneaResponseHeaderFilter" singleton="false">
-    <property name="cacheable" value="true"/>
-  </bean>
-  
-  <bean class="org.araneaframework.http.filter.StandardClientStateFilterWidget" 
-    id="araneaClientStateFilter" singleton="false">
-  	<property name="compress" value="true"/>
-  	<property name="serverSideStorage" value="true"/>
+<!--    <property name="cacheable" value="true"/>-->
   </bean>
   
   <bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" singleton="false">
   	<property name="serverSideStorage" value="true"/>
   </bean>
   
+
   <bean id="araneaWidgetFilters" singleton="false" 
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
     <property name="childWidget" ref="araneaOverlayContainer"/>

@@ -291,7 +291,16 @@ function AraneaPage() {
       url += '&araTopServiceId=' + topServiceId;
     if (threadServiceId) 
       url += '&araThreadServiceId=' + threadServiceId;
-  
+
+    if (_ap.getSystemForm().araClientStateId) {
+      url += '&araClientStateId=' + _ap.getSystemForm().araClientStateId.value;
+    }
+    
+    // this has only limited use, cause GET requests are limited in size
+    if (_ap.getSystemForm().araClientState) {
+      url += '&araClientState=' + _ap.getSystemForm().araClientState.value;
+    }
+
   	if(extraParams)
       url += '&' + extraParams;
 

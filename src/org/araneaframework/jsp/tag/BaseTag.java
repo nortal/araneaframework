@@ -314,7 +314,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * @since 1.1
    */
-  protected Environment getEnvironment() throws JspException {
+  protected Environment getEnvironment() {
     return ServletUtil.getEnvironment(pageContext.getRequest());
   }
 
