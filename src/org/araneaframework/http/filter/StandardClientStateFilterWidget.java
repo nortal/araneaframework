@@ -39,6 +39,10 @@ import org.araneaframework.http.util.EncodingUtil;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
+ * 
+ * @deprecated it is outdated and does not work correctly because some state may be actually
+ * modified by {@link Widget.Interface#render(OutputData)} call. Aranea 1.2 will provide
+ * more general StandardStateVersioningFilterWidget which can provide similar functionality.
  */
 public class StandardClientStateFilterWidget extends BaseFilterWidget implements FilterWidget {
   private static final Log log = LogFactory.getLog(StandardClientStateFilterWidget.class);
