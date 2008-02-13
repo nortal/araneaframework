@@ -149,6 +149,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
   }
 
+  /** @since 1.2 */
   protected void writeVersionedStateRegions(PrintWriter writer) throws Exception {
     StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
     if (ctx == null) return;

@@ -4,6 +4,7 @@ import org.araneaframework.core.ApplicationComponent;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.2
  */
 public interface StateVersioningContext extends UpdateRegionProvider {
   /** Key for request parameter that holds state (if parameter present). */

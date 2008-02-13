@@ -25,6 +25,7 @@ import org.araneaframework.http.util.RelocatableUtil;
 /**
  * Filter that supports Aranea state versioning.
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.2
  */
 public class StandardStateVersioningFilterWidget extends BaseFilterWidget implements StateVersioningContext {
   private static final long serialVersionUID = 1L;
