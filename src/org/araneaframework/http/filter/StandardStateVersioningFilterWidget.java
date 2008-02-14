@@ -1,6 +1,7 @@
 package org.araneaframework.http.filter;
 
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import net.iharder.base64.Base64;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.collections.map.SingletonMap;
@@ -23,6 +24,7 @@ import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.util.EncodingUtil;
 import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.http.util.RelocatableUtil;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * Filter that supports Aranea state versioning.
@@ -100,8 +102,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     restoreState(input);
     super.action(path, input, output);
     // if server-side storage, update the current state
-    if (isServerSideStorage()) saveState(getStateId(input));
-    // TODO: otherwise???
+    if (isServerSideStorage()) 
+      saveState(getStateId(input));
+    else {
+      // TODO:
+      // state updates for actions not supported ATM for client side state
+    }
   }
 
   /* Widget methods */
@@ -115,6 +121,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   protected void render(OutputData output) throws Exception {
+    setResponseHeaders(output);
     try {
       restoreState(output.getInputData());
       super.render(output);
@@ -123,6 +130,14 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
   }
   
+  // sets the response headers that disallow caching in general but still allow for using
+  // of browser history navigation facilities (back/forward buttons) in most browsers (IE, FF, Opera)
+  protected void setResponseHeaders(OutputData output) {
+    HttpServletResponse response = ServletUtil.getResponse(output);
+    response.setHeader("Pragma", null);       
+    response.setHeader("Cache-Control", null);
+  }
+
   /** 
    * Chooses the appropriate state and restores it. 
    * Calls {@link StandardStateVersioningFilterWidget#notifyClientNavigationAwareComponents()} when appropriate. 
@@ -155,7 +170,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       requestStateId = lastStateId;
     
     if (!versionedStates.containsKey(requestStateId)) {
-        throw new IllegalStateException("Invalid state identifier received from request.");
+      if (log.isWarnEnabled())
+        log.warn("Received request for restoration of state '" + requestStateId + "' which was not found within versioned states.");
+      // invoke the ExpiredStateHandlerWidget ? ExpirationHandler
+        requestStateId = lastStateId;
     }
     
     if (serverSideStorage)
