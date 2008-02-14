@@ -261,7 +261,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     public static final ClientNavigationNotifierMessage INSTANCE = new ClientNavigationNotifierMessage();
 
     protected void execute(Component component) throws Exception {
-      System.out.println("detected client side navigation event");
       if (component instanceof ClientNavigationAware) {
         ClientNavigationAware comp = (ClientNavigationAware) component;
         comp.onClientNavigation();

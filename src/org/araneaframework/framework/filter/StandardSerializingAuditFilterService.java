@@ -68,7 +68,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     callRWLock.readLock().acquire();
     try {      
-      ((Relocatable) childService)._getRelocatable().overrideEnvironment(getEnvironment());
+      ((Relocatable) childService)._getRelocatable().overrideEnvironment(getChildEnvironment());
       super.action(path, input, output);
     }
     finally {
