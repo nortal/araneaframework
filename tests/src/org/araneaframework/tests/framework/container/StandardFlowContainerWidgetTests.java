@@ -142,6 +142,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
 
     public void configure(Widget flow) throws Exception {
       this.configured = true;
+      this.flow = flow;
     }
 
     public boolean isConfigured() {
