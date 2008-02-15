@@ -71,7 +71,7 @@
     <property name="childWidget" ref="araneaOverlayContainer"/>
     <property name="filterChain">
       <list>
-      	<ref bean="araneaStateVersioningFilter"/>
+<!--      	<ref bean="araneaStateVersioningFilter"/>-->
         <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
         <ref bean="araneaUpdateRegionFilter"/>

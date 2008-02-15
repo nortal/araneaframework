@@ -238,7 +238,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * @return current state with supplied identifier
    */
   public State saveState(String stateId) {
-    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget);
+    //XXX: remove xml after testing phase
+    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget, "/home/taimo/newError.xml");
     String b64Child = Base64.encodeBytes(serializedChild, Base64.DONT_BREAK_LINES);
 
     versionedStates.put(stateId, isServerSideStorage() ? serializedChild : EncodingUtil.buildDigest(serializedChild));

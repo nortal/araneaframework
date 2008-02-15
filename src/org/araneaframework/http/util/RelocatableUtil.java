@@ -16,15 +16,26 @@
 
 package org.araneaframework.http.util;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Relocatable.RelocatableService;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.2
  */
 public abstract class RelocatableUtil {
+  /**
+   * Serializes {@link RelocatableService} to byte array.
+   */
   public static byte[] serializeRelocatable(RelocatableService service) {
     Relocatable.Interface relocatable = service._getRelocatable();
     Environment env = relocatable.getCurrentEnvironment();
@@ -34,5 +45,27 @@ public abstract class RelocatableUtil {
     relocatable.overrideEnvironment(env);
 
     return result;
+  }
+  
+  /**
+   * Serializes {@link RelocatableService} to byte array. If serialization fails,
+   * tries serializing it into XML with XStream (http://xstream.codehaus.org/),
+   * so that it is possible to debug the issue by looking at partial XML dump. 
+   */
+  public static byte[] serializeRelocatable(RelocatableService service, String fileName) {
+    try {
+      return serializeRelocatable(service);
+    } catch (SerializationException e) {
+      try {
+        XStream xstream = new XStream(new DomDriver());
+        PrintWriter writer = new PrintWriter(new FileWriter(fileName));
+        xstream.toXML(service, writer);
+        writer.close();
+      } catch (IOException e1) {
+        ExceptionUtil.uncheckException(e1);
+      }
+
+      throw e;
+    }
   }
 }

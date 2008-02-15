@@ -16,7 +16,9 @@
 
 package org.araneaframework.framework.container;
 
+import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -29,8 +31,16 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.ThreadContext;
+import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.util.EnvironmentUtil;
+import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.http.util.URLUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -127,6 +137,18 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   protected void render(OutputData output) throws Exception {
     if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
         overlay._getWidget().render(output);
+
+        if (!isOverlayActive()) {
+          HttpServletResponse response = ServletUtil.getResponse(output);
+          response.addHeader("Aranea-Overlay-Expired", "true");
+
+          StateVersioningContext ctx = (StateVersioningContext) overlay.getEnvironment().getEntry(StateVersioningContext.class);
+          if (ctx != null) {
+            String stateId = (String)getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
+            ctx.saveState(stateId);
+            response.addHeader("Aranea-StateId-Update", stateId);
+          }
+        }
     }
     else
       main._getWidget().render(output);
