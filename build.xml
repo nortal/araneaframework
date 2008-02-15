@@ -27,7 +27,8 @@
 		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
 		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
 		<ant dir="examples/widgetHelloName" target="clean" inheritall="false"/>		
-		<ant dir="examples/blank" target="clean" inheritall="false"/>		
+		<ant dir="examples/blank" target="clean" inheritall="false"/>
+		<ant dir="tests" target="clean" inheritall="false"/>
 	</target>
 	
 	<!-- Clean up build system results -->
@@ -372,8 +373,11 @@
 		<ant dir="doc/tutorial" target="clean" inheritall="false"/>
 			
 		<antcall target="doc"/>
-    
-		<mkdir dir="build/tmp/dist/dist"/>    
+		
+		<mkdir dir="build/tmp/dist/dist"/>
+		
+		<ant dir="tests" target="build" inheritall="false"/>
+		<copy todir="build/tmp/dist/dist" file="tests/dist/aranea-tests.jar"/>
 
 		<copy todir="build/tmp/dist/dist">
 			<fileset dir="${dist.dir}">
@@ -394,7 +398,7 @@
 				<include name="*"/>
 			</fileset>     
 		</copy>
-
+		
 		<zip destfile="${dist.dir}/${distname}.zip">
 				<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
 		</zip>
