@@ -19,10 +19,12 @@ package org.araneaframework.tests.framework.container;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import junit.framework.TestCase;
+import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
-import org.araneaframework.mock.widget.MockCallableWidget;
+import org.araneaframework.mock.core.MockEventfulBaseWidget;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -30,9 +32,9 @@ import org.araneaframework.mock.widget.MockCallableWidget;
  */
 public class StandardFlowContainerWidgetTests extends TestCase {
   private StandardFlowContainerWidget stackWidget;
-  private MockCallableWidget topWidget;
-  private MockCallableWidget childWidget;
-  private MockCallableWidget childWidget2;
+  private MockEventfulBaseWidget topWidget;
+  private MockEventfulBaseWidget childWidget;
+  private MockEventfulBaseWidget childWidget2;
   private StandardEnvironment env;
   
   private static String BASE_FLOW_KEY; 
@@ -53,9 +55,9 @@ public class StandardFlowContainerWidgetTests extends TestCase {
   }
   
   public void setUp() throws Exception {    
-    topWidget = new MockCallableWidget();
-    childWidget = new MockCallableWidget();
-    childWidget2 = new MockCallableWidget();
+    topWidget = new MockEventfulBaseWidget();
+    childWidget = new MockEventfulBaseWidget();
+    childWidget2 = new MockEventfulBaseWidget();
     
     env = new StandardEnvironment(null, new HashMap());
     
@@ -64,38 +66,91 @@ public class StandardFlowContainerWidgetTests extends TestCase {
   }
   
   public void testCallingContract() throws Exception {
-    stackWidget.start(childWidget, childWidget.getConfigurator(), childWidget.getHandler());
+    MemoizingFlowContextConfigurator configurator = new MemoizingFlowContextConfigurator();
+    MemoizingFlowContextHandler handler = new MemoizingFlowContextHandler();
+    stackWidget.start(childWidget, configurator, handler);
 
-    assertTrue(topWidget.getDeactivateCalled());
-    assertTrue(childWidget.getConfigureCalled());
+    assertTrue(topWidget.isDisableCalled());
+    assertTrue(configurator.isConfigured());
     assertEquals(childWidget, stackWidget.getChildren().get(BASE_FLOW_KEY+"1"));
   }
   
   public void testCancelCallContract() throws Exception {
-    stackWidget.start(childWidget, childWidget.getConfigurator(), childWidget.getHandler());
+    MemoizingFlowContextConfigurator configurator = new MemoizingFlowContextConfigurator();
+    MemoizingFlowContextHandler handler = new MemoizingFlowContextHandler();
+    stackWidget.start(childWidget, configurator, handler);
     
     stackWidget.cancel();
-    assertTrue(childWidget.getOnCallCancelled());
-    assertTrue(topWidget.getActivateCalled());
+    assertTrue(handler.isCancelled());
+    assertTrue(topWidget.isEnableCalled());
     assertEquals(topWidget, stackWidget.getChildren().get(TOP_FLOW_KEY));
   }
     
   public void testReturnCallContract() throws Exception {
-    stackWidget.start(childWidget, childWidget.getConfigurator(), childWidget.getHandler());
+    MemoizingFlowContextConfigurator configurator = new MemoizingFlowContextConfigurator();
+    MemoizingFlowContextHandler handler = new MemoizingFlowContextHandler();
+    stackWidget.start(childWidget, configurator, handler);
     
     stackWidget.finish("returnCall");
-    assertTrue("returnCall".equals(childWidget.getReturnCallReturned()));
-    assertTrue(topWidget.getActivateCalled());
+    assertTrue("returnCall".equals(handler.getReturnValue()));
+    assertTrue(topWidget.isEnableCalled());
     assertEquals(topWidget, stackWidget.getChildren().get(TOP_FLOW_KEY));
   }
   
   public void testDestroyDestroysChildrenOnStack() throws Exception {
-    stackWidget.start(childWidget, childWidget.getConfigurator(), childWidget.getHandler());
-    stackWidget.start(childWidget2, childWidget.getConfigurator(), childWidget.getHandler());
-    
+    stackWidget.start(childWidget, new MemoizingFlowContextConfigurator(),new MemoizingFlowContextHandler());
+    stackWidget.start(childWidget2, new MemoizingFlowContextConfigurator(), new MemoizingFlowContextHandler());
+
     stackWidget._getComponent().destroy();
     
     assertEquals(true, childWidget.getDestroyCalled());
     assertEquals(true, childWidget2.getDestroyCalled());
+  }
+  
+  protected static class MemoizingFlowContextHandler implements FlowContext.Handler {
+    private static final long serialVersionUID = 1L;
+    private Object returnValue = null;
+    private boolean finished;
+    private boolean cancelled;
+    
+    public void onCancel() throws Exception {
+      cancelled = true;
+    }
+
+    public void onFinish(Object returnValue) throws Exception {
+      finished = true;
+      this.returnValue = returnValue;
+    }
+
+    public Object getReturnValue() {
+      return returnValue;
+    }
+
+    public boolean isFinished() {
+      return finished;
+    }
+
+    public boolean isCancelled() {
+      return cancelled;
+    }
+  }
+  
+  protected static class MemoizingFlowContextConfigurator implements FlowContext.Configurator {
+    private static final long serialVersionUID = 1L;
+    private boolean configured;
+    private Widget flow;
+
+    public void configure(Widget flow) throws Exception {
+      this.configured = true;
+      this.flow = flow;
+    }
+
+    public boolean isConfigured() {
+      return configured;
+    }
+
+    public Widget getFlow() {
+      return flow;
+    }
   }
 }

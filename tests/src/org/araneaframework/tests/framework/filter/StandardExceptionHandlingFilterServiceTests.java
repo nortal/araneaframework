@@ -28,9 +28,9 @@ import org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFil
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockLifeCycle;
-import org.araneaframework.mock.MockRenderableStandardService;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulBaseService;
+import org.araneaframework.mock.core.MockEventfulStandardService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -41,7 +41,7 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
   private StandardCriticalExceptionHandlingFilterService service;
   private MockEventfulBaseService child;
   private ExceptionHandlerFactory factory;
-  private MockRenderableStandardService factoryCreatedService;
+  private MockEventfulStandardService factoryCreatedService;
   
   private StandardServletInputData input;
   private StandardServletOutputData output;
@@ -52,13 +52,13 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
   private Throwable exception;
   
   public void setUp() throws Exception {
-    factoryCreatedService = new MockRenderableStandardService();
+    factoryCreatedService = new MockEventfulStandardService();
     factoryCreatedService._getComponent().init(null, MockUtil.getEnv());
     
     factory = new ExceptionHandlerFactory() {
       public Service buildExceptionHandler(Throwable e, Environment environment) {
         StandardExceptionHandlingFilterServiceTests.this.exception = e;
-        factoryCreatedService = new MockRenderableStandardService();
+        factoryCreatedService = new MockEventfulStandardService();
         return factoryCreatedService;
       }
     };
