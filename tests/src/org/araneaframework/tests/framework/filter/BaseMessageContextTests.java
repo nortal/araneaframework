@@ -25,11 +25,11 @@ import junit.framework.TestCase;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.Widget;
+import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.mock.MockInputData;
-import org.araneaframework.mock.core.MockBaseWidget;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -43,7 +43,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     msgCtx = getMessageContext();
 
     // assertions do not allow filter widgets without childs :)
-    ((FilterWidget)msgCtx).setChildWidget(new MockBaseWidget());
+    ((FilterWidget)msgCtx).setChildWidget(new BaseWidget(){});
     
     Environment env = new StandardEnvironment(null, new HashMap());
     ((Widget)msgCtx)._getComponent().init(null, env);

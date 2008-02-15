@@ -16,7 +16,6 @@
 
 package org.araneaframework.mock.core;
 
-import org.araneaframework.Component;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -31,17 +30,8 @@ public class MockEventfulBaseWidget extends BaseWidget {
   private boolean eventCalled = false;
   private boolean renderCalled = false;
   private boolean actionCalled = false;
-  private boolean processCalled = false;
   private boolean destroyCalled = false;
     
-  public void addComponent(Object key, Component component) throws Exception {
-    _addComponent(key, component, getEnvironment());
-  }
-  
-  public void removeComponent(Object key) throws Exception {
-    _removeComponent(key);
-  }
-
   protected void update(InputData input) throws Exception {
     updateCalled = true;
   }
@@ -82,9 +72,5 @@ public class MockEventfulBaseWidget extends BaseWidget {
   
   public boolean getDestroyCalled() {
     return destroyCalled;
-  }
-
-  public void setDestroyCalled(boolean destroyCalled) {
-    this.destroyCalled = destroyCalled;
   }
 }

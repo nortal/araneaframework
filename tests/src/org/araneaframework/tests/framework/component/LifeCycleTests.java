@@ -18,11 +18,12 @@ package org.araneaframework.tests.framework.component;
 
 import junit.framework.TestCase;
 import org.araneaframework.Component;
+import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.BaseComponent;
+import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.mock.MockInputData;
 import org.araneaframework.mock.MockOutputData;
-import org.araneaframework.mock.core.MockBaseComponent;
-import org.araneaframework.mock.core.MockBaseWidget;
 import org.araneaframework.tests.mock.MockEnvironment;
 
 /**
@@ -32,7 +33,7 @@ import org.araneaframework.tests.mock.MockEnvironment;
 public class LifeCycleTests extends TestCase {
     // tests that dead component stays dead
 	public void testPermantentDeath() throws Exception {
-		MockBaseComponent c = new MockBaseComponent();
+		BaseComponent c = new BaseComponent(){};
 		
 		c._getComponent().init(null, new MockEnvironment());
 		c._getComponent().destroy();
@@ -49,7 +50,7 @@ public class LifeCycleTests extends TestCase {
 	// invalid leftover calls are those that activate the methods that directly 
 	// depend on request or response
 	public void testInvalidLeftOverCalls() throws Exception {
-		MockBaseWidget w = new MockBaseWidget();
+		BaseWidget w = new BaseWidget() {};
 		w._getComponent().init(null, new MockEnvironment());
 		w._getComponent().destroy();
 		
@@ -63,7 +64,7 @@ public class LifeCycleTests extends TestCase {
 	
 	// all leftover calls are considered valid 
 	public void testValidLeftOverCalls() throws Exception {
-		MockBaseWidget w = new MockBaseWidget();
+	  BaseApplicationWidget w = new BaseApplicationWidget() {};
 		w._getComponent().init(null, new MockEnvironment());
 		w._getComponent().destroy();
 		
@@ -73,8 +74,8 @@ public class LifeCycleTests extends TestCase {
 				}
 			});
 		
-		w.addComponent("new", new MockBaseWidget());
-		w.removeComponent("new");
+		w.addWidget("new", new BaseApplicationWidget() {});
+		w.removeWidget("new");
 
 		w._getComponent().disable();
 		w._getComponent().enable();

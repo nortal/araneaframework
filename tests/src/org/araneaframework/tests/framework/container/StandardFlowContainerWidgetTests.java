@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
-import org.araneaframework.mock.widget.MockCallableWidget;
+import org.araneaframework.mock.widget.MockFlowWidget;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -30,9 +30,9 @@ import org.araneaframework.mock.widget.MockCallableWidget;
  */
 public class StandardFlowContainerWidgetTests extends TestCase {
   private StandardFlowContainerWidget stackWidget;
-  private MockCallableWidget topWidget;
-  private MockCallableWidget childWidget;
-  private MockCallableWidget childWidget2;
+  private MockFlowWidget topWidget;
+  private MockFlowWidget childWidget;
+  private MockFlowWidget childWidget2;
   private StandardEnvironment env;
   
   private static String BASE_FLOW_KEY; 
@@ -53,9 +53,9 @@ public class StandardFlowContainerWidgetTests extends TestCase {
   }
   
   public void setUp() throws Exception {    
-    topWidget = new MockCallableWidget();
-    childWidget = new MockCallableWidget();
-    childWidget2 = new MockCallableWidget();
+    topWidget = new MockFlowWidget();
+    childWidget = new MockFlowWidget();
+    childWidget2 = new MockFlowWidget();
     
     env = new StandardEnvironment(null, new HashMap());
     

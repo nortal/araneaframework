@@ -26,7 +26,7 @@ import org.araneaframework.framework.FlowContext.Handler;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockCallableWidget extends BaseApplicationWidget {
+public class MockFlowWidget extends BaseApplicationWidget {
   private boolean activateCalled = false;
   private boolean deactivateCalled = false;
   
@@ -71,7 +71,7 @@ public class MockCallableWidget extends BaseApplicationWidget {
   public Configurator getConfigurator() {
     return new FlowContext.Configurator() {
       public void configure(Widget comp) throws Exception {
-        MockCallableWidget.this.configureCalled = true;
+        MockFlowWidget.this.configureCalled = true;
       }
     };
   }
@@ -79,12 +79,12 @@ public class MockCallableWidget extends BaseApplicationWidget {
   public Handler getHandler() {
     return new FlowContext.Handler() {
       public void onFinish(Object returnValue) throws Exception {
-        MockCallableWidget.this.onCallReturned = true;
+        MockFlowWidget.this.onCallReturned = true;
         returnCallReturned = returnValue;
       }
 
       public void onCancel() throws Exception {
-        MockCallableWidget.this.onCallCancelled = true;
+        MockFlowWidget.this.onCallCancelled = true;
       }
     };
   }
