@@ -26,11 +26,18 @@ import org.araneaframework.core.BaseWidget;
  *
  */
 public class MockEventfulBaseWidget extends BaseWidget {
+  private static final long serialVersionUID = 1L;
   private boolean updateCalled = false;
   private boolean eventCalled = false;
   private boolean renderCalled = false;
   private boolean actionCalled = false;
   private boolean destroyCalled = false;
+  private boolean disableCalled = false;
+  private boolean enableCalled = false;
+  
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    actionCalled = true;
+  }
     
   protected void update(InputData input) throws Exception {
     updateCalled = true;
@@ -40,16 +47,20 @@ public class MockEventfulBaseWidget extends BaseWidget {
     eventCalled = true;
   }
 
-
   protected void render(OutputData output) throws Exception {
     renderCalled = true;
   }
-
-
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    actionCalled = true;
-  }
   
+  protected void disable() throws Exception {
+    super.disable();
+    disableCalled = true;
+  }
+
+  protected void enable() throws Exception {
+    super.enable();
+    enableCalled = true;
+  }
+
   public void destroy() throws Exception {
     destroyCalled = true;
   }
@@ -72,5 +83,13 @@ public class MockEventfulBaseWidget extends BaseWidget {
   
   public boolean getDestroyCalled() {
     return destroyCalled;
+  }
+
+  public boolean isDisableCalled() {
+    return disableCalled;
+  }
+
+  public boolean isEnableCalled() {
+    return enableCalled;
   }
 }
