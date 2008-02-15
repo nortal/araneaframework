@@ -16,7 +16,6 @@
 
 package org.araneaframework.framework.container;
 
-import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.map.LinkedMap;
@@ -31,16 +30,10 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
-import org.araneaframework.framework.ThreadContext;
-import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
-import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.StateVersioningContext;
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.http.util.URLUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -64,6 +57,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    */
   public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
   private static final String OVERLAY_REQUEST_KEY = "araOverlay";
+  private static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";
@@ -136,19 +130,21 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   protected void render(OutputData output) throws Exception {
     if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
-        overlay._getWidget().render(output);
+      overlay._getWidget().render(output);
 
-        if (!isOverlayActive()) {
-          HttpServletResponse response = ServletUtil.getResponse(output);
-          response.addHeader("Aranea-Overlay-Expired", "true");
+      if (!isOverlayActive()) {
+        // response should be empty as nothing was rendered when overlay did not contain an active flow
+        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
+        HttpServletResponse response = ServletUtil.getResponse(output);
+        response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
 
-          StateVersioningContext ctx = (StateVersioningContext) overlay.getEnvironment().getEntry(StateVersioningContext.class);
-          if (ctx != null) {
-            String stateId = (String)getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
-            ctx.saveState(stateId);
-            response.addHeader("Aranea-StateId-Update", stateId);
-          }
+        StateVersioningContext ctx = (StateVersioningContext) overlay.getEnvironment().getEntry(StateVersioningContext.class);
+        if (ctx != null) {
+          String stateId = (String)getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
+          ctx.saveState(stateId);
+          response.getWriter().write("<!--" + stateId + "-->\n");
         }
+      }
     }
     else
       main._getWidget().render(output);

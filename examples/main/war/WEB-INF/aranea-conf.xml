@@ -54,37 +54,10 @@
     </property>
   </bean>
   
-  <!-- Configuration for supporting the usage of client side state filter -->
-  
-  <bean class="org.araneaframework.http.filter.StandardHttpResponseFilterService" 
-    id="araneaResponseHeaderFilter" singleton="false">
-<!--    <property name="cacheable" value="true"/>-->
-  </bean>
-  
+  <!-- Configuration for supporting the usage of state versioning filter -->
+
   <bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" singleton="false">
   	<property name="serverSideStorage" value="true"/>
   </bean>
-  
-
-  <bean id="araneaWidgetFilters" singleton="false" 
-    class="org.araneaframework.framework.filter.StandardFilterChainWidget">
-    <property name="childWidget" ref="araneaOverlayContainer"/>
-    <property name="filterChain">
-      <list>
-<!--      	<ref bean="araneaStateVersioningFilter"/>-->
-        <ref bean="araneaRedirectingFilter"/>        
-        <ref bean="araneaTransactionFilter"/>
-        <ref bean="araneaUpdateRegionFilter"/>
-        <ref bean="araneaConfirmationFilter"/>
-        <ref bean="araneaRenderStatusResettingFilter"/>
-        <ref bean="araneaMessagingFilter"/>
-        <ref bean="araneaEnvContextFilter"/>
-        <ref bean="araneaPopupFilter"/>
-        <bean class="org.araneaframework.integration.spring.SpringOptionalFilterWidget" singleton="false">
-          <property name="beanId" value="araneaCustomWidgetFilters"/>
-        </bean>        
-      </list>
-    </property>
-   </bean>
 
 </beans>
