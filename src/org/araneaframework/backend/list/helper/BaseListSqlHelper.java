@@ -553,7 +553,7 @@ public abstract class BaseListSqlHelper {
 			sb.append(")");
 			sb.append(getDatabaseFilterWith(" AND ", ""));
 		}
-		if (customWhereSql == null) {
+		if (customOrderbySql == null) {
 			sb.append(getDatabaseOrderWith(" ORDER BY ", ""));	
 		} else {
 			sb.append(" ORDER BY ");
@@ -991,7 +991,7 @@ public abstract class BaseListSqlHelper {
 		 * Cache all the field names, field types and column names to be used for each row.
 		 */
 		public void init() {
-			Collection names = fields.getNames();
+			Collection names = fields.getResultSetNames();
 			int count = names.size();
 			fieldNames = new String[count];
 			fieldTypes = new Class[count];

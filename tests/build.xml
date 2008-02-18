@@ -18,6 +18,7 @@
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="build" failonerror="false"/>
+		<delete dir="dist" failonerror="false"/>
 	</target>
 	
 	<!-- Build the code -->
@@ -37,6 +38,13 @@
 			<classpath refid="classpath"/>
 			<include name="**/*.java" />
 		</javac>
+		
+		<mkdir dir="dist"/>
+		<jar destfile="dist/aranea-tests.jar">
+			<fileset dir="build/classes">
+			  <include name="org/araneaframework/**/*"/>	
+			</fileset>
+		</jar>
 	</target>
 	
 	<!-- test the system -->

@@ -1256,7 +1256,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                   <entry>
                   Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
                   and <emphasis>column alias</emphasis> mapping.
-                  A given field is also listed in the <code>SELECT</code> clause.
+                  A given field is listed in the <code>SELECT</code> and is read from the <code>ResultSet</code>.
                   </entry>
                 </row>
 
@@ -1265,8 +1265,17 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                   <entry>
                   Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
                   and <emphasis>column alias</emphasis> mapping.
-                  A given field is also listed in the <code>SELECT</code> clause.
+                  A given field is listed in the <code>SELECT</code> and is read from the <code>ResultSet</code>.
                   The corresponding <emphasis>column alias</emphasis> is generated automatically.
+                  </entry>
+                </row>
+
+                <row>
+                  <entry><literal>addDatabaseFieldMapping(String fieldName, String columnName, String columnAlias)</literal></entry>
+                  <entry>
+                  Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
+                  and <emphasis>column alias</emphasis> mapping.
+                  A given field is listed in the <code>SELECT</code> but is not read from the <code>ResultSet</code>.
                   </entry>
                 </row>
 
@@ -1275,7 +1284,17 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                   <entry>
                   Adds a <emphasis>field name</emphasis> to database <emphasis>column name</emphasis>
                   mapping.
-                  A given field is not listed in the <code>SELECT</code> clause.
+                  A given field is listed in the <code>SELECT</code> but is not read from the <code>ResultSet</code>.
+                  The corresponding <emphasis>column alias</emphasis> is generated automatically.
+                  </entry>
+                </row>
+
+                <row>
+                  <entry><literal>addResultSetMapping(String fieldName, String columnAlias)</literal></entry>
+                  <entry>
+                  Adds a <emphasis>field name</emphasis> to database <emphasis>column alias</emphasis>
+                  mapping.
+                  A given field is not listed in the <code>SELECT</code> but is read from the <code>ResultSet</code>.
                   </entry>
                 </row>
               </tbody>
@@ -1369,6 +1388,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 <para>A set of fields are provided by following interface.
 <programlisting role="java">public interface Fields {
 	Collection getNames();
+	Collection getResultSetNames();
 }</programlisting></para>
 		<para>
 			To set or get a <emphasis>fields provider</emphasis> use methods
