@@ -291,7 +291,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   // Service methods
   //
 
-  protected ConfigurationContext getConfiguration() throws JspException {
+  protected ConfigurationContext getConfiguration() {
     return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
 
@@ -299,7 +299,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Returns the current <code>LocalizationContext</code>.
    * @return current <code>LocalizationContext</code>.
    */
-  protected LocalizationContext getLocalizationContext() throws JspException {
+  protected LocalizationContext getLocalizationContext() {
     return JspUtil.getLocalizationContext(pageContext);
   }
 
@@ -307,7 +307,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Returns the current response object.
    * @return the current response object.
    */
-  protected OutputData getOutputData() throws JspException {
+  protected OutputData getOutputData() {
     return ServletUtil.getOutputData(pageContext.getRequest());
   }
 

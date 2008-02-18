@@ -28,7 +28,6 @@ import org.araneaframework.core.BaseApplicationWidget;
 public class MockEventfulStandardWidget extends BaseApplicationWidget {
   private boolean updateCalled = false;
   private boolean eventProcessed = false;
-  private boolean processCalled = false;
   private boolean renderCalled = false;
   private boolean destroyCalled = false;
   
@@ -77,10 +76,6 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
 
   public boolean getEventProcessed() {
     return eventProcessed;
-  }
-
-  public boolean isProcessCalled() {
-    return processCalled;
   }
 
   public boolean getRenderCalled() {

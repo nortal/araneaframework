@@ -16,7 +16,6 @@
 
 package org.araneaframework.mock.core;
 
-import org.araneaframework.Component;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -27,21 +26,19 @@ import org.araneaframework.core.BaseWidget;
  *
  */
 public class MockEventfulBaseWidget extends BaseWidget {
+  private static final long serialVersionUID = 1L;
   private boolean updateCalled = false;
   private boolean eventCalled = false;
   private boolean renderCalled = false;
   private boolean actionCalled = false;
-  private boolean processCalled = false;
   private boolean destroyCalled = false;
-    
-  public void addComponent(Object key, Component component) throws Exception {
-    _addComponent(key, component, getEnvironment());
-  }
+  private boolean disableCalled = false;
+  private boolean enableCalled = false;
   
-  public void removeComponent(Object key) throws Exception {
-    _removeComponent(key);
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    actionCalled = true;
   }
-
+    
   protected void update(InputData input) throws Exception {
     updateCalled = true;
   }
@@ -50,16 +47,20 @@ public class MockEventfulBaseWidget extends BaseWidget {
     eventCalled = true;
   }
 
-
   protected void render(OutputData output) throws Exception {
     renderCalled = true;
   }
-
-
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    actionCalled = true;
-  }
   
+  protected void disable() throws Exception {
+    super.disable();
+    disableCalled = true;
+  }
+
+  protected void enable() throws Exception {
+    super.enable();
+    enableCalled = true;
+  }
+
   public void destroy() throws Exception {
     destroyCalled = true;
   }
@@ -84,7 +85,11 @@ public class MockEventfulBaseWidget extends BaseWidget {
     return destroyCalled;
   }
 
-  public void setDestroyCalled(boolean destroyCalled) {
-    this.destroyCalled = destroyCalled;
+  public boolean isDisableCalled() {
+    return disableCalled;
+  }
+
+  public boolean isEnableCalled() {
+    return enableCalled;
   }
 }
