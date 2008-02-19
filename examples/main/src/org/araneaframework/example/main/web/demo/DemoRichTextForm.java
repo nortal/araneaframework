@@ -51,11 +51,17 @@ public class DemoRichTextForm extends TemplateBaseWidget {
 		ButtonControl button = new ButtonControl();
 		button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testForm"));
 		form.addElement("button", "#Preview", button, null, false);
+
+		getOverlayCtx().getOverlayOptions().put("height", new Integer(600));
 		
 		addWidget("form", form);
 	}
 	
-	public void handleEventTestForm() throws Exception {
+	protected void destroy() throws Exception {
+	  getOverlayCtx().getOverlayOptions().remove("height");
+  }
+
+  public void handleEventTestForm() throws Exception {
 		form.convert();
 		putViewData("preview", areaContents.getValue());
 	}

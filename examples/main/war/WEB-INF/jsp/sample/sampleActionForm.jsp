@@ -10,8 +10,9 @@
 		<ui:form id="form">
 
 			<script type="text/javascript">
-				var formId = '<c:out value="${formFullId}" />';
-				var callback = function(request, response) {
+			  with (window) {
+				formId = '<c:out value="${formFullId}" />';
+				callback = function(request, response) {
 					if (request.status != 200) {
 						alert(request.responseText);	// Very ugly
 						return;
@@ -23,7 +24,8 @@
 					$(formId + '.vatTotal').value = fields[3];
 					$(formId + '.bigTotal').value = fields[4];
 				};
-				var widgetId = '<c:out value="${widgetId}" />';
+				widgetId = '<c:out value="${widgetId}" />';
+		      }
 			</script>
 				
 			<tui:componentHeader>

@@ -110,10 +110,6 @@
 			
 			</ui:updateRegion>
 			
-			<tui:componentActions>
-				<ui:eventButton eventId="return" labelId="common.Return"/> 
-			</tui:componentActions>
-
 		</tui:component>
 		
 		</ui:list>

@@ -67,6 +67,7 @@ import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidg
 import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
+import org.araneaframework.example.main.web.testing.ModalDialogTestWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
@@ -160,10 +161,11 @@ private MenuItem araneaMenu;
       sampleMenu.addMenuItem("Advanced", new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
       sampleMenu.addMenuItem("Advanced", new MenuItem("Flow_Navigation_Confirmation", DemoFlowEventConfirmationWidget.class));
-      advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
       
+      advDemos.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
+      advDemos.addMenuItem(new MenuItem("ModalDialogTesting", ModalDialogTestWidget.class));
       
       MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
       formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));

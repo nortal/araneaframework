@@ -847,8 +847,14 @@ AraneaPage.ReloadRegionHandler.prototype = {
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
-      systemForm.araTransactionId.value = 'inconsistent';
-    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+      systemForm.araTransactionId.value = 'override';
+
+    // if current systemform is overlayed, reload only overlay
+    if (systemForm.araOverlay) {
+      return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
+    }
+
+    return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
