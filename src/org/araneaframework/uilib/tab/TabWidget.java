@@ -83,9 +83,9 @@ public class TabWidget extends BaseApplicationWidget {
 
 	/* PUBLIC GETTERS */
 	public String getLabel() {
-        if (labelId != null)
+    if (labelId != null)
 		  return EnvironmentUtil.requireLocalizationContext(getEnvironment()).localize(labelId);
-        return null;
+    return null;
 	}
 
 	public Widget getLabelWidget() {
@@ -93,7 +93,7 @@ public class TabWidget extends BaseApplicationWidget {
 	}
 
 	public Widget getTabContentWidget() {
-		return tabContentWidget;
+		return isStateless() ? getWidget(CONTENT_WIDGET_KEY) : tabContentWidget;
 	}
 
 	public boolean isTabDisabled() {
