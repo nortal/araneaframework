@@ -99,14 +99,20 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (log.isDebugEnabled())
       log.debug("StandardStateVersioningFilterWidget is routing widget action.");
     
-    restoreState(input);
-    super.action(path, input, output);
-    // if server-side storage, update the current state
-    if (isServerSideStorage()) 
-      saveState(getStateId(input));
-    else {
-      // TODO:
-      // state updates for actions not supported ATM for client side state
+    try {
+      restoreChild(getState(lastStateId));
+      //restoreState(input);
+      super.action(path, input, output);
+      // if server-side storage, update the current state
+      if (isServerSideStorage()) {
+        saveState(getStateId(input));
+      }
+      else {
+        // TODO:
+        // state updates for actions not supported ATM for client side state
+      }
+    } finally {
+      childWidget = null;
     }
   }
 
@@ -147,13 +153,17 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (childWidget != null) return;
     
     byte[] serializedState = getState(input);
-    childWidget = (Widget) SerializationUtils.deserialize(serializedState);
-    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
+    restoreChild(serializedState);
     
     String requestStateId = getStateId(input);
     if (lastStateId != null && !lastStateId.equals(requestStateId) && requestStateId != null)
       notifyClientNavigationAwareComponents();
     lastStateId = requestStateId;
+  }
+
+  protected void restoreChild(byte[] serializedState) {
+    childWidget = (Widget) SerializationUtils.deserialize(serializedState);
+    ((RelocatableWidget) childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
   }
 
   /**
@@ -177,7 +187,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
     
     if (serverSideStorage)
-      return (byte[]) versionedStates.get(requestStateId);
+      return getState(requestStateId);
     
     // get and verify state submitted by client
     String suppliedState = (String)input.getGlobalData().get(StateVersioningContext.STATE_KEY);
@@ -188,6 +198,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       throw new IllegalStateException("Client side state digest invalid.");
 
     return decodedState;
+  }
+
+  protected byte[] getState(String stateId) {
+    return (byte[]) versionedStates.get(stateId);
   }
 
   /**
