@@ -31,6 +31,8 @@ import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
+import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * @author Alar Kvell (alar@araneaframework.org)
@@ -53,8 +55,6 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    * </ul>
    */
   public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
-  private static final String OVERLAY_REQUEST_KEY = "araOverlay";
-
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";
   
@@ -99,6 +99,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     Assert.notNull(overlay);
     addWidget(MAIN_CHILD_KEY, main);
     addWidget(OVERLAY_CHILD_KEY, overlay);
+    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class, new OverlayActivityMarkerContext(){});
   }
 
   protected void update(InputData input) throws Exception {
@@ -125,8 +126,12 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
+    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
         overlay._getWidget().render(output);
+        if (!isOverlayActive()) { // overlay has become inactive for some reason
+          UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
+          urCtx.disableOnce();
+        }
     }
     else
       main._getWidget().render(output);

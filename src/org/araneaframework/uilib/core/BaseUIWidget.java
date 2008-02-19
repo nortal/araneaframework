@@ -27,6 +27,7 @@ import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -77,6 +78,11 @@ public class BaseUIWidget extends BaseApplicationWidget {
   
   protected OverlayContext getOverlayCtx() {
     return (OverlayContext) getEnvironment().getEntry(OverlayContext.class);
+  }
+  
+  /** @since 1.1 */
+  protected boolean isRunningInOverlay() {
+    return (getEnvironment().getEntry(OverlayActivityMarkerContext.class)) != null;
   }
   
   /**

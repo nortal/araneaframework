@@ -21,7 +21,9 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
+import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.jsp.util.JspUtil;
@@ -56,6 +58,12 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PATH_KEY, "");
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
+    
+    // if overlay is active, set the empty field which denotes that systemform is running in overlay
+    OverlayActivityMarkerContext oCtx = (OverlayActivityMarkerContext) getEnvironment().getEntry(OverlayActivityMarkerContext.class);
+    if (oCtx != null) {
+      JspUtil.writeHiddenInputElement(out, OverlayContext.OVERLAY_REQUEST_KEY, "");
+    }
 
     // Continue
     return EVAL_BODY_INCLUDE;

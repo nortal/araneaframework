@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework;
 
+import java.io.Serializable;
 import java.util.Map;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
@@ -26,7 +27,9 @@ import org.araneaframework.framework.FlowContext.Handler;
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */
-public interface OverlayContext {
+public interface OverlayContext extends Serializable {
+  public static final String OVERLAY_REQUEST_KEY = "araOverlay";
+
   boolean isOverlayActive();
   
   void setOverlayOptions(Map options);
@@ -39,4 +42,6 @@ public interface OverlayContext {
   void start(Widget flow, Configurator configurator, Handler handler);
   void start(Widget flow, Handler handler);
   void start(Widget flow);
+  
+  interface OverlayActivityMarkerContext extends Serializable {}
 }

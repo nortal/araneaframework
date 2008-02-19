@@ -23,6 +23,7 @@ import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.http.UpdateRegionContext;
 
 /**
  * Utility class that provides shortcuts for accessing some {@link Environment} entries.
@@ -86,5 +87,13 @@ public abstract class EnvironmentUtil {
   
   public static SystemFormContext requireSystemFormContext(Environment env) {
     return (SystemFormContext)env.requireEntry(SystemFormContext.class);
+  }
+  
+  public static UpdateRegionContext getUpdateRegionContext(Environment env) {
+    return (UpdateRegionContext)env.getEntry(UpdateRegionContext.class);
+  }
+
+  public static UpdateRegionContext requireUpdateRegionContext(Environment env) {
+    return (UpdateRegionContext)env.requireEntry(UpdateRegionContext.class);
   }
 }
