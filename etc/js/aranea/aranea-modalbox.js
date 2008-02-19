@@ -40,8 +40,8 @@ Aranea.ModalBox.afterLoad = function(content) {
   if (content == '') {
     AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.transactionId)
-      systemForm.transactionId.value = 'override';
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = 'override';
     return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
