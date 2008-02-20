@@ -105,7 +105,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       super.action(path, input, output);
       // if server-side storage, update the current state
       if (isServerSideStorage()) {
-        saveState(getStateId(input));
+        saveState(lastStateId);
       }
       else {
         // TODO:
