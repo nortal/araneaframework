@@ -10,6 +10,11 @@ import org.araneaframework.core.WidgetFactory;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
+ * Represents a tab managed by {@link TabContainerContext} implementation {@link TabContainerWidget}.
+ * Tab consists of <i>label</i> and <i>content</i>, represented either by {@link Widget}s (for stateful tabs)
+ * or {@link WidgetFactory}ies (for stateless tabs). Difference between stateful and stateless tabs is that
+ * stateless tabs forget the state when they become inactive (deselected).
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */

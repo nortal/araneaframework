@@ -14,7 +14,7 @@ Bugfixes
    Several BaseTag.get*() methods do not throw Exception anymore              | See #617
    ConfirmationContext.CONFIRMATION_RESULT_KEY was missing 'ara' prefix       | See #610
    Main example demo was using uncompressed TinyMCE javascript files          | See #608
-   
+
 Deprecation & API changes
     Deprecated outdated StandardClientStateFilterWidget                       | See #616
 ---------------------------------------------------------------------------------------------
