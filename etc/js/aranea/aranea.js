@@ -507,6 +507,11 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
+  /*
+  if (dhtmlHistory) {
+    var url = araneaPage().getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, systemForm.araTransactionId.value, 'araClientStateId=' + systemForm.araClientStateId.value);
+    dhtmlHistory.add(systemForm.araClientStateId.value, url);
+  } */
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
