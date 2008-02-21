@@ -41,8 +41,14 @@ Aranea.ModalBox.afterLoad = function(content) {
     AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
-      systemForm.araTransactionId.value = 'override';
+      systemForm.araTransactionId.value = 'inconsistent';
     return new DefaultAraneaSubmitter().event_4(systemForm);
+  }
+};
+
+Aranea.ModalBox.resizeToContent = function(activeSystemForm) {
+  if (activeSystemForm.hasClassName('aranea-overlay') && Modalbox) {
+    Modalbox.resizeToContent(Aranea.ModalBox.Options);
   }
 };
 
