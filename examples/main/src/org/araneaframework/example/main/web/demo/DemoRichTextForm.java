@@ -52,13 +52,15 @@ public class DemoRichTextForm extends TemplateBaseWidget {
 		button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testForm"));
 		form.addElement("button", "#Preview", button, null, false);
 
-		getOverlayCtx().getOverlayOptions().put("height", new Integer(600));
+		if (isRunningInOverlay())
+		  getOverlayCtx().getOverlayOptions().put("height", new Integer(600));
 		
 		addWidget("form", form);
 	}
 	
 	protected void destroy() throws Exception {
-	  getOverlayCtx().getOverlayOptions().remove("height");
+	  if (isRunningInOverlay())
+	    getOverlayCtx().getOverlayOptions().remove("height");
   }
 
   public void handleEventTestForm() throws Exception {

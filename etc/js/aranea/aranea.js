@@ -531,8 +531,8 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
-      	if (systemForm.hasClassName('aranea-overlay') && Modalbox) {
-      	  Modalbox.resizeToContent(Aranea.ModalBox.Options);
+      	if (Aranea.ModalBox) {
+      	  Aranea.ModalBox.resizeToContent(systemForm);
         }
       };
       // -- force the delay here
@@ -847,7 +847,7 @@ AraneaPage.ReloadRegionHandler.prototype = {
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
-      systemForm.araTransactionId.value = 'override';
+      systemForm.araTransactionId.value = 'inconsistent';
 
     // if current systemform is overlayed, reload only overlay
     if (systemForm.araOverlay) {
