@@ -16,10 +16,12 @@
 
 package org.araneaframework.uilib.tab;
 
+import java.io.Serializable;
+
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public interface TabRegistrationContext {
+public interface TabRegistrationContext extends Serializable {
 	/** Invoked by {@link TabWidget} when it is initialized. */
 	TabWidget registerTab(TabWidget tabWidget);
 
