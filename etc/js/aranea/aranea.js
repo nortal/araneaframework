@@ -532,7 +532,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       var f = function() {
       	araneaPage().onload();
       	if (Aranea.ModalBox) {
-      	  Aranea.ModalBox.resizeToContent(systemForm);
+      	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
         }
       };
       // -- force the delay here
