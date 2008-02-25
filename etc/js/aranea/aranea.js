@@ -236,16 +236,17 @@ function AraneaPage() {
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {
-	if (systemForm.hasClassName('aranea-overlay')) {
-      return new DefaultAraneaOverlaySubmitter(systemForm);
-	}
-
     var updateRegions = this.getEventUpdateRegions(element);
 
     if (updateRegions && updateRegions.length > 0)
       return new DefaultAraneaAJAXSubmitter(systemForm);
-    else
+    else {
+      if (systemForm.hasClassName('aranea-overlay')) {
+        return new DefaultAraneaOverlaySubmitter(systemForm);
+	  }
+
       return new DefaultAraneaSubmitter(systemForm);
+    }
   };
   
   // another submit function, takes all params that are currently possible to use.
@@ -468,8 +469,8 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
-    
-    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad}; 
+
+    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad};
     Object.extend(options, Aranea.ModalBox.Options || {});
     Modalbox.show(systemForm.readAttribute('action') + '?araOverlay', options);
     return false;
@@ -544,6 +545,9 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
+      	if (Aranea.ModalBox) {
+      	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
+        }
       };
       // -- force the delay here
       setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
@@ -858,7 +862,13 @@ AraneaPage.ReloadRegionHandler.prototype = {
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
       systemForm.araTransactionId.value = 'inconsistent';
-    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+
+    // if current systemform is overlayed, reload only overlay
+    if (systemForm.araOverlay) {
+      return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
+    }
+
+    return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());

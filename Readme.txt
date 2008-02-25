@@ -1,5 +1,5 @@
 *****************************************
-* THE ARANEA FRAMEWORK, release 1.1-RC1 *
+* THE ARANEA FRAMEWORK, release 1.1     *
 *    http://www.araneaframework.org/    *
 *****************************************
 
@@ -32,6 +32,8 @@ DISTRIBUTION JAR FILES
 The "dist" directory contains the following jar files for use in applications:
  * aranea.jar
     All current Aranea classes and modules.
+ * modules/aranea-tests.jar
+    Aranea framework test classes and test utility classes.
 
  * modules/aranea-core.jar
  	Aranea core interfaces and base implementations.
@@ -44,10 +46,7 @@ The "dist" directory contains the following jar files for use in applications:
  	
  * modules/aranea-jsp.jar
  	Custom tag library.
- 
- * modules/aranea-jsp-engine.jar
-    Experimental lightweight JSP engine (in prototype stage).
- 
+
  * modules/aranea-backend.jar
  	Supporting classes for use in the application service layer.
 

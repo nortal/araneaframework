@@ -47,13 +47,20 @@ Aranea.ModalBox.afterLoad = function(content) {
 
     AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.transactionId)
-      systemForm.transactionId.value = 'override';
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = 'inconsistent';
     if (stateId) {
       araneaPage().debug("Overlay closing: updating main system form araClientStateId to '" + stateId + "'.");
       systemForm.araClientStateId.value = stateId;
     }
     return new DefaultAraneaSubmitter().event_4(systemForm);
+  }
+};
+
+// gets executed after update region response has been processed completely
+Aranea.ModalBox.afterUpdateRegionResponseProcessing = function(activeSystemForm) {
+  if (activeSystemForm.hasClassName('aranea-overlay') && Modalbox) {
+    Modalbox.resizeToContent(Aranea.ModalBox.Options);
   }
 };
 

@@ -261,18 +261,6 @@
 			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
 		</jar>	
 		
-		<jar destfile="${dist.dir}/modules/aranea-jsp-engine.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
-			<fileset dir="build/classes">
-				<include name="org/araneaframework/jsp/engine/**/*"/>		        
-			</fileset>
-
-			<fileset dir="src">
-				<include name="org/araneaframework/jsp/engine/**/*"/>		        
-			</fileset>
-
-			<fileset dir="etc" includes="cache/**/*"/>      
-		</jar>					
-		
 		<!-- INTEGRATION -->
 		
 		<jar destfile="${dist.dir}/integration/aranea-integration-spring.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
@@ -377,7 +365,8 @@
 		<mkdir dir="build/tmp/dist/dist"/>
 		
 		<ant dir="tests" target="build" inheritall="false"/>
-		<copy todir="build/tmp/dist/dist" file="tests/dist/aranea-tests.jar"/>
+		<mkdir dir="build/tmp/dist/dist/modules"/>
+		<copy todir="build/tmp/dist/dist/modules" file="tests/dist/aranea-tests.jar"/>
 
 		<copy todir="build/tmp/dist/dist">
 			<fileset dir="${dist.dir}">

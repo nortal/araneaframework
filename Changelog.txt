@@ -1,5 +1,23 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2008.02.22    | Aranea 1.1
+
+Features and Improvements
+   isRunningInOverlay() method added to BaseUIWidget                          | See change #620
+   Update region submits in overlay use smoother page update method           | See change #620
+   aranea-tests.jar included in a distribution 'dist' folder, contains tests  | See
+   and few classes which might be useful for testing custom components        |     #381
+
+Bugfixes
+   ListSqlHelper incompatibility introduced in 1.1-M6 was fixed               | See #614
+   TabWidget.getTabContentWidget() always returned NULL for stateless tabs    | See #621
+   Several BaseTag.get*() methods do not throw Exception anymore              | See #617
+   ConfirmationContext.CONFIRMATION_RESULT_KEY was missing 'ara' prefix       | See #610
+   Main example demo was using uncompressed TinyMCE javascript files          | See #608
+
+Deprecation & API changes
+    Deprecated outdated StandardClientStateFilterWidget                       | See #616
+---------------------------------------------------------------------------------------------
 2008.02.07    | Aranea 1.1-RC1
 
 Features and Improvements
@@ -45,7 +63,6 @@ Bugfixes
 Deprecation & API changes
     Deprecated FlowContext FlowReference interface and getReference() method  | See change #578
     org.araneaframework.jsp.engine package was removed                        | See change #394
-
 ---------------------------------------------------------------------------------------------
 2007.10.31    | Aranea 1.1-M5
 

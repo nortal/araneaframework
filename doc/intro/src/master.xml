@@ -90,20 +90,16 @@
 &lt;jsp:root 
   xmlns:jsp="http://java.sun.com/JSP/Page" 
   xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
-  &lt;ui:root&gt;
-    &lt;ui:viewPort&gt; 
-      &lt;head&gt;
-        &lt;ui:importScripts/&gt;           
-        &lt;title&gt;Hello World!&lt;/title&gt;
-      &lt;/head&gt;                  
-      &lt;ui:body&gt;        
-        &lt;ui:systemForm method="GET"&gt;
-            Insert your name: &lt;input type="text" name="name"/&gt;&lt;br/&gt;&lt;br/&gt;            
-            &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;      
-        &lt;/ui:systemForm&gt;
-      &lt;/ui:body&gt;
-    &lt;/ui:viewPort&gt;
-  &lt;/ui:root&gt;  
+    &lt;head&gt;
+      &lt;ui:importScripts/&gt;           
+      &lt;title&gt;Hello World!&lt;/title&gt;
+    &lt;/head&gt;                  
+    &lt;ui:body&gt;        
+      &lt;ui:systemForm method="GET"&gt;
+          Insert your name: &lt;input type="text" name="name"/&gt;&lt;br/&gt;&lt;br/&gt;            
+          &lt;ui:eventButton labelId="#Say hello" eventId="hello"/&gt;      
+      &lt;/ui:systemForm&gt;
+    &lt;/ui:body&gt;
 &lt;/jsp:root&gt;</programlisting>
 
     <para>The interesting parts are highlighted with bold.
@@ -152,21 +148,17 @@
   xmlns:jsp="http://java.sun.com/JSP/Page" 
   xmlns:c="http://java.sun.com/jstl/core"
   xmlns:ui="http://araneaframework.org/tag-library/standard" version="1.2"&gt;
-  &lt;ui:root&gt;
-    &lt;ui:viewPort&gt; 
-      &lt;ui:widgetContext&gt;
-        &lt;head&gt;
-          &lt;ui:importScripts/&gt;
-              
-          &lt;title&gt;Hello World!&lt;/title&gt;
-        &lt;/head&gt;     
-        
-        &lt;ui:body&gt;
-          Hello &lt;c:out value="${widget.name}"/&gt;!
-        &lt;/ui:body&gt;
-      &lt;/ui:widgetContext&gt;
-    &lt;/ui:viewPort&gt;
-  &lt;/ui:root&gt;  
+    &lt;ui:widgetContext&gt;
+      &lt;head&gt;
+        &lt;ui:importScripts/&gt;
+            
+        &lt;title&gt;Hello World!&lt;/title&gt;
+      &lt;/head&gt;     
+      
+      &lt;ui:body&gt;
+        Hello &lt;c:out value="${widget.name}"/&gt;!
+      &lt;/ui:body&gt;
+    &lt;/ui:widgetContext&gt;
 &lt;/jsp:root&gt;</programlisting>
 
     <para>Finally we will need to deploy the example as a web application. The
