@@ -16,6 +16,31 @@
 
 		<ui:importScripts/>
 		<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
+		<ui:importScripts file="js/rsh/rsh.js"/>
+		
+		<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript" src="rsh.js"></script>
+
+<script type="text/javascript">
+window.dhtmlHistory.create({
+        toJSON: function(o) {
+                return Object.toJSON(o);
+        }, 
+        fromJSON: function(s) {
+                return s.evalJSON();
+        }
+});
+
+var yourListener = function(newLocation, historyData) {
+        araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
+}
+
+Event.observe(window, 'load', function() {
+        dhtmlHistory.initialize();
+        dhtmlHistory.addListener(yourListener);
+});
+</script>
+
 		<!-- <ui:importScripts file="js/calendar/calendar-et.js" />-->
 
 		<!-- Enables firebug js console logging, if firebug present -->
