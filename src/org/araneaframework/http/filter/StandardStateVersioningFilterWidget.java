@@ -222,10 +222,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   /* UpdateRegionProvider IMPLEMENTATION */
   public Map getRegions() {
     // do not create new state -- instead update the current one
-    State currentState = saveState(getStateId(getInputData()));
+    //State currentState = saveState(getStateId(getInputData()));
     
     // when rsh is active, that should be used
-    //State currentState = saveState();
+    State currentState = saveState();
 
     JsonObject stateRegion = new JsonObject();
 

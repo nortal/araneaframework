@@ -57,8 +57,11 @@
 			</div>
 
 			<ui:widgetInclude id="menu.footer"/>
+
 		</ui:body>
+		
+		
+		
 		</html>
 	</ui:widgetContext>
-
 </jsp:root>

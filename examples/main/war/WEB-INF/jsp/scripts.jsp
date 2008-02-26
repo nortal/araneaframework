@@ -19,27 +19,7 @@
 		<ui:importScripts file="js/rsh/rsh.js"/>
 		
 		<script type="text/javascript" src="prototype.js"></script>
-<script type="text/javascript" src="rsh.js"></script>
 
-<script type="text/javascript">
-window.dhtmlHistory.create({
-        toJSON: function(o) {
-                return Object.toJSON(o);
-        }, 
-        fromJSON: function(s) {
-                return s.evalJSON();
-        }
-});
-
-var yourListener = function(newLocation, historyData) {
-        araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
-}
-
-Event.observe(window, 'load', function() {
-        dhtmlHistory.initialize();
-        dhtmlHistory.addListener(yourListener);
-});
-</script>
 
 		<!-- <ui:importScripts file="js/calendar/calendar-et.js" />-->
 
@@ -66,4 +46,32 @@ Event.observe(window, 'load', function() {
 			<ui:attribute name="theme_advanced_path_location" value="bottom"/>
 			<ui:attribute name="extended_valid_elements" value="a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"/>
 		</ui:richTextAreaInit>
+
+
+<script type="text/javascript">
+window.dhtmlHistory.create({
+        toJSON: function(o) {
+                return Object.toJSON(o);
+        }, fromJSON: function(s) {
+                return s.evalJSON();
+        }
+});
+
+var initFunc = function() {
+     var yourListener = function(newLocation, historyData) {
+	     araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
+	     document.body = historyData;
+	     //var extBody = Element.extend(document.body);
+         //extBody.replace(historyData);
+     };
+
+         dhtmlHistory.initialize();
+         dhtmlHistory.addListener(yourListener);
+         
+}; 
+
+araneaPage().addSystemLoadEvent(initFunc);
+
+</script>
+<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 </jsp:root>
