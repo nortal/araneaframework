@@ -68,6 +68,23 @@ var Behaviour = {
 			}
 		}
 	},
+	
+	applyToElement : function(domelement) {
+	  	var sheet = null;
+		for (var h=0;sheet=Behaviour.list[h];h++){
+			for (selector in sheet){
+				list = $(domelement).getElementsBySelector(selector);
+
+				if (!list){
+					continue;
+				}
+
+				for (i=0;element=list[i];i++){
+					sheet[selector](element);
+				}
+			}
+		}
+	},
 
 	addLoadEvent : function(func) {
 		var oldonload = window.onload;

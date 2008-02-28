@@ -104,12 +104,13 @@ var AraneaTree = {
 		return function(request, response) {
 			// TODO handle non-200 responses
 			var element = $(treeNodeId);
+			var parentElement = element.up();
 			if (Element.hasClassName(element, 'aranea-tree')) {
 				Element.replace(element, request.responseText);
 			} else {
 				Element.update(element, request.responseText);
 			}
-			Behaviour.apply();
+			Behaviour.applyToElement(parentElement);
 			if (onComplete) {
 				onComplete(request, response);
 			}
