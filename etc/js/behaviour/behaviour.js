@@ -1,6 +1,7 @@
 /*
    Note: for Aranea 1.1.1 the selector methods in this file were replaced with
    Prototype's built-in $$() function, very few of original behaviour is left.
+   Also, applyToElement(domelement) does not exist in original Behaviour.
 
    Behaviour v1.1 by Ben Nolan, June 2005. Based largely on the work
    of Simon Willison (see comments by Simon below).

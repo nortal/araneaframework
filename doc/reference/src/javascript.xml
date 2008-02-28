@@ -28,8 +28,8 @@
             <title>Behaviour (<ulink url="http://bennolan.com/behaviour/">http://bennolan.com/behaviour/</ulink>)</title>
             <para>
               Neat little library allowing usage of CSS selectors for applying behaviour to HTML page elements. It is required
-              for full function of Aranea pages rendered with Aranea JSP tags. With standard Behaviour rules, following
-              functionality is provided:
+              for full function of Aranea pages rendered with Aranea JSP tags. It has been customised to use Prototype library
+              selector functions and allow behaviour addition for subtrees (without processing whole page).
 
               <itemizedlist spacing="compact">
                 <listitem>
@@ -40,14 +40,6 @@
                   link in new window&mdash;and in different session thread).
                 </listitem>
               </itemizedlist>
-            </para>
-          </sect2> 
-          
-          <sect2 id="ajaxanywhere">
-            <title>AjaxAnywhere (<ulink url="http://ajaxanywhere.sourceforge.net/">http://ajaxanywhere.sourceforge.net/</ulink>)</title>
-            <para>
-               AjaxAnywhere allows separating web page into multiple zones, and refreshing only those zones that needs to be updated.
-               Inclusion of this library is required for building AJAX capable web-page with Aranea JSP tags.
             </para>
           </sect2> 
           
@@ -71,7 +63,8 @@
             <title>script.aculo.us (<ulink url="http://script.aculo.us/">http://script.aculo.us/</ulink>)</title>
             <para>
                script.aculo.us provides easy-to-use, cross-browser user interface JavaScript libraries. Only subset of script.aculo.us
-               libraries are included&mdash;only JSP tag that depends on it is <emphasis>&lt;ui:autoCompleteTextInput&gt;</emphasis>.
+               libraries are included&mdash; JSP tags that depends on them are <emphasis>&lt;ui:autoCompleteTextInput&gt;</emphasis>
+               and <emphasis>&lt;ui:tooltip&gt;</emphasis>.
             </para>
           </sect2>
 
@@ -84,7 +77,29 @@
           </sect2>
           
           <sect2>
+          	<title>Prototip (<ulink url="http://www.nickstakenburg.com/projects/prototip/">http://www.nickstakenburg.com/projects/prototip/</ulink>)</title>
+          	<para>
+          	  Prototip allows to easily create both simple and complex tooltips using the Prototype javascript 
+          	  framework. If one also uses Scriptaculous some nice effects can be added. This is required when
+          	  using JSP <emphasis>&lt;ui:tooltip&gt;</emphasis> tag.
+          	</para>
+          </sect2>
+          
+          
+           <sect2>
+          	<title>ModalBox (<ulink url="http://www.wildbit.com/labs/modalbox/">http://www.wildbit.com/labs/modalbox/</ulink>)</title>
+          	<para>
+          	  ModalBox is a JavaScript technique for creating modern modal dialogs or even wizards 
+          	  (sequences of dialogs) without using conventional popups and page reloads.
+          	</para>
+          </sect2>
+
+          <sect2>
             <title>log4javascript (<ulink url="http://www.timdown.co.uk/log4javascript/">http://www.timdown.co.uk/log4javascript/</ulink>)</title>
+            <para>
+	            Note that this is now deprecated in favour of <ulink url="http://www.getfirebug.com/">Firebug's</ulink> built in 
+	            logging facilities. Logging to Firebug console is enabled with <emphasis>AraneaPage.setFirebugLogger()</emphasis>.
+            </para>
             <para>
                log4javascript is a JavaScript logging framework similar to Java logging framework log4j. Include log4javascript
                scripts and call <emphasis>AraneaPage.setDefaultLogger()</emphasis> to receive a popup window where
