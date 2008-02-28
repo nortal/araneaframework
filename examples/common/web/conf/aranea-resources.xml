@@ -2,11 +2,14 @@
 <resources>
 	<files content-type="text/css">
 		<file path="styles/_styles_global.css"/>
-		<file path="styles/_styles_screen.css"/>
 		<file path="styles/_styles_print.css"/>
-		<file path="styles/_styles_new.css"/>
 	</files>
-
+	
+	<files content-type="text/css" group="templateScreenStyleGroup.css">
+	    <file path="styles/_styles_new.css"/>
+		<file path="styles/_styles_screen.css"/>
+	</files>
+	
 	<files content-type="image/gif">
 		<file path="gfx/i01.gif"/>
 		<file path="gfx/i02.gif"/>

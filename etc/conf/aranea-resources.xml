@@ -2,7 +2,6 @@
 <resources>
   <files content-type="text/css" group="defaultStyles">
     <file path="css/aranea/aranea.css" />
-    <file path="css/aranea/comboselect.css" />
     <file path="css/calendar/calendar.css" />
     <file path="css/contextmenu/contextmenu.css" />
     <file path="css/modalbox/modalbox.css"/>
@@ -52,9 +51,6 @@
     <file path="gfx/ico_calendar.gif" />
     <file path="gfx/contextmenu/shade.gif" />
     <file path="gfx/contextmenu/sub.gif" />
-    <file path="gfx/contextmenu/transparent.gif" />
-    <file path="gfx/comboselect/select_arrow_down.gif" />
-    <file path="gfx/comboselect/select_arrow_over.gif" />
-    <file path="gfx/comboselect/select_arrow.gif" />
+    <file path="gfx/contextmenu/transparent.gif"/>
   </files>
 </resources>
