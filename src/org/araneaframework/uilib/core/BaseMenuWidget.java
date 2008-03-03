@@ -16,12 +16,18 @@
 
 package org.araneaframework.uilib.core;
 
+import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
+import org.araneaframework.Message;
+import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.StandardPath;
+import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 
 /**
@@ -29,6 +35,7 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
   protected MenuItem menu;
+  private String lastPath;
 
   // CONSTRUCTOR 
   public BaseMenuWidget(Widget topWidget) throws Exception {
@@ -40,8 +47,27 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   }
 
   protected void init() throws Exception {
-	super.init();
-	setFinishable(false);
+    super.init();
+    setFinishable(false);
+    
+    MountContext mc = (MountContext) getEnvironment().getEntry(MountContext.class);
+    mc.mount(getInputData(), "/" + getScope() + "/", new MountContext.MessageFactory() {
+      public Message buildMessage(String url, final String suffix, InputData input,
+          OutputData output) {
+        //TODO: Allow the bookmarks to work with login widget
+//        int i = suffix.indexOf('/');
+//        if (i == -1)
+//          throw new IllegalArgumentException("URL '" + url + "' should contain both menu widget identifier and menu item identifier!");
+//        
+//        String menuWidgetId = suffix.substring(0, i);
+//        final String menuItemId = suffix.substring(i + 1);
+        
+        return new RoutedMessage(getScope().toPath()) {          
+          protected void execute(Component component) throws Exception {
+            ((BaseMenuWidget) component).selectMenuItem(suffix);
+          }
+        };
+      }});
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
@@ -56,6 +82,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   }
 
   public void selectMenuItem(String menuItemPath) throws Exception {
+    lastPath = menuItemPath;
     final Widget newFlow = menu.selectMenuItem(menuItemPath);
     
     reset(new EnvironmentAwareCallback() {
