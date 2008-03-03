@@ -96,6 +96,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   protected void render(OutputData output) throws Exception {
     String regionsFromRequest = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    
     StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
     
     if (!renderedRegions.isEmpty()) {
@@ -120,6 +121,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       if (!disabled) {
         // Parse widget and region ids
         Map regionIdsByWidgetId = parseRegionNames(regionNames.toString());
+
         // Render widgets
         regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
       }
@@ -226,7 +228,9 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String widgetId = (String) documentRegions.get(documentRegionId);
       if (widgetId == null) {
         if (log.isWarnEnabled())
+          log.warn("---------------------------------------------------");
           log.warn("Document region '" + documentRegionId + "' not found");
+          log.warn("---------------------------------------------------");
         continue;
       }
 

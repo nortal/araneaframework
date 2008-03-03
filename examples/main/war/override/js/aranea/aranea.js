@@ -508,16 +508,22 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
   
-  if (dhtmlHistory) {
-    //dhtmlHistory.add(systemForm.araClientStateId.value, document.body.innerHTML);
-    dhtmlHistory.add(systemForm.araClientStateId.value, document.body.cloneNode(true));
+  var neededAraClientStateId = systemForm.araClientStateId.value;
+  var neededAraTransactionId = 'override';
+  
+  if (updateRegions == 'globalBackRegion') {
+    neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
+    window.dhtmlHistoryListenerRequestedState = null;
+    neededAraTransactionId = 'inconsistent';
   }
+
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      araTransactionId: 'override',
+      araTransactionId: neededAraTransactionId,
       ajaxRequestId: ajaxRequestId,
-      updateRegions: updateRegions
+      updateRegions: updateRegions,
+      araClientStateId: neededAraClientStateId
     },
     onSuccess: function(transport) {
       AraneaPage.hideLoadingMessage();
@@ -737,8 +743,10 @@ AraneaPage.DocumentRegionHandler.prototype = {
     var mode = properties.mode;
     var domContentString = text.toString();
     if (mode == 'update') {
+      araneaPage().debug("Updating " + id);
       $(id).update(domContentString);
     } else if (mode == 'replace') {
+      araneaPage().debug("Replacing " + id);
       $(id).replace(domContentString);
     } else {
       araneaPage().getLogger().error('Document region mode "' + mode + '" is unknown');
@@ -925,6 +933,8 @@ AraneaPage.VersionedStateRegionHandler.prototype = {
     var json = content.evalJSON();
     if (json.araClientStateId) {
       systemForm.araClientStateId.value = json.araClientStateId;
+      if (dhtmlHistory)
+        dhtmlHistory.add(json.araClientStateId);
     }
     if (json.araClientState) {
       systemForm.araClientState.value = json.araClientState;

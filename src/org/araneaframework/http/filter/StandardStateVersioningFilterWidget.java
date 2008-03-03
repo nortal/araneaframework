@@ -183,7 +183,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       if (log.isWarnEnabled())
         log.warn("Received request for restoration of state '" + requestStateId + "' which was not found within versioned states.");
       // invoke the ExpiredStateHandlerWidget ? ExpirationHandler
-        requestStateId = lastStateId;
+      
+        throw new Exception("State expired");
+        //requestStateId = lastStateId;
     }
     
     if (serverSideStorage)
@@ -222,10 +224,16 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   /* UpdateRegionProvider IMPLEMENTATION */
   public Map getRegions() {
     // do not create new state -- instead update the current one
-    //State currentState = saveState(getStateId(getInputData()));
-    
-    // when rsh is active, that should be used
-    State currentState = saveState();
+    State currentState;
+    String regions = (String) getInputData().getGlobalData().get("updateRegions");
+    if (regions.indexOf("globalBackRegion") >= 0) {
+      System.out.println("----------------------XXXXXXXXXXXXXXXXXXXXXXXX");
+      System.out.println("back state: " + getStateId(getInputData()));
+      System.out.println("----------------------XXXXXXXXXXXXXXXXXXXXXXXX");
+      currentState = saveState(getStateId(getInputData()));
+    }
+    else
+      currentState = saveState();
 
     JsonObject stateRegion = new JsonObject();
 

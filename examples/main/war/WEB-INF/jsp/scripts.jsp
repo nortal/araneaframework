@@ -60,13 +60,18 @@ window.dhtmlHistory.create({
 var initFunc = function() {
      var yourListener = function(newLocation, historyData) {
 	     araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
-	     document.body = historyData;
-	     //var extBody = Element.extend(document.body);
-         //extBody.replace(historyData);
+	     
+	     if (newLocation &amp;&amp; !dhtmlHistory.isFirstLoad()) {
+	       // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+	       window.dhtmlHistoryListenerRequestedState = newLocation;
+	       araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'globalBackRegion');
+         }
+
+         dhtmlHistory.firstLoad = false;
      };
 
-         dhtmlHistory.initialize();
-         dhtmlHistory.addListener(yourListener);
+     dhtmlHistory.initialize();
+     dhtmlHistory.addListener(yourListener);
          
 }; 
 
