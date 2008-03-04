@@ -16,5 +16,5 @@ span.form-element-valid { color: red; background-color: black; }
 
 div.tree { padding: 10px; }
 div.tree div.level { padding: 0 0 4px 15px; }
-div.tree div.item { padding: 0 0 4px 15px; background: url(../gfx/dot02.gif) 7px 5px no-repeat; }
+div.tree div.item { padding: 0 0 4px 15px; background: url(gfx/dot02.gif) 7px 5px no-repeat; }
 

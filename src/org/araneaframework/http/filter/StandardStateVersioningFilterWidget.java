@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
@@ -135,7 +136,19 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       childWidget = null;
     }
   }
-  
+
+  protected void propagate(Message message) throws Exception {
+    InputData input = (InputData)getEnvironment().getEntry(InputData.class);
+    if (childWidget == null)
+      restoreState(input);
+
+    super.propagate(message);
+
+    // overhead when request comes back to state versioning filter anyway, but needed for other cases...
+    saveState(getStateId(input));
+    childWidget = null;
+  }
+
   // sets the response headers that disallow caching in general but still allow for using
   // of browser history navigation facilities (back/forward buttons) in most browsers (IE, FF, Opera)
   protected void setResponseHeaders(OutputData output) {

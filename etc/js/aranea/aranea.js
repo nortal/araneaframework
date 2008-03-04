@@ -236,16 +236,17 @@ function AraneaPage() {
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {
-	if (systemForm.hasClassName('aranea-overlay')) {
-      return new DefaultAraneaOverlaySubmitter(systemForm);
-	}
-
     var updateRegions = this.getEventUpdateRegions(element);
 
     if (updateRegions && updateRegions.length > 0)
       return new DefaultAraneaAJAXSubmitter(systemForm);
-    else
+    else {
+      if (systemForm.hasClassName('aranea-overlay')) {
+        return new DefaultAraneaOverlaySubmitter(systemForm);
+	  }
+
       return new DefaultAraneaSubmitter(systemForm);
+    }
   };
   
   // another submit function, takes all params that are currently possible to use.
@@ -291,17 +292,16 @@ function AraneaPage() {
       url += '&araTopServiceId=' + topServiceId;
     if (threadServiceId) 
       url += '&araThreadServiceId=' + threadServiceId;
-
+  
     if (_ap.getSystemForm().araClientStateId) {
       url += '&araClientStateId=' + _ap.getSystemForm().araClientStateId.value;
     }
-    
     // this has only limited use, cause GET requests are limited in size
     if (_ap.getSystemForm().araClientState) {
       url += '&araClientState=' + _ap.getSystemForm().araClientState.value;
     }
-
-  	if(extraParams)
+  
+    if (extraParams)    
       url += '&' + extraParams;
 
     return url;
@@ -468,8 +468,8 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
-    
-    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad}; 
+
+    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad};
     Object.extend(options, Aranea.ModalBox.Options || {});
     Modalbox.show(systemForm.readAttribute('action') + '?araOverlay', options);
     return false;
@@ -507,11 +507,6 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
-  
-  if (dhtmlHistory) {
-    var url = araneaPage().getSubmitURL(systemForm.araTopServiceId.value, systemForm.araThreadServiceId.value, systemForm.araTransactionId.value, 'araClientStateId=' + systemForm.araClientStateId.value);
-    dhtmlHistory.add(systemForm.araClientStateId.value, url);
-  }
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
@@ -544,6 +539,9 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
+      	if (Aranea.ModalBox) {
+      	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
+        }
       };
       // -- force the delay here
       setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
@@ -858,7 +856,13 @@ AraneaPage.ReloadRegionHandler.prototype = {
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
       systemForm.araTransactionId.value = 'inconsistent';
-    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
+
+    // if current systemform is overlayed, reload only overlay
+    if (systemForm.araOverlay) {
+      return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
+    }
+
+    return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
@@ -909,30 +913,6 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
   }
 };
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
-
-
-/**
- * Versioned state region handler.
- * @since 1.2
- */
-AraneaPage.VersionedStateRegionHandler = Class.create();
-AraneaPage.VersionedStateRegionHandler.prototype = {
-  initialize: function() {
-  },
-
-  process: function(content) {
-    var systemForm = araneaPage().getSystemForm();
-    var json = content.evalJSON();
-    if (json.araClientStateId) {
-      systemForm.araClientStateId.value = json.araClientStateId;
-    }
-    if (json.araClientState) {
-      systemForm.araClientState.value = json.araClientState;
-    }
-  }
-};
-AraneaPage.addRegionHandler('araStateVersionRegion', new AraneaPage.VersionedStateRegionHandler());
-
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */

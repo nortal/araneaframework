@@ -33,6 +33,8 @@ import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -103,6 +105,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     Assert.notNull(overlay);
     addWidget(MAIN_CHILD_KEY, main);
     addWidget(OVERLAY_CHILD_KEY, overlay);
+    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class, new OverlayActivityMarkerContext(){});
   }
 
   protected void update(InputData input) throws Exception {
@@ -145,9 +148,9 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
           response.getWriter().write("<!--" + stateId + "-->\n");
         }
       }
-    }
-    else
+    } else {
       main._getWidget().render(output);
+    }
   }
 
   // FlowContext methods

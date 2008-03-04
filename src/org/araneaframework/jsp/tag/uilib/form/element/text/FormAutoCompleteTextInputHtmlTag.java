@@ -85,6 +85,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     
     StateVersioningContext ctx = (StateVersioningContext)getEnvironment().getEntry(StateVersioningContext.class);
     if (ctx != null) {
+      //XXX: wtf is that
       result.append('&');
       result.append(constructServiceParameter(StateVersioningContext.STATE_ID_KEY)).append(" + \"");
     }

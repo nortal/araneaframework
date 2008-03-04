@@ -57,6 +57,13 @@ Aranea.ModalBox.afterLoad = function(content) {
   }
 };
 
+// gets executed after update region response has been processed completely
+Aranea.ModalBox.afterUpdateRegionResponseProcessing = function(activeSystemForm) {
+  if (activeSystemForm.hasClassName('aranea-overlay') && Modalbox) {
+    Modalbox.resizeToContent(Aranea.ModalBox.Options);
+  }
+};
+
 Aranea.ModalBox.close = function() {
   if (Modalbox) Modalbox.hide();
 };

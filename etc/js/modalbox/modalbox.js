@@ -216,7 +216,8 @@ Modalbox.Methods = {
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) {
-							    return eval(script.replace("<!--", "").replace("// -->", ""));
+							    var ss = script.replace("<!--", "").replace("// -->", "");
+							    return eval(ss);
 							}.bind(window));
 							this._putContent(transport.responseText);
 							// again -- for correct centering
@@ -228,7 +229,11 @@ Modalbox.Methods = {
 							};
 							// -- force the delay here
 							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
-						}.bind(this)
+						}.bind(this),
+					onException: function(AjaxRequest, exc) {
+					  araneaPage().debug("Exception has occured while processing or receiving Modalbox request.");
+					  araneaPage().debug(exc);
+					}.bind(this)
 					});
 					
 			} else if (typeof this.content == 'object') {// HTML Object is given

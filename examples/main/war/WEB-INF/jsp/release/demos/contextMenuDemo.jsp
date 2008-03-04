@@ -10,24 +10,26 @@
 		
 		<ui:list id="list">
 			<script type="text/javascript">
-				var locateRow = function(el) {
-                    return $(el).up('tr');
-                  };
-                  
-                var lfId = '<c:out value="${listFullId}"/>';
-			
-				// this function supplies the event parameter for context menu event
-			    // taking place inside a list widget -- a list row's id.
-				var cMenuparameterSupplier = function() {
-					if (araneaContextMenu.getTriggeringElement()) {
-					  var tablerow = locateRow(araneaContextMenu.getTriggeringElement())
-					  var trid = tablerow.id;
-					  var rrr = trid.substring(lfId.length+4);
-					  return rrr;
-					} else {
-
-					}
-				};
+				with (window) {
+					locateRow = function(el) {
+	                    return $(el).up('tr');
+	                  };
+	                  
+	                lfId = '<c:out value="${listFullId}"/>';
+				
+					// this function supplies the event parameter for context menu event
+				    // taking place inside a list widget -- a list row's id.
+					cMenuparameterSupplier = function() {
+						if (araneaContextMenu.getTriggeringElement()) {
+						  var tablerow = locateRow(araneaContextMenu.getTriggeringElement())
+						  var trid = tablerow.id;
+						  var rrr = trid.substring(lfId.length+4);
+						  return rrr;
+						} else {
+	
+						}
+					};
+				}
 			</script>
 		
 			<tui:component>
@@ -107,7 +109,7 @@
 			</ui:updateRegion>
 			
 			</ui:updateRegion>
-
+			
 		</tui:component>
 		
 		</ui:list>

@@ -9,23 +9,17 @@
 		<ui:importStyles group="defaultStyles" media="screen"/>
 
 		<ui:importStyles file="styles/_styles_global.css" media="all"/>
-		<ui:importStyles file="styles/_styles_new.css" media="screen" />
-		<ui:importStyles file="styles/_styles_screen.css" media="screen"/>
+		<ui:importStyles group="templateScreenStyleGroup.css" media="screen"/>
 		<ui:importStyles file="styles/_styles_print.css" media="print" />
-		<ui:importStyles file="css/aranea/comboselect.css" media="screen" />
 
 		<ui:importScripts/>
 		<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
 		<ui:importScripts file="js/rsh/rsh.js"/>
 		
-		<script type="text/javascript" src="prototype.js"></script>
-
-
-		<!-- <ui:importScripts file="js/calendar/calendar-et.js" />-->
 
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
-		
+
 		<!-- Enables stand-alone javascript logging 
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">

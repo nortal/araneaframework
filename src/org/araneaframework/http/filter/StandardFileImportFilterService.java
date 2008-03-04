@@ -83,7 +83,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 		if (fileName == null) {
 			fileName = uri.substring(FILE_IMPORTER_NAME.length() + 1);
 			
-			if (fileName.indexOf(".") == -1) {
+			if (resources.getGroupByName(fileName) != null) {
 				groupName = fileName;
 				fileName = null;
 			}

@@ -164,6 +164,7 @@ public class ExampleData {
 			this.country = country;
 		}
 		public void edit(Client f) {
+		  setCountry(f.country);
 			setSurname(f.surname);
 			setForename(f.forename);
 			setSex(f.sex);

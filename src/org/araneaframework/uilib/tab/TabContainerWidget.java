@@ -41,10 +41,8 @@ import org.araneaframework.core.WidgetFactory;
  * Only one tab can be selected (active) at a time, such tab is specified with {@link #selectTab(String)}.
  * When on creation the selected tab is not specified, the first tab is marked as selected.
  *
- * Tabs are added with {@link #addWidget(Object, org.araneaframework.Widget)}, removed
- * with {@link #removeWidget(Object)} and disabled (user cannot select them) with {@link #disableWidget(Object)}.
- * Note that only added {@link TabWidget}s are actually treated (and rendered by Aranea JSP tags) as tabs, 
- * other children are accepted but the developer needs to handle their rendering.
+ * Tabs are added with {@link #addTab(String, String, Widget)}, removed
+ * with {@link #removeTab(String)} and disabled (user cannot select them) with {@link #disableTab(String)}.
  * 
  * By default tabs preserve the addition order and are also presented in that order. When this {@link TabContainerWidget}
  * has a {@link Comparator} set, it will sort and present the tabs in an order specified by that {@link Comparator}.
