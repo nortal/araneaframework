@@ -26,16 +26,15 @@
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 		
-		<!-- Enables stand-alone javascript logging
+		<!-- Enables stand-alone javascript logging 
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
-			if (window.console) {
-			  araneaPage().setFirebugLogger();
-			} else if (window['log4javascript/log4javascript.js']) {
+
+		 if (window['log4javascript/log4javascript.js']) {
 			  araneaPage().setDefaultLogger();
 			}
-		</script>
-        -->
+		</script>-->
+        
 
 		<ui:richTextAreaInit>
 			<ui:attribute name="theme" value="advanced"/>
@@ -61,13 +60,14 @@ var initFunc = function() {
      var yourListener = function(newLocation, historyData) {
 	     araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
 	     
-	     if (newLocation &amp;&amp; !dhtmlHistory.isFirstLoad()) {
+	     if (newLocation &amp;&amp; (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
 	       // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
 	       window.dhtmlHistoryListenerRequestedState = newLocation;
 	       araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'globalBackRegion');
          }
 
          dhtmlHistory.firstLoad = false;
+         dhtmlHistory.ignoreLocationChange = false;
      };
 
      dhtmlHistory.initialize();

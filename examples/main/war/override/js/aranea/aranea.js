@@ -550,6 +550,10 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
+      	if (_ap.versionedStateApplier) {
+          _ap.versionedStateApplier();
+          _ap.versionedStateApplier = null;
+        }
       };
       // -- force the delay here
       setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
@@ -932,12 +936,15 @@ AraneaPage.VersionedStateRegionHandler.prototype = {
     var systemForm = araneaPage().getSystemForm();
     var json = content.evalJSON();
     if (json.araClientStateId) {
-      systemForm.araClientStateId.value = json.araClientStateId;
-      if (dhtmlHistory)
-        dhtmlHistory.add(json.araClientStateId);
-    }
-    if (json.araClientState) {
-      systemForm.araClientState.value = json.araClientState;
+      _ap.versionedStateApplier = function () {
+        var sForm = araneaPage().getSystemForm();
+        sForm.araClientStateId.value = json.araClientStateId;
+        if (dhtmlHistory)
+          dhtmlHistory.add(json.araClientStateId);
+        if (json.araClientState) {
+          sForm.araClientState.value = json.araClientState;
+        }
+      };
     }
   }
 };
