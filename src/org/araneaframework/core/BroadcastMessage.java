@@ -25,7 +25,19 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BroadcastMessage implements Message {
+  private Class componentClass;
+  public BroadcastMessage() {}
 
+  /**
+   * Specifies component class for which 
+   * {@link BroadcastMessage#execute(Component)} will be called.
+   * 
+   * @since 1.1.1 
+   */
+  public BroadcastMessage(Class componentClass) {
+    this.componentClass = componentClass;
+  }
+  
   /**
    * Sends method that causes {@link BroadcastMessage#execute(Component)} to be called for 
    * each {@link Component} in hierarchy. 
@@ -36,7 +48,8 @@ public abstract class BroadcastMessage implements Message {
     component._getComponent().propagate(this);	  
 
     try {
-      this.execute(component);
+      if (componentClass == null || componentClass.isAssignableFrom(component.getClass()))
+        this.execute(component);  
     }
     catch (Exception e) {
       throw ExceptionUtil.uncheckException(e);
