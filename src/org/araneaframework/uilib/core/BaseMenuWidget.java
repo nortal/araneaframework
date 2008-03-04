@@ -26,7 +26,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
-import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 
@@ -35,7 +34,7 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
   protected MenuItem menu;
-  private String lastPath;
+  private String selectionPath;
 
   // CONSTRUCTOR 
   public BaseMenuWidget(Widget topWidget) throws Exception {
@@ -50,10 +49,21 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     super.init();
     setFinishable(false);
     
+    initMenuSelectorMountSupport();
+  }
+
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), MenuContext.class, this);
+  }
+  
+  /** @since 1.1.1 */
+  protected void initMenuSelectorMountSupport() {
     MountContext mc = (MountContext) getEnvironment().getEntry(MountContext.class);
+    if (mc == null)
+      return;
+
     mc.mount(getInputData(), "/" + getScope() + "/", new MountContext.MessageFactory() {
-      public Message buildMessage(String url, final String suffix, InputData input,
-          OutputData output) {
+      public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
         //TODO: Allow the bookmarks to work with login widget
 //        int i = suffix.indexOf('/');
 //        if (i == -1)
@@ -62,16 +72,12 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
 //        String menuWidgetId = suffix.substring(0, i);
 //        final String menuItemId = suffix.substring(i + 1);
         
-        return new RoutedMessage(getScope().toPath()) {          
+        return new RoutedMessage(getScope().toPath()) {
           protected void execute(Component component) throws Exception {
             ((BaseMenuWidget) component).selectMenuItem(suffix);
           }
         };
       }});
-  }
-
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(), MenuContext.class, this);
   }
   
   // MENU SELECTION LISTENER
@@ -82,9 +88,10 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   }
 
   public void selectMenuItem(String menuItemPath) throws Exception {
-    lastPath = menuItemPath;
+    selectionPath = null;
     final Widget newFlow = menu.selectMenuItem(menuItemPath);
-    
+    selectionPath = menuItemPath;
+
     reset(new EnvironmentAwareCallback() {
       public void call(org.araneaframework.Environment env) throws Exception {
         if (newFlow != null)
@@ -98,6 +105,13 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * @return built menu.
    */
   protected abstract MenuItem buildMenu() throws Exception;
+
+  /**
+   * @return currently selected menu path or <code>null</code> 
+   * @since 1.1.1 */
+  public String getSelectionPath() {
+    return this.selectionPath;
+  }
   
   public MenuItem getMenu() {
     return menu;
