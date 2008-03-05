@@ -22,9 +22,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <head>
 
 <script language="JavaScript">
+if (window.parent) {
+	document.title = window.parent.document.title;
+}
 function pageLoaded() {
 	window.parent.dhtmlHistory.iframeLoaded(window.location);
-	document.getElementById("output").innerHTML = window.location;
+	if (window.parent.historyStorage.debugMode) {
+		document.getElementById("output").innerHTML = window.location;
+	}
 }
 </script>
 
@@ -32,7 +37,6 @@ function pageLoaded() {
 
 <body onload="pageLoaded();" style="width:700px;padding:2px;margin:0;">
 
-	<p>blank.html - Needed for Internet Explorer's hidden iframe</p>
 	<p id="output"></p>
 
 </body>
