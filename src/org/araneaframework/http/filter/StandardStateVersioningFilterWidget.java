@@ -181,9 +181,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   /**
    * Gets the serialized state for current request.
-   * @throws Exception if state is invalid for some reason
+   * @throws StateExpirationException if state is not available for some reason
    */
-  private byte[] getState(InputData input) throws Exception {
+  private byte[] getState(InputData input) throws StateExpirationException {
     String requestStateId = getStateId(input);
     
     if (log.isDebugEnabled())
@@ -195,9 +195,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (!versionedStates.containsKey(requestStateId)) {
       if (log.isWarnEnabled())
         log.warn("Received request for restoration of state '" + requestStateId + "' which was not found within versioned states.");
-      // invoke the ExpiredStateHandlerWidget ? ExpirationHandler
-      
-        throw new Exception("State expired");
+        throw new StateExpirationException("State '" + requestStateId + "' is expired and cannot be restored.");
+     // invoke the ExpiredStateHandlerWidget ? ExpirationHandler
         //requestStateId = lastStateId;
     }
     

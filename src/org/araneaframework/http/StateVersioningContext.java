@@ -1,5 +1,6 @@
 package org.araneaframework.http;
 
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.core.ApplicationComponent;
 
 /**
@@ -61,11 +62,30 @@ public interface StateVersioningContext extends UpdateRegionProvider {
     }
   }
 
+  public static class StateExpirationException extends NestableRuntimeException {
+    public StateExpirationException() {
+      super();
+    }
+
+    public StateExpirationException(String msg, Throwable cause) {
+      super(msg, cause);
+    }
+
+    public StateExpirationException(String msg) {
+      super(msg);
+    }
+
+    public StateExpirationException(Throwable cause) {
+      super(cause);
+    }
+  }
+
   /**
    * Interface that should be implemented by {@link org.araneaframework.Component}s 
    * who wish to be notified when client uses browser history mechanism for navigating
    * application states.
    * 
+   * @since 1.2
    * @author Taimo Peelo (taimo@araneaframework.org)
    */
   public interface ClientNavigationAware extends ApplicationComponent {

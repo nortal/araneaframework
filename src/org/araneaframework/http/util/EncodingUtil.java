@@ -111,7 +111,7 @@ public abstract class EncodingUtil {
 	 * @return true if the digest of the value equals digest, otherwise false.
 	 * @throws Exception
 	 */
-	public static boolean checkDigest(byte[] value, byte[] digest) throws Exception {
+	public static boolean checkDigest(byte[] value, byte[] digest) {
 		return MessageDigest.isEqual(buildDigest(value), digest);
 	}
 
