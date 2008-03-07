@@ -135,6 +135,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
         // TODO: stinky feeling this does not work with versioned states!
         if (log.isDebugEnabled())
           log.debug("Partial rendering is disabled, forcing a reload for full render");
+        disabled = false;
+        writeVersionedStateRegions(writer);
         writeReloadRegion(writer);
       } else {
         writeTransactionIdRegion(writer);

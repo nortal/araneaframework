@@ -560,6 +560,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();
+      var logmsg = "";
       logmsg += 'Partial rendering: received erroneous response';
       logmsg += ' (' + transport.responseText.length + ' characters)';
       logmsg += ': ' + transport.status + ' ' + transport.statusText;
@@ -867,6 +868,10 @@ AraneaPage.ReloadRegionHandler.prototype = {
   },
 
   process: function(content) {
+    if (_ap.versionedStateApplier) {
+      _ap.versionedStateApplier();
+    }
+
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
       systemForm.araTransactionId.value = 'inconsistent';
