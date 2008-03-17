@@ -121,3 +121,6 @@ JSP templates
 
 -${viewPort....}
 +Refactor to pass data some other way: through Environment, Widget's viewData, request scoped attributes ...
+
+JAVASCRIPT
+-AraneaTraverser
