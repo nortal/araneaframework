@@ -123,4 +123,19 @@ JSP templates
 +Refactor to pass data some other way: through Environment, Widget's viewData, request scoped attributes ...
 
 JAVASCRIPT
--AraneaTraverser
+-AraneaTraverser does not exist anymore
++Change 
+  AraneaTraverser.findSurroundingSystemForm(element) 
+  --> araneaPage().getSystemForm(element)
+  AraneaTraverser.getElementAttribute(element, attributeName)
+  --> element.getAttribute(attributeName);
+  AraneaTraverser.getEventTarget(element);
+  --> araneaPage().getEventTarget(element);
+  AraneaTraverser.getEventId(element);
+  --> araneaPage().getEventId(element);
+  AraneaTraverser.getEventParam(element);
+  --> araneaPage().getEventParam(element);
+  AraneaTraverser.getEventUpdateRegions(element)
+  --> araneaPage().getEventUpdateRegions(element)
+  AraneaTraverser.getEventPreCondition(element);
+  --> araneaPage().getEventPreCondition(element)
