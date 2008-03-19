@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
-2008.03.18    | Aranea 1.1.1
+2008.03.19    | Aranea 1.1.1
 
 Features and Improvements
    Allow file importer group names to contain dots                            | See #628
