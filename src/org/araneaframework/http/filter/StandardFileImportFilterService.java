@@ -29,10 +29,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterService;
+import org.araneaframework.http.FileImportContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.extension.ExternalResource;
 import org.araneaframework.http.extension.ExternalResourceInitializer;
@@ -43,18 +46,48 @@ import org.araneaframework.http.util.URLUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 */
-public class StandardFileImportFilterService  extends BaseFilterService {
+public class StandardFileImportFilterService  extends BaseFilterService implements FileImportContext {
 	private static final Log log = LogFactory.getLog(StandardFileImportFilterService.class);
 	private static boolean isInitialized = false;
 	private static ExternalResource resources;
 	private long cacheHoldingTime = 3600000;
 
+	/* The host where resources are kept. */
+	private String resourceHost;
+
 	public static final String IMPORTER_FILE_NAME = "FileImporterFileName";
 	public static final String IMPORTER_GROUP_NAME = "FileImporterGroupName";
 	public static final String OVERRIDE_PREFIX = "override";
 	public static final String FILE_IMPORTER_NAME = "fileimporter";
-	
-	synchronized static void initialize(ServletContext context) {
+
+	/** 
+	 * Set cache holding time for resources. Only applicable when the resources are
+	 * served from web application itself and not some external host. Value should be
+	 * given in nanoseconds (default is 3.6*10^6 ns = 1h).
+	 * 
+	 * @since 1.3
+	 */
+  public void setCacheHoldingTime(long cacheHoldingTime) {
+    this.cacheHoldingTime = cacheHoldingTime;
+  }
+
+  /** 
+   * Set the host that provides the resources. 
+   * @since 1.3 
+   */
+  public void setResourceHost(String resourceHost) {
+    this.resourceHost = resourceHost;
+  }
+  
+	public String getResourceHost() {
+    return resourceHost;
+  }
+
+  protected Environment getChildEnvironment() {
+	  return new StandardEnvironment(super.getChildEnvironment(), FileImportContext.class, this);
+  }
+
+  synchronized static void initialize(ServletContext context) {
 		if (!isInitialized) {
 			ExternalResourceInitializer initializer = new ExternalResourceInitializer();
 			resources = initializer.getResources(context);

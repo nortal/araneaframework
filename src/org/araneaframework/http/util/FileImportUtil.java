@@ -17,8 +17,10 @@
 package org.araneaframework.http.util;
 
 import javax.servlet.ServletRequest;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.Assert;
+import org.araneaframework.http.FileImportContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.filter.StandardFileImportFilterService;
@@ -60,10 +62,20 @@ public abstract  class FileImportUtil {
     Assert.notNullParam(input, "input");
     Assert.notEmptyParam(fileName, "fileName");
     Assert.isInstanceOfParam(HttpInputData.class, input, "input");
-
+    
+    Environment env = ServletUtil.getEnvironment(ServletUtil.getRequest(input));
+    FileImportContext fiCtx = (FileImportContext) env.getEntry(FileImportContext.class);
+    
     StringBuffer url = new StringBuffer();
-    url.append(((HttpInputData) input).getContainerURL());
-    url.append(getImportString(fileName));
+
+    if (fiCtx.getResourceHost() == null) {
+      url.append(((HttpInputData) input).getContainerURL());
+      url.append(getImportString(fileName));
+    } else {
+      url.append(fiCtx.getResourceHost());
+      url.append("/");
+      url.append(fileName);
+    }
 
     return (url.toString());
   }
@@ -72,6 +84,8 @@ public abstract  class FileImportUtil {
   /**
    * Given a filename, returns the string with absolute encoded URL that can be used 
    * for importing via the file importing service {@link StandardFileImportFilterService}.
+   * 
+   * @deprecated session-specific identifiers should not be necessary to acquire static resources
    */
   public final static String getEncodedImportString(String fileName, InputData input) {
     return ((HttpOutputData) input.getOutputData()).encodeURL(getImportString(fileName, input));

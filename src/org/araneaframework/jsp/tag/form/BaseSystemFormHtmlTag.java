@@ -53,7 +53,7 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     JspUtil.writeAttribute(out, "method", method);
     JspUtil.writeAttribute(out, "enctype", enctype);
     JspUtil.writeAttribute(out, "accept-charset", getAcceptCharset());
-    JspUtil.writeAttribute(out, "action", ((HttpServletResponse)pageContext.getResponse()).encodeURL(getFormAction()));
+    JspUtil.writeAttribute(out, "action", encodeFormAction(getFormAction()));
     if (styleClass != null)
       JspUtil.writeAttribute(out, "class", styleClass);
     JspUtil.writeAttribute(out, "style", "margin: 0px");
@@ -62,6 +62,10 @@ public abstract class BaseSystemFormHtmlTag extends BaseTag {
     JspUtil.writeCloseStartTag(out);
 
     return EVAL_BODY_INCLUDE;
+  }
+
+  protected String encodeFormAction(String url) throws Exception {
+    return ((HttpServletResponse)pageContext.getResponse()).encodeURL(url);
   }
 
   protected int doEndTag(Writer out) throws Exception {
