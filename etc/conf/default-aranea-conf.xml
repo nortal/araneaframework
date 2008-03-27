@@ -53,7 +53,7 @@
   
   <bean id="araneaSessionFilters" singleton="false"
     class="org.araneaframework.framework.filter.StandardFilterChainService">
-    <property name="childService" ref="araneaThreadServiceRouter"/>
+    <property name="childService" ref="araneaPortletRouter"/>
     <property name="filterChain">     
       <list>
         <ref bean="araneaLocalizationFilter"/>
@@ -63,8 +63,18 @@
         </bean>        
       </list>
     </property>
-  </bean>  
+  </bean>
   
+  <bean class="org.araneaframework.http.portlet.AraneaPortletRouterService" id="araneaPortletRouter" singleton="false">
+  	<property name="serviceFactory" ref="araneaThreadServiceFactory"></property>
+  </bean>
+  
+    <bean class="org.araneaframework.integration.spring.SpringServiceFactory" id="araneaThreadServiceFactory"
+        singleton="false">
+    <property name="beanId">
+      <idref bean="araneaThreadServiceRouter"/>
+    </property>
+  </bean>
 
   <bean class="org.araneaframework.framework.router.StandardThreadServiceRouterService" 
     id="araneaThreadServiceRouter" singleton="false">
@@ -106,7 +116,7 @@
    
   <bean id="araneaWidgetFilters" singleton="false" 
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
-    <property name="childWidget" ref="araneaOverlayContainer"/>
+    <property name="childWidget" ref="araneaPortletScopingWidget"/>
     <property name="filterChain">
       <list>      
         <ref bean="araneaRedirectingFilter"/>        
@@ -119,7 +129,7 @@
         <ref bean="araneaPopupFilter"/>
         <bean class="org.araneaframework.integration.spring.SpringOptionalFilterWidget" singleton="false">
           <property name="beanId" value="araneaCustomWidgetFilters"/>
-        </bean>        
+        </bean>
       </list>
     </property>
   </bean>
@@ -133,6 +143,10 @@
       </bean>
     </property>
   </bean>
+
+   <bean class="org.araneaframework.http.portlet.PortletScopingWidget" id="araneaPortletScopingWidget" singleton="false">
+     <property name="scopedWidget" ref="araneaOverlayContainer"/>
+   </bean>
   
    <bean class="org.araneaframework.framework.container.StandardOverlayContainerWidget" id="araneaOverlayContainer" singleton="false">
      <property name="main" ref="araneaRootFlowContainer"/>

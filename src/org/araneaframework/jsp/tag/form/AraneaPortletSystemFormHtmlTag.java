@@ -1,8 +1,6 @@
 package org.araneaframework.jsp.tag.form;
 
 
-
-
 /**
  * System form tag. System form maps into HTML form. 
  * Canonical use in Aranea - surrounding all body elements. 

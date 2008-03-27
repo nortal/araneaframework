@@ -17,6 +17,7 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.util.ServletUtil;
 
 public class PortletServletServiceAdapterComponent extends BaseComponent implements ServletServiceAdapterComponent {
   private Service childService;
@@ -48,7 +49,7 @@ public class PortletServletServiceAdapterComponent extends BaseComponent impleme
   public void service(HttpServletRequest request, HttpServletResponse response) {
     HttpInputData input = new PortletInputData(request);
     localInput.set(input);
-    HttpOutputData output = new StandardServletOutputData(request,response);
+    HttpOutputData output = new PortletOutputData(request,response);
     localOutput.set(output);
 
     try {
@@ -66,23 +67,19 @@ public class PortletServletServiceAdapterComponent extends BaseComponent impleme
   }
   
   private static class PortletInputData extends StandardServletInputData {
-    private HttpServletRequest request;
-
     public PortletInputData(HttpServletRequest request) {
       super(request);
-      this.request = request;
       extend(PortletRequest.class, request.getAttribute("javax.portlet.request"));
+      extend(PortletResponse.class, request.getAttribute("javax.portlet.response"));
     }
 
     public String getContainerURL() {
-      RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
+      RenderResponse response = (RenderResponse) ServletUtil.getRequest(this).getAttribute("javax.portlet.response");
       return response.createActionURL().toString();
     }
   }
   
   private static class  PortletOutputData extends StandardServletOutputData {
-    private HttpServletResponse response;
-    
     public PortletOutputData(HttpServletRequest request, HttpServletResponse response) {
       super(request, response);
       extend(PortletRequest.class, request.getAttribute("javax.portlet.request"));
