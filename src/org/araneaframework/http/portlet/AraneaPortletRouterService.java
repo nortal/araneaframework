@@ -8,6 +8,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.http.util.PortletUtil;
 
@@ -21,7 +22,13 @@ public class AraneaPortletRouterService extends BaseService {
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    RenderResponse rr = (RenderResponse) PortletUtil.getResponse(input);
+    RenderResponse rr = null;
+    try {
+      rr = (RenderResponse) PortletUtil.getResponse(input);
+    } catch (NoSuchNarrowableException ex) {
+      // ok, not running through portal
+    }
+
     if (rr != null) {
       if (!_getChildren().containsKey(rr.getNamespace())) {
         log.debug("No hierarchy for portlet NS '" + rr.getNamespace() + "'.");
