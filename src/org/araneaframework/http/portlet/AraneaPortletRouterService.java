@@ -26,7 +26,7 @@ public class AraneaPortletRouterService extends BaseService {
     try {
       rr = (RenderResponse) PortletUtil.getResponse(input);
     } catch (NoSuchNarrowableException ex) {
-      // ok, not running through portal
+      // ok, not running under portal
     }
 
     if (rr != null) {
