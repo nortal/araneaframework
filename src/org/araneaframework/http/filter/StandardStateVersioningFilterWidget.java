@@ -23,6 +23,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.util.EncodingUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.http.util.RelocatableUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -138,15 +139,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   protected void propagate(Message message) throws Exception {
-    InputData input = (InputData)getEnvironment().getEntry(InputData.class);
-    if (childWidget == null)
-      restoreState(input);
-
     super.propagate(message);
-
-    // overhead when request comes back to state versioning filter anyway, but needed for other cases...
-    saveState(getStateId(input));
-    childWidget = null;
   }
 
   // sets the response headers that disallow caching in general but still allow for using
@@ -282,7 +275,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     State result = new State(isServerSideStorage() ? (Object)serializedChild : (Object)b64Child, stateId);
 
     if (log.isDebugEnabled()) {
-      log.debug("Registered client state version: " + stateId);
+      log.debug("Registered client state version: " + stateId + " in thread '" + EnvironmentUtil.getThreadServiceId(getEnvironment()) + "'.");
     }
 
     lastStateId = stateId;
