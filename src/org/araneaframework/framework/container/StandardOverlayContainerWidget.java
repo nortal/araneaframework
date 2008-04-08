@@ -132,7 +132,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
+    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
       overlay._getWidget().render(output);
 
       if (!isOverlayActive()) {
@@ -150,6 +150,10 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
       }
     } else {
       main._getWidget().render(output);
+        if (!isOverlayActive()) { // overlay has become inactive for some reason
+          UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
+          urCtx.disableOnce();
+        }
     }
   }
 

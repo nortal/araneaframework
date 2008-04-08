@@ -36,12 +36,14 @@
                                     * submits event called "menuSelect"
                                     * submits label id as event parameter 
                                     * CSS class is active, indicating that this menu item is selected currently -->
-                                 <ui:link href="${containerURL}/mount/${widgetId}/${item.value.label}" styleClass="${activeStyle}"><fmt:message key="${item.value.label}"/></ui:link>                                
+                                    <ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}" styleClass="${activeStyle}"/>
+                                 <!-- ui:link href="${containerURL}/mount/${widgetId}/${item.value.label}" styleClass="${activeStyle}"><fmt:message key="${item.value.label}"/></ui:link-->                                
                             </c:if>
 
                             <c:if test="${not item.value.selected}">
                                 <!-- same as the other button, but menu item is not selected -->
-                                <ui:link href="${containerURL}/mount/${widgetId}/${item.value.label}"><fmt:message key="${item.value.label}"/></ui:link>
+                                <!--ui:link href="${containerURL}/mount/${widgetId}/${item.value.label}"><fmt:message key="${item.value.label}"/></ui:link-->
+                                <ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}"/>
                             </c:if>
                         </div>
                     </c:forEach>

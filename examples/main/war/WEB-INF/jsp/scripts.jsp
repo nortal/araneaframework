@@ -20,7 +20,7 @@
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 
-		<!-- Enables stand-alone javascript logging 
+		<!-- Enables stand-alone javascript logging
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
 

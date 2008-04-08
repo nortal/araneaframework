@@ -1,5 +1,15 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------
+2008.03.19    | Aranea 1.1.1
+
+Features and Improvements
+   Allow file importer group names to contain dots                            | See #628
+   behaviour.js internally uses prototype CSS selector support                | See #627
+   Reference manual javascript documentation brought up-to-date               | See #625
+
+Bugfixes
+   Mandatory FileUploadControl validation erroneously succeeded               | See #633
+---------------------------------------------------------------------------------------------
 2008.02.22    | Aranea 1.1
 
 Features and Improvements
