@@ -131,7 +131,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
       response.setDateHeader ("Expires", 1);
     }
     else {
-      response.setHeader("Cache-Control", "private, max-age=" + (cacheHoldingTime / 1000));
+      response.setHeader("Cache-Control", "max-age=" + (cacheHoldingTime / 1000));
       response.setDateHeader ("Expires", System.currentTimeMillis () + cacheHoldingTime);
     }
     

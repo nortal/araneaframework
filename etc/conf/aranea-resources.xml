@@ -45,7 +45,6 @@
   <!-- other scripts that should not be omnipresent but which must be accessible to fileimporter -->
   <files content-type="text/javascript">
     <file path="js/calendar/calendar-et.js"/>
-    <file path="js/rsh/rsh.js" />
   </files>
 
   <files content-type="image/gif">

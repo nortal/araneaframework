@@ -118,7 +118,6 @@
 	<target name="run-app-only" description="Run in standalone container">
 		<mkdir dir="tmp/jsp" /> 
 		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
-			<!-- <jvmarg line="-agentpath:/home/taimo/apps/yjp/bin/linux-x86-32/libyjpagent.so -agentlib:yjpagent  -Dsun.io.serialization.extendedDebugInfo=true -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n"/> -->
 			<jvmarg line="-Dsun.io.serialization.extendedDebugInfo=true -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n"/>
 			<arg value="../jetty.xml"/>
 			<classpath>

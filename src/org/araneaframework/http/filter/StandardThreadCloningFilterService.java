@@ -21,12 +21,14 @@ import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.core.RelocatableDecorator;
@@ -37,7 +39,6 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.ThreadCloningContext;
-import org.araneaframework.http.util.RelocatableUtil;
 import org.araneaframework.http.util.URLUtil;
 
 /**
@@ -128,7 +129,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   protected byte[] takeSnapshot(RelocatableService service) {
-    return RelocatableUtil.serializeRelocatable(service);
+    Relocatable.Interface relocatable = service._getRelocatable();
+	Environment env = relocatable.getCurrentEnvironment();
+	relocatable.overrideEnvironment(null);
+	
+	byte[] result = SerializationUtils.serialize(service);
+	relocatable.overrideEnvironment(env);
+
+	return result;
   }
 
   /** Wraps the cloned service in a new StandardThreadCloningFilterService, attaches it to {@link ThreadContext}.

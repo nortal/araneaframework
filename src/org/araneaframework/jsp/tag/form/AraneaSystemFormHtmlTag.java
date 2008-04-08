@@ -16,17 +16,16 @@
 
 package org.araneaframework.jsp.tag.form;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
+import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.StateVersioningContext;
-import org.araneaframework.http.StateVersioningContext.State;
 import org.araneaframework.jsp.util.JspUtil;
 
 
@@ -49,43 +48,25 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     super.doStartTag(out);
 
     // Hidden fields: preset
-    writeSystemFormFields(out);
-
-    // Hidden fields: to be set
-    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
-    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PATH_KEY, "");
-    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
-
-    // Continue
-    return EVAL_BODY_INCLUDE;
-  }
-  
-  protected int doEndTag(Writer out) throws Exception {
-    writeVersionedStateInfo(out);
-    return super.doEndTag(out);
-  }
-
-  /**
-   * @since 1.2
-   */
-  protected void writeVersionedStateInfo(Writer out) throws Exception {
-    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
-    if (ctx != null) {
-      State state = ctx.saveState();
-      if (state != null) {
-        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_KEY, state.getStateId());
-        if (!ctx.isServerSideStorage())
-          JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_KEY, state.getState().toString());          
-      }
-    }
-  }
-
-  private void writeSystemFormFields(Writer out) throws JspException, IOException {
     SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
     for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
     }
+
+    // Hidden fields: to be set
+    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
+    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PATH_KEY, "");
+    JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
+    
+    // if overlay is active, set the empty field which denotes that systemform is running in overlay
+    OverlayActivityMarkerContext oCtx = (OverlayActivityMarkerContext) getEnvironment().getEntry(OverlayActivityMarkerContext.class);
+    if (oCtx != null) {
+      JspUtil.writeHiddenInputElement(out, OverlayContext.OVERLAY_REQUEST_KEY, "");
+    }
+
+    // Continue
+    return EVAL_BODY_INCLUDE;
   }
   
   /* ***********************************************************************************

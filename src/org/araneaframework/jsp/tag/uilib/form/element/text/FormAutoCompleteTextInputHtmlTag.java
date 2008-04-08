@@ -9,7 +9,6 @@ import org.araneaframework.core.ApplicationService;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
-import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -74,23 +73,14 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    * ***********************************************************************************/
   protected StringBuffer constructACUrl() {
     StringBuffer result = new StringBuffer();
-    //this.getActionSubmitURL = function(systemForm, actionId, actionTarget, actionParam, sync, extraParams) {
-    
     result.append("_ap.getSystemForm().action + \"?");
     result.append(constructServiceParameter(TopServiceContext.TOP_SERVICE_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(TransactionContext.TRANSACTION_ID_KEY)).append(" + \"").append('&');
     result.append(constructServiceParameter(ThreadContext.THREAD_SERVICE_KEY)).append(" + \"").append('&');
     result.append(ApplicationService.ACTION_PATH_KEY).append('=').append(getFullFieldId()).append('&');
     result.append(ApplicationService.ACTION_HANDLER_ID_KEY).append('=').append(AutoCompleteTextControl.LISTENER_NAME);
-    
-    StateVersioningContext ctx = (StateVersioningContext)getEnvironment().getEntry(StateVersioningContext.class);
-    if (ctx != null) {
-      //XXX: wtf is that
-      result.append('&');
-      result.append(constructServiceParameter(StateVersioningContext.STATE_ID_KEY)).append(" + \"");
-    }
 
-	  return result;
+	return result;
   }
   
   protected String constructServiceParameter(String serviceId) {

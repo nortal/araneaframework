@@ -57,7 +57,6 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
 		for (int i = 0; i <  ExampleData.females.length; i++) {
 			ExampleData.Client friend = new ExampleData.Client();
 			friend.setForename(ExampleData.females[i]);
-			friend.setId(lastId);
 			friend.setSex ("F");
 			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
 			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));

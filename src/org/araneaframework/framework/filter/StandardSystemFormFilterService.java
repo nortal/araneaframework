@@ -24,6 +24,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @since 1.1
  */
 public class StandardSystemFormFilterService extends BaseFilterService implements SystemFormContext {
+
   private Map fields = new HashMap();
 
   protected Environment getChildEnvironment() {
@@ -53,4 +54,5 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
   public Map getFields() {
     return Collections.unmodifiableMap(fields);
   }
+
 }
