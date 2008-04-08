@@ -14,20 +14,20 @@
 
 		<ui:importScripts/>
 		<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
-
+		<ui:importScripts file="js/rsh/rsh.js"/>
+		
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 
 		<!-- Enables stand-alone javascript logging
 		<ui:importScripts group="debugScripts"/>
 		<script type="text/javascript">
-			if (window.console) {
-			  araneaPage().setFirebugLogger();
-			} else if (window['log4javascript/log4javascript.js']) {
+
+		 if (window['log4javascript/log4javascript.js']) {
 			  araneaPage().setDefaultLogger();
 			}
-		</script>
-        -->
+		</script>-->
+        
 
 		<ui:richTextAreaInit>
 			<ui:attribute name="theme" value="advanced"/>
@@ -38,4 +38,38 @@
 			<ui:attribute name="theme_advanced_path_location" value="bottom"/>
 			<ui:attribute name="extended_valid_elements" value="a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"/>
 		</ui:richTextAreaInit>
+
+
+<script type="text/javascript">
+window.dhtmlHistory.create({
+        toJSON: function(o) {
+                return Object.toJSON(o);
+        }, fromJSON: function(s) {
+                return s.evalJSON();
+        }
+});
+
+var initFunc = function() {
+     var yourListener = function(newLocation, historyData) {
+	     araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
+	     
+	     if (newLocation &amp;&amp; (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
+	       // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+	       window.dhtmlHistoryListenerRequestedState = newLocation;
+	       araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'globalBackRegion');
+         }
+
+         dhtmlHistory.firstLoad = false;
+         dhtmlHistory.ignoreLocationChange = false;
+     };
+
+     dhtmlHistory.initialize();
+     dhtmlHistory.addListener(yourListener);
+         
+}; 
+
+araneaPage().addSystemLoadEvent(initFunc);
+
+</script>
+<script type="text/javascript">araneaPage().setFirebugLogger();</script>
 </jsp:root>

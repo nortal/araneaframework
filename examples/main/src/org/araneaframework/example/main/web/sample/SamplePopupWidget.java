@@ -51,7 +51,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 		getMessageCtx().showInfoMessage("Popup window should have opened. If it did not, please relax your popup blocker settings.");
 		getPopupCtx().open(
         new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form"), 
-        new PopupWindowProperties(), this);
+        new PopupWindowProperties(), null);
 	}
 
 	public void handleEventOpenUrl() throws Exception {

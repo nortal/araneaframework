@@ -101,14 +101,14 @@
     <property name="childWidget" ref="araneaWidgetFilters"/>
   </bean>
 
-  
    <!-- Framework widgets -->
    
   <bean id="araneaWidgetFilters" singleton="false" 
     class="org.araneaframework.framework.filter.StandardFilterChainWidget">
     <property name="childWidget" ref="araneaOverlayContainer"/>
     <property name="filterChain">
-      <list>      
+      <list>
+        <ref bean="araneaStateVersioningFilter"/>      
         <ref bean="araneaRedirectingFilter"/>        
         <ref bean="araneaTransactionFilter"/>
         <ref bean="araneaUpdateRegionFilter"/>
@@ -123,6 +123,9 @@
       </list>
     </property>
   </bean>
+  
+  <!-- Default state versioning widget is NOOP, override with org.araneaframework.http.filter.StandardStateVersioningFilterWidget -->
+  <bean class="org.araneaframework.framework.core.NopFilterWidget" id="araneaStateVersioningFilter" singleton="false"/>
   
   <bean class="org.araneaframework.http.filter.StandardPopupFilterWidget" id="araneaPopupFilter" singleton="false">
     <property name="threadServiceFactory">

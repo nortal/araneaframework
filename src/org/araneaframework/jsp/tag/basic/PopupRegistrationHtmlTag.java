@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.filter.StandardPopupFilterWidget;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -53,8 +54,11 @@ public class PopupRegistrationHtmlTag extends BaseTag {
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {
+    PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
     for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
-      addPopup(out, (Map.Entry)i.next());
+      Map.Entry next = (Map.Entry)i.next();
+      addPopup(out, next);
+      ((StandardPopupFilterWidget)popupWindowContext).renderPopup((String)next.getKey());
     }
   }
 
