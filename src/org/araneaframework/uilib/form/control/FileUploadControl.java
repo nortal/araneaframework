@@ -135,15 +135,7 @@ public class FileUploadControl extends BaseControl {
   }
 
   public void validate() {
-    boolean fieldFilled = false;
-    FileInfo info = (FileInfo)innerData;
-    fieldFilled = 
-      info != null &&
-      info.getSize() > 0 &&
-      info.getOriginalFilename() != null && 
-      !info.getOriginalFilename().trim().equals("");
-
-    if ((isMandatory() && !isRead()) || (isMandatory() && !fieldFilled)) {
+    if (isMandatory() && !isRead()) {
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.MANDATORY_FIELD, 

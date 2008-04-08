@@ -37,11 +37,22 @@ Aranea.ModalBox.show = function(options) {
 
 Aranea.ModalBox.afterLoad = function(content) {
   // if no content is returned, overlay has been closed.
-  if (content == '') {
+  if (content.startsWith='<!-- araOverlaySpecialResponse -->') {
+    var rtext = new Text(content);
+    rtext.readLine();
+  	var stateId = rtext.readLine();
+  	if (stateId) {
+  	  stateId = stateId.substring(4, stateId.length-3);
+  	}
+
     AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.araTransactionId)
-      systemForm.araTransactionId.value = 'inconsistent';
+    if (systemForm.transactionId)
+      systemForm.transactionId.value = 'override';
+    if (stateId) {
+      araneaPage().debug("Overlay closing: updating main system form araClientStateId to '" + stateId + "'.");
+      systemForm.araClientStateId.value = stateId;
+    }
     return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };

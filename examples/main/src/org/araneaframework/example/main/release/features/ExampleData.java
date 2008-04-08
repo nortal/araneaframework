@@ -168,6 +168,7 @@ public class ExampleData {
 			setSurname(f.surname);
 			setForename(f.forename);
 			setSex(f.sex);
+			setCountry(f.country);
 		}
 	}
 

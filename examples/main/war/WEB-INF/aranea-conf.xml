@@ -52,5 +52,12 @@
         <entry key="overlayDemo" value-ref="overlayDemoMessageFactory"/>
       </map>
     </property>
-  </bean> 
+  </bean>
+  
+  <!-- Configuration for supporting the usage of state versioning filter -->
+
+  <bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" singleton="false">
+  	<property name="serverSideStorage" value="true"/>
+  </bean>
+
 </beans>

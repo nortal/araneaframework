@@ -236,17 +236,16 @@ function AraneaPage() {
    * submit methods.
    */
   this.findSubmitter = function(element, systemForm) {
+	if (systemForm.hasClassName('aranea-overlay')) {
+      return new DefaultAraneaOverlaySubmitter(systemForm);
+	}
+
     var updateRegions = this.getEventUpdateRegions(element);
 
     if (updateRegions && updateRegions.length > 0)
       return new DefaultAraneaAJAXSubmitter(systemForm);
-    else {
-      if (systemForm.hasClassName('aranea-overlay')) {
-        return new DefaultAraneaOverlaySubmitter(systemForm);
-	  }
-
+    else
       return new DefaultAraneaSubmitter(systemForm);
-    }
   };
   
   // another submit function, takes all params that are currently possible to use.
@@ -292,16 +291,17 @@ function AraneaPage() {
       url += '&araTopServiceId=' + topServiceId;
     if (threadServiceId) 
       url += '&araThreadServiceId=' + threadServiceId;
-  
+
     if (_ap.getSystemForm().araClientStateId) {
       url += '&araClientStateId=' + _ap.getSystemForm().araClientStateId.value;
     }
+    
     // this has only limited use, cause GET requests are limited in size
     if (_ap.getSystemForm().araClientState) {
       url += '&araClientState=' + _ap.getSystemForm().araClientState.value;
     }
-  
-    if (extraParams)    
+
+  	if(extraParams)
       url += '&' + extraParams;
 
     return url;
@@ -468,8 +468,8 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
-
-    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad};
+    
+    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad}; 
     Object.extend(options, Aranea.ModalBox.Options || {});
     Modalbox.show(systemForm.readAttribute('action') + '?araOverlay', options);
     return false;
@@ -507,12 +507,23 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
+  
+  var neededAraClientStateId = systemForm.araClientStateId.value;
+  var neededAraTransactionId = 'override';
+  
+  if (updateRegions == 'globalBackRegion') {
+    neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
+    window.dhtmlHistoryListenerRequestedState = null;
+    neededAraTransactionId = 'inconsistent';
+  }
+
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      araTransactionId: 'override',
+      araTransactionId: neededAraTransactionId,
       ajaxRequestId: ajaxRequestId,
-      updateRegions: updateRegions
+      updateRegions: updateRegions,
+      araClientStateId: neededAraClientStateId
     },
     onSuccess: function(transport) {
       AraneaPage.hideLoadingMessage();
@@ -539,8 +550,9 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
-      	if (Aranea.ModalBox) {
-      	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
+      	if (_ap.versionedStateApplier) {
+          _ap.versionedStateApplier();
+          _ap.versionedStateApplier = null;
         }
       };
       // -- force the delay here
@@ -548,6 +560,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();
+      var logmsg = "";
       logmsg += 'Partial rendering: received erroneous response';
       logmsg += ' (' + transport.responseText.length + ' characters)';
       logmsg += ': ' + transport.status + ' ' + transport.statusText;
@@ -735,8 +748,10 @@ AraneaPage.DocumentRegionHandler.prototype = {
     var mode = properties.mode;
     var domContentString = text.toString();
     if (mode == 'update') {
+      araneaPage().debug("Updating " + id);
       $(id).update(domContentString);
     } else if (mode == 'replace') {
+      araneaPage().debug("Replacing " + id);
       $(id).replace(domContentString);
     } else {
       araneaPage().getLogger().error('Document region mode "' + mode + '" is unknown');
@@ -853,16 +868,14 @@ AraneaPage.ReloadRegionHandler.prototype = {
   },
 
   process: function(content) {
+    if (_ap.versionedStateApplier) {
+      _ap.versionedStateApplier();
+    }
+
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
       systemForm.araTransactionId.value = 'inconsistent';
-
-    // if current systemform is overlayed, reload only overlay
-    if (systemForm.araOverlay) {
-      return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
-    }
-
-    return new DefaultAraneaSubmitter().event_4(systemForm);
+    return new DefaultAraneaSubmitter().event_4(araneaPage().getSystemForm());
   }
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
@@ -913,6 +926,35 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
   }
 };
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
+
+
+/**
+ * Versioned state region handler.
+ * @since 1.2
+ */
+AraneaPage.VersionedStateRegionHandler = Class.create();
+AraneaPage.VersionedStateRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var systemForm = araneaPage().getSystemForm();
+    var json = content.evalJSON();
+    if (json.araClientStateId) {
+      _ap.versionedStateApplier = function () {
+        var sForm = araneaPage().getSystemForm();
+        sForm.araClientStateId.value = json.araClientStateId;
+        if (dhtmlHistory)
+          dhtmlHistory.add(json.araClientStateId);
+        if (json.araClientState) {
+          sForm.araClientState.value = json.araClientState;
+        }
+      };
+    }
+  }
+};
+AraneaPage.addRegionHandler('araStateVersionRegion', new AraneaPage.VersionedStateRegionHandler());
+
 
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */

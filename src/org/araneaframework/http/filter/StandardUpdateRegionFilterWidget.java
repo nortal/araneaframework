@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +43,7 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.util.AtomicResponseHelper;
@@ -94,6 +96,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   protected void render(OutputData output) throws Exception {
     String regionsFromRequest = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    
     StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
     
     if (!renderedRegions.isEmpty()) {
@@ -118,6 +121,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       if (!disabled) {
         // Parse widget and region ids
         Map regionIdsByWidgetId = parseRegionNames(regionNames.toString());
+
         // Render widgets
         regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
       }
@@ -128,13 +132,17 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String ajaxRequestId = (String) output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
       writeResponseId(writer, ajaxRequestId);
       if (disabled) {
+        // TODO: stinky feeling this does not work with versioned states!
         if (log.isDebugEnabled())
           log.debug("Partial rendering is disabled, forcing a reload for full render");
+        disabled = false;
+        writeVersionedStateRegions(writer);
         writeReloadRegion(writer);
       } else {
         writeTransactionIdRegion(writer);
         writeHandlerRegions(writer);
         writeDocumentRegions(writer, regionContents);
+        writeVersionedStateRegions(writer);
       }
       writer.flush();
     }
@@ -142,6 +150,18 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       arUtil.commit();
       disabled = false;
       renderedRegions.clear();
+    }
+  }
+
+  /** @since 1.2 */
+  protected void writeVersionedStateRegions(PrintWriter writer) throws Exception {
+    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    if (ctx == null) return;
+    
+    Map stateRegion = ctx.getRegions();
+    for (Iterator i = stateRegion.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Entry) i.next();
+      writeRegion(writer, (String)entry.getKey(), (String)entry.getValue());
     }
   }
 
@@ -210,7 +230,9 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String widgetId = (String) documentRegions.get(documentRegionId);
       if (widgetId == null) {
         if (log.isWarnEnabled())
+          log.warn("---------------------------------------------------");
           log.warn("Document region '" + documentRegionId + "' not found");
+          log.warn("---------------------------------------------------");
         continue;
       }
 
