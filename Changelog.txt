@@ -5,7 +5,7 @@ ARANEA FRAMEWORK CHANGELOG
 Bugfixes
    Modalbox submitting of 'overlay' attribute                                 | See #640
    Optimize scripting Text object (aranea-util.js)                            | See #643
-   Calendar placement in IE7						      | See #639
+   Calendar placement in IE7                                                  | See #639
 
 ---------------------------------------------------------------------------------------------
 2008.03.19    | Aranea 1.1.1
