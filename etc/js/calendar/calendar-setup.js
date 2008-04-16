@@ -108,8 +108,15 @@ Calendar.setup = function (params) {
 		if (update && p.inputField) {
 			p.inputField.value = cal.date.print(p.ifFormat);
 			if (typeof p.inputField.onchange == "function") {
-				p.inputField.onchange();
-			}
+			    var inputFieldId = p.inputField.id;
+			    var nf = function() { 
+			      var inpf = $(inputFieldId);
+			      inpf.onchange.bind(inpf);
+			      inpf.value=cal.date.print(p.ifFormat);
+			      inpf.onchange(); 
+			    };
+		    	nf();
+		    }
 		}
 		if (update && p.displayArea)
 			p.displayArea.innerHTML = cal.date.print(p.daFormat);
@@ -206,3 +213,5 @@ Calendar.setup = function (params) {
 
 	return cal;
 };
+
+window['calendar/calendar-setup.js'] = true;

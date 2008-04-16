@@ -24,9 +24,6 @@ import java.util.Locale;
  * insensitive. This comparator is not <code>Locale</code>-specific.
  */
 public class IgnoreCaseComparator implements StringComparator, Serializable {
-
-	private static final long serialVersionUID = 1L;
-
 	public static final IgnoreCaseComparator INSTANCE = new IgnoreCaseComparator();
 	
 	private IgnoreCaseComparator() {}
@@ -40,9 +37,7 @@ public class IgnoreCaseComparator implements StringComparator, Serializable {
 	}
 
 	public int compare(Object o1, Object o2) {
-		String s1 = (String) o1;
-		String s2 = (String) o2;
-		return String.CASE_INSENSITIVE_ORDER.compare(s1, s2);
+		return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
 	}
 	
 	public boolean equals(Object obj) {

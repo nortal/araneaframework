@@ -41,35 +41,38 @@ import org.araneaframework.http.HttpInputData;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletInputData implements HttpInputData {
-
-	private HttpServletRequest req;
-
+  private HttpServletRequest req;
+  
   private Map extensions = new HashMap();
+  
   private Map globalData = new HashMap();
   private Map scopedData = new HashMap();
-
   private boolean dataInited;
-
+  
   private StringBuffer path;
   private LinkedList pathPrefixes = new LinkedList();
-
+  
   private String servletPath;
-
+  
   /**
    * Constructs a StandardServletInputData from the request. 
    * @param request
    */
   public StandardServletInputData(HttpServletRequest request) {
-    Assert.notNullParam(request, "Request must be specified");
+    Assert.notNullParam(request, "request");
+    
     servletPath = request.getServletPath();
-    extend(HttpServletRequest.class, request);
+    
+    setRequest(request);
+    extend(HttpServletRequest.class, req);
   }
-
+  
   private void setRequest(HttpServletRequest request) {
     req = request;
     dataInited = false;
-    pathPrefixes = new LinkedList();
+    
     path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
+    pathPrefixes = new LinkedList();
   }
 
   private void initData() {
@@ -124,30 +127,25 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public void extend(Class interfaceClass, Object implementation) {
-    if (HttpServletRequest.class.equals(interfaceClass)
-				&& implementation != null) {
-			setRequest((HttpServletRequest) implementation);
-		}
+    if (HttpServletRequest.class.equals(interfaceClass) && implementation != null)
+      setRequest((HttpServletRequest) implementation);
+    
     extensions.put(interfaceClass, implementation);
   }
 
   public Object narrow(Class interfaceClass) {
-		Object extension = extensions.get(interfaceClass);
-		if (extension == null) {
-			throw new NoSuchNarrowableException(interfaceClass);
-		}
-		return extension;
-	}
+    Object extension = extensions.get(interfaceClass); 
+    if (extension == null)
+      throw new NoSuchNarrowableException(interfaceClass);
+    return extension;
+  }
 
 	public OutputData getOutputData() {
-		OutputData output = (OutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
-
-		if (output == null) {
-			throw new NoCurrentOutputDataSetException(
-					"No OutputData set in the request.");
-		}
-
-		return output;
+		OutputData output = (OutputData)req.getAttribute(OutputData.OUTPUT_DATA_KEY);
+		if (output == null)
+			throw new NoCurrentOutputDataSetException("No OutputData set in the request.");
+		else
+			return output;
 	}
 
   public String getCharacterEncoding() {
@@ -165,26 +163,26 @@ public class StandardServletInputData implements HttpInputData {
     url.append(servletPath);
     return url.toString();
   }
- 
+  
   public String getContainerPath() {
-		return servletPath;
-	}
-
+    return servletPath;
+  }
+  
   public String getContextURL() {
-		StringBuffer url = new StringBuffer();
-		url.append(req.getScheme());
-		url.append("://");
-		url.append(req.getServerName());
-		url.append(":");
-		url.append(req.getServerPort());
-		url.append(req.getContextPath());
-		return url.toString();
-	}
-
+    StringBuffer url = new StringBuffer();
+    url.append(req.getScheme());
+    url.append("://");
+    url.append(req.getServerName());    
+    url.append(":");
+    url.append(req.getServerPort());
+    url.append(req.getContextPath());
+    return url.toString();
+  }
+  
   public String getContextPath() {
     return req.getContextPath();
   }
-
+  
   public String getRequestURL() {
     return req.getRequestURL().toString();
   }
@@ -215,18 +213,19 @@ public class StandardServletInputData implements HttpInputData {
 
   public void pushPathPrefix(String pathPrefix) {
     Assert.notEmptyParam(pathPrefix, "pathPrefix");
+    
     pathPrefixes.addLast(pathPrefix);
     path.delete(0, pathPrefix.length() - 1);
   }
-
+  
   public void setCharacterEncoding(String encoding) {
     Assert.notEmptyParam(encoding, "encoding");
 
     try {
-			req.setCharacterEncoding(encoding);
-		} catch (UnsupportedEncodingException e) {
-			ExceptionUtil.uncheckException(e);
-		}
+      req.setCharacterEncoding(encoding);
+    }
+    catch (UnsupportedEncodingException e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
-
 }

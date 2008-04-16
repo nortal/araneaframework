@@ -71,16 +71,17 @@ Text.prototype = {
   },
 
   readLine: function() {
-    if (this.pos>=this.text.length) return;
-    var newpos = this.text.indexOf("\n", this.pos);
-    var line;
-    if (newpos == -1) {
-      line = this.text.substr(this.pos);
-      this.pos=this.text.length;
-    } else {
-      newpos++;
-      line = this.text.substr(this.pos, newpos-this.pos-1);
-      this.pos=newpos;
+    var line = "";
+    if (this.pos < this.text.length) {
+	    var newpos = this.text.indexOf("\n", this.pos);
+	    if (newpos == -1) {
+	      line = this.text.substr(this.pos);
+	      this.pos = this.text.length;
+	    } else {
+	      newpos++;
+	      line = this.text.substr(this.pos, newpos-this.pos-1);
+	      this.pos = newpos;
+	    }
     }
     return line;
   },

@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.person;
 
 import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
