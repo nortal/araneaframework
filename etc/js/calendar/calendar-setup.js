@@ -196,11 +196,18 @@ Calendar.setup = function (params) {
 		cal.setDateFormat(dateFmt);
 		if (mustCreate)
 			cal.create();
-		cal.refresh();
-		if (!params.position)
-			cal.showAtElement(params.button || params.displayArea || params.inputField, params.align);
-		else
-			cal.showAt(params.position[0], params.position[1]);
+		if ( Calendar.is_ie && /msie 7\.0/i.test(navigator.userAgent) ) {
+			var temp = params.button;
+			var p = Calendar.getAbsolutePos(temp);
+			cal.showAt(p.x, p.y + temp.offsetHeight);
+		} else {
+			cal.refresh();
+			if (!params.position) {
+				cal.showAtElement(params.button || params.displayArea || params.inputField, params.align);
+			} else {
+				cal.showAt(params.position[0], params.position[1]);
+			}
+		}
 		return false;
 	};
 

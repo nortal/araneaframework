@@ -110,22 +110,31 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   protected void event(Path path, InputData input) throws Exception {
-    if (path != null && path.hasNext()) {
-      Object next = path.getNext();
-      Assert.isTrue(!(isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY).equals(next), "Cannot deliver event to wrong hierarchy!");
-    }
+  	assertActiveHierarchy(path,  "Cannot deliver event to wrong hierarchy!");
     super.event(path, input);
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (path != null && path.hasNext()) {
-      Object next = path.getNext();
-      Assert.isTrue(!(isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY).equals(next), "Cannot deliver action to wrong hierarchy!");
-    }
+  	assertActiveHierarchy(path,  "Cannot deliver action to wrong hierarchy!");
     super.action(path, input, output);
   }
 
-  protected void render(OutputData output) throws Exception {
+  /**
+	 * Asserts that the current widget is in the active hierarchy. If not, the
+	 * execution will fail with an exception.
+	 * 
+	 * @param path Path of the widget (from the request).
+	 * @param message A description message to include with the exception.
+	 * @since 1.1.2
+	 */
+	protected void assertActiveHierarchy(Path path, String message) {
+		if (path != null && path.hasNext()) {
+			String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
+			Assert.isTrue(!key.equals(path.getNext()), message);
+		}
+	}
+
+	protected void render(OutputData output) throws Exception {
     if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
         overlay._getWidget().render(output);
         if (!isOverlayActive()) { // overlay has become inactive for some reason

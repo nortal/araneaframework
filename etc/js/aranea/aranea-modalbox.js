@@ -27,7 +27,8 @@ Aranea.ModalBox.Options = null;
 Aranea.ModalBox.show = function(options) {
   var showfunc = function() {
     Modalbox.show(
-      araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value, araneaPage().getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay', 
+      araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value,
+      araneaPage().getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay=true', 
       options
 	);
   };

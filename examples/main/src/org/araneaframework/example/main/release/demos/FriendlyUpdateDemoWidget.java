@@ -92,7 +92,7 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 	private Map firms = new HashMap();
 	private void handleEventFetchData() throws Exception {
 		if (companyForm.convertAndValidate()) {
-			Thread.currentThread().sleep(6000);
+			Thread.sleep(6000);
 			Firm firm = new Firm(); 
 			firm = (Firm) companyForm.writeToBean(firm);
 

@@ -74,7 +74,9 @@ public class StandardServletSessionRouterServiceTests extends TestCase {
     service._getService().action(path, input, output);
     Service sessService = (Service)ServletUtil.getRequest(input).getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
     service._getService().action(path, input, output);
-    
-    assertEquals(sessService, (Service)ServletUtil.getRequest(input).getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY));
+
+    Service service = (Service)ServletUtil.getRequest(input).getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
+
+    assertEquals(sessService, service);
   }
 }

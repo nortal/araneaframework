@@ -113,14 +113,17 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public Map getScopedData(Path scope) {
-    if (!dataInited) initData();
-    Map result = (Map)scopedData.get(scope.toString());
+    if (!dataInited) {
+			initData();
+    }
+
+    Map result = (Map) scopedData.get(scope.toString());
+
     if (result != null) {
-      return Collections.unmodifiableMap(result);  
-    }
-    else {
-      return Collections.EMPTY_MAP;
-    }
+			return Collections.unmodifiableMap(result);
+		} else {
+			return Collections.EMPTY_MAP;
+		}
   }
 
   public void extend(Class interfaceClass, Object implementation) {

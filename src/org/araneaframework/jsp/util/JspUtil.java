@@ -25,22 +25,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.StringTokenizer;
+
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
 import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
 import org.araneaframework.jsp.tag.layout.support.RowClassProvider;
 import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
-import org.araneaframework.jsp.tag.uilib.list.ListRowsTag;
+import org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag;
 import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag;
 
@@ -53,7 +54,6 @@ public class JspUtil {
   private static final Map attributeErrorMap = new HashMap();  
   static {
     attributeErrorMap.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
-    attributeErrorMap.put(PresentationTag.ATTRIBUTED_TAG_KEY, null);
 
     attributeErrorMap.put(FormListTag.FORM_LIST_ID_KEY, "&lt;ui:formList&gt; tag expected, but not found!");
     attributeErrorMap.put(FormListTag.FORM_LIST_VIEW_MODEL_KEY, "&lt;ui:formList&gt; tag expected, but not found!");
@@ -71,7 +71,7 @@ public class JspUtil {
 
     attributeErrorMap.put(ListTag.LIST_VIEW_MODEL_KEY, "&lt;ui:list&gt; tag expected, but not found! Make sure list tags is used inside &lt;ui:list&gt; tag.");
     attributeErrorMap.put(ListTag.LIST_ID_KEY, "&lt;ui:list&gt; tag expected, but not found!  Make sure list tags is used inside &lt;ui:list&gt; tag.");
-    attributeErrorMap.put(ListRowsTag.ROW_REQUEST_ID_KEY, "&lt;ui:listRows&gt; or another list rows tag expected, but not found!");	
+    attributeErrorMap.put(BaseListRowsTag.ROW_REQUEST_ID_KEY, "&lt;ui:listRows&gt; or another list rows tag expected, but not found!");	
   }
 
   /**

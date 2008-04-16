@@ -68,10 +68,10 @@ public class FormElementValidationActionListener extends StandardActionListener 
     
     MessageContext messageContext = (MessageContext) baseFormElement.getEnvironment().getEntry(MessageContext.class);
     if(messageContext != null) {
-      UpdateRegionProvider messageRegion = (UpdateRegionProvider) messageContext;
+      UpdateRegionProvider messageRegion = messageContext;
 
       // TODO: general mechanism for writing out UpdateRegions from actions
-      String messageRegionContent = (String)  messageRegion.getRegions().get(MessageContext.MESSAGE_REGION_KEY).toString();
+      String messageRegionContent = messageRegion.getRegions().get(MessageContext.MESSAGE_REGION_KEY).toString();
       writeRegion(out, MessageContext.MESSAGE_REGION_KEY, messageRegionContent);
     }
   }

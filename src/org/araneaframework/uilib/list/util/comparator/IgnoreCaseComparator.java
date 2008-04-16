@@ -37,7 +37,7 @@ public class IgnoreCaseComparator implements StringComparator, Serializable {
 	}
 
 	public int compare(Object o1, Object o2) {
-		return String.CASE_INSENSITIVE_ORDER.compare((String) o1, (String) o2);
+		return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
 	}
 	
 	public boolean equals(Object obj) {

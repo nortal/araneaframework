@@ -355,7 +355,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
         JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 	}
 	
-	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName) throws IOException, JspException {
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName) throws IOException {
 		JspUtil.writeOpenAttribute(out, attributeName);
 		JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 		JspUtil.writeCloseAttribute(out);

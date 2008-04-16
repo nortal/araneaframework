@@ -1,5 +1,13 @@
 ARANEA FRAMEWORK CHANGELOG
----------------------------
+---------------------------------------------------------------------------------------------
+2008.04.16    | Aranea 1.1.2
+
+Bugfixes
+   Modalbox submitting of 'overlay' attribute                                 | See #640
+   Optimize scripting Text object (aranea-util.js)                            | See #643
+   Calendar placement in IE7                                                  | See #639
+
+---------------------------------------------------------------------------------------------
 2008.03.19    | Aranea 1.1.1
 
 Features and Improvements
@@ -9,6 +17,7 @@ Features and Improvements
 
 Bugfixes
    Mandatory FileUploadControl validation erroneously succeeded               | See #633
+
 ---------------------------------------------------------------------------------------------
 2008.02.22    | Aranea 1.1
 
