@@ -37,7 +37,7 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
-		addContextEntry(PresentationTag.ATTRIBUTED_TAG_KEY, this);
+		addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 		return EVAL_BODY_INCLUDE;
 	}

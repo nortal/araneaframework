@@ -49,7 +49,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
     if (contextWidgetId == null)
       throw new AraneaJspException("'listRow(Link)Button' tags can only be used in a context widget!");
 
-    event.setParam((String) requireContextEntry(ListRowsTag.ROW_REQUEST_ID_KEY));
+    event.setParam((String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY));
     event.setTarget(contextWidgetId);
     event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
     event.setEventPrecondition(onClickPrecondition);

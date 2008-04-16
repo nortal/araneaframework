@@ -200,7 +200,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 		
 		// Write out.
 		if (intKeyCode != null)
-			KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
+			BaseKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, intHandler);
 		else if (keyCombo != null)
 			writeRegisterKeycomboHandlerScript(out, scope, keyCombo, intHandler);
 

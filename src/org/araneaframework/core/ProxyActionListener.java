@@ -38,7 +38,7 @@ public class ProxyActionListener implements ActionListener {
   }
 
   public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
-    String actionParameter = (String) input.getGlobalData().get(ApplicationWidget.ACTION_PARAMETER_KEY);    
+    String actionParameter = (String) input.getGlobalData().get(ApplicationService.ACTION_PARAMETER_KEY);    
  
     Method actionHandler;
     // lets try to find a handle method with an empty argument

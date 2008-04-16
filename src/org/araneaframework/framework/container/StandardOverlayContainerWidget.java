@@ -12,11 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.framework.container;
 
 import java.util.Map;
+
 import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -39,135 +40,152 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
-  /**
-   * <p> 
-   * Map containing the default overlay presentation options. 
-   * Default values are as follows:</p>
-   * <ul>
-   *   <li>method: post</li>
-   *   <li>overlayClose: false</li>
-   *   <li>width: 800</li>
-   *   <li>slideDownDuration: 0.0</li>
-   *   <li>slideUpDuration: 0.0</li>
-   *   <li>overlayDuration: 0.0</li>
-   *   <li>resizeDuration: 0.0</li>
-   * </ul>
-   */
-  public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
-  private static final String MAIN_CHILD_KEY = "m";
-  private static final String OVERLAY_CHILD_KEY = "o";
-  
-  protected Map presentationOptions = new LinkedMap();
+public class StandardOverlayContainerWidget extends BaseApplicationWidget
+		implements OverlayContext {
 
-  private Widget main;
-  private FlowContextWidget overlay;
-  
-  static {
-    DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
-    DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
-    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.0));
-  }
+	/**
+	 * <p>
+	 * Map containing the default overlay presentation options. Default values are
+	 * as follows:
+	 * </p>
+	 * <ul>
+	 * <li>method: post</li>
+	 * <li>overlayClose: false</li>
+	 * <li>width: 800</li>
+	 * <li>slideDownDuration: 0.0</li>
+	 * <li>slideUpDuration: 0.0</li>
+	 * <li>overlayDuration: 0.0</li>
+	 * <li>resizeDuration: 0.0</li>
+	 * </ul>
+	 */
+	public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
 
-  {
-    presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
-  }
+	private static final String MAIN_CHILD_KEY = "m";
 
-  public void setMain(Widget main) {
-    this.main = main;
-  }
+	private static final String OVERLAY_CHILD_KEY = "o";
 
-  public void setOverlay(FlowContextWidget overlay) {
-    this.overlay = overlay;
-  }
+	protected Map presentationOptions = new LinkedMap();
 
-  public boolean isOverlayActive() {
-    return overlay.isNested();
-  }
+	private Widget main;
 
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(), OverlayContext.class, this);
-  }
+	private FlowContextWidget overlay;
 
-  protected void init() throws Exception {
-    super.init();
-    Assert.notNull(main);
-    Assert.notNull(overlay);
-    addWidget(MAIN_CHILD_KEY, main);
-    addWidget(OVERLAY_CHILD_KEY, overlay);
-    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class, new OverlayActivityMarkerContext(){});
-  }
+	static {
+		DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
+		DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
+		DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
+		DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
+		DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
+		DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
+		DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.0));
+	}
 
-  protected void update(InputData input) throws Exception {
-    if (isOverlayActive())
-      overlay._getWidget().update(input);
-    else
-      main._getWidget().update(input);
-  }
+	{
+		presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
+	}
 
-  protected void event(Path path, InputData input) throws Exception {
-    if (path != null && path.hasNext()) {
-      Object next = path.getNext();
-      Assert.isTrue(!(isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY).equals(next), "Cannot deliver event to wrong hierarchy!");
-    }
-    super.event(path, input);
-  }
+	public void setMain(Widget main) {
+		this.main = main;
+	}
 
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (path != null && path.hasNext()) {
-      Object next = path.getNext();
-      Assert.isTrue(!(isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY).equals(next), "Cannot deliver action to wrong hierarchy!");
-    }
-    super.action(path, input, output);
-  }
+	public void setOverlay(FlowContextWidget overlay) {
+		this.overlay = overlay;
+	}
 
-  protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
-        overlay._getWidget().render(output);
-        if (!isOverlayActive()) { // overlay has become inactive for some reason
-          UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
-          urCtx.disableOnce();
-        }
-    }
-    else
-      main._getWidget().render(output);
-  }
+	public boolean isOverlayActive() {
+		return overlay.isNested();
+	}
 
-  // FlowContext methods
-  public void replace(Widget flow) {
-    overlay.replace(flow);
-  }
+	protected Environment getChildWidgetEnvironment() throws Exception {
+		return new StandardEnvironment(super.getChildWidgetEnvironment(),
+				OverlayContext.class, this);
+	}
 
-  public void replace(Widget flow, Configurator configurator) {
-    overlay.replace(flow, configurator);
-  }
+	protected void init() throws Exception {
+		super.init();
+		Assert.notNull(main);
+		Assert.notNull(overlay);
+		addWidget(MAIN_CHILD_KEY, main);
+		addWidget(OVERLAY_CHILD_KEY, overlay);
+		overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
+				new OverlayActivityMarkerContext() {
+					private static final long serialVersionUID = 1L;
+				});
+	}
 
-  public void reset(EnvironmentAwareCallback callback) {
-    overlay.reset(callback);
-  }
+	protected void update(InputData input) throws Exception {
+		if (isOverlayActive()) {
+			overlay._getWidget().update(input);
+		} else {
+			main._getWidget().update(input);
+		}
+	}
 
-  public void start(Widget flow, Configurator configurator, Handler handler) {
-    overlay.start(flow, configurator, handler);
-  }
+	protected void event(Path path, InputData input) throws Exception {
+		assertKeyIsInPath(path, "Cannot deliver event to wrong hierarchy!");
+		super.event(path, input);
+	}
 
-  public void start(Widget flow, Handler handler) {
-    overlay.start(flow, handler);
-  }
+	protected void action(Path path, InputData input, OutputData output) throws Exception {
+		assertKeyIsInPath(path, "Cannot deliver action to wrong hierarchy!");
+		super.action(path, input, output);
+	}
 
-  public void start(Widget flow) {
-    overlay.start(flow);
-  }
+	protected void render(OutputData output) throws Exception {
+		if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
 
-  /* The presentation options of this overlay. */
-  public Map getOverlayOptions() {
-    return presentationOptions;
-  }
+			overlay._getWidget().render(output);
 
-  public void setOverlayOptions(Map presentationOptions) {
-    this.presentationOptions = presentationOptions; 
-  }
+			if (!isOverlayActive()) { // overlay has become inactive for some reason
+				UpdateRegionContext urCtx = EnvironmentUtil
+						.getUpdateRegionContext(getEnvironment());
+				urCtx.disableOnce();
+			}
+
+		} else {
+			main._getWidget().render(output);
+		}
+	}
+
+	private void assertKeyIsInPath(Path path, String message) {
+		if (path != null && path.hasNext()) {
+			String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
+			Assert.isTrue(key.equals(path.getNext()), message);
+		}
+	}
+
+	// FlowContext methods
+	public void replace(Widget flow) {
+		overlay.replace(flow);
+	}
+
+	public void replace(Widget flow, Configurator configurator) {
+		overlay.replace(flow, configurator);
+	}
+
+	public void reset(EnvironmentAwareCallback callback) {
+		overlay.reset(callback);
+	}
+
+	public void start(Widget flow, Configurator configurator, Handler handler) {
+		overlay.start(flow, configurator, handler);
+	}
+
+	public void start(Widget flow, Handler handler) {
+		overlay.start(flow, handler);
+	}
+
+	public void start(Widget flow) {
+		overlay.start(flow);
+	}
+
+	/* The presentation options of this overlay. */
+	public Map getOverlayOptions() {
+		return presentationOptions;
+	}
+
+	public void setOverlayOptions(Map presentationOptions) {
+		this.presentationOptions = presentationOptions;
+	}
+
 }

@@ -108,15 +108,8 @@ Calendar.setup = function (params) {
 		if (update && p.inputField) {
 			p.inputField.value = cal.date.print(p.ifFormat);
 			if (typeof p.inputField.onchange == "function") {
-			    var inputFieldId = p.inputField.id;
-			    var nf = function() { 
-			      var inpf = $(inputFieldId);
-			      inpf.onchange.bind(inpf);
-			      inpf.value=cal.date.print(p.ifFormat);
-			      inpf.onchange(); 
-			    };
-		    	nf();
-		    }
+				p.inputField.onchange();
+			}
 		}
 		if (update && p.displayArea)
 			p.displayArea.innerHTML = cal.date.print(p.daFormat);
@@ -196,15 +189,20 @@ Calendar.setup = function (params) {
 		cal.setDateFormat(dateFmt);
 		if (mustCreate)
 			cal.create();
-		cal.refresh();
-		if (!params.position)
-			cal.showAtElement(params.button || params.displayArea || params.inputField, params.align);
-		else
-			cal.showAt(params.position[0], params.position[1]);
+		if ( Calendar.is_ie && /msie 7\.0/i.test(navigator.userAgent) ) {
+			var temp = params.button;
+			var p = Calendar.getAbsolutePos(temp);
+			cal.showAt(p.x, p.y + temp.offsetHeight);
+		} else {
+			cal.refresh();
+			if (!params.position) {
+				cal.showAtElement(params.button || params.displayArea || params.inputField, params.align);
+			} else {
+				cal.showAt(params.position[0], params.position[1]);
+			}
+		}
 		return false;
 	};
 
 	return cal;
 };
-
-window['calendar/calendar-setup.js'] = true;

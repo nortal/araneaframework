@@ -61,7 +61,7 @@ public class BodyHtmlTag extends PresentationTag {
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
 
-    addContextEntry(PresentationTag.ATTRIBUTED_TAG_KEY, null);
+    addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     addContextEntry(KEY, this);
     
@@ -123,7 +123,7 @@ public class BodyHtmlTag extends PresentationTag {
   }
 
   /** Writes scripts that register client-side keepalive events for server-side expiring services. */
-  protected void writeKeepAliveRegistrationScripts(Writer out) throws JspException, IOException {
+  protected void writeKeepAliveRegistrationScripts(Writer out) throws IOException {
     ExpiringServiceContext expiringServiceContext = (ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class);
     if (expiringServiceContext == null)
       return;
@@ -169,7 +169,7 @@ public class BodyHtmlTag extends PresentationTag {
   }
 
   /** Writes script that makes client-side aware of server-side locale. */
-  protected void writeLocaleScript(Writer out) throws JspException, IOException {
+  protected void writeLocaleScript(Writer out) throws IOException {
 	Locale locale = getLocalizationContext().getLocale();
 
     out.write("_ap.setLocale(new AraneaLocale('");
@@ -185,7 +185,7 @@ public class BodyHtmlTag extends PresentationTag {
    * 
    * @see ConfigurationContext#BACKGROUND_FORM_VALIDATION
    * @since 1.1 */
-  protected void writeAjaxValidationScript(Writer out) throws JspException, IOException {
+  protected void writeAjaxValidationScript(Writer out) throws IOException {
     Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
     out.write("_ap.setBackgroundValidation(" + String.valueOf(validationEnabled) +");");
   }

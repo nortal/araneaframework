@@ -130,7 +130,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletRequest request = ServletUtil.getRequest(input);
 
-    if (commonsFileUploadPresent && ServletFileUpload.isMultipartContent(new ServletRequestContext(request))) {
+    if (commonsFileUploadPresent && FileUploadBase.isMultipartContent(new ServletRequestContext(request))) {
       Map fileItems = new HashMap();
       Map parameterLists = new HashMap();
 

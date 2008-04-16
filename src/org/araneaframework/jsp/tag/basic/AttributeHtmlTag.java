@@ -54,7 +54,7 @@ public class AttributeHtmlTag extends BaseTag {
     	  return SKIP_BODY;
     }
     
-    AttributedTagInterface attributedTag = (AttributedTagInterface)requireContextEntry(PresentationTag.ATTRIBUTED_TAG_KEY);
+    AttributedTagInterface attributedTag = (AttributedTagInterface)requireContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY);
     attributedTag.addAttribute(name, value);
 
     return SKIP_BODY;

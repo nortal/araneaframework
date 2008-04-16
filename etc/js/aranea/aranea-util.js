@@ -65,35 +65,38 @@ function setElementAttr(elementStr, attrName, attrValue) {
  */
 Text = Class.create();
 Text.prototype = {
+  pos: 0,
   initialize: function(text) {
     this.text = text;
   },
 
   readLine: function() {
-    var i = this.text.indexOf("\n");
+    if (this.pos>=this.text.length) return;
+    var newpos = this.text.indexOf("\n", this.pos);
     var line;
-    if (i == -1) {
-      line = this.text;
-      this.text = '';
+    if (newpos == -1) {
+      line = this.text.substr(this.pos);
+      this.pos=this.text.length;
     } else {
-      line = this.text.substr(0, i);
-      this.text = this.text.substr(i + 1);
+      newpos++;
+      line = this.text.substr(this.pos, newpos-this.pos-1);
+      this.pos=newpos;
     }
     return line;
   },
 
   readCharacters: function(characters) {
-    var content = this.text.substr(0, characters);
-    this.text = this.text.substr(characters);
+    var content = this.text.substr(this.pos, parseInt(characters));
+    this.pos=this.pos + parseInt(characters);
     return content;
   },
 
   isEmpty: function() {
-    return this.text.length == 0;
+    return this.pos >= this.text.length;
   },
 
   toString: function() {
-    return this.text;
+    return this.text.substr(this.pos);
   }
 };
 

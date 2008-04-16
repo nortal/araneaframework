@@ -123,7 +123,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 
 		// Write out.
 		if (intKeyCode != null)
-			KeyboardHandlerHtmlTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);
+			BaseKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);
 		else if (keyCombo != null)
 			writeRegisterKeycomboHandlerScript(out, scope, keyCombo, handler);
 

@@ -828,7 +828,7 @@ if (fileUploadExt.uploadSucceeded()) {
     <sect2>
       <title>Filter Services</title>
 
-      <para>One of the most common ways to use the services it to create a
+      <para>One of the most common ways to use the services is to create a
       filter service, that wraps a child service and provides some additional
       functionality and/or environment entries. To that purpose Aranea
       provides a filter base class —

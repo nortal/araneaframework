@@ -19,10 +19,11 @@ package org.araneaframework.jsp.tag.basic;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
 
@@ -55,7 +56,7 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 		super.doStartTag(out);
 
 		addContextEntry(KEY, this);
-		addContextEntry(PresentationTag.ATTRIBUTED_TAG_KEY, this);
+		addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
 
 		JspUtil.writeOpenStartTag(out, name);
 
