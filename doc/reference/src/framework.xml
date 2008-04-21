@@ -319,7 +319,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
     <para>The frameworks itself is assembled using a hierarchy of components
     (this hierarchy is mostly flat, except for the routers and application
-    components). The hierarchy is arrange simply by containment, with each
+    components). The hierarchy is arranged simply by containment, with each
     component containing its chidren as fields as illustrated on <xref
     linkend="figure-framework-assembly" />.</para>
 

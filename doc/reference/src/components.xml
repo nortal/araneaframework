@@ -288,6 +288,7 @@
       interact with the framework. <literal>Environment</literal> interface is
       rather simple: <programlisting role="java">public interface Environment extends Serializable {
   public Object getEntry(Object key);
+  public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException;
 }</programlisting></para>
 
       <para>It basically provides means of looking up entry objects by their
@@ -911,7 +912,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
     <para>Although widgets extend services, a widget will function during one
     request either as a widget or as a service—that is if a widget receives an
-    <literal>action()</literal> call no other request-response cycle calls can
+    <literal>action()</literal> call then no other request-response cycle calls can
     occur.</para>
 
     <para>The widget request-response cycle proceeds as follows: <orderedlist
@@ -929,7 +930,7 @@ if (fileUploadExt.uploadSucceeded()) {
 
           <literal>event()</literal>
 
-           —this method is called on only one widget in the hierarchy. It allows to send widgets events from the user. The 
+           —this method is called on only one widget in the hierarchy. It allows to send events from the user to widgets. The 
 
           <literal>path</literal>
 
@@ -951,7 +952,7 @@ if (fileUploadExt.uploadSucceeded()) {
       </orderedlist></para>
 
     <para>Aranea provides a base implementation of the
-    <literal>Widget</literal>—<literal>org.araneaframework.core.Base</literal>Widget
+    <literal>Widget</literal>—<literal>org.araneaframework.core.BaseWidget</literal>
     and a base class for application development
     <literal>org.araneaframework.core.BaseApplicationWidget</literal>. More on
     the last one can be found in <xref
@@ -1147,6 +1148,7 @@ if (fileUploadExt.uploadSucceeded()) {
   addEventListener("myEvent", new ProxyEventListener(this));
 }
 
+// This method handles the event that was registered in init().
 public void handleEventMyEvent(String parameter) {
     log.debug("Received event myEvent with parameter " + parameter);
 }</programlisting></para>
@@ -1664,7 +1666,7 @@ getMessageCtx().showInfoMessage(message);
       to be the incoming parameters of the flow:</para>
 
       <para><programlisting role="java">...
-getFlowCtx().start(new TestFlow(new Long(5)), null, null);
+getFlowCtx().start(new TestFlow(new Long(5)));
 ...</programlisting></para>
 
       <para>This call will start a new nested flow for the widget
@@ -1691,7 +1693,7 @@ getFlowCtx().finish(new Long(8));
       <literal>FlowContext.Handler</literal>:</para>
 
       <para><programlisting role="java">...
-getFlowCtx().start(new TestFlow(new Long(5)), null, 
+getFlowCtx().start(new TestFlow(new Long(5)),
   new FlowContext.Handler() {
     public void onFinish(Object result) {
       getMessageCtx().showInfoMessage("TestFlow returned value " + result);
