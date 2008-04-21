@@ -62,7 +62,8 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	}
 	
 	/**
-	 * Sets the current case sensitivity behaivor.
+	 * Sets the current case sensitivity behaivor. Default is
+	 * <code>ignoreCase = true</code>;
 	 * 
 	 * @param ignoreCase whether to ignore case.
 	 */
@@ -227,11 +228,11 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper ltConst(String valueId, Object value) {
 		return this.helper.ltConst(fieldId, valueId, value);
 	}
-		
+
 	// ========== LIKE ==========
-	
+
 	// filter with form element
-	
+
 	public FilterHelper like() {
 		return this.helper.like(fieldId);
 	}
@@ -268,7 +269,215 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper likeConst(String valueId, Object value) {
 		return this.helper.likeConst(fieldId, valueId, value);
 	}
-	
+
+	// ========== STARTS WITH ==========
+
+	// filter with form element
+
+	/**
+	 * Marks that values of this field must start with the value of filter
+	 * control. The control (with the same Id as fieldId) will be automatically
+	 * created.
+	 * 
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWith() {
+		return this.helper.startsWith(fieldId);
+	}
+
+	/**
+	 * Marks that values of this field must start with the value of filter control
+	 * whose Id is valueId. The control will be automatically created.
+	 * 
+	 * @param valueId The Id of the filter Control.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWith(String valueId) {
+		return this.helper.startsWith(fieldId, valueId);
+	}
+
+	/**
+	 * Marks that values of this field must start with the value of given control.
+	 * The Id of the control will be the same as fieldId.
+	 * 
+	 * @param control Custom control for user input.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWith(Control control) {
+		return this.helper.startsWith(fieldId, control);
+	}
+
+	/**
+	 * Marks that values of this field must start with the value of given control
+	 * whose Id is <code>valueId</code>.
+	 * 
+	 * @param valueId The Id of the <code>control</code>.
+	 * @param control Custom control for user input.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWith(String valueId, Control control) {
+		return this.helper.startsWith(fieldId, valueId, control);
+	}
+
+	/**
+	 * Marks that values of this field must start with the value of given form
+	 * element. The Id of the element will be the same as fieldId.
+	 * 
+	 * @param element The form element (with label and control) whose value will
+	 *          be used to filter the data.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWith(FormElement element) {
+		return this.helper.startsWith(fieldId, element);
+	}
+
+	/**
+	 * Marks that values of this field must start with the value of given form
+	 * element.
+	 * 
+	 * @param valueId The Id of the <code>element</code>.
+	 * @param element The form element (with label and control) whose value will
+	 *          be used to filter the data.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWith(String valueId, FormElement element) {
+		return this.helper.startsWith(fieldId, valueId, element);
+	}
+
+	// filter
+
+	/**
+	 * Adds filter condition without the form control.
+	 * 
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper _startsWith() {
+		return this.helper._startsWith(fieldId);
+	}
+
+	public FilterHelper _startsWith(String valueId) {
+		return this.helper._startsWith(fieldId, valueId);
+	}
+
+	// constant filter
+
+	/**
+	 * Marks that all values of this field must start with given
+	 * <code>value</code>.
+	 * 
+	 * @param value The (constant String) value that is used in filtering.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper startsWithConst(Object value) {
+		return this.helper.startsWithConst(fieldId, value);
+	}
+
+	public FilterHelper startsWithConst(String valueId, Object value) {
+		return this.helper.startsWithConst(fieldId, valueId, value);
+	}
+
+	// ========== ENDS WITH ==========
+
+	// filter with form element
+
+	/**
+	 * Marks that values of this field must end with the value of filter control.
+	 * The control (with the same Id as fieldId) will be automatically created.
+	 * 
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWith() {
+		return this.helper.endsWith(fieldId);
+	}
+
+	/**
+	 * Marks that values of this field must end with the value of filter control
+	 * whose Id is valueId. The control will be automatically created.
+	 * 
+	 * @param valueId The Id of the filter Control.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWith(String valueId) {
+		return this.helper.endsWith(fieldId, valueId);
+	}
+
+	/**
+	 * Marks that values of this field must end with the value of given control.
+	 * The Id of the control will be the same as fieldId.
+	 * 
+	 * @param control Custom control for user input.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWith(Control control) {
+		return this.helper.endsWith(fieldId, control);
+	}
+
+	/**
+	 * Marks that values of this field must end with the value of given control
+	 * whose Id is <code>valueId</code>.
+	 * 
+	 * @param valueId The Id of the <code>control</code>.
+	 * @param control Custom control for user input.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWith(String valueId, Control control) {
+		return this.helper.endsWith(fieldId, valueId, control);
+	}
+
+	/**
+	 * Marks that values of this field must end with the value of given form
+	 * element. The Id of the element will be the same as fieldId.
+	 * 
+	 * @param element The form element (with label and control) whose value will
+	 *          be used to filter the data.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWith(FormElement element) {
+		return this.helper.endsWith(fieldId, element);
+	}
+
+	/**
+	 * Marks that values of this field must end with the value of given form
+	 * element.
+	 * 
+	 * @param valueId The Id of the <code>element</code>.
+	 * @param element The form element (with label and control) whose value will
+	 *          be used to filter the data.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWith(String valueId, FormElement element) {
+		return this.helper.endsWith(fieldId, valueId, element);
+	}
+
+	// filter
+
+	/**
+	 * Adds filter condition without the form control.
+	 * 
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper _endsWith() {
+		return this.helper._endsWith(fieldId);
+	}
+	public FilterHelper _endsWith(String valueId) {
+		return this.helper._endsWith(fieldId, valueId);
+	}
+
+	// constant filter
+
+	/**
+	 * Marks that all values of this field must end with given <code>value</code>.
+	 * 
+	 * @param value The (constant String) value that is used in filtering.
+	 * @return reference to current instance of FilterHelper.
+	 */
+	public FilterHelper endsWithConst(Object value) {
+		return this.helper.endsWithConst(fieldId, value);
+	}
+	public FilterHelper endsWithConst(String valueId, Object value) {
+		return this.helper.endsWithConst(fieldId, valueId, value);
+	}
+
 	// ========== IS NULL ========== 
 	
 	// fiisNuller with form element
@@ -344,11 +553,11 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper notNullConst() {
 		return this.helper.notNullConst(fieldId);
 	}
-		
+
 	// ========== RANGE ==========
-	
+
 	// filter with form element
-	
+
 	public FilterHelper range() {
 		return this.helper.range(fieldId);
 	}

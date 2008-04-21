@@ -23,11 +23,13 @@ import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
+import org.araneaframework.backend.list.memorybased.expression.compare.EndsWithExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.IsNullExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.LikeExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.LowerThanExpression;
+import org.araneaframework.backend.list.memorybased.expression.compare.StartsWithExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
@@ -198,7 +200,35 @@ public class ExpressionUtil {
 		}
 		return new LikeExpression(expr, pattern, ignoreCase, conf);
 	}
-	
+
+	/**
+	 * Creates a StartsWith expression.
+	 */
+	public static Expression startsWith(Expression expr, ValueExpression pattern,
+			boolean ignoreCase, LikeConfiguration conf) {
+		if (expr == null || pattern == null) {
+			return null;
+		}
+		if (conf == null) {
+			conf = DEFAULT_LIKE_CONFIGURATION;
+		}
+		return new StartsWithExpression(expr, pattern, ignoreCase, conf);
+	}
+
+	/**
+	 * Creates a EndsWith expression.
+	 */
+	public static Expression endsWith(Expression expr, ValueExpression pattern,
+			boolean ignoreCase, LikeConfiguration conf) {
+		if (expr == null || pattern == null) {
+			return null;
+		}
+		if (conf == null) {
+			conf = DEFAULT_LIKE_CONFIGURATION;
+		}
+		return new EndsWithExpression(expr, pattern, ignoreCase, conf);
+	}
+
 	/**
 	 * Creates PROCEDURE expression.
 	 */	

@@ -28,11 +28,13 @@ import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
+import org.araneaframework.backend.list.memorybased.expression.compare.EndsWithExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.GreaterThanExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.IsNullExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.LikeExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.LowerThanExpression;
+import org.araneaframework.backend.list.memorybased.expression.compare.StartsWithExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
@@ -79,6 +81,8 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 		addTranslator(OrExpression.class, new OrTranslator());
 		addTranslator(NotExpression.class, new NotTranslator());
 		addTranslator(LikeExpression.class, new LikeTranslator());
+		addTranslator(StartsWithExpression.class, new StartsWithTranslator());
+		addTranslator(EndsWithExpression.class, new EndsWithTranslator());
 		addTranslator(ConcatenationExpression.class, new ConcatenationTranslator());
 		addTranslator(ProcedureExpression.class, new ProcedureTranslator());
 	}
@@ -212,7 +216,41 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 			return new SqlEscapeExpression(sqlLike, ESCAPE_CHAR);
 		}
 	}
-	
+
+	class StartsWithTranslator extends CompositeExprToSqlExprTranslator {
+		protected SqlExpression translateParent(Expression expr,
+				SqlExpression[] sqlChildren) {
+			LikeExpression like = (LikeExpression) expr;
+			SqlExpression var = sqlChildren[0];
+			String value = (String) convertValue(like.getMask());
+			SqlExpression mask = new SqlValueExpression(SqlLikeUtil.convertStartMask(
+					value, like.getConfiguration(), ESCAPE_CHAR));
+			if (like.getIgnoreCase()) {
+				var = new SqlUpperExpression(var);
+				mask = new SqlUpperExpression(mask);
+			}
+			SqlExpression sqlLike = new SqlLikeExpression(var, mask);
+			return new SqlEscapeExpression(sqlLike, ESCAPE_CHAR);
+		}
+	}
+
+	class EndsWithTranslator extends CompositeExprToSqlExprTranslator {
+		protected SqlExpression translateParent(Expression expr,
+				SqlExpression[] sqlChildren) {
+			LikeExpression like = (LikeExpression) expr;
+			SqlExpression var = sqlChildren[0];
+			String value = (String) convertValue(like.getMask());
+			SqlExpression mask = new SqlValueExpression(SqlLikeUtil.convertEndMask(
+					value, like.getConfiguration(), ESCAPE_CHAR));
+			if (like.getIgnoreCase()) {
+				var = new SqlUpperExpression(var);
+				mask = new SqlUpperExpression(mask);
+			}
+			SqlExpression sqlLike = new SqlLikeExpression(var, mask);
+			return new SqlEscapeExpression(sqlLike, ESCAPE_CHAR);
+		}
+	}
+
 	static class ConcatenationTranslator extends CompositeExprToSqlExprTranslator {
 		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 			return new SqlConcatenationExpression().setChildren(sqlChildren);
