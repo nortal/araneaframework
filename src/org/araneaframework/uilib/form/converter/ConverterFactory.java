@@ -42,6 +42,9 @@ public class ConverterFactory implements ConverterProvider {
     converters.put(new ConverterKey("String", "Integer"), new StringToIntegerConverter());
     converters.put(new ConverterKey("String", "BigDecimal"), new StringToBigDecimalConverter());
 
+    converters.put(new ConverterKey("BigDecimal", "Float"), new BigDecimalToFloatConverter());
+    converters.put(new ConverterKey("BigDecimal", "Double"), new BigDecimalToDoubleConverter());
+
     converters.put(new ConverterKey("BigInteger", "Long"), new BigIntegerToLongConverter());
     converters.put(new ConverterKey("BigInteger", "Integer"), new BigIntegerToIntegerConverter());
 
@@ -68,40 +71,33 @@ public class ConverterFactory implements ConverterProvider {
   }
 
   /**
-   * This method finds a {@link BaseConverter}corresponding to the two types given.
-   * 
-   * @param fromType
-   *          from type.
-   * @param toType
-   *          to type.
-   * @return {@link BaseConverter}corresponding to the types given.
-   * 
-   * @throws ConverterNotFoundException
-   *           if {@link BaseConverter}is not found
-   */
+   * {@inheritDoc}
+	 */
   public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException {
-    if (fromType == null || toType == null) throw new ConverterNotFoundException(fromType, toType);
-    if (fromType.equals(toType)) {
-      return new IdenticalConverter();
-    }
-    else if ("Object".equals(fromType) || "Object".equals(toType)) {
-      return new IdenticalConverter();
-    }
-    else {
-      Converter result = ((Converter) converters.get(new ConverterKey(fromType, toType)));
+    if (fromType == null || toType == null) {
+			throw new ConverterNotFoundException(fromType, toType);
+		} else if (fromType.equals(toType)) {
+			return new IdenticalConverter();
+		} else if ("Object".equals(fromType) || "Object".equals(toType)) {
+			return new IdenticalConverter();
+		} else {
+			Converter result = ((Converter) converters.get(new ConverterKey(fromType, toType)));
 
-      if (result == null) throw new ConverterNotFoundException(fromType, toType);
+			if (result == null) {
+				throw new ConverterNotFoundException(fromType, toType);
+			}
 
-      return result.newConverter();
-    }
+			return result.newConverter();
+		}
   }
 
   /**
-   * Returns an instance of a <code>ConverterFactory</code>. This method is here to simplify the configuration of the
-   * <code>ConverterFactory</code> in future.
-   * 
-   * @return an instance of a <code>ConverterFactory</code>.
-   */
+	 * Returns an instance of a <code>ConverterFactory</code>. This method is
+	 * here to simplify the configuration of the <code>ConverterFactory</code>
+	 * in future.
+	 * 
+	 * @return an instance of a <code>ConverterFactory</code>.
+	 */
   public static ConverterProvider getInstance(ConfigurationContext configuration) {
     ConverterProvider confConverterProvider = (ConverterProvider) configuration.getEntry(ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
     if (confConverterProvider == null) {
@@ -110,4 +106,5 @@ public class ConverterFactory implements ConverterProvider {
 
     return confConverterProvider;
   }
+
 }

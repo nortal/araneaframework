@@ -37,7 +37,7 @@ public class StringToBooleanConverter extends BaseConverter {
 	 * Converts <code>Boolean</code> to <code>String</code>.
 	 */
   public Object reverseConvertNotNull(Object data) {
-    return ((Boolean) data).booleanValue() ? "true" : "false";
+    return ((Boolean) data).toString();
   }
 
   /**

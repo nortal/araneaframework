@@ -66,6 +66,7 @@ import org.araneaframework.example.main.web.popups.DemoAdvancedPopupUsageWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
 import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
+import org.araneaframework.example.main.web.sample.SimpleBeanFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.testing.ModalDialogTestWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
@@ -148,6 +149,7 @@ private MenuItem araneaMenu;
     MenuItem sampleMenu = result.addMenuItem(new MenuItem("Demos")); {
       sampleMenu.addMenuItem(new MenuItem("Simple"));
       sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Bean_Form", SimpleBeanFormWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Popup_Example", SamplePopupWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("MultiSelect", DemoMultiSelect.class));
