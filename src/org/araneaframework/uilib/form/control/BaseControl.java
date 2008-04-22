@@ -180,6 +180,9 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     return feCtx.isValid();
   }
 
+  /**
+	 * @since 1.1.3
+   */
   protected boolean isReadOnly() {
     return feCtx.isReadOnly();
   }

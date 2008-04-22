@@ -203,6 +203,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	/**
 	 * Specifies whether the form control is currently read-only.
 	 * @return A boolean indicating whether the form control is read-only.
+	 * @since 1.1.3
 	 */
   public boolean isReadOnly() {
 		return this.readOnly;
@@ -214,6 +215,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	 * true.
 	 * 
 	 * @param readOnly Sets whether the form control will be read-only.
+	 * @since 1.1.3
 	 */
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;

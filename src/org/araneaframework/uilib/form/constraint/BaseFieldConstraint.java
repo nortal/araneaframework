@@ -90,6 +90,9 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
     return getField().isMandatory();
   }
 
+  /**
+	 * @since 1.1.3
+   */
   public boolean isReadOnly() {
     return getField().isReadOnly();
   }
