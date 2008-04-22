@@ -112,9 +112,16 @@ public class TypeHelper implements Serializable {
 	 */
 	public Comparator getFieldComparator(String fieldId) {
 		Comparator result = getCustomComparator(fieldId);
+
 		if (result == null) {
-			result = buildComparator(getFieldType(fieldId)); 
+			Class fieldType = getFieldType(fieldId);
+
+			Assert.notNull(fieldType, "Could not resolve the value type of field '"
+					+ fieldId + "'");
+
+			result = buildComparator(fieldType);
 		}
+
 		return result;
 	}
 	
