@@ -63,9 +63,10 @@ public class FormElement extends GenericFormElement implements FormElementContex
   
   private boolean rendered = false;
   private boolean ignoreEvents = true;
-  
+
   protected boolean mandatory = false;
-  protected boolean disabled;
+  protected boolean disabled = false;
+  protected boolean readOnly = false;
 
   //*********************************************************************
   //* PUBLIC METHODS
@@ -199,7 +200,26 @@ public class FormElement extends GenericFormElement implements FormElementContex
 	  return this.disabled;
 	}	  
 
-  public void markBaseState() {
+	/**
+	 * Specifies whether the form control is currently read-only.
+	 * @return A boolean indicating whether the form control is read-only.
+	 */
+  public boolean isReadOnly() {
+		return this.readOnly;
+	}
+
+  /**
+	 * Sets the form control read-only behaviour. Note that setting both read-only
+	 * and disabled to true will have the same effect as just setting disabled to
+	 * true.
+	 * 
+	 * @param readOnly Sets whether the form control will be read-only.
+	 */
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public void markBaseState() {
     if (getData() != null)
       getData().markBaseState();
   }

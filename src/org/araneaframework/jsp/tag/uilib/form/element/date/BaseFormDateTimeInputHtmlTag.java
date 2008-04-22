@@ -17,6 +17,8 @@
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
@@ -38,11 +40,19 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	
 	public final static Long DEFAULT_DATE_INPUT_SIZE = new Long(11);
 	public final static Long DEFAULT_TIME_INPUT_SIZE = new Long(5);
-	
+
+	protected static final String ATTR_ID = "id";
+	protected static final String ATTR_NAME = "name";
+	protected static final String ATTR_VALUE = "value";
+	protected static final String ATTR_LABEL = "label";
+	protected static final String ATTR_MANDATORY = "mandatory";
+	protected static final String ATTR_VALID = "id";
+
 	protected String onChangePrecondition;
 	protected String calendarAlignment;
 	protected String calendarIconClass = "middle";
-	
+	protected Map attributesMap = new HashMap();
+
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -77,15 +87,17 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			Long size,
 			boolean disabled,
 			String styleClass,
-			String accessKey,      
+			String accessKey,
 			DateControl.ViewModel viewModel) throws Exception {
-	    if (viewModel.getInputFilter() != null) {
-	      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
-	    }
+
+		if (viewModel.getInputFilter() != null) {
+			attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER,
+					viewModel.getInputFilter().getCharacterFilter());
+		}
 
 		// Write input tag
 		JspUtil.writeOpenStartTag(out, "input");
-		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
+		if (StringUtils.isNotBlank(id)) JspUtil.writeAttribute(out, "id", id);
 		JspUtil.writeAttribute(out, "name", name);
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
@@ -93,13 +105,17 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttribute(out, "value", value);	
 		JspUtil.writeAttribute(out, "size", size);
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
-		if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
+		if (StringUtils.isNotBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		
 		if (disabled) {
-			JspUtil.writeAttribute(out, "disabled", "true");
-		}
-		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
+			JspUtil.writeAttribute(out, "disabled", "disabled");
+
+		} else if (viewModel.isReadOnly()) {
+			JspUtil.writeAttribute(out, "readonly", "readonly");
+
+		} else if (events && viewModel.isOnChangeEventRegistered()) {
+			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
+					onChangePrecondition, updateRegionNames);
 		}
 
 		// validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
@@ -109,7 +125,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 
 		writeBackgroundValidationAttribute(out);
 
-		JspUtil.writeAttributes(out, attributes);    
+		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);
 
 		if (!disabled) {
@@ -143,58 +159,70 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 
 	    return sb.toString();
 	}
-	
-	  /**
-	   * @since 1.0.3
-	   */
-	  protected String getTimeInputOnChangePrecondition(String timeInputId) {
-        if (onChangePrecondition != null)
-          return onChangePrecondition;
-        String timeInputRef = "document.getElementById('" + timeInputId + "')";
-	    String precondition =  
-	    		"return Aranea.UI.isChanged('" + timeInputId + "')"+
-	    		" && ((" + timeInputRef + ".value.length==5) || (" + timeInputRef + ".value.length==0))"
-	    		;
-	    return precondition;
-	  }
 
-	  /**
-	   * @since 1.0.3
-	   */
-	  protected String getHourSelectOnChangePrecondition(String timeInputId) {
-	    return getSelectOnChangePrecondition(timeInputId);
-	  }
-
-	  /**
-	   * @since 1.0.3
-	   */
-	  protected String getMinuteSelectOnChangePrecondition(String timeInputId) {
-	    return getSelectOnChangePrecondition(timeInputId);
-	  }
-
-	  /**
-	   * @since 1.0.3
-	   */
-	  protected String getSelectOnChangePrecondition(String timeInputId) {
-	    String precondition = onChangePrecondition == null ? 
-	    		"return (document.getElementById('" + timeInputId +"').value.length==5)" 
-	    		: 
-	    		onChangePrecondition;
-	    return precondition;
-	  }
-
-	
 	/**
-	 * Writes out time input
-	 * The id and accessKey parameters may be null.
-	 * Note that the ID attribute is [for the moment, at least: 28.12.2004] only needed
-	 * for the access keys to function. That is, the typical pattern as seen in HTML is:
+	 * @since 1.0.3
+	 */
+	protected String getTimeInputOnChangePrecondition(String timeInputId) {
+		if (onChangePrecondition != null) {
+			return onChangePrecondition;
+		}
+
+		String timeInputRef = new StringBuffer("document.getElementById('")
+				.append(timeInputId)
+				.append("')")
+				.toString();
+
+		StringBuffer precondition = new StringBuffer();
+		precondition.append("return Aranea.UI.isChanged('");
+		precondition.append(timeInputId);
+		precondition.append("') && ((");
+		precondition.append(timeInputRef);
+		precondition.append(".value.length==5) || (");
+		precondition.append(timeInputRef);
+		precondition.append(".value.length==0))");
+		return precondition.toString();
+	}
+
+	/**
+	 * @since 1.0.3
+	 */
+	protected String getHourSelectOnChangePrecondition(String timeInputId) {
+		return getSelectOnChangePrecondition(timeInputId);
+	}
+
+	/**
+	 * @since 1.0.3
+	 */
+	protected String getMinuteSelectOnChangePrecondition(String timeInputId) {
+		return getSelectOnChangePrecondition(timeInputId);
+	}
+
+	/**
+	 * @since 1.0.3
+	 */
+	protected String getSelectOnChangePrecondition(String timeInputId) {
+		String precondition = onChangePrecondition;
+		if (precondition == null) {
+			precondition = "return (document.getElementById('" + timeInputId
+					+ "').value.length==5)";
+		}
+		return precondition;
+	}
+
+	/**
+	 * Writes out time input The id and accessKey parameters may be null. Note
+	 * that the ID attribute is [for the moment, at least: 28.12.2004] only needed
+	 * for the access keys to function. That is, the typical pattern as seen in
+	 * HTML is:
+	 * 
 	 * <pre>
-	 * &lt;label for="some.control.id" accesskey="some.key"&gt; ...
-	 * &lt;input id="some.control.id" ... &gt;
+	 * &lt;label for=&quot;some.control.id&quot; accesskey=&quot;some.key&quot;&gt; ...
+	 * &lt;input id=&quot;some.control.id&quot; ... &gt;
 	 * </pre>
-	 * As you see, the <code>input</code> tag outputs its ID so that the <code>label</code> tag
-	 * could reference it. 
+	 * 
+	 * As you see, the <code>input</code> tag outputs its ID so that the
+	 * <code>label</code> tag could reference it.
 	 */
 	// XXX: not used ANYWHERE in Aranea classes.
 	protected void writeTimeInput(
@@ -208,8 +236,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
       String styleClass,
 			String accessKey,
 			TimeControl.ViewModel viewModel) throws Exception {
-	    if (viewModel.getInputFilter() != null) {
-	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+
+		if (viewModel.getInputFilter() != null) {
+	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER,
+					viewModel.getInputFilter().getCharacterFilter());
 		}
 
 		// Write input tag
@@ -221,41 +251,52 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttribute(out, "value", value);	
 		JspUtil.writeAttribute(out, "size", size);
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
-		if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
+
+		if (!StringUtils.isBlank(accessKey)) {
+			JspUtil.writeAttribute(out, "accesskey", accessKey);
+		}
+
 		if (disabled) {
-			JspUtil.writeAttribute(out, "disabled", "true");
+			JspUtil.writeAttribute(out, "disabled", "disabled");
+
+		} else if (viewModel.isReadOnly()) {
+			JspUtil.writeAttribute(out, "readonly", "readonly");
+
+		} else if (events && viewModel.isOnChangeEventRegistered()) {
+			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
+					onChangePrecondition, updateRegionNames);
 		}
-		else if (events && viewModel.isOnChangeEventRegistered()) {
-			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", onChangePrecondition, updateRegionNames);
-		}
-		
-	    writeBackgroundValidationAttribute(out);
-		
+
+		writeBackgroundValidationAttribute(out);
+
 		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);
 	}
-	
+
 	protected void writeCalendarScript (Writer out, String id, String format) throws Exception {
 		JspUtil.writeOpenStartTag(out, "script");
 		JspUtil.writeAttribute(out, "type", "text/javascript");
 		JspUtil.writeCloseStartTag(out);
-		
+
 		StringBuffer script = new StringBuffer();
 		script.append("Aranea.UI.calendarSetup('");
 		script.append(id);
 		script.append("', '");
 		script.append(format);
 		script.append("', ");
-		if (calendarAlignment == null)
-		  script.append("null");
-		else {
-          script.append("'");
-          script.append(calendarAlignment);
-          script.append("'");
+
+		if (calendarAlignment == null) {
+			script.append("null");
+		} else {
+			script.append("'");
+			script.append(calendarAlignment);
+			script.append("'");
 		}
+
 		script.append(");");
-		
+
 		out.write(script.toString());
 		JspUtil.writeEndTag_SS(out, "script");
 	}
+
 }

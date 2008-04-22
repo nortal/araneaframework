@@ -111,6 +111,28 @@
 						</ui:formElement>
 					</ui:row>
 
+					<ui:row>
+						<ui:formElement id="disabledCtrl">
+							<ui:cell>
+								<ui:label />
+							</ui:cell>
+
+							<ui:cell>
+								<ui:textarea cols="30" rows="3"/>
+							</ui:cell>
+						</ui:formElement>
+
+						<ui:formElement id="readOnlyCtrl">
+							<ui:cell>
+								<ui:label />
+							</ui:cell>
+
+							<ui:cell>
+								<ui:textInput/>
+							</ui:cell>
+						</ui:formElement>
+					</ui:row>
+
 				</tui:componentForm>
 				
 <!--				<ui:keyboardHandler keyCombo="ctrl+f12" handler="function() { alert('yay for all! global handler works');}"/>-->

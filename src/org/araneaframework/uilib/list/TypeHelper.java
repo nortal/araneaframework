@@ -100,14 +100,11 @@ public class TypeHelper implements Serializable {
 	 * <p>
 	 * First, a custom comparator is returned if found.
 	 * <p>
-	 * </p>
 	 * Otherwise a comparator is tryed to create according to the field type
-	 * returned by {@link #getFieldType(String)}.
-	 * Also {@link #isIgnoreCase()} and {@link #getLocale()} is considered for
-	 * creating the new comparator.
+	 * returned by {@link #getFieldType(String)}. Also {@link #isIgnoreCase()}
+	 * and {@link #getLocale()} is considered for creating the new comparator.
 	 * 
-	 * @param fieldId
-	 *                field Id.
+	 * @param fieldId field Id.
 	 * @return comparator for this field.
 	 */
 	public Comparator getFieldComparator(String fieldId) {

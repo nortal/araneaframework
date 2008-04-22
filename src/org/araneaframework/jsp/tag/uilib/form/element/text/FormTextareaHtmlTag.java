@@ -64,8 +64,13 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "cols", cols);
     JspUtil.writeAttribute(out, "rows", rows);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
-    if (viewModel.isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+
+    if (viewModel.isDisabled()) {
+      JspUtil.writeAttribute(out, "disabled", "disabled");
+    } else if (viewModel.isReadOnly()) {
+    	JspUtil.writeAttribute(out, "readonly", "readonly");
+    }
+
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEscaped(out, viewModel.getSimpleValue());

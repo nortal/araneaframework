@@ -83,10 +83,10 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
         + fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name + ".select1", name + ".select2")
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
 
-    if (disabled)
-      out.write(" disabled=\"true\"");
+    if (disabled || viewModel.isReadOnly())
+      out.write(" disabled=\"disabled\"");
     
-    if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
+    if (!disabled && !viewModel.isReadOnly() &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getMinuteSelectOnChangePrecondition(name));
     	out.write(" ");
@@ -98,7 +98,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeStartTag_SS(out, "script");
     out.write(getTimeSelectScript(name+".select2", minute, 60));
     
-    if (!disabled && backgroundValidation) {
+    if (!disabled && !viewModel.isReadOnly() && backgroundValidation) {
     	String s = name + ".select2";
     	String es = "$('" + s + "')";
     	String ns =  "$('" + name + "')";
@@ -116,10 +116,10 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     out.write("<select id=\"" + name + ".select1\" name=\"" + name + ".select1\" onChange=\""
         + fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name + ".select1", name + ".select2")
         + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
-    if (disabled)
-      out.write(" disabled=\"true\"");
+    if (disabled || viewModel.isReadOnly())
+      out.write(" disabled=\"disabled\"");
 
-    if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
+    if (!disabled && !viewModel.isReadOnly() &&  events && viewModel.isOnChangeEventRegistered()) {
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getHourSelectOnChangePrecondition(name));
     	out.write(" ");
@@ -130,7 +130,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeStartTag_SS(out, "script");
     out.write(getTimeSelectScript(name+".select1", hour, 24));
     
-    if (!disabled && backgroundValidation) {
+    if (!disabled && !viewModel.isReadOnly() && backgroundValidation) {
     	String s = name + ".select1";
     	String es = "$('" + name + "')";
     	String ns =  "$('" + s + "')";
@@ -168,7 +168,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     
     writeBackgroundValidationAttribute(out);
 
-    if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
+    if (!disabled && !viewModel.isReadOnly() && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getTimeInputOnChangePrecondition(name));
@@ -177,21 +177,23 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     }
     
     // validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
-    if (!viewModel.isOnChangeEventRegistered() && !disabled && backgroundValidation) {
+    if (!viewModel.isOnChangeEventRegistered() && !disabled && !viewModel.isReadOnly() && backgroundValidation) {
     	JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
     }
 
     StringBuffer onBlur = new StringBuffer();
     if (showTimeSelect)
     	onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name, name +".select1", name + ".select2") + ";");
-    if (!disabled && events && viewModel.isOnChangeEventRegistered())
+    if (!disabled && !viewModel.isReadOnly() && events && viewModel.isOnChangeEventRegistered())
     	onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onblur", onBlur.toString());
 
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
     if (disabled) 
-      JspUtil.writeAttribute(out, "disabled", "true");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
+    if (viewModel.isReadOnly()) 
+      JspUtil.writeAttribute(out, "readonly", "readonly");
 
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);

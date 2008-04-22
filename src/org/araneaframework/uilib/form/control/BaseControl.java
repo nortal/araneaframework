@@ -180,6 +180,10 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     return feCtx.isValid();
   }
 
+  protected boolean isReadOnly() {
+    return feCtx.isReadOnly();
+  }
+
   public Widget.Interface _getWidget() {
 	  return new WidgetImpl();
   }
@@ -204,6 +208,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     protected String controlType;
     protected boolean mandatory;
     protected boolean disabled;
+    protected boolean readOnly;
     protected String label;
     
     /**
@@ -220,6 +225,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
       
       this.mandatory = BaseControl.this.isMandatory();
       this.disabled = BaseControl.this.isDisabled();
+      this.readOnly = BaseControl.this.isReadOnly();
       
       this.label = BaseControl.this.getLabel();
     }
@@ -258,6 +264,14 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
      */
     public boolean isDisabled() {
       return disabled;
+    }
+
+    /**
+     * Returns whether the control is read-only.
+     * @return whether the control is read-only.
+     */
+    public boolean isReadOnly() {
+      return this.readOnly;
     }
   }
 }

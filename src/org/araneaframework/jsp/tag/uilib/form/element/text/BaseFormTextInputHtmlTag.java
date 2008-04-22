@@ -101,8 +101,12 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "" + attribute.getKey(), attribute.getValue());
     }
 
-    if (viewModel.isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+    if (viewModel.isDisabled()) {
+      JspUtil.writeAttribute(out, "disabled", "disabled");
+    } else if (viewModel.isReadOnly()) {
+      JspUtil.writeAttribute(out, "readonly", "readonly");
+    }
+
     if (events && viewModel.isOnChangeEventRegistered()) {
       // We use "onblur" to simulate the textbox's "onchange" event
       // this is _not_ good, but there seems to be no other way

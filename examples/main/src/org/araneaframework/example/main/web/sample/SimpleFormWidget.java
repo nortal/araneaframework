@@ -28,6 +28,7 @@ import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.control.TextareaControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.BooleanData;
@@ -78,15 +79,19 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // sets initial value of form element
     simpleForm.setValueByFullName("dateTime", new Date());
 
-	// now we construct a button, that is also Control. Reason why we cannot just add it
+    // here are two controls that are either disabled or read-only:
+    simpleForm.addElement("disabledCtrl", "common.disabled", new TextareaControl(), new StringData(), t("common.disabled"), false).setDisabled(true);
+    simpleForm.addElement("readOnlyCtrl", "common.readOnly", new TextControl(), new StringData(), t("common.readOnly"), false).setReadOnly(true);
+
+    // now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.
     ButtonControl button = new ButtonControl();
-	button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
-	// add the button to form. As the button does not hold any value, Data will be null.
-	simpleForm.addElement("button", "#Button", button, null, false);
+		button.addOnClickEventListener(new ProxyOnClickEventListener(this, "testSimpleForm"));
+		// add the button to form. As the button does not hold any value, Data will be null.
+		simpleForm.addElement("button", "#Button", button, null, false);
     
     // the usual, add the created widget to main widget.
-	addWidget("simpleForm", simpleForm);
+		addWidget("simpleForm", simpleForm);
   }
 
   /**
