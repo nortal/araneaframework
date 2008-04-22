@@ -128,7 +128,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);
 
-		if (!disabled) {
+		if (!disabled && !viewModel.isReadOnly()) {
 
 			JspUtil.writeOpenStartTag(out, "a");
 			JspUtil.writeAttribute(out, "href", "javascript:;");
