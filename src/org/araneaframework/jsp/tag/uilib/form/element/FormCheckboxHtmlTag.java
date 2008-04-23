@@ -64,10 +64,10 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttribute(out, "type", "checkbox");
 
 		if ("true".equals(viewModel.getSimpleValue()))
-			JspUtil.writeAttribute(out, "checked", "true");
+			JspUtil.writeAttribute(out, "checked", "checked");
 
 		if (viewModel.isDisabled())
-			JspUtil.writeAttribute(out, "disabled", "true");
+			JspUtil.writeAttribute(out, "disabled", "disabled");
 		JspUtil.writeAttribute(out, "tabindex", tabindex);
 		if (accessKey != null)
 			JspUtil.writeAttribute(out, "accesskey", accessKey);

@@ -68,7 +68,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     if (viewModel.isOnChangeEventRegistered())
       this.writeSubmitScriptForUiEvent(out, "onchange", derivedId, "onChanged", "", updateRegionNames);
     if (viewModel.isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     JspUtil.writeAttributes(out, attributes);
     writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartTag(out);      
@@ -81,7 +81,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeOpenStartTag(out, "option");      
       JspUtil.writeAttribute(out, "value", value != null ? value : "");
       if (viewModel.getValueSet().contains(value))
-        JspUtil.writeAttribute(out, "selected", "true");
+        JspUtil.writeAttribute(out, "selected", "selected");
       JspUtil.writeCloseStartTag_SS(out);
       JspUtil.writeEscaped(out, label);
       JspUtil.writeEndTag(out, "option");

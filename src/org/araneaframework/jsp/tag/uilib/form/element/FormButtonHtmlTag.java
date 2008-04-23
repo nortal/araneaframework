@@ -77,7 +77,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     if (events && !viewModel.isDisabled()) {
       writeEventAttribute(out);
     } else if (viewModel.isDisabled()) {
-      JspUtil.writeAttribute(out, "disabled", "true");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     }
     JspUtil.writeAttributes(out, attributes);
     if (accessKey != null)
