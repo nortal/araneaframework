@@ -49,13 +49,10 @@ public class ConverterFactory implements ConverterProvider {
     converters.put(new ConverterKey("BigInteger", "Integer"), new BigIntegerToIntegerConverter());
 
     //List<String> -> List<Type>
-    converters
-        .put(new ConverterKey("List<String>", "List<Boolean>"), new ListConverter(new StringToBooleanConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Boolean>"), new ListConverter(new StringToBooleanConverter()));
     converters.put(new ConverterKey("List<String>", "List<Long>"), new ListConverter(new StringToLongConverter()));
-    converters
-        .put(new ConverterKey("List<String>", "List<Integer>"), new ListConverter(new StringToIntegerConverter()));
-    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"), new ListConverter(
-        new StringToBigDecimalConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Integer>"), new ListConverter(new StringToIntegerConverter()));
+    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"), new ListConverter(new StringToBigDecimalConverter()));
 
     //Boolean -> Type
     converters.put(new ConverterKey("Boolean", "String"), new ReverseConverter(new StringToBooleanConverter()));
@@ -72,23 +69,25 @@ public class ConverterFactory implements ConverterProvider {
 
   /**
    * {@inheritDoc}
-	 */
-  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException {
+   */
+  public Converter findConverter(String fromType, String toType, Environment env)
+      throws ConverterNotFoundException {
     if (fromType == null || toType == null) {
-			throw new ConverterNotFoundException(fromType, toType);
-		} else if (fromType.equals(toType)) {
-			return new IdenticalConverter();
-		} else if ("Object".equals(fromType) || "Object".equals(toType)) {
-			return new IdenticalConverter();
-		} else {
-			Converter result = ((Converter) converters.get(new ConverterKey(fromType, toType)));
+      throw new ConverterNotFoundException(fromType, toType);
+    } else if (fromType.equals(toType)) {
+      return new IdenticalConverter();
+    } else if ("Object".equals(fromType) || "Object".equals(toType)) {
+      return new IdenticalConverter();
+    } else {
+      Converter result = ((Converter) converters.get(new ConverterKey(fromType,
+          toType)));
 
-			if (result == null) {
-				throw new ConverterNotFoundException(fromType, toType);
-			}
+      if (result == null) {
+        throw new ConverterNotFoundException(fromType, toType);
+      }
 
-			return result.newConverter();
-		}
+      return result.newConverter();
+    }
   }
 
   /**

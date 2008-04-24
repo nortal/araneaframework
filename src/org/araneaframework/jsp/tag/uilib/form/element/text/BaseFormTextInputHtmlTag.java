@@ -33,8 +33,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @author Oleg Mürk
  */
 public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
+
   protected Long size;
   protected String onChangePrecondition;
+  protected boolean renderDisabledAsReadOnly;
 
   {
     baseStyleClass = "aranea-text";
@@ -67,6 +69,22 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
    */
   public void setOnChangePrecondition(String onChangePrecondition) throws JspException {
     this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false" 
+   *   description = "Specifies whether the disabled textarea will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   * @since 1.1.3
+   */
+  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
+      throws JspException {
+    Boolean tempResult = (Boolean) evaluate("renderDisabledAsReadonly",
+        renderDisabledAsReadonly, Boolean.class);
+    if (tempResult != null) {
+      this.renderDisabledAsReadOnly = tempResult.booleanValue();
+    }
   }
 
   /* ***********************************************************************************
@@ -102,9 +120,11 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     }
 
     if (viewModel.isDisabled()) {
-      JspUtil.writeAttribute(out, "disabled", "disabled");
-    } else if (viewModel.isReadOnly()) {
-      JspUtil.writeAttribute(out, "readonly", "readonly");
+      if (this.renderDisabledAsReadOnly) {
+        JspUtil.writeAttribute(out, "readonly", "readonly");
+      } else {
+        JspUtil.writeAttribute(out, "disabled", "disabled");
+      }
     }
 
     if (events && viewModel.isOnChangeEventRegistered()) {

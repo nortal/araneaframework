@@ -38,9 +38,6 @@ public interface FormElementContext extends Serializable {
 
 	public boolean isDisabled();
 
-	/** @since 1.1.3 */
-	public boolean isReadOnly();
-
 	public boolean isRead();
 
 	public Object getValue();

@@ -151,8 +151,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     DateTimeControl.ViewModel viewModel = (DateTimeControl.ViewModel) controlViewModel;
 
     // In case of read-only time control, we don't want to show select boxes.
-    if (viewModel.isReadOnly()) {
-    	return;
+    if (viewModel.isDisabled() && this.renderDisabledAsReadOnly) {
+      return;
     }
 
     String selectField = null;
@@ -230,8 +230,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
-    if (!disabled && !viewModel.isReadOnly() && events
-				&& viewModel.isOnChangeEventRegistered()) {
+    if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
 
     	JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
@@ -245,17 +244,18 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name) + ";");
     }
 
-    if (!disabled && !viewModel.isReadOnly() && events
-				&& viewModel.isOnChangeEventRegistered()) {
-			onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
+    if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
+      onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     }
 
     JspUtil.writeAttribute(out, "onBlur", onBlur.toString());
 
     if (disabled) {
-      JspUtil.writeAttribute(out, "disabled", "disabled");
-    } else if (viewModel.isReadOnly()) {
-      JspUtil.writeAttribute(out, "readonly", "readonly");
+      if (this.renderDisabledAsReadOnly) {
+        JspUtil.writeAttribute(out, "readonly", "readonly");
+      } else {
+        JspUtil.writeAttribute(out, "disabled", "disabled");
+      }
     }
 
     JspUtil.writeAttributes(out, attributes);
@@ -300,11 +300,11 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 
 		if (disabled) {
-			JspUtil.writeAttribute(out, "disabled", "disabled");
-
-		} else if (viewModel.isReadOnly()) {
-			JspUtil.writeAttribute(out, "readonly", "readonly");
-
+          if (this.renderDisabledAsReadOnly) {
+            JspUtil.writeAttribute(out, "readonly", "readonly");
+          } else {
+            JspUtil.writeAttribute(out, "disabled", "disabled");
+          }
 		} else if (events && dateTimeViewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
 					onChangePrecondition, updateRegionNames);
@@ -313,7 +313,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		JspUtil.writeAttributes(out, attributes);    
 		JspUtil.writeCloseStartEndTag_SS(out);
 		
-		if (!disabled && !viewModel.isReadOnly()) {
+		if (!disabled) {
 
 			JspUtil.writeOpenStartTag(out, "a");
 			JspUtil.writeAttribute(out, "href", "javascript:;");

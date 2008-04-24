@@ -81,7 +81,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 
     // here are two controls that are either disabled or read-only:
     simpleForm.addElement("disabledCtrl", "common.disabled", new TextareaControl(), new StringData(), t("common.disabled"), false).setDisabled(true);
-    simpleForm.addElement("readOnlyCtrl", "common.readOnly", new TextControl(), new StringData(), t("common.readOnly"), false).setReadOnly(true);
+    simpleForm.addElement("readOnlyCtrl", "common.readOnly", new TextControl(), new StringData(), t("common.readOnly"), false).setDisabled(true);
 
     // now we construct a button, that is also Control. Reason why we cannot just add it
     // to form is obvious, we want to add a specific listener to button before.

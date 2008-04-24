@@ -38,8 +38,6 @@ public class MockFormElementContext implements FormElementContext {
 
 	private boolean disabled;
 
-	private boolean readOnly;
-
 	private boolean read;
 
 	private Object value;
@@ -96,14 +94,6 @@ public class MockFormElementContext implements FormElementContext {
 
 	public void setDisabled(boolean disabled) {
 		this.disabled = disabled;
-	}
-
-	public boolean isReadOnly() {
-		return this.readOnly;
-	}
-
-	public void setReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
 	}
 
 	public boolean isRead() {

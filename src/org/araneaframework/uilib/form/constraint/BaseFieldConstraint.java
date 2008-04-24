@@ -91,13 +91,6 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   }
 
   /**
-	 * @since 1.1.3
-   */
-  public boolean isReadOnly() {
-    return getField().isReadOnly();
-  }
-
-  /**
    * Exception thrown when {@link org.araneaframework.uilib.form.FormElement} associated with 
    * {@link BaseFieldConstraint} could not be determined.
    */

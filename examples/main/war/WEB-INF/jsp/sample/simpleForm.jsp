@@ -128,7 +128,7 @@
 							</ui:cell>
 
 							<ui:cell>
-								<ui:textInput/>
+								<ui:textInput renderDisabledAsReadOnly="true"/>
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>

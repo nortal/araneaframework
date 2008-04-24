@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
@@ -41,17 +39,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	public final static Long DEFAULT_DATE_INPUT_SIZE = new Long(11);
 	public final static Long DEFAULT_TIME_INPUT_SIZE = new Long(5);
 
-	protected static final String ATTR_ID = "id";
-	protected static final String ATTR_NAME = "name";
-	protected static final String ATTR_VALUE = "value";
-	protected static final String ATTR_LABEL = "label";
-	protected static final String ATTR_MANDATORY = "mandatory";
-	protected static final String ATTR_VALID = "id";
-
 	protected String onChangePrecondition;
 	protected String calendarAlignment;
 	protected String calendarIconClass = "middle";
-	protected Map attributesMap = new HashMap();
+	protected boolean renderDisabledAsReadOnly = false;
 
 	/**
 	 * @jsp.attribute
@@ -62,13 +53,28 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
 		this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
 	}
-	
+
+  /**
+   * @jsp.attribute type = "java.lang.String"
+   *                required = "false"
+   *                description = "Specifies whether the disabled textarea will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   * @since 1.1.3
+   */
+  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
+      throws JspException {
+    Boolean tempResult = (Boolean) evaluate(
+        "renderDisabledAsReadonly", renderDisabledAsReadonly, Boolean.class);
+    if (tempResult != null) {
+      this.renderDisabledAsReadOnly = tempResult.booleanValue();
+    }
+  }
+
 	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)." 
-	 */
+     * @jsp.attribute type = "java.lang.String" required = "false" description =
+     *                "Alignment for popup calendar. In form 'zx' where z is in
+     *                {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom,
+     *                right)."
+     */
 	public void setCalendarAlignment(String calendarAlignment)throws JspException {
 		this.calendarAlignment = (String) evaluate("calendarAlignment", calendarAlignment, String.class);
 	}
@@ -108,11 +114,11 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		if (StringUtils.isNotBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		
 		if (disabled) {
-			JspUtil.writeAttribute(out, "disabled", "disabled");
-
-		} else if (viewModel.isReadOnly()) {
-			JspUtil.writeAttribute(out, "readonly", "readonly");
-
+		  if (this.renderDisabledAsReadOnly) {
+            JspUtil.writeAttribute(out, "readonly", "readonly");
+		  } else {
+		    JspUtil.writeAttribute(out, "disabled", "disabled");
+		  }
 		} else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
 					onChangePrecondition, updateRegionNames);
@@ -128,7 +134,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);
 
-		if (!disabled && !viewModel.isReadOnly()) {
+		if (!disabled) {
 
 			JspUtil.writeOpenStartTag(out, "a");
 			JspUtil.writeAttribute(out, "href", "javascript:;");
@@ -257,11 +263,11 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		}
 
 		if (disabled) {
-			JspUtil.writeAttribute(out, "disabled", "disabled");
-
-		} else if (viewModel.isReadOnly()) {
-			JspUtil.writeAttribute(out, "readonly", "readonly");
-
+          if (this.renderDisabledAsReadOnly) {
+            JspUtil.writeAttribute(out, "readonly", "readonly");
+          } else {
+            JspUtil.writeAttribute(out, "disabled", "disabled");
+          }
 		} else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
 					onChangePrecondition, updateRegionNames);

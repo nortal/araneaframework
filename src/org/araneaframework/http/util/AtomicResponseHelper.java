@@ -23,8 +23,6 @@ import java.io.PrintWriter;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
@@ -42,11 +40,6 @@ import org.araneaframework.http.HttpOutputData;
  * TODO: rewrite as HttpOutputData wrapper
  */
 public class AtomicResponseHelper {
-//*******************************************************************
-  // CONSTANTS
-  //*******************************************************************
-  private static final Log log = LogFactory.getLog(AtomicResponseHelper.class);
-
   //*******************************************************************
   // FIELDS
   //*******************************************************************

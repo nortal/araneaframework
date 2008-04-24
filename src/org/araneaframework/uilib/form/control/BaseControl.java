@@ -180,13 +180,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     return feCtx.isValid();
   }
 
-  /**
-	 * @since 1.1.3
-   */
-  protected boolean isReadOnly() {
-    return feCtx.isReadOnly();
-  }
-
   public Widget.Interface _getWidget() {
 	  return new WidgetImpl();
   }
@@ -201,7 +194,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
-  
+
   /**
    * Represents a general control view model.
    * 
@@ -211,12 +204,11 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     protected String controlType;
     protected boolean mandatory;
     protected boolean disabled;
-    protected boolean readOnly;
     protected String label;
-    
+
     /**
      * Takes an outer class snapshot.     
-     */    
+     */
     public ViewModel() {
       String className = BaseControl.this.getClass().getName();
       // Recognizes Controls that are defined as (anonymous) nested classes.
@@ -225,25 +217,23 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
         className = BaseControl.this.getClass().getSuperclass().getName();
       className = className.substring(className.lastIndexOf(".") + 1);
       this.controlType = className;
-      
+
       this.mandatory = BaseControl.this.isMandatory();
       this.disabled = BaseControl.this.isDisabled();
-      this.readOnly = BaseControl.this.isReadOnly();
-      
       this.label = BaseControl.this.getLabel();
     }
-    
+
     /** @since 1.1 */
     public Scope getScope() {
       return BaseControl.this.getScope();
     }
-    
+
     /**
      * Returns control type.
      * @return control type.
      */
     public String getControlType() {
-      return controlType;     
+      return controlType;
     }
 
     /**
@@ -253,7 +243,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     public boolean isMandatory() {
       return mandatory;
     }
-    
+
     /**
      * Returns control label.
      * @return control label.
@@ -261,6 +251,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     public String getLabel() {
       return label;
     }
+
     /**
      * Returns whether the control is disabled.
      * @return whether the control is disabled.
@@ -269,12 +260,5 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
       return disabled;
     }
 
-    /**
-     * Returns whether the control is read-only.
-     * @return whether the control is read-only.
-     */
-    public boolean isReadOnly() {
-      return this.readOnly;
-    }
   }
 }

@@ -88,7 +88,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     TimeControl.ViewModel viewModel = (TimeControl.ViewModel) controlViewModel;
 
     // In case of read-only time control, we don't want to show select boxes.
-    if (viewModel.isReadOnly()) {
+    if (viewModel.isDisabled() && renderDisabledAsReadOnly) {
     	return;
     }
 
@@ -171,7 +171,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     
     writeBackgroundValidationAttribute(out);
 
-    if (!disabled && !viewModel.isReadOnly() && events && viewModel.isOnChangeEventRegistered()) {
+    if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
         JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
     	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
     	event.setEventPrecondition(getTimeInputOnChangePrecondition(name));
@@ -180,23 +180,26 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     }
     
     // validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
-    if (!viewModel.isOnChangeEventRegistered() && !disabled && !viewModel.isReadOnly() && backgroundValidation) {
+    if (!viewModel.isOnChangeEventRegistered() && !disabled && backgroundValidation) {
     	JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
     }
 
     StringBuffer onBlur = new StringBuffer();
     if (showTimeSelect)
     	onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name, name +".select1", name + ".select2") + ";");
-    if (!disabled && !viewModel.isReadOnly() && events && viewModel.isOnChangeEventRegistered())
+    if (!disabled && events && viewModel.isOnChangeEventRegistered())
     	onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     JspUtil.writeAttribute(out, "onblur", onBlur.toString());
 
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
-    if (disabled) 
-      JspUtil.writeAttribute(out, "disabled", "disabled");
-    if (viewModel.isReadOnly()) 
-      JspUtil.writeAttribute(out, "readonly", "readonly");
+    if (disabled) {
+      if (renderDisabledAsReadOnly) {
+        JspUtil.writeAttribute(out, "readonly", "readonly");
+      } else {
+        JspUtil.writeAttribute(out, "disabled", "disabled");
+      }
+    }
 
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);
