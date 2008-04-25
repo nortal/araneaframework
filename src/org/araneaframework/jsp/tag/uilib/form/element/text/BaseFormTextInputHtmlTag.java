@@ -33,8 +33,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @author Oleg Mürk
  */
 public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
+
   protected Long size;
   protected String onChangePrecondition;
+  protected boolean renderDisabledAsReadOnly;
 
   {
     baseStyleClass = "aranea-text";
@@ -69,6 +71,20 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false" 
+   *   description = "Specifies whether the disabled input will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   * @since 1.1.3
+   */
+  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
+      throws JspException {
+    Boolean tempResult = (Boolean) evaluate("renderDisabledAsReadonly",
+        renderDisabledAsReadonly, Boolean.class);
+    this.renderDisabledAsReadOnly = tempResult.booleanValue();
+  }
+
   /* ***********************************************************************************
    * INPUT writing functions
    * ***********************************************************************************/
@@ -101,8 +117,14 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "" + attribute.getKey(), attribute.getValue());
     }
 
-    if (viewModel.isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+    if (viewModel.isDisabled()) {
+      if (this.renderDisabledAsReadOnly) {
+        JspUtil.writeAttribute(out, "readonly", "readonly");
+      } else {
+        JspUtil.writeAttribute(out, "disabled", "disabled");
+      }
+    }
+
     if (events && viewModel.isOnChangeEventRegistered()) {
       // We use "onblur" to simulate the textbox's "onchange" event
       // this is _not_ good, but there seems to be no other way

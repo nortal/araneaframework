@@ -194,7 +194,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   //*********************************************************************
   //* VIEW MODEL
   //*********************************************************************    
-  
+
   /**
    * Represents a general control view model.
    * 
@@ -205,10 +205,10 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     protected boolean mandatory;
     protected boolean disabled;
     protected String label;
-    
+
     /**
      * Takes an outer class snapshot.     
-     */    
+     */
     public ViewModel() {
       String className = BaseControl.this.getClass().getName();
       // Recognizes Controls that are defined as (anonymous) nested classes.
@@ -217,24 +217,23 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
         className = BaseControl.this.getClass().getSuperclass().getName();
       className = className.substring(className.lastIndexOf(".") + 1);
       this.controlType = className;
-      
+
       this.mandatory = BaseControl.this.isMandatory();
       this.disabled = BaseControl.this.isDisabled();
-      
       this.label = BaseControl.this.getLabel();
     }
-    
+
     /** @since 1.1 */
     public Scope getScope() {
       return BaseControl.this.getScope();
     }
-    
+
     /**
      * Returns control type.
      * @return control type.
      */
     public String getControlType() {
-      return controlType;     
+      return controlType;
     }
 
     /**
@@ -244,7 +243,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     public boolean isMandatory() {
       return mandatory;
     }
-    
+
     /**
      * Returns control label.
      * @return control label.
@@ -252,6 +251,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     public String getLabel() {
       return label;
     }
+
     /**
      * Returns whether the control is disabled.
      * @return whether the control is disabled.
@@ -259,5 +259,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     public boolean isDisabled() {
       return disabled;
     }
+
   }
 }

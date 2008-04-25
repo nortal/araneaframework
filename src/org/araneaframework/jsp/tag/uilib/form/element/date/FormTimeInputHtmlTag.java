@@ -7,7 +7,6 @@ import java.util.Calendar;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -77,69 +76,73 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     return EVAL_PAGE;
   }
 
-  protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
-    TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
-    out.write("<select id=\"" + name + ".select2\" name=\"" + name + ".select2\" onChange=\""
-        + fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name + ".select1", name + ".select2")
-        + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
-
-    if (disabled)
-      out.write(" disabled=\"true\"");
-    
-    if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
-    	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(getMinuteSelectOnChangePrecondition(name));
-    	out.write(" ");
-    	out.write(event.getEventAttributes().toString());
-    }
-
-    out.write(">\n");
-
-    JspUtil.writeStartTag_SS(out, "script");
-    out.write(getTimeSelectScript(name+".select2", minute, 60));
-    
-    if (!disabled && backgroundValidation) {
-    	String s = name + ".select2";
-    	String es = "$('" + s + "')";
-    	String ns =  "$('" + name + "')";
-    	String vcall = "formElementValidationActionCall(" + ns + ");";
-    	out.write("Event.observe(" + es + ", 'change', function(event) {" + vcall + "});");
-    }
-    
-    JspUtil.writeEndTag_SS(out, "script");
-
-    JspUtil.writeEndTag_SS(out, "select");
+  protected void writeHourSelect(Writer out, String name, boolean disabled, Integer hour) throws IOException {
+  	writeSelect(out, name, disabled, hour, true);
   }
 
-  protected void writeHourSelect(Writer out, String name, boolean disabled, Integer hour) throws IOException {
-    TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
-    out.write("<select id=\"" + name + ".select1\" name=\"" + name + ".select1\" onChange=\""
-        + fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name + ".select1", name + ".select2")
-        + ";" + ((!disabled && events && viewModel.isOnChangeEventRegistered()) ? JspWidgetCallUtil.getSubmitScriptForEvent() : "") + "\"");
-    if (disabled)
-      out.write(" disabled=\"true\"");
+  protected void writeMinuteSelect(Writer out, String name, boolean disabled, Integer minute) throws IOException {
+  	writeSelect(out, name, disabled, minute, false);
+  }
+
+  protected void writeSelect(Writer out, String name, boolean disabled, Integer value, boolean isHour) throws IOException {
+    TimeControl.ViewModel viewModel = (TimeControl.ViewModel) controlViewModel;
+
+    // In case of read-only time control, we don't want to show select boxes.
+    if (viewModel.isDisabled() && renderDisabledAsReadOnly) {
+    	return;
+    }
+
+    String selectField = null;
+    String precondition = null;
+    String selectScript = null;
+
+    if (isHour) {
+    	selectField = "select1";
+			precondition = getHourSelectOnChangePrecondition(name + ".time");
+			selectScript = getTimeSelectScript(name + "." + selectField, value, 24);
+    } else {
+    	selectField = "select2";
+			precondition = getMinuteSelectOnChangePrecondition(name + ".time");
+			selectScript = getTimeSelectScript(name + "." + selectField, value, 60);
+    }
+
+    out.write("<select id=\"");
+		out.write(name);
+		out.write(".");
+		out.write(selectField);
+		out.write("\" name=\"");
+		out.write(name);
+		out.write(".");
+		out.write(selectField);
+		out.write("\" onChange=\""); 
+		out.write(fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name
+				+ ".select1", name + ".select2"));
+		out.write(";");
+
+		if (!disabled && events) {
+			out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
+		}
+
+		out.write("\"");
+
+		if (disabled) {
+      out.write(" disabled=\"disabled\"");
+		}
 
     if (!disabled &&  events && viewModel.isOnChangeEventRegistered()) {
-    	UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
-    	event.setEventPrecondition(getHourSelectOnChangePrecondition(name));
+    	UiUpdateEvent event = new UiUpdateEvent(
+					OnChangeEventListener.ON_CHANGE_EVENT, name, null, updateRegionNames);
+    	event.setEventPrecondition(precondition);
+
     	out.write(" ");
     	out.write(event.getEventAttributes().toString());
     }
     out.write(">\n");
 
     JspUtil.writeStartTag_SS(out, "script");
-    out.write(getTimeSelectScript(name+".select1", hour, 24));
-    
-    if (!disabled && backgroundValidation) {
-    	String s = name + ".select1";
-    	String es = "$('" + name + "')";
-    	String ns =  "$('" + s + "')";
-    	String vcall = "formElementValidationActionCall(" + es + ");";
-    	out.write("Event.observe(" + ns + ", 'change', function(event) {" + vcall + "});");
-    }
-    
+    out.write(selectScript);
     JspUtil.writeEndTag_SS(out, "script");
-    
+
     JspUtil.writeEndTag_SS(out, "select");
   }
 
@@ -190,8 +193,13 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
-    if (disabled) 
-      JspUtil.writeAttribute(out, "disabled", "true");
+    if (disabled) {
+      if (renderDisabledAsReadOnly) {
+        JspUtil.writeAttribute(out, "readonly", "readonly");
+      } else {
+        JspUtil.writeAttribute(out, "disabled", "disabled");
+      }
+    }
 
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartEndTag_SS(out);

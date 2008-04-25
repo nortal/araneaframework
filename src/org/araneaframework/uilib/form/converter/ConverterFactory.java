@@ -42,6 +42,9 @@ public class ConverterFactory implements ConverterProvider {
     converters.put(new ConverterKey("String", "Integer"), new StringToIntegerConverter());
     converters.put(new ConverterKey("String", "BigDecimal"), new StringToBigDecimalConverter());
 
+    converters.put(new ConverterKey("BigDecimal", "Float"), new BigDecimalToFloatConverter());
+    converters.put(new ConverterKey("BigDecimal", "Double"), new BigDecimalToDoubleConverter());
+
     converters.put(new ConverterKey("BigInteger", "Long"), new BigIntegerToLongConverter());
     converters.put(new ConverterKey("BigInteger", "Integer"), new BigIntegerToIntegerConverter());
 

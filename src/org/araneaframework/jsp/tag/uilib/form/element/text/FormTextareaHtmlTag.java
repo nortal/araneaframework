@@ -36,8 +36,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  *   description = "Form text input field (textarea), represents UiLib 'TextareaControl'."
  */
 public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
+
   protected Long cols;
   protected Long rows;
+  protected boolean renderDisabledAsReadOnly;
 
   {
     baseStyleClass = "aranea-textarea";
@@ -54,7 +56,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     
     String name = this.getFullFieldId();     
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
-    
+
     JspUtil.writeOpenStartTag(out, "textarea");
     JspUtil.writeAttribute(out, "id", name);
     JspUtil.writeAttribute(out, "name", name);
@@ -64,8 +66,15 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "cols", cols);
     JspUtil.writeAttribute(out, "rows", rows);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
-    if (viewModel.isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+
+    if (viewModel.isDisabled()) {
+      if (renderDisabledAsReadOnly) {
+    	JspUtil.writeAttribute(out, "readonly", "readonly");
+      } else {
+        JspUtil.writeAttribute(out, "disabled", "disabled");
+      }
+    }
+
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEscaped(out, viewModel.getSimpleValue());
@@ -100,4 +109,19 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
   public void setRows(String size) throws JspException {
     this.rows = (Long)evaluate("rows", size, Long.class);
   }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false" 
+   *   description = "Specifies whether the disabled textarea will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   * @since 1.1.3
+   */
+  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
+      throws JspException {
+    Boolean tempResult = (Boolean) evaluate("renderDisabledAsReadonly",
+        renderDisabledAsReadonly, Boolean.class);
+    this.renderDisabledAsReadOnly = tempResult.booleanValue();
+  }
+
 }

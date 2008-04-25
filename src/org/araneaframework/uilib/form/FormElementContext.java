@@ -21,24 +21,31 @@ import java.util.Set;
 import org.araneaframework.Environment;
 
 public interface FormElementContext extends Serializable {
-  // TODO: isInitialized() ?
-  public boolean isValid();
 
-  public void addError(String error);
-  public void addErrors(Set errors);
+	// TODO: isInitialized() ?
 
-  public Environment getEnvironment();
+	public boolean isValid();
 
-  public String getLabel();
-  public boolean isMandatory();
-  public boolean isDisabled();
-  
-  public boolean isRead();
-  public Object getValue();
-  
-  /** @since 1.1 */
-  public Control getControl();
+	public void addError(String error);
 
-  /** @since 1.1 */
-  public Converter getConverter();
+	public void addErrors(Set errors);
+
+	public Environment getEnvironment();
+
+	public String getLabel();
+
+	public boolean isMandatory();
+
+	public boolean isDisabled();
+
+	public boolean isRead();
+
+	public Object getValue();
+
+	/** @since 1.1 */
+	public Control getControl();
+
+	/** @since 1.1 */
+	public Converter getConverter();
+
 }

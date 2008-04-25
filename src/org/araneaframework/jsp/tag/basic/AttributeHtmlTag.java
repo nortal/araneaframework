@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.tag.PresentationTag;
 
 
 /**

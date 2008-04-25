@@ -334,7 +334,6 @@ public class FormWidget extends GenericFormElement implements FormContext {
     
     result.setLabel(labelId);
     result.setMandatory(mandatory);    
-    result.setLabel(labelId);
     result.setControl(control);
     if (data != null) {
       result.setData(data);

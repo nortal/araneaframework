@@ -30,12 +30,14 @@ import org.araneaframework.uilib.list.structure.filter.advanced.SqlFunctionFilte
 import org.araneaframework.uilib.list.structure.filter.atomic.Constant;
 import org.araneaframework.uilib.list.structure.filter.atomic.Field;
 import org.araneaframework.uilib.list.structure.filter.atomic.Value;
+import org.araneaframework.uilib.list.structure.filter.field.EndsWithFilter;
 import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
 import org.araneaframework.uilib.list.structure.filter.field.GreaterThanFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LikeFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LowerThanFilter;
 import org.araneaframework.uilib.list.structure.filter.field.NullFilter;
 import org.araneaframework.uilib.list.structure.filter.field.RangeFilter;
+import org.araneaframework.uilib.list.structure.filter.field.StartsWithFilter;
 import org.araneaframework.uilib.list.util.FormUtil;
 
 /**
@@ -84,7 +86,7 @@ import org.araneaframework.uilib.list.util.FormUtil;
  * the <b>initial value</b> is set to null by default.    
  * </p>
  * <p>
- * Their is one more aspect for all filter adding methods. For each method, one
+ * There is one more aspect for all filter adding methods. For each method, one
  * can define <b>valueId</b>. The term <b>value</b> is used here to mark the
  * blank in the filter (basically the form element). By default the
  * <b>fieldId</b> is also used as the valueId. So it's unneccesary to pass a
@@ -95,6 +97,7 @@ import org.araneaframework.uilib.list.util.FormUtil;
  * custom value ids must be used as well. 
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @see ListWidget
  * @see FormWidget
@@ -362,7 +365,181 @@ public class FilterHelper extends BaseFilterHelper {
 		list.addFilter(LikeFilter.getConstantInstance(this, fieldId, valueId, value));
 		return this;
 	}
+
+	// ========== STARTS WITH ==========
+
+	// filter with form element
+
+	/**
+     * @since 1.1.3
+	 */
+	public FilterHelper startsWith(String fieldId) {
+		return startsWith(fieldId, fieldId);
+	}
+
+	/**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWith(String fieldId, String valueId) {
+		_startsWith(fieldId, valueId);
+		StartsWithFilter.addToForm(this, valueId);
+		return this;
+	}
+
+	/**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWith(String fieldId, Control control) {
+		return startsWith(fieldId, fieldId, control);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWith(String fieldId, String valueId, Control control) {
+		_startsWith(fieldId, valueId);
+		StartsWithFilter.addToForm(this, valueId, control);
+		return this;
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWith(String fieldId, FormElement element) {
+		return startsWith(fieldId, fieldId, element);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWith(String fieldId, String valueId, FormElement element) {
+		_startsWith(fieldId, valueId);
+		StartsWithFilter.addToForm(this, valueId, element);
+		return this;
+	}
 	
+	// filter
+	
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper _startsWith(String fieldId) {
+		return _startsWith(fieldId, fieldId);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper _startsWith(String fieldId, String valueId) {
+		list.addFilter(StartsWithFilter.getInstance(this, fieldId, valueId));
+		return this;
+	}
+
+	// constant filter
+
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWithConst(String fieldId, Object value) {
+		return startsWithConst(fieldId, fieldId, value);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper startsWithConst(String fieldId, String valueId, Object value) {
+		list.addFilter(StartsWithFilter.getConstantInstance(this, fieldId, valueId, value));
+		return this;
+	}
+
+	// ========== ENDS WITH ==========
+
+	// filter with form element
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWith(String fieldId) {
+		return endsWith(fieldId, fieldId);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWith(String fieldId, String valueId) {
+		_endsWith(fieldId, valueId);
+		EndsWithFilter.addToForm(this, valueId);
+		return this;
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWith(String fieldId, Control control) {
+		return endsWith(fieldId, fieldId, control);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWith(String fieldId, String valueId, Control control) {
+		_endsWith(fieldId, valueId);
+		EndsWithFilter.addToForm(this, valueId, control);
+		return this;
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWith(String fieldId, FormElement element) {
+		return endsWith(fieldId, fieldId, element);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWith(String fieldId, String valueId, FormElement element) {
+		_endsWith(fieldId, valueId);
+		EndsWithFilter.addToForm(this, valueId, element);
+		return this;
+	}
+
+	// filter
+	
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper _endsWith(String fieldId) {
+		return _endsWith(fieldId, fieldId);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper _endsWith(String fieldId, String valueId) {
+		list.addFilter(EndsWithFilter.getInstance(this, fieldId, valueId));
+		return this;
+	}
+
+	// constant filter
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWithConst(String fieldId, Object value) {
+		return endsWithConst(fieldId, fieldId, value);
+	}
+
+    /**
+     * @since 1.1.3
+     */
+	public FilterHelper endsWithConst(String fieldId, String valueId, Object value) {
+		list.addFilter(EndsWithFilter.getConstantInstance(this, fieldId, valueId, value));
+		return this;
+	}
+
 	// ========== IS NULL ========== 
 	
 	// filter with form element
@@ -610,7 +787,7 @@ public class FilterHelper extends BaseFilterHelper {
 		list.addFilter(RangeInRangeFilter.getOverlapInstance(this, lowFieldId, highFieldId, lowValueId, highValueId));
 		return this;
 	}
-	
+
 	// ========== SQL FUNCTION ==========
 	
 	public SqlFunction sqlFunction(String name) {

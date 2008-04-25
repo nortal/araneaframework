@@ -71,7 +71,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "size", size);
 
     if (viewModel.isDisabled())
-      JspUtil.writeAttribute(out, "disabled", "true");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     if (events && viewModel.isOnChangeEventRegistered()) {
       UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
       event.setEventPrecondition(onChangePrecondition);
@@ -95,7 +95,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
         JspUtil.writeAttribute(out, "value", value != null ? value : "");
         if ((value == null && selectedValue == null) ||              
             (value != null && value.equals(selectedValue)))
-          JspUtil.writeAttribute(out, "selected", "true");
+          JspUtil.writeAttribute(out, "selected", "selected");
         JspUtil.writeCloseStartTag_SS(out);
         JspUtil.writeEscaped(out, label);
         JspUtil.writeEndTag(out, "option");

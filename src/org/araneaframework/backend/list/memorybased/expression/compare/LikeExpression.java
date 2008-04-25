@@ -30,13 +30,13 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Expression expr;
+	protected Expression expr;
 	
-	private Value mask;
+	protected Value mask;
 	
-	private boolean ignoreCase;
+	protected boolean ignoreCase;
 	
-	private LikeConfiguration configuration;
+	protected LikeConfiguration configuration;
 	
 	public LikeExpression(Expression expr, Value mask, boolean ignoreCase, LikeConfiguration configuration) {
 		if (expr == null) {

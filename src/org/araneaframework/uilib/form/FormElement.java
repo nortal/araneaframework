@@ -24,6 +24,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.ActionListener;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.RenderStateAware;
@@ -167,13 +168,20 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * 
    * @throws ConverterNotFoundException if converter cannot be found.
    */
-  public Converter findConverter() throws ConverterNotFoundException {
-    ConfigurationContext confCtx = 
-      (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
-    return ConverterFactory.getInstance(confCtx).findConverter(
-        getControl().getRawValueType(), 
-        getData().getValueType(), 
-        getEnvironment());
+  public Converter findConverter() {
+    ConfigurationContext confCtx = (ConfigurationContext) getEnvironment()
+        .requireEntry(ConfigurationContext.class);
+
+    try {
+
+      return ConverterFactory.getInstance(confCtx).findConverter(
+          getControl().getRawValueType(), getData().getValueType(),
+          getEnvironment());
+
+    } catch (ConverterNotFoundException e) {
+      throw new AraneaRuntimeException("Could not find a field value "
+          + "converter for field " + getScope().toString(), e);
+    }
   }
 
   /**

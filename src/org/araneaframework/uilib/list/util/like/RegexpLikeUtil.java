@@ -61,7 +61,39 @@ public class RegexpLikeUtil {
 	public static boolean isLike(String string, String customMask, boolean ignoreCase, LikeConfiguration config) {
 		return matches(string, convertMask(customMask, config), ignoreCase);
 	}
-	
+
+	/**
+     * Checks whether given <code>string</code> starts with given
+     * <code>customMask</code> using regular expression.
+     * 
+     * @param string The string to check
+     * @param customMask The mask that must match
+     * @param ignoreCase Specifies the case sensitivity of the match.
+     * @param config Configuration of the expression.
+     * @return <code>true</code>, if given <code>string</code> starts with
+     *         given <code>customMask</code>
+     * @since 1.1.3
+     */
+	public static boolean isStartsWith(String string, String customMask, boolean ignoreCase, LikeConfiguration config) {
+		return matches(string, RE_LINE_START + convertMask(customMask, config), ignoreCase);
+	}
+
+    /**
+     * Checks whether given <code>string</code> ends with given
+     * <code>customMask</code> using regular expression.
+     * 
+     * @param string The string to check.
+     * @param customMask The mask that must match.
+     * @param ignoreCase Specifies the case sensitivity of the match.
+     * @param config Configuration of the expression.
+     * @return <code>true</code>, if given <code>string</code> ends with
+     *         given <code>customMask</code>
+     * @since 1.1.3
+     */
+	public static boolean isEndsWith(String string, String customMask, boolean ignoreCase, LikeConfiguration config) {
+		return matches(string, convertMask(customMask, config) + RE_LINE_END, ignoreCase);
+	}
+
 	private static String convertMask(String mask, LikeConfiguration config) {
 		// Escape all metachars except custom wildcards
 		List tmp = new ArrayList(Arrays.asList(RE_META_CHARS));

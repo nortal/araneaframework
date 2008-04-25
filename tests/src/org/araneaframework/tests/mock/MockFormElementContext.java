@@ -27,88 +27,105 @@ import org.araneaframework.uilib.form.FormElementContext;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class MockFormElementContext implements FormElementContext {
-  private Set errors;
-  private Environment environment;
 
-  private String label;
-  private boolean mandatory;
-  private boolean disabled;
-  private boolean read;
-  private Object value;
-  
-  public MockFormElementContext() {}
+	private Set errors;
 
-  public MockFormElementContext(String label, boolean mandatory, boolean disabled) {
-    super();
-    this.label = label;
-    this.mandatory = mandatory;
-    this.disabled = disabled;
-  }
+	private Environment environment;
 
-  public boolean isDisabled() {
-    return disabled;
-  }
-  public void setDisabled(boolean disabled) {
-    this.disabled = disabled;
-  }
-  public String getLabel() {
-    return label;
-  }
-  public void setLabel(String label) {
-    this.label = label;
-  }
-  public boolean isMandatory() {
-    return mandatory;
-  }
-  public void setMandatory(boolean mandatory) {
-    this.mandatory = mandatory;
-  }
-  public boolean isRead() {
-    return read;
-  }
-  public void setRead(boolean read) {
-    this.read = read;
-  }
-  public Object getValue() {
-    return value;
-  }
-  public void setValue(Object value) {
-    this.value = value;
-  }
-  
-  public Set getErrors() {
-    if (errors == null)
-      errors = new HashSet();
-    return errors;
-  }
-  
-  public Control getControl() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+	private String label;
 
-  public Converter getConverter() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+	private boolean mandatory;
 
-public void addError(String error) {
-     getErrors().add(error);
-  }
-  
-  public void addErrors(Set errors) {
-    getErrors().addAll(errors);
-  }
-  
-  public Environment getEnvironment() {
-    return environment;
-  }
-  
-  public boolean isValid() {
-    return (errors == null || errors.size() == 0);
-  }
-  
-  public void clearErrors() {
-    errors.clear();
-  }
+	private boolean disabled;
+
+	private boolean read;
+
+	private Object value;
+
+	public MockFormElementContext() {
+	}
+
+	public MockFormElementContext(String label, boolean mandatory,
+			boolean disabled) {
+		this.label = label;
+		this.mandatory = mandatory;
+		this.disabled = disabled;
+	}
+
+	public boolean isValid() {
+		return (errors == null || errors.size() == 0);
+	}
+
+	public void addError(String error) {
+		getErrors().add(error);
+	}
+
+	public void addErrors(Set errors) {
+		getErrors().addAll(errors);
+	}
+
+	public void clearErrors() {
+		errors.clear();
+	}
+
+	public Environment getEnvironment() {
+		return environment;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public boolean isMandatory() {
+		return mandatory;
+	}
+
+	public void setMandatory(boolean mandatory) {
+		this.mandatory = mandatory;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setValue(Object value) {
+		this.value = value;
+	}
+
+	public Set getErrors() {
+		if (errors == null)
+			errors = new HashSet();
+		return errors;
+	}
+
+	public Control getControl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Converter getConverter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

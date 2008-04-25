@@ -116,7 +116,11 @@ public class FormUtil {
 	    result.setLabel(label);
 	    result.setMandatory(mandatory);    
 	    result.setControl(control);
-	    result.setData(data);
+
+	    if (data != null) {
+	    	result.setData(data);
+	    }
+
 	    return result;
 	}
 	

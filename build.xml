@@ -114,7 +114,8 @@
 				dir="src" includes="**/*Tag.java"/>
 
 			<jsptaglib validatexml="true"
-				shortName="aui"
+				shortName="ui"
+				displayname="Aranea UI"
 				filename="aranea-standard.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
@@ -312,6 +313,13 @@
 		<zip destfile="${dist.dir}/doc/javadoc.zip">
 			<zipfileset dir="${dist.dir}/doc/javadoc" prefix="javadoc"/>
 		</zip>
+	</target>
+
+	<target name="tlddoc" depends="tld" description="Generates documentation for JSP tags.">
+	  <java fork="true" jar="${lib.dir}/default/tlddoc.jar" failonerror="true">
+	    <arg line="-d ${dist.dir}/doc/tlddocs"/>
+	    <arg value="build/tmp/presentation/META-INF/aranea-standard.tld"/>
+	  </java>
 	</target>
 	
 	<!-- Build internal documentation -->
