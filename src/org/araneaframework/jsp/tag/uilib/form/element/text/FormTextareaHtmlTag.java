@@ -121,9 +121,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
       throws JspException {
     Boolean tempResult = (Boolean) evaluate("renderDisabledAsReadonly",
         renderDisabledAsReadonly, Boolean.class);
-    if (tempResult != null) {
-      this.renderDisabledAsReadOnly = tempResult.booleanValue();
-    }
+    this.renderDisabledAsReadOnly = tempResult.booleanValue();
   }
 
 }
