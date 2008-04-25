@@ -32,10 +32,8 @@ public class ConverterNotFoundException extends Exception {
    * 
    * @param fromType the source type of the {@link org.araneaframework.uilib.form.converter.BaseConverter}.
    * @param toType the target type of the {@link org.araneaframework.uilib.form.converter.BaseConverter}.
-   * @param fieldName Name of the field that was being processed (for description)
    */
-  public ConverterNotFoundException(String fromType, String toType) {
-    super("Could not find a Converter from type '" + fromType + "' to type '"
-				+ toType + "'.");
+  public ConverterNotFoundException(String fromType, String toType, String fieldName) {
+    super("Could not find a Converter from type '" + fromType + "' to type '" + toType + "'.");
   }
 }

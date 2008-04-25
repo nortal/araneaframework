@@ -169,17 +169,19 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * @throws ConverterNotFoundException if converter cannot be found.
    */
   public Converter findConverter() {
-    ConfigurationContext confCtx = 
-      (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+    ConfigurationContext confCtx = (ConfigurationContext) getEnvironment()
+        .requireEntry(ConfigurationContext.class);
+
     try {
-	    return ConverterFactory.getInstance(confCtx).findConverter(
-	        getControl().getRawValueType(), 
-	        getData().getValueType(), 
-	        getEnvironment());
+
+      return ConverterFactory.getInstance(confCtx).findConverter(
+          getControl().getRawValueType(), getData().getValueType(),
+          getEnvironment());
+
     } catch (ConverterNotFoundException e) {
-			throw new AraneaRuntimeException("Problem with finding a field value "
-					+ "converter for field " + this.label, e);
-		}
+      throw new AraneaRuntimeException("Could not find a field value "
+          + "converter for field " + getScope().getId(), e);
+    }
   }
 
   /**

@@ -64,16 +64,13 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
       throws JspException {
     Boolean tempResult = (Boolean) evaluate(
         "renderDisabledAsReadonly", renderDisabledAsReadonly, Boolean.class);
-    if (tempResult != null) {
-      this.renderDisabledAsReadOnly = tempResult.booleanValue();
-    }
+    this.renderDisabledAsReadOnly = tempResult.booleanValue();
   }
 
 	/**
-     * @jsp.attribute type = "java.lang.String" required = "false" description =
-     *                "Alignment for popup calendar. In form 'zx' where z is in
-     *                {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom,
-     *                right)."
+     * @jsp.attribute type = "java.lang.String"
+     *                required = "false"
+     *                description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)."
      */
 	public void setCalendarAlignment(String calendarAlignment)throws JspException {
 		this.calendarAlignment = (String) evaluate("calendarAlignment", calendarAlignment, String.class);
