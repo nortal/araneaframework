@@ -57,7 +57,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute type = "java.lang.String"
    *                required = "false"
-   *                description = "Specifies whether the disabled textarea will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   *                description = "Specifies whether the disabled date/time input box will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
    * @since 1.1.3
    */
   public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
