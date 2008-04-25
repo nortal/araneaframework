@@ -114,7 +114,8 @@
 				dir="src" includes="**/*Tag.java"/>
 
 			<jsptaglib validatexml="true"
-				shortName="aranea-ui"
+				shortName="ui"
+				displayname="Aranea UI"
 				filename="aranea-standard.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
