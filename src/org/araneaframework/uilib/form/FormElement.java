@@ -180,7 +180,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
 
     } catch (ConverterNotFoundException e) {
       throw new AraneaRuntimeException("Could not find a field value "
-          + "converter for field " + getScope().getId(), e);
+          + "converter for field " + getScope().toString(), e);
     }
   }
 
