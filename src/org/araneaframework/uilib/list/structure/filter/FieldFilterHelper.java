@@ -280,6 +280,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * created.
 	 * 
 	 * @return reference to current instance of FilterHelper.
+	 * @since 1.1.3
 	 */
 	public FilterHelper startsWith() {
 		return this.helper.startsWith(fieldId);
@@ -291,6 +292,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @param valueId The Id of the filter Control.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper startsWith(String valueId) {
 		return this.helper.startsWith(fieldId, valueId);
@@ -302,6 +304,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @param control Custom control for user input.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper startsWith(Control control) {
 		return this.helper.startsWith(fieldId, control);
@@ -314,6 +317,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @param valueId The Id of the <code>control</code>.
 	 * @param control Custom control for user input.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper startsWith(String valueId, Control control) {
 		return this.helper.startsWith(fieldId, valueId, control);
@@ -326,6 +330,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @param element The form element (with label and control) whose value will
 	 *          be used to filter the data.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper startsWith(FormElement element) {
 		return this.helper.startsWith(fieldId, element);
@@ -339,6 +344,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @param element The form element (with label and control) whose value will
 	 *          be used to filter the data.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper startsWith(String valueId, FormElement element) {
 		return this.helper.startsWith(fieldId, valueId, element);
@@ -350,6 +356,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * Adds filter condition without the form control.
 	 * 
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper _startsWith() {
 		return this.helper._startsWith(fieldId);
@@ -367,6 +374,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @param value The (constant String) value that is used in filtering.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper startsWithConst(Object value) {
 		return this.helper.startsWithConst(fieldId, value);
@@ -385,6 +393,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * The control (with the same Id as fieldId) will be automatically created.
 	 * 
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWith() {
 		return this.helper.endsWith(fieldId);
@@ -396,6 +405,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @param valueId The Id of the filter Control.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWith(String valueId) {
 		return this.helper.endsWith(fieldId, valueId);
@@ -407,6 +417,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @param control Custom control for user input.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWith(Control control) {
 		return this.helper.endsWith(fieldId, control);
@@ -419,6 +430,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @param valueId The Id of the <code>control</code>.
 	 * @param control Custom control for user input.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWith(String valueId, Control control) {
 		return this.helper.endsWith(fieldId, valueId, control);
@@ -431,6 +443,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @param element The form element (with label and control) whose value will
 	 *          be used to filter the data.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWith(FormElement element) {
 		return this.helper.endsWith(fieldId, element);
@@ -444,6 +457,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @param element The form element (with label and control) whose value will
 	 *          be used to filter the data.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWith(String valueId, FormElement element) {
 		return this.helper.endsWith(fieldId, valueId, element);
@@ -455,6 +469,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * Adds filter condition without the form control.
 	 * 
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper _endsWith() {
 		return this.helper._endsWith(fieldId);
@@ -470,6 +485,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @param value The (constant String) value that is used in filtering.
 	 * @return reference to current instance of FilterHelper.
+     * @since 1.1.3
 	 */
 	public FilterHelper endsWithConst(Object value) {
 		return this.helper.endsWithConst(fieldId, value);

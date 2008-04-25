@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.araneaframework.Environment;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
@@ -94,33 +95,35 @@ public class TypeHelper implements Serializable {
 	}
 		
 	// List fields
-	
-	/**
-	 * Returns a comparator for the specifeid field.
-	 * <p>
-	 * First, a custom comparator is returned if found.
-	 * <p>
-	 * Otherwise a comparator is tryed to create according to the field type
-	 * returned by {@link #getFieldType(String)}. Also {@link #isIgnoreCase()}
-	 * and {@link #getLocale()} is considered for creating the new comparator.
-	 * 
-	 * @param fieldId field Id.
-	 * @return comparator for this field.
-	 */
-	public Comparator getFieldComparator(String fieldId) {
-		Comparator result = getCustomComparator(fieldId);
 
-		if (result == null) {
-			Class fieldType = getFieldType(fieldId);
+  /**
+   * Returns a comparator for the specifeid field.
+   * <p>
+   * First, a custom comparator is returned if found.
+   * <p>
+   * Otherwise a comparator is tryed to create according to the field type
+   * returned by {@link #getFieldType(String)}. Also {@link #isIgnoreCase()}
+   * and {@link #getLocale()} is considered for creating the new comparator.
+   * 
+   * @param fieldId field Id.
+   * @return comparator for this field.
+   */
+  public Comparator getFieldComparator(String fieldId) {
+    Comparator result = getCustomComparator(fieldId);
 
-			Assert.notNull(fieldType, "Could not resolve the value type of field '"
-					+ fieldId + "'");
+    if (result == null) {
+      Class fieldType = getFieldType(fieldId);
 
-			result = buildComparator(fieldType);
-		}
+      if (fieldType == null) {
+        throw new AraneaRuntimeException(
+            "Could not resolve the value type of field '" + fieldId + "'");
+      }
 
-		return result;
-	}
+      result = buildComparator(fieldType);
+    }
+
+    return result;
+  }
 	
 	public void addFieldType(String fieldId, Class type) {
 		this.types.put(fieldId, type);

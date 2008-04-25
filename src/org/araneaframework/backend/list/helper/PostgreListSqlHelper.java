@@ -15,6 +15,7 @@ import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
  * queries.
  * 
  * @author Roman Tekhov
+ * @since 1.1.3
  */
 public class PostgreListSqlHelper extends ListSqlHelper {
 

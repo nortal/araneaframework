@@ -370,25 +370,48 @@ public class FilterHelper extends BaseFilterHelper {
 
 	// filter with form element
 
+	/**
+     * @since 1.1.3
+	 */
 	public FilterHelper startsWith(String fieldId) {
 		return startsWith(fieldId, fieldId);
 	}
+
+	/**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWith(String fieldId, String valueId) {
 		_startsWith(fieldId, valueId);
 		StartsWithFilter.addToForm(this, valueId);
 		return this;
 	}
+
+	/**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWith(String fieldId, Control control) {
 		return startsWith(fieldId, fieldId, control);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWith(String fieldId, String valueId, Control control) {
 		_startsWith(fieldId, valueId);
 		StartsWithFilter.addToForm(this, valueId, control);
 		return this;
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWith(String fieldId, FormElement element) {
 		return startsWith(fieldId, fieldId, element);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWith(String fieldId, String valueId, FormElement element) {
 		_startsWith(fieldId, valueId);
 		StartsWithFilter.addToForm(this, valueId, element);
@@ -397,9 +420,17 @@ public class FilterHelper extends BaseFilterHelper {
 	
 	// filter
 	
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper _startsWith(String fieldId) {
 		return _startsWith(fieldId, fieldId);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper _startsWith(String fieldId, String valueId) {
 		list.addFilter(StartsWithFilter.getInstance(this, fieldId, valueId));
 		return this;
@@ -407,9 +438,17 @@ public class FilterHelper extends BaseFilterHelper {
 
 	// constant filter
 
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWithConst(String fieldId, Object value) {
 		return startsWithConst(fieldId, fieldId, value);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper startsWithConst(String fieldId, String valueId, Object value) {
 		list.addFilter(StartsWithFilter.getConstantInstance(this, fieldId, valueId, value));
 		return this;
@@ -419,25 +458,48 @@ public class FilterHelper extends BaseFilterHelper {
 
 	// filter with form element
 
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWith(String fieldId) {
 		return endsWith(fieldId, fieldId);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWith(String fieldId, String valueId) {
 		_endsWith(fieldId, valueId);
 		EndsWithFilter.addToForm(this, valueId);
 		return this;
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWith(String fieldId, Control control) {
 		return endsWith(fieldId, fieldId, control);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWith(String fieldId, String valueId, Control control) {
 		_endsWith(fieldId, valueId);
 		EndsWithFilter.addToForm(this, valueId, control);
 		return this;
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWith(String fieldId, FormElement element) {
 		return endsWith(fieldId, fieldId, element);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWith(String fieldId, String valueId, FormElement element) {
 		_endsWith(fieldId, valueId);
 		EndsWithFilter.addToForm(this, valueId, element);
@@ -446,9 +508,16 @@ public class FilterHelper extends BaseFilterHelper {
 
 	// filter
 	
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper _endsWith(String fieldId) {
 		return _endsWith(fieldId, fieldId);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper _endsWith(String fieldId, String valueId) {
 		list.addFilter(EndsWithFilter.getInstance(this, fieldId, valueId));
 		return this;
@@ -456,9 +525,16 @@ public class FilterHelper extends BaseFilterHelper {
 
 	// constant filter
 
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWithConst(String fieldId, Object value) {
 		return endsWithConst(fieldId, fieldId, value);
 	}
+
+    /**
+     * @since 1.1.3
+     */
 	public FilterHelper endsWithConst(String fieldId, String valueId, Object value) {
 		list.addFilter(EndsWithFilter.getConstantInstance(this, fieldId, valueId, value));
 		return this;

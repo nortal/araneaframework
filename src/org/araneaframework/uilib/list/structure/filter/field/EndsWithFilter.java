@@ -38,6 +38,7 @@ import org.araneaframework.uilib.list.util.like.LikeConfiguration;
  * @see EndsWithExpression
  * 
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @since 1.1.3
  */
 public class EndsWithFilter extends BaseFieldFilter {
 

@@ -33,6 +33,7 @@ import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
  * @see StandardExpressionToSqlExprBuilder
  * 
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @since 1.1.3
  */
 public class EndsWithExpression extends LikeExpression {
 

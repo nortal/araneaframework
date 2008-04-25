@@ -14,6 +14,7 @@ import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
  * LikeExpression
  * 
  * @author Roman Tekhov
+ * @since 1.1.3
  */
 public class PostgreExpressionToSqlExprBuilder extends
 		StandardExpressionToSqlExprBuilder {
