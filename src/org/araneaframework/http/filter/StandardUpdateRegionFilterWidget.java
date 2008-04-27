@@ -230,9 +230,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String widgetId = (String) documentRegions.get(documentRegionId);
       if (widgetId == null) {
         if (log.isWarnEnabled())
-          log.warn("---------------------------------------------------");
           log.warn("Document region '" + documentRegionId + "' not found");
-          log.warn("---------------------------------------------------");
         continue;
       }
 

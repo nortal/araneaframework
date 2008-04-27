@@ -232,9 +232,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     State currentState;
     String regions = (String) getInputData().getGlobalData().get("updateRegions");
     if (regions.indexOf("globalBackRegion") >= 0) {
-      System.out.println("----------------------XXXXXXXXXXXXXXXXXXXXXXXX");
-      System.out.println("back state: " + getStateId(getInputData()));
-      System.out.println("----------------------XXXXXXXXXXXXXXXXXXXXXXXX");
+      if (log.isDebugEnabled()) {
+        log.debug("back state: " + getStateId(getInputData()));
+      }
       currentState = saveState(getStateId(getInputData()));
     }
     else
