@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.form;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,6 +27,8 @@ import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
+import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.StateVersioningContext.State;
 import org.araneaframework.jsp.util.JspUtil;
 
 
@@ -48,11 +51,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     super.doStartTag(out);
 
     // Hidden fields: preset
-    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
-    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
-    }
+    writeSystemFormFields(out);
 
     // Hidden fields: to be set
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_HANDLER_ID_KEY, "");
@@ -67,6 +66,34 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
 
     // Continue
     return EVAL_BODY_INCLUDE;
+  }
+  
+  protected int doEndTag(Writer out) throws Exception {
+    writeVersionedStateInfo(out);
+    return super.doEndTag(out);
+  }
+
+  /**
+   * @since 1.2
+   */
+  protected void writeVersionedStateInfo(Writer out) throws Exception {
+    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    if (ctx != null) {
+      State state = ctx.saveState();
+      if (state != null) {
+        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_KEY, state.getStateId());
+        if (!ctx.isServerSideStorage())
+          JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_KEY, state.getState().toString());          
+      }
+    }
+  }
+
+  private void writeSystemFormFields(Writer out) throws JspException, IOException {
+    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
+    }
   }
   
   /* ***********************************************************************************

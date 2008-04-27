@@ -32,7 +32,6 @@
 								   	styleClass="${activeStyle}"/>
 
                   				   <!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}" styleClass="${activeStyle}"><fmt:message key="${item.value.label}"/></ui:link-->																											
-	 
 									<c:if test="${item.value.holder}">
 									<ul>
 										<c:forEach items="${item.value.subMenu}" var="subitem">

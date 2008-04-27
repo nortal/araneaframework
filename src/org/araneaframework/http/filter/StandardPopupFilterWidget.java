@@ -16,9 +16,11 @@
 
 package org.araneaframework.http.filter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
@@ -65,6 +67,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   protected Map allPopups = new HashMap();
   /** Widget that opened this popup. Only applicable to threads. */
   protected Widget opener = null;
+  /** */
+  protected List renderedPopups = new ArrayList();
 
   /** When creating new popup with unspecified service, popup is acquired from the factory. */
   protected ServiceFactory threadServiceFactory;
@@ -193,6 +197,10 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     allPopups.remove(id);
     popups.remove(id);
   }
+  
+   public void renderPopup(String id) {
+     renderedPopups.add(id);
+   }
 
   /**
    * @since 1.1
@@ -237,8 +245,16 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    * into output under the key {@link org.araneaframework.http.PopupWindowContext}.POPUPS_KEY
    */
   protected void render(OutputData output) throws Exception {
+    removeRenderedPopups();
+
     super.render(output);
-    popups = new HashMap();
+  }
+
+  protected void removeRenderedPopups() {
+    for (Iterator i = renderedPopups.iterator(); i.hasNext(); ) {
+      popups.remove(i.next());
+    }
+    renderedPopups.clear();
   }
   
   /* ************************************************************************************
@@ -376,6 +392,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       popupObject.setStringProperty("windowProperties", serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString() : "");
       popupObject.setStringProperty("url", serviceInfo.toURL());
       popupArray.append(popupObject.toString());
+      renderedPopups.add(popup.getKey());
     }
     Map regions = new HashMap();
     regions.put(POPUP_REGION_KEY, popupArray.toString());
