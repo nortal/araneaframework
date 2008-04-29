@@ -7,6 +7,8 @@ body { background: #f4f4f4 url(gfx/i02.gif) 77px 0 repeat-x; }
 .tooltip .title { background: #A61001; font: italic 17px Georgia, serif; padding: 5px;}
 .tooltip .content { background: #C61001; font: 11px Arial, Helvetica, sans-serif; padding: 5px;} 
 
+*.focus { outline: 2px blue dotted; }
+
 /* Main framework */
 
 #cont1 { min-height: 100%; margin-bottom: -22px; background: url(gfx/i03.gif) repeat-y; }

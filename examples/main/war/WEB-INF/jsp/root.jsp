@@ -19,8 +19,14 @@
 		</head>
 
 		<ui:body>
-            
+            			<script>
+			AraneaPage.MessageRegionHandler.prototype.buildRegionContent = function(messages) {
+    return messages.join(this.messageSeparator);
+  };
+			</script>
+			
             <ui:updateRegion globalId="globalBackRegion">
+            
 				<div id="cont1">
 					<ui:systemForm method="POST">
 						<ui:registerScrollHandler/>
@@ -43,7 +49,7 @@
 										</div>
 									</div>
 								</div>
-								<ui:messages type="error" styleClass="msg-error"/>
+								<ui:focusableMessages type="error" styleClass="msg-error"/>
 	
 								<!-- Renders the menu widget itself. As MenuWidget is subclass
 								     of StandardFlowContainerWidget, this means that actual
@@ -60,7 +66,7 @@
 				<ui:widgetInclude id="menu.footer"/>
 			</ui:updateRegion>
 
-			<ui:onLoadEvent event="if (dhtmlHistory &amp;&amp; _ap.getSystemForm().araClientStateId) { window.dhtmlHistory.firstLoad = true;  window.dhtmlHistory.ignoreLocationChange = true; window.location.hash = _ap.getSystemForm().araClientStateId.value;   dhtmlHistory.add(_ap.getSystemForm().araClientStateId.value, null); }"/>
+
 
 		</ui:body>
 		

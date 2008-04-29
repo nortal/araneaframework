@@ -11,6 +11,8 @@
         <!-- Set the form context, the form we will be rendering here. 
             We cannot as simply (using non-qualified names) refer to form 
             elements unless we define the form context here. -->
+            
+        <ui:updateRegion id="simpleRegion">
 		<ui:form id="simpleForm">
 
 			<!-- Now, these are the first custom tags in template application. They do
@@ -145,12 +147,13 @@
 				<!-- pure design tag -->
 				<tui:componentActions>
 					<ui:formElement id="button">
-						<ui:button/>
+						<ui:button updateRegions="simpleRegion"/>
 					</ui:formElement>
 				</tui:componentActions>
 			</tui:component>
 
 		</ui:form>
+		</ui:updateRegion>
 
 	</ui:widgetContext>
 </jsp:root>

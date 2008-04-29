@@ -211,4 +211,15 @@ Aranea.UI.flowEventConfirm = function(message) {
   araneaPage().event_6(araneaPage().getSystemForm());
 };
 
+
+function FocusEle(id) {
+  var sid = id;
+
+  this.f = function(event) {
+    var eeex = $(id);
+	if (eeex) eeex.focus();
+  };
+}
+
+
 window['aranea-ui.js'] = true;

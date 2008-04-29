@@ -64,6 +64,7 @@ import org.araneaframework.example.main.web.person.PersonEditableListWidget;
 import org.araneaframework.example.main.web.person.PersonListWidget;
 import org.araneaframework.example.main.web.popups.DemoAdvancedPopupUsageWidget;
 import org.araneaframework.example.main.web.sample.FormComplexConstraintDemoWidget;
+import org.araneaframework.example.main.web.sample.ManySimpleFormWidget;
 import org.araneaframework.example.main.web.sample.SampleActionFormWidget;
 import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleBeanFormWidget;
@@ -148,6 +149,7 @@ private MenuItem araneaMenu;
     // Another way of adding menuitems is available
     MenuItem sampleMenu = result.addMenuItem(new MenuItem("Demos")); {
       sampleMenu.addMenuItem(new MenuItem("Simple"));
+      sampleMenu.addMenuItem("Simple", new MenuItem("Many_Simple_Form", ManySimpleFormWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Form", SimpleFormWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Simple_Bean_Form", SimpleBeanFormWidget.class));
       sampleMenu.addMenuItem("Simple", new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
