@@ -476,9 +476,10 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
 
                 <entry><code>LikeFilter</code></entry>
 
-                <entry>This is very similar to the like() constraint, and tests if
-                the list field value either starts or ends with the user-provided 
-                pattern. The filter is disabled if the search field is blank.</entry>
+                <entry>This is very similar to the <code>like()</code> constraint,
+                and tests if the list field value either starts or ends with the
+                user-provided pattern. The filter is disabled if the search field
+                is blank.</entry>
               </row>
 
               <row>
@@ -487,7 +488,8 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
                 <entry><code>LikeFilter</code></entry>
 
                 <entry>Tests if given constant pattern is either in the beginning
-                or in the end of the field value. This filter is always enabled.</entry>
+                or in the end of the field value. This filter, if used,
+                is always enabled.</entry>
               </row>
 
               <row>
