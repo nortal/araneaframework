@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -29,10 +30,13 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
+import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
@@ -69,7 +73,13 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	protected static final Log log = LogFactory.getLog(ListWidget.class);
 
-	//*******************************************************************
+    public static final String LIST_CHECK_SCOPE = "checked";
+
+    public static final String LIST_RADIO_SCOPE = "radio";
+
+    public static final String LIST_CHECK_VALUE = "checked";
+
+    //*******************************************************************
 	// FIELDS
 	//*******************************************************************
 
@@ -96,6 +106,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 	protected List itemRange;
 	protected Map requestIdToRow = new HashMap();
+	protected List selectedItems = new LinkedList();
 	
 	private List initEvents = new ArrayList();
 	
@@ -115,7 +126,130 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		listStructure = createListStructure();
 	}
 
-	//*********************************************************************
+  //*********************************************************************
+  //* LIST ROW CHECK BOXES AND RADIO BUTTONS 
+  //*********************************************************************
+
+  /**
+   * Reads information about selected check boxes and radio buttons, and stores
+   * this information
+   * @since 1.1.3
+   */
+  protected void update(InputData input) throws Exception {
+    super.update(input);
+
+    // 1. Selected check boxes.
+
+    // Path is used to read only those value-names that start with given prefix:
+    Path path = new StandardPath(getScope().toPath() + "." + LIST_CHECK_SCOPE);
+
+    Map listData = input.getScopedData(path);
+
+    List rowKeys = new LinkedList();
+
+    // Now we read index numbers numbers of selected rows:
+    for (Iterator i = listData.entrySet().iterator(); i.hasNext();) {
+      Map.Entry reqParam = (Map.Entry) i.next();
+
+      if (reqParam.getKey() != null
+          && LIST_CHECK_VALUE.equals(reqParam.getValue())) {
+        rowKeys.add(new Integer(reqParam.getKey().toString()));
+      }
+    }
+
+    // Sort the rows in the order displayed on the page:
+    Collections.sort(rowKeys);
+
+    // Remove current rows from selectedItems list (because not all of them may
+    // be checked any more), and then we add those that were selected:
+    this.selectedItems.removeAll(this.itemRange);
+
+    for (Iterator i = rowKeys.iterator(); i.hasNext(); ) {
+      Object rowItem = getRowFromRequestId(i.next().toString());
+      if (!this.selectedItems.contains(rowItem)) {
+        this.selectedItems.add(rowItem);
+      }
+    }
+
+    putViewData(LIST_CHECK_SCOPE, selectedItems);
+
+
+    // 2. Selected radio button:
+
+    // The scope matches the past of the list widget:
+    listData = input.getScopedData(getScope().toPath());
+
+    // In case of radio buttons, we expect only one value.
+    if (listData.containsKey(LIST_RADIO_SCOPE)) {
+
+      String rowKey = (String) listData.get(LIST_RADIO_SCOPE);
+
+      rowKey = rowKey.substring(getScope().toPath().toString().length()
+          + LIST_RADIO_SCOPE.length() + 2);
+
+      Object rowItem = getRowFromRequestId(rowKey);
+
+      // In case of radio buttons, we discard the previous value,
+      // because only one row can be selected:
+
+      if (!selectedItems.contains(rowItem)) {
+        this.selectedItems.clear();
+        this.selectedItems.add(rowItem);
+      }
+
+      putViewData(LIST_RADIO_SCOPE, rowKey);
+    }
+  }
+
+  /**
+   * Collects the selected rows. The objects are not necessarily in the same
+   * order as in the list.
+   * <p>
+   * This method does not distinguish how rows were selected (i.e. check box vs.
+   * radio button).
+   * 
+   * @return A list of row objects.
+   * @since 1.1.3
+   */
+  public List getSelectedRows() {
+    return this.selectedItems;
+  }
+
+  /**
+   * Collects one single selected row (for example, in case of radio button
+   * list). If there is more than one select row, an exception will be thrown.
+   * In case when no rows is selected, <code>null</code> will be returned.
+   * <p>
+   * This method does not distinguish how rows were selected (i.e. check box vs.
+   * radio button).
+   * 
+   * @return A single selected row object.
+   * @since 1.1.3
+   */
+  public Object getSelectedRow() {
+    Assert.isTrue(this.selectedItems.size() <= 1,
+        "Selected rows count was expected to be not more than one.");
+
+    Object rowItem = null;
+
+    if (this.selectedItems.size() == 1) {
+      rowItem = this.selectedItems.get(0);
+    }
+
+    return rowItem;
+  }
+
+  /**
+   * Resets the selected rows so they wouldn't appear selected on the next page
+   * load.
+   */
+  public void resetSelectedRows() {
+    this.selectedItems = new LinkedList();
+    removeViewData(LIST_CHECK_SCOPE);
+    removeViewData(LIST_RADIO_SCOPE);
+  }
+
+    //*********************************************************************
 	//* PUBLIC METHODS
 	//*********************************************************************
 
@@ -387,7 +521,20 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		return getFilterHelper(id);
 	}
 
-	/**
+    /**
+     * Adds a non-orderable field that is not bound to any column. The label is
+     * not mandatory. This method is convenient to use when one wants to create
+     * a check box or radio button column to allow user mark the rows.
+     * 
+     * @param id list field Id. Is required, and must be distinguished.
+     * @param label list field label. If provided, will be used as the label of
+     *            the column.
+     */
+    public void addEmptyField(String id, String label) {
+        getListStructure().addField(id, label, false);
+    }
+
+    /**
 	 * Adds a list field order.
 	 * 
 	 * @param order
@@ -596,6 +743,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		try {
 			this.dataProvider.refreshData();
+	        this.selectedItems.clear();
 		}
 		catch (Exception e) {
 			ExceptionUtil.uncheckException(e);

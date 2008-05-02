@@ -68,7 +68,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     // add the displayed columns to list.
     // addField(String id, String label, boolean orderable)
     // note that # before the label means that label is treated as unlocalized and outputted as-is
-    list.addField("id", "#Id", false);
+    list.addEmptyField("radio", null);
     // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
     list.addField("name", "#Name", true).like();
     list.addField("address", "#Address", true).like();
@@ -79,7 +79,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     this.list.getDataProvider().refreshData();
   }
 
-  public void handleEventAdd(String eventParameter) throws Exception {
+  public void handleEventAdd() {
     getFlowCtx().start(new CompanyEditWidget(), new FlowContext.Handler() {
       private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {
@@ -100,7 +100,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     log.debug("Company with Id of " + id + " removed sucessfully");
   }
 
-  public void handleEventSelect(String eventParameter) throws Exception {
+  public void handleEventSelect(String eventParameter) {
     Long id = ((CompanyMO) this.list.getRowFromRequestId(eventParameter)).getId();
     log.debug("Company selected with Id of " + id);
     if (editMode)
@@ -132,9 +132,18 @@ public class CompanyListWidget extends TemplateBaseWidget {
     );
   }
 
-  public void handleEventCancel(String eventParameter) throws Exception {
+  public void handleEventCancel() {
     getFlowCtx().cancel();
   }  
+
+  public void handleEventCollect() {
+    CompanyMO company = (CompanyMO) list.getSelectedRow();
+
+    if (company != null) {
+      getMessageCtx().showInfoMessage(
+          "Following company was selected: " + company.getName());
+    }
+  }
 
   private class TemplateCompanyListDataProvider extends MemoryBasedListDataProvider {
     private static final long serialVersionUID = 1L;

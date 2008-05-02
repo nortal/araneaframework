@@ -84,21 +84,37 @@ function AraneaPage() {
   var loaded = false;
   this.isLoaded = function() { return loaded; };
   this.setLoaded = function(b) { if (typeof b == "boolean") { loaded = b; } };
-  
+
   /* Logger that outputs javascript logging messages. */
-  var dummyLogger = new function() { var dummy = function() {}; this.trace = dummy; this.debug = dummy; this.info = dummy; this.warn = dummy; this.error = dummy; this.fatal = dummy;};
+  var dummyLogger = new function() {
+        var dummy = function() {};
+        this.trace = dummy;
+        this.debug = dummy;
+        this.info = dummy;
+        this.warn = dummy;
+        this.error = dummy;
+        this.fatal = dummy;
+  };
+
   var safariLogger = (window.console && window.console.log) ? new function() {
-  	  var f = window.console.log;
-  	  this.trace = f; this.debug = f; this.info = f; this.warn = f; this.error = f; this.fatal = f;
-    } : dummyLogger;
+        var f = function(s) { window.console.log(s); };
+        this.trace = f;
+        this.debug = f;
+        this.info = f;
+        this.warn = f;
+        this.error = f;
+        this.fatal = f;
+  } : dummyLogger;
+
   var firebugLogger = (window.console && window.console.debug) ? new function() {
-  	  this.trace = window.console.debug; 
-  	  this.debug = window.console.debug; 
-  	  this.info = window.console.info; 
-  	  this.warn = window.console.warn; 
-  	  this.error = window.console.error; 
-  	  this.fatal = window.console.error;
-  	} : safariLogger;
+        this.trace = window.console.debug;
+        this.debug = window.console.debug;
+        this.info = window.console.info;
+        this.warn = window.console.warn;
+        this.error = window.console.error;
+        this.fatal = window.console.error;
+  } : safariLogger;
+
   var logger = dummyLogger;
   this.setDummyLogger = function() { logger = dummyLogger; };
   this.setDefaultLogger = function() { 
@@ -186,11 +202,11 @@ function AraneaPage() {
   this.addClientLoadEvent = function(event) { clientLoadEvents.add(event); }
   this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
-  this.onload = function() { 
-    logger.trace('System load events executing.\n'); 
+  this.onload = function() {
+    logger.trace('System load events executing.\n');
     systemLoadEvents.execute();
     this.setLoaded(true);
-    logger.trace('Client load events executing.\n'); 
+    logger.trace('Client load events executing.\n');
     clientLoadEvents.execute(); 
   };
   this.onunload = function() { systemUnLoadEvents.execute(); };
@@ -408,7 +424,7 @@ function AraneaPage() {
    * @param f replacement function 
    */
   this.override = function(functionName, f) {
-    this.getLogger().info("AraneaPage." +functionName + " was overriden.");
+    logger.info("AraneaPage." +functionName + " was overriden.");
     this[functionName] = f;
   };
   

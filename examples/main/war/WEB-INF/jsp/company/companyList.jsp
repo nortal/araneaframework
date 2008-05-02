@@ -45,7 +45,7 @@
 						<ui:row>
 						
 							<ui:cell>
-								<c:out value="${row.id}"/>
+								<ui:listRowRadioButton/>
 							</ui:cell>
 	
 							<ui:cell>
@@ -76,6 +76,8 @@
 
 				<tui:componentActions>
 					<ui:eventButton eventId="add" labelId="#Add new company"/>
+					<ui:nbsp/>
+					<ui:eventButton eventId="collect" labelId="#Pick the company"/>
 				</tui:componentActions>
 			</tui:component>
 		
