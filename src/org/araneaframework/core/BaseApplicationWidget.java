@@ -274,7 +274,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
 
   /**
    * If {@link Path#hasNext()} routes to the action to child, otherwise calls the
-   * appropriate {@link ActionListener}.
+   * appropriate {@link org.araneaframework.core.ActionListener}.
    */ 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
@@ -311,10 +311,6 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     
     List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
 
-    if (log.isTraceEnabled()) {
-      log.trace("Delivering action '" + actionId +"' to service '" + getClass() + "'");
-    }
-    
     if (log.isTraceEnabled()) {
       log.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName() + "'");
     }

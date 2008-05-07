@@ -1,0 +1,109 @@
+<sect1 id="contextmenu">
+	<title>Partial Rendering</title>
+
+	<para>
+	Imagine that you have a big web page with input form, and you want certain input controls
+	to update something on that page as user changes the value of the control. Now, would it be
+	efficient if the value changes, its <code>onchange</code> event submits the data so that an
+	<code>OnChangeEventListener</code> could read it and return the same page with slight changes?
+	The main problem here is that a small change should not force the user wait until the page
+	reloads. Here is the part where partial rendering comes in.
+	</para>
+
+	<note>
+		<para>
+		Partial rendering is more thoroughly described by Alar Kvell's bachelor thesis
+		<ulink url="http://www.araneaframework.org/docs/kvell-aranea-ajax.pdf">Aranea Ajax</ulink>.
+		This section only describes the practical part on how to use.
+		</para>
+	</note>
+
+	<sect2 id="How_It_Is_Accomplished">
+		<title>How It Is Accomplished?</title>
+
+		<para>
+		First of all, one must understand and then define the parts of the page that need to be updated
+		once a change fires the trigger. These regions are marked with the
+		<code>&lt;ui:updateRegion&gt;</code> tag by also indicating its ID to reference it later.
+		</para>
+
+		<note>
+			<para>
+			It is not possible to update an HTML table cell. One needs to update the
+			entire row by using the <code>&lt;ui:updateRegionRows&gt;</code> tag. 
+			</para>
+		</note>
+
+		<para>
+		Next, one needs to specify the <code>updateRegions</code> attribute of the input control
+		that has an event registered. The attribute value should contain a comma-separated list of
+		update region IDs that need to be update due to the event. It is important for this value to
+		be specified, because otherwise the entire page would be posted to the server.
+		</para>
+
+		<para>
+		When the input control has the <code>updateRegions</code> attribute defined, Aranea will use
+		Ajax to send the form data to the server, invoke the <code>OnEventListener</code> associated
+		with the event, and return the parts of the pages defined as update regions. Finally,
+		the script on the client side will replace the update regions on the page with the received
+		ones. For everything else on the same page, it will remain the same.
+		</para>
+
+		<para>
+		Note that these two steps described above are all that need to be taken to make partial rendering
+		possible with Aranea.
+		</para>
+	</sect2>
+
+	<sect2 id="Partial_Rendering_Example">
+		<title>Partial Rendering Example</title>
+
+		<para>
+		Now let's take a look at a short example where partial rendering is used. The following is the code
+		snippet from Aranea demo application component <emphasis>Easy AJAX w/ 'update regions'</emphasis>.
+
+		<programlisting role="xml">&lt;ui:row&gt;
+  &lt;ui:formElement id="beastSelection"&gt;
+    &lt;ui:cell styleClass="name"&gt;
+      &lt;ui:label /&gt;
+    &lt;/ui:cell&gt;
+    &lt;ui:cell&gt;
+      &lt;ui:select updateRegions="ajaxBeasts"/&gt;
+    &lt;/ui:cell&gt;
+  &lt;/ui:formElement&gt;
+&lt;/ui:row&gt;
+
+&lt;ui:updateRegionRows id="ajaxBeasts"&gt;
+  &lt;c:if test="${not empty form.elements['concreteBeastControl']}"&gt;
+    &lt;ui:row&gt;
+      &lt;ui:formElement id="concreteBeastControl"&gt;
+        &lt;ui:cell styleClass="centered-name"&gt;
+          &lt;ui:label /&gt;
+        &lt;/ui:cell&gt;
+        &lt;ui:cell&gt;
+          &lt;ui:checkboxMultiSelect type="vertical" /&gt;
+        &lt;/ui:cell&gt;
+      &lt;/ui:formElement&gt;
+    &lt;/ui:row&gt;
+  &lt;/c:if&gt;
+&lt;/ui:updateRegionRows&gt;</programlisting>
+
+		In the example, you can see that it does not matter in which order the update region
+		is declared and referenced. Also, because data (form elements) is displayed using table rows,
+		we must use <code>&lt;ui:updateRegionRows&gt;</code> tag here to make it work. However,
+		the most important part of this example is that the <code>&lt;ui:select&gt;</code>
+		control defines the update region it wishes to update.
+		</para>
+
+		<note>
+			<para>
+			Currently submit controls don't work with update regions because the JavaScript cannot
+			read the unsubmitted file and serialize it to send it to the server. Therefore, if you
+			provide the <code>updateRegions</code> attribute for the upload control, the file won't
+			reach the server. We hope to find a solution to this problem in near future.
+			</para>
+		</note>
+
+	</sect2>    	
+
+</sect1>

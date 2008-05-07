@@ -1754,10 +1754,14 @@ getFlowCtx().start(new TestFlow(new Long(5)),
     <sect2 id="OverlayContext">
       <title>OverlayContext</title>
       
-       <para>
+      <para>
       Supports running processes in "overlay" (in parallel <literal>FlowContext</literal> of the same session thread). 
-      It is used to allow construction of modal dialogs and modal processes. To start process inside overlay, one
-      calls one of the <literal>OverlayContext.start(...)</literal> methods.</para>
+      It is used to allow construction of modal dialogs and modal processes. To start a process inside overlay, a widget
+      calls one of the <literal>getOverlayCtx().start(...)</literal> methods.
+      The <literal>getOverlayCtx()</literal> method is defined is <literal>BaseUIWidget</literal>
+      so all sub classes should be able to access it. Others should be able to retrieve it
+      from the <literal>Environment</literal> like following:
+      <literal>(OverlayContext) getEnvironment().getEntry(OverlayContext.class)</literal>.</para>
 
       <para>
        <literal>OverlayContext</literal> provides the <literal>replace*</literal>, <literal>start*</literal> and <literal>reset*</literal>

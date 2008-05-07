@@ -14,6 +14,7 @@
 	<!ENTITY trees               SYSTEM "trees.xml">
 	<!ENTITY tabs               SYSTEM "tabs.xml">
 	<!ENTITY ctxtmenu               SYSTEM "ctxtmenu.xml">
+	<!ENTITY partrender               SYSTEM "partrender.xml">
 ]>
 
 <!--
@@ -39,7 +40,7 @@
         <titleabbrev>Aranea</titleabbrev>
 				<subtitle>Reference Manual</subtitle>
 
-        <releaseinfo>Version 1.1.2 (Work In Progress)</releaseinfo>
+        <releaseinfo>Version 1.1.3 (Work In Progress)</releaseinfo>
         <authorgroup>
 					<author>
 						<firstname>Jevgeni</firstname>
@@ -56,6 +57,10 @@
           <author>
             <firstname>Taimo</firstname>
             <surname>Peelo</surname>
+          </author>
+          <author>
+            <firstname>Martti</firstname>
+            <surname>Tamm</surname>
           </author>
         </authorgroup>        
     </bookinfo>

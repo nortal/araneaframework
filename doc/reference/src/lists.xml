@@ -56,7 +56,9 @@
 
             <emphasis>paging</emphasis>
 
-             memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution for tables with few (typically less than 100) rows. 
+             memory-based. The data source is not restricted here. This is a very fast and easy-to-use solution
+             for tables with few (typically less than 100) rows. This is a good solution when your server has
+             enough memory to store all the rows, and quering all the rows does not take much time.
           </listitem>
         </varlistentry>
 
@@ -76,7 +78,8 @@
 
             <emphasis>paging</emphasis>
 
-             conditions change. This is a powerful solution for tables with more than 500 rows. 
+             conditions change. This is a powerful solution for tables with more than 500 rows. Especially,
+             when the query is complex and takes time (so it would not be useful to query all the rows at once).
           </listitem>
         </varlistentry>
       </variablelist></para>
@@ -1489,6 +1492,37 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 }</programlisting></para>
           
     </sect3>
+
+    <sect2>
+      <title>Quick Overview on How to Use</title>
+    </sect2>
+
+		<para>Here is a quick summary on how one can create and use a list,
+		based on the material described in this chapter.
+			<orderedlist spacing="compact">
+		    <listitem>
+		      <emphasis>Create a data query.</emphasis> This basically means a service layer method
+		      that takes at least a <literal>ListQuery</literal> for its argument, executes the
+		      database query, and returns <literal>ListItemsData</literal>. To execute the query,
+		      one must also specify the binding between model object fields and query result set fields.
+		    </listitem>
+		    <listitem>
+		      <emphasis>Create a list widget.</emphasis> The (bean) list widget is used to define
+		      the columns and its labels together with sorting and filtering information. Also, one
+		      most define a data provider &mdash; either memory-based or back-end &mdash; that invokes
+		      the data query created previously. Note that the data provider implementation
+		      provides the <literal>ListQuery</literal> object for the query, and expects a
+		      <literal>ListItemsData</literal> object as a result. Finally, the created list must be
+		      added by its creator widget simply like following:
+		      <code>this.addWidget("myList", createdList);</code>
+		    </listitem>
+		    <listitem>
+		      <emphasis>Describe the layout in JSP.</emphasis> Here you can use the list tags
+		      provided by Aranea. These are described below.
+		    </listitem>
+	    </orderedlist>
+		</para>
+
   </sect1>
 
   <sect1>
