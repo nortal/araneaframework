@@ -30,6 +30,7 @@ import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.http.util.WeaverUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -100,12 +101,17 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * Renders widget to <code>output</code> using the defined <code>viewSelector</code>.
    */
   protected void render(OutputData output) throws Exception {
-    if (viewSelector == null)
+    if (viewSelector == null && !WeaverUtil.isWeaverPresent())
       throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 
     
     JspContext jspCtx = (JspContext) getEnvironment().requireEntry(JspContext.class);
     
-    String jsp = resolveJspName(jspCtx, viewSelector);
+    String jsp;
+    if (viewSelector != null) {
+    	jsp = resolveJspName(jspCtx, viewSelector);
+    } else {
+    	jsp = WeaverUtil.getClasspathJspUri(jspCtx, this);
+    }
     ServletUtil.include(jsp, this, output);
   }
   

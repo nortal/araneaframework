@@ -36,6 +36,19 @@
      	<servlet-class>org.araneaframework.integration.spring.AraneaSpringDispatcherServlet</servlet-class>
       <load-on-startup>1</load-on-startup>
    </servlet>
+
+  <servlet>
+    <servlet-name>weaverServlet</servlet-name>
+    <servlet-class>
+    com.zeroturnaround.jspweaver.JspInterpretingServlet
+    </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>weaverServlet</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
+  </servlet-mapping>
    
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>

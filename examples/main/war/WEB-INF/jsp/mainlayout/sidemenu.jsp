@@ -13,11 +13,6 @@
 	<c:set var="activeStyle" value="active"/>
 
 	<ui:widgetContext id="menu">
-	  <jsp:scriptlet>
-      InputData input = ServletUtil.getInputData(request);
-      request.setAttribute("containerURL", ((HttpInputData) input).getContainerURL());
-    </jsp:scriptlet>    
-	
 		<div id="leftcol">
 			<ul id="menu2">
 				<c:forEach items="${viewData.menu.subMenu}" var="topMenuItem">
@@ -31,7 +26,6 @@
 								   	labelId="${item.value.label}"
 								   	styleClass="${activeStyle}"/>
 
-                  				   <!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}" styleClass="${activeStyle}"><fmt:message key="${item.value.label}"/></ui:link-->																											
 									<c:if test="${item.value.holder}">
 									<ul>
 										<c:forEach items="${item.value.subMenu}" var="subitem">
@@ -42,7 +36,6 @@
 														eventParam="${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"
 														labelId="${subitem.value.label}"
 														styleClass="${activeStyle}"/>
-												<!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}" styleClass="${activeStyle}"><fmt:message key="${subitem.value.label}"/></ui:link -->
 												</c:if>
 	
 												<c:if test="${not subitem.value.selected}">
@@ -51,7 +44,6 @@
 														eventParam="${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"
 														labelId="${subitem.value.label}"/>
 
-												  <!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"><fmt:message key="${subitem.value.label}"/></ui:link-->															
 												</c:if>
 											</li>
 										</c:forEach>
@@ -65,7 +57,6 @@
 										eventId="menuSelect" 
 									   	eventParam="${topMenuItem.value.label}.${item.value.label}"
 									   	labelId="${item.value.label}"/>
-								  <!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}"><fmt:message key="${item.value.label}"/></ui:link  -->												
 								</c:if>
 							</li>
 						</c:forEach>
