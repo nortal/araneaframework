@@ -51,7 +51,10 @@ public class SimpleFormWidget extends TemplateBaseWidget {
    * Builds the form.
    */
   protected void init() throws Exception {
-	setViewSelector("sample/simpleForm");
+	  /*
+	   * View selector is not set:
+	   * simpleForm.jsp is used from the same directory
+	   */ 
 
     // creation of new form
 	simpleForm = new FormWidget();
