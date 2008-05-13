@@ -27,7 +27,11 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
 public class AfterTodayConstraint extends BaseFieldConstraint {
-	protected boolean allowToday;
+
+    /**
+     * Specifies whether the current date is included (allowed) or not.
+     */
+    protected boolean allowToday;
 	
 	/**
 	 * Whether today should be allowed as valid. 

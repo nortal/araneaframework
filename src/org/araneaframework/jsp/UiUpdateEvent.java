@@ -20,49 +20,108 @@ import java.util.List;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 
 /**
- * More advanced event that can be sent to widgets, includes event precondition 
- * (script that will be executed and only if returns true is event actually sent)
- * and updateregions that should be updated each time when event is processed.
+ * More advanced event that can be sent to widgets. Includes
+ * <ul>
+ * <li>event precondition - a client-side script that will be executed and,
+ * only if returns <code>true</code>, is event actually sent,</li>
+ * <li>update regions - regions that should be updated each time when event is
+ * processed.</li>
+ * </ul>
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class UiUpdateEvent extends UiEvent {
+
   private List updateRegionNames;
+
   private String eventPrecondition;
 
+  /**
+   * A constructor wihtout any field initialzation.
+   */
   public UiUpdateEvent() {}
 
+  /**
+   * A constructor that initializes all the common event fields.
+   * 
+   * @param id The event ID.
+   * @param target The path of the target that should respond to this event.
+   * @param param A <code>String</code> parameter for the event listener.
+   */
   public UiUpdateEvent(String id, String target, String param) {
 	super(id, target, param);
   }
-  
+
+  /**
+   * A constructor that initializes all the fields, except
+   * <code>eventPrecondition</code>.
+   * 
+   * @param id The event ID.
+   * @param target The path of the target that should respond to this event.
+   * @param param A <code>String</code> parameter for the event listener.
+   * @param updateRegionNames comma-separated region names
+   */
   public UiUpdateEvent(String id, String target, String param, List updateRegionNames) {
 	super(id, target, param);
 	this.updateRegionNames = updateRegionNames;
   }
 
+  /**
+   * Provides the comma-separated region names that should be updated when the
+   * response arrives to the client-side.
+   * 
+   * @return the comma-separated region names or <code>null</code>.
+   */
   public List getUpdateRegionNames() {
     return updateRegionNames;
   }
 
+  /**
+   * Specifies the comma-separated region names that should be updated when the
+   * response arrives to the client-side.
+   * 
+   * @param updateRegionNames the comma-separated region names or <code>null</code>.
+   */
   public void setUpdateRegionNames(List updateRegionNames) {
     this.updateRegionNames = updateRegionNames;
   }
-  
+
+  /**
+   * Provides the event precondition that returns whether the event should
+   * occur.
+   * 
+   * @return the event precondition or <code>null</code>.
+   */
   public String getEventPrecondition() {
     return eventPrecondition;
   }
 
+  /**
+   * Specifies the event precondition that returns whether the event should
+   * occur.
+   * 
+   * @param eventPrecondition the event precondition or <code>null</code>.
+   */
   public void setEventPrecondition(String eventPrecondition) {
     this.eventPrecondition = eventPrecondition;
   }
 
   public StringBuffer getEventAttributes() {
     StringBuffer result = super.getEventAttributes();
-    if (eventPrecondition != null)
-      result.append(' ').append(AraneaAttributes.Event.CONDITION).append("=\"").append(eventPrecondition).append('"');
-    if (getUpdateRegionNames() != null && !getUpdateRegionNames().isEmpty())
-      result.append(' ').append(AraneaAttributes.Event.UPDATE_REGIONS).append("=\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(getUpdateRegionNames())).append("\"");
+    if (eventPrecondition != null) {
+      result.append(" ").append(AraneaAttributes.Event.CONDITION);
+      result.append("=\"");
+      result.append(eventPrecondition).append('"');
+    }
+
+    List updtRgns = getUpdateRegionNames();
+    if (updtRgns != null && !updtRgns.isEmpty()) {
+      result.append(" ");
+      result.append(AraneaAttributes.Event.UPDATE_REGIONS);
+      result.append("=\"");
+      result.append(JspUpdateRegionUtil.formatUpdateRegionsJS(updtRgns));
+      result.append("\"");
+    }
 
     return result;
   }

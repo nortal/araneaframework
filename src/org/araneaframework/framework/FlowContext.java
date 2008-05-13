@@ -73,7 +73,7 @@ public interface FlowContext extends Serializable {
   public void replace(Widget flow);
   
   /**
-   * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
+   * Destroys the current flow and starts a new one. When the new flow ends execution it will return control
    * to the caller of the current flow (if there is one). Started subflow can be configured using the configurator.
    * @since 1.0.9 
    */

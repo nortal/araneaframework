@@ -31,9 +31,15 @@ import org.araneaframework.uilib.form.Constraint;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseConstraint implements java.io.Serializable, Constraint {
+
   private Environment environment;
-  protected String customErrorMessage;
+
   private Set errors;
+
+  /**
+   * Holds the custom error message for this constraint.
+   */
+  protected String customErrorMessage;
 
   //*********************************************************************
   //* PUBLIC METHODS
@@ -81,7 +87,12 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     if (this.environment == null)
       this.environment = environment;
   }
-  
+
+  /**
+   * Provides the <code>Environment</code> of the constraint.
+   * 
+   * @return the <code>Environment</code> of the constraint.
+   */
   public Environment getEnvironment() {
     return environment;
   }
@@ -90,19 +101,43 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
 //*********************************************************************
   //* PROTECTED METHODS
   //*********************************************************************
-  
+
+  /**
+   * Adds the given error message to the errors list to be displayed later.
+   * 
+   * @param error an error message
+   */
   protected void addError(String error) {
     getErrors().add(error);
   }
   
+  /**
+   * Adds the given error messages to the errors list to be displayed later.
+   * 
+   * @param errorList A list of error messages (<code>String</code>s).
+   */
   protected void addErrors(Collection errorList) {
     getErrors().addAll(errorList);
   }
 
+  /**
+   * Finds the <code>ConfigurationContext</code> from the
+   * <code>Environment</code>.
+   * 
+   * @return the <code>ConfigurationContext</code> from the
+   *         <code>Environment</code>.
+   */
   protected ConfigurationContext getConfiguration() {
     return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
   }
 
+  /**
+   * Transletes the given message key according to the
+   * <code>LocalizationContext</code>.
+   * 
+   * @param key The key to find the correct message.
+   * @return The localized message from the <code>LocalizationContext</code>.
+   */
   protected String t(String key) {
     LocalizationContext locCtx = 
      (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);

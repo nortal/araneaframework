@@ -100,7 +100,7 @@
 			Currently submit controls don't work with update regions because the JavaScript cannot
 			read the unsubmitted file and serialize it to send it to the server. Therefore, if you
 			provide the <code>updateRegions</code> attribute for the upload control, the file won't
-			reach the server. We hope to find a solution to this problem in near future.
+			reach the server. We hope to find a solution to this limitation in near future.
 			</para>
 		</note>
 

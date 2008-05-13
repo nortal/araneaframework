@@ -30,21 +30,44 @@ import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 
 /**
+ * The base implementation of the menu context that handles a menu. All custom
+ * menu contexts should extend it, and describe the menu structure in
+ * {@link #buildMenu()}.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
+
+  /**
+   * The container (a root) that holds the menu items.
+   */
   protected MenuItem menu;
+
+  /**
+   * The path of the currently selected menu item.
+   */
   private String selectionPath;
 
-  // CONSTRUCTOR 
+  /**
+   * Constructor that initializes the menu widget and sets the
+   * <code>topWidget</code> as its parent
+   * 
+   * @param topWidget The parent widget.
+   * @throws Exception Any non-specific runtime exception that may occur.
+   */
   public BaseMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
-    
     menu = buildMenu();
     addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
     putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
 
+  /**
+   * Initializes the menu. Also marks it as not finishable (it means that this
+   * widget does not inovke <code>FlowContext.finish()</code> nor
+   * <code>FlowContext.cancel()</code>).
+   * @exception Exception Any non-specific exception that may occur.
+   */
   protected void init() throws Exception {
     super.init();
     setFinishable(false);
@@ -56,8 +79,12 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), MenuContext.class, this);
   }
-  
-  /** @since 1.1.1 */
+
+  /**
+   * Initializes the menu selector that works with bookmarks.
+   * 
+   * @since 1.1.1
+   */
   protected void initMenuSelectorMountSupport() {
     MountContext mc = (MountContext) getEnvironment().getEntry(MountContext.class);
     if (mc == null)
@@ -81,7 +108,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
       }});
   }
   
-  // MENU SELECTION LISTENER
+  /**
+   * Menu selection listener.
+   */
   protected class ItemSelectionListener extends StandardEventListener {
     public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
     	BaseMenuWidget.this.selectMenuItem(eventParam);
@@ -103,13 +132,19 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
 
   /**
    * Method that must be implemented to build the menu.
+   * 
    * @return built menu.
+   * @exception Exception Any non-specific runtime exception that may occur.
    */
   protected abstract MenuItem buildMenu() throws Exception;
 
   /**
-   * @return currently selected menu path or <code>null</code> 
-   * @since 1.1.1 */
+   * Provides the {@link org.araneaframework.Path} of the currently selected
+   * menu item as a <code>String</code>.
+   * 
+   * @return the path of the currently selected menu item, or <code>null</code>
+   * @since 1.1.1
+   */
   public String getSelectionPath() {
     return this.selectionPath;
   }

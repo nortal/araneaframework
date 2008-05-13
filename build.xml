@@ -20,6 +20,11 @@
 	
 	<property name="ivy.settings.file" value="ivysettings.xml"/>
 	
+	<path id="classpath">
+		<fileset dir="${lib.dir}/default/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/j2ee/" includes="*.jar"/>
+	</path>
+
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean"  description="Clean up build system results">
 		<ant dir="examples/common" target="clean" inheritall="false"/>
@@ -63,10 +68,6 @@
 	<!-- Initialize the build system -->
 	<target name="init">
 		<mkdir dir="build" />
-		<path id="classpath">
-			<fileset dir="${lib.dir}/default/" includes="*.jar"/>
-			<fileset dir="${lib.dir}/j2ee/" includes="*.jar"/>
-		</path>
 	</target>
 	
 	<target name="init-ivy">
@@ -301,6 +302,7 @@
 			packagenames="org.araneaframework.*" 
 			sourcepath="src"
 			destdir="${dist.dir}/doc/javadoc/">
+			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
 			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
 			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
 		</javadoc>

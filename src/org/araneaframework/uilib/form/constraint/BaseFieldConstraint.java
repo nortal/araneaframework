@@ -24,12 +24,14 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 
 /**
- * {@link org.araneaframework.uilib.form.Constraint} that is associated with
- * some {@link org.araneaframework.uilib.form.FormElement}.
+ * Base implementation of the {@link org.araneaframework.uilib.form.Constraint}
+ * that is associated with some
+ * {@link org.araneaframework.uilib.form.FormElement}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseFieldConstraint extends BaseConstraint {
+
   private FormElement field;
 
   public BaseFieldConstraint() {
@@ -46,8 +48,8 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   }
 
   /**
-   * Returns the {@link FormElement} that 
-   * this {@link org.araneaframework.uilib.form.Constraint} is constraining.
+   * Returns the {@link FormElement} that this <code>Constraint</code> is
+   * constraining.
    * 
    * @return constrained {@link FormElement}
    */
@@ -70,45 +72,93 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
     return field.getConstraintEnvironment();
   }
 
+  /**
+   * Provides the label of the constraint field.
+   * 
+   * @return the label of the constraint field.
+   */
   protected String getLabel() {
     return getField().getLabel();
   }
 
+  /**
+   * Provides the value of the constraint field.
+   * 
+   * @return the value of the constraint field.
+   */
   protected Object getValue() {
     return getField().getValue();
   }
 
+  /**
+   * Specifies whether the constraint field was read.
+   * 
+   * @return a Boolean indicating whether the constraint field was read.
+   */
   public boolean isRead() {
     return getField().isRead();
   }
 
+  /**
+   * Specifies whether the constraint field is disabled.
+   * 
+   * @return a Boolean indicating whether the constraint field is disabled.
+   */
   public boolean isDisabled() {
     return getField().isDisabled();
   }
 
+  /**
+   * Specifies whether the constraint field is mandatory.
+   * 
+   * @return a Boolean indicating whether the constraint field is mandatory.
+   */
   public boolean isMandatory() {
     return getField().isMandatory();
   }
 
   /**
-   * Exception thrown when {@link org.araneaframework.uilib.form.FormElement} associated with 
-   * {@link BaseFieldConstraint} could not be determined.
+   * Exception thrown when {@link org.araneaframework.uilib.form.FormElement}
+   * associated with {@link BaseFieldConstraint} could not be determined.
    */
   public static class FieldConstraintException extends AraneaRuntimeException {
+
+    /**
+     * Creates the exception without any message or other <code>Throwable</code>.
+     */
     public FieldConstraintException() {
       super();
     } 
 
+    /**
+     * Creates the exception with a descriptive message and the
+     * <code>Throwable</code> that was caught.
+     * 
+     * @param message A descriptive message to help solve this issue.
+     * @param cause A <code>Throwable</code> that was caught.
+     */
     public FieldConstraintException(String message, Throwable cause) {
       super(message, cause);
     }
 
+    /**
+     * Creates the exception with a descriptive message.
+     * 
+     * @param message A descriptive message to help solve this issue.
+     */
     public FieldConstraintException(String message) {
       super(message);
     }
 
+    /**
+     * Creates the exception with the <code>Throwable</code> that was caught.
+     * 
+     * @param cause A <code>Throwable</code> that was caught.
+     */
     public FieldConstraintException(Throwable cause) {
       super(cause);
     }
+
   }
+
 }

@@ -20,8 +20,20 @@ import org.araneaframework.framework.LocalizationContext;
 import org.springframework.context.MessageSource;
 
 /**
+ * Extends the <code>LocalizationContext</code> to provide the localization
+ * using the <code>MessageSource</code> from the Spring framework.
+ * 
  * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
+ * @see SpringLocalizationFilterService
  */
 public interface SpringLocalizationContext extends LocalizationContext {
-	public MessageSource getMessageSource();
+
+  /**
+   * Provides access to the <code>MessageSource</code> from the Spring
+   * framework.
+   * 
+   * @return the <code>MessageSource</code> from the Spring framework.
+   */
+  public MessageSource getMessageSource();
+
 }

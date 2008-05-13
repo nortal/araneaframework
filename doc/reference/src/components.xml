@@ -1750,25 +1750,46 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       <para>For standard implementation, please see <xref
       linkend="araneaRootFlowContainer" /></para>
     </sect2>
-    
-    <sect2 id="OverlayContext">
-      <title>OverlayContext</title>
-      
-      <para>
-      Supports running processes in "overlay" (in parallel <literal>FlowContext</literal> of the same session thread). 
-      It is used to allow construction of modal dialogs and modal processes. To start a process inside overlay, a widget
-      calls one of the <literal>getOverlayCtx().start(...)</literal> methods.
-      The <literal>getOverlayCtx()</literal> method is defined is <literal>BaseUIWidget</literal>
-      so all sub classes should be able to access it. Others should be able to retrieve it
-      from the <literal>Environment</literal> like following:
-      <literal>(OverlayContext) getEnvironment().getEntry(OverlayContext.class)</literal>.</para>
 
-      <para>
-       <literal>OverlayContext</literal> provides the <literal>replace*</literal>, <literal>start*</literal> and <literal>reset*</literal>
+		<sect2 id="OverlayContext">
+			<title>OverlayContext</title>
+
+			<para>
+			Supports running processes in "overlay" (in parallel <literal>FlowContext</literal>
+			of the same session thread). It is used to allow construction of modal dialogs and modal processes.
+			To start a process inside overlay, a widget calls one of the
+			<literal>getOverlayCtx().start(...)</literal> methods.
+			</para>
+
+			<para>
+			The <literal>getOverlayCtx()</literal> method is defined in
+			<literal>BaseUIWidget</literal> so all sub-classes should be able to access it.
+			Others can retrieve it from the <literal>Environment</literal> like following:
+			<literal>(OverlayContext) getEnvironment().getEntry(OverlayContext.class)</literal>.
+			</para>
+
+			<para>
+			The first time the overlay mode is started, the <literal>start(...)</literal> must take
+			a container (root) widget as its argument because everything that happens in overlay mode,
+			is happening like in a separate window. For example, the code in Aranea Demo Application
+			creates the overlay root widget and its content(s) like this:
+
+			<programlisting role="java">  getOverlayCtx().start(
+      new OverlayRootWidget(new StandardFlowContainerWidget(
+          new ModalDialogDemoWidget(true))));</programlisting>
+
+			Notice that the <literal>start(...)</literal> method is used to start three widgets.
+			The custom-made <literal>OverlayRootWidget</literal> acts like a root widget, the
+			<literal>StandardFlowContainerWidget</literal> widget is for containing the content,
+			which is in this case the <literal>ModalDialogDemoWidget</literal> widget.
+			</para>
+
+			<para>
+			<literal>OverlayContext</literal> provides the <literal>replace*</literal>, <literal>start*</literal> and <literal>reset*</literal>
       methods that act analogously to <literal>FlowContext</literal> corresponding methods, but affect only overlayed 
       process. Additionally, following methods are available:
       </para>
-      
+
       <para><informaltable frame="topbot">
           <tgroup cols="2">
             <colspec colwidth="1*" />
@@ -1788,7 +1809,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
                 <entry><literal>boolean isOverlayActive()</literal></entry>
                 <entry>Returns whether some overlayed process is active.</entry>
               </row>
-              
+
               <row>
                 <entry><literal>setOverlayOptions(Map options)</literal></entry>
                 <entry>Sets the presentation options for overlayed processes.</entry>
@@ -1803,16 +1824,230 @@ getFlowCtx().start(new TestFlow(new Long(5)),
           </tgroup>
         </informaltable>
       </para>
-      
+
+			<para>
+			To make overlay visually possible, one must register it inside the system form as the following
+			code snippet does from <literal>root.jsp</literal> of the Aranea Demo Application:
+
+			<programlisting role="jsp"> ...
+  &lt;ui:body&gt;
+
+    &lt;div id="cont1"&gt;
+      &lt;ui:systemForm method="POST"&gt;
+        &lt;ui:registerScrollHandler/&gt;
+        &lt;ui:registerPopups/&gt;
+        &lt;ui:registerOverlay/&gt;
+...</programlisting>
+
+			Notice the <literal>&lt;ui:registerOverlay/&gt;</literal> tag!
+			</para>
+
       <para>
         Standard implementation of <literal>OverlayContext</literal> is described in
         <xref linkend="StandardOverlayContainerWidget"/>.
       </para>
-      
-      <para>
+    </sect2>
 
+		<sect2 id="MenuContext">
+			<title>MenuContext</title>
+
+			<para>
+			Defines the standard methods for menu handlers (contexts). Most custom implementations
+			can extend the <literal>org.araneaframework.uilib.core.BaseMenuWidget</literal> and
+			its <literal>buildMenu()</literal> method.
+			</para>
+
+      <para>
+      	<informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="1*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>void selectMenuItem(String menuItemPath)</literal></entry>
+                <entry>Marks the menu item (identified by given path) as active.</entry>
+              </row>
+
+              <row>
+                <entry><literal>MenuItem getMenu()</literal></entry>
+                <entry>Provides access to the entire menu.</entry>
+              </row>
+
+              <row>
+                <entry><literal>void setMenu(MenuItem menu)</literal></entry>
+                <entry>Specifies the menu to use.</entry>
+              </row>
+
+            </tbody>
+          </tgroup>
+        </informaltable>
       </para>
 
+			<para>
+			All menu items are represented as a tree of
+			<literal>org.araneaframework.uilib.core.MenuItem</literal> objects that
+			have its own label and a flow (a widget or a flow creator). An entire menu is also
+			a <literal>MenuItem</literal> and its menus are declared with
+			<literal>addSubMenuItem(MenuItem item)</literal>. A <literal>MenuItem</literal>
+			may not have a flow, if it represents a sub menu. An example menu might look like this:
+
+<programlisting role="java">  MenuItem menu = new MenuItem();
+  demoMenu = menu.addMenuItem(null, new MenuItem("Demo_Menu", DemoWidget.class));
+  demoMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
+  demoMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
+  demoMenu.addMenuItem(new MenuItem("Cooperative_Form", FriendlyUpdateDemoWidget.class));
+  ...</programlisting>
+			</para>
+
+			<para>
+			To enable the menu widget, the root widget may initialize it. Then the
+			menu can be accessed by view data. A simplified example for JSP (without
+			style information) is below:
+
+<programlisting role="jsp">&lt;ui:widgetContext id="menu"&gt;
+  &lt;c:forEach items="${viewData.menu.subMenu}" var="item"&gt;
+    &lt;c:if test="${item.value.selected}"&gt;
+      &lt;ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}" styleClass="active"/&gt;
+    &lt;/c:if&gt;
+
+    &lt;c:if test="${not item.value.selected}"&gt;
+      &lt;ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}"/&gt;
+    &lt;/c:if&gt;
+  &lt;/c:forEach&gt;
+&lt;/ui:widgetContext&gt;</programlisting>
+			</para>
+    </sect2>
+
+    <sect2 id="ConfirmationContext">
+      <title>ConfirmationContext</title>
+
+      <para>
+      Aranea standard component chain enriches <literal>Environment</literal>
+      with a context called <literal>ConfirmationContext</literal>. This can be
+      used for executing some code conditionally, depending on user actions.
+      Context interface is simple and consists of following methods:
+<programlisting role="java">public interface ConfirmationContext extends Serializable {
+
+  void confirm(Closure onConfirmClosure, String message);
+
+  String getConfirmationMessage();
+
+}</programlisting>
+
+			There the <literal>org.apache.commons.collections.Closure</literal> is a
+			simple interface to encapsulate business logic:
+			
+<programlisting role="java">public interface Closure {
+
+  public void execute(java.lang.Object input);
+
+}</programlisting>
+			The <literal>input</literal> param is <literal>null</literal> for transitions
+			handlers.
+      </para>
+
+			<para>
+			When confirmation is registered (with the <literal>confirm(...)</literal>
+			method), rendering mechanism will present end-user with the browser
+			standard message box (on page load) and ask for confirmation of requested action.
+			Depending on users choice, action encapsulated in the
+			<literal>onConfirmClosure</literal> param either will get executed or not.
+			</para>
+
+			<para>
+			Combined with <literal>FlowContext.TransitionHandler</literal>, confirmation
+			could be asked whenever the user performs navigation that would make active
+			flow unreachable and flow contains data that has not yet been saved.
+
+<programlisting role="java">getFlowCtx().setTransitionHandler(
+  new CancelConfirmingTransitionHandler(
+      new ShouldConfirmOnUnsavedData(),
+      "Some data not saved yet. Continue anyway?"));
+
+</programlisting>
+
+			Here <literal>CancelConfirmingTransitionHandler</literal> (provided by Aranea)
+			registers the confirmation whenever <literal>FlowContext.cancel()</literal> is
+			called from active flow and <literal>org.apache.commons.collections.Predicate</literal>
+			(that is used to check the custom condition before executing the event) 
+			<literal>ShouldConfirmOnUnsavedData</literal> (not provided by Aranea) evaluates
+			to <literal>true</literal>. Only after the user confirms the navigation, the event
+			will allow flow transition to be actually be performed.
+			</para>
+
+			<para>
+			<literal>ConfirmationContext</literal> and <literal>TransitionHandlers</literal>
+			together are a reliable and convenient way of preventing end-users shooting
+			themselves in the foot.
+			</para>
+
+    </sect2>
+
+    <sect2 id="ManagedServiceContext">
+      <title>ManagedServiceContext, ThreadContext, and TopServiceContext</title>
+
+      <para>
+      This section describes the contexts that are at the core of request handling.
+      </para>
+
+      <para>
+      <literal>org.araneaframework.framework.ManagedServiceContext</literal> represents
+      a context that handles the requests of different threads (windows) in one session.
+      The basic idea is that it routes requests to the right services. Here's an overview
+      of the interface:
+<programlisting role="java">package org.araneaframework.framework;
+
+public interface ManagedServiceContext extends Serializable {
+
+  public Object getCurrentId();
+
+  public Service addService(Object id, Service service);
+
+  public Service addService(Object id, Service service, Long timeToLive);
+
+  public Service getService(Object id);
+
+  public void close(Object id);
+
+}</programlisting>
+			</para>
+
+			<para>
+			<literal>org.araneaframework.framework.ThreadContext</literal> represents
+			a context that makes popups possible. Without it the user would have the
+			same session in both windows, because Aranea application has a state.
+			<literal>ThreadContext</literal>, however, provides means to create a
+			new (distinct) thread in the session. A proof that a
+			<literal>ThreadContext</literal> is running in a web application is
+			the fact that you can find something like this in the source code of a page:
+			<programlisting role="html">&lt;input name="araThreadServiceId" type="hidden" value="mainThread"/&gt;</programlisting>
+			It means that the next request (submit) made will be bound to the <literal>mainThread</literal>.
+			</para>
+
+			<para>
+			<literal>org.araneaframework.framework.TopServiceContext</literal> further
+			specifies the <literal>ManagedServiceContext</literal> by being the top-most
+			(and thus accessible by all users), though it works like <literal>ThreadContext</literal>.
+			The difference, however, lies in the fact that <literal>TopServiceContext</literal>
+			is not session based. Therefore, it would handle threads when, for example, the user
+			has not logged in. And one may see it in their Aranea application page as following:
+			<programlisting role="html">&lt;input name="araTopServiceId" type="hidden" value="application"/&gt;</programlisting>
+			</para>
+
+			<para>
+			<literal>ThreadContext</literal> and <literal>TopServiceContext</literal> do not
+			introduce new methods compared to <literal>ManagedServiceContext</literal>.
+			</para>
     </sect2>
   </sect1>
 </chapter>

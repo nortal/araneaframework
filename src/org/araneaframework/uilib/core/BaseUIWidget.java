@@ -22,6 +22,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Scope;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
@@ -77,9 +78,14 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
   
   protected OverlayContext getOverlayCtx() {
-    return (OverlayContext) getEnvironment().getEntry(OverlayContext.class);
+    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
   }
   
+  /** @since 1.1.3 */
+  protected ConfirmationContext getConfirmationCtx() {
+    return (ConfirmationContext) getEnvironment().requireEntry(ConfirmationContext.class);
+  }
+
   /** @since 1.1 */
   protected boolean isRunningInOverlay() {
     return (getEnvironment().getEntry(OverlayActivityMarkerContext.class)) != null;
