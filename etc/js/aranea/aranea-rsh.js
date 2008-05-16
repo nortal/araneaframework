@@ -16,11 +16,11 @@ window.dhtmlHistory.create({
   }
 });
 
-var initFunc = function() {
+AraneaPage.RSHInit = function() {
   var yourListener = function(newLocation, historyData) {
     araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
 
-    if (newLocation && (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange) && historyData) {
+    if (newLocation && (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
       window.dhtmlHistoryListenerRequestedState = newLocation;
       // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
       araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'globalBackRegion');
@@ -34,4 +34,4 @@ var initFunc = function() {
   dhtmlHistory.addListener(yourListener);
 }; 
 
-araneaPage().addSystemLoadEvent(initFunc);
+araneaPage().addSystemLoadEvent(AraneaPage.RSHInit);

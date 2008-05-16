@@ -1032,7 +1032,7 @@ AraneaPage.VersionedStateRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('araStateVersionRegion', new AraneaPage.VersionedStateRegionHandler());
 
-AraneaPage.RSHInit = function() {
+AraneaPage.RSHURLInit = function() {
   if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
 	window.dhtmlHistory.firstLoad = true;
 	window.dhtmlHistory.ignoreLocationChange = true;
@@ -1047,7 +1047,7 @@ var _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
-_ap.addSystemLoadEvent(AraneaPage.RSHInit);
+_ap.addClientLoadEvent(AraneaPage.RSHURLInit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */
