@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +42,6 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.util.AtomicResponseHelper;
@@ -136,13 +134,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
         if (log.isDebugEnabled())
           log.debug("Partial rendering is disabled, forcing a reload for full render");
         disabled = false;
-        writeVersionedStateRegions(writer);
         writeReloadRegion(writer);
       } else {
         writeTransactionIdRegion(writer);
         writeHandlerRegions(writer);
         writeDocumentRegions(writer, regionContents);
-        writeVersionedStateRegions(writer);
       }
       writer.flush();
     }
@@ -150,18 +146,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       arUtil.commit();
       disabled = false;
       renderedRegions.clear();
-    }
-  }
-
-  /** @since 1.2 */
-  protected void writeVersionedStateRegions(PrintWriter writer) throws Exception {
-    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
-    if (ctx == null) return;
-    
-    Map stateRegion = ctx.getRegions();
-    for (Iterator i = stateRegion.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Entry) i.next();
-      writeRegion(writer, (String)entry.getKey(), (String)entry.getValue());
     }
   }
 

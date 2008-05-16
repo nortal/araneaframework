@@ -23,7 +23,7 @@ AraneaPage.RSHInit = function() {
     if (newLocation && (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
       window.dhtmlHistoryListenerRequestedState = newLocation;
       // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
-      araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'globalBackRegion');
+      araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
     }
 
     dhtmlHistory.firstLoad = false;

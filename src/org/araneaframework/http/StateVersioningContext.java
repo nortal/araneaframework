@@ -1,5 +1,6 @@
 package org.araneaframework.http;
 
+import java.io.Serializable;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.core.ApplicationComponent;
 
@@ -7,12 +8,15 @@ import org.araneaframework.core.ApplicationComponent;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.2
  */
-public interface StateVersioningContext extends UpdateRegionProvider {
+public interface StateVersioningContext extends Serializable {
   /** Key for request parameter that holds state identifier (if parameter present). */
   public static final String STATE_ID_REQUEST_KEY = "araClientStateId";
   
-  /** Key for */
-  public static final String STATE_VERSIONING_UPDATE_REGION_KEY = "araStateVersionRegion";
+  /** Identifier of response header which contains state version information. */
+  public static final String STATE_ID_RESPONSE_HEADER = "Aranea-Application-StateVersion";
+  
+  /** Identifier of update region which must be updated when client-side history navigation occurs. */
+  public static final String GLOBAL_CLIENT_NAVIGATION_REGION_ID = "araneaGlobalClientHistoryNavigationUpdateRegion";
 
   /**
    * Saves state of the component tree at the moment of calling this method. State

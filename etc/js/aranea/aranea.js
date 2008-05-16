@@ -583,7 +583,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   var neededAraClientStateId = systemForm.araClientStateId.value;
   var neededAraTransactionId = 'override';
   
-  if (updateRegions == 'globalBackRegion') {
+  if (updateRegions == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
     neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
     window.dhtmlHistoryListenerRequestedState = null;
     neededAraTransactionId = 'inconsistent';
@@ -617,15 +617,22 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         document.close();
       }
     },
-    onComplete: function() {
+    onComplete: function(transport) {
       // because prototype's Element.update|replace delay execution of scripts,
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
-      	if (_ap.versionedStateApplier) {
-          _ap.versionedStateApplier();
-          _ap.versionedStateApplier = null;
-        }
+      	var stateVersion = null;
+        try {
+         stateVersion = transport.getResponseHeader('Aranea-Application-StateVersion');
+        } catch (e) { stateVersion = null }
+        if (stateVersion) {
+          var sForm = araneaPage().getSystemForm();
+          sForm.araClientStateId.value = stateVersion;
+          if (dhtmlHistory)
+            dhtmlHistory.add(stateVersion, true);
+      	}
+
       	if (Aranea.ModalBox) {
       	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
         }
@@ -1007,30 +1014,6 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
   }
 };
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
-
-/**
- * Versioned state region handler.
- * @since 1.2
- */
-AraneaPage.VersionedStateRegionHandler = Class.create();
-AraneaPage.VersionedStateRegionHandler.prototype = {
-  initialize: function() {
-  },
-
-  process: function(content) {
-    var systemForm = araneaPage().getSystemForm();
-    var json = content.evalJSON();
-    if (json.araClientStateId) {
-      _ap.versionedStateApplier = function () {
-        var sForm = araneaPage().getSystemForm();
-        sForm.araClientStateId.value = json.araClientStateId;
-        if (dhtmlHistory)
-          dhtmlHistory.add(json.araClientStateId, true);
-      };
-    }
-  }
-};
-AraneaPage.addRegionHandler('araStateVersionRegion', new AraneaPage.VersionedStateRegionHandler());
 
 AraneaPage.RSHURLInit = function() {
   if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {

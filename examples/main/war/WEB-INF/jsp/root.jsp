@@ -19,8 +19,8 @@
 		</head>
 
 		<ui:body>
-            
-            <ui:updateRegion globalId="globalBackRegion">
+
+            <ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion">
 				<div id="cont1">
 					<ui:systemForm method="POST">
 						<ui:registerScrollHandler/>

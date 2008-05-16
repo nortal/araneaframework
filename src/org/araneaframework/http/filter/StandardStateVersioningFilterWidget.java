@@ -3,7 +3,6 @@ package org.araneaframework.http.filter;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.collections.map.SingletonMap;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
@@ -21,8 +20,8 @@ import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
-import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.http.util.RelocatableUtil;
 import org.araneaframework.http.util.ServletUtil;
 
@@ -41,11 +40,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * is present in component hierarchy. 
    */
   public static final int DEFAULT_MAX_STATES_STORED = 10;
-
   private int maxVersionedStates = DEFAULT_MAX_STATES_STORED;
   
   /** State identifier of last component hierarchy serviced by this filter. */
   protected String lastStateId = null;
+  
+  /** Holds <code>Boolean</code> which indicates whether the state has been saved during current request/response cycle. */
+  private transient ThreadLocal stateSavedTL = new ThreadLocal();
 
   /** 
    * Map of states versioning system keeps track of. When using client side state storage,
@@ -87,6 +88,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (currentStates != null)
       versionedStates.putAll(currentStates);
   }
+  
+  protected synchronized void initStateSavedTL() {
+    if (stateSavedTL == null) {
+      stateSavedTL = new ThreadLocal();
+    }
+    stateSavedTL.set(Boolean.FALSE);
+  }
 
   /* Service methods */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -99,7 +107,11 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       super.action(path, input, output);
       // if server-side storage, update the current state
       saveOrUpdateState(lastStateId);
+      setResponseStateHeader(output, lastStateId);
     } finally {
+      if (stateSavedTL != null) {
+        stateSavedTL.set(null);
+      }
       childWidget = null;
     }
   }
@@ -117,9 +129,20 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void render(OutputData output) throws Exception {
     setResponseCacheHeaders(output);
     try {
+      initStateSavedTL();
       restoreState(output.getInputData());
       super.render(output);
+      if (stateSavedTL.get().equals(Boolean.FALSE)) {
+        String regions = (String) getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+        if (regions.indexOf(StateVersioningContext.GLOBAL_CLIENT_NAVIGATION_REGION_ID) != -1) {
+          saveOrUpdateState(lastStateId);
+        } else {
+          saveState();
+        }
+      }
+      setResponseStateHeader(output, lastStateId);
     } finally {
+      stateSavedTL.set(null);
       childWidget = null;
     }
   }
@@ -131,18 +154,16 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   /** 
    * Sets the response headers that disallow caching in general but still allow for using
    * of browser history navigation facilities (back/forward buttons) in most browsers (IE, FF, Opera). 
-   * Safari seems to behaves badly in regard to the RFC */
+   * Safari seems to behaves badly in regard to the RFC. */
   protected void setResponseCacheHeaders(OutputData output) {
     HttpServletResponse response = ServletUtil.getResponse(output);
     response.setHeader("Pragma", null);       
     response.setHeader("Cache-Control", null);
   }
-  
-  //TODO:
-  protected void setResponseStateHeader(OutputData output, State state) {
+
+  protected void setResponseStateHeader(OutputData output, String stateId) {
     HttpServletResponse response = ServletUtil.getResponse(output);
-    response.setHeader("Pragma", null);
-    response.setHeader("Cache-Control", null);
+    response.setHeader(StateVersioningContext.STATE_ID_RESPONSE_HEADER, stateId);
   }
 
   /** 
@@ -152,14 +173,16 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void restoreState(InputData input) throws Exception {
     // state already restored (usually the case when update/event/render all get called)
     if (childWidget != null) return;
-    
+
     byte[] serializedState = getState(input);
     restoreChild(serializedState);
-    
+
     String requestStateId = getStateId(input);
     if (lastStateId != null && !lastStateId.equals(requestStateId) && requestStateId != null)
       notifyClientNavigationAwareComponents();
-    lastStateId = requestStateId;
+
+    if (requestStateId != null)
+      lastStateId = requestStateId;
   }
 
   protected void restoreChild(byte[] serializedState) {
@@ -210,26 +233,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     ClientNavigationNotifierMessage.INSTANCE.send(null, childWidget);
   }
 
-  /* UpdateRegionProvider IMPLEMENTATION */
-  public Map getRegions() {
-    // do not create new state -- instead update the current one
-    State currentState;
-    String regions = (String) getInputData().getGlobalData().get("updateRegions");
-    if (regions.indexOf("globalBackRegion") >= 0) {
-      if (log.isDebugEnabled()) {
-        log.debug("back state: " + getStateId(getInputData()));
-      }
-      currentState = saveOrUpdateState(getStateId(getInputData()));
-    }
-    else
-      currentState = saveState();
-
-    JsonObject stateRegion = new JsonObject();
-    stateRegion.setStringProperty(StateVersioningContext.STATE_ID_REQUEST_KEY, currentState.getStateId());
-
-    return new SingletonMap(StateVersioningContext.STATE_VERSIONING_UPDATE_REGION_KEY, stateRegion.toString());
-  }
-
   /**
    * @return current state with new random identifier*/
   public State saveState() {
@@ -243,15 +246,20 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * @return current state with supplied identifier
    */
   public State saveOrUpdateState(String stateId) {
+    if (stateId == null)
+      return saveState();
+
     byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget);
     versionedStates.put(stateId, serializedChild);
     State result = new State(serializedChild, stateId);
-    
+
     if (log.isDebugEnabled()) {
       log.debug("Registered client state version: " + stateId + " in thread '" + EnvironmentUtil.getThreadServiceId(getEnvironment()) + "'.");
     }
 
     lastStateId = stateId;
+    stateSavedTL.set(Boolean.TRUE);
+
     return result;
   }
 
