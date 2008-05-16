@@ -87,7 +87,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     if (ctx != null) {
       //XXX: wtf is that
       result.append('&');
-      result.append(constructServiceParameter(StateVersioningContext.STATE_ID_KEY)).append(" + \"");
+      result.append(constructServiceParameter(StateVersioningContext.STATE_ID_REQUEST_KEY)).append(" + \"");
     }
 
 	  return result;

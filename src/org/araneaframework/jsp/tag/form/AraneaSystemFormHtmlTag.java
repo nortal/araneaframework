@@ -81,9 +81,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     if (ctx != null) {
       State state = ctx.saveState();
       if (state != null) {
-        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_KEY, state.getStateId());
-        if (!ctx.isServerSideStorage())
-          JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_KEY, state.getState().toString());          
+        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_REQUEST_KEY, state.getStateId());
       }
     }
   }

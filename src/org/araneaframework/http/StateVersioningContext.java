@@ -8,18 +8,16 @@ import org.araneaframework.core.ApplicationComponent;
  * @since 1.2
  */
 public interface StateVersioningContext extends UpdateRegionProvider {
-  /** Key for request parameter that holds state (if parameter present). */
-  public static final String STATE_KEY = "araClientState";
   /** Key for request parameter that holds state identifier (if parameter present). */
-  public static final String STATE_ID_KEY = "araClientStateId";
+  public static final String STATE_ID_REQUEST_KEY = "araClientStateId";
   
   /** Key for */
   public static final String STATE_VERSIONING_UPDATE_REGION_KEY = "araStateVersionRegion";
 
   /**
-   * Saves state at the moment of calling this method.
-   * State will have a generated id.
-   * @return snapshot of saved state
+   * Saves state of the component tree at the moment of calling this method. State
+   * will get a random id.
+   * @return State snapshot
    */
   public State saveState();
 
@@ -28,17 +26,10 @@ public interface StateVersioningContext extends UpdateRegionProvider {
    * have a supplied <code>stateId</code>
    * @return snapshot of saved state
    */
-  public State saveState(String stateId);
-
-  /**
-   * Returns whether the state versions are held on server. If not, and implementation
-   * is active in a component hierarchy it means that state is only present on client-side.
-   * @return whether the state versions are held on server
-   */
-  public boolean isServerSideStorage();
+  public State saveOrUpdateState(String stateId);
 
   /** 
-   * Expires all non-current versioned states. Should be called when current flow has completed some 
+   * Expires all stored versioned states. Should be called when current flow has completed some 
    * truly irreversible operation -- i.e calling remote service to bill a credit card etc etc. 
    */
   public void expire();
@@ -63,6 +54,8 @@ public interface StateVersioningContext extends UpdateRegionProvider {
   }
 
   public static class StateExpirationException extends NestableRuntimeException {
+    private static final long serialVersionUID = 1L;
+
     public StateExpirationException() {
       super();
     }

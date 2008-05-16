@@ -331,11 +331,7 @@ function AraneaPage() {
     if (_ap.getSystemForm().araClientStateId) {
       url += '&araClientStateId=' + _ap.getSystemForm().araClientStateId.value;
     }
-    // this has only limited use, cause GET requests are limited in size
-    if (_ap.getSystemForm().araClientState) {
-      url += '&araClientState=' + _ap.getSystemForm().araClientState.value;
-    }
-  
+
     if (extraParams)    
       url += '&' + extraParams;
 
@@ -583,12 +579,23 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
+
+  var neededAraClientStateId = systemForm.araClientStateId.value;
+  var neededAraTransactionId = 'override';
+  
+  if (updateRegions == 'globalBackRegion') {
+    neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
+    window.dhtmlHistoryListenerRequestedState = null;
+    neededAraTransactionId = 'inconsistent';
+  }
+
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      araTransactionId: 'override',
+      araTransactionId: neededAraTransactionId,
       ajaxRequestId: ajaxRequestId,
-      updateRegions: updateRegions
+      updateRegions: updateRegions,
+      araClientStateId: neededAraClientStateId
     },
     onSuccess: function(transport) {
       AraneaPage.hideLoadingMessage();
@@ -615,6 +622,10 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
       	araneaPage().onload();
+      	if (_ap.versionedStateApplier) {
+          _ap.versionedStateApplier();
+          _ap.versionedStateApplier = null;
+        }
       	if (Aranea.ModalBox) {
       	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
         }
@@ -624,6 +635,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();
+      var logmsg = "";
       logmsg += 'Partial rendering: received erroneous response';
       logmsg += ' (' + transport.responseText.length + ' characters)';
       logmsg += ': ' + transport.status + ' ' + transport.statusText;
@@ -931,6 +943,10 @@ AraneaPage.ReloadRegionHandler.prototype = {
   },
 
   process: function(content) {
+    if (_ap.versionedStateApplier) {
+      _ap.versionedStateApplier();
+    }
+
     var systemForm = araneaPage().getSystemForm();
     if (systemForm.araTransactionId)
       systemForm.araTransactionId.value = 'inconsistent';
@@ -992,12 +1008,46 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
 
+/**
+ * Versioned state region handler.
+ * @since 1.2
+ */
+AraneaPage.VersionedStateRegionHandler = Class.create();
+AraneaPage.VersionedStateRegionHandler.prototype = {
+  initialize: function() {
+  },
+
+  process: function(content) {
+    var systemForm = araneaPage().getSystemForm();
+    var json = content.evalJSON();
+    if (json.araClientStateId) {
+      _ap.versionedStateApplier = function () {
+        var sForm = araneaPage().getSystemForm();
+        sForm.araClientStateId.value = json.araClientStateId;
+        if (dhtmlHistory)
+          dhtmlHistory.add(json.araClientStateId, true);
+      };
+    }
+  }
+};
+AraneaPage.addRegionHandler('araStateVersionRegion', new AraneaPage.VersionedStateRegionHandler());
+
+AraneaPage.RSHInit = function() {
+  if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
+	window.dhtmlHistory.firstLoad = true;
+	window.dhtmlHistory.ignoreLocationChange = true;
+	window.location.hash = _ap.getSystemForm().araClientStateId.value;   
+	dhtmlHistory.add(_ap.getSystemForm().araClientStateId.value, null);
+  }
+};
+
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
 var _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
+_ap.addSystemLoadEvent(AraneaPage.RSHInit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */

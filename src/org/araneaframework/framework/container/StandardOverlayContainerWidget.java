@@ -152,8 +152,8 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
         StateVersioningContext ctx = (StateVersioningContext) overlay.getEnvironment().getEntry(StateVersioningContext.class);
         if (ctx != null) {
-          String stateId = (String)getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
-          ctx.saveState(stateId);
+          String stateId = (String)getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_REQUEST_KEY);
+          ctx.saveOrUpdateState(stateId);
           response.getWriter().write("<!--" + stateId + "-->\n");
         }
       }

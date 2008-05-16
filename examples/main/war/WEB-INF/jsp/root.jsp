@@ -60,8 +60,6 @@
 				<ui:widgetInclude id="menu.footer"/>
 			</ui:updateRegion>
 
-			<ui:onLoadEvent event="if (dhtmlHistory &amp;&amp; _ap.getSystemForm().araClientStateId) { window.dhtmlHistory.firstLoad = true;  window.dhtmlHistory.ignoreLocationChange = true; window.location.hash = _ap.getSystemForm().araClientStateId.value;   dhtmlHistory.add(_ap.getSystemForm().araClientStateId.value, null); }"/>
-
 		</ui:body>
 		
 		</html>
