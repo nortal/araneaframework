@@ -19,7 +19,15 @@ package org.araneaframework.core;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 
-public class StandardEnvironmentAwareCallback implements EnvironmentAwareCallback {
-  public void call(Environment env) throws Exception {
-  }
+/**
+ * A dummy class that implements <code>EnvironmentAwareCallback</code>. The
+ * sub classes may use it to provide custom solutions.
+ */
+public class StandardEnvironmentAwareCallback
+  implements EnvironmentAwareCallback {
+
+  private static final long serialVersionUID = 1L;
+
+  public void call(Environment env) throws Exception {}
+
 }

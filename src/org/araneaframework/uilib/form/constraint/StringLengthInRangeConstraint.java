@@ -21,46 +21,65 @@ import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * {@link org.araneaframework.uilib.form.Constraint} that allows constraining
- * input length in a {@link FormElement}.
+ * A <code>Constraint</code> that constrains the input length of a
+ * {@link FormElement}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StringLengthInRangeConstraint extends BaseFieldConstraint {
+
+  private static final long serialVersionUID = 1L;
+
   private int rangeStart;
+
   private int rangeEnd;
-  
+
+  /**
+   * Initializes this constraint without binding it with a field. Use
+   * {@link #setRangeStart(int)} and {@link #setRangeEnd(int)} to specify valid
+   * length criteria, or this constraint will always invalidate the data.
+   */
   public StringLengthInRangeConstraint() {}
 
+  /**
+   * Creates a <code>String</code> length constraint for given form element.
+   * Use {@link #setRangeStart(int)} and {@link #setRangeEnd(int)} to specify
+   * valid length criteria, or this constraint will always invalidate the data.
+   * 
+   * @param field The form element to be constrained.
+   */
   public StringLengthInRangeConstraint(FormElement field) {
     super(field);
   }
 
   /**
-   * Creates the constraint, initializing the corresponding fields.
-   * @param rangeStart start of the length range.
-   * @param rangeEnd end of the length range.
+   * Creates the constraint, and initializes the allowed length range. The
+   * minumum length must be less than the maximum length allowed, or the
+   * constraint never validates.
+   * <p>
+   * If the minimum length is less than 1 then it is not checked.
+   * 
+   * @param rangeStart The minumum allowed length of the value.
+   * @param rangeEnd The maximum allowed length of the value.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
     setRangeStart(rangeStart);
     setRangeEnd(rangeEnd);
   }
-  
+
   /**
-   * Checks that the length of string belongs in constraint boundaries.
+   * Checks that the length of the field value is in constrained boundaries.
    */
   protected void validateConstraint() {
     String value = (String) getValue();
 
     if (value == null) {
-      if (rangeStart == 0)
-        return;
+      if (rangeStart > 0) {
+        addValidationError();
+      }
+    } else if (value.length() < rangeStart || value.length() > rangeEnd) {
       addValidationError();
-      return;
     }
-
-    if (value != null && (value.length() < rangeStart || value.length() > rangeEnd))
-      addValidationError();
   }
 
   private void addValidationError() {
@@ -75,11 +94,26 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
         getEnvironment()));
   }
 
+  /**
+   * Specifies the new maximum length for the value. It must be greater than the
+   * minumum length allowed, or the constraint never validates.
+   * 
+   * @param rangeEnd The new maximum length for the value.
+   */
   public void setRangeEnd(int rangeEnd) {
     this.rangeEnd = rangeEnd;
   }
 
+  /**
+   * Specifies the new minumum length for the value. It must be less than the
+   * maximum length allowed, or the constraint never validates.
+   * <p>
+   * If this value is less than 1 then the minimum length is not checked.
+   * 
+   * @param rangeStart The new minumum length for the value.
+   */
   public void setRangeStart(int rangeStart) {
     this.rangeStart = rangeStart;
   }
+
 }

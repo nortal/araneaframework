@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagAttr;
+import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.jsp.tag.uilib.form.element.AutomaticTagFormElementTag;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -39,16 +40,27 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 
-
 /**
  * Utility class for setting {@link FormElement} properties that are needed for
  * rendering them in Aranea JSP with
  * {@link org.araneaframework.jsp.tag.uilib.form.element.AutomaticTagFormElementTag}.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @see AutomaticTagFormElementTag
+ * @see FormElementViewSelector
+ * @see TagInfo
+ * @see TagAttr
  */
 public class AutomaticFormElementUtil {
+
+  /**
+   * Contains the editable (input) tags
+   */
   public static final Map CONTROLS_TO_EDITABLE_TAGS = new HashMap();
+
+  /**
+   * Contains the display tags
+   */
   public static final Map CONTROLS_TO_DISPLAY_TAGS = new HashMap();
 
   static {
@@ -86,38 +98,49 @@ public class AutomaticFormElementUtil {
     CONTROLS_TO_DISPLAY_TAGS.put(TimeControl.class, "timeInputDisplay");
   }
 
+  // Cannot instantiate this class.
   private AutomaticFormElementUtil() {}
 
   /**
-   * Assigns a {@link FormElementViewSelector} <code>viewSelector</code> to the specified {@link FormElement}.
+   * Assigns a {@link FormElementViewSelector} <code>viewSelector</code> to
+   * the specified {@link FormElement}.
+   * 
+   * @param formElement The form element that will get the view (tag) selector.
+   * @param viewSelector The view (tag) selector that will be used on rendering.
    */
   public static void setFormElementViewSelector(FormElement formElement, FormElementViewSelector viewSelector) {
     formElement.setProperty(FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY, viewSelector);
   }
-  
+
   /**
-   * Assigns a {@link FormElementViewSelector} <code>viewSelector</code> to the {@link FormElement} that 
-   * belongs to <code>form</code> and has id <code>formElementId</code>.
+   * Assigns a {@link FormElementViewSelector} <code>viewSelector</code> to
+   * the {@link FormElement} that belongs to <code>form</code> and has an ID
+   * <code>formElementId</code>.
+   * 
+   * @param form The form with the given element.
+   * @param formElementId The ID of the form element that will get the view (tag) selector.
+   * @param viewSelector The view (tag) selector that will be used on rendering.
    */
   public static void setFormElementViewSelector(FormWidget form, String formElementId, FormElementViewSelector viewSelector) {
     setFormElementViewSelector(form.getElementByFullName(formElementId), viewSelector);
   }
 
   /**
-   * Associates {@link FormElement} with a JSP tag that {@link AutomaticTagFormElementTag} will use
-   * for actual rendering of the {@link FormElement}.
+   * Associates {@link FormElement} with a JSP tag that
+   * {@link AutomaticTagFormElementTag} will use for actual rendering of the
+   * {@link FormElement}.
    * 
-   * @param formElement 
+   * @param formElement The form element that will get the view (tag) selector.
    * @param tagName name of the tag, without any namespace
    * @param tagAttributes Map &lt;attributeName, attributeValue&gt;
    */
   public static void setFormElementTag(FormElement formElement, String tagName, Map tagAttributes) {
     setFormElementViewSelector(formElement, new FormElementViewSelector(tagName, tagAttributes));
   }
-  
+
   /**
    * Assigns a tag to the specified element.
-   *
+   * 
    * @param form parent form or composite element.
    * @param formElementId id of the simple element.
    * @param tagName name of the tag that will be used to render the element.
@@ -129,31 +152,35 @@ public class AutomaticFormElementUtil {
 
   /**
    * Assigns an attributeless tag to the specified {@link FormElement}.
-   *
+   * 
    * @param formElement id of the simple element.
-   * @param tagName name of the tag that will be used to render the element, without any namespace.
+   * @param tagName name of the tag that will be used to render the element,
+   *            without any namespace.
    */
   public static void setFormElementTag(FormElement formElement, String tagName) {
     setFormElementTag(formElement, tagName, Collections.EMPTY_MAP);
   }
 
   /**
-   * Assigns an attributeless tag to the specified to the {@link FormElement} that 
-   * belongs to <code>form</code> and has id <code>formElementId</code>.
-   *
+   * Assigns an attributeless tag to the specified to the {@link FormElement}
+   * that belongs to <code>form</code> and has id <code>formElementId</code>.
+   * 
    * @param form parent form or composite element.
    * @param formElementId id of the simple element.
-   * @param tagName name of the tag that will be used to render the element, without any namespace.
+   * @param tagName name of the tag that will be used to render the element,
+   *            without any namespace.
    */
   public static void setFormElementTag(FormWidget form, String formElementId, String tagName) {
 	setFormElementTag(form.getElementByFullName(formElementId), tagName);
   }
 
   /**
-   * Assigns specified tag and attributes to the {@link FormElement}. 
-   *
-   * @param formElement 
-   * @param tagName name of the tag that will be used to render the element, without any namespace
+   * Assigns specified tag and attributes to the {@link FormElement}.
+   * 
+   * @param formElement The form element that will start to use the automatic
+   *            tag.
+   * @param tagName name of the tag that will be used to render the element,
+   *            without any namespace
    * @param attributePairs tag attributes.
    */
   public static void setFormElementTag(FormElement formElement, String tagName, TagAttr[] attributePairs) {
@@ -164,30 +191,36 @@ public class AutomaticFormElementUtil {
 
     setFormElementTag(formElement, tagName, attributes);
   }
-  
+
   /**
-   * Assigns tag with specified attributes to the specified to the {@link FormElement} that 
-   * belongs to <code>form</code> and has id <code>formElementId</code>.
-   *
+   * Assigns tag with specified attributes to the specified to the
+   * {@link FormElement} that belongs to <code>form</code> and has id
+   * <code>formElementId</code>.
+   * 
    * @param form parent {@link FormWidget}
    * @param formElementId id of the form element
-   * @param tagName name of the tag that will be used to render the element, without any namespace
+   * @param tagName name of the tag that will be used to render the element,
+   *            without any namespace
    * @param attributePairs tag attributes.
    */
   public static void setFormElementTag(FormWidget form, String formElementId, String tagName, TagAttr[] attributePairs) {
     setFormElementTag(form.getElementByFullName(formElementId), tagName, attributePairs);
   }
-  
+
   /**
    * Assigns the default editable (aka input) tags to given form element.
+   * 
+   * @param element The form element that will be editable.
    * @since 1.0.7
    */
   public static void setFormElementDefaultEditableTag(FormElement element) {
     setFormElementTag(element, (String) CONTROLS_TO_EDITABLE_TAGS.get(element.getControl().getClass()));
   }
-  
+
   /**
    * Assigns the default editable (aka input) tags to given form element.
+   * 
+   * @param element The form element that will be just viewable.
    * @since 1.0.7
    */
   public static void setFormElementDefaultDisplayTag(FormElement element) {
@@ -195,7 +228,9 @@ public class AutomaticFormElementUtil {
   }
 
   /**
-   * Assigns the default editable (aka input) tags to all of the elements of the form.
+   * Assigns the default editable (aka input) tags to all of the elements of the
+   * form.
+   * 
    * @param form parent form or composite element.
    */
   public static void setFormElementDefaultEditableTags(FormWidget form) {
@@ -210,9 +245,11 @@ public class AutomaticFormElementUtil {
       }
     }
   }
-  
+
   /**
-   * Assigns the default display (aka read-only) tags to all of the elements of the form.
+   * Assigns the default display (aka read-only) tags to all of the elements of
+   * the form.
+   * 
    * @param form parent form or composite element.
    */
   public static void setFormElementDefaultDisplayTags(FormWidget form) {
@@ -227,4 +264,5 @@ public class AutomaticFormElementUtil {
       }
     }
   }
+
 }

@@ -29,15 +29,19 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseService extends BaseComponent implements Service {
-  
+
   protected InputData currentInputData;
+
   protected OutputData currentOutputData;
 
   public Service.Interface _getService() {
     return new ServiceImpl();
   }
-  
+
   protected class ServiceImpl implements Service.Interface {
+
+    private static final long serialVersionUID = 1L;
+
     public void action(Path path, InputData input, OutputData output){
       Assert.notNullParam(this, input, "input");
       Assert.notNullParam(this, output, "output");
@@ -65,24 +69,49 @@ public abstract class BaseService extends BaseComponent implements Service {
         _endCall();
       }
     }
+
   }
 
   /**
-   * Services provide their services through the action method. An implementation of a non-composite
-   * service like BaseService uses the action method to hook in the middle of the action routing and
-   * provide filtering, logging etc.
+   * Services provide their services through the <code>action(...)</code>
+   * method. An implementation of a non-composite service like
+   * <code>BaseService</code> uses the action method to hook in the middle of
+   * the action routing and provide filtering, logging etc.
+   * 
+   * @param path The path of the component to whom the action is targeted.
+   * @param input The request data.
+   * @param output The response data.
+   * @throws Exception Any runtime exception that may occur.
    */
-  protected void action(Path path, InputData input, OutputData output) throws Exception{}    
-  
+  protected void action(Path path, InputData input, OutputData output)
+      throws Exception {}    
+
+  /**
+   * A method for <code>Service</code>-specific exception handling.
+   * 
+   * @param e An exception that ha occured.
+   * @throws Exception Any exception that may occur during exception handling.
+   */
   protected void handleServiceException(Exception e) throws Exception {
     handleException(e);
   }
 
+  /**
+   * Provides access to the current request data.
+   * 
+   * @return The current request data.
+   */
   protected InputData getInputData() {
     return currentInputData;
   }
-  
+
+  /**
+   * Provides access to the current response data.
+   * 
+   * @return The current response data.
+   */
   protected OutputData getOutputData() {
     return currentOutputData;
   }
+
 }

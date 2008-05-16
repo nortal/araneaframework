@@ -348,7 +348,20 @@ msgContext.showInfoMessage("Hello world!");
       <para>After that the <literal>childService</literal>, its children and
       so on will be able to use the <literal>MessageContext</literal> provided
       by <literal>MessageFilterService</literal>. Of course this can be done
-      simpler as shown in examples in chapter</para>
+      simpler as shown in examples in this chapter, but this is how most of the
+      components in Aranea provide new contexts to the <literal>Environment</literal>.
+      </para>
+
+ 			<para>Sometimes, however, one may want to make his or her component or widget
+ 			 independent from the specific <literal>Environment</literal>. This can be achieved
+ 			 by using <literal>org.araneaframework.core.RelocatableDecorator</literal>:
+<programlisting role="java">  Service child = new RelocatableDecorator(new MyWidget());
+  addWidget("c", child);</programlisting>
+
+			For example, this technique is used when a user clones a thread (middle mouse button
+			click on a link), and it is necessary to clone the state. Then each widget is cloned,
+			and a new <literal>Environmnet</literal> is provided to them.
+ 			</para>
     </sect2>
 
     <sect2 id="components-messaging">

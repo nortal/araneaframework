@@ -123,7 +123,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     selectionPath = menuItemPath;
 
     reset(new EnvironmentAwareCallback() {
-      public void call(org.araneaframework.Environment env) throws Exception {
+      public void call(Environment env) throws Exception {
         if (newFlow != null)
           start(newFlow);
       }

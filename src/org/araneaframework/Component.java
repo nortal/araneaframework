@@ -40,43 +40,78 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Component extends Serializable {
-  /** @since 1.1 */
+
+  /**
+   * Provides access to the <code>Environment</code> of this
+   * <code>Component</code>.
+   * 
+   * @return the <code>Environment</code> of the <code>Component</code>.
+   * @since 1.1
+   */
   public Environment getEnvironment();
 
-  /** @since 1.1 */
-  public Scope getScope();
-  
   /**
-   * Returns true iff this component has been initialized and is not destroyed. 
-   * @since 1.1 */
+   * Provides the scope of this <code>Component</code>. The
+   * <code>Scope</code> is related to {@link Path} and the idea behind it is
+   * quite similar.
+   * 
+   * @return the scope of the <code>Component</code>
+   * @since 1.1
+   */
+  public Scope getScope();
+
+  /**
+   * Specifies whether this <code>Component</code> is alive. The latter means
+   * that the <code>Component</code> has been initialized and is not yet
+   * destroyed.
+   * 
+   * @return <code>true</code>, if this component has been initialized and is
+   *         not destroyed. Otherwise, <code>false</code>.
+   * @since 1.1
+   */
   public boolean isAlive();
-  
+
   /**
    * The factory method returning the implementation of the Component.
+   * 
    * @return the implementation of the Component.
    */
   public Component.Interface _getComponent();
-  
+
   /**
-   * The interface which takes care of calling the hooks in the template. 
+   * The interface which takes care of calling the hooks in the template.
    */
   public interface Interface extends Serializable {
-    
+
     /**
-     * Initializes this Component with the specified Environment.
-     * @param scope TODO
-     * @param env the Environment of this Component
+     * Initializes this <code>Component</code> with the specified Environment.
+     * 
+     * @param scope The <code>Scope</code> of the <code>Component</code>.
+     * @param env The <code>Environment</code> of this <code>Component</code>.
+     * @see Path
      */
     public void init(Scope scope, Environment env);
 
     /**
-     * Destroys this Component.
+     * Destroys this <code>Component</code>.
      */
     public void destroy();
-    
+
+    /**
+     * Forwards the given <code>Message</code> to the
+     * <code>Component<code> and its children.
+     * @param message The <code>Message</code> to forward.
+     */
     public void propagate(Message message);
-    
+
+    /**
+     * Enables this <code>Component</code>.
+     */
     public void enable();
+
+    /**
+     * Disables this <code>Component</code>.
+     */
     public void disable();
   }
 }

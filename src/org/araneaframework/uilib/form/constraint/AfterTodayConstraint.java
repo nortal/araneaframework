@@ -22,58 +22,54 @@ import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * Constraint that fails when checked java.util.Date is not after current date.
+ * Constraint that fails when checked {@link java.util.Date} is not after
+ * the current date.
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
 public class AfterTodayConstraint extends BaseFieldConstraint {
 
-    /**
-     * Specifies whether the current date is included (allowed) or not.
-     */
-    protected boolean allowToday;
-	
-	/**
-	 * Whether today should be allowed as valid. 
-	 * @param allowToday when set, all dates from today are considered valid.
-	 */
-	public AfterTodayConstraint(boolean allowToday) {
-		this.allowToday = allowToday;
-	}
-	
-	/**
-	 */
-	protected void validateConstraint() {
-		Calendar today = Calendar.getInstance();
+  private static final long serialVersionUID = 1L;
 
-		if (allowToday) {
-            today.set(Calendar.HOUR_OF_DAY, 0);
-            today.set(Calendar.MINUTE, 0);
-            today.set(Calendar.SECOND, 0);
-            today.set(Calendar.MILLISECOND, 0);
-		}
-		else {
-			today.set(Calendar.HOUR_OF_DAY, 23);
-			today.set(Calendar.MINUTE, 59);
-			today.set(Calendar.SECOND, 59);
+  /**
+   * Specifies whether the current date is included (allowed) or not.
+   */
+  protected boolean allowToday;
+
+  /**
+   * Whether today should be allowed as valid.
+   * 
+   * @param allowToday when set, all dates from today are considered valid.
+   */
+  public AfterTodayConstraint(boolean allowToday) {
+    this.allowToday = allowToday;
+  }
+
+  protected void validateConstraint() {
+    Calendar today = Calendar.getInstance();
+
+    if (allowToday) {
+      today.set(Calendar.HOUR_OF_DAY, 0);
+      today.set(Calendar.MINUTE, 0);
+      today.set(Calendar.SECOND, 0);
+      today.set(Calendar.MILLISECOND, 0);
+    } else {
+      today.set(Calendar.HOUR_OF_DAY, 23);
+      today.set(Calendar.MINUTE, 59);
+      today.set(Calendar.SECOND, 59);
       today.set(Calendar.MILLISECOND, 999);
-		}
+    }
 
-		if ((getValue() == null) || (today.getTime().compareTo((Date) getValue()) == 1)) {
-          if (!allowToday) {
-	        addError(
-	            MessageUtil.localizeAndFormat(
-	              UiLibMessages.DATE_BEFORE_TODAY, 
-	              t(getLabel()), 
-	              getEnvironment()));
-          } else {
-  	        addError(
-  		        MessageUtil.localizeAndFormat(
-  		            UiLibMessages.DATE_BEFORE_TODAY_TODAY_ALLOWED, 
-  		            t(getLabel()), 
-  		            getEnvironment()));
-          }
-		}
-	}
-
+    if ((getValue() == null)
+        || (today.getTime().compareTo((Date) getValue()) == 1)) {
+      if (!allowToday) {
+        addError(MessageUtil.localizeAndFormat(UiLibMessages.DATE_BEFORE_TODAY,
+            t(getLabel()), getEnvironment()));
+      } else {
+        addError(MessageUtil.localizeAndFormat(
+            UiLibMessages.DATE_BEFORE_TODAY_TODAY_ALLOWED, t(getLabel()),
+            getEnvironment()));
+      }
+    }
+  }
 }

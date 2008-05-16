@@ -17,8 +17,10 @@ import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * Stores system form fields that will be written out in &lt;ui:systemForm&gt;
- * tag. This implementation adds topServiceId and threadServiceId automatically,
- * since SystemFormContext is usually located below them in the hierarchy.
+ * tag. This implementation adds <code>topServiceId</code> and
+ * <code>threadServiceId</code> automatically, since
+ * <code>SystemFormContext</code> is usually located below them in the
+ * hierarchy.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
@@ -31,6 +33,10 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
     return new StandardEnvironment(super.getChildEnvironment(), SystemFormContext.class, this);
   }
 
+  /**
+   * Registers the <code>topServiceId</code> and <code>threadServiceId</code>
+   * fields from the <code>Envrionment</code>.
+   */
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     fields.clear();
 

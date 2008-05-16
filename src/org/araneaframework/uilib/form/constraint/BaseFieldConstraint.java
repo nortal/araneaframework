@@ -24,24 +24,36 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 
 /**
- * Base implementation of the {@link org.araneaframework.uilib.form.Constraint}
- * that is associated with some
- * {@link org.araneaframework.uilib.form.FormElement}.
+ * Base implementation of the <code>Constraint</code> that is associated with
+ * some {@link org.araneaframework.uilib.form.FormElement}. Most constraints
+ * may find it useful to extend this form-field-related implementation to
+ * define a new constraint.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseFieldConstraint extends BaseConstraint {
 
+  // The form field that this constraint applies to.
   private FormElement field;
 
-  public BaseFieldConstraint() {
-  }
-  
+  /**
+   * An empty constructor that does not bind this constraint with a form
+   * element. The only way to bind a constraint with a form field, is by a
+   * constructor.)
+   */
+  public BaseFieldConstraint() {}
+
   // Constraints environment should always be set to field environment.
   // however there is no guarantee that field has been initialized when
   // constructor is called, so the environment may be missing crucial entries.
   // Just setting field constraint works (then constraints environment is set when 
   // field is initialized). That would break constraint previously set however.
+
+  /**
+   * A constructor that binds this constraint with given form element (<code>field</code>)
+   * 
+   * @param field The form element to bind this contraint with.
+   */
   public BaseFieldConstraint(FormElement field) {
     Assert.notNullParam(this, field, "field");
     this.field = field;
@@ -122,6 +134,8 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
    * associated with {@link BaseFieldConstraint} could not be determined.
    */
   public static class FieldConstraintException extends AraneaRuntimeException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates the exception without any message or other <code>Throwable</code>.

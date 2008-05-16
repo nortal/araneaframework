@@ -1605,6 +1605,24 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <literal>override</literal> transaction ID is always considered
       consistent.</para>
 
+			<para>Transactions work in Aranea application by default. You may notice
+			it in a web page as a hidden field, for example:
+			<programlisting role="html">&lt;input name="araTransactionId" type="hidden" value="-8629560801569274688"/&gt;</programlisting>
+			The value is random, and a <literal>TransactionContext</literal> checks
+			every request whether it is the same as expected (it remembers the previous
+			<literal>transactionId</literal> value it gave to the page). If it is not the
+			same, the request will be ignored. Therefore, one may notice when
+			transactions are inconsistent: the pages won't update itself (on first click).
+			</para>
+
+			<para>Sometimes, however, a <literal>transactionId</literal> may become
+			inconsistent (for various reasons, such as due to a background request).
+			Then the solution would be to change the <literal>transactionId</literal>
+			value to <literal>"override"</literal> (for example, by using JavaScript).
+			(In the next response, the <literal>transactionId</literal> will still have a
+			new random numeric value.)
+			</para>
+
       <informaltable>
         <tgroup cols="2">
           <colspec colwidth="1*" />

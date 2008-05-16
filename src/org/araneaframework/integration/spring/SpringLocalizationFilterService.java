@@ -20,12 +20,34 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.filter.StandardLocalizationFilterService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceResourceBundle;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
+ * Provides the {@link SpringLocalizationContext} and
+ * {@link LocalizationContext} implementation that uses the
+ * {@link MessageSource} of the Spring framework. It is mainly targeted for
+ * projects that also use the Spring framework IoC container, and want to let
+ * the latter handle message context configuration. This service, however, helps
+ * to use the same message context in Aranea.
+ * <p>
+ * This filter service is accessible from the <code>Environment</code> by key
+ * <code>SpringLocalizationContext.class</code>.
+ * <p>
+ * To enable this service instead of the
+ * {@link StandardLocalizationFilterService}, one must define (to override the
+ * default solution) it in <code>aranea-conf.xml</code>:
+ * 
+ * <pre><code>
+ *   &lt;bean id=&quot;araneaLocalizationFilter&quot; singleton=&quot;false&quot;
+ *       class=&quot;org.araneaframework.integration.spring.SpringLocalizationFilterService&quot;&gt;
+ *     &lt;property name=&quot;languageName&quot; value=&quot;de&quot; /&gt;
+ *   &lt;/bean&gt;
+ * </code></pre>
+ * 
  * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
  */
 public class SpringLocalizationFilterService extends StandardLocalizationFilterService implements SpringLocalizationContext {

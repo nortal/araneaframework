@@ -151,6 +151,8 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   /**
    * This method should validate the constraint conditions adding error messages
    * and add messages about unsatisfied conditions.
+   * 
+   * @throws Exception Any runtime exception that may occur.
    */
   protected abstract void validateConstraint() throws Exception;
 }
