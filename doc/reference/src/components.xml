@@ -1764,6 +1764,186 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       linkend="araneaRootFlowContainer" /></para>
     </sect2>
 
+		<sect2 id="PopupWindowContext">
+			<title>PopupWindowContext</title>
+
+			<para>
+			Popup windows in Aranea are separate threads that are started using
+			<literal>org.araneaframework.http.PopupWindowContext</literal>. Popups can
+			be used, for example, to open new widgets or to upload files (using
+			<literal>org.araneaframework.http.service.FileDownloaderService</literal>).
+			Also note that current widgets can be replicated to open them in a new
+			window (when the user clicks on a middle mouse button) as this is
+			handled by <literal>org.araneaframework.http.filter.StandardThreadCloningFilterService</literal>.
+			However, to open a new widget in a popup, it must handle the entire page,
+			and its subwidgets may handle certain specific parts of a page. This is
+			similar to how a root widget handles the components in the main thread.
+			</para>
+
+			<para>
+			One can access the <literal>PopupWindowContext</literal> by getting it from
+			the <literal>Environment</literal>. If it is accessed from a widget that extends
+			<literal>BaseUIWidget</literal>, the <literal>getPopupCtx()</literal> method can
+			be used.
+			</para>
+
+			<para>
+			Here is an example on how to upload a file:
+
+<programlisting role="java">  PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+  popupContext.open(new FileDownloaderService(selectedFile), new PopupWindowProperties(), null);</programlisting>
+
+			In the example above, the first parameter is the service that uploads
+			the file, and the second one is the popup window properties. Sometimes 
+			one may want to also specify the widget that caused the popup to open.
+			Therefore, the last parameter in the example is the opener, which usually is
+			<literal>null</literal>, but may be provided as <literal>this</literal> (the caller widget).
+			(The popup widget can access the opener by <literal>PopupWindowContext.getOpener()</literal>.)
+			</para>
+
+			<para>
+			The following is an example from Aranea sample application (<literal>SamplePopupWidget</literal>)
+			on how to open a popup widget (from a widget that extends <literal>BaseUIWidget</literal>):
+
+<programlisting role="java">  getPopupCtx().open(
+    new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form"), 
+    new PopupWindowProperties(), this);</programlisting>
+
+			Here it must send a <literal>Message</literal> to the components that starts
+			new widgets to produce the desired effect. The <literal>LoginAndMenuSelectMessage</literal>
+			is a <literal>SeriesMessage</literal> that first uses the flow context from the
+			child environment of the login widget to start a new root context. Then the menu select
+			widget searches the menu widget to select the given menu item. Below  are the codes
+			for messages.
+			</para>
+
+			<para>
+			The code for the <literal>LoginAndMenuSelectMessage</literal>:
+<programlisting role="java">public class LoginAndMenuSelectMessage extends SeriesMessage {
+
+  public LoginAndMenuSelectMessage(String menuPath) {
+    super(new Message[] {
+        new LoginMessage(), 
+        new MenuSelectMessage(menuPath)});
+  }
+
+}</programlisting>
+			</para>
+
+			<para>
+			The code for the <literal>LoginMessage</literal>:
+<programlisting role="java">public class LoginMessage extends BroadcastMessage {
+
+  protected void execute(Component component) throws Exception {
+    if (component instanceof LoginWidget) {
+      LoginWidget loginWidget = (LoginWidget) component;
+
+      Environment childEnv = loginWidget.getChildEnvironment();
+
+      FlowContext flow = (FlowContext) childEnv.getEntry(FlowContext.class);
+      flow.replace(new RootWidget(), null);
+    }
+  }
+
+}</programlisting>
+			</para>
+
+			<para>
+			The code for the <literal>MenuSelectMessage</literal>:
+<programlisting role="java">public class MenuSelectMessage extends BroadcastMessage {
+
+  private String menuPath;
+
+  public MenuSelectMessage(String menuPath) {
+    this.menuPath = menuPath;
+  }
+
+  protected void execute(Component component) throws Exception {
+    if (component instanceof MenuWidget) {
+      MenuWidget w = (MenuWidget) component;
+      w.selectMenuItem(menuPath);
+    }
+  }
+
+}</programlisting>
+			</para>
+
+      <para><informaltable frame="topbot">
+          <tgroup cols="2">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="1*" />
+
+            <thead>
+              <row>
+                <entry align="left">Method</entry>
+
+                <entry align="left">Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>String open(Message startMessage, PopupWindowProperties properties, Widget opener)</literal></entry>
+                <entry>Uses a message that opens a widget inside a new popup.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String open(Service service, PopupWindowProperties properties, Widget opener)</literal></entry>
+                <entry>Uses a service that serves the data for a new popup.</entry>
+              </row>
+
+              <row>
+                <entry><literal>String openMounted(String url, PopupWindowProperties properties)</literal></entry>
+                <entry>Opens the mount URL in a popup.</entry>
+              </row>
+
+              <row>
+                <entry><literal>open(String url, PopupWindowProperties properties)</literal></entry>
+                <entry>Opens the given URL in a popup.</entry>
+              </row>
+
+              <row>
+                <entry><literal>boolean close(String id) throws Exception</literal></entry>
+                <entry>Closes the popup with given ID (the ID is returend when the popup is created).</entry>
+              </row>
+
+              <row>
+                <entry><literal>Widget getOpener()</literal></entry>
+                <entry>Provides the popup opener.</entry>
+              </row>
+
+              <row>
+                <entry><literal>Map getPopups()</literal></entry>
+                <entry>Returns a map with popups (the key is the ID of the popup, and
+                the value is an instance of <literal>PopupServiceInfo</literal>.</entry>
+              </row>
+
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </para>
+
+			<para>
+			To enable popups at JSP layer, one must also register it inside the system form as
+			the following code snippet does from <literal>root.jsp</literal> of the Aranea Demo Application:
+
+			<programlisting role="jsp"> ...
+  &lt;ui:body&gt;
+
+    &lt;div id="cont1"&gt;
+      &lt;ui:systemForm method="POST"&gt;
+        &lt;ui:register.../&gt;
+        &lt;ui:registerPopups/&gt;
+...</programlisting>
+			</para>
+
+      <para>
+        Standard implementation of <literal>PopupWindowContext</literal> is described in
+        <xref linkend="araneaPopupFilter"/>.
+      </para>
+    </sect2>
+
 		<sect2 id="OverlayContext">
 			<title>OverlayContext</title>
 
@@ -1847,8 +2027,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 
     &lt;div id="cont1"&gt;
       &lt;ui:systemForm method="POST"&gt;
-        &lt;ui:registerScrollHandler/&gt;
-        &lt;ui:registerPopups/&gt;
+        &lt;ui:register.../&gt;
         &lt;ui:registerOverlay/&gt;
 ...</programlisting>
 
