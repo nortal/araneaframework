@@ -891,9 +891,11 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
       that generate SQL statements and fetches the results from database. We
       strongly recommend it together with its subclasses that support
       different database systems. Currently <literal>Oracle</literal>
-      (<classname>OracleListSqlHelper</classname>) and <literal>HSQL</literal>
-      (<classname>HsqlListSqlHelper</classname>) databases are
-      supported.</para>
+      (<classname>OracleListSqlHelper</classname>),
+      <literal>Postgre</literal> (<literal>PostgreListSqlHelper</literal>),
+      and <literal>HSQL</literal> (<classname>HsqlListSqlHelper</classname>)
+      databases are supported (they are used similarly because they all
+      extend <literal>ListSqlHelper</literal>).</para>
 
       <para>The following example discovers the simplest usage of
       <classname>ListSqlHelper</classname>. The following code should be in a
@@ -1500,7 +1502,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
       <para>If all fields described for the <classname>ListWidget</classname> should be used
       they can be added using the <classname>ListStructure</classname>
-      contained in the <classname>ListQuery</classname>:       
+      contained in the <classname>ListQuery</classname>:
       <programlisting
       role="java">public class MyService {
   ...
@@ -1518,6 +1520,53 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 }</programlisting></para>
           
     </sect3>
+  </sect1>
+  <sect1>
+    <title>Selecting List Rows</title>
+    <para>
+    This section shows how a user can choose list rows with a check box or a radio button.
+    The solution described here is also integrated into Aranea lists, so it is quite easy to use.
+    Firstly, Aranea provides a check box tag (<literal>&lt;ui:listRowCheckBox/&gt;</literal>)
+    and a radio button tag (<literal>&lt;ui:listRowRadioButton/&gt;</literal>) for list rows.
+    These are meant for the user to check multiple rows or just one row to submit them
+    once the user clicks on a button. Usually, these tags don't require any attributes
+    (unless one needs to customize style or javascript), and work only with the list where they
+    are used, even if there are multiple lists on the page.
+    </para>
+
+		<para>
+		In addition, Aranea provides a tag that selects or unselects all row check boxes in
+		the list. It is named <literal>&lt;ui:listSelectAllCheckBox/&gt;</literal>. Again, it
+		requires zero configuration.
+		</para>
+
+		<para>
+		Now, these tags are useful because the next step is just getting the model objects from
+		the list with the <literal>ListWidget.getSelectedRows()</literal> method. Or, if a
+		radio button was used, and, therefore, only one selected row is expected, the
+		<literal>ListWidget.getSelectedRow()</literal> method can be used. If no rows were
+		selected then <literal>getSelectedRows()</literal> would return an empty list, and
+		<literal>getSelectedRow()</literal> would return <literal>null</literal>.
+		</para>
+
+		<para>
+		There is also an advanced feature in case the list row check boxes are used. One
+		can make the list remember the selected rows in case the user switches between
+		the (list) pages. It can be achieved by calling
+		<literal>list.setSelectFromMultiplePages(true)</literal> (by default it is
+		<literal>false</literal>). Once enabled, the list and the tags use the
+		<literal>equals()</literal> method of the list row data object to know whether
+		the row must be checked or unchecked. Therefore, when the user goes back to the
+		list page where some rows were selected before then they would still appear selected. 
+		</para>
+
+		<note>
+		Enabling the <literal>selectFromMultiplePages</literal> option, that makes list
+		remember previously selected rows, requires caution because the data model objects
+		needs to have the <literal>equals()</literal> to correctly compare them. Otherwise,
+		the "same" object could appear several times in the returned selected rows list.
+		This is the reason why it is turned off by default.
+		</note>
   </sect1>
 
   <sect1>

@@ -68,6 +68,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 	
 	protected void initList() {
 		this.list = new BeanListWidget(PersonMO.class);
+		list.setSelectFromMultiplePages(true);
 		list.setDataProvider(new TemplatePersonListDataProvider());
 		list.addEmptyField("check", "#Choose");
 		list.setOrderableByDefault(true);

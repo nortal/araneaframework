@@ -111,6 +111,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	private List initEvents = new ArrayList();
 	
 	private boolean changed = true;
+    private boolean selectFromMultiplePages = false;
 	private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
 	//*********************************************************************
@@ -132,22 +133,30 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
   /**
    * Reads information about selected check boxes and radio buttons, and stores
-   * this information
+   * this information. It is possible to make all selected check boxes (from
+   * previous pages as well) stored (see
+   * {@link #setSelectFromMultiplePages(boolean)} for more information).
+   * 
    * @since 1.1.3
+   * @see #setSelectFromMultiplePages(boolean)
+   * @see #getSelectedRows()
+   * @see #getSelectedRow()
    */
   protected void update(InputData input) throws Exception {
     super.update(input);
 
+    String listPath = getScope().toPath().toString();
+
     // 1. Selected check boxes.
 
     // Path is used to read only those value-names that start with given prefix:
-    Path path = new StandardPath(getScope().toPath() + "." + LIST_CHECK_SCOPE);
+    Path path = new StandardPath(listPath + "." + LIST_CHECK_SCOPE);
 
     Map listData = input.getScopedData(path);
 
     List rowKeys = new LinkedList();
 
-    // Now we read index numbers numbers of selected rows:
+    // Now we read index numbers of selected rows:
     for (Iterator i = listData.entrySet().iterator(); i.hasNext();) {
       Map.Entry reqParam = (Map.Entry) i.next();
 
@@ -160,10 +169,24 @@ public class ListWidget extends BaseUIWidget implements ListContext {
     // Sort the rows in the order displayed on the page:
     Collections.sort(rowKeys);
 
-    // Remove current rows from selectedItems list (because not all of them may
-    // be checked any more), and then we add those that were selected:
-    this.selectedItems.removeAll(this.itemRange);
+    if (log.isDebugEnabled()) {
+      log.debug("List [" + getScope().getId()
+          + "]: Collect selected list rows from multiple pages: "
+          + this.selectFromMultiplePages);
+    }
 
+    // If the items may be collected from multiple pages then we must remove
+    // only the rows currently visible (because some of them may have been
+    // selected before, but now may be no more checked.)
+    // If the items may be collected from only the current page then we must
+    // remove the previously collected items.
+    if (this.selectFromMultiplePages) {
+      this.selectedItems.removeAll(this.itemRange);
+    } else {
+      this.selectedItems.clear();
+    }
+
+    // Let's store the selected rows:
     for (Iterator i = rowKeys.iterator(); i.hasNext(); ) {
       Object rowItem = getRowFromRequestId(i.next().toString());
       if (!this.selectedItems.contains(rowItem)) {
@@ -171,34 +194,78 @@ public class ListWidget extends BaseUIWidget implements ListContext {
       }
     }
 
-    putViewData(LIST_CHECK_SCOPE, selectedItems);
+    // We make these visible for the list check box tag, so that
+    // they could be rendered checked.
+    putViewData(LIST_CHECK_SCOPE, this.selectedItems);
 
 
     // 2. Selected radio button:
 
-    // The scope matches the past of the list widget:
+    // Path is used to read only those value-names that start with given prefix:
     listData = input.getScopedData(getScope().toPath());
 
     // In case of radio buttons, we expect only one value.
-    if (listData.containsKey(LIST_RADIO_SCOPE)) {
+    if (!listData.isEmpty()) {
 
+      listData.get(LIST_RADIO_SCOPE);
       String rowKey = (String) listData.get(LIST_RADIO_SCOPE);
 
-      rowKey = rowKey.substring(getScope().toPath().toString().length()
-          + LIST_RADIO_SCOPE.length() + 2);
+      if (rowKey != null) {
+        rowKey = rowKey.substring(listPath.length() + LIST_RADIO_SCOPE.length() + 2);
+        Object rowItem = getRowFromRequestId(rowKey);
+        
+        // In case of radio buttons, we discard the previous value,
+        // because only one row can be selected:
+        if (!this.selectedItems.contains(rowItem)) {
+          this.selectedItems.clear();
+          this.selectedItems.add(rowItem);
+        }
 
-      Object rowItem = getRowFromRequestId(rowKey);
-
-      // In case of radio buttons, we discard the previous value,
-      // because only one row can be selected:
-
-      if (!selectedItems.contains(rowItem)) {
-        this.selectedItems.clear();
-        this.selectedItems.add(rowItem);
+        putViewData(LIST_RADIO_SCOPE, rowKey);
       }
-
-      putViewData(LIST_RADIO_SCOPE, rowKey);
     }
+
+    if (log.isDebugEnabled()) {
+      log.debug("List [" + getScope().getId()
+          + "]: Number of selected list rows: " + this.selectedItems.size());
+    }
+  }
+
+  /**
+   * Specifies whether selected rows (check boxes) should be collected from only
+   * one page or from multiple pages. Default is from one page (<code>false</code>).
+   * <p>
+   * If the selected rows are collected from all pages then the selected objects
+   * are remembered in an instance variable. The
+   * <code>&lt;ui:listCheckBox/&gt;</code> tag renders them checked when the
+   * user returns to the previous page. It uses the <code>equals()</code>
+   * method to compare whether the row is among selected rows or not.
+   * <p>
+   * The default is to select rows only from the current page because it is
+   * memory efficient, especially when a database (backend) data provider is
+   * used.
+   * 
+   * @param selectFromMultiplePages If <code>true</code> then rows can be
+   *            collected from multiple pages. If <code>false</code> then rows
+   *            can be collected from the current page.
+   */
+  public void setSelectFromMultiplePages(boolean selectFromMultiplePages) {
+    this.selectFromMultiplePages = selectFromMultiplePages;
+  }
+
+  /**
+   * Provides whether the selected items are collected from multiple pages
+   * (returns <code>true</code>) or only from the current page (returns
+   * <code>false</code>).
+   * <p>
+   * It changes only the behaviour of the check boxes.
+   * 
+   * @return whether the selected items are collected from multiple pages or
+   *         not.
+   * @see #setSelectFromMultiplePages(boolean)
+   */
+  public boolean isSelectFromMultiplePages() {
+    return this.selectFromMultiplePages;
   }
 
   /**
@@ -209,6 +276,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * radio button).
    * 
    * @return A list of row objects.
+   * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
   public List getSelectedRows() {
@@ -224,6 +292,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * radio button).
    * 
    * @return A single selected row object.
+   * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
   public Object getSelectedRow() {
