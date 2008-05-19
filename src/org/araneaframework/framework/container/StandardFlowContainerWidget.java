@@ -252,7 +252,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
   
   /** @since 1.1 */
-  protected Widget getActiveFlow() {
+  public Widget getActiveFlow() {
     CallFrame frame = getActiveCallFrame();
     return frame != null ? frame.getWidget() : null;
   }
