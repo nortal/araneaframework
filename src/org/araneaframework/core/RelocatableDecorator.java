@@ -33,7 +33,8 @@ import org.araneaframework.Relocatable.RelocatableWidget;
 /**
  * A decorator to make a service relocatable. A relocatable service can be moved
  * from one parent to another, and the relocatable service will have access to
- * the right <code>Environment</code>.
+ * the right <code>Environment</code>. The <code>Environment</code> of the
+ * decorator is swappable.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

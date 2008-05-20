@@ -2179,7 +2179,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
               <entry align="right"><emphasis
               role="bold">Provides:</emphasis></entry>
 
-              <entry>-</entry>
+              <entry>WindowScrollPositionContext</entry>
             </row>
 
             <row>

@@ -19,8 +19,7 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * Designed specifically for {@link org.araneaframework.framework.FlowContext}s
- * to allow custom <code>Environment</code> specific calls.
+ * Callbacks that are <code>Environment</code> aware.
  * <p>
  * For example, the call may use the flow context from the
  * <code>Environment</code> to start a new flow using the
@@ -29,8 +28,8 @@ import java.io.Serializable;
 public interface EnvironmentAwareCallback extends Serializable {
 
   /**
-   * This method is expected to use the given <code>Environment</code> to start a new flow
-   * or make necessary changes to the the <code>Environment</code> or whatever is necessary. 
+   * This method is expected to use the given <code>Environment</code> to
+   * start a new flow or use it for whatever is necessary.
    * 
    * @param env the <code>Environment</code> of the flow context.
    * @throws Exception Any runtime exception that may occur.

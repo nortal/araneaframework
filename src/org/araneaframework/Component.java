@@ -61,9 +61,9 @@ public interface Component extends Serializable {
   public Scope getScope();
 
   /**
-   * Specifies whether this <code>Component</code> is alive. The latter means
-   * that the <code>Component</code> has been initialized and is not yet
-   * destroyed.
+   * Specifies whether this <code>Component</code> is alive. If it is alive
+   * then it means that the <code>Component</code> has been initialized and is
+   * not destroyed yet.
    * 
    * @return <code>true</code>, if this component has been initialized and is
    *         not destroyed. Otherwise, <code>false</code>.

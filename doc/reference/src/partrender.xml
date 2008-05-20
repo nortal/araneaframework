@@ -14,17 +14,17 @@
 		<para>
 		Partial rendering is more thoroughly described by Alar Kvell's bachelor thesis
 		<ulink url="http://www.araneaframework.org/docs/kvell-aranea-ajax.pdf">Aranea Ajax</ulink>.
-		This section only describes the practical part on how to use.
+		This section concentrates mostly on how a programmer can make partial rendering work.
 		</para>
 	</note>
 
-	<sect2 id="How_It_Is_Accomplished">
-		<title>How It Is Accomplished?</title>
+	<sect2 id="The_Two_Steps">
+		<title>The Two Steps</title>
 
 		<para>
-		First of all, one must understand and then define the parts of the page that need to be updated
-		once a change fires the trigger. These regions are marked with the
-		<code>&lt;ui:updateRegion&gt;</code> tag by also indicating its ID to reference it later.
+		First of all, a page must have a part (parts) that needs to be updated when an event occurs.
+		These regions are marked with the <code>&lt;ui:updateRegion&gt;</code> tag by also indicating
+		its ID to reference it later.
 		</para>
 
 		<note>
@@ -97,9 +97,9 @@
 
 		<note>
 			<para>
-			Currently submit controls don't work with update regions because the JavaScript cannot
+			Currently file upload inputs don't work with update regions because the JavaScript cannot
 			read the unsubmitted file and serialize it to send it to the server. Therefore, if you
-			provide the <code>updateRegions</code> attribute for the upload control, the file won't
+			provide the <code>updateRegions</code> attribute for a file upload input, the file won't
 			reach the server. We hope to find a solution to this limitation in near future.
 			</para>
 		</note>

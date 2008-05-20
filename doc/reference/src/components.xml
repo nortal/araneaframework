@@ -1772,10 +1772,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 			<literal>org.araneaframework.http.PopupWindowContext</literal>. Popups can
 			be used, for example, to open new widgets or to upload files (using
 			<literal>org.araneaframework.http.service.FileDownloaderService</literal>).
-			Also note that current widgets can be replicated to open them in a new
-			window (when the user clicks on a middle mouse button) as this is
-			handled by <literal>org.araneaframework.http.filter.StandardThreadCloningFilterService</literal>.
-			However, to open a new widget in a popup, it must handle the entire page,
+			To open a new widget in a popup, the widget must handle the entire page,
 			and its subwidgets may handle certain specific parts of a page. This is
 			similar to how a root widget handles the components in the main thread.
 			</para>
@@ -1788,13 +1785,13 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 			</para>
 
 			<para>
-			Here is an example on how to upload a file:
+			Here is an example on how to the server enables the user to download a file:
 
 <programlisting role="java">  PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
   popupContext.open(new FileDownloaderService(selectedFile), new PopupWindowProperties(), null);</programlisting>
 
-			In the example above, the first parameter is the service that uploads
-			the file, and the second one is the popup window properties. Sometimes 
+			In the example above, the first parameter is the service that downloads the file
+			to the user's computer, and the second one is the popup window properties. Sometimes 
 			one may want to also specify the widget that caused the popup to open.
 			Therefore, the last parameter in the example is the opener, which usually is
 			<literal>null</literal>, but may be provided as <literal>this</literal> (the caller widget).
@@ -2019,8 +2016,9 @@ getFlowCtx().start(new TestFlow(new Long(5)),
       </para>
 
 			<para>
-			To make overlay visually possible, one must register it inside the system form as the following
-			code snippet does from <literal>root.jsp</literal> of the Aranea Demo Application:
+			To make overlay possible on the client-side, one must register it inside the system
+			form as the following code snippet does from <literal>root.jsp</literal> of the
+			Aranea Demo Application:
 
 			<programlisting role="jsp"> ...
   &lt;ui:body&gt;

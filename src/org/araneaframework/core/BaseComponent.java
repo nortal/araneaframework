@@ -134,8 +134,8 @@ public abstract class BaseComponent implements Component {
   }
 
   /**
-   * Specifies whether the component has been initialized. It means that the
-   * <code>init()</code> method has been called.
+   * Gets whether the component has been initialized. "Initialized" means that
+   * the <code>init()</code> method has been called.
    * 
    * @return <code>true</code>, if the component has been initialized.
    */

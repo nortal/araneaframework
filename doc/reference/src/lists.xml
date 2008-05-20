@@ -1509,9 +1509,10 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 		    <listitem>
 		      <emphasis>Create a list widget.</emphasis> The (bean) list widget is used to define
 		      the columns and its labels together with sorting and filtering information. Also, one
-		      most define a data provider &mdash; either memory-based or back-end &mdash; that invokes
+		      must define a data provider &mdash; either memory-based or back-end &mdash; that invokes
 		      the data query created previously. Note that the data provider implementation
-		      provides the <literal>ListQuery</literal> object for the query, and expects a
+		      provides the <literal>ListQuery</literal> object (containing information about the list,
+		      the constraints, and the rows expected) for the query, and expects a
 		      <literal>ListItemsData</literal> object as a result. Finally, the created list must be
 		      added by its creator widget simply like following:
 		      <code>this.addWidget("myList", createdList);</code>

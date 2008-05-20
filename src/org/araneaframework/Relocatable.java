@@ -20,8 +20,9 @@ import java.io.Serializable;
 
 /**
  * Relocatable is a component that can be relocated from one parent to another.
- * As the {@link Environment} of a component can be inhereted from the parent
- * and the new parent's Environment can differ, this class provides
+ * As the {@link Environment} of a component is inherited from its parent, and
+ * once the parent changes, the new parent's <code>Environment</code> can
+ * be different, this class provides
  * {@link Interface#overrideEnvironment(Environment)} for resetting the
  * {@link Environment}.
  * <p>
