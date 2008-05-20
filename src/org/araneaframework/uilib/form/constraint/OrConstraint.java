@@ -20,30 +20,44 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.araneaframework.uilib.form.Constraint;
 
-
 /**
  * This constraint implements "OR" Boolean logic (checks that at least one
- * contained constraits is satisfied). It is eager by default, but can
- * be set to act lazily, (note that subconstraints produce error messages
- * as they are being validated, unless some custom error message has been set,
- * it makes often sense to process all subconstraints). 
+ * contained constraits is satisfied). It is eager by default, but can be set to
+ * act lazily.
+ * <p>
+ * Note that subconstraints produce error messages as they are being validated.
+ * Unless some custom error message has been set, it makes often sense to
+ * process all subconstraints.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class OrConstraint extends BaseCompositeConstraint {
+
+  private static final long serialVersionUID = 1L;
+
   private boolean lazy = false;
-  
+
   public OrConstraint() {}
-  
+
   /**
+   * Creates an <code>OrConstraint</code> for one constraint. Other
+   * constraints can be added later with {@link #addConstraint(Constraint)} or
+   * {@link #addConstraints(Collection)} methods.
+   * 
+   * @param constraint The constraint to validate.
    * @since 1.0.9
    */
   public OrConstraint(Constraint constraint) {
     super(constraint);
   }
-  
+
   /**
-   * @param constraints Collection&lt;Constraint&gt;
+   * Creates an <code>OrConstraint</code> for a collection of
+   * <code>Constraint</code>s. Other constraints can be added later with
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
+   * methods.
+   * 
+   * @param constraints A collection of {@link Constraint}s.
    * @since 1.0.9
    */
   public OrConstraint(Collection constraints) {
@@ -51,7 +65,7 @@ public class OrConstraint extends BaseCompositeConstraint {
   }
 
   /**
-   * Checks that at least one  contained constraits is satisfied.
+   * Checks that at least one contained constraits is satisfied.
    */
   public void validateConstraint() throws Exception {
     boolean valid = false;
@@ -69,14 +83,19 @@ public class OrConstraint extends BaseCompositeConstraint {
       clearErrors();
     }
   }
-  
+
   /**
-   * Sets whether this {@link OrConstraint} acts lazily, default is <code>false</code>.
-   * @param lazy
-   * @return this {@link OrConstraint}
+   * Sets whether this {@link OrConstraint} acts lazily, default is
+   * <code>false</code>.
+   * 
+   * @param lazy If <code>true</code> then subconstraints will be validated
+   *            lazily (until one of them succeeds). If <code>false</code>
+   *            then all subconstraints will be validated.
+   * @return This <code>OrConstraint</code>.
    */
   public OrConstraint setLazy(boolean lazy) {
     this.lazy = lazy;
     return this;
   }
+
 }

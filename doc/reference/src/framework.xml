@@ -35,7 +35,7 @@
   <sect1 id="application-configuration">
     <title>Application Configuration</title>
 
-    <sect2>
+    <sect2 id="web.xml">
       <title>web.xml</title>
 
       <para>The simplest way to configure Aranea for a web application is to
@@ -85,7 +85,7 @@
         </note></para>
     </sect2>
 
-    <sect2>
+    <sect2 id="aranea-conf.xml">
       <title>aranea-conf.xml</title>
 
       <para>Aranea can also be configured using a Spring configuration file
@@ -106,7 +106,7 @@
       linkend="framework-configuration" />.</para>
     </sect2>
 
-    <sect2>
+    <sect2 id="aranea-conf.properties">
       <title>aranea-conf.properties</title>
 
       <para>Aranea also takes into account a property file located in
@@ -169,7 +169,7 @@
         </informaltable></para>
     </sect2>
 
-    <sect2>
+    <sect2 id="AraneaSpringDispatcherServlet">
       <title>AraneaSpringDispatcherServlet</title>
 
       <para><literal>AraneaSpringDispatcherServlet</literal> provides a number
@@ -230,7 +230,7 @@
         </informaltable></para>
     </sect2>
 
-    <sect2>
+    <sect2 id="ExtendingDispatcher">
       <title>Extending Dispatcher</title>
 
       <para>Currently, the most common way to put Aranea to work is to host it
@@ -254,6 +254,60 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 }</programlisting> One can then use such a servlet to configure Aranea in
       a web application as by replacing the standard dispatcher servlet
       with the custom one in <literal>WEB-INF/web.xml</literal>.</para>
+    </sect2>
+
+    <sect2 id="ConfigurationContext">
+      <title>ConfigurationContext</title>
+
+      <para>Aranea also provides a central way to configure some settings that
+      affect the way some components work or display data. These settings are
+      stored in a <literal>Map</literal>, where the key names are defined in the
+      <literal>org.araneaframework.uilib.ConfigurationContext</literal> interface.
+      </para>
+
+			<para>
+			The <literal>ConfigurationContext</literal> is accessible from the
+			<literal>Environment</literal> or by the <literal>getConfiguration()</literal>
+			method of <code>BaseUIWidget</code>.
+			</para>
+
+			<para>
+			Every application may provide their own values for settings by implementing
+			their version of the <literal>ConfigurationContext</literal> like following:
+
+<programlisting role="java">public class CustomConfiguration implements ConfigurationContext {
+
+  private Map configuration = new HashMap();
+
+  public CustomConfiguration() {
+    // Note that these constants are defined by the ConfigurationContext.
+    configuration.put(CUSTOM_DATE_FORMAT, "dd.MM.yyyy|d.M.yyyy");
+    configuration.put(CUSTOM_TIME_FORMAT, "HH:mm");
+    configuration.put(FULL_LIST_ITEMS_ON_PAGE, new Long(20));
+  }
+
+  public Object getEntry(String entryName) {
+    return configuration.get(entryName);
+  }
+
+}</programlisting>
+
+			For more information on the settings that can be changed, please see the
+			<literal>ConfigurationContext</literal> interface in the
+			<ulink url="http://www.araneaframework.org/docs/1.1/javadoc/">Aranea API</ulink>.
+			</para>
+
+			<para>
+			To make Aranea use the custom-created configuration, the class must be
+			defined in <literal>aranea-conf.xml</literal> file like this:
+<programlisting role="xml">&lt;bean id="araneaConfiguration"
+    class="com.company.conf.CustomConfiguration" singleton="false" /&gt;
+</programlisting>
+				Note that it is defined as not being a singleton. This means that the
+				configuration is created for every context (user). Therefore, the
+				settings can be further customized to be more user specific.
+			</para>
+
     </sect2>
   </sect1>
 
@@ -1551,6 +1605,24 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <literal>override</literal> transaction ID is always considered
       consistent.</para>
 
+			<para>Transactions work in Aranea application by default. You may notice
+			it in a web page as a hidden field, for example:
+			<programlisting role="html">&lt;input name="araTransactionId" type="hidden" value="-8629560801569274688"/&gt;</programlisting>
+			The value is random, and a <literal>TransactionContext</literal> checks
+			every request whether it is the same as expected (it remembers the previous
+			<literal>transactionId</literal> value it gave to the page). If it is not the
+			same, the request will be ignored. Therefore, one may notice when
+			transactions are inconsistent: the pages won't update itself (on first click).
+			</para>
+
+			<para>Sometimes, however, a <literal>transactionId</literal> may become
+			inconsistent (for various reasons, such as due to a background request).
+			Then the solution would be to change the <literal>transactionId</literal>
+			value to <literal>"override"</literal> (for example, by using JavaScript).
+			(In the next response, the <literal>transactionId</literal> will still have a
+			new random numeric value.)
+			</para>
+
       <informaltable>
         <tgroup cols="2">
           <colspec colwidth="1*" />
@@ -1903,8 +1975,10 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <para>See <xref linkend="FlowContext" /> for purpose and philosophy
       behind <literal>FlowContext</literal>.
       <literal>RootFlowContext</literal> is same as
-      <literal>FlowContext</literal>, but allows to acces the root flow
-      container at any time.</para>
+      <literal>FlowContext</literal>, but allows acces to the root flow
+      container at any time. Remember that <literal>RootFlowContext</literal>
+      is the topmost flow context that everything else depends on. One can find
+      it from the <literal>Environment</literal>.</para>
 
       <para><tip>
           <para>Flow containers are not generally a part of the framework and
@@ -1946,7 +2020,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
        <!--  -->
     
      <sect2 id="StandardOverlayContainerWidget">
-      <title>Overlay container.</title>
+      <title>Overlay Container</title>
 
       <informaltable frame="topbot">
         <tgroup cols="2">
@@ -2024,7 +2098,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
     <!--  systemformcontext -->
 
     <sect2 id="StandardSystemFormFilterService">
-      <title>System form field storage filter.</title>
+      <title>System Form Field Storage Filter</title>
 
       <informaltable frame="topbot">
         <tgroup cols="2">
@@ -2068,15 +2142,97 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       Form fields that indicate service levels (<code>topServiceId</code> and <code>threadServiceId</code>) are
       always automatically added to every response by this implementation.</para>
 
-	<para>
-		This filter does not have any special injectable properties (except the usual <literal>childService</literal>).
-		<literal>SystemFormContext</literal> interface is accessible from the <literal>Environment</literal>
-		when this filter is present in the hierarchy and provides <literal>addField(String key, String value);</literal>
-		and <literal>Map getFields();</literal> methods for managing special form fields. See also information 
-		about <xref linkend="systemForm"/> tag.
-	</para>
+			<para>
+				This filter does not have any special injectable properties (except the usual <literal>childService</literal>).
+				<literal>SystemFormContext</literal> interface is accessible from the <literal>Environment</literal>
+				when this filter is present in the hierarchy and provides <literal>addField(String key, String value);</literal>
+				and <literal>Map getFields();</literal> methods for managing special form fields. See also information 
+				about <xref linkend="systemForm"/> tag.
+			</para>
+		</sect2>
+
+    <sect2 id="StandardWindowScrollPositionFilterWidget">
+      <title>Window Scroll Position Filter</title>
+
+      <informaltable frame="topbot">
+        <tgroup cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="3*" />
+
+          <tbody>
+            <row>
+              <entry align="right"><emphasis role="bold">Java
+              class:</emphasis></entry>
+
+              <entry><literal>StandardWindowScrollPositionFilterWidget</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Default configuration
+              name:</emphasis></entry>
+
+              <entry><literal>araneaScrollingFilter</literal></entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis
+              role="bold">Provides:</emphasis></entry>
+
+              <entry>WindowScrollPositionContext</entry>
+            </row>
+
+            <row>
+              <entry align="right"><emphasis role="bold">Depends
+              on:</emphasis></entry>
+
+              <entry>-</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>
+      This filter provides a way to preserve the scroll position of the window so that the
+      user would not have to scroll back to the same place on the page every time they click
+      on something. With every submit, the page sends its scroll coordinates so that the next
+      response would know where to scroll the page. All-in-all, you can consider it a nice
+      feature to have.
+      </para>
+
+			<para>
+			To enable this feature, one must define it in <literal>aranea-conf.xml</literal>:
+
+<programlisting role="xml"> &lt;bean id=&quot;araneaCustomWidgetFilters&quot; singleton=&quot;false&quot;
+    class=&quot;org.araneaframework.framework.filter.StandardFilterChainWidget&quot;&gt;
+   &lt;property name=&quot;filterChain&quot;&gt;
+     &lt;list&gt;
+       &lt;ref bean=&quot;araneaScrollingFilter&quot;/&gt;
+     &lt;/list&gt;
+   &lt;/property&gt;
+ &lt;/bean&gt;</programlisting>
+
+			Note the <literal>araneaScrollingFilter</literal>, which you do not have
+			to define yourself (just reference it).
+			</para>
+
+			<para>
+			In addition, this feature must be registered in a (root) JSP page:
+
+<programlisting role="jsp"> ...
+  &lt;ui:body&gt;
+
+    &lt;div id="cont1"&gt;
+      &lt;ui:systemForm method="POST"&gt;
+        &lt;ui:registerScrollHandler/&gt;
+        &lt;ui:registerPopups/&gt;
+        &lt;ui:registerOverlay/&gt;
+...</programlisting>
+
+			Notice the <literal>&lt;ui:registerScrollHandler/&gt;</literal> tag!
+			</para>
 	</sect2>
-	
+
 
     <!-- sect3 id="StandardContainers">
         <title>StandardContainerService, StandardContainerWidget</title>

@@ -115,11 +115,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     return new StandardEnvironment(super.getChildEnvironment(), ThreadCloningContext.class, this);
   }
 
-/**
-   * Clones given {@link org.araneaframework.Relocatable.RelocatableService}. 
-   * Clone is created by first serializing and then deserializing given <code>service</code>.
-   * Created clone does not have {@link org.araneaframework.Environment}.
-   * @return clone (without {@link org.araneaframework.Environment}) of given {@link RelocatableService}.
+  /**
+   * Clones given {@link org.araneaframework.Relocatable.RelocatableService}.
+   * Clone is created by first serializing and then deserializing given
+   * <code>service</code>. Created clone does not have
+   * {@link org.araneaframework.Environment}.
+   * 
+   * @return clone (without {@link org.araneaframework.Environment}) of given
+   *         {@link org.araneaframework.Relocatable.RelocatableService}.
    */
   protected RelocatableService clone(RelocatableService service) throws Exception {
     this.threadSnapshot = takeSnapshot(service);
@@ -131,15 +134,20 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     return RelocatableUtil.serializeRelocatable(service);
   }
 
-  /** Wraps the cloned service in a new StandardThreadCloningFilterService, attaches it to {@link ThreadContext}.
+  /**
+   * Wraps the cloned service in a new StandardThreadCloningFilterService,
+   * attaches it to {@link ThreadContext}.
    * <ul>
-   * <li> created service should not be decorated relocatable again, because <code>clone</code> is relocatable already</li> 
-   * <li> new StandardThreadCloningFilterService's childService may not be reinited!</li>
+   * <li> created service should not be decorated relocatable again, because
+   * <code>clone</code> is relocatable already</li>
+   * <li> new StandardThreadCloningFilterService's childService may not be
+   * reinited!</li>
    * </ul>
+   * This method is public and part of {@link ThreadCloningContext} interface
+   * since Aranea 1.1.
    * 
-   * This method is public and part of {@link ThreadCloningContext} interface since Aranea 1.1.
-   * 
-   * @return thread id assigned to wrapped service  */ 
+   * @return thread id assigned to wrapped service
+   */ 
   public String startClonedThread(RelocatableService clone) {
     StandardThreadCloningFilterService wrappedClone = new StandardThreadCloningFilterService(clone, false);
     String cloneServiceId = RandomStringUtils.randomAlphabetic(12);

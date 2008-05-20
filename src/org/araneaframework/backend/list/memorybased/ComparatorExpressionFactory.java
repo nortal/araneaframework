@@ -21,8 +21,8 @@ import java.io.Serializable;
 /**
  * Comparator Expression factory.
  * 
- * @see ComparatorExpression
- * @see LazyComparatorExpression
+ * @see org.araneaframework.backend.list.memorybased.ComparatorExpression
+ * @see org.araneaframework.backend.list.memorybased.compexpr.LazyComparatorExpression
  * 
  * @author Rein Raudjärv
  * 

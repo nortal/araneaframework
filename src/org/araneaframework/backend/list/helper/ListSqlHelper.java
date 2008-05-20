@@ -260,7 +260,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 
 	/**
 	 * Adds a deconverter for <code>ResultSet</code>. The converter is used by
-	 * {@link BeanResultReader} to reverseConvert() values from
+	 * {@link BaseListSqlHelper.BeanResultReader} to reverseConvert() values from
 	 * <code>ResultSet</code> into bean field format.
 	 * 
 	 * @param beanField
@@ -271,7 +271,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 *            
 	 * @see #addDatabaseFieldConverter(String, Converter)
 	 * @see #addResultSetDeconverterForColumn(String, Converter)
-	 * @see BeanResultReader
+	 * @see BaseListSqlHelper.BeanResultReader
 	 */
 	public void addResultSetDeconverterForBeanField(String beanField, Converter converter) {
 		String columnName = namingStrategy.fieldToColumnAlias(beanField);
@@ -280,7 +280,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	
 	/**
 	 * Adds a deconverter for <code>ResultSet</code>. The converter is used by
-	 * {@link BeanResultReader} to reverseConvert() values from
+	 * {@link BaseListSqlHelper.BeanResultReader} to reverseConvert() values from
 	 * <code>ResultSet</code> into bean field format.
 	 * 
 	 * @param columnName
@@ -291,7 +291,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 	 *            
 	 * @see #addDatabaseFieldConverter(String, Converter)
 	 * @see #addResultSetDeconverterForBeanField(String, Converter)
-	 * @see BeanResultReader
+	 * @see BaseListSqlHelper.BeanResultReader
 	 */
 	public void addResultSetDeconverterForColumn(String columnName, Converter converter) {
 		getConverterBasedColumnReader().addResultSetDeconverterForColumn(columnName, converter);

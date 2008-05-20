@@ -24,30 +24,60 @@ import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.core.StandardScope;
 
 /**
- * This utility class contains methods for managing Aranea components.
+ * This utility class handles listening of component lifecycle events. Thus, it
+ * is possible to write a component (the listener) that, for example, modifies
+ * the child <code>Environment</code> of a component (the target).
+ * <p>
+ * Its usage is quite simple:
+ * <pre><code>pushGlobalEnvEntry(entryId, envEntry);
+ * 
+ * BaseWidget listenerComp = new BaseWidget() {
+ * 
+ *   protected void destroy() throws Exception {
+ *     popGlobalEnvEntry(entryId);
+ *   }
+ * 
+ * };
+ * ComponentUtil.addListenerComponent(targetComp, listenerComp);</code></pre>
+ * 
+ * In the example above, it uses the lifecycle listener to remove an
+ * <code>Environment</code> entry that was added before.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ComponentUtil {
-  /** 
-   * Prior to 1.0.2 this constant contained illegal characters (dots), 
-   * thus using <code>addListenerComponent</code> broke component name 
-   * scoping. */
+
+  /**
+   * The request key prefix that will be used to identify the listeners invoked.
+   * Prior to 1.0.2 this constant contained illegal characters (dots), thus
+   * using <code>addListenerComponent</code> broke component name scoping.
+   */
   public static final String LISTENER_KEY = "ComponentUtil_LISTENER";
   
   /**
-   * This method will attach the listener component to the target custom component, allowing it to receive
-   * all the lifecycle events (which exactly depends on the target component type).   
+   * This method will attach the listener component to the target custom
+   * component, allowing it to receive all the lifecycle events (which exactly
+   * depends on the target component type). The listener component may never
+   * get to do something more than processing lifecycle events.
    * <p>
-   * This allows for instance to add a child component that will execute some action on destroy, thus
-   * essentially tying some action to the lifecycle of the target component. A typical application
-   * is to scope something (e.g. environment entry) with the target component.
+   * This allows for instance to add a child component that will execute some
+   * action on destroy, thus essentially tying some action to the lifecycle of
+   * the target component. A typical application is to scope something (e.g.
+   * environment entry) with the target component.
+   * <p>
+   * This method also handles initialization of the listener.
+   * 
+   * @param target The component that wants to have the new listener.
+   * @param listener The listener component that will be added as a child
+   *            component of the <code>target</code>.
    */
-  public static void addListenerComponent(ApplicationComponent target, Component listener) {
+  public static void addListenerComponent(ApplicationComponent target,
+      Component listener) {
+
     Assert.notNullParam(target, "target");
     Assert.notNullParam(listener, "listener");
-           
-    String key = LISTENER_KEY;    
+
+    String key = LISTENER_KEY;
     while (target._getComposite().getChildren().get(key) != null) {
       key = LISTENER_KEY + RandomUtils.nextLong();
     }
@@ -60,7 +90,9 @@ public abstract class ComponentUtil {
 
   // allows adding listener components to not yet initialized components by failing lazily
   private static class LateBindingChildEnvironment implements Environment {
+
     private static final long serialVersionUID = 1L;
+
     private ApplicationComponent component;
 
     public LateBindingChildEnvironment(ApplicationComponent component) {
@@ -68,19 +100,23 @@ public abstract class ComponentUtil {
     }
 
     public Object getEntry(Object key) {
-      return getDelegateEnvironment().getEntry(key); 
+      return getDelegateEnvironment().getEntry(key);
     }
 
-    public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException {
+    public Object requireEntry(Object key)
+        throws NoSuchEnvironmentEntryException {
       return getDelegateEnvironment().requireEntry(key);
     }
 
     private Environment getDelegateEnvironment() {
       Environment result = component.getChildEnvironment();
       if (result == null) {
-        throw new IllegalStateException(getClass().getName() + " does not yet have access to environment.");
+        throw new IllegalStateException(getClass().getName()
+            + " does not yet have access to environment.");
       }
       return result;
     }
+
   }
+
 }

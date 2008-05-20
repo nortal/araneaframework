@@ -54,15 +54,17 @@ public interface Constraint extends Serializable {
   public void setCustomErrorMessage(String customErrorMessage);
 
   /**
-   * Sets the {@link org.araneaframework.Environment} of this {@link Constraint}.
-   * Environment should come from whatever {@link org.araneaframework.Component} that this
-   * {@link Constraint} is operating on.
+   * Sets the <code>Environment</code> of this <code>Constraint</code>.
+   * Environment should come from whatever {@link org.araneaframework.Component}
+   * that this <code>Constraint</code> is operating on.
+   * <p>
+   * The <code>Environment</code> of a <code>Constraint</code> may be set to
+   * non-null value only once, further calls are ignored. Application programmer
+   * typically never calls this method as <code>Environment</code> is
+   * propagated seamlessly.
    * 
-   * {@link Constraint} {@link org.araneaframework.Environment} may be set to non-null 
-   * value only once, further calls are ignored. Application programmer typically never
-   * calls this method as {@link org.araneaframework.Environment} is propagated seamlessly.
-   * 
-   * @param environment 
+   * @param environment the <code>Environment</code> for this constraint.
    */
   public void setEnvironment(Environment environment);
+
 }

@@ -43,7 +43,7 @@ public interface ThreadCloningContext extends Serializable {
    * of current thread is made before request is routed to child {@link Service}. Cloned
    * thread is not attached to thread router (no new window with cloned thread will be opened).
    * Snapshot can be acquired during the same request by calling 
-   * {@link ThreadCloningContext#acquireThreadSnapshot()}.
+   * {@link #acquireThreadSnapshot()}.
    * 
    * @since 1.1 
    */
@@ -63,10 +63,10 @@ public interface ThreadCloningContext extends Serializable {
   public String startClonedThread(RelocatableService clone);
 
   /**
-   * Returns the snapshot of current thread, made before child {@link Service} of {@link ThreadCloningContext} 
-   * implementation has had the chance to process the request. Only applicable when request contained either 
-   * {@link ThreadCloningContext#CLONE_ONLY_REQUEST_KEY} or {@link ThreadCloningContext#CLONING_REQUEST_KEY} parameter.
-   * 
+   * Returns the snapshot of current thread, made before child {@link Service}
+   * of {@link ThreadCloningContext} implementation has had the chance to
+   * process the request. Only applicable when request contained either
+   * {@link #CLONE_ONLY_REQUEST_KEY} or {@link #CLONING_REQUEST_KEY} parameter.
    * Deserialization of the snapshot could be done as follows:
    * <p>
    * <code>
@@ -74,11 +74,12 @@ public interface ThreadCloningContext extends Serializable {
    *   RelocatableService clone = (RelocatableService) ois.readObject();
    * </code>
    * </p>
-   * 
-   * Snapshot may then be started as cloned thread with {@link ThreadCloningContext#startClonedThread(RelocatableService)}.
+   * <p>
+   * Snapshot may then be started as cloned thread with
+   * {@link #startClonedThread(Relocatable.RelocatableService)}.
+   * </p>
    * 
    * @return serialized snapshot of current thread or <code>null</code>
-   * 
    * @since 1.1
    */
   public byte[] acquireThreadSnapshot();
