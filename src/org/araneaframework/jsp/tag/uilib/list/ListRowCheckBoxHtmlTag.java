@@ -52,6 +52,8 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    */
   protected static final String SCRIPT_ON_CLICK = "return Aranea.UI.updateListSelectAlls(this);";
 
+  protected String labelId;
+
   protected String value;
 
   protected boolean disabled;
@@ -95,6 +97,15 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
 
     JspUtil.writeCloseStartTag(out);
 
+    if (this.labelId != null) {
+      JspUtil.writeOpenStartTag(out, "label");
+      JspUtil.writeAttribute(out, "for", id);
+      JspUtil.writeCloseStartTag_SS(out);
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext,
+          this.labelId));
+      JspUtil.writeStartEndTag(out, "label");
+    }
+
     return SKIP_BODY;
   }
 
@@ -129,6 +140,17 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
     return listId + "." + SELECTION_SCOPE + "." + rowRequestId;
   }
 
+  /**
+   * This method decides whether the check box should be checked or not. If the
+   * attribute <code>checked</code> is <code>true</code> then it will always
+   * render it checked. Otherwise, it also looks from <code>viewData</code>
+   * whether the row has been checked (by the user) before.
+   * 
+   * @return A Boolean indicating whether the check box should be rendered
+   *         checked.
+   * @throws JspException This method expects to have access to
+   *             <code>ROW_KEY</code> and list view model in the JSP context.
+   */
   protected boolean isChecked() throws JspException {
     Object row = requireContextEntry(BaseListRowsTag.ROW_KEY);
     ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
@@ -137,6 +159,17 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
     boolean prevChecked = checkedRows != null && checkedRows.contains(row);
 
     return this.checked || prevChecked;
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   rtexprvalue = "true"
+   *   description = "Specifies a custom label for the check box."
+   */
+  public void setLabelId(String labelId) throws JspException {
+    this.labelId = (String) evaluateNotNull("labelId", labelId, String.class);
   }
 
   /**

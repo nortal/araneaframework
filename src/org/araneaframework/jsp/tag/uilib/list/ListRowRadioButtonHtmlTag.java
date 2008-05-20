@@ -42,6 +42,8 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    */
   public static final String SELECTION_SCOPE = ListWidget.LIST_RADIO_SCOPE;
 
+  protected String labelId;
+
   protected boolean disabled;
 
   protected String onclick;
@@ -51,10 +53,6 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
   protected String tabindex;
 
   protected boolean checked = false;
-
-  public ListRowRadioButtonHtmlTag() {
-    this.baseStyleClass = "aranea-checkbox";
-  }
 
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -79,6 +77,15 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
     }
 
     JspUtil.writeCloseStartEndTag(out);
+
+    if (this.labelId != null) {
+      JspUtil.writeOpenStartTag(out, "label");
+      JspUtil.writeAttribute(out, "for", getRadioButtonName());
+      JspUtil.writeCloseStartTag_SS(out);
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext,
+          this.labelId));
+      JspUtil.writeStartEndTag(out, "label");
+    }
 
     return SKIP_BODY;
   }
@@ -110,17 +117,40 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
         + SELECTION_SCOPE;
   }
 
+  /**
+   * Decides whether the radio button should be rendered selected or not. It
+   * will always be rendered selected when <code>checked</code> is
+   * <code>true</code>. Otherwise, it checks using the list view model
+   * whether row had been selected before.
+   * 
+   * @return A Boolean indicating whether the row should be rendered as
+   *         selected.
+   * @throws JspException This method need row request ID and list view model
+   *             from the JSP context.
+   */
   protected boolean isSelected() throws JspException {
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
     ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     return this.checked || rowRequestId.equals(viewModel.getData().get(SELECTION_SCOPE));
   }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   rtexprvalue = "true"
+   *   description = "Specifies a custom label for the radio button."
+   */
+  public void setLabelId(String labelId) throws JspException {
+    this.labelId = (String) evaluateNotNull("labelId", labelId, String.class);
+  }
+
   /**
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
    *   rtexprvalue = "true"
-   *   description = "Specifies whether the check box should be rendered as disabled. Default is active state."
+   *   description = "Specifies whether the radio button should be rendered as disabled. Default is active state."
    */
   public void setDisabled(String disabled) throws JspException {
     Boolean tempResult = (Boolean) evaluateNotNull("disabled", disabled, Boolean.class);
@@ -154,7 +184,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   type = "java.lang.Boolean"
    *   required = "false"
    *   rtexprvalue = "true"
-   *   description = "Specifies the initial value of the check box. Default is unchecked."
+   *   description = "Specifies the initial value of the radio button. Default is unchecked."
    */
   public void setChecked(String checked) throws JspException {
     Boolean tempResult = (Boolean) evaluateNotNull("checked", checked, Boolean.class);
@@ -166,7 +196,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   type = "java.lang.String"
    *   required = "false"
    *   rtexprvalue = "true"
-   *   description = "HTML tabindex for the check box."
+   *   description = "HTML tabindex for the radio button. This value must be a number between 0 and 32767."
    */   
   public void setTabindex(String tabindex) throws JspException {
     this.tabindex = (String) evaluateNotNull("tabindex", tabindex, String.class);

@@ -17,7 +17,7 @@
 <chapter id="lists">
   <title>Lists and Query Browsing</title>
 
-  <sect1>
+  <sect1 id="Introduction">
     <title>Introduction</title>
 
     <para>A common task in web applications is displaying tables. This is a
@@ -82,7 +82,7 @@
       </variablelist></para>
   </sect1>
 
-  <sect1>
+  <sect1 id="ListsAPI">
     <title>Lists API</title>
 
     <sect2>
@@ -1521,7 +1521,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
           
     </sect3>
   </sect1>
-  <sect1>
+  <sect1 id="SelectingListRows">
     <title>Selecting List Rows</title>
     <para>
     This section shows how a user can choose list rows with a check box or a radio button.
@@ -1569,7 +1569,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 		</note>
   </sect1>
 
-  <sect1>
+  <sect1 id="ListJSPTags">
     <title>List JSP Tags</title>
 
     <!-- LIST -->
@@ -2110,9 +2110,101 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 &lt;/ui:list&gt;</programlisting>
       </sect3>
     </sect2>
+
+    <sect2>
+      <title>&lt;ui:listRowCheckBox&gt; And &lt;ui:listRowRadioButton&gt;</title>
+
+      <para>
+      Represents a list row check box and a list row radio button that are bound to
+      the list row. The <literal>&lt;ui:listRowCheckBox&gt;</literal> accompanies
+      with the <literal>&lt;ui:listSelectAllCheckBox&gt;</literal> that lets the
+      user mark all list row check boxes (in the same list) checked or unchecked.
+      </para>
+
+			<para>
+			Both <literal>&lt;ui:listRowCheckBox&gt;</literal> and
+			<literal>&lt;ui:listRowRadioButton&gt;</literal> usually require no configuration. 
+			However, if one needs to change something, the tags provide similar attributes.
+			</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>(Check box only!) Specifies a custom value (when it is submitted).
+                Default value is <literal>selected</literal>.</entry>
+              </row>
+              <row>
+                <entry>labelId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies a custom label for the check box or the radio button.</entry>
+              </row>
+              <row>
+                <entry>disabled</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies whether the input should be rendered as disabled. Default is active state.</entry>
+              </row>
+              <row>
+                <entry>onclick</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies custom <literal>onclick</literal> event. Default is none.</entry>
+              </row>
+              <row>
+                <entry>accessKey</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies custom <literal>acceskey</literal> (defined by HTML). Default is none.</entry>
+              </row>
+              <row>
+                <entry>checked</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies the initial state of the check box or radio button. Default is unchecked.</entry>
+              </row>
+              <row>
+                <entry>tabindex</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
+              </row>
+              <row>
+                <entry>style</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Inline (CSS) style for HTML tag.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for the tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+			<para>
+				See also <xref linkend="SelectingListRows" />
+			</para>
+    </sect2>
   </sect1>
   
-    <sect1>
+    <sect1 id="EditableLists">
     <title>Editable Lists</title>
     <para>
      <literal>EditableListWidget</literal> and <literal>EditableBeanListWidget</literal> are <literal>ListWidgets</literal> 
