@@ -23,14 +23,15 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.FlowContext;
-import org.araneaframework.framework.FlowContext.TransitionHandler;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 
 /**
- * {@link TransitionHandler} with some special confirmation handling for 
- * {@link FlowContext#TRANSITION_CANCEL} events. It attaches event listener to active
- * flow when its cancellation request is received and asks user to confirm the action 
- * whenever the predicate <code>shouldConfirm</code> evaluates to <code>true</code>. 
+ * {@link org.araneaframework.framework.FlowContext.TransitionHandler} with some
+ * special confirmation handling for
+ * {@link org.araneaframework.framework.FlowContext#TRANSITION_CANCEL} events.
+ * It attaches event listener to active flow when its cancellation request is
+ * received and asks user to confirm the action whenever the predicate
+ * <code>shouldConfirm</code> evaluates to <code>true</code>.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1

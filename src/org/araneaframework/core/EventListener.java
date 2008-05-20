@@ -21,16 +21,16 @@ import org.araneaframework.InputData;
 
 /**
  * A simple eventlistener which can be added to Composite Widgets.
- * 
  */
-// Events
 public interface EventListener extends Serializable {
+
   /**
    * Gets called when the event happens.
    * 
-   * @param eventId the id of the event
-   * @param input the InputData of the event
-   * @throws Exception
+   * @param eventId The ID of the event.
+   * @param input The request data of the event.
+   * @throws Exception Any runtime exception that may occur.
    */
   public void processEvent(Object eventId, InputData input) throws Exception;
+
 }

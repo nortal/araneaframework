@@ -91,7 +91,6 @@ public class DisplayItemUtil implements java.io.Serializable {
    * 
    * @param displayItemContainer the container for created {@link DisplayItem}s
    * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
-   * @param valueName the name of the bean field corresponding to the (submitted) value of the select item.
    * @param displayStringName the name of the bean field corresponding to the displayed string (label) of the select item.
    * @param valueTransformer Transformer producing value ({@link DisplayItem#getValue()}) from a bean.
    * 
@@ -115,7 +114,6 @@ public class DisplayItemUtil implements java.io.Serializable {
    *
    * @param displayItemContainer the container for created {@link DisplayItem}s
    * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
-   * @param valueName the name of the bean field corresponding to the (submitted) value of the select item.
    * @param valueTransformer Transformer producing value ({@link DisplayItem#getValue()}) from a bean.
    * @param displayTransformer Transformer producing label (displayString) from a bean
    * 

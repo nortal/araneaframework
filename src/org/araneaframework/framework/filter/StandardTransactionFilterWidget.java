@@ -29,13 +29,15 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
 
 /**
- * Filters <code>update(InputData)</code>, <code>event(Path, InputData)</code> and
- * <code>render(OutputData)</code> based on the transaction id. If the transaction id is consistent, the mentionend
- * actions get called on the child service, otherwise they do not.
+ * Filters <code>update(InputData)</code>,
+ * <code>event(Path, InputData)</code> and <code>render(OutputData)</code>
+ * based on the transaction ID. If the transaction ID is consistent, the
+ * mentionend actions get called on the child service, otherwise they do not.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTransactionFilterWidget extends BaseFilterWidget implements TransactionContext {
+
   private static final Log log = LogFactory.getLog(StandardTransactionFilterWidget.class);
 
   private TransactionHelper transHelper;
@@ -85,7 +87,8 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   }
 
   /**
-   * Generates a new transaction id and pushes it as an attribute to the output. The children can access it via
+   * Generates a new transaction ID and pushes it as an attribute to the output.
+   * The children can access it via
    * {@link TransactionContext#TRANSACTION_ID_KEY} from their OutputData.
    */
   protected void render(OutputData output) throws Exception {
@@ -101,21 +104,28 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   }
 
   /**
-   * Returns true, if the transaction id is consistent. Current implementation uses an instance of
-   * {@link TransactionHelper} for determining the consistency. Can be overridden.
+   * Returns <code>true</code>, if the transaction ID is consistent. Current
+   * implementation uses an instance of {@link TransactionHelper} for
+   * determining the consistency. Can be overridden.
+   * 
+   * @param input the request data.
+   * @return <code>true</code>, if current request is consistent.
    */
   protected boolean isConsistent(InputData input) throws Exception {
     return transHelper.isConsistent(getTransactionId(input));
   }
 
   /**
-   * Extracts the transaction id from the input's global data with the key TRANSACTION_ID_KEY.
+   * Extracts the transaction ID from the input's global data with the key
+   * {@link TransactionContext#TRANSACTION_ID_KEY}.
+   * 
+   * @param input the request data.
+   * @return the transaction ID from the request.
    */
   protected Object getTransactionId(InputData input) throws Exception {
     return input.getGlobalData().get(TransactionContext.TRANSACTION_ID_KEY);
   }
   
-  /** @since 1.1 */
   public Long getNextTransactionId() {
     return transHelper.getNextTransactionId();
   }

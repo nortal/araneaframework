@@ -119,21 +119,23 @@ public class ContextMenuItem implements Serializable {
 	}
 
 	/**
-	 * This class describes the menu entry corresponding to some {@link ContextMenuItem}.
-	 * It contains information about {@link Component} that is notified when entry is selected from menu,
-	 * the event type (<code>action</code> or <code>event</code>) which should be triggered and
-	 * event parameter detector. It cannot be instantiated directly, rather its subclasses 
-	 * {@link ContextMenuActionEntry} or {@link ContextMenuEventEntry} should be used.
-	 * 
-	 * @author Taimo Peelo (taimo@araneaframework.org)
-	 * @since 1.1
-	 */
+     * This class describes the menu entry corresponding to some
+     * {@link ContextMenuItem}. It contains information about {@link Component}
+     * that is notified when entry is selected from menu, the event type (<code>action</code>
+     * or <code>event</code>) which should be triggered and event parameter
+     * detector. It cannot be instantiated directly, rather its subclasses
+     * {@link ContextMenuItem.ContextMenuActionEntry} or
+     * {@link ContextMenuItem.ContextMenuEventEntry} should be used.
+     * 
+     * @author Taimo Peelo (taimo@araneaframework.org)
+     * @since 1.1
+     */
 	public static class ContextMenuEntry implements Serializable {
 		/** Default event parameter detector (leaves event parameter undefined). */
 		public static final String NULL_EVENT_PARAM_DETECTOR = "function() { return null; }";
-		/** Constant corresponding to Aranea <code>action</code> triggering by this {@link ContextMenuEntry}. */
+		/** Constant corresponding to Aranea <code>action</code> triggering by this <code>ContextMenuEntry</code>. */
 		public static final String ACTION = "action";
-		/** Constant corresponding to Aranea <code>event</code> triggering by this {@link ContextMenuEntry}. */
+		/** Constant corresponding to Aranea <code>event</code> triggering by this <code>ContextMenuEntry</code>. */
 		public static final String EVENT = "event";
 
 		private Widget target = null;
@@ -165,9 +167,10 @@ public class ContextMenuItem implements Serializable {
 		}
 
 		/**
-		 * Returns the event type of this {@link ContextMenuEntry}, either {@link ContextMenuEntry#ACTION}
-		 * or {@link ContextMenuEntry#EVENT}.
-		 */
+         * Returns the event type of this <code>ContextMenuEntry</code>,
+         * either {@link ContextMenuItem.ContextMenuEntry#ACTION} or
+         * {@link ContextMenuItem.ContextMenuEntry#EVENT}.
+         */
 		public String getEventType() {
 			return eventType;
 		}
@@ -180,10 +183,13 @@ public class ContextMenuItem implements Serializable {
 		}
 
 		/**
-		 * Returns the event parameter detector which detects the event parameter supplied along with event id.
-		 * If left unspecified, this returns {@link ContextMenuEntry#NULL_EVENT_PARAM_DETECTOR} which returns
-		 * null. Otherwise it returns custom Javascript function defined by developer. 
-		 */
+         * Returns the event parameter detector which detects the event
+         * parameter supplied along with event id. If left unspecified, this
+         * returns
+         * {@link ContextMenuItem.ContextMenuEntry#NULL_EVENT_PARAM_DETECTOR}
+         * which returns null. Otherwise it returns custom Javascript function
+         * defined by developer.
+         */
 		public String getEventParamDetector() {
 			return eventParamDetector;
 		}

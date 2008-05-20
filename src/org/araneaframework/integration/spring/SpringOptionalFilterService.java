@@ -26,28 +26,53 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
+/**
+ * This is a utility service to enable custom filter service chains in XML
+ * configuration. More specifically, once it is defined as a (Spring) bean in
+ * the <code>default-aranea-conf.xml</code> and its <code>beanId</code>
+ * property is set, upon initialization it will try to find the bean
+ * <code>beanId</code> and add it as a child service (therefore, the bean
+ * should indeed be a <i>service</i>!).
+ * <p>
+ * To see it in use, look at the <code>default-aranea-conf.xml</code> and then
+ * the <code>aranea-conf.xml</code> file.
+ */
 public class SpringOptionalFilterService extends BaseFilterService {
-  private static final Log log = LogFactory.getLog(SpringOptionalFilterService.class);
-  
+
+  private static final long serialVersionUID = 1L;
+
+  private static final Log log = LogFactory
+      .getLog(SpringOptionalFilterService.class);
+
   private String beanId;
-  
+
+  /**
+   * A bean property to define the <code>beanId</code> that will be used to
+   * find the bean that will be incorporated as a child service.
+   * 
+   * @param beanName The name of the bean to incorporate.
+   */
   public void setBeanId(String beanName) {
     this.beanId = beanName;
   }
-  
-  protected void init() throws Exception {       
+
+  /**
+   * During initialization it will try to locate and add the bean with Id of
+   * <code>beanId</code> as its child service. Note that the bean must be an
+   * instance of {@link FilterService}.
+   */
+  protected void init() throws Exception {
     BeanFactory bf = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
     try {
       FilterService filter = (FilterService) bf.getBean(beanId);
       filter.setChildService(childService);
       childService = filter;
-      
+
       log.debug("Found optional bean '" + beanId + "'");
-    }
-    catch (NoSuchBeanDefinitionException e) {
+    } catch (NoSuchBeanDefinitionException e) {
       log.debug("Could not find optional bean '" + beanId + "'");
-    }        
-    
-    super.init();       
+    }
+    super.init();
   }
+
 }

@@ -31,63 +31,85 @@ import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.Relocatable.RelocatableWidget;
 
 /**
- * A decorator for a service making it relocatable. A relocatable service can be
- * moved from one parent to another. 
+ * A decorator to make a service relocatable. A relocatable service can be moved
+ * from one parent to another, and the relocatable service will have access to
+ * the right <code>Environment</code>. The <code>Environment</code> of the
+ * decorator is swappable.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class RelocatableDecorator extends BaseService implements Serializable, RelocatableService, RelocatableWidget, ApplicationService,  ApplicationWidget{
-  //*******************************************************************
+public class RelocatableDecorator extends BaseService
+  implements Serializable, RelocatableService, RelocatableWidget,
+  ApplicationService, ApplicationWidget {
+
+  // *******************************************************************
   // FIELDS
-  //*******************************************************************  
+  // *******************************************************************
+
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * The child service that is made relocatable.
+   */
   protected Service child;
 
   //*******************************************************************
   // PROTECTED CLASSES
   //*******************************************************************
+
   protected class RelocatableComponentImpl implements Relocatable.Interface {
+
+    private static final long serialVersionUID = 1L;
+
     public void overrideEnvironment(Environment newEnv) {
       _startCall();
-      
       _setEnvironment(newEnv);
-
       _endCall();
     }
-    
+
     public Environment getCurrentEnvironment() {
       return getEnvironment();
     }
+
   }
-  
+
   //*******************************************************************
   // PUBLIC METHODS
   //*******************************************************************
+
   public Relocatable.Interface _getRelocatable() {
     return new RelocatableComponentImpl();
   }
   
   /**
-   * Constructs a new StandardRelocatableServiceDecorator and sets its child service to child.
-   * @param child
+   * Constructs a new <code>RelocatableDecorator</code> and sets its child
+   * service to child.
+   * 
+   * @param child The service that should be relocatable.
    */
   public RelocatableDecorator(Service child) {
     this.child = child;
   }
-  
+
   /**
    * Sets the child service of this component.
-   * @param child
+   * 
+   * @param child The service that should be relocatable.
    */
   public void setChildService(Service child) {
     this.child = child;
   }
-  
+
   //*******************************************************************
   // PROTECTED METHODS
   //*******************************************************************
+
   protected void init() throws Exception {
     child._getComponent().init(getScope(), new BaseEnvironment() {
+
+      private static final long serialVersionUID = 1L;
+
       public Object getEntry(Object key) {
         if (getEnvironment() == null)
           return null;
@@ -95,15 +117,15 @@ public class RelocatableDecorator extends BaseService implements Serializable, R
       }
     });
   }
-  
+
   protected void propagate(Message message) throws Exception {
     message.send(null, child);
   }
-  
+
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     child._getService().action(path, input, output);
   }
-  
+
   protected void destroy() throws Exception {
     child._getComponent().destroy();
   }
@@ -123,4 +145,5 @@ public class RelocatableDecorator extends BaseService implements Serializable, R
   public Widget.Interface _getWidget() {
     return ((Widget) child)._getWidget();
   }
+
 }

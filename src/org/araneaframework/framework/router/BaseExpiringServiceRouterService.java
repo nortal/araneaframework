@@ -110,9 +110,11 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   }
 
   /**
-   * Returns the key which presence in {@link InputData} indicates that request is
-   * keepalive request for this {@link BaseExpiringServiceRouterService}.
-   * @return keepalive key for this {@link BaseExpiringServiceRouterService}
+   * Returns the key which presence in {@link org.araneaframework.InputData}
+   * indicates that request is a keepalive request for this
+   * {@link BaseExpiringServiceRouterService}.
+   * 
+   * @return a keepalive key for this {@link BaseExpiringServiceRouterService}
    */
   public abstract Object getKeepAliveKey();
 

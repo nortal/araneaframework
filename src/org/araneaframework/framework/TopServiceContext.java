@@ -19,7 +19,7 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 
 /**
- * A top level service that is not syncrhonized and is dependent only on the request.
+ * A top level service that is not synchronized and is dependent only on the request.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)

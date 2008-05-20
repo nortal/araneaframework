@@ -860,7 +860,7 @@ private void handleEventSave() {
 		<title>Form validation</title>
 		
 		<para>
-			As already mentioned, form validation is mostly explicit, by default the values will be just read from 
+			As already mentioned, form validation is mostly explicit. By default, the values will be just read from 
 			request without any parsing, conversion or validation. Validation will be performed after call to
 			<literal>FormWidget.convertAndValidate()</literal>.
 		</para>
@@ -874,22 +874,51 @@ private void handleEventSave() {
 		
 		<para>
 			Produced form validation error messages are rendered by active <literal>FormElementValidationErrorRenderer</literal>
-			implementation. It is possible to choose between two bundled implementations&mdash;<literal>StandardFormElementValidationErrorRenderer</literal> which is enabled by default and  
-           <literal>renders FormElement</literal> validation errors to standard <literal>MessageContext</literal>. Other bundled
-implementation is <literal>LocalFormElementValidationErrorRenderer</literal> which renders the validation 
-            messages into the same HTML <literal>span</literal> element as input field.
+			implementation, which adheres to these methods:
+<programlisting role="java">public interface FormElementValidationErrorRenderer extends Serializable {
+
+  void addError(FormElement element, String error);
+
+  void clearErrors(FormElement element);
+
+  String getClientRenderText(FormElement element);
+
+}</programlisting>
+			The last method is used to provide the client-side script (together with
+			<literal>&lt;script&gt;...&lt;/script&gt;</literal> tags) that binds its validator with the given
+			form element and updates error messages inside the &lt;span&gt; element of the given form element.
 		</para>
-		
+
+		<para>
+		  It is possible to choose between two bundled implementations &mdash;
+		  <literal>StandardFormElementValidationErrorRenderer</literal>, which is enabled by default, and
+		  <literal>LocalFormElementValidationErrorRenderer</literal>. The first one renders
+		  <literal>FormElement</literal> validation errors to standard <literal>MessageContext</literal>.
+		  The second bundled implementation renders the validation messages into the same HTML
+		  <literal>span</literal> element as input field (using the script returned by the
+		  <literal>getClientRenderText(FormElement)</literal> method).
+		</para>
+
 		<para>
 		   <literal>FormElementValidationErrorRenderer</literal> default implementation can be switched by configuring the 
 		   bean representing <literal>ConfigurationContext</literal> (named <literal>'araneaConfiguration'</literal>) 
            to have entry with key '<literal>uilib.widgets.forms.formelement.error.renderer</literal>' value set to desired
-           <literal>FormElementValidationErrorRenderer</literal> instance.
+           <literal>FormElementValidationErrorRenderer</literal> instance:
+<programlisting role="xml">&lt;bean id="araneaConfiguration" singleton="false"
+    class="org.araneaframework.uilib.core.StandardConfiguration"&gt;
+  &lt;property name="confEntries"&gt;
+    &lt;map&gt;
+      &lt;entry key="uilib.widgets.forms.formelement.error.renderer"
+        value="org.araneaframework.uilib.form.LocalFormElementValidationErrorRenderer"/&gt;
+    &lt;/map&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+</programlisting>
 		</para>
-		
+
 		<para>
 			For the cases where validation errors should be rendered differently for just few elements, 
-			<literal>FormElement#setFormElementValidationErrorRenderer()</literal> method should be used.
+			<literal>FormElement.setFormElementValidationErrorRenderer()</literal> method should be used.
 		</para>
 	</sect2>
   </sect1>

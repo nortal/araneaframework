@@ -17,19 +17,31 @@
 package org.araneaframework.example.main.message;
 
 import org.araneaframework.Component;
+import org.araneaframework.Environment;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.example.main.web.LoginWidget;
 import org.araneaframework.example.main.web.RootWidget;
 import org.araneaframework.framework.FlowContext;
 
-public class LoginMessage extends BroadcastMessage {	
-	  private static final long serialVersionUID = 1L;
+/**
+ * A message that searches the {@link LoginWidget} to start a new root widget.
+ */
+public class LoginMessage extends BroadcastMessage {
 
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * Searches the {@link LoginWidget} to start a new root widget.
+   */
   protected void execute(Component component) throws Exception {
-		if (component instanceof LoginWidget) {
-			LoginWidget w = (LoginWidget) component;
-			RootWidget root = new RootWidget();
-			((FlowContext)w.getChildEnvironment().getEntry(FlowContext.class)).replace(root, null);
-		}
-	}
+    if (component instanceof LoginWidget) {
+      LoginWidget loginWidget = (LoginWidget) component;
+
+      Environment childEnv = loginWidget.getChildEnvironment();
+
+      FlowContext flow = (FlowContext) childEnv.getEntry(FlowContext.class);
+      flow.replace(new RootWidget(), null);
+    }
+  }
+
 }

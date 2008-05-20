@@ -19,11 +19,38 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
+ * Scope is an abstraction of the <i>location</i> of the component in the
+ * hierarchy. Every component has its scope.
+ * 
  * @since 1.1
  */
 public interface Scope extends Serializable {
+
+  /**
+   * Every component has its unique ID compared to other children of its parent.
+   * Here is a way to view the ID of the component.
+   * 
+   * @return the ID of the component.
+   */
   Object getId();
+
+  /**
+   * Every component has a parent except the root component. Here is a way to
+   * view the scope of the parent component.
+   * 
+   * @return the scope of the parent component.
+   */
   Scope getParent();
-  
+
+  /**
+   * Builds and returns the full path of the component. The path consists of the
+   * IDs of all the components starting with the root flow. For example, if
+   * <code>a</code> is the ID of the root flow, and <code>c</code> is the ID
+   * of the component whose path we want to know, the path may be like
+   * following: <code>a.b.c</code>.
+   * 
+   * @return the Path of the component.
+   */
   Path toPath();
+
 }
