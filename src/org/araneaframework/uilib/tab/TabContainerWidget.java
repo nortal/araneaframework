@@ -140,7 +140,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		return id.equals(selected.getScope().getId());
 	}
 
-	public TabWidget getSelectedTab() {
+	public TabContext getSelectedTab() {
 		return selected;
 	}
 
