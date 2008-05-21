@@ -107,7 +107,7 @@ public interface TabContainerContext extends Serializable {
    * Returns the currently selected tab widget, which is the container for the
    * widget that was added using the <code>addTab(..)</code> method.
    * 
-   * @return The currently selected <code>TabWidget</code>.
+   * @return The currently selected <code>TabContext</code>.
    */
   TabContext getSelectedTab();
 
