@@ -20,18 +20,32 @@ import org.araneaframework.Component;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.example.main.web.menu.MenuWidget;
 
+/**
+ * A message that searches the {@link MenuWidget} to select the given menu item.
+ */
 public class MenuSelectMessage extends BroadcastMessage {
-	  private static final long serialVersionUID = 1L;
+
+  private static final long serialVersionUID = 1L;
+
   private String menuPath;
-	
-	public MenuSelectMessage(String menuPath) {
-		this.menuPath = menuPath;
-	}
-	
-	protected void execute(Component component) throws Exception {
-		if (component instanceof MenuWidget) {
+
+  /**
+   * Constructs a new message to select menu item named <code>menuPath</code>.
+   * 
+   * @param menuPath The name of the menu item.
+   */
+  public MenuSelectMessage(String menuPath) {
+    this.menuPath = menuPath;
+  }
+
+  /**
+   * Searches the {@link MenuWidget} to select the given menu item.
+   */
+  protected void execute(Component component) throws Exception {
+    if (component instanceof MenuWidget) {
       MenuWidget w = (MenuWidget) component;
-			w.selectMenuItem(menuPath);
-		}
-	}
+      w.selectMenuItem(menuPath);
+    }
+  }
+
 }

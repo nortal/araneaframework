@@ -20,16 +20,26 @@ import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Optional {@link Constraint} only applies when constrained field has some
- * real value. This is a wrapper around {@link Constraint}, wrapped 
- * {@link Constraint} will be  applied only if the constrained field has 
- * been read from the request.
+ * Optional <code>Constraint</code> only applies when constrained field has
+ * some real value. This class is a wrapper around the <code>Constraint</code>,
+ * and the wrapped <code>Constraint</code> will be applied only if the
+ * constrained field has been read from the request.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class OptionalConstraint extends BaseFieldConstraint {
+
+  private static final long serialVersionUID = 1L;
+
   private Constraint constraint;
 
+  /**
+   * Creates a new <code>OptionalConstraint</code> wrapper for given
+   * <code>constraint</code>. The latter will be validated only if the field
+   * has a value.
+   * 
+   * @param constraint The constraint to use for validation.
+   */
   public OptionalConstraint(Constraint constraint) {
     this.constraint = constraint;
   }

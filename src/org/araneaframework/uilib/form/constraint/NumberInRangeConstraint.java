@@ -22,25 +22,52 @@ import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * This constraint checks that the value is between two others.
+ * This constraint checks that the number value would be inside a given range.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class NumberInRangeConstraint extends BaseFieldConstraint {
+
+  private static final long serialVersionUID = 1L;
+
   private BigInteger rangeStart;
+
   private BigInteger rangeEnd;
-  
+
+  /**
+   * A constructor that expects constraint settings to be specified after
+   * initialization.
+   */
   public NumberInRangeConstraint() {}
-  public NumberInRangeConstraint(FormElement field) { super(field); }
-  
+
+  /**
+   * A constructor that binds given constraint to a form field. The ranges
+   * should be provided using {@link #setRangeStart(BigInteger)} and
+   * {@link #setRangeEnd(BigInteger)}.
+   * 
+   * @param field The form element that this constraint should be bound to.
+   */
+  public NumberInRangeConstraint(FormElement field) {
+    super(field);
+  }
+
+  /**
+   * A constructor that initializes the range limits. The latter ones also
+   * accept <code>null</code> values.
+   * <p>
+   * Of course, the start value should be less than end value, or the validation
+   * would fail.
+   * 
+   * @param start The start value of the range.
+   * @param end The end value of the range.
+   */
   public NumberInRangeConstraint(BigInteger start, BigInteger end) {
     rangeStart = start;
     rangeEnd = end;
   }
-  
+
   /**
-   * Checks that the value is between two others.
+   * Checks that the number value would be inside a given range.
    */
   protected void validateConstraint() {
     if (getValue() == null) {
@@ -57,7 +84,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
     }
     
     BigInteger value = new BigInteger(getValue().toString());
-    
+
     if (rangeStart != null && rangeEnd != null && ((value.compareTo(rangeStart) == -1) || value.compareTo(rangeEnd) == 1)) {      
         addError(
                 MessageUtil.localizeAndFormat(
@@ -90,20 +117,23 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
             getEnvironment()));
     }      
   }
-  
+
   /**
-   * Start of range.
-   * @param rangeStart Start of range.
+   * Sets the start value of the range.
+   * 
+   * @param rangeStart The start value of the range.
    */
   public void setRangeStart(BigInteger rangeStart) {
     this.rangeStart = rangeStart;
   }
-  
+
   /**
-   * End of range.
-   * @param rangeEnd End of range.
+   * Sets the end value of the range.
+   * 
+   * @param rangeEnd The end value of the range.
    */
   public void setRangeEnd(BigInteger rangeEnd) {
     this.rangeEnd = rangeEnd;
-  }  
+  }
+
 }

@@ -24,7 +24,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constraint;
 
-
 /**
  * This class is a generalization of a constraint that may contain other
  * constraints.
@@ -32,11 +31,25 @@ import org.araneaframework.uilib.form.Constraint;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseCompositeConstraint extends BaseConstraint {
+
+  /**
+   * List of {@link Constraint}s that this constraint should handle.
+   */
   protected List constraints = new ArrayList();
-  
+
+  /**
+   * An empty constructor that expects other constraints to be added later. Use
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
+   * to add constraints.
+   */
   public BaseCompositeConstraint() {}
   
   /**
+   * A constructor that requires a constraint to be provided immediately, and
+   * other constraints later. Use {@link #addConstraint(Constraint)} or
+   * {@link #addConstraints(Collection)} to add more constraints.
+   * 
+   * @param constraint a single constraint.
    * @since 1.0.9
    */
   public BaseCompositeConstraint(Constraint constraint) {
@@ -44,6 +57,11 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
   }
   
   /**
+   * A constructor that lets all constraints be added at once. Use
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
+   * to add more constraints.
+   * 
+   * @param constraints a collection of {@link Constraint}s.
    * @since 1.0.9
    */
   public BaseCompositeConstraint(Collection constraints) {
@@ -51,12 +69,11 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
   }
 
   /**
-	 * Adds a contained constraint.
-	 * 
-	 * @param constraint
-	 *          contained constraint.
-	 * @return this composite constraint
-	 */
+   * Adds a contained constraint.
+   * 
+   * @param constraint contained constraint.
+   * @return this composite constraint
+   */
   public BaseCompositeConstraint addConstraint(Constraint constraint) {
     constraints.add(constraint);
     return this;
@@ -76,8 +93,8 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
   }
 
   /**
-	 * Clears contained constraints.
-	 */
+   * Clears contained constraints.
+   */
   public void clearConstraints() {
     constraints.clear();
   }

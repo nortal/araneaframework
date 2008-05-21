@@ -101,10 +101,8 @@ package org.araneaframework.core.util;
  *    // ...  other similar traversal and update methods ...
  * }
  * </pre>
- * <p>
- * @see Semaphore
  * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
-**/
+ */
 
 public class Mutex implements Sync  {
 

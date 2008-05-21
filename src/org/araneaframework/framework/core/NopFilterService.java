@@ -16,6 +16,18 @@
 
 package org.araneaframework.framework.core;
 
+/**
+ * The No-Operation Service that can be used in the configuration (<code>aranea-conf.xml</code>)
+ * to disable a Aranea service that is enabled by default.
+ * <p>
+ * For example, to disable the JSP filter, insert the following line to
+ * <code>aranea-conf.xml</code>: <br>
+ * <code>
+ * &lt;bean
+ * class=&quot;org.araneaframework.framework.core.NopFilterService&quot;
+ * id=&quot;araneaJspConfigFilter&quot; singleton=&quot;false&quot;/&gt;
+ * </code>
+ */
 public class NopFilterService extends BaseFilterService {
 
 }

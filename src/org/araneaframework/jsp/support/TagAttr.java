@@ -17,25 +17,56 @@
 package org.araneaframework.jsp.support;
 
 import java.io.Serializable;
+import org.araneaframework.jsp.util.AutomaticFormElementUtil;
 
 /**
+ * Represents a tag attribute. Used with {@link AutomaticFormElementUtil} to
+ * define tag attributes.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @see AutomaticFormElementUtil
+ * @see TagInfo
  */
 public class TagAttr implements Serializable {
+
   private static final long serialVersionUID = 1L;
-    
+
+  /**
+   * The name of the tag attribute.
+   */
   protected String name;
+
+  /**
+   * The value of the tag attribute.
+   */
   protected Object value;
 
+  /**
+   * Creates a new tag attribute with given attribute <code>name</code> and
+   * <code>value</code>.
+   * 
+   * @param name The name of the tag attribute.
+   * @param value The value of the tag attribute.
+   */
   public TagAttr(String name, Object value) {
     this.name = name;
     this.value = value;
   }
 
+  /**
+   * Gets the name of the tag attribute.
+   * 
+   * @return the name of the tag attribute.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Gets the value of the tag attribute.
+   * 
+   * @return the value of the tag attribute.
+   */
   public Object getValue() {
     return value;
   }
