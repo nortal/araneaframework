@@ -75,7 +75,7 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
 	 *   required = "false" 
-	 *   description = "CSS class for tag"
+	 *   description = "CSS class for the tag."
 	 */
 	public void setStyleClass(String styleClass) throws JspException {
 		if (styleClass != null)

@@ -211,4 +211,71 @@ Aranea.UI.flowEventConfirm = function(message) {
   araneaPage().event_6(araneaPage().getSystemForm());
 };
 
+/**
+ * This function enables one check box to select all check boxes of given list.
+ * It assumes that all check boxes in the list have the ID that starts with the
+ * ID value of the given select-all check box (the parameter).
+ * @since 1.1.3
+ */
+Aranea.UI.toggleListCheckBoxes = function(chkSelectAll) {
+	var arrFormElems = araneaPage().getSystemForm().elements;
+
+	for (var i = 0; i < arrFormElems.length; i++) {
+		var elem = arrFormElems[i];
+		if (elem.getAttribute('type') == 'checkbox' && elem.id != null
+				&& elem.id.startsWith(chkSelectAll.id)) {
+			elem.checked = chkSelectAll.checked;
+		}
+	}
+	return true;
+}
+
+/**
+ * This function enables to update the state of the select-all check box.
+ * It assumes that all check boxes in the list have the ID that starts with the
+ * ID value of the given select-all check box. The parameter is the check box
+ * that was clicked. If all check boxes are selected, the select-all will be
+ * also selected, and vice versa.
+ * @since 1.1.3
+ */
+Aranea.UI.updateListSelectAlls = function(chkSelect) {
+	var arrFormElems = araneaPage().getSystemForm().elements;
+
+	var pos = chkSelect.id.lastIndexOf('.');
+	if (pos == -1) {
+		return true;
+	}
+
+	var prefix = chkSelect.id.substr(0, pos);
+	var allValuesEqual = true;
+	var previousValue = null;
+
+	for (var i = 0; i < arrFormElems.length; i++) {
+		var elem = arrFormElems[i];
+
+		if (elem.getAttribute('type') == 'checkbox'
+				&& elem.id != null && elem.id != prefix
+				&& elem.id.startsWith(prefix)) {
+
+			if (previousValue == null) {
+				previousValue = elem.checked;
+			}
+
+			if (previousValue != elem.checked) {
+				allValuesEqual = false;
+				break;
+			}
+
+		}
+	}
+
+	var chkSelectAll = document.getElementById(prefix);
+
+	if (chkSelectAll.checked != allValuesEqual) {
+		chkSelectAll.checked = allValuesEqual;
+	}
+
+	return true;
+}
+
 window['aranea-ui.js'] = true;

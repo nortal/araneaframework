@@ -42,7 +42,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	protected String onChangePrecondition;
 	protected String calendarAlignment;
 	protected String calendarIconClass = "middle";
-	protected boolean renderDisabledAsReadOnly = false;
+	protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
 
 	/**
 	 * @jsp.attribute
@@ -57,14 +57,11 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute type = "java.lang.String"
    *                required = "false"
-   *                description = "Specifies whether the disabled date/time input box will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3
    */
-  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
-      throws JspException {
-    Boolean tempResult = (Boolean) evaluate(
-        "renderDisabledAsReadonly", renderDisabledAsReadonly, Boolean.class);
-    this.renderDisabledAsReadOnly = tempResult.booleanValue();
+  public void setDisabledRenderMode(String disabledRenderMode) throws JspException {
+    this.disabledRenderMode = evaluateDisabledRenderMode(disabledRenderMode);
   }
 
 	/**
@@ -111,10 +108,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		if (StringUtils.isNotBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		
 		if (disabled) {
-		  if (this.renderDisabledAsReadOnly) {
-            JspUtil.writeAttribute(out, "readonly", "readonly");
-		  } else {
-		    JspUtil.writeAttribute(out, "disabled", "disabled");
+		  if (viewModel.isDisabled()) {
+		    JspUtil.writeAttribute(out, this.disabledRenderMode,
+		        this.disabledRenderMode);
 		  }
 		} else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
@@ -260,11 +256,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		}
 
 		if (disabled) {
-          if (this.renderDisabledAsReadOnly) {
-            JspUtil.writeAttribute(out, "readonly", "readonly");
-          } else {
-            JspUtil.writeAttribute(out, "disabled", "disabled");
-          }
+		  if (viewModel.isDisabled()) {
+		    JspUtil.writeAttribute(out, this.disabledRenderMode,
+		        this.disabledRenderMode);
+		  }
 		} else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
 					onChangePrecondition, updateRegionNames);

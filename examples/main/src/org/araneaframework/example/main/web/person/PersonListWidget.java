@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.person;
 
+import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,15 +61,16 @@ public class PersonListWidget extends TemplateBaseWidget {
 		this.editMode = editMode;
 	}
 	
-	protected void init() throws Exception {
+	protected void init() {
 		setViewSelector("person/personList");		
 		initList();
 	}
 	
-	protected void initList() throws Exception {
+	protected void initList() {
 		this.list = new BeanListWidget(PersonMO.class);
+		list.setSelectFromMultiplePages(true);
 		list.setDataProvider(new TemplatePersonListDataProvider());
-		list.addField("id", "#Id");
+		list.addEmptyField("check", "#Choose");
 		list.setOrderableByDefault(true);
 		list.addField("name", "#First name").like();
 		list.addField("surname", "#Last name").setIgnoreCase(false).like();
@@ -89,7 +91,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		this.list.getDataProvider().refreshData();
 	}
 	
-	public void handleEventAdd(String eventParameter) throws Exception {
+	public void handleEventAdd() {
 		getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler() {
 			private static final long serialVersionUID = 1L;
 			
@@ -114,7 +116,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		log.debug("Person with Id of " + id + " removed sucessfully");
 	}
 	
-	public void handleEventSelect(String eventParameter) throws Exception {
+	public void handleEventSelect(String eventParameter) {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		if (!selectOnly) {
 			PersonViewWidget newFlow = new PersonViewWidget(id);
@@ -124,7 +126,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 		}
 	}
 	
-	public void handleEventEdit(String eventParameter) throws Exception {
+	public void handleEventEdit(String eventParameter) {
 		Long id = ((PersonMO) this.list.getRowFromRequestId(eventParameter)).getId();
 		PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
 
@@ -139,10 +141,27 @@ public class PersonListWidget extends TemplateBaseWidget {
 		});
 	}
 	
-	public void handleEventCancel(String eventParameter) throws Exception {
+	public void handleEventCancel() {
 		getFlowCtx().cancel();
 	}
-	
+
+	public void handleEventCollect() {
+	  List persons = list.getSelectedRows();
+	  list.resetSelectedRows();
+
+	  StringBuffer names = new StringBuffer();
+	  for (Iterator i = persons.iterator(); i.hasNext(); ) {
+	    PersonMO person = (PersonMO) i.next();
+	    names.append(person.getName());
+	    if (i.hasNext()) {
+	      names.append(", ");
+	    }
+	  }
+
+	  getMessageCtx().showInfoMessage(
+        "Following persons were selected: " + names.toString());
+	}
+
 	public void setSelectOnly(boolean selectOnly) {
 		this.selectOnly = selectOnly;
 	}	

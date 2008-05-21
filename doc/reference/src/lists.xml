@@ -17,7 +17,7 @@
 <chapter id="lists">
   <title>Lists and Query Browsing</title>
 
-  <sect1>
+  <sect1 id="Introduction">
     <title>Introduction</title>
 
     <para>A common task in web applications is displaying tables. This is a
@@ -85,7 +85,7 @@
       </variablelist></para>
   </sect1>
 
-  <sect1>
+  <sect1 id="ListsAPI">
     <title>Lists API</title>
 
     <sect2>
@@ -286,7 +286,7 @@ private class MyMemoryBasedListDataProvider extends MemoryBasedListDataProvider 
 
       <para>Filtering means that we only display a certain list items. The
       list can be filtered using its fields and data provided by the search
-      from of this list.</para>
+      form of this list.</para>
 
       <para>For this, we must provide the <code>ListWidget</code> with the
       corresponding
@@ -373,6 +373,14 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
           </varlistentry>
         </variablelist></para>
 
+      <para>Sometimes tables need to contain a column (or more) that is not bound to specific
+      model object field. One can add such a column to the list structure like this:
+      <programlisting role="java">myList.addEmptyField("choose", "#Choose");</programlisting>
+      The column still must have unique ID (e.g. <code>"choose"</code> in this case).
+      The label for the column is optional. In addition, this column would not be orderable
+      as its values are not controlled by the <code>ListWdiget</code>. However, this column
+      can be used for check boxes, radio buttons, links, etc.</para>
+
       <para>Now, let's show which filters we have got: <informaltable
           frame="all">
           <tgroup cols="3">
@@ -428,8 +436,8 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
                 <entry><code>GreaterThanFilter, LowerThanFilter</code></entry>
 
                 <entry>Tests if the value of a certain list field is greater
-                than (lower than) a certain constant. This filter is always
-                enabled.</entry>
+                than (lower than) a certain constant. This filter, if used,
+                is always enabled.</entry>
               </row>
 
               <row>
@@ -464,6 +472,27 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
                 <entry>Tests if a certain constant pattern matches with the
                 value of a certain list field. This filter is always
                 enabled.</entry>
+              </row>
+
+              <row>
+                <entry><code>startsWith(), endsWith()</code></entry>
+
+                <entry><code>LikeFilter</code></entry>
+
+                <entry>This is very similar to the <code>like()</code> constraint,
+                and tests if the list field value either starts or ends with the
+                user-provided pattern. The filter is disabled if the search field
+                is blank.</entry>
+              </row>
+
+              <row>
+                <entry><code>startsWithConst(), endsWithConst()</code></entry>
+
+                <entry><code>LikeFilter</code></entry>
+
+                <entry>Tests if given constant pattern is either in the beginning
+                or in the end of the field value. This filter, if used,
+                is always enabled.</entry>
               </row>
 
               <row>
@@ -865,9 +894,11 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
       that generate SQL statements and fetches the results from database. We
       strongly recommend it together with its subclasses that support
       different database systems. Currently <literal>Oracle</literal>
-      (<classname>OracleListSqlHelper</classname>) and <literal>HSQL</literal>
-      (<classname>HsqlListSqlHelper</classname>) databases are
-      supported.</para>
+      (<classname>OracleListSqlHelper</classname>),
+      <literal>Postgre</literal> (<literal>PostgreListSqlHelper</literal>),
+      and <literal>HSQL</literal> (<classname>HsqlListSqlHelper</classname>)
+      databases are supported (they are used similarly because they all
+      extend <literal>ListSqlHelper</literal>).</para>
 
       <para>The following example discovers the simplest usage of
       <classname>ListSqlHelper</classname>. The following code should be in a
@@ -1474,7 +1505,7 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 
       <para>If all fields described for the <classname>ListWidget</classname> should be used
       they can be added using the <classname>ListStructure</classname>
-      contained in the <classname>ListQuery</classname>:       
+      contained in the <classname>ListQuery</classname>:
       <programlisting
       role="java">public class MyService {
   ...
@@ -1525,8 +1556,55 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 		</para>
 
   </sect1>
+  <sect1 id="SelectingListRows">
+    <title>Selecting List Rows</title>
+    <para>
+    This section shows how a user can choose list rows with a check box or a radio button.
+    The solution described here is also integrated into Aranea lists, so it is quite easy to use.
+    Firstly, Aranea provides a check box tag (<literal>&lt;ui:listRowCheckBox/&gt;</literal>)
+    and a radio button tag (<literal>&lt;ui:listRowRadioButton/&gt;</literal>) for list rows.
+    These are meant for the user to check multiple rows or just one row to submit them
+    once the user clicks on a button. Usually, these tags don't require any attributes
+    (unless one needs to customize style or javascript), and work only with the list where they
+    are used, even if there are multiple lists on the page.
+    </para>
 
-  <sect1>
+		<para>
+		In addition, Aranea provides a tag that selects or unselects all row check boxes in
+		the list. It is named <literal>&lt;ui:listSelectAllCheckBox/&gt;</literal>. Again, it
+		requires zero configuration.
+		</para>
+
+		<para>
+		Now, these tags are useful because the next step is just getting the model objects from
+		the list with the <literal>ListWidget.getSelectedRows()</literal> method. Or, if a
+		radio button was used, and, therefore, only one selected row is expected, the
+		<literal>ListWidget.getSelectedRow()</literal> method can be used. If no rows were
+		selected then <literal>getSelectedRows()</literal> would return an empty list, and
+		<literal>getSelectedRow()</literal> would return <literal>null</literal>.
+		</para>
+
+		<para>
+		There is also an advanced feature in case the list row check boxes are used. One
+		can make the list remember the selected rows in case the user switches between
+		the (list) pages. It can be achieved by calling
+		<literal>list.setSelectFromMultiplePages(true)</literal> (by default it is
+		<literal>false</literal>). Once enabled, the list and the tags use the
+		<literal>equals()</literal> method of the list row data object to know whether
+		the row must be checked or unchecked. Therefore, when the user goes back to the
+		list page where some rows were selected before then they would still appear selected. 
+		</para>
+
+		<note>
+		Enabling the <literal>selectFromMultiplePages</literal> option, that makes list
+		remember previously selected rows, requires caution because the data model objects
+		needs to have the <literal>equals()</literal> to correctly compare them. Otherwise,
+		the "same" object could appear several times in the returned selected rows list.
+		This is the reason why it is turned off by default.
+		</note>
+  </sect1>
+
+  <sect1 id="ListJSPTags">
     <title>List JSP Tags</title>
 
     <!-- LIST -->
@@ -2067,9 +2145,101 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
 &lt;/ui:list&gt;</programlisting>
       </sect3>
     </sect2>
+
+    <sect2>
+      <title>&lt;ui:listRowCheckBox&gt; And &lt;ui:listRowRadioButton&gt;</title>
+
+      <para>
+      Represents a list row check box and a list row radio button that are bound to
+      the list row. The <literal>&lt;ui:listRowCheckBox&gt;</literal> accompanies
+      with the <literal>&lt;ui:listSelectAllCheckBox&gt;</literal> that lets the
+      user mark all list row check boxes (in the same list) checked or unchecked.
+      </para>
+
+			<para>
+			Both <literal>&lt;ui:listRowCheckBox&gt;</literal> and
+			<literal>&lt;ui:listRowRadioButton&gt;</literal> usually require no configuration. 
+			However, if one needs to change something, the tags provide similar attributes.
+			</para>
+
+      <sect3>
+        <title>Attributes</title>
+
+        <informaltable frame="all">
+          <tgroup cols="3">
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="4*" />
+
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Required</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>value</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>(Check box only!) Specifies a custom value (when it is submitted).
+                Default value is <literal>selected</literal>.</entry>
+              </row>
+              <row>
+                <entry>labelId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies a custom label for the check box or the radio button.</entry>
+              </row>
+              <row>
+                <entry>disabled</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies whether the input should be rendered as disabled. Default is active state.</entry>
+              </row>
+              <row>
+                <entry>onclick</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies custom <literal>onclick</literal> event. Default is none.</entry>
+              </row>
+              <row>
+                <entry>accessKey</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies custom <literal>acceskey</literal> (defined by HTML). Default is none.</entry>
+              </row>
+              <row>
+                <entry>checked</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Specifies the initial state of the check box or radio button. Default is unchecked.</entry>
+              </row>
+              <row>
+                <entry>tabindex</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>This attribute specifies the position of the current element in the tabbing order for the current document. This value must be a number between 0 and 32767.</entry>
+              </row>
+              <row>
+                <entry>style</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>Inline (CSS) style for HTML tag.</entry>
+              </row>
+              <row>
+                <entry>styleClass</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>CSS class for the tag.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </sect3>
+
+			<para>
+				See also <xref linkend="SelectingListRows" />
+			</para>
+    </sect2>
   </sect1>
   
-    <sect1>
+    <sect1 id="EditableLists">
     <title>Editable Lists</title>
     <para>
      <literal>EditableListWidget</literal> and <literal>EditableBeanListWidget</literal> are <literal>ListWidgets</literal> 

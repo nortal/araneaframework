@@ -151,7 +151,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     DateTimeControl.ViewModel viewModel = (DateTimeControl.ViewModel) controlViewModel;
 
     // In case of read-only time control, we don't want to show select boxes.
-    if (viewModel.isDisabled() && this.renderDisabledAsReadOnly) {
+    if (viewModel.isDisabled() && RENDER_DISABLED_READONLY.equals(this.disabledRenderMode)) {
       return;
     }
 
@@ -251,10 +251,9 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "onBlur", onBlur.toString());
 
     if (disabled) {
-      if (this.renderDisabledAsReadOnly) {
-        JspUtil.writeAttribute(out, "readonly", "readonly");
-      } else {
-        JspUtil.writeAttribute(out, "disabled", "disabled");
+      if (viewModel.isDisabled()) {
+        JspUtil.writeAttribute(out, this.disabledRenderMode,
+            this.disabledRenderMode);
       }
     }
 
@@ -300,11 +299,10 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 
 		if (disabled) {
-          if (this.renderDisabledAsReadOnly) {
-            JspUtil.writeAttribute(out, "readonly", "readonly");
-          } else {
-            JspUtil.writeAttribute(out, "disabled", "disabled");
-          }
+		  if (viewModel.isDisabled()) {
+		    JspUtil.writeAttribute(out, this.disabledRenderMode,
+		      this.disabledRenderMode);
+		  }
 		} else if (events && dateTimeViewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
 					onChangePrecondition, updateRegionNames);
