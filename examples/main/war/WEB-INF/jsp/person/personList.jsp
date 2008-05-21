@@ -21,7 +21,9 @@
 					<!-- Filter -->
 					<ui:listFilter>
 						<ui:row styleClass="filter">
-							<ui:cell/>
+							<ui:cell>
+								<ui:listSelectAllCheckBox/>
+							</ui:cell>
 	
 							<ui:cell>
 								<ui:textInput id="name"/>
@@ -59,7 +61,7 @@
 					<ui:listRows>
 						<ui:row>
 							<ui:cell>
-								<c:out value="${row.id}"/>
+								<ui:listRowCheckBox/>
 							</ui:cell>
 	
 							<ui:cell>
@@ -101,6 +103,8 @@
 				
 				<tui:componentActions>
 					<ui:eventButton eventId="add" labelId="#Add new person"/>
+					<ui:nbsp/>
+					<ui:eventButton eventId="collect" labelId="#Collect selected persons"/>
 				</tui:componentActions>
 
 			</tui:component>

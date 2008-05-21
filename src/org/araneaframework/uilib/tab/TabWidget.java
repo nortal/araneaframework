@@ -18,7 +18,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class TabWidget extends BaseApplicationWidget {
+public class TabWidget extends BaseApplicationWidget implements TabContext {
 	private static final long serialVersionUID = 1L;
 
 	/** Child key for tab's label widget. */
