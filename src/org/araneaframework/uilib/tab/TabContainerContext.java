@@ -109,7 +109,7 @@ public interface TabContainerContext extends Serializable {
    * 
    * @return The currently selected <code>TabWidget</code>.
    */
-  TabWidget getSelectedTab();
+  TabContext getSelectedTab();
 
   /**
    * Returns all the tabs present in this {@link TabContainerContext}. Keys in
