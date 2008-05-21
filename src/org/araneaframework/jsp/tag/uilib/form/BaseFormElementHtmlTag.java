@@ -47,7 +47,11 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/** @since 1.1 */
 	public static final String FORMELEMENT_SPAN_PREFIX = "fe-span-";
 
-	protected String formFullId;
+    public static final String RENDER_DISABLED_DISABLED = "disabled";
+
+    public static final String RENDER_DISABLED_READONLY = "read-only";
+
+    protected String formFullId;
 	
 	protected FormWidget.ViewModel formViewModel;
 	protected FormElement.ViewModel formElementViewModel;
@@ -360,4 +364,20 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
 		JspUtil.writeCloseAttribute(out);
 	}
+
+	protected String evaluateRenderMode(String renderMode) throws JspException {
+      String resultRenderMode = (String) evaluateNotNull("renderMode",
+          renderMode, String.class);
+
+      if (!resultRenderMode.equals(RENDER_DISABLED_DISABLED)
+          && !resultRenderMode.equals(RENDER_DISABLED_READONLY)) {
+
+        throw new JspException("Valid options for the renderMode attribute are '"
+            + RENDER_DISABLED_DISABLED + "' and '" + RENDER_DISABLED_READONLY
+            + "'. The value '" + resultRenderMode + "' is not valid.");
+      }
+
+      return resultRenderMode;
+  }
+
 }

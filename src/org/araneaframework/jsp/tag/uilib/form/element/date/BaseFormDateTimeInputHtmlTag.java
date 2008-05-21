@@ -42,7 +42,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	protected String onChangePrecondition;
 	protected String calendarAlignment;
 	protected String calendarIconClass = "middle";
-	protected boolean renderDisabledAsReadOnly = false;
+	protected String renderMode = RENDER_DISABLED_DISABLED;
 
 	/**
 	 * @jsp.attribute
@@ -57,14 +57,11 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute type = "java.lang.String"
    *                required = "false"
-   *                description = "Specifies whether the disabled date/time input box will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3
    */
-  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
-      throws JspException {
-    Boolean tempResult = (Boolean) evaluate(
-        "renderDisabledAsReadonly", renderDisabledAsReadonly, Boolean.class);
-    this.renderDisabledAsReadOnly = tempResult.booleanValue();
+  public void setRenderMode(String renderMode) throws JspException {
+    this.renderMode = evaluateRenderMode(renderMode);
   }
 
 	/**
@@ -111,7 +108,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		if (StringUtils.isNotBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		
 		if (disabled) {
-		  if (this.renderDisabledAsReadOnly) {
+		  if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
             JspUtil.writeAttribute(out, "readonly", "readonly");
 		  } else {
 		    JspUtil.writeAttribute(out, "disabled", "disabled");
@@ -260,7 +257,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		}
 
 		if (disabled) {
-          if (this.renderDisabledAsReadOnly) {
+          if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
             JspUtil.writeAttribute(out, "readonly", "readonly");
           } else {
             JspUtil.writeAttribute(out, "disabled", "disabled");

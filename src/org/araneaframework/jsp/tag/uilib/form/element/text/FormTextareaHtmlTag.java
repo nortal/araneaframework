@@ -39,7 +39,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long cols;
   protected Long rows;
-  protected boolean renderDisabledAsReadOnly;
+  protected String renderMode;
 
   {
     baseStyleClass = "aranea-textarea";
@@ -68,8 +68,8 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     if (viewModel.isDisabled()) {
-      if (renderDisabledAsReadOnly) {
-    	JspUtil.writeAttribute(out, "readonly", "readonly");
+      if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
+        JspUtil.writeAttribute(out, "readonly", "readonly");
       } else {
         JspUtil.writeAttribute(out, "disabled", "disabled");
       }
@@ -111,17 +111,13 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false" 
-   *   description = "Specifies whether the disabled textarea will be rendered as read-only (the field would still stay disabled and any data changes would be lost). By default, disabled inputs won't be rendered as read-only."
+   * @jsp.attribute type = "java.lang.String"
+   *                required = "false"
+   *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3
    */
-  public void setRenderDisabledAsReadOnly(String renderDisabledAsReadonly)
-      throws JspException {
-    Boolean tempResult = (Boolean) evaluate("renderDisabledAsReadonly",
-        renderDisabledAsReadonly, Boolean.class);
-    this.renderDisabledAsReadOnly = tempResult.booleanValue();
+  public void setRenderMode(String renderMode) throws JspException {
+    this.renderMode = evaluateRenderMode(renderMode);
   }
 
 }

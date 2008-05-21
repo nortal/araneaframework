@@ -88,7 +88,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     TimeControl.ViewModel viewModel = (TimeControl.ViewModel) controlViewModel;
 
     // In case of read-only time control, we don't want to show select boxes.
-    if (viewModel.isDisabled() && renderDisabledAsReadOnly) {
+    if (viewModel.isDisabled() && RENDER_DISABLED_READONLY.equals(this.renderMode)) {
     	return;
     }
 
@@ -194,7 +194,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     if (!StringUtils.isBlank(accessKey))
       JspUtil.writeAttribute(out, "accesskey", accessKey);
     if (disabled) {
-      if (renderDisabledAsReadOnly) {
+      if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
         JspUtil.writeAttribute(out, "readonly", "readonly");
       } else {
         JspUtil.writeAttribute(out, "disabled", "disabled");
