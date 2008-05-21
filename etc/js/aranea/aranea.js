@@ -1019,8 +1019,6 @@ AraneaPage.RSHURLInit = function() {
   if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
 	window.dhtmlHistory.firstLoad = true;
 	window.dhtmlHistory.ignoreLocationChange = true;
-	window.location.hash = _ap.getSystemForm().araClientStateId.value;   
-	//dhtmlHistory.add(_ap.getSystemForm().araClientStateId.value, null);
   }
 };
 
