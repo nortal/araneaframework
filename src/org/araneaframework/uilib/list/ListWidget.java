@@ -899,9 +899,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 	
 	/**
-	 * Initilizes the list, initializing contained filter form and the {@link ListDataProvider}and
-	 * getting the initial item range.
-	 */
+     * Initilizes the list, initializing contained filter form and the
+     * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}and
+     * getting the initial item range.
+     */
 	protected void init() throws Exception {
 		this.sequenceHelper = createSequenceHelper();
 

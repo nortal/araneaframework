@@ -19,39 +19,49 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 
 /**
- * TransactionContext filters routing of duplicate requests. The detection of
- * duplicate requests is achieved through defining a transaction id
+ * <code>TransactionContext</code> filters routing of duplicate requests. The
+ * detection of duplicate requests is achieved through defining a transaction ID
  * <code>by getTransactionId()</code> and checking its consistency with
- * <code>isConsistent()</code>
+ * <code>isConsistent()</code>.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface TransactionContext extends Serializable {
+
   /**
-   * The key in the request, under which is the transaction id.
+   * The key in the request, under which is the transaction ID.
    */
   public static final String TRANSACTION_ID_KEY = "araTransactionId";
-  
+
   /**
-   * The key in the request that indicates situation where transaction id
+   * The key in the request that indicates situation where transaction ID.
    * was overrriden on purpose. 
    */
   public static final String OVERRIDE_KEY = "override";
 
   /**
-   * Returns true if current request is consistent (not a rerecurring one).
+   * Specifies whether the current request is consistent with the expected
+   * transaction ID.
+   * 
+   * @return <code>true</code>, if current request is consistent.
    */
   public boolean isConsistent();
-  
+
   /**
-   * Returns the transaction id of the current request.
+   * Provides the transaction ID of the current request.
+   * 
+   * @return the current transaction ID.
    */
   public Object getTransactionId();
-  
+
   /**
-   * Returns the transaction id expected in the next request.
+   * Provides the generated transaction ID that will be expected in the next
+   * request.
+   * 
+   * @return the new transaction ID.
    * @since 1.1
    */
   public Long getNextTransactionId();
+
 }

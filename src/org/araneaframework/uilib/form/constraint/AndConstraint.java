@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.araneaframework.uilib.form.Constraint;
 
-
 /**
  * This constraint implements "AND" Boolean logic (checks that all
  * contained constraits are satisfied). It is eager by default, but can
@@ -31,11 +30,30 @@ import org.araneaframework.uilib.form.Constraint;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class AndConstraint extends BaseCompositeConstraint {
+
+  private static final long serialVersionUID = 1L;
+
   private boolean lazy = false;
-  
-  public AndConstraint() {}
-  
+
   /**
+   * An empty constructor that expects other constraints to be added later. Use
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
+   * to add constraints.
+   * <p>
+   * Later all added constraints are expected to not fail, or this constraint
+   * fails also.
+   */
+  public AndConstraint() {}
+
+  /**
+   * A constructor that requires a constraint to be provided immediately, and
+   * other constraints later. Use {@link #addConstraint(Constraint)} or
+   * {@link #addConstraints(Collection)} to add more constraints.
+   * <p>
+   * Later all added constraints are expected to not fail, or this constraint
+   * fails also.
+   * 
+   * @param constraint a single constraint.
    * @since 1.0.9
    */
   public AndConstraint(Constraint constraint) {
@@ -43,7 +61,14 @@ public class AndConstraint extends BaseCompositeConstraint {
   }
   
   /**
-   * @param constraints Collection&lt;Constraint&gt;
+   * A constructor that lets all constraints be added at once. Use
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
+   * to add more constraints.
+   * <p>
+   * Later all added constraints are expected to not fail, or this constraint
+   * fails also.
+   * 
+   * @param constraints a collection of {@link Constraint}s.
    * @since 1.0.9
    */
   public AndConstraint(Collection constraints) {
@@ -65,12 +90,16 @@ public class AndConstraint extends BaseCompositeConstraint {
   }
   
   /**
-   * Sets whether this {@link AndConstraint} acts lazily, default is <code>false</code>.
-   * @param lazy
-   * @return this {@link AndConstraint}
+   * Sets whether this constraint acts lazily, default is
+   * <code>false</code>.
+   * 
+   * @param lazy <code>true</code>, if this constraint should acts lazily.
+   *            Otherwise, <code>false</code>.
+   * @return this constraint.
    */
   public AndConstraint setLazy(boolean lazy) {
     this.lazy = lazy;
     return this;
   }
+
 }

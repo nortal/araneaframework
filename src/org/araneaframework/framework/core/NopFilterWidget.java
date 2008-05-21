@@ -16,6 +16,17 @@
 
 package org.araneaframework.framework.core;
 
+/**
+ * The No-Operation Widget that can be used in the configuration (<code>aranea-conf.xml</code>)
+ * to disable a Aranea widget that is enabled by default.
+ * <p>
+ * For example, to disable the transaction filter, insert the following line to
+ * <code>aranea-conf.xml</code>: <br>
+ * <code>
+ * &lt;bean class=&quot;org.araneaframework.framework.core.NopFilterWidget&quot;
+ * id=&quot;araneaTransactionFilter&quot; singleton=&quot;false&quot;/&gt;
+ * </code>
+ */
 public class NopFilterWidget extends BaseFilterWidget {
 
 }

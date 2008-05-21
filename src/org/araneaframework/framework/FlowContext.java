@@ -73,7 +73,7 @@ public interface FlowContext extends Serializable {
   public void replace(Widget flow);
   
   /**
-   * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
+   * Destroys the current flow and starts a new one. When the new flow ends execution it will return control
    * to the caller of the current flow (if there is one). Started subflow can be configured using the configurator.
    * @since 1.0.9 
    */
@@ -127,13 +127,19 @@ public interface FlowContext extends Serializable {
     public void reset(EnvironmentAwareCallback callback) throws Exception;
   }
 
-  /** 
-   * Sets the {@link TransitionHandler} which performs the flow navigation.
-   * @since 1.1 */ 
-  void setTransitionHandler(TransitionHandler handler);
   /**
-   * Returns currently active {@link TransitionHandler} 
-   * @since 1.1 */ 
+   * Sets the <code>FlowContext.TransitionHandler</code> which performs the
+   * flow navigation.
+   * 
+   * @since 1.1
+   */ 
+  void setTransitionHandler(TransitionHandler handler);
+
+  /**
+   * Returns currently active <code>FlowContext.TransitionHandler</code>.
+   * 
+   * @since 1.1
+   */ 
   TransitionHandler getTransitionHandler();
 
   /**

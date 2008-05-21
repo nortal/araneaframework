@@ -20,15 +20,36 @@ import java.io.Serializable;
 import org.apache.commons.collections.Closure;
 
 /**
- * Simple confirmation context&mdash;expects immediate user confirmation
- * for going through with some event (expressed as closure).
+ * Simple confirmation context - expects immediate user confirmation for going
+ * through with some event (expressed as a closure).
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public interface ConfirmationContext extends Serializable {
+
+  /**
+   * Defines the request param name to be used by this context.
+   */
   String CONFIRMATION_RESULT_KEY = "araConfirmationContextConfirmationResult";
-  
+
+  /**
+   * Creates a condition for the user to confirm (only one confirmation can be
+   * used per page). The user will be shown the confirmation message (on page
+   * load). If the user chooses "Yes" then the business logic inside the closure
+   * will be invoked.
+   * 
+   * @param onConfirmClosure A closure that invokes the business logic when the
+   *            user confirms it.
+   * @param message The confirmation message displayed to the user.
+   */
   void confirm(Closure onConfirmClosure, String message);
+
+  /**
+   * Returns the current confirmation message meant for the user.
+   * 
+   * @return the current confirmation message.
+   */
   String getConfirmationMessage();
+
 }

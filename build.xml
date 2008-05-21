@@ -20,6 +20,10 @@
 
 	<property name="ivy.settings.file" value="ivysettings.xml"/>
 
+	<path id="classpath">
+		<fileset dir="${lib.dir}/default/" includes="*.jar"/>
+	</path>
+
 	<!-- Clean up build system results -->
 	<target name="clean-all" depends="clean" description="Clean up build system results">
 		<ant dir="examples/common" target="clean" inheritall="false"/>
@@ -64,10 +68,6 @@
 
 	<target name="init" description="Initializes the build system">
 		<mkdir dir="build" />
-		<path id="classpath">
-			<fileset dir="${lib.dir}/default/" includes="*.jar"/>
-			<fileset dir="${lib.dir}/j2ee/" includes="*.jar"/>
-		</path>
 	</target>
 
 	<target name="init-ivy" description="Initializes ivy path and settings">
@@ -299,11 +299,13 @@
 		<mkdir dir="${dist.dir}/doc/javadoc/" />
 		<javadoc 
 			classpathref="classpath"
-			encoding="UTF8"
-			docencoding="UTF8"
+			encoding="UTF-8"
+			docencoding="UTF-8"
 			packagenames="org.araneaframework.*" 
 			sourcepath="src"
 			destdir="${dist.dir}/doc/javadoc/">
+			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+			<link href="http://static.springframework.org/spring/docs/1.2.6/api/"/>
 			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
 			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
 		</javadoc>
@@ -402,6 +404,14 @@
 		<zip destfile="${dist.dir}/${distname}.zip">
 			<zipfileset dir="build/tmp/dist" prefix="${distname}"/>
 		</zip>
+	</target>
+
+	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
+		<taskdef resource="checkstyletask.properties" classpathref="classpath"/>
+		<checkstyle config="sun_checks.xml">
+			<fileset dir="src" includes="**/*.java"/>
+			<formatter type="xml" tofile="checkstyle_report.xml"/>
+		</checkstyle>
 	</target>
 
 	<!-- ======================== CHANGELOGIC TARGETS ======================== -->
