@@ -39,7 +39,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long cols;
   protected Long rows;
-  protected String renderMode;
+  protected String disabledRenderMode;
 
   {
     baseStyleClass = "aranea-textarea";
@@ -68,10 +68,9 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     if (viewModel.isDisabled()) {
-      if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
-        JspUtil.writeAttribute(out, "readonly", "readonly");
-      } else {
-        JspUtil.writeAttribute(out, "disabled", "disabled");
+      if (viewModel.isDisabled()) {
+        JspUtil.writeAttribute(out, this.disabledRenderMode,
+            this.disabledRenderMode);
       }
     }
 
@@ -116,8 +115,8 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
    *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3
    */
-  public void setRenderMode(String renderMode) throws JspException {
-    this.renderMode = evaluateRenderMode(renderMode);
+  public void setDisabledRenderMode(String disabledRenderMode) throws JspException {
+    this.disabledRenderMode = evaluateDisabledRenderMode(disabledRenderMode);
   }
 
 }

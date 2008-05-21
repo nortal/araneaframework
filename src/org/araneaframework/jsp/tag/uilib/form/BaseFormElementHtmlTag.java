@@ -365,16 +365,17 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		JspUtil.writeCloseAttribute(out);
 	}
 
-	protected String evaluateRenderMode(String renderMode) throws JspException {
-      String resultRenderMode = (String) evaluateNotNull("renderMode",
-          renderMode, String.class);
+	protected String evaluateDisabledRenderMode(String renderMode) throws JspException {
+      String resultRenderMode = (String) evaluateNotNull("disabledRenderMode",
+        renderMode, String.class);
 
       if (!resultRenderMode.equals(RENDER_DISABLED_DISABLED)
           && !resultRenderMode.equals(RENDER_DISABLED_READONLY)) {
 
-        throw new JspException("Valid options for the renderMode attribute are '"
-            + RENDER_DISABLED_DISABLED + "' and '" + RENDER_DISABLED_READONLY
-            + "'. The value '" + resultRenderMode + "' is not valid.");
+        throw new JspException(
+          "Valid options for the disabledRenderMode attribute are '"
+              + RENDER_DISABLED_DISABLED + "' and '" + RENDER_DISABLED_READONLY
+              + "'. The value '" + resultRenderMode + "' is not valid.");
       }
 
       return resultRenderMode;

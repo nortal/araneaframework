@@ -36,7 +36,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long size;
   protected String onChangePrecondition;
-  protected String renderMode;
+  protected String disabledRenderMode;
 
   {
     baseStyleClass = "aranea-text";
@@ -74,11 +74,11 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute type = "java.lang.String"
    *                required = "false"
-   *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
+   *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'readonly'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3
    */
-  public void setRenderMode(String renderMode) throws JspException {
-    this.renderMode = evaluateRenderMode(renderMode);
+  public void setDisabledRenderMode(String disabledRenderMode) throws JspException {
+    this.disabledRenderMode = evaluateDisabledRenderMode(disabledRenderMode);
   }
 
   /* ***********************************************************************************
@@ -114,11 +114,8 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     }
 
     if (viewModel.isDisabled()) {
-      if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
-        JspUtil.writeAttribute(out, "readonly", "readonly");
-      } else {
-        JspUtil.writeAttribute(out, "disabled", "disabled");
-      }
+      JspUtil.writeAttribute(out, this.disabledRenderMode,
+          this.disabledRenderMode);
     }
 
     if (events && viewModel.isOnChangeEventRegistered()) {

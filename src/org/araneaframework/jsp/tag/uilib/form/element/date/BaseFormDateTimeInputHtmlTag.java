@@ -42,7 +42,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	protected String onChangePrecondition;
 	protected String calendarAlignment;
 	protected String calendarIconClass = "middle";
-	protected String renderMode = RENDER_DISABLED_DISABLED;
+	protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
 
 	/**
 	 * @jsp.attribute
@@ -60,8 +60,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
    *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3
    */
-  public void setRenderMode(String renderMode) throws JspException {
-    this.renderMode = evaluateRenderMode(renderMode);
+  public void setDisabledRenderMode(String disabledRenderMode) throws JspException {
+    this.disabledRenderMode = evaluateDisabledRenderMode(disabledRenderMode);
   }
 
 	/**
@@ -108,10 +108,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		if (StringUtils.isNotBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 		
 		if (disabled) {
-		  if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
-            JspUtil.writeAttribute(out, "readonly", "readonly");
-		  } else {
-		    JspUtil.writeAttribute(out, "disabled", "disabled");
+		  if (viewModel.isDisabled()) {
+		    JspUtil.writeAttribute(out, this.disabledRenderMode,
+		        this.disabledRenderMode);
 		  }
 		} else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
@@ -257,11 +256,10 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		}
 
 		if (disabled) {
-          if (RENDER_DISABLED_READONLY.equals(this.renderMode)) {
-            JspUtil.writeAttribute(out, "readonly", "readonly");
-          } else {
-            JspUtil.writeAttribute(out, "disabled", "disabled");
-          }
+		  if (viewModel.isDisabled()) {
+		    JspUtil.writeAttribute(out, this.disabledRenderMode,
+		        this.disabledRenderMode);
+		  }
 		} else if (events && viewModel.isOnChangeEventRegistered()) {
 			writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
 					onChangePrecondition, updateRegionNames);

@@ -222,8 +222,8 @@ Aranea.UI.toggleListCheckBoxes = function(chkSelectAll) {
 
 	for (var i = 0; i < arrFormElems.length; i++) {
 		var elem = arrFormElems[i];
-		if (elem.getAttribute('type') == 'checkbox'
-				&& Aranea.UI.hasIdPrefix(elem, chkSelectAll.id)) {
+		if (elem.getAttribute('type') == 'checkbox' && elem.id != null
+				&& elem.id.startsWith(chkSelectAll.id)) {
 			elem.checked = chkSelectAll.checked;
 		}
 	}
@@ -254,8 +254,8 @@ Aranea.UI.updateListSelectAlls = function(chkSelect) {
 		var elem = arrFormElems[i];
 
 		if (elem.getAttribute('type') == 'checkbox'
-				&& elem.id != prefix
-				&& Aranea.UI.hasIdPrefix(elem, prefix)) {
+				&& elem.id != null && elem.id != prefix
+				&& elem.id.startsWith(prefix)) {
 
 			if (previousValue == null) {
 				previousValue = elem.checked;
@@ -276,19 +276,6 @@ Aranea.UI.updateListSelectAlls = function(chkSelect) {
 	}
 
 	return true;
-}
-
-/**
- * A helper method to check whether the ID of given element starts has given
- * prefix.
- * @since 1.1.3
- */
-Aranea.UI.hasIdPrefix = function(elem, prefix) {
-	if (prefix == null || elem.id == null) {
-		return true;
-	} else {
-		return elem.id.indexOf(prefix) == 0;
-	}
 }
 
 window['aranea-ui.js'] = true;
