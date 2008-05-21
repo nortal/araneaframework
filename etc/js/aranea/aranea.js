@@ -1020,7 +1020,7 @@ AraneaPage.RSHURLInit = function() {
 	window.dhtmlHistory.firstLoad = true;
 	window.dhtmlHistory.ignoreLocationChange = true;
 	window.location.hash = _ap.getSystemForm().araClientStateId.value;   
-	dhtmlHistory.add(_ap.getSystemForm().araClientStateId.value, null);
+	//dhtmlHistory.add(_ap.getSystemForm().araClientStateId.value, null);
   }
 };
 
@@ -1031,6 +1031,7 @@ function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
 _ap.addClientLoadEvent(AraneaPage.RSHURLInit);
+_ap.addClientLoadEvent(AraneaPage.RSHInit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */

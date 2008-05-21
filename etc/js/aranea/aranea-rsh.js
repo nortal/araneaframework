@@ -6,32 +6,34 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
-/** Initializes history object, overriding default JSON stringifier and default JSON parser. */
-window.dhtmlHistory.create({
-  toJSON: function(o) {
-    return Object.toJSON(o);
-  }, 
-  fromJSON: function(s) {
-    return s.evalJSON();
+/** 
+ * RSH event listener, RSH notifies this about the location changes (URL in browser window). 
+ * @param newLocation the hash part of the new location URL 
+ * @param historyData RSH managed history data for that hash
+ */
+AraneaPage.RSHListener = function(newLocation, historyData) {
+  araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
+
+  if (newLocation && (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
+    window.dhtmlHistoryListenerRequestedState = newLocation;
+    // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+    araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
   }
-});
+
+  dhtmlHistory.firstLoad = false;
+  dhtmlHistory.ignoreLocationChange = false;
+};
 
 AraneaPage.RSHInit = function() {
-  var yourListener = function(newLocation, historyData) {
-    araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
-
-    if (newLocation && (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
-      window.dhtmlHistoryListenerRequestedState = newLocation;
-      // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
-      araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
+  /** Initializes history object, overriding default JSON stringifier and default JSON parser. */
+  window.dhtmlHistory.create({
+    toJSON: function(o) {
+      return Object.toJSON(o);
+    }, 
+    fromJSON: function(s) {
+      return s.evalJSON();
     }
+  });
 
-    dhtmlHistory.firstLoad = false;
-    dhtmlHistory.ignoreLocationChange = false;
-  };
-
-  dhtmlHistory.initialize();
-  dhtmlHistory.addListener(yourListener);
-}; 
-
-araneaPage().addSystemLoadEvent(AraneaPage.RSHInit);
+  dhtmlHistory.initialize(AraneaPage.RSHListener);
+};
