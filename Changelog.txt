@@ -1,5 +1,16 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
+2008.05.22    | Aranea 1.2-M1
+
+Features and Improvements
+    Better browser history navigation support with Really Simple History       | See  
+    and server side state versioning.                                          |     change #652
+   
+Deprecation & API changes
+    Deprecated StandardClientStateFilterWidget and                             | See 
+    NoSerializedClientStateException were removed                              |     change #638
+
+---------------------------------------------------------------------------------------------
 2008.04.16    | Aranea 1.1.2
 
 Bugfixes
