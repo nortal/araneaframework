@@ -134,7 +134,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       super.render(output);
       if (stateSavedTL.get().equals(Boolean.FALSE)) {
         String regions = (String) getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
-        if (regions.indexOf(StateVersioningContext.GLOBAL_CLIENT_NAVIGATION_REGION_ID) != -1) {
+        if (regions != null && regions.indexOf(StateVersioningContext.GLOBAL_CLIENT_NAVIGATION_REGION_ID) != -1) {
           saveOrUpdateState(lastStateId);
         } else {
           saveState();
