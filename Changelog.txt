@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-2008.05.22    | Aranea 1.2-M1
+2008.05.28    | Aranea 1.2-M1
 
 Features and Improvements
     Better browser history navigation support with Really Simple History       | See  

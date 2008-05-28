@@ -616,6 +616,13 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
     onSuccess: function(transport) {
       AraneaPage.hideLoadingMessage();
       var logmsg = "";
+      
+      // This gets executed twice, it may be that during update region processing
+      // something already needs current stateId presence, e.g. the reloading region 
+      // handler. As it's likely that whole system form will be replaced completely
+      // when document region is updated, this must be repeated in onComplete.
+      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
+
       if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
         logmsg += 'Partial rendering: received successful response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
@@ -958,38 +965,26 @@ AraneaPage.ReloadRegionHandler.prototype = {
 
   process: function(content) {
     var systemForm = araneaPage().getSystemForm();
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = 'inconsistent';
 
     // if current systemform is overlayed, reload only overlay
     if (systemForm.araOverlay) {
-      // no state versioning here, thank you very much. So we can safely modify system form contents
-      // without being afraid that they will be needed again. At least i hope we can do that.
-      if (systemForm.araTransactionId)
-        systemForm.araTransactionId.value = 'inconsistent';
       return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
     }
 
-    /* Again we enter the domain of hackery.
+    /* Actually we should enter the domain of hackery.
        Reloads can break the back button in a subtle way, because the new state identifier
        would have been already loaded from AJAX response header to the system form. Thus if 
        one comes back to a page after AJAX request + full reload, the page shown 
-       would not match the state identifier actually present in the system form. 
-       If we just do window.location.href=window.location.href, no history navigation event
-       is generated, so it must be changed.
-       Additionally we must set transactionId to non-null inconsistent value, but may not affect the system form. */
-    var incT = "araTransactionId=inconsistent";
-    var s = window.location.href;
-    var hashIndex = s.indexOf('#');
-    if (hashIndex != -1) {
-      var hash = s.substr(hashIndex);
-      var url = s.substr(0, hashIndex);
-      s = url + "?" + incT + hash;
-    } else {
-      s = url + "?" + incT;
-    }
-
-    window.location.href= s; // window.location.href + "?araTransactionId=inconsistent" + );
-    return false;
-    //return new DefaultAraneaSubmitter().event_4(systemForm);
+       would not match the state identifier actually present in the system form.
+       If one just did window.location.href=window.location.href, no history navigation event
+       is generated because URL would not change. And the transactionId would have to be
+       encoded in the URL because NULL transactionId is consistent.
+       So the redirect should:
+         set transactionId to non-null inconsistent value, but may not affect the system form. 
+       Which is not satisfied by current implementation here. */
+    return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
@@ -1046,8 +1041,14 @@ AraneaPage.RSHURLInit = function() {
 	window.dhtmlHistory.firstLoad = true;
 	window.dhtmlHistory.ignoreLocationChange = true;
     var stateId = _ap.getSystemForm().araClientStateId.value;
-    window.location.hash = stateId;
-    dhtmlHistory.add(stateId, null);
+    // If we generate hashes to HTTP requests, URL changes cause the browser
+    // to never use local history data, as the hash added later is not 
+    // accessible from its memory cache. Thus we just keep the URL intact
+    // for these cases, so that browsers own history mechanisms can take over.
+    if (!stateId.startsWith("HTTP")) {
+      window.location.hash = stateId;
+      dhtmlHistory.add(stateId, null);
+    }
   }
 };
 

@@ -153,6 +153,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
 			// Set the row closed (for further editing, it must be opened again). 
 			editableRow.close();
+			
+			list.getDataProvider().refreshData();
 		}
 
 		public void deleteRow(Object key) throws Exception {

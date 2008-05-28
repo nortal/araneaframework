@@ -207,8 +207,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       if (log.isWarnEnabled())
         log.warn("Received request for restoration of state '" + requestStateId + "' which was not found within versioned states.");
         throw new StateExpirationException("State '" + requestStateId + "' is expired and cannot be restored.");
-     // invoke the ExpiredStateHandlerWidget ? ExpirationHandler
-        //requestStateId = lastStateId;
+        // Note: here could be a possibility to introduce ExpiredStateHandler
     }
 
     return getState(requestStateId);
@@ -238,7 +237,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   public State saveState() {
     boolean isUR = getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY) != null;
     String rnd = RandomStringUtils.randomAlphanumeric(30);
-    return saveOrUpdateState(isUR ? rnd : "HTTP" + rnd);
+    return saveOrUpdateState(isUR ? rnd : StateVersioningContext.HTTP_REQUEST_STATEPREFIX + rnd);
   }
 
   /** 

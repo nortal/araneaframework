@@ -5,6 +5,10 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.core.ApplicationComponent;
 
 /**
+ * Interface of a component hierarchy state versioning filter.
+ * This allows to support client-side history navigation 
+ * by storing the versioned hierarchies between requests.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.2
  */
@@ -17,6 +21,9 @@ public interface StateVersioningContext extends Serializable {
   
   /** Identifier of update region which must be updated when client-side history navigation occurs. */
   public static final String GLOBAL_CLIENT_NAVIGATION_REGION_ID = "araneaGlobalClientHistoryNavigationUpdateRegion";
+
+  /** State identifiers that were created during full HTTP requests will get this prefix. */
+  public static final String HTTP_REQUEST_STATEPREFIX = "HTTP";
 
   /**
    * Saves state of the component tree at the moment of calling this method. State
