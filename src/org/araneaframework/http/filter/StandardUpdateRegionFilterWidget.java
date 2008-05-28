@@ -130,7 +130,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String ajaxRequestId = (String) output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
       writeResponseId(writer, ajaxRequestId);
       if (disabled) {
-        // TODO: stinky feeling this does not work with versioned states!
+        // TODO: This has some problems with versioned states, but must be tackled on client-side.
         if (log.isDebugEnabled())
           log.debug("Partial rendering is disabled, forcing a reload for full render");
         disabled = false;
