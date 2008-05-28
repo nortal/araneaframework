@@ -28,6 +28,7 @@ import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.StateVersioningContext;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.StateVersioningContext.State;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -77,14 +78,17 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
    * @since 1.2
    */
   protected void writeVersionedStateInfo(Writer out) throws Exception {
-    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
-    if (ctx != null) {
-      State state = ctx.saveState();
+    String regionsFromRequest = (String) getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    StateVersioningContext stateVersionCtx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    if (regionsFromRequest == null && stateVersionCtx != null) {
+      State state = stateVersionCtx.saveState();
+      
+      //XXX: why the null check here??
       if (state != null) {
-        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_KEY, state.getStateId());
-        if (!ctx.isServerSideStorage())
-          JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_KEY, state.getState().toString());          
+        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_REQUEST_KEY, state.getStateId());
       }
+    } else if (stateVersionCtx != null) { // write just a placeholder
+      JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_REQUEST_KEY, "");
     }
   }
 

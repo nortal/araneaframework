@@ -1,5 +1,16 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
+2008.05.28    | Aranea 1.2-M1
+
+Features and Improvements
+    Better browser history navigation support with Really Simple History       | See  
+    and server side state versioning.                                          |     change #652
+   
+Deprecation & API changes
+    Deprecated StandardClientStateFilterWidget and                             | See 
+    NoSerializedClientStateException were removed                              |     change #638
+
+---------------------------------------------------------------------------------------------
 2008.05.21    | Aranea 1.1.3
 
 Features and Improvements
@@ -15,7 +26,7 @@ Features and Improvements
 Bugfixes
    Aranea does not work with Safari browser                                   | See #650
    FormUtil.createElement fails with null Data                                | See #649
-
+   
 ---------------------------------------------------------------------------------------------
 2008.04.16    | Aranea 1.1.2
 

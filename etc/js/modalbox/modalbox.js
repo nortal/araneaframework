@@ -213,6 +213,7 @@ Modalbox.Methods = {
 				} else 
 					new Ajax.Request( this.content, { method: this.options.method.toLowerCase(), parameters: this.options.params, 
 						onComplete: function(transport) {
+							window.modalTransport = transport;
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) {
@@ -225,7 +226,9 @@ Modalbox.Methods = {
  							AraneaPage.findSystemForm();
 							var f = function() {
                                 _ap.addSystemLoadEvent(AraneaPage.init);
+                                DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
 								araneaPage().onload();
+								window.modalTransport = null;
 							};
 							// -- force the delay here
 							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);

@@ -227,7 +227,12 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     super.action(path, input, output);
   }
-  
+
+  protected void update(InputData input) throws Exception {
+    removeRenderedPopups();
+    super.update(input);
+  }
+
   protected void event(Path path, InputData input) throws Exception {
     if (input.getGlobalData().containsKey(PopupWindowContext.POPUPS_CLOSE_KEY)) {
       ThreadContext threadCtx = (ThreadContext)getEnvironment().getEntry(ThreadContext.class);

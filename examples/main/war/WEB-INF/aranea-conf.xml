@@ -57,7 +57,6 @@
   <!-- Configuration for supporting the usage of state versioning filter -->
 
   <bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" singleton="false">
-  	<property name="serverSideStorage" value="true"/>
         <property name="maxVersionedStates" value="20"/>
   </bean>
 
