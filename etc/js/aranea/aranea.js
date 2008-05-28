@@ -568,6 +568,22 @@ function DefaultAraneaAJAXSubmitter(form) {
  * @since 1.1 */
 DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay=30;
 
+
+/**
+ * @since 1.2 */
+DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor = function(transport) {
+  var stateVersion = null;
+  try {
+   stateVersion = transport.getResponseHeader('Aranea-Application-StateVersion');
+  } catch (e) { stateVersion = null; }
+  if (stateVersion) {
+    var sForm = araneaPage().getSystemForm();
+    sForm.araClientStateId.value = stateVersion;
+    if (dhtmlHistory)
+      dhtmlHistory.add(stateVersion, true);
+  }
+};
+
 DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
   systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
   systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
@@ -621,22 +637,13 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       // because prototype's Element.update|replace delay execution of scripts,
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
+        araneaPage().addSystemLoadEvent(function() { DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport); });
       	araneaPage().onload();
-      	var stateVersion = null;
-        try {
-         stateVersion = transport.getResponseHeader('Aranea-Application-StateVersion');
-        } catch (e) { stateVersion = null }
-        if (stateVersion) {
-          var sForm = araneaPage().getSystemForm();
-          sForm.araClientStateId.value = stateVersion;
-          if (dhtmlHistory)
-            dhtmlHistory.add(stateVersion, true);
-      	}
-
       	if (Aranea.ModalBox) {
       	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
         }
       };
+
       // -- force the delay here
       setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
     },
@@ -950,20 +957,39 @@ AraneaPage.ReloadRegionHandler.prototype = {
   },
 
   process: function(content) {
-    if (_ap.versionedStateApplier) {
-      _ap.versionedStateApplier();
-    }
-
     var systemForm = araneaPage().getSystemForm();
-    if (systemForm.araTransactionId)
-      systemForm.araTransactionId.value = 'inconsistent';
 
     // if current systemform is overlayed, reload only overlay
     if (systemForm.araOverlay) {
+      // no state versioning here, thank you very much. So we can safely modify system form contents
+      // without being afraid that they will be needed again. At least i hope we can do that.
+      if (systemForm.araTransactionId)
+        systemForm.araTransactionId.value = 'inconsistent';
       return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
     }
 
-    return new DefaultAraneaSubmitter().event_4(systemForm);
+    /* Again we enter the domain of hackery.
+       Reloads can break the back button in a subtle way, because the new state identifier
+       would have been already loaded from AJAX response header to the system form. Thus if 
+       one comes back to a page after AJAX request + full reload, the page shown 
+       would not match the state identifier actually present in the system form. 
+       If we just do window.location.href=window.location.href, no history navigation event
+       is generated, so it must be changed.
+       Additionally we must set transactionId to non-null inconsistent value, but may not affect the system form. */
+    var incT = "araTransactionId=inconsistent";
+    var s = window.location.href;
+    var hashIndex = s.indexOf('#');
+    if (hashIndex != -1) {
+      var hash = s.substr(hashIndex);
+      var url = s.substr(0, hashIndex);
+      s = url + "?" + incT + hash;
+    } else {
+      s = url + "?" + incT;
+    }
+
+    window.location.href= s; // window.location.href + "?araTransactionId=inconsistent" + );
+    return false;
+    //return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 AraneaPage.addRegionHandler('reload', new AraneaPage.ReloadRegionHandler());
@@ -1019,6 +1045,9 @@ AraneaPage.RSHURLInit = function() {
   if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
 	window.dhtmlHistory.firstLoad = true;
 	window.dhtmlHistory.ignoreLocationChange = true;
+    var stateId = _ap.getSystemForm().araClientStateId.value;
+    window.location.hash = stateId;
+    dhtmlHistory.add(stateId, null);
   }
 };
 
@@ -1028,7 +1057,7 @@ var _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
-_ap.addClientLoadEvent(AraneaPage.RSHURLInit);
+_ap.addSystemLoadEvent(AraneaPage.RSHURLInit);
 _ap.addClientLoadEvent(AraneaPage.RSHInit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 

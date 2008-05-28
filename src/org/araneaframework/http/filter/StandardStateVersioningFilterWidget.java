@@ -236,7 +236,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   /**
    * @return current state with new random identifier*/
   public State saveState() {
-    return saveOrUpdateState(RandomStringUtils.randomAlphanumeric(30));
+    boolean isUR = getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY) != null;
+    String rnd = RandomStringUtils.randomAlphanumeric(30);
+    return saveOrUpdateState(isUR ? rnd : "HTTP" + rnd);
   }
 
   /** 

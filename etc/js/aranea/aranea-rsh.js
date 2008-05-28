@@ -14,26 +14,24 @@
 AraneaPage.RSHListener = function(newLocation, historyData) {
   araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
 
-  if (newLocation && (!dhtmlHistory.isFirstLoad() || !dhtmlHistory.ignoreLocationChange)) {
+  if (newLocation && !newLocation.startsWith("HTTP")) {
     window.dhtmlHistoryListenerRequestedState = newLocation;
     // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
     araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
   }
 
-  dhtmlHistory.firstLoad = false;
-  dhtmlHistory.ignoreLocationChange = false;
+  window.dhtmlHistory.firstLoad = false;
+  window.dhtmlHistory.ignoreLocationChange = false;
 };
 
-AraneaPage.RSHInit = function() {
-  /** Initializes history object, overriding default JSON stringifier and default JSON parser. */
-  window.dhtmlHistory.create({
-    toJSON: function(o) {
-      return Object.toJSON(o);
-    }, 
-    fromJSON: function(s) {
-      return s.evalJSON();
-    }
-  });
+/** Initializes history object, overriding default JSON stringifier and default JSON parser. */
+window.dhtmlHistory.create({
+  toJSON: function(o) {
+    return Object.toJSON(o);
+  }, 
+  fromJSON: function(s) {
+    return s.evalJSON();
+  }
+});
 
-  dhtmlHistory.initialize(AraneaPage.RSHListener);
-};
+window.dhtmlHistory.initialize(AraneaPage.RSHListener);
