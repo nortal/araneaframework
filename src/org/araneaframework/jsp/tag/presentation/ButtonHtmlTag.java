@@ -86,7 +86,6 @@ public class ButtonHtmlTag extends BaseButtonTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = 
    *     "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 

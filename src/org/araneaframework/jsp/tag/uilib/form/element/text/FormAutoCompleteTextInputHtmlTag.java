@@ -143,7 +143,6 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   /**
    * @jsp.attribute
    * type = "java.lang.String"
-   * rtexprvalue = "true"
    * required = "false"
    * description = "Class attribute assigned to &lt;DIV&gt; inside which suggestions are shown."
    */

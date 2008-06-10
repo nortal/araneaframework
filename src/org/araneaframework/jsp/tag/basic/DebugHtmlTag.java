@@ -85,7 +85,6 @@ public class DebugHtmlTag extends BaseTag {
 	/**
 	 *	@jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Attribute scope."
 	 */

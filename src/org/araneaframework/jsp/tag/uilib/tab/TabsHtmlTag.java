@@ -59,7 +59,6 @@ public class TabsHtmlTag extends BaseTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "true"
 	 *   description = "Id of Uilib TabContainerWidget" 
 	 */

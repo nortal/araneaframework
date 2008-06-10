@@ -71,7 +71,6 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "true"
    *   description = "Label id." 
    */
@@ -82,7 +81,6 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether the label should display the asterisk, <code>false<code> by default." 
    */
@@ -93,7 +91,6 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether a colon (&quot;:&quot;) is shown after the label." 
    */
@@ -104,7 +101,6 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "ID of the form element for which the label is created" 
    */

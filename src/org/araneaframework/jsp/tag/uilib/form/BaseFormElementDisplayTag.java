@@ -77,7 +77,6 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Element id, can also be inherited." 
    */

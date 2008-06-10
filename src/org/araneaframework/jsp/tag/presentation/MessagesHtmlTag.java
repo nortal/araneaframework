@@ -141,7 +141,6 @@ public class MessagesHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    * type = "java.lang.String"
-   * rtexprvalue = "true"
    * required = "false"
    * description = "Type of messages to show."
    */
@@ -152,7 +151,6 @@ public class MessagesHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    * type = "java.lang.String"
-   * rtexprvalue = "true"
    * required = "false"
    * description = "Sets the ID of the HTML &lt;DIV&gt; inside which the messages are rendered."
    * 

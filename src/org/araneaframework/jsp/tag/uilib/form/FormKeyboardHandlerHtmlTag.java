@@ -69,7 +69,6 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "A javascript handler function that takes two parameters - the event object and the element id for which 
           the event was fired. 
@@ -92,7 +91,6 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "By default, the scope of this keyboard handler is defined by the form inside which it is located.
           You may append a suffix to that scope by using this attribute.
@@ -122,7 +120,6 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once." 
 	 */
@@ -135,7 +132,6 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once." 
 	 */
@@ -146,7 +142,6 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Set the javascript event that should be invoked. "click" and "focus" are safe for most controls.
             If target element (the one given by elementId) is a selectbox, you may also set "select".

@@ -93,7 +93,6 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Possible values are 'button', 'input' &mdash; filter button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themself (with an image, for example). Default rendermode is 'button'." 
    */

@@ -65,7 +65,6 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Default style of rows in this layout. This is multi-valued attribute." 
    */
@@ -76,7 +75,6 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Default styleclass of cells in this layout. This is multi-valued attribute."
    */

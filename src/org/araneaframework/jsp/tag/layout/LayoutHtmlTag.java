@@ -63,7 +63,6 @@ public class LayoutHtmlTag extends BaseLayoutTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Width of the layout."
    */

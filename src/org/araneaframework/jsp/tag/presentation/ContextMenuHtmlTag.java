@@ -83,7 +83,6 @@ public class ContextMenuHtmlTag extends WidgetTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
 	 */	
@@ -94,7 +93,6 @@ public class ContextMenuHtmlTag extends WidgetTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
 	 */	

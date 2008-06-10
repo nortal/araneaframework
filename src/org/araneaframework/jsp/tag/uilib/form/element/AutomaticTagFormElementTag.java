@@ -141,7 +141,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Element id, can also be inherited." 
    */

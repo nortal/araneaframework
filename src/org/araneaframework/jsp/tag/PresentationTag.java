@@ -60,7 +60,6 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false" 
 	 *   description = "Inline style for HTML tag."
 	 */
@@ -75,7 +74,6 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false" 
 	 *   description = "CSS class for the tag."
 	 */

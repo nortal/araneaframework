@@ -72,7 +72,6 @@ public class ServiceActionUrlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "true"
    *   description = "Service id." 
    */

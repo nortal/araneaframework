@@ -78,7 +78,6 @@ public class AttributeHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "true" 
    *   description = "Attribute name."
    */
@@ -89,7 +88,6 @@ public class AttributeHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "true"
    *   description = "Attribute value." 
    */

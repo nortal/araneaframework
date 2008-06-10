@@ -43,7 +43,6 @@ public class BaseLinkTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Link id, allows to access link from JavaScript." 
    */
@@ -54,7 +53,6 @@ public class BaseLinkTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "true"
    *   description = "Link target URL." 
    */
@@ -65,7 +63,6 @@ public class BaseLinkTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Link target, same as <i>&lt;a&gt;</i> HTML tag <i>target</i> attribute." 
    */
@@ -75,7 +72,6 @@ public class BaseLinkTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Controls whether the link is disabled, disabled link doesn't link anywhere." 
    */

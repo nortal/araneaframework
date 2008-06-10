@@ -118,7 +118,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Css class for date." 
    */
@@ -129,7 +128,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Css class for time." 
    */
@@ -342,7 +340,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Boolean, specifying whether HTML &lt;select&;gt;'s should be shown for foolproof hour/minute selection."
 	 * 

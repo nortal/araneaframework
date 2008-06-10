@@ -223,7 +223,6 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false" 
 	 *   description = "Inline style for HTML tag."
 	 */
@@ -234,7 +233,6 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false" 
 	 *   description = "CSS class for tag"
 	 */
@@ -250,7 +248,6 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	/**
 	 *  @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Boolean specifying whether the tab selection events should invoke partial render or full render. Default is false (full render)."
 	 */

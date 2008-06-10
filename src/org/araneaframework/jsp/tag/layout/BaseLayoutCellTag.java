@@ -61,7 +61,6 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether cell's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass."
    */
@@ -72,7 +71,6 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
-   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "HTML id of this row."
    * @since 1.1

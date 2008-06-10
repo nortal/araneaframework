@@ -37,7 +37,6 @@ public class KeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "When a keyboard event happens, it is usually associated with 
           a certain form element / form / widget / etc. The object with which an event is associated
@@ -65,7 +64,6 @@ public class KeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String" 
-     *   rtexprvalue = "true"
 	 *   required = "true"
 	 *   description = "A javascript handler function that takes two parameters - the event object and the element id for which 
           the event was fired. 

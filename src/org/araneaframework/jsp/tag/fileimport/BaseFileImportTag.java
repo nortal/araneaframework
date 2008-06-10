@@ -31,7 +31,6 @@ public abstract class BaseFileImportTag extends BaseTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "The name of the group of files that should get included."
 	 */
@@ -42,7 +41,6 @@ public abstract class BaseFileImportTag extends BaseTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
-     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "The name of the file that should get included."
 	 */
