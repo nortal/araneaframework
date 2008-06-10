@@ -1232,12 +1232,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected class FilterEventHandler implements OnClickEventListener {
 		public void onClick() throws Exception {
 			filter();
+			resetSelectedRows();
 		}
 	}
 
 	protected class FilterClearEventHandler implements OnClickEventListener {
 		public void onClick() throws Exception {
 			clearFilter();
+            resetSelectedRows();
 		}
 	}
 	

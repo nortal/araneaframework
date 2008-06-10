@@ -115,7 +115,6 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies whether the check box should be rendered as disabled. Default is active state."
    */
   public void setDisabled(String disabled) throws JspException {
@@ -127,7 +126,6 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies custom <code>onclick</code> event. Default is none."
    */
   public void setOnclick(String onclick) throws JspException {
@@ -138,7 +136,6 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
    */
   public void setAccessKey(String accessKey) throws JspException {
@@ -149,7 +146,6 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies the initial value of the check box. Default is unchecked."
    */
   public void setChecked(String checked) throws JspException {
@@ -161,7 +157,6 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "HTML tabindex for the check box."
    */   
   public void setTabindex(String tabindex) throws JspException {
