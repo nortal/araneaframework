@@ -165,7 +165,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies a custom label for the check box."
    */
   public void setLabelId(String labelId) throws JspException {
@@ -176,7 +175,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Allows a custom value for this check box (when it is submitted). Default value is <code>selected</code>."
    */
   public void setValue(String value) throws JspException {
@@ -187,7 +185,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies whether the check box should be rendered as disabled. Default is active state."
    */
   public void setDisabled(String disabled) throws JspException {
@@ -199,7 +196,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies custom <code>onclick</code> event. Default is none."
    */
   public void setOnclick(String onclick) throws JspException {
@@ -210,7 +206,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
    */
   public void setAccessKey(String accessKey) throws JspException {
@@ -221,7 +216,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "Specifies the initial value of the check box. Default is unchecked."
    */
   public void setChecked(String checked) throws JspException {
@@ -233,7 +227,6 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
-   *   rtexprvalue = "true"
    *   description = "HTML tabindex for the check box."
    */   
   public void setTabindex(String tabindex) throws JspException {
