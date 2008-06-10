@@ -114,7 +114,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		out.write(name);
 		out.write(".");
 		out.write(selectField);
-		out.write("\" onChange=\""); 
+		out.write("\" onchange=\""); 
 		out.write(fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name
 				+ ".select1", name + ".select2"));
 		out.write(";");
@@ -215,6 +215,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Boolean, specifying whether HTML &lt;select&;gt;'s should be shown for hour/minute selection."
    * 
@@ -227,6 +228,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Boolean, specifying whether HTML &lt;table&;gt;'s should be rendered to around this time input. Default is true."
    * 

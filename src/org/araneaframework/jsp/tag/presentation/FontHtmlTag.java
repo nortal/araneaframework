@@ -65,6 +65,7 @@ public class FontHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Font face." 
    */
@@ -75,6 +76,7 @@ public class FontHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Font size." 
    */
@@ -85,6 +87,7 @@ public class FontHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Font color (any HTML valid color)." 
    */

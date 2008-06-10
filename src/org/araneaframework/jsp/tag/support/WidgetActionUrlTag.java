@@ -77,6 +77,7 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Action id" 
    */

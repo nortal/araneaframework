@@ -86,14 +86,19 @@ public class ButtonHtmlTag extends BaseButtonTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = 
    *     "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
    */
   public void setRenderMode(String renderMode) throws JspException {
-    if (!(renderMode.equals(ButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ButtonHtmlTag.RENDER_INPUT)))
-      throw new AraneaJspException("<ui:basicButton> 'renderMode' attribute must be '" + ButtonHtmlTag.RENDER_BUTTON + "' or '"+ ButtonHtmlTag.RENDER_INPUT+"'");
     this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+    if (!(this.renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON) ||
+        this.renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)))
+      throw new AraneaJspException(
+          "<ui:eventButton> 'renderMode' attribute must be '"
+              + EventButtonHtmlTag.RENDER_BUTTON + "' or '"
+              + EventButtonHtmlTag.RENDER_INPUT + "'");
   }
 }
 

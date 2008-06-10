@@ -118,6 +118,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Css class for date." 
    */
@@ -128,6 +129,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Css class for time." 
    */
@@ -177,11 +179,11 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		out.write(name);
 		out.write(".");
 		out.write(selectField);
-		out.write("\" onChange=\""); 
+		out.write("\" onchange=\""); 
 		out.write(fillXJSCallConstructor("Aranea.UI.fillTimeText", name));
 		out.write(";");
 
-		if (!disabled && events) {
+		if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
 			out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
 		}
 
@@ -340,6 +342,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   /**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Boolean, specifying whether HTML &lt;select&;gt;'s should be shown for foolproof hour/minute selection."
 	 * 

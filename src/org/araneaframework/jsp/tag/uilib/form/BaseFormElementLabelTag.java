@@ -95,6 +95,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Element id." 
    */
@@ -105,6 +106,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether an asterisk is shown when the element is mandatory." 
    */
@@ -115,6 +117,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether a colon (":") is draw after the label." 
    */

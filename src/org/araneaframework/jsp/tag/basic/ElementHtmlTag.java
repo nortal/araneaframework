@@ -97,6 +97,7 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "true" 
 	 *   description = "HTML element name."
 	 */

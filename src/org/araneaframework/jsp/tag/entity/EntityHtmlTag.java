@@ -60,6 +60,7 @@ public class EntityHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "HTML entity code, e.g. <i>nbsp</i> or <i>#012</i>." 
    */
@@ -70,6 +71,7 @@ public class EntityHtmlTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Number of times to repeat the entity." 
    */

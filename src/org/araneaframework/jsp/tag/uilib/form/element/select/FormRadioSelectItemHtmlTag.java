@@ -94,6 +94,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "The value of this radio button that will be submitted with form if this radio button is selected." 
    */
@@ -104,6 +105,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "The HTML id this radio button."
    * @since 1.1
@@ -115,6 +117,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */

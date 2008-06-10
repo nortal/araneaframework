@@ -52,6 +52,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Keycode to which the event must be triggered. 13 means enter.
           Either keyCode or key must be specified, but not both." 
@@ -63,6 +64,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Keycode to which the event must be triggered. 13 means enter.
           Either keyCode or key must be specified, but not both." 
@@ -81,6 +83,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	 * 
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+	 *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an
           ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or

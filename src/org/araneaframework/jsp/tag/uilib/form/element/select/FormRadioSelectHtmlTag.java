@@ -107,6 +107,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
 	 */ 
@@ -117,6 +118,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Boolean that controls whether label is before or after each radio button. False by default." 
 	 */

@@ -111,6 +111,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "The way the checkboxes will be rendered - can be either "vertical" or "horizontal". By default "horizontal"." 
    */
@@ -121,6 +122,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Boolean that controls whether label is before or after each checkbox. False by default." 
    */

@@ -53,8 +53,9 @@ public class ToolTipHtmlTag extends BaseTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+	 *   rtexprvalue = "true"
 	 *   required = "true"
-	 *   description = "HTML element id to which tooltip should be attached." 
+     *   description = "HTML element id to which tooltip should be attached." 
 	 */
 	public void setElement(String element) throws JspException {
 		this.element = (String) evaluate("element", element, String.class);
@@ -63,6 +64,7 @@ public class ToolTipHtmlTag extends BaseTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "true"
 	 *   description = "Tooltip content." 
 	 */
@@ -73,6 +75,7 @@ public class ToolTipHtmlTag extends BaseTag {
 	 /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details)." 
    */

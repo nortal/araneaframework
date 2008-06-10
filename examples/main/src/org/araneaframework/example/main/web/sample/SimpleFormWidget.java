@@ -18,6 +18,7 @@ package org.araneaframework.example.main.web.sample;
 
 import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -79,6 +80,14 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // sets initial value of form element
     simpleForm.setValueByFullName("dateTime", new Date());
 
+    DateTimeControl dateCtrl = (DateTimeControl) simpleForm.getControlByFullName("dateTime");
+    dateCtrl.addOnChangeEventListener(new OnChangeEventListener() {
+
+      public void onChange() throws Exception {
+        getMessageCtx().showInfoMessage("Date changed on " + new Date());
+      }
+      
+    });
     // here are two controls that are either disabled or read-only:
     simpleForm.addElement("disabledCtrl", "common.disabled", new TextareaControl(), new StringData(), t("common.disabled"), false).setDisabled(true);
     simpleForm.addElement("readOnlyCtrl", "common.readOnly", new TextControl(), new StringData(), t("common.readOnly"), false).setDisabled(true);

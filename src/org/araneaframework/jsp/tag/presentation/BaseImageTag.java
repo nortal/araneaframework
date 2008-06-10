@@ -74,6 +74,7 @@ public abstract class BaseImageTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Image code." 
    */
@@ -84,6 +85,7 @@ public abstract class BaseImageTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Image src." 
    */
@@ -94,6 +96,7 @@ public abstract class BaseImageTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Image width" 
    */
@@ -105,6 +108,7 @@ public abstract class BaseImageTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Image height." 
    */
@@ -116,6 +120,7 @@ public abstract class BaseImageTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Image alternate text." 
    */
@@ -126,6 +131,7 @@ public abstract class BaseImageTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Image title" 
    */

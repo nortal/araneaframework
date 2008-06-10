@@ -71,6 +71,7 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Colspan for this cell. Same as in HTML."
    */
@@ -81,6 +82,7 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Rowspan for this cell. Same as in HTML."
    */
@@ -101,6 +103,7 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Height for this cell. Same as in HTML, deprecated."
    */
@@ -111,6 +114,7 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether this cell is header cell, defaults to false. In HTML, tag is rendered with &lt;th&gt; or &lt;tr&gt;."
    */

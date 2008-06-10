@@ -180,6 +180,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Element id, can also be inherited."
 	 */
@@ -190,6 +191,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Whether the element will send the events that are registered by server-side (by default 'true')."
 	 */	
@@ -200,6 +202,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Whether the form will be validated on the client-side when the element generates an event (by default "false")."
 	 */	
@@ -210,6 +213,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "HTML tabindex for the element."
 	 */	
@@ -220,6 +224,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
 	 */	
@@ -230,6 +235,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
 	 */	

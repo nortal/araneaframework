@@ -70,6 +70,7 @@ public class LinkHtmlTag extends BaseLinkTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "CSS class for disabled link" 
    */

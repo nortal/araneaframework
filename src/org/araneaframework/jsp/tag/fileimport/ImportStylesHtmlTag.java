@@ -51,6 +51,7 @@ public class ImportStylesHtmlTag extends BaseFileImportTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+	 *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "The media type the css file should be applied to."
 	 */

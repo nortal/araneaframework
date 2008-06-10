@@ -81,6 +81,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Widget id." 
 	 */
@@ -91,6 +92,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Path to JSP." 
 	 */

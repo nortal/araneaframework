@@ -92,6 +92,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false" 
    *   description = "Number of visible columns."
    */
@@ -102,6 +103,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false" 
    *   description = "Number of visible rows."
    */
@@ -111,6 +113,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
 
   /**
    * @jsp.attribute type = "java.lang.String"
+   *                rtexprvalue = "true"
    *                required = "false"
    *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'read-only'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3

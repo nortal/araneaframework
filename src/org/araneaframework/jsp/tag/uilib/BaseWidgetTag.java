@@ -32,6 +32,7 @@ public class BaseWidgetTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "UiLib widget id." 
    */

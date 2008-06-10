@@ -118,7 +118,12 @@
 	<target name="run-app-only" description="Run in standalone container">
 		<mkdir dir="tmp/jsp" /> 
 		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
-			<jvmarg line="-Dsun.io.serialization.extendedDebugInfo=true -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n"/>
+			<jvmarg line="-Dsun.io.serialization.extendedDebugInfo=true"/>
+			<jvmarg line="-Xdebug"/>
+			<jvmarg line="-Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n"/>
+			<jvmarg line="-noverify"/>
+			<jvmarg line="-Xbootclasspath/p:C:\projects\aranea\examples\lib\jetty\javarebel-bootstrap.jar;C:\projects\aranea\examples\lib\jetty\javarebel.jar"/>
+			<jvmarg line="-Drebel.dirs=C:\projects\aranea\examples\main\war\WEB-INF\classes"/>
 			<arg value="../jetty.xml"/>
 			<classpath>
 				<pathelement location="war/WEB-INF/classes" />

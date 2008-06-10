@@ -75,6 +75,7 @@ public class FormElementTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "true"
    *   description = "UiLib form element id." 
    */

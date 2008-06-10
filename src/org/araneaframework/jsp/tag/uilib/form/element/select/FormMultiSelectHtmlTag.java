@@ -101,6 +101,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Vertical size, number of options displayed." 
    */

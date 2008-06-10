@@ -82,6 +82,7 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
    * 
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Whether even single spaces (blanks) should be replace with &amp;nbsp; entities in output." 
    */

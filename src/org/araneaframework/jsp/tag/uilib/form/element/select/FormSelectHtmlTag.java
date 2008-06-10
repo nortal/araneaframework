@@ -117,6 +117,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Number of select elements visible at once." 
    */
@@ -127,6 +128,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */

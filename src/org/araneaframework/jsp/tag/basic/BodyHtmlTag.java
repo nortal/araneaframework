@@ -234,6 +234,7 @@ public class BodyHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    * type = "java.lang.String"
+   * rtexprvalue = "true"
    * required = "false"
    * description = "Overwrite the standard Aranea JSP HTML body onload event. Use with caution."
    */
@@ -244,6 +245,7 @@ public class BodyHtmlTag extends PresentationTag {
   /**
    * @jsp.attribute
    * type = "java.lang.String"
+   * rtexprvalue = "true"
    * required = "false"
    * description = "Overwrite the standard Aranea JSP HTML body onunload event. Use with caution."
    */

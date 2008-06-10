@@ -81,12 +81,21 @@ public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Possible values are 'button', 'input' &mdash; clearance button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themself(with an image, for example). Default rendermode is 'button'." 
    */
   public void setRenderMode(String renderMode) throws JspException {
-	  if (!(renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_INPUT) || renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY)))
-	      throw new AraneaJspException("<ui:listFilterClearButton> 'renderMode' attribute must be '" + ListFilterClearButtonHtmlTag.RENDER_BUTTON + "' or '"+ ListFilterClearButtonHtmlTag.RENDER_INPUT+"'" + "' or '"+ ListFilterClearButtonHtmlTag.RENDER_EMPTY+"'");
-      this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+    this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+
+    if (!(this.renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_BUTTON)
+        || this.renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_INPUT)
+        || this.renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY))) {
+      throw new AraneaJspException(
+          "<ui:listFilterClearButton> 'renderMode' attribute must be '"
+              + ListFilterClearButtonHtmlTag.RENDER_BUTTON + "' or '"
+              + ListFilterClearButtonHtmlTag.RENDER_INPUT + "'" + "' or '"
+              + ListFilterClearButtonHtmlTag.RENDER_EMPTY + "'");
+    }
   }
 }

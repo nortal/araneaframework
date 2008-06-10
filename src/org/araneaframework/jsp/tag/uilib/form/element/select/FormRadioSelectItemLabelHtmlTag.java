@@ -55,6 +55,7 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Select item value." 
    */
@@ -65,6 +66,7 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "The HTML id radio button to which this label belongs."
    * @since 1.1  

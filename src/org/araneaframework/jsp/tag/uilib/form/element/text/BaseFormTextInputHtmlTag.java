@@ -54,6 +54,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Horizontal size, in characters." 
    */
@@ -64,6 +65,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
@@ -73,6 +75,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   /**
    * @jsp.attribute type = "java.lang.String"
+   *                rtexprvalue = "true"
    *                required = "false"
    *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'readonly'</code>. Default is <code>'disabled'</code>."
    * @since 1.1.3

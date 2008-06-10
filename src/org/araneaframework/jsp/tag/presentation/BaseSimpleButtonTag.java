@@ -52,6 +52,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Button id, allows to access button from JavaScript." 
    */
@@ -62,6 +63,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Id of button label." 
    */
@@ -72,6 +74,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
@@ -83,6 +86,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
    * @since 1.0.11
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "HTML tabindex for the element."
    */	

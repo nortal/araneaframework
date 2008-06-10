@@ -46,6 +46,7 @@ public abstract class StyledWrapperTag extends BaseTagWrapperTag  {
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
+     *   rtexprvalue = "true"
 	 *   required = "false"
 	 *   description = "Cell css class, defines the way the cell will be rendered." 
 	 */

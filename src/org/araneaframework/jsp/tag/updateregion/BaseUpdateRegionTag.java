@@ -62,6 +62,7 @@ public class BaseUpdateRegionTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Local id of the update region." 
    */
@@ -72,6 +73,7 @@ public class BaseUpdateRegionTag extends BaseTag {
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
+   *   rtexprvalue = "true"
    *   required = "false"
    *   description = "Global id of the update region." 
    */
