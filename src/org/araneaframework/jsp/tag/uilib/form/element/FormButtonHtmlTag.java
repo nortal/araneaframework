@@ -120,12 +120,13 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
    */
   public void setRenderMode(String renderMode) throws JspException {
     this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
-    if (!(renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON) ||
-        renderMode.equals(FormButtonHtmlTag.RENDER_INPUT)))
-      throw new AraneaJspException(
-          "<ui:button> 'renderMode' attribute must be '"
-              + FormButtonHtmlTag.RENDER_BUTTON + "' or '"
-              + FormButtonHtmlTag.RENDER_INPUT + "'");
+
+    if (!(this.renderMode.equals(RENDER_BUTTON) ||
+        this.renderMode.equals(RENDER_INPUT))) {
+
+      throw new AraneaJspException("<ui:button> 'renderMode' attribute "
+          + "must be '" + RENDER_BUTTON + "' or '" + RENDER_INPUT + "'");
+    }
   }
 
   protected boolean writeEventAttribute(Writer out) throws IOException,

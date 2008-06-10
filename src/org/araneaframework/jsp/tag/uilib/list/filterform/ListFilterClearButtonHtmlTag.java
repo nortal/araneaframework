@@ -87,14 +87,12 @@ public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
   public void setRenderMode(String renderMode) throws JspException {
     this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
 
-    if (!(this.renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_BUTTON)
-        || this.renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_INPUT)
-        || this.renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY))) {
-      throw new AraneaJspException(
-          "<ui:listFilterClearButton> 'renderMode' attribute must be '"
-              + ListFilterClearButtonHtmlTag.RENDER_BUTTON + "' or '"
-              + ListFilterClearButtonHtmlTag.RENDER_INPUT + "'" + "' or '"
-              + ListFilterClearButtonHtmlTag.RENDER_EMPTY + "'");
+    if (!(this.renderMode.equals(RENDER_BUTTON)
+        || this.renderMode.equals(RENDER_INPUT)
+        || this.renderMode.equals(RENDER_EMPTY))) {
+      throw new AraneaJspException("<ui:listFilterClearButton> 'renderMode' "
+          + "attribute must be '" + RENDER_BUTTON + "' or '" + RENDER_INPUT
+          + "'" + "' or '" + RENDER_EMPTY + "'");
     }
   }
 }

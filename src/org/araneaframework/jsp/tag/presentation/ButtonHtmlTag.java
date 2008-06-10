@@ -92,12 +92,13 @@ public class ButtonHtmlTag extends BaseButtonTag {
    */
   public void setRenderMode(String renderMode) throws JspException {
     this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+
     if (!(this.renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON) ||
-        this.renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)))
-      throw new AraneaJspException(
-          "<ui:eventButton> 'renderMode' attribute must be '"
-              + EventButtonHtmlTag.RENDER_BUTTON + "' or '"
-              + EventButtonHtmlTag.RENDER_INPUT + "'");
+        this.renderMode.equals(EventButtonHtmlTag.RENDER_INPUT))) {
+
+      throw new AraneaJspException("<ui:eventButton> 'renderMode' attribute "
+          + "must be '" + RENDER_BUTTON + "' or '" + RENDER_INPUT + "'");
+    }
   }
 }
 
