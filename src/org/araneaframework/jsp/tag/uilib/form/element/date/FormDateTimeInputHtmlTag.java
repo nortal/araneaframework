@@ -177,11 +177,11 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		out.write(name);
 		out.write(".");
 		out.write(selectField);
-		out.write("\" onChange=\""); 
+		out.write("\" onchange=\""); 
 		out.write(fillXJSCallConstructor("Aranea.UI.fillTimeText", name));
 		out.write(";");
 
-		if (!disabled && events) {
+		if (!disabled && events && viewModel.isOnChangeEventRegistered()) {
 			out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
 		}
 

@@ -114,7 +114,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		out.write(name);
 		out.write(".");
 		out.write(selectField);
-		out.write("\" onChange=\""); 
+		out.write("\" onchange=\""); 
 		out.write(fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name
 				+ ".select1", name + ".select2"));
 		out.write(";");
