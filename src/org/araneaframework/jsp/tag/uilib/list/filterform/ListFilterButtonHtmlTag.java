@@ -97,15 +97,15 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
    *   description = "Possible values are 'button', 'input' &mdash; filter button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themself (with an image, for example). Default rendermode is 'button'." 
    */
   public void setRenderMode(String renderMode) throws JspException {
-    this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+    String tmpMode = (String) evaluate("renderMode", renderMode, String.class);
 
-    if (!(this.renderMode.equals(RENDER_BUTTON)
-        || this.renderMode.equals(RENDER_INPUT)
-        || this.renderMode.equals(RENDER_EMPTY))) {
-      throw new AraneaJspException(
-          "<ui:listFilterButton> 'renderMode' attribute must be '"
-              + RENDER_BUTTON + "' or '" + RENDER_INPUT + "'" + "' or '"
-              + RENDER_EMPTY + "'");
+    if (!(RENDER_BUTTON.equals(tmpMode) || RENDER_INPUT.equals(tmpMode)
+        || RENDER_EMPTY.equals(tmpMode))) {
+      throw new AraneaJspException("<ui:listFilterButton> 'renderMode' "
+          + "attribute must be '" + RENDER_BUTTON + "' or '" + RENDER_INPUT
+          + "' or '" + RENDER_EMPTY + "'");
     }
+
+    this.renderMode = tmpMode;
   }
 }
