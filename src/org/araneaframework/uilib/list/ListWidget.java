@@ -660,6 +660,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
     /**
      * Specifies {@link Comparator} for the specified field.
+     * 
+     * @since 1.1.4
      */
     public void setFieldComparator(String fieldId, Comparator comparator) {
         this.typeHelper.addCustomComparator(fieldId, comparator);
