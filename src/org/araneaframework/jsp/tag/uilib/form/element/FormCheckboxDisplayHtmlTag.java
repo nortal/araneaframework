@@ -41,6 +41,7 @@ public class FormCheckboxDisplayHtmlTag extends BaseFormElementDisplayTag {
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
     JspUtil.writeOpenStartTag(out, "span");
+    JspUtil.writeAttribute(out, "id", getFullFieldId());
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttributes(out, attributes);

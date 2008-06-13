@@ -104,6 +104,14 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
   public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {}
 
+  /**
+   * Computes field name.
+   */ 
+  protected String getFullFieldId() {
+    String formFullId = (String)getContextEntry(FormTag.FORM_FULL_ID_KEY);
+    return formFullId + "." + derivedId;
+  }
+
   /* ***********************************************************************************
    * Control type assertion method to be used by subclasses.
    * ***********************************************************************************/  

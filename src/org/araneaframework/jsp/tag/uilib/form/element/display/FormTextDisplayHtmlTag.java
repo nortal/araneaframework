@@ -41,6 +41,7 @@ public class FormTextDisplayHtmlTag extends BaseFormElementDisplayTag {
     
     if (getStyleClass() != null) {
       JspUtil.writeOpenStartTag(out, "span");
+      JspUtil.writeAttribute(out, "id", getFullFieldId());
       JspUtil.writeAttribute(out, "class", getStyleClass());
       JspUtil.writeAttribute(out, "style", getStyle());
       JspUtil.writeAttributes(out, attributes);
