@@ -83,10 +83,13 @@ public class Data implements java.io.Serializable, FormElementAware {
    * This is used on {@link FormElement} conversion&mdash;which should not affect {@link Control} values
    * read from request. 
    *  
-   * @since 1.0.12 */
+   * @since 1.0.12
+   */
   public void setDataValue(Object value) {
-    if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
-      throw new DataItemTypeViolatedException(getValueType(), value.getClass());
+
+    if (value != null && !(typeClass.isAssignableFrom(value.getClass()))) {
+      throw new DataItemTypeViolatedException(this, value);
+    }
 
     this.value = value;
   }

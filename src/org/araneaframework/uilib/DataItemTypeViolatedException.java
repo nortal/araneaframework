@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib;
 
+import org.apache.commons.lang.ClassUtils;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.uilib.form.Data;
 
 /**
  * Exception thrown by {@link org.araneaframework.uilib.form.Data} when
@@ -26,12 +28,22 @@ import org.araneaframework.core.AraneaRuntimeException;
  */
 public class DataItemTypeViolatedException extends AraneaRuntimeException {
 
+  private static final long serialVersionUID = 1L;
+
   /**
-   * @param dataItemType {@link org.araneaframework.uilib.form.Data} type
-   * @param valueType value type attempted to assign to Data
+   * Constructs an exception to describe the situation when the
+   * {@link org.araneaframework.uilib.form.Data} cannot convert the given value
+   * to apropriate format.
+   *  
+   * @param data The Data instance object.
+   * @param value The value that was attempted to assign to Data.
    */
-  public DataItemTypeViolatedException(String dataItemType, Class valueType) {
-    super("The DataItem with type '" + dataItemType + "' cannot accept values of type '" + valueType.getName());
+  public DataItemTypeViolatedException(Data data, Object value) {
+    super("The " + ClassUtils.getShortClassName(data.getClass())
+        + " with type '" + data.getValueType()
+        + "' cannot accept values of type '"
+        + ClassUtils.getShortClassName(value.getClass()) + "' (value=" + value
+        + ")");
   }
-  
+
 }
