@@ -539,6 +539,16 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
               </row>
 
               <row>
+                <entry><code>in()</code></entry>
+
+                <entry><code>InFilter</code></entry>
+
+                <entry>Tests if the value of a list field is among the values
+                of a MultiSelectControl. It does a case-sensitive search for
+                this.</entry>
+              </row>
+
+              <row>
                 <entry><code>sqlFunction()</code></entry>
 
                 <entry><code>SqlFunctionFilter</code></entry>
