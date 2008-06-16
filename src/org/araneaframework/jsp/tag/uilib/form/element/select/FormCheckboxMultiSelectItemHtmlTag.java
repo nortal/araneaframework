@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -64,11 +63,6 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
 		if (viewModel.getSelectItemByValue(value) == null) 
 			throw new AraneaJspException("Value '" + value + "' not found in values list.");
-
-      if (StringUtils.isBlank(htmlId)) {
-        htmlId = name;
-      }
-
 
 		JspUtil.writeOpenStartTag(out, "input");
 		JspUtil.writeAttribute(out, "id", htmlId);

@@ -45,9 +45,8 @@ public class InExpression extends MultiExpression {
   protected Expression expr1;
 
   public InExpression(Expression expr1, List exprs) {
-    if (expr1 == null || exprs == null) {
-      throw new IllegalArgumentException("Operands must be provided");
-    }
+
+    Assert.isTrue(expr1 != null && exprs != null, "Operands must be provided");
 
     for (Iterator it = exprs.iterator(); it.hasNext();) {
       Assert.notNullParam(this, it.next(), "expr");
@@ -76,8 +75,7 @@ public class InExpression extends MultiExpression {
       throws ExpressionEvaluationException {
 
     if (this.children.size() == 0) {
-      throw new ExpressionEvaluationException(
-          "At least one children must be provided");
+      return Boolean.TRUE;
     }
 
     Object fieldValue = this.expr1.evaluate(resolver);

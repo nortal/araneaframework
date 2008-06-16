@@ -166,8 +166,8 @@ public class FormUtil {
         "The 'form' parameter is required to convert and validate.");
 
 	  if (!form.convertAndValidate()) {
-	    throw new ValidationFailureException("The form has " + form.getErrors().size()
-          + " validation error(s).");
+	    throw new ValidationFailureException("The form '" + form.getScope()
+          + "' has " + form.getErrors().size() + " validation error(s).");
 	  }
 	}
 

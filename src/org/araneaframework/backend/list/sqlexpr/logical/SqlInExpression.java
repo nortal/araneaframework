@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
+import org.araneaframework.core.Assert;
 
 /**
  * An IN expression for backend-based lists. Verifies that the field value is
@@ -38,17 +39,16 @@ public class SqlInExpression extends SqlCollectionExpression {
   protected SqlExpression expr1;
 
   public SqlInExpression(SqlExpression expr1, SqlExpression[] exprs) {
-    List exprList = Arrays.asList(exprs);
 
-    if (expr1 == null || exprList == null) {
-      throw new RuntimeException("All arguments must be provided");
-    }
+    Assert.isTrue(expr1 != null && exprs != null,
+        "All arguments must be provided");
+
+    List exprList = Arrays.asList(exprs);
 
     for (Iterator it = exprList.iterator(); it.hasNext();) {
       Object o = it.next();
-      if (!(o == null || o instanceof SqlExpression)) {
-        throw new RuntimeException("All arguments must be provided");
-      }
+      Assert.isTrue(o == null || o instanceof SqlExpression,
+          "All arguments in array must be provided");
     }
 
     this.expr1 = expr1;
@@ -78,10 +78,12 @@ public class SqlInExpression extends SqlCollectionExpression {
    */
   public String toSqlString() {
     StringBuffer sb = new StringBuffer();
-    sb.append(expr1.toSqlString());
-    sb.append(" IN ( ");
-    sb.append(super.toSqlString());
-    sb.append(" )");
+    if (this.children.size() > 0) {
+      sb.append(expr1.toSqlString());
+      sb.append(" IN (");
+      sb.append(super.toSqlString());
+      sb.append(")");
+    }
     return sb.toString();
   }
 

@@ -66,10 +66,6 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
       throw new AraneaJspException("Value '"+value+"' not found in values list.");
     }
 
-    if (this.htmlId == null) {
-      this.htmlId = name;
-    }
-
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", htmlId);
     JspUtil.writeAttribute(out, "name", name);

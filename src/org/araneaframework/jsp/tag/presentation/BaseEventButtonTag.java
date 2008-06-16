@@ -56,10 +56,6 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
     event.setTarget(eventTarget == null ? contextWidgetId : eventTarget);
     event.setEventPrecondition(onClickPrecondition);
 
-    if (this.id == null) {
-      this.id = this.event.getId();
-    }
-
     return result;
   }
   

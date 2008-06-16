@@ -19,6 +19,7 @@ package org.araneaframework.uilib;
 import org.apache.commons.lang.ClassUtils;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.form.Data;
+import org.araneaframework.uilib.form.FormElementContext;
 
 /**
  * Exception thrown by {@link org.araneaframework.uilib.form.Data} when
@@ -34,12 +35,16 @@ public class DataItemTypeViolatedException extends AraneaRuntimeException {
    * Constructs an exception to describe the situation when the
    * {@link org.araneaframework.uilib.form.Data} cannot convert the given value
    * to apropriate format.
-   *  
+   * 
    * @param data The Data instance object.
+   * @param formElementCtx The optional form element context (to display scope).
    * @param value The value that was attempted to assign to Data.
    */
-  public DataItemTypeViolatedException(Data data, Object value) {
+  public DataItemTypeViolatedException(Data data,
+      FormElementContext formElementCtx, Object value) {
     super("The " + ClassUtils.getShortClassName(data.getClass())
+        + (formElementCtx != null ? " for '"
+            + formElementCtx.getControl().getScope() + "'" : "")
         + " with type '" + data.getValueType()
         + "' cannot accept values of type '"
         + ClassUtils.getShortClassName(value.getClass()) + "' (value=" + value
