@@ -286,9 +286,13 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 	    if (dateTimeViewModel.getDateViewModel().getInputFilter() != null) {
 	    	attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getInputFilter().getCharacterFilter());
 		}
-		
+
+        if (StringUtils.isBlank(id)) {
+          id = name;
+        }
+
 		JspUtil.writeOpenStartTag(out, "input");
-		if (!StringUtils.isBlank(id)) JspUtil.writeAttribute(out, "id", id);
+		JspUtil.writeAttribute(out, "id", id);
 		JspUtil.writeAttribute(out, "name", name);
 		JspUtil.writeAttribute(out, "class", styleClass);
 		JspUtil.writeAttribute(out, "style", getStyle());

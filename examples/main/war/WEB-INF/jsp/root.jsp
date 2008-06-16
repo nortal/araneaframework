@@ -38,7 +38,7 @@
 							<div class="msg-info">
 								<div>
 									<div>
-										<ui:messages type="info"/>
+										<ui:messages type="info" escapeHtml="false"/>
 									</div>
 								</div>
 							</div>

@@ -42,6 +42,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class MessagesHtmlTag extends PresentationTag {
   protected String type;
   protected String divId;
+  protected Boolean escapeHtml = Boolean.TRUE;
 
   {
     baseStyleClass = "aranea-messages";
@@ -119,7 +120,10 @@ public class MessagesHtmlTag extends PresentationTag {
    * @since 1.1
    */
   protected void writeMessageBody(Writer out, String message) throws Exception {
-    out.write(StringEscapeUtils.escapeHtml(message));
+    if (this.escapeHtml.booleanValue()) {
+      message = StringEscapeUtils.escapeHtml(message);
+    }
+    out.write(message);
   }
 
   /**
@@ -158,5 +162,17 @@ public class MessagesHtmlTag extends PresentationTag {
    */
   public void setDivId(String divId) throws JspException {
     this.divId = (String) evaluate("divId", divId, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "Sets whether the messages should be escaped or not (default: escape)."
+   * 
+   * @since 1.1.4
+   */
+  public void setEscapeHtml(String escapeHtml) throws JspException {
+    this.escapeHtml = (Boolean) evaluateNotNull("escapeHtml", escapeHtml, Boolean.class);
   }
 }

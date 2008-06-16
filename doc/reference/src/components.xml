@@ -1925,7 +1925,7 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 			To enable popups at JSP layer, one must also register it inside the system form as
 			the following code snippet does from <literal>root.jsp</literal> of the Aranea Demo Application:
 
-			<programlisting role="jsp"> ...
+<programlisting role="jsp">...
   &lt;ui:body&gt;
 
     &lt;div id="cont1"&gt;
@@ -1965,13 +1965,46 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 			creates the overlay root widget and its content(s) like this:
 
 			<programlisting role="java">  getOverlayCtx().start(
-      new OverlayRootWidget(new StandardFlowContainerWidget(
-          new ModalDialogDemoWidget(true))));</programlisting>
+      new OverlayRootWidget(new ModalDialogDemoWidget(true)));</programlisting>
 
-			Notice that the <literal>start(...)</literal> method is used to start three widgets.
-			The custom-made <literal>OverlayRootWidget</literal> acts like a root widget, the
-			<literal>StandardFlowContainerWidget</literal> widget is for containing the content,
-			which is in this case the <literal>ModalDialogDemoWidget</literal> widget.
+			Notice that the <literal>start(...)</literal> method is used to start two widgets.
+			The custom-made <literal>OverlayRootWidget</literal> acts like a root widget, which
+			behind the scenes also specifies a flow container for the child widget
+			(i.e. ModalDialogDemoWidget). Here is the sample code for the OverlayRootWidget: 
+
+<programlisting role="java">public class OverlayRootWidget extends BaseUIWidget {
+
+  private Widget child;
+
+  public OverlayRootWidget(Widget child) {
+    this.child = child;
+  }
+
+  protected void init() throws Exception {
+    Assert.notNull(child);
+    addWidget("c", new OverlayFlowContainer(child));
+    setViewSelector("overlayRoot");
+  }
+
+  private class OverlayFlowContainer extends ExceptionHandlingFlowContainerWidget {
+
+    public OverlayFlowContainer(Widget topWidget) {
+        super(topWidget);
+    }
+
+    protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
+      if (ExceptionUtils.getRootCause(e) != null) {
+        putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(
+            ExceptionUtils.getRootCause(e)));
+      }        
+      putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
+      ServletUtil.include("/WEB-INF/jsp/menuError.jsp", this, output);
+    }
+
+  }
+
+}</programlisting>
+
 			</para>
 
 			<para>
@@ -2018,9 +2051,19 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 			<para>
 			To make overlay possible on the client-side, one must register it inside the system
 			form as the following code snippet does from <literal>root.jsp</literal> of the
-			Aranea Demo Application:
+			Aranea Demo Application. In addition, the modalbox.css file must also be incorporated
+			to enable the visual part of the overlay mode. In the example below, the file is
+			explicitly defined (it refers to the modalbox.css provided by Aranea), although the
+			necessary styles are also included if there are no attributes specified on the tag.
+			
 
-			<programlisting role="jsp"> ...
+			<programlisting role="jsp">  ...
+  &lt;head&gt;
+  	...
+  	&lt;ui:importStyles file="css/modalbox/modalbox.css" media="screen"/&gt;
+  	...
+  &lt;/head&gt;
+
   &lt;ui:body&gt;
 
     &lt;div id="cont1"&gt;
