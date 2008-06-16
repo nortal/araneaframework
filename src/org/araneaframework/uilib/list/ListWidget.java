@@ -658,6 +658,15 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		return this.typeHelper.getFieldComparator(fieldId);
 	}
 
+    /**
+     * Specifies {@link Comparator} for the specified field.
+     * 
+     * @since 1.1.4
+     */
+    public void setFieldComparator(String fieldId, Comparator comparator) {
+        this.typeHelper.addCustomComparator(fieldId, comparator);
+    }
+
 	/**
 	 * Returns the Locale used by memory-based filters and orders. 
 	 */

@@ -539,6 +539,16 @@ myList.addField("address", "#Address").setIgnoreCase(true).like();</programlisti
               </row>
 
               <row>
+                <entry><code>in()</code></entry>
+
+                <entry><code>InFilter</code></entry>
+
+                <entry>Tests if the value of a list field is among the values
+                of a MultiSelectControl. It does a case-sensitive search for
+                this.</entry>
+              </row>
+
+              <row>
                 <entry><code>sqlFunction()</code></entry>
 
                 <entry><code>SqlFunctionFilter</code></entry>
@@ -2227,6 +2237,16 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                 <entry>styleClass</entry>
                 <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class for the tag.</entry>
+              </row>
+              <row>
+                <entry>onChangeEventId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The event handler name (in the parent widget of the list) that wants to know when a row selection changes. The parameter for the event handler is the <literal>rowRequestId</literal>.</entry>
+              </row>
+              <row>
+                <entry>eventPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>A JavaScript event precondition on whether the <literal>onchange</literal> event should go server-side.</entry>
               </row>
             </tbody>
           </tgroup>

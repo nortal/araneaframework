@@ -22,6 +22,7 @@ import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
+import org.araneaframework.uilib.form.data.StringListData;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.TypeHelper;
 import org.araneaframework.uilib.list.structure.ListFilter;
@@ -33,6 +34,7 @@ import org.araneaframework.uilib.list.structure.filter.atomic.Value;
 import org.araneaframework.uilib.list.structure.filter.field.EndsWithFilter;
 import org.araneaframework.uilib.list.structure.filter.field.EqualFilter;
 import org.araneaframework.uilib.list.structure.filter.field.GreaterThanFilter;
+import org.araneaframework.uilib.list.structure.filter.field.InFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LikeFilter;
 import org.araneaframework.uilib.list.structure.filter.field.LowerThanFilter;
 import org.araneaframework.uilib.list.structure.filter.field.NullFilter;
@@ -788,12 +790,81 @@ public class FilterHelper extends BaseFilterHelper {
 		return this;
 	}
 
-	// ========== SQL FUNCTION ==========
+    // ========== IN ==========
+
+    // filter with form element
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper in(String fieldId) {
+        return in(fieldId, fieldId);
+    }
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper in(String fieldId, String valueId) {
+        _in(fieldId, valueId);
+        InFilter.addToForm(this, valueId);
+        return this;
+    }
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper in(String fieldId, Control control) {
+        return in(fieldId, fieldId, control);
+    }
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper in(String fieldId, String valueId, Control control) {
+        _in(fieldId, valueId);
+        InFilter.addToForm(this, valueId, control, new StringListData());
+        return this;
+    }
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper in(String fieldId, FormElement element) {
+        return in(fieldId, fieldId, element);
+    }
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper in(String fieldId, String valueId, FormElement element) {
+        _in(fieldId, valueId);
+        InFilter.addToForm(this, valueId, element);
+        return this;
+    }
+
+    // filter
+    
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper _in(String fieldId) {
+        return _in(fieldId, fieldId);
+    }
+
+    /**
+     * @since 1.1.4
+     */
+    public FilterHelper _in(String fieldId, String valueId) {
+        list.addFilter(InFilter.getInstance(this, fieldId, valueId));
+        return this;
+    }
+
+    // ========== SQL FUNCTION ==========
 	
 	public SqlFunction sqlFunction(String name) {
 		return new SqlFunction(name);
 	}
-	
+
 	/**
 	 * SQL Function filter helper.
 	 * 
