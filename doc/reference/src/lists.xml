@@ -2238,6 +2238,16 @@ private class MyBackendListDataProvider extends BackendListDataProvider {
                 <entry><emphasis>no</emphasis></entry>
                 <entry>CSS class for the tag.</entry>
               </row>
+              <row>
+                <entry>onChangeEventId</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>The event handler name (in the parent widget of the list) that wants to know when a row selection changes. The parameter for the event handler is the <literal>rowRequestId</literal>.</entry>
+              </row>
+              <row>
+                <entry>eventPrecondition</entry>
+                <entry><emphasis>no</emphasis></entry>
+                <entry>A JavaScript event precondition on whether the <literal>onchange</literal> event should go server-side.</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
