@@ -6,13 +6,13 @@ import java.util.Map;
 import org.araneaframework.uilib.form.formlist.FormListModel;
 
 public class MapFormListModel implements FormListModel {
-  private Map map;
+  private Map<?, Object> map;
   
-  public MapFormListModel(Map map) {
+  public MapFormListModel(Map<?, Object> map) {
     this.map = map;
   }
   
-  public List getRows() {
-    return new ArrayList(map.values());
+  public List<Object> getRows() {
+    return new ArrayList<Object>(map.values());
   }
 }

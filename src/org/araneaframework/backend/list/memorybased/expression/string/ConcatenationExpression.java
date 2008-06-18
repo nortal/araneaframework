@@ -16,7 +16,6 @@
 
 package org.araneaframework.backend.list.memorybased.expression.string;
 
-import java.util.Iterator;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
@@ -39,8 +38,7 @@ public class ConcatenationExpression extends MultiExpression {
 					"At least one children must be provided");
 		}
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = this.children.iterator(); i.hasNext();) {
-			Expression child = (Expression) i.next();
+		for (Expression child : this.children) {
 			buffer.append(child.evaluate(resolver));
 		}
 		return buffer.toString();

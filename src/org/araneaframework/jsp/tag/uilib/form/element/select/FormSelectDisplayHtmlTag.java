@@ -34,7 +34,8 @@ public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
 		baseStyleClass = "aranea-select-display";
 	}
 
-	protected int doEndTag(Writer out) throws Exception {				
+	@Override
+  protected int doEndTag(Writer out) throws Exception {				
 		SelectControl.ViewModel viewModel = ((SelectControl.ViewModel)controlViewModel);
 		
 		JspUtil.writeOpenStartTag(out, "span");

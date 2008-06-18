@@ -54,6 +54,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
 	}
   }
   
+  @Override
   public void setUp() throws Exception {    
     topWidget = new MockEventfulBaseWidget();
     childWidget = new MockEventfulBaseWidget();

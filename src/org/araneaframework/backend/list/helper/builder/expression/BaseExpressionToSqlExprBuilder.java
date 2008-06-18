@@ -31,9 +31,9 @@ import org.araneaframework.backend.list.memorybased.Expression;
 public class BaseExpressionToSqlExprBuilder implements ExpressionToSqlExprBuilder {
 	private static final Log log = LogFactory.getLog(BaseExpressionToSqlExprBuilder.class);
 	
-	private Map translators = new HashMap();
+	private Map<Class<? extends Expression>, ExprToSqlExprTranslator> translators = new HashMap<Class<? extends Expression>, ExprToSqlExprTranslator>();
 	
-	protected void addTranslator(Class expressionClass, ExprToSqlExprTranslator translator) {
+	protected void addTranslator(Class<? extends Expression> expressionClass, ExprToSqlExprTranslator translator) {
 		this.translators.put(expressionClass, translator);
 	}
 
@@ -42,7 +42,7 @@ public class BaseExpressionToSqlExprBuilder implements ExpressionToSqlExprBuilde
 			log.debug("Expression class: " + expression.getClass().getName());			
 		}
 		ExprToSqlExprTranslator translator =
-			(ExprToSqlExprTranslator) this.translators.get(expression.getClass());
+			this.translators.get(expression.getClass());
 		if (translator == null) {
 			throw new RuntimeException("Expression of class " + expression.getClass() + " not supported");
 		}

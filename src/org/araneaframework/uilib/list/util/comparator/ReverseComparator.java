@@ -38,7 +38,8 @@ public class ReverseComparator implements Comparator, Serializable {
 		return this.comparator.compare(o2, o1);
 	}
 	
-	public boolean equals(Object obj) {
+	@Override
+  public boolean equals(Object obj) {
 		if (obj instanceof ReverseComparator == false) {
 			return false;
 		}
@@ -51,7 +52,8 @@ public class ReverseComparator implements Comparator, Serializable {
 		return comparator.equals(rhs.comparator);
 	}
 
-	public int hashCode() {
+	@Override
+  public int hashCode() {
 		return new HashCodeBuilder(20070327, 1239).append(comparator).toHashCode();
 	}
 }

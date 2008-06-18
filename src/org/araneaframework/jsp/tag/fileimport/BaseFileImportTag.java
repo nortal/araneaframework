@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
@@ -34,8 +33,8 @@ public abstract class BaseFileImportTag extends BaseTag {
 	 *   required = "false"
 	 *   description = "The name of the group of files that should get included."
 	 */
-	public void setGroup(String includeTemplate) throws JspException {
-		this.includeGroupName = (String) evaluate("includeTemplate", includeTemplate, String.class);
+	public void setGroup(String includeTemplate){
+		this.includeGroupName = evaluate("includeTemplate", includeTemplate, String.class);
 	}
 	
 	/**
@@ -44,11 +43,12 @@ public abstract class BaseFileImportTag extends BaseTag {
 	 *   required = "false"
 	 *   description = "The name of the file that should get included."
 	 */
-	public void setFile(String file) throws JspException {
-		this.includeFileName = (String) evaluate("file", file, String.class);
+	public void setFile(String file){
+		this.includeFileName = evaluate("file", file, String.class);
 	}
 		
-	public int doEndTag(Writer out) throws Exception {
+	@Override
+  public int doEndTag(Writer out) throws Exception {
 		return EVAL_PAGE;
 	}
 	

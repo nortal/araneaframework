@@ -17,8 +17,6 @@
 package org.araneaframework.uilib.form.converter;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
@@ -31,27 +29,28 @@ import org.araneaframework.uilib.form.FormElementContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class ListConverter extends BaseConverter {
+public class ListConverter<C,D> extends BaseConverter<List<C>, List<D>> {
 
-  protected Converter listItemConverter;
+  protected Converter<C,D> listItemConverter;
 
   /**
 	 * Creates the converter initializing the contained converter.
 	 * 
 	 * @param listItemConverter the contained converter.
 	 */
-  public ListConverter(Converter listItemConverter) {
+  public ListConverter(Converter<C,D> listItemConverter) {
     this.listItemConverter = listItemConverter;
   }
 
   /**
 	 *  Converts the <code>List</code> using contained converter.
 	 */
-  public Object convertNotNull(Object data) {
-    List result = new ArrayList();
+  @Override
+  public List<D> convertNotNull(List<C> data) {
+    List<D> result = new ArrayList<D>();
 
-    for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
-      result.add(listItemConverter.convert(i.next()));
+    for (C item : data) {
+      result.add(listItemConverter.convert(item));
     }
 
     return result;
@@ -60,15 +59,17 @@ public class ListConverter extends BaseConverter {
   /**
 	 *  Converts the <code>List</code> back using contained converter.
 	 */
-  public Object reverseConvertNotNull(Object data) {
-    List result = new ArrayList();
+  @Override
+  public List<C> reverseConvertNotNull(List<D> data) {
+    List<C> result = new ArrayList<C>();
 
-    for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
-      result.add(listItemConverter.reverseConvert(i.next()));
+    for (D item : data) {
+      result.add(listItemConverter.reverseConvert(item));
 	  }
     return result;
   }
 
+  @Override
   public void setFormElementCtx(FormElementContext feCtx) {
     super.setFormElementCtx(feCtx);
     
@@ -78,8 +79,9 @@ public class ListConverter extends BaseConverter {
   /**
 	 *  Returns a <code>new ListConverter(listItemConverter)</code>.
 	 */
-  public Converter newConverter() {
-    return new ListConverter(listItemConverter.newConverter());
+  @Override
+  public Converter<List<C>, List<D>> newConverter() {
+    return new ListConverter<C,D>(listItemConverter.newConverter());
   }
 
 }

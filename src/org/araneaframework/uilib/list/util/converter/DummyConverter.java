@@ -32,11 +32,11 @@ public class DummyConverter implements Converter {
 		return data;
 	}
 
-	public Class getSourceType() {
+	public Class<Object> getSourceType() {
 		return Object.class;
 	}
 
-	public Class getDestinationType() {
+	public Class<Object> getDestinationType() {
 		return Object.class;
 	}
 

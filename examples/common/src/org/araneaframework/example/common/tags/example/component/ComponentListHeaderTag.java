@@ -17,10 +17,8 @@
 package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -51,12 +49,13 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
   private String updateRegions;
   private String globalUpdateRegions;
   
-  private List updateRegionNames;    
+  private List<String> updateRegionNames;    
   
   public ComponentListHeaderTag() {
     styleClass = ComponentListTag.COMPONENT_LIST_STYLE_CLASS;
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     this.updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 
@@ -69,14 +68,13 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
   protected void writeHeader(Writer out) throws Exception {
     // Get list data
     String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     
     // Get order data
     ListStructure.ViewModel listStructureViewModel = viewModel.getListStructure();
     OrderInfo.ViewModel orderInfoViewModel = viewModel.getOrderInfo();
     
-    for(Iterator i = listStructureViewModel.getColumnList().iterator(); i.hasNext();) {
-      ListField.ViewModel columnViewModel = (ListField.ViewModel)i.next();
+    for (ListField.ViewModel columnViewModel : listStructureViewModel.getColumnList()) {
       
       // Write cell
       JspUtil.writeOpenStartTag(out, "th");
@@ -85,8 +83,7 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
       // Write link if needed
       if (listStructureViewModel.isColumnOrdered(columnViewModel.getId())) {
         // Draw column ordering if needed        
-        for(Iterator j = orderInfoViewModel.getFields().iterator(); j.hasNext();) {
-          OrderInfoField.ViewModel orderInfoFieldViewModel = (OrderInfoField.ViewModel)j.next();
+        for (OrderInfoField.ViewModel orderInfoFieldViewModel : orderInfoViewModel.getFields()) {
           
           if (orderInfoFieldViewModel.getId().equals(columnViewModel.getId())) {
         	StringBuffer url = ((HttpServletRequest)pageContext.getRequest()).getRequestURL();
@@ -136,8 +133,8 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
 	 */	
-	public void setUpdateRegions(String updateRegions) throws JspException {
-		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+	public void setUpdateRegions(String updateRegions) {
+		this.updateRegions = evaluate("updateRegions", updateRegions, String.class);
 	}
 	
 	/**
@@ -146,7 +143,7 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
 	 */	
-	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+	public void setGlobalUpdateRegions(String globalUpdateRegions) {
+		this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
 	}  
 }

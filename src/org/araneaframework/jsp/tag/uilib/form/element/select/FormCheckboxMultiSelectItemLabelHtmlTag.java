@@ -20,7 +20,6 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
-import org.araneaframework.jsp.tag.uilib.form.FormSimpleLabelHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 
@@ -41,6 +40,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
   protected String value;
   protected String checkboxId;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -60,8 +60,8 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
    *   required = "false"
    *   description = "Select item value." 
    */
-  public void setValue(String value) throws JspException  {
-    this.value = (String)evaluateNotNull("value", value, String.class);
+  public void setValue(String value)  throws JspException {
+    this.value = evaluateNotNull("value", value, String.class);
   }
   
   /** @since 1.1 */
@@ -86,8 +86,8 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
    *   description = "The HTML id of checkbox to which this label belongs."
    * @since 1.1 
    */
-  public void setCheckboxId(String checkboxId) throws JspException  {
-    this.checkboxId = (String)evaluate("checkboxId", checkboxId, String.class);
+  public void setCheckboxId(String checkboxId) {
+    this.checkboxId = evaluate("checkboxId", checkboxId, String.class);
   }
 }
 

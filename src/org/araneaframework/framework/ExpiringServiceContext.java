@@ -33,6 +33,6 @@ public interface ExpiringServiceContext extends Serializable {
    * Returns all expiring services. Keys of the Map are services' keepalive id's
    * (String). Values are services' time to live in milliseconds (Long).
    */
-  public Map getServiceTTLMap();
+  public Map<String, Long> getServiceTTLMap();
 
 }

@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 
@@ -30,6 +29,7 @@ public abstract class BaseImageTag extends PresentationTag {
   // Usual HTML <img> tag attributes	
   protected String code, src, width, height, alt, title;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -77,8 +77,8 @@ public abstract class BaseImageTag extends PresentationTag {
    *   required = "false"
    *   description = "Image code." 
    */
-  public void setCode(String code) throws JspException {
-    this.code = (String)evaluate("code", code, String.class);
+  public void setCode(String code){
+    this.code = evaluate("code", code, String.class);
   }
 
   /**
@@ -87,8 +87,8 @@ public abstract class BaseImageTag extends PresentationTag {
    *   required = "false"
    *   description = "Image src." 
    */
-  public void setSrc(String src) throws JspException {
-    this.src = (String)evaluate("src", src, String.class);
+  public void setSrc(String src){
+    this.src = evaluate("src", src, String.class);
   }
 
   /**
@@ -98,8 +98,8 @@ public abstract class BaseImageTag extends PresentationTag {
    *   description = "Image width" 
    */
 
-  public void setWidth(String width) throws JspException {
-    this.width = (String)evaluate("width", width, String.class);
+  public void setWidth(String width){
+    this.width = evaluate("width", width, String.class);
   }  
 
   /**
@@ -108,8 +108,8 @@ public abstract class BaseImageTag extends PresentationTag {
    *   required = "false"
    *   description = "Image height." 
    */
-  public void setHeight(String height) throws JspException {
-    this.height = (String)evaluate("height", height, String.class);
+  public void setHeight(String height){
+    this.height = evaluate("height", height, String.class);
   }  
 
 
@@ -119,8 +119,8 @@ public abstract class BaseImageTag extends PresentationTag {
    *   required = "false"
    *   description = "Image alternate text." 
    */
-  public void setAlt(String alt) throws JspException {
-    this.alt = (String)evaluate("alt", alt, String.class);
+  public void setAlt(String alt){
+    this.alt = evaluate("alt", alt, String.class);
   }
 
   /**
@@ -129,8 +129,8 @@ public abstract class BaseImageTag extends PresentationTag {
    *   required = "false"
    *   description = "Image title" 
    */
-  public void setTitle(String title) throws JspException {
-    this.title = (String)evaluate("title", title, String.class);
+  public void setTitle(String title){
+    this.title = evaluate("title", title, String.class);
   }
 
 

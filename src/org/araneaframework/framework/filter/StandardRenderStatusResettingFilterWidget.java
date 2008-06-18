@@ -13,6 +13,7 @@ import org.araneaframework.http.filter.NotRenderedMessage;
  * @since 1.1
  */
 public class StandardRenderStatusResettingFilterWidget extends BaseFilterWidget {
+  @Override
   protected void render(OutputData output) throws Exception {
     NotRenderedMessage.INSTANCE.send(null, this.childWidget);
     super.render(output);

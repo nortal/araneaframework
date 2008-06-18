@@ -40,7 +40,8 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class FloatControl extends EmptyStringNullableControl implements FilteredInputControl {
+//FIXME why the hell class is called FloatControl when it works with BigDecimals?
+public class FloatControl extends EmptyStringNullableControl<BigDecimal> implements FilteredInputControl<BigDecimal> {
 	private InputFilter inputFilter;
 	private BigDecimal minValue;
 	private BigDecimal maxValue;
@@ -151,7 +152,8 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 	/**
 	 * Trims request parameter.
 	 */
-	protected String preprocessRequestParameter(String parameterValue) {
+	@Override
+  protected String preprocessRequestParameter(String parameterValue) {
 		String result = super.preprocessRequestParameter(parameterValue);
 		return (result == null ? null : result.trim());
 	}
@@ -160,7 +162,8 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 	 * Checks that the submitted data is a valid floating-point number.
 	 * 
 	 */
-	protected Object fromRequest(String parameterValue) {
+	@Override
+  protected BigDecimal fromRequest(String parameterValue) {
 		BigDecimal result = null;
 
 		try {
@@ -186,11 +189,9 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 		return result;
 	}
 
-	/**
-	 * 
-	 */
-	protected String toResponse(Object controlValue) {
-		return toString((BigDecimal) controlValue);
+	@Override
+  protected <E extends BigDecimal> String toResponse(E controlValue) {
+		return toString(controlValue);
 	}
 	
 	/**
@@ -225,9 +226,10 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 	 * Checks that the submitted value is in permitted range.
 	 * 
 	 */
-	protected void validateNotNull() {
+	@Override
+  protected void validateNotNull() {
 		// minimum and maximum permitted values
-		if (minValue != null && maxValue != null && ((((BigDecimal) getRawValue()).compareTo(minValue) == -1) || ((BigDecimal) getRawValue()).compareTo(maxValue) == 1)) {
+		if (minValue != null && maxValue != null && ((getRawValue().compareTo(minValue) == -1) || getRawValue().compareTo(maxValue) == 1)) {
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_BETWEEN, 
@@ -238,7 +240,7 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 							},          
 							getEnvironment()));           
 		}      
-		else if (minValue != null && ((BigDecimal) getRawValue()).compareTo(minValue) == -1) {      
+		else if (minValue != null && getRawValue().compareTo(minValue) == -1) {      
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_GREATER, 
@@ -248,7 +250,7 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 							},          
 							getEnvironment()));       
 		}    
-		else if (maxValue != null && ((BigDecimal) getRawValue()).compareTo(maxValue) == 1) {
+		else if (maxValue != null && getRawValue().compareTo(maxValue) == 1) {
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.NUMBER_NOT_LESS, 
@@ -260,7 +262,7 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 		}
 		
 		// maximum permitted scale
-		if (maxScale != null && ((BigDecimal) getRawValue()).scale() > maxScale.intValue()) {
+		if (maxScale != null && getRawValue().scale() > maxScale.intValue()) {
 			addError(
 					MessageUtil.localizeAndFormat(
 							UiLibMessages.SCALE_NOT_LESS, 
@@ -276,7 +278,8 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 	 * Returns {@link ViewModel}.
 	 * @return {@link ViewModel}.
 	 */
-	public Object getViewModel() {
+	@Override
+  public ViewModel getViewModel() {
 		return new ViewModel();
 	}
 
@@ -288,7 +291,7 @@ public class FloatControl extends EmptyStringNullableControl implements Filtered
 	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 	 * 
 	 */
-	public class ViewModel extends StringArrayRequestControl.ViewModel {
+	public class ViewModel extends StringArrayRequestControl<BigDecimal>.ViewModel {
 		private InputFilter inputFilter;
 		private BigDecimal maxValue;
 		private BigDecimal minValue;

@@ -84,10 +84,10 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 	}
 
 	protected FlowContext getFlowCtx() {
-		return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+		return getEnvironment().requireEntry(FlowContext.class);
 	}
 
-	public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
+	public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, Class<T> entryId, T envEntry) {
 		getFlowCtx().addNestedEnvironmentEntry(scope, entryId, envEntry);
 	}
 
@@ -101,7 +101,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 	      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
 	      Assert.notNull(cancellingService);
 	      threadCtx.addService(rndThreadId, cancellingService);
-	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
+	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), topCtx.getCurrentId(), rndThreadId));
 	    } catch (Exception e) {
 	      ExceptionUtil.uncheckException(e);
 	    }
@@ -117,22 +117,18 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 
 	      finishingService.setResult(result);
 	      threadCtx.addService(rndThreadId, finishingService);
-	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
+	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), topCtx.getCurrentId(), rndThreadId));
 	    } catch (Exception e) {
 	      ExceptionUtil.uncheckException(e);
 	    }
 	}
 	
 	protected TopServiceContext getTopServiceContext() {
-		return (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
+		return getEnvironment().getEntry(TopServiceContext.class);
 	}
 	
 	protected ThreadContext getThreadContext() {
-		return (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
-	}
-
-	public FlowReference getCurrentReference() {
-		return getFlowCtx().getCurrentReference();
+		return getEnvironment().getEntry(ThreadContext.class);
 	}
 
 	public boolean isNested() {

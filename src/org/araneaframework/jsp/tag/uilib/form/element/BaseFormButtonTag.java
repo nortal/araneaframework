@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element;				
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.ButtonControl;
@@ -55,13 +54,14 @@ public class BaseFormButtonTag extends BaseFormElementHtmlTag {
 	 *   required = "false"
 	 *   description = "Precondition for deciding whether go to server side or not." 
 	 */
-  public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
-    this.onClickPrecondition = (String) evaluate("onClickPrecondition", onClickPrecondition, String.class);
+  public void setOnClickPrecondition(String onClickPrecondition){
+    this.onClickPrecondition = evaluate("onClickPrecondition", onClickPrecondition, String.class);
   }
   //
   // Implementation
   //  
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     

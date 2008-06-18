@@ -26,28 +26,31 @@ import org.araneaframework.uilib.form.Converter;
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.1.3
  */
-public class BigDecimalToDoubleConverter extends BaseConverter {
+public class BigDecimalToDoubleConverter extends BaseConverter<BigDecimal, Double> {
 
   private static final long serialVersionUID = 1L;
 
   /**
    * Returns a <code>new BigDecimalToDoubleConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<BigDecimal, Double> newConverter() {
     return new BigDecimalToDoubleConverter();
   }
 
   /**
    * Converts <code>BigDecimal</code> to <code>Double</code>.
    */
-  protected Object convertNotNull(Object data) {
+  @Override
+  protected Double convertNotNull(BigDecimal data) {
     return new Double(data.toString());
   }
 
   /**
    * Converts <code>Double</code> to <code>BigDecimal</code>.
    */
-  protected Object reverseConvertNotNull(Object data) {
+  @Override
+  protected BigDecimal reverseConvertNotNull(Double data) {
     return new BigDecimal(data.toString());
   }
 

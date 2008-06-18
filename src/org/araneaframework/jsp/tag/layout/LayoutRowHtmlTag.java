@@ -31,6 +31,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutRowHtmlTag extends BaseLayoutRowTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -49,6 +50,7 @@ public class LayoutRowHtmlTag extends BaseLayoutRowTag {
     JspUtil.writeAttributes(out, attributes);
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "tr");
     return super.doEndTag(out);

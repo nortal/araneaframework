@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -42,6 +41,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     baseStyleClass = "aranea-text";
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
@@ -57,8 +57,8 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Horizontal size, in characters." 
    */
-  public void setSize(String size) throws JspException {
-    this.size = (Long)evaluate("size", size, Long.class);
+  public void setSize(String size){
+    this.size = evaluate("size", size, Long.class);
   }
 
   /**
@@ -67,8 +67,8 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
-  public void setOnChangePrecondition(String onChangePrecondition) throws JspException {
-    this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  public void setOnChangePrecondition(String onChangePrecondition){
+    this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 
   /**
@@ -86,12 +86,12 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
    * ***********************************************************************************/
 
   protected void writeTextInput(Writer out, String inputType) throws Exception {
-    writeTextInput(out, inputType, true, new HashMap());
+    writeTextInput(out, inputType, true, new HashMap<String, String>());
   }
 
-  protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map customAttributes) throws Exception {
+  protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map<String, String> customAttributes) throws Exception {
     String name = this.getFullFieldId();
-    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+    StringArrayRequestControl<?>.ViewModel viewModel = ((StringArrayRequestControl<?>.ViewModel)controlViewModel);
 
     // Write
     JspUtil.writeOpenStartTag(out, "input");
@@ -107,9 +107,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     
     writeBackgroundValidationAttribute(out);
 
-    for (Iterator i = customAttributes.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry attribute = (Map.Entry) i.next();
-      
+    for (Map.Entry<String, String> attribute : customAttributes.entrySet()) {
       JspUtil.writeAttribute(out, "" + attribute.getKey(), attribute.getValue());
     }
 
@@ -130,6 +128,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeCloseStartEndTag_SS(out);
   }
 
+  @Override
   public void doFinally() {
     super.doFinally();
     onChangePrecondition = null;

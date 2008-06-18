@@ -46,6 +46,6 @@ public interface ApplicationComponent extends Component, Serializable, Composite
     /**
      * Return component's child components.
      */
-    public Map getChildren();
+    public Map<Object, Component> getChildren();
   }
 }

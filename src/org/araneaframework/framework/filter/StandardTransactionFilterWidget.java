@@ -52,21 +52,25 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     return transHelper.getCurrentTransactionId();
   }
 
+  @Override
   protected void init() throws Exception {
     transHelper = new TransactionHelper();
 
     super.init();
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), TransactionContext.class, this);
   }
 
+  @Override
   protected void destroy() throws Exception {
     super.destroy();
   }
 
   // Template
+  @Override
   protected void update(InputData input) throws Exception {
     consistent = isConsistent(input);
     if (isConsistent()) {
@@ -77,6 +81,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     }
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (isConsistent()) {
       childWidget._getWidget().event(path, input);
@@ -91,12 +96,13 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    * The children can access it via
    * {@link TransactionContext#TRANSACTION_ID_KEY} from their OutputData.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
     // CONFIRM: when transactionid was overriden in request, new transaction id should not be generated
     if (transHelper.getCurrentTransactionId() == null || !transHelper.isOverride(getTransactionId(getInputData())))
       transHelper.resetTransactionId();
 
-    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
 
     log.debug("New transaction id '" + getTransactionId() + "'.");

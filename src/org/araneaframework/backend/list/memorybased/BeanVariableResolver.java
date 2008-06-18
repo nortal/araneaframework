@@ -26,12 +26,12 @@ public class BeanVariableResolver implements VariableResolver {
 
 	private static final long serialVersionUID = 1L;
 
-	private BeanMapper mapper;
+	private BeanMapper<?> mapper;
 
 	private Object bean;
 
-	public BeanVariableResolver(Class clazz) {
-		this.mapper = new BeanMapper(clazz);
+	public <T> BeanVariableResolver(Class<T> clazz) {
+		this.mapper = new BeanMapper<T>(clazz);
 	}
 
 	public void setBean(Object bean) {

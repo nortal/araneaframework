@@ -20,6 +20,6 @@ import java.io.Serializable;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface FormElementAware extends Serializable {
-  public void setFormElementCtx(FormElementContext feCtx);
+public interface FormElementAware<C,D> extends Serializable {
+  public void setFormElementCtx(FormElementContext<C,D> feCtx);
 }

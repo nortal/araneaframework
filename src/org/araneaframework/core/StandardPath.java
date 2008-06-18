@@ -30,7 +30,7 @@ import org.araneaframework.Path;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardPath implements Path {
-  private LinkedList path = new LinkedList();
+  private LinkedList<String> path = new LinkedList<String>();
   
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.
@@ -41,8 +41,8 @@ public class StandardPath implements Path {
     
     StringTokenizer tokenizer = new StringTokenizer(fullPath, ".");
     
-    while (tokenizer.hasMoreElements()) {
-      path.add(tokenizer.nextElement());
+    while (tokenizer.hasMoreTokens()) {
+      path.add(tokenizer.nextToken());
     }
   }
   
@@ -72,7 +72,7 @@ public class StandardPath implements Path {
   /**
    * @since 1.1
    */
-  public StandardPath(Collection fullPath) {
+  public StandardPath(Collection<String> fullPath) {
     path.addAll(fullPath);
   }
   
@@ -80,11 +80,12 @@ public class StandardPath implements Path {
    * Returns this {@link org.araneaframework.Path} as a dot-separated String.
    * @return this {@link org.araneaframework.Path} as a dot-separated String
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
 
-    for (Iterator i = path.iterator(); i.hasNext();) {  
-      result.append((String) i.next());
+    for (Iterator<String> i = path.iterator(); i.hasNext();) {  
+      result.append(i.next());
       if (i.hasNext())
         result.append('.');
     }

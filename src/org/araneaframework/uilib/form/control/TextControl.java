@@ -30,7 +30,7 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class TextControl extends StringValueControl implements FilteredInputControl {
+public class TextControl extends StringValueControl implements FilteredInputControl<String> {
   private InputFilter inputFilter;
   protected TextType textType = TextType.TEXT;
   
@@ -106,12 +106,13 @@ public class TextControl extends StringValueControl implements FilteredInputCont
   /**
    * In case text control type is other than {@link TextType#TEXT} makes custom checks. 
    */
+  @Override
   protected void validateNotNull() {
     super.validateNotNull();
     
     if (textType.equals(TextType.NUMBER_ONLY)) {
-    	for (int i = 0; i < ((String) getRawValue()).length(); i++) {
-    		if (!Character.isDigit(((String) getRawValue()).charAt(i))) {
+    	for (int i = 0; i < getRawValue().length(); i++) {
+    		if (!Character.isDigit(getRawValue().charAt(i))) {
           addError(
               MessageUtil.localizeAndFormat(
               UiLibMessages.NOT_A_NUMBER, 
@@ -122,7 +123,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
     	}
     }
     else if (textType.equals(TextType.EMAIL)) {
-      if (!ValidationUtil.isEmail((String) getRawValue())) {
+      if (!ValidationUtil.isEmail(getRawValue())) {
         addError(
             MessageUtil.localizeAndFormat(
             UiLibMessages.NOT_AN_EMAIL, 
@@ -131,7 +132,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
       }  
     }
     
-    if (getInputFilter() != null && !StringUtils.containsOnly((String)value, getInputFilter().getCharacterFilter())) {
+    if (getInputFilter() != null && !StringUtils.containsOnly(value, getInputFilter().getCharacterFilter())) {
     	addError(
     		MessageUtil.localizeAndFormat(
     		getInputFilter().getInvalidInputMessage(), 
@@ -146,7 +147,8 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * 
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
   

@@ -75,7 +75,7 @@ public final class SpringInjectionUtil {
 
     Method[] methods = object.getClass().getMethods();
 
-    BeanFactory bf = (BeanFactory) env.getEntry(BeanFactory.class);
+    BeanFactory bf = env.getEntry(BeanFactory.class);
 
     for (int i = 0; i < methods.length; i++) {
 
@@ -100,7 +100,7 @@ public final class SpringInjectionUtil {
           + "'!");
 
       try {
-        Class[] proxyArgs = { methods[i].getParameterTypes()[0] };
+        Class<?>[] proxyArgs = { methods[i].getParameterTypes()[0] };
 
         Object[] args = { Proxy.newProxyInstance(
             ClassLoaderUtil.getDefaultClassLoader(), proxyArgs,

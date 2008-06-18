@@ -27,15 +27,16 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class StringToLongConverter extends BaseConverter {
+public class StringToLongConverter extends BaseConverter<String, Long> {
 
   /**
    * Converts <code>String</code> to <code>Long</code>.
    */
-  public Object convertNotNull(Object data) {
-    Object result = null;
+  @Override
+  public Long convertNotNull(String data) {
+    Long result = null;
     try {
-      result = new Long((String) data);
+      result = new Long(data);
     }
     catch (NumberFormatException e) {
       addError(
@@ -50,14 +51,16 @@ public class StringToLongConverter extends BaseConverter {
   /**
    * Converts <code>Long</code> to <code>String</code>.
    */
-  public Object reverseConvertNotNull(Object data) {
+  @Override
+  public String reverseConvertNotNull(Long data) {
     return data.toString();
   }
   
   /**
    * Returns <code>new StringToLongConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<String, Long> newConverter() {
     return new StringToLongConverter();
   }
 

@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -34,6 +33,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class OnLoadEventHtmlTag extends BaseTag{
   protected String event = "return true;";
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     JspUtil.writeStartTag(out, "script");
@@ -52,7 +52,7 @@ public class OnLoadEventHtmlTag extends BaseTag{
    *   required = "true"
    *   description = "Event to register."
    */
-  public void setEvent(String event) throws JspException{
-    this.event = (String) evaluate("event", event, String.class);
+  public void setEvent(String event){
+    this.event = evaluate("event", event, String.class);
   }
 }

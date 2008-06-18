@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -78,7 +79,7 @@ public class TreeNode {
      * The attributes of this node, keyed by attribute name,
      * Instantiated only if required.
      */
-    protected HashMap attributes = null;
+    protected HashMap<String, String> attributes = null;
 
 
     /**
@@ -90,7 +91,7 @@ public class TreeNode {
     /**
      * The children of this node, instantiated only if required.
      */
-    protected ArrayList children = null;
+    protected ArrayList<TreeNode> children = null;
 
 
     /**
@@ -118,7 +119,7 @@ public class TreeNode {
     public void addAttribute(String name, String value) {
 
         if (attributes == null)
-            attributes = new HashMap();
+            attributes = new HashMap<String, String>();
         attributes.put(name, value);
 
     }
@@ -132,7 +133,7 @@ public class TreeNode {
     public void addChild(TreeNode node) {
 
         if (children == null)
-            children = new ArrayList();
+            children = new ArrayList<TreeNode>();
         children.add(node);
 
     }
@@ -149,7 +150,7 @@ public class TreeNode {
         if (attributes == null)
             return (null);
         else
-            return ((String) attributes.get(name));
+            return attributes.get(name);
 
     }
 
@@ -158,11 +159,12 @@ public class TreeNode {
      * Return an Iterator of the attribute names of this node.  If there are
      * no attributes, an empty Iterator is returned.
      */
-    public Iterator findAttributes() {
+    public Iterator<String> findAttributes() {
 
-        if (attributes == null)
-            return (Collections.EMPTY_LIST.iterator());
-        else
+        if (attributes == null) {
+          List<String> emptyList = Collections.emptyList();
+          return (emptyList.iterator());
+        } else
             return (attributes.keySet().iterator());
 
     }
@@ -178,9 +180,9 @@ public class TreeNode {
 
         if (children == null)
             return (null);
-        Iterator items = children.iterator();
+        Iterator<TreeNode> items = children.iterator();
         while (items.hasNext()) {
-            TreeNode item = (TreeNode) items.next();
+            TreeNode item = items.next();
             if (name.equals(item.getName()))
                 return (item);
         }
@@ -193,11 +195,12 @@ public class TreeNode {
      * Return an Iterator of all children of this node.  If there are no
      * children, an empty Iterator is returned.
      */
-    public Iterator findChildren() {
+    public Iterator<TreeNode> findChildren() {
 
-        if (children == null)
-            return (Collections.EMPTY_LIST.iterator());
-        else
+        if (children == null) {
+          List<TreeNode> emptyList = Collections.emptyList();
+          return (emptyList.iterator());
+        } else
             return (children.iterator());
 
     }
@@ -210,15 +213,17 @@ public class TreeNode {
      *
      * @param name Name used to select children
      */
-    public Iterator findChildren(String name) {
+    public Iterator<TreeNode> findChildren(String name) {
 
-        if (children == null)
-            return (Collections.EMPTY_LIST.iterator());
+        if (children == null) {
+          List<TreeNode> emptyList = Collections.emptyList();
+          return (emptyList.iterator());
+        }
 
-        ArrayList results = new ArrayList();
-        Iterator items = children.iterator();
+        ArrayList<TreeNode> results = new ArrayList<TreeNode>();
+        Iterator<TreeNode> items = children.iterator();
         while (items.hasNext()) {
-            TreeNode item = (TreeNode) items.next();
+            TreeNode item = items.next();
             if (name.equals(item.getName()))
                 results.add(item);
         }
@@ -288,6 +293,7 @@ public class TreeNode {
     /**
      * Return a String representation of this TreeNode.
      */
+    @Override
     public String toString() {
 
         StringBuffer sb = new StringBuffer();
@@ -318,10 +324,10 @@ public class TreeNode {
             sb.append(' ');
         sb.append('<');
         sb.append(node.getName());
-        Iterator names = node.findAttributes();
+        Iterator<String> names = node.findAttributes();
         while (names.hasNext()) {
             sb.append(' ');
-            String name = (String) names.next();
+            String name = names.next();
             sb.append(name);
             sb.append("=\"");
             String value = node.findAttribute(name);
@@ -340,9 +346,9 @@ public class TreeNode {
         }
 
         // Reconstruct child nodes with extra indentation
-        Iterator children = node.findChildren();
+        Iterator<TreeNode> children = node.findChildren();
         while (children.hasNext()) {
-            TreeNode child = (TreeNode) children.next();
+            TreeNode child = children.next();
             toString(sb, indent2, child);
         }
 

@@ -46,7 +46,7 @@ public class StandardContainerService extends BaseFilterService {
    * to get the path.
    */
   protected Path getActionPath(InputData input) {
-    return new StandardPath((String) input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
+    return new StandardPath(input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
   }
   
   /**
@@ -57,6 +57,7 @@ public class StandardContainerService extends BaseFilterService {
     return input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER) != null;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
       Path actionPath = getActionPath(input);

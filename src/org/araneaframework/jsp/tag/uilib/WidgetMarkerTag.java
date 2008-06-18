@@ -37,7 +37,8 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 	
 	protected String tag = null;
 	
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		JspUtil.writeOpenStartTag(out, tag == null ? "div" : tag);
@@ -48,7 +49,8 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 		return EVAL_BODY_INCLUDE;
 	}
 	
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		JspUtil.writeEndTag(out, tag == null ? "div" : tag);
 		return super.doEndTag(out);
 	}
@@ -60,6 +62,6 @@ public class WidgetMarkerTag extends BaseWidgetTag {
    *   description = "UiLib widget id." 
    */
   public void setTag(String tag) throws Exception {
-    this.tag = (String) evaluateNotNull("tag", tag, String.class);
+    this.tag = evaluateNotNull("tag", tag, String.class);
   }
 }

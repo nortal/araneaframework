@@ -1,6 +1,5 @@
 package org.araneaframework.backend.list.helper;
 
-import java.util.Iterator;
 import java.util.List;
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.SqlExpression;
@@ -38,7 +37,8 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 	public PostgreListSqlHelper() {
 	}
 
-	protected SqlStatement getCountSqlStatement() {
+	@Override
+  protected SqlStatement getCountSqlStatement() {
 		if (countSqlQuery != null) {
 			return new SqlStatement(countSqlQuery, statement.getParams());
 		}
@@ -49,7 +49,8 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 		return new SqlStatement(temp, this.statement.getParams());
 	}
 
-	protected SqlStatement getRangeSqlStatement() {
+	@Override
+  protected SqlStatement getRangeSqlStatement() {
 		StringBuffer sb = new StringBuffer(this.statement.getQuery());
 
 		if (this.itemRangeCount != null) {
@@ -69,11 +70,11 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 		return rangeStmt;
 	}
 
-	protected SqlExpression getFieldsSqlExpression() {
+	@Override
+  protected SqlExpression getFieldsSqlExpression() {
 		SqlCollectionExpression result = new SqlCollectionExpression();
 
-		for (Iterator it = fields.getNames().iterator(); it.hasNext();) {
-			String variable = (String) it.next();
+		for (String variable : fields.getNames()) {
 			String dbField = namingStrategy.fieldToColumnName(variable);
 			String dbAlias = namingStrategy.fieldToColumnAlias(variable);
 
@@ -88,27 +89,33 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 		return result;
 	}
 
-	protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
+	@Override
+  protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
 		return new PostgreExpressionToSqlExprBuilder();
 	}
 
-	public void setCountSqlQuery(String countSqlQuery) {
+	@Override
+  public void setCountSqlQuery(String countSqlQuery) {
 		this.countSqlQuery = countSqlQuery;
 	}
 
-	public void setSqlQuery(String sqlQuery) {
+	@Override
+  public void setSqlQuery(String sqlQuery) {
 		this.statement.setQuery(sqlQuery);
 	}
 
-	public void addNullParam(int valueType) {
+	@Override
+  public void addNullParam(int valueType) {
 		this.statement.addNullParam(valueType);
 	}
 
-	public void addStatementParam(Object param) {
+	@Override
+  public void addStatementParam(Object param) {
 		this.statement.addParam(param);
 	}
 
-	public void addStatementParams(List params) {
+	@Override
+  public void addStatementParams(List<Object> params) {
 		this.statement.addAllParams(params);
 	}
 

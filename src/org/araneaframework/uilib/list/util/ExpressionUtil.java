@@ -233,20 +233,20 @@ public class ExpressionUtil {
 	 * Creates PROCEDURE expression.
 	 */	
 	public static ProcedureExpression sqlFunction(String name, Expression[] exprs) {
-		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
+		return addAll(new ProcedureExpression(name), exprs, false);
 	}
 	
 	/**
 	 * Creates PROCEDURE expression.
 	 */	
-	public static ProcedureExpression sqlFunction(String name, Collection exprs) {
-		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
+	public static ProcedureExpression sqlFunction(String name, Collection<Expression> exprs) {
+		return addAll(new ProcedureExpression(name), exprs, false);
 	}
 	
 	/**
 	 * Creates PROCEDURE expression.
 	 */	
-	public static ProcedureExpression sqlFunction(String name, Iterator exprs) {
+	public static ProcedureExpression sqlFunction(String name, Iterator<Expression> exprs) {
 		return (ProcedureExpression) addAll(new ProcedureExpression(name), exprs, false);
 	}
 	
@@ -284,14 +284,14 @@ public class ExpressionUtil {
 	/**
 	 * Creates AND expression.
 	 */	
-	public static Expression and(Collection exprs) {
+	public static Expression and(Collection<Expression> exprs) {
 		return addAll(new AndExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creates AND expression.
 	 */	
-	public static Expression and(Iterator exprs) {
+	public static Expression and(Iterator<Expression> exprs) {
 		return addAll(new AndExpression(), exprs, true);		
 	}
 	
@@ -312,27 +312,27 @@ public class ExpressionUtil {
 	/**
 	 * Creates OR expression.
 	 */		
-	public static Expression or(Expression[] exprs) {
+	public static MultiExpression or(Expression[] exprs) {
 		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creates OR expression.
 	 */		
-	public static Expression or(Collection exprs) {
+	public static MultiExpression or(Collection<Expression> exprs) {
 		return addAll(new OrExpression(), exprs, true);		
 	}
 	
 	/**
 	 * Creates OR expression.
 	 */		
-	public static Expression or(Iterator exprs) {
+	public static Expression or(Iterator<Expression> exprs) {
 		return addAll(new OrExpression(), exprs, true);		
 	}
 	
-	// Private mthods
+	// Private methods
 	
-	private static Expression addAll(MultiExpression multiExpr, Expression[] children, boolean allowNulls) {
+	private static <T extends MultiExpression> T addAll(T multiExpr, Expression[] children, boolean allowNulls) {
 		if (children == null || children.length == 0) {
 			return null;
 		}
@@ -346,22 +346,21 @@ public class ExpressionUtil {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
-		if (count == 1) {
-			return multiExpr.getChildren()[0];
-		} else if (count == 0) {
-			return null;
-		}
+//		if (count == 1) {
+//			return multiExpr.getChildren()[0];
+//		} else if (count == 0) {
+//			return null;
+//		}
 		return multiExpr;
 	}
 	
-	private static Expression addAll(MultiExpression multiExpr, Collection children, boolean allowNulls) {
+	private static <T extends MultiExpression> T addAll(T multiExpr, Collection<Expression> children, boolean allowNulls) {
 		if (children == null || children.isEmpty()) {
 			return null;
 		}
 		
 		int count = 0;
-		for (Iterator i = children.iterator(); i.hasNext();) {
-			Expression expr = (Expression) i.next();
+		for (Expression expr : children) {
 			if (expr != null) {
 				multiExpr.add(expr);
 				count++;
@@ -369,23 +368,23 @@ public class ExpressionUtil {
 				throw new IllegalArgumentException("Expression can not be null");				
 			}
 		}
-		if (count == 1) {
-			return multiExpr.getChildren()[0];
-		} else if (count == 0) {
-			return null;
-		}
+//		if (count == 1) {
+//			return multiExpr.getChildren()[0];
+//		} else if (count == 0) {
+//			return null;
+//		}
 
 		return multiExpr;
 	}	
 	
-	private static Expression addAll(MultiExpression multiExpr, Iterator children, boolean allowNulls) {
+	private static Expression addAll(MultiExpression multiExpr, Iterator<Expression> children, boolean allowNulls) {
 		if (children == null || !children.hasNext()) {
 			return null;
 		}
 		
 		int count = 0;
 		while (children.hasNext()) {
-			Expression expr = (Expression) children.next();
+			Expression expr = children.next();
 			if (expr != null) {
 				multiExpr.add(expr);
 				count++;

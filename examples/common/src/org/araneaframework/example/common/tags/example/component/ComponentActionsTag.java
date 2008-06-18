@@ -34,7 +34,8 @@ public class ComponentActionsTag extends PresentationTag {
 		styleClass = ComponentActionsTag.COMPONENT_ACTION_STYLE_CLASS;
 	}
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		JspUtil.writeOpenStartTag(out, "div");
@@ -45,7 +46,8 @@ public class ComponentActionsTag extends PresentationTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		JspUtil.writeEndTag(out, "div");
 		super.doEndTag(out);
 		return EVAL_PAGE;

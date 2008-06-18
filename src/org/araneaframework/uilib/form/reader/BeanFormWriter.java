@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.reader;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.uilib.form.Data;
@@ -32,16 +31,16 @@ import org.araneaframework.uilib.form.GenericFormElement;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BeanFormWriter implements Serializable {
-  protected BeanMapper beanMapper;
+public class BeanFormWriter<T> implements Serializable {
+  protected BeanMapper<T> beanMapper;
 
   /**
    * Creates the class initializing the Value Object class.
    * 
 	 * @param voClass the Value Object class.
 	 */
-  public BeanFormWriter(Class voClass) {
-    beanMapper = new BeanMapper(voClass);
+  public BeanFormWriter(Class<T> voClass) {
+    beanMapper = new BeanMapper<T>(voClass);
   }
 
   /**
@@ -50,11 +49,10 @@ public class BeanFormWriter implements Serializable {
 	 * @param form {@link FormWidget} to write to.
 	 * @param vo Value Object to read from.
 	 */
-  public void writeFormBean(FormWidget form, Object vo) {
-    List voFields = beanMapper.getFields();
+  public void writeFormBean(FormWidget form, T vo) {
+    List<String> voFields = beanMapper.getFields();
 
-    for (Iterator i = voFields.iterator(); i.hasNext();) {
-      String field = (String) i.next();
+    for (String field : voFields) {
       GenericFormElement element = form.getElement(field);
       if (element != null) {
         if (element instanceof FormElement) {          
@@ -64,7 +62,7 @@ public class BeanFormWriter implements Serializable {
           }
         }
         else if (element instanceof FormWidget) {
-          BeanFormWriter subVoWriter = new BeanFormWriter(beanMapper.getFieldType(field));
+          BeanFormWriter subVoWriter = getInstance(beanMapper.getFieldType(field));
 
           Object subVO = beanMapper.getFieldValue(vo, field);
           
@@ -74,5 +72,9 @@ public class BeanFormWriter implements Serializable {
         }
       }
     }
+  }
+  
+  public static <E> BeanFormWriter<E> getInstance(Class<E> clazz) {
+    return new BeanFormWriter<E>(clazz);
   }
 }

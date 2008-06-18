@@ -13,59 +13,61 @@ import org.araneaframework.uilib.list.util.FormUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class BeanFormWidgetTest extends TestCase {
-	protected BeanFormWidget form;
 	
 	public static class FlatBean {
-		private int a;
-		private String s;
+		protected int a;
+		protected String s;
 
-		public int getA() {
-			return a;
+		public FlatBean() {}
+		public FlatBean(int a, String s) {
+		  this.a = a;
+		  this.s = s;
 		}
-		public void setA(int a) {
-			this.a = a;
-		}
-
-		public String getS() {
-			return s;
-		}
-		public void setS(String s) {
-			this.s = s;
-		}		
+    public int getA() {
+      return a;
+    }
+    public String getS() {
+      return s;
+    }
+    public void setA(int a) {
+      this.a = a;
+    }
+    public void setS(String s) {
+      this.s = s;
+    }
+		
 	}
 	
 	public static class HierarhicalBean extends FlatBean {
 		private FlatBean subFlatBean;
 
-		public FlatBean getSubFlatBean() {
-			return subFlatBean;
+		public HierarhicalBean() {}
+		
+		public HierarhicalBean(int a, String s, FlatBean subFlatBean) {
+		  super(a, s);
+		  this.subFlatBean = subFlatBean;
 		}
 
-		public void setSubFlatBean(FlatBean subFlatBean) {
-			this.subFlatBean = subFlatBean;
-		}
+    public FlatBean getSubFlatBean() {
+      return subFlatBean;
+    }
+
+    public void setSubFlatBean(FlatBean subFlatBean) {
+      this.subFlatBean = subFlatBean;
+    }
+		
 	}
 	
 	protected FlatBean makeFlatBean(int integer, String string) {
-		FlatBean bean = new FlatBean();
-		bean.setA(integer);
-		bean.setS(string);
-		return bean;
+		return new FlatBean(integer, string);
 	}
 	
 	protected HierarhicalBean makeHierarchicalBean(int integer, String string, int subInteger, String subString) {
-		HierarhicalBean bean = new HierarhicalBean();
-		bean.setA(integer);
-		bean.setS(string);
-
-		FlatBean flatBean = makeFlatBean(subInteger, subString);
-		bean.setSubFlatBean(flatBean);
-
-		return bean;
+		return new HierarhicalBean(integer, string, makeFlatBean(subInteger, subString));
 	}
 	
-	protected BeanFormWidget makeFlatBeanForm() throws Exception {
-		BeanFormWidget result = new BeanFormWidget(FlatBean.class);
+	protected BeanFormWidget<FlatBean> makeFlatBeanForm(FlatBean bean) throws Exception {
+		BeanFormWidget<FlatBean> result = new BeanFormWidget<FlatBean>(FlatBean.class, bean);
 		result.addBeanElement("a", "#dummyLabel1", new NumberControl(), true);
 		result.addBeanElement("s", "#dummyLabel2", new TextControl(), false);
 		result.addElement("b", FormUtil.createElement("b",
@@ -76,59 +78,53 @@ public class BeanFormWidgetTest extends TestCase {
 		return result;
 	}
 	
-	protected BeanFormWidget makeHierarchicalBeanForm() throws Exception {
-		BeanFormWidget result = new BeanFormWidget(HierarhicalBean.class);
+	protected BeanFormWidget<HierarhicalBean> makeHierarchicalBeanForm(HierarhicalBean bean) throws Exception {
+		BeanFormWidget<HierarhicalBean> result = new BeanFormWidget<HierarhicalBean>(HierarhicalBean.class, bean);
 		result.addBeanElement("a", "#dummyLabelX", new NumberControl(), true);
 		result.addBeanElement("s", "#dummyLabelY", new TextControl(), false);
-		result.addElement("subFlatBean", new BeanFormWidget(FlatBean.class));
-		((BeanFormWidget)result.getSubFormByFullName("subFlatBean")).addBeanElement("a", "#dummyLabel1", new NumberControl(), true);
+		result.addElement("subFlatBean", new BeanFormWidget<FlatBean>(FlatBean.class, bean.subFlatBean));
+		((BeanFormWidget<FlatBean>)result.getSubFormByFullName("subFlatBean")).addBeanElement("a", "#dummyLabel1", new NumberControl(), true);
 
 		return result;
 	}
 	
 	public void testFlatBeanWrite() throws Exception {
-		form = makeFlatBeanForm();
+	  BeanFormWidget<FlatBean> form = makeFlatBeanForm(makeFlatBean(100, "newString"));
 		form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
+	
+		FlatBean bean = form.writeToBean(new FlatBean());
 		
-		form.setValueByFullName("a", new Integer(100));
-		form.setValueByFullName("s", "newString");
-
-		FlatBean bean = (FlatBean) form.writeToBean(new FlatBean());
-		
-		assertEquals(new Integer(100), new Integer(bean.getA()));
-		assertEquals(new String("newString"), bean.getS());
+		assertEquals(100, bean.a);
+		assertEquals("newString", bean.s);
 	}
 	
 	public void testFlatBeanRead() throws Exception {
-		form = makeFlatBeanForm();
+	  FlatBean bean = makeFlatBean(234, "aaac");
+	  BeanFormWidget<FlatBean> form = makeFlatBeanForm(bean);
 		form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
+    assertEquals(new Integer(234), form.getValueByFullName("a"));
+    assertEquals(new String("aaac"), form.getValueByFullName("s"));
 
-		FlatBean bean = makeFlatBean(234, "aaac");
-		form.readFromBean(bean);
+		form.readFromBean(makeFlatBean(2, "xyz"));
 		
-		assertEquals(new Integer(234), form.getValueByFullName("a"));
-		assertEquals(new String("aaac"), form.getValueByFullName("s"));
+		assertEquals(2, form.getValueByFullName("a"));
+		assertEquals(new String("xyz"), form.getValueByFullName("s"));
 	}
 
 	// tests that bean fields that are not tied to BeanFormWidget elements
 	// are not modified when writing hierarchical form into hierarchical bean
 	public void testHierarchicalBeanWrite() throws Exception {
-		form = makeHierarchicalBeanForm();
+	  BeanFormWidget<HierarhicalBean> form = makeHierarchicalBeanForm(new HierarhicalBean(100, "newString", new FlatBean(200, "value")));
 		form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
 		
-		form.setValueByFullName("a", new Integer(100));
-		form.setValueByFullName("s", "newString");
-		form.setValueByFullName("subFlatBean.a", new Integer(200));
-		
 		HierarhicalBean bean = new HierarhicalBean();
-		bean.setSubFlatBean(new FlatBean());
-		bean.getSubFlatBean().setS("value");
+		bean.setSubFlatBean(new FlatBean(0, "value"));
 		
-		bean = (HierarhicalBean) form.writeToBean(bean);
+		bean = form.writeToBean(bean);
 		
-		assertEquals(new Integer(100), new Integer(bean.getA()));
-		assertEquals(new String("newString"), bean.getS());
-		assertEquals(new Integer(200), new Integer(bean.getSubFlatBean().getA()));
-		assertEquals(new String("value"), bean.getSubFlatBean().getS());
+		assertEquals(new Integer(100), new Integer(bean.a));
+		assertEquals(new String("newString"), bean.s);
+		assertEquals(new Integer(200), new Integer(bean.subFlatBean.a));
+		assertEquals(new String("value"), bean.subFlatBean.s);
 	}
 }

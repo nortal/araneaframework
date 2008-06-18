@@ -18,12 +18,12 @@ package org.araneaframework.jsp.util;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagAttr;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.jsp.tag.uilib.form.element.AutomaticTagFormElementTag;
+import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
@@ -56,12 +56,12 @@ public class AutomaticFormElementUtil {
   /**
    * Contains the editable (input) tags
    */
-  public static final Map CONTROLS_TO_EDITABLE_TAGS = new HashMap();
+  public static final Map<Class<? extends Control<?>>, String> CONTROLS_TO_EDITABLE_TAGS = new HashMap<Class<? extends Control<?>>, String>();
 
   /**
    * Contains the display tags
    */
-  public static final Map CONTROLS_TO_DISPLAY_TAGS = new HashMap();
+  public static final Map<Class<? extends Control<?>>, String> CONTROLS_TO_DISPLAY_TAGS = new HashMap<Class<? extends Control<?>>, String>();
 
   static {
     CONTROLS_TO_EDITABLE_TAGS.put(ButtonControl.class, "button");
@@ -108,7 +108,7 @@ public class AutomaticFormElementUtil {
    * @param formElement The form element that will get the view (tag) selector.
    * @param viewSelector The view (tag) selector that will be used on rendering.
    */
-  public static void setFormElementViewSelector(FormElement formElement, FormElementViewSelector viewSelector) {
+  public static void setFormElementViewSelector(FormElement<?,?> formElement, FormElementViewSelector viewSelector) {
     formElement.setProperty(FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY, viewSelector);
   }
 
@@ -134,7 +134,7 @@ public class AutomaticFormElementUtil {
    * @param tagName name of the tag, without any namespace
    * @param tagAttributes Map &lt;attributeName, attributeValue&gt;
    */
-  public static void setFormElementTag(FormElement formElement, String tagName, Map tagAttributes) {
+  public static void setFormElementTag(FormElement<?,?> formElement, String tagName, Map<String, Object> tagAttributes) {
     setFormElementViewSelector(formElement, new FormElementViewSelector(tagName, tagAttributes));
   }
 
@@ -146,7 +146,7 @@ public class AutomaticFormElementUtil {
    * @param tagName name of the tag that will be used to render the element.
    * @param tagAttributes tag custom attributes.
    */
-  public static void setFormElementTag(FormWidget form, String formElementId, String tagName, Map tagAttributes) {
+  public static void setFormElementTag(FormWidget form, String formElementId, String tagName, Map<String, Object> tagAttributes) {
     setFormElementViewSelector(form, formElementId, new FormElementViewSelector(tagName, tagAttributes));
   }
 
@@ -157,7 +157,8 @@ public class AutomaticFormElementUtil {
    * @param tagName name of the tag that will be used to render the element,
    *            without any namespace.
    */
-  public static void setFormElementTag(FormElement formElement, String tagName) {
+  @SuppressWarnings("unchecked")
+  public static void setFormElementTag(FormElement<?,?> formElement, String tagName) {
     setFormElementTag(formElement, tagName, Collections.EMPTY_MAP);
   }
 
@@ -183,8 +184,8 @@ public class AutomaticFormElementUtil {
    *            without any namespace
    * @param attributePairs tag attributes.
    */
-  public static void setFormElementTag(FormElement formElement, String tagName, TagAttr[] attributePairs) {
-    Map attributes = new HashMap(attributePairs.length);
+  public static void setFormElementTag(FormElement<?,?> formElement, String tagName, TagAttr[] attributePairs) {
+    Map<String, Object> attributes = new HashMap<String, Object>(attributePairs.length);
 
     for (int i = 0; i < attributePairs.length; i++)
       attributes.put(attributePairs[i].getName(), attributePairs[i].getValue());
@@ -213,8 +214,8 @@ public class AutomaticFormElementUtil {
    * @param element The form element that will be editable.
    * @since 1.0.7
    */
-  public static void setFormElementDefaultEditableTag(FormElement element) {
-    setFormElementTag(element, (String) CONTROLS_TO_EDITABLE_TAGS.get(element.getControl().getClass()));
+  public static void setFormElementDefaultEditableTag(FormElement<?,?> element) {
+    setFormElementTag(element, CONTROLS_TO_EDITABLE_TAGS.get(element.getControl().getClass()));
   }
 
   /**
@@ -223,8 +224,8 @@ public class AutomaticFormElementUtil {
    * @param element The form element that will be just viewable.
    * @since 1.0.7
    */
-  public static void setFormElementDefaultDisplayTag(FormElement element) {
-    setFormElementTag(element, (String) CONTROLS_TO_DISPLAY_TAGS.get(element.getControl().getClass()));
+  public static void setFormElementDefaultDisplayTag(FormElement<?,?> element) {
+    setFormElementTag(element, CONTROLS_TO_DISPLAY_TAGS.get(element.getControl().getClass()));
   }
 
   /**
@@ -234,14 +235,13 @@ public class AutomaticFormElementUtil {
    * @param form parent form or composite element.
    */
   public static void setFormElementDefaultEditableTags(FormWidget form) {
-    for (Iterator i = form.getElements().entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      GenericFormElement element = (GenericFormElement) entry.getValue();
+    for (Map.Entry<String, GenericFormElement> entry : form.getElements().entrySet()) {
+      GenericFormElement element = entry.getValue();
 
       if (element instanceof FormWidget)
         setFormElementDefaultEditableTags((FormWidget) element);
       else if (element instanceof FormElement) {
-        setFormElementDefaultEditableTag((FormElement)element);
+        setFormElementDefaultEditableTag((FormElement<?,?>)element);
       }
     }
   }
@@ -253,14 +253,13 @@ public class AutomaticFormElementUtil {
    * @param form parent form or composite element.
    */
   public static void setFormElementDefaultDisplayTags(FormWidget form) {
-    for (Iterator i = form.getElements().entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      GenericFormElement element = (GenericFormElement) entry.getValue();
+    for (Map.Entry<String, GenericFormElement> entry : form.getElements().entrySet()) {
+      GenericFormElement element = entry.getValue();
 
       if (element instanceof FormWidget)
         setFormElementDefaultDisplayTags((FormWidget) element);
       else if (element instanceof FormElement) {
-        setFormElementDefaultDisplayTag((FormElement)element);
+        setFormElementDefaultDisplayTag((FormElement<?,?>)element);
       }
     }
   }

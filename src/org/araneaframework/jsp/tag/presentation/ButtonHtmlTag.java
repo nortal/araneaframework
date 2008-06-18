@@ -46,6 +46,7 @@ public class ButtonHtmlTag extends BaseButtonTag {
     renderMode = ButtonHtmlTag.RENDER_BUTTON;
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -71,6 +72,7 @@ public class ButtonHtmlTag extends BaseButtonTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {  
     if (renderMode.equals(ButtonHtmlTag.RENDER_BUTTON)) {
       if (labelId != null)            
@@ -93,7 +95,7 @@ public class ButtonHtmlTag extends BaseButtonTag {
   public void setRenderMode(String renderMode) throws JspException {
     if (!(renderMode.equals(ButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ButtonHtmlTag.RENDER_INPUT)))
       throw new AraneaJspException("<ui:basicButton> 'renderMode' attribute must be '" + ButtonHtmlTag.RENDER_BUTTON + "' or '"+ ButtonHtmlTag.RENDER_INPUT+"'");
-    this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+    this.renderMode = evaluate("renderMode", renderMode, String.class);
   }
 }
 

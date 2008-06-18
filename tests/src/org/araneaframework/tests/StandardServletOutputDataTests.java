@@ -36,6 +36,7 @@ public class StandardServletOutputDataTests extends TestCase {
   private MockHttpServletResponse resp;
   
   
+  @Override
   public void setUp() {
     req = new MockHttpServletRequest();
     StandardServletInputData inputData = new StandardServletInputData(req);

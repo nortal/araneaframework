@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.util.ClassLoaderUtil;
@@ -59,11 +58,12 @@ public class AutomaticTagFormElementTag extends BaseTag {
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement.ViewModel formElementViewModel;
+  protected FormElement<?,?>.ViewModel formElementViewModel;
   protected Control.ViewModel controlViewModel;  
 
   protected FormElementTagInterface controlTag;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -77,7 +77,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
     	derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
     if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);
     formElementViewModel = 
-      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = formElementViewModel.getControl();
@@ -89,19 +89,19 @@ public class AutomaticTagFormElementTag extends BaseTag {
     if(viewSelector == null)
       throw new JspException("The form element view selector was not passed!.");
     
-    JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
-    Map tagMapping = config.getTagMapping(viewSelector.getUri());
+    JspContext config = getEnvironment().requireEntry(JspContext.class);
+    Map<String, TagInfo> tagMapping = config.getTagMapping(viewSelector.getUri());
     
     if(tagMapping == null)
       throw new JspException("The tag mapping was not found!.");
 
-    TagInfo tagInfo = (TagInfo) tagMapping.get(viewSelector.getTag());
+    TagInfo tagInfo = tagMapping.get(viewSelector.getTag());
 
     if(tagInfo == null)
       throw new JspException("Unexistant tag was passed to form element view selector!.");
 
     controlTag = (FormElementTagInterface)ClassLoaderUtil.loadClass(tagInfo.getTagClassName()).newInstance();
-    Class tagClass = controlTag.getClass();
+    Class<? extends FormElementTagInterface> tagClass = controlTag.getClass();
 
     registerSubtag(controlTag);
 
@@ -127,6 +127,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
   }
 
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     executeEndSubtag(controlTag);
     unregisterSubtag(controlTag);
@@ -145,7 +146,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   description = "Element id, can also be inherited." 
    */
   public void setId(String id) throws JspException {
-    this.id = (String)evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 
   /**
@@ -154,7 +155,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Whether the element will send the events that are registered by server-side (by default "true")." 
    */
-  public void setEvents(String events) throws JspException {
+  public void setEvents(String events) {
     this.events = events; 
   }
 
@@ -164,7 +165,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Whether the form will be validated on the client-side when the element generates an event (by default "false")." 
    */
-  public void setValidateOnEvent(String validateOnEvent) throws JspException {
+  public void setValidateOnEvent(String validateOnEvent) {
     this.validateOnEvent = validateOnEvent; 
   }
 
@@ -174,7 +175,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Element tabindex." 
    */
-  public void setTabindex(String tabindex) throws JspException {
+  public void setTabindex(String tabindex) {
     this.tabindex = tabindex;
   }
 
@@ -184,7 +185,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "CSS class without prefix of the dynamically selected tag." 
    */
-  public void setStyleClass(String styleClass) throws JspException {
+  public void setStyleClass(String styleClass) {
     this.styleClass = styleClass;
   }
 
@@ -194,7 +195,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
    */
-  public void setUpdateRegions(String updateRegions) throws JspException {
+  public void setUpdateRegions(String updateRegions) {
     this.updateRegions = updateRegions;
   }
 
@@ -204,15 +205,14 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
    */
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+  public void setGlobalUpdateRegions(String globalUpdateRegions) {
     this.globalUpdateRegions = globalUpdateRegions;
   }    
 
-  protected void initTagAttributes(Class tagClass, Object tag, Map attributes) throws Exception {
-    for (Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
+  protected void initTagAttributes(Class<? extends FormElementTagInterface> tagClass, Object tag, Map<String, Object> attributes) throws Exception {
+    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
 
-      String attributeName = (String) entry.getKey();
+      String attributeName = entry.getKey();
       String setterMethodName = "set" + attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
 
       Method setter = tagClass.getMethod(setterMethodName, new Class[] {entry.getValue().getClass()});

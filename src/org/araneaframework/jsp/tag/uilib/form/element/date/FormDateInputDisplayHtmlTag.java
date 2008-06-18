@@ -31,6 +31,7 @@ public class FormDateInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtm
   {
      baseStyleClass = "aranea-date-display";
   }
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("DateControl");
     return super.doEndTag(out);

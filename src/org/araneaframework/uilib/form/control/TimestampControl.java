@@ -33,7 +33,7 @@ import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class TimestampControl extends EmptyStringNullableControl implements FilteredInputControl {
+public abstract class TimestampControl extends EmptyStringNullableControl<Timestamp> implements FilteredInputControl<Timestamp> {
   
   //*********************************************************************
   // FIELDS
@@ -83,7 +83,8 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
    * <code>error.form.date.wrongformat</code> error message if
    * it fails.
    */
-  protected Object fromRequest(String parameterValue) {
+  @Override
+  protected Timestamp fromRequest(String parameterValue) {
   	ValidationUtil.ParsedDate result = parseDate(parameterValue);
     
     if (result != null) {
@@ -129,8 +130,9 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
   /**
    * Formats the value using <code>dateTimeFormat</code>.
    */
-  protected String toResponse(Object controlValue) {    
-    return new SimpleDateFormat(dateTimeOutputPattern).format((Timestamp) controlValue);
+  @Override
+  protected String toResponse(Timestamp controlValue) {    
+    return new SimpleDateFormat(dateTimeOutputPattern).format(controlValue);
   }
   
   //*********************************************************************
@@ -141,7 +143,8 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -149,7 +152,7 @@ public abstract class TimestampControl extends EmptyStringNullableControl implem
   //* VIEWMODEL
   //*********************************************************************  	
   
-  public class ViewModel extends EmptyStringNullableControl.ViewModel {
+  public class ViewModel extends StringArrayRequestControl<Timestamp>.ViewModel {
     private String dateTimeOutputPattern;
     private InputFilter inputFilter;
     

@@ -53,7 +53,7 @@ public class DemoRichTextForm extends TemplateBaseWidget {
 		form.addElement("button", "#Preview", button, null, false);
 
 		if (isRunningInOverlay())
-		  getOverlayCtx().getOverlayOptions().put("height", new Integer(600));
+		  getOverlayCtx().getOverlayOptions().put("height", "600");
 		
 		addWidget("form", form);
 	}

@@ -33,7 +33,7 @@ public abstract class StandardEventListener implements EventListener {
    */
   public final void processEvent(Object eventId, InputData input)
       throws Exception {
-    String eventParameter = (String) input.getGlobalData().get(
+    String eventParameter = input.getGlobalData().get(
         ApplicationWidget.EVENT_PARAMETER_KEY);
     processEvent(eventId, eventParameter, input);
   }

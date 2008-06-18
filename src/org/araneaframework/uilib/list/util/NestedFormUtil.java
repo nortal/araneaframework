@@ -44,7 +44,7 @@ public class NestedFormUtil {
 	 */
 	public static void addElement(FormWidget form, String fullId, final GenericFormElement element) {
 		addElement(form, fullId, new FormElementAdder() {
-			public FormElement addFormElement(FormWidget form, String id) {
+			public <C,D> FormElement<C,D> addFormElement(FormWidget form, String id) {
 				form.addElement(id, element);
 				return null;
 			}
@@ -62,9 +62,9 @@ public class NestedFormUtil {
 	 * @param mandatory whether the element must be present in request.
 	 * @return FormElement that was just added.
 	 */
-	public static FormElement addElement(FormWidget form, String fullId, final String labelId, final Control control, final Data data, final boolean mandatory) throws Exception {
+	public static <C, D> FormElement<C,D> addElement(FormWidget form, String fullId, final String labelId, final Control<C> control, final Data<D> data, final boolean mandatory) throws Exception {
 		return addElement(form, fullId, new FormElementAdder() {
-			public FormElement addFormElement(FormWidget form, String id) {
+			public FormElement<C,D> addFormElement(FormWidget form, String id) {
 				return form.addElement(id, labelId, control, data, mandatory);
 			}
 		});
@@ -82,9 +82,9 @@ public class NestedFormUtil {
 	 * @param mandatory whether the element must be present in request.
 	 * @return FormElement that was just added.
 	 */
-	public static FormElement addElement(FormWidget form, String fullId, final String labelId, final Control control, final Data data, final Object initialValue, final boolean mandatory) throws Exception {
+	public static <C,D> FormElement<C,D> addElement(FormWidget form, String fullId, final String labelId, final Control<C> control, final Data<D> data, final D initialValue, final boolean mandatory) throws Exception {
 		return addElement(form, fullId, new FormElementAdder() {
-			public FormElement addFormElement(FormWidget form, String id) {
+			public FormElement<C,D> addFormElement(FormWidget form, String id) {
 				return form.addElement(id, labelId, control, data, initialValue, mandatory);
 			}
 		});
@@ -99,9 +99,9 @@ public class NestedFormUtil {
 	 * @param fullId full element id (separated by dots).
 	 * @param element contained element.
 	 */	
-	public static void addElement(BeanFormWidget form, String fullId, final GenericFormElement element) {
+	public static void addElement(BeanFormWidget<?> form, String fullId, final GenericFormElement element) {
 		addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
+			public <C,D> FormElement<C,D> addFormElement(BeanFormWidget<?> form, String id) {
 				form.addElement(id, element);
 				return null;
 			}
@@ -119,9 +119,9 @@ public class NestedFormUtil {
 	 * @param mandatory whether the element must be present in request.
 	 * @return FormElement that was just added.
 	 */
-	public static FormElement addElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Data data, final boolean mandatory) throws Exception {
+	public static <C,D> FormElement<C,D> addElement(BeanFormWidget<?> form, String fullId, final String labelId, final Control<C> control, final Data<D> data, final boolean mandatory) throws Exception {
 		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
+			public FormElement<C,D> addFormElement(BeanFormWidget form, String id) {
 				return form.addElement(id, labelId, control, data, mandatory);
 			}
 		});
@@ -139,9 +139,9 @@ public class NestedFormUtil {
 	 * @param mandatory whether the element must be present in request.
 	 * @return FormElement that was just added.
 	 */
-	public static FormElement addElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Data data, final Object initialValue, final boolean mandatory) throws Exception {
+	public static <C,D> FormElement<C,D> addElement(BeanFormWidget<?> form, String fullId, final String labelId, final Control<C> control, final Data<D> data, final D initialValue, final boolean mandatory) throws Exception {
 		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
+			public FormElement<C,D> addFormElement(BeanFormWidget form, String id) {
 				return form.addElement(id, labelId, control, data, initialValue, mandatory);
 			}
 		});
@@ -157,9 +157,9 @@ public class NestedFormUtil {
 	 * @param mandatory whether the element must be present in request.
 	 * @return FormElement that was just added.
 	 */	
-	public static FormElement addBeanElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final boolean mandatory) throws Exception {
+	public static <C,D> FormElement<C,D> addBeanElement(BeanFormWidget form, String fullId, final String labelId, final Control<C> control, final boolean mandatory) throws Exception {
 		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
+			public FormElement<C,D> addFormElement(BeanFormWidget form, String id) {
 				return form.addBeanElement(id, labelId, control, mandatory);
 			}
 		});
@@ -176,10 +176,11 @@ public class NestedFormUtil {
 	 * @param mandatory whether the element must be present in request.
 	 * @return FormElement that was just added.
 	 */
-	public static FormElement addBeanElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Object initialValue, final boolean mandatory) throws Exception {
+	public static <C,D> FormElement<C,D> addBeanElement(BeanFormWidget form, String fullId, final String labelId, final Control<C> control, final D initialValue, final boolean mandatory) throws Exception {
 		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
-				return form.addBeanElement(id, labelId, control, initialValue, mandatory);
+			public FormElement<C,D> addFormElement(BeanFormWidget form, String id) {
+				FormElement<C,D> addBeanElement = form.addBeanElement(id, labelId, control, initialValue, mandatory);
+        return addBeanElement;
 			}
 		});
 	}
@@ -190,7 +191,7 @@ public class NestedFormUtil {
 	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
 	 */
 	private static interface FormElementAdder extends Serializable {
-		FormElement addFormElement(FormWidget form, String id);
+	  <C,D> FormElement<C,D> addFormElement(FormWidget form, String id);
 	}
 
 	/**
@@ -199,7 +200,7 @@ public class NestedFormUtil {
 	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
 	 */
 	private static interface BeanFormElementAdder extends Serializable {
-		FormElement addFormElement(BeanFormWidget form, String id);
+		<C,D> FormElement<C,D> addFormElement(BeanFormWidget<?> form, String id);
 	}
 
 	/**
@@ -210,7 +211,7 @@ public class NestedFormUtil {
 	 * @param adder element adder.
 	 * @return the element returned from the adder.
 	 */
-	private static FormElement addElement(FormWidget form, String fullId, FormElementAdder adder) {
+	private static <C,D> FormElement<C,D> addElement(FormWidget form, String fullId, FormElementAdder adder) {
 		if (fullId.indexOf(".") != -1) {
 			String subFormId = fullId.substring(0, fullId.indexOf("."));
 			String nextFullId =  fullId.substring(subFormId.length() + 1);
@@ -238,7 +239,7 @@ public class NestedFormUtil {
 	 * @param adder element adder.
 	 * @return the element returned from the adder.
 	 */
-	private static FormElement addBeanElement(BeanFormWidget form, String fullId, BeanFormElementAdder adder) {
+	private static <C,D> FormElement<C,D> addBeanElement(BeanFormWidget<?> form, String fullId, BeanFormElementAdder adder) {
 		if (fullId.indexOf(".") != -1) {
 			String subFormId = fullId.substring(0, fullId.indexOf("."));
 			String nextFullId =  fullId.substring(subFormId.length() + 1);

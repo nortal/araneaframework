@@ -60,11 +60,12 @@ public class TimeControl extends TimestampControl {
 		return "Timestamp";
 	}
 	
-	public void init() throws Exception {
+	@Override
+  public void init() throws Exception {
 		super.init();
 		if (!confOverridden) {
 			ConfigurationContext confCtx = 
-				(ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+				getEnvironment().getEntry(ConfigurationContext.class);
 
 			if(confCtx != null) {
 				String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
@@ -82,6 +83,7 @@ public class TimeControl extends TimestampControl {
 	  //*********************************************************************  	
 	
 	/** @since 1.1 */ 
+  @Override
   protected void addWrongTimeFormatError() {
 	addError(
         MessageUtil.localizeAndFormat(

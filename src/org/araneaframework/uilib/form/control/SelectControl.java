@@ -19,7 +19,6 @@ package org.araneaframework.uilib.form.control;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Transformer;
@@ -42,7 +41,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   /**
    * A list of {@link DisplayItem}s.
    */
-  protected List items = new ArrayList();
+  protected List<DisplayItem> items = new ArrayList<DisplayItem>();
 
   /**
    * Adds a select-item to the element.
@@ -60,26 +59,11 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @param items Collection&lt;DisplayItem&gt; the items to be added.
    */
-  public void addItems(Collection items) {
+  public <E extends DisplayItem> void addItems(Collection<E> items) {
     Assert.noNullElementsParam(items, "items");
     
     this.items.addAll(items);
   }  
-  
-  /**
-   * Adds the display-items corresponding to the given value and label fields in Value Object.
-   * 
-   * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
-   * @param valueName the name of the Value Object field corresponding to the value of the select
-   * item.
-   * @param labelName the name of the Value Object field corresponding to the label of the select
-   * item.
-   * 
-   * @deprecated use {@link SelectControl#addFromBeanCollection(Collection, String, String)} instead 
-   */
-  public void addDisplayItems(Collection beanCollection, String valueName, String labelName) {
-    addFromBeanCollection(beanCollection, valueName, labelName);
-  }
 
   /**
    * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
@@ -91,7 +75,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
+  public void addFromBeanCollection(Collection<?> beanCollection, String valueName, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayStringName);
   }
 
@@ -105,7 +89,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
+  public void addFromBeanCollection(Collection<?> beanCollection, String valueName, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayTransformer);
   }
 
@@ -119,7 +103,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+  public void addFromBeanCollection(Collection<?> beanCollection, Transformer valueTransformer, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayStringName);
   }
 
@@ -133,7 +117,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+  public void addFromBeanCollection(Collection<?> beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayTransformer);
   }
 
@@ -144,7 +128,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
     items.clear();
   }
 
-  public List getDisplayItems() {
+  public List<DisplayItem> getDisplayItems() {
     return items;
   }
 
@@ -154,14 +138,14 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   
   /**
    * Returns {@link DisplayItem} corresponding to selected element. Current
-   * value by which seleced element is determined is reported by the {@link FormElement} 
+   * value by which selected element is determined is reported by the {@link FormElement} 
    * to which this {@link SelectControl})belongs. If no {@link FormElement} is
    * associated with {@link SelectControl}, this method returns <code>null</code>.
    * @return {@link DisplayItem} corresponding to selected element.
    * @since 1.0.5
    */
   public DisplayItem getSelectedItem() {
-    FormElementContext ctx = getFormElementCtx();
+    FormElementContext<String, Object> ctx = getFormElementCtx();
     if (ctx == null)
       return null;
 
@@ -177,6 +161,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * Controls that the value submitted by the user is found in the select
    * items list. 
    */
+  @Override
   protected void validateNotNull() {
     super.validateNotNull();
     
@@ -190,10 +175,12 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
     //TODO: refactor ugly hack
     
@@ -209,7 +196,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
 			int valueIndex = getValueIndex(previousValues[0]);
 			
 			if (valueIndex != -1) {
-				DisplayItem previousDisplayItem = (DisplayItem) getDisplayItems().get(valueIndex);
+				DisplayItem previousDisplayItem = getDisplayItems().get(valueIndex);
 				
 				if (previousDisplayItem.isDisabled() && parameterValue == null)
 					return previousDisplayItem.getValue();
@@ -227,10 +214,10 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends StringArrayRequestControl.ViewModel {
+  public class ViewModel extends StringValueControl.ViewModel {
 
-    private List selectItems;
-    private Map selectItemMap = new HashMap(); 
+    private List<DisplayItem> selectItems;
+    private Map<String, DisplayItem> selectItemMap = new HashMap<String, DisplayItem>(); 
     
     /**
      * Takes an outer class snapshot.     
@@ -238,8 +225,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
     public ViewModel() {
       this.selectItems = items;
       
-      for (Iterator i = selectItems.iterator(); i.hasNext(); ) {
-      	DisplayItem displayItem = (DisplayItem) i.next();
+      for (DisplayItem displayItem : selectItems) {
       	selectItemMap.put(displayItem.getValue(), displayItem);
       }
     }         
@@ -248,12 +234,12 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
      * Returns a <code>List</code> of {@link DisplayItem}s.
      * @return a <code>List</code> of {@link DisplayItem}s.
      */
-    public List getSelectItems() {
+    public List<DisplayItem> getSelectItems() {
       return selectItems;
     }
     
 		public DisplayItem getSelectItemByValue(String value) {
-			return (DisplayItem) selectItemMap.get(value);
+			return selectItemMap.get(value);
 		}    
     
     public boolean containsItem(String itemValue) {

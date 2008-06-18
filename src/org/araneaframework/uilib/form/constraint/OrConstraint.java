@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.Collection;
-import java.util.Iterator;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -60,18 +59,18 @@ public class OrConstraint extends BaseCompositeConstraint {
    * @param constraints A collection of {@link Constraint}s.
    * @since 1.0.9
    */
-  public OrConstraint(Collection constraints) {
+  public OrConstraint(Collection<Constraint> constraints) {
     super(constraints);
   }
 
   /**
-   * Checks that at least one contained constraits is satisfied.
+   * Checks that at least one contained constraints is satisfied.
    */
+  @Override
   public void validateConstraint() throws Exception {
     boolean valid = false;
 
-    for (Iterator i = constraints.iterator(); i.hasNext();) {
-      Constraint constraint = (Constraint) i.next();
+    for (Constraint constraint : constraints) {
       valid = valid || constraint.validate();
       addErrors(constraint.getErrors());
       constraint.clearErrors();

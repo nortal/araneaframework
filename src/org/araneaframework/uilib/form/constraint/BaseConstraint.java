@@ -34,7 +34,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
 
   private Environment environment;
 
-  private Set errors;
+  private Set<String> errors;
 
   /**
    * Holds the custom error message for this constraint.
@@ -68,9 +68,9 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     return errors == null || errors.size() == 0;
   }
 
-  public Set getErrors() {
+  public Set<String> getErrors() {
     if (errors == null)
-      errors = new HashSet();
+      errors = new HashSet<String>();
     return errors;
   }
 
@@ -116,7 +116,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * 
    * @param errorList A list of error messages (<code>String</code>s).
    */
-  protected void addErrors(Collection errorList) {
+  protected void addErrors(Collection<String> errorList) {
     getErrors().addAll(errorList);
   }
 
@@ -128,7 +128,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    *         <code>Environment</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return getEnvironment().getEntry(ConfigurationContext.class);
   }
 
   /**
@@ -140,7 +140,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    */
   protected String t(String key) {
     LocalizationContext locCtx = 
-     (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+     getEnvironment().getEntry(LocalizationContext.class);
     return locCtx.localize(key);
   }
 

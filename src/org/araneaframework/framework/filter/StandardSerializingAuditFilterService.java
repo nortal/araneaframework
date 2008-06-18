@@ -52,6 +52,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   private ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
 
+  @Override
   public void setChildService(Service child) {
     this.childService = new RelocatableDecorator(child);
   }
@@ -65,6 +66,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
     this.testXmlSessionPath = testXmlSessionPath;
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     callRWLock.readLock().acquire();
     try {      
@@ -79,7 +81,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
       try {
         ((Relocatable) childService)._getRelocatable().overrideEnvironment(null);
 
-        HttpSession sess = (HttpSession) getEnvironment().getEntry(HttpSession.class);
+        HttpSession sess = getEnvironment().getEntry(HttpSession.class);
 
         byte[] serialized = SerializationUtils.serialize(childService);
         log.debug("Serialized session size: " + serialized.length);

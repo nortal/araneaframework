@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  */
 public class FallbackResourceBundle extends ResourceBundle implements Serializable {
   protected Locale locale;
-  protected List resourceBundles = new ArrayList();
+  protected List<ResourceBundle> resourceBundles = new ArrayList<ResourceBundle>();
   
   /**
    * Adds a <code>ResourceBundle</code> from which resources are searched.
@@ -50,7 +50,8 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
     resourceBundles.clear();
   }
   
-  public Enumeration getKeys() {
+  @Override
+  public Enumeration<String> getKeys() {
     return null;
   }
 
@@ -61,15 +62,16 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
    * 
    * @return the resource under the <code>key</code>
    */
+  @Override
   protected Object handleGetObject(String key) {
     if (locale == null)
       setLocale(getLocale());
     
     Object result = null;
     
-    for (Iterator i = resourceBundles.iterator(); i.hasNext() && result == null; ) {      
+    for (Iterator<ResourceBundle> i = resourceBundles.iterator(); i.hasNext() && result == null; ) {      
       try {
-        ResourceBundle currentBundle = (ResourceBundle) i.next(); 
+        ResourceBundle currentBundle = i.next(); 
         result = currentBundle.getObject(key);
       }
       catch (MissingResourceException e) {
@@ -83,13 +85,14 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
   public void setLocale(Locale locale) {
     this.locale = locale;
     
-    for (Iterator i = resourceBundles.iterator(); i.hasNext(); ) {      
-      ResourceBundle currentBundle = (ResourceBundle) i.next();
+    for (Iterator<ResourceBundle> i = resourceBundles.iterator(); i.hasNext(); ) {      
+      ResourceBundle currentBundle = i.next();
       if (currentBundle instanceof LocaleAwareResourceBundle) 
         ((LocaleAwareResourceBundle) currentBundle).setLocale(locale);
     }      
   }
   
+  @Override
   public Locale getLocale() {
     if (locale != null)
         return locale;

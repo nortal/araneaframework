@@ -40,7 +40,8 @@ import org.araneaframework.jsp.util.JspUtil;
 public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 	public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		setName("script");
 
 		super.doStartTag(out);
@@ -67,7 +68,8 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 		attributes.put("strict_loading_mode", Boolean.TRUE);
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		writeAttributes(out);
 
 		out.write("}); " + "};\n");
@@ -76,16 +78,17 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 		return EVAL_PAGE;
 	}
 	
-	protected void writeAttributes(Writer out) throws Exception {
-		Iterator ite = attributes.entrySet().iterator();
+	@Override
+  protected void writeAttributes(Writer out) throws Exception {
+		Iterator<Map.Entry<String, Object>> ite = attributes.entrySet().iterator();
 		
 		while(ite.hasNext()) {
-			Map.Entry entry = (Map.Entry)ite.next();
+			Map.Entry<String, Object> entry = ite.next();
 			
 			StringBuffer buf = new StringBuffer("\t");
 			buf.append(entry.getKey());
 			buf.append(" : ");
-			buf.append(entry.getValue() instanceof String ? '"' + (String)entry.getValue() + '"' : entry.getValue().toString());
+			buf.append(entry.getValue().toString());
 			if (ite.hasNext())
 				buf.append(",\n");
 			
@@ -98,7 +101,8 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 	 *   type = "java.lang.String"
 	 *   required = "false" 
 	 */
-	public void setName(String name) throws JspException {
+	@Override
+  public void setName(String name) throws JspException {
 		super.setName(name);
 	}
 }

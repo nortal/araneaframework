@@ -4,7 +4,8 @@ import java.util.Map;
 import org.araneaframework.framework.RootFlowContext;
 
 public class RootFlowContainerWidget extends StandardFlowContainerWidget implements RootFlowContext {
-  protected void putLocalEnvironmentEntries(Map nestedEnvironmentEntries) {
+  @Override
+  protected void putLocalEnvironmentEntries(Map<Class<?>, Object> nestedEnvironmentEntries) {
     super.putLocalEnvironmentEntries(nestedEnvironmentEntries);
     nestedEnvironmentEntries.put(RootFlowContext.class, this);
   }

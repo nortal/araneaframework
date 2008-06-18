@@ -24,12 +24,12 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class BeanFormListWidget extends BaseFormListWidget {
+public class BeanFormListWidget<T> extends BaseFormListWidget {
 	//*******************************************************************
 	// FIELDS
 	//*******************************************************************	
 
-	protected Class beanClass;
+	protected Class<T> beanClass;
 
 	//*******************************************************************
 	// CONSTRUCTORS
@@ -39,7 +39,7 @@ public class BeanFormListWidget extends BaseFormListWidget {
    * @param rowHandler row handler.
    * @param beanClass Class of beans in form
    */
-  public BeanFormListWidget(FormRowHandler rowHandler, Class beanClass) {
+  public BeanFormListWidget(FormRowHandler rowHandler, Class<T> beanClass) {
     super(rowHandler);
     this.beanClass = beanClass;
   }  
@@ -48,7 +48,7 @@ public class BeanFormListWidget extends BaseFormListWidget {
 	 * @param rowHandler row handler.
 	 * @param beanClass Class of beans in form
 	 */
-	public BeanFormListWidget(FormRowHandler rowHandler, FormListModel model, Class beanClass) {
+	public BeanFormListWidget(FormRowHandler rowHandler, FormListModel model, Class<T> beanClass) {
 		super(rowHandler, model);
 		this.beanClass = beanClass;
 	}
@@ -57,7 +57,7 @@ public class BeanFormListWidget extends BaseFormListWidget {
   // PUBLIC METHODS
   //*******************************************************************   
   
-  public Class getBeanClass() {
+  public Class<T> getBeanClass() {
     return this.beanClass;
   }
 
@@ -65,7 +65,8 @@ public class BeanFormListWidget extends BaseFormListWidget {
 	// PROTECTED METHODS
 	//*******************************************************************		
 
-	protected FormWidget buildAddForm(){
-		return new BeanFormWidget(beanClass);
+	@Override
+  protected FormWidget buildAddForm(){
+		return new BeanFormWidget<T>(beanClass);
 	}
 }

@@ -58,9 +58,10 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
     return closure != null;
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (isActive()) {
-      String confirmationResult = (String) input.getGlobalData().get(ConfirmationContext.CONFIRMATION_RESULT_KEY);
+      String confirmationResult = input.getGlobalData().get(ConfirmationContext.CONFIRMATION_RESULT_KEY);
 
       if ("true".equalsIgnoreCase(confirmationResult)) {
         closure.execute(null);
@@ -73,12 +74,14 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
     super.event(path, input);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     SystemFormContext systemFormContext = EnvironmentUtil.requireSystemFormContext(getEnvironment());
     systemFormContext.addField(ConfirmationContext.CONFIRMATION_RESULT_KEY, "");
     super.render(output);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), ConfirmationContext.class, this);
   }

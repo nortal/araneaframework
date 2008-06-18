@@ -25,16 +25,17 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFilterChainService extends BaseFilterService {
-  private List filterChain;  
+  private List<FilterService> filterChain;  
   
-  public void setFilterChain(List filterChain) {
+  public void setFilterChain(List<FilterService> filterChain) {
     this.filterChain = filterChain;
   }
   
+  @Override
   protected void init() throws Exception {      
     if (filterChain != null)
-      for (ListIterator i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
-        FilterService filter = (FilterService) i.previous();
+      for (ListIterator<FilterService> i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
+        FilterService filter = i.previous();
         
         filter.setChildService(childService);
         childService = filter;

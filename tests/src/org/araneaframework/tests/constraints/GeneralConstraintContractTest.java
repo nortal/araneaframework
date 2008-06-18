@@ -34,6 +34,7 @@ import org.araneaframework.uilib.form.data.BigDecimalData;
 public class GeneralConstraintContractTest extends TestCase {
   private FormWidget form;
 
+  @Override
   public void setUp() throws Exception {
     form = new FormWidget();
     MockLifeCycle.begin(form, new MockEnvironment());

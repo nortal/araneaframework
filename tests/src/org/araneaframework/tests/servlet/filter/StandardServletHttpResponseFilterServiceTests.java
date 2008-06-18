@@ -43,6 +43,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
   
+  @Override
   public void setUp() throws Exception {
     req = new MockHttpServletRequest();
     res = new MockHttpServletResponse();

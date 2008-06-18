@@ -32,6 +32,7 @@ import java.io.Writer;
  *   description = "Represents localizable label that is bound to a form element."
  */
 public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);    
     FormSimpleLabelHtmlTag.writeLabel(

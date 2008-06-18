@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -34,7 +33,8 @@ public class ImportStylesHtmlTag extends BaseFileImportTag {
 	
 	private String media;
 	
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file
 		if (includeFileName != null) {
 			writeContent(out, includeFileName);
@@ -54,11 +54,12 @@ public class ImportStylesHtmlTag extends BaseFileImportTag {
 	 *   required = "false"
 	 *   description = "The media type the css file should be applied to."
 	 */
-	public void setMedia(String media) throws JspException {
-		this.media = (String) evaluate("media", media, String.class);
+	public void setMedia(String media){
+		this.media = evaluate("media", media, String.class);
 	}
 	 
-	protected void writeContent(Writer out, String srcFile) throws Exception {
+	@Override
+  protected void writeContent(Writer out, String srcFile) throws Exception {
 		srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest());
 				
 		JspUtil.writeOpenStartTag(out, "link");

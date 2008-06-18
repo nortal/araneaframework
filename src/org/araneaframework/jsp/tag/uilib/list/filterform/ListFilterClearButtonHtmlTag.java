@@ -35,7 +35,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @jsp.tag
  *   name = "listFilterClearButton"
  *   body-content = "JSP"
- *   description = "Renders ListWidget's filter form clearance button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL&mdash;'uilib.list.filter.clear.button'"
+ *   description = "Renders ListWidget's filter form clearance button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL#;'uilib.list.filter.clear.button'"
  *   
  * @since 1.0.3
  */
@@ -54,6 +54,7 @@ public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
     this.renderMode = ListFilterClearButtonHtmlTag.RENDER_BUTTON;
   }
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -87,6 +88,6 @@ public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
   public void setRenderMode(String renderMode) throws JspException {
 	  if (!(renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ListFilterClearButtonHtmlTag.RENDER_INPUT) || renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY)))
 	      throw new AraneaJspException("<ui:listFilterClearButton> 'renderMode' attribute must be '" + ListFilterClearButtonHtmlTag.RENDER_BUTTON + "' or '"+ ListFilterClearButtonHtmlTag.RENDER_INPUT+"'" + "' or '"+ ListFilterClearButtonHtmlTag.RENDER_EMPTY+"'");
-      this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+      this.renderMode = evaluate("renderMode", renderMode, String.class);
   }
 }

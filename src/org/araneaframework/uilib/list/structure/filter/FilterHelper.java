@@ -182,10 +182,10 @@ public class FilterHelper extends BaseFilterHelper {
 		EqualFilter.addToForm(this, valueId);
 		return this;
 	}
-	public FilterHelper eq(String fieldId, Control control) {
+	public FilterHelper eq(String fieldId, Control<?> control) {
 		return eq(fieldId, fieldId, control);
 	}
-	public FilterHelper eq(String fieldId, String valueId, Control control) {
+	public FilterHelper eq(String fieldId, String valueId, Control<?> control) {
 		_eq(fieldId, valueId);
 		EqualFilter.addToForm(this, valueId, control);
 		return this;
@@ -291,7 +291,7 @@ public class FilterHelper extends BaseFilterHelper {
 	public FilterHelper lt(String fieldId, FormElement element) {
 		return lt(fieldId, fieldId, element);
 	}
-	public FilterHelper lt(String fieldId, String valueId, FormElement element) {
+	public FilterHelper lt(String fieldId, String valueId, FormElement<?,?> element) {
 		_lt(fieldId, valueId);
 		LowerThanFilter.addToForm(this, valueId, element);
 		return this;
@@ -801,14 +801,14 @@ public class FilterHelper extends BaseFilterHelper {
 	 */
 	public class SqlFunction {
 		private String name;
-		private List params = new ArrayList();
+		private List<ExpressionBuilder> params = new ArrayList<ExpressionBuilder>();
 		
 		SqlFunction(String name) {
 			this.name = name;
 		}
 		
 		private ExpressionBuilder[] getParams() {
-			return (ExpressionBuilder[]) params.toArray(new ExpressionBuilder[params.size()]);
+			return params.toArray(new ExpressionBuilder[params.size()]);
 		}
 		
 		// add params

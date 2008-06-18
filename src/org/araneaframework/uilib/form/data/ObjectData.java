@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * 
  * @since 1.1
  */
-public class ObjectData extends Data {
+public class ObjectData extends Data<Object> {
 	public ObjectData() {
 		super(Object.class);
 	}     

@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BigDecimalData extends Data {
+public class BigDecimalData extends Data<BigDecimal> {
 
   public BigDecimalData() {
     super(BigDecimal.class);

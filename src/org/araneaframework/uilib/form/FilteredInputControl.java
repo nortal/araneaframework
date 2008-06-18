@@ -25,7 +25,7 @@ import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.0.11
  */
-public interface FilteredInputControl extends Control {
+public interface FilteredInputControl<T> extends Control<T> {
   public InputFilter getInputFilter();
   public void setInputFilter(InputFilter inputFilter);
 }

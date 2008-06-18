@@ -29,14 +29,14 @@ import org.springframework.beans.factory.BeanFactory;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SpringServiceFactory implements ServiceFactory {
-  protected Class beanFactoryClass = BeanFactory.class;
+  protected Class<? extends BeanFactory> beanFactoryClass = BeanFactory.class;
   protected String beanId;
 
   /**
    * Set the class under which BeanFactory resides in the Environment.
    * @param beanFactoryClass the class under which BeanFactory resides in the Environment.
    */
-  public void setBeanFactoryClass(Class beanFactoryClass) {
+  public void setBeanFactoryClass(Class<? extends BeanFactory> beanFactoryClass) {
     this.beanFactoryClass = beanFactoryClass;
   }
 
@@ -48,7 +48,7 @@ public class SpringServiceFactory implements ServiceFactory {
   }
 	
   public Service buildService(Environment env) {
-    BeanFactory factory = (BeanFactory) env.requireEntry(beanFactoryClass);
+    BeanFactory factory = env.requireEntry(beanFactoryClass);
     return (Service) factory.getBean(beanId); 
   }
 }

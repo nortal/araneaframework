@@ -38,7 +38,8 @@ public class LogicalExpressionTests extends TestCase {
 	private Expression falseExpr;
 	private Expression notBoolExpr;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 		
 		this.trueExpr = new MockValueExpression(Boolean.TRUE);
@@ -46,7 +47,8 @@ public class LogicalExpressionTests extends TestCase {
 		this.notBoolExpr = new MockValueExpression(new Long(0));
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 		this.trueExpr = null;
 		this.falseExpr = null;

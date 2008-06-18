@@ -58,11 +58,12 @@ public class PopupFlowWidget extends BaseApplicationWidget {
     this.properties = properties;
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
 
     PopupWindowContext popupCtx = 
-      (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+      getEnvironment().getEntry(PopupWindowContext.class);
     popupCtx.open(msg, properties, this);
     msg = null;
   }

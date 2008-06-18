@@ -32,7 +32,8 @@ public class FormTextInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtm
 		baseStyleClass = "aranea-text-display";
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		assertControlType("TextControl");
 		return super.doEndTag(out);
   }

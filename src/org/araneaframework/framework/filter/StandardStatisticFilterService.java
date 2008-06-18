@@ -39,6 +39,7 @@ public class StandardStatisticFilterService extends BaseFilterService {
     this.message = message;
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     long start = System.currentTimeMillis();
     

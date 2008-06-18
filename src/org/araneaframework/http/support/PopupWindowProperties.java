@@ -36,7 +36,7 @@ import java.util.Map;
  */
 
 public class PopupWindowProperties implements Serializable {
-	private Map propertyMap = new HashMap();
+	private Map<String, String> propertyMap = new HashMap<String, String>();
 	
 	private boolean modal;
 	private boolean modeless;
@@ -60,56 +60,56 @@ public class PopupWindowProperties implements Serializable {
 	}
 
 	public String getChannelmode() {
-		return (String)propertyMap.get("channelmode");
+		return propertyMap.get("channelmode");
 	}
 	public void setChannelmode(String channelmode) {
 		propertyMap.put("channelmode", channelmode);
 	}
 	
 	public String getDirectories() {
-		return (String)propertyMap.get("directories");
+		return propertyMap.get("directories");
 	}
 	public void setDirectories(String directories) {
 		propertyMap.put("directories", directories);
 	}
 	
 	public String getFullscreen() {
-		return (String)propertyMap.get("fullscreen");
+		return propertyMap.get("fullscreen");
 	}
 	public void setFullscreen(String fullscreen) {
 		propertyMap.put("fullscreen", fullscreen);
 	}
 	
 	public String getHeight() {
-		return (String)propertyMap.get("height");
+		return propertyMap.get("height");
 	}
 	public void setHeight(String height) {
 		propertyMap.put("height", height);
 	}
 	
 	public String getLeft() {
-		return (String)propertyMap.get("left");
+		return propertyMap.get("left");
 	}
 	public void setLeft(String left) {
 		propertyMap.put("left", left);
 	}
 	
 	public String getLocation() {
-		return (String)propertyMap.get("location");
+		return propertyMap.get("location");
 	}
 	public void setLocation(String location) {
 		propertyMap.put("location", location);
 	}
 	
 	public String getMenubar() {
-		return (String)propertyMap.get("menubar");
+		return propertyMap.get("menubar");
 	}
 	public void setMenubar(String menubar) {
 		propertyMap.put("menubar", menubar);
 	}
 	
 	public String getResizable() {
-		return (String)propertyMap.get("resizable");
+		return propertyMap.get("resizable");
 	}
 
 	public void setResizable(String resizable) {
@@ -121,8 +121,8 @@ public class PopupWindowProperties implements Serializable {
 	 */
 	public String getScrollbars() {
 		if (isModal() || isModeless())
-			return (String)propertyMap.get("scroll");
-		return (String)propertyMap.get("scrollbars");
+			return propertyMap.get("scroll");
+		return propertyMap.get("scrollbars");
 	}
 	/**
 	 * Specifies whether the dialog window displays scrollbars.
@@ -138,35 +138,35 @@ public class PopupWindowProperties implements Serializable {
 	}
 
 	public String getStatus() {
-		return (String)propertyMap.get("status");
+		return propertyMap.get("status");
 	}
 	public void setStatus(String status) {
 		propertyMap.put("status", status);
 	}
 
 	public String getTitlebar() {
-		return (String)propertyMap.get("titlebar");
+		return propertyMap.get("titlebar");
 	}
 	public void setTitlebar(String titlebar) {
 		propertyMap.put("titlebar", titlebar);
 	}
 
 	public String getToolbar() {
-		return (String)propertyMap.get("toolbar");
+		return propertyMap.get("toolbar");
 	}
 	public void setToolbar(String toolbar) {
 		propertyMap.put("toolbar", toolbar);
 	}
 	
 	public String getTop() {
-		return (String)propertyMap.get("top");
+		return propertyMap.get("top");
 	}
 	public void setTop(String top) {
 		propertyMap.put("top", top);
 	}
 	
 	public String getWidth() {
-		return (String)propertyMap.get("width");
+		return propertyMap.get("width");
 	}
 
 	public void setWidth(String width) {
@@ -178,7 +178,7 @@ public class PopupWindowProperties implements Serializable {
 	 *  the desktop. The default is yes. Applicable to modal and modeless popups.
 	 */
 	public String getCenter() {
-		return (String) propertyMap.get("center");
+		return propertyMap.get("center");
 	}
 	
 	public void setCenter(String center) {
@@ -191,7 +191,7 @@ public class PopupWindowProperties implements Serializable {
 	 *  The default is no. Applicable to modal and modeless popups.
 	 */
 	public String getDialogHide() {
-		return (String) propertyMap.get("dialogHide");
+		return propertyMap.get("dialogHide");
 	}
 	
 	public void setDialogHide(String dialogHide) {
@@ -204,7 +204,7 @@ public class PopupWindowProperties implements Serializable {
 	 *  Applicable to modal and modeless popups.
 	 */
 	public String getEdge() {
-		return (String)propertyMap.get("edge");
+		return propertyMap.get("edge");
 	}
 	
 	/**
@@ -220,7 +220,7 @@ public class PopupWindowProperties implements Serializable {
 	 *  Applicable to modal and modeless popups.
 	 */
 	public String getHelp() {
-		return (String)propertyMap.get("help");
+		return propertyMap.get("help");
 	}
 	
 	/**
@@ -237,7 +237,7 @@ public class PopupWindowProperties implements Serializable {
 	 *  Applicable to modal and modeless popups.
 	 */
 	public String getUnadorned() {
-		return (String)propertyMap.get("unadorned");
+		return propertyMap.get("unadorned");
 	}
 	
 	/**
@@ -250,7 +250,7 @@ public class PopupWindowProperties implements Serializable {
 	}
 	
 	public String getDialogHeight() {
-		return (String)propertyMap.get("dialogHeight");
+		return propertyMap.get("dialogHeight");
 	}
 	
 	/**
@@ -263,7 +263,7 @@ public class PopupWindowProperties implements Serializable {
 	}
 	
 	public String getDialogWidth() {
-		return (String)propertyMap.get("dialogWidth");
+		return propertyMap.get("dialogWidth");
 	}
 	
 	/**
@@ -276,7 +276,7 @@ public class PopupWindowProperties implements Serializable {
 	}
 	
 	public String getDialogLeft() {
-		return (String)propertyMap.get("dialogLeft");
+		return propertyMap.get("dialogLeft");
 	}
 	
 	/**
@@ -289,7 +289,7 @@ public class PopupWindowProperties implements Serializable {
 	}
 	
 	public String getDialogTop() {
-		return (String)propertyMap.get("dialogTop");
+		return propertyMap.get("dialogTop");
 	}
 	
 	/**
@@ -301,11 +301,12 @@ public class PopupWindowProperties implements Serializable {
 		propertyMap.put("dialogTop", dialogTop);
 	}
 	
-	public String toString() {
+	@Override
+  public String toString() {
 		StringBuffer sb = new StringBuffer("");
 		
-		for (Iterator i = propertyMap.keySet().iterator(); i.hasNext(); ) {
-			String key = (String) i.next();
+		for (Iterator<String> i = propertyMap.keySet().iterator(); i.hasNext(); ) {
+			String key = i.next();
 			sb.append(key);
 			sb.append((modal || modeless) ? ':' : '=');
 			sb.append(propertyMap.get(key).toString());

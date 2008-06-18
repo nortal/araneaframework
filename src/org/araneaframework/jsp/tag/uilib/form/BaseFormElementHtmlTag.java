@@ -54,14 +54,14 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
     protected String formFullId;
 	
 	protected FormWidget.ViewModel formViewModel;
-	protected FormElement.ViewModel formElementViewModel;
+	protected FormElement<?,?>.ViewModel formElementViewModel;
 	protected Control.ViewModel controlViewModel;
 	
 	protected String localizedLabel;
 	
 	protected String accessKeyId;
 	
-	protected List updateRegionNames;    
+	protected List<String> updateRegionNames;    
 	private boolean hasElementContextSpan = true;
 	
 	protected String derivedId;
@@ -84,7 +84,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * Start & End tags
 	 * ***********************************************************************************/
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);    
 
 		// Get form data		
@@ -99,11 +100,11 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 			derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
 		if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);   
 		
-		FormElement fe = ((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId));
+		FormElement<?,?> fe = ((FormElement<?,?>)JspWidgetUtil.traverseToSubWidget(form, derivedId));
 		fe.rendered();
 
 		formElementViewModel = 
-			(FormElement.ViewModel) fe._getViewable().getViewModel();   
+			(FormElement<?,?>.ViewModel) fe._getViewable().getViewModel();   
 
 		// Get control	
 		controlViewModel = (formElementViewModel).getControl();
@@ -130,7 +131,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	}
 
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		if (hasElementContextSpan) {
 			writeFormElementContextClose(out);
 			writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "." + derivedId);
@@ -146,12 +148,13 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	protected void writeFormElementValidationErrorMessages(Writer out) throws JspException, AraneaJspException, IOException {
 		if (!formElementViewModel.isValid()) {
 		    FormWidget form = (FormWidget)requireContextEntry(FormTag.FORM_KEY);
-		    String errors = formElementViewModel.getFormElementValidationErrorRenderer().getClientRenderText(((FormElement)JspWidgetUtil.traverseToSubWidget(form, derivedId)));
+		    String errors = formElementViewModel.getFormElementValidationErrorRenderer().getClientRenderText(((FormElement<?,?>)JspWidgetUtil.traverseToSubWidget(form, derivedId)));
 		    out.write(errors);
 		}
 	}
 
-	public void doFinally() {
+	@Override
+  public void doFinally() {
 		super.doFinally();
 		formViewModel = null;
 		formElementViewModel = null;
@@ -184,7 +187,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Element id, can also be inherited."
 	 */
 	public void setId(String id) throws JspException {
-		this.id = (String)evaluateNotNull("id", id, String.class);
+		this.id = evaluateNotNull("id", id, String.class);
 	}
 
 	/**
@@ -194,7 +197,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Whether the element will send the events that are registered by server-side (by default 'true')."
 	 */	
 	public void setEvents(String events) throws JspException {
-		this.events = ((Boolean)evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
+		this.events = (evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
 	}
 
 	/**
@@ -204,7 +207,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "Whether the form will be validated on the client-side when the element generates an event (by default "false")."
 	 */	
 	public void setValidateOnEvent(String validateOnEvent) throws JspException {
-		this.validateOnEvent = ((Boolean)evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class)).booleanValue(); 
+		this.validateOnEvent = (evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class)).booleanValue(); 
 	}
 
 	/**
@@ -214,7 +217,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   description = "HTML tabindex for the element."
 	 */	
 	public void setTabindex(String tabindex) throws JspException {
-		this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
+		this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
 	}
 
 	/**
@@ -223,8 +226,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
 	 */	
-	public void setUpdateRegions(String updateRegions) throws JspException {
-		this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+	public void setUpdateRegions(String updateRegions){
+		this.updateRegions = evaluate("updateRegions", updateRegions, String.class);
 	}
 
 	/**
@@ -233,8 +236,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
 	 */	
-	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-		this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+	public void setGlobalUpdateRegions(String globalUpdateRegions){
+		this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
 	}  
 
 	/** 	
@@ -246,8 +249,8 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	 * for the element's label.
 	 * It's ok to specify null, empty string, or nothing for this property.
 	 */
-	public void setAccessKeyId(String accessKeyId) throws JspException {
-		this.accessKeyId = (String)evaluate("accessKeyId", accessKeyId, String.class);
+	public void setAccessKeyId(String accessKeyId){
+		this.accessKeyId = evaluate("accessKeyId", accessKeyId, String.class);
 	}
 
 	/**
@@ -352,7 +355,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	/**
 	 * Writes event custom attributes and submit script for <i>attributeName</i>.  
 	 */
-	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, String precondition, List updateRegions) throws IOException {
+	protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId, String precondition, List<String> updateRegions) throws IOException {
         UiUpdateEvent event = new UiUpdateEvent(eventId, formFullId + "." + id, null, updateRegions);
         event.setEventPrecondition(precondition);
         JspUtil.writeEventAttributes(out, event);
@@ -366,7 +369,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 	}
 
 	protected String evaluateDisabledRenderMode(String renderMode) throws JspException {
-      String resultRenderMode = (String) evaluateNotNull("disabledRenderMode",
+      String resultRenderMode = evaluateNotNull("disabledRenderMode",
         renderMode, String.class);
 
       if (!resultRenderMode.equals(RENDER_DISABLED_DISABLED)

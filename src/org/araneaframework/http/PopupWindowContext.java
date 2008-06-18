@@ -71,7 +71,7 @@ public interface PopupWindowContext extends Serializable {
 
   /**
    * Opens the URL for a mounted service. The <code>properties</code> may be
-   * specified to specify behaviour and appearance of the creatable popup
+   * specified to specify behavior and appearance of the creatable popup
    * window.
    * 
    * @param url The URL of a mounted service to be opened in the popup window.
@@ -115,5 +115,5 @@ public interface PopupWindowContext extends Serializable {
    *         {@link PopupServiceInfo}.
    * @since 1.1
    */
-  public Map getPopups();
+  public Map<String, PopupServiceInfo> getPopups();
 }

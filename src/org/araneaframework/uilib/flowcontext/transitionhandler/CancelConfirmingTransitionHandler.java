@@ -49,6 +49,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     this.confirmationMessage = confirmationMessage;
   }
 
+  @Override
   public  void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
     if (transitionType == FlowContext.TRANSITION_CANCEL && shouldConfirm.evaluate(activeFlow)) {
       ConfirmationContext ctx = requireConfirmationContext(activeFlow);
@@ -59,7 +60,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   protected ConfirmationContext requireConfirmationContext(Widget activeFlow) {
-    ConfirmationContext ctx = (ConfirmationContext) activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
+    ConfirmationContext ctx = activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
     return ctx;
   }
 

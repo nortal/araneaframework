@@ -52,6 +52,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   protected String forElementId;
   protected String accessKeyId;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -75,7 +76,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   description = "Label id." 
    */
   public void setLabelId(String labelId) throws JspException {
-    this.labelId = (String)evaluateNotNull("labelId", labelId, String.class); 
+    this.labelId = evaluateNotNull("labelId", labelId, String.class); 
   }
 
   /**
@@ -85,7 +86,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   description = "Whether the label should display the asterisk, <code>false<code> by default." 
    */
   public void setShowMandatory(String mandatory) throws JspException {
-    this.mandatory = ((Boolean)(evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
+    this.mandatory = ((evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
   }
 
   /**
@@ -95,7 +96,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   description = "Whether a colon (&quot;:&quot;) is shown after the label." 
    */
   public void setShowColon(String showColon) throws JspException {
-    this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
+    this.showColon = ((evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
   }  
 
   /**
@@ -104,8 +105,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   required = "false"
    *   description = "ID of the form element for which the label is created" 
    */
-  public void setFor(String elementName) throws JspException {
-    this.forElementId = (String)evaluate("for", elementName, String.class); 
+  public void setFor(String elementName){
+    this.forElementId = evaluate("for", elementName, String.class); 
   }
 
   /**
@@ -115,8 +116,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * When this resource exists and contains a single character, this character is used as an 
    * access key for the label. Otherwise no access key is used.
    */
-  public void setAccessKeyId(String accessKeyId) throws JspException {
-    this.accessKeyId = (String)evaluate("accessKeyId", accessKeyId, String.class);
+  public void setAccessKeyId(String accessKeyId){
+    this.accessKeyId = evaluate("accessKeyId", accessKeyId, String.class);
   }
 
   /* ***********************************************************************************
@@ -126,6 +127,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   /**
    * @deprecated Use {@link #writeLabel(Writer,String,boolean,String,String,PageContext,boolean,String,String)} instead
    */
+  @Deprecated
   public static void writeLabel(
       Writer out, 
       String label, 
@@ -198,12 +200,12 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     
     if (fullFormElementId != null) {
       FormWidget formWidget = (FormWidget) JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
-      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(formWidget, formElementId);
+      FormElement<?,?> f = (FormElement<?,?>) JspWidgetUtil.traverseToSubWidget(formWidget, formElementId);
       BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
   }
 
-  public static void writeSelectLabel(Writer out, String label, String styleClass) throws JspException, IOException {
+  public static void writeSelectLabel(Writer out, String label, String styleClass) throws IOException {
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", styleClass);
     JspUtil.writeCloseStartTag_SS(out);

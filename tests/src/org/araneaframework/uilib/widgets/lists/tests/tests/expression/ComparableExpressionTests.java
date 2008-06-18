@@ -44,7 +44,8 @@ public class ComparableExpressionTests extends TestCase {
 
 	private Expression nullExpr;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 		this.low = new MockValueExpression(new Long(-10));
 		this.low_copy = new MockValueExpression(new Long(-10));
@@ -52,7 +53,8 @@ public class ComparableExpressionTests extends TestCase {
 		this.nullExpr = new MockValueExpression(null);
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 		this.low = null;
 		this.low_copy = null;

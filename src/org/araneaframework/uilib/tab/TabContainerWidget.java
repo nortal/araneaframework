@@ -18,9 +18,9 @@ package org.araneaframework.uilib.tab;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -55,14 +55,15 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	
 	public static final String TAB_SELECT_EVENT_ID = "activateTab";
 
-	protected Map tabs;
+	protected Map<String, TabWidget> tabs;
 	protected TabWidget selected;
 
 	/** This is just to make sure that we do not initialize ANY tabs after destroying process has already begun. */
 	protected transient boolean dying = false;
 
-	protected Environment getChildWidgetEnvironment() throws Exception {
-		Map entries = new LinkedMap(2);
+	@Override
+  protected Environment getChildWidgetEnvironment() throws Exception {
+		Map<Class<?>, Object> entries = new LinkedHashMap<Class<?>, Object>(2);
 		entries.put(TabContainerContext.class, this);
 		entries.put(TabRegistrationContext.class, this);
 		return new StandardEnvironment(super.getChildWidgetEnvironment(), entries);
@@ -70,8 +71,8 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
 	protected void selectFirst() {
 		if (!tabs.isEmpty()) {
-			Map.Entry first = (Map.Entry) tabs.entrySet().iterator().next();
-			selectTab(first.getKey().toString());
+			String first = tabs.keySet().iterator().next();
+			selectTab(first);
 		}
 	}
 
@@ -79,11 +80,11 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	 * TabContainerContext IMPL
 	 **********************************************/
 	public TabContainerWidget() {
-		tabs = new LinkedMap();
+		tabs = new LinkedHashMap<String, TabWidget>();
 	}
 	
-	public TabContainerWidget(Comparator comparator) {
-		tabs = new TreeMap(comparator);
+	public TabContainerWidget(Comparator<String> comparator) {
+		tabs = new TreeMap<String, TabWidget>(comparator);
 	}
 
 	public void addTab(String id, String labelId, Widget contentWidget) {
@@ -124,7 +125,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		}
 		
 		if (!StringUtils.isEmpty(id)) {
-			selected = (TabWidget) tabs.get(id);
+			selected = tabs.get(id);
 			selected.enableTab();
 		} else
 			selected = null;
@@ -144,7 +145,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 		return selected;
 	}
 
-	public Map getTabs() {
+	public Map<String, TabWidget> getTabs() {
 		return Collections.unmodifiableMap(tabs);
 	}
 	/* ********************************************
@@ -155,7 +156,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	 */
 	public TabWidget registerTab(TabWidget tabWidget) {
 		boolean first = tabs.isEmpty();
-		TabWidget result = (TabWidget) tabs.put(tabWidget.getScope().getId().toString(), tabWidget);
+		TabWidget result = tabs.put(tabWidget.getScope().getId().toString(), tabWidget);
 		if (first && !dying) selectFirst();
 
 		return result;
@@ -165,7 +166,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	 * @see org.araneaframework.uilib.tab.TabRegistrationContext#unregisterTab(org.araneaframework.uilib.tab.TabWidget)
 	 */
 	public TabWidget unregisterTab(TabWidget tabWidget) {
-		TabWidget result = (TabWidget) tabs.remove(tabWidget.getScope().getId().toString());
+		TabWidget result = tabs.remove(tabWidget.getScope().getId().toString());
 		if (result == selected) {
 			selected = null;
 			if (!dying) selectFirst();
@@ -178,7 +179,8 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	 * Tab selection listener. 
 	 ****************************************************/
 	protected class SelectionEventListener extends StandardEventListener {
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			if (log.isTraceEnabled()) {
 				log.trace(ClassUtils.getShortClassName(TabContainerWidget.class) + " received tab selection event for tab '" + eventParam + "'.");
 			}
@@ -189,36 +191,41 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 	/* ********************************************
 	 * Overrides for disableWidget()/enableWidget()
 	 **********************************************/
-	public void disableWidget(Object key) {
+	@Override
+  public void disableWidget(Object key) {
 		if (!tabs.containsKey(key)) {
 			super.disableWidget(key);
 			return;
 		}
-		TabWidget tabWidget = (TabWidget) tabs.get(key);
+		TabWidget tabWidget = tabs.get(key);
 		tabWidget.disableTab();
 	}
 
-	public void enableWidget(Object key) {
+	@Override
+  public void enableWidget(Object key) {
 		if (!tabs.containsKey(key)) {
 			super.enableWidget(key);
 			return;
 		}
 
-		TabWidget tabWidget = (TabWidget) tabs.get(key);
+		TabWidget tabWidget = tabs.get(key);
 		tabWidget.enableTab();
 	}
 	/* ****************** COMPONENT LIFECYCLE METHODS ************************** */
-	public Component.Interface _getComponent() {
+	@Override
+  public Component.Interface _getComponent() {
 		return new ComponentImpl();
 	}
 
 	protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
-		public synchronized void init(Scope scope, Environment env) {
+		@Override
+    public synchronized void init(Scope scope, Environment env) {
 			super.init(scope, env);
 			addEventListener(TAB_SELECT_EVENT_ID, new SelectionEventListener());
 		}
 
-		public void destroy() {
+		@Override
+    public void destroy() {
 			dying = true;
 			super.destroy();
 		}

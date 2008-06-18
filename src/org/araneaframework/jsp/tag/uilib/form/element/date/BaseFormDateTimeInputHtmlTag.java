@@ -50,8 +50,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	 *   required = "false"
 	 *   description = "Precondition for deciding whether go to server side or not." 
 	 */
-	public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
-		this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+	public void setOnChangePrecondition(String onChangePrecondition) {
+		this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
 	}
 
   /**
@@ -69,8 +69,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
      *                required = "false"
      *                description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)."
      */
-	public void setCalendarAlignment(String calendarAlignment)throws JspException {
-		this.calendarAlignment = (String) evaluate("calendarAlignment", calendarAlignment, String.class);
+	public void setCalendarAlignment(String calendarAlignment) {
+		this.calendarAlignment = evaluate("calendarAlignment", calendarAlignment, String.class);
 	}
 
 	/**

@@ -43,6 +43,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    * </ul> 
    * are called on the child, if not then just <code>render(output).</code>
    */
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
    if (hasAction(input)) {
      Path actionPath = getActionPath(input);
@@ -73,7 +74,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    * @since 1.1
    */
   protected Path getEventPath(InputData input) {
-    return new StandardPath((String) input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY));
+    return new StandardPath(input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY));
   }
   
   /**
@@ -93,7 +94,7 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
    * @since 1.1
    */
   protected Path getActionPath(InputData input) {
-    return new StandardPath((String) input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY));
+    return new StandardPath(input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY));
   }
   
   /**

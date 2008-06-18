@@ -45,7 +45,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 		setHasElementContextSpan(false);
 	}
 	
-	public int doEndTag(Writer out) throws Exception {
+	@Override
+  public int doEndTag(Writer out) throws Exception {
 		assertControlType("SelectControl");		
 		
 		if (!"horizontal".equals(type) && !"vertical".equals(type))
@@ -58,8 +59,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 		FormRadioSelectItemLabelHtmlTag label = new FormRadioSelectItemLabelHtmlTag();
 		FormRadioSelectItemHtmlTag item = new FormRadioSelectItemHtmlTag();
 		
-		for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-			DisplayItem displayItem = (DisplayItem) i.next();
+		for (Iterator<DisplayItem> i = viewModel.getSelectItems().iterator(); i.hasNext();) {
+			DisplayItem displayItem = i.next();
 			
             // set the corresponding HTML id for label and radiobutton so that clicking on label
             // affects radiobutton selection 			
@@ -110,8 +111,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 	 *   required = "false"
 	 *   description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal." 
 	 */ 
-	public void setType(String type) throws JspException {
-		this.type = (String)evaluate("type", type, String.class);
+	public void setType(String type){
+		this.type = evaluate("type", type, String.class);
 	}
 	
 	/**
@@ -121,7 +122,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 	 *   description = "Boolean that controls whether label is before or after each radio button. False by default." 
 	 */
 	public void setLabelBefore(String labelBefore) throws JspException {
-		this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
+		this.labelBefore = (evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
 	}
 	
 	protected void writeLabel(FormRadioSelectItemLabelHtmlTag label, String id, String value) throws JspException {

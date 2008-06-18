@@ -25,7 +25,8 @@ public class PostgreExpressionToSqlExprBuilder extends
 
 	protected class PostgreLikeTranslator extends CompositeExprToSqlExprTranslator {
 
-		protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
+		@Override
+    protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 
 			LikeExpression like = (LikeExpression) expr;
 			SqlExpression var = sqlChildren[0];

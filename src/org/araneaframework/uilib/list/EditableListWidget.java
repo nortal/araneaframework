@@ -56,7 +56,8 @@ public class EditableListWidget extends ListWidget {
 	//* WIDGET METHODS
 	//*********************************************************************  	
 
-	protected void init() throws Exception {
+	@Override
+  protected void init() throws Exception {
 		super.init();
 
 		Assert.notNull(formList, "You must provide a form row handler to the editable list!");

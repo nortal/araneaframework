@@ -16,77 +16,105 @@
 
 package org.araneaframework.uilib.form;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
-public class BeanFormWidget extends FormWidget {
-  private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
-  private BeanMapper beanMapper;
-  private Class beanClass;
+public class BeanFormWidget<T> extends FormWidget {
+//  private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
+  private BeanMapper<T> beanMapper;
+  private Class<T> beanClass;
+  private T bean;
   
-  public BeanFormWidget(Class beanClass) {
+  public BeanFormWidget(Class<T> beanClass, T bean) {
     this.beanClass = beanClass;
-    this.beanMapper = new BeanMapper(beanClass);
+    this.beanMapper = new BeanMapper<T>(beanClass);
+    this.bean = bean;
   }
   
-  private Data inferDataType(String fieldId, boolean mandatory) {
-    if (!beanMapper.isReadable(fieldId))
-      throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
-
-    Class type = beanMapper.getFieldType(fieldId);
-    
-    if (type.isPrimitive()) {
-      if (!mandatory) 
-        throw new AraneaRuntimeException("Form element '" + fieldId +"' corresponding to JavaBean's primitive-typed field was not specified as mandatory.");
-
-      switch(ArrayUtils.indexOf(primitiveTypes, type.getName())) {
-        case 0: { type = Integer.class; break; }
-        case 1: { type = Long.class; break; }
-        case 2: { type = Short.class; break; }
-        case 3: { type = Double.class; break; }
-        case 4: { type = Float.class; break; }
-        case 5: { type = Boolean.class; break; }
-        case 6: { type = Byte.class; break; }
-        case 7: { type = Character.class; break; }
-        default : throw new AraneaRuntimeException("Could not infer type for bean field '" + fieldId + "'!");
-      }
+  public BeanFormWidget(Class<T> beanClass) {
+    this.beanClass = beanClass;
+    this.beanMapper = new BeanMapper<T>(beanClass);
+    try {
+      this.bean = beanClass.newInstance();
+    } catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
     }
-    
-    return new Data(type);
   }
   
-  public BeanFormWidget addBeanSubForm(String id) {
+  @Override
+  protected void init() throws Exception {
+    super.init();
+    readFromBean();
+  }
+  
+  public BeanFormWidget<?> addBeanSubForm(String id) {
+    return addBeanSubForm(id, Object.class);
+  }
+  
+  public <E> BeanFormWidget<E> addBeanSubForm(String id, Class<E> fieldType) {
     if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
-
-    BeanFormWidget result = new BeanFormWidget(beanMapper.getFieldType(id));
+    if(!beanMapper.getFieldType(id).isAssignableFrom(fieldType)){
+      throw new AraneaRuntimeException("The field '" + id + "' has different type than the provided " + fieldType);
+    }
+    BeanFormWidget<E> result = null;
+    try {
+      result = new BeanFormWidget<E>(fieldType, (E)PropertyUtils.getProperty(bean, id));
+    } catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    }
     addElement(id, result);
     return result;
   }
   
-  public FormElement addBeanElement(String elementName, String labelId, Control control, boolean mandatory) {
-    return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), mandatory);
+  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
+    Object initialValue = null;
+    try {
+      initialValue = PropertyUtils.getProperty(bean, elementName);
+    } catch (Exception e) {
+      throw ExceptionUtil.uncheckException(e);
+    } 
+    return addBeanElement(elementName, labelId, control, (D)initialValue, mandatory);
   }  
   
-  public FormElement addBeanElement(String elementName, String labelId, Control control, Object initialValue, boolean mandatory) {
-    return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), initialValue, mandatory);
+  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
+    return super.addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
   }
 
-  public Object writeToBean(Object bean) {
+  @Deprecated
+  public T writeToBean(T bean) {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(bean);
     return bean;
   }
   
-  public void readFromBean(Object bean) {
-    BeanFormWriter writer = new BeanFormWriter(beanClass);
+  @Deprecated
+  public void readFromBean(T bean) {
+    BeanFormWriter<T> writer = new BeanFormWriter<T>(beanClass);
     writer.writeFormBean(this, bean);
   }
 
-  public Class getBeanClass() {
+  public void readFromBean() {
+    BeanFormWriter<T> writer = new BeanFormWriter<T>(beanClass);
+    writer.writeFormBean(this, bean);
+  }
+  
+  public T writeToBean() {
+    BeanFormReader reader = new BeanFormReader(this);
+    reader.readFormBean(bean);
+    return bean;
+  }
+  
+  public T getBean() {
+    return bean;
+  }
+  
+  public Class<T> getBeanClass() {
     return beanClass;
   }  
+  
 }

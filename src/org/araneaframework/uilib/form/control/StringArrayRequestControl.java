@@ -30,7 +30,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class StringArrayRequestControl extends BaseControl {
+public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
 
   protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
     
@@ -50,13 +50,15 @@ public abstract class StringArrayRequestControl extends BaseControl {
     eventHelper.clearOnChangeEventListeners();
   }
   
-  public void setRawValue(Object value) {
+  @Override
+  public void setRawValue(T value) {   
   	super.setRawValue(value);
     innerData = getRawValue() != null ? toResponseParameters(getRawValue()) : null;
   }
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
+  @Override
   protected void init() throws Exception {
     super.init();
     
@@ -68,6 +70,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * methods {@link #preprocessRequestParameters(String[])}and
    * {@link #fromRequestParameters(String[])}to read the control from request.
    */
+  @Override
   protected void readFromRequest(HttpInputData request) {
     String parameterValues[] = request.getParameterValues(getScope().toString());
     innerData = preprocessRequestParameters(parameterValues);
@@ -79,6 +82,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * method {@link #fromRequestParameters(String[])}and validation using method
    * {@link #validate()}.
    */
+  @Override
   public void convert() {
     if (innerData != null)
       value = fromRequestParameters((String[]) innerData);
@@ -90,6 +94,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * Checks that the mandatory is satisfied, and if the value is not <code>null</code> calls the
    * {@link #validateNotNull()}method.
    */
+  @Override
   public void validate() {
     if (isMandatory() && !isRead()) {
       boolean hasValue = (innerData != null && ((String[]) innerData).length > 0 && ((String[]) innerData)[0].trim().length() != 0);
@@ -112,7 +117,8 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * 
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
   
@@ -144,12 +150,12 @@ public abstract class StringArrayRequestControl extends BaseControl {
 
   /**
    * This method should parse the request parameters (preprocessed with
-   * {@link #preprocessRequestParameters(String[])}) an produce the control value.
+   * {@link #preprocessRequestParameters(String[])}) and produce the control value.
    * 
    * @param parameterValues the request parameters.
    * @return control value.
    */
-  protected abstract Object fromRequestParameters(String[] parameterValues);
+  protected abstract T fromRequestParameters(String[] parameterValues);
 
   /**
    * This method should return the <code>String[]</code> representation of the control value.
@@ -157,7 +163,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * @param controlValue the control value.
    * @return the <code>String[]</code> representation of the control value.
    */
-  protected abstract String[] toResponseParameters(Object controlValue);	 	  
+  protected abstract  String[] toResponseParameters(T controlValue);	 	  
   
   //*********************************************************************
   //* VIEW MODEL
@@ -169,7 +175,7 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<T>.ViewModel {
 
     private String[] values;
     private boolean hasOnChangeEventListeners;

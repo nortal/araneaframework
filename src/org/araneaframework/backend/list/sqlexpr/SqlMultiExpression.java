@@ -25,7 +25,7 @@ import org.araneaframework.backend.list.SqlExpression;
 
 
 public abstract class SqlMultiExpression implements SqlExpression {
-	protected List children = new ArrayList();
+	protected List<SqlExpression> children = new ArrayList<SqlExpression>();
 	public SqlMultiExpression add(SqlExpression expression) {
 		this.children.add(expression);
 		return this;
@@ -35,9 +35,9 @@ public abstract class SqlMultiExpression implements SqlExpression {
 		return this;
 	}
 	public Object[] getValues() {
-		List values = new ArrayList();
-		for (Iterator i = this.children.iterator(); i.hasNext();) {			
-			SqlExpression expr = (SqlExpression) i.next();
+		List<Object> values = new ArrayList<Object>();
+		for (Iterator<SqlExpression> i = this.children.iterator(); i.hasNext();) {			
+			SqlExpression expr = i.next();
 			Object[] childValues = expr.getValues();
 			if (childValues != null) {
 				values.addAll(Arrays.asList(childValues));				

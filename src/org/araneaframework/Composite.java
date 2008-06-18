@@ -48,7 +48,7 @@ public interface Composite extends Serializable {
      * Returns an unmodifiable map of all the child components.
      * @return a map of child components
      */
-    public Map getChildren();
+    public Map<Object, Component> getChildren();
     
     /**
      * Attaches a component as a child of this component. No initialization of the

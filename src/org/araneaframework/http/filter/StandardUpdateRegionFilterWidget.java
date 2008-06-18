@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,8 +61,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   static private final Log log = LogFactory.getLog(StandardUpdateRegionFilterWidget.class);
 
   private String characterEncoding = "UTF-8";
-  private Map documentRegions = new HashMap();
-  private List renderedRegions = new ArrayList();
+  private Map<String, String> documentRegions = new HashMap<String, String>();
+  private List<String> renderedRegions = new ArrayList<String>();
   private boolean disabled = false;
 
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
@@ -90,18 +89,20 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     renderedRegions.add(documentRegionId);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), UpdateRegionContext.class, this);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
-    String regionsFromRequest = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    String regionsFromRequest = output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
     
     StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
     
     if (!renderedRegions.isEmpty()) {
-      for (Iterator i = renderedRegions.iterator(); i.hasNext();) {
-        regionNames.append(",").append(i.next());
+      for(String region : renderedRegions) {
+        regionNames.append(",").append(region);
       }
     }
 
@@ -117,10 +118,10 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
-      Map regionContents = null;
+      Map<String, Region> regionContents = null;
       if (!disabled) {
         // Parse widget and region ids
-        Map regionIdsByWidgetId = parseRegionNames(regionNames.toString());
+        Map<String,Set<String>> regionIdsByWidgetId = parseRegionNames(regionNames.toString());
 
         // Render widgets
         regionContents = renderRegions(regionIdsByWidgetId, arUtil, output);
@@ -129,7 +130,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       // Write out response
       HttpOutputData httpOutput = (HttpOutputData) output;
       PrintWriter writer = httpOutput.getWriter();
-      String ajaxRequestId = (String) output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
+      String ajaxRequestId = output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
       writeResponseId(writer, ajaxRequestId);
       if (disabled) {
         // TODO: stinky feeling this does not work with versioned states!
@@ -155,13 +156,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   /** @since 1.2 */
   protected void writeVersionedStateRegions(PrintWriter writer) throws Exception {
-    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    StateVersioningContext ctx = getEnvironment().getEntry(StateVersioningContext.class);
     if (ctx == null) return;
     
-    Map stateRegion = ctx.getRegions();
-    for (Iterator i = stateRegion.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Entry) i.next();
-      writeRegion(writer, (String)entry.getKey(), (String)entry.getValue());
+    Map<String, String> stateRegion = ctx.getRegions();
+    for (Map.Entry<String, String> entry : stateRegion.entrySet()) {
+      writeRegion(writer, entry.getKey(), entry.getValue());
     }
   }
 
@@ -184,7 +184,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   protected void writeTransactionIdRegion(PrintWriter out) throws Exception {
-    TransactionContext transactionContext = (TransactionContext) getEnvironment().getEntry(TransactionContext.class);
+    TransactionContext transactionContext = getEnvironment().getEntry(TransactionContext.class);
     if (transactionContext != null) {
       writeRegion(out, TRANSACTION_ID_REGION_KEY, transactionContext.getTransactionId().toString());
     }
@@ -193,24 +193,22 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   protected void writeHandlerRegions(PrintWriter out) throws Exception {
     UpdateRegionGatherMessage regionGatherMessage = new UpdateRegionGatherMessage();
     propagate(regionGatherMessage);
-    for (Iterator i = regionGatherMessage.getRegions().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String name = (String) entry.getKey();
+    for (Map.Entry<String, String> entry : regionGatherMessage.getRegions().entrySet()) {
+      String name = entry.getKey();
       if(log.isDebugEnabled()) {
         log.debug("Updating handler region : " + name);
       }
-      String content = (String) entry.getValue();
+      String content = entry.getValue();
       if (content != null) {
         writeRegion(out, name, content);
       }
     }
   }
 
-  protected void writeDocumentRegions(PrintWriter out, Map regionContents) throws Exception {
-    for (Iterator i = regionContents.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String id = (String) entry.getKey();
-      Region region = (Region) entry.getValue();
+  protected void writeDocumentRegions(PrintWriter out, Map<String, Region> regionContents) throws Exception {
+    for (Map.Entry<String, Region> entry : regionContents.entrySet()) {
+      String id = entry.getKey();
+      Region region = entry.getValue();
       JsonObject documentObject = new JsonObject();
       documentObject.setStringProperty("id", id);
       documentObject.setStringProperty("mode", region.getMode());
@@ -221,22 +219,22 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
   }
 
-  protected Map parseRegionNames(String commaSeparatedRegionNames) {
-    Map regionIdsByWidgetId = new HashMap();
+  protected Map<String,Set<String>> parseRegionNames(String commaSeparatedRegionNames) {
+    Map<String,Set<String>> regionIdsByWidgetId = new HashMap<String, Set<String>>();
 
     String[] regionNames = StringUtils.split(commaSeparatedRegionNames, ',');
     for (int i = 0; i < regionNames.length; i++) {
       String documentRegionId = regionNames[i];
-      String widgetId = (String) documentRegions.get(documentRegionId);
+      String widgetId = documentRegions.get(documentRegionId);
       if (widgetId == null) {
         if (log.isWarnEnabled())
           log.warn("Document region '" + documentRegionId + "' not found");
         continue;
       }
 
-      Set regionIds = (Set) regionIdsByWidgetId.get(widgetId);
+      Set<String> regionIds = regionIdsByWidgetId.get(widgetId);
       if (regionIds == null) {
-        regionIds = new HashSet();
+        regionIds = new HashSet<String>();
         regionIdsByWidgetId.put(widgetId, regionIds);
       }
       regionIds.add(documentRegionId);
@@ -247,20 +245,20 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     return regionIdsByWidgetId;
   }
 
-  protected void removeOverlappingRegions(Map regionIdsByWidgetId) {
+  protected void removeOverlappingRegions(Map<String,Set<String>> regionIdsByWidgetId) {
     String sourceWidgetId = null;
-    Set sourceRegionIds = null;
-    for (Iterator i = regionIdsByWidgetId.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
+    Set<String> sourceRegionIds = null;
+    for (Iterator<Map.Entry<String,Set<String>>> i = regionIdsByWidgetId.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry<String,Set<String>> entry = i.next();
 
       if (sourceRegionIds == null) {
-        sourceWidgetId = (String) entry.getKey();
-        sourceRegionIds = (Set) entry.getValue();
+        sourceWidgetId = entry.getKey();
+        sourceRegionIds = entry.getValue();
         continue;
       }
 
-      String widgetId = (String) entry.getKey();
-      Set regionIds = (Set) entry.getValue();
+      String widgetId = entry.getKey();
+      Set<String> regionIds = entry.getValue();
       if (widgetId.startsWith(sourceWidgetId + ".")) {
         sourceRegionIds.addAll(regionIds);
         i.remove();
@@ -271,12 +269,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     }
   }
 
-  protected Map renderRegions(Map regionIdsByWidgetId, AtomicResponseHelper arUtil, OutputData output) throws Exception {
-    Map regionContents = new HashMap();
-    for (Iterator i = regionIdsByWidgetId.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String widgetId = (String) entry.getKey();
-      Set regionIds = (Set) entry.getValue();
+  protected Map<String, Region> renderRegions(Map<String,Set<String>> regionIdsByWidgetId, AtomicResponseHelper arUtil, OutputData output) throws Exception {
+    Map<String, Region> regionContents = new HashMap<String, Region>();
+    for (Map.Entry<String,Set<String>> entry : regionIdsByWidgetId.entrySet()) {
+      String widgetId = entry.getKey();
+      Set<String> regionIds = entry.getValue();
 
       if (log.isDebugEnabled())
         log.debug("Rendering widget '" + widgetId + "'");
@@ -302,8 +299,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
       // Cut out regions by special comments
       String widgetContent = new String(arUtil.getData(), characterEncoding);
-      for (Iterator j = regionIds.iterator(); j.hasNext(); ) {
-        String id = (String) j.next();
+      for (String id : regionIds) {
         String content = getContentById(widgetContent, id);
         if (content == null) {
           if (log.isWarnEnabled())
@@ -365,6 +361,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       super(path);
     }
 
+    @Override
     protected void execute(Component component) throws Exception {
       this.component = component;
     }
@@ -383,6 +380,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       this.output = output;
     }
 
+    @Override
     protected void execute(Component component) throws Exception {
       ((Widget) component)._getWidget().render(output);
       ((HttpOutputData) output).getWriter().flush();
@@ -392,14 +390,15 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static class UpdateRegionGatherMessage extends BroadcastMessage {
 
-    private Map regions = new HashMap();
+    private Map<String, String> regions = new HashMap<String, String>();
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof UpdateRegionProvider) {
-        Map newRegions = ((UpdateRegionProvider) component).getRegions();
+        Map<String, String> newRegions = ((UpdateRegionProvider) component).getRegions();
         if (newRegions != null && !newRegions.isEmpty()) {
           if (log.isWarnEnabled()) {
-            Set duplicateRegions = new HashSet(newRegions.keySet());
+            Set<String> duplicateRegions = new HashSet<String>(newRegions.keySet());
             duplicateRegions.retainAll(regions.keySet());
             if (duplicateRegions.size() > 0) {
               log.warn("UpdateRegionProvider '" + (component.getScope() != null ? component.getScope().toString() : component.getClass().getName()) + "' overwrites previously added regions: " + duplicateRegions.toString());
@@ -410,7 +409,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       }
     }
 
-    public Map getRegions() {
+    public Map<String, String> getRegions() {
       return regions;
     }
 

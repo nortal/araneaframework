@@ -34,10 +34,11 @@ public class FormListDisplayHtmlTag extends BaseFormListDisplayHtmlTag {
     
   /**
    */
+  @Override
   protected int doEndTag(Writer out) throws Exception {    
     
     if (displayControlViewModel.getValue() != null) {
-      for (Iterator i = ((List) displayControlViewModel.getValue()).iterator(); i.hasNext(); ) { 
+      for (Iterator<?> i = ((List<?>) displayControlViewModel.getValue()).iterator(); i.hasNext(); ) { 
       	JspUtil.writeEscaped(out, i.next().toString());
         
         if (i.hasNext()) 

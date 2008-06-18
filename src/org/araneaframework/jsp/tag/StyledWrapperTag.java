@@ -34,7 +34,8 @@ public abstract class StyledWrapperTag extends BaseTagWrapperTag  {
 	/**
 	 * Callback: configure row tag
 	 */
-	protected void configureTag(ContainedTagInterface tag) throws JspException {
+	@Override
+  protected void configureTag(ContainedTagInterface tag) throws JspException {
 		StyledTagInterface styledTag = (StyledTagInterface)tag; 
 		styledTag.setStyleClass(styleClass);
 	}
@@ -49,7 +50,7 @@ public abstract class StyledWrapperTag extends BaseTagWrapperTag  {
 	 *   required = "false"
 	 *   description = "Cell css class, defines the way the cell will be rendered." 
 	 */
-	public void setStyleClass(String styleClass) throws JspException {
-		this.styleClass = (String)evaluate("styleClass", styleClass, String.class);
+	public void setStyleClass(String styleClass){
+		this.styleClass = evaluate("styleClass", styleClass, String.class);
 	}
 }

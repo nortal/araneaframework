@@ -41,10 +41,12 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   
   private Service continuation;
   
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), ContinuationManagerContext.class, this);
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     AtomicResponseHelper arUtil = 
       new AtomicResponseHelper(output);
@@ -81,7 +83,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   public void start(Service continuation) {
     this.continuation = continuation;
     
-    Map entries = new HashMap();
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     entries.put(ContinuationContext.class, this);        
     continuation._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), entries));
     
@@ -99,11 +101,12 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
 	public void runOnce(Service continuation) {
 		BaseFilterService service = new BaseFilterService(continuation) {
-			protected void action(Path path, InputData input, OutputData output) throws Exception {
+			@Override
+      protected void action(Path path, InputData input, OutputData output) throws Exception {
         childService._getService().action(path, input, output);
 				
 				ContinuationContext conCtx = 
-					(ContinuationContext) getEnvironment().getEntry(ContinuationContext.class);
+					getEnvironment().getEntry(ContinuationContext.class);
 				conCtx.finish();
 			}
 		};

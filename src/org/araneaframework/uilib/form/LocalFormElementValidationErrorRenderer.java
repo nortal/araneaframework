@@ -1,10 +1,9 @@
 package org.araneaframework.uilib.form;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 
@@ -19,23 +18,25 @@ public class LocalFormElementValidationErrorRenderer implements FormElementValid
   private static final long serialVersionUID = 1L;
   public static final LocalFormElementValidationErrorRenderer INSTANCE = new LocalFormElementValidationErrorRenderer();
 
-  public void addError(FormElement element, String error) {
-    Set c = (Set) element.getProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
+  @SuppressWarnings("unchecked")
+  public void addError(FormElement<?,?> element, String error) {
+    Set<String> c = (Set<String>) element.getProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
     if (c == null) {
       // usually form element produces just one validation error message
-      c = ListOrderedSet.decorate(new HashSet(1));
+      c = new LinkedHashSet<String>(1);
       element.setProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY, c);
     }
 
     c.add(error);
   }
 
-  public void clearErrors(FormElement element) {
+  public void clearErrors(FormElement<?,?> element) {
     element.setProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY, null);
   }
 
-  public String getClientRenderText(FormElement element) {
-    Collection messages = (Collection) element.getProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
+  @SuppressWarnings("unchecked")
+  public String getClientRenderText(FormElement<?,?> element) {
+    Collection<String> messages = (Collection<String>) element.getProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
     if (messages != null) {
       String elScope = element.getScope().toString();
 
@@ -50,7 +51,7 @@ public class LocalFormElementValidationErrorRenderer implements FormElementValid
       sb.append(" class='"+ RENDERED_FORMELEMENTERROR_STYLECLASS + " " + elScope + "'");
       sb.append(">");
 
-      for (Iterator i = messages.iterator(); i.hasNext();) {
+      for (Iterator<String> i = messages.iterator(); i.hasNext();) {
         sb.append(getFormattedMessage(i.next().toString()));
       }
 

@@ -24,5 +24,5 @@ import java.util.List;
  * TODO: javadoc
  */
 public interface FormListModel extends Serializable {
-  public List getRows() throws Exception;
+  public List<Object> getRows() throws Exception;
 }

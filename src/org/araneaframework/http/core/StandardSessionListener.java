@@ -45,7 +45,7 @@ public class StandardSessionListener implements HttpSessionListener {
       if (service != null)
         try {
           if (service._getRelocatable().getCurrentEnvironment() == null)
-            service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap()));
+            service._getRelocatable().overrideEnvironment(new StandardEnvironment(null, new HashMap<Class<?>, Object>()));
           service._getComponent().destroy();
         }
         catch(Exception e) {

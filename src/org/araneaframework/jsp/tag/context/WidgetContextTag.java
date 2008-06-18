@@ -32,6 +32,7 @@ public class WidgetContextTag extends WidgetTag {
   /** @since 1.1 */
   public static final String CONTEXT_WIDGET_KEY = "org.araneaframework.jsp.tag.context.WidgetContextTag.CONTEXTWIDGET";
   
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -47,6 +48,7 @@ public class WidgetContextTag extends WidgetTag {
     return EVAL_BODY_INCLUDE;
   }
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     return EVAL_PAGE;
   }

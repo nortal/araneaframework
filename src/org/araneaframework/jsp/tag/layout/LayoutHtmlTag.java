@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -34,6 +33,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class LayoutHtmlTag extends BaseLayoutTag {
   protected String width;
 	
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -52,6 +52,7 @@ public class LayoutHtmlTag extends BaseLayoutTag {
     JspUtil.writeAttributes(out, attributes);
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "table");
     return super.doEndTag(out);
@@ -66,7 +67,7 @@ public class LayoutHtmlTag extends BaseLayoutTag {
    *   required = "false"
    *   description = "Width of the layout."
    */
-  public void setWidth(String width) throws JspException {
-    this.width = (String)evaluate("width", width, String.class);
+  public void setWidth(String width){
+    this.width = evaluate("width", width, String.class);
   }
 }

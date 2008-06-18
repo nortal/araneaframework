@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface Relocatable extends Serializable {
+public interface Relocatable extends Component {
 
   /**
    * This method must provide a <code>Relocatable.Interface</code> that will

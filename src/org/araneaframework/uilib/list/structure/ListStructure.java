@@ -41,12 +41,12 @@ public class ListStructure extends BaseListStructure {
 	private boolean orderableByDefault = false;
 	
 	private boolean initialized = false;
-	private List initEvents = null;
+	private List<Event> initEvents = null;
 	
 	public void init(Environment env) throws Exception {
 		if (initEvents != null) {
-			for (Iterator it = initEvents.iterator(); it.hasNext();) {
-				Runnable event = (Runnable) it.next();
+			for (Iterator<Event> it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = it.next();
 				event.run();
 			}
 		}
@@ -66,7 +66,7 @@ public class ListStructure extends BaseListStructure {
 			event.run();
 		} else {
 			if (initEvents == null)
-				initEvents = new ArrayList();
+				initEvents = new ArrayList<Event>();
 			initEvents.add(event);
 		}		
 	}
@@ -99,11 +99,11 @@ public class ListStructure extends BaseListStructure {
 		addField(id, label, getTypeHelper().getFieldType(id), orderable);
 	}
 
-	public void addField(String id, String label, Class type) {
+	public void addField(String id, String label, Class<?> type) {
 		addField(id, label, type, isOrderableByDefault());
 	}
 
-	public void addField(String id, String label, Class type, boolean orderable) {
+	public void addField(String id, String label, Class<?> type, boolean orderable) {
 		addField(new ListField(id, label));
 		if (type != null) {
 			getTypeHelper().addFieldType(id, type);
@@ -129,7 +129,7 @@ public class ListStructure extends BaseListStructure {
 		final SimpleFieldOrder fieldOrder = new SimpleFieldOrder(fieldId); 
 		addInitEvent(new Event() {
 			public void run() {
-				Comparator comp = typeHelper.getFieldComparator(fieldId);
+				Comparator<?> comp = typeHelper.getFieldComparator(fieldId);
 				Validate.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
 				fieldOrder.setComparator(comp);
 			}
@@ -137,7 +137,7 @@ public class ListStructure extends BaseListStructure {
 		addOrder(fieldOrder);		
 	}
 	
-	protected void addFieldOrder(String fieldId, Comparator comparator) {
+	protected void addFieldOrder(String fieldId, Comparator<?> comparator) {
 		addOrder(new SimpleFieldOrder(fieldId, comparator));
 	}
 	
@@ -170,9 +170,9 @@ public class ListStructure extends BaseListStructure {
 	}
 	
 	public FieldFilter getFieldFilter(String field) {
-		Iterator i = getAndFilter().getFilters().iterator();
+		Iterator<ListFilter> i = getAndFilter().getFilters().iterator();
 		while (i.hasNext()) {
-			ListFilter listFilter = (ListFilter) i.next();
+			ListFilter listFilter = i.next();
 			if (listFilter instanceof FieldFilter) {
 				FieldFilter columnFilter = (FieldFilter) listFilter;
 				if (columnFilter.getFieldId().equals(field)) {

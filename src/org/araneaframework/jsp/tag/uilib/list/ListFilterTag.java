@@ -39,7 +39,8 @@ public class ListFilterTag extends BaseTag {
   // Implementation
   //
   
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
     // Get list data
@@ -55,6 +56,7 @@ public class ListFilterTag extends BaseTag {
 	  return EVAL_BODY_INCLUDE;		
 	}
   
+  @Override
   public int doEndTag(Writer out) throws Exception {   
     
     this.executeEndSubtag(formTag);

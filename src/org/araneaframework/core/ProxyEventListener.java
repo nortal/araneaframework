@@ -35,7 +35,7 @@ public class ProxyEventListener implements EventListener {
   }
 
   public void processEvent(Object eventId, InputData input) throws Exception {
-    String eventParameter = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);    
+    String eventParameter = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);    
 
     Method eventHandler;
     // lets try to find a handle method with an empty argument

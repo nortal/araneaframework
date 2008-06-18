@@ -90,9 +90,9 @@ public class ComparatorFactory {
 	 * @return the <code>Comparator</code> for <code>String</code> objects
 	 *         including <code>null</code> values.
 	 */
-	public static Comparator getStringComparator(boolean nullFirst,
+	public static Comparator<String> getStringComparator(boolean nullFirst,
 			boolean ignoreCase, Locale locale) {
-		return new NullComparator(
+		return new NullComparator<String>(
 				getNotNullStringComparator(ignoreCase, locale), nullFirst);
 	}
 
@@ -109,7 +109,7 @@ public class ComparatorFactory {
 	 * @return the <code>Comparator</code> for <code>String</code> objects
 	 *         excluding <code>null</code> values.
 	 */
-	protected static Comparator getNotNullStringComparator(boolean ignoreCase,
+	protected static Comparator<String> getNotNullStringComparator(boolean ignoreCase,
 			Locale locale) {
 		if (locale != null) {
 			return new LocaleStringComparator(ignoreCase, locale);
@@ -133,9 +133,9 @@ public class ComparatorFactory {
 	 * @return the <code>Comparator</code> for <code>Boolean</code> objects
 	 *         including <code>null</code> values.
 	 */
-	public static Comparator getBooleanComparator(boolean nullFirst,
+	public static Comparator<Boolean> getBooleanComparator(boolean nullFirst,
 			boolean trueFirst) {
-		return new NullComparator(trueFirst ? BooleanComparator.TRUE_FIRST
+		return new NullComparator<Boolean>(trueFirst ? BooleanComparator.TRUE_FIRST
 				: BooleanComparator.FALSE_FIRST, nullFirst);
 	}
 }

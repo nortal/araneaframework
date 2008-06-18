@@ -24,26 +24,29 @@ import org.araneaframework.uilib.form.Converter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BigIntegerToLongConverter extends BaseConverter {
+public class BigIntegerToLongConverter extends BaseConverter<BigInteger, Long> {
   /**
    * Returns a <code>new BigIntegerToLongConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<BigInteger, Long> newConverter() {
     return new BigIntegerToLongConverter();
   }
   
   /**
    * Converts <code>BigInteger</code> to <code>Long</code>.
    */
-  protected Object convertNotNull(Object data) {
-    return new Long(((BigInteger) data).longValue());
+  @Override
+  protected Long convertNotNull(BigInteger data) {
+    return new Long(data.longValue());
   }
   
   /**
    * Converts <code>Long</code> to <code>BigInteger</code>.
    */
-  protected Object reverseConvertNotNull(Object data) {
-    return new BigInteger(((Long) data).toString());
+  @Override
+  protected BigInteger reverseConvertNotNull(Long data) {
+    return new BigInteger(data.toString());
   }
 
 }

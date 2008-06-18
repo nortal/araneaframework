@@ -33,10 +33,10 @@ public interface ComparatorExpression extends Serializable {
 	 * second.
 	 * 
 	 * @param resolver1
-	 *            Resolver that is used to evalute the first
+	 *            Resolver that is used to evaluate the first
 	 *            <code>Variable</code>.
 	 * @param resolver2
-	 *            Resolver that is used to evalute the second
+	 *            Resolver that is used to evaluate the second
 	 *            <code>Variable</code>.
 	 * @return a negative integer, zero, or a positive integer as the first
 	 *         <code>Variable</code> is less than, equal to, or greater than

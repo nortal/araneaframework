@@ -46,7 +46,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   private static final Log log = LogFactory.getLog(StandardLocalizationFilterService.class);
   private String resourceBundleName;
   private Locale currentLocale;
-  private List localeChangeListeners;
+  private List<LocaleChangeListener> localeChangeListeners;
 
   /**
    * Set the name of the language, it must be a <b>valid ISO Language Code</b>. See the
@@ -84,6 +84,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
   }
   
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), LocalizationContext.class, this);
   }
@@ -92,6 +93,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     return getResourceBundle(currentLocale);
   }
 
+  @Override
   protected void init() throws Exception {
     childService._getComponent().init(getScope(), getChildEnvironment());
   }
@@ -103,10 +105,10 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   public ResourceBundle getResourceBundle(Locale locale) {
     Assert.notNullParam(locale, "locale");
     
-	  List loaders = ClassLoaderUtil.getClassLoaders();
+	  List<ClassLoader> loaders = ClassLoaderUtil.getClassLoaders();
 	  
-	  for (Iterator iter = loaders.iterator(); iter.hasNext();) {
-		ClassLoader loader = (ClassLoader) iter.next();
+	  for (Iterator<ClassLoader> iter = loaders.iterator(); iter.hasNext();) {
+		ClassLoader loader = iter.next();
 		try {
 			return ResourceBundle.getBundle(resourceBundleName, locale, loader);
 		}
@@ -146,7 +148,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
       return;
 
     if (localeChangeListeners == null)
-      localeChangeListeners = new ArrayList();
+      localeChangeListeners = new ArrayList<LocaleChangeListener>();
 
     ComponentUtil.addListenerComponent(listener, new LocaleChangeListenerDestroyerComponent(listener));
     localeChangeListeners.add(listener);
@@ -163,8 +165,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   /** @since 1.1 */
   protected void notifyLocaleChangeListeners(Locale oldLocale, Locale newLocale) {
     if (localeChangeListeners != null) {
-      for (Iterator i = localeChangeListeners.iterator(); i.hasNext();) {
-        LocaleChangeListener listener = (LocaleChangeListener) i.next();
+      for (LocaleChangeListener listener : localeChangeListeners) {
         listener.onLocaleChange(oldLocale, newLocale);
       }
     }
@@ -177,8 +178,9 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
       this.listener = listener;
     }
 
+    @Override
     protected void destroy() throws Exception {
-      LocalizationContext context = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+      LocalizationContext context = getEnvironment().getEntry(LocalizationContext.class);
       if (context != null) {
         context.removeLocaleChangeListener(listener);
       }

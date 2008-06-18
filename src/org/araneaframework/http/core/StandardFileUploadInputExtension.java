@@ -28,9 +28,9 @@ import org.araneaframework.http.FileUploadInputExtension;
  */
 public class StandardFileUploadInputExtension implements FileUploadInputExtension {
   private Exception uploadException;
-  private Map fileItems = new HashMap();
+  private Map<String, ? extends FileItem> fileItems = new HashMap<String, FileItem>();
 
-  public StandardFileUploadInputExtension(Map fileItems, Exception uploadException) {
+  public StandardFileUploadInputExtension(Map<String, ? extends FileItem> fileItems, Exception uploadException) {
     Assert.isTrue(fileItems != null || uploadException != null, "FileItems should be present or uploadException non-null.");
 
     this.fileItems = fileItems;
@@ -38,10 +38,10 @@ public class StandardFileUploadInputExtension implements FileUploadInputExtensio
   }
 
   public FileItem getUploadedFile(String fieldName) {
-    return (FileItem) fileItems.get(fieldName);
+    return fileItems.get(fieldName);
   }
 
-  public Map getUploadedFiles() {
+  public Map<String, FileItem> getUploadedFiles() {
     return Collections.unmodifiableMap(fileItems);
   }
   

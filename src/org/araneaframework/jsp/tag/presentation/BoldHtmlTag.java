@@ -36,6 +36,7 @@ public class BoldHtmlTag extends BaseTag {
   // Implementation
   //
     
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -45,6 +46,7 @@ public class BoldHtmlTag extends BaseTag {
     return EVAL_BODY_INCLUDE;    
   }
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {   
     JspUtil.writeEndTag(out, "b");
       

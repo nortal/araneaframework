@@ -31,7 +31,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class NumberControl extends EmptyStringNullableControl implements FilteredInputControl {
+public class NumberControl extends EmptyStringNullableControl<BigInteger> implements FilteredInputControl<BigInteger> {
   private InputFilter inputFilter;
   private BigInteger minValue;
   private BigInteger maxValue;
@@ -112,6 +112,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
   /**
    * Trims request parameter.
    */
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
     String result = super.preprocessRequestParameter(parameterValue);
     return (result == null ? null : result.trim());
@@ -120,7 +121,8 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
   /**
    * Checks that the submitted data is a valid integer number.
    */
-  protected Object fromRequest(String parameterValue) {
+  @Override
+  protected BigInteger fromRequest(String parameterValue) {
     BigInteger result = null;
     
     try {
@@ -146,19 +148,18 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
     return result;
   }
 
-  /**
-   * 
-   */
-  protected String toResponse(Object controlValue) {
-    return ((BigInteger) controlValue).toString();
+  @Override
+  protected <E extends BigInteger> String toResponse(E controlValue) {
+    return controlValue.toString();
   }
   
   /**
    * Checks that the submitted value is in permitted range.
    * 
    */
+  @Override
   protected void validateNotNull() {    
-    if (minValue != null && maxValue != null && ((((BigInteger) getRawValue()).compareTo(minValue) == -1) || ((BigInteger) getRawValue()).compareTo(maxValue) == 1)) {      
+    if (minValue != null && maxValue != null && ((getRawValue().compareTo(minValue) == -1) || getRawValue().compareTo(maxValue) == 1)) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_BETWEEN, 
@@ -169,7 +170,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
           },          
           getEnvironment()));     
     }      
-    else if (minValue != null && ((BigInteger) getRawValue()).compareTo(minValue) == -1) {      
+    else if (minValue != null && getRawValue().compareTo(minValue) == -1) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_GREATER, 
@@ -179,7 +180,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
           },          
           getEnvironment()));    
     }    
-    else if (maxValue != null && ((BigInteger) getRawValue()).compareTo(maxValue) == 1) {      
+    else if (maxValue != null && getRawValue().compareTo(maxValue) == 1) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.NUMBER_NOT_LESS, 
@@ -195,7 +196,8 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }	  
   
@@ -207,7 +209,7 @@ public class NumberControl extends EmptyStringNullableControl implements Filtere
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends StringArrayRequestControl.ViewModel {
+  public class ViewModel extends StringArrayRequestControl<BigInteger>.ViewModel {
     private InputFilter inputFilter;
     private BigInteger maxValue;
     private BigInteger minValue;

@@ -31,7 +31,8 @@ public class FormTimeInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtm
 	{
 		baseStyleClass = "aranea-time-display";
 	}
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		assertControlType("TimeControl");
 		return super.doEndTag(out);
 	}

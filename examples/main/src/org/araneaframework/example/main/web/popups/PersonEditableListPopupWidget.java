@@ -159,7 +159,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     public void onClick() throws Exception {
-      FormRow formRow = (FormRow) list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
+      FormRow formRow = list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
       final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
       PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
       getFlowCtx().start(pfw, null, new MyHandler(rowForm, person)); 

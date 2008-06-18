@@ -18,7 +18,6 @@ package org.araneaframework.http.util;
 
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
@@ -96,7 +95,7 @@ public abstract class ServletUtil {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
 
-    Map attributeBackupMap = new HashMap();
+    Map<String, Object> attributeBackupMap = new HashMap<String, Object>();
     if (widget != null) {
       setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
@@ -117,14 +116,14 @@ public abstract class ServletUtil {
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
     setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
 
-    ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
+    ServletContext servletContext = env.requireEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(req, res);
 
     restoreAttributes(req, attributeBackupMap);
   }
 
 
-  private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
+  private static void setAttribute(HttpServletRequest req, Map<String, Object> attributeBackupMap, String name, Object value) {
     attributeBackupMap.put(name, req.getAttribute(name));
     if (value != null) {
       req.setAttribute(name, value);
@@ -133,13 +132,12 @@ public abstract class ServletUtil {
     }
   }
   
-  private static void restoreAttributes(HttpServletRequest req, Map attributeBackupMap) {
-    for (Iterator i = attributeBackupMap.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
+  private static void restoreAttributes(HttpServletRequest req, Map<String, Object> attributeBackupMap) {
+    for (Map.Entry<String, Object> entry : attributeBackupMap.entrySet()) {
       if (entry.getValue() != null) {
-        req.setAttribute((String) entry.getKey(), entry.getValue());
+        req.setAttribute(entry.getKey(), entry.getValue());
       } else {
-        req.removeAttribute((String) entry.getKey());
+        req.removeAttribute(entry.getKey());
       }
     }
   }
@@ -163,7 +161,7 @@ public abstract class ServletUtil {
   }
   
   public static HttpServletRequest getRequest(InputData input) {
-    return (HttpServletRequest) input.narrow(HttpServletRequest.class);
+    return input.narrow(HttpServletRequest.class);
   }
   
   public static void setRequest(InputData input, HttpServletRequest req) {
@@ -171,7 +169,7 @@ public abstract class ServletUtil {
   }
   
   public static HttpServletResponse getResponse(OutputData output) {
-    return (HttpServletResponse) output.narrow(HttpServletResponse.class);
+    return output.narrow(HttpServletResponse.class);
   }
   
   public static void setResponse(OutputData output, HttpServletResponse res) {
@@ -193,7 +191,7 @@ public abstract class ServletUtil {
 
   /** @since 1.1 */
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
-    LocalizationContext localizationContext = (LocalizationContext) env.getEntry(LocalizationContext.class);
+    LocalizationContext localizationContext = env.getEntry(LocalizationContext.class);
     if (localizationContext == null)
       return null;
     return new javax.servlet.jsp.jstl.fmt.LocalizationContext(
@@ -214,12 +212,14 @@ public abstract class ServletUtil {
       this.bundle = bundle;
     }
     
+    @Override
     protected Object handleGetObject(String key) {
       Object object = bundle.getObject(key);
       return (object != null) ? object.toString() : null;
     } 
     
-    public Enumeration getKeys() {
+    @Override
+    public Enumeration<String> getKeys() {
       return bundle.getKeys();
     }
   }

@@ -17,10 +17,10 @@
 package org.araneaframework.uilib.form;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
+import org.araneaframework.Component;
 import org.araneaframework.Environment;
-import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
@@ -40,18 +40,19 @@ public class FormWidget extends GenericFormElement implements FormContext {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  protected LinkedMap elements = new LinkedMap();
+  protected Map<String, GenericFormElement> elements = new LinkedHashMap<String, GenericFormElement>();
 
+  
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	
 	
+  @Override
   protected void init() throws Exception {
     super.init();
     
-    for (Iterator i = getElements().entrySet().iterator(); i.hasNext();) {
-      Map.Entry element = (Map.Entry) i.next();
-      addWidget(element.getKey(), (Widget) element.getValue());
+    for (Map.Entry<String, GenericFormElement> element : getElements().entrySet()) {
+      addWidget(element.getKey(), element.getValue());
     }
   }
   
@@ -59,25 +60,28 @@ public class FormWidget extends GenericFormElement implements FormContext {
   //* PUBLIC METHODS
   //*********************************************************************
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), FormContext.class, this);
   }
 
+  @Override
   public void clearErrors() {
 	  getMessageCtx().hideMessages(MessageContext.ERROR_TYPE, getErrors());
 	  super.clearErrors();
-	  for (Iterator i = getElements().values().iterator(); i.hasNext();) {
-		 ((GenericFormElement) i.next()).clearErrors();
+	  for (Iterator<GenericFormElement> i = getElements().values().iterator(); i.hasNext();) {
+		 i.next().clearErrors();
 	  }
   }
   
+  @Override
   public boolean isValid() {
     boolean result = super.isValid();
     
-    for (Iterator i = getElements().values().iterator(); i.hasNext();) {
+    for (Iterator<GenericFormElement> i = getElements().values().iterator(); i.hasNext();) {
       if (!result) 
         break;
-      result &= ((GenericFormElement) i.next()).isValid();   
+      result &= i.next().isValid();   
     }
     
     return result;
@@ -91,7 +95,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public GenericFormElement getElement(String elementName) {
     if (elementName.indexOf('.') == -1)
-      return (GenericFormElement) elements.get(elementName);
+      return elements.get(elementName);
     return getGenericElementByFullName(elementName);
   }
 
@@ -136,13 +140,12 @@ public class FormWidget extends GenericFormElement implements FormContext {
 
   private void addFlatElementAfter(String id, GenericFormElement element, String afterId) {
     Assert.isTrue(afterId.indexOf(".") == -1, "addFlatElementAfter() method does not accept nested 'afterId'");
-    LinkedMap newElements = new LinkedMap();
+    Map<String, GenericFormElement> newElements = new LinkedHashMap<String, GenericFormElement>();
 
     if (!getElements().containsKey(afterId))
       throw new AraneaRuntimeException("The element '" + afterId + "' does not exist!");
 
-    for (Iterator i = elements.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
+    for (Map.Entry<String, GenericFormElement> entry : elements.entrySet()) {
 
       newElements.put(entry.getKey(), entry.getValue());
       if (entry.getKey().equals(afterId)) {
@@ -158,13 +161,12 @@ public class FormWidget extends GenericFormElement implements FormContext {
 
   private void addFlatElementBefore(String id, GenericFormElement element, String beforeId) {
 	Assert.isTrue(beforeId.indexOf(".") == -1, "addFlatElementBefore() method does not accept nested 'afterId'");
-    LinkedMap newElements = new LinkedMap();  
+    Map<String, GenericFormElement> newElements = new LinkedHashMap<String, GenericFormElement>();  
 
     if (!elements.containsKey(beforeId))
       throw new AraneaRuntimeException("The element '" + beforeId + "' does not exist!");
 
-    for (Iterator i = elements.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
+    for (Map.Entry<String, GenericFormElement> entry : elements.entrySet()) {
 
       if (entry.getKey().equals(beforeId))
         newElements.put(id, element);
@@ -213,68 +215,75 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * Returns elements.
    * @return elements.
    */
-  public Map getElements() {
-    return new LinkedMap(elements);
+  public Map<String, GenericFormElement> getElements() {
+    return new LinkedHashMap<String, GenericFormElement>(elements);
   }
 
   /**
    * Calls {@link GenericFormElement#convert()} for all contained elements.
    */
+  @Override
   protected void convertInternal()  throws Exception  {
-    for (Iterator i = elements.values().iterator(); i.hasNext();) {
-      ((GenericFormElement) i.next()).convert();
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();) {
+      i.next().convert();
     }
   }
 
   /**
    * Controls that the constraints and all subcontrols are valid.
    */
+  @Override
   protected boolean validateInternal() throws Exception  {
-    for (Iterator i = elements.values().iterator(); i.hasNext();)
-      ((GenericFormElement) i.next()).validate();  
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();)
+      i.next().validate();  
     
     return super.validateInternal();
   }
 
+  @Override
   public void markBaseState() {
-    for (Iterator i = elements.values().iterator(); i.hasNext();)
-      ((GenericFormElement) i.next()).markBaseState();
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();)
+      i.next().markBaseState();
   }
   
+  @Override
   public void restoreBaseState() {
-    for (Iterator i = elements.values().iterator(); i.hasNext();)
-       ((GenericFormElement) i.next()).restoreBaseState();
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();)
+       i.next().restoreBaseState();
   }
   
+  @Override
   public boolean isStateChanged() {
   	boolean result = false;
-    for (Iterator i = elements.values().iterator(); i.hasNext();)
-    	result |= ((GenericFormElement) i.next()).isStateChanged();
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();)
+    	result |= i.next().isStateChanged();
     return result;
   }   
   
+  @Override
   public void setDisabled(boolean disabled) {
-    for (Iterator i = elements.values().iterator(); i.hasNext();)
-      ((GenericFormElement) i.next()).setDisabled(disabled);
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();)
+      i.next().setDisabled(disabled);
   }
   
+  @Override
   public boolean isDisabled() {
   	boolean result = false;
-    for (Iterator i = elements.values().iterator(); i.hasNext();)
-    	result &= ((GenericFormElement) i.next()).isDisabled();
+    for (Iterator<GenericFormElement> i = elements.values().iterator(); i.hasNext();)
+    	result &= i.next().isDisabled();
     return result;
   }
   
+  @Override
   public void accept(String id, FormElementVisitor visitor) {
     visitor.visit(id, this);
 
     visitor.pushContext(id, this);
 
-    for (Iterator i = elements.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
+    for (Map.Entry<String, GenericFormElement> entry : elements.entrySet()) {
 
-      String elementId = (String) entry.getKey();
-      GenericFormElement element = (GenericFormElement) entry.getValue();
+      String elementId = entry.getKey();
+      GenericFormElement element = entry.getValue();
 
       element.accept(elementId, visitor);
     }
@@ -311,7 +320,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param mandatory whether the element must be filled in
    * @return {@link FormElement} with given configuration
    */
-  public FormElement createElement(String labelId, Control control, Data data, Object initialValue, boolean mandatory) {
+  public <C,D> FormElement<C,D> createElement(String labelId, Control<C> control, Data<D> data, D initialValue, boolean mandatory) {
     if (data != null)
       data.setValue(initialValue);
     return createElement(labelId, control, data, mandatory); 
@@ -327,10 +336,10 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param mandatory whether the element must be present in request.
    * @return {@link FormElement} with given configuration
    */
-  public FormElement createElement(String labelId, Control control, Data data, boolean mandatory) {
+  public <C,D> FormElement<C,D> createElement(String labelId, Control<C> control, Data<D> data, boolean mandatory) {
     Assert.notNullParam(control, "control");
     
-    FormElement result = new FormElement();
+    FormElement<C,D> result = new FormElement<C,D>();
     
     result.setLabel(labelId);
     result.setMandatory(mandatory);    
@@ -350,8 +359,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
-  public FormElement addElement(String elementName, String labelId, Control control, Data data, boolean mandatory) {
-  	FormElement result = createElement(labelId, control, data, mandatory);
+  public <C,D> FormElement<C,D> addElement(String elementName, String labelId, Control<C> control, Data<D> data, boolean mandatory) {
+  	FormElement<C,D> result = createElement(labelId, control, data, mandatory);
     addElement(elementName, result);
     return result;
   }
@@ -365,8 +374,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
-  public FormElement addElement(String elementName, String labelId, Control control, Data data, Object initialValue, boolean mandatory) {
-  	FormElement result = createElement(labelId, control, data, initialValue, mandatory);
+  public <C,D> FormElement<C,D> addElement(String elementName, String labelId, Control<C> control, Data<D> data, D initialValue, boolean mandatory) {
+  	FormElement<C,D> result = createElement(labelId, control, data, initialValue, mandatory);
     addElement(elementName, result);
     return result;
   }  
@@ -408,8 +417,9 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param fullName The full dot-separated name of the form element.
    * @return simple form element specified by full name.
    */
-  public FormElement getElementByFullName(String fullName) {
-    return (FormElement) getGenericElementByFullName(fullName);
+  @SuppressWarnings("unchecked")
+  public <T> FormElement<?, T> getElementByFullName(String fullName) {
+    return (FormElement<?, T>) getGenericElementByFullName(fullName);
   }
   
   /**
@@ -426,8 +436,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param fullName The full dot-separated name of the form element.
    * @return composite form element specified by full name.
    */
-  public Control getControlByFullName(String fullName) {
-  	FormElement el = getElementByFullName(fullName);
+  public Control<?> getControlByFullName(String fullName) {
+  	FormElement<?, ?> el = getElementByFullName(fullName);
     return (el == null) ? null : el.getControl();
   }
   
@@ -437,7 +447,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @return form element value specified by full name.
    */
   public Object getValueByFullName(String fullName) {
-  	FormElement el = getElementByFullName(fullName);
+  	FormElement<?, ?> el = getElementByFullName(fullName);
     return (el == null) ? null : el.getValue();  	    
   }
 
@@ -446,8 +456,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param fullName The full dot-separated name of the form element.
    * @param value form element value specified by full name.
    */  
-  public void setValueByFullName(String fullName, Object value) {
-  	FormElement el = getElementByFullName(fullName);
+  public <T> void setValueByFullName(String fullName, T value) {
+  	FormElement<?, T> el = getElementByFullName(fullName);
   	
   	if (el == null)
   		throw new InvalidFormElementNameException(fullName);
@@ -455,6 +465,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
   	el.getData().setValue(value);
   }
   
+  @Override
   public void addError(String error) {
     super.addError(error);
     getMessageCtx().showErrorMessage(error);
@@ -464,6 +475,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
+  @Override
   public Object getViewModel() {
     return new ViewModel();
   }
@@ -483,7 +495,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
      * Returns the <code>Map</code> with element views.
      * @return the <code>Map</code> with element views.
      */
-    public Map getElements() {
+    public Map<Object, Component> getElements() {
       return getChildren();
     } 
   }

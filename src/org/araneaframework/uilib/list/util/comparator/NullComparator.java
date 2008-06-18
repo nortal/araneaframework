@@ -24,24 +24,24 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * Comparator that compares <code>null</code> values and uses another not-null
  * <code>Comparator</code> in other cases.
  */
-public class NullComparator implements Comparator, Serializable {
+public class NullComparator<T> implements Comparator<T>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Comparator notNullComparator;
+	private Comparator<T> notNullComparator;
 
 	private boolean nullFirst;
 
-	public NullComparator(Comparator notNullComparator, boolean nullFirst) {
+	public NullComparator(Comparator<T> notNullComparator, boolean nullFirst) {
 		this.notNullComparator = notNullComparator;
 		this.nullFirst = nullFirst;
 	}
 	
-	public Comparator getNotNullComparator() {
+	public Comparator<T> getNotNullComparator() {
 		return this.notNullComparator;
 	}
 
-	public int compare(Object o1, Object o2) {
+	public int compare(T o1, T o2) {
 		if (o1 == null && o2 == null) {
 			return 0;
 		}
@@ -56,7 +56,8 @@ public class NullComparator implements Comparator, Serializable {
 		return this.notNullComparator.compare(o1, o2);
 	}
 	
-	public boolean equals(Object obj) {
+	@Override
+  public boolean equals(Object obj) {
 		if (obj instanceof NullComparator == false) {
 			return false;
 		}
@@ -69,7 +70,8 @@ public class NullComparator implements Comparator, Serializable {
 		return nullFirst == rhs.nullFirst && notNullComparator.equals(rhs.notNullComparator);
 	}
 
-	public int hashCode() {
+	@Override
+  public int hashCode() {
 		return new HashCodeBuilder(20070327, 1229).append(nullFirst).append(notNullComparator).toHashCode();
 	}
 }

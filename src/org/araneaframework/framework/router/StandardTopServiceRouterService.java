@@ -27,20 +27,23 @@ import org.araneaframework.framework.TopServiceContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTopServiceRouterService extends BaseExpiringServiceRouterService {
-  protected Object getServiceKey() throws Exception {
+  @Override
+  protected String getServiceKey() throws Exception {
     return TopServiceContext.TOP_SERVICE_KEY;
   }
 
-  public Object getKeepAliveKey() { 
+  @Override
+  public String getKeepAliveKey() { 
     return TopServiceContext.KEEPALIVE_KEY;
   }
 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+  @Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
     
   private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {
-    protected ServiceRouterContextImpl(Object serviceId) {
+    protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
   }

@@ -27,11 +27,13 @@ import org.araneaframework.backend.list.sqlexpr.constant.SqlValueExpression;
 public class SqlExpressionTests extends TestCase {
 	private static final Log log = LogFactory.getLog(SqlExpressionTests.class);
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		// reserved
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		// reserved
 	}
 

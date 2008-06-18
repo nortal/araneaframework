@@ -30,7 +30,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class DateTimeControl extends BaseControl {
+public class DateTimeControl extends BaseControl<Timestamp> {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -88,6 +88,7 @@ public class DateTimeControl extends BaseControl {
     return "Timestamp";
   }
 
+  @Override
   public boolean isRead() {
     // if date is not present, control cannot have valid value -- see comment
     // in addTimeToDate() method
@@ -145,6 +146,7 @@ public class DateTimeControl extends BaseControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
   
+  @Override
   protected void init() throws Exception {
     super.init();
 
@@ -169,6 +171,7 @@ public class DateTimeControl extends BaseControl {
   /**
    * 
    */
+  @Override
   public void convert() {
     dateControl.convert();
     timeControl.convert();
@@ -176,14 +179,15 @@ public class DateTimeControl extends BaseControl {
     //Reading control data
     if (getFormElementCtx().isValid() && isRead()) {
       value = addTimeToDate(
-          (Timestamp) dateControl.getRawValue(), 
-          (Timestamp) timeControl.getRawValue());
+          dateControl.getRawValue(), 
+          timeControl.getRawValue());
     }
     else {
     	value = null;
     }
   }
   
+  @Override
   public void validate() {
     if (isMandatory() && !isRead()) {
       addError(
@@ -198,17 +202,20 @@ public class DateTimeControl extends BaseControl {
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() throws Exception {
+  @Override
+  public ViewModel getViewModel() throws Exception {
     return new ViewModel();
   }
   
-  public void setRawValue(Object value) {
+  @Override
+  public void setRawValue(Timestamp value) {
     // mark composite control dirty
     super.setRawValue(null);
     dateControl.setRawValue(value);    
     timeControl.setRawValue(value);
   }
   
+  @Override
   public void setFormElementCtx(FormElementContext formElementContext) {
     super.setFormElementCtx(formElementContext);
     
@@ -226,7 +233,7 @@ public class DateTimeControl extends BaseControl {
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<Timestamp>.ViewModel {
     private String time;
     private String date;
     

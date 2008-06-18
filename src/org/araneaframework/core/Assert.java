@@ -88,7 +88,7 @@ public abstract class Assert {
     }
   }
   
-  public static void isInstanceOf(Object that, Class klass, Object object, String message) {
+  public static void isInstanceOf(Object that, Class<?> klass, Object object, String message) {
     if (object == null) return;
     
     if (!klass.isAssignableFrom(object.getClass())) {
@@ -96,7 +96,7 @@ public abstract class Assert {
     }
   }
   
-  public static void isInstanceOf( Class klass, Object object, String message) {
+  public static void isInstanceOf( Class<?> klass, Object object, String message) {
     if (object == null) return;
     
     if (!klass.isAssignableFrom(object.getClass())) {
@@ -104,7 +104,7 @@ public abstract class Assert {
     }
   }
   
-  public static void isInstanceOfParam(Object that, Class klass, Object object, String parameterName) {
+  public static void isInstanceOfParam(Object that, Class<?> klass, Object object, String parameterName) {
     if (object == null) return;
     
     if (!klass.isAssignableFrom(object.getClass())) {
@@ -112,7 +112,7 @@ public abstract class Assert {
     }
   }
   
-  public static void isInstanceOfParam( Class klass, Object object, String parameterName) {
+  public static void isInstanceOfParam( Class<?> klass, Object object, String parameterName) {
     if (object == null) return;
     
     if (!klass.isAssignableFrom(object.getClass())) {
@@ -139,13 +139,13 @@ public abstract class Assert {
     }
   }
 
-  public static void notEmpty(Collection collection, String message) {
+  public static void notEmpty(Collection<?> collection, String message) {
     if (collection == null || collection.size() == 0) {
       throw new IllegalArgumentException(message);
     }
   }
 
-  public static void notEmpty(Map map, String message) {
+  public static void notEmpty(Map<?,?> map, String message) {
     if (map == null || map.size() == 0) {
       throw new IllegalArgumentException(message);
     }
@@ -157,41 +157,41 @@ public abstract class Assert {
     }
   }
   
-  public static void noNullElementsParam(Collection collection, String param) {
+  public static void noNullElementsParam(Collection<?> collection, String param) {
     notNullParam(collection, param);
     int i = 0;
-    for (Iterator it = collection.iterator(); it.hasNext();) {
+    for (Iterator<?> it = collection.iterator(); it.hasNext();) {
       if (it.next() == null)
         throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!");
       i++;
     }
   }
   
-  public static void noNullElements(Collection collection, String message) {
+  public static void noNullElements(Collection<?> collection, String message) {
     notNull(collection);
     int i = 0;
-    for (Iterator it = collection.iterator(); it.hasNext();) {
-      if (it.next() == null)
+    for (Object element : collection) {
+      if (element == null)
         throw new IllegalArgumentException(message);
       i++;
     }
   }
   
-  public static void noNullElementsParam(Object that, Collection collection, String param) {
+  public static void noNullElementsParam(Object that, Collection<?> collection, String param) {
     notNullParam(collection, param);
     int i = 0;
-    for (Iterator it = collection.iterator(); it.hasNext();) {
-      if (it.next() == null)
+    for (Object element : collection) {
+      if (element == null)
         throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!" + thisToString(that));
       i++;
     }
   }
   
-  public static void noNullElements(Object that, Collection collection, String message) {
+  public static void noNullElements(Object that, Collection<?> collection, String message) {
     notNull(collection);
     int i = 0;
-    for (Iterator it = collection.iterator(); it.hasNext();) {
-      if (it.next() == null)
+    for (Object element : collection) {
+      if (element == null)
         throw new IllegalArgumentException(message + thisToString(that));
       i++;
     }

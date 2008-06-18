@@ -31,8 +31,8 @@ import org.araneaframework.uilib.form.formlist.FormListWidget;
  *   description = "UiLib form list tag. <br/> 
            Makes available following page scope variables: 
            <ul>
-             <li><i>formList</i> - UiLib editable list view model.
-             <li><i>formListId</i> - UiLib editable list id.
+             <li><i>formList</i> - UiLib editable list view model.</li>
+             <li><i>formListId</i> - UiLib editable list id.</li>
            </ul> "
  */
 public class FormListTag extends BaseWidgetTag {
@@ -43,7 +43,8 @@ public class FormListTag extends BaseWidgetTag {
 	/**
 	 *
 	 */
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		if (id == null) {
 			String listId = (String) requireContextEntry(ListTag.LIST_ID_KEY);
 			id = listId + ".formList";
@@ -67,7 +68,8 @@ public class FormListTag extends BaseWidgetTag {
 	/* ***********************************************************************************
 	 * FINALLY - reset some fields to allow safe reuse from tag pool.
 	 * ***********************************************************************************/
-	public void doFinally() {
+	@Override
+  public void doFinally() {
 		super.doFinally();
 		id = null;
 		formListViewModel = null;

@@ -32,12 +32,12 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  */
 public class UiUpdateEvent extends UiEvent {
 
-  private List updateRegionNames;
+  private List<String> updateRegionNames;
 
   private String eventPrecondition;
 
   /**
-   * A constructor wihtout any field initialzation.
+   * A constructor without any field initialization.
    */
   public UiUpdateEvent() {}
 
@@ -61,7 +61,7 @@ public class UiUpdateEvent extends UiEvent {
    * @param param A <code>String</code> parameter for the event listener.
    * @param updateRegionNames comma-separated region names
    */
-  public UiUpdateEvent(String id, String target, String param, List updateRegionNames) {
+  public UiUpdateEvent(String id, String target, String param, List<String> updateRegionNames) {
 	super(id, target, param);
 	this.updateRegionNames = updateRegionNames;
   }
@@ -72,7 +72,7 @@ public class UiUpdateEvent extends UiEvent {
    * 
    * @return the comma-separated region names or <code>null</code>.
    */
-  public List getUpdateRegionNames() {
+  public List<String> getUpdateRegionNames() {
     return updateRegionNames;
   }
 
@@ -82,7 +82,7 @@ public class UiUpdateEvent extends UiEvent {
    * 
    * @param updateRegionNames the comma-separated region names or <code>null</code>.
    */
-  public void setUpdateRegionNames(List updateRegionNames) {
+  public void setUpdateRegionNames(List<String> updateRegionNames) {
     this.updateRegionNames = updateRegionNames;
   }
 
@@ -106,6 +106,7 @@ public class UiUpdateEvent extends UiEvent {
     this.eventPrecondition = eventPrecondition;
   }
 
+  @Override
   public StringBuffer getEventAttributes() {
     StringBuffer result = super.getEventAttributes();
     if (eventPrecondition != null) {
@@ -114,7 +115,7 @@ public class UiUpdateEvent extends UiEvent {
       result.append(eventPrecondition).append('"');
     }
 
-    List updtRgns = getUpdateRegionNames();
+    List<String> updtRgns = getUpdateRegionNames();
     if (updtRgns != null && !updtRgns.isEmpty()) {
       result.append(" ");
       result.append(AraneaAttributes.Event.UPDATE_REGIONS);
@@ -126,6 +127,7 @@ public class UiUpdateEvent extends UiEvent {
     return result;
   }
 
+  @Override
   public void clear() {
     super.clear();
     updateRegionNames = null;

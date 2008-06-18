@@ -33,6 +33,7 @@ public class FormTextDisplayHtmlTag extends BaseFormElementDisplayTag {
   
   /**
    */
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("DisplayControl");
     

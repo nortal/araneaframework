@@ -37,6 +37,7 @@ public class FormCheckboxDisplayHtmlTag extends BaseFormElementDisplayTag {
     baseStyleClass = "aranea-checkbox-display";
   }
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {        
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
@@ -54,6 +55,6 @@ public class FormCheckboxDisplayHtmlTag extends BaseFormElementDisplayTag {
 
   //XXX: why is it here, without attributes
   protected void setImageCode(String imageCode) throws JspException {
-    this.imageCode = (String) evaluateNotNull("imageCode", imageCode, String.class);
+    this.imageCode = evaluateNotNull("imageCode", imageCode, String.class);
   }
 }

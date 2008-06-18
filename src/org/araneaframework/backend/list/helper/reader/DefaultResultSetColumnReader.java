@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-
 import org.araneaframework.core.util.ExceptionUtil;
 
 
@@ -53,34 +52,34 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
 	/**
 	 * Tries to read the same type as is given in the <code>javaType</code>.
 	 */
-	public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType){
+	public <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType){
 		try {
 			if (resultSet.getObject(columnName) == null)
 				return null;
 
 			if (Long.class.isAssignableFrom(javaType))      
-				return new Long(resultSet.getLong(columnName));
+				return (T) new Long(resultSet.getLong(columnName));
 
 			if (Integer.class.isAssignableFrom(javaType))
-				return new Integer(resultSet.getInt(columnName));
+				return (T) new Integer(resultSet.getInt(columnName));
 
 			if (Boolean.class.isAssignableFrom(javaType))
-				return resultSet.getBoolean(columnName) ? Boolean.TRUE : Boolean.FALSE;
+				return (T) (resultSet.getBoolean(columnName) ? Boolean.TRUE : Boolean.FALSE);
 
 			if (BigDecimal.class.isAssignableFrom(javaType))
-				return resultSet.getBigDecimal(columnName);
+				return (T) resultSet.getBigDecimal(columnName);
 
 			if (Timestamp.class.isAssignableFrom(javaType))
-				return resultSet.getTimestamp(columnName);
+				return (T) resultSet.getTimestamp(columnName);
 
 			if (java.sql.Date.class.isAssignableFrom(javaType))
-				return resultSet.getDate(columnName);        
+				return (T) resultSet.getDate(columnName);        
 
 			if (java.util.Date.class.isAssignableFrom(javaType))
-				return new java.util.Date(resultSet.getTimestamp(columnName).getTime());
+				return (T) new java.util.Date(resultSet.getTimestamp(columnName).getTime());
 
 			if (String.class.isAssignableFrom(javaType))
-				return resultSet.getString(columnName);
+				return (T) resultSet.getString(columnName);
 
 		}
 		catch (SQLException e) {

@@ -33,7 +33,7 @@ import org.araneaframework.http.util.ServletUtil;
 public class DownloaderWidget extends BaseApplicationWidget {
   protected byte[] data;
   protected String contentType;
-  protected Map headers;
+  protected Map<String, String> headers;
 
   public DownloaderWidget(byte[] data, String contentType) {
     Assert.notNullParam(data, "data");
@@ -43,7 +43,7 @@ public class DownloaderWidget extends BaseApplicationWidget {
   }
   
   /** @since 1.1 */
-  public DownloaderWidget(byte[] data, Map headers) {
+  public DownloaderWidget(byte[] data, Map<String, String> headers) {
     Assert.notNullParam(data, "data");
     this.data = data;
     this.headers = headers;
@@ -58,10 +58,11 @@ public class DownloaderWidget extends BaseApplicationWidget {
   }
   
   /** @since 1.1 */
-  public Map getHeaders() {
+  public Map<String, String> getHeaders() {
     return headers;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
     response.setContentType(getContentType());

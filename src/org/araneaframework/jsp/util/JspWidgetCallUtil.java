@@ -80,7 +80,11 @@ public abstract class JspWidgetCallUtil {
     String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
     String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";
     String eventPrecondition = event.getEventPrecondition() != null ? "'" + event.getEventPrecondition() + "'" : "null";
-    List updateRegionNames = event.getUpdateRegionNames() != null ? event.getUpdateRegionNames() : Collections.EMPTY_LIST;
+    List<String> updateRegionNames;
+    if (event.getUpdateRegionNames() != null)
+      updateRegionNames = event.getUpdateRegionNames();
+    else
+      updateRegionNames = Collections.emptyList();
     
     sb.append(eventId).append(",");
     sb.append(eventTarget).append(",");

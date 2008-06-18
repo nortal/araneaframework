@@ -44,29 +44,30 @@ import org.araneaframework.framework.ManagedServiceContext;
 public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService implements ExpiringServiceContext {
 
   private static final Log log = LogFactory.getLog(BaseExpiringServiceRouterService.class);
-  private Map timeCapsules;
-  private Map serviceTTLMap;
+  private Map<Object, TimeCapsule> timeCapsules;
+  private Map<String, Long> serviceTTLMap;
   
-  public Map getServiceTTLMap() {
+  public Map<String, Long> getServiceTTLMap() {
     if (serviceTTLMap == null)
       return null;
     return Collections.unmodifiableMap(serviceTTLMap);
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     TimeCapsule capsule = null;
     if (timeCapsules != null) {
       killExpiredServices(System.currentTimeMillis());
-      capsule = (TimeCapsule)getTimeCapsules().get(getServiceId(input));
+      capsule = getTimeCapsules().get(getServiceId(input));
     }
  
     serviceTTLMap = null;
     if (capsule != null) {
       if (getEnvironment().getEntry(ExpiringServiceContext.class) != null) {
-        serviceTTLMap = ((ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class)).getServiceTTLMap();
+        serviceTTLMap = (getEnvironment().getEntry(ExpiringServiceContext.class)).getServiceTTLMap();
       }
       if (serviceTTLMap == null) {
-        serviceTTLMap = new HashMap();
+        serviceTTLMap = new HashMap<String, Long>();
       }
 
       serviceTTLMap.put(getKeepAliveKey(), capsule.getTimeToLive());
@@ -83,13 +84,15 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
       capsule.setLastActivity(new Long(System.currentTimeMillis()));
   }
 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();
+  @Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
     entries.put(ExpiringServiceContext.class, this);
     return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
   
+  @Override
   protected void closeService(Object serviceId) {
     super.closeService(serviceId);
     getTimeCapsules().remove(serviceId);
@@ -97,9 +100,9 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
   protected void killExpiredServices(long now) {
     synchronized (getTimeCapsules()) {
-      for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
-        Map.Entry entry = (Map.Entry) i.next();
-        if (((TimeCapsule)entry.getValue()).isExpired(now)) {
+      for (Iterator<Map.Entry<Object, TimeCapsule>> i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry<Object, TimeCapsule> entry = i.next();
+        if (entry.getValue().isExpired(now)) {
           super.closeService(entry.getKey());
           i.remove();
           if (log.isDebugEnabled())
@@ -116,15 +119,15 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
    * 
    * @return a keepalive key for this {@link BaseExpiringServiceRouterService}
    */
-  public abstract Object getKeepAliveKey();
+  public abstract String getKeepAliveKey();
 
   protected boolean isKeepAlive(InputData input) {
     return input.getGlobalData().get(getKeepAliveKey()) != null;
   }
 
-  private synchronized Map getTimeCapsules() {
+  private synchronized Map<Object, TimeCapsule> getTimeCapsules() {
     if (timeCapsules == null)
-      timeCapsules = Collections.synchronizedMap(new HashMap());
+      timeCapsules = Collections.synchronizedMap(new HashMap<Object, TimeCapsule>());
 
     return timeCapsules;
   }
@@ -152,11 +155,12 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   }
   
   protected class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl {
-    protected ServiceRouterContextImpl(Object serviceId) {
+    protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
 
-    public Service addService(Object id, Service service, Long timeToLive) {
+    @Override
+    public Service addService(String id, Service service, Long timeToLive) {
       Service result = super.addService(id, service);
       if (timeToLive != null)
         getTimeCapsules().put(id, new TimeCapsule(timeToLive));

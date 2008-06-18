@@ -23,7 +23,7 @@ package org.araneaframework.uilib.form.control;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class CheckboxControl extends StringRequestControl{   
+public class CheckboxControl extends StringRequestControl<Boolean>{   
   
   /**
    * Returns "Boolean".
@@ -44,6 +44,7 @@ public class CheckboxControl extends StringRequestControl{
    * <li>if there isn't a request parameter, it's substituted with "false"
    * </ul>
    */
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
     if (parameterValue == null) {
       return "false";
@@ -56,14 +57,16 @@ public class CheckboxControl extends StringRequestControl{
   /**
    * This method makes a <code>Boolean</code> out of a <code>String</code>.
    */
-  protected Object fromRequest(String parameterValue) {
+  @Override
+  protected Boolean fromRequest(String parameterValue) {
     return Boolean.valueOf(parameterValue);
   }
   
   /**
    * This method makes a <code>String</code> out of a <code>Boolean</code>.
    */
-  protected String toResponse(Object controlValue) {
-    return ((Boolean) controlValue).booleanValue() ? "true" : "false";
+  @Override
+  protected String toResponse(Boolean controlValue) {
+    return controlValue.booleanValue() ? "true" : "false";
   }
 }

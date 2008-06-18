@@ -139,7 +139,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
 	  getFlowCtx().start(new ClientViewWidget(c));
 	  // XXX: this is a hack to work around the shortcoming of partial rendering -- namely when flow is switched,
 	  // the regions that are supposed to be updated are of course lost and old flow remains on end-user screen
-	  ((UpdateRegionContext)getEnvironment().getEntry(UpdateRegionContext.class)).disableOnce();
+	  (getEnvironment().getEntry(UpdateRegionContext.class)).disableOnce();
   }
   
   private void handleEventChangeSex(String param) {

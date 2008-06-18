@@ -28,15 +28,16 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class StringToBigDecimalConverter extends BaseConverter {
+public class StringToBigDecimalConverter extends BaseConverter<String, BigDecimal> {
 
   /**
    * Converts <code>String</code> to <code>BigDecimal</code>.
    */
-  public Object convertNotNull(Object data) {
-    Object result = null;
+  @Override
+  public BigDecimal convertNotNull(String data) {
+    BigDecimal result = null;
     try {
-      result = new BigDecimal((String) data);
+      result = new BigDecimal(data);
     }
     catch (NumberFormatException e) {      
       addError(
@@ -51,14 +52,16 @@ public class StringToBigDecimalConverter extends BaseConverter {
   /**
    * Converts <code>BigDecimal</code> to <code>String</code>.
    */
-  public Object reverseConvertNotNull(Object data) {
+  @Override
+  public String reverseConvertNotNull(BigDecimal data) {
     return data.toString();
   }
   
   /**
    * Returns <code>new StringToBigDecimalConverter()</code>
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<String, BigDecimal> newConverter() {
     return new StringToBigDecimalConverter();
   }
 }

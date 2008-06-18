@@ -139,13 +139,15 @@ public abstract class RangeFilter extends BaseRangeFilter {
 	}
 	
 	static class DateStrict extends RightStrict {
-		protected Object convertLowValue(Object value) {
+		@Override
+    protected Object convertLowValue(Object value) {
 			return nextDay((Date) value);
 		}
 	}
 	
 	static class DateNonStrict extends RightStrict {
-		protected Object convertHighValue(Object value) {
+		@Override
+    protected Object convertHighValue(Object value) {
 			return nextDay((Date) value);
 		}
 	}

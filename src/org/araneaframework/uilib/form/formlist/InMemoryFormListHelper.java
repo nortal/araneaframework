@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.formlist.adapter.InMemoryFormRowHandlerDecorator;
 import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
@@ -35,13 +35,13 @@ import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class InMemoryFormListHelper implements Serializable {
-	protected Map tempKeys = new HashMap();
+	protected Map<Object, Object> tempKeys = new HashMap<Object, Object>();
 	
-	protected Map added = new HashMap();
-	protected Map updated = new HashMap();
-	protected Set deleted = new HashSet();
+	protected Map<Object, Object> added = new HashMap<Object, Object>();
+	protected Map<Object, Object> updated = new HashMap<Object, Object>();
+	protected Set<Object> deleted = new HashSet<Object>();
 	
-	protected Map current = new LinkedMap();
+	protected Map<Object, Object> current = new LinkedHashMap<Object, Object>();
 	
 	protected BaseFormListWidget formList;
 	
@@ -51,11 +51,11 @@ public class InMemoryFormListHelper implements Serializable {
 	 * @param formList
 	 * @param initialData initial row objects.
 	 */
-	public InMemoryFormListHelper(BaseFormListWidget formList, Collection initialData) {
+	public InMemoryFormListHelper(BaseFormListWidget formList, Collection<Object> initialData) {
     this.formList = formList;
     
     if (initialData != null) {
-      for (Iterator i = initialData.iterator(); i.hasNext();) {
+      for (Iterator<Object> i = initialData.iterator(); i.hasNext();) {
         Object row = i.next();
         current.put(formList.getFormRowHandler().getRowKey(row), row);
       }
@@ -126,10 +126,12 @@ public class InMemoryFormListHelper implements Serializable {
 			return this.row;
 		}
 		
-		public String toString() {
+		@Override
+    public String toString() {
 			return "tempId@" + Integer.toHexString(System.identityHashCode(getRow()));
 		}
     
+    @Override
     public boolean equals(Object obj) {
       Assert.notNullParam(obj, "obj");
       Assert.isInstanceOfParam(RowWrapper.class, obj, "obj");
@@ -138,6 +140,7 @@ public class InMemoryFormListHelper implements Serializable {
       return that.getRow() == this.getRow();
     }
     
+    @Override
     public int hashCode() {
       return System.identityHashCode(getRow());
     }
@@ -164,28 +167,28 @@ public class InMemoryFormListHelper implements Serializable {
 	/**
 	 * Returns row objects added during the session.
 	 */
-	public Map getAdded() {
+	public Map<Object, Object> getAdded() {
 		return this.added;
 	}
 	
 	/**
 	 * Returns row objects deleted during the session.
 	 */
-	public Set getDeleted() {
+	public Set<Object> getDeleted() {
 		return this.deleted;
 	}
 	
 	/**
 	 * Returns row objects updated during the session.
 	 */
-	public Map getUpdated() {
+	public Map<Object, Object> getUpdated() {
 		return this.updated;
 	}
 	
 	/**
 	 * Returns current row objects. 
 	 */
-	public Map getCurrent() {
+	public Map<Object, Object> getCurrent() {
 		return this.current;
 	}
 }

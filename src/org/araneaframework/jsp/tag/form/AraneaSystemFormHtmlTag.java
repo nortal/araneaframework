@@ -18,9 +18,7 @@ package org.araneaframework.jsp.tag.form;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
@@ -45,8 +43,9 @@ import org.araneaframework.jsp.util.JspUtil;
 public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {  
   private JspContext config;
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
-    config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+    config = getEnvironment().requireEntry(JspContext.class);
 
     super.doStartTag(out);
 
@@ -59,7 +58,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
     
     // if overlay is active, set the empty field which denotes that systemform is running in overlay
-    OverlayActivityMarkerContext oCtx = (OverlayActivityMarkerContext) getEnvironment().getEntry(OverlayActivityMarkerContext.class);
+    OverlayActivityMarkerContext oCtx = getEnvironment().getEntry(OverlayActivityMarkerContext.class);
     if (oCtx != null) {
       JspUtil.writeHiddenInputElement(out, OverlayContext.OVERLAY_REQUEST_KEY, "");
     }
@@ -68,6 +67,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     return EVAL_BODY_INCLUDE;
   }
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     writeVersionedStateInfo(out);
     return super.doEndTag(out);
@@ -77,7 +77,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
    * @since 1.2
    */
   protected void writeVersionedStateInfo(Writer out) throws Exception {
-    StateVersioningContext ctx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    StateVersioningContext ctx = getEnvironment().getEntry(StateVersioningContext.class);
     if (ctx != null) {
       State state = ctx.saveState();
       if (state != null) {
@@ -88,11 +88,10 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     }
   }
 
-  private void writeSystemFormFields(Writer out) throws JspException, IOException {
-    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
-    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
+  private void writeSystemFormFields(Writer out) throws IOException {
+    SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
+    for (Map.Entry<String, String> entry : systemFormContext.getFields().entrySet()) {
+      JspUtil.writeHiddenInputElement(out, entry.getKey(), entry.getValue());
     }
   }
   
@@ -100,11 +99,13 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
    * Implementation of SystemForm abstract methods
    * ***********************************************************************************/
 
+  @Override
   protected String getAcceptCharset() {
     return config.getSubmitCharset();
   }
 
-  protected String getFormAction() throws JspException {
+  @Override
+  protected String getFormAction(){
     return ((HttpInputData) getOutputData().getInputData()).getContainerURL();
   }
 }

@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * TODO: rename to BlankStringNullableControl in Aranea 2.0
  */
-public abstract class EmptyStringNullableControl extends StringRequestControl {
+public abstract class EmptyStringNullableControl<T> extends StringRequestControl<T> {
   
   //*********************************************************************
   //* INTERNAL METHODS
@@ -36,6 +36,7 @@ public abstract class EmptyStringNullableControl extends StringRequestControl {
    * Preprocesses the request parameter, substituting empty or blank String 
    * with null.
    */
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
     if (StringUtils.isBlank(parameterValue)) {
       return null;
@@ -44,7 +45,8 @@ public abstract class EmptyStringNullableControl extends StringRequestControl {
   }
   
 
-	public boolean isRead() {
+	@Override
+  public boolean isRead() {
 		// semantically this is not right, as innerData may be not null when value was not
 		// actually read from current request: ie in cases when update() is not called. 
 		return (innerData != null && ((String[]) innerData)[0].trim().length() != 0);

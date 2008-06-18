@@ -123,6 +123,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
   protected void event(Path path, InputData input) throws Exception {}
   protected void render(OutputData output) throws Exception {}
   
+  @Override
   protected InputData getInputData() {
   	InputData input = super.getInputData();
   	OutputData output = super.getOutputData();
@@ -135,11 +136,12 @@ public abstract class BaseWidget extends BaseService implements Widget {
   	// as last resort, look in the Environment -- when result cannot be found be
   	// before, this probably means that we are still in widgets init() method.
   	if (input == null)
-      input = (InputData) getEnvironment().getEntry(InputData.class);
+      input = getEnvironment().getEntry(InputData.class);
   	
   	return input;
   }
   
+  @Override
   protected OutputData getOutputData() {
   	OutputData output = super.getOutputData();
   	InputData input = super.getInputData();
@@ -150,7 +152,7 @@ public abstract class BaseWidget extends BaseService implements Widget {
   	// as last resort, look in the Environment -- when result cannot be found be
   	// before, this probably means that we are still in widgets init() method.
   	if (output == null)
-      output = (OutputData) getEnvironment().getEntry(OutputData.class);
+      output = getEnvironment().getEntry(OutputData.class);
 
   	return output;
   }

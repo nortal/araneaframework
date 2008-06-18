@@ -31,6 +31,7 @@ public class TemplateCriticalErrorHandler extends BaseService  {
     this.exception = exception;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Writer out = ((HttpOutputData) output).getWriter();
     

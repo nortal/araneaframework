@@ -33,6 +33,7 @@ import org.araneaframework.uilib.form.control.TextControl;
  *   description = "Form password input field, represents UiLib "TextControl"."
  */
 public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("TextControl");
@@ -40,8 +41,8 @@ public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
     TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
 
     // Write
-    Map attributes = new HashMap();
-    attributes.put("maxLength", viewModel.getMaxLength());
+    Map<String, String> attributes = new HashMap<String, String>();
+    attributes.put("maxLength", String.valueOf(viewModel.getMaxLength()));
     writeTextInput(out, "password", false, attributes);
 
     // Continue

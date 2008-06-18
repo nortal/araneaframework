@@ -29,7 +29,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
 /**
  * Tag that renders the {@link ListWidget}'s filter form filtering button.
  * Should be used inside list filter form (&lt;ui:listFilter&gt; tag).
- * Button uses label specified by {@link ListWidget}&mdash;{@link UiLibMessages#LIST_FILTER_BUTTON_LABEL}.
+ * Button uses label specified by {@link ListWidget}-{@link UiLibMessages#LIST_FILTER_BUTTON_LABEL}.
  * Also registers enter keyboard handler, so that ENTER key triggers filtering
  * from any filter form field.
  * 
@@ -38,7 +38,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @jsp.tag
  *   name = "listFilterButton"
  *   body-content = "JSP"
- *   description = "Renders ListWidget's filter form filtering button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_BUTTON_LABEL&mdash;'uilib.list.filter.button'"
+ *   description = "Renders ListWidget's filter form filtering button. Should be used inside &lt;ui:listFilter&gt; tag. Button label identifier is UiLibMessages.LIST_FILTER_BUTTON_LABEL-'uilib.list.filter.button'"
  *
  * @since 1.0.3  
  */
@@ -57,6 +57,7 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
     this.renderMode = ListFilterButtonHtmlTag.RENDER_BUTTON;
   }
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -99,6 +100,6 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
   public void setRenderMode(String renderMode) throws JspException {
 	  if (!(renderMode.equals(ListFilterButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(ListFilterButtonHtmlTag.RENDER_INPUT) || renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY)))
 	      throw new AraneaJspException("<ui:listFilterButton> 'renderMode' attribute must be '" + ListFilterButtonHtmlTag.RENDER_BUTTON + "' or '"+ ListFilterButtonHtmlTag.RENDER_INPUT+"'" + "' or '"+ ListFilterButtonHtmlTag.RENDER_EMPTY+"'");
-      this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+      this.renderMode = evaluate("renderMode", renderMode, String.class);
   }
 }

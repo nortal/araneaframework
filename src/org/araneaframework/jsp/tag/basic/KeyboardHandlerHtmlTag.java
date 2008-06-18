@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 
 /**
  * Invokes a "uiRegisterKeyboardHandler" javascript.
@@ -49,8 +48,8 @@ public class KeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
           element with ID beginning with 'somelist'.
           When scope is not specified, a global handler is registered, that reacts to an event in any form/widget"
 	 */
-	public void setScope(String scope) throws JspException{
-	  this.scope = (String) evaluate("scope", scope, String.class);
+	public void setScope(String scope){
+	  this.scope = evaluate("scope", scope, String.class);
 	}
 	
 	/**
@@ -69,12 +68,13 @@ public class KeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
           the event was fired. 
           Example: function(event, elementId) { alert(elementId); }" 
 	 */
-	public void setHandler(String handler) throws JspException {
-		this.handler = (String) evaluate("handler", handler, String.class);
+	public void setHandler(String handler){
+		this.handler = evaluate("handler", handler, String.class);
 	}
 	
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		if (intKeyCode != null)
 			writeRegisterKeypressHandlerScript(out, scope, intKeyCode, handler);

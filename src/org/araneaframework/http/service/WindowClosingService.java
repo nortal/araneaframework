@@ -47,18 +47,19 @@ public class WindowClosingService extends BaseService {
 		this.closableComponentEnv = closableComponentEnv;
 	}
 	
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
+	@Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		
-		PopupWindowContext popupCtx = ((PopupWindowContext)closableComponentEnv.getEntry(PopupWindowContext.class));
+		PopupWindowContext popupCtx = (closableComponentEnv.getEntry(PopupWindowContext.class));
 		BaseApplicationWidget opener = null;
 		if (popupCtx != null)
 			opener = (BaseApplicationWidget) popupCtx.getOpener();
 		
 		StandardPopupServiceInfo serviceInfo = null;
 		if (opener != null) {
-			String threadId = (String) EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
-			String topserviceId = (String) EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
+			String threadId = EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
+			String topserviceId = EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
 			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
 			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
 			serviceInfo.setTransactionOverride(false);
@@ -97,7 +98,7 @@ public class WindowClosingService extends BaseService {
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 }

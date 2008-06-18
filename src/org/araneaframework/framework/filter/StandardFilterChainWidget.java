@@ -25,16 +25,17 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFilterChainWidget extends BaseFilterWidget {
-  private List filterChain;  
+  private List<FilterWidget> filterChain;  
   
-  public void setFilterChain(List filterChain) {
+  public void setFilterChain(List<FilterWidget> filterChain) {
     this.filterChain = filterChain;
   }
   
+  @Override
   protected void init() throws Exception {    
     if (filterChain != null)
-      for (ListIterator i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
-        FilterWidget filter = (FilterWidget) i.previous();
+      for (ListIterator<FilterWidget> i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
+        FilterWidget filter = i.previous();
         
         filter.setChildWidget(childWidget);
         childWidget = filter;

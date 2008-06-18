@@ -23,7 +23,7 @@ import org.araneaframework.framework.LocalizationContext;
 public class MessageUtil {
   public static String localize(String messageCode, Environment env) {
     LocalizationContext locCtx = 
-      (LocalizationContext) env.getEntry(LocalizationContext.class);
+      env.getEntry(LocalizationContext.class);
     return locCtx.getResourceBundle().getString(messageCode);    
   }
   

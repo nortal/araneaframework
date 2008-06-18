@@ -33,12 +33,13 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class FileUploadControl extends BaseControl {
-  protected List permittedMimeFileTypes;
+public class FileUploadControl extends BaseControl<FileInfo> {
+  protected List<String> permittedMimeFileTypes;
   
   protected boolean uploadSucceeded = true;
   protected boolean mimeTypePermitted = true;
 
+  @Override
   public boolean isRead() {
     return innerData != null;
   }
@@ -49,7 +50,7 @@ public class FileUploadControl extends BaseControl {
    * @param permittedMimeFileTypes
    *          the MIME file types that will be permitted.
    */
-  public void setPermittedMimeFileTypes(List permittedMimeFileTypes) {
+  public void setPermittedMimeFileTypes(List<String> permittedMimeFileTypes) {
     this.permittedMimeFileTypes = permittedMimeFileTypes;
   }
 
@@ -76,6 +77,7 @@ public class FileUploadControl extends BaseControl {
   /**
    * Reads the {@link FileInfo}data from request {@link HttpInputData}.
    */
+  @Override
   protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = getFileUploadInputExtension(request);
     // this is acceptable, see comments in getFileUploadInputExtension()
@@ -111,7 +113,7 @@ public class FileUploadControl extends BaseControl {
     // FileUploadInputExtension extension does not exist in InputData which is
     // extended only when request is multipart, while cloning filter always sends ordinary GET.
     try {
-      fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
+      fileUpload = request.narrow(FileUploadInputExtension.class);
     }
     catch (NoSuchNarrowableException e) {
       // If no fileupload extension is present and fileupload filter is enabled, control should
@@ -120,11 +122,12 @@ public class FileUploadControl extends BaseControl {
     return fileUpload;
   }
 
+  @Override
   public void convert() {
-    value = innerData;
+    value = (FileInfo) innerData;
     
     if (!uploadSucceeded) {
-      Long sizeLimit = ((FileUploadContext) getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
+      Long sizeLimit = (getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
       addError(MessageUtil.localizeAndFormat(
           UiLibMessages.FILE_UPLOAD_FAILED,
           sizeLimit.toString(),
@@ -134,6 +137,7 @@ public class FileUploadControl extends BaseControl {
     }
   }
 
+  @Override
   public void validate() {
     boolean fieldFilled = false;
     FileInfo info = (FileInfo)innerData;
@@ -164,7 +168,8 @@ public class FileUploadControl extends BaseControl {
    * 
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -175,9 +180,9 @@ public class FileUploadControl extends BaseControl {
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<FileInfo>.ViewModel {
 
-    private List permittedMimeFileTypes;
+    private List<String> permittedMimeFileTypes;
 
     /**
      * Takes an outer class snapshot.
@@ -191,7 +196,7 @@ public class FileUploadControl extends BaseControl {
      * 
      * @return the MIME file types that will be permitted.
      */
-    public List getPermittedMimeFileTypes() {
+    public List<String> getPermittedMimeFileTypes() {
       return permittedMimeFileTypes;
     }
   }

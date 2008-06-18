@@ -45,6 +45,7 @@ public class StandardSessionServiceRouterServiceTests extends TestCase {
   
   private Map map;
   
+  @Override
   public void setUp() throws Exception {
     service = new StandardSessionServiceRouterService();
     map = new HashMap();
@@ -70,7 +71,7 @@ public class StandardSessionServiceRouterServiceTests extends TestCase {
   public void testCloseRemoves() throws Exception {
     service._getService().action(MockUtil.getPath(), input, output);
     SessionServiceContext sess = 
-      (SessionServiceContext)child1.getTheEnvironment().getEntry(SessionServiceContext.class);
+      child1.getTheEnvironment().getEntry(SessionServiceContext.class);
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
   }

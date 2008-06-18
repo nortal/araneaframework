@@ -40,6 +40,7 @@ public class StandardServiceContainerWidgetTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
   
+  @Override
   public void setUp() throws Exception {
     child = new MockEventfulStandardService();
     parent = new StandardServiceAdapterWidget();

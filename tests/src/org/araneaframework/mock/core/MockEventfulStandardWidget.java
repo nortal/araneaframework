@@ -37,16 +37,19 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
   private transient OutputData output;
   private transient Path path;
   
+  @Override
   public void render(OutputData output) {
     
     this.renderCalled = true;
   }
   
+  @Override
   public void update(InputData input) throws Exception {
     this.updateCalled = true;
     this.input = input;
   }
   
+  @Override
   public void event(Path path, InputData input) throws Exception {
     eventProcessed = true;
     this.path = path;
@@ -54,6 +57,7 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
     super.event(path, input);
   }
   
+  @Override
   public void action(Path path, InputData input, OutputData output) throws Exception {
     actionCalled = true;
     this.path = path;
@@ -62,10 +66,13 @@ public class MockEventfulStandardWidget extends BaseApplicationWidget {
     super.action(path, input, output);
   }
   
+  @Override
   protected void handleAction(InputData input, OutputData output) throws Exception {}
 
+  @Override
   protected void handleEvent(InputData input) throws Exception {}
 
+  @Override
   public void destroy() {
     destroyCalled = true;
   }

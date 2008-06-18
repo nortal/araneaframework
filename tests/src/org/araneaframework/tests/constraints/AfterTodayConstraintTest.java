@@ -32,6 +32,7 @@ import org.araneaframework.uilib.form.data.DateData;
  */
 public class AfterTodayConstraintTest extends TestCase {
   public static class FakeDateControl extends DateControl {
+    @Override
     public boolean isRead() { return true; }
   }
 
@@ -41,6 +42,7 @@ public class AfterTodayConstraintTest extends TestCase {
   private FormElement dateElement;
   private ConstraintTestHelper helper;
 
+  @Override
   public void setUp() throws Exception {
     form = new FormWidget();
     dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);

@@ -20,10 +20,12 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 public class StringResourceBundle extends ResourceBundle {
-	public Enumeration getKeys() {
+	@Override
+  public Enumeration<String> getKeys() {
 		return null;
 	}
 
+  @Override
   protected Object handleGetObject(String key) {
 	if (key.length() > 0 && key.charAt(0) == '#')
       return key.substring(1);

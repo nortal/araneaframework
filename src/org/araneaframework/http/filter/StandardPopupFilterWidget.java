@@ -19,7 +19,6 @@ package org.araneaframework.http.filter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
@@ -62,13 +61,13 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   
   /** Maps of popups where keys are service IDs(==popup IDs) and values 
    * <code>StandardPopupFilterWidget.PopupServiceInfo</code>. Used for rendering popups.*/ 
-  protected Map popups = new HashMap();
+  protected Map<String, PopupServiceInfo> popups = new HashMap<String, PopupServiceInfo>();
   /** Used to keep track of popups that have been opened from thread and not yet known to be closed. */
-  protected Map allPopups = new HashMap();
+  protected Map<String, PopupServiceInfo> allPopups = new HashMap<String, PopupServiceInfo>();
   /** Widget that opened this popup. Only applicable to threads. */
   protected Widget opener = null;
   /** */
-  protected List renderedPopups = new ArrayList();
+  protected List<String> renderedPopups = new ArrayList<String>();
 
   /** When creating new popup with unspecified service, popup is acquired from the factory. */
   protected ServiceFactory threadServiceFactory;
@@ -86,7 +85,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
   public String open(Message startMessage, PopupWindowProperties properties, Widget opener) {
     String threadId = getRandomServiceId();
-    String topServiceId = (String) getTopServiceCtx().getCurrentId();
+    String topServiceId = getTopServiceCtx().getCurrentId();
 
     Service service = threadServiceFactory.buildService(getEnvironment());
     startThreadPopupService(threadId, service);
@@ -119,7 +118,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     Assert.notNullParam(this, service, "service");
 
     String threadId = getRandomServiceId();
-    String topServiceId = (String) getTopServiceCtx().getCurrentId();
+    String topServiceId = getTopServiceCtx().getCurrentId();
 
     startThreadPopupService(threadId, service);
     popups.put(threadId, new StandardPopupServiceInfo(topServiceId, threadId, properties, getRequestURL()));
@@ -213,25 +212,28 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return this.opener;
   }
   
-  public Map getPopups() {
+  public Map<String, PopupServiceInfo> getPopups() {
     return Collections.unmodifiableMap(popups);
   }
   
   /* ************************************************************************************
    * Widget methods
    * ************************************************************************************/
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), PopupWindowContext.class, this);
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     super.action(path, input, output);
   }
   
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (input.getGlobalData().containsKey(PopupWindowContext.POPUPS_CLOSE_KEY)) {
-      ThreadContext threadCtx = (ThreadContext)getEnvironment().getEntry(ThreadContext.class);
-      Object id = threadCtx.getCurrentId();
+      ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
+      String id = threadCtx.getCurrentId();
       threadCtx.close(id);
       if (log.isDebugEnabled())
         log.debug("Closed thread with id : " + id);
@@ -244,6 +246,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    * Popups are rendered by pushing <code>Map &lt;String serviceId, PopupServiceInfo serviceInfo&gt;</code>
    * into output under the key {@link org.araneaframework.http.PopupWindowContext}.POPUPS_KEY
    */
+  @Override
   protected void render(OutputData output) throws Exception {
     removeRenderedPopups();
 
@@ -251,8 +254,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   protected void removeRenderedPopups() {
-    for (Iterator i = renderedPopups.iterator(); i.hasNext(); ) {
-      popups.remove(i.next());
+    for(String popup : renderedPopups) {
+      popups.remove(popup);
     }
     renderedPopups.clear();
   }
@@ -264,7 +267,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     startPopupService(id, service, ThreadContext.class);
   }
   
-  protected void startPopupService(String id, Service service, Class serviceContext) {
+  protected <T extends ManagedServiceContext> void startPopupService(String id, Service service, Class<T> serviceContext) {
     getServiceCtx(serviceContext).addService(id, service);
   }
   
@@ -272,12 +275,12 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     return RandomStringUtils.randomAlphanumeric(8);
   }
   
-  protected ManagedServiceContext getServiceCtx(Class contextClass) {
-    return (ManagedServiceContext)(getEnvironment().requireEntry(contextClass));
+  protected <T extends ManagedServiceContext> ManagedServiceContext getServiceCtx(Class<T> contextClass) {
+    return (getEnvironment().requireEntry(contextClass));
   }
   
   protected TopServiceContext getTopServiceCtx() {
-    return ((TopServiceContext)getEnvironment().requireEntry(TopServiceContext.class));
+    return (getEnvironment().requireEntry(TopServiceContext.class));
   }
   
   protected String getRequestURL() {
@@ -374,27 +377,26 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   /**
    * @since 1.1
    */
-  public Map getRegions() {
-    Map popups = getPopups();
+  public Map<String, String> getRegions() {
+    Map<String, PopupServiceInfo> popups = getPopups();
     if (popups == null || popups.isEmpty())
       return null;
 
     // clear popup list
-    this.popups = new HashMap();
+    this.popups = new HashMap<String, PopupServiceInfo>();
 
     JsonArray popupArray = new JsonArray();
-    for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
+    for (Map.Entry<String, PopupServiceInfo> popup : popups.entrySet()) {
       JsonObject popupObject = new JsonObject();
-      Map.Entry popup = (Map.Entry) i.next();
-      String serviceId = (String) popup.getKey();
-      PopupServiceInfo serviceInfo = (PopupServiceInfo) popup.getValue();
+      String serviceId = popup.getKey();
+      PopupServiceInfo serviceInfo = popup.getValue();
       popupObject.setStringProperty("popupId", serviceId);
       popupObject.setStringProperty("windowProperties", serviceInfo.getPopupProperties() != null ? serviceInfo.getPopupProperties().toString() : "");
       popupObject.setStringProperty("url", serviceInfo.toURL());
       popupArray.append(popupObject.toString());
       renderedPopups.add(popup.getKey());
     }
-    Map regions = new HashMap();
+    Map<String, String> regions = new HashMap<String, String>();
     regions.put(POPUP_REGION_KEY, popupArray.toString());
     return regions;
   }

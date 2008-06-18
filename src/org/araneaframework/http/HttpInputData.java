@@ -23,7 +23,7 @@ public interface HttpInputData extends InputData {
   /**
    * Returns an iterator over names of the parameters submitted with the current request.
    */
-  Iterator getParameterNames();
+  Iterator<String> getParameterNames();
   /**
    * Returns the array of values of the particular parameter submitted with the current request.
    */

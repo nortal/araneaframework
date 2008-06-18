@@ -34,7 +34,8 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		baseStyleClass = "aranea-link-button";
 	}
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 	    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
@@ -56,7 +57,8 @@ public class ListRowLinkButtonHtmlTag extends BaseListRowButtonTag {
 		return EVAL_BODY_INCLUDE;    
 	}    
 	
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		if (localizedLabel != null)
 			JspUtil.writeEscaped(out, localizedLabel);
 		JspUtil.writeEndTag(out, "a");

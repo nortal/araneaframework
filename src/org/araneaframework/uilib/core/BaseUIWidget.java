@@ -62,7 +62,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>ConfigurationContext</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+    return getEnvironment().requireEntry(ConfigurationContext.class);
   }
 
   /**
@@ -72,7 +72,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>FlowContext</code>.
    */
   protected FlowContext getFlowCtx() {
-    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+    return getEnvironment().requireEntry(FlowContext.class);
   }
   
   /**
@@ -82,7 +82,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>MessageContext</code>.
    */
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    return getEnvironment().requireEntry(MessageContext.class);
   }
   
   /**
@@ -93,7 +93,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>LocalizationContext</code>.
    */
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
+    return getEnvironment().requireEntry(LocalizationContext.class);
   }
 
   /**
@@ -103,7 +103,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>MountContext</code>.
    */
   protected MountContext getMountCtx() {
-    return (MountContext) getEnvironment().requireEntry(MountContext.class);
+    return getEnvironment().requireEntry(MountContext.class);
   }
   
   /**
@@ -113,7 +113,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>BeanFactory</code>.
    */
   protected BeanFactory getBeanFactory() {
-    return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
+    return getEnvironment().requireEntry(BeanFactory.class);
   }
   
   /**
@@ -123,7 +123,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>OverlayContext</code>.
    */
   protected OverlayContext getOverlayCtx() {
-    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+    return getEnvironment().requireEntry(OverlayContext.class);
   }
   
   /**
@@ -136,7 +136,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1.3
    */
   protected ConfirmationContext getConfirmationCtx() {
-    return (ConfirmationContext) getEnvironment().requireEntry(ConfirmationContext.class);
+    return getEnvironment().requireEntry(ConfirmationContext.class);
   }
 
   /**
@@ -147,7 +147,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1.3
    */
   protected PopupWindowContext getPopupCtx() {
-    return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+    return getEnvironment().requireEntry(PopupWindowContext.class);
   }
 
   /**
@@ -177,11 +177,12 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * Renders widget to <code>output</code> using the defined
    * <code>viewSelector</code>.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
     if (viewSelector == null)
       throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 
     
-    JspContext jspCtx = (JspContext) getEnvironment().requireEntry(JspContext.class);
+    JspContext jspCtx = getEnvironment().requireEntry(JspContext.class);
     
     String jsp = resolveJspName(jspCtx, viewSelector);
     ServletUtil.include(jsp, this, output);
@@ -191,11 +192,13 @@ public class BaseUIWidget extends BaseApplicationWidget {
     return jspCtx.getJspPath() + "/" + viewSelector + jspCtx.getJspExtension();
   }
   
+  @Override
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
   
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
+    @Override
     public synchronized void init(Scope scope, Environment env) {
       setGlobalEventListener(new ProxyEventListener(BaseUIWidget.this));
 	

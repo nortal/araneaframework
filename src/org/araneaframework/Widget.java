@@ -48,13 +48,12 @@ public interface Widget extends Service, Serializable {
      * Widget received an event. 
      * @param path
      * @param input
-     * @throws Exception
      */
     public void event(Path path, InputData input);
 
     /**
      * Widget outputs its graphical representation to OutputData. This method is
-     * idempotent and thus can be called mupltiple times.
+     * idempotent and thus can be called multiple times.
      */
     public void render(OutputData output) throws Exception;
   } 

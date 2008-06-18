@@ -65,8 +65,8 @@ public class ExternalResourceInitializer {
 			
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-			Enumeration classPathResources = loader.getResources(ARANEA_RESOURCES_FILE_NAME);
-			Enumeration contextPathResources = getContextResources(context, ARANEA_RESOURCES_FILE_NAME); 
+			Enumeration<URL> classPathResources = loader.getResources(ARANEA_RESOURCES_FILE_NAME);
+			Enumeration<URL> contextPathResources = getContextResources(context, ARANEA_RESOURCES_FILE_NAME); 
 
 			if (!(classPathResources.hasMoreElements() || contextPathResources.hasMoreElements()))
 				log.warn("Aranea resource configuration file '" + ARANEA_RESOURCES_FILE_NAME + "' not found.");
@@ -91,16 +91,16 @@ public class ExternalResourceInitializer {
 		}
 	}
 	
-	protected void loadResources(Enumeration resources, XMLReader xr) throws IOException, SAXException {
+	protected void loadResources(Enumeration<URL> resources, XMLReader xr) throws IOException, SAXException {
 		while (resources.hasMoreElements()) {
-			URL fileURL = (URL)resources.nextElement();
+			URL fileURL = resources.nextElement();
 			log.debug("Adding resources from file'"+fileURL+"'");
 			xr.parse(new InputSource(fileURL.openStream()));
 		}
 	}
 	
-	protected Enumeration getContextResources(ServletContext ctx, String fileName) throws MalformedURLException {
-		Set fileURLSet = new HashSet();
+	protected Enumeration<URL> getContextResources(ServletContext ctx, String fileName) throws MalformedURLException {
+		Set<URL> fileURLSet = new HashSet<URL>();
 		URL url;
 
 		url = ctx.getResource("/META-INF/" + fileName);

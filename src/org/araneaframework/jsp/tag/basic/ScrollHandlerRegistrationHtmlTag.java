@@ -31,8 +31,9 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Registers popups present in current popupcontext for opening. For this tag to work, produced HTML file BODY should have attribute onload='processLoadEvents()'".
  */
 public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
-   protected int doEndTag(Writer out) throws Exception {
-     WindowScrollPositionContext scrollHandler = (WindowScrollPositionContext) getEnvironment().getEntry(WindowScrollPositionContext.class);
+   @Override
+  protected int doEndTag(Writer out) throws Exception {
+     WindowScrollPositionContext scrollHandler = getEnvironment().getEntry(WindowScrollPositionContext.class);
 
      if (scrollHandler != null) {
        registerScrollHandler(out, scrollHandler);

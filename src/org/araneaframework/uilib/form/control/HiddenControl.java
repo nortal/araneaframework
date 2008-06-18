@@ -21,7 +21,7 @@ package org.araneaframework.uilib.form.control;
  * 
  * @author Konstantin Tretjakov
  */
-public class HiddenControl extends EmptyStringNullableControl {
+public class HiddenControl extends EmptyStringNullableControl<String> {
  
 	//*********************************************************************
   //* PUBLIC METHODS
@@ -39,11 +39,13 @@ public class HiddenControl extends EmptyStringNullableControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
 		  
-  protected Object fromRequest(String parameterValue) {
+  @Override
+  protected String fromRequest(String parameterValue) {
     return parameterValue;
   }
 
-  protected String toResponse(Object controlValue) {
-    return (String) controlValue;
+  @Override
+  protected String toResponse(String controlValue) {
+    return controlValue;
   }
 }

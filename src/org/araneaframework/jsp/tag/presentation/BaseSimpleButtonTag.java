@@ -34,6 +34,7 @@ public class BaseSimpleButtonTag extends PresentationTag {
   protected String onClickPrecondition;
   protected String tabindex;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -55,8 +56,8 @@ public class BaseSimpleButtonTag extends PresentationTag {
    *   required = "false"
    *   description = "Button id, allows to access button from JavaScript." 
    */
-  public void setId(String id) throws JspException {
-    this.id = (String)evaluate("id", id, String.class);
+  public void setId(String id){
+    this.id = evaluate("id", id, String.class);
   }
 
   /**
@@ -65,8 +66,8 @@ public class BaseSimpleButtonTag extends PresentationTag {
    *   required = "false"
    *   description = "Id of button label." 
    */
-  public void setLabelId(String labelId) throws JspException {
-    this.labelId = (String)evaluate("labelId", labelId, String.class);
+  public void setLabelId(String labelId){
+    this.labelId = evaluate("labelId", labelId, String.class);
   }
 
   /**
@@ -75,8 +76,8 @@ public class BaseSimpleButtonTag extends PresentationTag {
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
-  public void setOnClickPrecondition(String onClickPrecondition) throws JspException {
-    this.onClickPrecondition = (String) evaluate("onClickPrecondition", onClickPrecondition, String.class);
+  public void setOnClickPrecondition(String onClickPrecondition){
+    this.onClickPrecondition = evaluate("onClickPrecondition", onClickPrecondition, String.class);
   }
   
   /**
@@ -87,6 +88,6 @@ public class BaseSimpleButtonTag extends PresentationTag {
    *   description = "HTML tabindex for the element."
    */	
   public void setTabindex(String tabindex) throws JspException {
-    this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
+    this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 }

@@ -82,8 +82,9 @@ public class StartsWithFilter extends BaseFieldFilter {
 		// private
 	}
 
-	public void init(Environment env) {
-		ConfigurationContext cfg = (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+	@Override
+  public void init(Environment env) {
+		ConfigurationContext cfg = env.getEntry(ConfigurationContext.class);
 		if (cfg != null) {
 			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);
 		}

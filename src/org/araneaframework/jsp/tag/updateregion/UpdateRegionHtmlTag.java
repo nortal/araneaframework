@@ -32,6 +32,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -44,6 +45,7 @@ public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
     return EVAL_BODY_INCLUDE;
   }    
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     out.write("<!--END:" + fullId + "-->");
     

@@ -18,9 +18,9 @@ package org.araneaframework.uilib.core;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Widget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.support.FlowCreator;
@@ -36,7 +36,7 @@ public class MenuItem implements Serializable {
   private String label;
 
   /** Flow which instance should be started when menuitem is selected. */
-  private Class flowClass;
+  private Class<? extends Widget> flowClass;
   /** <code>FlowCreator</code> used to create new flow instance started when menuitem is selected. */
   private FlowCreator flowCreator;
 
@@ -44,7 +44,7 @@ public class MenuItem implements Serializable {
   private boolean selected;
 
   /** Submenu of this <code>MenuItem</code>. */
-  private Map subMenu;
+  private Map<String, MenuItem> subMenu;
 
   /* **************************************************************************************************
    * CONSTRUCTORS 
@@ -70,7 +70,7 @@ public class MenuItem implements Serializable {
    * @param label name assigned to created menuitem. May not contain dots.
    * @param flowClass class of flow.
    */
-  public MenuItem(String label, Class flowClass) {
+  public MenuItem(String label, Class<? extends Widget> flowClass) {
     checkLabelLegality(label);
     this.label = label;
     this.flowClass = flowClass;
@@ -103,7 +103,7 @@ public class MenuItem implements Serializable {
    */
   private void addSubMenuItem(MenuItem item) {
     if (subMenu == null)
-      subMenu = new LinkedMap();
+      subMenu = new LinkedHashMap<String, MenuItem>();
     subMenu.put(item.getLabel(), item);
   }
   
@@ -141,7 +141,7 @@ public class MenuItem implements Serializable {
     MenuItem menu = this;
 
     for (StringTokenizer st = new StringTokenizer(path, MENU_PATH_SEPARATOR); st.hasMoreTokens(); )
-      menu = (MenuItem)menu.subMenu.get(st.nextToken());
+      menu = menu.subMenu.get(st.nextToken());
     menu.addSubMenuItem(item);
 
     return item;
@@ -163,12 +163,12 @@ public class MenuItem implements Serializable {
     try {
       for (StringTokenizer st = new StringTokenizer(menuPath, MENU_PATH_SEPARATOR); st.hasMoreTokens(); ) {
         pathElement = st.nextToken();
-        menu = (MenuItem)menu.subMenu.get(pathElement);
+        menu = menu.subMenu.get(pathElement);
         menu.setSelected(true);
       }
 
       if (menu.flowClass != null)
-        resultFlow = (Widget) menu.flowClass.newInstance();
+        resultFlow = menu.flowClass.newInstance();
       else if (menu.flowCreator != null)
         resultFlow = menu.flowCreator.createFlow();
     } catch (Exception e) {
@@ -183,8 +183,8 @@ public class MenuItem implements Serializable {
     setSelected(false);
 
     if (subMenu != null) {
-      for (Iterator i = subMenu.values().iterator(); i.hasNext(); )
-	    ((MenuItem)i.next()).clearSelection();
+      for (Iterator<MenuItem> i = subMenu.values().iterator(); i.hasNext(); )
+	    i.next().clearSelection();
     }
   }
 
@@ -202,6 +202,7 @@ public class MenuItem implements Serializable {
    * @return true
    * @deprecated
    */
+  @Deprecated
   public boolean isHolder() {
     return true;
   }
@@ -210,7 +211,7 @@ public class MenuItem implements Serializable {
     return selected;
   }
   
-  public Map getSubMenu() {
+  public Map<String, MenuItem> getSubMenu() {
     return subMenu;
   }
 }

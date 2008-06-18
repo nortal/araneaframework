@@ -33,7 +33,8 @@ public class GreaterThanExpression extends ComparableExpression {
 		super(expr1, expr2);
 	}
 
-	protected boolean doEvaluate(Object value1, Object value2) {
+	@Override
+  protected boolean doEvaluate(Object value1, Object value2) {
 		return this.comparator.compare(value1, value2) > 0;
 	}
 }

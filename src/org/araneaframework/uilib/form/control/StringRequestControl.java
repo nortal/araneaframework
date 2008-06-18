@@ -25,7 +25,7 @@ package org.araneaframework.uilib.form.control;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class StringRequestControl extends StringArrayRequestControl {
+public abstract class StringRequestControl<T> extends StringArrayRequestControl<T> {
 
   //*********************************************************************
   // FIELDS
@@ -38,13 +38,15 @@ public abstract class StringRequestControl extends StringArrayRequestControl {
   /**
    * This is just a proxy to {@link #fromRequest(String)}.
    */
-  protected Object fromRequestParameters(String[] parameterValues) {
+  @Override
+  protected T fromRequestParameters(String[] parameterValues) {
     return fromRequest(parameterValues[0]);
   }
   
   /**
    * This is just a proxy to {@link #preprocessRequestParameter(String)}.
    */
+  @Override
   protected String[] preprocessRequestParameters(String[] parameterValues) {
     String result = parameterValues == null ? preprocessRequestParameter(null) : preprocessRequestParameter(parameterValues[0]);
     return result == null ? null : new String[] {result};
@@ -53,7 +55,8 @@ public abstract class StringRequestControl extends StringArrayRequestControl {
   /**
    * This is just a proxy to {@link #toResponse(Object)}.
    */
-  protected String[] toResponseParameters(Object controlValue) {
+  @Override
+  protected String[] toResponseParameters(T controlValue) { 
     String result = toResponse(controlValue);
     return result == null ? null : new String[] {result};        
   }
@@ -70,10 +73,10 @@ public abstract class StringRequestControl extends StringArrayRequestControl {
   /**
    * @see StringArrayRequestControl#fromRequestParameters(String[])
    */
-  protected abstract Object fromRequest(String parameterValue);
+  protected abstract T fromRequest(String parameterValue);
 
   /**
-   * @see StringArrayRequestControl#toResponseParameters(Object)
+   * @see StringArrayRequestControl#toResponseParameters(E)
    */
-  protected abstract String toResponse(Object controlValue);    
+  protected abstract <E extends T> String toResponse(E controlValue);    
 }

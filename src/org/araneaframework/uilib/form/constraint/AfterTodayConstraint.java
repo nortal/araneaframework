@@ -45,6 +45,7 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
     this.allowToday = allowToday;
   }
 
+  @Override
   protected void validateConstraint() {
     Calendar today = Calendar.getInstance();
 

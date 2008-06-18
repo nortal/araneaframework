@@ -24,26 +24,29 @@ import org.araneaframework.uilib.form.Converter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class StringToBooleanConverter extends BaseConverter {
+public class StringToBooleanConverter extends BaseConverter<String, Boolean> {
 
   /**
 	 * Converts <code>String</code> to <code>Boolean</code>.
 	 */
-  public Object convertNotNull(Object data) {
-    return Boolean.valueOf((String) data);
+  @Override
+  public Boolean convertNotNull(String data) {
+    return Boolean.valueOf(data);
   }
 
   /**
 	 * Converts <code>Boolean</code> to <code>String</code>.
 	 */
-  public Object reverseConvertNotNull(Object data) {
-    return ((Boolean) data).toString();
+  @Override
+  public String reverseConvertNotNull(Boolean data) {
+    return data.toString();
   }
 
   /**
 	 * Returns <code>new StringToBooleanConverter()</code>.
 	 */
-  public Converter newConverter() {
+  @Override
+  public Converter<String, Boolean> newConverter() {
     return new StringToBooleanConverter();
   }
 }

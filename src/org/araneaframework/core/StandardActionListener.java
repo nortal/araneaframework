@@ -36,7 +36,7 @@ public abstract class StandardActionListener implements ActionListener {
   public final void processAction(Object actionId, InputData input,
       OutputData output) throws Exception {
 
-    String actionParam = (String) input.getGlobalData().get(
+    String actionParam = input.getGlobalData().get(
         ApplicationService.ACTION_PARAMETER_KEY);
 
     processAction(actionId, actionParam, input, output);

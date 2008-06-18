@@ -38,7 +38,8 @@ import org.araneaframework.uilib.tab.TabContainerWidget;
 public class TabsHtmlTag extends BaseTag {
 	protected String id;
 	
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		TabContainerHtmlTag tabContainerHtmlTag = new TabContainerHtmlTag();
 		tabContainerHtmlTag.setId(id);
 		registerAndExecuteStartTag(tabContainerHtmlTag);
@@ -52,7 +53,8 @@ public class TabsHtmlTag extends BaseTag {
 		return SKIP_BODY;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		return super.doEndTag(out);
 	}
 
@@ -63,6 +65,6 @@ public class TabsHtmlTag extends BaseTag {
 	 *   description = "Id of Uilib TabContainerWidget" 
 	 */
 	public void setId(String id) throws JspException {
-		this.id = (String) evaluateNotNull("id", id, String.class);
+		this.id = evaluateNotNull("id", id, String.class);
 	}
 }

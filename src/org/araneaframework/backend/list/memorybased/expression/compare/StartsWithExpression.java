@@ -47,7 +47,8 @@ public class StartsWithExpression extends LikeExpression {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object evaluate(VariableResolver resolver)
+	@Override
+  public Object evaluate(VariableResolver resolver)
 			throws ExpressionEvaluationException {
 		String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
 		String maskStr = ObjectUtils.toString(mask.getValue());

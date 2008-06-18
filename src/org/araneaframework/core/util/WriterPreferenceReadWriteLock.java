@@ -188,6 +188,7 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock {
     }
 
 
+    @Override
     synchronized void signalWaiters() { ReaderLock.this.notifyAll(); }
 
     public boolean attempt(long msecs) throws InterruptedException { 
@@ -264,6 +265,7 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock {
       if (s != null) s.signalWaiters();
     }
 
+    @Override
     synchronized void signalWaiters() { WriterLock.this.notify(); }
 
     public boolean attempt(long msecs) throws InterruptedException { 

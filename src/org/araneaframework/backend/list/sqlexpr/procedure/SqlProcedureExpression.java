@@ -34,8 +34,8 @@ public class SqlProcedureExpression extends SqlMultiExpression {
 	public String toSqlString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(this.name).append("(");
-		for (Iterator i = this.children.iterator(); i.hasNext();) {
-			SqlExpression expr = (SqlExpression) i.next();
+		for (Iterator<SqlExpression> i = this.children.iterator(); i.hasNext();) {
+			SqlExpression expr = i.next();
 			sb.append(expr.toSqlString());
 			if (i.hasNext()) {
 				sb.append(", ");

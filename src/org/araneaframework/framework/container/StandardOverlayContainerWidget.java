@@ -16,9 +16,9 @@
 
 package org.araneaframework.framework.container;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
@@ -57,22 +57,21 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    *   <li>resizeDuration: 0.0</li>
    * </ul>
    */
-  public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
-  private static final String OVERLAY_REQUEST_KEY = "araOverlay";
+  public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
   private static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";
   
-  protected Map presentationOptions = new LinkedMap();
+  protected Map<String, String> presentationOptions = new LinkedHashMap<String, String>();
 
   private Widget main;
   private FlowContextWidget overlay;
   
   static {
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
-    DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", "false");
+    DEFAULT_PRESENTATION_OPTIONS.put("width", "800");
     DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
@@ -95,10 +94,12 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     return overlay.isNested();
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), OverlayContext.class, this);
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
     Assert.notNull(main);
@@ -108,6 +109,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class, new OverlayActivityMarkerContext(){});
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     if (isOverlayActive())
       overlay._getWidget().update(input);
@@ -115,11 +117,13 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
       main._getWidget().update(input);
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
   	assertActiveHierarchy(path,  "Cannot deliver event to wrong hierarchy!");
     super.event(path, input);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
   	assertActiveHierarchy(path,  "Cannot deliver action to wrong hierarchy!");
     super.action(path, input, output);
@@ -140,7 +144,8 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 		}
 	}
 
-	protected void render(OutputData output) throws Exception {
+	@Override
+  protected void render(OutputData output) throws Exception {
     if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
       overlay._getWidget().render(output);
 
@@ -150,9 +155,9 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
         HttpServletResponse response = ServletUtil.getResponse(output);
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
 
-        StateVersioningContext ctx = (StateVersioningContext) overlay.getEnvironment().getEntry(StateVersioningContext.class);
+        StateVersioningContext ctx = overlay.getEnvironment().getEntry(StateVersioningContext.class);
         if (ctx != null) {
-          String stateId = (String)getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
+          String stateId = getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
           ctx.saveState(stateId);
           response.getWriter().write("<!--" + stateId + "-->\n");
         }
@@ -192,11 +197,11 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   /* The presentation options of this overlay. */
-  public Map getOverlayOptions() {
+  public Map<String, String> getOverlayOptions() {
     return presentationOptions;
   }
 
-  public void setOverlayOptions(Map presentationOptions) {
+  public void setOverlayOptions(Map<String, String> presentationOptions) {
     this.presentationOptions = presentationOptions; 
   }
 }

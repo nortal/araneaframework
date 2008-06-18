@@ -95,7 +95,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
+      return getEnvironment().getEntry(TreeNodeContext.class);
     }
 
   }

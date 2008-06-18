@@ -105,27 +105,32 @@ public class RelocatableDecorator extends BaseService
   // PROTECTED METHODS
   //*******************************************************************
 
+  @Override
   protected void init() throws Exception {
     child._getComponent().init(getScope(), new BaseEnvironment() {
 
       private static final long serialVersionUID = 1L;
 
-      public Object getEntry(Object key) {
+      public <T> T getEntry(Class<T> key) {
         if (getEnvironment() == null)
           return null;
         return getEnvironment().getEntry(key);
       }
+
     });
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
     message.send(null, child);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     child._getService().action(path, input, output);
   }
 
+  @Override
   protected void destroy() throws Exception {
     child._getComponent().destroy();
   }

@@ -23,20 +23,22 @@ import java.util.Comparator;
  * Not-null comparator that compares <code>Comparable</code> objects by their
  * own (@see java.lang.Comparable#compareTo(java.lang.Object)) method.
  */
-public class ComparableComparator implements Comparator, Serializable {
+public class ComparableComparator<T extends Comparable<T>> implements Comparator<T>, Serializable {
 	public static final ComparableComparator INSTANCE = new ComparableComparator();
 
 	private ComparableComparator() {}
 	
-	public int compare(Object o1, Object o2) {
-		return ((Comparable) o1).compareTo(o2);
+	public int compare(T o1, T o2) {
+		return o1.compareTo(o2);
 	}
 	
-	public boolean equals(Object obj) {
+	@Override
+  public boolean equals(Object obj) {
 		return ComparableComparator.class.equals(obj.getClass());
 	}
 
-	public int hashCode() {
+	@Override
+  public int hashCode() {
 		return 703271500;
 	}
 }

@@ -67,6 +67,7 @@ public class ConverterKey implements Serializable {
    * Implements the {@link Object#equals(java.lang.Object)} method, using both
    * types.
    */
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof ConverterKey))
       return false;
@@ -84,6 +85,7 @@ public class ConverterKey implements Serializable {
    * 
    * 
 	 */
+  @Override
   public int hashCode() {
     int result = 17;
     result = 37 * result + fromType.hashCode();

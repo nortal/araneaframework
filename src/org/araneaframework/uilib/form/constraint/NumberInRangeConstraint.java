@@ -69,6 +69,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
   /**
    * Checks that the number value would be inside a given range.
    */
+  @Override
   protected void validateConstraint() {
     if (getValue() == null) {
       addError(

@@ -32,8 +32,9 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "TODO"
  */
 public class OverlayRegistrationHtmlTag extends BaseTag {
+  @Override
   protected int doEndTag(Writer out) throws Exception {
-    OverlayContext overlayCtx = (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+    OverlayContext overlayCtx = getEnvironment().requireEntry(OverlayContext.class);
 
     if (overlayCtx.isOverlayActive()) {
       JspUtil.writeOpenStartTag(out, "script");

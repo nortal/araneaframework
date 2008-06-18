@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
-import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -43,6 +42,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     return dateStyleClass;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("DateTimeControl");
 
@@ -121,8 +121,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    *   required = "false"
    *   description = "Css class for date." 
    */
-  public void setDateStyleClass(String dateCssClass) throws JspException {
-    this.dateStyleClass = (String) evaluate("dateStyleClass", dateCssClass, String.class);
+  public void setDateStyleClass(String dateCssClass){
+    this.dateStyleClass = evaluate("dateStyleClass", dateCssClass, String.class);
   }
 
   /**
@@ -131,8 +131,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    *   required = "false"
    *   description = "Css class for time." 
    */
-  public void setTimeStyleClass(String timeCssClass) throws JspException {
-    this.timeStyleClass = (String) evaluate("timeStyleClass", timeCssClass, String.class);
+  public void setTimeStyleClass(String timeCssClass){
+    this.timeStyleClass = evaluate("timeStyleClass", timeCssClass, String.class);
   }
 
   /* ***********************************************************************************
@@ -267,7 +267,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 	 * If just super.writeDateInput is called then date's viewmodel does not have
      * correct information about whether onchange listeners are registered and who has registered them.
 	 */
-	protected void writeDateInput(
+	@Override
+  protected void writeDateInput(
 			Writer out, 
 			String id,
 			String name, 
@@ -345,8 +346,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 	 * 
 	 * @since 1.0.3
 	 */
-	public void setShowTimeSelect(String showTimeSelect) throws JspException {
-		this.showTimeSelect = ((Boolean) evaluate("showTimeSelect", showTimeSelect,
+	public void setShowTimeSelect(String showTimeSelect){
+		this.showTimeSelect = (evaluate("showTimeSelect", showTimeSelect,
 				Boolean.class)).booleanValue();
 	}
 

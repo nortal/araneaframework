@@ -31,7 +31,7 @@ public class AsyncFormModificationTest extends TestCase {
 		String value = "newvalue";
 		
 		FormWidget form = makeForm();
-		FormElement el = form.getElementByFullName("myLongText");
+		FormElement<?, String> el = form.getElementByFullName("myLongText");
 		
 		el.setValue(value);
 		
@@ -54,16 +54,16 @@ public class AsyncFormModificationTest extends TestCase {
 	 * modifications work). */
 	public void testSetValue_3() throws Exception {
 		String value = "newvalue";
-		Data data = new StringData();
+		Data<String> data = new StringData();
 		data.setValue(value);
 		
 		FormWidget form = makeForm();
-		FormElement element = form.getElementByFullName("myLongText");
+		FormElement<?, String> element = form.getElementByFullName("myLongText");
 
 		element.setData(data);
 		assertEquals("Element value incorrect", value, element.getValue());
 		
-		TextControl.ViewModel viewModel = (TextControl.ViewModel) ((BaseControl)(element.getControl())).getViewModel();
+		TextControl.ViewModel viewModel = (TextControl.ViewModel) ((BaseControl<String>)(element.getControl())).getViewModel();
 		
 		assertEquals("Inited formelement's Control value differs from Data value", value, viewModel.getSimpleValue());
 	}
@@ -72,16 +72,16 @@ public class AsyncFormModificationTest extends TestCase {
 	 * After that, demonstrate that Control inside uninited FormElement is still unaware of its value. */
 	public void testSetValue_4() throws Exception {
 		String value = "newvalue";
-		Data data = new StringData();
+		Data<String> data = new StringData();
 		data.setValue(value);
 		
 		FormWidget form = makeForm();
-		FormElement element = form.createElement("labelId", new TextControl(), new StringData(), "initial", false);
+		FormElement<String, String> element = form.createElement("labelId", new TextControl(), new StringData(), "initial", false);
 
 		element.setData(data);
 		assertEquals("Element value incorrect", value, element.getValue());
 		
-		TextControl.ViewModel viewModel = (TextControl.ViewModel) ((BaseControl)(element.getControl())).getViewModel();
+		TextControl.ViewModel viewModel = (TextControl.ViewModel) ((BaseControl<String>)(element.getControl())).getViewModel();
 
 		// As Control's converters are not yet in place, this is expected to be false.
 		if (value.equals(viewModel.getSimpleValue())) {

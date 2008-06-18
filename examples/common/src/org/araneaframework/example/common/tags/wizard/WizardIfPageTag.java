@@ -43,6 +43,7 @@ public class WizardIfPageTag extends BaseTag {
 
   private String index;
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
 
     WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY);    
@@ -50,7 +51,7 @@ public class WizardIfPageTag extends BaseTag {
     int curIndex = wizard.getCurrentPageIndex();
     int count = wizard.countPages();
 
-    String ifIndex = (String) evaluate("index", this.index, String.class);
+    String ifIndex = evaluate("index", this.index, String.class);
 
     boolean not = false;
 

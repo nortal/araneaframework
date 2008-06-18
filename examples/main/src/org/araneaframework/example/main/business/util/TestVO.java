@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.business.util;
 
 import java.io.Serializable;
-import org.araneaframework.backend.BaseBean;
 import org.araneaframework.backend.util.BeanMapper;
 
 
@@ -28,7 +27,7 @@ import org.araneaframework.backend.util.BeanMapper;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class TestVO extends BaseBean implements Serializable, Cloneable {
+public class TestVO implements Serializable, Cloneable {
   private static final long serialVersionUID = 1L;
   /**
    * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.

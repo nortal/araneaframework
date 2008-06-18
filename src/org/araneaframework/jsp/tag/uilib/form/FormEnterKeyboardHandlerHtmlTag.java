@@ -39,14 +39,16 @@ public final class FormEnterKeyboardHandlerHtmlTag extends FormKeyboardHandlerHt
 	/**
 	 * Throw an exception on attempt to set key. This tag supports "enter" only!
 	 */
-	public void setKey(String key) throws JspException {
+	@Override
+  public void setKey(String key) throws JspException {
 		throw new JspException("You may not set key for the enter handler tag!");
 	}
 
 	/**
 	 * @see #setKey
 	 */
-	public void setKeyCode(String keyCode) throws JspException {
+	@Override
+  public void setKeyCode(String keyCode) throws JspException {
 		throw new JspException("You may not set keyCode for the enter handler tag!");
 	}
 }

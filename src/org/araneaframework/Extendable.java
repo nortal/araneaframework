@@ -54,5 +54,5 @@ public interface Extendable {
    * @param interfaceClass the interface of the extension being added 
    * @param extension a implementation of the interfaceClass
    */
-  public void extend(Class interfaceClass, Object extension);
+  public <T> void extend(Class<T> interfaceClass, T extension);
 }

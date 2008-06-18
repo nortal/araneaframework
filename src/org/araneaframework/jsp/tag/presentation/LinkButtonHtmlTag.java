@@ -35,6 +35,7 @@ public class LinkButtonHtmlTag extends BaseButtonTag {
     baseStyleClass = "aranea-link-button"; 
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -52,6 +53,7 @@ public class LinkButtonHtmlTag extends BaseButtonTag {
     return EVAL_BODY_INCLUDE;    
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {  
     if (labelId != null)            
       JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, labelId));

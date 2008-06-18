@@ -24,7 +24,8 @@ import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
 public abstract class ComparingExprToSqlExprTranslator extends
 		CompositeExprToSqlExprTranslator {
 	
-	protected final SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
+	@Override
+  protected final SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 		if (((StringExpression) expr).getIgnoreCase()) {
 			return translateComparable(expr,
 					new SqlUpperExpression(sqlChildren[0]),

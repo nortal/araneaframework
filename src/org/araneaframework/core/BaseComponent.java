@@ -19,8 +19,8 @@ package org.araneaframework.core;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -49,9 +49,9 @@ public abstract class BaseComponent implements Component {
 
   private Scope scope;
 
-  private Map children;
+  private Map<Object, Component> children;
 
-  private Map disabledChildren;
+  private Map<Object, Component> disabledChildren;
 
   private static final byte UNBORN = 1;
 
@@ -65,7 +65,7 @@ public abstract class BaseComponent implements Component {
 
   private transient int reentrantCallCount = 0;
 
-  private transient ThreadLocal reentrantTLS;
+  private transient ThreadLocal<Counter> reentrantTLS;
 
   //*******************************************************************
   // PUBLIC METHODS
@@ -271,10 +271,10 @@ public abstract class BaseComponent implements Component {
   /**
    * Returns the children of this component.
    */
-  protected Map _getChildren() {
+  protected Map<Object, Component> _getChildren() {
     synchronized (this) {
       if (children == null)
-        children = Collections.synchronizedMap(new LinkedMap(1));
+        children = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
     }
     return children;
   }
@@ -282,10 +282,10 @@ public abstract class BaseComponent implements Component {
   /**
    * Returns the children of this component.
    */
-  protected Map _getDisabledChildren() {
+  protected Map<Object, Component> _getDisabledChildren() {
     synchronized (this) {
       if (disabledChildren == null)
-        disabledChildren = Collections.synchronizedMap(new LinkedMap(1));
+        disabledChildren = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
     }
     return disabledChildren;
   }
@@ -342,7 +342,7 @@ public abstract class BaseComponent implements Component {
     //Only Strings are supported by this implementation
     Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
-    Component comp = (Component) _getChildren().get(key);
+    Component comp = _getChildren().get(key);
     if (comp == null) {
       return;
     }
@@ -369,7 +369,7 @@ public abstract class BaseComponent implements Component {
       throw new NoSuchComponentException(key);
     }
     if (enabled) {
-      ((Component) _getChildren().get(key))._getComponent().disable();
+      _getChildren().get(key)._getComponent().disable();
       _getDisabledChildren().put(key, _getChildren().remove(key));
     }
   }
@@ -392,7 +392,7 @@ public abstract class BaseComponent implements Component {
     }
     if (disabled) {
       _getChildren().put(key, _getDisabledChildren().remove(key));
-      ((Component) _getChildren().get(key))._getComponent().enable();
+      _getChildren().get(key)._getComponent().enable();
     }
   }
 
@@ -439,10 +439,10 @@ public abstract class BaseComponent implements Component {
     Assert.notNullParam(this, message, "message");
     if (children == null || isDead())
       return;
-    Iterator ite = (new LinkedMap(_getChildren())).keySet().iterator();
+    Iterator<Object> ite = (new LinkedHashMap<Object, Component>(_getChildren())).keySet().iterator();
     while (ite.hasNext()) {
       Object key = ite.next();
-      Component component = (Component) _getChildren().get(key);
+      Component component = _getChildren().get(key);
       // message has not destroyed previously existing child
       if (component != null) {
         message.send(key, component);
@@ -455,11 +455,11 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   private void incCallCount() {
     if (reentrantTLS == null)
-      reentrantTLS = new ThreadLocal();
+      reentrantTLS = new ThreadLocal<Counter>();
     if (reentrantTLS.get() == null)
       reentrantTLS.set(new Counter(0));
     callCount++;
-    ((Counter) reentrantTLS.get()).counter++;
+    reentrantTLS.get().counter++;
     if (getReentrantCount() > 1)
       reentrantCallCount++;
   }
@@ -468,12 +468,12 @@ public abstract class BaseComponent implements Component {
     if (getReentrantCount() > 1)
       reentrantCallCount--;
     callCount--;
-    ((Counter) reentrantTLS.get()).counter--;
+    reentrantTLS.get().counter--;
   }
 
   private int getReentrantCount() {
     return (reentrantTLS == null || reentrantTLS.get() == null) ? 0
-        : ((Counter) reentrantTLS.get()).counter;
+        : reentrantTLS.get().counter;
   }
 
   //*******************************************************************
@@ -507,12 +507,12 @@ public abstract class BaseComponent implements Component {
         _waitNoCall();
         synchronized (this) {
           if (children != null)
-            for (Iterator i = new HashMap(_getChildren()).keySet().iterator(); i.hasNext();) {
+            for (Iterator<Object> i = new HashMap<Object, Component>(_getChildren()).keySet().iterator(); i.hasNext();) {
               _removeComponent(i.next());
             }
           if (disabledChildren != null)
-            for (Iterator i = _getDisabledChildren().keySet().iterator(); i.hasNext();) {
-              Component comp = (Component) _getDisabledChildren().get(i.next());
+            for (Iterator<Object> i = _getDisabledChildren().keySet().iterator(); i.hasNext();) {
+              Component comp = _getDisabledChildren().get(i.next());
               if (comp != null) {
                 comp._getComponent().destroy();
               }

@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -42,13 +41,15 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 		baseStyleClass = "aranea-checkbox";
 	}
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		int r = super.doStartTag(out);
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 		return r;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		assertControlType("CheckboxControl");	
 
 		// Prepare
@@ -89,7 +90,7 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 	 *   required = "false"
 	 *   description = "Precondition for deciding whether go to server side or not." 
 	 */	  
-	public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
-		this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+	public void setOnChangePrecondition(String onChangePrecondition) {
+		this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
 	}
 }

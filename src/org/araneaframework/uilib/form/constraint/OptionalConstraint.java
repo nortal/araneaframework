@@ -44,6 +44,7 @@ public class OptionalConstraint extends BaseFieldConstraint {
     this.constraint = constraint;
   }
   
+  @Override
   protected void validateConstraint() throws Exception {
     if (isRead()) {
       constraint.validate();
@@ -52,10 +53,12 @@ public class OptionalConstraint extends BaseFieldConstraint {
     }
   }
 
+  @Override
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
 
+  @Override
   public void setEnvironment(Environment environment) {
     super.setEnvironment(environment);
     constraint.setEnvironment(environment);

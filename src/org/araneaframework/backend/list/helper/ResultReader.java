@@ -33,12 +33,12 @@ import java.util.List;
  *
  * @author Rod Johnson
  */
-public interface ResultReader extends RowCallbackHandler {
+public interface ResultReader<T> extends RowCallbackHandler {
 	
 	/**
 	 * Return all results, disconnected from the JDBC ResultSet.
 	 * Never returns null; returns the empty collection if there
 	 * were no results.
 	 */
-	List getResults();
+	List<T> getResults();
 }

@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.formlist.adapter;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.uilib.form.formlist.FormRow;
@@ -25,16 +24,17 @@ import org.araneaframework.uilib.form.formlist.FormRow;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class IndividualFormRowHandler extends DefaultFormRowHandler{
-	public void saveRows(Map rowForms) throws Exception {
-		for (Iterator i = rowForms.entrySet().iterator(); i.hasNext();) {
-			Map.Entry entry = (Map.Entry) i.next();
-			saveRow((FormRow) entry.getValue());
+	@Override
+  public void saveRows(Map<Object, FormRow> rowForms) throws Exception {
+		for (Map.Entry<Object, FormRow> entry : rowForms.entrySet()) {
+			saveRow(entry.getValue());
 		}
 	}
 	
-	public void deleteRows(Set keys) throws Exception {
-		for (Iterator i = keys.iterator(); i.hasNext(); )
-			deleteRow(i.next());
+	@Override
+  public void deleteRows(Set<Object> keys) throws Exception {
+		for (Object object : keys)
+      deleteRow(object);
 	}
 
 	public void saveRow(FormRow editableRow) throws Exception  {}

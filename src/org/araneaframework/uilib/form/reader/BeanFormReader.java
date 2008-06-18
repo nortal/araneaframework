@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form.reader;
 
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
@@ -57,8 +56,8 @@ public class BeanFormReader {
 	 * @return Value Object of the specified class with values read from the form
 	 *         where possible.
 	 */
-  public Object getBean(Class voClass) {
-    Object result = null;
+  public <T> T getBean(Class<T> voClass) {
+    T result = null;
     try {
       result = voClass.newInstance();
       readFormBean(result);
@@ -78,17 +77,17 @@ public class BeanFormReader {
 	 * @param vo
 	 *          Value Object to write to.
 	 */
-  public void readFormBean(Object vo) {
-	  BeanMapper beanMapper = new BeanMapper(vo.getClass());
-    for (Iterator i = compositeFormElement.getElements().entrySet().iterator(); i.hasNext();) {
-    	Map.Entry entry = (Map.Entry) i.next();
+  @SuppressWarnings("unchecked")
+  public <T> void readFormBean(T vo) {
+	  BeanMapper<T> beanMapper = new BeanMapper<T>((Class<T>) vo.getClass());
+    for (Map.Entry<String, GenericFormElement> entry : compositeFormElement.getElements().entrySet()) {
     	
-      GenericFormElement element = (GenericFormElement) entry.getValue();
-      String elementId = (String) entry.getKey();
+      GenericFormElement element = entry.getValue();
+      String elementId = entry.getKey();
       
       if (element instanceof FormElement) {
         if (beanMapper.isWritable(elementId)) {
-          Data data = ((FormElement) element).getData();
+          Data<?> data = ((FormElement<?,?>) element).getData();
           if (data != null) {
             beanMapper.setFieldValue(vo, elementId, data.getValue());
           }

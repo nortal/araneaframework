@@ -43,6 +43,7 @@ public class StandardServiceContainerServiceTests extends TestCase {
   
   private Path path;
   
+  @Override
   public void setUp() throws Exception {
     child = new MockEventfulStandardService();
     parent = new StandardContainerService();

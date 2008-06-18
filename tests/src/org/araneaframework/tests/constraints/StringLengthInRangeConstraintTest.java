@@ -34,6 +34,7 @@ public class StringLengthInRangeConstraintTest extends TestCase {
   private FormElement stringElement;
   private ConstraintTestHelper helper;
 
+  @Override
   public void setUp() throws Exception {
     form = new FormWidget();
     stringElement = form.createElement("#text", new TextControl(), new StringData(), false);

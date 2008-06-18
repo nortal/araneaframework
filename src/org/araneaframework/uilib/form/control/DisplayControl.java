@@ -24,11 +24,12 @@ package org.araneaframework.uilib.form.control;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class DisplayControl extends BaseControl {
+public class DisplayControl extends BaseControl<Object> {
   /**
    * Returns <code>false</code>.
    * @return <code>false</code>.
    */
+  @Override
   public boolean isRead() {
     return false;
   }
@@ -45,7 +46,8 @@ public class DisplayControl extends BaseControl {
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -57,7 +59,7 @@ public class DisplayControl extends BaseControl {
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<Object>.ViewModel {
 
     private Object value;
     

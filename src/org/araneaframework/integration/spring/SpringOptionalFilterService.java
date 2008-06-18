@@ -61,8 +61,9 @@ public class SpringOptionalFilterService extends BaseFilterService {
    * <code>beanId</code> as its child service. Note that the bean must be an
    * instance of {@link FilterService}.
    */
+  @Override
   protected void init() throws Exception {
-    BeanFactory bf = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
     try {
       FilterService filter = (FilterService) bf.getBean(beanId);
       filter.setChildService(childService);

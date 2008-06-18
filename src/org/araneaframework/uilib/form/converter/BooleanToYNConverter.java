@@ -25,26 +25,29 @@ import org.araneaframework.uilib.form.Converter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BooleanToYNConverter extends BaseConverter {
+public class BooleanToYNConverter extends BaseConverter<Boolean, String> {
   /**
    * Converts <code>Boolean</code> to <code>Y|N</code>.
    */
-  public Object convertNotNull(Object data) {
-    return ((Boolean) data).booleanValue() ? "Y" : "N";
+  @Override
+  public String convertNotNull(Boolean data) {
+    return data.booleanValue() ? "Y" : "N";
   }
 
   /**
 	 *  Converts <code>String</code> "Y" to <code>Boolean.TRUE</code> and 
 	 *  any other <code>String</code>, including "N" to <code>Boolean.FALSE</code>. 
 	 */
-  public Object reverseConvertNotNull(Object data) {
-    return ((String) data).equals("Y") ? Boolean.TRUE : Boolean.FALSE;
+  @Override
+  public Boolean reverseConvertNotNull(String data) {
+    return data.equals("Y") ? Boolean.TRUE : Boolean.FALSE;
   }
 
   /**
    * Returns a <code>new BooleanToYNConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<Boolean, String> newConverter() {
     return new BooleanToYNConverter();
   }
 }

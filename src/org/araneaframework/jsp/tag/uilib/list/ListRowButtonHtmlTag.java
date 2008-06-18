@@ -33,6 +33,7 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
     baseStyleClass = "aranea-button";
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -53,6 +54,7 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
     return EVAL_BODY_INCLUDE;
   }    
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     if (localizedLabel != null)
       JspUtil.writeEscaped(out, localizedLabel);

@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -50,13 +50,14 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * The attribute of the action id.
    * @deprecated
    */    
+  @Deprecated
   public static final String ACTION_ID_ATTRIBUTE = ApplicationService.ACTION_HANDLER_ID_KEY;    
 
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private Map actionListeners;
-  private Map viewData;
+  private Map<Object, List<ActionListener>> actionListeners;
+  private Map<String, Object> viewData;
 
 //*******************************************************************
   // PROTECTED CLASSES
@@ -73,7 +74,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   protected class CompositeImpl implements Composite.Interface {
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
@@ -82,7 +83,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     }
 
     public Component detach(Object key) {      
-      return (Component) _getChildren().remove(key);
+      return _getChildren().remove(key);
     }    
   }
   
@@ -95,11 +96,11 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     /**
      * Returns the children of this StandardService.
      */
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
     
-    public Map getData() {
+    public Map<String, Object> getData() {
       return getViewData();
     }    
   }
@@ -109,16 +110,16 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   //*******************************************************************
   
   
-  private synchronized Map getActionListeners() {
+  private synchronized Map<Object, List<ActionListener>> getActionListeners() {
     if (actionListeners == null)
-      actionListeners = new LinkedMap(1);
+      actionListeners = new LinkedHashMap<Object, List<ActionListener>>(1);
       
     return actionListeners;
   }
   
-  private synchronized Map getViewData() {
+  private synchronized Map<String, Object> getViewData() {
     if (viewData == null)
-      viewData = new LinkedMap(1);
+      viewData = new LinkedHashMap<String, Object>(1);
       
     return viewData;
   }
@@ -142,10 +143,10 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     Assert.notNullParam(this, actionId, "actionId");
     Assert.notNullParam(this, listener, "listener");
     
-    List list = (List)getActionListeners().get(actionId);
+    List<ActionListener> list = getActionListeners().get(actionId);
     
     if (list == null) {
-      list = new ArrayList(1);
+      list = new ArrayList<ActionListener>(1);
     }
     list.add(listener);
     
@@ -158,9 +159,9 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
     
-    Iterator ite = (new HashMap(getActionListeners())).values().iterator();
+    Iterator<List<ActionListener>> ite = (new HashMap<Object, List<ActionListener>>(getActionListeners())).values().iterator();
     while(ite.hasNext()) {
-      ((List)ite.next()).remove(listener);
+      ite.next().remove(listener);
     }
   }
   
@@ -196,12 +197,12 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   /**
    * Returns an unmodifiable map of the children.
    */
-  public Map getChildren() {
-    return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
+  public Map<Object, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
   }
 
   /**
-   * Adds a service with the specified key. Allready initilized services cannot be added. Duplicate
+   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate
    * keys not allowed. The child is initialized with the Environment env.
    */
   public void addService(Object key, Service child, Environment env) {
@@ -209,7 +210,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   /**
-   * Adds a service with the specified key. Allready initilized services cannot be added. Duplicate
+   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate
    * keys not allowed. The child is initialized with the Environment from
    * <code>getChildServiceEnvironment()</code>. 
    */
@@ -272,10 +273,6 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     _disableComponent(key);
   }
   
-  public Environment getEnvironment() {
-    return super.getEnvironment();
-  }
-  
   public Environment getChildEnvironment() {
     try {
       return getChildServiceEnvironment();
@@ -312,6 +309,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   
+  @Override
   protected void propagate(Message message) throws Exception {   
     _propagate(message);
   }
@@ -320,6 +318,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * If path hasNextStep() routes to the correct child, otherwise calls the
    * appropriate listener.
    */ 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
       Object next = path.next();
@@ -341,7 +340,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
   
   /**
-   * Calls the approriate listener
+   * Calls the appropriate listener
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
     Object actionId = getActionId(input);    
@@ -352,14 +351,14 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       return;
     }
     
-    List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
+    List<ActionListener> listener = actionListeners == null ? null : actionListeners.get(actionId);  
     
     log.debug("Delivering action '" + actionId +"' to service '" + getClass() + "'");
     
     if (listener != null && listener.size() > 0) {
-      Iterator ite = (new ArrayList(listener)).iterator();
+      Iterator<ActionListener> ite = (new ArrayList<ActionListener>(listener)).iterator();
       while(ite.hasNext()) {
-        ((ActionListener)ite.next()).processAction(actionId, input, output);
+        ite.next().processAction(actionId, input, output);
       }
       
       return;

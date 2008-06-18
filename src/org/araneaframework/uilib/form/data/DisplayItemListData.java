@@ -18,12 +18,13 @@ package org.araneaframework.uilib.form.data;
 
 import java.util.List;
 import org.araneaframework.uilib.form.Data;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class DisplayItemListData extends Data {
+public class DisplayItemListData extends Data<List<DisplayItem>> {
 
   public DisplayItemListData() {
     super(List.class, "List<DisplayItem>");

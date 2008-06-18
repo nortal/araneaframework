@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class ConcatFields implements Fields {
 	
-	private List children = new ArrayList();
+	private List<Fields> children = new ArrayList<Fields>();
 	
 	/**
 	 * Adds an instance of {@link Fields} which results are used.
@@ -46,23 +46,23 @@ public class ConcatFields implements Fields {
 		children.add(fields);
 	}
 
-	public Collection getNames() {
+	public Collection<String> getNames() {
 		// Concatenate all fields without duplicating any name
-		Collection result = new LinkedHashSet();
+		Collection<String> result = new LinkedHashSet<String>();
 		
-		for (Iterator it = children.iterator(); it.hasNext();) {
-			Fields child = (Fields) it.next(); 
+		for (Iterator<Fields> it = children.iterator(); it.hasNext();) {
+			Fields child = it.next(); 
 			result.addAll(child.getNames());
 		}
 		return result;
 	}
 
-	public Collection getResultSetNames() {
+	public Collection<String> getResultSetNames() {
 		// Concatenate all fields without duplicating any name
-		Collection result = new LinkedHashSet();
+		Collection<String> result = new LinkedHashSet<String>();
 		
-		for (Iterator it = children.iterator(); it.hasNext();) {
-			Fields child = (Fields) it.next(); 
+		for (Iterator<Fields> it = children.iterator(); it.hasNext();) {
+			Fields child = it.next(); 
 			result.addAll(child.getResultSetNames());
 		}
 		return result;

@@ -40,6 +40,7 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
     this.validateOnEvent = false;
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
@@ -47,6 +48,7 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
   }
 
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("HiddenControl");

@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.uilib.DataItemTypeViolatedException;
 import org.araneaframework.uilib.util.Event;
 
 /**
@@ -32,14 +31,14 @@ import org.araneaframework.uilib.util.Event;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class Data implements java.io.Serializable, FormElementAware {
+public class Data<T> implements java.io.Serializable, FormElementAware<Object,T> {
   protected String type;
-  protected Class typeClass;
+  protected Class<T> typeClass;
   
-  protected Object value;  
-  protected Object markedBaseValue;
+  protected T value;  
+  protected T markedBaseValue;
   
-  protected FormElement feCtx;
+  protected FormElement<Object, T> feCtx;
   
   /**
    * Creates {@link Data} of type <code>type</code>.
@@ -65,7 +64,7 @@ public class Data implements java.io.Serializable, FormElementAware {
    * Returns {@link Data} value.
    * @return {@link Data} value.
    */
-  public Object getValue() {
+  public T getValue() {
     return value;
   }
 
@@ -73,7 +72,7 @@ public class Data implements java.io.Serializable, FormElementAware {
    * Sets {@link Data} value.
    * @param value {@link Data} value.
    */
-  public void setValue(Object value) {
+  public void setValue(T value) {
     setDataValue(value);
     setControlValue(value);
   }
@@ -84,9 +83,10 @@ public class Data implements java.io.Serializable, FormElementAware {
    * read from request. 
    *  
    * @since 1.0.12 */
-  public void setDataValue(Object value) {
-    if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
-      throw new DataItemTypeViolatedException(getValueType(), value.getClass());
+  public void setDataValue(T value) {
+    //XXX useless now?
+//    if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
+//      throw new DataItemTypeViolatedException(getValueType(), value.getClass());
 
     this.value = value;
   }
@@ -94,7 +94,7 @@ public class Data implements java.io.Serializable, FormElementAware {
   /** 
    * Sets the value of {@link Control} that is associated with {@link FormElement} which owns this {@link Data}.
    * @since 1.0.12 */
-  public void setControlValue(final Object value) {
+  public void setControlValue(final T value) {
     if (feCtx != null) {
       feCtx.addInitEvent(new Event() {
         public void run() {
@@ -115,6 +115,7 @@ public class Data implements java.io.Serializable, FormElementAware {
     return type;
   }
   
+  @Override
   public String toString() {
     return "Data: [Type = " + getValueType() + "; Value = " + value + "]";
   }
@@ -123,8 +124,12 @@ public class Data implements java.io.Serializable, FormElementAware {
    * Returns a new instance of this {@link Data}, value is not set.
    * @return a new instance of current {@link Data}, value is not set.
    */
-  public Data newData() {
-    return new Data(typeClass, type);
+  public Data<T> newData() {
+    return new Data<T>(typeClass, type);
+  }
+  
+  public static <V> Data<V> newInstance(Class<V> clazz){
+    return new Data<V>(clazz);
   }
   
   /**
@@ -155,9 +160,9 @@ public class Data implements java.io.Serializable, FormElementAware {
   		else return !markedBaseValue.equals(value);
   }
 
-  public void setFormElementCtx(FormElementContext feCtx) {
+  public void setFormElementCtx(FormElementContext<Object, T> feCtx) {
     if (this.feCtx != feCtx) {
-      this.feCtx = (FormElement)feCtx;
+      this.feCtx = (FormElement<Object, T>)feCtx;
       setValue(getValue());
     }
   }

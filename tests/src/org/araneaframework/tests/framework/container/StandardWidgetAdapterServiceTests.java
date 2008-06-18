@@ -35,6 +35,7 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
   private StandardWidgetAdapterService adapter;
   private MockEventfulStandardWidget widget;
   
+  @Override
   public void setUp() throws Exception {
     widget = new MockEventfulStandardWidget();
     
@@ -68,9 +69,11 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
   
   public void testActionPropagates() throws Exception {
     adapter = new StandardWidgetAdapterService() {
+      @Override
       protected boolean hasAction(InputData input) {
         return true;
       }
+      @Override
       protected Path getActionPath(InputData input) {
         return null;
       }

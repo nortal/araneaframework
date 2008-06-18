@@ -32,7 +32,7 @@ public class MultiComparatorExpression implements CompositeComparatorExpression 
 
 	private static final Log log = LogFactory.getLog(MultiComparatorExpression.class);
 	
-	protected List children = new ArrayList();
+	protected List children = new ArrayList<ComparatorExpression>();
 	
 	public ComparatorExpression add(ComparatorExpression expression) {
 		this.children.add(expression);

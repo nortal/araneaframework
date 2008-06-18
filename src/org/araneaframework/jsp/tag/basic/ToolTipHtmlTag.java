@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -36,7 +35,8 @@ public class ToolTipHtmlTag extends BaseTag {
 	protected String text;
 	protected String options;
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
 		JspUtil.writeOpenStartTag(out, "script");
@@ -56,8 +56,8 @@ public class ToolTipHtmlTag extends BaseTag {
 	 *   required = "true"
 	 *   description = "HTML element id to which tooltip should be attached." 
 	 */
-	public void setElement(String element) throws JspException {
-		this.element = (String) evaluate("element", element, String.class);
+	public void setElement(String element){
+		this.element = evaluate("element", element, String.class);
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class ToolTipHtmlTag extends BaseTag {
 	 *   required = "true"
 	 *   description = "Tooltip content." 
 	 */
-	public void setText(String text) throws JspException {
-		this.text = (String) evaluate("text", text, String.class);
+	public void setText(String text){
+		this.text = evaluate("text", text, String.class);
 	}
 	
 	 /**
@@ -76,7 +76,7 @@ public class ToolTipHtmlTag extends BaseTag {
    *   required = "false"
    *   description = "Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details)." 
    */
-	public void setOptions(String options) throws JspException {
-	  this.options = (String) evaluate("options", options, String.class);
+	public void setOptions(String options){
+	  this.options = evaluate("options", options, String.class);
 	}
 }

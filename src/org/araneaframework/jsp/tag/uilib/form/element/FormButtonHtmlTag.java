@@ -48,6 +48,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     baseStyleClass = "aranea-button";
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -91,6 +92,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
 
     if (renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON)) {
@@ -121,11 +123,10 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
   public void setRenderMode(String renderMode) throws JspException {
     if (!(renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(FormButtonHtmlTag.RENDER_INPUT)))
       throw new AraneaJspException("<ui:button> 'renderMode' attribute must be '" + FormButtonHtmlTag.RENDER_BUTTON + "' or '"+ FormButtonHtmlTag.RENDER_INPUT+"'");
-    this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+    this.renderMode = evaluate("renderMode", renderMode, String.class);
   }
 
-  protected boolean writeEventAttribute(Writer out) throws IOException,
-  JspException {
+  protected boolean writeEventAttribute(Writer out) throws IOException {
     UiUpdateEvent event = new UiUpdateEvent();
     event.setId(OnClickEventListener.ON_CLICK_EVENT);
     event.setTarget(formFullId+"."+ derivedId);

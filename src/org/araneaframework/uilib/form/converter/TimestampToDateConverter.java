@@ -26,26 +26,29 @@ import org.araneaframework.uilib.form.Converter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class TimestampToDateConverter extends BaseConverter {
+public class TimestampToDateConverter extends BaseConverter<Timestamp, Date> {
   
   /**
    * Converts <code>Timestamp</code> to <code>Date</code>.
    */
-  protected Object convertNotNull(Object data) {
-    return new Date(((Timestamp)data).getTime());
+  @Override
+  protected Date convertNotNull(Timestamp data) {
+    return new Date(data.getTime());
   }
   
   /**
    * Converts <code>Date</code> to <code>Timestamp</code>.
    */
-  protected Object reverseConvertNotNull(Object data) {
-    return new Timestamp(((Date) data).getTime());
+  @Override
+  protected Timestamp reverseConvertNotNull(Date data) {
+    return new Timestamp(data.getTime());
   }
   
   /**
    * Returns <code>new TimestampToDateConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<Timestamp, Date> newConverter() {
     return new TimestampToDateConverter();
   }  
 }

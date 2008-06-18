@@ -25,7 +25,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BroadcastMessage implements Message {
-  private Class componentClass;
+  private Class<? extends Component> componentClass;
   public BroadcastMessage() {}
 
   /**
@@ -34,7 +34,7 @@ public abstract class BroadcastMessage implements Message {
    * 
    * @since 1.1.1 
    */
-  public BroadcastMessage(Class componentClass) {
+  public BroadcastMessage(Class<? extends Component> componentClass) {
     this.componentClass = componentClass;
   }
   
@@ -44,7 +44,7 @@ public abstract class BroadcastMessage implements Message {
    * 
    * @see org.araneaframework.Message#send(java.lang.Object, org.araneaframework.Component)
    */
-  public final void send(Object id, Component component) {
+  public final void send(@SuppressWarnings("unused") Object id, Component component) {
     component._getComponent().propagate(this);	  
 
     try {

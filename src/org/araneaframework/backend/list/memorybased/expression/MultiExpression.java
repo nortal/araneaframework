@@ -24,7 +24,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * Composite Expression containing other expressions.
  */
 public abstract class MultiExpression implements CompositeExpression {
-	protected List children = new ArrayList();
+	protected List<Expression> children = new ArrayList<Expression>();
 
 	/**
 	 * Adds expression to this composite MultiExpression.
@@ -37,6 +37,6 @@ public abstract class MultiExpression implements CompositeExpression {
 	}
 
 	public Expression[] getChildren() {
-		return (Expression[]) this.children.toArray(new Expression[this.children.size()]);
+		return this.children.toArray(new Expression[this.children.size()]);
 	}
 }

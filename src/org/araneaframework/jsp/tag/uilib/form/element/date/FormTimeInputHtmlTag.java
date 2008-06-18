@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
-import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -29,6 +28,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   {
     baseStyleClass = "aranea-time";
   }
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("TimeControl");
 
@@ -220,8 +220,8 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    * 
    * @since 1.0.3
    */
-  public void setShowTimeSelect(String showTimeSelect) throws JspException {
-    this.showTimeSelect = ((Boolean) evaluate("showTimeSelect", showTimeSelect, Boolean.class)).booleanValue();
+  public void setShowTimeSelect(String showTimeSelect){
+    this.showTimeSelect = (evaluate("showTimeSelect", showTimeSelect, Boolean.class)).booleanValue();
   }
   
   /**
@@ -232,7 +232,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    * 
    * @since 1.1
    */
-  public void setSurroundingTable(String surroundingTable) throws JspException {
-    this.surroundingTable = ((Boolean) evaluate("surroundingTable", surroundingTable, Boolean.class)).booleanValue();
+  public void setSurroundingTable(String surroundingTable){
+    this.surroundingTable = (evaluate("surroundingTable", surroundingTable, Boolean.class)).booleanValue();
   }
 }

@@ -47,7 +47,8 @@ public class ExternalResourceConfigurationHandler extends DefaultHandler {
 		result = resource;
 	}
 
-	public void startElement(String uri, String localName, String qName, Attributes attributes) {
+	@Override
+  public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (TAG_FILES.equalsIgnoreCase(qName)) {
 			fileGroup = new FileGroup();
 			boolean contentTypeSet = false;
@@ -73,7 +74,8 @@ public class ExternalResourceConfigurationHandler extends DefaultHandler {
 		}
 	} 
 
-	public void endElement(String uri, String localName, String qName) {
+	@Override
+  public void endElement(String uri, String localName, String qName) {
 		if (TAG_FILES.equalsIgnoreCase(qName)) {
 			result.addGroup(fileGroup);	
 		}

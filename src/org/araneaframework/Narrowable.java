@@ -34,5 +34,5 @@ public interface Narrowable {
    * @param interfaceClass the interface of the implementation in need of
    * @return the implementation of the interfaceClass
    */
-  public Object narrow(Class interfaceClass);
+  public <T> T narrow(Class<T> interfaceClass);
 }

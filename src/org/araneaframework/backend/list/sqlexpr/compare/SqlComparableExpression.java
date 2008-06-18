@@ -48,7 +48,7 @@ public abstract class SqlComparableExpression implements SqlExpression {
 	protected abstract String getOperator();
 
 	public Object[] getValues() {
-		List values = new ArrayList();
+		List<Object> values = new ArrayList<Object>();
 		Object[] childValues = this.expr1.getValues();
 		if (childValues != null) {
 			values.addAll(Arrays.asList(childValues));

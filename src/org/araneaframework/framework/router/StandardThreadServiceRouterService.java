@@ -28,21 +28,24 @@ import org.araneaframework.framework.ThreadContext;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardThreadServiceRouterService extends BaseExpiringServiceRouterService {
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+  @Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
   private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements ThreadContext {
-    protected ServiceRouterContextImpl(Object serviceId) {
+    protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
   }
 
-  protected Object getServiceKey() throws Exception {
+  @Override
+  protected String getServiceKey() throws Exception {
     return ThreadContext.THREAD_SERVICE_KEY;
   }
 
-  public Object getKeepAliveKey() { 
+  @Override
+  public String getKeepAliveKey() { 
     return ThreadContext.KEEPALIVE_KEY;
   }
 }

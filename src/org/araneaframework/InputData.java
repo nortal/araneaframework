@@ -47,14 +47,14 @@ public interface InputData extends Extendable, Narrowable {
    * @param scope the Path prefix
    * @return a map with the data
    */
-  public Map getScopedData(Path scope);
+  public Map<String, String> getScopedData(Path scope);
   
   /**
    * Returns the global data of this object. Global data is not the same
    * as scoped data with empty path.
    * @return the map with the global data
    */
-  public Map getGlobalData();
+  public Map<String, String> getGlobalData();
   
   /**
    * Returns the current OutputData.

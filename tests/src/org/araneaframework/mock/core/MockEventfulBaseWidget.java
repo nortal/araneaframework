@@ -35,32 +35,39 @@ public class MockEventfulBaseWidget extends BaseWidget {
   private boolean disableCalled = false;
   private boolean enableCalled = false;
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     actionCalled = true;
   }
     
+  @Override
   protected void update(InputData input) throws Exception {
     updateCalled = true;
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     eventCalled = true;
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     renderCalled = true;
   }
   
+  @Override
   protected void disable() throws Exception {
     super.disable();
     disableCalled = true;
   }
 
+  @Override
   protected void enable() throws Exception {
     super.enable();
     enableCalled = true;
   }
 
+  @Override
   public void destroy() throws Exception {
     destroyCalled = true;
   }

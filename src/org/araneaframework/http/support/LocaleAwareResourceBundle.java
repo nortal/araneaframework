@@ -31,6 +31,7 @@ public abstract class LocaleAwareResourceBundle extends ResourceBundle implement
     this.locale = locale;
   }
   
+  @Override
   public Locale getLocale() {
     return this.locale;
   }  

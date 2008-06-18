@@ -65,11 +65,11 @@ public class BooleanToLongConverter implements Converter {
 		throw new ConversionException("Data " + data + " not supported");
 	}
 
-	public Class getSourceType() {
+	public Class<Boolean> getSourceType() {
 		return Boolean.class;
 	}
 
-	public Class getDestinationType() {
+	public Class<Long> getDestinationType() {
 		return Long.class;
 	}
 }

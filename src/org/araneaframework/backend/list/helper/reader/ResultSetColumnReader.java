@@ -41,6 +41,6 @@ public interface ResultSetColumnReader {
    * @param javaType java type to read to.
    * @return Custom Java Object from the given <code>ResultSet</code> column.
    */
-  Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
+  <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType);
   
 }

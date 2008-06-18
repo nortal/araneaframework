@@ -101,7 +101,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * 
 	 * @see TypeHelper#addFieldType(String, Class)
 	 */
-	public FieldFilterHelper useFieldType(Class type) {
+	public FieldFilterHelper useFieldType(Class<?> type) {
 		super._addFieldType(fieldId, type);
 		return this;
 	}
@@ -116,16 +116,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper eq(String valueId) {
 		return this.helper.eq(fieldId, valueId);
 	}
-	public FilterHelper eq(Control control) {
+	public FilterHelper eq(Control<?> control) {
 		return this.helper.eq(fieldId, control);
 	}
-	public FilterHelper eq(String valueId, Control control) {
+	public FilterHelper eq(String valueId, Control<?> control) {
 		return this.helper.eq(fieldId, valueId, control);
 	}
-	public FilterHelper eq(FormElement element) {
+	public FilterHelper eq(FormElement<?,?> element) {
 		return this.helper.eq(fieldId, element);
 	}
-	public FilterHelper eq(String valueId, FormElement element) {
+	public FilterHelper eq(String valueId, FormElement<?,?> element) {
 		return this.helper.eq(fieldId, valueId, element);
 	}
 	
@@ -157,16 +157,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper gt(String valueId) {
 		return this.helper.gt(fieldId, valueId);
 	}
-	public FilterHelper gt(Control control) {
+	public FilterHelper gt(Control<?> control) {
 		return this.helper.gt(fieldId, control);
 	}
-	public FilterHelper gt(String valueId, Control control) {
+	public FilterHelper gt(String valueId, Control<?> control) {
 		return this.helper.gt(fieldId, valueId, control);
 	}
-	public FilterHelper gt(FormElement element) {
+	public FilterHelper gt(FormElement<?,?> element) {
 		return this.helper.gt(fieldId, element);
 	}
-	public FilterHelper gt(String valueId, FormElement element) {
+	public FilterHelper gt(String valueId, FormElement<?,?> element) {
 		return this.helper.gt(fieldId, valueId, element);
 	}
 	
@@ -198,16 +198,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper lt(String valueId) {
 		return this.helper.lt(fieldId, valueId);
 	}
-	public FilterHelper lt(Control control) {
+	public FilterHelper lt(Control<?> control) {
 		return this.helper.lt(fieldId, control);
 	}
-	public FilterHelper lt(String valueId, Control control) {
+	public FilterHelper lt(String valueId, Control<?> control) {
 		return this.helper.lt(fieldId, valueId, control);
 	}
-	public FilterHelper lt(FormElement element) {
+	public FilterHelper lt(FormElement<?,?> element) {
 		return this.helper.lt(fieldId, element);
 	}
-	public FilterHelper lt(String valueId, FormElement element) {
+	public FilterHelper lt(String valueId, FormElement<?,?> element) {
 		return this.helper.lt(fieldId, valueId, element);
 	}
 	
@@ -239,16 +239,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper like(String valueId) {
 		return this.helper.like(fieldId, valueId);
 	}
-	public FilterHelper like(Control control) {
+	public FilterHelper like(Control<?> control) {
 		return this.helper.like(fieldId, control);
 	}
-	public FilterHelper like(String valueId, Control control) {
+	public FilterHelper like(String valueId, Control<?> control) {
 		return this.helper.like(fieldId, valueId, control);
 	}
-	public FilterHelper like(FormElement element) {
+	public FilterHelper like(FormElement<?,?> element) {
 		return this.helper.like(fieldId, element);
 	}
-	public FilterHelper like(String valueId, FormElement element) {
+	public FilterHelper like(String valueId, FormElement<?,?> element) {
 		return this.helper.like(fieldId, valueId, element);
 	}
 	
@@ -306,7 +306,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper startsWith(Control control) {
+	public FilterHelper startsWith(Control<?> control) {
 		return this.helper.startsWith(fieldId, control);
 	}
 
@@ -319,7 +319,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper startsWith(String valueId, Control control) {
+	public FilterHelper startsWith(String valueId, Control<?> control) {
 		return this.helper.startsWith(fieldId, valueId, control);
 	}
 
@@ -332,7 +332,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper startsWith(FormElement element) {
+	public FilterHelper startsWith(FormElement<?,?> element) {
 		return this.helper.startsWith(fieldId, element);
 	}
 
@@ -346,7 +346,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper startsWith(String valueId, FormElement element) {
+	public FilterHelper startsWith(String valueId, FormElement<?,?> element) {
 		return this.helper.startsWith(fieldId, valueId, element);
 	}
 
@@ -419,7 +419,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper endsWith(Control control) {
+	public FilterHelper endsWith(Control<?> control) {
 		return this.helper.endsWith(fieldId, control);
 	}
 
@@ -432,7 +432,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper endsWith(String valueId, Control control) {
+	public FilterHelper endsWith(String valueId, Control<?> control) {
 		return this.helper.endsWith(fieldId, valueId, control);
 	}
 
@@ -445,7 +445,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper endsWith(FormElement element) {
+	public FilterHelper endsWith(FormElement<?,?> element) {
 		return this.helper.endsWith(fieldId, element);
 	}
 
@@ -459,7 +459,7 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	 * @return reference to current instance of FilterHelper.
      * @since 1.1.3
 	 */
-	public FilterHelper endsWith(String valueId, FormElement element) {
+	public FilterHelper endsWith(String valueId, FormElement<?,?> element) {
 		return this.helper.endsWith(fieldId, valueId, element);
 	}
 
@@ -504,16 +504,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper isNull(String valueId, Object conditionValue) {
 		return this.helper.isNull(fieldId, valueId, conditionValue);
 	}
-	public FilterHelper isNull(Object conditionValue, Control control) {
+	public FilterHelper isNull(Object conditionValue, Control<?> control) {
 		return this.helper.isNull(fieldId, conditionValue, control);
 	}
-	public FilterHelper isNull(String valueId, Object conditionValue, Control control) {
+	public FilterHelper isNull(String valueId, Object conditionValue, Control<?> control) {
 		return this.helper.isNull(fieldId, valueId, conditionValue, control);
 	}
-	public FilterHelper isNull(Object conditionValue, FormElement element) {
+	public FilterHelper isNull(Object conditionValue, FormElement<?,?> element) {
 		return this.helper.isNull(fieldId, conditionValue, element);
 	}
-	public FilterHelper isNull(String valueId, Object conditionValue, FormElement element) {
+	public FilterHelper isNull(String valueId, Object conditionValue, FormElement<?,?> element) {
 		return this.helper.isNull(fieldId, valueId, conditionValue, element);
 	}
 	
@@ -542,16 +542,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper notNull(String valueId, Object conditionValue) {
 		return this.helper.notNull(fieldId, valueId, conditionValue);
 	}
-	public FilterHelper notNull(Object conditionValue, Control control) {
+	public FilterHelper notNull(Object conditionValue, Control<?> control) {
 		return this.helper.notNull(fieldId, conditionValue, control);
 	}
-	public FilterHelper notNull(String valueId, Object conditionValue, Control control) {
+	public FilterHelper notNull(String valueId, Object conditionValue, Control<?> control) {
 		return this.helper.notNull(fieldId, valueId, conditionValue, control);
 	}
-	public FilterHelper notNull(Object conditionValue, FormElement element) {
+	public FilterHelper notNull(Object conditionValue, FormElement<?,?> element) {
 		return this.helper.notNull(fieldId, conditionValue, element);
 	}
-	public FilterHelper notNull(String valueId, Object conditionValue, FormElement element) {
+	public FilterHelper notNull(String valueId, Object conditionValue, FormElement<?,?> element) {
 		return this.helper.notNull(fieldId, valueId, conditionValue, element);
 	}
 	

@@ -63,6 +63,7 @@ public class TextareaControl extends StringValueControl {
   /**
    * Takes away &lt;cr&gt; added by Intenet Explorer.
    */
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
     String superProcessed = super.preprocessRequestParameter(parameterValue);
     

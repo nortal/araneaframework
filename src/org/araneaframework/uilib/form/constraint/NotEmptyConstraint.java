@@ -77,6 +77,7 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
   /**
    * Checks that the <code>String</code> value would not be empty.
    */
+  @Override
   public void validateConstraint() {
     boolean empty = getValue() == null;
 

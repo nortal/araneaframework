@@ -44,7 +44,8 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 		page = null;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {   
+	@Override
+  protected int doEndTag(Writer out) throws Exception {   
     ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), widgetId);
 		
 		WidgetContextTag widgetContextTag = new WidgetContextTag();
@@ -61,7 +62,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 				widget._getWidget().render(output);
 			}
 			else {
-				JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+				JspContext config = getEnvironment().requireEntry(JspContext.class);
 				JspUtil.include(pageContext, config.getJspPath() + "/" + page);
 			}
 		}
@@ -85,7 +86,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	 *   description = "Widget id." 
 	 */
 	public void setId(String widgetId) throws JspException {
-		this.widgetId = (String)evaluateNotNull("widgetId", widgetId, String.class);		
+		this.widgetId = evaluateNotNull("widgetId", widgetId, String.class);		
 	}
 	
 	/**
@@ -94,7 +95,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 	 *   required = "false"
 	 *   description = "Path to JSP." 
 	 */
-	public void setPage(String page) throws JspException {
-		this.page = (String)evaluate("page", page, String.class);
+	public void setPage(String page){
+		this.page = evaluate("page", page, String.class);
 	}
 }

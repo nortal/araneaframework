@@ -67,6 +67,7 @@ public class JsonArray implements Serializable {
   /**
    * Get this array in JSON data-interchange format.
    */
+  @Override
   public String toString() {
     buf.append(']');
     String string = buf.toString();

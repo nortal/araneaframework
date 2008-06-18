@@ -19,12 +19,10 @@ package org.araneaframework.framework.filter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.collections.map.LinkedMap;
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.Assert;
@@ -53,31 +51,33 @@ import org.araneaframework.http.util.JsonObject;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
-  protected Map permanentMessages;
-  protected Map messages;
+  protected Map<String, Collection<String>> permanentMessages;
+  protected Map<String, Collection<String>> messages;
 
+  @Override
   protected void update(InputData input) throws Exception {
     clearMessages();
 
     super.update(input);
   }
   
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
   
   /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
-  protected Map storeMessage(final String type, final String message, Map messageMap) {
+  protected Map<String, Collection<String>> storeMessage(final String type, final String message, Map<String, Collection<String>> messageMap) {
     Assert.notEmptyParam(type, "type");
     Assert.notEmptyParam(message, "message");
     
     if (messageMap == null)
-      messageMap = new LinkedMap();
+      messageMap = new LinkedHashMap<String, Collection<String>>();
 
-    Collection messages = (Collection)messageMap.get(type);
+    Collection<String> messages = messageMap.get(type);
 
     if (messages == null) {
-      messages = ListOrderedSet.decorate(new HashSet());
+      messages = new LinkedHashSet<String>();
       messageMap.put(type, messages);
     }
 
@@ -89,16 +89,15 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   /** 
    * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. 
    * When given <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types. */
-  protected Map removeMessage(String type, final String message, Map messageMap) {
+  protected Map<String, Collection<String>> removeMessage(String type, final String message, Map<String, Collection<String>> messageMap) {
     Assert.notEmptyParam(message, "message");
 
     if (messageMap == null)
       return null;
 
-    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry next = (Map.Entry)i.next();
+    for (Map.Entry<String, Collection<String>> next : messageMap.entrySet()) {
       if (type == null || next.getKey().equals(type)) {
-        Collection messages = (Collection)(next).getValue();
+        Collection<String> messages = next.getValue();
         messages.remove(message);
         if (type != null) 
           break;
@@ -112,18 +111,17 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
    * Adds current permanent messages to given message map.
    * @return given message map with permanent messages added. 
    */
-  protected Map addPermanentMessages(Map msgs) {
+  protected Map<String, Collection<String>> addPermanentMessages(Map<String, Collection<String>> msgs) {
     if (msgs == null && permanentMessages.size() > 0)
-      msgs = new LinkedMap();
+      msgs = new LinkedHashMap<String, Collection<String>>();
 
-    for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry)i.next();
-      Collection typedMessages = (Collection)msgs.get(entry.getKey());
+    for (Map.Entry<String, Collection<String>> entry : permanentMessages.entrySet()) {
+      Collection<String> typedMessages = msgs.get(entry.getKey());
 
       if (typedMessages == null)
         msgs.put(entry.getKey(), entry.getValue());
       else
-        typedMessages.addAll((Collection)entry.getValue());
+        typedMessages.addAll(entry.getValue());
     }
     return msgs;
   }
@@ -132,10 +130,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     messages = storeMessage(type, message, messages);
   }
 
-  public void showMessages(String type, Set messages) {
+  public void showMessages(String type, Set<String> messages) {
     Assert.notNullParam(messages, "messages");
-    for (Iterator i = messages.iterator(); i.hasNext(); ) {
-      showMessage(type, (String)i.next());
+    for (String element : messages) {
+      showMessage(type, element);
     }
   }
 
@@ -144,10 +142,10 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     removeMessage(type, message, messages);
   }
   
-  public void hideMessages(String type, Set messages) {
+  public void hideMessages(String type, Set<String> messages) {
     Assert.notNullParam(messages, "messages");
-    for (Iterator i = messages.iterator(); i.hasNext(); ) {
-      hideMessage(type, (String)i.next());
+    for (String element : messages) {
+      hideMessage(type, element);
     }
   }
 
@@ -198,7 +196,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     clearPermanentMessages();
   }
 
-  public Map getMessages() {
+  public Map<String, Collection<String>> getMessages() {
     if (permanentMessages != null) {
       // add permanent messages to-one time messages for rendering
       messages = addPermanentMessages(messages);
@@ -216,25 +214,23 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   /**
    * @since 1.1
    */
-  public Map getRegions() {
+  public Map<String, String> getRegions() {
     JsonObject messagesByType = new JsonObject();
-    Map messageMap = getMessages();
+    Map<String, Collection<String>> messageMap = getMessages();
     if (messageMap != null) {
-      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-        Map.Entry entry = (Map.Entry) i.next();
+      for (Map.Entry<String, Collection<String>> entry : messageMap.entrySet()) {
         if (entry.getValue() == null) {
           continue;
         }
-        String type = (String) entry.getKey();
+        String type = entry.getKey();
         JsonArray messages = new JsonArray();
-        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
-          String message = (String) j.next();
+        for (String message : entry.getValue()) {
           messages.appendString(message);
         }
         messagesByType.setProperty(type, messages.toString());
       }
     }
-    Map regions = new HashMap(1);
+    Map<String, String> regions = new HashMap<String, String>(1);
     regions.put(MessageContext.MESSAGE_REGION_KEY, messagesByType.toString());
     return regions;
   }

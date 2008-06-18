@@ -32,6 +32,7 @@ public class AtomicResponseHelperTests extends TestCase {
   private StandardServletOutputData output;
   private MockHttpServletResponse res;
   
+  @Override
   public void setUp() throws Exception {
     res = new MockHttpServletResponse();
     res.setContentType("text/html; charset=UTF-8");

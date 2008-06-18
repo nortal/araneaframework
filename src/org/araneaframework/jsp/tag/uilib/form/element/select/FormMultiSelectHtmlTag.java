@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
-import java.util.Iterator;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -43,12 +41,14 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     baseStyleClass = "aranea-multi-select";
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return r;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");    
     
@@ -73,8 +73,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartTag(out);      
     
-    for(Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem item = (DisplayItem)i.next();
+    for (DisplayItem item : viewModel.getSelectItems()) {
       String value = item.getValue();
       String label = item.getDisplayString();
       
@@ -104,7 +103,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Vertical size, number of options displayed." 
    */
-  public void setSize(String size) throws JspException {
-    this.size = (Long)evaluate("size", size, Long.class);
+  public void setSize(String size){
+    this.size = evaluate("size", size, Long.class);
   }
 }

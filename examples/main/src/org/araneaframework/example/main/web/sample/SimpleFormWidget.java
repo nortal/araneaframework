@@ -92,6 +92,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     
     // the usual, add the created widget to main widget.
 		addWidget("simpleForm", simpleForm);
+
   }
 
   /**

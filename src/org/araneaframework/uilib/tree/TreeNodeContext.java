@@ -96,7 +96,7 @@ public interface TreeNodeContext extends Serializable {
    * @param nodes
    *          list of {@link TreeNodeWidget}s to be added.
    */
-  void addAllNodes(List nodes);
+  void addAllNodes(List<TreeNodeWidget> nodes);
 
   /**
    * Removes all child nodes of this tree node.
@@ -122,7 +122,7 @@ public interface TreeNodeContext extends Serializable {
    * 
    * @return list of {@link TreeNodeWidget}s.
    */
-  List getNodes();
+  List<TreeNodeWidget> getNodes();
 
   /**
    * Returns if this tree node has any child nodes.

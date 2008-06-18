@@ -40,6 +40,7 @@ public class StandardStatisticFilterServiceTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
   
+  @Override
   public void setUp() throws Exception {
     service = new StandardStatisticFilterService();
     child = new MockEventfulBaseService();

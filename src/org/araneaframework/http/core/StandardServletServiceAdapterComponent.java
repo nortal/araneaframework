@@ -57,19 +57,21 @@ implements ServletServiceAdapterComponent {
 
 	private Service childService;
 
-	private static final ThreadLocal localInput = new ThreadLocal();
-	private static final ThreadLocal localOutput = new ThreadLocal();
+	private static final ThreadLocal<InputData> localInput = new ThreadLocal<InputData>();
+	private static final ThreadLocal<OutputData> localOutput = new ThreadLocal<OutputData>();
 
-	protected void init() throws Exception {
+	@Override
+  protected void init() throws Exception {
 		childService._getComponent().init(getScope(), new BaseEnvironment() {
 
-			public Object getEntry(Object key) {
-				if (InputData.class.equals(key))
-					return localInput.get();
-				if (OutputData.class.equals(key))
-					return localOutput.get();
-				return getEnvironment().getEntry(key);
-			}  
+      @SuppressWarnings("unchecked")
+      //TODO look at this more closely
+      public <T> T getEntry(Class<T> key) {
+        if (InputData.class.equals(key))
+          return (T) localInput.get();
+        if (OutputData.class.equals(key))
+          return (T) localOutput.get();
+        return getEnvironment().getEntry(key);   }
 		});
 	}
 
@@ -77,7 +79,8 @@ implements ServletServiceAdapterComponent {
 		childService = service;
 	}
 
-	protected void destroy() throws Exception {
+	@Override
+  protected void destroy() throws Exception {
 		childService._getComponent().destroy();
 	}
 

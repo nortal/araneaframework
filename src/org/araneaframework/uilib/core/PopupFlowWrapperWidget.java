@@ -55,10 +55,12 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     this.child = child;
   }
   
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(getEnvironment(), FlowContext.class, this);
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
     addWidget("child", child);
@@ -86,7 +88,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public void finish(Object result) {
-    ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+    ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
     getOpenerFlowContext().finish(result);
 
     try {
@@ -101,7 +103,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
 	    String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
         //popup window is closed with redirect to a page that closes current window and reloads parent.
         threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
-        ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String) EnvironmentUtil.requireTopServiceId(getEnvironment()), rndThreadId));
+        ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), EnvironmentUtil.requireTopServiceId(getEnvironment()), rndThreadId));
       }
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
@@ -123,21 +125,22 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     // XXX: and now what?
   }
 
-  public FlowReference getCurrentReference() {
-    return getLocalFlowContext().getCurrentReference();
-  }
+//  public FlowReference getCurrentReference() {
+//    return getLocalFlowContext().getCurrentReference();
+//  }
 
-  public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
+  public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, Class<T> entryId, T envEntry) {
     getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId,
         envEntry);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     child._getWidget().render(output);
   }
   
   private FlowContext getLocalFlowContext() {
-    return (FlowContext) getEnvironment().getEntry(FlowContext.class);
+    return getEnvironment().getEntry(FlowContext.class);
   }
   
   protected String getRequestURL() {
@@ -145,7 +148,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
   
   protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
-    Map m = new HashMap();
+    Map<String, String> m = new HashMap<String, String>();
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
@@ -154,18 +157,18 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   
   private FlowContext getOpenerFlowContext() {
     PopupWindowContext popupCtx = 
-      (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+      getEnvironment().getEntry(PopupWindowContext.class);
     // XXX
-    return (FlowContext) ((ApplicationWidget) popupCtx.getOpener())
+    return ((ApplicationWidget) popupCtx.getOpener())
       .getChildEnvironment().getEntry(FlowContext.class);
   }
   
   protected PopupWindowContext getPopupContext() {
-    return (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+    return getEnvironment().getEntry(PopupWindowContext.class);
   }
 
   protected PopupWindowContext getOpenerPopupContext() {
-    return (PopupWindowContext)((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
+    return ((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
   }
 
   public void setTransitionHandler(TransitionHandler handler) {

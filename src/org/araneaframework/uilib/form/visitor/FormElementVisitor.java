@@ -35,7 +35,7 @@ public abstract class FormElementVisitor implements Serializable {
   //* CONTEXT STACK
   //*********************************************************************
 	
-	protected List contextStack = new ArrayList();
+	protected List<IdElementPair> contextStack = new ArrayList<IdElementPair>();
 	
 	/**
 	 * Pushes the context element to stack. 
@@ -81,7 +81,7 @@ public abstract class FormElementVisitor implements Serializable {
 	 * Returns the current context element that should be the parent of the element being visited.  
 	 */
 	public GenericFormElement getParent() {
-		return ((IdElementPair) contextStack.get(contextStack.size() - 1)).getElement();
+		return contextStack.get(contextStack.size() - 1).getElement();
 	}
 	
 	/**
@@ -91,8 +91,8 @@ public abstract class FormElementVisitor implements Serializable {
 	public String getPrefix() {
 		String result = "";
 		
-		for (Iterator i = contextStack.iterator(); i.hasNext();) {
-			IdElementPair pair = (IdElementPair) i.next();
+		for (Iterator<IdElementPair> i = contextStack.iterator(); i.hasNext();) {
+			IdElementPair pair = i.next();
 			result = NameUtil.getFullName(result, pair.getId());
 		}
 		

@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
 import java.util.Iterator;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -42,12 +41,14 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     baseStyleClass = "aranea-file-upload";
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return r;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FileUploadControl");
 
@@ -59,8 +60,8 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     String accept = null;
     if (viewModel.getPermittedMimeFileTypes() != null) {
       StringBuffer acceptBuffer = new StringBuffer();
-      for(Iterator i = viewModel.getPermittedMimeFileTypes().iterator(); i.hasNext();) {
-        String mimeType = (String)i.next();
+      for(Iterator<String> i = viewModel.getPermittedMimeFileTypes().iterator(); i.hasNext();) {
+        String mimeType = i.next();
         acceptBuffer.append(mimeType);
         if (i.hasNext())
           acceptBuffer.append(",");
@@ -89,7 +90,7 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     return EVAL_PAGE;
   }
 
-  public void setSize(String size) throws JspException {
-    this.size = (Long)evaluate("size", size, Long.class);
+  public void setSize(String size){
+    this.size = evaluate("size", size, Long.class);
   }
 }

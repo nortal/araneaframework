@@ -23,9 +23,9 @@ import org.araneaframework.uilib.form.converter.BaseConverter;
  * Form data converter interface, for converting from one data type to another.
  * See {@link BaseConverter} for description of {@link Converter} purpose in forms.
  */
-public interface Converter extends Serializable, FormElementAware {
+public interface Converter<C,D> extends Serializable, FormElementAware<C,D> {
 
-  public void setFormElementCtx(FormElementContext feCtx);
+  public void setFormElementCtx(FormElementContext<C,D> feCtx);
   
   /**
    * This method converts the data from one type to another.
@@ -33,7 +33,7 @@ public interface Converter extends Serializable, FormElementAware {
    * @param data Data to convert.
    * @return Converted data.
    */
-  public Object convert(Object data);
+  public D convert(C data);
 
   /**
    * This method converts the data from one type to another (though the types are exchanged in
@@ -42,7 +42,7 @@ public interface Converter extends Serializable, FormElementAware {
    * @param data Data to convert.
    * @return Converted data.
    */
-  public Object reverseConvert(Object data);
+  public C reverseConvert(D data);
 
   /**
    * This method should return a new converter, of the same type that the class that overrides it,
@@ -51,6 +51,6 @@ public interface Converter extends Serializable, FormElementAware {
    * @return a new converter, of the same type that the class that overrides it, however freshly
    * initialized.
    */
-  public Converter newConverter();
+  public Converter<C,D> newConverter();
 
 }

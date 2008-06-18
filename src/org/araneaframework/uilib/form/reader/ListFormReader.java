@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.reader;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
@@ -53,13 +52,12 @@ public class ListFormReader {
   /**
    * Returns <code>List></code> with values read from the form list where possible.
    * 
-   * @return <code>List></code> with values read from the form list swhere possible.
+   * @return <code>List></code> with values read from the form list where possible.
    */
-  public List getList() {
-    List result = new ArrayList();
+  public List<Object> getList() {
+    List<Object> result = new ArrayList<Object>();
 
-    for (Iterator i = formList.getFormRows().values().iterator(); i.hasNext();) {
-    	FormRow formRow = (FormRow) i.next();
+    for (FormRow formRow : formList.getFormRows().values()) {
 
       FormWidget form = formRow.getForm();
 

@@ -45,7 +45,8 @@ public class SimpleListFilterTest extends TestCase {
 
 	public void testListFilterBuilder() throws ExpressionEvaluationException {
 		FilterContext ctx = new MockFilterContext() {
-			public Comparator getFieldComparator(String fieldId) {
+			@Override
+      public Comparator getFieldComparator(String fieldId) {
 				// Boolean is not comparable
 				if ("licenseToKill".equals(fieldId)) {
 					return null;

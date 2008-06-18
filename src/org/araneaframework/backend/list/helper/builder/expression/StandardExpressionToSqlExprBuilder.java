@@ -163,6 +163,7 @@ public class StandardExpressionToSqlExprBuilder extends
   }
 
   static class IsNullTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       return new SqlIsNullExpression(sqlChildren[0]);
@@ -171,6 +172,7 @@ public class StandardExpressionToSqlExprBuilder extends
 
   static class ComparedEqualsTranslator extends
       ComparingExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
       return new SqlEqualsExpression(sql1, sql2);
@@ -178,6 +180,7 @@ public class StandardExpressionToSqlExprBuilder extends
   }
 
   static class GreaterThanTranslator extends ComparingExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
       return new SqlGreaterThanExpression(sql1, sql2);
@@ -185,6 +188,7 @@ public class StandardExpressionToSqlExprBuilder extends
   }
 
   static class LowerThanTranslator extends ComparingExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
       return new SqlLowerThanExpression(sql1, sql2);
@@ -194,6 +198,7 @@ public class StandardExpressionToSqlExprBuilder extends
   // logical
 
   static class AndTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       SqlExpression temp = new SqlAndExpression().setChildren(sqlChildren);
@@ -202,6 +207,7 @@ public class StandardExpressionToSqlExprBuilder extends
   }
 
   static class OrTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       SqlExpression temp = new SqlOrExpression().setChildren(sqlChildren);
@@ -210,6 +216,7 @@ public class StandardExpressionToSqlExprBuilder extends
   }
 
   static class NotTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       return new SqlNotExpression(sqlChildren[0]);
@@ -219,6 +226,7 @@ public class StandardExpressionToSqlExprBuilder extends
   // String
 
   class LikeTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
 
@@ -243,6 +251,7 @@ public class StandardExpressionToSqlExprBuilder extends
    * @since 1.1.3
    */
   class StartsWithTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       LikeExpression like = (LikeExpression) expr;
@@ -265,6 +274,7 @@ public class StandardExpressionToSqlExprBuilder extends
    * @since 1.1.3
    */
   class EndsWithTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       LikeExpression like = (LikeExpression) expr;
@@ -284,6 +294,7 @@ public class StandardExpressionToSqlExprBuilder extends
   }
 
   static class ConcatenationTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       return new SqlConcatenationExpression().setChildren(sqlChildren);
@@ -293,6 +304,7 @@ public class StandardExpressionToSqlExprBuilder extends
   // procedure
 
   static class ProcedureTranslator extends CompositeExprToSqlExprTranslator {
+    @Override
     protected SqlExpression translateParent(Expression expr,
         SqlExpression[] sqlChildren) {
       ProcedureExpression expr0 = (ProcedureExpression) expr;

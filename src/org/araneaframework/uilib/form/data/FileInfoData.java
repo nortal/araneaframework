@@ -25,7 +25,7 @@ import org.araneaframework.uilib.support.FileInfo;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class FileInfoData extends Data implements Serializable {
+public class FileInfoData extends Data<FileInfo> implements Serializable {
 
   public FileInfoData() {
     super(FileInfo.class);

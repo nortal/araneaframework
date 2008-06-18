@@ -41,7 +41,7 @@ public class BooleanColumnReader extends FilterResultSetColumnReader {
 		this.nullValue = nullValue;
 	}
 	
-	public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) {
+	public Boolean readFromResultSet(String columnName, ResultSet resultSet, Class<Boolean> javaType) {
 		if (Boolean.class.equals(javaType)) {
 			
 			Object value = super.readFromResultSet(columnName, resultSet, Object.class);

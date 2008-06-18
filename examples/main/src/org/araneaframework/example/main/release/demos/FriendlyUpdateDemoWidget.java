@@ -45,15 +45,15 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements LocaleChangeListener {
-	private BeanFormWidget companyForm;
-	private BeanFormWidget invoiceForm;
-	private FormElement firmElement;
+	private BeanFormWidget<Firm> companyForm;
+	private BeanFormWidget<Invoice> invoiceForm;
+	private FormElement<String,String> firmElement;
 	
-	static List allCountries = new ArrayList();
+	static List<String> allCountries = new ArrayList<String>();
 	
 	static {
-		for (Iterator i = Arrays.asList(Locale.getISOCountries()).iterator(); i.hasNext(); ) {
-			allCountries.add(new Locale("en", (String)i.next()).getDisplayCountry(Locale.ENGLISH));
+		for (Iterator<String> i = Arrays.asList(Locale.getISOCountries()).iterator(); i.hasNext(); ) {
+			allCountries.add(new Locale("en", i.next()).getDisplayCountry(Locale.ENGLISH));
 		}
 	}
 
@@ -68,8 +68,8 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		addWidget("invoiceForm", invoiceForm);
 	}
 
-	private BeanFormWidget buildInvoiceForm() {
-		BeanFormWidget result = new BeanFormWidget(Invoice.class);
+	private BeanFormWidget<Invoice> buildInvoiceForm() {
+		BeanFormWidget<Invoice> result = new BeanFormWidget<Invoice>(Invoice.class);
 		result.addBeanElement("id", "ufriendly.component.invoice.id", new TextControl(new Long(10), new Long(10)), true);
 		result.addBeanElement("date", "ufriendly.component.invoice.date", new DateControl(), true);
 		result.addBeanElement("sum", "ufriendly.component.invoice.sum", new FloatControl(), true);
@@ -77,8 +77,8 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		return result;
 	}
 
-	private BeanFormWidget buildCompanyForm() {
-		BeanFormWidget result = new BeanFormWidget(Firm.class);
+	private BeanFormWidget<Firm> buildCompanyForm() {
+		BeanFormWidget<Firm> result = new BeanFormWidget<Firm>(Firm.class);
 		result.addElement("arkNumber", "ufriendly.component.centralfirmid", new NumberControl(), new LongData(), true);
 		result.addBeanElement("registryAddress", "ufriendly.component.registryaddress", new TextControl(),  false);
 		result.addBeanElement("postalAddress", "ufriendly.component.postaladdress", new TextControl(),  false);
@@ -89,15 +89,15 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		return result;
 	}
 	
-	private Map firms = new HashMap();
+	private Map<Long, Firm> firms = new HashMap<Long, Firm>();
 	private void handleEventFetchData() throws Exception {
 		if (companyForm.convertAndValidate()) {
 			Thread.sleep(6000);
 			Firm firm = new Firm(); 
-			firm = (Firm) companyForm.writeToBean(firm);
+			firm = companyForm.writeToBean(firm);
 
 			// present ?
-			Firm present = (Firm) firms.get(firm.getArkNumber()); 
+			Firm present = firms.get(firm.getArkNumber()); 
 			if (present == null) {
 				present = generateFirm(firm.getArkNumber());
 			}
@@ -119,8 +119,8 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 
 		result.setBankAccount(RandomStringUtils.randomNumeric(16));
 
-		String registryCountry = (String) allCountries.get(rnd.nextInt(allCountries.size()));
-		String postalCountry = (String) allCountries.get(rnd.nextInt(allCountries.size()));
+		String registryCountry = allCountries.get(rnd.nextInt(allCountries.size()));
+		String postalCountry = allCountries.get(rnd.nextInt(allCountries.size()));
 		
 		String registryStreet = ExampleData.fungi[rnd.nextInt(ExampleData.fungi.length)];
 		String postalStreet = ExampleData.fungi[rnd.nextInt(ExampleData.fungi.length)];
@@ -148,7 +148,7 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 	}
 	
 	public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-		Object value = firmElement.getControl().getRawValue();
+		String value = firmElement.getControl().getRawValue();
 		SelectControl c = buildFirmTypeSelect();
 		c.setRawValue(value);
 		firmElement.setControl(c);

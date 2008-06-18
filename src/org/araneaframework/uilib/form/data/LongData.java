@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class LongData extends Data {
+public class LongData extends Data<Long> {
 
   public LongData() {
     super(Long.class);

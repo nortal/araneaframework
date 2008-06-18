@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.tag.presentation.BaseImageHtmlTag;
 /**
@@ -36,7 +35,7 @@ public class SampleImageTag extends BaseImageHtmlTag {
 	/**
 	 * Static method to write out image with given code with default style.
 	 */
-	public  void writeImage(Writer out, String code) throws JspException, IOException {
+	public  void writeImage(Writer out, String code) throws IOException {
 		writeImage(out, code, "aranea-image", getStyleClass(), null);
 	}
   
@@ -46,23 +45,26 @@ public class SampleImageTag extends BaseImageHtmlTag {
 	 *   required = "false"
 	 *   description = "Image code." 
 	 */
-	public void setCode(String code) throws JspException {
+	@Override
+  public void setCode(String code) {
 		super.setCode(code);
 	}
   
-	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
+	@Override
+  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws IOException {
 		String url = FileImportUtil.getImportString(src, pageContext.getRequest());
 		writeImage(out, url, width, height, alt, styleClass, title);
 	}
 
-	protected Info getImageInfo(String code) {
-		return (Info)imageInfo.get(code);
+	@Override
+  protected Info getImageInfo(String code) {
+		return imageInfo.get(code);
 	} 
   
 	/**
 	 * Map: String(image code) -> Info
 	 */
-	protected static final Map imageInfo = new HashMap();
+	protected static final Map<String, Info> imageInfo = new HashMap<String, Info>();
 	//XXX: this is bullshit
 	static {
 		imageInfo.put("add",             new Info("gfx/ico_add3.gif",      "30",   "16"));

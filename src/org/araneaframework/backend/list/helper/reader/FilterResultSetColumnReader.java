@@ -33,8 +33,8 @@ public class FilterResultSetColumnReader implements ResultSetColumnReader {
 		this.child = child;
 	}
 	
-	public Object readFromResultSet(String columnName, ResultSet resultSet,
-			Class javaType) {
+	public <T> T readFromResultSet(String columnName, ResultSet resultSet,
+			Class<T> javaType) {
 		return child.readFromResultSet(columnName, resultSet, javaType);
 	}
 

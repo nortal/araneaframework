@@ -45,12 +45,14 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     baseStyleClass = "aranea-textarea";
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("TextareaControl");    
     
@@ -95,8 +97,8 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false" 
    *   description = "Number of visible columns."
    */
-  public void setCols(String size) throws JspException {
-    this.cols = (Long)evaluate("cols", size, Long.class);
+  public void setCols(String size){
+    this.cols = evaluate("cols", size, Long.class);
   }
   
   /**
@@ -105,8 +107,8 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false" 
    *   description = "Number of visible rows."
    */
-  public void setRows(String size) throws JspException {
-    this.rows = (Long)evaluate("rows", size, Long.class);
+  public void setRows(String size){
+    this.rows = evaluate("rows", size, Long.class);
   }
 
   /**

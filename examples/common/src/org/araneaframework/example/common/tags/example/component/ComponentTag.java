@@ -17,7 +17,6 @@
 package org.araneaframework.example.common.tags.example.component;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -39,7 +38,8 @@ public class ComponentTag extends PresentationTag {
 		widthClass = ComponentTag.DEFAULT_COMPONENT_WIDTH_STYLE;
 	}
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		addContextEntry(ComponentTag.KEY, this);
@@ -57,7 +57,8 @@ public class ComponentTag extends PresentationTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		JspUtil.writeEndTag(out, "div");
 		JspUtil.writeEndTag(out, "div");
 		super.doEndTag(out);
@@ -71,7 +72,7 @@ public class ComponentTag extends PresentationTag {
 	 *   description = "CSS class for secondary DIV that is written out by this tag. 
 	 *   By default this is w100p - maximum component width is set."
 	 */
-	public void setWidthClass(String widthClass) throws JspException {
-		this.widthClass = (String)evaluate("widthClass", widthClass, String.class);
+	public void setWidthClass(String widthClass) {
+		this.widthClass = evaluate("widthClass", widthClass, String.class);
 	}
 }

@@ -20,17 +20,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.StringTokenizer;
-
 import javax.servlet.ServletException;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;
@@ -51,7 +47,7 @@ import org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag;
  * @author Oleg Mürk
  */
 public class JspUtil {
-  private static final Map attributeErrorMap = new HashMap();  
+  private static final Map<String, String> attributeErrorMap = new HashMap<String, String>();  
   static {
     attributeErrorMap.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
 
@@ -206,13 +202,11 @@ public class JspUtil {
    * Writes out attributes contained in the Map &lt;attributeName, attributeValue&gt;.
    * If map is <code>null</code>, writes nothing.
    */
-  public static void writeAttributes(Writer out, Map attributes) throws IOException {
+  public static void writeAttributes(Writer out, Map<String, Object> attributes) throws IOException {
     if (attributes == null) return;
     
-    for(Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String attributeName = (String)entry.getKey();
-      JspUtil.writeAttribute(out, attributeName, entry.getValue());
+    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+      JspUtil.writeAttribute(out, entry.getKey(), entry.getValue());
     }    
   }
 
@@ -378,8 +372,8 @@ public class JspUtil {
    * between commas: "first, ,third".
    * @return List&lt;String&gt; containing attribute values. 
    */
-  public static List parseMultiValuedAttribute(String attribute) {
-    List result = new ArrayList();
+  public static List<String> parseMultiValuedAttribute(String attribute) {
+    List<String> result = new ArrayList<String>();
 
     if (attribute != null && !"".equals(attribute.trim())) {
       StringTokenizer tokens = new StringTokenizer(attribute, ",");
@@ -402,11 +396,11 @@ public class JspUtil {
    * Read attribute value from request scope and ensure that it is defined.
    * @throws AraneaJspException if key is not present in given <code>PageContext</code>
    */
-  public static Object requireContextEntry(PageContext pageContext, String key) throws JspException {
+  public static Object requireContextEntry(PageContext pageContext, String key) throws AraneaJspException{
     Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
     if (value == null) {
       StringBuffer message = new StringBuffer();
-      String errMsg = (String)attributeErrorMap.get(key);      
+      String errMsg = attributeErrorMap.get(key);      
       if (errMsg != null) 
         message.append(errMsg + " (");
       message.append("Missing attribute '" + key + "' in ");

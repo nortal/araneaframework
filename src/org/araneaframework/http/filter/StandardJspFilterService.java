@@ -27,8 +27,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.StandardEnvironment;
@@ -44,10 +42,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
-  private static final Log log = LogFactory.getLog(StandardJspFilterService.class);
 
   // URI -> Map<TagInfo>
-  private Map taglibs = new HashMap();
+  private Map<String, Map<String, TagInfo>> taglibs = new HashMap<String, Map<String, TagInfo>>();
   
   private String submitCharset;
   private String jspPath = "/WEB-INF/jsp";
@@ -79,25 +76,26 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public String getFormAction() {
-    return ((ServletConfig) getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
+    return (getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
   }
   
-  public Map getTagMapping(String uri){
+  public Map<String, TagInfo> getTagMapping(String uri){
     return getTagMap(uri);
   }
   
   public ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return getEnvironment().getEntry(ConfigurationContext.class);
   }
   
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(getEnvironment(), JspContext.class, this);
   }
   
-  public Map getTagMap(String uri) {
+  public Map<String, TagInfo> getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
       ServletContext ctx = 
-        (ServletContext) getEnvironment().getEntry(ServletContext.class);
+        getEnvironment().getEntry(ServletContext.class);
       String[] locations = TldLocationsCache.getInstance(ctx).getLocation(uri);
       if (locations != null) {
         URL realLoc = null;        
@@ -116,11 +114,11 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
       }
     }
 
-    return (Map) taglibs.get(uri);
+    return taglibs.get(uri);
   }
 
-  private Map readTldMapping(URL location) throws IOException {
-    Map result = new HashMap();
+  private Map<String, TagInfo> readTldMapping(URL location) throws IOException {
+    Map<String, TagInfo> result = new HashMap<String, TagInfo>();
 
     InputStream tldStream = location.openStream();
 

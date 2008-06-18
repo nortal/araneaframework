@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.http.UpdateRegionProvider;
@@ -73,7 +74,7 @@ public interface MessageContext extends UpdateRegionProvider {
    * @param messages Set&lt;String&gt;
    * @since 1.1
    */
-  public void showMessages(String type, Set messages);
+  public void showMessages(String type, Set<String> messages);
   
   /**
    * Removes a message <code>message</code> of type <code>type</code>. 
@@ -87,7 +88,7 @@ public interface MessageContext extends UpdateRegionProvider {
    * 
    * @since 1.1
    */
-  public void hideMessages(String type, Set messages);
+  public void hideMessages(String type, Set<String> messages);
 
   /**
    * Shows an error message to the user.
@@ -169,5 +170,5 @@ public interface MessageContext extends UpdateRegionProvider {
    * 
    * @since 1.1
    */
-  public Map getMessages();
+  public Map<String, Collection<String>> getMessages();
 }

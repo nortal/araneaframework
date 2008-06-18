@@ -66,6 +66,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
       super.setChildService(childService);
   }
 
+  @Override
   public void setChildService(Service childService) {
     super.setChildService(new RelocatableDecorator(childService));
   }
@@ -78,11 +79,13 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     this.timeToLive = timeToLive;
   }
   
+  @Override
   protected void init() throws Exception {
     if (initializeChildren)
       super.init();
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (cloningRequested(input)) {
       redirect(cloningAction(path, input, output));
@@ -104,13 +107,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     clone._getService().action(path, input, output);
     
     // return URL where cloned service resides
-    return ((HttpOutputData) getOutputData()).encodeURL((getResponseURL(getRequestURL(), (String)getTopServiceCtx().getCurrentId(), cloneServiceId)));
+    return ((HttpOutputData) getOutputData()).encodeURL((getResponseURL(getRequestURL(), getTopServiceCtx().getCurrentId(), cloneServiceId)));
   }
   
   protected void redirect(String location) throws Exception {
 	((HttpOutputData) getOutputData()).sendRedirect(location);
   }
   
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), ThreadCloningContext.class, this);
   }
@@ -188,17 +192,17 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
   
   protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
-    Map m = new HashMap();
+    Map<String, String> m = new HashMap<String, String>();
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     return URLUtil.parametrizeURI(url, m);
   }
 
   protected ThreadContext getThreadServiceCtx() {
-    return ((ThreadContext)getEnvironment().requireEntry(ThreadContext.class));
+    return (getEnvironment().requireEntry(ThreadContext.class));
   }
 
   protected TopServiceContext getTopServiceCtx() {
-    return ((TopServiceContext)getEnvironment().requireEntry(TopServiceContext.class));
+    return (getEnvironment().requireEntry(TopServiceContext.class));
   }
 }

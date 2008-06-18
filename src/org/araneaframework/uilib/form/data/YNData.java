@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class YNData extends Data {
+public class YNData extends Data<String> {
 
   public YNData() {
     super(String.class, "YN");

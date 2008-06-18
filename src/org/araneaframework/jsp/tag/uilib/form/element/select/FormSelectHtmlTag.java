@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
-import java.util.Iterator;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -47,12 +45,14 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     baseStyleClass = "aranea-select";
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return r;
   }
 
+  @Override
   public int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("SelectControl");    
@@ -85,8 +85,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     // Write items
     String selectedValue = viewModel.getSimpleValue();
 
-    for(Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem item = (DisplayItem)i.next();
+    for (DisplayItem item : viewModel.getSelectItems()) {
       if (!item.isDisabled()) {
         String value = item.getValue();
         String label = item.getDisplayString();
@@ -120,8 +119,8 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Number of select elements visible at once." 
    */
-  public void setSize(String size) throws JspException {
-    this.size = (Long)evaluate("size", size, Long.class);
+  public void setSize(String size){
+    this.size = evaluate("size", size, Long.class);
   }
 
   /**
@@ -130,7 +129,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
-  public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
-    this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  public void setOnChangePrecondition(String onChangePrecondition) {
+    this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 }

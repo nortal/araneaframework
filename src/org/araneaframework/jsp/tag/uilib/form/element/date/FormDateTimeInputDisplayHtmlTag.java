@@ -33,7 +33,8 @@ public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
 	{
 		baseStyleClass = "aranea-datetime-display";
 	}
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		assertControlType("DateTimeControl");	
 		
 		DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel)controlViewModel);

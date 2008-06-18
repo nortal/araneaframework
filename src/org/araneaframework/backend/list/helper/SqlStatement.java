@@ -31,26 +31,26 @@ public class SqlStatement implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	protected String query;
-	protected List parameters;
+	protected List<Object> parameters;
 
-	public SqlStatement(String query, List parameters) {
+	public SqlStatement(String query, List<Object> parameters) {
 		this.query = query;
 		this.parameters = parameters;
 	}
 
 	public SqlStatement(String query) {
-		this(query, new ArrayList());
+		this(query, new ArrayList<Object>());
 	}
 
 	public SqlStatement() {
 		this(null);
 	}
 
-	public List getParams() {
+	public List<Object> getParams() {
 		return this.parameters;
 	}
 
-	public void setParams(List params) {
+	public void setParams(List<Object> params) {
 		if (params == null) {
 			throw new RuntimeException("Parameters list can not be NULL, use an empty list instead");
 		}
@@ -97,7 +97,7 @@ public class SqlStatement implements Serializable, Cloneable {
 	 * @param params
 	 *            parameters.
 	 */
-	public void addAllParams(int index, List params) {
+	public void addAllParams(int index, List<Object> params) {
 		this.parameters.addAll(index, params);
 	}
 
@@ -136,7 +136,7 @@ public class SqlStatement implements Serializable, Cloneable {
 	 * @param params
 	 *            parameters.
 	 */
-	public void addAllParams(List params) {
+	public void addAllParams(List<Object> params) {
 		addAllParams(countParams(), params);
 	}
 	
@@ -153,8 +153,9 @@ public class SqlStatement implements Serializable, Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
-	public Object clone() {
-		return new SqlStatement(this.query, new ArrayList(this.parameters));
+	@Override
+  public Object clone() {
+		return new SqlStatement(this.query, new ArrayList<Object>(this.parameters));
 	}
 
 	// *********************************************************************

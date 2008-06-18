@@ -52,7 +52,7 @@ public class FormControlTest extends TestCase {
     ms.convertAndValidate();
 
     assertNotNull("MultiSelect must not return null if it's not present in request", ms.getRawValue());
-    assertTrue("MultiSelect must return List if it's not present in request", ms.getRawValue() instanceof List);
+    assertTrue("MultiSelect must return List if it's not present in request", ms.getRawValue() != null);
     assertTrue("MultiSelect must return empty List if it's not present in request", ((List) ms.getRawValue()).size() == 0);
     
     ms._getComponent().destroy();
@@ -121,8 +121,8 @@ public class FormControlTest extends TestCase {
     numberControl.convertAndValidate();
     
     assertTrue("Number control must be valid.", mockFormElementContext.isValid());
-    assertTrue("Number control value must be a 'BigInteger'.", numberControl.getRawValue() instanceof BigInteger);
-    assertTrue("Number control value must be '108'.", ((BigInteger) numberControl.getRawValue()).longValue() == 108L);
+    assertTrue("Number control value must be a 'BigInteger'.", numberControl.getRawValue() != null);
+    assertTrue("Number control value must be '108'.", (numberControl.getRawValue()).longValue() == 108L);
 
     MockHttpServletRequest incorrectValueRequest = new MockHttpServletRequest();
     incorrectValueRequest.addParameter("myNumberInput", "abcd");
@@ -155,7 +155,7 @@ public class FormControlTest extends TestCase {
     numberControl.convertAndValidate();
     
     assertTrue("Number control must be valid.", mockFormElementContext.isValid());    
-    assertTrue("Number control value must be '50'.", ((BigInteger) numberControl.getRawValue()).longValue() == 50L);
+    assertTrue("Number control value must be '50'.", (numberControl.getRawValue()).longValue() == 50L);
     
     MockHttpServletRequest tooLittleValueRequest = new MockHttpServletRequest();
     tooLittleValueRequest.addParameter("myNumberInput", "20");
@@ -191,8 +191,8 @@ public class FormControlTest extends TestCase {
     nc.convertAndValidate();
     
     assertTrue("Float control must be valid.", mockFormElementContext.isValid());
-    assertTrue("Float control value must be a 'BigDecimal'.", nc.getRawValue() instanceof BigDecimal);
-    assertTrue("Float control value must be '28.012'.", ((BigDecimal) nc.getRawValue()).doubleValue() == 28.012);
+    assertTrue("Float control value must be a 'BigDecimal'.", nc.getRawValue() != null);
+    assertTrue("Float control value must be '28.012'.", nc.getRawValue().doubleValue() == 28.012);
     
     MockHttpServletRequest incorrectValueRequest = new MockHttpServletRequest();
     incorrectValueRequest.addParameter("myFloatInput", "abcd");
@@ -225,7 +225,7 @@ public class FormControlTest extends TestCase {
     numberControl.convertAndValidate();
     
     assertTrue("Float control must be valid.", mockFormElementContext.isValid());    
-    assertTrue("Float control value must be '50.0018'.", ((BigDecimal) numberControl.getRawValue()).doubleValue() == 50.0018);
+    assertTrue("Float control value must be '50.0018'.", (numberControl.getRawValue()).doubleValue() == 50.0018);
     
     MockHttpServletRequest tooLittleValueRequest = new MockHttpServletRequest();
     tooLittleValueRequest.addParameter("myFloatInput", "20.1");
@@ -265,7 +265,7 @@ public class FormControlTest extends TestCase {
     textControl.convertAndValidate();
     
     assertTrue("Textbox control must be valid.", mockFormElementContext.isValid());    
-    assertTrue("Textbox control value must be 'i love me'.", ((String) textControl.getRawValue()).equals("i love me"));
+    assertTrue("Textbox control value must be 'i love me'.", (textControl.getRawValue()).equals("i love me"));
      
     //Too short
 
@@ -300,7 +300,7 @@ public class FormControlTest extends TestCase {
     textControl.convertAndValidate();
         
     assertTrue("Textbox control must be valid.", mockFormElementContext.isValid());
-    assertTrue("Textbox control value must be '1234567890'.", ((String) textControl.getRawValue()).equals("1234567890"));
+    assertTrue("Textbox control value must be '1234567890'.", (textControl.getRawValue()).equals("1234567890"));
     
     //min=max too short
 

@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class TimestampData extends Data {
+public class TimestampData extends Data<Timestamp> {
 
   public TimestampData() {
     super(Timestamp.class);

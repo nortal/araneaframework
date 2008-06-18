@@ -34,6 +34,7 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "Includes the current wizard page."
  */
 public class WizardBodyTag extends BaseTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     ApplicationWidget widget = getContextWidget();
 

@@ -76,7 +76,7 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   private ServiceFactory serviceFactory;
   
-  private Map locks = Collections.synchronizedMap(new HashMap());
+  private Map<HttpSession, ReadWriteLock> locks = Collections.synchronizedMap(new HashMap<HttpSession, ReadWriteLock>());
   
   /**
    * Sets the factory which is used to build the service if one does not exist in the session.
@@ -89,6 +89,7 @@ public class StandardHttpSessionRouterService extends BaseService {
    * Routes an action to the service in the session. If the service does not exist,
    * it is created.
    */
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {       
     HttpSession sess = ServletUtil.getRequest(input).getSession();
     
@@ -123,7 +124,7 @@ public class StandardHttpSessionRouterService extends BaseService {
      * to synchronize critical sections dealing with locking in this method.
      */
     synchronized (sess) {
-      ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
+      ReadWriteLock lock = locks.get(sess);
       if (lock == null) {
         lock = new ReaderPreferenceReadWriteLock();
         locks.put(sess, lock);
@@ -137,12 +138,12 @@ public class StandardHttpSessionRouterService extends BaseService {
       service._getService().action(path, input, output);
     }
     finally {
-      ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
+      ReadWriteLock lock = locks.get(sess);
       lock.readLock().release();
     }
     
     synchronized (sess) {
-      ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
+      ReadWriteLock lock = locks.get(sess);
       if (lock.writeLock().attempt(0)) {
         try {
           log.info("Propagating session updates to cluster nodes");

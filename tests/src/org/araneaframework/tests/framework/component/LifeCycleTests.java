@@ -69,7 +69,8 @@ public class LifeCycleTests extends TestCase {
 		w._getComponent().destroy();
 		
 		w._getComponent().propagate(new BroadcastMessage() {
-				protected void execute(Component component) throws Exception {
+				@Override
+        protected void execute(Component component) throws Exception {
 					return;
 				}
 			});

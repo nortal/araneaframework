@@ -36,9 +36,10 @@ import org.araneaframework.http.filter.StandardMountingFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMountPointFilterService extends BaseFilterService {
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     MountContext mountCtx = 
-      (MountContext) getEnvironment().requireEntry(MountContext.class);
+      getEnvironment().requireEntry(MountContext.class);
     
     Message mountMsg = mountCtx.getMountedMessage(input);
     

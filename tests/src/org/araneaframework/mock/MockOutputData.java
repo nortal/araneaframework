@@ -34,7 +34,7 @@ import org.araneaframework.core.StandardPath;
  */
 public class MockOutputData implements OutputData {
   private Map data;
-  private List pathPrefix;
+  private List<Object> pathPrefix;
   
   public MockOutputData(Map data) {
     this();
@@ -43,7 +43,7 @@ public class MockOutputData implements OutputData {
   
   public MockOutputData() {
     data = new HashMap();
-    pathPrefix = new ArrayList();
+    pathPrefix = new ArrayList<Object>();
   }
   
   public Path getScope() {
@@ -68,6 +68,7 @@ public class MockOutputData implements OutputData {
     pathPrefix.remove(pathPrefix.size()-1);
   }
   
+  @Override
   public String toString() {
     return getScopePathString();
   }
@@ -87,7 +88,7 @@ public class MockOutputData implements OutputData {
   
   private String getScopePathString() {
     StringBuffer result = new StringBuffer();
-    Iterator ite = pathPrefix.iterator();
+    Iterator<Object> ite = pathPrefix.iterator();
     while (ite.hasNext()) {
       result.append(ite.next()+".");
     }

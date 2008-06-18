@@ -19,7 +19,6 @@ package org.araneaframework.backend.list.helper.reader;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.uilib.list.util.Converter;
 
 /**
@@ -40,7 +39,7 @@ import org.araneaframework.uilib.list.util.Converter;
  */
 public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
 
-	private final Map converters = new HashMap();
+	private final Map<String, Converter> converters = new HashMap<String, Converter>();
 	
 	public ConverterBasedColumnReader(ResultSetColumnReader child) {
 		super(child);
@@ -62,9 +61,10 @@ public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
 		this.converters.put(columnName, converter);
 	}
 	
-	public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) {
+	@Override
+  public <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType) {
 		// Find converter
-		Converter converter = (Converter) converters.get(columnName);
+		Converter converter = converters.get(columnName);
 		if (converter == null) {
 			// No converter registered
 			return super.readFromResultSet(columnName, resultSet, javaType);
@@ -75,10 +75,10 @@ public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
 		javaType = converter.getDestinationType();
 		
 		// Read data
-		Object value = super.readFromResultSet(columnName, resultSet, javaType);
+		T value = super.readFromResultSet(columnName, resultSet, javaType);
 		
 		// Convert
-		value = converter.reverseConvert(value);
+		value = (T) converter.reverseConvert(value);
 		
 		return value;
 	}

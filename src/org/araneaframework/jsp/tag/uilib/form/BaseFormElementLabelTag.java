@@ -35,7 +35,7 @@ import org.araneaframework.uilib.form.FormWidget;
 public class BaseFormElementLabelTag extends PresentationTag {
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement.ViewModel formElementViewModel;
+  protected FormElement<?,?>.ViewModel formElementViewModel;
   protected Control.ViewModel controlViewModel;
   protected String localizedLabel;
   protected String accessKeyId;  
@@ -48,6 +48,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
   protected boolean showColon = true;
   protected String accessKey;  
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -64,7 +65,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
       throw new MissingFormElementIdAraneaJspException(this);
 
     formElementViewModel = 
-      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = (formElementViewModel).getControl();
@@ -99,7 +100,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
    *   description = "Element id." 
    */
   public void setId(String id) throws JspException {
-    this.id = (String)evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 
   /**
@@ -109,7 +110,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
    *   description = "Whether an asterisk is shown when the element is mandatory." 
    */
   public void setShowMandatory(String showMandatory) throws JspException {
-    this.showMandatory = ((Boolean)(evaluateNotNull("showMandatory", showMandatory, Boolean.class))).booleanValue();
+    this.showMandatory = ((evaluateNotNull("showMandatory", showMandatory, Boolean.class))).booleanValue();
   }
 
   /**
@@ -119,7 +120,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
    *   description = "Whether a colon (":") is draw after the label." 
    */
   public void setShowColon(String showColon) throws JspException {
-    this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
+    this.showColon = ((evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
   }
 
   /**
@@ -132,7 +133,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
    * tag outputs an additional accesskey attribute for the HTML a &lt;label&gt; element.
    * If given resource does not exist, it's also ok. Noone will die. 
    */
-  public void setAccessKeyId(String accessKeyId) throws JspException {
-    this.accessKeyId = (String)evaluate("accessKeyId", accessKeyId, String.class);
+  public void setAccessKeyId(String accessKeyId){
+    this.accessKeyId = evaluate("accessKeyId", accessKeyId, String.class);
   }
 }

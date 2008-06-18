@@ -64,12 +64,14 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     this.dataProvider = dataProvider;
   }
 
+  @Override
   protected void init() throws Exception {
-    List children = loadChildren();
+    List<TreeNodeWidget> children = loadChildren();
     if (children != null)
       addAllNodes(children);
   }
 
+  @Override
   public Environment getEnvironment() {
     return new StandardEnvironment(super.getEnvironment(), TreeContext.class, this);
   }
@@ -127,6 +129,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return renderer;
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     super.render(output);
     Writer out = ((HttpOutputData) output).getWriter();
@@ -136,13 +139,16 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
+  @Override
   public Widget getDisplayWidget() {
     return null;
   }
 
+  @Override
   public void setCollapsed(boolean collapsed) {
   }
 
+  @Override
   public void toggleCollapsed() {
   }
 

@@ -29,14 +29,14 @@ import java.util.List;
  */
 public class OrderInfo implements Serializable {
 
-	protected List fields = new ArrayList();
+	protected List<OrderInfoField> fields = new ArrayList<OrderInfoField>();
 
 	/**
 	 * Returns the ordering fields.
 	 * 
 	 * @return the ordering fields.
 	 */
-	public List getFields() {
+	public List<OrderInfoField> getFields() {
 		return this.fields;
 	}
 
@@ -72,14 +72,14 @@ public class OrderInfo implements Serializable {
 	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
 	 */
 	public class ViewModel implements Serializable {
-		private List fields = new ArrayList();
+		private List<OrderInfoField.ViewModel> fields = new ArrayList<OrderInfoField.ViewModel>();
 
 		/**
 		 * Takes a snapshot of outer class state.
 		 */
 		public ViewModel() {
-			for (Iterator i = OrderInfo.this.fields.iterator(); i.hasNext();) {
-				this.fields.add(((OrderInfoField) i.next()).getViewModel());
+			for (OrderInfoField orderInfoField : OrderInfo.this.fields) {
+				this.fields.add(orderInfoField.getViewModel());
 			}
 		}
 
@@ -88,15 +88,16 @@ public class OrderInfo implements Serializable {
 		 * 
 		 * @return the ordering fields.
 		 */
-		public List getFields() {
+		public List<OrderInfoField.ViewModel> getFields() {
 			return this.fields;
 		}
 	}
 	
-	public String toString() {
+	@Override
+  public String toString() {
 		StringBuffer sb = new StringBuffer("OrderInfo (");
-		for (Iterator i = this.fields.iterator(); i.hasNext();) {
-			OrderInfoField field = (OrderInfoField) i.next();
+		for (Iterator<OrderInfoField> i = this.fields.iterator(); i.hasNext();) {
+			OrderInfoField field = i.next();
 			sb.append(field.toString());
 			if (i.hasNext()) {
 				sb.append("; ");				

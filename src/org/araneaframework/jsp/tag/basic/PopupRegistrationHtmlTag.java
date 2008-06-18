@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
@@ -36,9 +35,10 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class PopupRegistrationHtmlTag extends BaseTag {
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
-    PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-    Map popups = popupWindowContext.getPopups();
+    PopupWindowContext popupWindowContext = getEnvironment().requireEntry(PopupWindowContext.class);
+    Map<String, PopupServiceInfo> popups = popupWindowContext.getPopups();
 
     if (popups != null && !popups.isEmpty()) {
       JspUtil.writeOpenStartTag(out, "script");
@@ -53,18 +53,17 @@ public class PopupRegistrationHtmlTag extends BaseTag {
     return super.doEndTag(out);
   }
 
-  protected void addPopups(Writer out, Map popups) throws Exception {
-    PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
-    for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry next = (Map.Entry)i.next();
+  protected void addPopups(Writer out, Map<String, PopupServiceInfo> popups) throws Exception {
+    PopupWindowContext popupWindowContext = getEnvironment().requireEntry(PopupWindowContext.class);
+    for (Map.Entry<String, PopupServiceInfo> next : popups.entrySet()) {
       addPopup(out, next);
-      ((StandardPopupFilterWidget)popupWindowContext).renderPopup((String)next.getKey());
+      ((StandardPopupFilterWidget)popupWindowContext).renderPopup(next.getKey());
     }
   }
 
-  protected void addPopup(Writer out, Map.Entry popup) throws Exception {
-    String serviceId = (String)popup.getKey();
-    PopupServiceInfo serviceInfo = (PopupServiceInfo)popup.getValue();
+  protected void addPopup(Writer out, Map.Entry<String, PopupServiceInfo> popup) throws Exception {
+    String serviceId = popup.getKey();
+    PopupServiceInfo serviceInfo = popup.getValue();
 
     out.write("Aranea.Popups.addPopup('"  + serviceId + "'");
     out.write(", '");

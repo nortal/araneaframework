@@ -27,15 +27,16 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class StringToIntegerConverter extends BaseConverter {
+public class StringToIntegerConverter extends BaseConverter<String, Integer> {
 
   /**
    * Converts <code>String</code> to <code>Integer</code>.
    */
-  public Object convertNotNull(Object data) {
-    Object result = null;
+  @Override
+  public Integer convertNotNull(String data) {
+    Integer result = null;
     try {
-      result = new Integer((String) data);
+      result = new Integer(data);
     }
     catch (NumberFormatException e) {
       addError(
@@ -50,14 +51,16 @@ public class StringToIntegerConverter extends BaseConverter {
   /**
    * Converts <code>Integer</code> to <code>String</code>.
    */
-  public Object reverseConvertNotNull(Object data) {
+  @Override
+  public String reverseConvertNotNull(Integer data) {
     return data.toString();
   }
 
   /**
    * Returns <code>new StringToIntegerConverter()</code>
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<String, Integer> newConverter() {
     return new StringToIntegerConverter();
   }
 }

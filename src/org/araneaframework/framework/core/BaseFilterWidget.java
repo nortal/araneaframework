@@ -65,32 +65,39 @@ public class BaseFilterWidget extends BaseWidget  implements FilterWidget {
     return childWidget;
   }
   
+  @Override
   protected void init() throws Exception {
     Assert.notNull(this, childWidget, "Filter cannot have a null child!");
     
     this.childWidget._getComponent().init(getScope(), getChildWidgetEnvironment());
   }
   
+  @Override
   protected void propagate(Message message) throws Exception {   
     message.send(null, childWidget);
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     this.childWidget._getService().action(path, input, output);
   }
   
+  @Override
   protected void update(InputData input) throws Exception {
     this.childWidget._getWidget().update(input);
   }
   
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     this.childWidget._getWidget().event(path, input);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     this.childWidget._getWidget().render(output);
   }
   
+  @Override
   protected void destroy() throws Exception {
     this.childWidget._getComponent().destroy();
   }

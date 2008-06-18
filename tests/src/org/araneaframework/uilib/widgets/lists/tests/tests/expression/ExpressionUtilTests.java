@@ -34,10 +34,12 @@ public class ExpressionUtilTests extends TestCase {
 
 	private Expression expr;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.expr = new MockExpression();
 	}
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.expr = null;
 	}
 	

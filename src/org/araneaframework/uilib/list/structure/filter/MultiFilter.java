@@ -26,11 +26,11 @@ import org.araneaframework.uilib.list.structure.ListFilter;
 
 public abstract class MultiFilter implements ListFilter {
 	
-	protected List children = new ArrayList();
+	protected List<ListFilter> children = new ArrayList<ListFilter>();
 	
 	public void init(Environment env) {
-		for (Iterator i = children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
+		for (Iterator<ListFilter> i = children.iterator(); i.hasNext();) {
+			ListFilter filter = i.next();
 			filter.init(env);
 		}
 	}
@@ -41,12 +41,12 @@ public abstract class MultiFilter implements ListFilter {
 		this.children.add(filter);
 		return this;
 	}
-	public List getFilters() {
+	public List<ListFilter> getFilters() {
 		return this.children;
 	}
 	public void clearFilters() {
-		for (Iterator i = children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
+		for (Iterator<ListFilter> i = children.iterator(); i.hasNext();) {
+			ListFilter filter = i.next();
 			filter.destroy();
 			i.remove();
 		}

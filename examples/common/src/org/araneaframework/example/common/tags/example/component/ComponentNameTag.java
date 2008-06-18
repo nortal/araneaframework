@@ -34,6 +34,7 @@ public class ComponentNameTag extends PresentationTag {
     styleClass = ComponentNameTag.DEFAULT_HEADER_NAME_STYLE;
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -49,6 +50,7 @@ public class ComponentNameTag extends PresentationTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "div");
     return super.doEndTag(out);

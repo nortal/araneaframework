@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.Collection;
-import java.util.Iterator;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -71,16 +70,16 @@ public class AndConstraint extends BaseCompositeConstraint {
    * @param constraints a collection of {@link Constraint}s.
    * @since 1.0.9
    */
-  public AndConstraint(Collection constraints) {
+  public AndConstraint(Collection<Constraint> constraints) {
     super(constraints);
   }
 
   /**
-   * Checks that all contained constraits are satisfied.
+   * Checks that all contained constraints are satisfied.
    */
+  @Override
   public void validateConstraint() throws Exception {
-    for (Iterator i = constraints.iterator(); i.hasNext();) {
-      Constraint constraint = (Constraint) i.next();
+    for (Constraint constraint : constraints) {
       boolean valid = constraint.validate();
       addErrors(constraint.getErrors());
       constraint.clearErrors();

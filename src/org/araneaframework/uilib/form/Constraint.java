@@ -38,7 +38,7 @@ public interface Constraint extends Serializable {
    * Returns the validation errors produced while validating this {@link Constraint}.
    * @return validation errors.
    */
-  public Set getErrors();
+  public Set<String> getErrors();
 
   /**
    * Clears the the errors produced while validating this {@link Constraint}.

@@ -44,6 +44,7 @@ public class WizardFooterTag extends BaseTag {
   public static final String WIZARD_SUBMIT_LABEL_ID = "#Submit";
   public static final String WIZARD_CANCEL_LABEL_ID = "#Cancel";
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
 		  	
   	WizardContext wizard = (WizardContext) getContextWidget();

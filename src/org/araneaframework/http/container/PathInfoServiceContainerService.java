@@ -23,6 +23,7 @@ import org.araneaframework.framework.container.StandardContainerService;
 import org.araneaframework.http.HttpInputData;
 
 public class PathInfoServiceContainerService extends StandardContainerService {
+  @Override
   protected Path getActionPath(InputData input) {
     //XXX StandardPath doesn fit here, or at least pop/push should affect the path...
     String pathInfo = ((HttpInputData) input).getPath().substring(1);

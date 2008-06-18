@@ -16,7 +16,6 @@
 
 package org.araneaframework.http.core;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +47,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
   private static final Log log = LogFactory.getLog(BaseAraneaDispatcherServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
   
+  @Override
   public void init() throws ServletException {
     serviceAdapter = buildRootComponent();
     buildAlternateRootComponents();
@@ -64,7 +64,8 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
     log.info(AraneaVersion.getTitle() + " " + AraneaVersion.getVersion() + " started");        
   }
   
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
     try {
       getServiceAdapter(req).service(req, resp);
     }
@@ -73,7 +74,8 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
     }
   }
   
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
     try {
       getServiceAdapter(req).service(req, resp);
     }
@@ -114,8 +116,8 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
   protected void buildAlternateRootComponents() {
   }
   
-  protected Map getEnvironmentEntries() {
-    return Collections.EMPTY_MAP;
+  protected Map<Class<?>, Object> getEnvironmentEntries() {
+    return Collections.emptyMap();
   }
   
   /**
@@ -123,8 +125,8 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
    * 	container specific entries (ServletContext, ServletConfig)
    * @since 1.0.7
    */
-  protected Map getServletEnvironmentMap() {
-	Map entries = new HashMap();
+  protected Map<Class<?>, Object> getServletEnvironmentMap() {
+	Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
 	entries.put(ServletContext.class, getServletContext());
 	entries.put(ServletConfig.class, getServletConfig());
 	entries.putAll(getEnvironmentEntries());

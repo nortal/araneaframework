@@ -45,7 +45,7 @@ public class StandardScope implements Scope {
   public Path toPath() {
     Scope cur = this;
     
-    List idlist = new ArrayList();
+    List<String> idlist = new ArrayList<String>();
     
     while (cur != null) {
       if (cur.getId() != null)
@@ -58,6 +58,7 @@ public class StandardScope implements Scope {
     return new StandardPath(idlist);
   }
   
+  @Override
   public String toString() {
     return toPath().toString();
   }

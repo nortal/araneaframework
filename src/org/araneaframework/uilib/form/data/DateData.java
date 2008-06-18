@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class DateData extends Data {
+public class DateData extends Data<Date> {
 
   public DateData() {
     super(Date.class);

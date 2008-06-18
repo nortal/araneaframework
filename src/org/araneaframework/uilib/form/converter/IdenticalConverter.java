@@ -24,10 +24,11 @@ import org.araneaframework.uilib.form.Converter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class IdenticalConverter extends BaseConverter {
+public class IdenticalConverter extends BaseConverter<Object, Object> {
   /**
    * Does not change the data.
    */
+  @Override
   public Object convertNotNull(Object data) {
     return data;
   }
@@ -35,6 +36,7 @@ public class IdenticalConverter extends BaseConverter {
   /**
    * Does not change the data.
    */
+  @Override
   public Object reverseConvertNotNull(Object data) {
     return data;
   }
@@ -42,7 +44,8 @@ public class IdenticalConverter extends BaseConverter {
   /**
    * Returns a <code>new IdenticalConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<Object, Object> newConverter() {
     return new IdenticalConverter();
   }
 }

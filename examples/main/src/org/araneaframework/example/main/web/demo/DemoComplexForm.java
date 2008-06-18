@@ -68,7 +68,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
 				if (complexForm.convertAndValidate()) {
 					// DemoComplexForm.this.getMessageCtx().showInfoMessage("Value in multiselect has changed to " + (String)beastSelectionControl.getRawValue() + ".");
 					// get the value from control (aka what beast was selected).
-					String selectedBeast = (String)beastSelectionControl.getRawValue();
+					String selectedBeast = beastSelectionControl.getRawValue();
 	
                     // if no beast is selected in our select control, we remove the other 
                     // elements from form that depend directly on selection being made - 

@@ -30,6 +30,7 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardRedirectingFilterWidget extends BaseFilterWidget {
+  @Override
   protected void update(InputData input) throws Exception {
     ResponseWrapper wrapper = new ResponseWrapper(ServletUtil.getResponse(getOutputData()));    
     ServletUtil.setResponse(getOutputData(), wrapper);
@@ -38,9 +39,10 @@ public class StandardRedirectingFilterWidget extends BaseFilterWidget {
     super.update(input);
   }
   
+  @Override
   protected void render(OutputData output) throws Exception {
     try {
-      ResponseWrapper wrapper = (ResponseWrapper) output.narrow(ResponseWrapper.class);
+      ResponseWrapper wrapper = output.narrow(ResponseWrapper.class);
       if (!wrapper.canRender())
         return;
     }
@@ -58,30 +60,35 @@ public class StandardRedirectingFilterWidget extends BaseFilterWidget {
       super(arg0);
     }
     
+    @Override
     public void sendRedirect(String arg0) throws IOException {      
       status = SC_MOVED_TEMPORARILY;
       
       super.sendRedirect(arg0);
     }   
     
+    @Override
     public void setStatus(int arg0) {
       status = arg0;
       
       super.setStatus(arg0);
     }
     
+    @Override
     public void setStatus(int arg0, String arg1) {
       status = arg0;
       
       super.setStatus(arg0, arg1);
     }
     
+    @Override
     public void sendError(int arg0) throws IOException {      
       status = arg0;
       
       super.sendError(arg0);
     }
     
+    @Override
     public void sendError(int arg0, String arg1) throws IOException {
       status = arg0;
       

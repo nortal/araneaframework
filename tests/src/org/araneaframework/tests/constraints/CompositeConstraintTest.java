@@ -42,6 +42,7 @@ public class CompositeConstraintTest extends TestCase {
   protected FormWidget form;
   protected FormElement textInput1, textInput2, numberInput;
 
+  @Override
   public void setUp() throws Exception {
     form = new FormWidget();
     textInput1 = form.createElement("#text1", new TextControl(), new StringData(), false);

@@ -40,6 +40,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
 
   protected String renderMode = EventButtonHtmlTag.RENDER_BUTTON;  
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);                
     // Write button tag
@@ -69,6 +70,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     return EVAL_BODY_INCLUDE;    
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     if (renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON)) {
       if (localizedLabel != null)
@@ -91,6 +93,6 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
   public void setRenderMode(String renderMode) throws JspException {
     if (!(renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON) || renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)))
       throw new AraneaJspException("<ui:eventButton> 'renderMode' attribute must be '" + EventButtonHtmlTag.RENDER_BUTTON + "' or '"+ EventButtonHtmlTag.RENDER_INPUT+"'");
-    this.renderMode = (String) evaluate("renderMode", renderMode, String.class);
+    this.renderMode = evaluate("renderMode", renderMode, String.class);
   }  
 }

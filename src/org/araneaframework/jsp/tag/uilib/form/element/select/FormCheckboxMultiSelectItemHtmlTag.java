@@ -47,13 +47,15 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 		baseStyleClass = "aranea-multi-checkbox";
 	}
 
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		int r = super.doStartTag(out);
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 		return r;
 	}
 	
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		// Type check
 		assertControlType("MultiSelectControl");		
 
@@ -101,7 +103,7 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 	 *   description = "The value of this checkbox that will be submitted with form if this checkbox is selected." 
 	 */
 	public void setValue(String value) throws JspException  {
-		this.value = (String)evaluateNotNull("value", value, String.class);
+		this.value = evaluateNotNull("value", value, String.class);
 	}
 	
   /**
@@ -111,8 +113,8 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
    *   description = "Sets the HTML id of this checkbox button."
    * @since 1.1
    */
-  public void setHtmlId(String htmlId) throws JspException  {
-    this.htmlId = (String)evaluate("htmlId", htmlId, String.class);
+  public void setHtmlId(String htmlId) {
+    this.htmlId = evaluate("htmlId", htmlId, String.class);
   }
 }
 

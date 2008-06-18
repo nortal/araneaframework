@@ -34,7 +34,7 @@ import org.araneaframework.uilib.form.FormWidget;
  */
 public class BaseFormElementDisplayTag extends PresentationTag implements FormElementTagInterface {
   protected FormWidget.ViewModel formViewModel;
-  protected FormElement.ViewModel formElementViewModel;
+  protected FormElement<?,?>.ViewModel formElementViewModel;
   protected Control.ViewModel controlViewModel;
 
   private String id;
@@ -44,6 +44,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
   protected boolean validate = true;
   protected boolean validateOnEvent = false;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -59,12 +60,13 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
     // get control and formelement viewmodels
     formElementViewModel = 
-      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
     controlViewModel = (formElementViewModel).getControl();
 
     return EVAL_BODY_INCLUDE;    
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     super.doEndTag(out);
     return EVAL_PAGE;
@@ -81,28 +83,28 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
    *   description = "Element id, can also be inherited." 
    */
   public void setId(String id) throws JspException {
-    this.id = (String)evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 
   public void setEvents(String events) throws JspException {
-    this.events = ((Boolean)evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
+    this.events = (evaluateNotNull("events", events, Boolean.class)).booleanValue(); 
   }
 
   public void setValidate(String validate) throws JspException {
-    this.validate = ((Boolean)evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
+    this.validate = (evaluateNotNull("validate", validate, Boolean.class)).booleanValue(); 
   }
 
   public void setValidateOnEvent(String validateOnEvent) throws JspException {
-    this.validateOnEvent = ((Boolean)evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class)).booleanValue(); 
+    this.validateOnEvent = (evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class)).booleanValue(); 
   }
 
   public void setTabindex(String tabindex) throws JspException {
-    this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
+    this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 
-  public void setUpdateRegions(String updateRegions) throws JspException {}
+  public void setUpdateRegions(String updateRegions){}
 
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {}
+  public void setGlobalUpdateRegions(String globalUpdateRegions){}
 
   /* ***********************************************************************************
    * Control type assertion method to be used by subclasses.

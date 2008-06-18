@@ -95,7 +95,7 @@ private MenuItem araneaMenu;
   }
   
   public void handleEventLogout() throws Exception {
-    ((SecurityContext) getEnvironment().requireEntry(SecurityContext.class)).logout();
+    (getEnvironment().requireEntry(SecurityContext.class)).logout();
   }
   
   public void handleEventMainPage() throws Exception {

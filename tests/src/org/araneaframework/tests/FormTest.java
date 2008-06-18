@@ -191,12 +191,12 @@ public class FormTest extends TestCase {
     assertTrue(hierarchyTest.getValueByFullName("myTextarea").equals("blah"));
     
     StringArrayRequestControl.ViewModel vm1 = 
-    	((StringArrayRequestControl.ViewModel)((CheckboxControl)testForm.getControlByFullName("myCheckBox")).getViewModel());
+    	((CheckboxControl)testForm.getControlByFullName("myCheckBox")).getViewModel();
     
     assertTrue((Boolean.valueOf(vm1.getSimpleValue()).equals(Boolean.FALSE)));
     
     TextControl.ViewModel vm2 = 
-    	((TextControl.ViewModel)((TextControl)testForm.getControlByFullName("myLongText")).getViewModel());
+    	((TextControl)testForm.getControlByFullName("myLongText")).getViewModel();
     assertTrue(Long.valueOf(vm2.getSimpleValue()).equals(new Long(108)));
     
     assertTrue(((FormElement) testForm.getElement("myCheckBox")).getData().getValue().equals(Boolean.FALSE));

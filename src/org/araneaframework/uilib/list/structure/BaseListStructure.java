@@ -36,12 +36,12 @@ public class BaseListStructure implements Serializable {
 	 * Map of {@link ListField}s where the column Ids are the keys and columns
 	 * are the values.
 	 */
-	protected Map fields = new HashMap();
+	protected Map<String, ListField> fields = new HashMap<String, ListField>();
 
 	/**
 	 * List of {@link ListField}s.
 	 */
-	protected List fieldList = new ArrayList();
+	protected List<ListField> fieldList = new ArrayList<ListField>();
 
 	/**
 	 * {@link ListOrder} information.
@@ -58,7 +58,7 @@ public class BaseListStructure implements Serializable {
 	 * 
 	 * @return {@link ListField}s.
 	 */
-	public Map getFields() {
+	public Map<String, ListField> getFields() {
 		return this.fields;
 	}
 
@@ -67,7 +67,7 @@ public class BaseListStructure implements Serializable {
 	 * 
 	 * @return {@link ListField}s.
 	 */
-	public List getFieldList() {
+	public List<ListField> getFieldList() {
 		return this.fieldList;
 	}
 
@@ -79,7 +79,7 @@ public class BaseListStructure implements Serializable {
 	 * @return {@link ListField}.
 	 */
 	public ListField getField(String id) {
-		return (ListField) this.fields.get(id);
+		return this.fields.get(id);
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class BaseListStructure implements Serializable {
 	 * Clears the {@link ListField}s
 	 */
 	public void clearFields() {
-		this.fields = new HashMap();
-		this.fieldList = new ArrayList();
+		this.fields = new HashMap<String, ListField>();
+		this.fieldList = new ArrayList<ListField>();
 	}
 	
 	/**
@@ -156,9 +156,9 @@ public class BaseListStructure implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		protected Map columns = new HashMap();
-		protected List columnList = new ArrayList();
-		protected Map columnOrders = new HashMap();
+		protected Map<String, ListField.ViewModel> columns = new HashMap<String, ListField.ViewModel>();
+		protected List<ListField.ViewModel> columnList = new ArrayList<ListField.ViewModel>();
+		protected Map<String, Boolean> columnOrders = new HashMap<String, Boolean>();
 
 		/**
 		 * Takes a snapshot of outer class state.
@@ -167,10 +167,10 @@ public class BaseListStructure implements Serializable {
 			MultiFieldOrder multiOrder = getListOrder() instanceof MultiFieldOrder ? (MultiFieldOrder) getListOrder()
 					: null;
 
-			for (Iterator i = BaseListStructure.this.fieldList.iterator(); i
+			for (Iterator<ListField> i = BaseListStructure.this.fieldList.iterator(); i
 					.hasNext();) {
-				ListField.ViewModel currentColumn = ((ListField) i
-						.next()).getViewModel();
+				ListField.ViewModel currentColumn = i
+						.next().getViewModel();
 				boolean isOrdered = multiOrder != null
 						&& multiOrder.isFiedOrdered(currentColumn.getId());
 
@@ -184,14 +184,14 @@ public class BaseListStructure implements Serializable {
 		/**
 		 * @return Returns the columnList.
 		 */
-		public List getColumnList() {
+		public List<ListField.ViewModel> getColumnList() {
 			return this.columnList;
 		}
 
 		/**
 		 * @return Returns the columns.
 		 */
-		public Map getColumns() {
+		public Map<String, ListField.ViewModel> getColumns() {
 			return this.columns;
 		}
 
@@ -203,7 +203,7 @@ public class BaseListStructure implements Serializable {
 		 * @return Returns <code>true</code> if the column can be ordered.
 		 */
 		public boolean isColumnOrdered(String column) {
-			return ((Boolean) this.columnOrders.get(column)).booleanValue();
+			return this.columnOrders.get(column).booleanValue();
 		}
 	}
 }

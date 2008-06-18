@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * @see BeanUtil
  */
-public class BeanMapper implements Serializable {
+public class BeanMapper<T> implements Serializable {
 	
 	//*******************************************************************
 	// FIELDS
@@ -41,10 +41,10 @@ public class BeanMapper implements Serializable {
 	/**
 	 * Holds the Bean <code>Class</code>.
 	 */
-	private Class beanClass;
+	private Class<T> beanClass;
 	
 	/**
-	 * Whetther to create missing beans during writing bean subfields.
+	 * Whether to create missing beans during writing bean subfields.
 	 */
 	private boolean createMissingBeans = false;	
 	
@@ -56,8 +56,12 @@ public class BeanMapper implements Serializable {
 	 * Initializes the BeanMapper.
 	 * @param beanClass the class implementing the Bean pattern.
 	 */
-	public BeanMapper(Class beanClass) {
+	public BeanMapper(Class<T> beanClass) {
 		this.beanClass = beanClass;
+	}
+	
+	public BeanMapper(T value) {
+	  this.beanClass = (Class<T>) value.getClass();
 	}
 	
 	/**
@@ -66,10 +70,10 @@ public class BeanMapper implements Serializable {
 	 * @param beanClass
 	 *          the class implementing the Bean pattern.
 	 * @param createMissingBeans
-	 * 			whetther to create missing beans during writing bean subfields
+	 * 			Whether to create missing beans during writing bean subfields
 	 * 			(default is false).
 	 */
-	public BeanMapper(Class beanClass, boolean createMissingBeans) {
+	public BeanMapper(Class<T> beanClass, boolean createMissingBeans) {
 		this(beanClass);
 		this.createMissingBeans = createMissingBeans;		
 	}
@@ -80,7 +84,7 @@ public class BeanMapper implements Serializable {
 	 * @return <code>List&lt;String&gt;</code>- the <code>List</code> of Bean
 	 *         field names.
 	 */
-	public List getFields() {
+	public List<String> getFields() {
 		return BeanUtil.getFields(beanClass);
 	}
 	
@@ -124,7 +128,7 @@ public class BeanMapper implements Serializable {
 	 *          The name of Bean field.
 	 * @return The type of the field.
 	 */
-	public Class getFieldType(String fieldName) {
+	public Class<?> getFieldType(String fieldName) {
 		return BeanUtil.getFieldType(beanClass, fieldName);
 	}
 	

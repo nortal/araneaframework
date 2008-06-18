@@ -44,6 +44,7 @@ public class AutoCompleteTextControl extends TextControl {
     this.minCompletionLength = minCompletionLength;
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
     addActionListener(LISTENER_NAME, new AutoCompleteActionListener());
@@ -66,13 +67,13 @@ public class AutoCompleteTextControl extends TextControl {
   }
 
   public interface DataProvider extends Serializable {
-    public List getSuggestions(String input);
+    public List<String> getSuggestions(String input);
   }
 
   private class AutoCompleteActionListener implements ActionListener {
     public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
-      List suggestions = dataProvider.getSuggestions(str);
+      List<String> suggestions = dataProvider.getSuggestions(str);
 
       ResponseBuilder responseBuilder = resolveResponseBuilder();
 
@@ -89,7 +90,7 @@ public class AutoCompleteTextControl extends TextControl {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
       ConfigurationContext confCtx = 
-        (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+        getEnvironment().getEntry(ConfigurationContext.class);
       if (confCtx != null)
         result = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
     }
@@ -110,7 +111,7 @@ public class AutoCompleteTextControl extends TextControl {
      * @param suggestions suggested completions that should be included in response
      * @return appropriate response content
      */
-    public String getResponseContent(List suggestions);
+    public String getResponseContent(List<String> suggestions);
     /**
      * Returns response content type. 
      * @return response content type
@@ -126,12 +127,12 @@ public class AutoCompleteTextControl extends TextControl {
    * @author Steven Jentson (steven@webmedia.ee)
    */
   public static class DefaultResponseBuilder implements ResponseBuilder {
-	public String getResponseContent(List suggestions) {
+	public String getResponseContent(List<String> suggestions) {
   	  StringBuffer xml = new StringBuffer();
         xml.append("<ul>");
         for (int i = 0; i < suggestions.size(); i++) {
   		  xml.append("<li>");
-  		  xml.append(StringEscapeUtils.escapeHtml((String) suggestions.get(i)));
+  		  xml.append(StringEscapeUtils.escapeHtml(suggestions.get(i)));
   		  xml.append("</li>");
         }
         xml.append("</ul>");
@@ -148,7 +149,8 @@ public class AutoCompleteTextControl extends TextControl {
    * 
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 

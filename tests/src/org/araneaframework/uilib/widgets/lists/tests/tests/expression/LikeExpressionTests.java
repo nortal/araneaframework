@@ -42,7 +42,8 @@ public class LikeExpressionTests extends TestCase {
 	
 	private LikeConfiguration config;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 		
 		this.tom = new MockValueExpression("Tom");
@@ -53,7 +54,8 @@ public class LikeExpressionTests extends TestCase {
 		this.config = new LikeConfiguration();
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 		this.tom = null;
 		this.jerry = null;

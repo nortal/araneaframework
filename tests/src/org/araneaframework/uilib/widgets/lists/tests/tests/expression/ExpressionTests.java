@@ -31,11 +31,13 @@ public class ExpressionTests extends TestCase {
 
 	private VariableResolver resolver;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 	}
 

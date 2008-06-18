@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Map;
 import org.araneaframework.jsp.tag.uilib.form.element.AutomaticTagFormElementTag;
 import org.araneaframework.jsp.util.AutomaticFormElementUtil;
-import org.araneaframework.uilib.form.FormElement;
 
 /**
  * A class that holds information about the tag and the attributes of the tag
@@ -60,7 +59,7 @@ public class FormElementViewSelector implements Serializable {
    * <code>String</code> (the name of the attribute) and value is any object
    * (the value for the attribute).
    */
-  protected Map attributes;
+  protected Map<String, Object> attributes;
 
   /**
    * The URI of the tag library where the <code>tag</code> is located.
@@ -76,11 +75,11 @@ public class FormElementViewSelector implements Serializable {
    * <code>String</code> (the name of the attribute) and value is any object
    * (the value for the attribute).
    * <p>
-   * The attribute names must qualifify to appropriate setter of class
+   * The attribute names must qualify to appropriate setter of class
    * {@link AutomaticTagFormElementTag} as:
    * <pre><code>set[attributeName]([AttributeValueType] attributeValue)</code></pre>
    * <p>
-   * <b>This constructor excpects that the URI of the tag library is the same as
+   * <b>This constructor expects that the URI of the tag library is the same as
    * for Aranea tag library!</b>
    * 
    * @param tagName The name of the tag (not a tag class name!) to use.
@@ -88,10 +87,8 @@ public class FormElementViewSelector implements Serializable {
    * @see AutomaticFormElementUtil
    * @see AutomaticTagFormElementTag
    */
-  public FormElementViewSelector(String tagName, Map attributes) {
-    this.uri = DEFAULT_URI;
-    this.tag = tagName;
-    this.attributes = attributes == null ? Collections.EMPTY_MAP : attributes;
+  public FormElementViewSelector(String tagName, Map<String, Object> attributes) {
+    this(DEFAULT_URI, tagName, attributes);
   }
 
   /**
@@ -115,10 +112,14 @@ public class FormElementViewSelector implements Serializable {
    * @see AutomaticFormElementUtil
    * @see AutomaticTagFormElementTag
    */
-  public FormElementViewSelector(String uri, String tag, Map attributes) {
+  public FormElementViewSelector(String uri, String tag, Map<String, Object> attributes) {
     this.uri = uri;
     this.tag = tag;
-    this.attributes = attributes == null ? Collections.EMPTY_MAP : attributes;
+    if(attributes == null) {
+      this.attributes =Collections.emptyMap();
+    } else {
+      this.attributes = attributes;
+    }
   }
 
   /**
@@ -133,7 +134,7 @@ public class FormElementViewSelector implements Serializable {
    * @return the attributes of the tag.
    * @see AutomaticTagFormElementTag
    */
-  public Map getAttributes() {
+  public Map<String, Object> getAttributes() {
     return attributes;
   }
 

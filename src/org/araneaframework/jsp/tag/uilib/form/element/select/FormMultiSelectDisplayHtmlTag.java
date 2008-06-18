@@ -21,7 +21,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
@@ -43,6 +42,7 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     baseStyleClass = "aranea-multi-select-display";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {        
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
 
@@ -52,14 +52,14 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
 
-    List selectedItems = new ArrayList(viewModel.getSelectItems());
-    for (Iterator i = selectedItems.iterator(); i.hasNext();) {
-      DisplayItem displayItem = (DisplayItem) i.next();
+    List<DisplayItem> selectedItems = new ArrayList<DisplayItem>(viewModel.getSelectItems());
+    for (Iterator<DisplayItem> i = selectedItems.iterator(); i.hasNext();) {
+      DisplayItem displayItem = i.next();
       if (!viewModel.getValueSet().contains(displayItem.getValue())) i.remove();
     }
 
-    for (Iterator i = selectedItems.iterator(); i.hasNext();) {
-      DisplayItem displayItem = (DisplayItem) i.next();
+    for (Iterator<DisplayItem> i = selectedItems.iterator(); i.hasNext();) {
+      DisplayItem displayItem = i.next();
 
       JspUtil.writeEscaped(out, displayItem.getDisplayString());
       if (i.hasNext()) writeSeparator(out);
@@ -78,7 +78,7 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     this.separator = separator;
   }    
 
-  protected void writeSeparator(Writer out) throws IOException, AraneaJspException {
+  protected void writeSeparator(Writer out) throws IOException {
     if (NEWLINE_SEPARATOR_CODE.equals(separator))      
       JspUtil.writeStartEndTag(out, "br");
     else 

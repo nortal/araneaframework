@@ -39,7 +39,7 @@ public class LoginMessage extends BroadcastMessage {
 
       Environment childEnv = loginWidget.getChildEnvironment();
 
-      FlowContext flow = (FlowContext) childEnv.getEntry(FlowContext.class);
+      FlowContext flow = childEnv.getEntry(FlowContext.class);
       flow.replace(new RootWidget(), null);
     }
   }

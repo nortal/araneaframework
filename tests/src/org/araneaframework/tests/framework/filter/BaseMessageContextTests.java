@@ -39,13 +39,14 @@ public abstract class BaseMessageContextTests extends TestCase {
   
   protected abstract MessageContext getMessageContext();
   
+  @Override
   protected void setUp() throws Exception {
     msgCtx = getMessageContext();
 
     // assertions do not allow filter widgets without childs :)
     ((FilterWidget)msgCtx).setChildWidget(new BaseWidget(){});
     
-    Environment env = new StandardEnvironment(null, new HashMap());
+    Environment env = new StandardEnvironment(null, new HashMap<Class<?>, Object>());
     ((Widget)msgCtx)._getComponent().init(null, env);
   }
   
@@ -152,31 +153,31 @@ public abstract class BaseMessageContextTests extends TestCase {
     
     msgCtx.hidePermanentMessage("permanent message");
     
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<String>> messages = msgCtx.getMessages();
     assertTrue("messages must not be null", messages != null);
     assertTrue("Messages must contain ONE element!", messages.size() == 1);
     
     Object errorMessages = messages.get(MessageContext.ERROR_TYPE);
     assertTrue("Messages must be in java.util.Collection", errorMessages instanceof Collection);
 
-    assertTrue("There must be TWO error messages", ((Collection)errorMessages).size() == 2);
+    assertTrue("There must be TWO error messages", ((Collection<String>)errorMessages).size() == 2);
   }
   
   /** Tests that message addition order is preserved on rendering. */
   public void testMessageOrderPreservation() throws Exception {
-    ArrayList messages = new ArrayList(200);
+    ArrayList<String> messages = new ArrayList<String>(200);
     for (int i = 0; i < 200; i++) {
       String nextMessage = RandomStringUtils.randomAlphanumeric(30);
       messages.add(i, nextMessage);
 	    msgCtx.showErrorMessage(nextMessage);
     }
 
-    Map renderedMessageMap = msgCtx.getMessages();
-    Collection renderedMessages = (Collection)renderedMessageMap.get(MessageContext.ERROR_TYPE);
+    Map<String, Collection<String>> renderedMessageMap = msgCtx.getMessages();
+    Collection<String> renderedMessages = renderedMessageMap.get(MessageContext.ERROR_TYPE);
     
     int j = 0;
-    for (Iterator i = renderedMessages.iterator(); i.hasNext(); j++)
-      assertEquals((String)messages.get(j), (String)i.next());
+    for (Iterator<String> i = renderedMessages.iterator(); i.hasNext(); j++)
+      assertEquals(messages.get(j), i.next());
 
     assertTrue("There should have been 200 error messages", j == 200);
   }

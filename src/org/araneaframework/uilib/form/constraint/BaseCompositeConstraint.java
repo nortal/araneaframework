@@ -35,7 +35,7 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
   /**
    * List of {@link Constraint}s that this constraint should handle.
    */
-  protected List constraints = new ArrayList();
+  protected List<Constraint> constraints = new ArrayList<Constraint>();
 
   /**
    * An empty constructor that expects other constraints to be added later. Use
@@ -64,7 +64,7 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
    * @param constraints a collection of {@link Constraint}s.
    * @since 1.0.9
    */
-  public BaseCompositeConstraint(Collection constraints) {
+  public BaseCompositeConstraint(Collection<Constraint> constraints) {
     addConstraints(constraints);
   }
 
@@ -86,7 +86,7 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
    * @return this composite constraint
    * @since 1.0.9
    */
-  public BaseCompositeConstraint addConstraints(Collection constraints) {
+  public BaseCompositeConstraint addConstraints(Collection<Constraint> constraints) {
     Assert.notNullParam(constraints, "constraints");
     this.constraints.addAll(constraints);
     return this;
@@ -99,10 +99,11 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
     constraints.clear();
   }
 
+  @Override
   public void setEnvironment(Environment environment) {
 	super.setEnvironment(environment);
-	for (Iterator i = constraints.iterator(); i.hasNext();) {
-      Constraint c = (Constraint) i.next();
+	for (Iterator<Constraint> i = constraints.iterator(); i.hasNext();) {
+      Constraint c = i.next();
       c.setEnvironment(environment);
 	}
   }

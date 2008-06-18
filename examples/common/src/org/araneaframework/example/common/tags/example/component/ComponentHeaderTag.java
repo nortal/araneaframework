@@ -35,7 +35,8 @@ public class ComponentHeaderTag extends PresentationTag {
 		styleClass = ComponentHeaderTag.DEFAULT_HEADER_STYLE;
 	}
 	
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		addContextEntry(ComponentHeaderTag.KEY, this);
@@ -48,7 +49,8 @@ public class ComponentHeaderTag extends PresentationTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		JspUtil.writeEndTag(out, "div");
 		return super.doEndTag(out);
 	}

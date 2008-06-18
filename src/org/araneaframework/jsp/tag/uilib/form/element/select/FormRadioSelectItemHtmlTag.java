@@ -44,12 +44,14 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     baseStyleClass = "aranea-radio";
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
 	int result = super.doStartTag(out);
 	addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 	return result;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");
     
@@ -98,7 +100,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
    *   description = "The value of this radio button that will be submitted with form if this radio button is selected." 
    */
   public void setValue(String value) throws JspException  {
-    this.value = (String)evaluateNotNull("value", value, String.class);
+    this.value = evaluateNotNull("value", value, String.class);
   }
   
   /**
@@ -108,8 +110,8 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
    *   description = "The HTML id this radio button."
    * @since 1.1
    */
-  public void setHtmlId(String htmlId) throws JspException  {
-    this.htmlId = (String)evaluate("htmlId", htmlId, String.class);
+  public void setHtmlId(String htmlId) {
+    this.htmlId = evaluate("htmlId", htmlId, String.class);
   }
 
   /**
@@ -118,7 +120,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
-  public void setOnChangePrecondition(String onChangePrecondition) throws JspException {
-    this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  public void setOnChangePrecondition(String onChangePrecondition){
+    this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 }

@@ -30,7 +30,7 @@ public class DataItemTypeViolatedException extends AraneaRuntimeException {
    * @param dataItemType {@link org.araneaframework.uilib.form.Data} type
    * @param valueType value type attempted to assign to Data
    */
-  public DataItemTypeViolatedException(String dataItemType, Class valueType) {
+  public DataItemTypeViolatedException(String dataItemType, Class<?> valueType) {
     super("The DataItem with type '" + dataItemType + "' cannot accept values of type '" + valueType.getName());
   }
   

@@ -39,13 +39,14 @@ public class FileDownloaderService extends FileDownloaderWidget {
   }
   
   /** @since 1.1 */
-  public FileDownloaderService(byte[] fileContent, Map headers) {
+  public FileDownloaderService(byte[] fileContent, Map<String, String> headers) {
     super(fileContent, headers);
   }
 
+  @Override
   protected void close() {
     //Ensure that allow to download only once...
-    ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+    ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
     mngCtx.close(mngCtx.getCurrentId());
   }
 }

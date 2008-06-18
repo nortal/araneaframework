@@ -36,13 +36,14 @@ import org.araneaframework.uilib.support.DisplayItem;
  */
 public abstract class TemplateMenuWidget extends BaseMenuWidget implements LocaleChangeListener {
   private FormWidget form;
-  private FormElement langSelect;
+  private FormElement<String, String> langSelect;
 
   // CONSTRUCTOR 
   public TemplateMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
 
@@ -61,7 +62,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     select.addOnChangeEventListener(new OnChangeEventListener() {
 		public void onChange() throws Exception {
 			if (langSelect.convertAndValidate()) {
-				String lang = (String) langSelect.getValue();
+				String lang = langSelect.getValue();
 				getL10nCtx().setLocale(new Locale(lang, ""));
 			}
 		}
@@ -73,21 +74,21 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
   }
   
   public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-    String lang = (String) langSelect.getValue();
+    String lang = langSelect.getValue();
     ((SelectControl)langSelect.getControl()).clearItems();
     ((SelectControl)langSelect.getControl()).addItems(getLocales());
     langSelect.setValue(lang);
   }
 
-  public List getLocales() {
-    List result = new ArrayList();
+  public List<DisplayItem> getLocales() {
+    List<DisplayItem> result = new ArrayList<DisplayItem>();
     result.add(new DisplayItem("en", getL10nCtx().localize("EnglishLang")));
     result.add(new DisplayItem("et", getL10nCtx().localize("EstonianLang")));
     return result;
   }
 
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return getEnvironment().getEntry(LocalizationContext.class);
   }
 
   // returns the name of currently running flow class, 
@@ -96,7 +97,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     String result = null;
 
     try {
-      result = ((CallFrame) callStack.getFirst()).getWidget().getClass().getName();
+      result = callStack.getFirst().getWidget().getClass().getName();
     } catch (Exception e) {}
 
     return result;
@@ -108,7 +109,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     String result = null;
 
     try {
-      result = ((ViewSelectorAware) ((CallFrame) callStack.getFirst()).getWidget()).getViewSelector();
+      result = ((ViewSelectorAware) callStack.getFirst().getWidget()).getViewSelector();
     } catch (Exception e) {}
 
     return result;

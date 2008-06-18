@@ -40,14 +40,15 @@ public class ListTag extends BaseWidgetTag {
 	public final static String LIST_VIEW_MODEL_KEY = "list";  
 	public final static String LIST_FULL_ID_KEY = "listFullId";
 	
-	protected ListWidget.ViewModel listViewModel;
+	protected ListWidget<?>.ViewModel listViewModel;
 	protected String varSequence = "listSequence";
 	
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		try {
-			listViewModel = (ListWidget.ViewModel)viewModel;
+			listViewModel = (ListWidget<?>.ViewModel)viewModel;
 		} catch (ClassCastException e) {
 			throw new AraneaJspException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
 		}
@@ -62,12 +63,14 @@ public class ListTag extends BaseWidgetTag {
 		return EVAL_BODY_INCLUDE;		
 	}
 	
-	public int doEndTag(Writer out) throws Exception {
+	@Override
+  public int doEndTag(Writer out) throws Exception {
 		addContextEntry(varSequence, null);
 		return EVAL_PAGE;		
 	}
 	
-	public void doFinally() {
+	@Override
+  public void doFinally() {
 		super.doFinally();
 		listViewModel = null;
 	}

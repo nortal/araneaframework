@@ -39,14 +39,16 @@ public final class FormEscapeKeyboardHandlerHtmlTag extends FormKeyboardHandlerH
 	/**
 	 * Throw an exception on attempt to set key. This tag supports "escape" only!
 	 */
-	public void setKey(String key) throws JspException {
+	@Override
+  public void setKey(String key) throws JspException {
 		throw new JspException("You may not set key for the escape handler tag!");
 	}
 
 	/**
 	 * @see #setKey
 	 */
-	public void setKeyCode(String keyCode) throws JspException {
+	@Override
+  public void setKeyCode(String keyCode) throws JspException {
 		throw new JspException("You may not set keyCode for the escape handler tag!");
 	}
 }

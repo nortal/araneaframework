@@ -47,8 +47,8 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 		return this.locale;
 	}
 
-	public int compare(Object o1, Object o2) {
-		return getCollator().compare(o1, o2);
+	public int compare(String s1, String s2) {
+		return getCollator().compare(s1, s2);
 	}
 	
 	private Collator getCollator() {
@@ -60,7 +60,8 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 		return this.collator;
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+  public boolean equals(Object obj) {
 		if (obj instanceof LocaleStringComparator == false) {
 			return false;
 		}
@@ -73,7 +74,8 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 		return ignoreCase == rhs.ignoreCase && locale.equals(rhs.locale);
 	}
 
-	public int hashCode() {
+	@Override
+  public int hashCode() {
 		return new HashCodeBuilder(20070327, 1221).append(ignoreCase).append(locale).toHashCode();
 	}
 }

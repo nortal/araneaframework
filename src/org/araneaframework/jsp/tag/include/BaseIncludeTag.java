@@ -17,9 +17,6 @@
 package org.araneaframework.jsp.tag.include;
 
 import java.io.Writer;
-
-import javax.servlet.jsp.JspException;
-
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 
@@ -35,6 +32,7 @@ public class BaseIncludeTag extends BaseTag implements AttributedTagInterface {
   // Implementation
   //
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -44,7 +42,7 @@ public class BaseIncludeTag extends BaseTag implements AttributedTagInterface {
     return EVAL_BODY_INCLUDE;   
   }  
  
-  public void addAttribute(String name, String value) throws JspException {
+  public void addAttribute(String name, String value){
     this.addContextEntry(name, this.evaluate("attributeValue", value, Object.class));
   }
 }

@@ -19,21 +19,24 @@ package org.araneaframework.uilib.form.formlist.adapter;
 import java.util.Map;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
+import org.araneaframework.uilib.form.formlist.FormRow;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ValidOnlyFormRowHandler extends DefaultFormRowHandler {
 
-	public final void addRow(FormWidget rowForm) throws Exception {
+	@Override
+  public final void addRow(FormWidget rowForm) throws Exception {
     if (rowForm.convertAndValidate())
       addValidRow(rowForm); 
   }	   
-	public final void saveRows(Map formRows) throws Exception {
+	@Override
+  public final void saveRows(Map<Object, FormRow> formRows) throws Exception {
     if (FormListUtil.convertAndValidateRowForms(formRows))
       saveValidRows(formRows); 
   }
   
   public void addValidRow(FormWidget rowForm) throws Exception {}     
-  public void saveValidRows(Map formRows) throws Exception {} 
+  public void saveValidRows(Map<Object, FormRow> formRows) throws Exception {} 
 }

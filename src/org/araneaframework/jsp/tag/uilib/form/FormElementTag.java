@@ -36,9 +36,9 @@ import org.araneaframework.uilib.form.FormWidget;
  *   description = "UiLib form element tag.  <br/>                 
            Makes available following variables: 
            <ul>
-             <li><i>formElement</i> - UiLib form element view model.
-             <li><i>formElementId</i> - UiLib form element id.
-             <li><i>formElementValue</i> - UiLib form element value.
+             <li><i>formElement</i> - UiLib form element view model.</li>
+             <li><i>formElementId</i> - UiLib form element id.</li>
+             <li><i>formElementValue</i> - UiLib form element value.</li>
            </ul>"
  */
 public class FormElementTag extends BaseTag {
@@ -47,8 +47,9 @@ public class FormElementTag extends BaseTag {
   public static final String VALUE_KEY = "formElementValue";
 
   protected String id;
-  protected FormElement.ViewModel formElementViewModel;
+  protected FormElement<?,?>.ViewModel formElementViewModel;
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -57,7 +58,7 @@ public class FormElementTag extends BaseTag {
 
     // Get form element
     formElementViewModel = 
-      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
+      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
 
     // Store data
     addContextEntry(VIEW_MODEL_KEY, formElementViewModel);
@@ -79,6 +80,6 @@ public class FormElementTag extends BaseTag {
    *   description = "UiLib form element id." 
    */
   public void setId(String id) throws JspException {
-    this.id = (String)evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 }

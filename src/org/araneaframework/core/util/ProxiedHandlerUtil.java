@@ -28,30 +28,21 @@ import org.araneaframework.core.ProxyEventListener;
  * @since 1.0.12
  */
 public abstract class ProxiedHandlerUtil {
-	private static final Class[] EMTPY_CLASS_ARRAY = new Class[] {};
 
 	public static final String EVENT_HANDLER_PREFIX = "handleEvent";
 	public static final String ACTION_HANDLER_PREFIX = "handleAction";
 	
 	private ProxiedHandlerUtil() {}
-	
-	public static Method getEventHandler(String eventId, Object eventTarget) throws SecurityException, NoSuchMethodException {
-		return getEventHandler(eventId, eventTarget, EMTPY_CLASS_ARRAY);
-	}
 
-	public static Method getEventHandler(String eventId, Object eventTarget, Class [] params) throws SecurityException, NoSuchMethodException {
+	public static Method getEventHandler(String eventId, Object eventTarget, Class<?>... params) throws SecurityException, NoSuchMethodException {
 		return getHandler(EVENT_HANDLER_PREFIX, eventId, eventTarget, params);
 	}
 
-	public static Method getActionHandler(String actionId, Object eventTarget) throws SecurityException, NoSuchMethodException {
-		return getActionHandler(actionId, eventTarget, EMTPY_CLASS_ARRAY);
-	}
-
-	public static Method getActionHandler(String eventId, Object eventTarget, Class [] params) throws SecurityException, NoSuchMethodException {
+	public static Method getActionHandler(String eventId, Object eventTarget, Class<?>... params) throws SecurityException, NoSuchMethodException {
         return getHandler(ACTION_HANDLER_PREFIX, eventId, eventTarget, params);
 	}
 
-	private static Method getHandler(String handlerPrefix, String eventId, Object eventTarget, Class [] params) throws SecurityException, NoSuchMethodException {
+	private static Method getHandler(String handlerPrefix, String eventId, Object eventTarget, Class<?>... params) throws SecurityException, NoSuchMethodException {
 		String eventHandlerName = handlerPrefix + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
 		Method result = null;
 		try {

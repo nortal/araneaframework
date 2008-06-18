@@ -57,7 +57,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
           Either keyCode or key must be specified, but not both." 
 	 */
 	public void setKeyCode(String keyCode) throws JspException {
-		this.keyCode = (String) evaluateNotNull("keyCode", keyCode, String.class);
+		this.keyCode = evaluateNotNull("keyCode", keyCode, String.class);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
           Either keyCode or key must be specified, but not both." 
 	 */
 	public void setKeyCombo(String keyCombo) throws JspException {
-		this.keyCombo = (String) evaluateNotNull("keyCombo", keyCombo, String.class);
+		this.keyCombo = evaluateNotNull("keyCombo", keyCombo, String.class);
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
           'f2', ..., 'f12'."
 	 */
 	public void setKey(String key) throws JspException {
-		this.key = (String) evaluateNotNull("key", key, String.class);
+		this.key = evaluateNotNull("key", key, String.class);
 	}
   
   //
@@ -99,7 +99,8 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
    * Checks that either keyCode or key is specified (not both), and initializes the keyCode field.
    * When overriding don't forget to invoke superimplementation first.
    */
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		intKey = (key == null && keyCode == null) ? defaultKey : key;
@@ -180,16 +181,16 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
   		else return 0;
   	}
   	else {
-  		Integer code = (Integer)keyToKeyCodeMap.get(key.toLowerCase());
+  		Integer code = keyToKeyCodeMap.get(key.toLowerCase());
   		if (code != null) return code.intValue();
   		else return 0; 
   	}
   }
   
   // This map is used in "keyToKeyCode"
-  private static final Map keyToKeyCodeMap; 
+  private static final Map<String, Integer> keyToKeyCodeMap; 
   static {
-  	keyToKeyCodeMap = new HashMap();
+  	keyToKeyCodeMap = new HashMap<String, Integer>();
   	keyToKeyCodeMap.put("return", new Integer(13));
   	keyToKeyCodeMap.put("enter", new Integer(13));
   	keyToKeyCodeMap.put("escape", new Integer(27));

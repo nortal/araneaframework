@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
 
-public interface FormElementContext extends Serializable {
+public interface FormElementContext<C,D> extends Serializable {
 
 	// TODO: isInitialized() ?
 
@@ -28,7 +28,7 @@ public interface FormElementContext extends Serializable {
 
 	public void addError(String error);
 
-	public void addErrors(Set errors);
+	public void addErrors(Set<String> errors);
 
 	public Environment getEnvironment();
 
@@ -40,12 +40,12 @@ public interface FormElementContext extends Serializable {
 
 	public boolean isRead();
 
-	public Object getValue();
+	public D getValue();
 
 	/** @since 1.1 */
-	public Control getControl();
+	public Control<C> getControl();
 
 	/** @since 1.1 */
-	public Converter getConverter();
+	public Converter<C,D> getConverter();
 
 }

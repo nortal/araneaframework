@@ -61,8 +61,9 @@ public class SpringOptionalFilterWidget extends BaseFilterWidget {
    * <code>beanId</code> as its child widget. Note that the bean must be an
    * instance of {@link FilterWidget}
    */
+  @Override
   protected void init() throws Exception {
-    BeanFactory bf = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
     try {
       FilterWidget filter = (FilterWidget) bf.getBean(beanId);
       filter.setChildWidget(childWidget);

@@ -27,11 +27,13 @@ import org.araneaframework.mock.MockUtil;
  */
 public class MockBaseServiceRouterService extends BaseServiceRouterService {
 
-  protected Object getServiceId(InputData input) throws Exception {
+  @Override
+  protected String getServiceId(InputData input) throws Exception {
     return input.getGlobalData().get("serviceId");  
   }
   
-  protected Object getServiceKey() throws Exception {
+  @Override
+  protected String getServiceKey() throws Exception {
     return "serviceId";
   }
 

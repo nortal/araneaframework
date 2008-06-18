@@ -33,7 +33,7 @@ import org.araneaframework.http.util.URLUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMountingFilterService extends BaseFilterService implements MountContext {
-  private Map mounts = new HashMap();    
+  private Map<String, MessageFactory> mounts = new HashMap<String, MessageFactory>();    
   
   public String mount(InputData input, String pathPrefix, MessageFactory messageFactory) {
     Assert.notNullParam(input, "input");
@@ -65,6 +65,7 @@ public class StandardMountingFilterService extends BaseFilterService implements 
     return url.toString();    
   }
   
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), MountContext.class, this);
   }
@@ -73,7 +74,7 @@ public class StandardMountingFilterService extends BaseFilterService implements 
    * This setter allows to configure the default mounts using dependency injection. 
    * It expects as keys the mounting path prefixes and as values {@link org.araneaframework.framework.MountContext.MessageFactory}.
    */
-  public void setMounts(Map mounts) {
+  public void setMounts(Map<String, MessageFactory> mounts) {
     this.mounts = mounts;
   }
 
@@ -86,15 +87,15 @@ public class StandardMountingFilterService extends BaseFilterService implements 
     String maxPrefix = "";
     
     if (pathInfo != null) {
-      for (Iterator i = mounts.keySet().iterator(); i.hasNext();) {
-        String mountPrefix = (String) i.next();      
+      for (Iterator<String> i = mounts.keySet().iterator(); i.hasNext();) {
+        String mountPrefix = i.next();      
                       
         if (pathInfo.startsWith(MountContext.MOUNT_PATH + mountPrefix) && (mountPrefix.length() > maxPrefix.length())) 
           maxPrefix = mountPrefix;
       }
       
       if (maxPrefix.length() > 0) {
-        MessageFactory mountFactory = (MessageFactory) mounts.get(maxPrefix);
+        MessageFactory mountFactory = mounts.get(maxPrefix);
         
         int fullPrefixLength = MountContext.MOUNT_PATH.length() + maxPrefix.length();
         String suffix = fullPrefixLength < pathInfo.length() ? pathInfo.substring(fullPrefixLength + 1) : null;

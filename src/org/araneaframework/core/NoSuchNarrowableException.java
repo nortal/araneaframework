@@ -23,7 +23,7 @@ package org.araneaframework.core;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class NoSuchNarrowableException extends AraneaRuntimeException {
-  public NoSuchNarrowableException(Class target) {
+  public NoSuchNarrowableException(Class<?> target) {
     super("Target " + target.getName() + " does not exist!");
   }
 }

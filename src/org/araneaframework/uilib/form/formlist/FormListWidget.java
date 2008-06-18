@@ -45,7 +45,8 @@ public class FormListWidget extends BaseFormListWidget {
     super(rowHandler, model);
 	}
 
-	protected FormWidget buildAddForm(){
+	@Override
+  protected FormWidget buildAddForm(){
 		return new FormWidget();
 	}
 }

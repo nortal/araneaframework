@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +38,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class MultiSelectControl extends StringArrayRequestControl implements DisplayItemContainer {
+public class MultiSelectControl extends StringArrayRequestControl<List<String>> implements DisplayItemContainer {
 
   //*********************************************************************
   //* FIELDS
@@ -48,7 +47,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
   /**
    * The {@link org.araneaframework.uilib.util.DisplayItemUtil}.
    */
-  protected List items = new ArrayList();
+  protected List<DisplayItem> items = new ArrayList<DisplayItem>();
 
   //*********************************************************************
   //* PUBLIC METHODS
@@ -68,7 +67,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * 
    * @param items the items to be added.
    */
-  public void addItems(Collection items) {
+  public <E extends DisplayItem> void addItems(Collection<E> items) {
   	this.items.addAll(items);
   }    
 
@@ -79,28 +78,13 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
     items.clear();
   }
   
-  public List getDisplayItems() {
+  public List<DisplayItem> getDisplayItems() {
   	return items;
   }
   
 	public int getValueIndex(String value) {
 		return DisplayItemUtil.getValueIndex(items, value);
 	}    
-  
-  /**
-   * Adds the display-items corresponding to the given value and label fields in Value Object.
-   * 
-   * @param valueObjects <code>Collection</code> of Value Objects.
-   * @param valueName the name of the Value Object field corresponding to the value of the select
-   * item.
-   * @param labelName the name of the Value Object field corresponding to the label of the select
-   * item.
-   * 
-   * @deprecated use {@link MultiSelectControl#addFromBeanCollection(Collection, String, String)} instead
-   */
-  public void addDisplayItems(Collection valueObjects, String valueName, String labelName) {
-    DisplayItemUtil.addItemsFromBeanCollection(this, valueObjects, valueName, labelName);
-  }
 
   /**
    * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds
@@ -112,7 +96,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, String valueName, String displayStringName) {
+  public void addFromBeanCollection(Collection<?> beanCollection, String valueName, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayStringName);
   }
 
@@ -126,7 +110,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, String valueName, Transformer displayTransformer) {
+  public void addFromBeanCollection(Collection<?> beanCollection, String valueName, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueName, displayTransformer);
   }
 
@@ -140,7 +124,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+  public void addFromBeanCollection(Collection<?> beanCollection, Transformer valueTransformer, String displayStringName) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayStringName);
   }
 
@@ -154,7 +138,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * 
    * @since 1.1
    */
-  public void addFromBeanCollection(Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+  public void addFromBeanCollection(Collection<?> beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
     DisplayItemUtil.addItemsFromBeanCollection(this, beanCollection, valueTransformer, displayTransformer);
   }
   
@@ -176,18 +160,20 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * Returns {@link ViewModel}.
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }  
   
   /**
    * Removes all empty strings from the <code>String[]</code> request parameters.
    */
+  @Override
   protected String[] preprocessRequestParameters(String[] parameterValues) {
 	  //Removes submitted empty values	    
 	  if (parameterValues != null && parameterValues.length > 0) {
 	
-	    List processedParameterValues = new ArrayList();
+	    List<String> processedParameterValues = new ArrayList<String>();
 	
 	    for (int i = 0; i < parameterValues.length; i++) {
 	      if (parameterValues[i] != null && !"".equals(parameterValues[i])) {
@@ -212,12 +198,11 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
 	  
 	  if (innerData != null) {
 	    //Handles disabled DisplayItems	    
-	  	Set previousDisabledValues = new HashSet(Arrays.asList((Object[]) innerData));	  		  	
-	  	Set currentValues = new HashSet(parameterValues == null ? new ArrayList() : Arrays.asList(parameterValues));
-	  	Set disabledItemValues = new HashSet();
+	  	Set<String> previousDisabledValues = new HashSet<String>(Arrays.asList((String[]) innerData));	  		  	
+	  	Set<String> currentValues = new HashSet<String>(parameterValues == null ? new ArrayList<String>() : Arrays.asList(parameterValues));
+	  	Set<String> disabledItemValues = new HashSet<String>();
 	  	
-	  	for (Iterator i = items.iterator(); i.hasNext();) {
-				DisplayItem item = (DisplayItem) i.next();
+	  	for (DisplayItem item : items) {
 				if (item.isDisabled()) disabledItemValues.add(item.getValue());
 			}
 	  	
@@ -235,24 +220,15 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * @param data <code>List&lt;String&gt;</code>.
    * @return <code>String[]</code>.
    */
-  protected String[] convertToStringArray(Collection data) {
-    String[] result = new String[data.size()];
-
-    Iterator i = data.iterator();
-    int j = 0;
-    
-    while (i.hasNext()) {
-    	result[j] = (String) i.next();
-    	j++;
-    }
-    
-    return result;
+  protected String[] convertToStringArray(Collection<String> data) {
+    return data.toArray(new String[data.size()]);
   }
   
   
   
-   protected void validateNotNull() {
-     if (isMandatory() && ((Collection)getRawValue()).isEmpty()) {
+   @Override
+  protected void validateNotNull() {
+     if (isMandatory() && getRawValue().isEmpty()) {
 	      addError(
 	              MessageUtil.localizeAndFormat(
 	              UiLibMessages.MANDATORY_FIELD, 
@@ -264,15 +240,17 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
   /**
    * Converts <code>String[]</code> to <code>List&lt;String&gt;</code>.
    */
-  protected Object fromRequestParameters(String[] parameterValues) {
+  @Override
+  protected List<String> fromRequestParameters(String[] parameterValues) {
     return Arrays.asList(parameterValues);
   }
 
   /**
    * Converts <code>List&lt;String&gt;</code> to <code>String[]</code>.
    */
-  protected String[] toResponseParameters(Object controlValue) {
-    return convertToStringArray((Collection) controlValue);
+  @Override
+  protected String[] toResponseParameters(List<String> controlValue) {
+    return convertToStringArray(controlValue);
   }
 
   //*********************************************************************
@@ -285,11 +263,11 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends StringArrayRequestControl.ViewModel {
+  public class ViewModel extends StringArrayRequestControl<List<String>>.ViewModel {
 
-    private List selectItems;
-    private Map selectItemMap = new HashMap();
-    private Set valueSet = new HashSet();
+    private List<DisplayItem> selectItems;
+    private Map<String, DisplayItem> selectItemMap = new HashMap<String, DisplayItem>();
+    private Set<String> valueSet = new HashSet<String>();
     
     /**
      * Takes an outer class snapshot.     
@@ -297,8 +275,7 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
     public ViewModel() {
       this.selectItems = items;
       
-      for (Iterator i = selectItems.iterator(); i.hasNext(); ) {
-      	DisplayItem displayItem = (DisplayItem) i.next();
+      for (DisplayItem displayItem : selectItems) {
       	selectItemMap.put(displayItem.getValue(), displayItem);
       }
 
@@ -313,16 +290,19 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
      * Returns a <code>List</code> of {@link DisplayItem}s.
      * @return a <code>List</code> of {@link DisplayItem}s.
      */
-    public List getSelectItems() {
+    public List<DisplayItem> getSelectItems() {
       return selectItems;
     }
     
 		public DisplayItem getSelectItemByValue(String value) {
-			return (DisplayItem) selectItemMap.get(value);
+			return selectItemMap.get(value);
 		}
 		
-		public Set getValueSet() {
+		public Set<String> getValueSet() {
 			return valueSet;
 		}
   }
+
+
+
 }

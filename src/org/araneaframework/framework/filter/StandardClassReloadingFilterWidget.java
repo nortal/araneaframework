@@ -53,17 +53,18 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     this.childClassName = childClass;
   }
 
+  @Override
   protected void init() throws Exception {    
     super.init();  
     
     ClassLoader cl = newClassLoader();
-    Class childClass = cl.loadClass(childClassName);
+    Class<Widget> childClass = (Class<Widget>) cl.loadClass(childClassName);
 
-    addWidget("c", new RelocatableDecorator((Widget) childClass.newInstance()));
+    addWidget("c", new RelocatableDecorator(childClass.newInstance()));
   }
   
   private ClassLoader newClassLoader() throws MalformedURLException {
-    ServletContext sctx = (ServletContext) getEnvironment().getEntry(ServletContext.class);
+    ServletContext sctx = getEnvironment().getEntry(ServletContext.class);
     return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")}, ClassLoaderUtil.getDefaultClassLoader());
   }
   
@@ -71,6 +72,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     return deepCopy(newClassLoader(), child);
   }
   
+  @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
     try {
@@ -87,6 +89,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     _getComposite().attach("c", child);
   }
   
+  @Override
   protected void render(OutputData output) throws Exception {
     child._getWidget().render(output);
   }
@@ -119,7 +122,8 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
       this.cl = cl;
     }
 
-    protected Class resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
+    @Override
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
       String name = desc.getName();
       return cl.loadClass(name);
     }
@@ -131,7 +135,8 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
       super(urls, parent);
     }
     
-    public Class loadClass(String name) throws ClassNotFoundException {
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
       if (hasLoadedClass(this, name))
         return super.loadClass(name);
       

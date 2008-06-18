@@ -64,6 +64,7 @@ public class GroupedConstraint extends BaseConstraint {
    * Validates the constraint, if the group is active. If it is not active, the
    * validation succeeds.
    */
+  @Override
   protected void validateConstraint() throws Exception {
     if (!this.conditionalConstraintHelper.isGroupActive(this.group))
       return;
@@ -94,14 +95,17 @@ public class GroupedConstraint extends BaseConstraint {
     this.conditionalConstraintHelper = conditionalConstraintHelper;
   }
 
+  @Override
   public void setEnvironment(Environment environment) {
     constraint.setEnvironment(environment);
   }
 
+  @Override
   public void setCustomErrorMessage(String customErrorMessage) {
     constraint.setCustomErrorMessage(customErrorMessage);
   }
 
+  @Override
   public void clearErrors() {
     constraint.clearErrors();
   }

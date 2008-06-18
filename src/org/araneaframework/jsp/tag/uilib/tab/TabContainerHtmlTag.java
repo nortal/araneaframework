@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.Assert;
@@ -69,7 +68,8 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
     public static final String TAB_LINK_CLASS = "aranea-tab-link";
     
 
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		Assert.isInstanceOf(TabContainerWidget.class, widget, "<ui:tabContainer> must be used only for referring to TabContainerWidget");
 		addContextEntry(TAB_CONTAINER_WIDGET, widget);
@@ -82,10 +82,9 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 		TabContainerWidget tabContainerWidget = (TabContainerWidget) widget;
 
-		Collection tabs = tabContainerWidget.getTabs().values();
+		Collection<TabWidget> tabs = tabContainerWidget.getTabs().values();
 
-		for (Iterator i = tabs.iterator(); i.hasNext();) {
-			TabWidget tabwidget = (TabWidget) i.next();
+		for (TabWidget tabwidget : tabs) {
 			writeTab(out, tabwidget);
 		}
 
@@ -105,7 +104,8 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 		JspUtil.writeEndTag(out, "div");
 	}
 
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		writeUpdateRegionEnd();
 		return super.doEndTag(out);
 	}
@@ -193,7 +193,7 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	protected UiEvent getTabSelectionEvent(TabWidget tab) {
 		UiUpdateEvent result;
 		if (registerUpdateRegions) {
-			List updateRegionNames = new ArrayList(1);
+			List<String> updateRegionNames = new ArrayList<String>(1);
 			updateRegionNames.add(NameUtil.getFullName(fullId, TAB_CONTAINER_UPDATE_REGION_NAME));
 			result = new UiUpdateEvent(TabContainerWidget.TAB_SELECT_EVENT_ID, fullId, tab.getScope().getId().toString(), updateRegionNames);
 		} else {
@@ -226,8 +226,8 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	 *   required = "false" 
 	 *   description = "Inline style for HTML tag."
 	 */
-	public void setStyle(String style) throws JspException {
-		this.style = (String) evaluate("style", style, String.class);
+	public void setStyle(String style){
+		this.style = evaluate("style", style, String.class);
 	}
 	
 	/**
@@ -236,9 +236,9 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	 *   required = "false" 
 	 *   description = "CSS class for tag"
 	 */
-	public void setStyleClass(String styleClass) throws JspException {
+	public void setStyleClass(String styleClass){
 		if (styleClass != null)
-			this.styleClass = (String) evaluate("styleClass", styleClass, String.class);
+			this.styleClass = evaluate("styleClass", styleClass, String.class);
 	}
 
 	protected String getStyleClass() {
@@ -251,7 +251,7 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 	 *   required = "false"
 	 *   description = "Boolean specifying whether the tab selection events should invoke partial render or full render. Default is false (full render)."
 	 */
-	public void setRegisterUpdateRegions(String registerUpdateRegions) throws JspException {
-		this.registerUpdateRegions = ((Boolean) evaluate("registerUpdateRegions", registerUpdateRegions, Boolean.class)).booleanValue();
+	public void setRegisterUpdateRegions(String registerUpdateRegions){
+		this.registerUpdateRegions = (evaluate("registerUpdateRegions", registerUpdateRegions, Boolean.class)).booleanValue();
 	}
 }

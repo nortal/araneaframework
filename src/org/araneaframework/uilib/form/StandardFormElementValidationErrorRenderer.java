@@ -30,17 +30,17 @@ public class StandardFormElementValidationErrorRenderer implements FormElementVa
   private static final long serialVersionUID = 1L;
   public static final StandardFormElementValidationErrorRenderer INSTANCE = new StandardFormElementValidationErrorRenderer();
 
-  public void addError(FormElement element, String error) {
+  public void addError(FormElement<?,?> element, String error) {
     MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
     messageCtx.showMessage(MessageContext.ERROR_TYPE, error);
   }
 
-  public void clearErrors(FormElement element) {
+  public void clearErrors(FormElement<?,?> element) {
     MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
     messageCtx.hideMessages(MessageContext.ERROR_TYPE, element.getErrors());
   }
 
-  public String getClientRenderText(FormElement element) {
+  public String getClientRenderText(FormElement<?,?> element) {
     return "";
   }
 }

@@ -18,6 +18,7 @@ package org.araneaframework.http;
 
 import java.io.Serializable;
 import java.util.Map;
+import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
@@ -37,7 +38,7 @@ public interface JspContext extends Serializable {
   public String getFormAction();
 
   /** @since 1.1 */
-  public Map getTagMapping(String uri);
+  public Map<String, TagInfo> getTagMapping(String uri);
 
   /** @since 1.1 */
   public ConfigurationContext getConfiguration();

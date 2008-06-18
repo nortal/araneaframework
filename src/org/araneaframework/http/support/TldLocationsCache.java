@@ -33,7 +33,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -89,7 +88,7 @@ public class TldLocationsCache {
     private static final String JAR_FILE_SUFFIX = ".jar";
 
     // Names of JARs that are known not to contain any TLDs
-    private static HashSet noTldJars;
+    private static HashSet<String> noTldJars;
 
     /**
      * The mapping of the 'global' tag library URI to the location (resource
@@ -98,7 +97,7 @@ public class TldLocationsCache {
      *    [0] The location
      *    [1] If the location is a jar file, this is the location of the tld.
      */
-    private Hashtable mappings;
+    private Hashtable<String, String[]> mappings;
 
     private boolean initialized;
     private ServletContext ctxt;
@@ -119,7 +118,7 @@ public class TldLocationsCache {
      * Initializes the set of JARs that are known not to contain any TLDs
      */
     static {
-        noTldJars = new HashSet();
+        noTldJars = new HashSet<String>();
         noTldJars.add("ant.jar");
         noTldJars.add("catalina.jar");
         noTldJars.add("catalina-ant.jar");
@@ -188,7 +187,7 @@ public class TldLocationsCache {
     private TldLocationsCache(ServletContext ctxt, boolean redeployMode) {
         this.ctxt = ctxt;
         this.redeployMode = redeployMode;
-        mappings = new Hashtable();
+        mappings = new Hashtable<String, String[]>();
         initialized = false;
     }
 
@@ -228,7 +227,7 @@ public class TldLocationsCache {
         if (!initialized) {
             init();
         }
-        return (String[]) mappings.get(uri);
+        return mappings.get(uri);
     }
 
     /** 
@@ -286,11 +285,11 @@ public class TldLocationsCache {
             if (jspConfig != null) {
                 webtld = jspConfig;
             }
-            Iterator taglibs = webtld.findChildren("taglib");
+            Iterator<TreeNode> taglibs = webtld.findChildren("taglib");
             while (taglibs.hasNext()) {
 
                 // Parse the next <taglib> element
-                TreeNode taglib = (TreeNode) taglibs.next();
+                TreeNode taglib = taglibs.next();
                 String tagUri = null;
                 String tagLoc = null;
                 TreeNode child = taglib.findChild("taglib-uri");
@@ -340,9 +339,9 @@ public class TldLocationsCache {
                 conn.setUseCaches(false);
             }
             jarFile = conn.getJarFile();
-            Enumeration entries = jarFile.entries();
+            Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
-                JarEntry entry = (JarEntry) entries.nextElement();
+                JarEntry entry = entries.nextElement();
                 String name = entry.getName();
                 if (!name.startsWith("META-INF/")) continue;
                 if (!name.endsWith(".tld")) continue;
@@ -400,11 +399,11 @@ public class TldLocationsCache {
     private void processTldsInFileSystem(String startPath)
             throws Exception {
 
-        Set dirList = ctxt.getResourcePaths(startPath);
+        Set<String> dirList = ctxt.getResourcePaths(startPath);
         if (dirList != null) {
-            Iterator it = dirList.iterator();
+            Iterator<String> it = dirList.iterator();
             while (it.hasNext()) {
-                String path = (String) it.next();
+                String path = it.next();
                 if (path.endsWith("/")) {
                     processTldsInFileSystem(path);
                 }
@@ -521,14 +520,14 @@ public class TldLocationsCache {
     }
     
     private void scanPathForJars(String path) throws Exception {      
-      Set paths = ctxt.getResourcePaths(path);
+      Set<String> paths = ctxt.getResourcePaths(path);
 
       // nothing on this path
       if (paths == null)
         return;
 
-      for (Iterator i = paths.iterator(); i.hasNext();) {
-        String entry = (String) i.next();
+      for (Iterator<String> i = paths.iterator(); i.hasNext();) {
+        String entry = i.next();
         
         if (entry.charAt(entry.length() - 1) == '/') {
           scanPathForJars(entry);

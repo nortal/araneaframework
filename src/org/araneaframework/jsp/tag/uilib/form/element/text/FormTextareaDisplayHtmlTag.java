@@ -38,6 +38,7 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
     baseStyleClass = "aranea-textarea-display";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {        
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
@@ -86,6 +87,6 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
    *   description = "Whether even single spaces (blanks) should be replace with &amp;nbsp; entities in output." 
    */
   public void setEscapeSingleSpaces(String escapeSingleSpaces) throws Exception {
-    this.escapeSingleSpaces = ((Boolean)evaluate("escapeSingleSpaces", escapeSingleSpaces, Boolean.class)).booleanValue();
+    this.escapeSingleSpaces = (evaluate("escapeSingleSpaces", escapeSingleSpaces, Boolean.class)).booleanValue();
   }
 }

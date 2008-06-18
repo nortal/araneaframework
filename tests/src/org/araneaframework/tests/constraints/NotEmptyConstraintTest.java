@@ -36,6 +36,7 @@ public class NotEmptyConstraintTest extends TestCase {
   protected FormWidget form;
   protected FormElement textInput;
 
+  @Override
   public void setUp() throws Exception {
     form = new FormWidget();
     textInput = form.createElement("#text", new TextControl(), new StringData(), false);

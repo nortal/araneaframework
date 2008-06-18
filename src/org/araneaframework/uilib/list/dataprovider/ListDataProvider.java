@@ -18,7 +18,6 @@ package org.araneaframework.uilib.list.dataprovider;
 
 import java.io.Serializable;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.model.ListItemsData;
@@ -35,7 +34,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Rein Raudjärv
  */
-public interface ListDataProvider extends Serializable {
+public interface ListDataProvider<T> extends Serializable {
 
 	/**
 	 * This method should initialize the data provider, getting all needed handles and resources.
@@ -43,7 +42,7 @@ public interface ListDataProvider extends Serializable {
 	public void init() throws Exception;
 
 	/**
-	 * This method should deinitialize data provider, releasing all taken handles and resources.
+	 * This method should destroy data provider, releasing all taken handles and resources.
 	 */
 	public void destroy() throws Exception;
 
@@ -117,7 +116,7 @@ public interface ListDataProvider extends Serializable {
 	 * @param count the amount of items to return.
 	 * @return a range of items from the list data provider.
 	 */
-	public ListItemsData getItemRange(Long start, Long count) throws Exception;
+	public ListItemsData<T> getItemRange(Long start, Long count) throws Exception;
 
 	/**
 	 * This method should return the total item count in the list data.
@@ -132,14 +131,14 @@ public interface ListDataProvider extends Serializable {
 	 * @param index the index of item to be returned.
 	 * @return an individual item from the list data.
 	 */
-	public Object getItem(Long index) throws Exception;
+	public T getItem(Long index) throws Exception;
 
 	/**
 	 * This method should return all items from the list data.
 	 * 
 	 * @return all items from the list data.
 	 */
-	public ListItemsData getAllItems() throws Exception;
+	public ListItemsData<T> getAllItems() throws Exception;
 	
 	/** @since 1.1 */
 	public void addDataUpdateListener(DataUpdateListener listener);

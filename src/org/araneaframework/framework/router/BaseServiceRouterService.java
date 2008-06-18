@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
@@ -42,13 +43,13 @@ import org.araneaframework.framework.ManagedServiceContext;
 public abstract class BaseServiceRouterService extends BaseService {
   private static final Log log = LogFactory.getLog(BaseServiceRouterService.class);
   
-  private Map serviceMap;
+  private Map<String, Service> serviceMap;
   protected Object defaultServiceId;
   
   /**
    * Sets the service map. Key is the id of the service, value is the service.
    */
-  public void setServiceMap(Map serviceMap) {
+  public void setServiceMap(Map<String, Service> serviceMap) {
      this.serviceMap = serviceMap;
   }
   
@@ -65,22 +66,24 @@ public abstract class BaseServiceRouterService extends BaseService {
    * <code>getChildEnvironment(Object serviceId)</code>. The serviceId is the key
    * of the service in the service map. 
    */
+  @Override
   protected void init() throws Exception {
     // adds serviceMap entries as child services
-    Iterator ite = serviceMap.entrySet().iterator();
+    Iterator<Map.Entry<String, Service>> ite = serviceMap.entrySet().iterator();
     while(ite.hasNext()) {
-      Map.Entry entry = (Map.Entry) ite.next();
-      _addComponent(entry.getKey(), (Service) entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
+      Map.Entry<String, Service> entry = ite.next();
+      _addComponent(entry.getKey(), entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
     }
     // free extra references
     serviceMap = null;
   }
   
+  @Override
   protected void propagate(Message message) throws Exception {
-    Iterator ite =  _getChildren().entrySet().iterator();
+    Iterator<Map.Entry<Object, Component>> ite =  _getChildren().entrySet().iterator();
     while(ite.hasNext()) {
-      Map.Entry entry = (Map.Entry) ite.next();
-      message.send(null, (Service) entry.getValue());
+      Map.Entry<Object, Component> entry = ite.next();
+      message.send(null, entry.getValue());
     }
   }
   
@@ -89,6 +92,7 @@ public abstract class BaseServiceRouterService extends BaseService {
    * service is determined by <code>getServiceId(input)</code>. If the service id cannot be
    * determined then the default id is used set via <code>setDefaultServiceId(Object)</code>.
    */
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Object currentServiceId = getServiceId(input);
 
@@ -106,7 +110,7 @@ public abstract class BaseServiceRouterService extends BaseService {
   }
   
   // Callbacks 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
     return new StandardEnvironment(getEnvironment(), ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
   }
   
@@ -140,7 +144,7 @@ public abstract class BaseServiceRouterService extends BaseService {
    * Every service has its own key under which the service service id can be found in the request.
    * This method returns that key. 
    */
-  protected abstract Object getServiceKey() throws Exception;
+  protected abstract String getServiceKey() throws Exception;
   
   protected void closeService(Object serviceId) {
     ((Service)_getChildren().get(serviceId))._getComponent().destroy();
@@ -148,21 +152,21 @@ public abstract class BaseServiceRouterService extends BaseService {
   }
   
   protected class ServiceRouterContextImpl implements ManagedServiceContext {
-    private Object currentServiceId;
+    private String currentServiceId;
     
-    protected ServiceRouterContextImpl(Object serviceId) {
+    protected ServiceRouterContextImpl(String serviceId) {
       currentServiceId = serviceId;
     }
     
-    public Object getCurrentId() {
+    public String getCurrentId() {
       return currentServiceId;
     }
     
-    public Service getService(Object id) {
+    public Service getService(String id) {
       return (Service)_getChildren().get(id);
     }
     
-    public Service addService(Object id, Service service) {
+    public Service addService(String id, Service service) {
       try {
         _addComponent(id, service, null, getChildEnvironment(id));
       }
@@ -172,7 +176,7 @@ public abstract class BaseServiceRouterService extends BaseService {
       return service;
     }
     
-    public Service addService(Object id, Service service, Long timeToLive) {
+    public Service addService(String id, Service service, Long timeToLive) {
       Service result = addService(id, service);
       if (log.isWarnEnabled()) {
         log.warn(getClass().getName() + 
@@ -182,7 +186,7 @@ public abstract class BaseServiceRouterService extends BaseService {
       return result;
     }
 
-	public void close(Object id) {
+	public void close(String id) {
       closeService(id);
     }
   }

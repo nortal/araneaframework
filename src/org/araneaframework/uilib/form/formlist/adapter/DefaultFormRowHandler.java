@@ -33,8 +33,8 @@ public abstract class DefaultFormRowHandler implements FormRowHandler {
 	public void initAddForm(FormWidget addForm) throws Exception {}
 	
 	public void addRow(FormWidget rowForm) throws Exception {}	
-	public void saveRows(Map editableRows) throws Exception {}
-	public void deleteRows(Set keys) throws Exception {}
+	public void saveRows(Map<Object, FormRow> editableRows) throws Exception {}
+	public void deleteRows(Set<Object> keys) throws Exception {}
 
 	/**
 	 * Opens a closed row or resets and closes open row. 

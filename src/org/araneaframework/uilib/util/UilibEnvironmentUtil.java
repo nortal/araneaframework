@@ -30,22 +30,22 @@ import org.araneaframework.uilib.tree.TreeNodeContext;
  */
 public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
 	public static ConfigurationContext getConfigurationContext(Environment env) {
-		return (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+		return env.getEntry(ConfigurationContext.class);
 	}
 
 	public static FormContext getFormContext(Environment env) {
-		return (FormContext) env.getEntry(FormContext.class);
+		return env.getEntry(FormContext.class);
 	}
 	
 	public static TreeContext getTreeContext(Environment env) {
-		return (TreeContext) env.getEntry(TreeContext.class);
+		return env.getEntry(TreeContext.class);
 	}
 	
 	public static TreeNodeContext getTreeNodeContext(Environment env) {
-		return (TreeNodeContext) env.getEntry(TreeNodeContext.class);
+		return env.getEntry(TreeNodeContext.class);
 	}
 	
 	public static MenuContext getMenuContext(Environment env) {
-		return (MenuContext) env.getEntry(MenuContext.class);
+		return env.getEntry(MenuContext.class);
 	}
 }

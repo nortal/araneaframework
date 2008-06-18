@@ -27,15 +27,24 @@ import java.util.List;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class ListItemsData implements Serializable {
+public class ListItemsData<T> implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/** @since 1.1 */
+	/** 
+	 * @since 1.1
+	 * @deprecated use {@link #emptyListItemsData()} 
+	 * 
+	 */
 	public static final ListItemsData EMPTY =
 		new ListItemsData(Collections.EMPTY_LIST, new Long(0L));
 
-	private List itemRange;
+	public static <T> ListItemsData<T> emptyListItemsData(){
+	  List<T> emptyList = Collections.emptyList();
+    return new ListItemsData<T>(emptyList, new Long(0L));
+	}
+	
+	private List<T> itemRange;
 
 	private Long totalCount;
 	
@@ -43,7 +52,7 @@ public class ListItemsData implements Serializable {
 	public ListItemsData() {}
 	
 	/** @since 1.0.11 */
-	public ListItemsData(List itemRange, Long totalCount) {
+	public ListItemsData(List<T> itemRange, Long totalCount) {
 		this.itemRange = itemRange;
 		this.totalCount = totalCount;
 	}
@@ -51,7 +60,7 @@ public class ListItemsData implements Serializable {
 	/**
 	 * @return Returns the itemRange.
 	 */
-	public List getItemRange() {
+	public List<T> getItemRange() {
 		return this.itemRange;
 	}
 
@@ -59,7 +68,7 @@ public class ListItemsData implements Serializable {
 	 * @param itemRange
 	 *            The itemRange to set.
 	 */
-	public void setItemRange(List itemRange) {
+	public void setItemRange(List<T> itemRange) {
 		this.itemRange = itemRange;
 	}
 

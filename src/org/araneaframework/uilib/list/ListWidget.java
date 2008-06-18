@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
@@ -67,7 +66,7 @@ import org.araneaframework.uilib.util.Event;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Rein Raudjärv
  */
-public class ListWidget extends BaseUIWidget implements ListContext {
+public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
 	private static final long serialVersionUID = 1L;
 
@@ -95,7 +94,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	public static final String ORDER_FORM_NAME = "orderForm";
 
 	protected ListStructure listStructure;							// should not be accessible by public methods
-	protected ListDataProvider dataProvider;
+	protected ListDataProvider<T> dataProvider;
 
 	protected TypeHelper typeHelper;
 	protected FilterHelper filterHelper; 
@@ -104,11 +103,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	protected FormWidget form = new FormWidget();					// is transfomed into filter info Map and vice-versa
 	protected OrderInfo orderInfo = new OrderInfo();
 
-	protected List itemRange;
-	protected Map requestIdToRow = new HashMap();
-	protected List selectedItems = new LinkedList();
+	protected List<T> itemRange;
+	protected Map<String, T> requestIdToRow = new HashMap<String, T>();
+	protected List<T> selectedItems = new LinkedList<T>();
 	
-	private List initEvents = new ArrayList();
+	private List<Event> initEvents = new ArrayList<Event>();
 	
 	private boolean changed = true;
     private boolean selectFromMultiplePages = false;
@@ -142,6 +141,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @see #getSelectedRows()
    * @see #getSelectedRow()
    */
+  @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
 
@@ -152,13 +152,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
     // Path is used to read only those value-names that start with given prefix:
     Path path = new StandardPath(listPath + "." + LIST_CHECK_SCOPE);
 
-    Map listData = input.getScopedData(path);
+    Map<String, String> listData = input.getScopedData(path);
 
-    List rowKeys = new LinkedList();
+    List<Integer> rowKeys = new LinkedList<Integer>();
 
     // Now we read index numbers of selected rows:
-    for (Iterator i = listData.entrySet().iterator(); i.hasNext();) {
-      Map.Entry reqParam = (Map.Entry) i.next();
+    for (Map.Entry<String, String> reqParam : listData.entrySet()) {
 
       if (reqParam.getKey() != null
           && LIST_CHECK_VALUE.equals(reqParam.getValue())) {
@@ -187,8 +186,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
     }
 
     // Let's store the selected rows:
-    for (Iterator i = rowKeys.iterator(); i.hasNext(); ) {
-      Object rowItem = getRowFromRequestId(i.next().toString());
+    for (Iterator<Integer> i = rowKeys.iterator(); i.hasNext(); ) {
+      T rowItem = getRowFromRequestId(i.next().toString());
       if (!this.selectedItems.contains(rowItem)) {
         this.selectedItems.add(rowItem);
       }
@@ -208,11 +207,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
     if (!listData.isEmpty()) {
 
       listData.get(LIST_RADIO_SCOPE);
-      String rowKey = (String) listData.get(LIST_RADIO_SCOPE);
+      String rowKey = listData.get(LIST_RADIO_SCOPE);
 
       if (rowKey != null) {
         rowKey = rowKey.substring(listPath.length() + LIST_RADIO_SCOPE.length() + 2);
-        Object rowItem = getRowFromRequestId(rowKey);
+        T rowItem = getRowFromRequestId(rowKey);
         
         // In case of radio buttons, we discard the previous value,
         // because only one row can be selected:
@@ -279,7 +278,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
-  public List getSelectedRows() {
+  public List<T> getSelectedRows() {
     return this.selectedItems;
   }
 
@@ -295,11 +294,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
-  public Object getSelectedRow() {
+  public T getSelectedRow() {
     Assert.isTrue(this.selectedItems.size() <= 1,
         "Selected rows count was expected to be not more than one.");
 
-    Object rowItem = null;
+    T rowItem = null;
 
     if (this.selectedItems.size() == 1) {
       rowItem = this.selectedItems.get(0);
@@ -313,7 +312,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * load.
    */
   public void resetSelectedRows() {
-    this.selectedItems = new LinkedList();
+    this.selectedItems = new LinkedList<T>();
     removeViewData(LIST_CHECK_SCOPE);
     removeViewData(LIST_RADIO_SCOPE);
   }
@@ -345,7 +344,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * 
 	 * @return the {@link ListDataProvider}used to fill the list with data.
 	 */
-	public ListDataProvider getDataProvider() {
+	public ListDataProvider<T> getDataProvider() {
 		return this.dataProvider;
 	}
 
@@ -354,7 +353,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * 
 	 * @param dataProvider the {@link ListDataProvider}used to fill the list with data.
 	 */
-	public void setDataProvider(ListDataProvider dataProvider) {
+	public void setDataProvider(ListDataProvider<T> dataProvider) {
 		if (this.dataProvider != null)
 			this.dataProvider.removeDataUpdateListener(dataProviderDataUpdateListener);
 
@@ -497,7 +496,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * 
 	 * @return {@link ListField}s.
 	 */
-	public List getFields() {
+	public List<ListField> getFields() {
 		return getListStructure().getFieldList();
 	}
 
@@ -568,7 +567,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @param type
 	 *            list field type.
 	 */
-	public FieldFilterHelper addField(String id, String label, Class type) {
+	public FieldFilterHelper addField(String id, String label, Class<?> type) {
 		getListStructure().addField(id, label, type);
 		return getFilterHelper(id);
 	}
@@ -585,7 +584,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @param orderable
 	 *            whether this list field should be orderable or not. 
 	 */	
-	public FieldFilterHelper addField(String id, String label, Class type, boolean orderable) {
+	public FieldFilterHelper addField(String id, String label, Class<?> type, boolean orderable) {
 		getListStructure().addField(id, label, type, orderable);
 		return getFilterHelper(id);
 	}
@@ -647,14 +646,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 *            field identifier.
 	 * @return field type
 	 */
-	public Class getFieldType(String fieldId) {
+	public Class<?> getFieldType(String fieldId) {
 		return this.typeHelper.getFieldType(fieldId);
 	}
 
 	/**
 	 * Returns {@link Comparator} for the specified field.
 	 */
-	public Comparator getFieldComparator(String fieldId) {
+	public Comparator<?> getFieldComparator(String fieldId) {
 		return this.typeHelper.getFieldComparator(fieldId);
 	}
 
@@ -827,14 +826,14 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		if (this.dataProvider == null)
 			throw new IllegalStateException("DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
 
-		ListItemsData itemRangeData;
+		ListItemsData<T> itemRangeData;
 		
 		try {
 			itemRangeData = this.dataProvider.getItemRange(new Long(this.sequenceHelper
 					.getCurrentPageFirstItemIndex()), new Long(this.sequenceHelper.getItemsOnPage()));
 		}
 		catch (Exception e) {
-			throw new AraneaRuntimeException(e);
+		  throw ExceptionUtil.uncheckException(e);
 		}
 
 		this.itemRange = itemRangeData.getItemRange();
@@ -849,7 +848,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * 
 	 * @return the current item range.
 	 */
-	public List getItemRange() {
+	public List<T> getItemRange() {
 		if (itemRange == null || this.checkChanged() || sequenceHelper.checkChanged() || typeHelper.checkChanged() || filterHelper.checkChanged()) {
 			refreshCurrentItemRange();
 
@@ -869,7 +868,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * @param requestId request identifier.
 	 * @return list row object.
 	 */
-	public Object getRowFromRequestId(String requestId) {	
+	public T getRowFromRequestId(String requestId) {	
 		return this.requestIdToRow.get(requestId);
 	}
 
@@ -883,15 +882,15 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 			event.run();
 		} else if (!isInitialized()){
 			if (initEvents == null)
-				initEvents = new ArrayList();
+				initEvents = new ArrayList<Event>();
 			initEvents.add(event);
 		}		
 	}
 	
 	protected void runInitEvents() {
 		if (initEvents != null) {
-			for (Iterator it = initEvents.iterator(); it.hasNext();) {
-				Runnable event = (Runnable) it.next();
+			for (Iterator<Event> it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = it.next();
 				event.run();
 			}
 		}
@@ -899,11 +898,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 	
 	/**
-     * Initilizes the list, initializing contained filter form and the
+     * Initializes the list, initializing contained filter form and the
      * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}and
      * getting the initial item range.
      */
-	protected void init() throws Exception {
+	@Override
+  protected void init() throws Exception {
 		this.sequenceHelper = createSequenceHelper();
 
 		addEventListener("nextPage", new NextPageEventHandler());
@@ -949,10 +949,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 			this.form = new FormWidget();
 		}
 
-		FormElement filterButton = this.form.addElement(FILTER_BUTTON_ID, UiLibMessages.LIST_FILTER_BUTTON_LABEL, new ButtonControl(), null, false);
+		FormElement<String, ?> filterButton = this.form.addElement(FILTER_BUTTON_ID, UiLibMessages.LIST_FILTER_BUTTON_LABEL, new ButtonControl(), null, false);
 		((ButtonControl) (filterButton.getControl())).addOnClickEventListener(new FilterEventHandler());
 
-		FormElement clearButton = this.form.addElement(FILTER_RESET_BUTTON_ID, UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL, new ButtonControl(), null, false);
+		FormElement<String,?> clearButton = this.form.addElement(FILTER_RESET_BUTTON_ID, UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL, new ButtonControl(), null, false);
 		((ButtonControl) (clearButton.getControl())).addOnClickEventListener(new FilterClearEventHandler());
 
 		this.form.markBaseState();
@@ -975,10 +975,11 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	/**
-	 * Destoys the list and contained data provider and filter form.
+	 * Destroys the list and contained data provider and filter form.
 	 * @throws Exception 
 	 */
-	protected void destroy() throws Exception {
+	@Override
+  protected void destroy() throws Exception {
         if (this.dataProvider != null)
         	this.dataProvider.destroy();
         
@@ -997,7 +998,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * 
 	 * @return {@link ViewModel}- list widget view model.
 	 */
-	public Object getViewModel() {
+	@Override
+  public ViewModel getViewModel() {
 		return new ViewModel();
 	}
 
@@ -1010,17 +1012,19 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected class NextPageEventHandler extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextPage();
 		}
 	}
 
 	/**
-	 * Handles page preceeding.
+	 * Handles page preceding.
 	 */
 	protected class PreviousPageEventHandler  extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToPreviousPage();
 		}
 	}
@@ -1030,17 +1034,19 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected class NextBlockEventHandler  extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToNextBlock();
 		}
 	}
 
 	/**
-	 * Handles block preceeding.
+	 * Handles block preceding.
 	 */
 	protected class PreviousBlockEventHandler  extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToPreviousBlock();
 		}
 	}
@@ -1050,7 +1056,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected class FirstPageEventHandler  extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToFirstPage();
 		}
 	}
@@ -1060,7 +1067,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected class LastPageEventHandler  extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			sequenceHelper.goToLastPage();
 		}
 	}
@@ -1070,7 +1078,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 */
 	protected class JumpToPageEventHandler  extends StandardEventListener {
 
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			int page;
 			try {
 				page = Integer.parseInt(eventParam);
@@ -1086,7 +1095,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Handles showing all records.
 	 */
 	protected class ShowAllEventHandler  extends StandardEventListener {
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 		  filter();
       sequenceHelper.showFullPages();
 		}
@@ -1096,7 +1106,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	 * Handles showing only current records.
 	 */
 	protected class ShowSliceEventHandler extends StandardEventListener {
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 		  filter();
       sequenceHelper.showDefaultPages();
 		}
@@ -1110,8 +1121,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		boolean ascending = true;
 
-		List orderFields = orderInfo.getFields();
-		OrderInfoField currentOrderField = (OrderInfoField) (orderFields.size() > 0 ? orderFields.get(0) : null);
+		List<OrderInfoField> orderFields = orderInfo.getFields();
+		OrderInfoField currentOrderField = (orderFields.size() > 0 ? orderFields.get(0) : null);
 		if (currentOrderField != null) {
 			if (currentOrderField.getId().equals(fieldName) && currentOrderField.isAscending()) {
 				ascending = false;
@@ -1123,14 +1134,12 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		propagateListDataProviderWithOrderInfo(orderInfo);		
 
-		// XXX: why is this commented code here?
-		// listDataProvider.setOrderInfo(orderInfo);   
-
 		filter();
 	}
 
 	protected class OrderEventHandler extends StandardEventListener {
-		public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+		@Override
+    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
 			// single column ordering
 			if (eventParam.length() > 0) {
 				order(eventParam);
@@ -1167,8 +1176,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 			return;
 
 		requestIdToRow.clear();
-		for (ListIterator i = itemRange.listIterator(); i.hasNext();) {
-			Object row = i.next();
+		for (ListIterator<T> i = itemRange.listIterator(); i.hasNext();) {
+			T row = i.next();
 			requestIdToRow.put(Integer.toString(i.previousIndex()), row);
 		}
 	}
@@ -1201,8 +1210,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 	}
 
 	protected static void clearForm(FormWidget compositeFormElement) {
-		for (Iterator i = compositeFormElement.getElements().values().iterator(); i.hasNext();) {
-			GenericFormElement element = (GenericFormElement) i.next();
+		for (GenericFormElement element : compositeFormElement.getElements().values()) {
 
 			if (element instanceof FormElement) {
 				((FormElement) element).setValue(null);
@@ -1261,7 +1269,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
 		private static final long serialVersionUID = 1L;
 
-		private List itemRange;
+		private List<T> itemRange;
 		private SequenceHelper.ViewModel sequence;
 		private ListStructure.ViewModel listStructure;
 		private OrderInfo.ViewModel orderInfo;
@@ -1284,7 +1292,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 		 * 
 		 * @return item range.
 		 */
-		public List getItemRange() {
+		public List<T> getItemRange() {
 			return itemRange;
 		}
 

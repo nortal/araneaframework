@@ -17,13 +17,13 @@ import org.xml.sax.XMLReader;
 public class ResourceConfigurationParsingTest extends TestCase {
 	private ExternalResource struct;
 	
-	private static final List availableGroups = new ArrayList();
+	private static final List<String> availableGroups = new ArrayList<String>();
 	static {
 		availableGroups.add("common-styles");
 		availableGroups.add("common-js");
 	}
 	
-	private static final List availableFilesInGroup = new ArrayList();
+	private static final List<String> availableFilesInGroup = new ArrayList<String>();
 	static {
 		availableFilesInGroup.add("js/mce.js");
 		availableFilesInGroup.add("js/calendar.js");
@@ -32,7 +32,7 @@ public class ResourceConfigurationParsingTest extends TestCase {
 		availableFilesInGroup.add("js/behaviour.js");
 	}
 	
-	private static final List allFiles = new ArrayList();
+	private static final List<String> allFiles = new ArrayList<String>();
 	static {
 		allFiles.add("gfx/alfa.gif");
 		allFiles.add("gfx/beta.gif");
@@ -47,7 +47,8 @@ public class ResourceConfigurationParsingTest extends TestCase {
 		allFiles.addAll(availableFilesInGroup);
 	}
 	
-	public void setUp() throws Exception {
+	@Override
+  public void setUp() throws Exception {
 		XMLReader xr = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 		ExternalResourceConfigurationHandler handler = new ExternalResourceConfigurationHandler();
 		
@@ -81,8 +82,8 @@ public class ResourceConfigurationParsingTest extends TestCase {
 	}
 	
 	public void testAllowedFilesContains() {		
-		for (Iterator iter = allFiles.iterator(); iter.hasNext();) {
-			String file = (String)iter.next();
+		for (Iterator<String> iter = allFiles.iterator(); iter.hasNext();) {
+			String file = iter.next();
 			if (!struct.isAllowedFile(file))
 				fail("File is reported not allowed although in allowed list");
 		}

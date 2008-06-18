@@ -24,18 +24,18 @@ import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class EditableBeanListWidget extends BeanListWidget {
+public class EditableBeanListWidget<T> extends BeanListWidget<T> {
 
-	protected BeanFormListWidget formList;
+	protected BeanFormListWidget<T> formList;
 
 	//*********************************************************************
 	//* CONSTRUCTORS  
 	//*********************************************************************	
 
-	public EditableBeanListWidget(FormRowHandler rowHandler, Class beanClass) {
+	public EditableBeanListWidget(FormRowHandler rowHandler, Class<T> beanClass) {
 		super(beanClass);
     
-    formList = new BeanFormListWidget(rowHandler, new ListWidgetFormListModel(this), beanClass);
+    formList = new BeanFormListWidget<T>(rowHandler, new ListWidgetFormListModel(this), beanClass);
 	}
 
 	//*********************************************************************
@@ -46,7 +46,7 @@ public class EditableBeanListWidget extends BeanListWidget {
 	 * Returns the editable row manager.
 	 * @return the editable row manager.
 	 */
-	public BeanFormListWidget getFormList() {
+	public BeanFormListWidget<T> getFormList() {
 		return formList;
 	}
 
@@ -58,7 +58,8 @@ public class EditableBeanListWidget extends BeanListWidget {
 	//* WIDGET METHODS
 	//*********************************************************************  	
 
-	protected void init() throws Exception {
+	@Override
+  protected void init() throws Exception {
 		super.init();
 
     Assert.notNull(formList, "You must provide a form row handler to the editable list!");

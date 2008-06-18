@@ -35,15 +35,18 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 	
   private String pathInfo;
   
-	protected Object getServiceIdFromInput(InputData input) throws Exception {
+	@Override
+  protected Object getServiceIdFromInput(InputData input) throws Exception {
 		return getPathInfo(input)[0];
 	}
   
-	protected Object getServiceKey() throws Exception {
+	@Override
+  protected String getServiceKey() throws Exception {
 		return "pathInfoServiceId";
 	}
 
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
+	@Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
     pathInfo = getPathInfo(input)[1];
     super.action(path, input, output);
 	}
@@ -74,14 +77,15 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 		return new String[]{serviceId, pathInfo};
 	}
 
-	protected Environment getChildEnvironment(Object serviceId) throws Exception {
-		Map entries = new HashMap();    
+	@Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
+		Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();    
 		entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
 		return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
 	}
   
 	private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements PathInfoServiceContext {
-		protected ServiceRouterContextImpl(Object serviceId) {
+		protected ServiceRouterContextImpl(String serviceId) {
 			super(serviceId);
 		}
     public String getPathInfo() {

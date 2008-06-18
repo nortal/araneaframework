@@ -38,6 +38,7 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   /** @since 1.1 */ 
   protected String radioId;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -58,8 +59,8 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
    *   required = "false"
    *   description = "Select item value." 
    */
-  public void setValue(String value) throws JspException  {
-    this.value = (String)evaluateNotNull("value", value, String.class);
+  public void setValue(String value)  throws JspException {
+    this.value = evaluateNotNull("value", value, String.class);
   }
   
   /**
@@ -69,8 +70,8 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
    *   description = "The HTML id radio button to which this label belongs."
    * @since 1.1  
    */
-  public void setRadioId(String radioId) throws JspException  {
-    this.radioId = (String)evaluate("radioId", radioId, String.class);
+  public void setRadioId(String radioId) {
+    this.radioId = evaluate("radioId", radioId, String.class);
   }
   
   /** @since 1.1 */

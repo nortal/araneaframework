@@ -54,6 +54,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
 
   protected boolean checked = false;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -130,7 +131,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    */
   protected boolean isSelected() throws JspException {
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     return this.checked || rowRequestId.equals(viewModel.getData().get(SELECTION_SCOPE));
   }
 
@@ -142,7 +143,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   description = "Specifies a custom label for the radio button."
    */
   public void setLabelId(String labelId) throws JspException {
-    this.labelId = (String) evaluateNotNull("labelId", labelId, String.class);
+    this.labelId = evaluateNotNull("labelId", labelId, String.class);
   }
 
   /**
@@ -153,7 +154,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   description = "Specifies whether the radio button should be rendered as disabled. Default is active state."
    */
   public void setDisabled(String disabled) throws JspException {
-    Boolean tempResult = (Boolean) evaluateNotNull("disabled", disabled, Boolean.class);
+    Boolean tempResult = evaluateNotNull("disabled", disabled, Boolean.class);
     this.disabled = tempResult.booleanValue();
   }
 
@@ -165,7 +166,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   description = "Specifies custom <code>onclick</code> event. Default is none."
    */
   public void setOnclick(String onclick) throws JspException {
-    this.onclick = (String) evaluateNotNull("onclick", onclick, String.class);
+    this.onclick = evaluateNotNull("onclick", onclick, String.class);
   }
 
   /**
@@ -176,7 +177,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
    */
   public void setAccessKey(String accessKey) throws JspException {
-    this.accesskey = (String) evaluateNotNull("accessKey", accessKey, String.class);
+    this.accesskey = evaluateNotNull("accessKey", accessKey, String.class);
   }
 
   /**
@@ -187,7 +188,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   description = "Specifies the initial value of the radio button. Default is unchecked."
    */
   public void setChecked(String checked) throws JspException {
-    Boolean tempResult = (Boolean) evaluateNotNull("checked", checked, Boolean.class);
+    Boolean tempResult = evaluateNotNull("checked", checked, Boolean.class);
     this.checked = tempResult.booleanValue();
   }
 
@@ -199,7 +200,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    *   description = "HTML tabindex for the radio button. This value must be a number between 0 and 32767."
    */   
   public void setTabindex(String tabindex) throws JspException {
-    this.tabindex = (String) evaluateNotNull("tabindex", tabindex, String.class);
+    this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 
 }

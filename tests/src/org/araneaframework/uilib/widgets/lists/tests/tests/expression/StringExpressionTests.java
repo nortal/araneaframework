@@ -36,7 +36,8 @@ public class StringExpressionTests extends TestCase {
 	private Expression part2expr;
 	private Expression part3expr;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 		
 		this.part1expr = new MockValueExpression("part1");
@@ -44,7 +45,8 @@ public class StringExpressionTests extends TestCase {
 		this.part3expr = new MockValueExpression("part3");
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 		this.part1expr = null;
 		this.part2expr = null;

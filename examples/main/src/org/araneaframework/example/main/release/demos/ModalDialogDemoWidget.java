@@ -45,7 +45,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 
     form = new FormWidget();
 
-    FormElement el = form.createElement("common.Textbox", new TextControl(), new StringData(), false);
+    FormElement<String, String> el = form.createElement("common.Textbox", new TextControl(), new StringData(), false);
     form.addElement("textbox1", el);
 
     form.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
@@ -93,6 +93,6 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   }
   
   public OverlayContext getOverlayCtx() {
-    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+    return getEnvironment().requireEntry(OverlayContext.class);
   }
 }

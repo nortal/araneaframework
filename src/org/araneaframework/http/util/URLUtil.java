@@ -46,7 +46,7 @@ public abstract class URLUtil {
   }
 
   public static String[] splitURI(String uri) {
-    List result = new ArrayList();
+    List<String> result = new ArrayList<String>();
     uri = normalizeURI(uri);
 
     StringTokenizer tokenizer = new StringTokenizer(uri, "/");
@@ -54,17 +54,17 @@ public abstract class URLUtil {
       result.add(tokenizer.nextToken());
     }
 
-    return (String[]) result.toArray(new String[result.size()]);
+    return result.toArray(new String[result.size()]);
   }
   
-  public static String parametrizeURI(String uri, Map parameters) {
+  public static String parametrizeURI(String uri, Map<String, String> parameters) {
     StringBuffer sb = new StringBuffer(uri);
     
     if (parameters != null && parameters.size() > 0) {
       sb.append('?');
-      for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
-        Map.Entry pair = (Map.Entry) i.next();
-        sb.append((String)pair.getKey());
+      for (Iterator<Map.Entry<String, String>> i = parameters.entrySet().iterator(); i.hasNext();) {
+        Map.Entry<String, String> pair = i.next();
+        sb.append(pair.getKey());
         sb.append('=');
         sb.append(pair.getValue());
         if (i.hasNext())

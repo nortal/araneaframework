@@ -37,9 +37,9 @@ public class StandardControlEventListenerAdapter implements EventListener {
 
   private static final Log log = LogFactory.getLog(StandardControlEventListenerAdapter.class);
 
-  private Collection onClickEventListeners;
+  private Collection<OnClickEventListener> onClickEventListeners;
 
-  private Collection onChangeEventListeners;
+  private Collection<OnChangeEventListener> onChangeEventListeners;
 
   /**
    * Adds a {@link OnChangeEventListener}, which is called when the control
@@ -51,7 +51,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
   public void addOnChangeEventListener(
       OnChangeEventListener onChangeEventListener) {
     if (onChangeEventListeners == null)
-      onChangeEventListeners = new ArrayList(1);
+      onChangeEventListeners = new ArrayList<OnChangeEventListener>(1);
     onChangeEventListeners.add(onChangeEventListener);
   }
 
@@ -93,7 +93,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
    */
   public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
     if (onClickEventListeners == null)
-      onClickEventListeners = new ArrayList(1);
+      onClickEventListeners = new ArrayList<OnClickEventListener>(1);
     onClickEventListeners.add(onClickEventListener);
   }
 
@@ -133,13 +133,13 @@ public class StandardControlEventListenerAdapter implements EventListener {
   public void processEvent(Object eventId, InputData input) throws Exception {
     if (OnChangeEventListener.ON_CHANGE_EVENT.equals(eventId)) {
       if (onChangeEventListeners != null)
-        for (Iterator i = onChangeEventListeners.iterator(); i.hasNext();) {
-          ((OnChangeEventListener) i.next()).onChange();
+        for (Iterator<OnChangeEventListener> i = onChangeEventListeners.iterator(); i.hasNext();) {
+          i.next().onChange();
         }
     } else if (OnClickEventListener.ON_CLICK_EVENT.equals(eventId)) {
       if (onClickEventListeners != null)
-        for (Iterator i = onClickEventListeners.iterator(); i.hasNext();) {
-          ((OnClickEventListener) i.next()).onClick();
+        for (Iterator<OnClickEventListener> i = onClickEventListeners.iterator(); i.hasNext();) {
+          i.next().onClick();
         }
     } else {
       log.warn("Cannot deliver event as no event listeners were registered "

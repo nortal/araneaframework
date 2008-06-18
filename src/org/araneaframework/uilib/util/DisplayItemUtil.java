@@ -18,7 +18,6 @@ package org.araneaframework.uilib.util;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import org.apache.commons.collections.Transformer;
@@ -48,17 +47,17 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param valueName the name of the bean field corresponding to the (submitted) value of the select item.
    * @param displayStringName the name of the bean field corresponding to the displayed string (label) of the select item.
    */
-  public static void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection beanCollection, String valueName, String displayStringName) {
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection<T> beanCollection, String valueName, String displayStringName) {
     Assert.notNullParam(displayItemContainer, "displayItemContainer");
     Assert.noNullElementsParam(beanCollection, "beanCollection");
     Assert.notEmptyParam(valueName, "valueName");
     Assert.notEmptyParam(displayStringName, "displayStringName");
     
     if (beanCollection.size() == 0) return;
-    BeanMapper beanMapper = new BeanMapper(beanCollection.iterator().next().getClass());
+    BeanMapper<T> beanMapper = new BeanMapper<T>(beanCollection.iterator().next());
     
-    Transformer valueTransformer = new BeanToPropertyValueTransformer(beanMapper, valueName);
-    Transformer displayTransformer = new BeanToPropertyValueTransformer(beanMapper, displayStringName);
+    Transformer valueTransformer = new BeanToPropertyValueTransformer<T>(beanMapper, valueName);
+    Transformer displayTransformer = new BeanToPropertyValueTransformer<T>(beanMapper, displayStringName);
     addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, displayTransformer);
   }
 
@@ -73,15 +72,15 @@ public class DisplayItemUtil implements java.io.Serializable {
    * 
    * @since 1.1
    */
-  public static void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection beanCollection, String valueName, Transformer displayTransformer) {
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection<T> beanCollection, String valueName, Transformer displayTransformer) {
     Assert.notNullParam(displayItemContainer, "displayItemContainer");
     Assert.noNullElementsParam(beanCollection, "beanCollection");
     Assert.notEmptyParam(valueName, "valueName");
     Assert.notNullParam(displayTransformer, "displayTransformer");
     
     if (beanCollection.size() == 0) return;
-    BeanMapper beanMapper = new BeanMapper(beanCollection.iterator().next().getClass());
-    Transformer valueTransformer = new BeanToPropertyValueTransformer(beanMapper, valueName);
+    BeanMapper<T> beanMapper = new BeanMapper<T>(beanCollection.iterator().next());
+    Transformer valueTransformer = new BeanToPropertyValueTransformer<T>(beanMapper, valueName);
     addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, displayTransformer);
   }
   
@@ -96,15 +95,15 @@ public class DisplayItemUtil implements java.io.Serializable {
    * 
    * @since 1.1
    */
-  public static void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection beanCollection, Transformer valueTransformer, String displayStringName) {
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection<T> beanCollection, Transformer valueTransformer, String displayStringName) {
     Assert.notNullParam(displayItemContainer, "displayItemContainer");
     Assert.noNullElementsParam(beanCollection, "beanCollection");
     Assert.notNullParam(valueTransformer, "valueTransformer");
     Assert.notEmptyParam(displayStringName, "displayStringName");
     
     if (beanCollection.size() == 0) return;
-    BeanMapper beanMapper = new BeanMapper(beanCollection.iterator().next().getClass());
-    Transformer displayTransformer = new BeanToPropertyValueTransformer(beanMapper, displayStringName);
+    BeanMapper<T> beanMapper = new BeanMapper<T>(beanCollection.iterator().next());
+    Transformer displayTransformer = new BeanToPropertyValueTransformer<T>(beanMapper, displayStringName);
     addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, displayTransformer);
   }
 
@@ -119,16 +118,15 @@ public class DisplayItemUtil implements java.io.Serializable {
    * 
    * @since 1.1
    */
-  public static void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
+  public static void addItemsFromBeanCollection(DisplayItemContainer displayItemContainer, Collection<?> beanCollection, Transformer valueTransformer, Transformer displayTransformer) {
     if (beanCollection == null || beanCollection.size() == 0) return;
 
     Assert.notNullParam(displayItemContainer, "displayItemContainer");
     Assert.notNullParam(valueTransformer, "valueTransformer");
     Assert.notNullParam(displayTransformer, "displayTransformer");
 
-    for (Iterator i = beanCollection.iterator(); i.hasNext();) {
-      Object vo = i.next();
-      displayItemContainer.addItem(new DisplayItem((String)valueTransformer.transform(vo), (String)displayTransformer.transform(vo)));
+    for (Object element : beanCollection) {
+      displayItemContainer.addItem(new DisplayItem((String)valueTransformer.transform(element), (String)displayTransformer.transform(element)));
     }
   }
   
@@ -146,15 +144,14 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param value the value that is controlled.
    * @return whether <code>value</code> is found in the select items.
    */
-  public static boolean isValueInItems(Collection displayItems, String value) {
+  public static boolean isValueInItems(Collection<DisplayItem> displayItems, String value) {
     Assert.noNullElementsParam(displayItems, "displayItems");
     
-    for (Iterator i = displayItems.iterator(); i.hasNext(); ) {
-    	DisplayItem currentItem = (DisplayItem) i.next();
-      String currentValue = currentItem.getValue();
-      if (value == null && currentValue == null && !currentItem.isDisabled())
+    for (DisplayItem element : displayItems) {
+    	String currentValue = element.getValue();
+      if (value == null && currentValue == null && !element.isDisabled())
         return true;      
-      if (value != null && value.equals(currentValue) && !currentItem.isDisabled()) 
+      if (value != null && value.equals(currentValue) && !element.isDisabled()) 
         return true;
     }
     return false;
@@ -167,16 +164,15 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param value display item value.
    * @return display item label by the specified value.
    */
-  public static String getLabelForValue(Collection displayItems, String value) {
+  public static String getLabelForValue(Collection<DisplayItem> displayItems, String value) {
     Assert.noNullElementsParam(displayItems, "displayItems");
     
-    for (Iterator i = displayItems.iterator(); i.hasNext(); ) {
-      DisplayItem item = (DisplayItem)i.next();
-      String currentValue = item.getValue();
+    for (DisplayItem element : displayItems) {
+      String currentValue = element.getValue();
       if (value == null && currentValue == null)
-        return item.getDisplayString();
+        return element.getDisplayString();
       if (value != null && value.equals(currentValue)) 
-        return item.getDisplayString();
+        return element.getDisplayString();
     }
     return "";
   }
@@ -188,11 +184,11 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param value display item value.
    * @return display item index by the specified value.
    */
-	public static int getValueIndex(List displayItems, String value) {
+	public static int getValueIndex(List<DisplayItem> displayItems, String value) {
     Assert.noNullElementsParam(displayItems, "displayItems");
     
-		for (ListIterator i = displayItems.listIterator(); i.hasNext(); ) {
-			DisplayItem item = (DisplayItem) i.next();
+		for (ListIterator<DisplayItem> i = displayItems.listIterator(); i.hasNext(); ) {
+			DisplayItem item = i.next();
 			if ((value == null && item.getValue() == null) ||
 					value != null && item.getValue() != null && value.equals(item.getValue())) {
 				return i.previousIndex();
@@ -202,12 +198,12 @@ public class DisplayItemUtil implements java.io.Serializable {
 		return -1;
 	}      
   
-  private static class BeanToPropertyValueTransformer implements Transformer, Serializable {
+  private static class BeanToPropertyValueTransformer<T> implements Transformer, Serializable {
 	private static final long serialVersionUID = 1L;
-	private final BeanMapper bm;
+	private final BeanMapper<T> bm;
     private final String propertyName;
     
-    public BeanToPropertyValueTransformer(final BeanMapper beanMapper, final String propertyName) {
+    public BeanToPropertyValueTransformer(final BeanMapper<T> beanMapper, final String propertyName) {
       this.bm = beanMapper;
       this.propertyName = propertyName;
     }

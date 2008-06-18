@@ -23,11 +23,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
@@ -260,8 +257,7 @@ public abstract class BaseListSqlHelper {
 			throw new IllegalStateException("No fields defined for SELECT");
 		}
 		
-		for (Iterator it = fields.getNames().iterator(); it.hasNext();) {
-			String variable = (String) it.next();
+		for (String variable : fields.getNames()) {
 			String dbField = namingStrategy.fieldToColumnName(variable);
 			String dbAlias = namingStrategy.fieldToColumnAlias(variable);
 			
@@ -389,7 +385,7 @@ public abstract class BaseListSqlHelper {
 	 * @see #getDatabaseFilter()
 	 * @see #getDatabaseFilterWith(String, String)
 	 */
-	public List getDatabaseFilterParams() {
+	public List<Object> getDatabaseFilterParams() {
 		return getSqlParams(getFilterSqlExpression());
 	}
 
@@ -432,7 +428,7 @@ public abstract class BaseListSqlHelper {
 	 * @see #getDatabaseOrder()
 	 * @see #getDatabaseOrderWith(String, String)
 	 */
-	public List getDatabaseOrderParams() {
+	public List<Object> getDatabaseOrderParams() {
 		return getSqlParams(getOrderSqlExpression());
 	}
 
@@ -642,7 +638,7 @@ public abstract class BaseListSqlHelper {
 	 * @param params
 	 *            <code>PreparedStatement</code> parameters.
 	 */
-	public abstract void addStatementParams(List params);
+	public abstract void addStatementParams(List<Object> params);
 	
 	/**
 	 * Returns the total count SQL query String and parameters. 
@@ -680,7 +676,7 @@ public abstract class BaseListSqlHelper {
 	 * @param action callback object that specifies the action.
 	 * @return a result object returned by the action, or null.
 	 */
-	public Object execute(ConnectionCallback action) {		
+	public <T> T execute(ConnectionCallback<T> action) {		
 		if (this.ds == null) {
 			throw new RuntimeException("Please pass a DataSource to the ListSqlHelper!");
 		}
@@ -711,8 +707,8 @@ public abstract class BaseListSqlHelper {
 	 * @return <code>ListItemsData</code> containing the item range and total
 	 *         count.
 	 */
-	public ListItemsData execute(ResultReader reader) {
-		return (ListItemsData) execute(getListItemsDataCallback(reader));
+	public <T> ListItemsData<T> execute(ResultReader<T> reader) {
+		return execute(getListItemsDataCallback(reader));
 	}
 
 	/**
@@ -730,8 +726,8 @@ public abstract class BaseListSqlHelper {
 	 * @return <code>ListItemsData</code> containing the item range and total
 	 *         count.
 	 */
-	public ListItemsData execute(Class itemClass) {
-		return (ListItemsData) execute(getListItemsDataCallback(createBeanResultReader(itemClass)));
+	public <T> ListItemsData<T> execute(Class<T> itemClass) {
+		return execute(getListItemsDataCallback(createBeanResultReader(itemClass)));
 	}
 	
 	/**
@@ -744,7 +740,7 @@ public abstract class BaseListSqlHelper {
 	 * @return the total count of items in the list.
 	 */
 	public Long executeCountSql() {
-		return (Long) execute(getCountSqlCallback());
+		return execute(getCountSqlCallback());
 	}
 
 	/**
@@ -761,8 +757,8 @@ public abstract class BaseListSqlHelper {
 	 *         <code>ResultSet</code> reader.
 	 * @return <code>List</code> containing the item range.
 	 */	
-	public List executeItemRangeSql(ResultReader reader) {
-		return (List) execute(getItemRangeSqlCallback(reader));
+	public <T> List<T> executeItemRangeSql(ResultReader<T> reader) {
+		return execute(getItemRangeSqlCallback(reader));
 	}
 	
 	/**
@@ -779,8 +775,8 @@ public abstract class BaseListSqlHelper {
 	 *         Bean class.
 	 * @return <code>List</code> containing the item range.
 	 */	
-	public List executeItemRangeSql(Class itemClass) {
-		return (List) execute(getItemRangeSqlCallback(createBeanResultReader(itemClass)));
+	public <T> List<T> executeItemRangeSql(Class<T> itemClass) {
+		return execute(getItemRangeSqlCallback(createBeanResultReader(itemClass)));
 	}
 	
 	// *********************************************************************
@@ -793,8 +789,8 @@ public abstract class BaseListSqlHelper {
 	 * In most cases, you should not use this method directly, instead
 	 * using one of the <code>execute</code> methods is recommended.
 	 */
-	public ConnectionCallback getListItemsDataCallback(ResultReader reader) {
-		return new ListItemsDataCallback(getCountSqlCallback(), getItemRangeSqlCallback(reader));
+	public <T> ListItemsDataCallback<T> getListItemsDataCallback(ResultReader<T> reader) {
+		return new ListItemsDataCallback<T>(getCountSqlCallback(), getItemRangeSqlCallback(reader));
 	}
 
 	/**
@@ -803,7 +799,7 @@ public abstract class BaseListSqlHelper {
 	 * In most cases, you should not use this method directly, instead
 	 * using one of the <code>execute</code> methods is recommended.
 	 */
-	public ConnectionCallback getCountSqlCallback() {
+	public ConnectionCallback<Long> getCountSqlCallback() {
 		return new CountSqlCallback();
 	}
 
@@ -813,8 +809,8 @@ public abstract class BaseListSqlHelper {
 	 * In most cases, you should not use this method directly, instead
 	 * using one of the <code>execute</code> methods is recommended.
 	 */
-	public ConnectionCallback getItemRangeSqlCallback(ResultReader reader) {
-		return new ItemRangeSqlCallback(reader);
+	public <T> ConnectionCallback<List<T>> getItemRangeSqlCallback(ResultReader<T> reader) {
+		return new ItemRangeSqlCallback<T>(reader);
 	}
 	
 	/**
@@ -823,16 +819,16 @@ public abstract class BaseListSqlHelper {
 	 * 
 	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
-	public static class ListItemsDataCallback implements ConnectionCallback {
+	public static class ListItemsDataCallback<T> implements ConnectionCallback<ListItemsData<T>> {
 		
-		protected ConnectionCallback countSqlCallback;
-		protected ConnectionCallback itemRangeSqlCallback;
+		protected ConnectionCallback<Long> countSqlCallback;
+		protected ConnectionCallback<List<T>> itemRangeSqlCallback;
 		
 		/**
 		 * @param countSqlCallback total count query callback.
 		 * @param itemRangeSqlCallback item range query callback.
 		 */
-		public ListItemsDataCallback(ConnectionCallback countSqlCallback, ConnectionCallback itemRangeSqlCallback) {
+		public ListItemsDataCallback(ConnectionCallback<Long> countSqlCallback, ConnectionCallback<List<T>> itemRangeSqlCallback) {
 			this.countSqlCallback = countSqlCallback;
 			this.itemRangeSqlCallback = itemRangeSqlCallback;
 		}
@@ -843,10 +839,10 @@ public abstract class BaseListSqlHelper {
 		 * 
 		 * @return the whole results as <code>ListItemsData</code> object.
 		 */
-		public Object doInConnection(Connection con) throws SQLException {			
-			ListItemsData result = new ListItemsData();
-			result.setTotalCount((Long) countSqlCallback.doInConnection(con));
-			result.setItemRange((List) itemRangeSqlCallback.doInConnection(con));
+		public ListItemsData<T> doInConnection(Connection con) throws SQLException {			
+			ListItemsData<T> result = new ListItemsData<T>();
+			result.setTotalCount(countSqlCallback.doInConnection(con));
+			result.setItemRange(itemRangeSqlCallback.doInConnection(con));
 			return result;
 		}
 	}
@@ -856,13 +852,13 @@ public abstract class BaseListSqlHelper {
 	 * 
 	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
-	public class CountSqlCallback implements ConnectionCallback {
+	public class CountSqlCallback implements ConnectionCallback<Long> {
 		/** 
 		 * Executes total count query and returns the result.
 		 * 
 		 * @return the total count as <code>Long</code> object.  
 		 */
-		public Object doInConnection(Connection con) throws SQLException {
+		public Long doInConnection(Connection con) throws SQLException {
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
 			try {
@@ -898,23 +894,23 @@ public abstract class BaseListSqlHelper {
 	 * 
 	 * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
 	 */
-	public class ItemRangeSqlCallback implements ConnectionCallback {	
-		protected ResultReader reader;
+	public class ItemRangeSqlCallback<T> implements ConnectionCallback<List<T>> {	
+		protected ResultReader<T> reader;
 		
 		/**
 		 * @param reader <code>ResultSet</code> reader that processes the data
 		 * and returns items as <code>List</code>.
 		 */
-		public ItemRangeSqlCallback(ResultReader reader) {
+		public ItemRangeSqlCallback(ResultReader<T> reader) {
 			this.reader = reader;
 		}
 		
 		/**
-		 * Executes the item range query and returns the reuslts.
+		 * Executes the item range query and returns the results.
 		 * 
 		 * @return list items as <code>List</code> object. 
 		 */
-		public Object doInConnection(Connection con) throws SQLException {
+		public List<T> doInConnection(Connection con) throws SQLException {
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
 			
@@ -956,8 +952,8 @@ public abstract class BaseListSqlHelper {
 	 * In most cases, you should not use this method directly, instead
 	 * using one of the <code>execute</code> methods is recommended.
 	 */
-	public ResultReader createBeanResultReader(Class itemClass) {
-		return new BeanResultReader(itemClass);
+	public <T> ResultReader<T> createBeanResultReader(Class<T> itemClass) {
+		return new BeanResultReader<T>(itemClass);
 	}
 	
 	/**
@@ -966,24 +962,24 @@ public abstract class BaseListSqlHelper {
 	 * 
 	 * @author Rein Raudjärv
 	 */
-	public class BeanResultReader implements ResultReader {
+	public class BeanResultReader<T> implements ResultReader<T> {
 		
-		protected Class itemClass;
-		protected List results;
-		protected BeanMapper beanMapper;
+		protected Class<T> itemClass;
+		protected List<T> results;
+		protected BeanMapper<T> beanMapper;
 		
 		// For caching
 		protected String[] fieldNames;
-		protected Class[] fieldTypes;
+    protected Class<?>[] fieldTypes;
 		protected String[] columnNames;
 		
 		/**
 		 * @param itemClass Bean type.
 		 */
-		public BeanResultReader(Class itemClass) {
+		public BeanResultReader(Class<T> itemClass) {
 			this.itemClass = itemClass;
-			this.results = new ArrayList();
-			this.beanMapper = new BeanMapper(itemClass, true);
+			this.results = new ArrayList<T>();
+			this.beanMapper = new BeanMapper<T>(itemClass, true);
 			init();
 		}
 		
@@ -991,15 +987,14 @@ public abstract class BaseListSqlHelper {
 		 * Cache all the field names, field types and column names to be used for each row.
 		 */
 		public void init() {
-			Collection names = fields.getResultSetNames();
+			Collection<String> names = fields.getResultSetNames();
 			int count = names.size();
 			fieldNames = new String[count];
 			fieldTypes = new Class[count];
 			columnNames = new String[count];
 			
 			int i = 0;
-			for (Iterator it = names.iterator(); it.hasNext(); i++) {
-				String fieldName = (String) it.next();
+			for (String fieldName : names) {
 				
 				// Check get-method
 				if (!this.beanMapper.isWritable(fieldName))
@@ -1018,7 +1013,7 @@ public abstract class BaseListSqlHelper {
 		 * method.
 		 */
 		public void processRow(ResultSet rs) {
-			Object record = createBean();
+			T record = createBean();
 			readBeanFields(rs, record);
 			this.results.add(record);
 		}
@@ -1026,7 +1021,7 @@ public abstract class BaseListSqlHelper {
 		/**
 		 * @return new Bean instance.
 		 */
-		protected Object createBean() {
+		protected T createBean() {
 			try {
 				return itemClass.newInstance();
 			}
@@ -1064,7 +1059,8 @@ public abstract class BaseListSqlHelper {
 		 * @param beanField name of the bean field to read to.
 		 * @param fieldType type of the bean field.
 		 */
-		protected void readBeanField(ResultSet rs, String rsColumn, Object bean, String beanField, Class fieldType) {
+		@SuppressWarnings("unchecked")
+    protected void readBeanField(ResultSet rs, String rsColumn, Object bean, String beanField, Class fieldType) {
 			Object value = resultSetColumnReader.readFromResultSet(rsColumn, rs, fieldType);
 			this.beanMapper.setFieldValue(bean, beanField, value);
 		}
@@ -1072,7 +1068,7 @@ public abstract class BaseListSqlHelper {
 		/** 
 		 * Returns the results.
 		 */
-		public List getResults() {
+		public List<T> getResults() {
 			return this.results;
 		}
 	}
@@ -1113,15 +1109,15 @@ public abstract class BaseListSqlHelper {
 		return sb.toString();
 	}
 	
-	private static List getSqlParams(SqlExpression expr) {
-		return (expr != null && expr.getValues() != null)? Arrays.asList(expr.getValues()) : new ArrayList();
+	private static List<Object> getSqlParams(SqlExpression expr) {
+		return (expr != null && expr.getValues() != null)? Arrays.asList(expr.getValues()) : new ArrayList<Object>();
 	}
 	
 	/**
 	 * Returns query failed Exception that contains query String and params. 
 	 */
 	protected static RuntimeException createQueryFailedException(
-			String QueryString, List queryParams, SQLException nestedException) {
+			String QueryString, List<Object> queryParams, SQLException nestedException) {
 		String str = new StringBuffer("Executing list query [").append(QueryString).
 			append("] with params: ").append(queryParams).append(" failed").toString();
 		return new AraneaRuntimeException(str, nestedException);

@@ -32,6 +32,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Defines an HTML element content, meaning the body of the HTML element where text and other tags go."
  */
 public class ElementContentHtmlTag extends BaseTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 

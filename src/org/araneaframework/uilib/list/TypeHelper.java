@@ -40,9 +40,9 @@ public class TypeHelper implements Serializable {
 	private boolean ignoreCase = true;
 	
 	// Map<String,Comparator> - custom comparators for fields
-	private Map comparators = new HashMap();
+	private Map<String, Comparator<?>> comparators = new HashMap<String, Comparator<?>>();
 	// Map<String,Class> - field types
-	private Map types = new HashMap();
+	private Map<String, Class<?>> types = new HashMap<String, Class<?>>();
 	
 	private boolean initialized = false;
 	private boolean changed = true;
@@ -50,7 +50,7 @@ public class TypeHelper implements Serializable {
 	public void init(Environment env) throws Exception {
 		if (locale == null) {
 			LocalizationContext l10nCtx =
-				(LocalizationContext) env.getEntry(LocalizationContext.class);
+				env.getEntry(LocalizationContext.class);
 			if (l10nCtx != null) {
 				locale = l10nCtx.getLocale();
 			}
@@ -97,22 +97,22 @@ public class TypeHelper implements Serializable {
 	// List fields
 
   /**
-   * Returns a comparator for the specifeid field.
+   * Returns a comparator for the specified field.
    * <p>
    * First, a custom comparator is returned if found.
    * <p>
-   * Otherwise a comparator is tryed to create according to the field type
+   * Otherwise a comparator is tried to create according to the field type
    * returned by {@link #getFieldType(String)}. Also {@link #isIgnoreCase()}
    * and {@link #getLocale()} is considered for creating the new comparator.
    * 
    * @param fieldId field Id.
    * @return comparator for this field.
    */
-  public Comparator getFieldComparator(String fieldId) {
-    Comparator result = getCustomComparator(fieldId);
+  public Comparator<?> getFieldComparator(String fieldId) {
+    Comparator<?> result = getCustomComparator(fieldId);
 
     if (result == null) {
-      Class fieldType = getFieldType(fieldId);
+      Class<?> fieldType = getFieldType(fieldId);
 
       if (fieldType == null) {
         throw new AraneaRuntimeException(
@@ -125,7 +125,7 @@ public class TypeHelper implements Serializable {
     return result;
   }
 	
-	public void addFieldType(String fieldId, Class type) {
+	public void addFieldType(String fieldId, Class<?> type) {
 		this.types.put(fieldId, type);
 		fireChange();
 	}
@@ -133,41 +133,41 @@ public class TypeHelper implements Serializable {
 	/**
 	 * Returns the field type.
 	 * <p>
-	 * Returns <code>null</code> if no type specifeid for this field or no
+	 * Returns <code>null</code> if no type specified for this field or no
 	 * such field exists.
 	 * 
 	 * @param fieldId
 	 *                field Id.
 	 * @return type of this field.
 	 */
-	public Class getFieldType(String fieldId) {
-		return (Class) this.types.get(fieldId);
+	public Class<?> getFieldType(String fieldId) {
+		return this.types.get(fieldId);
 	}
 	
-	public Class removeFieldType(String fieldId) {
-		Class result = (Class) this.types.remove(fieldId);
+	public Class<?> removeFieldType(String fieldId) {
+		Class<?> result = this.types.remove(fieldId);
 		fireChange();
 		return result;
 	}
 
-	public void addCustomComparator(String fieldId, Comparator comp) {
+	public void addCustomComparator(String fieldId, Comparator<?> comp) {
 		this.comparators.put(fieldId, comp);
 		fireChange();
 	}
 	
-	public Comparator getCustomComparator(String fieldId) {
-		return (Comparator) this.comparators.get(fieldId);
+	public Comparator<?> getCustomComparator(String fieldId) {
+		return this.comparators.get(fieldId);
 	}
 		
-	public Comparator removeCustomComparator(String fieldId) {
-		Comparator result = (Comparator) this.comparators.remove(fieldId);
+	public Comparator<?> removeCustomComparator(String fieldId) {
+		Comparator<?> result = this.comparators.remove(fieldId);
 		fireChange();
 		return result;
 	}
 	
 	// Comparator
 	
-	protected Comparator buildComparator(Class type) {
+	protected Comparator<?> buildComparator(Class<?> type) {
 		Assert.notNullParam(this, type, "type");
 		
 		if (String.class.equals(type)) {

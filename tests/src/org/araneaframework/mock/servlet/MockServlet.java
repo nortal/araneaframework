@@ -31,6 +31,7 @@ public class MockServlet extends BaseAraneaDispatcherServlet {
   private ServletServiceAdapterComponent builtComponent;
   private BeanFactory factory;
   
+  @Override
   protected ServletServiceAdapterComponent buildRootComponent() {
     ClassPathResource resource = new ClassPathResource(beansFile);
     factory = new XmlBeanFactory(resource);  

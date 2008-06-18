@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BooleanData extends Data {
+public class BooleanData extends Data<Boolean> {
   public BooleanData() {
     super(Boolean.class);
     setValue(Boolean.FALSE);

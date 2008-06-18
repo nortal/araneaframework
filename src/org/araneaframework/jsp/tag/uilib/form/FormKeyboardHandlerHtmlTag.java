@@ -76,8 +76,8 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 
           Either handler or elementId/event pair should be specified, not both." 
 	 */
-	public void setHandler(String handler) throws JspException {
-		this.handler = (String) evaluate("handler", handler, String.class);
+	public void setHandler(String handler){
+		this.handler = evaluate("handler", handler, String.class);
 	}
 	
 	/**
@@ -98,8 +98,8 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
           'someForm.someElement', not "someForm" as would be by default.
           The handler will therefore be active only for the element 'someElement'"  
 	 */
-	public void setSubscope(String subscope) throws JspException {
-		this.subscope = (String) evaluate("subscope", subscope, String.class);
+	public void setSubscope(String subscope){
+		this.subscope = evaluate("subscope", subscope, String.class);
 	}
 
 	/**
@@ -123,8 +123,8 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 *   required = "false"
 	 *   description = "Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once." 
 	 */
-	public void setElementId(String elementId) throws JspException {
-		this.elementId = (String) evaluate("elementId", elementId, String.class);
+	public void setElementId(String elementId){
+		this.elementId = evaluate("elementId", elementId, String.class);
 	}
 
 	/**
@@ -135,8 +135,8 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 *   required = "false"
 	 *   description = "Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once." 
 	 */
-	public void setFullElementId(String fullElementId) throws JspException {
-		this.fullElementId = (String) evaluate("fullElementId", fullElementId, String.class);
+	public void setFullElementId(String fullElementId){
+		this.fullElementId = evaluate("fullElementId", fullElementId, String.class);
 	}
 
 	/**
@@ -148,15 +148,16 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
             For more, consult the javascript reference. This attribute is not foolproof and you may
             produce invalid javascript if you don't know what you are doing.  "onclick" is the default." 
 	 */
-	public void setEvent(String eventId) throws JspException {
-		this.event = (String) evaluate("event", eventId, String.class);
+	public void setEvent(String eventId){
+		this.event = evaluate("event", eventId, String.class);
 	}
 
 	
 	//
 	// Implementation
 	//
-	protected final int doStartTag(Writer out) throws Exception {
+	@Override
+  protected final int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		String intHandler = handler;
 		String intElementId = fullElementId;

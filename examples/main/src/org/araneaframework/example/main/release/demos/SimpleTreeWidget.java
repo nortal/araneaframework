@@ -71,7 +71,7 @@ public class SimpleTreeWidget extends TemplateBaseWidget {
     }
 
     private Iterator getResourceIterator(TreeNodeContext widget) {
-      ServletContext servletContext = (ServletContext) SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
+      ServletContext servletContext = SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
       String path = null;
       if (widget instanceof TreeWidget)
         path = "/";

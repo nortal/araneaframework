@@ -74,13 +74,14 @@ public class DateControl extends TimestampControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
 
+  @Override
   protected void init() throws Exception {
 	  super.init();
 
 
 	  if (!confOverridden) {
 		  ConfigurationContext confCtx = 
-			  (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+			  getEnvironment().getEntry(ConfigurationContext.class);
 
 		  if (confCtx != null) {
 			  String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    
@@ -93,8 +94,9 @@ public class DateControl extends TimestampControl {
 	  }
   }	 
   
-	protected Object fromRequest(String parameterValue) {
-		Timestamp result = (Timestamp) super.fromRequest(parameterValue);
+	@Override
+  protected Timestamp fromRequest(String parameterValue) {
+		Timestamp result = super.fromRequest(parameterValue);
 		
 		if (result != null) {
 			Calendar cal = getCalendarInstance();

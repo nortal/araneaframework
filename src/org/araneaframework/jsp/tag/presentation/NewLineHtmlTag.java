@@ -36,6 +36,7 @@ public class NewLineHtmlTag extends BaseTag {
   // Implementation
   //
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     

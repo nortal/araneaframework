@@ -31,7 +31,8 @@ import org.araneaframework.jsp.util.JspUtil;
 public class ImportScriptsHtmlTag extends BaseFileImportTag {
 	public static final String DEFAULT_GROUP_NAME = "defaultScripts";
 	
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		// if filename specified we include the file
 		if (includeFileName != null) {
 			writeContent(out, includeFileName);
@@ -47,7 +48,8 @@ public class ImportScriptsHtmlTag extends BaseFileImportTag {
 		return EVAL_BODY_INCLUDE;
 	}
 	
-	protected void writeContent(Writer out, String srcFile) throws Exception {
+	@Override
+  protected void writeContent(Writer out, String srcFile) throws Exception {
 		writeHtmlScriptsInclude(out, FileImportUtil.getImportString(srcFile, pageContext.getRequest()));
 		out.write("\n");
 	}

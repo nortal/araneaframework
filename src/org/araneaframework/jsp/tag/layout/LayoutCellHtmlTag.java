@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -38,6 +37,7 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   protected String width;
   protected String height;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -60,6 +60,7 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
 	JspUtil.writeAttributes(out, attributes);
   }
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, cellTag);
     return super.doEndTag(out);
@@ -74,8 +75,8 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
    *   required = "false"
    *   description = "Colspan for this cell. Same as in HTML."
    */
-  public void setColspan(String colspan) throws JspException {
-    this.colspan = (String)evaluate("colspan", colspan, String.class);
+  public void setColspan(String colspan){
+    this.colspan = evaluate("colspan", colspan, String.class);
   }
 
   /**
@@ -84,8 +85,8 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
    *   required = "false"
    *   description = "Rowspan for this cell. Same as in HTML."
    */
-  public void setRowspan(String rowspan) throws JspException {
-    this.rowspan = (String)evaluate("rowspan", rowspan, String.class);
+  public void setRowspan(String rowspan){
+    this.rowspan = evaluate("rowspan", rowspan, String.class);
   }
 
   /**
@@ -94,8 +95,8 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
    *   required = "false"
    *   description = "Width for this cell. Same as in HTML, deprecated."
    */
-  public void setWidth(String width) throws JspException {
-    this.width = (String)evaluate("width", width, String.class);
+  public void setWidth(String width){
+    this.width = evaluate("width", width, String.class);
   }
   
   /**
@@ -104,8 +105,8 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
    *   required = "false"
    *   description = "Height for this cell. Same as in HTML, deprecated."
    */
-  public void setHeight(String height) throws JspException {
-    this.height = (String)evaluate("height", height, String.class);
+  public void setHeight(String height){
+    this.height = evaluate("height", height, String.class);
   }
 
   /**
@@ -114,8 +115,8 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
    *   required = "false"
    *   description = "Whether this cell is header cell, defaults to false. In HTML, tag is rendered with &lt;th&gt; or &lt;tr&gt;."
    */
-  public void setHeaderCell(String headerCell) throws JspException {
-    boolean isHeaderCell = ((Boolean)evaluate("headerCell", headerCell, Boolean.class)).booleanValue();
+  public void setHeaderCell(String headerCell){
+    boolean isHeaderCell = (evaluate("headerCell", headerCell, Boolean.class)).booleanValue();
     this.cellTag = isHeaderCell ? "th" : "td";
   }
 }

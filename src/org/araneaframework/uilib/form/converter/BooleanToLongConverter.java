@@ -25,26 +25,29 @@ import org.araneaframework.uilib.form.Converter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class BooleanToLongConverter extends BaseConverter {
+public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
 
   /**
    * Converts <code>Boolean</code> to <code>Long</code>.
    */
-  public Object convertNotNull(Object data) {
-    return ((Boolean) data).booleanValue() ? new Long(1) : new Long(0);
+  @Override
+  public Long convertNotNull(Boolean data) {
+    return data.booleanValue() ? new Long(1) : new Long(0);
   }
 
   /**
 	 *  Converts <code>Long</code> to <code>Boolean</code>. 
 	 */
-  public Object reverseConvertNotNull(Object data) {
-    return ((Long) data).longValue() == 0 ? Boolean.FALSE : Boolean.TRUE ;
+  @Override
+  public Boolean reverseConvertNotNull(Long data) {
+    return data.longValue() == 0 ? Boolean.FALSE : Boolean.TRUE ;
   }
 
   /**
    * Returns a <code>new BooleanToLong10Converter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<Boolean, Long> newConverter() {
     return new BooleanToLongConverter();
   }
 }

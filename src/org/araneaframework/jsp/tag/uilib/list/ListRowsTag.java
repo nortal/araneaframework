@@ -32,15 +32,17 @@ import org.araneaframework.uilib.list.ListWidget;
  */
 public class ListRowsTag extends BaseListRowsTag {
 	protected String var = "row";
-	protected ListWidget.ViewModel viewModel;
+	protected ListWidget<?>.ViewModel viewModel;
 	
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		// Get list data    
-		viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+		viewModel = (ListWidget<?>.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 		return super.doStartTag(out);
 	}
 	
-	protected void doForEachRow(Writer out) throws Exception {
+	@Override
+  protected void doForEachRow(Writer out) throws Exception {
 		super.doForEachRow(out);
 		addContextEntry(var, currentRow);
 	}
@@ -55,7 +57,8 @@ public class ListRowsTag extends BaseListRowsTag {
 		this.var = var;
 	}
 	
-	protected ListIterator getIterator() {
+	@Override
+  protected ListIterator<?> getIterator() {
 		return viewModel.getItemRange().listIterator();
 	}
 }

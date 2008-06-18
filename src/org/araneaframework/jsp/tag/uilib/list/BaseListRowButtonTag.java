@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 import java.util.List;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -34,7 +33,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
   protected String updateRegions;
   protected String globalUpdateRegions;  
 
-  protected List updateRegionNames;
+  protected List<String> updateRegionNames;
   
   protected UiUpdateEvent event;
   
@@ -42,6 +41,7 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
     event = new UiUpdateEvent();
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
@@ -67,8 +67,8 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    *   required = "false"
    *   description = "Event id." 
    */
-  public void setEventId(String eventId) throws JspException {
-    event.setId((String)evaluate("eventId", eventId, String.class));
+  public void setEventId(String eventId){
+    event.setId(evaluate("eventId", eventId, String.class));
   }
 
   /**
@@ -77,8 +77,8 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
    */
-  public void setUpdateRegions(String updateRegions) throws JspException {
-    this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+  public void setUpdateRegions(String updateRegions){
+    this.updateRegions = evaluate("updateRegions", updateRegions, String.class);
   }
 
   /**
@@ -87,10 +87,11 @@ public class BaseListRowButtonTag extends BaseSimpleButtonTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
    */
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+  public void setGlobalUpdateRegions(String globalUpdateRegions){
+    this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }
 
+  @Override
   public void doFinally() {
     super.doFinally();
     event.clear();

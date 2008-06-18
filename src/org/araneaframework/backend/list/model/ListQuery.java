@@ -18,7 +18,6 @@ package org.araneaframework.backend.list.model;
 
 import java.io.Serializable;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.list.OrderInfo;

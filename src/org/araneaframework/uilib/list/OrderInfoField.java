@@ -114,7 +114,8 @@ public class OrderInfoField implements Serializable {
 		}
 	}
 	
-	public String toString() {
+	@Override
+  public String toString() {
 		StringBuffer sb = new StringBuffer("OrderInfoField (");
 		sb.append("Id: ");
 		sb.append(getId());

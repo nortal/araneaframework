@@ -45,6 +45,7 @@ public class StandardServletSessionRouterServiceTests extends TestCase {
  
   private Path path;
   
+  @Override
   public void setUp() throws Exception {
     service = new StandardHttpSessionRouterService();
     child = new MockEventfulBaseService();

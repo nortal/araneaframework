@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.updateregion;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.ServletUtil;
@@ -39,6 +38,7 @@ public class BaseUpdateRegionTag extends BaseTag {
   
   protected String fullId;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -53,7 +53,7 @@ public class BaseUpdateRegionTag extends BaseTag {
     	fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
 
     String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
-    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().requireEntry(UpdateRegionContext.class);
+    UpdateRegionContext updateRegionContext = getEnvironment().requireEntry(UpdateRegionContext.class);
     updateRegionContext.addDocumentRegion(fullId, uiWidgetId);
 
     return EVAL_BODY_INCLUDE;
@@ -65,8 +65,8 @@ public class BaseUpdateRegionTag extends BaseTag {
    *   required = "false"
    *   description = "Local id of the update region." 
    */
-  public void setId(String id) throws JspException {
-    this.id = (String) evaluate("id", id, String.class);
+  public void setId(String id){
+    this.id = evaluate("id", id, String.class);
   }
 
   /**
@@ -75,7 +75,7 @@ public class BaseUpdateRegionTag extends BaseTag {
    *   required = "false"
    *   description = "Global id of the update region." 
    */
-  public void setGlobalId(String globalId) throws JspException {
-    this.globalId = (String) evaluate("globalId", globalId, String.class);
+  public void setGlobalId(String globalId){
+    this.globalId = evaluate("globalId", globalId, String.class);
   }  
 }

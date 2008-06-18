@@ -33,6 +33,7 @@ public class WizardTag extends WidgetContextTag {
 	 *   required = "false"
 	 *   description = "Widget id."
    */
+  @Override
   public void setId(String widgetId) throws JspException {
   	super.setId(widgetId);
   }

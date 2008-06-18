@@ -23,7 +23,8 @@ public class SqlGreaterThanExpression extends SqlComparableExpression {
 	public SqlGreaterThanExpression(SqlExpression expr1, SqlExpression expr2) {
 		super(expr1, expr2);
 	}
-	protected String getOperator() {
+	@Override
+  protected String getOperator() {
 		return ">";
 	}
 }

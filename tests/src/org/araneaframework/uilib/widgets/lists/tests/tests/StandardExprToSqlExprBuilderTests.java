@@ -35,13 +35,15 @@ public class StandardExprToSqlExprBuilderTests extends TestCase {
 	
 	private Object testValue = "test_value";
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.builder = new StandardExpressionToSqlExprBuilder();
 		this.builder.setMapper(new MockVariableResolver());
 		this.builder.setConverter(new MockValueConverter());
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.builder = null;
 	}
 	

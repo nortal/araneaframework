@@ -80,12 +80,13 @@ public class ComponentListFooterTag extends PresentationTag {
   private String updateRegions;
   private String globalUpdateRegions;
   
-  private List updateRegionNames; 
+  private List<String> updateRegionNames; 
 
   public ComponentListFooterTag() {
     styleClass = "pages";
   }
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -93,7 +94,7 @@ public class ComponentListFooterTag extends PresentationTag {
 
     // Get list data
     listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 
     // Get sequnce data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();
@@ -174,7 +175,7 @@ public class ComponentListFooterTag extends PresentationTag {
    *   description = "Data string id for empty list message." 
    */
   public void setNoDataStringId(String noDataStringId) throws JspException {
-    this.noDataStringId = (String)evaluateNotNull("noDataStringId", noDataStringId, String.class);
+    this.noDataStringId = evaluateNotNull("noDataStringId", noDataStringId, String.class);
   }
 
   /**
@@ -201,7 +202,7 @@ public class ComponentListFooterTag extends PresentationTag {
    * Helper functions
    * ***********************************************************************************/
 
-  protected void writeInfo(Writer out, long totalItemCount, boolean allItemsShown, long firstShown, long lastShown) throws IOException, JspException {
+  protected void writeInfo(Writer out, long totalItemCount, boolean allItemsShown, long firstShown, long lastShown) throws IOException {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "class", infoStyleClass);
     JspUtil.writeCloseStartTag(out);
@@ -281,8 +282,8 @@ public class ComponentListFooterTag extends PresentationTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details."
    */  
-  public void setUpdateRegions(String updateRegions) throws JspException {
-    this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
+  public void setUpdateRegions(String updateRegions) {
+    this.updateRegions = evaluate("updateRegions", updateRegions, String.class);
   }
   
   /**
@@ -291,7 +292,7 @@ public class ComponentListFooterTag extends PresentationTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details."
    */  
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
-    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+  public void setGlobalUpdateRegions(String globalUpdateRegions) {
+    this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }  
 }

@@ -39,5 +39,5 @@ public interface ExpressionBuilder extends Serializable {
 	 * @return <code>Expression</code> that is built according to the
 	 *         <code>data</code> or null if no expression has been built.
 	 */
-	Expression buildExpression(Map data);
+	Expression buildExpression(Map<String, Object> data);
 }

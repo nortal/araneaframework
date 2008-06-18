@@ -57,14 +57,14 @@ public interface OverlayContext extends Serializable {
    * forwarded to the script that handles the overlay mode visually.
    * @param options options as <code>&lt;String, String&gt;</code> pair.
    */
-  void setOverlayOptions(Map options);
+  void setOverlayOptions(Map<String, String> options);
 
   /**
    * Provides the current options for overlay rendering.
    * 
    * @return the current options for overlay rendering.
    */
-  Map getOverlayOptions();
+  Map<String, String> getOverlayOptions();
 
   /**
    * Destroys the current flow and starts a new one inside the overlay mode.

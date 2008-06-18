@@ -29,9 +29,9 @@ import org.araneaframework.uilib.form.FormElementContext;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class BaseConverter implements java.io.Serializable, Converter {
+public abstract class BaseConverter<C,D> implements java.io.Serializable, Converter<C,D> {
 
-  private FormElementContext feCtx;
+  private FormElementContext<C,D> feCtx;
   
   //*********************************************************************
   //* PUBLIC METHODS
@@ -45,7 +45,7 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @param data Data to convert.
    * @return Converted data.
    */
-  public Object convert(Object data) {
+  public D convert(C data) {
     Assert.notNull(this, getFormElementCtx(), 
         "Form element context must be assigned to the converter before it can function! " +
         "Make sure that the converter is associated with a form element!");
@@ -65,7 +65,7 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @param data Data to convert.
    * @return Converted data.
    */
-  public Object reverseConvert(Object data) {
+  public C reverseConvert(D data) {
     Assert.notNull(this, getFormElementCtx(), 
         "Form element context must be assigned to the converter before it can function! " +
         "Make sure that the converter is associated with a form element!");
@@ -76,11 +76,11 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
     return reverseConvertNotNull(data);
   }
   
-  public void setFormElementCtx(FormElementContext feCtx) {
+  public void setFormElementCtx(FormElementContext<C,D> feCtx) {
     this.feCtx = feCtx;
   }
   
-  public FormElementContext getFormElementCtx() {
+  public FormElementContext<C,D> getFormElementCtx() {
     return this.feCtx;
   }
 
@@ -92,7 +92,7 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
     feCtx.addError(error);
   }
   
-  protected void addErrors(Set errors) {
+  protected void addErrors(Set<String> errors) {
     feCtx.addErrors(errors);
   }
   
@@ -115,7 +115,7 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @return a new converter, of the same type that the class that overrides it, however freshly
    * initialized.
    */
-  public abstract Converter newConverter();
+  public abstract Converter<C,D> newConverter();
 
   //*********************************************************************
   //* ABSTRACT IMPLEMENTATION METHODS
@@ -128,7 +128,7 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @param data Data to convert.
    * @return Converted data.
    */
-  protected abstract Object convertNotNull(Object data);
+  protected abstract D convertNotNull(C data);
 
   /**
    * This method should convert the data from one type to another. It may assume that the <code>data</code>
@@ -138,6 +138,6 @@ public abstract class BaseConverter implements java.io.Serializable, Converter {
    * @param data Data to convert.
    * @return Converted data.
    */
-  protected abstract Object reverseConvertNotNull(Object data);
+  protected abstract C reverseConvertNotNull(D data);
 
 }

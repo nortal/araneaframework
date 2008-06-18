@@ -42,7 +42,7 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
   protected long checkTime;
   protected long lastModified = 0;
   
-  protected Map properties = new HashMap();
+  protected Map<String, String> properties = new HashMap<String, String>();
 
 
   public ReloadingPropertyFileResourceBundle() {}
@@ -51,6 +51,7 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
     this.propertyResource = propertyResource;
   }
   
+  @Override
   protected Object handleGetObject(String key) {
     if (key == null) throw new NullPointerException();
 
@@ -104,7 +105,7 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
   }
 
   protected void loadData(Properties newProperties) throws Exception {
-    properties = new HashMap();
+    properties = new HashMap<String, String>();
 
     for (Enumeration i = newProperties.propertyNames(); i.hasMoreElements();) {
       String key = (String) i.nextElement();
@@ -114,7 +115,8 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
     }
   }
   
-  public Enumeration getKeys() {
+  @Override
+  public Enumeration<String> getKeys() {
     return null;
   }
 }

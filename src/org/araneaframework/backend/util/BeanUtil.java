@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -61,10 +60,10 @@ public class BeanUtil {
 	 * @return <code>List&lt;String&gt;</code>- the <code>List</code> of Bean
 	 *         field names.
 	 */
-	public static List getFields(Class beanClass) {
+	public static List<String> getFields(Class<?> beanClass) {
 		Assert.notNull(beanClass, "No bean class specified.");
 
-		List result = new ArrayList();
+		List<String> result = new ArrayList<String>();
 		
 		Method[] methods = beanClass.getMethods();
 		for (int i = 0; i < methods.length; i++) {
@@ -287,14 +286,14 @@ public class BeanUtil {
 	 *          The name of Bean field.
 	 * @return The type of the field.
 	 */
-	private static Class getSimpleFieldType(Class beanClass, String field) {
+	private static <T> Class<T> getSimpleFieldType(Class<?> beanClass, String field) {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
-		Class result = null;
+		Class<T> result = null;
 		Method getter = getSimpleReadMethod(beanClass, field);
 		if (getter != null) {
-			result = getter.getReturnType();
+			result = (Class<T>) getter.getReturnType();
 		}
 		return result;
 	}
@@ -311,12 +310,12 @@ public class BeanUtil {
 	 *          The name of Bean field.
 	 * @return The type of the field.
 	 */
-	public static Class getFieldType(Class beanClass, String field) {
+	public static Class<?> getFieldType(Class<?> beanClass, String field) {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
 		String[] fields = StringUtils.split(field, NESTED_DELIM);
-		Class subBeanType = beanClass;
+		Class<?> subBeanType = beanClass;
 		for (int i = 0; i < fields.length && subBeanType != null; i++) {
 			subBeanType = getSimpleFieldType(subBeanType, fields[i]);
 		}
@@ -327,7 +326,7 @@ public class BeanUtil {
 	 * Checks that the field identified by <code>field</code> is a valid
 	 * Bean field (can be read-only).
 	 * <p>
-	 * To enable reading the field, the spcfified <code>beanClass</code> must
+	 * To enable reading the field, the specified <code>beanClass</code> must
 	 * have getter (field's name starts with <code>get</code> or
 	 * <code>is</code>) for this field.
 	 * </p>
@@ -338,7 +337,7 @@ public class BeanUtil {
 	 *          Bean field name.
 	 * @return if this field is in Bean.
 	 */	
-	public static boolean isReadable(Class beanClass, String field) {
+	public static boolean isReadable(Class<?> beanClass, String field) {
 		return (getReadMethod(beanClass, field) != null);
 	}
 	
@@ -356,7 +355,7 @@ public class BeanUtil {
 	 *          Bean field name.
 	 * @return if this field is in Bean.
 	 */
-	public static boolean isWritable(Class beanClass, String field) {
+	public static boolean isWritable(Class<?> beanClass, String field) {
 		return (getWriteMethod(beanClass, field) != null);
 	}
 
@@ -376,7 +375,7 @@ public class BeanUtil {
 	 *          Bean field name.
 	 * @return write method (setter) for the field.
 	 */	
-	private static Method getSimpleWriteMethod(Class beanClass, String field) {
+	private static Method getSimpleWriteMethod(Class<?> beanClass, String field) {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
@@ -403,12 +402,12 @@ public class BeanUtil {
 	 *          Bean field name.
 	 * @return write method (setter) for the field.
 	 */
-	public static Method getWriteMethod(Class beanClass, String field) {
+	public static Method getWriteMethod(Class<?> beanClass, String field) {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
 		String[] fields = StringUtils.split(field, NESTED_DELIM);
-		Class subBeanType = beanClass;
+		Class<?> subBeanType = beanClass;
 		for (int i = 0; i < fields.length - 1 && subBeanType != null; i++) {
 			subBeanType = getSimpleFieldType(subBeanType, fields[i]);
 		}
@@ -434,7 +433,7 @@ public class BeanUtil {
 	 *          Bean field name.
 	 * @return read method (getter) for the field.
 	 */
-	private static Method getSimpleReadMethod(Class beanClass, String field) {
+	private static Method getSimpleReadMethod(Class<?> beanClass, String field) {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
@@ -469,12 +468,12 @@ public class BeanUtil {
 	 *          Bean field name.
 	 * @return read method (getter) for the field.
 	 */
-	public static Method getReadMethod(Class beanClass, String field) {
+	public static Method getReadMethod(Class<?> beanClass, String field) {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
 		String[] fields = StringUtils.split(field, NESTED_DELIM);
-		Class subBeanType = beanClass;
+		Class<?> subBeanType = beanClass;
 		for (int i = 0; i < fields.length - 1 && subBeanType != null; i++) {
 			subBeanType = getSimpleFieldType(subBeanType, fields[i]);
 		}
@@ -497,10 +496,10 @@ public class BeanUtil {
 	 *         the class implementing the Bean pattern.
 	 * @return new instance of the Bean type.
 	 */
-	public static Object newInstance(Class beanClass) {
+	public static <T> T newInstance(Class<T> beanClass) {
     	Validate.notNull(beanClass, "No bean class specified");
 
-		Object result;
+		T result;
 		try {
 			result = beanClass.newInstance();
 		}
@@ -531,14 +530,13 @@ public class BeanUtil {
 	 * 
 	 * @see #copy(Object, Class)
 	 */
-	public static Object copy(Object from, Object to) {
+	public static <T> T copy(Object from, T to) {
         Assert.isTrue(from != null && to != null, "BeanUtil.copy() cannot accept NULL arguments.");
 		
-		List fromVoFields = getFields(from.getClass());
-		for (Iterator i = fromVoFields.iterator(); i.hasNext();) {
-			String field = (String) i.next();
-			Class toFieldType = getSimpleFieldType(to.getClass(), field);
-			Class fromFieldType = getSimpleFieldType(from.getClass(), field);
+		List<String> fromVoFields = getFields(from.getClass());
+		for (String field : fromVoFields) {
+			Class<?> toFieldType = getSimpleFieldType(to.getClass(), field);
+			Class<?> fromFieldType = getSimpleFieldType(from.getClass(), field);
 			if (isWritable(to.getClass(), field) && toFieldType.isAssignableFrom(fromFieldType)) {
 				setSimpleFieldValue(to, field, getSimpleFieldValue(from, field));
 			}
@@ -560,7 +558,7 @@ public class BeanUtil {
 	 * @see #copy(Object, Object)
 	 * @see #clone() 
 	 */
-	public static Object copy(Object from, Class toType) {
+	public static <T> T copy(Object from, Class<T> toType) {
     	Validate.isTrue(from != null && from != null, "You cannot convert a Bean to null or vice versa");		
 		return copy(from, newInstance(toType));
 	}
@@ -589,7 +587,7 @@ public class BeanUtil {
 	 *         the class.
 	 * @return whether the given object type is a Bean type.
 	 */
-	public static boolean isBean(Class clazz) {
+	public static boolean isBean(Class<?> clazz) {
 		return (getFields(clazz).size() != 0);
 	}
 }

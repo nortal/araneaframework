@@ -19,10 +19,8 @@ package org.araneaframework.jsp.tag.basic;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -41,18 +39,20 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 	public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
 
 	protected String name = null;
-	protected Map attributes = new HashMap();
+	protected Map<String, Object> attributes = new HashMap<String, Object>();
 	protected boolean hasContent = false;
 	
-	public void setPageContext(PageContext pageContext) {
-		attributes = new HashMap();
+	@Override
+  public void setPageContext(PageContext pageContext) {
+		attributes = new HashMap<String, Object>();
 		hasContent = false;
 		name = null;
 		
 		super.setPageContext(pageContext);
 	}
 	
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
 		addContextEntry(KEY, this);
@@ -67,7 +67,8 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 	/**
 	 * After tag.
 	 */
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		if (hasContent)
 			JspUtil.writeEndTag_SS(out, name);
 		else {
@@ -77,8 +78,8 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 		return super.doEndTag(out);
 	}
 	
-	public void addAttribute(String name, String value) throws JspException {
-		value = (String)evaluate("value", value, String.class);
+	public void addAttribute(String name, String value){
+		value = evaluate("value", value, String.class);
 		attributes.put(name, value);
 	}
 
@@ -101,6 +102,6 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 	 *   description = "HTML element name."
 	 */
 	public void setName(String name) throws JspException {
-		this.name = (String)evaluateNotNull("name", name, String.class);
+		this.name = evaluateNotNull("name", name, String.class);
 	}
 }

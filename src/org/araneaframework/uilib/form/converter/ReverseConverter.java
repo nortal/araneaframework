@@ -25,16 +25,16 @@ import org.araneaframework.uilib.form.FormElementContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class ReverseConverter extends BaseConverter {
+public class ReverseConverter<C,D> extends BaseConverter<C,D> {
 
-  protected Converter toReverse;
+  protected Converter<D,C> toReverse;
 
   /**
 	 * Creates class initializing the contained converter.
 	 * 
 	 * @param toReverse converter that will be reversed.
 	 */
-  public ReverseConverter(Converter toReverse) {
+  public ReverseConverter(Converter<D,C> toReverse) {
     this.toReverse = toReverse;
   }
 
@@ -42,8 +42,9 @@ public class ReverseConverter extends BaseConverter {
 	 * Converts the data using {@link BaseConverter#reverseConvertNotNull}of the
 	 * contained converter.
 	 */
-  public Object convertNotNull(Object data) {
-    Object result = toReverse.reverseConvert(data);
+  @Override
+  public D convertNotNull(C data) {
+    D result = toReverse.reverseConvert(data);
   	return result;    
   }
 
@@ -51,11 +52,13 @@ public class ReverseConverter extends BaseConverter {
 	 * Converts the data using {@link BaseConverter#convertNotNull}of the
 	 * contained converter.
 	 */
-  public Object reverseConvertNotNull(Object data) {    
-    Object result = toReverse.convert(data);  
+  @Override
+  public C reverseConvertNotNull(D data) {    
+    C result = toReverse.convert(data);  
   	return result;       
   }
 
+  @Override
   public void setFormElementCtx(FormElementContext feCtx) {
     super.setFormElementCtx(feCtx);
     
@@ -65,7 +68,8 @@ public class ReverseConverter extends BaseConverter {
   /**
    * Returns a <code>new ReverseConverter(toReverse)</code>.
    */
-  public Converter newConverter() {
-    return new ReverseConverter(toReverse.newConverter());
+  @Override
+  public Converter<C,D> newConverter() {
+    return new ReverseConverter<C,D>(toReverse.newConverter());
   }
 }

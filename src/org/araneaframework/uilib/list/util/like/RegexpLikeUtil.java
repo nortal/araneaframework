@@ -96,10 +96,10 @@ public class RegexpLikeUtil {
 
 	private static String convertMask(String mask, LikeConfiguration config) {
 		// Escape all metachars except custom wildcards
-		List tmp = new ArrayList(Arrays.asList(RE_META_CHARS));
+		List<String> tmp = new ArrayList<String>(Arrays.asList(RE_META_CHARS));
 		tmp.removeAll(Arrays.asList(config.getAnyStringWildcards()));
 		tmp.removeAll(Arrays.asList(config.getAnyCharWildcards()));
-		String[] metaChars = (String[]) tmp.toArray(new String[tmp.size()]);
+		String[] metaChars = tmp.toArray(new String[tmp.size()]);
 		for (int i = 0; i < metaChars.length; i++) {
 			mask = StringUtils.replace(mask, metaChars[i], RE_ESCAPE_CHAR + metaChars[i]);
 		}

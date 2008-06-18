@@ -41,6 +41,7 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class TreeTag extends BaseWidgetTag {
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 

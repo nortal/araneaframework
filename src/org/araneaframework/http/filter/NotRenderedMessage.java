@@ -12,6 +12,7 @@ import org.araneaframework.framework.core.RenderStateAware;
 public class NotRenderedMessage extends BroadcastMessage {
   public static final NotRenderedMessage INSTANCE = new NotRenderedMessage();
   
+  @Override
   protected void execute(Component component) throws Exception {
     if (component instanceof RenderStateAware) {
       ((RenderStateAware) component)._setRendered(false);    }

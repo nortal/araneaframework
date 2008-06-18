@@ -53,14 +53,14 @@ public interface FormRowHandler extends RowHandler {
    * 
    * @param formRows <code>Map&lt;Object key, EditableRow</code>. 
    */
-  public void saveRows(Map formRows) throws Exception;
+  public void saveRows(Map<Object, FormRow> formRows) throws Exception;
   
   /**
    * This method is called when the rows specified by the supplied set of keys should be deleted. 
    * 
    * @param keys row keys.
    */
-  public void deleteRows(Set keys) throws Exception;
+  public void deleteRows(Set<Object> keys) throws Exception;
   
   /**
    * This method is called when the supplied row has been opened or closed.

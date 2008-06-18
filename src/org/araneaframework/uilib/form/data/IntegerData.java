@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class IntegerData extends Data {
+public class IntegerData extends Data<Integer> {
 
   public IntegerData() {
     super(Integer.class);

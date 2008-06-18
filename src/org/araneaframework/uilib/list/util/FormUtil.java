@@ -44,13 +44,13 @@ public class FormUtil {
 	
 	// Date
 	
-	public static Data createData(Class type) {
-		return new Data(type);
+	public static <T> Data<T> createData(Class<T> type) {
+		return new Data<T>(type);
 	}
 	
 	// Controls
 	
-	public static Control createControl(Class type) {
+	public static <T> Control<T> createControl(Class<T> type) {
 		Validate.notNull(type);
 		
 		if (String.class.equals(type)) {
@@ -111,8 +111,8 @@ public class FormUtil {
 	
 	// Form elements
 	
-	public static FormElement createElement(String label, Control control, Data data, boolean mandatory) {
-	    FormElement result = new FormElement();	    
+	public static <C,D> FormElement<C,D> createElement(String label, Control<C> control, Data<D> data, boolean mandatory) {
+	    FormElement<C,D> result = new FormElement<C,D>();	    
 	    result.setLabel(label);
 	    result.setMandatory(mandatory);    
 	    result.setControl(control);

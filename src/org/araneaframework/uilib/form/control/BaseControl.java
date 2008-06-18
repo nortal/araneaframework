@@ -37,16 +37,17 @@ import org.araneaframework.uilib.form.FormElementContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class BaseControl extends BaseApplicationWidget implements java.io.Serializable, Control {
+public abstract class BaseControl<T> extends BaseApplicationWidget implements java.io.Serializable, Control<T> {
   //*******************************************************************
   // FIELDS
   //*******************************************************************
   
-  protected Object value;
+  protected T value;
+  //TODO think about this object :S
   protected Object innerData;
   protected boolean isReadFromRequest = false;
 
-  private FormElementContext feCtx;
+  private FormElementContext<T, Object> feCtx;
   
   //*********************************************************************
   //* PUBLIC METHODS
@@ -58,7 +59,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * 
    * @return Returns the value of the control (value read from the request).
    */
-  public Object getRawValue() {
+  public T getRawValue() {
     return value;
   }
 
@@ -70,7 +71,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * @param value control value.
    * @see #getRawValue()
    */
-  public void setRawValue(Object value) {   
+  public void setRawValue(T value) {   
     BaseControl.this.value = value;
   }
 
@@ -79,15 +80,16 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * @return {@link ViewModel}.
    * @throws Exception 
    */
-  public Object getViewModel() throws Exception {
+  @Override
+  public BaseControl<T>.ViewModel getViewModel() throws Exception {
     return new ViewModel();
   }
   
-  public void setFormElementCtx(FormElementContext formElementContext) {
+  public void setFormElementCtx(FormElementContext<T, Object> formElementContext) {
     this.feCtx = formElementContext;
   }
   
-  public FormElementContext getFormElementCtx() {
+  public FormElementContext<T, Object> getFormElementCtx() {
     return feCtx;
   }
   
@@ -119,6 +121,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   //* INTERNAL METHODS
   //*********************************************************************  
   
+  @Override
   protected void init() throws Exception {
     super.init();
     
@@ -127,11 +130,13 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (!isDisabled())
       super.action(path, input, output);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
     
@@ -139,6 +144,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
       readFromRequest((HttpInputData) input);
   }
   
+  @Override
   protected void handleEvent(InputData input) throws Exception {
     if (!isDisabled())
       super.handleEvent(input);
@@ -180,11 +186,13 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     return feCtx.isValid();
   }
 
+  @Override
   public Widget.Interface _getWidget() {
 	  return new WidgetImpl();
   }
 
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
+    @Override
     public void update(InputData input) {
     	isReadFromRequest = false;
 		super.update(input);

@@ -31,7 +31,7 @@ import java.io.Writer;
  *   description = "UiLib widget tag. <br/> 
            Makes available following page scope variables: 
            <ul>
-             <li><i>widget</i> - UiLib widget view model.
+             <li><i>widget</i> - UiLib widget view model.</li>
            </ul> "
  */
 public class WidgetTag extends BaseWidgetTag {
@@ -40,6 +40,7 @@ public class WidgetTag extends BaseWidgetTag {
   public static final String WIDGET_VIEW_MODEL_KEY = "viewModel";
   public static final String WIDGET_VIEW_DATA_KEY = "viewData";
   
+  @Override
   public int doStartTag(Writer out) throws Exception {
      super.doStartTag(out);
      

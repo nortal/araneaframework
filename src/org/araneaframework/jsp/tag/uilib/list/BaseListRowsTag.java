@@ -31,8 +31,9 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
   public static final String ROW_KEY = "org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag.ROW";
   
   protected Object currentRow;
-  protected ListIterator rowIterator;
+  protected ListIterator<?> rowIterator;
   
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -56,6 +57,7 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
     addContextEntry(ROW_REQUEST_ID_KEY, Integer.toString(rowIterator.previousIndex()));
   }
   
+  @Override
   protected int afterBody(Writer out) throws Exception {
     // Get next row & continue if needed    
     if (rowIterator.hasNext()) {
@@ -69,5 +71,5 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
       return SKIP_BODY;         
   }
   
-  protected abstract ListIterator getIterator();
+  protected abstract ListIterator<?> getIterator();
 }

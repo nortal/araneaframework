@@ -53,6 +53,7 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
     this.baseStyleClass = "aranea-checkbox";
   }
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -112,60 +113,65 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
   }
 
   /**
+   * @throws JspException 
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
    *   rtexprvalue = "true"
    *   description = "Specifies whether the check box should be rendered as disabled. Default is active state."
    */
-  public void setDisabled(String disabled) throws JspException {
-    Boolean tempResult = (Boolean) evaluateNotNull("disabled", disabled, Boolean.class);
+  public void setDisabled(String disabled) throws JspException{
+    Boolean tempResult = evaluateNotNull("disabled", disabled, Boolean.class);
     this.disabled = tempResult.booleanValue();
   }
 
   /**
+   * @throws JspException 
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
    *   rtexprvalue = "true"
    *   description = "Specifies custom <code>onclick</code> event. Default is none."
    */
-  public void setOnclick(String onclick) throws JspException {
-    this.onclick = (String) evaluateNotNull("onclick", onclick, String.class);
+  public void setOnclick(String onclick) throws JspException{
+    this.onclick = evaluateNotNull("onclick", onclick, String.class);
   }
 
   /**
+   * @throws JspException 
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
    *   rtexprvalue = "true"
    *   description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
    */
-  public void setAccessKey(String accessKey) throws JspException {
-    this.accesskey = (String) evaluateNotNull("accessKey", accessKey, String.class);
+  public void setAccessKey(String accessKey) throws JspException{
+    this.accesskey = evaluateNotNull("accessKey", accessKey, String.class);
   }
 
   /**
+   * @throws JspException 
    * @jsp.attribute
    *   type = "java.lang.Boolean"
    *   required = "false"
    *   rtexprvalue = "true"
    *   description = "Specifies the initial value of the check box. Default is unchecked."
    */
-  public void setChecked(String checked) throws JspException {
-    Boolean tempResult = (Boolean) evaluateNotNull("checked", checked, Boolean.class);
+  public void setChecked(String checked) throws JspException{
+    Boolean tempResult = evaluateNotNull("checked", checked, Boolean.class);
     this.checked = tempResult.booleanValue();
   }
 
   /**
+   * @throws JspException 
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
    *   rtexprvalue = "true"
    *   description = "HTML tabindex for the check box."
    */   
-  public void setTabindex(String tabindex) throws JspException {
-    this.tabindex = (String) evaluateNotNull("tabindex", tabindex, String.class);
+  public void setTabindex(String tabindex) throws JspException{
+    this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 
 }

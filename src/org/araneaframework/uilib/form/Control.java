@@ -35,7 +35,7 @@ import org.araneaframework.uilib.form.control.BaseControl;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface Control extends Widget, Viewable, FormElementAware {
+public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object> {
   
   /**
    * Returns whether the control data was present in the HTTP request.
@@ -60,7 +60,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
    * 
    * @return Returns the value of the control (value read from the request).
    */
-  public Object getRawValue();
+  public T getRawValue();
 
   /**
    * Sets the control value. It is usually set by {@link org.araneaframework.uilib.form.Converter} when
@@ -69,7 +69,7 @@ public interface Control extends Widget, Viewable, FormElementAware {
    * @param value control value.
    * @see #getRawValue()
    */
-  public void setRawValue(Object value);
+  public void setRawValue(T value);
 
   /**
    * Converts the data submitted by the user.

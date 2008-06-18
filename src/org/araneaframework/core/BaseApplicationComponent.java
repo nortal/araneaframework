@@ -17,8 +17,8 @@
 package org.araneaframework.core;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
@@ -44,7 +44,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
       return BaseApplicationComponent.this.getScope();
     }
 
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
   }
@@ -61,7 +61,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
   }
   
   protected class CompositeComponentImpl implements Composite.Interface {
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
     
@@ -70,7 +70,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
     }
 
     public Component detach(Object key) {      
-      return (Component) _getChildren().remove(key);
+      return _getChildren().remove(key);
     }    
   }
   
@@ -81,8 +81,8 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * Returns a unmodifiable map of all the child components under this Component.
    * @return a map of child components
    */
-  public Map getChildren() {
-    return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
+  public Map<Object, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
   }
   
   public Viewable.Interface _getViewable() {
@@ -105,7 +105,6 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * Adds a component with the specified key. Allready initilized components cannot be added.
    * Duplicate keys not allowed. The child is initialized with the Environment from
    * <code>getChildComponentEnvironment()</code>. 
-   * @throws Exception
    */
   public void addComponent(Object key, Component child) {
     _addComponent(key, child, getChildComponentEnvironment());
@@ -155,10 +154,12 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
     _removeComponent(key);
   }  
   
+  @Override
   protected void propagate(Message message) {   
     _propagate(message);
   }
   
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }

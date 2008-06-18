@@ -43,14 +43,14 @@ import org.araneaframework.http.HttpInputData;
 public class StandardServletInputData implements HttpInputData {
   private HttpServletRequest req;
   
-  private Map extensions = new HashMap();
+  private Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
   
-  private Map globalData = new HashMap();
-  private Map scopedData = new HashMap();
+  private Map<String, String> globalData = new HashMap<String, String>();
+  private Map<String, Map<String, String>> scopedData = new HashMap<String, Map<String, String>>();
   private boolean dataInited;
   
   private StringBuffer path;
-  private LinkedList pathPrefixes = new LinkedList();
+  private LinkedList<String> pathPrefixes = new LinkedList<String>();
   
   private String servletPath;
   
@@ -72,17 +72,18 @@ public class StandardServletInputData implements HttpInputData {
     dataInited = false;
     
     path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
-    pathPrefixes = new LinkedList();
+    pathPrefixes = new LinkedList<String>();
   }
 
+  @SuppressWarnings("unchecked")
   private void initData() {
 	globalData.clear();
     scopedData.clear();
     
-    Enumeration params = req.getParameterNames();
+    Enumeration<String> params = req.getParameterNames();
     
     while (params.hasMoreElements()) {
-      String key = (String)params.nextElement();
+      String key = params.nextElement();
       
       if (key.lastIndexOf(".") == -1) {
         //global data - no prefix data
@@ -93,10 +94,10 @@ public class StandardServletInputData implements HttpInputData {
         String prefix = key.substring(0, key.lastIndexOf("."));
         String subKey = key.substring(key.lastIndexOf(".") + 1);
         
-        Map map = (Map)scopedData.get(prefix);
+        Map<String, String> map = scopedData.get(prefix);
         
         if (map == null) {
-          map = new HashMap();
+          map = new HashMap<String, String>();
           scopedData.put(prefix, map);
         }
 
@@ -107,34 +108,35 @@ public class StandardServletInputData implements HttpInputData {
     dataInited = true;
   }
   
-  public Map getGlobalData() {
+  public Map<String, String> getGlobalData() {
     if (!dataInited) initData();
     return Collections.unmodifiableMap(globalData);
   }
 
-  public Map getScopedData(Path scope) {
+  public Map<String, String> getScopedData(Path scope) {
     if (!dataInited) {
 			initData();
     }
 
-    Map result = (Map) scopedData.get(scope.toString());
+    Map<String, String> result = scopedData.get(scope.toString());
 
     if (result != null) {
 			return Collections.unmodifiableMap(result);
 		} else {
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		}
   }
 
-  public void extend(Class interfaceClass, Object implementation) {
+  public <T> void extend(Class<T> interfaceClass, T implementation) {
     if (HttpServletRequest.class.equals(interfaceClass) && implementation != null)
       setRequest((HttpServletRequest) implementation);
     
     extensions.put(interfaceClass, implementation);
   }
 
-  public Object narrow(Class interfaceClass) {
-    Object extension = extensions.get(interfaceClass); 
+  @SuppressWarnings("unchecked")
+  public <T> T narrow(Class<T> interfaceClass) {
+    T extension = (T) extensions.get(interfaceClass); 
     if (extension == null)
       throw new NoSuchNarrowableException(interfaceClass);
     return extension;
@@ -195,7 +197,8 @@ public class StandardServletInputData implements HttpInputData {
     return req.getLocale();
   }
 
-  public Iterator getParameterNames() {
+  @SuppressWarnings("unchecked")
+  public Iterator<String> getParameterNames() {
     return new EnumerationIterator(req.getParameterNames());
   }
 
@@ -208,7 +211,7 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public void popPathPrefix() {
-    path.insert(0, (String) pathPrefixes.removeLast()); 
+    path.insert(0, pathPrefixes.removeLast()); 
   }
 
   public void pushPathPrefix(String pathPrefix) {
@@ -228,4 +231,5 @@ public class StandardServletInputData implements HttpInputData {
       ExceptionUtil.uncheckException(e);
     }
   }
+
 }

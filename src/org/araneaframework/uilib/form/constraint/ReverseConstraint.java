@@ -100,16 +100,17 @@ public class ReverseConstraint extends BaseConstraint {
      * @return A collection of {@link String}s containing constraint validation
      *         error messages.
      */
-    public Collection getErrorMessage(ReverseConstraint c);
+    public Collection<String> getErrorMessage(ReverseConstraint c);
   }
 
   /**
    * It has the opposite effect on the contained constraint. If the latter validates,
    * this method does not, and <i>vice versa</i>.
    */
+  @Override
   protected void validateConstraint() throws Exception {
     toReverse.validate();
-    Set errors = toReverse.getErrors();
+    Set<String> errors = toReverse.getErrors();
     // Reverse constraint is invalid when wrapped constraint validates
     if (errors.isEmpty()) {
       if (customErrorMessage != null)
@@ -124,11 +125,13 @@ public class ReverseConstraint extends BaseConstraint {
     toReverse.clearErrors();
   }
 
+  @Override
   public void clearErrors() {
     toReverse.clearErrors();
     super.clearErrors();
   }
 
+  @Override
   public void setEnvironment(Environment environment) {
     super.setEnvironment(environment);
     toReverse.setEnvironment(environment);

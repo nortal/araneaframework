@@ -30,14 +30,17 @@ public class MockEventfulBaseService extends BaseService {
   private boolean destroyCalled = false;
   private boolean initCalled = false;
 
+  @Override
   public void action(Path path, InputData input, OutputData output) throws Exception {
     isActionCalled = true;
   }
   
+  @Override
   public void destroy() {
     destroyCalled = true;
   }
   
+  @Override
   public void init() {
     initCalled = true;
   }

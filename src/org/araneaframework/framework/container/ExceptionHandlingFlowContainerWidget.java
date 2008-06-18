@@ -95,6 +95,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * 
    * @throws Exception Any non-specific exception that may occur.
    */
+  @Override
   protected void init() throws Exception {
     super.init();
     
@@ -133,6 +134,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   /**
    * A widget specific handling of an exception.
    */
+  @Override
   protected void handleWidgetException(Exception e) throws Exception {
     this.exception = e;
     
@@ -141,7 +143,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     else
       log.error("Critical exception occured: ", e);
     
-    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
+    UpdateRegionContext updateRegionContext = getEnvironment().getEntry(UpdateRegionContext.class);
     if (updateRegionContext != null) {
       updateRegionContext.disableOnce();
     }
@@ -151,6 +153,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * Overrides the <code>update()</code> functionality to catch and handle
    * exceptions.
    */
+  @Override
   protected void update(InputData input) throws Exception {
     if (exception == null)
       super.update(input);    
@@ -161,6 +164,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * Overrides the <code>event()</code> functionality to catch and handle
    * exceptions.
    */
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (exception == null)
       super.event(path, input);    
@@ -172,6 +176,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * Overrides the <code>propagate()</code> functionality to catch and handle
    * exceptions.
    */
+  @Override
   protected void propagate(Message message) throws Exception {
     try {
       super.propagate(message);
@@ -189,6 +194,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * Overrides the <code>render()</code> functionality to catch and handle
    * exceptions.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     

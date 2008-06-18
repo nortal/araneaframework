@@ -47,11 +47,11 @@ public class InMemoryFormRowHandlerDecorator implements FormRowHandler {
 		return inMemoryRowHelper.getTempKey(row);
 	}
 
-	public void saveRows(Map rowForms) throws Exception {
+	public void saveRows(Map<Object, FormRow> rowForms) throws Exception {
 		rowHandler.saveRows(rowForms);
 	}
 
-	public void deleteRows(Set keys) throws Exception {
+	public void deleteRows(Set<Object> keys) throws Exception {
 		rowHandler.deleteRows(keys);
 	}
 

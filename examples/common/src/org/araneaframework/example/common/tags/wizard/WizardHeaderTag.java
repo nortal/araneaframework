@@ -31,6 +31,7 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "Includes navigation info."
  */
 public class WizardHeaderTag extends BaseTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
 	  WizardContext wizard = (WizardContext) getContextWidget();
 	  

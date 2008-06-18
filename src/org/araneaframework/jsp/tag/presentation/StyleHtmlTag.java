@@ -35,6 +35,7 @@ public class StyleHtmlTag extends PresentationTag {
   // Implementation
   //  
     
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -46,6 +47,7 @@ public class StyleHtmlTag extends PresentationTag {
     return EVAL_BODY_INCLUDE;    
   }
   
+  @Override
   protected int doEndTag(Writer out) throws Exception {   
     JspUtil.writeEndTag(out, "span");
       

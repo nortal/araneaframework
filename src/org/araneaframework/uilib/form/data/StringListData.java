@@ -24,10 +24,10 @@ import org.araneaframework.uilib.form.Data;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class StringListData extends Data {
+public class StringListData extends Data<List<String>> {
 
   public StringListData() {
     super(List.class, "List<String>");
-    value = new ArrayList();
+    value = new ArrayList<String>();
   }
 }

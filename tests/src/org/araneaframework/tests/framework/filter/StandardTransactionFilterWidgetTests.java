@@ -39,6 +39,7 @@ public class StandardTransactionFilterWidgetTests extends TestCase {
   private MockHttpServletRequest req;
   private StandardServletOutputData output;
   
+  @Override
   public void setUp() throws Exception {
     child = new MockEventfulBaseWidget();
     trans = new StandardTransactionFilterWidget();

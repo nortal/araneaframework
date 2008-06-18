@@ -40,8 +40,8 @@ public class BaseButtonTag extends PresentationTag {
    *   required = "false"
    *   description = "Button id, allows to access button from JavaScript." 
    */
-  public void setId(String id) throws JspException {
-    this.id = (String)evaluate("id", id, String.class);
+  public void setId(String id){
+    this.id = evaluate("id", id, String.class);
   }
 
   /**
@@ -50,8 +50,8 @@ public class BaseButtonTag extends PresentationTag {
    *   required = "false"
    *   description = "Id of button label." 
    */
-  public void setLabelId(String labelId) throws JspException {
-    this.labelId = (String)evaluate("labelId", labelId, String.class);
+  public void setLabelId(String labelId){
+    this.labelId = evaluate("labelId", labelId, String.class);
   }
 
   /**
@@ -60,8 +60,8 @@ public class BaseButtonTag extends PresentationTag {
    *   required = "true"
    *   description = "onClick Javascript action." 
    */
-  public void setOnclick(String onclick) throws JspException {
-    this.onclick = (String)evaluate("onclick", onclick, String.class);
+  public void setOnclick(String onclick){
+    this.onclick = evaluate("onclick", onclick, String.class);
   }
   
   /**
@@ -72,6 +72,6 @@ public class BaseButtonTag extends PresentationTag {
    *   description = "HTML tabindex for the button."
    */	
   public void setTabindex(String tabindex) throws JspException {
-    this.tabindex = (String)evaluateNotNull("tabindex", tabindex, String.class);
+    this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 }

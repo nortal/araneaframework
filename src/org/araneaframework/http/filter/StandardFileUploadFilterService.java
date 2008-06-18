@@ -116,6 +116,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
     this.tempDirectory = tempDirectory;
   }
 
+  @Override
   protected void init() throws Exception {
     if (!commonsFileUploadPresent) {
       log.warn("Jakarta Commons FileUpload not found! File uploading and multipart request handling will be disabled!");
@@ -123,16 +124,18 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
     super.init();
   }
 
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), FileUploadContext.class, this);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletRequest request = ServletUtil.getRequest(input);
 
     if (commonsFileUploadPresent && FileUploadBase.isMultipartContent(new ServletRequestContext(request))) {
-      Map fileItems = new HashMap();
-      Map parameterLists = new HashMap();
+      Map<String, DiskFileItem> fileItems = new HashMap<String, DiskFileItem>();
+      Map<String, List<String>> parameterLists = new HashMap<String, List<String>>();
 
       DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
       // Set upload parameters
@@ -160,7 +163,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
       // FIXME: somehow parse the request so that all information except file
       // upload data
       // comes through when exception occurs.
-      List items = null;
+      List<DiskFileItem> items = null;
       Exception uploadException = null;
       try {
         items = upload.parseRequest(request);
@@ -173,9 +176,9 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
       }
       // Process the uploaded items
       if (items != null) {
-        Iterator iter = items.iterator();
+        Iterator<DiskFileItem> iter = items.iterator();
         while (iter.hasNext()) {
-          DiskFileItem item = (DiskFileItem) iter.next();
+          DiskFileItem item = iter.next();
 
           if (!item.isFormField()) {
             if (maximumSize != null && item.getSize() > maximumSize.longValue()) {
@@ -188,10 +191,10 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
             fileItems.put(item.getFieldName(), item);
           }
           else {
-            List parameterValues = (List) parameterLists.get(item.getFieldName());
+            List<String> parameterValues = parameterLists.get(item.getFieldName());
 
             if (parameterValues == null) {
-              parameterValues = new ArrayList();
+              parameterValues = new ArrayList<String>();
               parameterLists.put(item.getFieldName(), parameterValues);
             }
 
@@ -218,29 +221,19 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   private static class MultipartWrapper extends HttpServletRequestWrapper {
-    Map parameters = new HashMap();
+    Map<String, String[]> parameters = new HashMap<String, String[]>();
 
-    public MultipartWrapper(HttpServletRequest req, Map parameterLists) throws Exception {
+    public MultipartWrapper(HttpServletRequest req, Map<String, List<String>> parameterLists) throws Exception {
       super(req);
 
-      for (Iterator i = parameterLists.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-        List parameterList = (List) entry.getValue();
+      for (Map.Entry<String, List<String>> entry : parameterLists.entrySet()) {
+        List<String> parameterList = entry.getValue();
 
-        parameters.put(entry.getKey(), toStringArray(parameterList.toArray()));
+        parameters.put(entry.getKey(), parameterList.toArray(new String[parameterList.size()]));
       }
     }
 
-    private String[] toStringArray(Object[] array) throws Exception {
-      String[] result = new String[array.length];
-
-      for (int i = 0; i < array.length; i++) {
-        result[i] = (String) array[i];
-      }
-
-      return result;
-    }
-
+    @Override
     public String getParameter(String arg0) {
       String[] result = getParameterValues(arg0);
 
@@ -250,16 +243,19 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
       return result[0];
     }
 
-    public Map getParameterMap() {
+    @Override
+    public Map<String, String[]> getParameterMap() {
       return parameters;
     }
 
-    public Enumeration getParameterNames() {
+    @Override
+    public Enumeration<String> getParameterNames() {
       return Collections.enumeration(parameters.keySet());
     }
 
+    @Override
     public String[] getParameterValues(String arg0) {
-      return (String[]) parameters.get(arg0);
+      return parameters.get(arg0);
     }
   }
 

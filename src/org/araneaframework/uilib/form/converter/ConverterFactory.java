@@ -16,9 +16,9 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
@@ -33,7 +33,7 @@ import org.araneaframework.uilib.support.ConverterKey;
 public class ConverterFactory implements ConverterProvider {
   /** @since 1.1 */
   public static final ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
-  protected final Map converters = new HashMap();
+  protected final Map<ConverterKey, Converter<?,?>> converters = new HashMap<ConverterKey, Converter<?,?>>();
 
   protected ConverterFactory() {
     //String -> Type
@@ -50,11 +50,11 @@ public class ConverterFactory implements ConverterProvider {
 
     //List<String> -> List<Type>
     converters
-        .put(new ConverterKey("List<String>", "List<Boolean>"), new ListConverter(new StringToBooleanConverter()));
-    converters.put(new ConverterKey("List<String>", "List<Long>"), new ListConverter(new StringToLongConverter()));
+        .put(new ConverterKey("List<String>", "List<Boolean>"), new ListConverter<String, Boolean>(new StringToBooleanConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Long>"), new ListConverter<String, Long>(new StringToLongConverter()));
     converters
-        .put(new ConverterKey("List<String>", "List<Integer>"), new ListConverter(new StringToIntegerConverter()));
-    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"), new ListConverter(
+        .put(new ConverterKey("List<String>", "List<Integer>"), new ListConverter<String, Integer>(new StringToIntegerConverter()));
+    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"), new ListConverter<String, BigDecimal>(
         new StringToBigDecimalConverter()));
 
     //Boolean -> Type
@@ -82,7 +82,7 @@ public class ConverterFactory implements ConverterProvider {
    * @throws ConverterNotFoundException
    *           if {@link BaseConverter}is not found
    */
-  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException {
+  public Converter<?,?> findConverter(String fromType, String toType) throws ConverterNotFoundException {
     if (fromType == null || toType == null) throw new ConverterNotFoundException(fromType, toType);
     if (fromType.equals(toType)) {
       return new IdenticalConverter();
@@ -91,7 +91,7 @@ public class ConverterFactory implements ConverterProvider {
       return new IdenticalConverter();
     }
     else {
-      Converter result = ((Converter) converters.get(new ConverterKey(fromType, toType)));
+      Converter<?,?> result = converters.get(new ConverterKey(fromType, toType));
 
       if (result == null) throw new ConverterNotFoundException(fromType, toType);
 

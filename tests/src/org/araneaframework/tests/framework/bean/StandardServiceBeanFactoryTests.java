@@ -30,6 +30,7 @@ public class StandardServiceBeanFactoryTests extends TestCase {
   private SpringServiceFactory factory;
   private MockBeanFactory beanFactory;
   
+  @Override
   public void setUp() throws Exception {
     factory = new SpringServiceFactory();
     beanFactory = new MockBeanFactory();

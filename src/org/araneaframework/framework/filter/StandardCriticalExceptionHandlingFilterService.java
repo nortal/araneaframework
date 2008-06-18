@@ -46,6 +46,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
     this.factory = factory;
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     AtomicResponseHelper arUtil = 
       new AtomicResponseHelper(output);

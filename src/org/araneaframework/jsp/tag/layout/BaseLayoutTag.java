@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import java.util.List;
-import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -32,12 +31,13 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseLayoutTag extends PresentationTag implements RowClassProvider, CellClassProvider {
-  protected List rowClasses;
-  protected List cellClasses;
+  protected List<String> rowClasses;
+  protected List<String> cellClasses;
   
   protected ResettableIterator rowIter;
   protected ResettableIterator cellIter;
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -50,12 +50,12 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
     return EVAL_BODY_INCLUDE;
   }
   
-  public String getRowClass() throws JspException {
+  public String getRowClass(){
     cellIter.reset();
 	return rowIter.hasNext() ? (String)rowIter.next() : null;
   }
   
-  public String getCellClass() throws JspException {
+  public String getCellClass(){
     return cellIter.hasNext() ? (String)cellIter.next() : null;
   }
   
@@ -68,8 +68,8 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
    *   required = "false"
    *   description = "Default style of rows in this layout. This is multi-valued attribute." 
    */
-  public void setRowClasses(String rowClasses) throws JspException {
-    this.rowClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("rowClasses", rowClasses, String.class));
+  public void setRowClasses(String rowClasses){
+    this.rowClasses = JspUtil.parseMultiValuedAttribute(evaluate("rowClasses", rowClasses, String.class));
   }
 
   /**
@@ -78,7 +78,7 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
    *   required = "false"
    *   description = "Default styleclass of cells in this layout. This is multi-valued attribute."
    */
-  public void setCellClasses(String cellClasses) throws JspException {
-    this.cellClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
+  public void setCellClasses(String cellClasses){
+    this.cellClasses = JspUtil.parseMultiValuedAttribute(evaluate("cellClasses", cellClasses, String.class));
   }
 }

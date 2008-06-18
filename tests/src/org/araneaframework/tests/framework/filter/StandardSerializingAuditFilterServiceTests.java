@@ -47,6 +47,7 @@ public class StandardSerializingAuditFilterServiceTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
   
+  @Override
   public void setUp() throws Exception {
     service = new StandardSerializingAuditFilterService();
     child = new MockEventfulBaseService();

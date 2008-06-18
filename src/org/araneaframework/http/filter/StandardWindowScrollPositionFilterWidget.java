@@ -32,7 +32,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   private static final Log log = LogFactory.getLog(StandardWindowScrollPositionFilterWidget.class);
   
   private static final long serialVersionUID = 1L;
-  protected LinkedList savedCoordinates = new LinkedList();
+  protected LinkedList<String[]> savedCoordinates = new LinkedList<String[]>();
   protected String windowScrollX;
   protected String windowScrollY;
   
@@ -47,7 +47,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   
   public void pop() {
     if (!savedCoordinates.isEmpty()) { 
-      String[] coords = (String[]) savedCoordinates.removeFirst();
+      String[] coords = savedCoordinates.removeFirst();
       windowScrollX = coords[0];
       windowScrollY = coords[1];
       
@@ -80,13 +80,15 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   }
 
   /* *********************************************************************** */
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), WindowScrollPositionContext.class, this);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
-    windowScrollX = (String) input.getGlobalData().get(WINDOW_SCROLL_X_KEY);
-    windowScrollY = (String) input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
+    windowScrollX = input.getGlobalData().get(WINDOW_SCROLL_X_KEY);
+    windowScrollY = input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
     
     log.debug("REQUEST COORDS READ TO BE  to " + windowScrollX + " " + windowScrollY);
 

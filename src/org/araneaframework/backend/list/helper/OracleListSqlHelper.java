@@ -43,7 +43,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 		super();
 	}
 
-	protected SqlStatement getCountSqlStatement() {
+	@Override
+  protected SqlStatement getCountSqlStatement() {
 		if (this.countSqlQuery != null) {
 			return new SqlStatement(this.countSqlQuery, this.statement
 					.getParams());
@@ -53,7 +54,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 		return new SqlStatement(temp, this.statement.getParams());
 	}
 
-	protected SqlStatement getRangeSqlStatement() {
+	@Override
+  protected SqlStatement getRangeSqlStatement() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT * FROM ("
 				+ "SELECT rownum listRowNum, listItemData.* FROM (");
@@ -83,7 +85,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	 *            the SQL query that will be used to retrieve the item range
 	 *            from the list and count the items.
 	 */
-	public void setSqlQuery(String sqlQuery) {
+	@Override
+  public void setSqlQuery(String sqlQuery) {
 		this.statement.setQuery(sqlQuery);
 	}
 
@@ -93,7 +96,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	 * @param countSqlQuery
 	 *            the SQL query used to count the items in the database.
 	 */
-	public void setCountSqlQuery(String countSqlQuery) {
+	@Override
+  public void setCountSqlQuery(String countSqlQuery) {
 		this.countSqlQuery = countSqlQuery;
 	}
 
@@ -104,7 +108,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	 * @param valueType
 	 *            the type of the NULL value.
 	 */
-	public void addNullParam(int valueType) {
+	@Override
+  public void addNullParam(int valueType) {
 		this.statement.addNullParam(valueType);
 	}
 
@@ -114,7 +119,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	 * @param param
 	 *            a <code>PreparedStatement</code> parameter.
 	 */
-	public void addStatementParam(Object param) {
+	@Override
+  public void addStatementParam(Object param) {
 		this.statement.addParam(param);
 	}
 
@@ -124,7 +130,8 @@ public class OracleListSqlHelper extends ListSqlHelper {
 	 * @param params
 	 *            <code>PreparedStatement</code> parameters.
 	 */
-	public void addStatementParams(List params) {
+	@Override
+  public void addStatementParams(List params) {
 		this.statement.addAllParams(params);
 	}
 }

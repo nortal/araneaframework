@@ -25,14 +25,16 @@ import org.araneaframework.uilib.form.formlist.FormRow;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class ValidOnlyIndividualFormRowHandler extends ValidOnlyFormRowHandler{
-	public void saveValidRows(Map rowForms) throws Exception {
+	@Override
+  public void saveValidRows(Map rowForms) throws Exception {
 		for (Iterator i = rowForms.entrySet().iterator(); i.hasNext();) {
 			Map.Entry entry = (Map.Entry) i.next();
 			saveValidRow((FormRow) entry.getValue());
 		}
 	}
 	
-	public void deleteRows(Set keys) throws Exception {
+	@Override
+  public void deleteRows(Set keys) throws Exception {
 		for (Iterator i = keys.iterator(); i.hasNext(); )
 			deleteRow(i.next());
 	}

@@ -27,7 +27,7 @@ import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class ButtonControl extends BaseControl {
+public class ButtonControl extends BaseControl<String> {
 
   //*********************************************************************
   // FIELDS
@@ -38,6 +38,7 @@ public class ButtonControl extends BaseControl {
   /**
    * Returns true
    */
+  @Override
   public boolean isRead() {
     return true;
   }
@@ -63,6 +64,7 @@ public class ButtonControl extends BaseControl {
   //* INTERNAL METHODS
   //*********************************************************************  	
 	
+  @Override
   protected void init() throws Exception {
     super.init();
     
@@ -72,6 +74,7 @@ public class ButtonControl extends BaseControl {
   /**
    * Empty method
    */
+  @Override
   protected void readFromRequest(HttpInputData request) {
     // Button control is not interested in what is submitted
   }
@@ -79,6 +82,7 @@ public class ButtonControl extends BaseControl {
   /**
    * Empty method
    */
+  @Override
   public void convertAndValidate() {
     // Button control is not interested in conversion and validation
   }
@@ -95,7 +99,8 @@ public class ButtonControl extends BaseControl {
    * 
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -109,7 +114,7 @@ public class ButtonControl extends BaseControl {
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<String>.ViewModel {
 
     private boolean hasOnClickEventListeners;
     

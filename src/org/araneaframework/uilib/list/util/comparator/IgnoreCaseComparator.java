@@ -36,15 +36,17 @@ public class IgnoreCaseComparator implements StringComparator, Serializable {
 		throw new RuntimeException("Locales not supported");
 	}
 
-	public int compare(Object o1, Object o2) {
-		return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
+	public int compare(String s1, String s2) {
+		return String.CASE_INSENSITIVE_ORDER.compare(s1, s2);
 	}
 	
-	public boolean equals(Object obj) {
+	@Override
+  public boolean equals(Object obj) {
 		return IgnoreCaseComparator.class.equals(obj.getClass());
 	}
 
-	public int hashCode() {
+	@Override
+  public int hashCode() {
 		return 703271433;
 	}
 }

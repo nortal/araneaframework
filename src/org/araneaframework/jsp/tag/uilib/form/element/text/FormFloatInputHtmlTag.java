@@ -36,12 +36,13 @@ public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
   {
     baseStyleClass = "aranea-float";
   }
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
 
     FloatControl.ViewModel viewModel = ((FloatControl.ViewModel)controlViewModel);
 
-    Map attributes = new HashMap();
+    Map<String, String> attributes = new HashMap<String, String>();
     if (viewModel.getInputFilter() != null) {
       attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
     }

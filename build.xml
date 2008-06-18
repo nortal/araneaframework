@@ -110,7 +110,7 @@
 			classpathref="classpath"
 		/>
 
-		<webdoclet destdir="build/tmp/presentation/META-INF">
+		<webdoclet destdir="build/tmp/presentation/META-INF" force="true">
 			<fileset 
 				dir="src" includes="**/*Tag.java"/>
 
@@ -120,6 +120,7 @@
 				filename="aranea-standard.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
+        jspversion="2.0"
 			/>
 		</webdoclet>
 
@@ -151,8 +152,8 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			target="1.3"
-			source="1.3"
+			target="1.5"
+			source="1.5"
 			srcdir="etc/src"
 			deprecation="yes"
 		>
@@ -161,7 +162,7 @@
 		</javac>
 	</target>
 
-	<target name="compile" depends="init,compile-etc"
+	<target name="compile" depends="init"
 		description="Compiles source code from src and etc/src directory">
 
 		<mkdir dir="build/classes" />
@@ -171,8 +172,8 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			target="1.3"
-			source="1.3"
+			target="1.5"
+			source="1.5"
 			srcdir="src"
 			deprecation="yes"
 		>

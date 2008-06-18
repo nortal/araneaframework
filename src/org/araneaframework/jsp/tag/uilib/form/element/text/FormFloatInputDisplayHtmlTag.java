@@ -32,6 +32,7 @@ public class FormFloatInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHt
     baseStyleClass = "aranea-float-display";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
     return super.doEndTag(out);

@@ -34,13 +34,14 @@ import org.araneaframework.uilib.form.control.TextControl;
  *   description = "Form text input field, represents UiLib &quot;TextControl&quot;."
  */
 public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertType();
 
     TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
 
     // Write
-    Map attributes = getCustomAttributes(viewModel);
+    Map<String, String> attributes = getCustomAttributes(viewModel);
     writeTextInput(out, "text", true, attributes);
 
     // Continue
@@ -54,9 +55,9 @@ public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   }
 
   /** @since 1.1 */
-  protected Map getCustomAttributes(TextControl.ViewModel viewModel) {
-    Map attributes = new HashMap();
-    attributes.put("maxLength", viewModel.getMaxLength());
+  protected Map<String, String> getCustomAttributes(TextControl.ViewModel viewModel) {
+    Map<String, String> attributes = new HashMap<String, String>();
+    attributes.put("maxLength", String.valueOf(viewModel.getMaxLength()));
     if (viewModel.getInputFilter() != null) {
       attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
     }

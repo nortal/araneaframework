@@ -32,7 +32,8 @@ import java.sql.SQLException;
  * @author Thierry Templier
  * @author Juergen Hoeller
  */
-public interface ConnectionCallback {
+//FIXME WTH is this class?
+public interface ConnectionCallback<T> {
 	/**
 	 * Gets called by <code>CciTemplate.execute</code> with an active CCI Connection.
 	 * Does not need to care about activating or closing the Connection, or handling
@@ -52,5 +53,5 @@ public interface ConnectionCallback {
 	 *
 	 * @param con active CCI Connection
 	 */
-	Object doInConnection(Connection con) throws SQLException;
+	T doInConnection(Connection con) throws SQLException;
 }

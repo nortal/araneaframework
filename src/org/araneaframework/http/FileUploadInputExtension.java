@@ -35,12 +35,12 @@ public interface FileUploadInputExtension extends Serializable {
   /**
    * @return Map of &lt;fileName, fileContent&gt;
    */
-  public Map getUploadedFiles();
+  public Map<String, ? extends FileItem> getUploadedFiles();
 
   
   /**
-   * Returns the exception that occured when trying to parse file upload.
-   * @return exception that occured when trying to parse file upload
+   * Returns the exception that occurred when trying to parse file upload.
+   * @return exception that occurred when trying to parse file upload
    */
   public Exception getUploadException();
 

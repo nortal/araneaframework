@@ -52,14 +52,16 @@ public class DebugHtmlTag extends BaseTag {
 
 	protected int scope = PageContext.PAGE_SCOPE;
 
-	protected int doEndTag(Writer out) throws Exception {			
+	@SuppressWarnings("unchecked")
+  @Override
+  protected int doEndTag(Writer out) throws Exception {			
 		// Output
 		JspUtil.writeOpenStartTag(out, "table");
 		JspUtil.writeAttribute(out, "border", "1");
 		JspUtil.writeCloseStartTag(out);
 
-		for(Enumeration i = pageContext.getAttributeNamesInScope(scope); i.hasMoreElements();) {
-			String key = (String)i.nextElement();
+		for(Enumeration<String> i = pageContext.getAttributeNamesInScope(scope); i.hasMoreElements();) {
+			String key = i.nextElement();
 			JspUtil.writeStartTag(out, "tr");
 			JspUtil.writeStartTag(out, "td");
 			JspUtil.writeEscaped(out, key);
@@ -89,7 +91,7 @@ public class DebugHtmlTag extends BaseTag {
 	 *   description = "Attribute scope."
 	 */
 	public void setScope(String scope) throws JspException {
-		String scopeString = (String)evaluateNotNull("scope", scope, String.class);
+		String scopeString = evaluateNotNull("scope", scope, String.class);
 
 		if (APPLICATION_SCOPE.equals(scopeString))
 			this.scope = PageContext.APPLICATION_SCOPE;

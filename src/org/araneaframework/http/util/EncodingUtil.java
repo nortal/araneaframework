@@ -62,7 +62,9 @@ public abstract class EncodingUtil {
 			oos.flush();
 		}
 		finally {
-			oos.close();
+		  if(oos != null) {
+		    oos.close();
+		  }
 		}
 	
 		return new String(baos.toByteArray(), "UTF-8");
@@ -91,7 +93,6 @@ public abstract class EncodingUtil {
 	 * 
 	 * @param data the byte array that's digest we are building.
 	 * @return A byte[] array representing the SHA hash.
-	 * @throws Exception
 	 */
 	public static byte[] buildDigest(byte[] data) {
 	  try {
@@ -107,9 +108,8 @@ public abstract class EncodingUtil {
 	 * Returns true, if the digest of the value equals to the given digest.
 	 * 
 	 * @param value byte array that's digest we are comparing. 
-	 * @param digest the allready generated digest we are comparing against.
+	 * @param digest the already generated digest we are comparing against.
 	 * @return true if the digest of the value equals digest, otherwise false.
-	 * @throws Exception
 	 */
 	public static boolean checkDigest(byte[] value, byte[] digest) {
 		return MessageDigest.isEqual(buildDigest(value), digest);

@@ -27,7 +27,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class StringValueControl extends EmptyStringNullableControl {
+public abstract class StringValueControl extends EmptyStringNullableControl<String> {
   
   private Long minLength;
   private Long maxLength;
@@ -73,7 +73,8 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
   /**
    * Direct copy.
    */
-  protected Object fromRequest(String parameterValue) {
+  @Override
+  protected String fromRequest(String parameterValue) {
   	if (parameterValue != null && trimValue)
   		return parameterValue.trim();
   	
@@ -83,15 +84,17 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
   /**
    * Direct copy.
    */
-  protected String toResponse(Object controlValue) {
-    return (String) controlValue;
+  @Override
+  protected String toResponse(String controlValue) {
+    return controlValue;
   }
   
   /**
    * Checks that the value (<code>String</code>) length is between the given values.
    */
+  @Override
   protected void validateNotNull() {   
-    if (minLength != null && ((String) getRawValue()).length() < minLength.longValue()) {      
+    if (minLength != null && getRawValue().length() < minLength.longValue()) {      
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.STRING_TOO_SHORT, 
@@ -100,7 +103,7 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
           getEnvironment()));        
     }
     
-    if (maxLength != null && ((String) getRawValue()).length() > maxLength.longValue()) {  
+    if (maxLength != null && getRawValue().length() > maxLength.longValue()) {  
       addError(
           MessageUtil.localizeAndFormat(
           UiLibMessages.STRING_TOO_LONG, 
@@ -115,7 +118,8 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
    * 
    * @return {@link ViewModel}.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }	  
 
@@ -126,7 +130,7 @@ public abstract class StringValueControl extends EmptyStringNullableControl {
   /**
    * @author <a href="mailto:olegm@webmedia.ee">Oleg Mürk</a>
    */
-  public class ViewModel extends StringArrayRequestControl.ViewModel {
+  public class ViewModel extends StringArrayRequestControl<String>.ViewModel {
  
     private Long minLength;
     private Long maxLength;

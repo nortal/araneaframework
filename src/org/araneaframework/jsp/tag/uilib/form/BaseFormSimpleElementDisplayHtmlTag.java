@@ -25,8 +25,9 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  */
 public abstract class BaseFormSimpleElementDisplayHtmlTag extends BaseFormElementDisplayTag {	
 	
-	protected int doEndTag(Writer out) throws Exception {				
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
+	@Override
+  protected int doEndTag(Writer out) throws Exception {				
+		StringArrayRequestControl<?>.ViewModel viewModel = ((StringArrayRequestControl<?>.ViewModel) controlViewModel);
 		
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "class", getStyleClass());

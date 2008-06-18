@@ -46,7 +46,8 @@ public class FormListRowsTag extends BaseListRowsTag {
 	
 	protected String var = "row";
 	
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(FormListTag.FORM_LIST_VIEW_MODEL_KEY);
 		editableListId = (String)requireContextEntry(FormListTag.FORM_LIST_ID_KEY);
 		return super.doStartTag(out);
@@ -70,15 +71,17 @@ public class FormListRowsTag extends BaseListRowsTag {
   // Implementation
   //
 	
-	protected ListIterator getIterator() {
+	@Override
+  protected ListIterator<?> getIterator() {
 		return editableListViewModel.getRows().listIterator();
 	}
 
-	protected void doForEachRow(Writer out) throws Exception {
+	@Override
+  protected void doForEachRow(Writer out) throws Exception {
 		super.doForEachRow(out);		
 		
 	  	Object currentRowKey = editableListViewModel.getRowHandler().getRowKey(currentRow);
-	  	FormRow.ViewModel currentEditableRow = (FormRow.ViewModel) editableListViewModel.getFormRows().get(currentRowKey);
+	  	FormRow.ViewModel currentEditableRow = editableListViewModel.getFormRows().get(currentRowKey);
 	  	
 	  	addContextEntry(EDITABLE_ROW_KEY, currentEditableRow);
 	  	addContextEntry(var, currentRow);	
@@ -88,6 +91,7 @@ public class FormListRowsTag extends BaseListRowsTag {
 	    executeStartSubtag(rowForm);
 	}
     
+  @Override
   protected int afterBody(Writer out) throws Exception {
   	executeEndTagAndUnregister(rowForm);
   	

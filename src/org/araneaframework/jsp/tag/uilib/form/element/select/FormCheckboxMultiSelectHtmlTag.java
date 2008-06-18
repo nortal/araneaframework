@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -45,6 +44,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     setHasElementContextSpan(false);
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
@@ -52,6 +52,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
 
+  @Override
   public int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");    
 
@@ -64,8 +65,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
 
-    for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem displayItem = (DisplayItem) i.next();
+    for (DisplayItem displayItem : viewModel.getSelectItems()) {
       
       // set the corresponding HTML id for label and checkbox so that clicking on label
       // sets the checkbox value too
@@ -114,8 +114,8 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "The way the checkboxes will be rendered - can be either "vertical" or "horizontal". By default "horizontal"." 
    */
-  public void setType(String type) throws JspException {
-    this.type = (String)evaluate("type", type, String.class);
+  public void setType(String type){
+    this.type = evaluate("type", type, String.class);
   }
 
   /**
@@ -125,7 +125,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    *   description = "Boolean that controls whether label is before or after each checkbox. False by default." 
    */
   public void setLabelBefore(String labelBefore) throws JspException {
-    this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
+    this.labelBefore = (evaluateNotNull("labelBefore", labelBefore, Boolean.class)).booleanValue();
   }
 
   protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label, String id, String value) throws JspException {

@@ -54,27 +54,32 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 	private static final long serialVersionUID = 1L;
 	
 	public MessageSource getMessageSource() {
-		return (WebApplicationContext) getEnvironment().getEntry(WebApplicationContext.class);
+		return getEnvironment().getEntry(WebApplicationContext.class);
 	}
 	
-	public String getMessage(String code, Object[] args, String defaultMessage) {
+	@Override
+  public String getMessage(String code, Object[] args, String defaultMessage) {
 		return getMessageSource().getMessage(code, args, defaultMessage, getLocale());
 	}
 	
-	public String getMessage(String code, Object[] args) {
+	@Override
+  public String getMessage(String code, Object[] args) {
 		return getMessageSource().getMessage(code, args, getLocale());
 	}
 	
-	protected Environment getChildEnvironment() {
+	@Override
+  protected Environment getChildEnvironment() {
 		return new StandardEnvironment(super.getChildEnvironment(), SpringLocalizationContext.class, this);
 	}
 	
 	/* Resource Bundle Localization Context */
-	public ResourceBundle getResourceBundle(Locale locale) {
+	@Override
+  public ResourceBundle getResourceBundle(Locale locale) {
 		return new MessageSourceResourceBundle(getMessageSource(), locale);
 	}
 	
-	public String localize(String key) {
+	@Override
+  public String localize(String key) {
 		return getMessage(key, null);
 	}
 }

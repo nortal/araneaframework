@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletConfig;
@@ -62,9 +61,10 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 		}
 	}
 
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
+	@Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
 		if (!isInitialized) {
-			ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
+			ServletConfig config = getEnvironment().getEntry(ServletConfig.class);
 			initialize(config.getServletContext());
 		}
     
@@ -77,8 +77,8 @@ public class StandardFileImportFilterService  extends BaseFilterService {
       return;
     }
 
-		String fileName = (String)input.getGlobalData().get(IMPORTER_FILE_NAME);
-		String groupName = (String)input.getGlobalData().get(IMPORTER_GROUP_NAME);
+		String fileName = input.getGlobalData().get(IMPORTER_FILE_NAME);
+		String groupName = input.getGlobalData().get(IMPORTER_GROUP_NAME);
 		
 		if (fileName == null) {
 			fileName = uri.substring(FILE_IMPORTER_NAME.length() + 1);
@@ -94,7 +94,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 
 		HttpServletResponse response = ServletUtil.getResponse(output);
 	
-		List filesToLoad = new ArrayList();
+		List<String> filesToLoad = new ArrayList<String>();
 		OutputStream out = response.getOutputStream();
 		try {
 			if (fileName != null) {
@@ -105,10 +105,10 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 				}				
 			}
 			else if (groupName != null) {
-				Map group = resources.getGroupByName(groupName);
+				Map<String, String> group = resources.getGroupByName(groupName);
 				if (group != null && group.size() > 0) {
-					Map.Entry entry = (Map.Entry)(group.entrySet().iterator().next());
-					setHeaders(response, (String)entry.getValue());
+					Map.Entry<String, String> entry = (group.entrySet().iterator().next());
+					setHeaders(response, entry.getValue());
 					filesToLoad.addAll(group.keySet());
 					loadFiles(filesToLoad, out);
 				}
@@ -130,10 +130,9 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 	  response.setContentType(contentType);
 	}
 
-	private void loadFiles(List files, OutputStream out) throws Exception {
-		ServletContext context = (ServletContext)getEnvironment().getEntry(ServletContext.class);
-		for (Iterator iter = files.iterator(); iter.hasNext();) {
-			String fileName = (String) iter.next();
+	private void loadFiles(List<String> files, OutputStream out) throws Exception {
+		ServletContext context = getEnvironment().getEntry(ServletContext.class);
+		for (String fileName : files) {
 			
 			ClassLoader loader = getClass().getClassLoader();
 			// first we try load an override
@@ -165,7 +164,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 				InputStream inputStream = null;
 
 				try {
-				  inputStream = fileInputStream != null ? fileInputStream : fileURL.openStream();
+				  inputStream = fileURL != null ? fileURL.openStream() : fileInputStream;
 
           if (inputStream!=null) {
           	int length = 0;
@@ -177,7 +176,9 @@ public class StandardFileImportFilterService  extends BaseFilterService {
           	} while (length!=-1);
           }
         } finally {
-          inputStream.close();
+          if(inputStream != null) {
+            inputStream.close();
+          }
         }
 				
 			}

@@ -4,7 +4,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationService;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
@@ -30,13 +29,14 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected String divClass = "autocompletediv";  
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("AutoCompleteTextControl");
 
     AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
 
-    Map attributes = new HashMap();
-    attributes.put("maxlength", viewModel.getMaxLength());
+    Map<String, String> attributes = new HashMap<String, String>();
+    attributes.put("maxlength", String.valueOf(viewModel.getMaxLength()));
     attributes.put("autocomplete", "off");
 
     // TODO: make it completely consistent with every other tag 
@@ -83,7 +83,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     result.append(ApplicationService.ACTION_PATH_KEY).append('=').append(getFullFieldId()).append('&');
     result.append(ApplicationService.ACTION_HANDLER_ID_KEY).append('=').append(AutoCompleteTextControl.LISTENER_NAME);
     
-    StateVersioningContext ctx = (StateVersioningContext)getEnvironment().getEntry(StateVersioningContext.class);
+    StateVersioningContext ctx = getEnvironment().getEntry(StateVersioningContext.class);
     if (ctx != null) {
       //XXX: wtf is that
       result.append('&');
@@ -118,11 +118,11 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     script.append("\", {");
     
     // Autocompleter options
-    for (Iterator i = getOptionMap().entrySet().iterator(); i.hasNext(); ) {
-    	Map.Entry entry = (Map.Entry) i.next();
-    	script.append((String)entry.getKey());
+    for (Iterator<Map.Entry<String, String>> i = getOptionMap().entrySet().iterator(); i.hasNext(); ) {
+    	Map.Entry<String, String> entry = i.next();
+    	script.append(entry.getKey());
     	script.append(":");
-    	script.append((String)entry.getValue());
+    	script.append(entry.getValue());
     	if (i.hasNext()) script.append(",");
     }
 
@@ -132,10 +132,10 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   }
   
   /** @since 1.0.2 */
-  protected Map getOptionMap() {
+  protected Map<String, String> getOptionMap() {
     AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
 
-    Map result = new HashMap(2);
+    Map<String, String> result = new HashMap<String, String>(2);
     result.put("minChars", String.valueOf(viewModel.getMinCompletionLength()));
     if (!viewModel.isDisabled() && events && viewModel.isOnChangeEventRegistered())
       result.put("afterUpdateElement", "function(el, selectedEl) {" + JspWidgetCallUtil.getSubmitScriptForEvent(getOnChangeEvent()) + "}");
@@ -156,7 +156,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    * required = "false"
    * description = "Class attribute assigned to &lt;DIV&gt; inside which suggestions are shown."
    */
-  public void setDivClass(String divClass) throws JspException {
-    this.divClass = (String) evaluate("divClass", divClass, String.class);
+  public void setDivClass(String divClass){
+    this.divClass = evaluate("divClass", divClass, String.class);
   }
 }

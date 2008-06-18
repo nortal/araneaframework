@@ -28,7 +28,8 @@ import javax.servlet.jsp.JspException;
 public abstract class BaseTagWrapperTag extends BaseTag {
 	protected ContainedTagInterface tag;
   
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);	
 
 		// Get wrapped tag		
@@ -46,7 +47,8 @@ public abstract class BaseTagWrapperTag extends BaseTag {
 		return EVAL_BODY_INCLUDE;
 	}
 
-	protected int doEndTag(Writer out) throws Exception {				
+	@Override
+  protected int doEndTag(Writer out) throws Exception {				
 		this.executeEndSubtag(tag);
     
 		// Complete

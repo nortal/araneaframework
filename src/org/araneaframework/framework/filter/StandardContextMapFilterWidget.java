@@ -17,7 +17,6 @@
 package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,23 +31,23 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 public class StandardContextMapFilterWidget extends BaseFilterWidget {
   private static final Log log = LogFactory.getLog(StandardContextMapFilterWidget.class);
   
-  private Map contexts = new HashMap();
+  private Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
   
+  @Override
   protected void init() throws Exception {
-    Map entries = new HashMap();
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     
     if (contexts != null)
-      for (Iterator i = contexts.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
+      for (Map.Entry<Class<?>, Object> entry : contexts.entrySet()) {
         
-        String key = (String) entry.getKey();
+        Class<?> key = entry.getKey();
         
-        if (key.endsWith(".class")) {
-          String className =  key.substring(0, key.lastIndexOf('.'));
-          Class contextKey = Class.forName(className);
-          entries.put(contextKey, entry.getValue());
-        }
-        else
+//        if (key.endsWith(".class")) {
+//          String className =  key.substring(0, key.lastIndexOf('.'));
+//          Class<?> contextKey = Class.forName(className);
+//          entries.put(contextKey, entry.getValue());
+//        }
+//        else
           entries.put(key, entry.getValue());
       }
     
@@ -62,7 +61,7 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
    * Set the contexts that are made accessible from children's environments.
    * @param contexts Map &lt;contextKey, contextValue&gt;
    */
-  public void setContexts(Map contexts) {
+  public void setContexts(Map<Class<?>, Object> contexts) {
     this.contexts = contexts;
   }
 }

@@ -34,6 +34,7 @@ public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   {
     baseStyleClass = "aranea-date";
   }
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("DateControl");    
 

@@ -74,6 +74,7 @@ public class AtomicResponseHelper {
       out = new AraneaServletOutputStream();
     }    
     
+    @Override
     public ServletOutputStream getOutputStream() throws IOException {
       if (out == null)
         return getResponse().getOutputStream();
@@ -81,6 +82,7 @@ public class AtomicResponseHelper {
       return out;
     }
     
+    @Override
     public PrintWriter getWriter() throws IOException {
       if (out == null)
         return getResponse().getWriter();
@@ -141,15 +143,19 @@ public class AtomicResponseHelper {
       out = new ByteArrayOutputStream(20480);
     }
     
-    public void write(int b) throws IOException {
+    @Override
+    public void write(int b) {
       out.write(b);
     }
+    @Override
     public void write(byte[] b) throws IOException {
       out.write(b);
     }
-    public void write(byte[] b, int offset, int len) throws IOException{
+    @Override
+    public void write(byte[] b, int offset, int len){
        out.write(b, offset, len);
     }
+    @Override
     public void flush() throws IOException{
       out.flush();
     }

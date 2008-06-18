@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -53,13 +53,13 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private Map eventListeners;
+  private Map<Object, List<EventListener>> eventListeners;
   private EventListener globalListener;
   
-  private Map actionListeners;
+  private Map<Object, List<ActionListener>> actionListeners;
   
-  private Map viewData;
-  private Map viewDataOnce;
+  private Map<String, Object> viewData;
+  private Map<String, Object> viewDataOnce;
 
   //*******************************************************************
   // CONSTRUCTORS
@@ -84,7 +84,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
      * Returns a map of all the child components under this Composite.
      * @return a map of child components
      */
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }
 
@@ -99,7 +99,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
      * @see org.araneaframework.Composite.Interface#detach(java.lang.Object)
      */
     public Component detach(Object key) {
-      return (Component) _getChildren().remove(key);
+      return _getChildren().remove(key);
     }    
   }
   //*******************************************************************
@@ -111,12 +111,12 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   //*******************************************************************
   
   public class ViewModel implements ApplicationWidget.WidgetViewModel {
-    private Map viewData;
+    private Map<String, Object> data;
     
     public ViewModel() {
-      viewData = BaseApplicationWidget.this.viewData == null ? new HashMap() : new HashMap(BaseApplicationWidget.this.viewData);
+      data = BaseApplicationWidget.this.viewData == null ? new HashMap<String, Object>() : new HashMap<String, Object>(BaseApplicationWidget.this.viewData);
       if (viewDataOnce != null)
-        viewData.putAll(viewDataOnce);
+        data.putAll(viewDataOnce);
     }
 
     /** @since 1.1 */
@@ -124,12 +124,12 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     	return BaseApplicationWidget.this.getScope();
     }
 
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }
     
-    public Map getData() {
-      return viewData;
+    public Map<String, Object> getData() {
+      return data;
     }    
   }
   
@@ -137,30 +137,30 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   // PRIVATE METHODS
   //*******************************************************************
 
-  private Map getEventListeners() {
+  private Map<Object, List<EventListener>> getEventListeners() {
     if (eventListeners == null)
-      eventListeners = new LinkedMap(1);
+      eventListeners = new LinkedHashMap<Object, List<EventListener>>(1);
     
     return eventListeners;
   }
   
-  private Map getActionListeners() {
+  private Map<Object, List<ActionListener>> getActionListeners() {
     if (actionListeners == null)
-      actionListeners = new LinkedMap(1);
+      actionListeners = new LinkedHashMap<Object, List<ActionListener>>(1);
       
     return actionListeners;
   }
   
-  private Map getViewData() {
+  private Map<String, Object> getViewData() {
     if (viewData == null)
-      viewData = new LinkedMap(1);
+      viewData = new LinkedHashMap<String, Object>(1);
       
     return viewData;
   }
   
-  private Map getViewDataOnce() {
+  private Map<String, Object> getViewDataOnce() {
     if (viewDataOnce == null)
-      viewDataOnce = new LinkedMap(1);
+      viewDataOnce = new LinkedHashMap<String, Object>(1);
       
     return viewDataOnce;
   }
@@ -176,20 +176,23 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     return getEnvironment();
   }
   
+  @Override
   protected void propagate(Message message) throws Exception {
     _propagate(message);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     if (viewDataOnce != null)
       viewDataOnce.clear();
 
     handleUpdate(input);
 
-    Iterator ite = (new HashMap(getChildren())).keySet().iterator();
+    //XXX strange iterating
+    Iterator<Object> ite = (new HashMap<Object, Component>(getChildren())).keySet().iterator();
     while (ite.hasNext()) {
       Object key = ite.next();
-      Component c = (Component) getChildren().get(key);
+      Component c = getChildren().get(key);
       if (c != null && c instanceof Widget) {
         ((Widget)c)._getWidget().update(input);
       }
@@ -200,6 +203,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * If path hasNextStep() routes to the correct child, 
    * otherwise calls the appropriate listener. 
    */ 
+  @Override
   protected void event(Path path, InputData input) throws Exception {    
     if (path != null && path.hasNext()) {
       Object next = path.next();
@@ -240,7 +244,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       return;
     }
     
-    List listener = eventListeners == null ? null : (List)eventListeners.get(eventId);  
+    List<EventListener> listener = eventListeners == null ? null : eventListeners.get(eventId);  
     
     if (log.isTraceEnabled()) {
       log.trace("Delivering event '" + eventId + "' to widget '" + getScope() + "', type: '" + getClass().getName() + "'");
@@ -248,9 +252,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     
     try {
       if (listener != null && listener.size() > 0) {
-        Iterator ite = (new ArrayList(listener)).iterator();
+        Iterator<EventListener> ite = (new ArrayList<EventListener>(listener)).iterator();
         while(ite.hasNext()) {
-          ((EventListener)ite.next()).processEvent(eventId, input);
+          ite.next().processEvent(eventId, input);
         }
 
         return;
@@ -276,6 +280,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * If {@link Path#hasNext()} routes to the action to child, otherwise calls the
    * appropriate {@link org.araneaframework.core.ActionListener}.
    */ 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
       Object next = path.next();
@@ -309,16 +314,16 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
       return;
     }
     
-    List listener = actionListeners == null ? null : (List)actionListeners.get(actionId);  
+    List<ActionListener> listener = actionListeners == null ? null : actionListeners.get(actionId);  
 
     if (log.isTraceEnabled()) {
       log.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName() + "'");
     }
     
     if (listener != null && listener.size() > 0) {
-      Iterator ite = (new ArrayList(listener)).iterator();
+      Iterator<ActionListener> ite = (new ArrayList<ActionListener>(listener)).iterator();
       while(ite.hasNext()) {
-        ((ActionListener)ite.next()).processAction(actionId, input, output);
+        ite.next().processAction(actionId, input, output);
       }
       
       return;
@@ -333,6 +338,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   /**
    * Renders the component to output, meant for overriding.
    */
+  @Override
   protected void render(OutputData output) throws Exception {}
   
   /**
@@ -340,7 +346,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * the input's global data.
    */
   protected String getEventId(InputData input) {
-    return (String) input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
+    return input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
   }
   
   /**
@@ -374,8 +380,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
    * Returns all the childcomponents of this component.
    * @return a map of the childcomponents under this component
    */
-  public Map getChildren() {
-    return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
+  public Map<Object, Component> getChildren() {
+    //XXX why LinkedMap as well?
+    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
   }
   
   /**
@@ -435,6 +442,7 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     _disableComponent(key);
   }
   
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }
@@ -478,10 +486,10 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     Assert.notNullParam(this, eventId, "eventId");
     Assert.notNullParam(this, listener, "listener");
     
-    List list = (List)getEventListeners().get(eventId);
+    List<EventListener> list = getEventListeners().get(eventId);
     
     if (list == null) {
-      list = new ArrayList(1);
+      list = new ArrayList<EventListener>(1);
     }
     list.add(listener);
     
@@ -496,9 +504,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   public void removeEventListener(EventListener listener) {
     Assert.notNullParam(this, listener, "listener");
     
-    Iterator ite = (new HashMap(getEventListeners())).values().iterator();
+    Iterator<List<EventListener>> ite = (new HashMap<Object, List<EventListener>>(getEventListeners())).values().iterator();
     while(ite.hasNext()) {
-      ((List)ite.next()).remove(listener);
+      ite.next().remove(listener);
     }
   }
   
@@ -555,10 +563,10 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
     Assert.notNullParam(this, actionId, "actionId");
     Assert.notNullParam(this, listener, "listener");
     
-    List list = (List)getActionListeners().get(actionId);
+    List<ActionListener> list = getActionListeners().get(actionId);
     
     if (list == null) {
-      list = new ArrayList(1);
+      list = new ArrayList<ActionListener>(1);
     }
     list.add(listener);
     
@@ -571,9 +579,9 @@ public abstract class BaseApplicationWidget extends BaseWidget implements Applic
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
     
-    Iterator ite = (new HashMap(getActionListeners())).values().iterator();
+    Iterator<List<ActionListener>> ite = (new HashMap<Object, List<ActionListener>>(getActionListeners())).values().iterator();
     while(ite.hasNext()) {
-      ((List)ite.next()).remove(listener);
+      ite.next().remove(listener);
     }
   }
   

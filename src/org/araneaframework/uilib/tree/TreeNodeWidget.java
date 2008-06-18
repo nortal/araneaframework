@@ -50,11 +50,11 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private boolean collapsed = true;
   private boolean collapsedDecide = false;
   private Widget initDisplay;
-  private List initNodes;
+  private List<TreeNodeWidget> initNodes;
   private TreeNodeWidget parentNode;
   private int index = -1;
   private int nextChildIndex = 0;
-  private List childNodeWrappers;
+  private List<ChildNodeWrapper> childNodeWrappers;
 
   private static class ChildNodeWrapper implements Serializable {
 
@@ -104,7 +104,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * @param nodes
    *          list of {@link TreeNodeWidget}s added as children.
    */
-  public TreeNodeWidget(Widget display, List nodes) {
+  public TreeNodeWidget(Widget display, List<TreeNodeWidget> nodes) {
     this(display, nodes, true);
     collapsedDecide = true;
   }
@@ -120,13 +120,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * @param collapsed
    *          if tree node will be collapsed (children hidden) by default.
    */
-  public TreeNodeWidget(Widget display, List nodes, boolean collapsed) {
+  public TreeNodeWidget(Widget display, List<TreeNodeWidget> nodes, boolean collapsed) {
     this(display);
     Assert.notNullParam(nodes, "nodes");
     initNodes = nodes;
     this.collapsed = collapsed;
   }
 
+  @Override
   protected void init() throws Exception {
     Assert.notNull(parentNode, "parentNode must be set");
     Assert.isTrue(index > -1, "index must be set");
@@ -153,6 +154,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleEventListener extends StandardEventListener {
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
       toggleCollapsed();
     }
@@ -161,6 +163,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleActionListener extends StandardActionListener {
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
       toggleCollapsed();
       render(output);
@@ -172,11 +175,11 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected TreeContext getTreeCtx() {
-    return (TreeContext) getEnvironment().getEntry(TreeContext.class);
+    return getEnvironment().getEntry(TreeContext.class);
   }
 
   // returns List<TreeNodeWidget>
-  protected List loadChildren() {
+  protected List<TreeNodeWidget> loadChildren() {
     if (getTreeCtx().getDataProvider() != null) {
       return getTreeCtx().getDataProvider().getChildren(this);
     }
@@ -205,7 +208,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
       }
     } else {
       if (!hasNodes()) {
-        List children = loadChildren();
+        List<TreeNodeWidget> children = loadChildren();
         if (children != null)
           addAllNodes(children);
       }
@@ -225,7 +228,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   public int addNode(TreeNodeWidget node) {
     Assert.notNullParam(node, "node");
     if (childNodeWrappers == null)
-      childNodeWrappers = new ArrayList();
+      childNodeWrappers = new ArrayList<ChildNodeWrapper>();
 
     int nodeIndex = childNodeWrappers.size();
     String widgetId = Integer.toString(nextChildIndex++);
@@ -242,7 +245,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     Assert.notNullParam(node, "node");
     Assert.isTrue(nodeIndex >= 0 && nodeIndex < getNodeCount(), "nodeIndex must be >= 0 and less than nodeCount");
     if (childNodeWrappers == null)
-      childNodeWrappers = new ArrayList();
+      childNodeWrappers = new ArrayList<ChildNodeWrapper>();
 
     String widgetId = Integer.toString(nextChildIndex++);
 
@@ -271,10 +274,10 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return nodeWrapper.getNode();
   }
 
-  public void addAllNodes(List nodes) {
+  public void addAllNodes(List<TreeNodeWidget> nodes) {
     Assert.notNullParam(nodes, "nodes");
-    for (Iterator i = nodes.iterator(); i.hasNext(); ) {
-      addNode((TreeNodeWidget) i.next());
+    for (TreeNodeWidget element : nodes) {
+      addNode(element);
     }
   }
 
@@ -282,8 +285,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     if (childNodeWrappers == null)
       return;
 
-    for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
-      ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
+    for (Iterator<ChildNodeWrapper> i = childNodeWrappers.iterator(); i.hasNext(); ) {
+      ChildNodeWrapper nodeWrapper = i.next();
       removeWidget(nodeWrapper.getWidgetId());
     }
     childNodeWrappers.clear();
@@ -300,15 +303,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected ChildNodeWrapper getNodeWrapper(int nodeIndex) {
-    return (ChildNodeWrapper) childNodeWrappers.get(nodeIndex);
+    return childNodeWrappers.get(nodeIndex);
   }
 
   // returns List<TreeNodeWidget>
-  public List getNodes() {
-    List nodes = new ArrayList(getNodeCount());
+  public List<TreeNodeWidget> getNodes() {
+    List<TreeNodeWidget> nodes = new ArrayList<TreeNodeWidget>(getNodeCount());
     if (childNodeWrappers != null) {
-      for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
-        ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
+      for (Iterator<ChildNodeWrapper> i = childNodeWrappers.iterator(); i.hasNext(); ) {
+        ChildNodeWrapper nodeWrapper = i.next();
         nodes.add(nodeWrapper.getNode());
       }
     }
@@ -358,6 +361,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   // RENDERING METHODS
   //*******************************************************************  
 
+  @Override
   protected void render(OutputData output) throws Exception {
     TreeRenderer renderer = getTreeCtx().getRenderer();
     Assert.notNull(renderer, "renderer must be set");
@@ -382,8 +386,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
         renderer.renderChildrenStart(out, this);
       }
       if (!isCollapsed() && hasNodes()) {
-        for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
-          ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
+        for (Iterator<ChildNodeWrapper> i = childNodeWrappers.iterator(); i.hasNext(); ) {
+          ChildNodeWrapper nodeWrapper = i.next();
           TreeNodeWidget node = nodeWrapper.getNode();
           renderer.renderChildStart(out, this, node);
           out.flush();
@@ -400,14 +404,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected void renderDisplayPrefixRecursive(Writer out, TreeRenderer renderer) throws Exception {
-    LinkedList parents = new LinkedList();
+    LinkedList<TreeNodeContext> parents = new LinkedList<TreeNodeContext>();
     TreeNodeContext parent = getParentNode();
     while (parent != null) {
       parents.addFirst(parent);
       parent = parent.getParentNode();
     }
-    for (Iterator i = parents.iterator(); i.hasNext(); ) {
-      renderer.renderDisplayPrefix(out, (TreeNodeContext) i.next(), false);
+    for (Iterator<TreeNodeContext> i = parents.iterator(); i.hasNext(); ) {
+      renderer.renderDisplayPrefix(out, i.next(), false);
     }
     renderer.renderDisplayPrefix(out, this, true);
   }

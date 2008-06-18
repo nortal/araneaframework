@@ -23,7 +23,8 @@ public class SqlLikeExpression extends SqlComparableExpression {
 	public SqlLikeExpression(SqlExpression expr1, SqlExpression expr2) {
 		super(expr1, expr2);
 	}
-	protected String getOperator() {
+	@Override
+  protected String getOperator() {
 		return "LIKE";
 	}
 }

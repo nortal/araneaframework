@@ -119,5 +119,5 @@ public interface TabContainerContext extends Serializable {
    * 
    * @return A map of tabs.
    */
-  Map getTabs();
+  Map<String, TabWidget> getTabs();
 }

@@ -26,27 +26,29 @@ import org.araneaframework.core.Assert;
  * 
  * @see ListWidget
  */
-public class BeanListWidget extends ListWidget {
+public class BeanListWidget<T> extends ListWidget<T> {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected final Class beanType;
+	protected final Class<T> beanType;
 	
 	/**
 	 * Constructs a {@link BeanListWidget} for specified Bean type.
 	 * 
 	 * @param beanType list element type.
 	 */
-	public BeanListWidget(Class beanType) {
+	public BeanListWidget(Class<T> beanType) {
 		super();
 		Assert.notNullParam(this, beanType, "beanType");
 		this.beanType = beanType;
 	}
 	
-	protected TypeHelper createTypeHelper() {
+	@Override
+  protected TypeHelper createTypeHelper() {
 		return new TypeHelper() {			
-			public Class getFieldType(String fieldId) {
-				Class result = super.getFieldType(fieldId);
+			@Override
+      public Class<?> getFieldType(String fieldId) {
+				Class<?> result = super.getFieldType(fieldId);
 				if (result == null) {
 					result = BeanUtil.getFieldType(beanType, fieldId);
 				}

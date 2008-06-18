@@ -32,7 +32,8 @@ public class FormNumberInputDisplayHtmlTag extends BaseFormSimpleElementDisplayH
 		baseStyleClass = "aranea-number-display";
 	}
 	
-	protected int doEndTag(Writer out) throws Exception {
+	@Override
+  protected int doEndTag(Writer out) throws Exception {
 		assertControlType("NumberControl");
 		return super.doEndTag(out);
   }

@@ -32,6 +32,7 @@ public class StandardServletInputDataTests extends TestCase {
   private MockHttpServletRequest request;
   private StandardServletInputData input;
   
+  @Override
   public void setUp() {
     request = new MockHttpServletRequest();
     request.addParameter("foo","bar");

@@ -19,7 +19,6 @@ package org.araneaframework.uilib.form;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.Environment;
@@ -46,18 +45,19 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   //*******************************************************************
   protected Constraint constraint;
 
-  protected Map properties;
+  protected Map<Object, Object> properties;
   
   protected boolean converted = false;
   protected boolean validated = false;
   protected Boolean backgroundValidation = null;
   
-  private Set errors;
+  private Set<String> errors;
   
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
     
+  @Override
   protected void init() throws Exception {
     super.init();
     if (constraint != null)
@@ -69,9 +69,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    * @return all properties as a map.
    */
-  public Map getProperties() {
+  public Map<Object, Object> getProperties() {
     if (properties == null)
-      properties = new HashMap();
+      properties = new HashMap<Object, Object>();
     return properties;
   }
 
@@ -197,7 +197,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * Since 1.1 this returns an immutable Set.
    */
-  public Set getErrors() {
+  public Set<String> getErrors() {
     return Collections.unmodifiableSet(getMutableErrors()); 
   }
 
@@ -207,10 +207,10 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     getMutableErrors().add(error);
   }
 
-  public void addErrors(Set errors) {
+  public void addErrors(Set<String> errors) {
     Assert.notNullParam(errors, "errors");
-    for (Iterator i = errors.iterator(); i.hasNext(); )
-      addError((String) i.next());
+    for (String element : errors)
+      addError(element);
   }
 
   /**
@@ -232,7 +232,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
     if (this.backgroundValidation == null) {
-      FormContext fctx = ((FormContext) getEnvironment().getEntry(FormContext.class));
+      FormContext fctx = (getEnvironment().getEntry(FormContext.class));
       if (fctx != null)
         return fctx.isBackgroundValidation();
       return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
@@ -263,8 +263,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   public abstract boolean isStateChanged();
   
   /**
-   * Sets wether the element is disabled.
-   * @param disabled wether the element is disabled.
+   * Sets whether the element is disabled.
+   * @param disabled whether the element is disabled.
    */
   public abstract void setDisabled(boolean disabled);
 
@@ -285,7 +285,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   /** @since 1.1 this method is protected (private before 1.1). */
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    return getEnvironment().requireEntry(MessageContext.class);
   }
 
   /**
@@ -313,9 +313,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * @since 1.1
    */
-  protected Set getMutableErrors() {
+  protected Set<String> getMutableErrors() {
     if (errors == null)
-      errors = new HashSet();
+      errors = new HashSet<String>();
     return errors;
   }
 
@@ -330,13 +330,13 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel{
-    private Map properties;
+    private Map<Object, Object> properties;
 
     /**
      * Takes a outer class snapshot.     
      */
     public ViewModel() {
-      Map m  = GenericFormElement.this.properties;
+      Map<Object, Object> m  = GenericFormElement.this.properties;
       this.properties = m == null ? m : Collections.unmodifiableMap(m);
     }
 
@@ -344,7 +344,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
      * Returns form element properties.
      * @return form element properties.
      */
-    public Map getProperties() {
+    public Map<Object, Object> getProperties() {
       return properties;
     }
   }  

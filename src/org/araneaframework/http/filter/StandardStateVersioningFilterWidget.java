@@ -61,10 +61,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   /**
    * Sets the child to <code>childWidget</code> decorated with {@link RelocatableDecorator}.
    */
+  @Override
   public void setChildWidget(Widget childWidget) {
     this.childWidget = new RelocatableDecorator(childWidget);
   }
   
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), StateVersioningContext.class, this);
   }
@@ -97,6 +99,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /* Service methods */
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (log.isDebugEnabled())
       log.debug("StandardStateVersioningFilterWidget is routing widget action.");
@@ -119,15 +122,18 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /* Widget methods */
+  @Override
   protected void update(InputData input) throws Exception {
     restoreState(input);
     super.update(input);
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     super.event(path, input);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     setResponseHeaders(output);
     try {
@@ -138,6 +144,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
     super.propagate(message);
   }
@@ -197,7 +204,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       return getState(requestStateId);
     
     // get and verify state submitted by client
-    String suppliedState = (String)input.getGlobalData().get(StateVersioningContext.STATE_KEY);
+    String suppliedState = input.getGlobalData().get(StateVersioningContext.STATE_KEY);
     byte[] decodedState = Base64.decode(suppliedState);
     byte[] stateDigest = (byte[]) versionedStates.get(requestStateId);
     
@@ -215,7 +222,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * Returns the state id (under key {@link StateVersioningContext#STATE_ID_KEY} from current request.
    */
   protected String getStateId(InputData input) {
-    return (String) input.getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
+    return input.getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
   }
 
   /** 
@@ -230,7 +237,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   public Map getRegions() {
     // do not create new state -- instead update the current one
     State currentState;
-    String regions = (String) getInputData().getGlobalData().get("updateRegions");
+    String regions = getInputData().getGlobalData().get("updateRegions");
     if (regions.indexOf("globalBackRegion") >= 0) {
       if (log.isDebugEnabled()) {
         log.debug("back state: " + getStateId(getInputData()));
@@ -290,6 +297,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected static class ClientNavigationNotifierMessage extends BroadcastMessage {
     public static final ClientNavigationNotifierMessage INSTANCE = new ClientNavigationNotifierMessage();
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof ClientNavigationAware) {
         ClientNavigationAware comp = (ClientNavigationAware) component;

@@ -45,6 +45,7 @@ public class BaseServiceRouterServiceTests extends TestCase {
   
   private Map map;
   
+  @Override
   public void setUp() throws Exception {
     service = new MockBaseServiceRouterService();
     map = new HashMap();

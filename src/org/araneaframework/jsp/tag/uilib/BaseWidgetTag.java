@@ -36,9 +36,10 @@ public class BaseWidgetTag extends BaseTag {
    *   description = "UiLib widget id." 
    */
   public void setId(String id) throws JspException {
-    this.id = (String) evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -54,6 +55,7 @@ public class BaseWidgetTag extends BaseTag {
     return EVAL_BODY_INCLUDE;    
   }
 
+  @Override
   public void doFinally() {
     super.doFinally();
     // to prevent memory leaks in containers where tags might live very long

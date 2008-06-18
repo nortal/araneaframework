@@ -36,7 +36,7 @@ import org.araneaframework.uilib.form.FormWidget;
  *   description = "UiLib form tag. <br/> 
            Makes available following page scope variables: 
            <ul>
-             <li><i>form</i> - UiLib form view model.
+             <li><i>form</i> - UiLib form view model.</li>
            </ul> "
  */
 public class FormTag extends BaseWidgetTag {
@@ -47,7 +47,8 @@ public class FormTag extends BaseWidgetTag {
 	
 	protected FormWidget.ViewModel formViewModel;
 
-	public int doStartTag(Writer out) throws Exception {
+	@Override
+  public int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		
 		// Get form data
@@ -67,7 +68,8 @@ public class FormTag extends BaseWidgetTag {
 	  return EVAL_BODY_INCLUDE;		
 	}
 
-	public void doFinally() {
+	@Override
+  public void doFinally() {
 		super.doFinally();
 		formViewModel = null;
 	}

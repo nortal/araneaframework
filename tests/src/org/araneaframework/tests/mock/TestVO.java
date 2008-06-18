@@ -115,6 +115,7 @@ public class TestVO implements Serializable, Cloneable {
    * 
    * @return <code>java.lang.String</code> representation of this value object.
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     List voFields = beanMapper.getFields();
@@ -134,6 +135,7 @@ public class TestVO implements Serializable, Cloneable {
    * @param otherVo Value Object to compare to.
    * @return <code>boolean</code>- if Value Object are equal.
    */
+  @Override
   public boolean equals(Object otherVo) {
     //In case other VO is null, or of other class.
     if (otherVo == null || (!this.getClass().equals(otherVo.getClass()))) { return false; }
@@ -152,6 +154,7 @@ public class TestVO implements Serializable, Cloneable {
   /**
    * Implements hash using Value Object fields.
    */
+  @Override
   public int hashCode() {
     int result = 17;
     List voFields = beanMapper.getFields();
@@ -167,6 +170,7 @@ public class TestVO implements Serializable, Cloneable {
    * 
    * @return clone of this object.
    */
+  @Override
   public Object clone() {
     try {
       return super.clone();

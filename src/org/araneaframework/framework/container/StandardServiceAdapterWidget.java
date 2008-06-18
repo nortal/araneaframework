@@ -44,6 +44,7 @@ public class StandardServiceAdapterWidget extends BaseWidget {
     childService = service;
   }
   
+  @Override
   protected void init() throws Exception {
     childService._getComponent().init(getScope(), getEnvironment());
   }
@@ -53,18 +54,21 @@ public class StandardServiceAdapterWidget extends BaseWidget {
    * {@link StandardServiceAdapterWidget#ACTION_PATH_INPUT_DATA_PARAMETER} to get the path.
    */
   protected Path getActionPath(InputData input) {
-    return new StandardPath((String) input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
+    return new StandardPath(input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
   }
   
+  @Override
   public void update(InputData input) {
     this.input = input;
     eventReceived = false;
   } 
   
+  @Override
   protected void propagate(Message message) throws Exception {
     message.send(null, childService);
   }
   
+  @Override
   public void event(Path path, InputData input) {
     if (!path.hasNext()) {
       eventReceived = true;
@@ -78,12 +82,14 @@ public class StandardServiceAdapterWidget extends BaseWidget {
    * 
    * TODO: why is it in render and not in event() ?
    */
+  @Override
   public void render(OutputData output) throws Exception {
     if (eventReceived) {
       this.childService._getService().action(getActionPath(input), input, output);
     }
   }
   
+  @Override
   protected void destroy() throws Exception {
     childService._getComponent().destroy();
   }

@@ -31,9 +31,9 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 public class BaseCompExprToSqlExprBuilder implements CompExprToSqlExprBuilder {
 	private static final Log log = LogFactory.getLog(BaseCompExprToSqlExprBuilder.class);
 	
-	private Map translators = new HashMap();
+	private Map<Class<? extends ComparatorExpression>, CompExprToSqlExprTranslator> translators = new HashMap<Class<? extends ComparatorExpression>, CompExprToSqlExprTranslator>();
 	
-	protected void addTranslator(Class expressionClass, CompExprToSqlExprTranslator translator) {
+	protected void addTranslator(Class<? extends ComparatorExpression> expressionClass, CompExprToSqlExprTranslator translator) {
 		this.translators.put(expressionClass, translator);
 	}
 
@@ -42,7 +42,7 @@ public class BaseCompExprToSqlExprBuilder implements CompExprToSqlExprBuilder {
 			log.debug("ComparatorExpression class: " + expression.getClass().getName());			
 		}
 		CompExprToSqlExprTranslator translator =
-			(CompExprToSqlExprTranslator) this.translators.get(expression.getClass());
+			this.translators.get(expression.getClass());
 		if (translator == null) {
 			throw new RuntimeException("ComparatorExpression of class " + expression.getClass() + " not supported");
 		}
