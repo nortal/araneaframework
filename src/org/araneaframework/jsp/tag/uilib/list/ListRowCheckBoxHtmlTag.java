@@ -45,11 +45,6 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    */
   public static final String SELECTION_SCOPE = ListWidget.LIST_CHECK_SCOPE;
 
-  /**
-   * The script that performs update of the select-all check box state.
-   */
-  protected static final String SCRIPT_ON_CLICK = "return Aranea.UI.updateListSelectAlls($());";
-
   protected String value;
 
   public ListRowCheckBoxHtmlTag() {
