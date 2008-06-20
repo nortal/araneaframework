@@ -22,6 +22,7 @@ import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.uilib.WidgetTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
+import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
@@ -30,7 +31,7 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.1.4
  */
-public class BaseListRowControlTag extends PresentationTag {
+public abstract class BaseListRowControlTag extends PresentationTag {
 
   /**
    * A custom label for the control.
@@ -44,7 +45,9 @@ public class BaseListRowControlTag extends PresentationTag {
   protected boolean disabled;
 
   /**
-   * Specifies custom <code>onclick</code> event. Default is none.
+   * Specifies custom <code>onclick</code> event. Default is none. Note that
+   * this is used when the event information is missing. Otherwise, use
+   * 'eventPrecondition' attribute.
    */
   protected String onclick;
 
@@ -67,7 +70,7 @@ public class BaseListRowControlTag extends PresentationTag {
    * The name of the event handler (in the widget that contains the list) that
    * will be invoked when the selection changes.
    */
-  protected String onChangeEventId;
+  protected String onClickEventId;
 
   /**
    * The script that will be called before the submit.
@@ -85,17 +88,29 @@ public class BaseListRowControlTag extends PresentationTag {
   protected String globalUpdateRegions;
 
 
-  protected void writeOnChangeEvent(Writer out) throws Exception {
-    UiUpdateEvent event = new UiUpdateEvent();
-    event.setId(onChangeEventId);
-    event.setParam((String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY));
-    event.setTarget((String) requireContextEntry(WidgetTag.WIDGET_ID_KEY));
-    event.setEventPrecondition(eventPrecondition);
-    event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(
-        pageContext, updateRegions, globalUpdateRegions));
-
-    JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onchange", event);
+  protected void writeOnClickEvent(Writer out) throws Exception {
+    if (onClickEventId != null) {
+      UiUpdateEvent event = new UiUpdateEvent();
+      event.setId(onClickEventId);
+      event.setParam((String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY));
+      event.setTarget((String) requireContextEntry(WidgetTag.WIDGET_ID_KEY));
+      event.setEventPrecondition(getOnclickScript());
+      event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(
+          pageContext, updateRegions, globalUpdateRegions));
+      JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick", event);
+    } else {
+      JspUtil.writeAttribute(out, "onclick", getOnclickScript());
+    }
   }
+
+  /**
+   * Provides "onclick" event script for the control. If none specified then
+   * <code>null</code> should be returned. Note that the script is used also
+   * for Aranea events.
+   * 
+   * @return The script or <code>null</code>.
+   */
+  protected abstract String getOnclickScript();
 
   /**
    * @jsp.attribute
@@ -166,7 +181,7 @@ public class BaseListRowControlTag extends PresentationTag {
    *   description = "The name of the event handler (in the widget that contains the list) that will be invoked when the selection changes."
    */   
   public void setOnChangeEventId(String onChangeEventId) throws JspException {
-    this.onChangeEventId = (String) evaluateNotNull("onChangeEventId", onChangeEventId, String.class);
+    this.onClickEventId = (String) evaluateNotNull("onChangeEventId", onChangeEventId, String.class);
   }
 
   /**
