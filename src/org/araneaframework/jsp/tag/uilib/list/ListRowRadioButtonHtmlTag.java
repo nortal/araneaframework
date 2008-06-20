@@ -56,7 +56,7 @@ public class ListRowRadioButtonHtmlTag extends BaseListRowControlTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeAttribute(out, "accessKey", accesskey);
 
-    writeOnChangeEvent(out);
+    writeOnClickEvent(out);
 
     if (isSelected()) {
       JspUtil.writeAttribute(out, "checked", "checked");
@@ -122,6 +122,10 @@ public class ListRowRadioButtonHtmlTag extends BaseListRowControlTag {
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
     ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     return this.checked || rowRequestId.equals(viewModel.getData().get(SELECTION_SCOPE));
+  }
+
+  protected String getOnclickScript() {
+    return this.onClickEventId == null ? this.onclick : this.eventPrecondition;
   }
 
 }

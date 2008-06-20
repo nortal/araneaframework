@@ -11,6 +11,31 @@ Deprecation & API changes
     NoSerializedClientStateException were removed                              |     change #638
 
 ---------------------------------------------------------------------------------------------
+2008.06.19    | Aranea 1.1.5-M1
+
+Bugfixes
+   <ui:listRowCheckBox/> tag and "onChangeEventId" attribute                  | See #672
+
+---------------------------------------------------------------------------------------------
+2008.06.16    | Aranea 1.1.4
+
+Features and Improvements
+   List filtering using multi select controls                                 | See #664
+   Ability to describe links in a message                                     | See #654
+   <ui:listRowCheckBox/> tag and "onChangeEventId" attribute                  | See #672
+   The ID attribute of form elements missing                                  | See #665
+   convertAndValidate() that throws an exception                              | See #671
+   Data.setDataValue exception message                                        | See #677
+   Wonderful inconsistency in ListWidget                                      | See #679
+   ui:date(Time)Input: date format and calendar                               | See #680
+   Errors in modal mode block further use of application                      | See #670
+
+Bugfixes
+   DateTimeInput fires submits when listeners are not registered              | See #674
+   Disabled FormElements do not look like it anymore                          | See #666
+   Session does not serialize                                                 | See #668
+
+---------------------------------------------------------------------------------------------
 2008.05.21    | Aranea 1.1.3
 
 Features and Improvements

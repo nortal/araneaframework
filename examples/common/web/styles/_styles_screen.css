@@ -130,7 +130,7 @@ div.aranea-tabs div div A { color: #1F476E; }
 
 div.aranea-tabs A { display: block; padding: 5px 15px 5px 15px; }
 
-div.aranea-clear { clear: both; font-size: 1px; line-height: 0px; float: none !important; line-width: 0px; width: 0px; }
+div.aranea-clear { clear: both; font-size: 1px; line-height: 0px; float: none !important; width: 0px; }
 
 div.aranea-tabs div.aranea-active-tab { background: url(gfx/bg15.gif) no-repeat; float: left; margin-top: 2px; }
 div.aranea-tabs div.aranea-active-tab div { background: url(gfx/bg16.gif) right top no-repeat; }
