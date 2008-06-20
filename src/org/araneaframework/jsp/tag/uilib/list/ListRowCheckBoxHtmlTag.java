@@ -19,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 
@@ -46,11 +45,6 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    */
   public static final String SELECTION_SCOPE = ListWidget.LIST_CHECK_SCOPE;
 
-  /**
-   * The script that performs update of the select-all check box state.
-   */
-  protected static final String SCRIPT_ON_CLICK = "return Aranea.UI.updateListSelectAlls(this);";
-
   protected String value;
 
   public ListRowCheckBoxHtmlTag() {
@@ -69,12 +63,11 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "value", value != null ? value : LIST_CHECK_VALUE);
-    JspUtil.writeAttribute(out, "onclick", getOnclickScript());
 
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeAttribute(out, "accessKey", accesskey);
 
-    writeOnChangeEvent(out);
+    writeOnClickEvent(out);
 
     if (isChecked()) {
       JspUtil.writeAttribute(out, "checked", "checked");
@@ -84,7 +77,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
-    JspUtil.writeCloseStartTag(out);
+    JspUtil.writeCloseStartEndTag(out);
 
     if (this.labelId != null) {
       JspUtil.writeOpenStartTag(out, "label");
@@ -105,12 +98,21 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    * @return The entire script for check box onclick event.
    */
   protected String getOnclickScript() {
+    String tmp = this.onClickEventId == null ? this.onclick
+        : this.eventPrecondition;
+
     StringBuffer result = new StringBuffer();
-    if (StringUtils.isNotBlank(this.onclick)) {
-      result.append(this.onclick);
-      result.append("; ");
+    if (tmp != null) {
+      result.append(tmp);
+      result.append(" ");
     }
-    result.append(SCRIPT_ON_CLICK);
+
+    try {
+      result.append("return Aranea.UI.updateListSelectAlls($('");
+      result.append(getCheckBoxId());
+      result.append("'));");
+    } catch (JspException e) {}
+
     return result.toString();
   }
 
