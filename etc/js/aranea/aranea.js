@@ -347,11 +347,7 @@ function AraneaPage() {
     if (_ap.getSystemForm().araClientStateId) {
       url += '&araClientStateId=' + _ap.getSystemForm().araClientStateId.value;
     }
-    // this has only limited use, cause GET requests are limited in size
-    if (_ap.getSystemForm().araClientState) {
-      url += '&araClientState=' + _ap.getSystemForm().araClientState.value;
-    }
-  
+
     if (extraParams)    
       url += '&' + extraParams;
 
@@ -588,6 +584,22 @@ function DefaultAraneaAJAXSubmitter(form) {
  * @since 1.1 */
 DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay=30;
 
+
+/**
+ * @since 1.2 */
+DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor = function(transport) {
+  var stateVersion = null;
+  try {
+   stateVersion = transport.getResponseHeader('Aranea-Application-StateVersion');
+  } catch (e) { stateVersion = null; }
+  if (stateVersion) {
+    var sForm = araneaPage().getSystemForm();
+    sForm.araClientStateId.value = stateVersion;
+    if (dhtmlHistory)
+      dhtmlHistory.add(stateVersion, true);
+  }
+};
+
 DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, widgetId, eventParam, updateRegions) {
   systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
   systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
@@ -599,16 +611,34 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
   }
 
   var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
+
+  var neededAraClientStateId = systemForm.araClientStateId.value;
+  var neededAraTransactionId = 'override';
+  
+  if (updateRegions == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
+    neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
+    window.dhtmlHistoryListenerRequestedState = null;
+    neededAraTransactionId = 'inconsistent';
+  }
+
   AraneaPage.showLoadingMessage();
   $(systemForm.id).request({
     parameters: {
-      araTransactionId: 'override',
+      araTransactionId: neededAraTransactionId,
       ajaxRequestId: ajaxRequestId,
-      updateRegions: updateRegions
+      updateRegions: updateRegions,
+      araClientStateId: neededAraClientStateId
     },
     onSuccess: function(transport) {
       AraneaPage.hideLoadingMessage();
       var logmsg = "";
+      
+      // This gets executed twice, it may be that during update region processing
+      // something already needs current stateId presence, e.g. the reloading region 
+      // handler. As it's likely that whole system form will be replaced completely
+      // when document region is updated, this must be repeated in onComplete.
+      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
+
       if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + "\n") {
         logmsg += 'Partial rendering: received successful response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
@@ -626,20 +656,23 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         document.close();
       }
     },
-    onComplete: function() {
+    onComplete: function(transport) {
       // because prototype's Element.update|replace delay execution of scripts,
       // immediate execution of onload() is not guaranteed to be correct
       var f = function() {
+        araneaPage().addSystemLoadEvent(function() { DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport); });
       	araneaPage().onload();
       	if (Aranea.ModalBox) {
       	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
         }
       };
+
       // -- force the delay here
       setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
     },
     onFailure: function(transport) {
       AraneaPage.hideLoadingMessage();
+      var logmsg = "";
       logmsg += 'Partial rendering: received erroneous response';
       logmsg += ' (' + transport.responseText.length + ' characters)';
       logmsg += ': ' + transport.status + ' ' + transport.statusText;
@@ -956,6 +989,17 @@ AraneaPage.ReloadRegionHandler.prototype = {
       return new DefaultAraneaOverlaySubmitter(systemForm).event(document.createElement("div"));
     }
 
+    /* Actually we should enter the domain of hackery.
+       Reloads can break the back button in a subtle way, because the new state identifier
+       would have been already loaded from AJAX response header to the system form. Thus if 
+       one comes back to a page after AJAX request + full reload, the page shown 
+       would not match the state identifier actually present in the system form.
+       If one just did window.location.href=window.location.href, no history navigation event
+       is generated because URL would not change. And the transactionId would have to be
+       encoded in the URL because NULL transactionId is consistent.
+       So the redirect should:
+         set transactionId to non-null inconsistent value, but may not affect the system form. 
+       Which is not satisfied by current implementation here. */
     return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
@@ -1008,12 +1052,30 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
 };
 AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgroundValidationRegionHandler());
 
+AraneaPage.RSHURLInit = function() {
+  if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
+	window.dhtmlHistory.firstLoad = true;
+	window.dhtmlHistory.ignoreLocationChange = true;
+    var stateId = _ap.getSystemForm().araClientStateId.value;
+    // If we generate hashes to HTTP requests, URL changes cause the browser
+    // to never use local history data, as the hash added later is not 
+    // accessible from its memory cache. Thus we just keep the URL intact
+    // for these cases, so that browsers own history mechanisms can take over.
+    if (!stateId.startsWith("HTTP")) {
+      window.location.hash = stateId;
+      dhtmlHistory.add(stateId, null);
+    }
+  }
+};
+
 /* Initialize new Aranea page.  */
 /* Aranea page object is accessible in two ways -- _ap and araneaPage() */
 var _ap = new AraneaPage();
 function araneaPage() { return _ap; }
 _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
+_ap.addSystemLoadEvent(AraneaPage.RSHURLInit);
+_ap.addClientLoadEvent(AraneaPage.RSHInit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */

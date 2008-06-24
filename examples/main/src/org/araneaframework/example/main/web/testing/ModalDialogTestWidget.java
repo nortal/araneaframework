@@ -39,7 +39,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
           String className = (String) form.getValueByFullName("classSelect");
           
           Widget newInstance = (Widget) org.springframework.util.ClassUtils.forName(className).newInstance();
-          Widget testWidget = new OverlayRootWidget(new StandardFlowContainerWidget(new WrapperWidget(newInstance)));
+          Widget testWidget = new OverlayRootWidget(new WrapperWidget(newInstance));
 
           getOverlayCtx().start(testWidget);
         }

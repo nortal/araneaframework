@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import org.apache.commons.lang.Validate;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
@@ -148,4 +149,26 @@ public class FormUtil {
 			form.setConstraint(and);
 		}
 	}	
+
+	/**
+     * Converts and validates the form data. It is similar to
+     * {@link FormWidget#convertAndValidate()} except that it also throws an
+     * exception when there are validation errors.
+     * 
+     * @param form The form to convert and validate.
+     * @throws ValidationFailureException It is thrown when there are validation
+     *             errors after validating.
+     * @since 1.1.4
+     */
+	public static void convertAndValidate(FormWidget form) throws ValidationFailureException {
+
+	  Assert.notNull(form,
+        "The 'form' parameter is required to convert and validate.");
+
+	  if (!form.convertAndValidate()) {
+	    throw new ValidationFailureException("The form '" + form.getScope()
+          + "' has " + form.getErrors().size() + " validation error(s).");
+	  }
+	}
+
 }

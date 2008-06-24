@@ -40,6 +40,7 @@ public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
 		DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel)controlViewModel);
 		
 		JspUtil.writeOpenStartTag(out, "span");
+        
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
 		JspUtil.writeAttributes(out, attributes);

@@ -177,7 +177,7 @@ public class StandardHttpSessionRouterService extends BaseService {
   private synchronized Object getOrCreateSessionSyncObject(HttpSession sess) {
     Object syncObject = sess.getAttribute(SESSION_SYNC_OBJECT_KEY);
     if (syncObject == null) {
-      syncObject = new Serializable() {};
+      syncObject = new SessionSyncObject();
       sess.setAttribute(SESSION_SYNC_OBJECT_KEY, syncObject); // XXX why do we store this object in session? why not keep it in a synchronized map?
     }
     return syncObject;
@@ -201,6 +201,12 @@ public class StandardHttpSessionRouterService extends BaseService {
     }
     
     return result;
+  }
+
+  // Objects of this class will be held in session. It is static so that it
+  // would not depend on its parent as the latter might not serialize well.
+  private static class SessionSyncObject implements Serializable {
+    private static final long serialVersionUID = 1L;
   }
 
 }

@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2006 Webmedia Group Ltd.
  *
@@ -18,7 +19,6 @@ package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 
@@ -32,7 +32,7 @@ import org.araneaframework.uilib.list.ListWidget;
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.1.3
  */
-public class ListRowRadioButtonHtmlTag extends PresentationTag {
+public class ListRowRadioButtonHtmlTag extends BaseListRowControlTag {
 
   /**
    * This will be used to create the value of the radio button of the list row
@@ -41,18 +41,6 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    * the row.
    */
   public static final String SELECTION_SCOPE = ListWidget.LIST_RADIO_SCOPE;
-
-  protected String labelId;
-
-  protected boolean disabled;
-
-  protected String onclick;
-
-  protected String accesskey;
-
-  protected String tabindex;
-
-  protected boolean checked = false;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -68,6 +56,8 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
 
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeAttribute(out, "accessKey", accesskey);
+
+    writeOnClickEvent(out);
 
     if (isSelected()) {
       JspUtil.writeAttribute(out, "checked", "checked");
@@ -135,72 +125,8 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
     return this.checked || rowRequestId.equals(viewModel.getData().get(SELECTION_SCOPE));
   }
 
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   rtexprvalue = "true"
-   *   description = "Specifies a custom label for the radio button."
-   */
-  public void setLabelId(String labelId) throws JspException {
-    this.labelId = evaluateNotNull("labelId", labelId, String.class);
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.Boolean"
-   *   required = "false"
-   *   rtexprvalue = "true"
-   *   description = "Specifies whether the radio button should be rendered as disabled. Default is active state."
-   */
-  public void setDisabled(String disabled) throws JspException {
-    Boolean tempResult = evaluateNotNull("disabled", disabled, Boolean.class);
-    this.disabled = tempResult.booleanValue();
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   rtexprvalue = "true"
-   *   description = "Specifies custom <code>onclick</code> event. Default is none."
-   */
-  public void setOnclick(String onclick) throws JspException {
-    this.onclick = evaluateNotNull("onclick", onclick, String.class);
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   rtexprvalue = "true"
-   *   description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
-   */
-  public void setAccessKey(String accessKey) throws JspException {
-    this.accesskey = evaluateNotNull("accessKey", accessKey, String.class);
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.Boolean"
-   *   required = "false"
-   *   rtexprvalue = "true"
-   *   description = "Specifies the initial value of the radio button. Default is unchecked."
-   */
-  public void setChecked(String checked) throws JspException {
-    Boolean tempResult = evaluateNotNull("checked", checked, Boolean.class);
-    this.checked = tempResult.booleanValue();
-  }
-
-  /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   rtexprvalue = "true"
-   *   description = "HTML tabindex for the radio button. This value must be a number between 0 and 32767."
-   */   
-  public void setTabindex(String tabindex) throws JspException {
-    this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
+  protected String getOnclickScript() {
+    return this.onClickEventId == null ? this.onclick : this.eventPrecondition;
   }
 
 }

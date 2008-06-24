@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.util;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import org.apache.commons.collections.comparators.NullComparator;
 import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -32,6 +33,7 @@ import org.araneaframework.backend.list.memorybased.expression.compare.LowerThan
 import org.araneaframework.backend.list.memorybased.expression.compare.StartsWithExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
+import org.araneaframework.backend.list.memorybased.expression.logical.InExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
@@ -329,7 +331,16 @@ public class ExpressionUtil {
 	public static Expression or(Iterator<Expression> exprs) {
 		return addAll(new OrExpression(), exprs, true);		
 	}
-	
+
+    /**
+     * Creates IN expression.
+     * 
+     * @since 1.1.4
+     */     
+    public static Expression in(Expression expression, List expressions) {
+      return new InExpression(expression, expressions);
+    }
+
 	// Private methods
 	
 	private static <T extends MultiExpression> T addAll(T multiExpr, Expression[] children, boolean allowNulls) {
@@ -400,4 +411,5 @@ public class ExpressionUtil {
 
 		return multiExpr;
 	}		
+
 }

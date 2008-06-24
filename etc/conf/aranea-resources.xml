@@ -46,6 +46,12 @@
   <files content-type="text/javascript">
     <file path="js/calendar/calendar-et.js"/>
     <file path="js/rsh/rsh.js" />
+    <file path="js/aranea/aranea-rsh.js"/>
+  </files>
+
+  <files content-type="text/javascript" group="aranea-rsh">
+    <file path="js/rsh/rsh.js" />
+    <file path="js/aranea/aranea-rsh.js"/>
   </files>
 
   <files content-type="image/gif">

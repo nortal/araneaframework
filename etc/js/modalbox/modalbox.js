@@ -213,6 +213,7 @@ Modalbox.Methods = {
 				} else 
 					new Ajax.Request( this.content, { method: this.options.method.toLowerCase(), parameters: this.options.params, 
 						onComplete: function(transport) {
+							window.modalTransport = transport;
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) {
@@ -225,7 +226,9 @@ Modalbox.Methods = {
  							AraneaPage.findSystemForm();
 							var f = function() {
                                 _ap.addSystemLoadEvent(AraneaPage.init);
+                                DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
 								araneaPage().onload();
+								window.modalTransport = null;
 							};
 							// -- force the delay here
 							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
@@ -444,8 +447,12 @@ Modalbox.Methods = {
 	
 	_setPosition: function () {
         //$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
-        this.MBwindow.style.left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px";
-        this.MBwindow.style.top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2 ) + "px";
+        var left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 );
+        var top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2 );
+        if (top < 0) top = 0;
+
+        this.MBwindow.style.left = left + "px";
+        this.MBwindow.style.top = top + "px";
 	},
 	
 	_setWidthAndPosition: function () {

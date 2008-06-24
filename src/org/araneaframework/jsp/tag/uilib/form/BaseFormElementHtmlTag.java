@@ -49,7 +49,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
     public static final String RENDER_DISABLED_DISABLED = "disabled";
 
-    public static final String RENDER_DISABLED_READONLY = "read-only";
+    public static final String RENDER_DISABLED_READONLY = "readonly";
 
     protected String formFullId;
 	

@@ -205,5 +205,16 @@ public class BaseListStructure implements Serializable {
 		public boolean isColumnOrdered(String column) {
 			return this.columnOrders.get(column).booleanValue();
 		}
+
+        /**
+         * Provides the map where the list field ID is the key, and a Boolean is
+         * a value to indicate whether the column can be ordered or not.
+         * 
+         * @return A map of list field IDs and Booleans.
+         * @since 1.1.5
+         */
+        public Map getColumnOrders() {
+            return this.columnOrders;
+        }
 	}
 }

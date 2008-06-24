@@ -1,25 +1,34 @@
 package org.araneaframework.http;
 
+import java.io.Serializable;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.core.ApplicationComponent;
 
 /**
+ * Interface of a component hierarchy state versioning filter.
+ * This allows to support client-side history navigation 
+ * by storing the versioned hierarchies between requests.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.2
  */
-public interface StateVersioningContext extends UpdateRegionProvider {
-  /** Key for request parameter that holds state (if parameter present). */
-  public static final String STATE_KEY = "araClientState";
+public interface StateVersioningContext extends Serializable {
   /** Key for request parameter that holds state identifier (if parameter present). */
-  public static final String STATE_ID_KEY = "araClientStateId";
+  public static final String STATE_ID_REQUEST_KEY = "araClientStateId";
   
-  /** Key for */
-  public static final String STATE_VERSIONING_UPDATE_REGION_KEY = "araStateVersionRegion";
+  /** Identifier of response header which contains state version information. */
+  public static final String STATE_ID_RESPONSE_HEADER = "Aranea-Application-StateVersion";
+  
+  /** Identifier of update region which must be updated when client-side history navigation occurs. */
+  public static final String GLOBAL_CLIENT_NAVIGATION_REGION_ID = "araneaGlobalClientHistoryNavigationUpdateRegion";
+
+  /** State identifiers that were created during full HTTP requests will get this prefix. */
+  public static final String HTTP_REQUEST_STATEPREFIX = "HTTP";
 
   /**
-   * Saves state at the moment of calling this method.
-   * State will have a generated id.
-   * @return snapshot of saved state
+   * Saves state of the component tree at the moment of calling this method. State
+   * will get a random id.
+   * @return State snapshot
    */
   public State saveState();
 
@@ -28,17 +37,10 @@ public interface StateVersioningContext extends UpdateRegionProvider {
    * have a supplied <code>stateId</code>
    * @return snapshot of saved state
    */
-  public State saveState(String stateId);
-
-  /**
-   * Returns whether the state versions are held on server. If not, and implementation
-   * is active in a component hierarchy it means that state is only present on client-side.
-   * @return whether the state versions are held on server
-   */
-  public boolean isServerSideStorage();
+  public State saveOrUpdateState(String stateId);
 
   /** 
-   * Expires all non-current versioned states. Should be called when current flow has completed some 
+   * Expires all stored versioned states. Should be called when current flow has completed some 
    * truly irreversible operation -- i.e calling remote service to bill a credit card etc etc. 
    */
   public void expire();
@@ -63,6 +65,8 @@ public interface StateVersioningContext extends UpdateRegionProvider {
   }
 
   public static class StateExpirationException extends NestableRuntimeException {
+    private static final long serialVersionUID = 1L;
+
     public StateExpirationException() {
       super();
     }

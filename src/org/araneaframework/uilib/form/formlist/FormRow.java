@@ -50,7 +50,7 @@ public class FormRow implements Serializable {
 		this.open = false;
 	}
 	
-	public void reset() throws Exception {
+	public void reset() {
 		getFormList().resetFormRow(getKey());
 	}
 

@@ -2,9 +2,7 @@ package org.araneaframework.http.filter;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import net.iharder.base64.Base64;
 import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.collections.map.SingletonMap;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
@@ -22,9 +20,8 @@ import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.StateVersioningContext;
-import org.araneaframework.http.util.EncodingUtil;
+import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
-import org.araneaframework.http.util.JsonObject;
 import org.araneaframework.http.util.RelocatableUtil;
 import org.araneaframework.http.util.ServletUtil;
 
@@ -43,12 +40,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * is present in component hierarchy. 
    */
   public static final int DEFAULT_MAX_STATES_STORED = 10;
-
-  private boolean serverSideStorage;
   private int maxVersionedStates = DEFAULT_MAX_STATES_STORED;
   
   /** State identifier of last component hierarchy serviced by this filter. */
   protected String lastStateId = null;
+  
+  /** Holds <code>Boolean</code> which indicates whether the state has been saved during current request/response cycle. */
+  private transient ThreadLocal stateSavedTL = new ThreadLocal();
 
   /** 
    * Map of states versioning system keeps track of. When using client side state storage,
@@ -69,11 +67,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), StateVersioningContext.class, this);
-  }
-
-  /* INJECTORS/SETTERS */
-  public void setServerSideStorage(boolean b) {
-    serverSideStorage = b;
   }
 
   /**
@@ -97,6 +90,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (currentStates != null)
       versionedStates.putAll(currentStates);
   }
+  
+  protected synchronized void initStateSavedTL() {
+    if (stateSavedTL == null) {
+      stateSavedTL = new ThreadLocal();
+    }
+    stateSavedTL.set(Boolean.FALSE);
+  }
 
   /* Service methods */
   @Override
@@ -109,14 +109,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       //restoreState(input);
       super.action(path, input, output);
       // if server-side storage, update the current state
-      if (isServerSideStorage()) {
-        saveState(lastStateId);
-      }
-      else {
-        // TODO:
-        // state updates for actions not supported ATM for client side state
-      }
+      saveOrUpdateState(lastStateId);
+      setResponseStateHeader(output, lastStateId);
     } finally {
+      if (stateSavedTL != null) {
+        stateSavedTL.set(null);
+      }
       childWidget = null;
     }
   }
@@ -135,11 +133,22 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   @Override
   protected void render(OutputData output) throws Exception {
-    setResponseHeaders(output);
+    setResponseCacheHeaders(output);
     try {
+      initStateSavedTL();
       restoreState(output.getInputData());
       super.render(output);
+      if (stateSavedTL.get().equals(Boolean.FALSE)) {
+        String regions = (String) getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
+        if (regions != null && regions.indexOf(StateVersioningContext.GLOBAL_CLIENT_NAVIGATION_REGION_ID) != -1) {
+          saveOrUpdateState(lastStateId);
+        } else {
+          saveState();
+        }
+      }
+      setResponseStateHeader(output, lastStateId);
     } finally {
+      stateSavedTL.set(null);
       childWidget = null;
     }
   }
@@ -149,12 +158,19 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     super.propagate(message);
   }
 
-  // sets the response headers that disallow caching in general but still allow for using
-  // of browser history navigation facilities (back/forward buttons) in most browsers (IE, FF, Opera)
-  protected void setResponseHeaders(OutputData output) {
+  /** 
+   * Sets the response headers that disallow caching in general but still allow for using
+   * of browser history navigation facilities (back/forward buttons) in most browsers (IE, FF, Opera). 
+   * Safari seems to behaves badly in regard to the RFC. */
+  protected void setResponseCacheHeaders(OutputData output) {
     HttpServletResponse response = ServletUtil.getResponse(output);
     response.setHeader("Pragma", null);       
     response.setHeader("Cache-Control", null);
+  }
+
+  protected void setResponseStateHeader(OutputData output, String stateId) {
+    HttpServletResponse response = ServletUtil.getResponse(output);
+    response.setHeader(StateVersioningContext.STATE_ID_RESPONSE_HEADER, stateId);
   }
 
   /** 
@@ -164,14 +180,16 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void restoreState(InputData input) throws Exception {
     // state already restored (usually the case when update/event/render all get called)
     if (childWidget != null) return;
-    
+
     byte[] serializedState = getState(input);
     restoreChild(serializedState);
-    
+
     String requestStateId = getStateId(input);
     if (lastStateId != null && !lastStateId.equals(requestStateId) && requestStateId != null)
       notifyClientNavigationAwareComponents();
-    lastStateId = requestStateId;
+
+    if (requestStateId != null)
+      lastStateId = requestStateId;
   }
 
   protected void restoreChild(byte[] serializedState) {
@@ -196,22 +214,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       if (log.isWarnEnabled())
         log.warn("Received request for restoration of state '" + requestStateId + "' which was not found within versioned states.");
         throw new StateExpirationException("State '" + requestStateId + "' is expired and cannot be restored.");
-     // invoke the ExpiredStateHandlerWidget ? ExpirationHandler
-        //requestStateId = lastStateId;
+        // Note: here could be a possibility to introduce ExpiredStateHandler
     }
-    
-    if (serverSideStorage)
-      return getState(requestStateId);
-    
-    // get and verify state submitted by client
-    String suppliedState = input.getGlobalData().get(StateVersioningContext.STATE_KEY);
-    byte[] decodedState = Base64.decode(suppliedState);
-    byte[] stateDigest = (byte[]) versionedStates.get(requestStateId);
-    
-    if (!EncodingUtil.checkDigest(decodedState, stateDigest))
-      throw new IllegalStateException("Client side state digest invalid.");
 
-    return decodedState;
+    return getState(requestStateId);
   }
 
   protected byte[] getState(String stateId) {
@@ -219,10 +225,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * Returns the state id (under key {@link StateVersioningContext#STATE_ID_KEY} from current request.
+   * Returns the state id (under key {@link StateVersioningContext#STATE_ID_REQUEST_KEY} from current request.
    */
   protected String getStateId(InputData input) {
-    return input.getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
+    return (String) input.getGlobalData().get(StateVersioningContext.STATE_ID_REQUEST_KEY);
   }
 
   /** 
@@ -233,39 +239,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     ClientNavigationNotifierMessage.INSTANCE.send(null, childWidget);
   }
 
-  /* UpdateRegionProvider IMPLEMENTATION */
-  public Map getRegions() {
-    // do not create new state -- instead update the current one
-    State currentState;
-    String regions = getInputData().getGlobalData().get("updateRegions");
-    if (regions.indexOf("globalBackRegion") >= 0) {
-      if (log.isDebugEnabled()) {
-        log.debug("back state: " + getStateId(getInputData()));
-      }
-      currentState = saveState(getStateId(getInputData()));
-    }
-    else
-      currentState = saveState();
-
-    JsonObject stateRegion = new JsonObject();
-
-    stateRegion.setStringProperty(StateVersioningContext.STATE_ID_KEY, currentState.getStateId());
-    if (!isServerSideStorage())
-      stateRegion.setStringProperty(STATE_KEY, currentState.getState().toString());
-
-    return new SingletonMap(StateVersioningContext.STATE_VERSIONING_UPDATE_REGION_KEY, stateRegion.toString());
-  }
-
-  /* 
-   * StateVersioningContext IMPLEMENTATION
-   */
-  public boolean isServerSideStorage() {
-    return serverSideStorage;
-  }
-
-  /** @return current state with new random identifier*/
+  /**
+   * @return current state with new random identifier*/
   public State saveState() {
-    return saveState(RandomStringUtils.randomAlphanumeric(30));
+    boolean isUR = getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY) != null;
+    String rnd = RandomStringUtils.randomAlphanumeric(30);
+    return saveOrUpdateState(isUR ? rnd : StateVersioningContext.HTTP_REQUEST_STATEPREFIX + rnd);
   }
 
   /** 
@@ -274,27 +253,31 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * will only register state identifier and state checksums, returned state must be saved by someone else.
    * @return current state with supplied identifier
    */
-  public State saveState(String stateId) {
-    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget);
-    String b64Child = Base64.encodeBytes(serializedChild, Base64.DONT_BREAK_LINES);
+  public State saveOrUpdateState(String stateId) {
+    if (stateId == null)
+      return saveState();
 
-    versionedStates.put(stateId, isServerSideStorage() ? serializedChild : EncodingUtil.buildDigest(serializedChild));
-    State result = new State(isServerSideStorage() ? (Object)serializedChild : (Object)b64Child, stateId);
+    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) childWidget);
+    versionedStates.put(stateId, serializedChild);
+    State result = new State(serializedChild, stateId);
 
     if (log.isDebugEnabled()) {
       log.debug("Registered client state version: " + stateId + " in thread '" + EnvironmentUtil.getThreadServiceId(getEnvironment()) + "'.");
     }
 
     lastStateId = stateId;
+    stateSavedTL.set(Boolean.TRUE);
+
     return result;
   }
-  
+
   public void expire() {
     versionedStates.clear();
   }
 
   /* PROTECTED CLASSES */
   protected static class ClientNavigationNotifierMessage extends BroadcastMessage {
+    private static final long serialVersionUID = 1L;
     public static final ClientNavigationNotifierMessage INSTANCE = new ClientNavigationNotifierMessage();
 
     @Override

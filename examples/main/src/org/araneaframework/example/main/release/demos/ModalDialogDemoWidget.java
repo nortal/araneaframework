@@ -92,7 +92,4 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 	  return nested;
   }
   
-  public OverlayContext getOverlayCtx() {
-    return getEnvironment().requireEntry(OverlayContext.class);
-  }
 }
