@@ -60,7 +60,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
     // get control and formelement viewmodels
     formElementViewModel = 
-      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
     controlViewModel = (formElementViewModel).getControl();
 
     return EVAL_BODY_INCLUDE;    

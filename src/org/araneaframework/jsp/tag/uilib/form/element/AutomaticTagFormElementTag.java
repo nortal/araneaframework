@@ -77,7 +77,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
     	derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
     if (derivedId == null) throw new MissingFormElementIdAraneaJspException(this);
     formElementViewModel = 
-      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = formElementViewModel.getControl();

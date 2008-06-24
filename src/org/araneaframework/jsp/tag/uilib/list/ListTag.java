@@ -48,7 +48,7 @@ public class ListTag extends BaseWidgetTag {
 		super.doStartTag(out);
 		
 		try {
-			listViewModel = (ListWidget<?>.ViewModel)viewModel;
+			listViewModel = (ListWidget.ViewModel)viewModel;
 		} catch (ClassCastException e) {
 			throw new AraneaJspException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
 		}

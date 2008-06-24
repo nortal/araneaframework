@@ -37,7 +37,7 @@ public class ListRowsTag extends BaseListRowsTag {
 	@Override
   public int doStartTag(Writer out) throws Exception {
 		// Get list data    
-		viewModel = (ListWidget<?>.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+		viewModel = (ListWidget.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 		return super.doStartTag(out);
 	}
 	

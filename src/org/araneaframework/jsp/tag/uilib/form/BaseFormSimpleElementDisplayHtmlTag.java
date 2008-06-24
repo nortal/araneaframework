@@ -27,7 +27,7 @@ public abstract class BaseFormSimpleElementDisplayHtmlTag extends BaseFormElemen
 	
 	@Override
   protected int doEndTag(Writer out) throws Exception {				
-		StringArrayRequestControl<?>.ViewModel viewModel = ((StringArrayRequestControl<?>.ViewModel) controlViewModel);
+		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 		
 		JspUtil.writeOpenStartTag(out, "span");
 		JspUtil.writeAttribute(out, "class", getStyleClass());

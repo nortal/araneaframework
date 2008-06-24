@@ -58,7 +58,7 @@ public class FormElementTag extends BaseTag {
 
     // Get form element
     formElementViewModel = 
-      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
+      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, id)._getViewable().getViewModel();   
 
     // Store data
     addContextEntry(VIEW_MODEL_KEY, formElementViewModel);

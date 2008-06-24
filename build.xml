@@ -106,21 +106,23 @@
 
 		<taskdef
 			name="webdoclet"
-			classname="xdoclet.modules.web.WebDocletTask"
+			classname="org.xdoclet.ant.XDocletTask"
 			classpathref="classpath"
 		/>
 
-		<webdoclet destdir="build/tmp/presentation/META-INF" force="true">
+		<webdoclet>
 			<fileset 
 				dir="src" includes="**/*Tag.java"/>
 
-			<jsptaglib validatexml="true"
+			<component
+        classname="org.xdoclet.plugin.web.TaglibPlugin" 
+        validate="true"
 				shortName="ui"
 				displayname="Aranea UI"
-				filename="aranea-standard.tld"
 				uri="http://araneaframework.org/tag-library/standard"
 				description="Aranea User Interface Tag Library"
         jspversion="2.0"
+        destdir="build/tmp/presentation/META-INF" 
 			/>
 		</webdoclet>
 
@@ -176,6 +178,7 @@
 			source="1.5"
 			srcdir="src"
 			deprecation="yes"
+      compiler="javac1.5"
 		>
 			<classpath refid="classpath"/>
 			<include name="**/*.java" />

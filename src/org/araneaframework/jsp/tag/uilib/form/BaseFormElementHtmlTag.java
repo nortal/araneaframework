@@ -104,7 +104,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 		fe.rendered();
 
 		formElementViewModel = 
-			(FormElement<?,?>.ViewModel) fe._getViewable().getViewModel();   
+			(FormElement.ViewModel) fe._getViewable().getViewModel();   
 
 		// Get control	
 		controlViewModel = (formElementViewModel).getControl();

@@ -154,7 +154,7 @@ public class ListRowCheckBoxHtmlTag extends PresentationTag {
    */
   protected boolean isChecked() throws JspException {
     Object row = requireContextEntry(BaseListRowsTag.ROW_KEY);
-    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     List<?> checkedRows = (List<?>) viewModel.getData().get(SELECTION_SCOPE);
 
     boolean prevChecked = checkedRows != null && checkedRows.contains(row);

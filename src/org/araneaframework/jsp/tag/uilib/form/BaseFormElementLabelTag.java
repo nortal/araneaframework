@@ -65,7 +65,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
       throw new MissingFormElementIdAraneaJspException(this);
 
     formElementViewModel = 
-      (FormElement<?,?>.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
+      (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, derivedId)._getViewable().getViewModel();   
 
     // Get control  
     controlViewModel = (formElementViewModel).getControl();

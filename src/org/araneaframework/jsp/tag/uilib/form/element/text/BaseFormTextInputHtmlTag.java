@@ -91,7 +91,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map<String, String> customAttributes) throws Exception {
     String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel = ((StringArrayRequestControl<?>.ViewModel)controlViewModel);
+    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
 
     // Write
     JspUtil.writeOpenStartTag(out, "input");

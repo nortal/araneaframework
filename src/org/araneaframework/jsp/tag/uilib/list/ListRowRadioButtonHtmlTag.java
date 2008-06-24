@@ -131,7 +131,7 @@ public class ListRowRadioButtonHtmlTag extends PresentationTag {
    */
   protected boolean isSelected() throws JspException {
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
-    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     return this.checked || rowRequestId.equals(viewModel.getData().get(SELECTION_SCOPE));
   }
 
