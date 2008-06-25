@@ -88,6 +88,7 @@ public class Data<T> implements java.io.Serializable, FormElementAware<Object,T>
     //XXX useless now?
 //    if (value != null && !(typeClass.isAssignableFrom(value.getClass())))
 //      throw new DataItemTypeViolatedException(getValueType(), value.getClass());
+
     this.value = value;
   }
 

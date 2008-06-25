@@ -341,8 +341,6 @@ public class ExpressionUtil {
       return new InExpression(expression, expressions);
     }
 
-	// Private methods
-	
 	private static <T extends MultiExpression> T addAll(T multiExpr, Expression[] children, boolean allowNulls) {
 		if (children == null || children.length == 0) {
 			return null;

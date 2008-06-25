@@ -234,7 +234,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     super.update(input);
   }
 
-  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (input.getGlobalData().containsKey(PopupWindowContext.POPUPS_CLOSE_KEY)) {
       ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
