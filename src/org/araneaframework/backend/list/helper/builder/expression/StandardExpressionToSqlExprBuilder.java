@@ -16,6 +16,7 @@
 
 package org.araneaframework.backend.list.helper.builder.expression;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.SqlLikeUtil;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;
@@ -37,6 +38,7 @@ import org.araneaframework.backend.list.memorybased.expression.compare.LowerThan
 import org.araneaframework.backend.list.memorybased.expression.compare.StartsWithExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.AndExpression;
+import org.araneaframework.backend.list.memorybased.expression.logical.InExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.NotExpression;
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
@@ -53,6 +55,7 @@ import org.araneaframework.backend.list.sqlexpr.compare.SqlLowerThanExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlValueExpression;
 import org.araneaframework.backend.list.sqlexpr.logical.SqlAndExpression;
+import org.araneaframework.backend.list.sqlexpr.logical.SqlInExpression;
 import org.araneaframework.backend.list.sqlexpr.logical.SqlNotExpression;
 import org.araneaframework.backend.list.sqlexpr.logical.SqlOrExpression;
 import org.araneaframework.backend.list.sqlexpr.procedure.SqlProcedureExpression;
@@ -86,6 +89,7 @@ public class StandardExpressionToSqlExprBuilder extends
     addTranslator(EndsWithExpression.class, new EndsWithTranslator());
     addTranslator(ConcatenationExpression.class, new ConcatenationTranslator());
     addTranslator(ProcedureExpression.class, new ProcedureTranslator());
+    addTranslator(InExpression.class, new InTranslator());
   }
 
   public void setConverter(ValueConverter converter) {
@@ -310,6 +314,26 @@ public class StandardExpressionToSqlExprBuilder extends
       ProcedureExpression expr0 = (ProcedureExpression) expr;
       return new SqlProcedureExpression(expr0.getName()).setChildren(sqlChildren);
     }
+  }
+
+  /**
+   * @since 1.1.4
+   */
+  static class InTranslator extends CompositeExprToSqlExprTranslator {
+
+    protected SqlExpression translateParent(Expression expr,
+        SqlExpression[] sqlChildren) {
+
+      SqlExpression[] withoutFirst = (SqlExpression[])
+          ArrayUtils.remove(sqlChildren, 0);
+
+      if (withoutFirst.length == 0) {
+        return new SqlAlwaysTrueExpression();
+      }
+
+      return new SqlInExpression(sqlChildren[0], withoutFirst);
+    }
+
   }
 
 }

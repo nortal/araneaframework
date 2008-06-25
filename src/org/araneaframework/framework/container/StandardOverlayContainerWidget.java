@@ -154,13 +154,6 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
         // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
         HttpServletResponse response = ServletUtil.getResponse(output);
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
-
-        StateVersioningContext ctx = overlay.getEnvironment().getEntry(StateVersioningContext.class);
-        if (ctx != null) {
-          String stateId = getInputData().getGlobalData().get(StateVersioningContext.STATE_ID_KEY);
-          ctx.saveState(stateId);
-          response.getWriter().write("<!--" + stateId + "-->\n");
-        }
       }
     } else {
       main._getWidget().render(output);

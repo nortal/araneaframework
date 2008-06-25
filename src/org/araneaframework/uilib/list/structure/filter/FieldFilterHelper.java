@@ -601,5 +601,45 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper _range(String lowValueId, String highValueId) {
 		return this.helper._range(fieldId, lowValueId, highValueId);
 	}
-	
+
+	// ============ IN ============
+
+    // filter with form element
+
+	/** @since 1.1.4 */
+    public FilterHelper in() {
+        return this.helper.in(fieldId);
+    }
+    /** @since 1.1.4 */
+    public FilterHelper in(String valueId) {
+        return this.helper.in(fieldId, valueId);
+    }
+    /** @since 1.1.4 */
+    public FilterHelper in(Control control) {
+        return this.helper.in(fieldId, control);
+    }
+    /** @since 1.1.4 */
+    public FilterHelper in(String valueId, Control control) {
+        return this.helper.in(fieldId, valueId, control);
+    }
+    /** @since 1.1.4 */
+    public FilterHelper in(FormElement element) {
+        return this.helper.in(fieldId, element);
+    }
+    /** @since 1.1.4 */
+    public FilterHelper in(String valueId, FormElement element) {
+        return this.helper.in(fieldId, valueId, element);
+    }
+    
+    // filter
+    
+    /** @since 1.1.4 */
+    public FilterHelper _in() {
+        return this.helper._in(fieldId);
+    }
+    /** @since 1.1.4 */
+    public FilterHelper _in(String valueId) {
+        return this.helper._in(fieldId, valueId);
+    }
+
 }

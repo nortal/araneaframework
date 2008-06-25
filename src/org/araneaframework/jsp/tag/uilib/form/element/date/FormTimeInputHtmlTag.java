@@ -114,7 +114,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 		out.write(name);
 		out.write(".");
 		out.write(selectField);
-		out.write("\" onChange=\""); 
+		out.write("\" onchange=\""); 
 		out.write(fillXJSCallConstructor("Aranea.UI.fillTimeText", name, name
 				+ ".select1", name + ".select2"));
 		out.write(";");
@@ -158,10 +158,14 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       boolean disabled,
       String accessKey) throws Exception {
     TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) controlViewModel);
+
+    if (StringUtils.isBlank(id)) {
+      id = name;
+    }
+
     // Write input tag
     JspUtil.writeOpenStartTag(out, "input");
-    if (!StringUtils.isBlank(id))
-      JspUtil.writeAttribute(out, "id", id);
+    JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "type", "text");

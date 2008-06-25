@@ -5,8 +5,6 @@ import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
-import org.araneaframework.framework.OverlayContext;
-import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -76,7 +74,7 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   }
   
   public void handleEventNextFlowOverlay() throws Exception {
-    getOverlayCtx().start(new OverlayRootWidget(new StandardFlowContainerWidget(new ModalDialogDemoWidget(true))));
+    getOverlayCtx().start(new OverlayRootWidget(new ModalDialogDemoWidget(true)));
   }
   
   public void handleEventNextFlow() throws Exception {
@@ -90,9 +88,5 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
 
   public boolean isNested() {
 	  return nested;
-  }
-  
-  public OverlayContext getOverlayCtx() {
-    return getEnvironment().requireEntry(OverlayContext.class);
   }
 }

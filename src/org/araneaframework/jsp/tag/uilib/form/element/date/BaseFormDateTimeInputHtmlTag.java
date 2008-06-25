@@ -43,6 +43,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	protected String calendarAlignment;
 	protected String calendarIconClass = "middle";
 	protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
+	protected boolean disableCalendar = false;
+	protected String dateFormat = "%d.%m.%Y";
 
 	/**
 	 * @jsp.attribute
@@ -64,14 +66,33 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
     this.disabledRenderMode = evaluateDisabledRenderMode(disabledRenderMode);
   }
 
-	/**
-     * @jsp.attribute type = "java.lang.String"
-     *                required = "false"
-     *                description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)."
-     */
-	public void setCalendarAlignment(String calendarAlignment) {
-		this.calendarAlignment = evaluate("calendarAlignment", calendarAlignment, String.class);
-	}
+  /**
+   * @jsp.attribute type = "java.lang.String"
+   *                required = "false"
+   *                description = "Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right)."
+   */
+  public void setCalendarAlignment(String calendarAlignment)throws JspException {
+      this.calendarAlignment = (String) evaluate("calendarAlignment", calendarAlignment, String.class);
+  }
+
+  /**
+   * @jsp.attribute type = "java.lang.String"
+   *                required = "false"
+   *                description = "Specifies whether the calendar should not be rendered (default is false)."
+   */
+  public void setDisableCalendar(String disableCalendar)throws JspException {
+      Boolean tmpResult = (Boolean) evaluateNotNull("disableCalendar", disableCalendar, Boolean.class);
+      this.disableCalendar = tmpResult.booleanValue();
+  }
+
+  /**
+   * @jsp.attribute type = "java.lang.String"
+   *                required = "false"
+   *                description = "Specifies date format for date input (default is '%d.%m.%Y')."
+   */
+  public void setDateFormat(String dateFormat)throws JspException {
+      this.dateFormat = (String) evaluateNotNull("dateFormat", dateFormat, String.class);
+  }
 
 	/**
 	 * Writes out date input
@@ -95,9 +116,13 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 					viewModel.getInputFilter().getCharacterFilter());
 		}
 
+		if (StringUtils.isBlank(id)) {
+		  id = getFullFieldId();
+		}
+
 		// Write input tag
 		JspUtil.writeOpenStartTag(out, "input");
-		if (StringUtils.isNotBlank(id)) JspUtil.writeAttribute(out, "id", id);
+		JspUtil.writeAttribute(out, "id", id);
 		JspUtil.writeAttribute(out, "name", name);
 		JspUtil.writeAttribute(out, "class", getStyleClass());
 		JspUtil.writeAttribute(out, "style", getStyle());
@@ -127,7 +152,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		JspUtil.writeAttributes(out, attributes);
 		JspUtil.writeCloseStartEndTag_SS(out);
 
-		if (!disabled) {
+		if (!disabled && !disableCalendar) {
 
 			JspUtil.writeOpenStartTag(out, "a");
 			JspUtil.writeAttribute(out, "href", "javascript:;");
@@ -144,7 +169,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	
 			JspUtil.writeEndTag_SS(out, "a");
 		
-			writeCalendarScript(out, id, "%d.%m.%Y");
+			writeCalendarScript(out, id, dateFormat);
 		}
 	}
 

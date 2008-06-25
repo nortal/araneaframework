@@ -75,7 +75,7 @@ h2 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bo
 .disabled { background: #EEE; }
 
 .nowrap { white-space: nowrap !important; }
-.wrap { white-space: wrap; }
+.wrap { white-space: normal !important; }
 .wrap-centered { vertical-align: middle !important; text-align: center !important; }
 .nowrap td { white-space: nowrap; }
 .hidden { display: none; }

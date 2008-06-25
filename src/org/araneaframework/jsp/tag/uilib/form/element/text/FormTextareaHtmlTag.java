@@ -39,7 +39,7 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long cols;
   protected Long rows;
-  protected String disabledRenderMode;
+  protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
 
   {
     baseStyleClass = "aranea-textarea";

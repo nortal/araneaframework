@@ -42,7 +42,6 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.util.AtomicResponseHelper;
@@ -133,17 +132,15 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String ajaxRequestId = output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
       writeResponseId(writer, ajaxRequestId);
       if (disabled) {
-        // TODO: stinky feeling this does not work with versioned states!
+        // TODO: This has some problems with versioned states, but must be tackled on client-side.
         if (log.isDebugEnabled())
           log.debug("Partial rendering is disabled, forcing a reload for full render");
         disabled = false;
-        writeVersionedStateRegions(writer);
         writeReloadRegion(writer);
       } else {
         writeTransactionIdRegion(writer);
         writeHandlerRegions(writer);
         writeDocumentRegions(writer, regionContents);
-        writeVersionedStateRegions(writer);
       }
       writer.flush();
     }
@@ -151,17 +148,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       arUtil.commit();
       disabled = false;
       renderedRegions.clear();
-    }
-  }
-
-  /** @since 1.2 */
-  protected void writeVersionedStateRegions(PrintWriter writer) throws Exception {
-    StateVersioningContext ctx = getEnvironment().getEntry(StateVersioningContext.class);
-    if (ctx == null) return;
-    
-    Map<String, String> stateRegion = ctx.getRegions();
-    for (Map.Entry<String, String> entry : stateRegion.entrySet()) {
-      writeRegion(writer, entry.getKey(), entry.getValue());
     }
   }
 
