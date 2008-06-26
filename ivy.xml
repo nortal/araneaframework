@@ -72,7 +72,7 @@
 		<dependency org="xml-apis" rev="1.3.04" name="xml-apis"/>
 	
 		<!-- "optional" -->
-		<dependency org="base64" rev="1.0" name="base64"/>
+		<!--dependency org="base64" rev="1.0" name="base64"/-->
 		<dependency org="commons-fileupload" rev="1.2" name="commons-fileupload"/>
 		<dependency org="commons-io" rev="1.3" name="commons-io"/>
 		<dependency org="xstream" rev="1.2" name="xstream"/>
