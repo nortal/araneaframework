@@ -21,7 +21,8 @@
 	<property name="ivy.settings.file" value="ivysettings.xml"/>
 
 	<path id="classpath">
-		<fileset dir="${lib.dir}/default/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
 	</path>
 
 	<!-- Clean up build system results -->
@@ -42,7 +43,7 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build,runtime" />
 	</target>
 
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
@@ -61,6 +62,7 @@
 			status="${araneaframework.status}"
 			resolver="repository"
 			overwrite="true"
+			pubdate="now"
 		/>
 
 		<delete dir="publishtmp"/>
@@ -321,7 +323,7 @@
 	</target>
 
 	<target name="tlddoc" depends="tld" description="Generates documentation for JSP tags.">
-		<java fork="true" jar="${lib.dir}/default/tlddoc.jar" failonerror="true">
+		<java fork="true" jar="${lib.dir}/build/tlddoc.jar" failonerror="true">
 			<arg line="-d ${dist.dir}/doc/tlddocs"/>
 			<arg value="build/tmp/presentation/META-INF/aranea-standard.tld"/>
 		</java>
