@@ -1,0 +1,6564 @@
+<?xml version="1.0"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0"
+>
+  <display-name>Aranea UI</display-name>
+  <tlib-version>1.0</tlib-version>
+  <short-name>ui</short-name>
+  <uri>http://araneaframework.org/tag-library/standard</uri>
+  <tag>
+    <name>copyright</name>
+    <tag-class>org.araneaframework.jsp.tag.entity.CopyEntityHtmlTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+           
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>numberInputDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormNumberInputDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>tree</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.tree.TreeTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listFilterClearButton</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.filterform.ListFilterClearButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Possible values are 'button', 'input' &amp;mdash; clearance button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themself(with an image, for example). Default rendermode is 'button'.</description>
+         <name>renderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether button shows its label.</description>
+         <name>showLabel</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>layout</name>
+      <tag-class>org.araneaframework.jsp.tag.layout.LayoutHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Width of the layout.</description>
+         <name>width</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Default style of rows in this layout. This is multi-valued attribute.</description>
+         <name>rowClasses</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Default styleclass of cells in this layout. This is multi-valued attribute.</description>
+         <name>cellClasses</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>serviceActionUrl</name>
+      <tag-class>org.araneaframework.jsp.tag.support.ServiceActionUrlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Service id.</description>
+         <name>id</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listFilter</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListFilterTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>numberInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormNumberInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Horizontal size, in characters.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'readonly'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>nbsp</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.NbspEntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>updateRegion</name>
+      <tag-class>org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Local id of the update region.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Global id of the update region.</description>
+         <name>globalId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listRowCheckBox</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListRowCheckBoxHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      <display-name>listRowCheckBox</display-name>
+      
+
+      <attribute><description>Allows a custom value for this check box (when it is submitted). Default value is &lt;code&gt;selected&lt;/code&gt;.</description>
+         <name>value</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies a custom label for the control.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies whether the control should be rendered as disabled. Default is active state.</description>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.Boolean</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies custom &lt;code&gt;onclick&lt;/code&gt; event. Default is none.</description>
+         <name>onclick</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies custom &lt;code&gt;acceskey&lt;/code&gt; (defined by HTML). Default is none.</description>
+         <name>accessKey</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies the initial state of the control. Default is unchecked.</description>
+         <name>checked</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.Boolean</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the form element. This value must be a number between 0 and 32767.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The name of the event handler (in the widget that contains the list) that will be invoked when the selection changes.</description>
+         <name>onChangeEventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The script that will be called before the submit.</description>
+         <name>eventPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Update regions that must be updated.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Global update regions that must be updated.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>timeInputDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.date.FormTimeInputDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>richTextarea</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormRichTextAreaHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Number of visible columns.</description>
+         <name>cols</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of visible rows.</description>
+         <name>rows</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'read-only'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>floatInputDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormFloatInputDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>floatInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormFloatInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Horizontal size, in characters.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'readonly'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>multiSelect</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormMultiSelectHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Vertical size, number of options displayed.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>linkButton</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.FormLinkButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Whether button shows its label.</description>
+         <name>showLabel</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>link</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.LinkHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>CSS class for disabled link</description>
+         <name>disabledStyleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Link id, allows to access link from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Link target URL.</description>
+         <name>href</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Link target, same as &lt;i&gt;&amp;lt;a&amp;gt;&lt;/i&gt; HTML tag &lt;i&gt;target&lt;/i&gt; attribute.</description>
+         <name>target</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Controls whether the link is disabled, disabled link doesn't link anywhere.</description>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listRows</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListRowsTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute>
+         <name>var</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>style</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.StyleHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>conditionFalse</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionFalseTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>font</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.FontHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Font face.</description>
+         <name>face</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Font size.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Font color (any HTML valid color).</description>
+         <name>color</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>select</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormSelectHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Number of select elements visible at once.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.display.FormListDisplayHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute>
+         <name>separator</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>autoCompleteTextInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormAutoCompleteTextInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Class attribute assigned to &amp;lt;DIV&amp;gt; inside which suggestions are shown.</description>
+         <name>divClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Horizontal size, in characters.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'readonly'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>fileUpload</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.FormFileUploadHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listSelectAllCheckBox</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListSelectAllCheckBoxHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      <display-name>listSelectAllCheckBox</display-name>
+      
+
+      <attribute><description>Specifies whether the check box should be rendered as disabled. Default is active state.</description>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.Boolean</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies custom &lt;code&gt;onclick&lt;/code&gt; event. Default is none.</description>
+         <name>onclick</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies custom &lt;code&gt;acceskey&lt;/code&gt; (defined by HTML). Default is none.</description>
+         <name>accessKey</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies the initial value of the check box. Default is unchecked.</description>
+         <name>checked</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.Boolean</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the check box.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>checkboxDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.FormCheckboxDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listRowLinkButton</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListRowLinkButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Event id.</description>
+         <name>eventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Button id, allows to access button from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Id of button label.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>tooltip</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.ToolTipHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML element id to which tooltip should be attached.</description>
+         <name>element</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Tooltip content.</description>
+         <name>text</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details).</description>
+         <name>options</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>dateTimeInputDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.date.FormDateTimeInputDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>eventKeyboardHandler</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.ServerSideKeyboardHandlerHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>See keyboardHandler tag.</description>
+         <name>scope</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description/>
+         <name>widgetId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description/>
+         <name>eventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description/>
+         <name>eventParam</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCombo</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
+         <name>key</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>gt</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.GtEntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>list</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute>
+         <name>varSequence</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formList</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.formlist.FormListTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>basicButton</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.ButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</description>
+         <name>renderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Button id, allows to access button from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Id of button label.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>onClick Javascript action.</description>
+         <name>onclick</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the button.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formElement</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormElementTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib form element id.</description>
+         <name>id</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>keyboardHandler</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute>
+         <name>scope</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
+         <name>handler</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCombo</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
+         <name>key</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>dateInputDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.date.FormDateInputDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>messages</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.MessagesHtmlTag</tag-class>
+      <body-content>empty</body-content>
+
+      <attribute><description>Type of messages to show.</description>
+         <name>type</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Sets the ID of the HTML &amp;lt;DIV&amp;gt; inside which the messages are rendered.</description>
+         <name>divId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Sets whether the messages should be escaped or not (default: escape).</description>
+         <name>escapeHtml</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>widgetActionUrl</name>
+      <tag-class>org.araneaframework.jsp.tag.support.WidgetActionUrlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Action id</description>
+         <name>actionId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>lt</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.LtEntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>radioSelectItem</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormRadioSelectItemHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>The value of this radio button that will be submitted with form if this radio button is selected.</description>
+         <name>value</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The HTML id this radio button.</description>
+         <name>htmlId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>textDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.display.FormTextDisplayHtmlTag</tag-class>
+      <body-content>empty</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formEnterKeyboardHandler</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormEnterKeyboardHandlerHtmlTag</tag-class>
+      <body-content>empty</body-content>
+
+      <attribute><description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
+         <name>key</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); } Either handler or elementId/event pair should be specified, not both.</description>
+         <name>handler</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>subscope</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+         <name>elementId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+         <name>fullElementId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>event</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCombo</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formEscapeKeyboardHandler</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormEscapeKeyboardHandlerHtmlTag</tag-class>
+      <body-content>empty</body-content>
+
+      <attribute><description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
+         <name>key</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); } Either handler or elementId/event pair should be specified, not both.</description>
+         <name>handler</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>subscope</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+         <name>elementId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+         <name>fullElementId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>event</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCombo</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>widgetInclude</name>
+      <tag-class>org.araneaframework.jsp.tag.include.WidgetIncludeTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Path to JSP.</description>
+         <name>page</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>element</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.ElementHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>HTML element name.</description>
+         <name>name</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>widget</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.WidgetTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>textInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormTextInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Horizontal size, in characters.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'readonly'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>conditionTrue</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionTrueTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>textarea</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormTextareaHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Number of visible columns.</description>
+         <name>cols</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of visible rows.</description>
+         <name>rows</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'read-only'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>debug</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.DebugHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Attribute scope.</description>
+         <name>scope</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>checkboxMultiSelectItemLabel</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormCheckboxMultiSelectItemLabelHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Select item value.</description>
+         <name>value</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The HTML id of checkbox to which this label belongs.</description>
+         <name>checkboxId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether an asterisk is shown when the element is mandatory.</description>
+         <name>showMandatory</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>showColon</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>tabBody</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.tab.TabBodyTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>Widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Path to JSP.</description>
+         <name>page</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>onLoadEvent</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.OnLoadEventHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>Event to register.</description>
+         <name>event</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>hiddenInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.FormHiddenInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>registerScrollHandler</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.ScrollHandlerRegistrationHtmlTag</tag-class>
+      <body-content>empty</body-content>
+
+   </tag>
+   <tag>
+
+      <name>listRowRadioButton</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListRowRadioButtonHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      <display-name>listRowRadioButton</display-name>
+      
+
+      <attribute><description>Specifies a custom label for the control.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies whether the control should be rendered as disabled. Default is active state.</description>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.Boolean</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies custom &lt;code&gt;onclick&lt;/code&gt; event. Default is none.</description>
+         <name>onclick</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies custom &lt;code&gt;acceskey&lt;/code&gt; (defined by HTML). Default is none.</description>
+         <name>accessKey</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies the initial state of the control. Default is unchecked.</description>
+         <name>checked</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.Boolean</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the form element. This value must be a number between 0 and 32767.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The name of the event handler (in the widget that contains the list) that will be invoked when the selection changes.</description>
+         <name>onChangeEventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The script that will be called before the submit.</description>
+         <name>eventPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Update regions that must be updated.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Global update regions that must be updated.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>italic</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.ItalicHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>eventButton</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.EventButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</description>
+         <name>renderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Event id.</description>
+         <name>eventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Event parameter.</description>
+         <name>eventParam</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>numerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Widget where event should be routed, default is contextwidget.</description>
+         <name>eventTarget</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Disables button.</description>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Button id, allows to access button from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Id of button label.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formListRows</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.formlist.FormListRowsTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute>
+         <name>var</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>passwordInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormPasswordInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Horizontal size, in characters.</description>
+         <name>size</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'readonly'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>entity</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.EntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>laquo</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.LaquoEntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>multiSelectDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormMultiSelectDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>The separator between list items, can be any string and '\n', meaning a newline (by default ', ').</description>
+         <name>separator</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>importStyles</name>
+      <tag-class>org.araneaframework.jsp.tag.fileimport.ImportStylesHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>The media type the css file should be applied to.</description>
+         <name>media</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The name of the group of files that should get included.</description>
+         <name>group</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The name of the file that should get included.</description>
+         <name>file</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>importScripts</name>
+      <tag-class>org.araneaframework.jsp.tag.fileimport.ImportScriptsHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>The name of the group of files that should get included.</description>
+         <name>group</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The name of the file that should get included.</description>
+         <name>file</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>updateRegionRows</name>
+      <tag-class>org.araneaframework.jsp.tag.updateregion.UpdateRegionRowsHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Local id of the update region.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Global id of the update region.</description>
+         <name>globalId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>attribute</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.AttributeHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>Attribute name.</description>
+         <name>name</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Attribute value.</description>
+         <name>value</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>radioSelectItemLabel</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormRadioSelectItemLabelHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Select item value.</description>
+         <name>value</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>The HTML id radio button to which this label belongs.</description>
+         <name>radioId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether an asterisk is shown when the element is mandatory.</description>
+         <name>showMandatory</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>showColon</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>cell</name>
+      <tag-class>org.araneaframework.jsp.tag.layout.LayoutCellHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Colspan for this cell. Same as in HTML.</description>
+         <name>colspan</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Rowspan for this cell. Same as in HTML.</description>
+         <name>rowspan</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Width for this cell. Same as in HTML, deprecated.</description>
+         <name>width</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Height for this cell. Same as in HTML, deprecated.</description>
+         <name>height</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether this cell is header cell, defaults to false. In HTML, tag is rendered with &amp;lt;th&amp;gt; or &amp;lt;tr&amp;gt;.</description>
+         <name>headerCell</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether cell's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</description>
+         <name>overrideLayout</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML id of this row.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>tabs</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.tab.TabsHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>Id of Uilib TabContainerWidget</description>
+         <name>id</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>registerOverlay</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.OverlayRegistrationHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>tabContainer</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.tab.TabContainerHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for tag</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Boolean specifying whether the tab selection events should invoke partial render or full render. Default is false (full render).</description>
+         <name>registerUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>registerPopups</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.PopupRegistrationHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>button</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.FormButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button.</description>
+         <name>renderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether button shows its label.</description>
+         <name>showLabel</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>conditionalDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionalDisplayTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>timeInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.date.FormTimeInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Boolean, specifying whether HTML &amp;lt;select&amp;;gt;'s should be shown for hour/minute selection.</description>
+         <name>showTimeSelect</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Boolean, specifying whether HTML &amp;lt;table&amp;;gt;'s should be rendered to around this time input. Default is true.</description>
+         <name>surroundingTable</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'read-only'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right).</description>
+         <name>calendarAlignment</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies whether the calendar should not be rendered (default is false).</description>
+         <name>disableCalendar</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies date format for date input (default is '%d.%m.%Y').</description>
+         <name>dateFormat</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>dateTimeInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.date.FormDateTimeInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Css class for date.</description>
+         <name>dateStyleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Css class for time.</description>
+         <name>timeStyleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Boolean, specifying whether HTML &amp;lt;select&amp;;gt;'s should be shown for foolproof hour/minute selection.</description>
+         <name>showTimeSelect</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'read-only'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right).</description>
+         <name>calendarAlignment</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies whether the calendar should not be rendered (default is false).</description>
+         <name>disableCalendar</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies date format for date input (default is '%d.%m.%Y').</description>
+         <name>dateFormat</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>simpleLabel</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormSimpleLabelHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Label id.</description>
+         <name>labelId</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the label should display the asterisk, &lt;code&gt;false&lt;code&gt; by default.</description>
+         <name>showMandatory</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether a colon (&amp;quot;:&amp;quot;) is shown after the label.</description>
+         <name>showColon</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>ID of the form element for which the label is created</description>
+         <name>for</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>acute</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.AcuteEntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>bold</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.BoldHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>checkbox</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.FormCheckboxHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>systemForm</name>
+      <tag-class>org.araneaframework.jsp.tag.form.AraneaSystemFormHtmlTag</tag-class>
+      
+
+      <attribute><description>Form name, autogenerated if omitted.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Submitting method: GET or POST.</description>
+         <name>method</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Form data encoding type.</description>
+         <name>enctype</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for tag</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>widgetContext</name>
+      <tag-class>org.araneaframework.jsp.tag.context.WidgetContextTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>textInputDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormTextInputDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>checkboxMultiSelect</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormCheckboxMultiSelectHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute>
+         <name>type</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Boolean that controls whether label is before or after each checkbox. False by default.</description>
+         <name>labelBefore</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>listRowButton</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.ListRowButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Event id.</description>
+         <name>eventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Button id, allows to access button from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Id of button label.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>widgetMarker</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.WidgetMarkerTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>tag</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>dateInput</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.date.FormDateInputHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onChangePrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies how to render a disabled input. Valid options are &lt;code&gt;'disabled'&lt;/code&gt; and &lt;code&gt;'read-only'&lt;/code&gt;. Default is &lt;code&gt;'disabled'&lt;/code&gt;.</description>
+         <name>disabledRenderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Alignment for popup calendar. In form 'zx' where z is in {TBCtb} and x in {LRClr}. Default is 'Br' (Bottom, right).</description>
+         <name>calendarAlignment</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies whether the calendar should not be rendered (default is false).</description>
+         <name>disableCalendar</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Specifies date format for date input (default is '%d.%m.%Y').</description>
+         <name>dateFormat</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>selectDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormSelectDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>newLine</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.NewLineHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>listFilterButton</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.filterform.ListFilterButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Possible values are 'button', 'input' &amp;mdash; filter button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themself (with an image, for example). Default rendermode is 'button'.</description>
+         <name>renderMode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether button shows its label.</description>
+         <name>showLabel</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>eventLinkButton</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.EventLinkButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Event id.</description>
+         <name>eventId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Event parameter.</description>
+         <name>eventParam</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>numerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Widget where event should be routed, default is contextwidget.</description>
+         <name>eventTarget</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Disables button.</description>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Button id, allows to access button from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Id of button label.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Precondition for deciding whether go to server side or not.</description>
+         <name>onClickPrecondition</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>elementContent</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.ElementContentHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+   </tag>
+   <tag>
+
+      <name>form</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>automaticFormElement</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.AutomaticTagFormElementTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Element tabindex.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class without prefix of the dynamically selected tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>checkboxMultiSelectItem</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormCheckboxMultiSelectItemHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>The value of this checkbox that will be submitted with form if this checkbox is selected.</description>
+         <name>value</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Sets the HTML id of this checkbox button.</description>
+         <name>htmlId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formKeyboardHandler</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag</tag-class>
+      <body-content>empty</body-content>
+
+      <attribute><description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); } Either handler or elementId/event pair should be specified, not both.</description>
+         <name>handler</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>subscope</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+         <name>elementId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+         <name>fullElementId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>event</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCode</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
+         <name>keyCombo</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
+         <name>key</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>row</name>
+      <tag-class>org.araneaframework.jsp.tag.layout.LayoutRowHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout.</description>
+         <name>cellClasses</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether row's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</description>
+         <name>overrideLayout</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML id of this row.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>richTextAreaInit</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.head.RichTextAreaInitializationHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>HTML element name.</description>
+         <name>name</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>formListAddForm</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.list.formlist.FormListAddFormTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>label</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.FormElementLabelHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Element id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether an asterisk is shown when the element is mandatory.</description>
+         <name>showMandatory</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>showColon</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>radioSelect</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormRadioSelectHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal.</description>
+         <name>type</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Boolean that controls whether label is before or after each radio button. False by default.</description>
+         <name>labelBefore</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Whether the element will send the events that are registered by server-side (by default 'true').</description>
+         <name>events</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute>
+         <name>validateOnEvent</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+
+      </attribute>
+      <attribute><description>HTML tabindex for the element.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>contextMenu</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.ContextMenuHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>updateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+         <name>globalUpdateRegions</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>UiLib widget id.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>valueDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.display.FormElementValueDisplayTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Name of the page scope variable to put the element value into.</description>
+         <name>var</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>textareaDisplay</name>
+      <tag-class>org.araneaframework.jsp.tag.uilib.form.element.text.FormTextareaDisplayHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+
+      <attribute><description>Whether even single spaces (blanks) should be replace with &amp;amp;nbsp; entities in output.</description>
+         <name>escapeSingleSpaces</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Element id, can also be inherited.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>raquo</name>
+      <tag-class>org.araneaframework.jsp.tag.entity.RaquoEntityHtmlTag</tag-class>
+      <body-content>empty</body-content>
+      
+
+      <attribute><description>HTML entity code, e.g. &lt;i&gt;nbsp&lt;/i&gt; or &lt;i&gt;#012&lt;/i&gt;.</description>
+         <name>code</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Number of times to repeat the entity.</description>
+         <name>count</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>body</name>
+      <tag-class>org.araneaframework.jsp.tag.basic.BodyHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Overwrite the standard Aranea JSP HTML body onload event. Use with caution.</description>
+         <name>onload</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Overwrite the standard Aranea JSP HTML body onunload event. Use with caution.</description>
+         <name>onunload</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Text direction.</description>
+         <name>dir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML body id</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Language information.</description>
+         <name>lang</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Title.</description>
+         <name>title</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+   <tag>
+
+      <name>basicLinkButton</name>
+      <tag-class>org.araneaframework.jsp.tag.presentation.LinkButtonHtmlTag</tag-class>
+      <body-content>JSP</body-content>
+      
+
+      <attribute><description>Button id, allows to access button from JavaScript.</description>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Id of button label.</description>
+         <name>labelId</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>onClick Javascript action.</description>
+         <name>onclick</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>HTML tabindex for the button.</description>
+         <name>tabindex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>Inline style for HTML tag.</description>
+         <name>style</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+      <attribute><description>CSS class for the tag.</description>
+         <name>styleClass</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+
+           <type>java.lang.String</type>
+           
+
+      </attribute>
+
+   </tag>
+
+</taglib>

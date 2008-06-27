@@ -59,7 +59,8 @@ public class MessageUtil {
    * to the placeholder in the message.
    * 
    * @param message The message containing a placeholder for the parameter.
-   * @param parameter The parameter that will be used in the message.
+   * @param parameter1 The parameter that will be used in the message.
+   * @param parameter2 The parameter that will be used in the message.
    * @return The formatted message.
    */
   public static String format(String message, Object parameter1, Object parameter2) {
@@ -112,10 +113,7 @@ public class MessageUtil {
    * <code>parameters</code> to the placeholders.
    * 
    * @param message The key to retrieve the message.
-   * @param parameter1 The first parameter that will be used in the localized
-   *            message.
-   * @param parameter2 The second parameter that will be used in the localized
-   *            message.
+   * @param parameters The parameters that will be used in the localized message.
    * @param env The environment that is expected to contain the localization
    *            context.
    * @return The localized and formatted message.
