@@ -98,7 +98,6 @@ public class FormListUtil {
    * @param editableRows editable rows widget.
    * @param rowForm row form.
    * @param key row key.
-   * @throws Exception
    */
   public static ButtonControl addEditSaveButtonToRowForm(String labelId,
       BaseFormListWidget editableRows, FormWidget rowForm, Object key) {

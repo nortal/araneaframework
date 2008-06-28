@@ -16,12 +16,12 @@
 
 package org.araneaframework.uilib.list.util.like;
 
+import com.sun.org.apache.regexp.internal.RE;
+import com.sun.org.apache.regexp.internal.RESyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
-import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
 import org.araneaframework.backend.list.SqlLikeUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 

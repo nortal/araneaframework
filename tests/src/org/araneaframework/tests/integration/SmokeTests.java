@@ -23,7 +23,7 @@ import junit.framework.TestCase;
  * XXX: why is the whole test commented out?
  */
 public class SmokeTests extends TestCase {
-  /*private MockServlet servlet;
+/*  private MockServlet servlet;
   private ServletServiceAdapterComponent adapter;
   
   private Map initedAdapters = new HashMap();
@@ -64,7 +64,7 @@ public class SmokeTests extends TestCase {
   }
   
   public void testSmoke() throws Exception {
-    adapter = (ServletServiceAdapterComponent)initAdapter("smokeTest.xml");
+    adapter = initAdapter("smokeTest.xml");
     adapter.service(req, resp);
     //success if no exception thrown
     fail();
@@ -72,7 +72,7 @@ public class SmokeTests extends TestCase {
   //
   
   public void testSerialization() throws Exception {
-    adapter = (ServletServiceAdapterComponent)initAdapter("serializationTestsConf.xml");
+    adapter = initAdapter("serializationTestsConf.xml");
     
     BeanFactory factory = servlet.getFactory();
     MockViewPortWidget widget = (MockViewPortWidget)factory.getBean("rootWidget");
@@ -85,7 +85,7 @@ public class SmokeTests extends TestCase {
     String event = "theEvent";
     String widgetKey =StandardViewPortWidget.CHILD_KEY;
     
-    adapter = (ServletServiceAdapterComponent)initAdapter("repeatedRequest.xml");
+    adapter = initAdapter("repeatedRequest.xml");
     // lets get reference to the bean doing the heavy-lifting
     // its a singleton, so we're cool
     BeanFactory factory = servlet.getFactory();
@@ -115,7 +115,7 @@ public class SmokeTests extends TestCase {
   }
   
   public void testDestroyPropagates() throws Exception {
-    adapter = (ServletServiceAdapterComponent)initAdapter("repeatedRequest.xml");
+    adapter = initAdapter("repeatedRequest.xml");
     
     MockViewPortWidget widget = (MockViewPortWidget)servlet.getFactory().getBean("rootWidget");
     // initializes everything
@@ -131,7 +131,7 @@ public class SmokeTests extends TestCase {
     String childKey = "aWidget";
     String event = "tehEvent";
     
-    adapter = (ServletServiceAdapterComponent)initAdapter("simpleFilters.xml");
+    adapter = initAdapter("simpleFilters.xml");
     
     MockViewPortWidget widget = (MockViewPortWidget)servlet.getFactory().getBean("rootWidget");
     MockStandardWidget childWidget = new MockStandardWidget();
@@ -155,5 +155,5 @@ public class SmokeTests extends TestCase {
   public static void main(String args[]) {
     junit.textui.TestRunner.run(suite());
   }
-  */
+*/  
 }

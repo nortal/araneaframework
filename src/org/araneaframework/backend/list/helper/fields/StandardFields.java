@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;

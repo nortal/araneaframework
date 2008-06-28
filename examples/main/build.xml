@@ -21,12 +21,12 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
-        <delete dir="war/WEB-INF/classes" failonerror="false"/>
-        <delete dir="war/WEB-INF/lib" failonerror="false"/>	
+    <delete dir="war/WEB-INF/classes" failonerror="false"/>
+    <delete dir="war/WEB-INF/lib" failonerror="false"/>	
 		<delete dir="war/src" failonerror="false"/>	
 		<delete dir="war/jsp" failonerror="false"/>
 		<delete dir="dist" failonerror="false"/>	
-        <delete dir="tmp" failonerror="false"/>
+    <delete dir="tmp" failonerror="false"/>
 	</target>
 	
 	<!-- Initialize the build system -->

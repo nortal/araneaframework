@@ -21,7 +21,7 @@
 	<property name="ivy.settings.file" value="ivysettings.xml"/>
 
 	<path id="classpath">
-		<fileset dir="${lib.dir}/default/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
 	</path>
 
 	<!-- Clean up build system results -->
@@ -42,9 +42,16 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build"/>
 	</target>
 
+  <property name="ivy.report.dir" value="build/reports/ivy" />
+  <!-- Generates a report of dependencies -->
+  <target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
+    <ivy:resolve file="ivy.xml" />
+    <ivy:report todir="${ivy.report.dir}"/>
+  </target>
+  
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
 	<target name="publish" depends="clean-all,init-ivy,build"
 		description="Publishes the JAR from dist directory to ivy repository.">
@@ -79,7 +86,7 @@
 	             uri="antlib:org.apache.ivy.ant"
 	             classpathref="ivy.lib.path"/>
 
-		<ivy:configure file="${ivy.settings.file}" />
+		<ivy:settings file="${ivy.settings.file}" />
 	</target>
 
 	<target name="build" depends="jar" description="Builds the Aranea source code" />
@@ -251,9 +258,9 @@
 	</target>
 
 	<target name="tlddoc" depends="init" description="Generates documentation for JSP tags.">
-		<java fork="true" jar="${lib.dir}/default/tlddoc.jar" failonerror="true">
+		<java fork="true" jar="${lib.dir}/build/tlddoc.jar" failonerror="true">
 			<arg line="-d ${dist.dir}/doc/tlddocs"/>
-			<arg value="etc/aranea-standard.tld"/>
+			<arg value="etc/META-INF/aranea-standard.tld"/>
 		</java>
 	</target>
 
@@ -338,7 +345,7 @@
 
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
 		<taskdef resource="checkstyletask.properties" classpathref="classpath"/>
-		<checkstyle config="sun_checks.xml">
+		<checkstyle config="checkstyle_checks.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<formatter type="xml" tofile="checkstyle_report.xml"/>
 		</checkstyle>

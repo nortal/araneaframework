@@ -19,7 +19,6 @@ package org.araneaframework.backend.list.helper.reader;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.uilib.list.util.Converter;
 
 /**

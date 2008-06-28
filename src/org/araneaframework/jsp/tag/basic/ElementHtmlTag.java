@@ -19,10 +19,8 @@ package org.araneaframework.jsp.tag.basic;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
