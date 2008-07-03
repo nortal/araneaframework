@@ -53,10 +53,11 @@
   </target>
   
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
-	<target name="publish" depends="clean-all,init-ivy,build"
+	<target name="publish" depends="init-ivy"
 		description="Publishes the JAR from dist directory to ivy repository.">
 
-		<ivy:resolve/>
+    
+		<ivy:resolve conf="runtime"/>
 
 		<mkdir dir="publishtmp"/>
 		<copydir dest="publishtmp" src="${dist.dir}" includes="**/*.jar" flatten="true"/>

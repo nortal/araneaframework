@@ -21,17 +21,23 @@
     <conf name="runtime"/>
     <conf name="spring" description="For using Spring dispatcher"/>
     <conf name="default" extends="runtime"/>
+    <conf name="backend" extends="runtime"/>
+    <conf name="core" extends="runtime"/>
+    <conf name="framework" extends="runtime"/>
+    <conf name="http" extends="runtime"/>
+    <conf name="jsp" extends="runtime"/>
+    <conf name="uilib" extends="runtime"/>
   </configurations>
   
   <publications>
      <artifact name="aranea" type="jar" conf="default"/>
-     <artifact name="aranea-backend" type="jar" conf="default"/>
-     <artifact name="aranea-core" type="jar" conf="default"/>
-     <artifact name="aranea-framework" type="jar" conf="default"/>
-     <artifact name="aranea-http" type="jar" conf="default"/>
-     <artifact name="aranea-jsp" type="jar" conf="default"/>
-     <artifact name="aranea-uilib" type="jar" conf="default"/>
-     <artifact name="aranea-integration-spring" type="jar" conf="default"/>
+     <artifact name="aranea-backend" type="jar" conf="backend"/>
+     <artifact name="aranea-core" type="jar" conf="core"/>
+     <artifact name="aranea-framework" type="jar" conf="framework"/>
+     <artifact name="aranea-http" type="jar" conf="http"/>
+     <artifact name="aranea-jsp" type="jar" conf="jsp"/>
+     <artifact name="aranea-uilib" type="jar" conf="uilib"/>
+     <artifact name="aranea-integration-spring" type="jar" conf="spring"/>
   </publications>
 
   <dependencies>
@@ -39,23 +45,23 @@
     <dependency org="checkstyle" name="checkstyle" rev="4.4" conf="build->master,runtime"/>
     <dependency org="taglibrarydoc" name="tlddoc" rev="1.3" conf="build->default"/>
     <dependency org="cobertura" name="cobertura" rev="1.7" conf="build->default"/>
-    <dependency org="apache" name="commons-el" rev="1.0"/>
-  	<dependency org="apache" name="commons-collections" rev="3.2+"/>
-    <dependency org="apache" name="commons-lang" rev="2.3+" />
-    <dependency org="apache" name="commons-beanutils" rev="1.7.0" conf="build->default" />
-    <dependency org="apache" name="commons-fileupload" rev="1.2"/>
-    <dependency org="apache" name="commons-validator" rev="1.3.1"/>
-    <dependency org="apache" name="taglibs-standard" rev="1.1.2"/>
-    <dependency org="net.iharder" name="base64" rev="1.0"/>
+    <dependency org="apache" name="commons-el" rev="1.0" conf="build->default"/>
+    <dependency org="apache" name="commons-beanutils" rev="1.7.0" conf="build->default"/>
     <dependency org="junit" name="junit" rev="3+" conf="build->default"/>
     <dependency org="springframework" name="spring" rev="1.2.9+" conf="spring,build->context,web;build->mock,hibernate,dao,jdbc,orm"/>
     <dependency org="sun" name="j2ee" rev="1.4" conf="build->default"/>
-    <dependency org="sun" name="jstl" rev="1.1.2" conf="build->default"/>
-    <dependency org="com.thoughtworks" name="xstream" rev="1.2" conf="build->default"/>
     
     <!-- "required" -->
+    <dependency org="apache" name="commons-collections" rev="3.2+" conf="runtime->default"/>
+    <dependency org="apache" name="commons-lang" rev="2.3+" conf="runtime->default"/>
+    <dependency org="apache" name="commons-fileupload" rev="1.2" conf="runtime->default"/>
+    <dependency org="apache" name="commons-validator" rev="1.3.1" conf="runtime->default"/>
+    <dependency org="apache" name="taglibs-standard" rev="1.1.2" conf="runtime->default"/>
+    <dependency org="sun" name="jstl" rev="1.1.2" conf="runtime->default"/>
     
 		<!-- "optional" -->
+    <dependency org="net.iharder" name="base64" rev="1.0" conf="runtime->default"/>
+    <dependency org="com.thoughtworks" name="xstream" rev="1.2" conf="runtime->default"/>
 
   </dependencies>
 
