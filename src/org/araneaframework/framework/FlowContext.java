@@ -46,14 +46,14 @@ public interface FlowContext extends Serializable {
   int TRANSITION_RESET = 5;
 
   /** 
-   * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
+   * Starts a new nested subflow. Current flow becomes inactive until subflow calls {@link #finish(Object)} or 
    * {@link #cancel()}.
    * @since 1.0.9
    */
-  public void start(Widget flow);
+  public FlowResult start(Widget flow);
 
   /**
-   * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
+   * Starts a new nested subflow. Current flow becomes inactive until subflow calls {@link #finish(Object)} or 
    * {@link #cancel()}. {@link Handler} allows to receive notification, when the subflow ends execution.
    * @since 1.0.9
    */
@@ -61,7 +61,7 @@ public interface FlowContext extends Serializable {
   
   /**
    * Starts a new nested subflow, that can be configured using the configurator. Current flow becomes inactive
-   * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
+   * until subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
    * when the subflow ends execution.
    */
   public void start(Widget flow, Configurator configurator, Handler handler);
@@ -80,7 +80,7 @@ public interface FlowContext extends Serializable {
   public void replace(Widget flow, Configurator configurator);
 
   /**
-   * Finisheds the current flow passing control back to the calling flow. Optionally may return some value that 
+   * Finishes the current flow passing control back to the calling flow. Optionally may return some value that 
    * can be interpreted by the calling flow as the result of the call.
    */
   public void finish(Object result);
