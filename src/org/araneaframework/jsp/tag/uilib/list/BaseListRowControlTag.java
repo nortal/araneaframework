@@ -124,7 +124,7 @@ public abstract class BaseListRowControlTag extends PresentationTag {
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.Boolean"
+   *   type = "java.lang.String"
    *   required = "false"
    *   description = "Specifies whether the control should be rendered as disabled. Default is active state."
    */
@@ -155,7 +155,7 @@ public abstract class BaseListRowControlTag extends PresentationTag {
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.Boolean"
+   *   type = "java.lang.String"
    *   required = "false"
    *   description = "Specifies the initial state of the control. Default is unchecked."
    */

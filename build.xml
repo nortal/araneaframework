@@ -22,6 +22,7 @@
 
 	<path id="classpath">
 		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
 	</path>
 
 	<!-- Clean up build system results -->
@@ -42,7 +43,7 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build,runtime" />
 	</target>
 
   <property name="ivy.report.dir" value="build/reports/ivy" />
@@ -69,6 +70,7 @@
 			status="${araneaframework.status}"
 			resolver="repository"
 			overwrite="true"
+			pubdate="now"
 		/>
 
 		<delete dir="publishtmp"/>
