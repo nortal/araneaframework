@@ -48,8 +48,8 @@
     <dependency org="apache" name="commons-el" rev="1.0" conf="build->default"/>
     <dependency org="apache" name="commons-beanutils" rev="1.7.0" conf="build->default"/>
     <dependency org="junit" name="junit" rev="3+" conf="build->default"/>
-    <dependency org="springframework" name="spring" rev="1.2.9+" conf="spring,build->context,web;build->mock,hibernate,dao,jdbc,orm"/>
-    <dependency org="sun" name="j2ee" rev="1.4" conf="build->default"/>
+    <dependency org="org.springframework" name="spring" rev="1.2.9+" conf="build->default"/>
+    <dependency org="javax" name="j2ee" rev="1.4" conf="build->default"/>
     
     <!-- "required" -->
     <dependency org="apache" name="commons-collections" rev="3.2+" conf="runtime->default"/>
