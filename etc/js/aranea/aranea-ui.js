@@ -247,8 +247,7 @@ Aranea.UI.updateListSelectAlls = function(chkSelect) {
 	}
 
 	var prefix = chkSelect.id.substr(0, pos);
-	var allValuesEqual = true;
-	var previousValue = null;
+	var allSelected = true;
 
 	for (var i = 0; i < arrFormElems.length; i++) {
 		var elem = arrFormElems[i];
@@ -257,12 +256,8 @@ Aranea.UI.updateListSelectAlls = function(chkSelect) {
 				&& elem.id != null && elem.id != prefix
 				&& elem.id.startsWith(prefix)) {
 
-			if (previousValue == null) {
-				previousValue = elem.checked;
-			}
-
-			if (previousValue != elem.checked) {
-				allValuesEqual = false;
+			if (!elem.checked) {
+				allSelected = false;
 				break;
 			}
 
@@ -271,8 +266,8 @@ Aranea.UI.updateListSelectAlls = function(chkSelect) {
 
 	var chkSelectAll = document.getElementById(prefix);
 
-	if (chkSelectAll.checked != allValuesEqual) {
-		chkSelectAll.checked = allValuesEqual;
+	if (chkSelectAll != null && chkSelectAll.checked != allSelected) {
+		chkSelectAll.checked = allSelected;
 	}
 
 	return true;

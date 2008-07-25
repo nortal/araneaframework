@@ -444,8 +444,9 @@ Modalbox.Methods = {
 	
 	_setPosition: function () {
         //$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
-        var left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 );
-        var top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2 );
+        var left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2);
+        var top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2);
+
         if (top < 0) top = 0;
 
         this.MBwindow.style.left = left + "px";

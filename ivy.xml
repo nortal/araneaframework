@@ -83,9 +83,13 @@
 		<exclude module="oro" conf="build" />
 
 		<!-- Ignore these dependecies in every conf -->
+		<exclude module="activation" />
 		<exclude module="ant" />
 		<exclude module="avalon-framework" />
+		<exclude module="connector" />
+		<exclude module="jta" />
 		<exclude module="log4j" />
+		<exclude module="mail" />
 		<exclude module="portlet-api" />
 		<exclude module="servletapi" />
 		<exclude module="servlet-api" />

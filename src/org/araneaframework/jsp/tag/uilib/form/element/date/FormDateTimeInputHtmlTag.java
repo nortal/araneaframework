@@ -332,7 +332,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 	
 			JspUtil.writeEndTag_SS(out, "a");
 		
-			writeCalendarScript(out, id, "%d.%m.%Y");
+			writeCalendarScript(out, id, dateFormat);
 		}
 	}
 
