@@ -11,6 +11,12 @@ Deprecation & API changes
     NoSerializedClientStateException were removed                              |     change #638
 
 ---------------------------------------------------------------------------------------------
+2008.06.27    | Aranea 1.1.5
+
+Bugfixes
+   Ivy XML should not require Aranea-dependable projects download all JARs    | See #681
+
+---------------------------------------------------------------------------------------------
 2008.06.19    | Aranea 1.1.5-M1
 
 Bugfixes
