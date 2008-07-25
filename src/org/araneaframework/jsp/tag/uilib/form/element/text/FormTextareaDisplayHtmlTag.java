@@ -18,6 +18,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
 import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
@@ -38,7 +39,7 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
     baseStyleClass = "aranea-textarea-display";
   }
 
-  protected int doEndTag(Writer out) throws Exception {        
+  protected int doEndTag(Writer out) throws Exception {
     StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
 
     JspUtil.writeOpenStartTag(out, "span");
@@ -47,34 +48,18 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
     JspUtil.writeAttributes(out, attributes);
     JspUtil.writeCloseStartTag(out);
 
-    if (viewModel.getSimpleValue() != null)
-      for (StringTokenizer lines = new StringTokenizer(viewModel.getSimpleValue(), "\n"); lines.hasMoreTokens(); ) {
-        String line = lines.nextToken();
-        for (int i = 0; i < line.length(); i++) {
-          if (line.charAt(i) == ' ') {
-            out.write(escapeSingleSpaces ? "&nbsp;" : " ");
-            int spaceCount = 1;
-            while (line.length() > i+spaceCount && line.charAt(i+spaceCount) == ' ') {
-           	  if ((spaceCount % 2) == 1)
-            	  out.write("&nbsp;");
-              else
-            	  out.write(" ");
-           	  spaceCount++;
-            }
-            i = i + spaceCount - 1;
-          } 
-          else {
-            JspUtil.writeEscaped(out, line.substring(i, i+1));
-          }
-        }
-
-        if (lines.hasMoreTokens())
-          JspUtil.writeStartEndTag(out, "br");
+    if (viewModel.getSimpleValue() != null) {
+      String text = viewModel.getSimpleValue();
+      text = StringUtils.replace(text, "\n", "<br/>\n");
+      text = StringUtils.replace(text, "  ", " &nbsp;");
+      if (escapeSingleSpaces) {
+        text = StringUtils.replace(text, " ", "&nbsp;");
       }
+      out.write(text);
+    }
 
     JspUtil.writeEndTag(out, "span");
-
-    return super.doEndTag(out);  
+    return super.doEndTag(out);
   }
   
   /** 

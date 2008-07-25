@@ -89,11 +89,12 @@ public class InFilter extends BaseFieldFilter {
   }
 
   public Expression buildExpression(Map filterInfo) {
-    if (!isActive(filterInfo)) {
+    List valueIds = (List) filterInfo.get(getValueId());
+
+    if (!isActive(filterInfo) || valueIds.isEmpty()) {
       return null;
     }
 
-    List valueIds = (List) filterInfo.get(getValueId());
     Iterator valueIdIterator = valueIds.iterator();
     List values = new LinkedList();
 
