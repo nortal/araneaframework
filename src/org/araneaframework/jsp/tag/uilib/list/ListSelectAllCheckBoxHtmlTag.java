@@ -113,7 +113,7 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.Boolean"
+   *   type = "java.lang.String"
    *   required = "false"
    *   description = "Specifies whether the check box should be rendered as disabled. Default is active state."
    */
@@ -144,7 +144,7 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.Boolean"
+   *   type = "java.lang.String"
    *   required = "false"
    *   description = "Specifies the initial value of the check box. Default is unchecked."
    */

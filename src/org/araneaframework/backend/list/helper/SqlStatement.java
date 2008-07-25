@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -74,7 +75,11 @@ public class SqlStatement implements Serializable, Cloneable {
 	 *            a parameter.
 	 */
 	public void addParam(int index, Object param) {
-		this.parameters.add(index, param);
+      if (param instanceof List) {
+        addAllParams(index, (List) param);
+      } else {
+        this.parameters.add(index, param);
+      }
 	}
 
 	/**
@@ -137,7 +142,9 @@ public class SqlStatement implements Serializable, Cloneable {
 	 *            parameters.
 	 */
 	public void addAllParams(List params) {
-		addAllParams(countParams(), params);
+	  for (Iterator i = params.iterator(); i.hasNext(); ) {
+	    addParam(i.next());
+	  }
 	}
 	
 	/**
@@ -172,8 +179,8 @@ public class SqlStatement implements Serializable, Cloneable {
 			throws SQLException {
 		for (int i = 1; i <= this.parameters.size(); i++) {
 			Object parameter = this.parameters.get(i - 1);
-			if (parameter instanceof NullValue) {
-				pstmt.setNull(i, ((NullValue) parameter).getType());
+            if (parameter instanceof NullValue) {
+              pstmt.setNull(i, ((NullValue) parameter).getType());
 			} else {
 				// converting java.util.Date into java.sql.Date (java.sql.Timestamp is not changed)
 			    if (parameter != null && parameter.getClass().equals(java.util.Date.class)) {
