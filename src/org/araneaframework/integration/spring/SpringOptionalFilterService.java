@@ -62,7 +62,7 @@ public class SpringOptionalFilterService extends BaseFilterService {
    * instance of {@link FilterService}.
    */
   protected void init() throws Exception {
-    BeanFactory bf = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
     try {
       FilterService filter = (FilterService) bf.getBean(beanId);
       filter.setChildService(childService);

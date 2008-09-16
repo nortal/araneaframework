@@ -61,7 +61,7 @@ public class StandardFlowContextResettingMessage implements Message {
   
     fCtx.reset(new EnvironmentAwareCallback() {
       public void call(Environment env) throws Exception {
-        FlowContext f = (FlowContext)env.getEntry(FlowContext.class);
+        FlowContext f = env.getEntry(FlowContext.class);
         if (flow != null)
           f.start(flow);
       }

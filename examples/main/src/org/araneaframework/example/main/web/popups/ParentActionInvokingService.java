@@ -69,7 +69,7 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 

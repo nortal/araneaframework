@@ -124,7 +124,7 @@ public class FileUploadControl extends BaseControl {
     value = innerData;
     
     if (!uploadSucceeded) {
-      Long sizeLimit = ((FileUploadContext) getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
+      Long sizeLimit = (getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
       addError(MessageUtil.localizeAndFormat(
           UiLibMessages.FILE_UPLOAD_FAILED,
           sizeLimit.toString(),

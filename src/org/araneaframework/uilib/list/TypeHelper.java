@@ -50,7 +50,7 @@ public class TypeHelper implements Serializable {
 	public void init(Environment env) throws Exception {
 		if (locale == null) {
 			LocalizationContext l10nCtx =
-				(LocalizationContext) env.getEntry(LocalizationContext.class);
+				env.getEntry(LocalizationContext.class);
 			if (l10nCtx != null) {
 				locale = l10nCtx.getLocale();
 			}

@@ -172,7 +172,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected TreeContext getTreeCtx() {
-    return (TreeContext) getEnvironment().getEntry(TreeContext.class);
+    return getEnvironment().getEntry(TreeContext.class);
   }
 
   // returns List<TreeNodeWidget>

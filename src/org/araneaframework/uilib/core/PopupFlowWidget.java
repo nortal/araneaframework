@@ -62,7 +62,7 @@ public class PopupFlowWidget extends BaseApplicationWidget {
     super.init();
 
     PopupWindowContext popupCtx = 
-      (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+      getEnvironment().getEntry(PopupWindowContext.class);
     popupCtx.open(msg, properties, this);
     msg = null;
   }

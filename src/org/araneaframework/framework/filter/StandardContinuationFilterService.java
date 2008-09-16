@@ -103,7 +103,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
         childService._getService().action(path, input, output);
 				
 				ContinuationContext conCtx = 
-					(ContinuationContext) getEnvironment().getEntry(ContinuationContext.class);
+					getEnvironment().getEntry(ContinuationContext.class);
 				conCtx.finish();
 			}
 		};

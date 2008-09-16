@@ -53,7 +53,7 @@ public class BaseUpdateRegionTag extends BaseTag {
     	fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
 
     String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
-    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().requireEntry(UpdateRegionContext.class);
+    UpdateRegionContext updateRegionContext = getEnvironment().requireEntry(UpdateRegionContext.class);
     updateRegionContext.addDocumentRegion(fullId, uiWidgetId);
 
     return EVAL_BODY_INCLUDE;

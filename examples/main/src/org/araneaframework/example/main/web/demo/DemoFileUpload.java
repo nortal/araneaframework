@@ -105,7 +105,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please relax your popup blocker settings.");
 		FileDownloaderService service = new FileDownloaderService(selectedFile);
 		
-		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+		PopupWindowContext popupContext = getEnvironment().getEntry(PopupWindowContext.class);
 		PopupWindowProperties p = new PopupWindowProperties();
 		popupContext.open(service, p, null);
 	}

@@ -79,7 +79,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
       try {
         ((Relocatable) childService)._getRelocatable().overrideEnvironment(null);
 
-        HttpSession sess = (HttpSession) getEnvironment().getEntry(HttpSession.class);
+        HttpSession sess = getEnvironment().getEntry(HttpSession.class);
 
         byte[] serialized = SerializationUtils.serialize(childService);
         log.debug("Serialized session size: " + serialized.length);

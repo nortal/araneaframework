@@ -70,7 +70,7 @@ public class StandardTopServiceRouterServiceTests extends TestCase {
   public void testCloseRemoves() throws Exception {
     service._getService().action(MockUtil.getPath(), input, output);
     TopServiceContext sess = 
-      (TopServiceContext)child1.getTheEnvironment().getEntry(TopServiceContext.class);
+      child1.getTheEnvironment().getEntry(TopServiceContext.class);
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
   }

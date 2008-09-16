@@ -110,7 +110,7 @@ public class RelocatableDecorator extends BaseService
 
       private static final long serialVersionUID = 1L;
 
-      public Object getEntry(Object key) {
+      public <T> T getEntry(Class<T> key) {
         if (getEnvironment() == null)
           return null;
         return getEnvironment().getEntry(key);

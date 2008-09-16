@@ -86,7 +86,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public void finish(Object result) {
-    ThreadContext threadCtx = (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+    ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
     getOpenerFlowContext().finish(result);
 
     try {
@@ -137,7 +137,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
   
   private FlowContext getLocalFlowContext() {
-    return (FlowContext) getEnvironment().getEntry(FlowContext.class);
+    return getEnvironment().getEntry(FlowContext.class);
   }
   
   protected String getRequestURL() {
@@ -154,18 +154,18 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   
   private FlowContext getOpenerFlowContext() {
     PopupWindowContext popupCtx = 
-      (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+      getEnvironment().getEntry(PopupWindowContext.class);
     // XXX
-    return (FlowContext) ((ApplicationWidget) popupCtx.getOpener())
+    return ((ApplicationWidget) popupCtx.getOpener())
       .getChildEnvironment().getEntry(FlowContext.class);
   }
   
   protected PopupWindowContext getPopupContext() {
-    return (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+    return getEnvironment().getEntry(PopupWindowContext.class);
   }
 
   protected PopupWindowContext getOpenerPopupContext() {
-    return (PopupWindowContext)((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
+    return ((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
   }
 
   public void setTransitionHandler(TransitionHandler handler) {

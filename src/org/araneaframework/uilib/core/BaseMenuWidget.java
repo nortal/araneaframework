@@ -86,7 +86,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * @since 1.1.1
    */
   protected void initMenuSelectorMountSupport() {
-    MountContext mc = (MountContext) getEnvironment().getEntry(MountContext.class);
+    MountContext mc = getEnvironment().getEntry(MountContext.class);
     if (mc == null)
       return;
 

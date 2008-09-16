@@ -17,17 +17,41 @@
 package org.araneaframework.uilib.form;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
-public class BeanFormWidget extends FormWidget {
+public class BeanFormWidget<T> extends FormWidget {
+  
+  private static final Log log = LogFactory.getLog(BaseApplicationWidget.class);
+  
   private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
   private BeanMapper beanMapper;
-  private Class beanClass;
+  private Class<T> beanClass;
+  private T bean;
   
-  public BeanFormWidget(Class beanClass) {
+  @SuppressWarnings("unchecked")
+  public BeanFormWidget(T bean) {
+    this.bean = bean;
+    this.beanClass = (Class<T>) bean.getClass();
+    this.beanMapper = new BeanMapper(beanClass);
+    _readFromBean();
+  }
+  
+  private BeanFormWidget(Class<T> beanClass){
+    try {
+      this.bean = beanClass.newInstance();
+      _readFromBean();
+    } catch (InstantiationException e) {
+      ExceptionUtil.uncheckException(e);
+    } catch (IllegalAccessException e) {
+      ExceptionUtil.uncheckException(e);
+    }
     this.beanClass = beanClass;
     this.beanMapper = new BeanMapper(beanClass);
   }
@@ -58,11 +82,15 @@ public class BeanFormWidget extends FormWidget {
     return new Data(type);
   }
   
-  public BeanFormWidget addBeanSubForm(String id) {
+  /**
+   * NB! The user of this method must take the full responsibility for type checking when using this method.
+   */
+  @SuppressWarnings("unchecked")
+  public <V> BeanFormWidget<V> addBeanSubForm(String id) {
     if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
 
-    BeanFormWidget result = new BeanFormWidget(beanMapper.getFieldType(id));
+    BeanFormWidget<V> result = new BeanFormWidget<V>(beanMapper.getFieldType(id));
     addElement(id, result);
     return result;
   }
@@ -75,18 +103,37 @@ public class BeanFormWidget extends FormWidget {
     return super.addElement(elementName, labelId, control, inferDataType(elementName, mandatory), initialValue, mandatory);
   }
 
-  public Object writeToBean(Object bean) {
+  @Deprecated
+  public T writeToBean(T bean) {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(bean);
     return bean;
   }
   
-  public void readFromBean(Object bean) {
+  public T writeToBean() {
+    BeanFormReader reader = new BeanFormReader(this);
+    reader.readFormBean(bean);
+    return bean;
+  }
+  
+  public void readFromBean(T bean) {
+    if(this.bean == bean){
+      log.warn("You are reading from the same bean that is already contained in this form!");
+    }
+    this.bean = bean;
+    _readFromBean();
+  }
+
+  public void readFromBean() {
+    _readFromBean();
+  }
+  
+  private void _readFromBean() {
     BeanFormWriter writer = new BeanFormWriter(beanClass);
     writer.writeFormBean(this, bean);
   }
-
-  public Class getBeanClass() {
+  
+  public Class<T> getBeanClass() {
     return beanClass;
   }  
 }

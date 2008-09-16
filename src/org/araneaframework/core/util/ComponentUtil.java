@@ -99,11 +99,11 @@ public abstract class ComponentUtil {
       this.component = component;
     }
 
-    public Object getEntry(Object key) {
+    public <T> T getEntry(Class<T> key) {
       return getDelegateEnvironment().getEntry(key);
     }
 
-    public Object requireEntry(Object key)
+    public <T> T requireEntry(Class<T> key)
         throws NoSuchEnvironmentEntryException {
       return getDelegateEnvironment().requireEntry(key);
     }

@@ -87,7 +87,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
   }
 
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+    return getEnvironment().getEntry(LocalizationContext.class);
   }
 
   // returns the name of currently running flow class, 

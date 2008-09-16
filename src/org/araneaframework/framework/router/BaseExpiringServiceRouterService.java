@@ -63,7 +63,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     serviceTTLMap = null;
     if (capsule != null) {
       if (getEnvironment().getEntry(ExpiringServiceContext.class) != null) {
-        serviceTTLMap = ((ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class)).getServiceTTLMap();
+        serviceTTLMap = (getEnvironment().getEntry(ExpiringServiceContext.class)).getServiceTTLMap();
       }
       if (serviceTTLMap == null) {
         serviceTTLMap = new HashMap();

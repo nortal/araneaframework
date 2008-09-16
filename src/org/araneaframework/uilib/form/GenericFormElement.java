@@ -232,7 +232,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
     if (this.backgroundValidation == null) {
-      FormContext fctx = ((FormContext) getEnvironment().getEntry(FormContext.class));
+      FormContext fctx = (getEnvironment().getEntry(FormContext.class));
       if (fctx != null)
         return fctx.isBackgroundValidation();
       return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
@@ -285,7 +285,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   /** @since 1.1 this method is protected (private before 1.1). */
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    return getEnvironment().requireEntry(MessageContext.class);
   }
 
   /**

@@ -64,7 +64,7 @@ public class TimeControl extends TimestampControl {
 		super.init();
 		if (!confOverridden) {
 			ConfigurationContext confCtx = 
-				(ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+				getEnvironment().getEntry(ConfigurationContext.class);
 
 			if(confCtx != null) {
 				String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);

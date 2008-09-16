@@ -33,15 +33,15 @@ import org.springframework.beans.factory.BeanFactory;
  */
 public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSelectorAware {
   protected BeanFactory getBeanFactory() {
-    return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    return getEnvironment().getEntry(BeanFactory.class);
   }
   
   protected SecurityContext getSecCtx() {
-    return (SecurityContext) getEnvironment().getEntry(SecurityContext.class);
+    return getEnvironment().getEntry(SecurityContext.class);
   }
   
   protected PopupWindowContext getPopupCtx() {
-    return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+    return getEnvironment().requireEntry(PopupWindowContext.class);
   }
   
   public IGeneralDAO getGeneralDAO() {

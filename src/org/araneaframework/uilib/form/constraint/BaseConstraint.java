@@ -128,7 +128,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    *         <code>Environment</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return getEnvironment().getEntry(ConfigurationContext.class);
   }
 
   /**
@@ -140,7 +140,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    */
   protected String t(String key) {
     LocalizationContext locCtx = 
-     (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+     getEnvironment().getEntry(LocalizationContext.class);
     return locCtx.localize(key);
   }
 

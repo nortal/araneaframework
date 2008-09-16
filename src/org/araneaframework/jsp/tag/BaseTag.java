@@ -292,7 +292,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   //
 
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return getEnvironment().getEntry(ConfigurationContext.class);
   }
 
   /**

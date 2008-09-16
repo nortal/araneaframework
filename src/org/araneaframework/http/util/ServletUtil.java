@@ -117,7 +117,7 @@ public abstract class ServletUtil {
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
     setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
 
-    ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
+    ServletContext servletContext = env.requireEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(req, res);
 
     restoreAttributes(req, attributeBackupMap);
@@ -193,7 +193,7 @@ public abstract class ServletUtil {
 
   /** @since 1.1 */
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
-    LocalizationContext localizationContext = (LocalizationContext) env.getEntry(LocalizationContext.class);
+    LocalizationContext localizationContext = env.getEntry(LocalizationContext.class);
     if (localizationContext == null)
       return null;
     return new javax.servlet.jsp.jstl.fmt.LocalizationContext(

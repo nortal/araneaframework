@@ -83,7 +83,7 @@ public class EndsWithFilter extends BaseFieldFilter {
 	}
 
 	public void init(Environment env) {
-		ConfigurationContext cfg = (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+		ConfigurationContext cfg = env.getEntry(ConfigurationContext.class);
 		if (cfg != null) {
 			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);
 		}

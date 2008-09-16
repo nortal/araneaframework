@@ -61,7 +61,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 				widget._getWidget().render(output);
 			}
 			else {
-				JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+				JspContext config = getEnvironment().requireEntry(JspContext.class);
 				JspUtil.include(pageContext, config.getJspPath() + "/" + page);
 			}
 		}

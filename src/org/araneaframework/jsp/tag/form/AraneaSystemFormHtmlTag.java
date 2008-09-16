@@ -47,7 +47,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   private JspContext config;
   
   protected int doStartTag(Writer out) throws Exception {
-    config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+    config = getEnvironment().requireEntry(JspContext.class);
 
     super.doStartTag(out);
 
@@ -60,7 +60,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     JspUtil.writeHiddenInputElement(out, ApplicationWidget.EVENT_PARAMETER_KEY, "");
     
     // if overlay is active, set the empty field which denotes that systemform is running in overlay
-    OverlayActivityMarkerContext oCtx = (OverlayActivityMarkerContext) getEnvironment().getEntry(OverlayActivityMarkerContext.class);
+    OverlayActivityMarkerContext oCtx = getEnvironment().getEntry(OverlayActivityMarkerContext.class);
     if (oCtx != null) {
       JspUtil.writeHiddenInputElement(out, OverlayContext.OVERLAY_REQUEST_KEY, "");
     }
@@ -79,7 +79,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
    */
   protected void writeVersionedStateInfo(Writer out) throws Exception {
     String regionsFromRequest = (String) getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
-    StateVersioningContext stateVersionCtx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    StateVersioningContext stateVersionCtx = getEnvironment().getEntry(StateVersioningContext.class);
     if (regionsFromRequest == null && stateVersionCtx != null) {
       State state = stateVersionCtx.saveState();
       
@@ -93,7 +93,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   }
 
   private void writeSystemFormFields(Writer out) throws JspException, IOException {
-    SystemFormContext systemFormContext = (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
+    SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();
       JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());

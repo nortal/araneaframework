@@ -84,7 +84,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 	}
 
 	protected FlowContext getFlowCtx() {
-		return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+		return getEnvironment().requireEntry(FlowContext.class);
 	}
 
 	public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
@@ -124,11 +124,11 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 	}
 	
 	protected TopServiceContext getTopServiceContext() {
-		return (TopServiceContext) getEnvironment().getEntry(TopServiceContext.class);
+		return getEnvironment().getEntry(TopServiceContext.class);
 	}
 	
 	protected ThreadContext getThreadContext() {
-		return (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+		return getEnvironment().getEntry(ThreadContext.class);
 	}
 
 	public FlowReference getCurrentReference() {

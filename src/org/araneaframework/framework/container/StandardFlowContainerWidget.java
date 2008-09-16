@@ -348,7 +348,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
 
     if (finishable && callStack.size() == 0) {
-      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
+      FlowContext parentFlowContainer = getEnvironment().getEntry(FlowContext.class);
       if (parentFlowContainer != null) {
         parentFlowContainer.finish(returnValue);
       }
@@ -380,7 +380,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
 
     if (finishable && callStack.size() == 0) {
-      FlowContext parentFlowContainer = (FlowContext) getEnvironment().getEntry(FlowContext.class);
+      FlowContext parentFlowContainer = getEnvironment().getEntry(FlowContext.class);
       if (parentFlowContainer != null) {
         parentFlowContainer.cancel();
       }
@@ -626,7 +626,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     protected void notifyScrollContext(int transitionType, Widget activeFlow) {
       if (activeFlow == null) return;
-      WindowScrollPositionContext scrollCtx = (WindowScrollPositionContext) activeFlow.getEnvironment().getEntry(WindowScrollPositionContext.class);
+      WindowScrollPositionContext scrollCtx = activeFlow.getEnvironment().getEntry(WindowScrollPositionContext.class);
       if (scrollCtx != null) {
         switch (transitionType) {
           case FlowContext.TRANSITION_START: 

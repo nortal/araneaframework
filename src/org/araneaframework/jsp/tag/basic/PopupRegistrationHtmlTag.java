@@ -37,7 +37,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class PopupRegistrationHtmlTag extends BaseTag {
 
   protected int doEndTag(Writer out) throws Exception {
-    PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+    PopupWindowContext popupWindowContext = getEnvironment().requireEntry(PopupWindowContext.class);
     Map popups = popupWindowContext.getPopups();
 
     if (popups != null && !popups.isEmpty()) {
@@ -54,7 +54,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
   }
 
   protected void addPopups(Writer out, Map popups) throws Exception {
-    PopupWindowContext popupWindowContext = (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+    PopupWindowContext popupWindowContext = getEnvironment().requireEntry(PopupWindowContext.class);
     for (Iterator i = popups.entrySet().iterator(); i.hasNext(); ) {
       Map.Entry next = (Map.Entry)i.next();
       addPopup(out, next);

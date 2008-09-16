@@ -71,7 +71,7 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
   public void testCloseRemoves() throws Exception, Throwable {
     service._getService().action(MockUtil.getPath(), input, output);
     ThreadContext sess = 
-      (ThreadContext)child1.getTheEnvironment().getEntry(ThreadContext.class);
+      child1.getTheEnvironment().getEntry(ThreadContext.class);
     assertNotNull(sess.getService("child1"));
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
@@ -79,7 +79,7 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
   }
 
   public void testServiceExpiration() throws Exception {
-    ThreadContext ctx = (ThreadContext)child1.getTheEnvironment().getEntry(ThreadContext.class);
+    ThreadContext ctx = child1.getTheEnvironment().getEntry(ThreadContext.class);
     ctx.addService("newService", new BaseService() {}, new Long(1000));
     Thread.sleep(1200);
     assertNotNull("Action is not yet called.", ctx.getService("newService"));

@@ -45,7 +45,7 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements LocaleChangeListener {
-	private BeanFormWidget companyForm;
+	private BeanFormWidget<Firm> companyForm;
 	private BeanFormWidget invoiceForm;
 	private FormElement firmElement;
 	
@@ -77,8 +77,8 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		return result;
 	}
 
-	private BeanFormWidget buildCompanyForm() {
-		BeanFormWidget result = new BeanFormWidget(Firm.class);
+	private BeanFormWidget<Firm> buildCompanyForm() {
+		BeanFormWidget<Firm> result = new BeanFormWidget<Firm>(new Firm());
 		result.addElement("arkNumber", "ufriendly.component.centralfirmid", new NumberControl(), new LongData(), true);
 		result.addBeanElement("registryAddress", "ufriendly.component.registryaddress", new TextControl(),  false);
 		result.addBeanElement("postalAddress", "ufriendly.component.postaladdress", new TextControl(),  false);
@@ -93,8 +93,7 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 	private void handleEventFetchData() throws Exception {
 		if (companyForm.convertAndValidate()) {
 			Thread.sleep(6000);
-			Firm firm = new Firm(); 
-			firm = (Firm) companyForm.writeToBean(firm);
+			Firm firm = companyForm.writeToBean();
 
 			// present ?
 			Firm present = (Firm) firms.get(firm.getArkNumber()); 

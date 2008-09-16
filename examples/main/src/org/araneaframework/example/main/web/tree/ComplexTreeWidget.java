@@ -63,7 +63,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
+      return getEnvironment().getEntry(TreeNodeContext.class);
     }
 
   }
@@ -79,7 +79,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
+      return getEnvironment().getEntry(TreeNodeContext.class);
     }
 
   }
@@ -95,7 +95,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
+      return getEnvironment().getEntry(TreeNodeContext.class);
     }
 
   }

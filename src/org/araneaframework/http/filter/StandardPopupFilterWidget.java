@@ -235,7 +235,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
   protected void event(Path path, InputData input) throws Exception {
     if (input.getGlobalData().containsKey(PopupWindowContext.POPUPS_CLOSE_KEY)) {
-      ThreadContext threadCtx = (ThreadContext)getEnvironment().getEntry(ThreadContext.class);
+      ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
       Object id = threadCtx.getCurrentId();
       threadCtx.close(id);
       if (log.isDebugEnabled())
@@ -282,7 +282,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   protected TopServiceContext getTopServiceCtx() {
-    return ((TopServiceContext)getEnvironment().requireEntry(TopServiceContext.class));
+    return (getEnvironment().requireEntry(TopServiceContext.class));
   }
   
   protected String getRequestURL() {

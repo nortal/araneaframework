@@ -50,7 +50,7 @@ public class WindowClosingService extends BaseService {
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		
-		PopupWindowContext popupCtx = ((PopupWindowContext)closableComponentEnv.getEntry(PopupWindowContext.class));
+		PopupWindowContext popupCtx = (closableComponentEnv.getEntry(PopupWindowContext.class));
 		BaseApplicationWidget opener = null;
 		if (popupCtx != null)
 			opener = (BaseApplicationWidget) popupCtx.getOpener();
@@ -97,7 +97,7 @@ public class WindowClosingService extends BaseService {
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 }

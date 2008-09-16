@@ -168,7 +168,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   protected void writeTransactionIdRegion(PrintWriter out) throws Exception {
-    TransactionContext transactionContext = (TransactionContext) getEnvironment().getEntry(TransactionContext.class);
+    TransactionContext transactionContext = getEnvironment().getEntry(TransactionContext.class);
     if (transactionContext != null) {
       writeRegion(out, TRANSACTION_ID_REGION_KEY, transactionContext.getTransactionId().toString());
     }

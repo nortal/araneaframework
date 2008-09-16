@@ -59,7 +59,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   protected ConfirmationContext requireConfirmationContext(Widget activeFlow) {
-    ConfirmationContext ctx = (ConfirmationContext) activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
+    ConfirmationContext ctx = activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
     return ctx;
   }
 

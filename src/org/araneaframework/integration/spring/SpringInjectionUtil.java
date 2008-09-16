@@ -75,7 +75,7 @@ public final class SpringInjectionUtil {
 
     Method[] methods = object.getClass().getMethods();
 
-    BeanFactory bf = (BeanFactory) env.getEntry(BeanFactory.class);
+    BeanFactory bf = env.getEntry(BeanFactory.class);
 
     for (int i = 0; i < methods.length; i++) {
 

@@ -47,7 +47,7 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 		return this.locale;
 	}
 
-	public int compare(Object o1, Object o2) {
+	public int compare(String o1, String o2) {
 		return getCollator().compare(o1, o2);
 	}
 	

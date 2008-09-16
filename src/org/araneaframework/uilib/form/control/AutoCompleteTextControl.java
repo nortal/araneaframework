@@ -89,7 +89,7 @@ public class AutoCompleteTextControl extends TextControl {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
       ConfigurationContext confCtx = 
-        (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+        getEnvironment().getEntry(ConfigurationContext.class);
       if (confCtx != null)
         result = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
     }

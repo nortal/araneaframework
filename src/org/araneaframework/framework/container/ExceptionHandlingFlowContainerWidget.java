@@ -141,7 +141,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
     else
       log.error("Critical exception occured: ", e);
     
-    UpdateRegionContext updateRegionContext = (UpdateRegionContext) getEnvironment().getEntry(UpdateRegionContext.class);
+    UpdateRegionContext updateRegionContext = getEnvironment().getEntry(UpdateRegionContext.class);
     if (updateRegionContext != null) {
       updateRegionContext.disableOnce();
     }

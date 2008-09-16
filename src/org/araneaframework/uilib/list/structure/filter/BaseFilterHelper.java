@@ -170,7 +170,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @return the global configuration context.
 	 */
 	public ConfigurationContext getConfiguration() {
-		return (ConfigurationContext) this.list.getEnvironment().getEntry(ConfigurationContext.class);
+		return this.list.getEnvironment().getEntry(ConfigurationContext.class);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @return the localization context.
 	 */
 	protected LocalizationContext getL10nCtx() {		
-		return (LocalizationContext) this.list.getEnvironment().requireEntry(LocalizationContext.class);
+		return this.list.getEnvironment().requireEntry(LocalizationContext.class);
 	}
 
 	/**

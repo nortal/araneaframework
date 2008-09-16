@@ -33,67 +33,67 @@ import org.araneaframework.http.UpdateRegionContext;
  */
 public abstract class EnvironmentUtil {
   public static Object getTopServiceId(Environment env) {
-    TopServiceContext topServiceContext = (TopServiceContext) env.getEntry(TopServiceContext.class);
+    TopServiceContext topServiceContext = env.getEntry(TopServiceContext.class);
     if (topServiceContext == null)
       return null;
     return topServiceContext.getCurrentId();
   }
   
   public static Object getThreadServiceId(Environment env) {
-    ThreadContext threadContext = (ThreadContext) env.getEntry(ThreadContext.class);
+    ThreadContext threadContext = env.getEntry(ThreadContext.class);
     if (threadContext == null)
       return null;
     return threadContext.getCurrentId();
   }
   
   public static Object requireTopServiceId(Environment env) {
-    TopServiceContext topServiceContext = (TopServiceContext) env.requireEntry(TopServiceContext.class);
+    TopServiceContext topServiceContext = env.requireEntry(TopServiceContext.class);
     return topServiceContext.getCurrentId();
   }
   
   public static Object requireThreadServiceId(Environment env) {
-    ThreadContext threadContext = (ThreadContext) env.requireEntry(ThreadContext.class);
+    ThreadContext threadContext = env.requireEntry(ThreadContext.class);
     return threadContext.getCurrentId();
   }
   
   // THESE ARE NOT CONNECTED TO SYSTEM FORM
   public static LocalizationContext getLocalizationContext(Environment env) {
-    return (LocalizationContext)env.getEntry(LocalizationContext.class);
+    return env.getEntry(LocalizationContext.class);
   }
   
   public static LocalizationContext requireLocalizationContext(Environment env) {
-    return (LocalizationContext)env.requireEntry(LocalizationContext.class);
+    return env.requireEntry(LocalizationContext.class);
   }
   
   public static FlowContext getFlowContext(Environment env) {
-    return (FlowContext)env.getEntry(FlowContext.class);
+    return env.getEntry(FlowContext.class);
   }
 
   public static FlowContext requireFlowContext(Environment env) {
-    return (FlowContext)env.requireEntry(FlowContext.class);
+    return env.requireEntry(FlowContext.class);
   }
   
   public static MessageContext getMessageContext(Environment env) {
-    return (MessageContext)env.getEntry(MessageContext.class);
+    return env.getEntry(MessageContext.class);
   }
 
   public static MessageContext requireMessageContext(Environment env) {
-    return (MessageContext)env.requireEntry(MessageContext.class);
+    return env.requireEntry(MessageContext.class);
   }
   
   public static SystemFormContext getSystemFormContext(Environment env) {
-    return (SystemFormContext)env.getEntry(SystemFormContext.class);
+    return env.getEntry(SystemFormContext.class);
   }
   
   public static SystemFormContext requireSystemFormContext(Environment env) {
-    return (SystemFormContext)env.requireEntry(SystemFormContext.class);
+    return env.requireEntry(SystemFormContext.class);
   }
   
   public static UpdateRegionContext getUpdateRegionContext(Environment env) {
-    return (UpdateRegionContext)env.getEntry(UpdateRegionContext.class);
+    return env.getEntry(UpdateRegionContext.class);
   }
 
   public static UpdateRegionContext requireUpdateRegionContext(Environment env) {
-    return (UpdateRegionContext)env.requireEntry(UpdateRegionContext.class);
+    return env.requireEntry(UpdateRegionContext.class);
   }
 }

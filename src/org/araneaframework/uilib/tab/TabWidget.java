@@ -136,7 +136,7 @@ public class TabWidget extends BaseApplicationWidget implements TabContext {
 	}
 
 	protected void destroy() throws Exception {
-		TabRegistrationContext tabRegistrationContext = (TabRegistrationContext) getEnvironment().requireEntry(TabRegistrationContext.class);
+		TabRegistrationContext tabRegistrationContext = getEnvironment().requireEntry(TabRegistrationContext.class);
 		tabRegistrationContext.unregisterTab(TabWidget.this);
 
 		super.destroy();
@@ -144,10 +144,10 @@ public class TabWidget extends BaseApplicationWidget implements TabContext {
 
 	/* ****************** PROTECTED METHODS ************************** */
 	protected TabContainerContext getTabContainerContext() {
-		return (TabContainerContext) getEnvironment().getEntry(TabContainerContext.class);
+		return getEnvironment().getEntry(TabContainerContext.class);
 	}
 	
 	protected TabRegistrationContext getTabRegistrationContext() {
-		return (TabRegistrationContext) getEnvironment().getEntry(TabRegistrationContext.class);
+		return getEnvironment().getEntry(TabRegistrationContext.class);
 	}
 }

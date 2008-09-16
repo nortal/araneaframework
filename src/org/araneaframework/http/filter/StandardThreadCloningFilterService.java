@@ -195,10 +195,10 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   protected ThreadContext getThreadServiceCtx() {
-    return ((ThreadContext)getEnvironment().requireEntry(ThreadContext.class));
+    return (getEnvironment().requireEntry(ThreadContext.class));
   }
 
   protected TopServiceContext getTopServiceCtx() {
-    return ((TopServiceContext)getEnvironment().requireEntry(TopServiceContext.class));
+    return (getEnvironment().requireEntry(TopServiceContext.class));
   }
 }

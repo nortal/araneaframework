@@ -113,7 +113,7 @@ public class BodyHtmlTag extends PresentationTag {
 
   /** @since 1.1 */
   protected void writeConfirmationScript(Writer out) throws Exception {
-    ConfirmationContext ctx = (ConfirmationContext) getEnvironment().getEntry(ConfirmationContext.class);
+    ConfirmationContext ctx = getEnvironment().getEntry(ConfirmationContext.class);
     if (ctx == null) return;
 
     String message = ctx.getConfirmationMessage();
@@ -124,7 +124,7 @@ public class BodyHtmlTag extends PresentationTag {
 
   /** Writes scripts that register client-side keepalive events for server-side expiring services. */
   protected void writeKeepAliveRegistrationScripts(Writer out) throws IOException {
-    ExpiringServiceContext expiringServiceContext = (ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class);
+    ExpiringServiceContext expiringServiceContext = getEnvironment().getEntry(ExpiringServiceContext.class);
     if (expiringServiceContext == null)
       return;
 	  Map expiringServiceMap = expiringServiceContext.getServiceTTLMap();

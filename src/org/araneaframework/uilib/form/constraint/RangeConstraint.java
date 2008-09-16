@@ -130,7 +130,7 @@ public final class RangeConstraint extends BaseConstraint {
 
   // Translates the key into a message that will be displayed to the user.
   private String t(String key, Environment env) {
-    LocalizationContext locCtx = (LocalizationContext) env.getEntry(
+    LocalizationContext locCtx = env.getEntry(
         LocalizationContext.class);
     return locCtx.localize(key);
   }
