@@ -1,68 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ivy-module 
-	version="1.3" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-
-  <info 
-  	organisation="araneaframework" 
-  	module="aranea-mvc" 
-  	revision="${araneaframework.version}"
-  	status="${araneaframework.status}">
-  	<license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
-  	<ivyauthor name="Nikita Salnikov-Tarnovski" url="nikem@webmedia.ee"/>
-  	<description homepage="http://www.araneaframework.org">
-  		Aranea MVC web framework.
-  	</description>
+<?xml-stylesheet type="text/xsl" href="ivy-doc.xsl"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
+  <info organisation="araneaframework" module="aranea-mvc" revision="${araneaframework.version}" status="${araneaframework.status}">
+    <license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html" />
+    <ivyauthor name="Martti Tamm" url="http://www.araneaframework.org/" />
+    <description homepage="http://www.araneaframework.org/">Aranea MVC web framework</description>
   </info>
-
-  <configurations>
-    <conf name="build" extends="runtime" description="Dependencies needed for building the project and running sample applications"/>
-    <conf name="runtime"/>
-    <conf name="spring" description="For using Spring dispatcher"/>
-    <conf name="default" extends="runtime"/>
-    <conf name="backend" extends="runtime"/>
-    <conf name="core" extends="runtime"/>
-    <conf name="framework" extends="runtime"/>
-    <conf name="http" extends="runtime"/>
-    <conf name="jsp" extends="runtime"/>
-    <conf name="uilib" extends="runtime"/>
+  <configurations defaultconfmapping="*->runtime">
+    <conf name="runtime" description="The runtime dependecies for Aranea." />
+    <conf name="build" description="The configuration to build Aranea." visibility="private" />
+    <conf name="aranea" description="The entire Aranea runtime library." />
+    <conf name="aranea-backend" description="The Aranea lists library." />
+    <conf name="aranea-core" description="The Aranea core library." />
+    <conf name="aranea-framework" description="The Aranea MVC base library." />
+    <conf name="aranea-http" description="The Aranea HTTP library." />
+    <conf name="aranea-jsp" description="The Aranea JSP library." />
+    <conf name="aranea-uilib" description="The Aranea MVC library." />
+    <conf name="aranea-integration-spring" description="The Aranea-Spring integration library." />
   </configurations>
-  
   <publications>
-     <artifact name="aranea" type="jar" conf="default"/>
-     <artifact name="aranea-backend" type="jar" conf="backend"/>
-     <artifact name="aranea-core" type="jar" conf="core"/>
-     <artifact name="aranea-framework" type="jar" conf="framework"/>
-     <artifact name="aranea-http" type="jar" conf="http"/>
-     <artifact name="aranea-jsp" type="jar" conf="jsp"/>
-     <artifact name="aranea-uilib" type="jar" conf="uilib"/>
-     <artifact name="aranea-integration-spring" type="jar" conf="spring"/>
+    <artifact name="aranea" conf="aranea" />
+    <artifact name="aranea-backend" conf="aranea-backend" />
+    <artifact name="aranea-core" conf="aranea-core" />
+    <artifact name="aranea-framework" conf="aranea-framework" />
+    <artifact name="aranea-http" conf="aranea-http" />
+    <artifact name="aranea-jsp" conf="aranea-jsp" />
+    <artifact name="aranea-uilib" conf="aranea-uilib" />
+    <artifact name="aranea-integration-spring" conf="aranea-integration-spring" />
   </publications>
+  <dependencies defaultconfmapping="*->default">
 
-  <dependencies>
-    <!-- "buildtime" -->
-    <dependency org="checkstyle" name="checkstyle" rev="4.4" conf="build->master,runtime"/>
-    <dependency org="taglibrarydoc" name="tlddoc" rev="1.3" conf="build->default"/>
-    <dependency org="cobertura" name="cobertura" rev="1.7" conf="build->default"/>
-    <dependency org="apache" name="commons-el" rev="1.0" conf="build->default"/>
-    <dependency org="apache" name="commons-beanutils" rev="1.7.0" conf="build->default"/>
-    <dependency org="junit" name="junit" rev="3+" conf="build->default"/>
-    <dependency org="org.springframework" name="spring" rev="1.2.9+" conf="build->default"/>
-    <dependency org="javax" name="j2ee" rev="1.4" conf="build->default"/>
-    
-    <!-- "required" -->
-    <dependency org="apache" name="commons-collections" rev="3.2+" conf="runtime->default"/>
-    <dependency org="apache" name="commons-lang" rev="2.3+" conf="runtime->default"/>
-    <dependency org="apache" name="commons-fileupload" rev="1.2" conf="runtime->default"/>
-    <dependency org="apache" name="commons-validator" rev="1.3.1" conf="runtime->default"/>
-    <dependency org="apache" name="taglibs-standard" rev="1.1.2" conf="runtime->default"/>
-    <dependency org="sun" name="jstl" rev="1.1.2" conf="runtime->default"/>
-    
-		<!-- "optional" -->
-    <dependency org="net.iharder" name="base64" rev="1.0" conf="runtime->default"/>
-    <dependency org="com.thoughtworks" name="xstream" rev="1.2" conf="runtime->default"/>
+		<!-- "runtime" -->
+    <dependency conf="runtime" org="base64" rev="1.0" name="base64" />
+    <dependency conf="runtime" org="commons-collections" rev="3.2.1" name="commons-collections" />
+    <dependency conf="runtime" org="commons-el" rev="1.0" name="commons-el" />
+    <dependency conf="runtime" org="commons-fileupload" rev="1.2.1" name="commons-fileupload" />
+    <dependency conf="runtime" org="commons-io" rev="1.4" name="commons-io" />
+    <dependency conf="runtime" org="commons-lang" rev="2.4" name="commons-lang" />
+    <dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" />
+    <dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" />
+    <dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" />
+    <dependency conf="runtime" org="oro" rev="2.0.8" name="oro" />
+    <dependency conf="runtime" org="xstream" rev="1.2" name="xstream" />
 
+		<!-- "buildtime" -->
+    <dependency conf="build" org="asm" rev="2.2.1" name="asm" />
+    <dependency conf="build" org="asm" rev="1.5.3" name="asm-attrs" />
+    <dependency conf="build" org="checkstyle" rev="4.4" name="checkstyle" />
+    <dependency conf="build" org="cobertura" rev="1.7" name="cobertura" />
+    <dependency conf="build" org="javancss" rev="28.49" name="javancss" />
+    <dependency conf="build" org="javancss" rev="28.49" name="jhbasic" />
+    <dependency conf="build" org="javancss" rev="28.49" name="ccl" />
+    <dependency conf="build" org="javax" rev="1.4" name="j2ee" />
+    <dependency conf="build" org="jstl" rev="1.0.3" name="jstl" />
+    <dependency conf="build" org="junit" rev="3.8.1" name="junit" />
+    <dependency conf="build" org="taglibs" rev="1.0.6" name="standard" />
+    <dependency conf="build" org="taglibrarydoc" rev="1.3" name="tlddoc" />
+    <dependency conf="build" org="springframework" rev="1.2.6" name="spring" />
+    <dependency conf="build" org="springframework" rev="1.2.6" name="spring-mock" />
+    <dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet" />
+    <dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet-web-module" />
+    <dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet-hibernate-module" />
+    <dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet-xdoclet-module" />
+    <dependency conf="build" org="xdoclet" rev="1.1" name="xjavadoc" />
+
+		<!-- Ignore these dependecies in "build" conf -->
+    <exclude module="commons-collections" conf="build" />
+    <exclude module="commons-lang" conf="build" />
+    <exclude module="commons-logging" conf="build" />
+    <exclude module="oro" conf="build" />
+
+		<!-- Ignore these dependecies in every conf -->
+    <exclude module="activation" />
+    <exclude module="ant" />
+    <exclude module="avalon-framework" />
+    <exclude module="connector" />
+    <exclude module="jta" />
+    <exclude module="log4j" />
+    <exclude module="mail" />
+    <exclude module="portlet-api" />
+    <exclude module="servletapi" />
+    <exclude module="servlet-api" />
   </dependencies>
-
 </ivy-module>

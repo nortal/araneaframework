@@ -34,8 +34,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.xerces.dom.DocumentImpl;
-import org.apache.xerces.dom.NodeImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,7 +54,6 @@ public class TcdAndTldMerger {
 			System.err.println("USAGE: TCD TLD outputTLD");
 			System.err.println("If TCD is not found from file system, it is searched from classpath.");
 			System.err.println("TLD and outputTLD may be the same, though it is not recommended.");
-			System.err.println("This utility depends on xerces XML parser.");
 			System.err.println("Tag classes referenced by TCD and/or TLD must all be available on classpath.");
 			System.exit(1);
 		}
@@ -100,7 +97,7 @@ public class TcdAndTldMerger {
 			 for (int j = 0; j < children.getLength(); j++) {
 				 Node node = children.item(j);
 				 if (node.getNodeName().equals("tag-class")) {
-					 String tagClassName = ((NodeImpl)node).getTextContent();
+					 String tagClassName = node.getTextContent();
 					 if (tagClassName == null)
 						 continue;
 					 Class tagClazz = Class.forName(tagClassName);
@@ -108,15 +105,14 @@ public class TcdAndTldMerger {
 						 List additionalAttributes = getAttributesFromTCD(fDoc,  tagClazz.getSuperclass().getName());
 						 for (Iterator it = additionalAttributes.iterator(); it.hasNext(); ) {
 							 Node additional = (Node) it.next();
-							 String attrName = ((NodeImpl)((Element) additional).getElementsByTagName("name").item(0)).getTextContent();
+							 String attrName = ((Element) additional).getElementsByTagName("name").item(0).getTextContent();
 							 
 							 // attribute from parentclass should only be added if it does not exist already 
 							 NodeList currentAttrs = ((Element)current).getElementsByTagName("attribute");
 							 
 							 boolean found = false;
 							 for (int zz = 0; zz < currentAttrs.getLength(); zz++) {
-								 if (
-										 ( (NodeImpl)  ((Element)currentAttrs.item(zz)).getElementsByTagName("name").item(0)).
+								 if (((Element)currentAttrs.item(zz)).getElementsByTagName("name").item(0).
 										 getTextContent().equals(attrName)) {
 									 found = true;
 									 break;
@@ -125,7 +121,7 @@ public class TcdAndTldMerger {
 							 
 							 if (found) continue;
 
-							 current.appendChild(((DocumentImpl)sDoc).adoptNode((additional.cloneNode(true))));
+							 current.appendChild(sDoc.adoptNode((additional.cloneNode(true))));
 						 }
 						 
 						 // if any supertag has extra attributes, it should have them all
@@ -179,7 +175,7 @@ public class TcdAndTldMerger {
 		Node tagClassNode = null;
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node current = nodes.item(i);
-			if (((NodeImpl)current).getTextContent() != null && ((NodeImpl)current).getTextContent().equals(tagClass)) {
+			if (tagClass.equals(current.getTextContent())) {
 				tagClassNode = current;
 				break;
 			}

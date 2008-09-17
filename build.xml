@@ -103,7 +103,23 @@
 		<ant dir="examples/widgetHelloName" target="build" inheritall="false"/>
 	</target>
 
-	<target name="compile" depends="init"
+    <target name="compile-etc" depends="init" description="Compiles source code from etc/src directory">
+            <mkdir dir="build/classes"/>
+            <javac destdir="build/classes"
+                    debug="on"
+                    debuglevel="lines,vars,source"
+                    encoding="utf-8"
+                    target="1.3"
+                    source="1.3"
+                    srcdir="etc/src"
+                    deprecation="yes"
+            >
+                    <classpath refid="classpath"/>
+                    <include name="**/*.java" />
+            </javac>
+    </target>
+
+	<target name="compile" depends="init,compile-etc"
 		description="Compiles source code from src and etc/src directory">
 
 		<mkdir dir="build/classes" />
@@ -193,6 +209,7 @@
 		<jar destfile="${dist.dir}/modules/aranea-jsp.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>
+				<include name="org/araneaframework/buildutil/**/*"/>
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>
 			</fileset>
 
@@ -201,10 +218,15 @@
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>
 			</fileset>
 
+			<fileset dir="etc/src">
+				<include name="org/araneaframework/buildutil/**/*"/>
+			</fileset>
+
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
 			<fileset dir="etc" includes="*.tld"/>
+			<fileset dir="etc" includes="*.tcd"/>
 		</jar>
 
 		<!-- INTEGRATION -->
