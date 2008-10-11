@@ -193,7 +193,6 @@
 		<jar destfile="${dist.dir}/modules/aranea-jsp.jar" compress="true" manifest="build/tmp/MANIFEST.MF">
 			<fileset dir="build/classes">
 				<include name="org/araneaframework/jsp/**/*"/>
-				<include name="org/araneaframework/buildutil/**/*"/>
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>
 			</fileset>
 
