@@ -17,7 +17,6 @@
 package org.araneaframework.http;
 
 import java.io.Serializable;
-import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
 import org.araneaframework.framework.ManagedServiceContext;
