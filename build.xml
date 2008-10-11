@@ -103,24 +103,8 @@
 		<ant dir="examples/widgetHelloName" target="build" inheritall="false"/>
 	</target>
 
-    <target name="compile-etc" depends="init" description="Compiles source code from etc/src directory">
-            <mkdir dir="build/classes"/>
-            <javac destdir="build/classes"
-                    debug="on"
-                    debuglevel="lines,vars,source"
-                    encoding="utf-8"
-                    target="1.3"
-                    source="1.3"
-                    srcdir="etc/src"
-                    deprecation="yes"
-            >
-                    <classpath refid="classpath"/>
-                    <include name="**/*.java" />
-            </javac>
-    </target>
-
-	<target name="compile" depends="init,compile-etc"
-		description="Compiles source code from src and etc/src directory">
+	<target name="compile" depends="init"
+		description="Compiles source code from src directory">
 
 		<mkdir dir="build/classes" />
 
@@ -218,10 +202,6 @@
 				<exclude name="org/araneaframework/jsp/engine/**/*"/>
 			</fileset>
 
-			<fileset dir="etc/src">
-				<include name="org/araneaframework/buildutil/**/*"/>
-			</fileset>
-
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
@@ -253,7 +233,7 @@
 				<include name="org/araneaframework/**/*"/>
 			</fileset>
 
-			<fileset dir="etc" excludes="build/,src/"/>
+			<fileset dir="etc" excludes="build/"/>
 		</jar>
 	</target>
 
@@ -282,15 +262,8 @@
 		</zip>
 	</target>
 
-	<target name="tlddoc" depends="init" description="Generates documentation for JSP tags.">
-		<java fork="true" jar="${lib.dir}/build/tlddoc.jar" failonerror="true">
-			<arg line="-d ${dist.dir}/doc/tlddocs"/>
-			<arg value="etc/META-INF/aranea-standard.tld"/>
-		</java>
-	</target>
-
 	<!-- Build internal documentation -->
-	<target name="doc" depends="init, javadoc, tlddoc" description="Build internal documentation">
+	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
 		<ant target="build" dir="doc/tutorial" />
 		<ant target="build" dir="doc/intro" />
