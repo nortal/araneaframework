@@ -37,8 +37,32 @@
       <load-on-startup>1</load-on-startup>
    </servlet>
    
+   
+   <servlet>
+      <servlet-name>SSContextServlet</servlet-name>
+     	<servlet-class>org.araneaframework.example.main.SSContextServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   
+	   
+	<servlet>
+	  <servlet-name>RestProxy</servlet-name>
+	  <servlet-class>com.jsos.restproxy.RestProxyServlet</servlet-class>
+	</servlet>
+   
    <servlet-mapping>
       <servlet-name>araneaServlet</servlet-name>
       <url-pattern>/main/*</url-pattern>
    </servlet-mapping>
+      
+   <servlet-mapping>
+      <servlet-name>SSContextServlet</servlet-name>
+      <url-pattern>/socialsite_context.jsp</url-pattern>
+   </servlet-mapping>
+   
+   
+   <servlet-mapping>
+     <servlet-name>RestProxy</servlet-name>
+     <url-pattern>/proxy</url-pattern>
+   </servlet-mapping> 
 </web-app>

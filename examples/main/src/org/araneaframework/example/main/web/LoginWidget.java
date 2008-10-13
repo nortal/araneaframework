@@ -53,7 +53,7 @@ public class LoginWidget extends TemplateBaseWidget {
 		form = new FormWidget();
 		// Add the input fields. Arguments taken by addElement() :  
 		// String elementName, String labelId, Control control, Data data, boolean mandatory
-		form.addElement("username", "#User", new TextControl(), new StringData(), false);
+		form.addElement("username", "#User", new TextControl(), new StringData(), true);
 		form.addElement("password", "#Password", new TextControl(), new StringData(), false);
 
 		// attach created form to our widget. 
@@ -72,8 +72,12 @@ public class LoginWidget extends TemplateBaseWidget {
 			String password = (String) form.getValueByFullName("password");
 			/* Add the message about wrong credentials to message context. 
 			 * Messages will be shown to user upon exiting this event. */
-			getMessageCtx().showErrorMessage("User '" + username + "'" + " not allowed to log in with password '" + password + "'");
-			// do nothing (do not let anyone in :))
+			
+			// let everyone in
+			
+			RootWidget flow = new RootWidget();
+      getFlowCtx().replace(flow, null);
+      flow.setUserName(username);
 		}
 	}
 	

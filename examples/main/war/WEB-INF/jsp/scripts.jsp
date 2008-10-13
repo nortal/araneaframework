@@ -17,6 +17,25 @@
 
 		<!-- Enables firebug js console logging, if firebug present -->
 		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
+	 
+     <c:if test="${not empty widget.secCtx.userName}">
+      <script type="text/javascript" src="http://localhost:8080/socialsite/js/consumer.jsp">//</script>
+     
+	     <script type="text/javascript">
+	       socialsite.setContext({
+	        'attributes': {
+	          'ownerId': '<c:out value="${widget.secCtx.userName}" />'
+	        },
+	        'delegate': {
+	          'method': 'GET',
+	          'url': 'http://localhost:2000/mainExample/socialsite_context.jsp',
+	          'headers': {
+	            'cookie': document.cookie
+	          }
+	        }
+	      });
+	    </script>
+    </c:if>
 
 		<!-- Enables stand-alone javascript logging
 		<ui:importScripts group="debugScripts"/>

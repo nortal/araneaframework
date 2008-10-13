@@ -22,6 +22,8 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface SecurityContext extends Serializable {
+  String getUserName();
+  
   boolean hasPrivilege(String privilege);
   
   void logout();

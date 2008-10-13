@@ -69,6 +69,7 @@ import org.araneaframework.example.main.web.sample.SamplePopupWidget;
 import org.araneaframework.example.main.web.sample.SimpleBeanFormWidget;
 import org.araneaframework.example.main.web.sample.SimpleFormWidget;
 import org.araneaframework.example.main.web.testing.ModalDialogTestWidget;
+import org.araneaframework.example.main.web.testing.SocialTestWidget;
 import org.araneaframework.example.main.web.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.http.util.ServletUtil;
@@ -168,6 +169,7 @@ private MenuItem araneaMenu;
       advDemos.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
       advDemos.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
       advDemos.addMenuItem(new MenuItem("ModalDialogTesting", ModalDialogTestWidget.class));
+      advDemos.addMenuItem(new MenuItem("Social", SocialTestWidget.class));
       
       MenuItem formListMenu = sampleMenu.addMenuItem(new MenuItem("Form_Lists"));
       formListMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));

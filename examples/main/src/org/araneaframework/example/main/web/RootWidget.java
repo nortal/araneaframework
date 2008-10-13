@@ -16,6 +16,8 @@
 
 package org.araneaframework.example.main.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
@@ -33,6 +35,8 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 	private static final long serialVersionUID = 1L;
 	private MenuWidget menuWidget;
 	private Widget topWidget;
+	
+	private String username;
 
 	public RootWidget() {}
 
@@ -53,6 +57,10 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 	protected Environment getChildWidgetEnvironment() throws Exception {
 		return new StandardEnvironment(super.getChildWidgetEnvironment(), SecurityContext.class, this);
 	}
+	
+  public SecurityContext getSecCtx() {
+    return this;
+  }
 
 	public boolean hasPrivilege(String privilege) {
 		return false;
@@ -65,4 +73,13 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 	public void logout() {
 		getFlowCtx().replace(new LoginWidget(), null);
 	}
+	
+	public void setUserName(String name) {
+	  this.username = name;
+	  ((HttpSession)getEnvironment().getEntry(HttpSession.class)).setAttribute("username", name);
+	}
+
+  public String getUserName() {
+    return this.username;
+  }
 }
