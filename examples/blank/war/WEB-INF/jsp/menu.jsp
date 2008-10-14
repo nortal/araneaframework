@@ -2,7 +2,7 @@
 <jsp:root 
     xmlns:jsp="http://java.sun.com/JSP/Page" 
     xmlns:c="http://java.sun.com/jsp/jstl/core" 
-    xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="1.2">
+    xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template" version="2.0">
 
     <!-- WidgetContext id must be set here, because we want to render MenuWidget 
     	not TemplateRootWidget (which includes this JSP, thereby providing its own widget context) here. -->
