@@ -74,8 +74,9 @@
     <junit haltonfailure="yes" fork="yes">
       <test name="org.araneaframework.perftests.TimedSmokeTests"/>
       <formatter type="plain" usefile="false"/>
-		<classpath location="${src.build.dir}"/>
-		<classpath location="${tests.build.dir}"/>
+  		<classpath location="${src.build.dir}"/>
+  		<classpath location="${tests.build.dir}"/>
+      <classpath refid="classpath"/>
     </junit>
   </target>
 

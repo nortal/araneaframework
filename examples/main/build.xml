@@ -21,39 +21,18 @@
 	
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
-        <delete dir="war/WEB-INF/classes" failonerror="false"/>
-        <delete dir="war/WEB-INF/lib" failonerror="false"/>	
+    <delete dir="war/WEB-INF/classes" failonerror="false"/>
+    <delete dir="war/WEB-INF/lib" failonerror="false"/>	
 		<delete dir="war/src" failonerror="false"/>	
 		<delete dir="war/jsp" failonerror="false"/>
 		<delete dir="dist" failonerror="false"/>	
-        <delete dir="tmp" failonerror="false"/>
+    <delete dir="tmp" failonerror="false"/>
 	</target>
 	
 	<!-- Initialize the build system -->
 	<target name="init">
 		<mkdir dir="war/WEB-INF/classes" />
 		<mkdir dir="war/WEB-INF/lib" />		
-	</target>
-	
-	<path id="classpath.hibernate">
-		<fileset dir="../lib/hibernate" includes="*.jar" />
-	</path>
-	
-
-		
-	<!-- Creates Hibernate mappings from Xdoclet -->	
-	<target name="xdoclet.hibernate" depends="init" description="Creates Hibernate mappings from Java files (Xdoclet)">
-		<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
-			<classpath refid="classpath" />
-		</taskdef>
-		<hibernatedoclet destdir="war/WEB-INF/classes/mappings" excludedtags="@version,@author,@todo"
-			force="false" mergedir="war/WEB-INF" verbose="true">
-			<fileset dir="src">
-				<include name="**/model/*.java" />
-			</fileset>
-			<packageSubstitution packages="org.araneaframework.example.main.business.model" substituteWith="." useFirst="true" />
-			<hibernate version="3.0" />
-		</hibernatedoclet>
 	</target>
 	
 	<!-- Create WAR -->
@@ -70,7 +49,7 @@
 	</target>
 
 	<!-- Build the code -->
-	<target name="build" depends="xdoclet.hibernate,compile" description="Build the code">
+	<target name="build" depends="compile" description="Build the code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
 			<fileset dir="../lib/">
 				<include name="**/*.jar" />

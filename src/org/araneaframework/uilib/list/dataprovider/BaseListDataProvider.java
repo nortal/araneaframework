@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.dataprovider;
 
 import java.util.Map;
-
 import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.list.util.ListUtil;
