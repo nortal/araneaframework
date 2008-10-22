@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping
+>
+    <class
+        name="org.araneaframework.example.main.business.model.ContractMO"
+        table="contract"
+        lazy="false"
+    >
+
+        <id
+            name="id"
+            column="id"
+            type="java.lang.Long"
+        >
+            <generator class="increment">
+              <!--  
+                  To add non XDoclet generator parameters, create a file named 
+                  hibernate-generator-params-ContractMO.xml 
+                  containing the additional parameters and place it in your merge dir. 
+              --> 
+            </generator>
+        </id>
+
+        <many-to-one
+            name="company"
+            class="org.araneaframework.example.main.business.model.CompanyMO"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="COMPANY_ID"
+            not-null="true"
+        />
+
+        <many-to-one
+            name="person"
+            class="org.araneaframework.example.main.business.model.PersonMO"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="PERSON_ID"
+            not-null="true"
+        />
+
+        <property
+            name="notes"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            column="NOTES"
+        />
+
+        <property
+            name="total"
+            type="java.math.BigDecimal"
+            update="true"
+            insert="true"
+            column="TOTAL"
+        />
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-ContractMO.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

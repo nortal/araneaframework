@@ -26,7 +26,7 @@
 			<ref local="dataSource" />
 		</property>
 		<property name="mappingLocations">
-			<value>classpath*:mappings/*.hbm.xml</value>
+			<value>/WEB-INF/mappings/*.hbm.xml</value>
 		</property>
 		<property name="hibernateProperties">
 			<props>

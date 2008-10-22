@@ -17,9 +17,7 @@
 package org.araneaframework.jsp.tag.include;
 
 import java.io.Writer;
-
 import javax.servlet.jsp.JspException;
-
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 

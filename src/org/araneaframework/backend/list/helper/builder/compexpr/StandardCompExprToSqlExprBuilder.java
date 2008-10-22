@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.Comparator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;

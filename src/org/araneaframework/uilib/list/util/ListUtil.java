@@ -17,7 +17,6 @@ package org.araneaframework.uilib.list.util;
 
 import java.util.Comparator;
 import java.util.Map;
-
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ComparatorExpressionFactory;
 import org.araneaframework.backend.list.memorybased.Expression;

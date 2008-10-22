@@ -44,7 +44,7 @@ public abstract class EncodingUtil {
 	 * 
 	 * @param object that will be encoded.
 	 * @param compress if set, the serialized object will be compressed.
-	 * @return A String represtation of the object in base64 encoded format.
+	 * @return A String representation of the object in base64 encoded format.
 	 * @throws Exception
 	 */
 	public static String encodeObjectBase64(Serializable object, boolean compress) throws Exception {

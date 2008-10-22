@@ -25,12 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.StringTokenizer;
-
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;

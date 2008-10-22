@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root 
 	xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"  version="1.2">
+	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"  version="2.0">
 	
 	When the Error button is clicked, failing ajax request is made. 
 	
