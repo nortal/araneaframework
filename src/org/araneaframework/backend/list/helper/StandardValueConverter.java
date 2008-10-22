@@ -18,7 +18,6 @@ package org.araneaframework.backend.list.helper;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.araneaframework.backend.list.helper.builder.ValueConverter;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.core.Assert;

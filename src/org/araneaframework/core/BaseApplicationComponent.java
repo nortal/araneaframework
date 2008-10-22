@@ -105,7 +105,6 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * Adds a component with the specified key. Allready initilized components cannot be added.
    * Duplicate keys not allowed. The child is initialized with the Environment from
    * <code>getChildComponentEnvironment()</code>. 
-   * @throws Exception
    */
   public void addComponent(Object key, Component child) {
     _addComponent(key, child, getChildComponentEnvironment());

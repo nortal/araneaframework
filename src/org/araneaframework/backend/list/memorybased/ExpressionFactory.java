@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
-
 import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
 
 /**

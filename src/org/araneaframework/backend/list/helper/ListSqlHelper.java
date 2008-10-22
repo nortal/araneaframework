@@ -17,9 +17,7 @@
 package org.araneaframework.backend.list.helper;
 
 import java.sql.ResultSet;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.helper.fields.ConcatFields;

@@ -46,11 +46,19 @@
 		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build,runtime" />
 	</target>
 
+  <property name="ivy.report.dir" value="build/reports/ivy" />
+  <!-- Generates a report of dependencies -->
+  <target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
+    <ivy:resolve file="ivy.xml" />
+    <ivy:report todir="${ivy.report.dir}"/>
+  </target>
+  
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
-	<target name="publish" depends="clean-all,init-ivy,build"
+	<target name="publish" depends="init-ivy"
 		description="Publishes the JAR from dist directory to ivy repository.">
 
-		<ivy:resolve/>
+    
+		<ivy:resolve conf="runtime"/>
 
 		<mkdir dir="publishtmp"/>
 		<copydir dest="publishtmp" src="${dist.dir}" includes="**/*.jar" flatten="true"/>
@@ -81,10 +89,10 @@
 	             uri="antlib:org.apache.ivy.ant"
 	             classpathref="ivy.lib.path"/>
 
-		<ivy:configure file="${ivy.settings.file}" />
+		<ivy:settings file="${ivy.settings.file}" />
 	</target>
 
-	<target name="build" depends="tld, jar" description="Builds the Aranea source code" />
+	<target name="build" depends="jar" description="Builds the Aranea source code" />
 
 	<target name="build-all" depends="build" description="Build the code and examples">
 		<ant dir="examples/common" target="build" inheritall="false"/>
@@ -95,81 +103,8 @@
 		<ant dir="examples/widgetHelloName" target="build" inheritall="false"/>
 	</target>
 
-	<target name="tld-check" description="Checks if TLD files need an update.">
-		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-standard.tld">
-			<srcfiles dir="src/org/araneaframework/jsp/tag"/>
-		</uptodate>
-	</target>
-
-	<target name="tld" depends="tld-check,init" unless="tld-check.uptodate"
-		description="Creates and updates TLD files.">
-
-		<mkdir dir="build/tmp/presentation/META-INF" />
-
-		<taskdef
-			name="webdoclet"
-			classname="xdoclet.modules.web.WebDocletTask"
-			classpathref="classpath"
-		/>
-
-		<webdoclet destdir="build/tmp/presentation/META-INF">
-			<fileset 
-				dir="src" includes="**/*Tag.java"/>
-
-			<jsptaglib validatexml="true"
-				shortName="ui"
-				displayname="Aranea UI"
-				filename="aranea-standard.tld"
-				uri="http://araneaframework.org/tag-library/standard"
-				description="Aranea User Interface Tag Library"
-			/>
-		</webdoclet>
-
-		<!-- 
-		  Secondary TLD, attributes defined to be /rtexprvalue/s, so that JSP > 2 
-		  EL evaluator evaluates them -->
-
-		<xslt style="etc/build/rt_tld-transform.xsl" in="build/tmp/presentation/META-INF/aranea-standard.tld" out="build/tmp/presentation/META-INF/aranea-standard_rt.tld" classpathref="classpath">
-		        <!-- 
-			<xmlcatalog>
-				<dtd publicid="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" location="jar:file:lib/default/jsp-api.jar!/javax/servlet/jsp/resources/web-jsptaglibrary_1_2.dtd"/>
-			</xmlcatalog> -->
-		</xslt>
-		<replace file="build/tmp/presentation/META-INF/aranea-standard_rt.tld" token="http://araneaframework.org/tag-library/standard" value="http://araneaframework.org/tag-library/standard_rt"/>
-
-		<!-- Creation of tag class descriptor file (contains xdoclet attribute annotation 
-		     information for all tag files; even those that do not have @jsp.tag information). -->
-		<webdoclet destdir="build/tmp/presentation/META-INF">
-			<fileset dir="src" includes="**/*Tag.java"/>
-
-			<configparam name="validatexml" value="true"/>
-			<configparam name="Shortname" value="aui"/>
-			<configparam name="Uri" value="http://araneaframework.org/tag-library/standard"/>
-			<configparam name="Jspversion" value="1.2"/>
-			<configparam name="Taglibversion" value="1.0"/>
-
-			<xmltemplate templatefile="etc/build/taglib_tcd.xdt"  destinationfile="aranea-standard.tcd"/>
-		</webdoclet>
-	</target>
-
-	<target name="compile-etc" depends="init" description="Compiles source code from etc/src directory">
-		<mkdir dir="build/classes"/>
-		<javac destdir="build/classes"
-			debug="on"
-			debuglevel="lines,vars,source"
-			encoding="utf-8"
-			target="1.3"
-			source="1.3"
-			srcdir="etc/src"
-			deprecation="yes"
-		>
-			<classpath refid="classpath"/>
-			<include name="**/*.java" />
-		</javac>
-	</target>
-
-	<target name="compile" depends="init,compile-etc"
-		description="Compiles source code from src and etc/src directory">
+	<target name="compile" depends="init"
+		description="Compiles source code from src directory">
 
 		<mkdir dir="build/classes" />
 
@@ -178,8 +113,8 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			target="1.3"
-			source="1.3"
+			target="1.5"
+			source="1.5"
 			srcdir="src"
 			deprecation="yes"
 		>
@@ -197,7 +132,7 @@
 		</manifest>
 	</target>
 
-	<target name="jar" depends="compile,tld,make-manifest" description="Builds Aranea JAR file">
+	<target name="jar" depends="compile,make-manifest" description="Builds Aranea JAR file">
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${dist.dir}/modules" />
 		<mkdir dir="${dist.dir}/integration" />
@@ -269,7 +204,8 @@
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
-			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+			<fileset dir="etc" includes="*.tld"/>
+			<fileset dir="etc" includes="*.tcd"/>
 		</jar>
 
 		<!-- INTEGRATION -->
@@ -296,9 +232,7 @@
 				<include name="org/araneaframework/**/*"/>
 			</fileset>
 
-			<fileset dir="etc" excludes="build/,src/"/>
-
-			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+			<fileset dir="etc" excludes="build/"/>
 		</jar>
 	</target>
 
@@ -327,15 +261,8 @@
 		</zip>
 	</target>
 
-	<target name="tlddoc" depends="tld" description="Generates documentation for JSP tags.">
-		<java fork="true" jar="${lib.dir}/build/tlddoc.jar" failonerror="true">
-			<arg line="-d ${dist.dir}/doc/tlddocs"/>
-			<arg value="build/tmp/presentation/META-INF/aranea-standard.tld"/>
-		</java>
-	</target>
-
 	<!-- Build internal documentation -->
-	<target name="doc" depends="init, javadoc, tlddoc" description="Build internal documentation">
+	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
 		<ant target="build" dir="doc/tutorial" />
 		<ant target="build" dir="doc/intro" />
@@ -415,7 +342,7 @@
 
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
 		<taskdef resource="checkstyletask.properties" classpathref="classpath"/>
-		<checkstyle config="sun_checks.xml">
+		<checkstyle config="checkstyle_checks.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<formatter type="xml" tofile="checkstyle_report.xml"/>
 		</checkstyle>
