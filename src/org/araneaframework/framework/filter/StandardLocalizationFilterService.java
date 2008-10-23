@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.filter;
 
@@ -33,34 +33,44 @@ import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.core.BaseFilterService;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * Enriches the environment with an implementation of the
- * {@link org.araneaframework.framework.LocalizationContext}. Children can use it and thus
- * provide Locale specific content. 
+ * {@link org.araneaframework.framework.LocalizationContext}. Children can use
+ * it and thus provide Locale specific content.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {
-  private static final Log log = LogFactory.getLog(StandardLocalizationFilterService.class);
+public class StandardLocalizationFilterService extends BaseFilterService
+  implements LocalizationContext {
+
+  private static final long serialVersionUID = 1L;
+
+  private static final Log log =
+    LogFactory.getLog(StandardLocalizationFilterService.class);
+
   private String resourceBundleName;
+
   private Locale currentLocale;
+
   private List localeChangeListeners;
 
   /**
-   * Set the name of the language, it must be a <b>valid ISO Language Code</b>. See the
-   * language name in {@link Locale}. This method should only be used when <i>country</i>
-   * and <i>variant</i> are not important at all, otherwise {@link #setLocale(Locale)} must be used.
+   * Set the name of the language, it must be a <b>valid ISO Language Code</b>.
+   * See the language name in {@link Locale}. This method should only be used
+   * when <i>country</i> and <i>variant</i> are not important at all,
+   * otherwise {@link #setLocale(Locale)} must be used.
    */
   public void setLanguageName(String languageName) {
     Assert.notNullParam(languageName, "languageName");
-    
     setLocale(new Locale(languageName, ""));
   }
-  
+
   /**
-   * Sets the name of the resource bundle. 
+   * Sets the name of the resource bundle.
+   * 
    * @param resourceBundleName
    */
   public void setResourceBundleName(String resourceBundleName) {
@@ -73,7 +83,6 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
 
   public void setLocale(Locale currentLocale) {
     Assert.notNullParam(currentLocale, "currentLocale");
-    
     if (!currentLocale.equals(getLocale())) {
       if (log.isDebugEnabled()) {
         log.debug("Current locale switched to: '" + currentLocale + "'.");
@@ -83,11 +92,12 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
       notifyLocaleChangeListeners(old, getLocale());
     }
   }
-  
+
   protected Environment getChildEnvironment() {
-    return new StandardEnvironment(super.getChildEnvironment(), LocalizationContext.class, this);
+    return new StandardEnvironment(super.getChildEnvironment(),
+        LocalizationContext.class, this);
   }
-  
+
   public ResourceBundle getResourceBundle() {
     return getResourceBundle(currentLocale);
   }
@@ -95,68 +105,67 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   protected void init() throws Exception {
     childService._getComponent().init(getScope(), getChildEnvironment());
   }
-  
-  /** 
-   * Gets a resource bundle using the specified resource bundle name and current locale
-   * and the ClassLoaders provided by the ClassLoaderUtil.
+
+  /**
+   * Gets a resource bundle using the specified resource bundle name and current
+   * locale and the ClassLoaders provided by the ClassLoaderUtil.
    */
   public ResourceBundle getResourceBundle(Locale locale) {
     Assert.notNullParam(locale, "locale");
-    
-	  List loaders = ClassLoaderUtil.getClassLoaders();
-	  
-	  for (Iterator iter = loaders.iterator(); iter.hasNext();) {
-		ClassLoader loader = (ClassLoader) iter.next();
-		try {
-			return ResourceBundle.getBundle(resourceBundleName, locale, loader);
-		}
-		catch(MissingResourceException e) {
-			if (!iter.hasNext())
-				throw e;
-		}
-	  }
-     throw new MissingResourceException("No resource bundle for the specified base name can be found",
-    		 							getClass().getName(), "");
+
+    List loaders = ClassLoaderUtil.getClassLoaders();
+    for (Iterator iter = loaders.iterator(); iter.hasNext();) {
+      ClassLoader loader = (ClassLoader) iter.next();
+      try {
+        return ResourceBundle.getBundle(resourceBundleName, locale, loader);
+      } catch (MissingResourceException e) {
+        if (!iter.hasNext()) {
+          throw e;
+        }
+      }
+    }
+
+    throw new MissingResourceException("No resource bundle for the "
+        + "specified base name can be found", getClass().getName(), "");
   }
 
   public String localize(String key) {
     return getResourceBundle().getString(key);
   }
-  
+
   public String getMessage(String code, Object[] args) {
-    String message = localize(code);        
+    String message = localize(code);
     return MessageFormat.format(message, args);
   }
-  
+
   public String getMessage(String code, Object[] args, String defaultMessage) {
     String message = null;
     try {
       message = localize(code);
-    }
-    catch (MissingResourceException e) {
+    } catch (MissingResourceException e) {
       message = defaultMessage;
     }
-    
     return MessageFormat.format(message, args);
   }
-  
+
   /** @since 1.1 */
   public void addLocaleChangeListener(final LocaleChangeListener listener) {
-    if (listener == null)
+    if (listener == null) {
       return;
-
-    if (localeChangeListeners == null)
+    }
+    if (localeChangeListeners == null) {
       localeChangeListeners = new ArrayList();
-
-    ComponentUtil.addListenerComponent(listener, new LocaleChangeListenerDestroyerComponent(listener));
+    }
+    ComponentUtil.addListenerComponent(listener,
+        new LocaleChangeListenerDestroyerComponent(listener));
     localeChangeListeners.add(listener);
   }
 
   /** @since 1.1 */
   public boolean removeLocaleChangeListener(LocaleChangeListener listener) {
-    if (listener == null || localeChangeListeners == null)
-    return false;
-
+    if (listener == null || localeChangeListeners == null) {
+      return false;
+    }
     return localeChangeListeners.remove(listener);
   }
 
@@ -169,8 +178,12 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
       }
     }
   }
-  
-  private static final class LocaleChangeListenerDestroyerComponent extends BaseComponent {
+
+  private static final class LocaleChangeListenerDestroyerComponent
+    extends BaseComponent {
+
+    private static final long serialVersionUID = 1L;
+
     private final LocaleChangeListener listener;
 
     private LocaleChangeListenerDestroyerComponent(LocaleChangeListener listener) {
@@ -178,7 +191,8 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
 
     protected void destroy() throws Exception {
-      LocalizationContext context = (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
+      LocalizationContext context = 
+        EnvironmentUtil.getLocalizationContext(getEnvironment());
       if (context != null) {
         context.removeLocaleChangeListener(listener);
       }

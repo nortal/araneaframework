@@ -1,5 +1,5 @@
-/**
- * Copyright 2006-2007 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -26,9 +26,13 @@ import org.araneaframework.Scope;
  * @since 1.1
  */
 public class StandardScope implements Scope {
+
+  private static final long serialVersionUID = 1L;
+
   private Object id;
+
   private Scope parent;
-  
+
   public StandardScope(Object id, Scope parent) {
     this.id = id;
     this.parent = parent;
@@ -44,22 +48,18 @@ public class StandardScope implements Scope {
 
   public Path toPath() {
     Scope cur = this;
-    
     List idlist = new ArrayList();
-    
     while (cur != null) {
-      if (cur.getId() != null)
-        idlist.add(cur.getId().toString());      
+      if (cur.getId() != null) {
+        idlist.add(cur.getId().toString());
+      }
       cur = cur.getParent();
     }
-    
     Collections.reverse(idlist);
-
     return new StandardPath(idlist);
   }
-  
+
   public String toString() {
     return toPath().toString();
   }
-
 }

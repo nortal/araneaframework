@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
@@ -45,8 +44,8 @@ public class InExpression extends MultiExpression {
   protected Expression expr1;
 
   public InExpression(Expression expr1, List exprs) {
-
-    Assert.isTrue(expr1 != null && exprs != null, "Operands must be provided");
+    Assert.notNull(expr1, "Operands must be provided.");
+    Assert.notNull(exprs, "Operands must be provided.");
 
     for (Iterator it = exprs.iterator(); it.hasNext();) {
       Assert.notNullParam(this, it.next(), "expr");
@@ -63,7 +62,6 @@ public class InExpression extends MultiExpression {
       result.add(0, expr1);
       return (Expression[]) result.toArray(new Expression[result.size()]);
     }
-
     return new Expression[] { expr1 };
   }
 
@@ -83,14 +81,11 @@ public class InExpression extends MultiExpression {
     for (Iterator i = this.children.iterator(); i.hasNext();) {
       Expression expr = (Expression) i.next();
       Object userSelectedValue = expr.evaluate(resolver);
-
-      if (new EqualsBuilder().append(fieldValue,
-          userSelectedValue).isEquals()) {
+      if (new EqualsBuilder().append(fieldValue, userSelectedValue).isEquals()) {
         return Boolean.TRUE;
       }
     }
 
     return Boolean.FALSE;
   }
-
 }

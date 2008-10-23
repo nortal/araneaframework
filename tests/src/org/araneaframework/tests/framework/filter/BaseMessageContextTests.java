@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.framework.filter;
 
@@ -43,7 +43,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     msgCtx = getMessageContext();
 
     // assertions do not allow filter widgets without childs :)
-    ((FilterWidget)msgCtx).setChildWidget(new BaseWidget(){});
+    ((FilterWidget)msgCtx).setChildWidget(new BaseWidget());
     
     Environment env = new StandardEnvironment(null, new HashMap());
     ((Widget)msgCtx)._getComponent().init(null, env);

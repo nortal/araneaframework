@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.filter;
 
@@ -35,96 +35,113 @@ import org.araneaframework.http.util.JsonArray;
 import org.araneaframework.http.util.JsonObject;
 
 /**
- * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can
- * be used to add messages for later output. 
- *<p>
+ * Adds a {@link org.araneaframework.framework.MessageContext} implementation to
+ * the environment that can be used to add messages for later output.
+ * <p>
  * An example how to add messages to the context follows:
+ * 
  * <pre>
  * <code>
  * ...
  * MessageContext messageContext = (MessageContext)getEnvironment().get(CallContext.class);
- * messageContext.addMessage(MessageContext.INFO_TYPE, "Hello message!");
+ * messageContext.addMessage(MessageContext.INFO_TYPE, &quot;Hello message!&quot;);
  * </code>
  * </pre>
- *</p>
- *
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
+public class StandardMessagingFilterWidget extends BaseFilterWidget
+  implements MessageContext {
+
+  private static final long serialVersionUID = 1L;
+
   protected Map permanentMessages;
+
   protected Map messages;
 
   protected void update(InputData input) throws Exception {
     clearMessages();
-
     super.update(input);
   }
-  
+
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
-  
-  /** Stores message of given type in given messageMap (created if <code>null</code> at invocation). */
-  protected Map storeMessage(final String type, final String message, Map messageMap) {
+
+  /**
+   * Stores message of given type in given messageMap (created if
+   * <code>null</code> at invocation).
+   */
+  protected Map storeMessage(final String type, final String message,
+      Map messageMap) {
+
     Assert.notEmptyParam(type, "type");
     Assert.notEmptyParam(message, "message");
-    
-    if (messageMap == null)
+
+    if (messageMap == null) {
       messageMap = new LinkedMap();
+    }
 
-    Collection messages = (Collection)messageMap.get(type);
-
+    Collection messages = (Collection) messageMap.get(type);
     if (messages == null) {
       messages = ListOrderedSet.decorate(new HashSet());
       messageMap.put(type, messages);
     }
 
     messages.add(message);
-    
     return messageMap;
   }
-  
-  /** 
-   * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. 
-   * When given <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types. */
+
+  /**
+   * Removes the given <code>message</code> from given message
+   * <code>type</code> in <code>messageMap</code>. When given
+   * <code>type</code> is <code>NULL</code>, removes the given
+   * <code>message</code> from all types.
+   */
   protected Map removeMessage(String type, final String message, Map messageMap) {
     Assert.notEmptyParam(message, "message");
 
-    if (messageMap == null)
+    if (messageMap == null) {
       return null;
+    }
 
-    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry next = (Map.Entry)i.next();
+    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext();) {
+      Map.Entry next = (Map.Entry) i.next();
       if (type == null || next.getKey().equals(type)) {
-        Collection messages = (Collection)(next).getValue();
+        Collection messages = (Collection) (next).getValue();
         messages.remove(message);
-        if (type != null) 
+        if (type != null) {
           break;
+        }
       }
     }
 
     return messageMap;
   }
-  
-  /** 
+
+  /**
    * Adds current permanent messages to given message map.
-   * @return given message map with permanent messages added. 
+   * 
+   * @return given message map with permanent messages added.
    */
   protected Map addPermanentMessages(Map msgs) {
-    if (msgs == null && permanentMessages.size() > 0)
+    if (msgs == null){
       msgs = new LinkedMap();
+    }
 
     for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry)i.next();
-      Collection typedMessages = (Collection)msgs.get(entry.getKey());
+      Map.Entry entry = (Map.Entry) i.next();
+      Collection typedMessages = (Collection) msgs.get(entry.getKey());
 
-      if (typedMessages == null)
+      if (typedMessages == null) {
         msgs.put(entry.getKey(), entry.getValue());
-      else
-        typedMessages.addAll((Collection)entry.getValue());
+      } else {
+        typedMessages.addAll((Collection) entry.getValue());
+      }
     }
+
     return msgs;
   }
 
@@ -134,8 +151,8 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
   public void showMessages(String type, Set messages) {
     Assert.notNullParam(messages, "messages");
-    for (Iterator i = messages.iterator(); i.hasNext(); ) {
-      showMessage(type, (String)i.next());
+    for (Iterator i = messages.iterator(); i.hasNext();) {
+      showMessage(type, (String) i.next());
     }
   }
 
@@ -143,18 +160,18 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     Assert.notEmptyParam(type, "type");
     removeMessage(type, message, messages);
   }
-  
+
   public void hideMessages(String type, Set messages) {
     Assert.notNullParam(messages, "messages");
-    for (Iterator i = messages.iterator(); i.hasNext(); ) {
-      hideMessage(type, (String)i.next());
+    for (Iterator i = messages.iterator(); i.hasNext();) {
+      hideMessage(type, (String) i.next());
     }
   }
 
   public void showPermanentMessage(String type, final String message) {
     permanentMessages = storeMessage(type, message, permanentMessages);
   }
-  
+
   public void hidePermanentMessage(String message) {
     permanentMessages = removeMessage(null, message, permanentMessages);
   }
@@ -162,27 +179,27 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   public void showErrorMessage(String message) {
     showMessage(ERROR_TYPE, message);
   }
-  
+
   public void hideErrorMessage(String message) {
-    hideMessage(ERROR_TYPE, message);    
+    hideMessage(ERROR_TYPE, message);
   }
 
   public void showInfoMessage(String message) {
     showMessage(INFO_TYPE, message);
   }
-  
+
   public void hideInfoMessage(String message) {
-    hideMessage(INFO_TYPE, message); 
+    hideMessage(INFO_TYPE, message);
   }
-  
+
   public void showWarningMessage(String message) {
     showMessage(WARNING_TYPE, message);
   }
-  
+
   public void hideWarningMessage(String message) {
     hideMessage(WARNING_TYPE, message);
   }
-  
+
   public void clearMessages() {
     if (messages != null)
       messages.clear();
@@ -192,7 +209,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     if (permanentMessages != null)
       permanentMessages.clear();
   }
-  
+
   public void clearAllMessages() {
     clearMessages();
     clearPermanentMessages();
@@ -219,15 +236,19 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   public Map getRegions() {
     JsonObject messagesByType = new JsonObject();
     Map messageMap = getMessages();
+
     if (messageMap != null) {
-      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext();) {
         Map.Entry entry = (Map.Entry) i.next();
+
         if (entry.getValue() == null) {
           continue;
         }
+
         String type = (String) entry.getKey();
         JsonArray messages = new JsonArray();
-        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext(); ) {
+ 
+        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext();) {
           String message = (String) j.next();
           messages.appendString(message);
         }
@@ -238,5 +259,4 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     regions.put(MessageContext.MESSAGE_REGION_KEY, messagesByType.toString());
     return regions;
   }
-
 }

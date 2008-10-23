@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.naming;
 
@@ -23,27 +23,25 @@ import org.araneaframework.core.Assert;
 /**
  * VariableResolver that converts a variable (using its name) into column alias.
  * <p>
- * Column aliases should be used in <code>WHERE</code> and <code>ORDER BY </code> clauses.  
+ * Column aliases should be used in <code>WHERE</code> and
+ * <code>ORDER BY </code> clauses.
  * 
  * @see ColumnNameVariableResolver
- * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public class ColumnAliasVariableResolver implements VariableResolver {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private final NamingStrategy namingStrategy;
 
-	public ColumnAliasVariableResolver(NamingStrategy namingStrategy) {
-		Assert.notNullParam(namingStrategy, "namingStrategy");
-		this.namingStrategy = namingStrategy;
-	}
+  private static final long serialVersionUID = 1L;
 
-	public Object resolve(Variable variable) {
-		return namingStrategy.fieldToColumnAlias(variable.getName());
-	}
+  private final NamingStrategy namingStrategy;
 
+  public ColumnAliasVariableResolver(NamingStrategy namingStrategy) {
+    Assert.notNullParam(namingStrategy, "namingStrategy");
+    this.namingStrategy = namingStrategy;
+  }
+
+  public Object resolve(Variable variable) {
+    return namingStrategy.fieldToColumnAlias(variable.getName());
+  }
 }

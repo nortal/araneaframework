@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.filter;
 
@@ -44,123 +44,127 @@ import org.araneaframework.core.util.ClassLoaderUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
+
+  private static final long serialVersionUID = 1L;
+
   private static final Log log = LogFactory.getLog(StandardClassReloadingFilterWidget.class);
-  
+
   private String childClassName;
+
   private RelocatableWidget child;
 
   public void setChildClass(String childClass) {
     this.childClassName = childClass;
   }
 
-  protected void init() throws Exception {    
-    super.init();  
-    
+  protected void init() throws Exception {
+    super.init();
+
     ClassLoader cl = newClassLoader();
     Class childClass = cl.loadClass(childClassName);
 
     addWidget("c", new RelocatableDecorator((Widget) childClass.newInstance()));
   }
-  
+
   private ClassLoader newClassLoader() throws MalformedURLException {
     ServletContext sctx = (ServletContext) getEnvironment().getEntry(ServletContext.class);
-    return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")}, ClassLoaderUtil.getDefaultClassLoader());
+    return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")},
+        ClassLoaderUtil.getDefaultClassLoader());
   }
-  
+
   private Serializable reload(Serializable child) throws Exception {
     return deepCopy(newClassLoader(), child);
   }
-  
+
   protected void update(InputData input) throws Exception {
     super.update(input);
     try {
       child._getRelocatable().overrideEnvironment(null);
-      child = (RelocatableWidget) reload(child);      
-    }
-    catch (ClassNotFoundException e) {
+      child = (RelocatableWidget) reload(child);
+    } catch (ClassNotFoundException e) {
       log.error("Failed to reload widget classes", e);
-    }
-    finally {
+    } finally {
       child._getRelocatable().overrideEnvironment(getEnvironment());
     }
-    
     _getComposite().attach("c", child);
   }
-  
+
   protected void render(OutputData output) throws Exception {
     child._getWidget().render(output);
   }
-  
+
   private Serializable deepCopy(ClassLoader cl, Serializable original) throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
     ObjectOutputStream out = new ObjectOutputStream(baos);
     try {
       out.writeObject(original);
-    }
-    finally {
+    } finally {
       out.close();
     }
-    
+
     byte[] serialized = baos.toByteArray();
-    
+
     ByteArrayInputStream bais = new ByteArrayInputStream(serialized);
-    
+
     ReloadingObjectInputStream in = new ReloadingObjectInputStream(cl, bais);
     Object obj = in.readObject();
-    
+
     return (Serializable) obj;
   }
- 
+
   private static class ReloadingObjectInputStream extends ObjectInputStream {
+
     private ClassLoader cl;
-    
-    public ReloadingObjectInputStream(ClassLoader cl, InputStream in) throws IOException {
+
+    public ReloadingObjectInputStream(ClassLoader cl, InputStream in)
+        throws IOException {
       super(in);
       this.cl = cl;
     }
 
-    protected Class resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
+    protected Class resolveClass(ObjectStreamClass desc)
+        throws ClassNotFoundException {
       String name = desc.getName();
       return cl.loadClass(name);
     }
   }
-  
+
   private class ReloadingClassloader extends URLClassLoader {
 
     public ReloadingClassloader(URL[] urls, ClassLoader parent) {
       super(urls, parent);
     }
-    
+
     public Class loadClass(String name) throws ClassNotFoundException {
       if (hasLoadedClass(this, name))
         return super.loadClass(name);
-      
       try {
         return findClass(name);
-      }
-      catch (ClassNotFoundException e) {
+      } catch (ClassNotFoundException e) {
         return getParent().loadClass(name);
       }
     }
   }
-  
+
   private boolean hasLoadedClass(ClassLoader cl, String name) {
     try {
       Method mFindLoadedClass = ClassLoader.class.getDeclaredMethod(
           "findLoadedClass", new Class[] { String.class });
       mFindLoadedClass.setAccessible(true);
-      if (mFindLoadedClass.invoke(cl, new Object[] { name }) != null)
+
+      if (mFindLoadedClass.invoke(cl, new Object[] { name }) != null) {
         return true;
-      
+      }
+
       Method mGetParent = ClassLoader.class.getDeclaredMethod("getParent",
           new Class[] {});
       ClassLoader parent = (ClassLoader) mGetParent.invoke(cl, new Object[] {});
-      if (parent != null)
+      if (parent != null) {
         return hasLoadedClass(parent, name);
-      
+      }
+
       return false;
-    } 
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new NestableRuntimeException(e);
     }    
   }

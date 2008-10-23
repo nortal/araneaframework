@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.backend.list.sqlexpr;
 
@@ -26,37 +26,37 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * SQL Expression methods.
  * 
  * @see SqlExpression
- * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public class SqlExpressionUtil {
 
-	/**
-	 * Builds {@link SqlExpression} based on {@link Expression}.
-	 */
-	public static SqlExpression toSql(Expression expression, ExpressionToSqlExprBuilder builder) {
-		SqlExpression result = null;
-		if (expression == null) {
-			return null;
-		}
-		result = builder.buildSqlExpression(expression);
-		if (result instanceof SqlAlwaysTrueExpression) {
-			result = null;
-		}
-		return result;
-	}
+  /**
+   * Builds {@link SqlExpression} based on {@link Expression}.
+   */
+  public static SqlExpression toSql(Expression expression,
+      ExpressionToSqlExprBuilder builder) {
+    SqlExpression result = null;
+    if (expression == null) {
+      return null;
+    }
+    result = builder.buildSqlExpression(expression);
+    if (result instanceof SqlAlwaysTrueExpression) {
+      result = null;
+    }
+    return result;
+  }
 
-	/**
-	 * Builds {@link SqlExpression} based on {@link ComparatorExpression}.
-	 */
-	public static SqlExpression toSql(ComparatorExpression expression, CompExprToSqlExprBuilder builder) {
-		SqlExpression result = null;
-		if (expression == null) {
-			return null;
-		}
-		result = builder.buildSqlExpression(expression);
-		return result;
-	}	
+  /**
+   * Builds {@link SqlExpression} based on {@link ComparatorExpression}.
+   */
+  public static SqlExpression toSql(ComparatorExpression expression,
+      CompExprToSqlExprBuilder builder) {
+    SqlExpression result = null;
+    if (expression == null) {
+      return null;
+    }
+    result = builder.buildSqlExpression(expression);
+    return result;
+  }
 }

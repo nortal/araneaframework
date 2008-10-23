@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.backend.list.helper.fields;
 
@@ -28,33 +28,33 @@ import org.araneaframework.backend.list.helper.naming.MappingNamingStrategyAndFi
  * <p>
  * There are two lists of fields:
  * <ul>
- * <li>fields presented in <code>SELECT</code> - returned by {@link #getNames()}</li>
- * <li>Fields read from the {@link java.sql.ResultSet} - returned by {@link #getResultSetNames()}</li>
+ * <li>fields presented in <code>SELECT</code> - returned by
+ * {@link #getNames()}</li>
+ * <li>Fields read from the {@link java.sql.ResultSet} - returned by
+ * {@link #getResultSetNames()}</li>
  * </ul>
  * 
  * @see ListSqlHelper#getFields()
  * @see StandardFields
  * @see MappingNamingStrategyAndFields
  * @see ConcatFields
- * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public interface Fields {
 
-	/**
-	 * Return the list of fields used in <code>SELECT</code>.
-	 * 
-	 * @return List&lt;String&gt; the names of the fields used in SELECT.
-	 */
-	Collection getNames();
-	
-	/**
-	 * Return the list of fields read from the {@link java.sql.ResultSet}.
-	 * 
-	 * @return List&lt;String&gt; the names of the fields read from the {@link java.sql.ResultSet}.
-	 */
-	Collection getResultSetNames();	
-	
+  /**
+   * Return the list of fields used in <code>SELECT</code>.
+   * 
+   * @return List&lt;String&gt; the names of the fields used in SELECT.
+   */
+  Collection getNames();
+
+  /**
+   * Return the list of fields read from the {@link java.sql.ResultSet}.
+   * 
+   * @return List&lt;String&gt; the names of the fields read from the
+   *         {@link java.sql.ResultSet}.
+   */
+  Collection getResultSetNames();
 }

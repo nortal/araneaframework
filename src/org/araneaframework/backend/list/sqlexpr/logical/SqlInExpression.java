@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.backend.list.sqlexpr.logical;
 
@@ -39,17 +39,11 @@ public class SqlInExpression extends SqlCollectionExpression {
   protected SqlExpression expr1;
 
   public SqlInExpression(SqlExpression expr1, SqlExpression[] exprs) {
-
-    Assert.isTrue(expr1 != null && exprs != null,
-        "All arguments must be provided");
+    Assert.notNull(expr1, "All arguments must be provided");
+    Assert.notEmpty(exprs, "All arguments must be provided");
 
     List exprList = Arrays.asList(exprs);
-
-    for (Iterator it = exprList.iterator(); it.hasNext();) {
-      Object o = it.next();
-      Assert.isTrue(o == null || o instanceof SqlExpression,
-          "All arguments in array must be provided");
-    }
+    Assert.noNullElements(exprList, "All arguments in array must be provided");
 
     this.expr1 = expr1;
     this.children = exprList;
@@ -86,5 +80,4 @@ public class SqlInExpression extends SqlCollectionExpression {
     }
     return sb.toString();
   }
-
 }

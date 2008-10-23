@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.model;
 
@@ -28,53 +28,51 @@ import java.util.List;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class ListItemsData implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	/** @since 1.1 */
-	public static final ListItemsData EMPTY =
-		new ListItemsData(Collections.EMPTY_LIST, new Long(0L));
 
-	private List itemRange;
+  private static final long serialVersionUID = 1L;
 
-	private Long totalCount;
-	
-	/** @since 1.0.11 */
-	public ListItemsData() {}
-	
-	/** @since 1.0.11 */
-	public ListItemsData(List itemRange, Long totalCount) {
-		this.itemRange = itemRange;
-		this.totalCount = totalCount;
-	}
+  /** @since 1.1 */
+  public static final ListItemsData EMPTY = new ListItemsData(
+      Collections.EMPTY_LIST, new Long(0L));
 
-	/**
-	 * @return Returns the itemRange.
-	 */
-	public List getItemRange() {
-		return this.itemRange;
-	}
+  private List itemRange;
 
-	/**
-	 * @param itemRange
-	 *            The itemRange to set.
-	 */
-	public void setItemRange(List itemRange) {
-		this.itemRange = itemRange;
-	}
+  private Long totalCount;
 
-	/**
-	 * @return Returns the totalCount.
-	 */
-	public Long getTotalCount() {
-		return this.totalCount;
-	}
+  /** @since 1.0.11 */
+  public ListItemsData() {}
 
-	/**
-	 * @param totalCount
-	 *            The totalCount to set.
-	 */
-	public void setTotalCount(Long totalCount) {
-		this.totalCount = totalCount;
-	}
+  /** @since 1.0.11 */
+  public ListItemsData(List itemRange, Long totalCount) {
+    this.itemRange = itemRange;
+    this.totalCount = totalCount;
+  }
+
+  /**
+   * @return Returns the itemRange.
+   */
+  public List getItemRange() {
+    return this.itemRange;
+  }
+
+  /**
+   * @param itemRange The itemRange to set.
+   */
+  public void setItemRange(List itemRange) {
+    this.itemRange = itemRange;
+  }
+
+  /**
+   * @return Returns the totalCount.
+   */
+  public Long getTotalCount() {
+    return this.totalCount;
+  }
+
+  /**
+   * @param totalCount The totalCount to set.
+   */
+  public void setTotalCount(Long totalCount) {
+    this.totalCount = totalCount;
+  }
 }

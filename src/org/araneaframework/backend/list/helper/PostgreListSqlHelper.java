@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.araneaframework.backend.list.helper;
 
 import java.util.Iterator;
@@ -19,97 +35,94 @@ import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
  */
 public class PostgreListSqlHelper extends ListSqlHelper {
 
-	protected SqlStatement statement = new SqlStatement();
+  protected SqlStatement statement = new SqlStatement();
 
-	protected String countSqlQuery = null;
+  protected String countSqlQuery = null;
 
-	public PostgreListSqlHelper(DataSource dataSource, ListQuery query) {
-		super(dataSource, query);
-	}
+  public PostgreListSqlHelper(DataSource dataSource, ListQuery query) {
+    super(dataSource, query);
+  }
 
-	public PostgreListSqlHelper(DataSource dataSource) {
-		super(dataSource);
-	}
+  public PostgreListSqlHelper(DataSource dataSource) {
+    super(dataSource);
+  }
 
-	public PostgreListSqlHelper(ListQuery query) {
-		super(query);
-	}
+  public PostgreListSqlHelper(ListQuery query) {
+    super(query);
+  }
 
-	public PostgreListSqlHelper() {
-	}
+  public PostgreListSqlHelper() {}
 
-	protected SqlStatement getCountSqlStatement() {
-		if (countSqlQuery != null) {
-			return new SqlStatement(countSqlQuery, statement.getParams());
-		}
+  protected SqlStatement getCountSqlStatement() {
+    if (countSqlQuery != null) {
+      return new SqlStatement(countSqlQuery, statement.getParams());
+    }
 
-		String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
-				statement.getQuery()).append(") t").toString();
+    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
+        statement.getQuery()).append(") t").toString();
 
-		return new SqlStatement(temp, this.statement.getParams());
-	}
+    return new SqlStatement(temp, this.statement.getParams());
+  }
 
-	protected SqlStatement getRangeSqlStatement() {
-		StringBuffer sb = new StringBuffer(this.statement.getQuery());
+  protected SqlStatement getRangeSqlStatement() {
+    StringBuffer sb = new StringBuffer(this.statement.getQuery());
 
-		if (this.itemRangeCount != null) {
-			sb.append(" LIMIT ?");
-		}
+    if (this.itemRangeCount != null) {
+      sb.append(" LIMIT ?");
+    }
 
-		sb.append(" OFFSET ?");
+    sb.append(" OFFSET ?");
 
-		// Create a SQL statement to hold the query and its parameters:
-		SqlStatement rangeStmt = new SqlStatement(sb.toString());
-		rangeStmt.addAllParams(this.statement.getParams());
-		if (this.itemRangeCount != null) {
-			rangeStmt.addParam(this.itemRangeCount);
-		}
-		rangeStmt.addParam(this.itemRangeStart);
+    // Create a SQL statement to hold the query and its parameters:
+    SqlStatement rangeStmt = new SqlStatement(sb.toString());
+    rangeStmt.addAllParams(this.statement.getParams());
 
-		return rangeStmt;
-	}
+    if (this.itemRangeCount != null) {
+      rangeStmt.addParam(this.itemRangeCount);
+    }
 
-	protected SqlExpression getFieldsSqlExpression() {
-		SqlCollectionExpression result = new SqlCollectionExpression();
+    rangeStmt.addParam(this.itemRangeStart);
+    return rangeStmt;
+  }
 
-		for (Iterator it = fields.getNames().iterator(); it.hasNext();) {
-			String variable = (String) it.next();
-			String dbField = namingStrategy.fieldToColumnName(variable);
-			String dbAlias = namingStrategy.fieldToColumnAlias(variable);
+  protected SqlExpression getFieldsSqlExpression() {
+    SqlCollectionExpression result = new SqlCollectionExpression();
+    for (Iterator it = fields.getNames().iterator(); it.hasNext();) {
+      String variable = (String) it.next();
+      String dbField = namingStrategy.fieldToColumnName(variable);
+      String dbAlias = namingStrategy.fieldToColumnAlias(variable);
 
-			if (dbAlias.equals(dbField)) {
-				result.add(new SqlStringExpression(dbField));
-			} else {
-				result.add(new SqlStringExpression(new StringBuffer(dbField).append(
-						" AS ").append(dbAlias).toString()));
-			}
-		}
+      if (dbAlias.equals(dbField)) {
+        result.add(new SqlStringExpression(dbField));
+      } else {
+        result.add(new SqlStringExpression(new StringBuffer(dbField).append(
+            " AS ").append(dbAlias).toString()));
+      }
+    }
+    return result;
+  }
 
-		return result;
-	}
+  protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
+    return new PostgreExpressionToSqlExprBuilder();
+  }
 
-	protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
-		return new PostgreExpressionToSqlExprBuilder();
-	}
+  public void setCountSqlQuery(String countSqlQuery) {
+    this.countSqlQuery = countSqlQuery;
+  }
 
-	public void setCountSqlQuery(String countSqlQuery) {
-		this.countSqlQuery = countSqlQuery;
-	}
+  public void setSqlQuery(String sqlQuery) {
+    this.statement.setQuery(sqlQuery);
+  }
 
-	public void setSqlQuery(String sqlQuery) {
-		this.statement.setQuery(sqlQuery);
-	}
+  public void addNullParam(int valueType) {
+    this.statement.addNullParam(valueType);
+  }
 
-	public void addNullParam(int valueType) {
-		this.statement.addNullParam(valueType);
-	}
+  public void addStatementParam(Object param) {
+    this.statement.addParam(param);
+  }
 
-	public void addStatementParam(Object param) {
-		this.statement.addParam(param);
-	}
-
-	public void addStatementParams(List params) {
-		this.statement.addAllParams(params);
-	}
-
+  public void addStatementParams(List params) {
+    this.statement.addAllParams(params);
+  }
 }

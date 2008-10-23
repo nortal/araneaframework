@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.filter;
 
@@ -28,50 +28,54 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
- * A custom exception handling filter. If the child service's action method throws an exception,
- * then the response stream is rollbacked, a exception handler constructed, inited and the
- * request routed to the handler.
+ * A custom exception handling filter. If the child service's action method
+ * throws an exception, then the response stream is rollbacked, a exception
+ * handler constructed, inited and the request routed to the handler.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardCriticalExceptionHandlingFilterService extends BaseFilterService {
-  private static final Log log = LogFactory.getLog(StandardCriticalExceptionHandlingFilterService.class);
+
+  private static final long serialVersionUID = 1L;
+
+  private static final Log log =
+    LogFactory.getLog(StandardCriticalExceptionHandlingFilterService.class);
+
   private ExceptionHandlerFactory factory;
-  
+
   /**
    * Set the factory for creating the exception handling service.
    */
   public void setExceptionHandlerFactory(ExceptionHandlerFactory factory) {
     this.factory = factory;
   }
-  
+
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    AtomicResponseHelper arUtil = 
-      new AtomicResponseHelper(output);
-    
+    AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
+
     try {
       childService._getService().action(path, input, output);
-    }
-    catch (Throwable e) {               
-      if (ExceptionUtils.getRootCause(e) != null)
-        log.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
-      else
+    } catch (Throwable e) {
+      if (ExceptionUtils.getRootCause(e) != null) {
+        log.error("Critical exception occured: ",
+            ExceptionUtils.getRootCause(e));
+      } else {
         log.error("Critical exception occured: ", e);
-      
-      if (e instanceof Error && 
-          !(e instanceof StackOverflowError))
+      }
+
+      if (e instanceof Error && !(e instanceof StackOverflowError)) {
         throw (Error) e;
-      
+      }
+
       arUtil.rollback();
-      
       Service service = factory.buildExceptionHandler(e, getEnvironment());
       service._getComponent().init(getScope(), getEnvironment());
+
       try {
         log.debug("Routing request to the continuation.");
         service._getService().action(null, input, output);
-      }
-      finally {
+      } finally {
         service._getComponent().destroy();
       }
     }

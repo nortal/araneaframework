@@ -16,6 +16,7 @@
 
 package example;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import javax.servlet.ServletContext;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;

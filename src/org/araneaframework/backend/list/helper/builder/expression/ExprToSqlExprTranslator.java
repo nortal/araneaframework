@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.builder.expression;
 
@@ -28,16 +28,16 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * to translate the whole hierarchy.
  */
 public interface ExprToSqlExprTranslator {
-	/**
-	 * Translates an <code>Expression</code> into <code>SqlExpression</code>.
-	 * 
-	 * @param expr
-	 *            an <code>Expression</code>.
-	 * @param builder
-	 *            <code>ExpressionToSqlExprBuilder</code> that is used to
-	 *            translate the children of the <code>Expression</code>.
-	 * @return the <code>SqlExpression</code> that represents the former
-	 *         <code>Expression</code>.
-	 */
-	SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder);
+
+  /**
+   * Translates an <code>Expression</code> into <code>SqlExpression</code>.
+   * 
+   * @param expr an <code>Expression</code>.
+   * @param builder <code>ExpressionToSqlExprBuilder</code> that is used to
+   *            translate the children of the <code>Expression</code>.
+   * @return the <code>SqlExpression</code> that represents the former
+   *         <code>Expression</code>.
+   */
+  SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder);
+
 }

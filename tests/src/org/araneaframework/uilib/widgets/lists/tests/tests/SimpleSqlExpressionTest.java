@@ -54,6 +54,8 @@ public class SimpleSqlExpressionTest extends TestCase {
 
 		// evaluate expression in memory
 		Object value = expr.evaluate(new VariableResolver() {
+	        private static final long serialVersionUID = 1L;
+
 			public Object resolve(Variable variable) {
 				if (variable.getName().equals("name")) {
 					return "James Bond";
@@ -71,6 +73,8 @@ public class SimpleSqlExpressionTest extends TestCase {
 
 		// evaluate expression in memory
 		value = expr.evaluate(new VariableResolver() {
+	        private static final long serialVersionUID = 1L;
+
 			public Object resolve(Variable variable) {
 				if (variable.getName().equals("name")) {
 					return "Bond, James";
@@ -83,6 +87,8 @@ public class SimpleSqlExpressionTest extends TestCase {
 		// build sql expression
 		StandardExpressionToSqlExprBuilder builder = new StandardExpressionToSqlExprBuilder();
 		builder.setMapper(new VariableResolver() {
+	        private static final long serialVersionUID = 1L;
+
 			public Object resolve(Variable variable) {
 				if ("name".equals(variable.getName())) {
 					return "AGENT.NAME";
@@ -97,6 +103,8 @@ public class SimpleSqlExpressionTest extends TestCase {
 			}
 		});
 		builder.setConverter(new ValueConverter() {
+	        private static final long serialVersionUID = 1L;
+
 			public Object convert(Value value) {
 				if ("licenseToKill".equals(value.getName())) {
 					return new BooleanToStringConverter("Y", "N")

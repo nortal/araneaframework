@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.compare;
 
@@ -27,33 +27,29 @@ import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
 
 /**
  * Expression for EndsWith condition. Supports both database query and
- * mempry-based lists. To use this expression in Aranea, it must be bound
- * to a translator that recognizes it.
+ * mempry-based lists. To use this expression in Aranea, it must be bound to a
+ * translator that recognizes it.
  * 
  * @see StandardExpressionToSqlExprBuilder
- * 
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.1.3
  */
 public class EndsWithExpression extends LikeExpression {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public EndsWithExpression(Expression expr, Value mask, boolean ignoreCase,
-			LikeConfiguration configuration) {
-		super(expr, mask, ignoreCase, configuration);
-	}
+  public EndsWithExpression(Expression expr, Value mask, boolean ignoreCase,
+      LikeConfiguration configuration) {
+    super(expr, mask, ignoreCase, configuration);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Object evaluate(VariableResolver resolver)
-			throws ExpressionEvaluationException {
-		String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
-		String maskStr = ObjectUtils.toString(mask.getValue());
-		boolean result = RegexpLikeUtil.isEndsWith(stringToCompare, maskStr,
-				ignoreCase, configuration);
-		return result ? Boolean.TRUE : Boolean.FALSE;
-	}
+  public Object evaluate(VariableResolver resolver)
+      throws ExpressionEvaluationException {
+    String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
+    String maskStr = ObjectUtils.toString(mask.getValue());
+    boolean result = RegexpLikeUtil.isEndsWith(stringToCompare, maskStr,
+        ignoreCase, configuration);
+    return result ? Boolean.TRUE : Boolean.FALSE;
+  }
 
 }

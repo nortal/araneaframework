@@ -20,37 +20,38 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Generic callback interface for code that operates on a CCI Connection.
- * Allows to execute any number of operations on a single Connection,
- * using any type and number of Interaction.
- * 
- * <p>This is particularly useful for delegating to existing data access code
- * that expects a Connection to work on and throws ResourceException. For newly
+ * Generic callback interface for code that operates on a CCI Connection. Allows
+ * to execute any number of operations on a single Connection, using any type
+ * and number of Interaction.
+ * <p>
+ * This is particularly useful for delegating to existing data access code that
+ * expects a Connection to work on and throws ResourceException. For newly
  * written code, it is strongly recommended to use CciTemplate's more specific
  * <code>execute</code> variants.
- *
+ * 
  * @author Thierry Templier
  * @author Juergen Hoeller
  */
 public interface ConnectionCallback {
-	/**
-	 * Gets called by <code>CciTemplate.execute</code> with an active CCI Connection.
-	 * Does not need to care about activating or closing the Connection, or handling
-	 * transactions.
-	 * 
-	 * <p>If called without a thread-bound CCI transaction (initiated by
-	 * CciLocalTransactionManager), the code will simply get executed on the CCI
-	 * Connection with its transactional semantics. If CciTemplate is configured
-	 * to use a JTA-aware ConnectionFactory, the CCI Connection and thus the callback
-	 * code will be transactional if a JTA transaction is active.
-	 *
-	 * <p>Allows for returning a result object created within the callback, i.e.
-	 * a domain object or a collection of domain objects. Note that there's special
-	 * support for single step actions: see the <code>CciTemplate.execute</code>
-	 * variants. A thrown RuntimeException is treated as application exception:
-	 * it gets propagated to the caller of the template.
-	 *
-	 * @param con active CCI Connection
-	 */
-	Object doInConnection(Connection con) throws SQLException;
+
+  /**
+   * Gets called by <code>CciTemplate.execute</code> with an active CCI
+   * Connection. Does not need to care about activating or closing the
+   * Connection, or handling transactions.
+   * <p>
+   * If called without a thread-bound CCI transaction (initiated by
+   * CciLocalTransactionManager), the code will simply get executed on the CCI
+   * Connection with its transactional semantics. If CciTemplate is configured
+   * to use a JTA-aware ConnectionFactory, the CCI Connection and thus the
+   * callback code will be transactional if a JTA transaction is active.
+   * <p>
+   * Allows for returning a result object created within the callback, i.e. a
+   * domain object or a collection of domain objects. Note that there's special
+   * support for single step actions: see the <code>CciTemplate.execute</code>
+   * variants. A thrown RuntimeException is treated as application exception: it
+   * gets propagated to the caller of the template.
+   * 
+   * @param con active CCI Connection
+   */
+  Object doInConnection(Connection con) throws SQLException;
 }

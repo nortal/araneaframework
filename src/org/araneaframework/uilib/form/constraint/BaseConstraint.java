@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -139,9 +140,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * @return The localized message from the <code>LocalizationContext</code>.
    */
   protected String t(String key) {
-    LocalizationContext locCtx = 
-     (LocalizationContext) getEnvironment().getEntry(LocalizationContext.class);
-    return locCtx.localize(key);
+    return EnvironmentUtil.getLocalizationContext(getEnvironment()).localize(key);
   }
 
   //*********************************************************************

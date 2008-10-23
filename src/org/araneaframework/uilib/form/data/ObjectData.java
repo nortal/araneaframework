@@ -20,11 +20,13 @@ import org.araneaframework.uilib.form.Data;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
- * 
  * @since 1.1
  */
 public class ObjectData extends Data {
-	public ObjectData() {
-		super(Object.class);
-	}     
+
+  private static final long serialVersionUID = 1L;
+
+  public ObjectData() {
+    super(Object.class);
+  }
 }

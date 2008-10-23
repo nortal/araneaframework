@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,36 +12,35 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.backend.list.helper.naming;
-
 
 /**
  * NamingStrategy implementation which does not alter the names.
  * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public class NopNamingStrategy implements NamingStrategy {
-	protected static final NamingStrategy INSTANCE = new NopNamingStrategy();
-	
-	public static NamingStrategy getInstance() {
-		return INSTANCE;
-	}
-	
-	protected NopNamingStrategy() {}
-	
-	public String beanFieldToResultSetColumnName(String beanField) {
-		return beanField;
-	}
 
-	public String fieldToColumnAlias(String variableName) {
-		return variableName;
-	}
+  protected static final NamingStrategy INSTANCE = new NopNamingStrategy();
 
-	public String fieldToColumnName(String variableName) {
-		return variableName;
-	}	
+  public static NamingStrategy getInstance() {
+    return INSTANCE;
+  }
+
+  protected NopNamingStrategy() {}
+
+  public String beanFieldToResultSetColumnName(String beanField) {
+    return beanField;
+  }
+
+  public String fieldToColumnAlias(String variableName) {
+    return variableName;
+  }
+
+  public String fieldToColumnName(String variableName) {
+    return variableName;
+  }
 }

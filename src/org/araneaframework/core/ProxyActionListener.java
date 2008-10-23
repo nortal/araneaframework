@@ -1,5 +1,5 @@
-/**
- * Copyright 2007 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,15 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
-import java.lang.reflect.Method;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
+import org.araneaframework.Widget;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
@@ -29,52 +27,18 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * @since 1.0.11
  */
 public class ProxyActionListener implements ActionListener {
-  private static final Log log = LogFactory.getLog(ProxyActionListener.class);
 
-  protected Object actionTarget;
+  private static final long serialVersionUID = 1L;
 
-  public ProxyActionListener(Object actionTarget) {
+  protected Widget actionTarget;
+
+  public ProxyActionListener(Widget actionTarget) {
     this.actionTarget = actionTarget;
   }
 
-  public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+  public void processAction(String actionId, InputData input, OutputData output) throws Exception {
     String actionParameter = (String) input.getGlobalData().get(ApplicationService.ACTION_PARAMETER_KEY);    
- 
-    Method actionHandler;
-    // lets try to find a handle method with an empty argument
-    try {
-      actionHandler = ProxiedHandlerUtil.getActionHandler((String)actionId, actionTarget); 
-
-      if (log.isDebugEnabled()) {
-    	String actionHandlerName = ProxiedHandlerUtil.ACTION_HANDLER_PREFIX + ((String) actionId).substring(0, 1).toUpperCase() + ((String) actionId).substring(1);
-        log.debug("Calling method '" + actionHandlerName + "()' of class '" + actionTarget.getClass().getName() + "'.");
-      }
-      actionHandler.invoke(actionTarget, new Object[] {});
-
-      return;
-    } catch (NoSuchMethodException e) {/*OK*/}
-
-    // lets try to find a method with a String type argument
-    try {               
-      actionHandler = ProxiedHandlerUtil.getActionHandler((String)actionId, actionTarget, new Class[] { String.class });  
-
-      if (log.isDebugEnabled()) {
-        String actionHandlerName = ProxiedHandlerUtil.ACTION_HANDLER_PREFIX + ((String) actionId).substring(0, 1).toUpperCase() + ((String) actionId).substring(1);
-        log.debug("Calling method '" + actionHandlerName + "(String)' of class '" + actionTarget.getClass().getName() + "'.");
-      }
-      actionHandler.invoke(actionTarget, new Object[] { actionParameter });
-
-      return;
-    } catch (NoSuchMethodException e) {/*OK*/}
-
-    if (log.isWarnEnabled()) {
-      StringBuffer logMessage = new StringBuffer().append("ProxyActionListener").append(actionTarget instanceof org.araneaframework.Component ? 
-    		  " '"+((org.araneaframework.Component)actionTarget).getScope() + "'" :
-    		  "");
-      logMessage.append(" cannot deliver action as no action listeners were registered for the action id '");
-      logMessage.append(actionId).append("'!").append(Assert.thisToString(actionTarget));
-      log.warn(logMessage);
-    }
+    ProxiedHandlerUtil.invokeActionHandler(actionId, actionParameter, actionTarget);
   }
 
 }

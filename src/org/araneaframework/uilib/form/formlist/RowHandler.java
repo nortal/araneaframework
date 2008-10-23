@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.formlist;
 
@@ -24,11 +24,12 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface RowHandler extends Serializable {
-	/**
-	 * Should return the key that uniquely identifies the row object among others.
-	 * 
-	 * @param row row object.
-	 * @return the key that uniquely identifies the row object among others.
-	 */
+
+  /**
+   * Should return the key that uniquely identifies the row object among others.
+   * 
+   * @param row row object.
+   * @return the key that uniquely identifies the row object among others.
+   */
   public Object getRowKey(Object row);
 }

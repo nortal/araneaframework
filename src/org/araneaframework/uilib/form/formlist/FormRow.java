@@ -20,144 +20,163 @@ import java.io.Serializable;
 import org.araneaframework.uilib.form.FormWidget;
 
 /**
- * Represents one editable row. 
+ * Represents one editable row.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormRow implements Serializable {
 
-	protected Object rowKey;
-	protected Object row;
-	protected FormWidget rowForm;
-	protected String rowFormId;
-	protected boolean open;
-	protected BaseFormListWidget formList;
+  private static final long serialVersionUID = 1L;
 
-	public FormRow(BaseFormListWidget formList, Object rowKey, Object row, String rowFormId, FormWidget rowForm, boolean open) {
-		this.rowKey = rowKey;
-		this.row = row;
-		this.rowForm = rowForm;
-		this.rowFormId = rowFormId;
-		this.open = open;
-		this.formList = formList;
-	}
+  protected Object rowKey;
 
-	public void open() {
-		this.open = true;
-	}
+  protected Object row;
 
-	public void close() {
-		this.open = false;
-	}
-	
-	public void reset() {
-		getFormList().resetFormRow(getKey());
-	}
+  protected FormWidget rowForm;
 
-	/**
-	 * Returns editable row form.
-	 * @return editable row form.
-	 */
-	public FormWidget getForm() {
-		return rowForm;
-	}
+  protected String rowFormId;
 
-	/**
-	 * Returns editable row key.
-	 * @return editable row key.
-	 */
-	public Object getKey() {
-		return rowKey;
-	}
+  protected boolean open;
 
-	/**
-	 * Returns whether the row is open.
-	 * @return whether the row is open.
-	 */
-	public boolean isOpen() {
-		return open;
-	}
+  protected BaseFormListWidget formList;
 
-	/**
-	 * Sets whether the row is open.
-	 * @param open whether the row is open.
-	 */
-	public void setOpen(boolean open) {
-		this.open = open;
-	}
+  public FormRow(BaseFormListWidget formList, Object rowKey, Object row,
+      String rowFormId, FormWidget rowForm, boolean open) {
+    this.rowKey = rowKey;
+    this.row = row;
+    this.rowForm = rowForm;
+    this.rowFormId = rowFormId;
+    this.open = open;
+    this.formList = formList;
+  }
 
-	/**
-	 * Returns editable row form id.
-	 * @return editable row form id.
-	 */
-	public String getFormId() {
-		return rowFormId;
-	}
+  public void open() {
+    this.open = true;
+  }
 
-	/**
-	 * Returns assosiated list row object.
-	 * @return assosiated list row object.
-	 */
-	public Object getRow() {
-		return this.row;
-	}
+  public void close() {
+    this.open = false;
+  }
 
-	/**
-	 * Sets assosiated list row object.
-	 */
-	public void setRow(Object row) {
-		this.row = row;
-	}
+  public void reset() {
+    getFormList().resetFormRow(getKey());
+  }
 
-	/**
-	 * Returns editable list.
-	 * @return editable list.
-	 */
-	public BaseFormListWidget getFormList() {
-		return formList;
-	}
+  /**
+   * Returns editable row form.
+   * 
+   * @return editable row form.
+   */
+  public FormWidget getForm() {
+    return rowForm;
+  }
 
-	/**
-	 * Returns editable row view model.
-	 * @return editable row view model.
-	 */
-	public ViewModel getViewModel() {
-		return new ViewModel();
-	}
+  /**
+   * Returns editable row key.
+   * 
+   * @return editable row key.
+   */
+  public Object getKey() {
+    return rowKey;
+  }
 
-	public class ViewModel {
-		protected FormWidget rowForm;
-		protected String rowFormId;
-		protected Boolean open;		
+  /**
+   * Returns whether the row is open.
+   * 
+   * @return whether the row is open.
+   */
+  public boolean isOpen() {
+    return open;
+  }
 
-		public ViewModel() {
-			this.rowForm = FormRow.this.rowForm;
-			this.rowFormId = FormRow.this.rowFormId; 
-			this.open = FormRow.this.open ? Boolean.TRUE : Boolean.FALSE;
-		}
+  /**
+   * Sets whether the row is open.
+   * 
+   * @param open whether the row is open.
+   */
+  public void setOpen(boolean open) {
+    this.open = open;
+  }
 
-		/**
-		 * Returns editable row form view model.
-		 * @return editable row form view model.
-		 */
-		public FormWidget getRowForm() {
-			return this.rowForm;
-		}
+  /**
+   * Returns editable row form id.
+   * 
+   * @return editable row form id.
+   */
+  public String getFormId() {
+    return rowFormId;
+  }
 
-		/**
-		 * Gets whether the row is open.
-		 */		
-		public Boolean getOpen() {
-			return this.open;
-		}
+  /**
+   * Returns assosiated list row object.
+   * 
+   * @return assosiated list row object.
+   */
+  public Object getRow() {
+    return this.row;
+  }
 
-		/**
-		 * Returns editable row form id.
-		 * @return editable row form id.
-		 */
-		public String getRowFormId() {
-			return rowFormId;
-		}	
-	}	
+  /**
+   * Sets assosiated list row object.
+   */
+  public void setRow(Object row) {
+    this.row = row;
+  }
 
-}	
+  /**
+   * Returns editable list.
+   * 
+   * @return editable list.
+   */
+  public BaseFormListWidget getFormList() {
+    return formList;
+  }
+
+  /**
+   * Returns editable row view model.
+   * 
+   * @return editable row view model.
+   */
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  public class ViewModel {
+
+    protected FormWidget rowForm;
+
+    protected String rowFormId;
+
+    protected Boolean open;
+
+    public ViewModel() {
+      this.rowForm = FormRow.this.rowForm;
+      this.rowFormId = FormRow.this.rowFormId;
+      this.open = FormRow.this.open ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    /**
+     * Returns editable row form view model.
+     * 
+     * @return editable row form view model.
+     */
+    public FormWidget getRowForm() {
+      return this.rowForm;
+    }
+
+    /**
+     * Gets whether the row is open.
+     */
+    public Boolean getOpen() {
+      return this.open;
+    }
+
+    /**
+     * Returns editable row form id.
+     * @return editable row form id.
+     */
+    public String getRowFormId() {
+      return rowFormId;
+    }
+  }
+}

@@ -12,7 +12,7 @@
  * @param historyData RSH managed history data for that hash
  */
 AraneaPage.RSHListener = function(newLocation, historyData) {
-  araneaPage().debug('detected navigation event ' + newLocation + " history: " + historyData);
+  araneaPage().debug('Detected navigation event ' + newLocation + " history: " + historyData);
 
   if (newLocation && !newLocation.startsWith("HTTP")) {
     window.dhtmlHistoryListenerRequestedState = newLocation;

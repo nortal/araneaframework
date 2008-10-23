@@ -140,6 +140,10 @@ public interface OverlayContext extends Serializable {
    */
   void start(Widget flow);
 
+  void cancel();
+
+  void finish(Object result);
+
   /**
    * This is a marker interface to say that overlay mode is active by putting
    * this interface class into the <code>Environment</code>. The tags may use

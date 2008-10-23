@@ -25,7 +25,9 @@ import org.araneaframework.uilib.form.Data;
  */
 public class IntegerListData extends Data {
 
+  private static final long serialVersionUID = 1L;
+
   public IntegerListData() {
     super(List.class, "List<Integer>");
-  }   
+  }
 }

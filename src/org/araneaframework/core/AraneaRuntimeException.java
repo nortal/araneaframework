@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -20,10 +20,13 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * A general nestable Aranea specific runtime exception.
- *  
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class AraneaRuntimeException extends NestableRuntimeException {
+
+  private static final long serialVersionUID = 1L;
+
   public AraneaRuntimeException(String message, Throwable cause) {
     super(message, cause);
   }
@@ -31,11 +34,11 @@ public class AraneaRuntimeException extends NestableRuntimeException {
   public AraneaRuntimeException() {
     super();
   }
-  
+
   public AraneaRuntimeException(String message) {
     super(message);
   }
-  
+
   public AraneaRuntimeException(Throwable cause) {
     super(cause);
   }

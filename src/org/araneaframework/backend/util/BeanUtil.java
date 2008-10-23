@@ -532,8 +532,9 @@ public class BeanUtil {
 	 * @see #copy(Object, Class)
 	 */
 	public static Object copy(Object from, Object to) {
-        Assert.isTrue(from != null && to != null, "BeanUtil.copy() cannot accept NULL arguments.");
-		
+      Assert.notNull(from, "BeanUtil.copy() cannot accept NULL argument 'from'.");
+      Assert.notNull(to, "BeanUtil.copy() cannot accept NULL arguments 'to'.");
+
 		List fromVoFields = getFields(from.getClass());
 		for (Iterator i = fromVoFields.iterator(); i.hasNext();) {
 			String field = (String) i.next();
@@ -561,7 +562,7 @@ public class BeanUtil {
 	 * @see #clone() 
 	 */
 	public static Object copy(Object from, Class toType) {
-    	Validate.isTrue(from != null && from != null, "You cannot convert a Bean to null or vice versa");		
+    	Validate.isTrue(from != null && toType != null, "You cannot convert a Bean to null or vice versa");		
 		return copy(from, newInstance(toType));
 	}
 	

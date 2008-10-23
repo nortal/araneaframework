@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,41 +12,39 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper;
 
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-
+import org.araneaframework.core.Assert;
 
 /**
  * VariableResolver that has a map of Variable names and their resolvable
  * values.
  */
 public class VariableMapper implements VariableResolver {
-	private Map map;
 
-	public VariableMapper(Map map) {
-		if (map == null) {
-			throw new RuntimeException("Mapping must be provided");
-		}
-		this.map = map;
-	}
+  private static final long serialVersionUID = 1L;
 
-	public Object resolve(Variable variable) {
-		if (variable == null) {
-			throw new RuntimeException("Variable must be provided");
-		}
-		String name = variable.getName();
-		if (name == null) {
-			throw new RuntimeException("Variable name must be provided");
-		}
-		Object result = this.map.get(name);
-		if (result == null) {
-			throw new RuntimeException("Variable " + name + " not supported");
-		}
-		return result;
-	}
+  private Map map;
+
+  public VariableMapper(Map map) {
+    Assert.notNull(map, "Mapping must be provided");
+    this.map = map;
+  }
+
+  public Object resolve(Variable variable) {
+    Assert.notNull(variable, "Variable must be provided");
+
+    String name = variable.getName();
+    Assert.notNull(name, "Variable name must be provided");
+
+    Object result = this.map.get(name);
+    Assert.notNull(result, "Variable " + name + " not supported");
+
+    return result;
+  }
 }

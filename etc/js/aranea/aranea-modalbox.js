@@ -38,7 +38,7 @@ Aranea.ModalBox.show = function(options) {
 
 Aranea.ModalBox.afterLoad = function(content) {
   // if no content is returned, overlay has been closed.
-  if (content.startsWith("<!-- araOverlaySpecialResponse -->")) {
+  if (content != null && content.startsWith("<!-- araOverlaySpecialResponse -->")) {
     AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
 

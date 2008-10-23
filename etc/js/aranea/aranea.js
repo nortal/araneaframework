@@ -49,7 +49,7 @@ function AraneaStore() {
 function AraneaEventStore() {
   var araneaEventStore = function() {
     var processEvent = function(event) {
-      araneaPage().getLogger().trace(Object.inspect(event));
+      araneaPage().getLogger().trace("Starting to process event: " + Object.inspect(event));
       if (typeof event != "function") {
         event;
       } else {
@@ -203,11 +203,13 @@ function AraneaPage() {
   this.addSystemUnLoadEvent = function(event) { systemUnLoadEvents.add(event); }
 
   this.onload = function() {
-    logger.trace('System load events executing.\n');
+    logger.trace('System (on)load events executing.\n');
     systemLoadEvents.execute();
     this.setLoaded(true);
+    logger.trace('System (on)load events are executed.\n');
     logger.trace('Client load events executing.\n');
     clientLoadEvents.execute(); 
+    logger.trace('Client load events are executed.\n');
   };
   this.onunload = function() { systemUnLoadEvents.execute(); };
   
@@ -229,15 +231,17 @@ function AraneaPage() {
   /** Executes all callbacks that should run before submitting the form with given id. 
     * Executed callbacks are removed. */
   this.executeCallbacks = function(systemFormId) {
-    logger.trace('Request for submit callback execution was received.\n'); 
+    logger.trace('Request for submit callback execution was received.\n');
     if (this.submitCallbacks['callbacks']) {
-      logger.trace('General submit callbacks executing.\n'); 
+      logger.trace('General submit callbacks executing.\n');
       this.submitCallbacks['callbacks'].execute();
+      logger.trace('General submit callbacks are executed.\n');
     }
 
     if (this.submitCallbacks[systemFormId]) {
       logger.trace('Submit callbacks executing.\n');
       this.submitCallbacks[systemFormId].execute();
+      logger.trace('Submit callbacks are executed.\n');
     }
   };
 
@@ -557,9 +561,9 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
 
-    var options = {params: systemForm.serialize(true), afterLoad: Aranea.ModalBox.afterLoad};
+    var options = {params: systemForm.serialize(true)};
     Object.extend(options, Aranea.ModalBox.Options || {});
-    Modalbox.show(systemForm.readAttribute('action') + '?araOverlay', options);
+    Modalbox.show(systemForm.readAttribute('action') + '?araOverlay=true', options);
     return false;
   };
 }

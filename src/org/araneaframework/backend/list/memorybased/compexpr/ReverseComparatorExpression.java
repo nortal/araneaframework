@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,39 +12,37 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.compexpr;
 
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.core.Assert;
 
 /**
  * ComparatorExpression that reverses another ComparatorExpression comparation
  * result.
  */
-public class ReverseComparatorExpression implements
-		CompositeComparatorExpression {
+public class ReverseComparatorExpression
+  implements CompositeComparatorExpression {
 
-	private static final long serialVersionUID = 1L;
-	
-	protected ComparatorExpression expression;
+  private static final long serialVersionUID = 1L;
 
-	public ReverseComparatorExpression(ComparatorExpression expression) {
-		if (expression == null) {
-			throw new RuntimeException("Expression must be provided");
-		}
-		this.expression = expression;
-	}
+  protected ComparatorExpression expression;
 
-	public int compare(VariableResolver resolver1, VariableResolver resolver2)
-			throws ExpressionEvaluationException {
-		return this.expression.compare(resolver2, resolver1);
-	}
+  public ReverseComparatorExpression(ComparatorExpression expression) {
+    Assert.notNull(expression, "Expression must be provided");
+    this.expression = expression;
+  }
 
-	public ComparatorExpression[] getChildren() {
-		return new ComparatorExpression[] { this.expression };
-	}
+  public int compare(VariableResolver resolver1, VariableResolver resolver2)
+      throws ExpressionEvaluationException {
+    return this.expression.compare(resolver2, resolver1);
+  }
 
+  public ComparatorExpression[] getChildren() {
+    return new ComparatorExpression[] { this.expression };
+  }
 }

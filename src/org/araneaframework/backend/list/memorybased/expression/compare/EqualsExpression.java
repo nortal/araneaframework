@@ -1,5 +1,5 @@
-/**
- * Copyright 2006 Webmedia Group Ltd.
+/*
+ * Copyright 2006-2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.compare;
 
@@ -23,28 +23,29 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class EqualsExpression implements CompositeExpression {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	protected Expression expr1;
+  protected Expression expr1;
 
-	protected Expression expr2;
+  protected Expression expr2;
 
-	public EqualsExpression(Expression expr1, Expression expr2) {
-		if (expr1 == null || expr2 == null) {
-			throw new IllegalArgumentException("Operands must be provided");
-		}
-		this.expr1 = expr1;
-		this.expr2 = expr2;
-	}
+  public EqualsExpression(Expression expr1, Expression expr2) {
+    if (expr1 == null || expr2 == null) {
+      throw new IllegalArgumentException("Operands must be provided");
+    }
+    this.expr1 = expr1;
+    this.expr2 = expr2;
+  }
 
-	public Object evaluate(VariableResolver resolver)
-			throws ExpressionEvaluationException {
-		Object value1 = this.expr1.evaluate(resolver);
-		Object value2 = this.expr2.evaluate(resolver);
-		return (value1 == null ? value2 == null : value1.equals(value2)) ? Boolean.TRUE : Boolean.FALSE;
-	}
+  public Object evaluate(VariableResolver resolver)
+      throws ExpressionEvaluationException {
+    Object value1 = this.expr1.evaluate(resolver);
+    Object value2 = this.expr2.evaluate(resolver);
+    return (value1 == null ? value2 == null : value1.equals(value2)) ? Boolean.TRUE
+        : Boolean.FALSE;
+  }
 
-	public Expression[] getChildren() {
-		return new Expression[] { this.expr1, this.expr2 };
-	}
+  public Expression[] getChildren() {
+    return new Expression[] { this.expr1, this.expr2 };
+  }
 }
