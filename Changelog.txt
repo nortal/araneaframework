@@ -3,7 +3,12 @@ ARANEA FRAMEWORK CHANGELOG
 2008.05.28    | Aranea 1.2-M2
 
 Features and Improvements
-   
+   Updated thrid-party scripts													| See #678
+
+Bugfixes
+   Upgrade Aranea 1.2M code to contain previous bugfixes						| See #693
+   DateControl -- anything before 1900 not considered date						| See #545
+
 Deprecation & API changes
 
 ---------------------------------------------------------------------------------------------
