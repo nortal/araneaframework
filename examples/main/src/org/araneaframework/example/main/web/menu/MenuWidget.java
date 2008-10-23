@@ -17,6 +17,7 @@
 package org.araneaframework.example.main.web.menu;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
@@ -88,12 +89,15 @@ private MenuItem araneaMenu;
 
   protected void init() throws Exception {
     super.init();
-    
     addWidget("footer", new FooterWidget());
     addEventListener("logout", new ProxyEventListener(this));
     addEventListener("mainPage", new ProxyEventListener(this));
   }
-  
+
+  protected void update(InputData input) throws Exception {
+    super.update(input);
+  }
+
   public void handleEventLogout() throws Exception {
     ((SecurityContext) getEnvironment().requireEntry(SecurityContext.class)).logout();
   }

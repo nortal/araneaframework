@@ -33,7 +33,7 @@ public class LoginWidget extends TemplateBaseWidget {
   /* Widget we will create and attach to this widget. */
 	private FormWidget form;
 
-	protected void init() throws Exception {
+	protected void init() {
 		/* Sets the view selector that will be used for rendering this widget. 
 		 * The path to real JSP file is determined by:
 		 * StandardJspFilterService field jspPath (configured in aranea-conf.xml) + 
@@ -61,7 +61,7 @@ public class LoginWidget extends TemplateBaseWidget {
 	}
 	
 	// implementation of the login handler
-	private void handleEventLogin() throws Exception {
+	public void handleEventLogin() {
 		/* convertAndValidate() fails if data found from form does not 
 		 * satisfy the restrictions laid on it. If that is the case, 
 		 * we ignore received event. There is only one restriction -
@@ -81,7 +81,7 @@ public class LoginWidget extends TemplateBaseWidget {
 	 * promptly replaces login widget with root widget - allowing
 	 * user to start work with real examples. Demonstrates
 	 * simple flow navigation. */ 
-	private void handleEventBypass() throws Exception {
+	public void handleEventBypass() {
 		getFlowCtx().replace(new RootWidget(), null);
 	}
 }

@@ -19,7 +19,6 @@ package org.araneaframework.example.main.web.demo;
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.service.FileDownloaderService;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.event.OnChangeEventListener;
@@ -103,11 +102,12 @@ public class DemoFileUpload extends TemplateBaseWidget {
 		FileInfo selectedFile = (FileInfo) uploadList.getRowFromRequestId(param);
 		
 		getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please relax your popup blocker settings.");
+
 		FileDownloaderService service = new FileDownloaderService(selectedFile);
-		
-		PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
+		service.setContentDispositionInline(true);
+
 		PopupWindowProperties p = new PopupWindowProperties();
-		popupContext.open(service, p, null);
+		getPopupCtx().open(service, p, null);
 	}
 	
 	public void handleEventValidate() throws Exception {

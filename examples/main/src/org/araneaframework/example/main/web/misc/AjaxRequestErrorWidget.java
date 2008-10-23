@@ -24,6 +24,9 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class AjaxRequestErrorWidget extends TemplateBaseWidget {
+
+  private static final long serialVersionUID = 1L;
+
   private boolean renderError = false;
 
   public void init() throws Exception {

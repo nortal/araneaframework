@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.message;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.core.BroadcastMessage;
@@ -39,7 +40,7 @@ public class LoginMessage extends BroadcastMessage {
 
       Environment childEnv = loginWidget.getChildEnvironment();
 
-      FlowContext flow = (FlowContext) childEnv.getEntry(FlowContext.class);
+      FlowContext flow = EnvironmentUtil.requireFlowContext(childEnv);
       flow.replace(new RootWidget(), null);
     }
   }

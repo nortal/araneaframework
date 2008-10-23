@@ -17,6 +17,7 @@
 
 package org.araneaframework.example.main.release;
 
+import org.araneaframework.InputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
 
 /**
@@ -25,5 +26,9 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 public class ReleaseWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		setViewSelector("release/release");
+	}
+
+	protected void update(InputData input) throws Exception {
+	  super.update(input);
 	}
 }

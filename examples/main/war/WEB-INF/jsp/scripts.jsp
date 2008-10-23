@@ -14,6 +14,7 @@
 
 		<ui:importScripts/>
 		<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
+		<ui:importScripts file="js/prototype/prototype_update_helper.js"/>
 		<ui:importScripts group="aranea-rsh"/>
 
 		<!-- Enables firebug js console logging, if firebug present -->

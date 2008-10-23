@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.ClassUtils;
+import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.core.MenuContext;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.event.OnChangeEventListener;
@@ -22,6 +22,9 @@ import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 public class ModalDialogTestWidget extends TemplateBaseWidget {
+
+  private static final long serialVersionUID = 1L;
+
   private FormWidget form;
   private List menuitems = new ArrayList();
   
@@ -34,6 +37,9 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
     SelectControl select = new SelectControl();
     select.addItem(new DisplayItem(null, t("select.choose")));
     select.addOnChangeEventListener(new OnChangeEventListener() {
+
+      private static final long serialVersionUID = 1L;
+
       public void onChange() throws Exception {
         if (form.getElement("classSelect").convertAndValidate()) {
           String className = (String) form.getValueByFullName("classSelect");
@@ -52,7 +58,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
     addWidget("form", form);
   }
 
-  private void handleEventReturn() {
+  public void handleEventReturn() {
     getFlowCtx().cancel();
   }
 
@@ -69,6 +75,9 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
   }
   
   private static class WrapperWidget extends TemplateBaseWidget {
+
+    private static final long serialVersionUID = 1L;
+
     private Widget wrapped;
     
     public WrapperWidget(Widget wrapped) {
@@ -79,15 +88,18 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
       setViewSelector("testing/renderChild");
       addWidget("wrapped", wrapped);
     }
-    
-    private void handleEventGobacknow() {
+
+    protected void render(OutputData output) throws Exception {
+      getMessageCtx().showInfoMessage("#Uus popup.");
+      super.render(output);
+    }
+    public void handleEventGobacknow() {
       getFlowCtx().cancel();
     }
   }
 
   private class MenuItemCollector {
     public void visit(MenuItem menu, List itemList) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-      Class c = menu.getClass();
       Field classfld = menu.getClass().getDeclaredField("flowClass");
       
       if (classfld != null) {
