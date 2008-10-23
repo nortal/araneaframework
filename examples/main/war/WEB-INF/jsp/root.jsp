@@ -55,10 +55,6 @@
 							<div class="clear1"><ui:nbsp/></div>
 						</div>
 					</ui:systemForm>
-
-					<ui:keyboardHandler handler="function (event, elementId) { alert('123'); return false; }"
-					key="f1"/>
-
 				</div>
 	
 				<ui:widgetInclude id="menu.footer"/>

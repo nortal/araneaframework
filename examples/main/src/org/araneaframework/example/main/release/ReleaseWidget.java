@@ -14,21 +14,18 @@
  * limitations under the License.
 **/
 
-
 package org.araneaframework.example.main.release;
 
-import org.araneaframework.InputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
 
 /**
  * @author Taimo Peelo
  */
 public class ReleaseWidget extends TemplateBaseWidget {
-	protected void init() throws Exception {
-		setViewSelector("release/release");
-	}
 
-	protected void update(InputData input) throws Exception {
-	  super.update(input);
-	}
+  private static final long serialVersionUID = 1L;
+
+  protected void init() throws Exception {
+    setViewSelector("release/release");
+  }
 }

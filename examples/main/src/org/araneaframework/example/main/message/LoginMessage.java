@@ -16,13 +16,12 @@
 
 package org.araneaframework.example.main.message;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.example.main.web.LoginWidget;
 import org.araneaframework.example.main.web.RootWidget;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * A message that searches the {@link LoginWidget} to start a new root widget.
@@ -37,11 +36,8 @@ public class LoginMessage extends BroadcastMessage {
   protected void execute(Component component) throws Exception {
     if (component instanceof LoginWidget) {
       LoginWidget loginWidget = (LoginWidget) component;
-
       Environment childEnv = loginWidget.getChildEnvironment();
-
-      FlowContext flow = EnvironmentUtil.requireFlowContext(childEnv);
-      flow.replace(new RootWidget(), null);
+      EnvironmentUtil.requireFlowContext(childEnv).replace(new RootWidget());
     }
   }
 
