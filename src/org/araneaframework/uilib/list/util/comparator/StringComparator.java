@@ -23,7 +23,7 @@ import java.util.Locale;
  * General interface for <code>Comparator</code> that compares
  * <code>String</code> objects.
  */
-public interface StringComparator extends Comparator {
+public interface StringComparator extends Comparator<String> {
 	/**
 	 * Returns <code>true</code> if this <code>Comparator</code> is case
 	 * insensitive.
