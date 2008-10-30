@@ -6,9 +6,8 @@
 	version="1.2">
 	<ui:systemForm id="overlaySystemForm" method="POST" styleClass="aranea-overlay">
 		<ui:messages type="error" styleClass="msg-error"/>
+		<ui:messages type="warning" styleClass="msg-warning"/>
 		<ui:messages type="info" styleClass="msg-info"/>
-		<div style="margin: 5px">
-			<ui:widgetInclude id="c"/>
-		</div>
+		<ui:widgetInclude id="c"/>
 	</ui:systemForm>
 </jsp:root>

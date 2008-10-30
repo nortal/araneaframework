@@ -18,9 +18,7 @@ package org.araneaframework.example.main.web.sample;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
@@ -102,11 +100,6 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     // We use a simple option of not defining the button here. Instead, we just
     // use a JSP tag that renders the button and also invokes the event.
 
-    GregorianCalendar cal = new GregorianCalendar(1899, 6, 14);
-    Date date = cal.getTime();
-    Timestamp ts = new Timestamp(date.getTime());
-    simpleForm.setValueByFullName("createdDate", ts);
-
     // The usual, add the created widget to main widget.
     addWidget("simpleForm", simpleForm);
   }
@@ -151,12 +144,6 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     formData.setWeight(77.8F);
     formData.setPreciseWeight(77.8989);
     simpleBeanFormWidget.readFromBean(formData);
-  }
-
-  public void handleEventMultiParam(String[] params) {
-    getMessageCtx().showInfoMessage("#Param1: " + params[0]);
-    getMessageCtx().showInfoMessage("#Param2: " + params[1]);
-    getMessageCtx().showInfoMessage("#Param3: " + params[2]);
   }
 
   /**

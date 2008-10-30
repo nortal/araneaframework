@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.ClassUtils;
-import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
@@ -89,10 +88,6 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
       addWidget("wrapped", wrapped);
     }
 
-    protected void render(OutputData output) throws Exception {
-      getMessageCtx().showInfoMessage("#Uus popup.");
-      super.render(output);
-    }
     public void handleEventGobacknow() {
       getFlowCtx().cancel();
     }

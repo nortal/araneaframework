@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2008 Webmedia Group Ltd.
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import org.araneaframework.backend.util.BeanMapper;
  * @since 1.4.1.20
  */
 public abstract class BaseBean implements Serializable, Cloneable {
+
+  private static final long serialVersionUID = 1L;
 
   private static final Log log = LogFactory.getLog(BaseBean.class);
 
@@ -99,8 +101,8 @@ public abstract class BaseBean implements Serializable, Cloneable {
 
     for (Iterator i = voFields.iterator(); i.hasNext() && result;) {
       String field = (String) i.next();
-      result = valuesEqual(beanMapper.getFieldValue(this, field), beanMapper
-          .getFieldValue(otherVo, field));
+      result = valuesEqual(beanMapper.getFieldValue(this, field),
+          beanMapper.getFieldValue(otherVo, field));
     }
 
     return result;

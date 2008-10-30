@@ -118,7 +118,6 @@
 				<!-- pure design tag -->
 				<tui:componentActions>
 					<ui:eventButton eventId="testSimpleBeanForm" labelId="button.submit"/>
-					<ui:eventButton eventId="multiParam" labelId="#Multi-Param Test" eventParam="ABC;abc;123"/>
 				</tui:componentActions>
 			</tui:component>
 

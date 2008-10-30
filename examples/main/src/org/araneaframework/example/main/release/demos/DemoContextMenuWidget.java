@@ -1,12 +1,17 @@
 /**
- * Copyright 2007 Webmedia Group Ltd. Licensed under the Apache License, Version
- * 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2007 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.araneaframework.example.main.release.demos;
@@ -47,23 +52,24 @@ public class DemoContextMenuWidget extends TemplateBaseWidget
   {
     Random rn = new Random();
     List allSuggestions = new ArrayList();
-    for (Iterator i = Arrays.asList(Locale.getISOCountries()).iterator(); i
-        .hasNext();) {
-      allSuggestions.add(new Locale("en", (String) i.next())
-          .getDisplayCountry(Locale.ENGLISH));
+    List allCountries = Arrays.asList(Locale.getISOCountries());
+
+    for (Iterator i = allCountries.iterator(); i.hasNext();) {
+      Locale locale = new Locale("en", (String) i.next());
+      allSuggestions.add(locale.getDisplayCountry(Locale.ENGLISH));
     }
+
     for (int i = 0; i < ExampleData.males.length; i++) {
       ExampleData.Client friend = new ExampleData.Client();
       friend.setForename(ExampleData.males[i]);
       friend.setId(this.lastId);
       friend.setSex("M");
-      friend
-          .setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
-      friend.setCountry((String) allSuggestions.get(rn.nextInt(allSuggestions
-          .size())));
+      friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+      friend.setCountry((String) allSuggestions.get(rn.nextInt(allSuggestions.size())));
       this.friends.add(friend);
       this.lastId = new Long(this.lastId.longValue() + 1);
     }
+
     for (int i = 0; i < ExampleData.females.length; i++) {
       ExampleData.Client friend = new ExampleData.Client();
       friend.setForename(ExampleData.females[i]);

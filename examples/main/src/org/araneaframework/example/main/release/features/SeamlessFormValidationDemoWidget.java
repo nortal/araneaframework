@@ -168,6 +168,8 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
   private abstract class LocaleChangeListenerAdapter
     implements LocaleChangeListener {
 
+    private static final long serialVersionUID = 1L;
+
     private ApplicationComponent wrapped;
 
     public LocaleChangeListenerAdapter(ApplicationComponent wrapped) {
