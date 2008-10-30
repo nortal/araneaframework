@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
+
 package org.araneaframework.core.util;
 
 import org.apache.commons.lang.math.RandomUtils;
@@ -29,16 +30,17 @@ import org.araneaframework.core.StandardScope;
  * the child <code>Environment</code> of a component (the target).
  * <p>
  * Its usage is quite simple:
- * <pre><code>pushGlobalEnvEntry(entryId, envEntry);
  * 
+ * <pre><code>
+ * pushGlobalEnvEntry(entryId, envEntry);
  * BaseWidget listenerComp = new BaseWidget() {
  * 
  *   protected void destroy() throws Exception {
  *     popGlobalEnvEntry(entryId);
  *   }
- * 
  * };
- * ComponentUtil.addListenerComponent(targetComp, listenerComp);</code></pre>
+ * ComponentUtil.addListenerComponent(targetComp, listenerComp);
+ * </code></pre>
  * 
  * In the example above, it uses the lifecycle listener to remove an
  * <code>Environment</code> entry that was added before.
@@ -53,12 +55,12 @@ public abstract class ComponentUtil {
    * using <code>addListenerComponent</code> broke component name scoping.
    */
   public static final String LISTENER_KEY = "ComponentUtil_LISTENER";
-  
+
   /**
    * This method will attach the listener component to the target custom
    * component, allowing it to receive all the lifecycle events (which exactly
-   * depends on the target component type). The listener component may never
-   * get to do something more than processing lifecycle events.
+   * depends on the target component type). The listener component may never get
+   * to do something more than processing lifecycle events.
    * <p>
    * This allows for instance to add a child component that will execute some
    * action on destroy, thus essentially tying some action to the lifecycle of
@@ -73,22 +75,24 @@ public abstract class ComponentUtil {
    */
   public static void addListenerComponent(ApplicationComponent target,
       Component listener) {
-
     Assert.notNullParam(target, "target");
     Assert.notNullParam(listener, "listener");
-
     String key = LISTENER_KEY;
+
     while (target._getComposite().getChildren().get(key) != null) {
       key = LISTENER_KEY + RandomUtils.nextLong();
     }
 
-    Environment env = target.isAlive() ? target.getChildEnvironment() : new LateBindingChildEnvironment(target);
-    listener._getComponent().init(new StandardScope(key, target.getScope()), env);
+    Environment env = target.isAlive() ? target.getChildEnvironment()
+        : new LateBindingChildEnvironment(target);
 
-    target._getComposite().attach(key, listener);    
+    listener._getComponent().init(
+        new StandardScope(key, target.getScope()),env);
+    target._getComposite().attach(key, listener);
   }
 
-  // allows adding listener components to not yet initialized components by failing lazily
+  // allows adding listener components to not yet initialized components by
+  // failing lazily
   private static class LateBindingChildEnvironment implements Environment {
 
     private static final long serialVersionUID = 1L;
@@ -116,7 +120,5 @@ public abstract class ComponentUtil {
       }
       return result;
     }
-
   }
-
 }

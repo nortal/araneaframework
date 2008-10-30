@@ -19,8 +19,6 @@ package org.araneaframework.backend.list.memorybased.compexpr;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
@@ -30,8 +28,6 @@ public class MultiComparatorExpression implements CompositeComparatorExpression 
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Log log = LogFactory.getLog(MultiComparatorExpression.class);
-	
 	protected List children = new ArrayList();
 	
 	public ComparatorExpression add(ComparatorExpression expression) {

@@ -52,7 +52,7 @@ public class DemoDisplayForm extends TemplateBaseWidget {
 		addWidget("displayForm", displayForm);
 	}
 	
-	public void handleEventReturn(String param) throws Exception {
+	public void handleEventReturn() throws Exception {
 		getFlowCtx().cancel();
 	}
 }

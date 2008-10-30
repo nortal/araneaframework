@@ -57,7 +57,7 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
     return EVAL_BODY_INCLUDE;    
   }
 
-  protected String getWidgetActionUrl() throws JspException {
+  protected String getWidgetActionUrl() {
     Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));

@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.util;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.text.MessageFormat;
 import org.araneaframework.Environment;
 import org.araneaframework.Widget;
@@ -37,8 +38,7 @@ public class MessageUtil {
    * @return The localized message.
    */
   public static String localize(String messageCode, Environment env) {
-    LocalizationContext locCtx = 
-      (LocalizationContext) env.getEntry(LocalizationContext.class);
+    LocalizationContext locCtx = EnvironmentUtil.getLocalizationContext(env);
     return locCtx.getResourceBundle().getString(messageCode);    
   }
 

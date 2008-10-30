@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,37 +12,35 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.sqlexpr.constant;
 
 import org.araneaframework.backend.list.SqlExpression;
+import org.araneaframework.core.Assert;
 
 public class SqlStringExpression implements SqlExpression {
-	private String string;
 
-	private Object[] values;
+  private String string;
 
-	public SqlStringExpression(String string, Object[] values) {
-		if (string == null) {
-			throw new RuntimeException("String can not be null");
-		}
-		if (values == null) {
-			throw new RuntimeException("Values array can not be null");
-		}
-		this.string = string;
-		this.values = values;
-	}
+  private Object[] values;
 
-	public SqlStringExpression(String string) {
-		this(string, new Object[0]);
-	}
+  public SqlStringExpression(String string, Object[] values) {
+    Assert.notNull(string, "String cannot be null");
+    Assert.notNull(values, "Values array cannot be null");
+    this.string = string;
+    this.values = values;
+  }
 
-	public String toSqlString() {
-		return this.string;
-	}
+  public SqlStringExpression(String string) {
+    this(string, new Object[0]);
+  }
 
-	public Object[] getValues() {
-		return this.values;
-	}
+  public String toSqlString() {
+    return this.string;
+  }
+
+  public Object[] getValues() {
+    return this.values;
+  }
 }

@@ -80,20 +80,20 @@ import org.araneaframework.uilib.support.FlowCreator;
  */
 public class MenuWidget extends TemplateMenuWidget  {
   private static final long serialVersionUID = 1L;
-private MenuItem araneaMenu;
+
+  private MenuItem araneaMenu;
 
   public MenuWidget(Widget topWidget) throws Exception {
 	super(topWidget);
   }
 
   protected void init() throws Exception {
-    super.init();
-    
+    super.init(); // It is necessary here to invoke parent code also.
     addWidget("footer", new FooterWidget());
     addEventListener("logout", new ProxyEventListener(this));
     addEventListener("mainPage", new ProxyEventListener(this));
   }
-  
+
   public void handleEventLogout() throws Exception {
     ((SecurityContext) getEnvironment().requireEntry(SecurityContext.class)).logout();
   }

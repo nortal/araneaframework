@@ -18,12 +18,13 @@ package org.araneaframework.uilib.form.data;
 
 import org.araneaframework.uilib.form.Data;
 
-
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class YNData extends Data {
+
+  private static final long serialVersionUID = 1L;
 
   public YNData() {
     super(String.class, "YN");

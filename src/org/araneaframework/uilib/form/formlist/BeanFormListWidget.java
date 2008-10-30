@@ -20,21 +20,25 @@ import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 
 /**
- * Editable rows widget that is used to handle simultenous editing of multiple forms with same structure.
+ * Editable rows widget that is used to handle simultenous editing of multiple
+ * forms with same structure.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BeanFormListWidget extends BaseFormListWidget {
-	//*******************************************************************
-	// FIELDS
-	//*******************************************************************	
 
-	protected Class beanClass;
+  private static final long serialVersionUID = 1L;
 
-	//*******************************************************************
-	// CONSTRUCTORS
-	//*******************************************************************		
-  
+  // *******************************************************************
+  // FIELDS
+  // *******************************************************************
+
+  protected Class beanClass;
+
+  // *******************************************************************
+  // CONSTRUCTORS
+  // *******************************************************************
+
   /**
    * @param rowHandler row handler.
    * @param beanClass Class of beans in form
@@ -42,30 +46,29 @@ public class BeanFormListWidget extends BaseFormListWidget {
   public BeanFormListWidget(FormRowHandler rowHandler, Class beanClass) {
     super(rowHandler);
     this.beanClass = beanClass;
-  }  
-  
-	/**
-	 * @param rowHandler row handler.
-	 * @param beanClass Class of beans in form
-	 */
-	public BeanFormListWidget(FormRowHandler rowHandler, FormListModel model, Class beanClass) {
-		super(rowHandler, model);
-		this.beanClass = beanClass;
-	}
-  
-  //*******************************************************************
+  }
+
+  /**
+   * @param rowHandler row handler.
+   * @param beanClass Class of beans in form
+   */
+  public BeanFormListWidget(FormRowHandler rowHandler, FormListModel model,
+      Class beanClass) {
+    super(rowHandler, model);
+    this.beanClass = beanClass;
+  }
+
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************   
-  
+  // *******************************************************************
   public Class getBeanClass() {
     return this.beanClass;
   }
 
-	//*******************************************************************
-	// PROTECTED METHODS
-	//*******************************************************************		
-
-	protected FormWidget buildAddForm(){
-		return new BeanFormWidget(beanClass);
-	}
+  // *******************************************************************
+  // PROTECTED METHODS
+  // *******************************************************************
+  protected FormWidget buildAddForm() {
+    return new BeanFormWidget(beanClass);
+  }
 }

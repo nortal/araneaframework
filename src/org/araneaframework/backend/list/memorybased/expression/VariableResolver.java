@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression;
 
 import java.io.Serializable;
 import org.araneaframework.backend.list.memorybased.Variable;
-
 
 /**
  * General interface for a resolver that resolves <code>Variables</code>. The
@@ -26,12 +25,12 @@ import org.araneaframework.backend.list.memorybased.Variable;
  * <code>Variables</code> as well as transforming their names etc.
  */
 public interface VariableResolver extends Serializable {
-	/**
-	 * Resolves a <code>Variable</code>.
-	 * 
-	 * @param variable
-	 *            a <code>Variable</code> to resolve.
-	 * @return the result of resolving the <code>Variable</code>.
-	 */
-	Object resolve(Variable variable);
+
+  /**
+   * Resolves a <code>Variable</code>.
+   * 
+   * @param variable a <code>Variable</code> to resolve.
+   * @return the result of resolving the <code>Variable</code>.
+   */
+  Object resolve(Variable variable);
 }

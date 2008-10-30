@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.container;
 
@@ -42,6 +42,9 @@ import org.araneaframework.http.util.ServletUtil;
  * @since 1.1
  */
 public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * <p> 
    * Map containing the default overlay presentation options. 
@@ -57,7 +60,6 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    * </ul>
    */
   public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
-  private static final String OVERLAY_REQUEST_KEY = "araOverlay";
   private static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
   private static final String MAIN_CHILD_KEY = "m";
@@ -69,13 +71,17 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   private FlowContextWidget overlay;
   
   static {
+    // To see all the options, refer to "modalbox.js", lines 21-38.
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
     DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
     DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
-    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("title", null);
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
+    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.2));
+    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.2));
     DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.2));
+    DEFAULT_PRESENTATION_OPTIONS.put("autoFocusing", Boolean.FALSE);
   }
 
   {
@@ -104,14 +110,18 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     Assert.notNull(overlay);
     addWidget(MAIN_CHILD_KEY, main);
     addWidget(OVERLAY_CHILD_KEY, overlay);
-    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class, new OverlayActivityMarkerContext(){});
+    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
+        new OverlayActivityMarkerContext() {
+          private static final long serialVersionUID = 1L;
+        });
   }
 
   protected void update(InputData input) throws Exception {
-    if (isOverlayActive())
+    if (isOverlayActive()) {
       overlay._getWidget().update(input);
-    else
+    } else {
       main._getWidget().update(input);
+    }
   }
 
   protected void event(Path path, InputData input) throws Exception {
@@ -125,34 +135,37 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   /**
-	 * Asserts that the current widget is in the active hierarchy. If not, the
-	 * execution will fail with an exception.
-	 * 
-	 * @param path Path of the widget (from the request).
-	 * @param message A description message to include with the exception.
-	 * @since 1.1.2
-	 */
-	protected void assertActiveHierarchy(Path path, String message) {
-		if (path != null && path.hasNext()) {
-			String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
-			Assert.isTrue(!key.equals(path.getNext()), message);
-		}
-	}
+   * Asserts that the current widget is in the active hierarchy. If not, the
+   * execution will fail with an exception.
+   * 
+   * @param path Path of the widget (from the request).
+   * @param message A description message to include with the exception.
+   * @since 1.1.2
+   */
+  protected void assertActiveHierarchy(Path path, String message) {
+    if (path != null && path.hasNext()) {
+      String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
+      Assert.isTrue(!key.equals(path.getNext()), message);
+    }
+  }
 
-	protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
+  protected void render(OutputData output) throws Exception {
+    if (output.getInputData().getGlobalData().containsKey(
+        OverlayContext.OVERLAY_REQUEST_KEY)) {
       overlay._getWidget().render(output);
-
       if (!isOverlayActive()) {
-        // response should be empty as nothing was rendered when overlay did not contain an active flow
-        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
+        // response should be empty as nothing was rendered when overlay did not
+        // contain an active flow
+        // write out a hack of a response that should be interpreted by
+        // Aranea.ModalBox.afterLoad
         HttpServletResponse response = ServletUtil.getResponse(output);
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
       }
     } else {
       main._getWidget().render(output);
       if (!isOverlayActive()) { // overlay has become inactive for some reason
-        UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
+        UpdateRegionContext urCtx = EnvironmentUtil
+            .getUpdateRegionContext(getEnvironment());
         urCtx.disableOnce();
       }
     }
@@ -189,6 +202,15 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   public void setOverlayOptions(Map presentationOptions) {
-    this.presentationOptions = presentationOptions; 
+    this.presentationOptions = presentationOptions;
   }
+
+  public void finish(Object result) {
+    overlay.finish(result);
+  }
+
+  public void cancel() {
+    overlay.cancel();
+  }
+
 }

@@ -24,9 +24,14 @@ import org.araneaframework.core.BaseService;
 import org.araneaframework.http.util.ServletUtil;
 
 public class HelloService extends BaseService {
+
+  private static final long serialVersionUID = 1L;
+
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    ServletUtil.publishModel((input), "helloName", input.getGlobalData().get("name"));    
+    ServletUtil.publishModel(input, "helloName", input.getGlobalData().get("name")); 
     ServletContext servletContext = (ServletContext) getEnvironment().getEntry(ServletContext.class);
-    servletContext.getRequestDispatcher("/WEB-INF/hello.jsp").include(ServletUtil.getRequest(input), ServletUtil.getResponse(output));
+    servletContext.getRequestDispatcher("/WEB-INF/hello.jsp").include(
+        ServletUtil.getRequest(input), ServletUtil.getResponse(output));
   }
+
 }

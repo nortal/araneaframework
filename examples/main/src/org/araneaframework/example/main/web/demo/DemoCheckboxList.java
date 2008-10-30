@@ -65,11 +65,11 @@ public class DemoCheckboxList extends TemplateBaseWidget {
 		checkList.setInitialOrder("longField", false);		
 	}
 
-	public void handleEventSave(String parameter) throws Exception {
+	public void handleEventSave() throws Exception {
 		checkList.getFormList().saveCurrentRows();
 	}
 	
-	public void handleEventReturn(String parameter) throws Exception {
+	public void handleEventReturn() throws Exception {
 		getFlowCtx().cancel();
 	}
 

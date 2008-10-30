@@ -47,7 +47,7 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
     setViewSelector("contract/contractPersonEdit");
   }
   
-	public void handleEventChoosePerson(String eventParameter) throws Exception {
+	public void handleEventChoosePerson() throws Exception {
 		PersonListWidget newFlow = new PersonListWidget(false);
 		newFlow.setSelectOnly(true);
 		getFlowCtx().start(newFlow, new FlowContext.Handler() {

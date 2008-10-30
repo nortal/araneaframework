@@ -30,39 +30,45 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class RootWidget extends BaseUIWidget implements SecurityContext {
-	private static final long serialVersionUID = 1L;
-	private MenuWidget menuWidget;
-	private Widget topWidget;
 
-	public RootWidget() {}
+  private static final long serialVersionUID = 1L;
 
-	public RootWidget(Widget topWidget) {
-		this.topWidget = topWidget;
-	}
+  private MenuWidget menuWidget;
 
-	protected void init() throws Exception {
-		menuWidget = new MenuWidget(topWidget);
-		addWidget("menu", menuWidget);
-		setViewSelector("root");
-		
-		if (topWidget == null)
-			menuWidget.selectMenuItem("Aranea_1_1");
-		topWidget = null;
-	}
+  private Widget topWidget;
 
-	protected Environment getChildWidgetEnvironment() throws Exception {
-		return new StandardEnvironment(super.getChildWidgetEnvironment(), SecurityContext.class, this);
-	}
+  public RootWidget() {}
 
-	public boolean hasPrivilege(String privilege) {
-		return false;
-	}
+  public RootWidget(Widget topWidget) {
+    this.topWidget = topWidget;
+  }
 
-	public MenuWidget getMenuWidget() {
-		return menuWidget;
-	}
+  protected void init() throws Exception {
+    setViewSelector("root");
 
-	public void logout() {
-		getFlowCtx().replace(new LoginWidget(), null);
-	}
+    menuWidget = new MenuWidget(topWidget);
+    addWidget("menu", menuWidget);
+
+    if (topWidget == null) {
+      menuWidget.selectMenuItem("Aranea_1_1");
+    }
+    topWidget = null;
+}
+
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(),
+        SecurityContext.class, this);
+  }
+
+  public boolean hasPrivilege(String privilege) {
+    return false;
+  }
+
+  public MenuWidget getMenuWidget() {
+    return menuWidget;
+  }
+
+  public void logout() {
+    getFlowCtx().replace(new LoginWidget(), null);
+  }
 }

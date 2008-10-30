@@ -106,8 +106,10 @@ import org.araneaframework.uilib.list.util.FormUtil;
  * @see ListFilter
  */
 public class FilterHelper extends BaseFilterHelper {
-	
-	/**
+
+  private static final long serialVersionUID = 1L;
+
+  /**
 	 * Constructs a {@link FilterHelper}.
 	 * 
 	 * @param list list widget.
@@ -681,24 +683,24 @@ public class FilterHelper extends BaseFilterHelper {
 		return fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
 	}
 	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) {
-		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId);
+		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId);
 		return this;
 	}
 	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, Control lowControl, Control highControl) {
 		return fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowControl, highControl);
 	}
 	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) {
-		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowControl, highControl);
+		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId, lowControl, highControl);
 		return this;
 	}
 	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, FormElement lowElement, FormElement highElement) {
 		return fieldRangeInValueRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowElement, highElement);
 	}
 	public FilterHelper fieldRangeInValueRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) {
-		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowElement, highElement);
+		_fieldRangeInValueRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId, lowElement, highElement);
 		return this;
 	}
 	
@@ -720,24 +722,24 @@ public class FilterHelper extends BaseFilterHelper {
 		return valueRangeInFieldRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
 	}
 	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) {
-		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId);
+		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId);
 		return this;
 	}
 	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, Control lowControl, Control highControl) {
 		return valueRangeInFieldRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowControl, highControl);
 	}
 	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) {
-		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowControl, highControl);
+		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId, lowControl, highControl);
 		return this;
 	}
 	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, FormElement lowElement, FormElement highElement) {
 		return valueRangeInFieldRange(lowFieldId, highFieldId, lowFieldId, highFieldId, lowElement, highElement);
 	}
 	public FilterHelper valueRangeInFieldRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) {
-		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowElement, highElement);
+		_valueRangeInFieldRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId, lowElement, highElement);
 		return this;
 	}
 	
@@ -759,8 +761,8 @@ public class FilterHelper extends BaseFilterHelper {
 		return overlapRange(lowFieldId, highFieldId, lowFieldId, highFieldId);
 	}
 	public FilterHelper overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId) {
-		_overlapRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId);
+		_overlapRange(lowFieldId, highFieldId, lowValueId, highValueId);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId);
 		return this;
 	}
 	public FilterHelper overlapRange(String lowFieldId, String highFieldId, Control lowControl, Control highControl) {
@@ -768,7 +770,7 @@ public class FilterHelper extends BaseFilterHelper {
 	}
 	public FilterHelper overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, Control lowControl, Control highControl) {
 		_overlapRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowControl, highControl);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId, lowControl, highControl);
 		return this;
 	}
 	public FilterHelper overlapRange(String lowFieldId, String highFieldId, FormElement lowElement, FormElement highElement) {
@@ -776,7 +778,7 @@ public class FilterHelper extends BaseFilterHelper {
 	}
 	public FilterHelper overlapRange(String lowFieldId, String highFieldId, String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) {
 		_overlapRange(lowFieldId, highFieldId, lowValueId, highFieldId);
-		RangeInRangeFilter.addToForm(this, lowValueId, highFieldId, lowElement, highElement);
+		RangeInRangeFilter.addToForm(this, lowValueId, highValueId, lowElement, highElement);
 		return this;
 	}
 	

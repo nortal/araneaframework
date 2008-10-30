@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -35,7 +36,9 @@ import org.araneaframework.core.util.ExceptionUtil;
  * </p>
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public abstract class BaseWidget extends BaseService implements Widget {
+public class BaseWidget extends BaseService implements Widget {
+
+  private static final long serialVersionUID = 1L;
 
   /**
    * Returns a widget's internal implementation.
@@ -47,6 +50,8 @@ public abstract class BaseWidget extends BaseService implements Widget {
     
   protected class WidgetImpl implements Widget.Interface {
     
+    private static final long serialVersionUID = 1L;
+
     public void update(InputData input) {
       Assert.notNullParam(this, input, "input");
 

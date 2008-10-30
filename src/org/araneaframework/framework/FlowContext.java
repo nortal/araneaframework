@@ -80,13 +80,13 @@ public interface FlowContext extends Serializable {
   public void replace(Widget flow, Configurator configurator);
 
   /**
-   * Finisheds the current flow passing control back to the calling flow. Optionally may return some value that 
+   * Finishes the current flow passing control back to the calling flow. Optionally may return some value that 
    * can be interpreted by the calling flow as the result of the call.
    */
   public void finish(Object result);
   
   /**
-   * Finished the current flow passing control back to the calling flow. 
+   * Finishes the current flow passing control back to the calling flow. 
    * Should be interpreted by the calling flow as a unsuccessful return. 
    */
   public void cancel();  
@@ -102,30 +102,11 @@ public interface FlowContext extends Serializable {
    * stack. 
    */
   public void reset(EnvironmentAwareCallback callback);
-  
-  /**
-   * Returns a reference to the current flow that can be used later to manipulate the current flow.
-   * @deprecated to be removed in Aranea 2.0. Also see {@link FlowReference}
-   */
-  public FlowReference getCurrentReference();
 
   /**
    * Adds an environment entry that is visible in all subflows.
    */
   public void addNestedEnvironmentEntry(ApplicationWidget scope, final Object entryId, Object envEntry);
-
-  /** 
-   * This is unused -- only implementation is a protected class StandardFlowContainerWidget.FlowReference
-   * FlowReference.reset() is not called from anywhere and is duplicate of FlowContext.reset() anyway.
-   * @deprecated to be removed in Aranea 2.0 
-   */
-  public interface FlowReference extends Serializable {
-    /**
-     * Resets the flow stack up to the referred flow and provides the callback with the local environment
-     * that can be used to manipulate the flow stack further.
-     */
-    public void reset(EnvironmentAwareCallback callback) throws Exception;
-  }
 
   /**
    * Sets the <code>FlowContext.TransitionHandler</code> which performs the
