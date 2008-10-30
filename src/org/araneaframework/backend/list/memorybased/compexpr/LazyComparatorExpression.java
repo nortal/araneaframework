@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.compexpr;
 
@@ -20,45 +20,44 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ComparatorExpressionFactory;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.core.Assert;
 
 /**
  * ComparatorExpression that is initialized lazily.
  * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public class LazyComparatorExpression implements ComparatorExpression {
 
-	private static final long serialVersionUID = 1L;
-	
-	private final ComparatorExpressionFactory factory;
-	private ComparatorExpression expression;
+  private static final long serialVersionUID = 1L;
 
-	public LazyComparatorExpression(ComparatorExpressionFactory factory) {
-		if (factory == null) {
-			throw new IllegalArgumentException("ComparatorExpressionFactory must be provided");
-		}
-		this.factory = factory;
-	}
+  private final ComparatorExpressionFactory factory;
 
-	public ComparatorExpressionFactory getFactory() {
-		return factory;
-	}
-	
-	public ComparatorExpression getComparatorExpression() {
-		if (expression == null) {
-			expression = factory.createComparatorExpression();
-			if (expression == null) {
-				throw new AssertionError("ComparatorExpressionFactory must not create a null object");
-			}
-		}
-		return expression;
-	}
+  private ComparatorExpression expression;
 
-	public int compare(VariableResolver resolver1, VariableResolver resolver2)
-			throws ExpressionEvaluationException {
-		return getComparatorExpression().compare(resolver1, resolver2);
-	}
+  public LazyComparatorExpression(ComparatorExpressionFactory factory) {
+    Assert.notNull(factory, "ComparatorExpressionFactory must be provided");
+    this.factory = factory;
+  }
 
+  public ComparatorExpressionFactory getFactory() {
+    return factory;
+  }
+
+  public ComparatorExpression getComparatorExpression() {
+    if (expression == null) {
+      expression = factory.createComparatorExpression();
+      if (expression == null) {
+        throw new AssertionError(
+            "ComparatorExpressionFactory must not create a null object");
+      }
+    }
+    return expression;
+  }
+
+  public int compare(VariableResolver resolver1, VariableResolver resolver2)
+      throws ExpressionEvaluationException {
+    return getComparatorExpression().compare(resolver1, resolver2);
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,28 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.sqlexpr;
 
 import org.araneaframework.backend.list.SqlExpression;
+import org.araneaframework.core.Assert;
 
 public class SqlBracketsExpression implements SqlExpression {
-	private SqlExpression expr;
 
-	public SqlBracketsExpression(SqlExpression expr) {
-		if (expr == null) {
-			throw new RuntimeException("SqlExpression must be provided");
-		}
-		this.expr = expr;
-	}
+  private SqlExpression expr;
 
-	public String toSqlString() {
-		return new StringBuffer("(").append(this.expr.toSqlString())
-				.append(")").toString();
-	}
+  public SqlBracketsExpression(SqlExpression expr) {
+    Assert.notNull(expr, "SqlExpression must be provided");
+    this.expr = expr;
+  }
 
-	public Object[] getValues() {
-		return this.expr.getValues();
-	}
+  public String toSqlString() {
+    return new StringBuffer("(").append(this.expr.toSqlString()).append(")").toString();
+  }
+
+  public Object[] getValues() {
+    return this.expr.getValues();
+  }
 }

@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.display;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.uilib.form.control.DisplayControl;
 
@@ -39,7 +38,7 @@ public class FormElementValueDisplayTag extends BaseFormElementDisplayTag {
 	 *   required = "true"
 	 *   description = "Name of the page scope variable to put the element value into." 
 	 */
-  public void setVar(String var) throws JspException {
+  public void setVar(String var) {
     this.var = var;
   }  
   

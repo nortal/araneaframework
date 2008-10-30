@@ -28,20 +28,21 @@ package org.araneaframework.uilib.list.util.like;
  */
 public class AutomaticWildcardHandler extends BaseWildcardHandler {
 
-	public int shouldStartWith() {
-		return noWildcards() ? ANY_STRING_WILDCARD : this.startsWith;
-	}
+  private static final long serialVersionUID = 1L;
 
-	public int shouldEndWith() {
-		return noWildcards() ? ANY_STRING_WILDCARD : this.endsWith;
-	}
-	
-	private boolean noWildcards() {
-		return this.startsWith == NO_WILDCARD && this.endsWith == NO_WILDCARD;
-	}
+  public int shouldStartWith() {
+    return noWildcards() ? ANY_STRING_WILDCARD : this.startsWith;
+  }
 
-	public WildcardHandler newInstance() {
-		return new AutomaticWildcardHandler();
-	}
+  public int shouldEndWith() {
+    return noWildcards() ? ANY_STRING_WILDCARD : this.endsWith;
+  }
 
+  private boolean noWildcards() {
+    return this.startsWith == NO_WILDCARD && this.endsWith == NO_WILDCARD;
+  }
+
+  public WildcardHandler newInstance() {
+    return new AutomaticWildcardHandler();
+  }
 }

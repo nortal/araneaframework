@@ -31,28 +31,33 @@ import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
- * This widget represents the usual custom application widget that is rendered using 
- * JSP tags. It assumes to be connected with a JSP page and allows setting its view selector.
+ * This widget represents the usual custom application widget that is rendered
+ * using JSP tags. It assumes to be connected with a JSP page and allows setting
+ * its view selector.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseUIWidget extends BaseApplicationWidget {
-  protected String viewSelector;  
+
+  private static final long serialVersionUID = 1L;
+
+  protected String viewSelector;
 
   /**
-   * Sets the view selector for this widget, should be path to <code>jsp</code> file
-   * without <code>jsp</code> extension.
+   * Sets the view selector for this widget, should be path to <code>jsp</code>
+   * file without <code>jsp</code> extension.
    * 
-   * @param viewSelector path to <code>jsp</code> file, without file extension 
+   * @param viewSelector path to <code>jsp</code> file, without file extension
    */
   protected void setViewSelector(String viewSelector) {
     this.viewSelector = viewSelector;
-  }  
+  }
 
   /**
    * Provides the <code>ConfigurationContext</code> from the
@@ -62,7 +67,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>ConfigurationContext</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().requireEntry(ConfigurationContext.class);
+    return (ConfigurationContext) getEnvironment().requireEntry(
+        ConfigurationContext.class);
   }
 
   /**
@@ -72,19 +78,20 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>FlowContext</code>.
    */
   protected FlowContext getFlowCtx() {
-    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+    return EnvironmentUtil.getFlowContext(getEnvironment());
   }
-  
+
   /**
-   * Provides the <code>MessageContext</code> from the <code>Environment</code>.
-   * It can be used to display or hide messages from the user.
+   * Provides the <code>MessageContext</code> from the
+   * <code>Environment</code>. It can be used to display or hide messages
+   * from the user.
    * 
    * @return The <code>MessageContext</code>.
    */
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    return EnvironmentUtil.getMessageContext(getEnvironment());
   }
-  
+
   /**
    * Provides the <code>LocalizationContext</code> from the
    * <code>Environment</code>. It can be used to handle localization changes,
@@ -93,7 +100,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>LocalizationContext</code>.
    */
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext) getEnvironment().requireEntry(LocalizationContext.class);
+    return EnvironmentUtil.getLocalizationContext(getEnvironment());
   }
 
   /**
@@ -105,7 +112,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
   protected MountContext getMountCtx() {
     return (MountContext) getEnvironment().requireEntry(MountContext.class);
   }
-  
+
   /**
    * Provides the <code>BeanFactory</code> from the <code>Environment</code>.
    * It can be used to access Spring framework configuration.
@@ -115,17 +122,18 @@ public class BaseUIWidget extends BaseApplicationWidget {
   protected BeanFactory getBeanFactory() {
     return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
   }
-  
+
   /**
-   * Provides the <code>OverlayContext</code> from the <code>Environment</code>.
-   * It can be used to start and handle flow in <i>overlay</i> mode.
+   * Provides the <code>OverlayContext</code> from the
+   * <code>Environment</code>. It can be used to start and handle flow in
+   * <i>overlay</i> mode.
    * 
    * @return The <code>OverlayContext</code>.
    */
   protected OverlayContext getOverlayCtx() {
     return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
   }
-  
+
   /**
    * Provides the <code>ConfirmationContext</code> from the
    * <code>Environment</code>. It can be used to present the user a question
@@ -136,7 +144,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1.3
    */
   protected ConfirmationContext getConfirmationCtx() {
-    return (ConfirmationContext) getEnvironment().requireEntry(ConfirmationContext.class);
+    return (ConfirmationContext) getEnvironment().requireEntry(
+        ConfirmationContext.class);
   }
 
   /**
@@ -147,7 +156,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1.3
    */
   protected PopupWindowContext getPopupCtx() {
-    return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
+    return (PopupWindowContext) getEnvironment().requireEntry(
+        PopupWindowContext.class);
   }
 
   /**
@@ -158,9 +168,9 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1
    */
   protected boolean isRunningInOverlay() {
-    return (getEnvironment().getEntry(OverlayActivityMarkerContext.class)) != null;
+    return getEnvironment().getEntry(OverlayActivityMarkerContext.class) != null;
   }
-  
+
   /**
    * Translates the message under the given key, with help from widget's current
    * {@link org.araneaframework.framework.LocalizationContext}.
@@ -171,34 +181,36 @@ public class BaseUIWidget extends BaseApplicationWidget {
    */
   protected String t(String key) {
     return getL10nCtx().localize(key);
-  } 
-  
+  }
+
   /**
    * Renders widget to <code>output</code> using the defined
    * <code>viewSelector</code>.
    */
   protected void render(OutputData output) throws Exception {
     if (viewSelector == null)
-      throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 
-    
-    JspContext jspCtx = (JspContext) getEnvironment().requireEntry(JspContext.class);
-    
+      throw new RuntimeException("Widget '" + getClass().getName()
+          + "' does not have a view selector!");
+    JspContext jspCtx = (JspContext) getEnvironment().requireEntry(
+        JspContext.class);
     String jsp = resolveJspName(jspCtx, viewSelector);
     ServletUtil.include(jsp, this, output);
   }
-  
+
   protected String resolveJspName(JspContext jspCtx, String viewSelector) {
     return jspCtx.getJspPath() + "/" + viewSelector + jspCtx.getJspExtension();
   }
-  
+
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
-  
+
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
+
+    private static final long serialVersionUID = 1L;
+
     public synchronized void init(Scope scope, Environment env) {
       setGlobalEventListener(new ProxyEventListener(BaseUIWidget.this));
-	
       super.init(scope, env);
     }
   }

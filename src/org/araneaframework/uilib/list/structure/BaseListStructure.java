@@ -22,15 +22,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
 
 public class BaseListStructure implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final Log log = LogFactory.getLog(BaseListStructure.class);
 
 	/**
 	 * Map of {@link ListField}s where the column Ids are the keys and columns

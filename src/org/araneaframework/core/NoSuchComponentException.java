@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,32 +12,35 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
-
 /**
- * Thrown to indicate that a component does not exist in the set of (child)components.
- * The exception is thrown when:
+ * Thrown to indicate that a component does not exist in the set of
+ * (child)components. The exception is thrown when:
  * <ul>
- *  <li>Routing an event to a specific child component that does not exist.</li>
- *  <li>Calling <code>disableComponent(Object key)</code> when the object does not exist.</li>
- *  <li>Calling <code>enableComponent(Object key)</code> when the object does not exist in the set
- *  of disabled components.</li>
- *  <li>Calling <code>removeComponent(Object key)</code> when the object does not exist in the
- *  set of child components.<li>
+ * <li>Routing an event to a specific child component that does not exist.</li>
+ * <li>Calling <code>disableComponent(Object key)</code> when the object does
+ * not exist.</li>
+ * <li>Calling <code>enableComponent(Object key)</code> when the object does
+ * not exist in the set of disabled components.</li>
+ * <li>Calling <code>removeComponent(Object key)</code> when the object does
+ * not exist in the set of child components. </li>
  * </ul>
  * <p>
- * Services and Widgets have corresponding exceptions, 
+ * Services and Widgets have corresponding exceptions,
  * {@link org.araneaframework.core.NoSuchServiceException} and
  * {@link org.araneaframework.core.NoSuchWidgetException} respectively.
  * </p>
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class NoSuchComponentException extends AraneaRuntimeException {
-  
+
+  private static final long serialVersionUID = 1L;
+
   public NoSuchComponentException(Object key) {
-    super("No such component '"+key+"'");
+    super("No such component '" + key + "'");
   }
 }

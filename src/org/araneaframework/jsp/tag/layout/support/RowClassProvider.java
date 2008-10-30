@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.layout.support;
 
-import javax.servlet.jsp.JspException;
 
 /**
  * Interface that is implemented by tags that provide class to rows inside them.
@@ -27,5 +26,5 @@ import javax.servlet.jsp.JspException;
 public interface RowClassProvider {
   public static final String KEY = "rowClassProvider";
 
-  public String getRowClass() throws JspException;
+  public String getRowClass();
 }

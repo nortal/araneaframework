@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Map;
 import org.araneaframework.jsp.tag.uilib.form.element.AutomaticTagFormElementTag;
 import org.araneaframework.jsp.util.AutomaticFormElementUtil;
-import org.araneaframework.uilib.form.FormElement;
 
 /**
  * A class that holds information about the tag and the attributes of the tag

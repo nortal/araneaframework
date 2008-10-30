@@ -15,6 +15,7 @@
 **/
 package org.araneaframework.uilib.list;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -49,8 +50,7 @@ public class TypeHelper implements Serializable {
 	
 	public void init(Environment env) throws Exception {
 		if (locale == null) {
-			LocalizationContext l10nCtx =
-				(LocalizationContext) env.getEntry(LocalizationContext.class);
+			LocalizationContext l10nCtx = EnvironmentUtil.getLocalizationContext(env);
 			if (l10nCtx != null) {
 				locale = l10nCtx.getLocale();
 			}

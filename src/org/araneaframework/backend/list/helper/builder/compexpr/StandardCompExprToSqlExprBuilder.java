@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.builder.compexpr;
 
 import java.util.Comparator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
@@ -38,80 +37,106 @@ import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
+public class StandardCompExprToSqlExprBuilder
+  extends BaseCompExprToSqlExprBuilder {
 
-public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuilder {
-	
-	static final Log log = LogFactory.getLog(StandardCompExprToSqlExprBuilder.class);
-	
-	protected VariableResolver mapper;
+  static final Log log = LogFactory
+      .getLog(StandardCompExprToSqlExprBuilder.class);
 
-	public StandardCompExprToSqlExprBuilder() {
-		addTranslator(NopComparatorExpression.class, new NopComparatorTranslator());
-		addTranslator(LazyComparatorExpression.class, new LazyComparatorTranslator());
-		addTranslator(MultiComparatorExpression.class, new MultiComparatorTranslator());
-		addTranslator(VariableComparatorExpression.class, new VariableComparatorTranslator());
-		addTranslator(ReverseComparatorExpression.class, new ReverseComparatorTranslator());
-	}
+  protected VariableResolver mapper;
 
-	public void setMapper(VariableResolver mapper) {
-		this.mapper = mapper;
-	}
-	
-	protected String resolveVariable(Variable variable) {
-		return this.mapper != null ? (String) this.mapper.resolve(variable) : variable.getName();
-	}
-	
-	// NopComparatorExpression must be the root
-	static class NopComparatorTranslator implements CompExprToSqlExprTranslator {
-		public SqlExpression translate(ComparatorExpression expr,
-				CompExprToSqlExprBuilder builder) {
-			return null;
-		}
-	}
-	
-	class LazyComparatorTranslator implements CompExprToSqlExprTranslator {
-		public SqlExpression translate(ComparatorExpression expr,
-				CompExprToSqlExprBuilder builder) {
-			LazyComparatorExpression lazyExpr = (LazyComparatorExpression) expr;
-			return buildSqlExpression(lazyExpr.getComparatorExpression());
-		}
-	}	
-	
-	static class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
-		protected SqlExpression translateParent(ComparatorExpression expr, SqlExpression[] sqlChildren) {
-			return new SqlCollectionExpression().setChildren(sqlChildren);
-		}
-	}
-	
-	class VariableComparatorTranslator implements CompExprToSqlExprTranslator {
-		public SqlExpression translate(ComparatorExpression expr, CompExprToSqlExprBuilder builder) {
-			log.debug("Translating VariableComparatorExpression");
-			VariableComparatorExpression compExpr = (VariableComparatorExpression) expr;
-			return new SqlAscendingExpression(translateVariableComparatorInternal(compExpr));
-		}
-	}
-	
-	class ReverseComparatorTranslator implements CompExprToSqlExprTranslator {
-		public SqlExpression translate(ComparatorExpression expr, CompExprToSqlExprBuilder builder) {
-			log.debug("Translating ReverseComparatorExpression");
-			ReverseComparatorExpression parent = (ReverseComparatorExpression) expr;
-			VariableComparatorExpression compExpr = (VariableComparatorExpression) parent.getChildren()[0];
-			return new SqlDescendingExpression(translateVariableComparatorInternal(compExpr)); 
-		}
-	}
-	
-	SqlExpression translateVariableComparatorInternal(VariableComparatorExpression compExpr) {
-		SqlExpression temp = new SqlStringExpression(resolveVariable(compExpr));
-		Comparator comparator = compExpr.getComparator();
-		if (comparator instanceof NullComparator) {
-			comparator = ((NullComparator) comparator).getNotNullComparator();
-		}
-		log.debug("Comparator: " + comparator);
-		if (StringComparator.class.isAssignableFrom(comparator.getClass())) {
-			if (((StringComparator) comparator).getIgnoreCase()) {
-				temp = new SqlUpperExpression(temp);
-			}
-		}
-		return temp;
-	}
+  public StandardCompExprToSqlExprBuilder() {
+    addTranslator(NopComparatorExpression.class, new NopComparatorTranslator());
+    addTranslator(LazyComparatorExpression.class, new LazyComparatorTranslator());
+    addTranslator(MultiComparatorExpression.class, new MultiComparatorTranslator());
+    addTranslator(VariableComparatorExpression.class, new VariableComparatorTranslator());
+    addTranslator(ReverseComparatorExpression.class, new ReverseComparatorTranslator());
+  }
+
+  public void setMapper(VariableResolver mapper) {
+    this.mapper = mapper;
+  }
+
+  protected String resolveVariable(Variable variable) {
+    return this.mapper != null ?
+        (String) this.mapper.resolve(variable) : variable.getName();
+  }
+
+  // NopComparatorExpression must be the root
+  static class NopComparatorTranslator implements CompExprToSqlExprTranslator {
+
+    public SqlExpression translate(ComparatorExpression expr,
+        CompExprToSqlExprBuilder builder) {
+      return null;
+    }
+
+  }
+
+  class LazyComparatorTranslator implements CompExprToSqlExprTranslator {
+
+    public SqlExpression translate(ComparatorExpression expr,
+        CompExprToSqlExprBuilder builder) {
+      LazyComparatorExpression lazyExpr = (LazyComparatorExpression) expr;
+      return buildSqlExpression(lazyExpr.getComparatorExpression());
+    }
+
+  }
+
+  static class MultiComparatorTranslator
+    extends CompositeCompExprToSqlExprTranslator {
+
+    protected SqlExpression translateParent(ComparatorExpression expr,
+        SqlExpression[] sqlChildren) {
+      return new SqlCollectionExpression().setChildren(sqlChildren);
+    }
+
+  }
+
+  class VariableComparatorTranslator implements CompExprToSqlExprTranslator {
+
+    public SqlExpression translate(ComparatorExpression expr,
+        CompExprToSqlExprBuilder builder) {
+      log.debug("Translating VariableComparatorExpression");
+      VariableComparatorExpression compExpr = (VariableComparatorExpression) expr;
+      return new SqlAscendingExpression(
+          translateVariableComparatorInternal(compExpr));
+    }
+
+  }
+
+  class ReverseComparatorTranslator implements CompExprToSqlExprTranslator {
+
+    public SqlExpression translate(ComparatorExpression expr,
+        CompExprToSqlExprBuilder builder) {
+
+      log.debug("Translating ReverseComparatorExpression");
+      ReverseComparatorExpression parent = (ReverseComparatorExpression) expr;
+      VariableComparatorExpression compExpr =
+          (VariableComparatorExpression) parent.getChildren()[0];
+
+      return new SqlDescendingExpression(
+          translateVariableComparatorInternal(compExpr));
+    }
+  }
+
+  private SqlExpression translateVariableComparatorInternal(
+      VariableComparatorExpression compExpr) {
+    SqlExpression temp = new SqlStringExpression(resolveVariable(compExpr));
+    Comparator comparator = compExpr.getComparator();
+
+    if (comparator instanceof NullComparator) {
+      comparator = ((NullComparator) comparator).getNotNullComparator();
+    }
+
+    log.debug("Comparator: " + comparator);
+
+    if (StringComparator.class.isAssignableFrom(comparator.getClass())) {
+      if (((StringComparator) comparator).getIgnoreCase()) {
+        temp = new SqlUpperExpression(temp);
+      }
+    }
+
+    return temp;
+  }
+
 }

@@ -193,7 +193,7 @@ public abstract class ServletUtil {
 
   /** @since 1.1 */
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
-    LocalizationContext localizationContext = (LocalizationContext) env.getEntry(LocalizationContext.class);
+    LocalizationContext localizationContext = EnvironmentUtil.getLocalizationContext(env);
     if (localizationContext == null)
       return null;
     return new javax.servlet.jsp.jstl.fmt.LocalizationContext(

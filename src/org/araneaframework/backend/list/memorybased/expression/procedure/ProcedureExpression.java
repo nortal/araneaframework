@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.procedure;
 
@@ -21,22 +21,22 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class ProcedureExpression extends MultiExpression {
 
-	private static final long serialVersionUID = 1L;
-	
-	private String name;
+  private static final long serialVersionUID = 1L;
 
-	public ProcedureExpression(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException("Name must be provided");
-		}
-		this.name = name;
-	}
+  private String name;
 
-	public String getName() {
-		return this.name;
-	}
+  public ProcedureExpression(String name) {
+    if (name == null) {
+      throw new IllegalArgumentException("Name must be provided");
+    }
+    this.name = name;
+  }
 
-	public Object evaluate(VariableResolver resolver) {
-		throw new RuntimeException("Evaluating not supported");
-	}
+  public String getName() {
+    return this.name;
+  }
+
+  public Object evaluate(VariableResolver resolver) {
+    throw new RuntimeException("Evaluating not supported");
+  }
 }

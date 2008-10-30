@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.builder;
 
+import java.io.Serializable;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 
 /**
@@ -25,13 +26,13 @@ import org.araneaframework.backend.list.memorybased.expression.Value;
  * @see org.araneaframework.backend.list.memorybased.expression.Value
  * @see org.araneaframework.uilib.list.util.Converter
  */
-public interface ValueConverter {
-	/**
-	 * Converts the <code>Value</code>.
-	 * 
-	 * @param value
-	 *            the <code>Value</code>.
-	 * @return the converted value.
-	 */
-	Object convert(Value value);
+public interface ValueConverter extends Serializable {
+
+  /**
+   * Converts the <code>Value</code>.
+   * 
+   * @param value the <code>Value</code>.
+   * @return the converted value.
+   */
+  Object convert(Value value);
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -35,7 +35,6 @@ public interface ActionListener extends Serializable {
    * @param output The response data.
    * @throws Exception Any runtime exception that might occur.
    */
-  public void processAction(Object actionId, InputData input, OutputData output)
+  public void processAction(String actionId, InputData input, OutputData output)
       throws Exception;
-
 }

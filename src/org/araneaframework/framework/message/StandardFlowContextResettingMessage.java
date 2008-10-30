@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.message;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -34,23 +35,23 @@ import org.araneaframework.framework.FlowContext;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardFlowContextResettingMessage implements Message {
+
+  private static final long serialVersionUID = 1L;
+
   private Widget flow;
-  
+
   public StandardFlowContextResettingMessage(Widget flow) {
     Assert.notNullParam(flow, "flow");
-    
     this.flow = flow;
   }
-  
+
   public final void send(Object id, Component component) {
     if (!(component instanceof FlowContext)) {
       component._getComponent().propagate(this);
-    }
-    else {
+    } else {
       try {
         this.execute(component);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
       }
     }
@@ -58,10 +59,13 @@ public class StandardFlowContextResettingMessage implements Message {
 
   protected void execute(Component component) throws Exception {
     final FlowContext fCtx = (FlowContext) component;
-  
+
     fCtx.reset(new EnvironmentAwareCallback() {
+
+      private static final long serialVersionUID = 1L;
+
       public void call(Environment env) throws Exception {
-        FlowContext f = (FlowContext)env.getEntry(FlowContext.class);
+        FlowContext f = EnvironmentUtil.getFlowContext(env);
         if (flow != null)
           f.start(flow);
       }

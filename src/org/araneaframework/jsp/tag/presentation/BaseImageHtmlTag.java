@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.presentation;
 
 import java.io.IOException;
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -40,12 +39,15 @@ public abstract class BaseImageHtmlTag extends BaseImageTag {
   /**
    * Method to write out image with given properties and default style.
    */ 
-  public void writeImage(Writer out, String src, String width, String height, String title) throws JspException, IOException {
-	  writeImage(out, src, width, height, null, getStyleClass(), title);
+  public void writeImage(Writer out, String src, String width, String height,
+      String title) throws IOException {
+    writeImage(out, src, width, height, null, getStyleClass(), title);
   }
 
-  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws JspException, IOException {
-	  writeImage(out, src,width, height, alt, styleClass, title);
+  public void writeImageLocal(Writer out, String src, String width,
+      String height, String alt, String styleClass, String title)
+      throws IOException {
+    writeImage(out, src, width, height, alt, styleClass, title);
   }
 
   /* ***********************************************************************************
@@ -54,14 +56,14 @@ public abstract class BaseImageHtmlTag extends BaseImageTag {
   /**
    * Static method to write out image with given properties.
    */ 
-  public static void writeImage(Writer out, String src, String width, String height, String styleClass, String title) throws JspException, IOException {
+  public static void writeImage(Writer out, String src, String width, String height, String styleClass, String title) throws IOException {
     writeImage(out, src,width, height, null, styleClass, title);
   }
 
   /**
    * Static method to write out image with given properties.
    */ 
-  public static void writeImage(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {  
+  public static void writeImage(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws IOException {  
     JspUtil.writeOpenStartTag(out, "img");
     if (styleClass != null)
       JspUtil.writeAttribute(out, "class", styleClass);

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.reader;
 
@@ -22,20 +22,18 @@ import java.sql.ResultSet;
  * Filter implementation of {@link ResultSetColumnReader}.
  * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public class FilterResultSetColumnReader implements ResultSetColumnReader {
 
-	private final ResultSetColumnReader child;
-	
-	public FilterResultSetColumnReader(ResultSetColumnReader child) {
-		this.child = child;
-	}
-	
-	public Object readFromResultSet(String columnName, ResultSet resultSet,
-			Class javaType) {
-		return child.readFromResultSet(columnName, resultSet, javaType);
-	}
+  private final ResultSetColumnReader child;
 
+  public FilterResultSetColumnReader(ResultSetColumnReader child) {
+    this.child = child;
+  }
+
+  public Object readFromResultSet(String columnName, ResultSet resultSet,
+      Class javaType) {
+    return child.readFromResultSet(columnName, resultSet, javaType);
+  }
 }

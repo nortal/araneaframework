@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
-
 import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
 
 /**
@@ -25,17 +24,15 @@ import org.araneaframework.backend.list.memorybased.expression.LazyExpression;
  * 
  * @see Expression
  * @see LazyExpression
- * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public interface ExpressionFactory extends Serializable {
-	
-	/**
-	 * Creates a new Expression.
-	 * 
-	 * @return new Expression.
-	 */
-	Expression createExpression(); 
+
+  /**
+   * Creates a new Expression.
+   * 
+   * @return new Expression.
+   */
+  Expression createExpression();
 }

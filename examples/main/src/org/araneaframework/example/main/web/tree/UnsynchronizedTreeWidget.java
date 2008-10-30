@@ -37,6 +37,8 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
+  private static final long serialVersionUID = 1L;
+
   private static final Log log = LogFactory.getLog(UnsynchronizedTreeWidget.class);
 
   private TreeWidget tree;
@@ -50,6 +52,8 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
   }
 
   public static class UnsynchronizedTreeDataProvider implements TreeDataProvider {
+
+    private static final long serialVersionUID = 1L;
 
     public List getChildren(TreeNodeContext parent) {
       List children = new ArrayList();
@@ -67,6 +71,8 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
   public static class UnsynchronizedTreeDisplayWidget extends BaseUIWidget {
 
+    private static final long serialVersionUID = 1L;
+
     private int counter;
 
     protected void init() throws Exception {
@@ -75,7 +81,9 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
       addActionListener("test", new StandardActionListener() {
 
-        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+        private static final long serialVersionUID = 1L;
+
+        public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
           log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           putViewData("counter", new Integer(++counter));
           getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
@@ -85,7 +93,9 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
       addActionListener("sleep", new StandardActionListener() {
 
-        public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+        private static final long serialVersionUID = 1L;
+
+        public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
           log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           Thread.sleep(10000);
           getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code

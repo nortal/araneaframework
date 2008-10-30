@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased;
 
@@ -24,21 +24,21 @@ import org.araneaframework.backend.util.BeanMapper;
  */
 public class BeanVariableResolver implements VariableResolver {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private BeanMapper mapper;
+  private BeanMapper mapper;
 
-	private Object bean;
+  private Object bean;
 
-	public BeanVariableResolver(Class clazz) {
-		this.mapper = new BeanMapper(clazz);
-	}
+  public BeanVariableResolver(Class clazz) {
+    this.mapper = new BeanMapper(clazz);
+  }
 
-	public void setBean(Object bean) {
-		this.bean = bean;
-	}
+  public void setBean(Object bean) {
+    this.bean = bean;
+  }
 
-	public Object resolve(Variable variable) {
-		return this.mapper.getFieldValue(this.bean, variable.getName());
-	}
+  public Object resolve(Variable variable) {
+    return this.mapper.getFieldValue(this.bean, variable.getName());
+  }
 }

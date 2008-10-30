@@ -58,6 +58,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   private static class ChildNodeWrapper implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private TreeNodeWidget node;
     private String widgetId;
 
@@ -153,7 +155,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleEventListener extends StandardEventListener {
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       toggleCollapsed();
     }
   }
@@ -161,7 +163,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleActionListener extends StandardActionListener {
     private static final long serialVersionUID = 1L;
 
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam,
+        InputData input, OutputData output) throws Exception {
       toggleCollapsed();
       render(output);
     }

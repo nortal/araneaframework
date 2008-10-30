@@ -21,7 +21,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.Scope;
 import org.araneaframework.example.common.framework.ViewSelectorAware;
 import org.araneaframework.example.main.business.data.IGeneralDAO;
-import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.integration.spring.SpringInjectionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.springframework.beans.factory.BeanFactory;
@@ -32,16 +31,11 @@ import org.springframework.beans.factory.BeanFactory;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSelectorAware {
+
+  private static final long serialVersionUID = 1L;
+
   protected BeanFactory getBeanFactory() {
     return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
-  }
-  
-  protected SecurityContext getSecCtx() {
-    return (SecurityContext) getEnvironment().getEntry(SecurityContext.class);
-  }
-  
-  protected PopupWindowContext getPopupCtx() {
-    return (PopupWindowContext) getEnvironment().requireEntry(PopupWindowContext.class);
   }
   
   public IGeneralDAO getGeneralDAO() {
@@ -57,9 +51,11 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
   }
   
   protected class ComponentImpl extends BaseUIWidget.ComponentImpl {
+
+    private static final long serialVersionUID = 1L;
+
     public void init(Scope scope, Environment env) {
       SpringInjectionUtil.injectBeans(env, TemplateBaseWidget.this);
-  
       super.init(scope, env);
     }
   }

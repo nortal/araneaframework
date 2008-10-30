@@ -26,246 +26,280 @@ import org.araneaframework.uilib.form.GenericFormElement;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
- * {@link FormWidget} and {@link BeanFormWidget} <code>addElement</code> methods
- * that take full element Id (separated by dots) as an argument. 
+ * {@link FormWidget} and {@link BeanFormWidget} <code>addElement</code>
+ * methods that take full element Id (separated by dots) as an argument.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class NestedFormUtil {
 
-	// FormWidget	
+  // FormWidget
+  /**
+   * Adds a contained element.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param element contained element.
+   */
+  public static void addElement(FormWidget form, String fullId,
+      final GenericFormElement element) {
+    addElement(form, fullId, new FormElementAdder() {
 
-	/**
-	 * Adds a contained element.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param element contained element.
-	 */
-	public static void addElement(FormWidget form, String fullId, final GenericFormElement element) {
-		addElement(form, fullId, new FormElementAdder() {
-			public FormElement addFormElement(FormWidget form, String id) {
-				form.addElement(id, element);
-				return null;
-			}
-		});		
-	}
+      private static final long serialVersionUID = 1L;
 
-	/**
-	 * This method adds a {@link FormElement}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param labelId id of the localized label.
-	 * @param control the type of control data.
-	 * @param data the type of data.
-	 * @param mandatory whether the element must be present in request.
-	 * @return FormElement that was just added.
-	 */
-	public static FormElement addElement(FormWidget form, String fullId, final String labelId, final Control control, final Data data, final boolean mandatory) throws Exception {
-		return addElement(form, fullId, new FormElementAdder() {
-			public FormElement addFormElement(FormWidget form, String id) {
-				return form.addElement(id, labelId, control, data, mandatory);
-			}
-		});
-	}
+      public FormElement addFormElement(FormWidget form, String id) {
+        form.addElement(id, element);
+        return null;
+      }
+    });
+  }
 
-	/**
-	 * This method adds a {@link FormElement}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param labelId id of the localized label.
-	 * @param control the type of control data.
-	 * @param data the type of data.
-	 * @param initialValue initial value.
-	 * @param mandatory whether the element must be present in request.
-	 * @return FormElement that was just added.
-	 */
-	public static FormElement addElement(FormWidget form, String fullId, final String labelId, final Control control, final Data data, final Object initialValue, final boolean mandatory) throws Exception {
-		return addElement(form, fullId, new FormElementAdder() {
-			public FormElement addFormElement(FormWidget form, String id) {
-				return form.addElement(id, labelId, control, data, initialValue, mandatory);
-			}
-		});
-	}
+  /**
+   * This method adds a {@link FormElement}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
+   * @param mandatory whether the element must be present in request.
+   * @return FormElement that was just added.
+   */
+  public static FormElement addElement(FormWidget form, String fullId,
+      final String labelId, final Control control, final Data data,
+      final boolean mandatory) throws Exception {
+    return addElement(form, fullId, new FormElementAdder() {
 
-	// BeanFormWidget
-	
-	/**
-	 * Adds a contained element.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param element contained element.
-	 */	
-	public static void addElement(BeanFormWidget form, String fullId, final GenericFormElement element) {
-		addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
-				form.addElement(id, element);
-				return null;
-			}
-		});
-	}
-	
-	/**
-	 * This method adds a {@link FormElement}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param labelId id of the localized label.
-	 * @param control the type of control data.
-	 * @param data the type of data.
-	 * @param mandatory whether the element must be present in request.
-	 * @return FormElement that was just added.
-	 */
-	public static FormElement addElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Data data, final boolean mandatory) throws Exception {
-		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
-				return form.addElement(id, labelId, control, data, mandatory);
-			}
-		});
-	}
+      private static final long serialVersionUID = 1L;
 
-	/**
-	 * This method adds a {@link FormElement}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param labelId id of the localized label.
-	 * @param control the type of control data.
-	 * @param data the type of data.
-	 * @param initialValue initial value.
-	 * @param mandatory whether the element must be present in request.
-	 * @return FormElement that was just added.
-	 */
-	public static FormElement addElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Data data, final Object initialValue, final boolean mandatory) throws Exception {
-		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
-				return form.addElement(id, labelId, control, data, initialValue, mandatory);
-			}
-		});
-	}	
+      public FormElement addFormElement(FormWidget form, String id) {
+        return form.addElement(id, labelId, control, data, mandatory);
+      }
+    });
+  }
 
-	/**
-	 * This method adds a {@link FormElement}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param labelId id of the localized label.
-	 * @param control the type of control data.
-	 * @param mandatory whether the element must be present in request.
-	 * @return FormElement that was just added.
-	 */	
-	public static FormElement addBeanElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final boolean mandatory) throws Exception {
-		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
-				return form.addBeanElement(id, labelId, control, mandatory);
-			}
-		});
-	}
-	
-	/**
-	 * This method adds a {@link FormElement}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param labelId id of the localized label.
-	 * @param control the type of control data.
-	 * @param initialValue initial value.
-	 * @param mandatory whether the element must be present in request.
-	 * @return FormElement that was just added.
-	 */
-	public static FormElement addBeanElement(BeanFormWidget form, String fullId, final String labelId, final Control control, final Object initialValue, final boolean mandatory) throws Exception {
-		return addBeanElement(form, fullId, new BeanFormElementAdder() {
-			public FormElement addFormElement(BeanFormWidget form, String id) {
-				return form.addBeanElement(id, labelId, control, initialValue, mandatory);
-			}
-		});
-	}
+  /**
+   * This method adds a {@link FormElement}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
+   * @param initialValue initial value.
+   * @param mandatory whether the element must be present in request.
+   * @return FormElement that was just added.
+   */
+  public static FormElement addElement(FormWidget form, String fullId,
+      final String labelId, final Control control, final Data data,
+      final Object initialValue, final boolean mandatory) throws Exception {
+    return addElement(form, fullId, new FormElementAdder() {
 
-	/**
-	 * FormWidget element adder.
-	 * 
-	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
-	 */
-	private static interface FormElementAdder extends Serializable {
-		FormElement addFormElement(FormWidget form, String id);
-	}
+      private static final long serialVersionUID = 1L;
 
-	/**
-	 * BeanFormWidget element adder.
-	 * 
-	 * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
-	 */
-	private static interface BeanFormElementAdder extends Serializable {
-		FormElement addFormElement(BeanFormWidget form, String id);
-	}
+      public FormElement addFormElement(FormWidget form, String id) {
+        return form.addElement(id, labelId, control, data, initialValue,
+            mandatory);
+      }
+    });
+  }
 
-	/**
-	 * This method adds a {@link FormElement} to {@link FormWidget}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param adder element adder.
-	 * @return the element returned from the adder.
-	 */
-	private static FormElement addElement(FormWidget form, String fullId, FormElementAdder adder) {
-		if (fullId.indexOf(".") != -1) {
-			String subFormId = fullId.substring(0, fullId.indexOf("."));
-			String nextFullId =  fullId.substring(subFormId.length() + 1);
+  // BeanFormWidget
+  /**
+   * Adds a contained element.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param element contained element.
+   */
+  public static void addElement(BeanFormWidget form, String fullId,
+      final GenericFormElement element) {
+    addBeanElement(form, fullId, new BeanFormElementAdder() {
 
-			FormWidget subForm = null;
+      private static final long serialVersionUID = 1L;
 
-			if (form.getElement(subFormId) != null) {
-				subForm = form.getSubFormByFullName(subFormId);        	
-			} else {
-				subForm = form.addSubForm(subFormId);        	
-			}
+      public FormElement addFormElement(BeanFormWidget form, String id) {
+        form.addElement(id, element);
+        return null;
+      }
+    });
+  }
 
-			return addElement(subForm, nextFullId, adder);
-		}
+  /**
+   * This method adds a {@link FormElement}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
+   * @param mandatory whether the element must be present in request.
+   * @return FormElement that was just added.
+   */
+  public static FormElement addElement(BeanFormWidget form, String fullId,
+      final String labelId, final Control control, final Data data,
+      final boolean mandatory) throws Exception {
+    return addBeanElement(form, fullId, new BeanFormElementAdder() {
 
-		return adder.addFormElement(form, fullId);
-	}
+      private static final long serialVersionUID = 1L;
 
+      public FormElement addFormElement(BeanFormWidget form, String id) {
+        return form.addElement(id, labelId, control, data, mandatory);
+      }
+    });
+  }
 
-	/**
-	 * This method adds a {@link FormElement} to {@link BeanFormWidget}.
-	 * 
-	 * @param form form.
-	 * @param fullId full element id (separated by dots).
-	 * @param adder element adder.
-	 * @return the element returned from the adder.
-	 */
-	private static FormElement addBeanElement(BeanFormWidget form, String fullId, BeanFormElementAdder adder) {
-		if (fullId.indexOf(".") != -1) {
-			String subFormId = fullId.substring(0, fullId.indexOf("."));
-			String nextFullId =  fullId.substring(subFormId.length() + 1);
+  /**
+   * This method adds a {@link FormElement}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
+   * @param initialValue initial value.
+   * @param mandatory whether the element must be present in request.
+   * @return FormElement that was just added.
+   */
+  public static FormElement addElement(BeanFormWidget form, String fullId,
+      final String labelId, final Control control, final Data data,
+      final Object initialValue, final boolean mandatory) throws Exception {
+    return addBeanElement(form, fullId, new BeanFormElementAdder() {
 
-			BeanFormWidget subForm = null;
+      private static final long serialVersionUID = 1L;
 
-			if (form.getElement(subFormId) != null) {
-				subForm = (BeanFormWidget) form.getElement(subFormId);        	
-			} else {
-				subForm = form.addBeanSubForm(subFormId);        	
-			}
+      public FormElement addFormElement(BeanFormWidget form, String id) {
+        return form.addElement(id, labelId, control, data, initialValue,
+            mandatory);
+      }
+    });
+  }
 
-			return addBeanElement(subForm, nextFullId, adder);
-		}
+  /**
+   * This method adds a {@link FormElement}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param mandatory whether the element must be present in request.
+   * @return FormElement that was just added.
+   */
+  public static FormElement addBeanElement(BeanFormWidget form, String fullId,
+      final String labelId, final Control control, final boolean mandatory)
+      throws Exception {
+    return addBeanElement(form, fullId, new BeanFormElementAdder() {
 
-		return adder.addFormElement(form, fullId);
-	}
-	
-	/**
-	 * Returns the deepest subform on given path of given form.
-	 * @return deepest subform on given path of given form
-	 * @since 1.0.9
-	 */
-	public static FormWidget getDeepestForm(String path, FormWidget form) {
-		if (path.indexOf(".") != -1) {
-			form = form.getSubFormByFullName(NameUtil.getLongestPrefix(path));
-		}
-		return form;
-	}
+      private static final long serialVersionUID = 1L;
+
+      public FormElement addFormElement(BeanFormWidget form, String id) {
+        return form.addBeanElement(id, labelId, control, mandatory);
+      }
+    });
+  }
+
+  /**
+   * This method adds a {@link FormElement}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param initialValue initial value.
+   * @param mandatory whether the element must be present in request.
+   * @return FormElement that was just added.
+   */
+  public static FormElement addBeanElement(BeanFormWidget form, String fullId,
+      final String labelId, final Control control, final Object initialValue,
+      final boolean mandatory) throws Exception {
+    return addBeanElement(form, fullId, new BeanFormElementAdder() {
+
+      private static final long serialVersionUID = 1L;
+
+      public FormElement addFormElement(BeanFormWidget form, String id) {
+        return form.addBeanElement(id, labelId, control, initialValue,
+            mandatory);
+      }
+    });
+  }
+
+  /**
+   * FormWidget element adder.
+   * 
+   * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+   */
+  private static interface FormElementAdder extends Serializable {
+
+    FormElement addFormElement(FormWidget form, String id);
+  }
+
+  /**
+   * BeanFormWidget element adder.
+   * 
+   * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+   */
+  private static interface BeanFormElementAdder extends Serializable {
+
+    FormElement addFormElement(BeanFormWidget form, String id);
+  }
+
+  /**
+   * This method adds a {@link FormElement} to {@link FormWidget}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param adder element adder.
+   * @return the element returned from the adder.
+   */
+  private static FormElement addElement(FormWidget form, String fullId,
+      FormElementAdder adder) {
+    if (fullId.indexOf(".") != -1) {
+      String subFormId = fullId.substring(0, fullId.indexOf("."));
+      String nextFullId = fullId.substring(subFormId.length() + 1);
+      FormWidget subForm = null;
+      if (form.getElement(subFormId) != null) {
+        subForm = form.getSubFormByFullName(subFormId);
+      } else {
+        subForm = form.addSubForm(subFormId);
+      }
+      return addElement(subForm, nextFullId, adder);
+    }
+    return adder.addFormElement(form, fullId);
+  }
+
+  /**
+   * This method adds a {@link FormElement} to {@link BeanFormWidget}.
+   * 
+   * @param form form.
+   * @param fullId full element id (separated by dots).
+   * @param adder element adder.
+   * @return the element returned from the adder.
+   */
+  private static FormElement addBeanElement(BeanFormWidget form, String fullId,
+      BeanFormElementAdder adder) {
+    if (fullId.indexOf(".") != -1) {
+      String subFormId = fullId.substring(0, fullId.indexOf("."));
+      String nextFullId = fullId.substring(subFormId.length() + 1);
+      BeanFormWidget subForm = null;
+      if (form.getElement(subFormId) != null) {
+        subForm = (BeanFormWidget) form.getElement(subFormId);
+      } else {
+        subForm = form.addBeanSubForm(subFormId);
+      }
+      return addBeanElement(subForm, nextFullId, adder);
+    }
+    return adder.addFormElement(form, fullId);
+  }
+
+  /**
+   * Returns the deepest subform on given path of given form.
+   * @return deepest subform on given path of given form
+   * @since 1.0.9
+   */
+  public static FormWidget getDeepestForm(String path, FormWidget form) {
+    if (path.indexOf(".") != -1) {
+      form = form.getSubFormByFullName(NameUtil.getLongestPrefix(path));
+    }
+    return form;
+  }
 }

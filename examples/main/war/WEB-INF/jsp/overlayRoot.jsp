@@ -5,14 +5,9 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 	<ui:systemForm id="overlaySystemForm" method="POST" styleClass="aranea-overlay">
-		<div class="msg-info">
-			<div>
-				<div>
-					<ui:messages type="info"/>
-				</div>
-			</div>
-		</div>
 		<ui:messages type="error" styleClass="msg-error"/>
+		<ui:messages type="warning" styleClass="msg-warning"/>
+		<ui:messages type="info" styleClass="msg-info"/>
 		<ui:widgetInclude id="c"/>
 	</ui:systemForm>
 </jsp:root>
