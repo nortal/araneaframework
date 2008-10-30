@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,11 @@ Aranea.ModalBox.ModalBoxFileName = 'js/modalbox/modalbox.js';
 Aranea.ModalBox.Options = null;
 
 Aranea.ModalBox.show = function(options) {
-  var showfunc = function() {
-    Modalbox.show(
-      araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value,
-      araneaPage().getSystemForm().araThreadServiceId.value, 'override') + '&araOverlay=true', 
-      options
-	);
-  };
-
-  showfunc();
+  var suffix = $$('.aranea-overlay').length == 0 ? '&araOverlay=true' : '';
+  Modalbox.show(
+		  araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value,
+		  araneaPage().getSystemForm().araThreadServiceId.value, 'override') + suffix,
+		  options);
 };
 
 Aranea.ModalBox.afterLoad = function(content) {
@@ -42,8 +38,9 @@ Aranea.ModalBox.afterLoad = function(content) {
     AraneaPage.findSystemForm();
     var systemForm = araneaPage().getSystemForm();
 
-    if (systemForm.araTransactionId)
+    if (systemForm.araTransactionId) {
       systemForm.araTransactionId.value = 'inconsistent';
+    }
 
     if (window.modalTransport) {
       DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);

@@ -14,7 +14,7 @@
 		     <c:if test="${not empty viewData['templateSrcLink']}">
 		 	   <c:out value="${viewData['templateSrcLink']}" escapeXml="false"/><i>|</i>
 			</c:if>
-			<ui:entity code="copy"/> <a href="http://www.webmedia.ee">Webmedia</a> 2006 <i>|</i>
+			<ui:entity code="copy"/> <a href="http://www.webmedia.ee">Webmedia</a> 2008 <i>|</i>
 			<b>Aranea <c:out value="${viewData['aranea-version']}"/></b><i>|</i> 
 			<a href="mailto:info@araneaframework.org">info@araneaframework.org</a>
 		</div>

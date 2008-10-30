@@ -17,7 +17,6 @@
 package org.araneaframework.http.util;
 
 import org.araneaframework.Environment;
-import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.ManagedServiceContext;
@@ -118,10 +117,6 @@ public abstract class EnvironmentUtil {
 
   public static PopupWindowContext requirePopupWindowContext(Environment env) {
     return (PopupWindowContext) env.requireEntry(PopupWindowContext.class);
-  }
-
-  public static SecurityContext getSecurityContext(Environment env) {
-    return (SecurityContext) env.getEntry(SecurityContext.class);
   }
 
   // Environment item retrieve methods mostly for Aranea core:

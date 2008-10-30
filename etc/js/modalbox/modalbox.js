@@ -59,7 +59,7 @@ Modalbox.Methods = {
 				)
 			)
 		);
-		this.MBclose = new Element("a", {id: "MB_close", title: this.options.closeString, href: "#"}).update("<span>" + this.options.closeValue + "</span>");
+		this.MBclose = new Element("a", {id: "MB_close", style: "display: none", title: this.options.closeString, href: "#"}).update("<span>" + this.options.closeValue + "</span>");
 		this.MBheader.insert({'bottom':this.MBclose});
 		
 		this.MBcontent = new Element("div", {id: "MB_content"}).update(

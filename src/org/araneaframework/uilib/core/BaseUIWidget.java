@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.core;
 
-import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
@@ -161,17 +160,6 @@ public class BaseUIWidget extends BaseApplicationWidget {
         PopupWindowContext.class);
   }
 
-  /**
-   * Provides the <code>SecurityContext</code> from the <code>Environment</code>
-   * . It can be used to check credentials.
-   * 
-   * @return The <code>SecurityContext</code>.
-   * @since 2.1
-   */
-  protected SecurityContext getSecurityContext() {
-    return (SecurityContext) getEnvironment().requireEntry(
-        SecurityContext.class);
-  }
   /**
    * Specifies wether this widget is running in <i>overlay</i> mode.
    * 
