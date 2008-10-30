@@ -189,10 +189,10 @@ public abstract class BaseServiceRouterService extends BaseService {
     public Service addService(Object id, Service service, Long timeToLive) {
       Service result = addService(id, service);
       if (log.isWarnEnabled()) {
-        log
-            .warn(getClass().getName()
-                + ".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute."
-                + "Just addService(Object id, Service service) should be used.");
+        log.warn(getClass().getName() + ".addService(Object id, "
+            + "Service service, Long timeToLive) ignores timeToLive "
+            + "attribute. Just addService(Object id, Service service) "
+            + "should be used.");
       }
       return result;
     }

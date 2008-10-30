@@ -23,6 +23,8 @@ import org.araneaframework.Widget;
 /**
  * A simple factory for creating widgets.
  * 
+ * @see org.araneaframework.uilib.tab.TabContainerContext
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */

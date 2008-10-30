@@ -32,8 +32,7 @@ import org.araneaframework.Viewable;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface ApplicationComponent
-  extends Component, Serializable, Composite, Viewable {
+public interface ApplicationComponent extends Component, Composite, Viewable {
 
   /**
    * Get the child Environment of this component.
