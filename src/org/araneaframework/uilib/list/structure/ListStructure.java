@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list.structure;
 
+import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -156,21 +157,31 @@ public class ListStructure extends BaseListStructure {
 	public void clearOrders() {
 		getMultiFieldOrder().clearFieldOrders();
 	}
-	
-	/*
-	 * Filters
-	 */
-	
-	protected AndFilter getAndFilter() {
-		return (AndFilter) this.filter;
+
+  // Filters
+
+  /**
+   * Provides a way to change the filter that will contain other filters.
+   * Therefore it must be MultiFilter. Specify your custom filter before the
+   * list is initialized. The default filter is AndFilter.
+   * 
+   * @param filter The new filter to use.
+   * @since 1.2
+   */
+  public void setFilter(MultiFilter filter) {
+    this.filter = filter;
+  }
+
+	protected MultiFilter getFilter() {
+		return (MultiFilter) this.filter;
 	}
 	
 	public void addFilter(ListFilter filter) {
-		getAndFilter().addFilter(filter);
+		getFilter().addFilter(filter);
 	}
 	
 	public FieldFilter getFieldFilter(String field) {
-		Iterator i = getAndFilter().getFilters().iterator();
+		Iterator i = getFilter().getFilters().iterator();
 		while (i.hasNext()) {
 			ListFilter listFilter = (ListFilter) i.next();
 			if (listFilter instanceof FieldFilter) {
@@ -184,6 +195,6 @@ public class ListStructure extends BaseListStructure {
 	}
 	
 	public void clearFilters() {
-		getAndFilter().clearFilters();
+		getFilter().clearFilters();
 	}
 }
