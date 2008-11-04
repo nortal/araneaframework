@@ -1034,7 +1034,7 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
     Aranea.UI.markFEContentStatus(result.valid, labelSpan);
     
     if (result.valid || result.clientRenderText) {
-      document.getElementsByClassName('aranea-formelementerrors ' + result.formElementId).each(
+      $$('.aranea-formelementerrors ' + result.formElementId).each(
         function(e) { e.remove() }
       );
     } 

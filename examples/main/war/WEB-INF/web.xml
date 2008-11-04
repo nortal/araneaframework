@@ -2,14 +2,18 @@
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+
+	<context-param>
+		<param-name>fileImporterCacheInMillis</param-name>
+		<param-value>10800000</param-value>
+	</context-param>
+
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value> 
-			/WEB-INF/services.xml
-		</param-value>
+		<param-value>/WEB-INF/services.xml</param-value>
 	</context-param>
-	
-     <filter>
+
+   <filter>
      <filter-name>jhighlight</filter-name>
      <filter-class>com.uwyn.jhighlight.servlet.HighlightFilter</filter-class>
    </filter>
