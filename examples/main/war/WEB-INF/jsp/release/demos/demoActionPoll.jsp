@@ -6,25 +6,28 @@
   version="1.2">
 
   <ui:widgetContext>
-    <script type="text/javascript">
-        var widgetId = '<c:out value="${widgetId}" />';
-    	var pollingUpdater = function(request, response) {
-    	  var text = request.responseText;
-    	  if (text != 'NOTHING')
-    	    pollAddErrorMessage(text);
-        };
+	<script type="text/javascript">
+		var widgetId = '<c:out value="${widgetId}" />';
+
+		var pollingUpdater = function(request, response) {
+			var text = request.responseText;
+			if (text != 'NOTHING') {
+				pollAddErrorMessage(text);
+			}
+		};
 
 		var pollingAction = function() {
-		  araneaPage().action($('pollingdiv'), "pollrequest", widgetId, null, pollingUpdater); 
+			// araneaPage()action(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams)
+			araneaPage().action($('pollingdiv'), "pollrequest", widgetId, null, pollingUpdater); 
 		};
 
 		setInterval(pollingAction, 3000);
-		
+
 		var pollAddErrorMessage = function(msg) {
-		   var errdiv = Element.getElementsByClassName(document.body, 'msg-error')[0];
-		   new Insertion.Bottom(errdiv, msg);
-		   errdiv.show();
+			var errdiv = $$('div.msg-error').first();
+			errdiv.insert(msg);
+			errdiv.show();
 		};
-    </script>
+	</script>
   </ui:widgetContext>
 </jsp:root>

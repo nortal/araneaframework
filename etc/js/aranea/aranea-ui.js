@@ -199,7 +199,7 @@ Aranea.UI.markFEContentStatus = function(valid, el) {
  */
 Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
   if (el) el = $(el); else return;
-  if (el) new Insertion.Bottom(el, html);
+  if (el) el.insert(html);
 };
 
 /**

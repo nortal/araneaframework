@@ -5,7 +5,7 @@
 
 	<context-param>
 		<param-name>fileImporterCacheInMillis</param-name>
-		<param-value>200000</param-value>
+		<param-value>10800000</param-value>
 	</context-param>
 
 	<context-param>

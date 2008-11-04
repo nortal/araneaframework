@@ -13,7 +13,7 @@
 <!--                        Style groups                          -->
 <!-- ============================================================ -->
 
-	<files content-type="text/css" group="all">
+	<files content-type="text/css" group="all_css">
 		<file path="css/aranea/aranea.css" />
 		<file path="css/calendar/calendar.css" />
 		<file path="css/contextmenu/contextmenu.css" />
@@ -21,23 +21,23 @@
 		<file path="css/prototip/prototip.css" />
 	</files>
 
-	<files content-type="text/css" group="aranea">
+	<files content-type="text/css" group="aranea_css">
 		<file path="css/aranea/aranea.css" />
 	</files>
 
-	<files content-type="text/css" group="calendar">
+	<files content-type="text/css" group="calendar_css">
 		<file path="css/calendar/calendar.css" />
 	</files>
 
-	<files content-type="text/css" group="contextmenu">
+	<files content-type="text/css" group="contextmenu_css">
 		<file path="css/contextmenu/contextmenu.css" />
 	</files>
 
-	<files content-type="text/css" group="modalbox">
+	<files content-type="text/css" group="modalbox_css">
 		<file path="css/modalbox/modalbox.css" />
 	</files>
 
-	<files content-type="text/css" group="prototip">
+	<files content-type="text/css" group="prototip_css">
 		<file path="css/prototip/prototip.css" />
 	</files>
 
@@ -45,7 +45,7 @@
 <!--                       Script groups                          -->
 <!-- ============================================================ -->
 
-	<files content-type="text/javascript" group="all">
+	<files content-type="text/javascript" group="all_js">
 		<file path="js/behaviour/behaviour.js" />
 		<file path="js/prototype/prototype.js" />
 		<file path="js/aranea/aranea-locale.js" />
@@ -66,10 +66,9 @@
 		<file path="js/calendar/calendar-setup.js" />
 		<file path="js/modalbox/modalbox.js" />
 		<file path="js/prototip/prototip.js" />
-		<file path="js/tiny_mce/tiny_mce.js" />
 	</files>
 
-	<files content-type="text/javascript" group="core-all">
+	<files content-type="text/javascript" group="core-all_js">
 		<file path="js/rsh/rsh.js" />
 		<file path="js/behaviour/behaviour.js" />
 		<file path="js/prototype/prototype.js" />
@@ -89,7 +88,7 @@
 		<file path="js/scriptaculous/controls.js" />
 	</files>
 
-	<files content-type="text/javascript" group="core">
+	<files content-type="text/javascript" group="core_js">
 		<file path="js/behaviour/behaviour.js" />
 		<file path="js/prototype/prototype.js" />
 		<file path="js/aranea/aranea-locale.js" />
@@ -101,39 +100,39 @@
 		<file path="js/aranea/aranea-popups.js" />
 	</files>
 
-	<files content-type="text/javascript" group="calendar">
+	<files content-type="text/javascript" group="calendar_js">
 		<file path="js/calendar/calendar.js" />
 		<file path="js/calendar/calendar-en.js" />
 		<file path="js/calendar/calendar-setup.js" />
 	</files>
 
-	<files content-type="text/javascript" group="calendar_et">
+	<files content-type="text/javascript" group="calendar_et_js">
 		<file path="js/calendar/calendar.js" />
 		<file path="js/calendar/calendar-et.js" />
 		<file path="js/calendar/calendar-setup.js" />
 	</files>
 
-	<files content-type="text/javascript" group="modalbox">
+	<files content-type="text/javascript" group="modalbox_js">
 		<file path="js/aranea/aranea-modalbox.js" />
 		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
 	</files>
 
-	<files content-type="text/javascript" group="rsh">
+	<files content-type="text/javascript" group="rsh_js">
 		<file path="js/rsh/rsh.js" />
 		<file path="js/aranea/aranea-rsh.js" />
 	</files>
 
-	<files content-type="text/javascript" group="prototip">
+	<files content-type="text/javascript" group="prototip_js">
 		<file path="js/prototip/prototip.js" />
 	</files>
 
-	<files content-type="text/javascript" group="tinyMCE">
-		<file path="js/tiny_mce/tiny_mce.js" />
+	<files content-type="text/javascript" group="tinyMCE_js">
+		<file path="js/tiny_mce/tiny_mce_src.js" />
 	</files>
 
-	<files content-type="text/javascript" group="logger">
+	<files content-type="text/javascript" group="logger_js">
 		<file path="js/log4javascript/log4javascript.js" />
 	</files>
 
@@ -142,17 +141,12 @@
 		accessible to fileimporter.
 	-->
 
-	<files content-type="text/javascript">
-		<file path="js/calendar/calendar-et.js" />
-		<file path="js/rsh/rsh.js" />
-		<file path="js/aranea/aranea-rsh.js" />
-	</files>
-
 	<files content-type="image/gif">
 		<file path="gfx/ico_calendar.gif" />
 		<file path="gfx/contextmenu/shade.gif" />
 		<file path="gfx/contextmenu/sub.gif" />
 		<file path="gfx/contextmenu/transparent.gif" />
+		<file path="js/prototype/prototype_update_helper.js"/>
 	</files>
 
 </resources>
