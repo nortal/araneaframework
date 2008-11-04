@@ -25,7 +25,12 @@ import org.araneaframework.jsp.tag.BaseTag;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseFileImportTag extends BaseTag {
-	protected String includeGroupName;
+
+  public static final String DEFAULT_GROUP_NAME = "all";
+  public static final String GROUP_CSS_SUFFIX = "_css";
+  public static final String GROUP_JS_SUFFIX = "_js";
+
+    protected String includeGroupName;
 	protected String includeFileName;
 
 	/**
@@ -34,8 +39,8 @@ public abstract class BaseFileImportTag extends BaseTag {
 	 *   required = "false"
 	 *   description = "The name of the group of files that should get included."
 	 */
-	public void setGroup(String includeTemplate) throws JspException {
-		this.includeGroupName = (String) evaluate("includeTemplate", includeTemplate, String.class);
+	public void setGroup(String group) throws JspException {
+		this.includeGroupName = (String) evaluate("group", group, String.class);
 	}
 	
 	/**

@@ -17,7 +17,7 @@
 
 	<!-- CSS for the demo app:  -->
 	<ui:importStyles file="styles/_styles_global.css" media="all"/>
-	<ui:importStyles group="templateScreenStyleGroup.css" media="screen"/>
+	<ui:importStyles group="templateScreenStyleGroup" media="screen"/>
 	<ui:importStyles file="styles/_styles_print.css" media="print" />
 
 	<!-- Includes stand-alone JavaScript logging (it is not included by default). -->
@@ -26,7 +26,10 @@
 	<!-- Imports all Aranea scripts (group="all"). -->
 	<ui:importScripts/>
 
-	<!--
+	<!-- We also need tinyMCE, a JavaScript-based rich-text editor --><!--
+	<ui:importScripts group="tinyMCE"/>
+
+	--><!--
 		Now a longer and more customizable way to import the same things.
 		Of course you can also import files one-by-one.
 	-->
@@ -57,14 +60,15 @@
 		<ui:importScripts group="tinyMCE"/>
 	-->
 
-	<!-- Enables console logging, if browser supports it. In general, you may not want to include it. -->
-	<script type="text/javascript">araneaPage().setDefaultLogger();</script>
+	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
+	<script type="text/javascript">araneaPage().setFirebugLogger();</script>
+	
 
-	<!-- You can also use Firebug logger:
-		<script type="text/javascript">araneaPage().setFirebugLogger();</script>
+	<!-- You can also use log4javacript logger:
+		<script type="text/javascript">araneaPage().setDefaultLogger();</script>
 	 -->
 
-	<!-- Let's specify Tiny MCE preferences: -->
+	<!-- Let's specify Tiny MCE preferences: --><!--
 	<ui:richTextAreaInit>
 		<ui:attribute name="theme" value="advanced"/>
 		<ui:attribute name="theme_advanced_buttons1" value="bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink,code"/>
@@ -75,4 +79,4 @@
 		<ui:attribute name="extended_valid_elements" value="a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"/>
 	</ui:richTextAreaInit>
 
-</jsp:root>
+--></jsp:root>
