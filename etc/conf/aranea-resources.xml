@@ -15,6 +15,7 @@
 
 	<files content-type="text/css" group="all_css">
 		<file path="css/aranea/aranea.css" />
+		<file path="css/aranea/comboselect.css" />
 		<file path="css/calendar/calendar.css" />
 		<file path="css/contextmenu/contextmenu.css" />
 		<file path="css/modalbox/modalbox.css" />
@@ -23,6 +24,7 @@
 
 	<files content-type="text/css" group="aranea_css">
 		<file path="css/aranea/aranea.css" />
+		<file path="css/aranea/comboselect.css" />
 	</files>
 
 	<files content-type="text/css" group="calendar_css">
@@ -128,10 +130,6 @@
 		<file path="js/prototip/prototip.js" />
 	</files>
 
-	<files content-type="text/javascript" group="tinyMCE_js">
-		<file path="js/tiny_mce/tiny_mce_src.js" />
-	</files>
-
 	<files content-type="text/javascript" group="logger_js">
 		<file path="js/log4javascript/log4javascript.js" />
 	</files>
@@ -140,6 +138,12 @@
 		Other scripts that should not be omnipresent but which must be
 		accessible to fileimporter.
 	-->
+
+	<files content-type="text/javascript">
+		<file path="js/tiny_mce/tiny_mce.js" />
+		<file path="js/tiny_mce/tiny_mce_src.js" />
+		<file path="js/tiny_mce/tiny_mce_popup.js" />
+	</files>
 
 	<files content-type="image/gif">
 		<file path="gfx/ico_calendar.gif" />

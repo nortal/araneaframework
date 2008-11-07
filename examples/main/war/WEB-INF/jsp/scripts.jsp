@@ -26,10 +26,10 @@
 	<!-- Imports all Aranea scripts (group="all"). -->
 	<ui:importScripts/>
 
-	<!-- We also need tinyMCE, a JavaScript-based rich-text editor --><!--
-	<ui:importScripts group="tinyMCE"/>
+	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->
+	<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
 
-	--><!--
+	<!--
 		Now a longer and more customizable way to import the same things.
 		Of course you can also import files one-by-one.
 	-->
@@ -57,7 +57,6 @@
 		<ui:importScripts group="modalbox"/>
 		<ui:importScripts group="rsh"/>
 		<ui:importScripts group="prototip"/>
-		<ui:importScripts group="tinyMCE"/>
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
@@ -68,7 +67,7 @@
 		<script type="text/javascript">araneaPage().setDefaultLogger();</script>
 	 -->
 
-	<!-- Let's specify Tiny MCE preferences: --><!--
+	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>
 		<ui:attribute name="theme" value="advanced"/>
 		<ui:attribute name="theme_advanced_buttons1" value="bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink,code"/>
@@ -79,4 +78,4 @@
 		<ui:attribute name="extended_valid_elements" value="a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"/>
 	</ui:richTextAreaInit>
 
---></jsp:root>
+</jsp:root>

@@ -466,7 +466,7 @@ AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAli
     if (window['prototype/prototype.js']) {
       var url = araneaPage().getSubmitURL(topServiceId, threadServiceId, 'override');
       url += "&" + keepAliveKey + "=true";
-      araneaPage().getLogger().debug("Sending async service keepalive request to URL '" + url +"'");
+      araneaPage().debug("Sending async service keepalive request to URL '" + url +"'");
       var keepAlive = new Ajax.Request(
           url,
           { method: 'post' }
@@ -651,14 +651,14 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
         logmsg += 'Partial rendering: received successful response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
         logmsg += ': ' + transport.status + ' ' + transport.statusText;
-        araneaPage().getLogger().debug(logmsg);
+        araneaPage().debug(logmsg);
         AraneaPage.processResponse(transport.responseText);
         AraneaPage.init();
       } else {
         logmsg += 'Partial rendering: received erroneous response';
         logmsg += ' (' + transport.responseText.length + ' characters)';
         logmsg += ': ' + transport.status + ' ' + transport.statusText;
-        araneaPage().getLogger().debug(logmsg);
+        araneaPage().debug(logmsg);
         // Doesn't work quite well for javascript and CSS, but fine for plain HTML
         document.write(transport.responseText);
         document.close();
@@ -686,7 +686,7 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       logmsg += transport.status;
       logmsg += ' ';
       logmsg += transport.statusText;
-      araneaPage().getLogger().debug(logmsg);
+      araneaPage().debug(logmsg);
 
       // Doesn't work quite well for javascript and CSS, but fine for plain HTML
       document.write(transport.responseText);
@@ -752,7 +752,7 @@ Object.extend(AraneaPage, {
       }
 
       if (this.regionHandlers[key]) {
-        araneaPage().getLogger().debug('Region type: "' + key + '" (' + length + ' characters)');
+        araneaPage().debug('Region type: "' + key + '" (' + length + ' characters)');
         this.regionHandlers[key].process(content);
       } else {
         araneaPage().getLogger().error('Region type: "' + key + '" is unknown!');
@@ -760,7 +760,7 @@ Object.extend(AraneaPage, {
     }
 
     if (this.reloadOnNoDocumentRegions && !this.receivedRegionCounters['document']) {
-      araneaPage().getLogger().debug('No document regions were received, forcing a reload of the page');
+      araneaPage().debug('No document regions were received, forcing a reload of the page');
       if (this.regionHandlers['reload']) {
         this.regionHandlers['reload'].process();
       } else {
