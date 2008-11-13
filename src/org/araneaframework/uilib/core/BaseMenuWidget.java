@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.core;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;

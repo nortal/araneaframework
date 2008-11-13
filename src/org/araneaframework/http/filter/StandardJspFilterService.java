@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.filter;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -86,7 +87,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
   
   protected Environment getChildEnvironment() {

@@ -16,6 +16,7 @@
 
 package org.araneaframework.framework.filter;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -106,9 +107,7 @@ public class StandardContinuationFilterService extends BaseFilterService
       protected void action(Path path, InputData input, OutputData output)
           throws Exception {
         childService._getService().action(path, input, output);
-        ContinuationContext conCtx = (ContinuationContext) getEnvironment()
-            .getEntry(ContinuationContext.class);
-        conCtx.finish();
+        EnvironmentUtil.getContinuationContext(getEnvironment()).finish();
       }
     };
     start(service);

@@ -33,6 +33,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * Router service that kills child services after specified period of inactivity
@@ -43,6 +44,8 @@ import org.araneaframework.framework.ManagedServiceContext;
  */
 public abstract class BaseExpiringServiceRouterService
   extends BaseServiceRouterService implements ExpiringServiceContext {
+
+  private static final long serialVersionUID = 1L;
 
   private static final Log log = LogFactory.getLog(
       BaseExpiringServiceRouterService.class);
@@ -70,9 +73,11 @@ public abstract class BaseExpiringServiceRouterService
     serviceTTLMap = null;
 
     if (capsule != null) {
-      if (getEnvironment().getEntry(ExpiringServiceContext.class) != null) {
-        serviceTTLMap = ((ExpiringServiceContext) getEnvironment().getEntry(
-            ExpiringServiceContext.class)).getServiceTTLMap();
+      ExpiringServiceContext esc =
+        EnvironmentUtil.getExpiringServiceContext(getEnvironment());
+
+      if (esc != null) {
+        serviceTTLMap = esc.getServiceTTLMap();
       }
 
       if (serviceTTLMap == null) {

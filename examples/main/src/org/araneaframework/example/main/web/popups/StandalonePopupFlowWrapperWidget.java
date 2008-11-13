@@ -35,6 +35,7 @@ import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.core.PopupFlowWrapperWidget;
@@ -135,12 +136,11 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
   }
 
   protected TopServiceContext getTopServiceContext() {
-    return (TopServiceContext) getEnvironment().getEntry(
-        TopServiceContext.class);
+    return EnvironmentUtil.getTopServiceContext(getEnvironment());
   }
 
   protected ThreadContext getThreadContext() {
-    return (ThreadContext) getEnvironment().getEntry(ThreadContext.class);
+    return EnvironmentUtil.getThreadContext(getEnvironment());
   }
 
   public boolean isNested() {

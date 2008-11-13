@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.filter;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
