@@ -23,16 +23,59 @@ public class LowerThanExpression extends ComparableExpression {
 
   private static final long serialVersionUID = 1L;
 
+  private boolean allowEquals;
+
+  /**
+   * Greates a new <code>LowerThanExpression</code>.
+   * 
+   * @param expr1 The expression that should be lower than the other.
+   * @param expr2 The expression that should be greater than the other.
+   * @param comparator The comparator that is used to compare.
+   */
   public LowerThanExpression(Expression expr1, Expression expr2,
       Comparator comparator) {
     super(expr1, expr2, comparator);
   }
 
+  /**
+   * Greates a new <code>LowerThanExpression</code> using a default comparator.
+   * 
+   * @param expr1 The expression that should be lower than the other.
+   * @param expr2 The expression that should be greater than the other.
+   */
   public LowerThanExpression(Expression expr1, Expression expr2) {
     super(expr1, expr2);
   }
+  
+  /**
+   * Greates a new <code>LowerThanExpression</code> that can also be
+   * lower-than-or-equal expression. The latter is determined by the boolean
+   * parameter <code>allowEquals</code>.
+   * 
+   * @param expr1 The expression that should be lower than the other.
+   * @param expr2 The expression that should be greater than the other.
+   * @param comparator The comparator that is used to compare.
+   * @param allowEquals Whether expressions can also be equal. By default: equality not allowed.
+   * @since 1.2
+   */
+  public LowerThanExpression(Expression expr1, Expression expr2,
+      Comparator comparator, boolean allowEquals) {
+    super(expr1, expr2, comparator);
+    this.allowEquals = allowEquals;
+  }
 
   protected boolean doEvaluate(Object value1, Object value2) {
-    return this.comparator.compare(value1, value2) < 0;
+    int comp = this.comparator.compare(value1, value2);
+    return this.allowEquals ? comp <= 0 : comp < 0;
+  }
+
+  /**
+   * Declares whether this expression allows equals.
+   * 
+   * @return <code>true</code>, if this expression allows equals
+   * @since 1.2
+   */
+  public boolean getAllowsEqual() {
+    return this.allowEquals;
   }
 }

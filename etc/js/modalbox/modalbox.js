@@ -115,7 +115,22 @@ Modalbox.Methods = {
 			// Passing beforeHide callback
 			this.event("beforeHide");
 			if(this.options.transitions)
-				Effect.SlideUp(this.MBwindow, { duration: this.options.slideUpDuration, transition: Effect.Transitions.sinoidal, afterFinish: this._deinit.bind(this) } );
+				// Changed for Aranea
+				new Effect.Scale(this.MBwindow, 0.0, {
+					scaleContent: false,
+					scaleFromCenter: true,
+					restoreAfterFinish: false,
+					afterFinish: function() {
+						Modalbox.MBwindow.hide();
+					}
+				});
+
+//				new Effect.ScaleBy(this.MBwindow,
+//						-this.MBwindow.getWidth(),
+//						-this.MBwindow.getHeight(),
+//						this.options,
+//						Object.extend(this.options, {afterFinish: this._deinit.bind(this)}));
+//				Effect.SlideUp(this.MBwindow, { duration: this.options.slideUpDuration, transition: Effect.Transitions.sinoidal, afterFinish: this._deinit.bind(this) } );
 			else {
 				$(this.MBwindow).hide();
 				this._deinit();
@@ -147,16 +162,31 @@ Modalbox.Methods = {
 			new Effect.Fade(this.MBoverlay, {
 					from: 0, 
 					to: this.options.overlayOpacity, 
-					duration: this.options.overlayDuration, 
+					duration: this.options.overlayDuration,
 					afterFinish: function() {
-						new Effect.SlideDown(this.MBwindow, {
-							duration: this.options.slideDownDuration, 
-							transition: Effect.Transitions.sinoidal, 
-							afterFinish: function(){ 
-								this._setPosition(); 
-								this.loadContent();
-							}.bind(this)
+						// Changed for Aranea:
+						new Effect.Scale(this.MBwindow, 100.0, {
+							scaleContent: false,
+							scaleFromCenter: true,
+							scaleFrom: window.opera ? 0 : 1,
+							beforeStart: function() {
+								Modalbox._setPosition();
+								Modalbox.MBwindow.show();
+							},
+							afterFinish: function() {
+								Modalbox._setPosition(); 
+								Modalbox.loadContent();
+							}
 						});
+
+//						new Effect.SlideDown(this.MBwindow, {
+//							duration: this.options.slideDownDuration, 
+//							transition: Effect.Transitions.sinoidal,
+//							afterFinish: function(){ 
+//								this._setPosition(); 
+//								this.loadContent();
+//							}.bind(this)
+//						});
 					}.bind(this)
 			});
 		} else {
@@ -250,6 +280,7 @@ Modalbox.Methods = {
 								response.extractScripts().map(function(script) { 
 									return eval(script.replace("<!--", "").replace("// -->", ""));
 								}.bind(window));
+								Modalbox._setWidthAndPosition();
 							});
 
 							// Added for Aranea - page preparation:
@@ -302,7 +333,25 @@ Modalbox.Methods = {
 	
 	_putContent: function(callback){
 		// Prepare and resize modal box for content
-		if(this.options.height == this._options.height) {
+		if (this.options.maxHeight) {
+			this._setWidth();
+			this.MBcontent.show();
+			this.focusableElements = this._findFocusableElements();
+			this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
+			setTimeout(function(){ // MSIE fix
+				var maxHeight = this.options.maxHeight;
+				if (maxHeight <= 1) { // if less or equal to 1 then consider it as percentage.
+					maxHeight = document.documentElement. clientHeight * maxHeight;
+				}
+				if (maxHeight < this.MBcontent.getHeight()) {
+					this.MBwindow.setStyle({height: maxHeight + 'px'});
+					this.MBcontent.setStyle({overflow: 'auto', height: $(this.MBwindow).getHeight() - $(this.MBheader).getHeight() - 13 + 'px'});
+				}
+				if(callback != undefined)
+					callback(); // Executing internal JS from loaded content
+				this.event("afterLoad"); // Passing callback
+			}.bind(this),1);
+		} else if(this.options.height == this._options.height) {
 			setTimeout(function() { // MSIE sometimes doesn't display content correctly
 				Modalbox.resize(0, $(this.MBcontent).getHeight() - $(this.MBwindow).getHeight() + $(this.MBheader).getHeight(), {
 					afterResize: function(){
@@ -374,8 +423,8 @@ Modalbox.Methods = {
 	},
 	
 	_loadAfterResize: function() {
-		this._setWidth();
-		this._setPosition();
+//		this._setWidth();		-- Commented for Aranea
+//		this._setPosition();	-- Commented for Aranea
 		this.loadContent();
 	},
 	
@@ -543,7 +592,7 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
   initialize: function(element, byWidth, byHeight, options) {
     this.element = $(element)
     var options = Object.extend({
-	  scaleFromTop: true,
+	  scaleFromTop: false,     // changed for Aranea
       scaleMode: 'box',        // 'box' or 'contents' or {} with provided values
       scaleByWidth: byWidth,
 	  scaleByHeight: byHeight
