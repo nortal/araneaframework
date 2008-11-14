@@ -29,7 +29,7 @@ import org.apache.commons.validator.GenericValidator;
  */
 public abstract class ValidationUtil {
 
-  private static final int MIN_YEAR = 0;
+  private static final int MIN_YEAR = 1;
   private static final int MAX_YEAR = 9999;
 
   /**

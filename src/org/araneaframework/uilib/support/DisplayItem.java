@@ -28,10 +28,14 @@ import org.araneaframework.uilib.form.control.SelectControl;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DisplayItem implements java.io.Serializable {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Item's label.
    */
   protected String displayString;
+
   /**
    * Item's value.
    */
@@ -89,5 +93,10 @@ public class DisplayItem implements java.io.Serializable {
 	
   public void setDisabled(boolean disabled) {
     this.disabled = disabled;
+  }
+
+  public boolean equals(Object obj) {
+    DisplayItem other = (DisplayItem) obj;
+    return other == this || other.value == this.value;
   }
 }

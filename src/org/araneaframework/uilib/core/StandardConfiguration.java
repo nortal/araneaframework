@@ -24,6 +24,9 @@ import org.araneaframework.uilib.ConfigurationContext;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardConfiguration implements ConfigurationContext {
+
+  private static final long serialVersionUID = 1L;
+
   private Map confEntries = new HashMap();
 
   public Object getEntry(String entryName) {

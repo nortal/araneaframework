@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.core.Assert;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +41,8 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  */
 public class MultiSelectControl extends StringArrayRequestControl implements DisplayItemContainer {
+  
+  private static final long serialVersionUID = 1L;
 
   //*********************************************************************
   //* FIELDS
@@ -60,7 +63,9 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * @param item the item to be added.
    */
   public void addItem(DisplayItem item) {
-    items.add(item);
+    Assert.notNullParam(item, "item");
+    DisplayItemUtil.assertUnique(this.items, item);
+    this.items.add(item);
   }
   
   /**
@@ -69,18 +74,20 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    * @param items the items to be added.
    */
   public void addItems(Collection items) {
-  	this.items.addAll(items);
+    Assert.noNullElementsParam(items, "items");
+    DisplayItemUtil.assertUnique(this.items, items);
+    this.items.addAll(items);
   }    
 
   /**
    * Clears the list of select-items.
    */
   public void clearItems() {
-    items.clear();
+    this.items.clear();
   }
   
   public List getDisplayItems() {
-  	return items;
+  	return this.items;
   }
   
 	public int getValueIndex(String value) {
@@ -248,10 +255,8 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
     
     return result;
   }
-  
-  
-  
-   protected void validateNotNull() {
+
+  protected void validateNotNull() {
      if (isMandatory() && ((Collection)getRawValue()).isEmpty()) {
 	      addError(
 	              MessageUtil.localizeAndFormat(
@@ -287,8 +292,12 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
    */
   public class ViewModel extends StringArrayRequestControl.ViewModel {
 
+    private static final long serialVersionUID = 1L;
+
     private List selectItems;
+
     private Map selectItemMap = new HashMap();
+
     private Set valueSet = new HashSet();
     
     /**

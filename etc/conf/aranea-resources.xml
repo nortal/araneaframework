@@ -63,9 +63,6 @@
 		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
-		<file path="js/calendar/calendar.js" />
-		<file path="js/calendar/calendar-en.js" />
-		<file path="js/calendar/calendar-setup.js" />
 		<file path="js/modalbox/modalbox.js" />
 		<file path="js/prototip/prototip.js" />
 	</files>

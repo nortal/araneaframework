@@ -112,9 +112,9 @@
 			classpathref="classpath"
 		/>
 
+		<!-- 1. Generate taglib XML from annotations in *Tag.java files. -->
 		<webdoclet destdir="build/tmp/presentation/META-INF">
-			<fileset 
-				dir="src" includes="**/*Tag.java"/>
+			<fileset dir="src" includes="**/*Tag.java"/>
 
 			<jsptaglib validatexml="true"
 				shortName="ui"
@@ -129,17 +129,22 @@
 		  Secondary TLD, attributes defined to be /rtexprvalue/s, so that JSP > 2 
 		  EL evaluator evaluates them -->
 
-		<xslt style="etc/build/rt_tld-transform.xsl" in="build/tmp/presentation/META-INF/aranea-standard.tld" out="build/tmp/presentation/META-INF/aranea-standard_rt.tld" classpathref="classpath">
-		        <!-- 
+		<!-- 2. Generate Secondary TLD XML, attributes defined to be /rtexprvalue/s, so that JSP > 2 EL evaluator evaluates them. -->
+		<xslt style="etc/build/rt_tld-transform.xsl"
+			in="build/tmp/presentation/META-INF/aranea-standard.tld"
+			out="build/tmp/presentation/META-INF/aranea-standard_rt.tld"
+			classpathref="classpath">
 			<xmlcatalog>
-				<dtd publicid="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" location="jar:file:lib/default/jsp-api.jar!/javax/servlet/jsp/resources/web-jsptaglibrary_1_2.dtd"/>
-			</xmlcatalog> -->
+				<dtd publicid="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+					location="jar:file:lib/build/xdoclet-web-module.jar!xdoclet/modules/web/resources/web-jsptaglibrary_1_2.dtd"/>
+			</xmlcatalog>
 		</xslt>
+
 		<replace file="build/tmp/presentation/META-INF/aranea-standard_rt.tld" token="http://araneaframework.org/tag-library/standard" value="http://araneaframework.org/tag-library/standard_rt"/>
 
 		<!-- Creation of tag class descriptor file (contains xdoclet attribute annotation 
 		     information for all tag files; even those that do not have @jsp.tag information). -->
-		<webdoclet destdir="build/tmp/presentation/META-INF">
+		<webdoclet destdir="build/tmp/presentation/META-INF" verbose="true" >
 			<fileset dir="src" includes="**/*Tag.java"/>
 
 			<configparam name="validatexml" value="true"/>
@@ -148,7 +153,7 @@
 			<configparam name="Jspversion" value="1.2"/>
 			<configparam name="Taglibversion" value="1.0"/>
 
-			<xmltemplate templatefile="etc/build/taglib_tcd.xdt"  destinationfile="aranea-standard.tcd"/>
+			<xmltemplate templatefile="etc/build/taglib_tcd.xdt" destinationfile="aranea-standard.tcd"/>
 		</webdoclet>
 	</target>
 
