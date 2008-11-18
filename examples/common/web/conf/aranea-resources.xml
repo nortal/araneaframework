@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
 
-	<files content-type="text/css" group="templateScreenStyleGroup_css">
+	<files content-type="text/css" group="templateScreenStyleGroup.css">
 		<file path="styles/_styles_new.css" />
 		<file path="styles/_styles_screen.css" />
 	</files>
