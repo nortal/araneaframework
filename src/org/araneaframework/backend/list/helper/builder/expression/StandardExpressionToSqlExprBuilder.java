@@ -184,14 +184,22 @@ public class StandardExpressionToSqlExprBuilder extends
   static class GreaterThanTranslator extends ComparingExprToSqlExprTranslator {
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
-      return new SqlGreaterThanExpression(sql1, sql2);
+      boolean allowEqual = false;
+      if (expr instanceof GreaterThanExpression) {
+        allowEqual = ((GreaterThanExpression) expr).getAllowsEqual();
+      }
+      return new SqlGreaterThanExpression(sql1, sql2, allowEqual);
     }
   }
 
   static class LowerThanTranslator extends ComparingExprToSqlExprTranslator {
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
-      return new SqlLowerThanExpression(sql1, sql2);
+      boolean allowEquals = false;
+      if (expr instanceof LowerThanExpression) {
+        allowEquals = ((LowerThanExpression) expr).getAllowsEqual();
+      }
+      return new SqlLowerThanExpression(sql1, sql2, allowEquals);
     }
   }
 

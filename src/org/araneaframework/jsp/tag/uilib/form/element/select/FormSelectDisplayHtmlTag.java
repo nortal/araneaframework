@@ -17,36 +17,71 @@
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  * @jsp.tag
- *   name = "selectDisplay"
- *   body-content = "JSP"
- *   description = "Form select display field, represents UiLib "SelectControl"."
+ *    name = "selectDisplay"
+ *    body-content = "JSP"
+ *    description = "Form select display field, represents UiLib "SelectControl"."
  */
 public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
-	{
-		baseStyleClass = "aranea-select-display";
-	}
 
-	protected int doEndTag(Writer out) throws Exception {				
-		SelectControl.ViewModel viewModel = ((SelectControl.ViewModel)controlViewModel);
-		
-		JspUtil.writeOpenStartTag(out, "span");
-		JspUtil.writeAttribute(out, "class", getStyleClass());
-		JspUtil.writeAttribute(out, "style", getStyle());
-		JspUtil.writeAttributes(out, attributes);
-		JspUtil.writeCloseStartTag(out);
+  {
+    baseStyleClass = "aranea-select-display";
+  }
 
-		JspUtil.writeEscaped(out, viewModel.getLabelForValue(viewModel.getSimpleValue()));
-		
-		JspUtil.writeEndTag_SS(out, "span");
+  /**
+   * A boolean setting to override default configuration of
+   * {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
+   * 
+   * @since 1.2
+   */
+  protected Boolean localizeDisplayItems;
 
-		return super.doEndTag(out);  
-	}
+  protected int doEndTag(Writer out) throws Exception {
+    SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
+
+    JspUtil.writeOpenStartTag(out, "span");
+    JspUtil.writeAttribute(out, "class", getStyleClass());
+    JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeCloseStartTag(out);
+
+    if (this.localizeDisplayItems == null) {
+      this.localizeDisplayItems = ConfigurationContextUtil
+          .isLocalizeControlData(getEnvironment());
+    }
+
+    String label = viewModel.getLabelForValue(viewModel.getSimpleValue());
+    
+    if (this.localizeDisplayItems.booleanValue()) {
+      label = JspUtil.getResourceString(pageContext, label);
+    }
+
+    JspUtil.writeEscaped(out, label);
+    JspUtil.writeEndTag_SS(out, "span");
+    return super.doEndTag(out);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description ="Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
+   * 
+   * @since 1.2
+   */
+  public void setLocalizeDisplayItems(String localizeDisplayItems)
+      throws JspException {
+    this.localizeDisplayItems = (Boolean) evaluateNotNull(
+        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+  }
+
 }

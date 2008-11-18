@@ -1,17 +1,23 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-2008.11.04    | Aranea 1.2-M2
+2008.11.18    | Aranea 1.2 RC1
 
 Features and Improvements
     Updated third-party scripts													| See #678
     cancel() and finish(Object) for OverlayContext								| See #708
     OrFilter for list rows filtering and for entire filter elements				| See #701
 	file importer writes into response header Cache-Control: max-age=3600		| See #669
+	Lower-than-or-equal and greater-than-or-equal constraints					| See #704
+	EnvrionmentUtil enhancement													| See #703
+	DefaultResultSetColumnReader: error message needs to be more precise		| See #702
+	OrFilter for list rows filtering and for entire filter elements				| See #701
+	DisplayItem + SelectControl refactor										| See #272
 
 Bugfixes
     Upgrade Aranea 1.2M code to contain previous bugfixes						| See #693
     DateControl -- anything before 1900 not considered date						| See #545
     Made aranea JavaScripts not depend on state versioning						| See #707
+	ReaderPreferenceReadWriteLock not serializable								| See #714
 
 ---------------------------------------------------------------------------------------------
 2008.05.28    | Aranea 1.2-M1

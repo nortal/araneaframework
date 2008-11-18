@@ -38,6 +38,8 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * The container (a root) that holds the menu items.
    */

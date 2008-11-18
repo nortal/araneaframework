@@ -82,7 +82,8 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
         return resultSet.getString(columnName);
       }
     } catch (SQLException e) {
-      throw ExceptionUtil.uncheckException(e);
+      throw ExceptionUtil.uncheckException("Problem with column '" + columnName
+          + "'. See the stacktrace for more details.", e);
     }
     throw new RuntimeException("Could not read column '" + columnName
         + "' with Java type '" + javaType + "' from the ResultSet!");

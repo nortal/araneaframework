@@ -52,11 +52,11 @@ public class MessageUtil {
    */
   public static String format(String message, Object parameter) {
     return format(message, new Object[] {parameter});
-  }  
-  
+  }
+
   /**
-   * Formats the localized message by inserting given <code>parameter</code>
-   * to the placeholder in the message.
+   * Formats the localized message by inserting given <code>parameter</code> to
+   * the placeholder in the message.
    * 
    * @param message The message containing a placeholder for the parameter.
    * @param parameter1 The parameter that will be used in the message.
@@ -107,15 +107,16 @@ public class MessageUtil {
   public static String localizeAndFormat(String message, Object parameter1, Object parameter2, Environment env) {
     return localizeAndFormat(message, new Object[] {parameter1, parameter2}, env);
   }
-  
+
   /**
    * Localizes and then formats the localized message by inserting given
    * <code>parameters</code> to the placeholders.
    * 
    * @param message The key to retrieve the message.
-   * @param parameters The parameters that will be used in the localized message.
+   * @param parameters The parameters that will be used in the localized
+   *          message.
    * @param env The environment that is expected to contain the localization
-   *            context.
+   *          context.
    * @return The localized and formatted message.
    */
   public static String localizeAndFormat(String message, Object[] parameters, Environment env) {

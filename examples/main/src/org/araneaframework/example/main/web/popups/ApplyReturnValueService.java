@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.popups;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -70,7 +71,7 @@ public class ApplyReturnValueService extends BaseService implements ClientSideRe
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 

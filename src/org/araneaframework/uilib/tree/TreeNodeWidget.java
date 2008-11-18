@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.tree;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -175,7 +176,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected TreeContext getTreeCtx() {
-    return (TreeContext) getEnvironment().getEntry(TreeContext.class);
+    return UilibEnvironmentUtil.getTreeContext(getEnvironment());
   }
 
   // returns List<TreeNodeWidget>

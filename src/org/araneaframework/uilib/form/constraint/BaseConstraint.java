@@ -16,14 +16,14 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.araneaframework.Environment;
-import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constraint;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} 
@@ -129,7 +129,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    *         <code>Environment</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+    return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
 
   /**

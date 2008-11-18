@@ -1,5 +1,7 @@
 package org.araneaframework.example.main.web.testing;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +31,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
   
   protected void init() throws Exception {
     setViewSelector("testing/modalDialogTest");
-    MenuWidget menuWidget = (MenuWidget)getEnvironment().getEntry(MenuContext.class);
+    MenuWidget menuWidget = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
     new MenuItemCollector().visit(menuWidget.getMenu(), menuitems);
     
     form = new FormWidget();
@@ -100,8 +102,9 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
       if (classfld != null) {
         classfld.setAccessible(true);
         Class clazz = (Class) classfld.get(menu);
-        if (clazz != null)
+        if (clazz != null && !itemList.contains(clazz)) {
           itemList.add(clazz);
+        }
       }
 
       Map subMenu = menu.getSubMenu();

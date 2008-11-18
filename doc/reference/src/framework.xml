@@ -309,6 +309,47 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 			</para>
 
     </sect2>
+
+    <sect2 id="StateVersioningContext">
+      <title>StateVersioningContext</title>
+
+	<para>
+		To compensate the lack of support for the back button of the web browser,
+		a custom solution for this has been added to Aranea since release 1.2. This
+		solution depends on rsh (<ulink url="http://code.google.com/p/reallysimplehistory/">Really Simple History</ulink>),
+		so you also need to import JavaScripts (<filename>js/aranea/aranea-rsh.js</filename>,
+		<filename>js/rsh/rsh.js</filename>, see also <link linkend="systemTags">System tags</link>).
+	</para>
+	<para>
+
+		The main interface of this context is <literal>org.araneaframework.http.StateVersioningContext</literal>,
+		and once enabled, it is accessible form the <literal>Environment</literal>, though one
+		generally does not need to access it. Every application may provide their own values
+		for costumizing the number of pages (default is 20) of the <literal>StateVersioningContext</literal>.
+		To enable state versioning, one must add following XML code to <filename>aranea-conf.xml</filename>:
+
+<programlisting role="xml">
+&lt;bean id="araneaStateVersioningFilter"
+  class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget"
+  singleton="false"&gt;
+    &lt;property name="maxVersionedStates" value="10"/&gt;
+&lt;/bean&gt;</programlisting>
+
+		Note that it is defined as not being a singleton. This means that the
+		configuration is created for every context (user). Therefore, the
+		settings can be further customized to be more user specific.
+	</para>
+
+	<warning>
+		<para>
+			Since the visited pages are serialized on the client side, do not set high values for
+			<literal>maxVersionedStates</literal> as it puts more stress on the client's browser. 
+			Therefore, <literal>10</literal> is normal, <literal>20</literal> should be maximum
+			value for this attribute.
+		</para>
+	</warning>
+
+    </sect2>
   </sect1>
 
   <sect1 id="framework-assembly">

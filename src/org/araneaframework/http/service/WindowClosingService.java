@@ -41,7 +41,10 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
-	private Environment closableComponentEnv;
+
+  private static final long serialVersionUID = 1L;
+
+  private Environment closableComponentEnv;
 	
 	public WindowClosingService(Environment closableComponentEnv) {
 		this.closableComponentEnv = closableComponentEnv;
@@ -50,7 +53,7 @@ public class WindowClosingService extends BaseService {
 	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		
-		PopupWindowContext popupCtx = ((PopupWindowContext)closableComponentEnv.getEntry(PopupWindowContext.class));
+		PopupWindowContext popupCtx = EnvironmentUtil.getPopupWindowContext(getEnvironment());
 		BaseApplicationWidget opener = null;
 		if (popupCtx != null)
 			opener = (BaseApplicationWidget) popupCtx.getOpener();
@@ -97,7 +100,7 @@ public class WindowClosingService extends BaseService {
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = (ManagedServiceContext) getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 }

@@ -55,7 +55,9 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
 public class StandardServletServiceAdapterComponent extends BaseComponent
 implements ServletServiceAdapterComponent {
 
-	private Service childService;
+  private static final long serialVersionUID = 1L;
+
+  private Service childService;
 
 	private static final ThreadLocal localInput = new ThreadLocal();
 	private static final ThreadLocal localOutput = new ThreadLocal();
@@ -63,7 +65,9 @@ implements ServletServiceAdapterComponent {
 	protected void init() throws Exception {
 		childService._getComponent().init(getScope(), new BaseEnvironment() {
 
-			public Object getEntry(Object key) {
+          private static final long serialVersionUID = 1L;
+
+          public Object getEntry(Object key) {
 				if (InputData.class.equals(key))
 					return localInput.get();
 				if (OutputData.class.equals(key))
