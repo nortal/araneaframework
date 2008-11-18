@@ -235,7 +235,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
     if (this.backgroundValidation == null) {
-      FormContext fctx = ((FormContext) getEnvironment().getEntry(FormContext.class));
+      FormContext fctx = UilibEnvironmentUtil.getFormContext(getEnvironment());
       if (fctx != null)
         return fctx.isBackgroundValidation();
       return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfiguration(getEnvironment()));

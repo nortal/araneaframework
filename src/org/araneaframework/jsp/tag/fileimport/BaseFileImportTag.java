@@ -27,8 +27,8 @@ import org.araneaframework.jsp.tag.BaseTag;
 public abstract class BaseFileImportTag extends BaseTag {
 
   public static final String DEFAULT_GROUP_NAME = "all";
-  public static final String GROUP_CSS_SUFFIX = "_css";
-  public static final String GROUP_JS_SUFFIX = "_js";
+  public static final String GROUP_CSS_SUFFIX = ".css";
+  public static final String GROUP_JS_SUFFIX = ".js";
 
     protected String includeGroupName;
 	protected String includeFileName;

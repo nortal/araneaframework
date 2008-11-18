@@ -24,7 +24,7 @@
            functionality, but extend the functionality of both framework and <emphasis>UiLib</emphasis>.
            </para>
 
-          <sect2>
+          <sect2 id="behaviour">
             <title>Behaviour (<ulink url="http://bennolan.com/behaviour/">http://bennolan.com/behaviour/</ulink>)</title>
             <para>
               Neat little library allowing usage of CSS selectors for applying behaviour to HTML page elements. It is required
@@ -43,14 +43,14 @@
             </para>
           </sect2> 
           
-          <sect2>
+          <sect2 id="dhtmlcalendar">
             <title>The DHTML Calendar (<ulink url="http://www.dynarch.com/projects/calendar/">http://www.dynarch.com/projects/calendar/</ulink>)</title>
             <para>
                Nice DHTML calendar, required if one wants to use Aranea JSP <emphasis>&lt;ui:dateInput&gt;</emphasis> or <emphasis>&lt;ui:dateTimeInput&gt;</emphasis> tags.
             </para>
           </sect2>
           
-          <sect2>
+          <sect2 id="prototype">
             <title>Prototype (<ulink url="http://www.prototypejs.org/">http://www.prototypejs.org/</ulink>)</title>
             <para>
                Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea partial rendering
@@ -60,7 +60,7 @@
             </para>
           </sect2>
           
-          <sect2>
+          <sect2 id="scriptaculous">
             <title>script.aculo.us (<ulink url="http://script.aculo.us/">http://script.aculo.us/</ulink>)</title>
             <para>
                script.aculo.us provides easy-to-use, cross-browser user interface JavaScript libraries. Only subset of script.aculo.us
@@ -69,7 +69,7 @@
             </para>
           </sect2>
 
-          <sect2>
+          <sect2 id="tinymce">
             <title>TinyMCE (<ulink url="http://tinymce.moxiecode.com/">http://tinymce.moxiecode.com/</ulink>)</title>
             <para>
                TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control. Required for using Aranea 
@@ -77,7 +77,7 @@
             </para>
           </sect2>
           
-          <sect2>
+          <sect2 id="prototip">
           	<title>Prototip (<ulink url="http://www.nickstakenburg.com/projects/prototip/">http://www.nickstakenburg.com/projects/prototip/</ulink>)</title>
           	<para>
           	  Prototip allows to easily create both simple and complex tooltips using the Prototype javascript 
@@ -87,7 +87,7 @@
           </sect2>
           
           
-           <sect2>
+           <sect2 id="modalbox">
           	<title>ModalBox (<ulink url="http://www.wildbit.com/labs/modalbox/">http://www.wildbit.com/labs/modalbox/</ulink>)</title>
           	<para>
           	  ModalBox is a JavaScript technique for creating modern modal dialogs or even wizards 
@@ -95,8 +95,8 @@
           	</para>
           </sect2>
 
-          <sect2>
-            <title>log4javascript (<ulink url="http://www.timdown.co.uk/log4javascript/">http://www.timdown.co.uk/log4javascript/</ulink>)</title>
+          <sect2 id="log4javascript">
+            <title>log4javascript (<ulink url="http://log4javascript.org/">http://log4javascript.org/</ulink>)</title>
             <para>
 	            Note that this is now deprecated in favour of <ulink url="http://www.getfirebug.com/">Firebug's</ulink> built in 
 	            logging facilities. Logging to Firebug console is enabled with <emphasis>AraneaPage.setFirebugLogger()</emphasis>.

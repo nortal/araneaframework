@@ -16,6 +16,8 @@
 
 package org.araneaframework.http.util;
 
+import org.araneaframework.framework.ExpiringServiceContext;
+import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
@@ -119,9 +121,16 @@ public abstract class EnvironmentUtil {
     return (PopupWindowContext) env.requireEntry(PopupWindowContext.class);
   }
 
+  public static ContinuationContext getContinuationContext(Environment env) {
+    return (ContinuationContext) env.getEntry(ContinuationContext.class);
+  }
+
   // Environment item retrieve methods mostly for Aranea core:
   public static ManagedServiceContext requireManagedService(Environment env) {
     return (ManagedServiceContext) env.requireEntry(ManagedServiceContext.class);
   }
 
+  public static ExpiringServiceContext getExpiringServiceContext(Environment env) {
+    return (ExpiringServiceContext) env.getEntry(ExpiringServiceContext.class);
+  }
 }

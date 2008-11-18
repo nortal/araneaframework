@@ -15,6 +15,7 @@
 **/
 package org.araneaframework.uilib.util;
 
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
 
@@ -38,5 +39,11 @@ public abstract class ConfigurationContextUtil {
   public static FormElementValidationErrorRenderer getFormElementValidationErrorRenderer(ConfigurationContext cctx) {
     FormElementValidationErrorRenderer r = (FormElementValidationErrorRenderer) cctx.getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
     return r;
+  }
+
+  public static Boolean isLocalizeControlData(Environment env) {
+    ConfigurationContext conf = UilibEnvironmentUtil.getConfiguration(env);
+    Boolean setting = (Boolean) conf.getEntry(ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA);
+    return setting == null ? Boolean.FALSE : setting;
   }
 }

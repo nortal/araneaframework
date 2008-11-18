@@ -1,5 +1,6 @@
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -94,8 +95,7 @@ public class AutoCompleteTextControl extends TextControl {
   protected ResponseBuilder resolveResponseBuilder() {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
-      ConfigurationContext confCtx = 
-        (ConfigurationContext) getEnvironment().getEntry(ConfigurationContext.class);
+      ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
       if (confCtx != null)
         result = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
     }

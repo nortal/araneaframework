@@ -30,6 +30,8 @@ import org.araneaframework.uilib.list.util.comparator.StringComparator;
 public abstract class ComparableExpression
   implements CompositeExpression, StringExpression {
 
+  private static final long serialVersionUID = 1L;
+
   protected Expression expr1;
 
   protected Expression expr2;

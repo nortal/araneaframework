@@ -20,11 +20,28 @@ import org.araneaframework.backend.list.SqlExpression;
 
 public class SqlLowerThanExpression extends SqlComparableExpression {
 
+  protected boolean allowEquals = false;
+
   public SqlLowerThanExpression(SqlExpression expr1, SqlExpression expr2) {
     super(expr1, expr2);
   }
 
+  /**
+   * Greates a new <code>SqlLowerThanExpression</code> that can also be
+   * lower-than-or-equal expression. The latter is determined by the boolean
+   * parameter <code>allowEquals</code>.
+   * 
+   * @param expr1 The expression that should be lower than the other.
+   * @param expr2 The expression that should be greater than the other.
+   * @param allowEquals Whether expressions can also be equal. By default: equality not allowed.
+   * @since 1.2
+   */
+  public SqlLowerThanExpression(SqlExpression expr1, SqlExpression expr2, boolean allowEquals) {
+    super(expr1, expr2);
+    this.allowEquals = allowEquals;
+  }
+
   protected String getOperator() {
-    return "<";
+    return allowEquals ? "<=" : "<";
   }
 }

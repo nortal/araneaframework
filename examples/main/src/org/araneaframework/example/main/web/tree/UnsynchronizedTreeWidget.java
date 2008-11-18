@@ -15,6 +15,7 @@
 **/
 
 package org.araneaframework.example.main.web.tree;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -105,7 +106,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return (TreeNodeContext) getEnvironment().getEntry(TreeNodeContext.class);
+      return UilibEnvironmentUtil.getTreeNodeContext(getEnvironment());
     }
 
   }

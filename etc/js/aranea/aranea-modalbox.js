@@ -35,19 +35,26 @@ Aranea.ModalBox.show = function(options) {
 Aranea.ModalBox.afterLoad = function(content) {
   // if no content is returned, overlay has been closed.
   if (content != null && content.startsWith("<!-- araOverlaySpecialResponse -->")) {
-    AraneaPage.findSystemForm();
-    var systemForm = araneaPage().getSystemForm();
+	Aranea.ModalBox.close();
 
-    if (systemForm.araTransactionId) {
-      systemForm.araTransactionId.value = 'inconsistent';
-    }
+	var f = function() {
+	    AraneaPage.findSystemForm();
+	    var systemForm = araneaPage().getSystemForm();
 
-    if (window.modalTransport) {
-      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
-      window.modalTransport = null;
-    }
+	    if (systemForm.araTransactionId) {
+	      systemForm.araTransactionId.value = 'inconsistent';
+	    }
 
-    return new DefaultAraneaSubmitter().event_4(systemForm);
+	    if (window.modalTransport) {
+	      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
+	      window.modalTransport = null;
+	    }
+
+	    return new DefaultAraneaSubmitter().event_4(systemForm);
+	};
+
+	var interval = Modalbox && Modalbox.options.transitions ? Modalbox.options.resizeDuration * 4000 : 400;
+	setTimeout(f, interval);
   }
 };
 

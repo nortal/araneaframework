@@ -21,7 +21,7 @@
         <div id="header">
             <div class="box1">
             	<ui:eventLinkButton id="logo" eventId="mainPage">
-                    <tui:image src="gfx/logo_aranea_screen.jpg" alt="Aranea fancy logo"/>
+                    <tui:image src="gfx/logo_aranea_screen.jpg" />
                 </ui:eventLinkButton>
 
                 <div id="menu1">

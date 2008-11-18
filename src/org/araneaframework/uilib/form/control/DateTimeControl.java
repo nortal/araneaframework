@@ -31,6 +31,9 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DateTimeControl extends BaseControl {
+
+  private static final long serialVersionUID = 1L;
+
   //*******************************************************************
   // FIELDS
   //*******************************************************************
@@ -227,6 +230,9 @@ public class DateTimeControl extends BaseControl {
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {
+
+    private static final long serialVersionUID = 1L;
+
     private String time;
     private String date;
     

@@ -124,7 +124,7 @@ public class BodyHtmlTag extends PresentationTag {
 
   /** Writes scripts that register client-side keepalive events for server-side expiring services. */
   protected void writeKeepAliveRegistrationScripts(Writer out) throws IOException {
-    ExpiringServiceContext expiringServiceContext = (ExpiringServiceContext) getEnvironment().getEntry(ExpiringServiceContext.class);
+    ExpiringServiceContext expiringServiceContext = EnvironmentUtil.getExpiringServiceContext(getEnvironment());
     if (expiringServiceContext == null)
       return;
 	  Map expiringServiceMap = expiringServiceContext.getServiceTTLMap();

@@ -39,7 +39,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * Default number of states that is stored when this {@link StandardStateVersioningFilterWidget} 
    * is present in component hierarchy. 
    */
-  public static final int DEFAULT_MAX_STATES_STORED = 10;
+  public static final int DEFAULT_MAX_STATES_STORED = 20;
   private int maxVersionedStates = DEFAULT_MAX_STATES_STORED;
   
   /** State identifier of last component hierarchy serviced by this filter. */
@@ -225,7 +225,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /** 
-   * Notifies descendants which implement {@link StateVersioningContext.ClientNavigationAware} when
+   * Notifies descendants which implement {@link StateVersioningContext#ClientNavigationAware} when
    * state which was previously stored and modified by later actions becomes active again. 
    */
   protected void notifyClientNavigationAwareComponents() {

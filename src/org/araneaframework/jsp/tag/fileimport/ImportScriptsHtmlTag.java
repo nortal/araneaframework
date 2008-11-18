@@ -50,7 +50,6 @@ public class ImportScriptsHtmlTag extends BaseFileImportTag {
   public static void writeHtmlScriptsInclude(Writer out, String srcFile)
       throws Exception {
     JspUtil.writeOpenStartTag(out, "script");
-    JspUtil.writeAttribute(out, "language", "JavaScript1.2");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeAttribute(out, "src", srcFile, false);
     JspUtil.writeCloseStartTag(out);
