@@ -132,11 +132,6 @@
 		<file path="js/prototip/prototip.js" />
 	</files>
 
-	<files content-type="text/javascript" group="tiny_mce.js">
-		<file path="js/tiny_mce/tiny_mce.js" />
-		<file path="js/tiny_mce/tiny_mce_popup.js" />
-	</files>
-
 	<files content-type="text/javascript" group="logger.js">
 		<file path="js/log4javascript/log4javascript.js" />
 	</files>
@@ -147,7 +142,9 @@
 	-->
 
 	<files content-type="text/javascript">
+		<file path="js/tiny_mce/tiny_mce.js" />
 		<file path="js/tiny_mce/tiny_mce_src.js" />
+		<file path="js/tiny_mce/tiny_mce_popup.js" />
 	</files>
 
 	<files content-type="image/gif">

@@ -27,11 +27,11 @@
 	<ui:importScripts/>
 
 	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->
-	<ui:importScripts group="tiny_mce"/>
+	<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
 
 	<!--
 		Now a longer and more customizable way to import the same things.
-		Of course you can also import files one-by-one.
+		In addition, of course, you can also import files one-by-one.
 	-->
 
 	<!--
@@ -43,7 +43,7 @@
 	-->
 
 	<!--
-		Now the JavaScript dependencies.		
+		Now the JavaScript dependencies.
 		Notice that the difference between groups "core-all" and "core" is that
 		the first one includes Aranea core scripts + JavaScript for modalbox
 		and back-button (rsh) support.
