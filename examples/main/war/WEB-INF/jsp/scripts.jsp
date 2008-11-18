@@ -27,7 +27,7 @@
 	<ui:importScripts/>
 
 	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->
-	<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
+	<ui:importScripts group="tiny_mce"/>
 
 	<!--
 		Now a longer and more customizable way to import the same things.

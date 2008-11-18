@@ -46,4 +46,4 @@ Version 1.2 2008-11-25
    Styles: all, aranea, calendar, contextmenu, modalbox, prototip
 
    Scripts: all, core-all, core, calendar, calendar_et, modalbox, rsh,
-            prototip, logger, tinyMCE
+            prototip, logger, tiny_mce

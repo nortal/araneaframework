@@ -17,7 +17,6 @@
 		</head>
 
 		<ui:body>
-
 			<div id="cont1">
 	            <ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion">
 					<ui:systemForm method="post">
@@ -57,9 +56,7 @@
 						<ui:widgetInclude id="menu.footer"/>
 					</ui:updateRegion>
 				</div>
-
 			</ui:body>
-
 		</html>
 	</ui:widgetContext>
 </jsp:root>

@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.util.Collections;
+import java.util.Comparator;
 import org.araneaframework.core.Assert;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,8 +175,20 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
   public String getRawValueType() {
     return "List<String>";
   }
-  
-  
+
+  /**
+   * Provides a way to sort the items in this <code>MultiSelectControl</code>.
+   * The <code>comparator</code> parameter is used to compare
+   * <code>DisplayItem</code>s and, therefore, to set the order.
+   * 
+   * @param comparator Any <code>Comparator</code> that is used to define order
+   *          of display items.
+   * @since 1.2
+   */
+  public void sort(Comparator comparator) {
+    Collections.sort(this.items, comparator);
+  }
+
   //*********************************************************************
   //* INTERNAL METHODS
   //*********************************************************************  	

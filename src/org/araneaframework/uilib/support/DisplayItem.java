@@ -95,6 +95,9 @@ public class DisplayItem implements java.io.Serializable {
     this.disabled = disabled;
   }
 
+  /**
+   * @since 1.2
+   */
   public boolean equals(Object obj) {
     DisplayItem other = (DisplayItem) obj;
     return other == this || other.value == this.value;

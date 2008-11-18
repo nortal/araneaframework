@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-2008.11.17    | Aranea 1.2 RC1
+2008.11.18    | Aranea 1.2 RC1
 
 Features and Improvements
     Updated third-party scripts													| See #678

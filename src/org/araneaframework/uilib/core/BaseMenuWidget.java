@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.core;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -38,6 +37,8 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
+
+  private static final long serialVersionUID = 1L;
 
   /**
    * The container (a root) that holds the menu items.

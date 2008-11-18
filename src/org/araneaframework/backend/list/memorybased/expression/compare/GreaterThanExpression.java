@@ -23,7 +23,7 @@ public class GreaterThanExpression extends ComparableExpression {
 
   private static final long serialVersionUID = 1L;
 
-  private boolean allowEquals;
+  private boolean allowEquals = false;
 
   /**
    * Greates a new <code>GreaterThanExpression</code>.
