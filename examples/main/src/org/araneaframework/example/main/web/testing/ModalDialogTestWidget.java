@@ -102,8 +102,9 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
       if (classfld != null) {
         classfld.setAccessible(true);
         Class clazz = (Class) classfld.get(menu);
-        if (clazz != null)
+        if (clazz != null && !itemList.contains(clazz)) {
           itemList.add(clazz);
+        }
       }
 
       Map subMenu = menu.getSubMenu();

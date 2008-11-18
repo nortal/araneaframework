@@ -161,7 +161,6 @@ Modalbox.Methods = {
 					afterFinish: function() {
 						// Changed for Aranea:
 						new Effect.Scale(this.MBwindow, 100.0, {
-							scaleMode: 'box',
 							scaleContent: false,
 							scaleFromCenter: true,
 							scaleFrom: window.opera ? 0 : 1,
@@ -330,28 +329,24 @@ Modalbox.Methods = {
 	
 	_putContent: function(callback){
 		// Prepare and resize modal box for content
-		if (this.options.maxHeight) {
-			this._setWidth();
-			this.MBcontent.show();
-			this.focusableElements = this._findFocusableElements();
-			this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
-			setTimeout(function(){ // MSIE fix
-				var maxHeight = this.options.maxHeight;
-				if (maxHeight <= 1) { // if less or equal to 1 then consider it as percentage.
-					maxHeight = document.documentElement.clientHeight * maxHeight;
-				}
-				if (maxHeight < this.MBcontent.getHeight()) {
-					this.MBwindow.setStyle({height: maxHeight + 'px'});
-					this.MBcontent.setStyle({overflow: 'auto', height: $(this.MBwindow).getHeight() - $(this.MBheader).getHeight() - 13 + 'px'});
-				}
-				if(callback != undefined)
-					callback(); // Executing internal JS from loaded content
-				this.event("afterLoad"); // Passing callback
-			}.bind(this),1);
-		} else if(this.options.height == this._options.height) {
+
+		var byHeight = $(this.MBcontent).getHeight() - $(this.MBwindow).getHeight() + $(this.MBheader).getHeight();
+
+		var maxHeight = this.options.maxHeight; // This is added for Aranea.
+
+		// if less or equal to 1 then consider it as percentage:
+		maxHeight = (maxHeight && maxHeight <= 1) ? document.documentElement.clientHeight * maxHeight : null;
+
+		if(this.options.height == this._options.height) {
 			setTimeout(function() { // MSIE sometimes doesn't display content correctly
-				Modalbox.resize(0, $(this.MBcontent).getHeight() - $(this.MBwindow).getHeight() + $(this.MBheader).getHeight(), {
-					afterResize: function(){
+
+				if (maxHeight && maxHeight < this.MBcontent.getHeight()) {
+					byHeight = maxHeight - $(this.MBwindow).getHeight();
+					this.MBcontent.setStyle({overflow: 'auto', height: maxHeight - $(this.MBheader).getHeight() - 13 + 'px'});
+				}
+
+				Modalbox.resize(0, byHeight, {
+					afterResize: function() {
 						this.MBcontent.show().makePositioned();
 						this.focusableElements = this._findFocusableElements();
 						this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
@@ -590,7 +585,7 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
     this.element = $(element)
     var options = Object.extend({
 	  scaleFromTop: false,     // changed for Aranea
-      scaleMode: 'contents',        // 'box' or 'contents' or {} with provided values
+      scaleMode: 'box',        // 'box' or 'contents' or {} with provided values
       scaleByWidth: byWidth,
 	  scaleByHeight: byHeight
     }, arguments[3] || {});
