@@ -125,11 +125,6 @@ Modalbox.Methods = {
 					}
 				});
 
-//				new Effect.ScaleBy(this.MBwindow,
-//						-this.MBwindow.getWidth(),
-//						-this.MBwindow.getHeight(),
-//						this.options,
-//						Object.extend(this.options, {afterFinish: this._deinit.bind(this)}));
 //				Effect.SlideUp(this.MBwindow, { duration: this.options.slideUpDuration, transition: Effect.Transitions.sinoidal, afterFinish: this._deinit.bind(this) } );
 			else {
 				$(this.MBwindow).hide();
@@ -166,6 +161,7 @@ Modalbox.Methods = {
 					afterFinish: function() {
 						// Changed for Aranea:
 						new Effect.Scale(this.MBwindow, 100.0, {
+							scaleMode: 'box',
 							scaleContent: false,
 							scaleFromCenter: true,
 							scaleFrom: window.opera ? 0 : 1,
@@ -174,7 +170,8 @@ Modalbox.Methods = {
 								Modalbox.MBwindow.show();
 							},
 							afterFinish: function() {
-								Modalbox._setPosition(); 
+								Modalbox._setPosition();
+								Modalbox.MBframe.makePositioned();
 								Modalbox.loadContent();
 							}
 						});
@@ -341,7 +338,7 @@ Modalbox.Methods = {
 			setTimeout(function(){ // MSIE fix
 				var maxHeight = this.options.maxHeight;
 				if (maxHeight <= 1) { // if less or equal to 1 then consider it as percentage.
-					maxHeight = document.documentElement. clientHeight * maxHeight;
+					maxHeight = document.documentElement.clientHeight * maxHeight;
 				}
 				if (maxHeight < this.MBcontent.getHeight()) {
 					this.MBwindow.setStyle({height: maxHeight + 'px'});
@@ -593,7 +590,7 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
     this.element = $(element)
     var options = Object.extend({
 	  scaleFromTop: false,     // changed for Aranea
-      scaleMode: 'box',        // 'box' or 'contents' or {} with provided values
+      scaleMode: 'contents',        // 'box' or 'contents' or {} with provided values
       scaleByWidth: byWidth,
 	  scaleByHeight: byHeight
     }, arguments[3] || {});

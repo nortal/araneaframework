@@ -601,8 +601,8 @@ DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor = function(transport) {
 	if (stateVersion != null && stateVersion.length > 0) {
 		var sForm = araneaPage().getSystemForm();
 		sForm.araClientStateId.value = stateVersion;
-		if (dhtmlHistory) {
-			dhtmlHistory.add(stateVersion, true);
+		if (window.dhtmlHistory) {
+			window.dhtmlHistory.add(stateVersion, true);
 		}
 	}
 };
@@ -1077,7 +1077,7 @@ AraneaPage.RSHURLInit = function() {
     // for these cases, so that browsers own history mechanisms can take over.
     if (!stateId.startsWith("HTTP")) {
       window.location.hash = stateId;
-      dhtmlHistory.add(stateId, null);
+      window.dhtmlHistory.add(stateId, null);
     }
   }
 };

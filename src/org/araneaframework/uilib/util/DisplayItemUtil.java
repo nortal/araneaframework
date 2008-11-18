@@ -149,8 +149,6 @@ public class DisplayItemUtil implements Serializable {
    * @param displayItems The items that should be checked whether given
    *          <code>value</code> is one of them.
    * @param value the value that is controlled.
-   * @param ignoreStatus Whether this algorithm should ignore whether the
-   *          currentItem is disabled or not.
    * @return whether <code>value</code> is found in the select items.
    */
   public static boolean isValueInItems(Collection displayItems, String value) {

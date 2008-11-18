@@ -50,7 +50,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
     addWidget("menu", menuWidget);
 
     if (topWidget == null) {
-      menuWidget.selectMenuItem("Aranea_1_1");
+      menuWidget.selectMenuItem("AraneaRelease");
     }
     topWidget = null;
 }
