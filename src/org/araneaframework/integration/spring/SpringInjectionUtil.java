@@ -86,7 +86,7 @@ public final class SpringInjectionUtil {
 	 * 				eligible for dependency injection.
 	 */
 	public static void injectBeans(Environment env, Object object) {
-		BeanFactory bf = (BeanFactory) env.getEntry(BeanFactory.class);
+		BeanFactory bf = env.getEntry(BeanFactory.class);
 
 		injectMethods(env, object, bf);
 		injectFields(env, object, bf);

@@ -40,7 +40,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>ConfigurationContext</code> or <code>null</code>.
    */
   public static ConfigurationContext getConfiguration(Environment env) {
-    return (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+    return env.getEntry(ConfigurationContext.class);
   }
 
   /**
@@ -51,7 +51,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>FormContext</code> or <code>null</code>.
    */
   public static FormContext getFormContext(Environment env) {
-    return (FormContext) env.getEntry(FormContext.class);
+    return env.getEntry(FormContext.class);
   }
 
   /**
@@ -62,7 +62,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>TreeContext</code> or <code>null</code>.
    */
   public static TreeContext getTreeContext(Environment env) {
-    return (TreeContext) env.getEntry(TreeContext.class);
+    return env.getEntry(TreeContext.class);
   }
 
   /**

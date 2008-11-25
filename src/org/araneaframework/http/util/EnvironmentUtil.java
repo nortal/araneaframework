@@ -39,11 +39,11 @@ import org.araneaframework.http.UpdateRegionContext;
 public abstract class EnvironmentUtil {
 
   public static TopServiceContext getTopServiceContext(Environment env) {
-    return (TopServiceContext) env.getEntry(TopServiceContext.class);
+    return env.getEntry(TopServiceContext.class);
   }
 
   public static TopServiceContext requireTopServiceContext(Environment env) {
-    return (TopServiceContext) env.requireEntry(TopServiceContext.class);
+    return env.requireEntry(TopServiceContext.class);
   }
 
   public static Object getTopServiceId(Environment env) {
@@ -56,11 +56,11 @@ public abstract class EnvironmentUtil {
   }
 
   public static ThreadContext getThreadContext(Environment env) {
-    return (ThreadContext) env.getEntry(ThreadContext.class);
+    return env.getEntry(ThreadContext.class);
   }
 
   public static ThreadContext requireThreadContext(Environment env) {
-    return (ThreadContext) env.requireEntry(ThreadContext.class);
+    return env.requireEntry(ThreadContext.class);
   }
 
   public static Object getThreadServiceId(Environment env) {
@@ -114,23 +114,23 @@ public abstract class EnvironmentUtil {
   }
 
   public static PopupWindowContext getPopupWindowContext(Environment env) {
-    return (PopupWindowContext) env.getEntry(PopupWindowContext.class);
+    return env.getEntry(PopupWindowContext.class);
   }
 
   public static PopupWindowContext requirePopupWindowContext(Environment env) {
-    return (PopupWindowContext) env.requireEntry(PopupWindowContext.class);
+    return env.requireEntry(PopupWindowContext.class);
   }
 
   public static ContinuationContext getContinuationContext(Environment env) {
-    return (ContinuationContext) env.getEntry(ContinuationContext.class);
+    return env.getEntry(ContinuationContext.class);
   }
 
   // Environment item retrieve methods mostly for Aranea core:
   public static ManagedServiceContext requireManagedService(Environment env) {
-    return (ManagedServiceContext) env.requireEntry(ManagedServiceContext.class);
+    return env.requireEntry(ManagedServiceContext.class);
   }
 
   public static ExpiringServiceContext getExpiringServiceContext(Environment env) {
-    return (ExpiringServiceContext) env.getEntry(ExpiringServiceContext.class);
+    return env.getEntry(ExpiringServiceContext.class);
   }
 }
