@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.IOException;
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -72,7 +71,7 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
     return EVAL_PAGE;
   }  
 
-  protected boolean writeEventAttribute(Writer out) throws IOException, JspException {
+  protected boolean writeEventAttribute(Writer out) throws IOException {
     if (viewModel.isOnClickEventRegistered()) {
       UiUpdateEvent event = new UiUpdateEvent(OnClickEventListener.ON_CLICK_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
       event.setEventPrecondition(onClickPrecondition);

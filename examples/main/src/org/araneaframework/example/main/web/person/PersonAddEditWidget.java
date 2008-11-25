@@ -87,7 +87,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 		return form;
 	}
 	
-	public void handleEventSave(String eventParameter) throws Exception {
+	public void handleEventSave() throws Exception {
 		// if form data is found to be valid  
 		if (form.convertAndValidate()) {
 			// read the application user supplied data from form into model object.
@@ -112,7 +112,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 	}
 	
 	/* Cancels the adding/editing of current person, returns to calling flow */
-	public void handleEventCancel(String eventParameter) throws Exception {
+	public void handleEventCancel() throws Exception {
 		getFlowCtx().cancel();
 	}
 }

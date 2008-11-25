@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -30,28 +30,28 @@ import org.araneaframework.Path;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardPath implements Path {
+
+  private static final long serialVersionUID = 1L;
+
   private LinkedList path = new LinkedList();
-  
+
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.
    * @param fullPath
    */
   public StandardPath(String fullPath) {
     Assert.notNull(fullPath, "Path cannot be null!");
-    
     StringTokenizer tokenizer = new StringTokenizer(fullPath, ".");
-    
     while (tokenizer.hasMoreElements()) {
       path.add(tokenizer.nextElement());
     }
   }
-  
 
   /**
    * @see org.araneaframework.Path#getNext()
    */
   public Object getNext() {
-  	return path.getFirst();
+    return path.getFirst();
   }
 
   /**
@@ -67,28 +67,26 @@ public class StandardPath implements Path {
   public boolean hasNext() {
     return path.size() > 0;
   }
-  
-  
+
   /**
    * @since 1.1
    */
   public StandardPath(Collection fullPath) {
     path.addAll(fullPath);
   }
-  
+
   /**
    * Returns this {@link org.araneaframework.Path} as a dot-separated String.
    * @return this {@link org.araneaframework.Path} as a dot-separated String
    */
   public String toString() {
     StringBuffer result = new StringBuffer();
-
-    for (Iterator i = path.iterator(); i.hasNext();) {  
+    for (Iterator i = path.iterator(); i.hasNext();) {
       result.append((String) i.next());
-      if (i.hasNext())
+      if (i.hasNext()) {
         result.append('.');
+      }
     }
-
     return result.toString();
   }
 }

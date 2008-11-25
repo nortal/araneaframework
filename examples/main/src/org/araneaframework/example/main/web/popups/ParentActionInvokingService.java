@@ -24,6 +24,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -69,7 +70,7 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 

@@ -203,7 +203,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     }
   }
 
-  public static void writeSelectLabel(Writer out, String label, String styleClass) throws JspException, IOException {
+  public static void writeSelectLabel(Writer out, String label, String styleClass) throws IOException {
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", styleClass);
     JspUtil.writeCloseStartTag_SS(out);

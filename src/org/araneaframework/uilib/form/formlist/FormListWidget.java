@@ -18,34 +18,35 @@ package org.araneaframework.uilib.form.formlist;
 
 import org.araneaframework.uilib.form.FormWidget;
 
-
 /**
- * Editable rows widget that is used to handle simultenous editing of multiple forms with same structure.
+ * Editable rows widget that is used to handle simultenous editing of multiple
+ * forms with same structure.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormListWidget extends BaseFormListWidget {
 
+  private static final long serialVersionUID = 1L;
 
-	//*******************************************************************
-	// CONSTRUCTORS
-	//*******************************************************************		
+  // *******************************************************************
+  // CONSTRUCTORS
+  // *******************************************************************
 
   /**
    * @param rowHandler row handler.
    */
   public FormListWidget(FormRowHandler rowHandler) {
     super(rowHandler);
-  }  
-  
-	/**
-	 * @param rowHandler row handler.
-	 */
-	public FormListWidget(FormRowHandler rowHandler, FormListModel model) {
-    super(rowHandler, model);
-	}
+  }
 
-	protected FormWidget buildAddForm(){
-		return new FormWidget();
-	}
+  /**
+   * @param rowHandler row handler.
+   */
+  public FormListWidget(FormRowHandler rowHandler, FormListModel model) {
+    super(rowHandler, model);
+  }
+
+  protected FormWidget buildAddForm() {
+    return new FormWidget();
+  }
 }

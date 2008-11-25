@@ -201,7 +201,7 @@ public class ComponentListFooterTag extends PresentationTag {
    * Helper functions
    * ***********************************************************************************/
 
-  protected void writeInfo(Writer out, long totalItemCount, boolean allItemsShown, long firstShown, long lastShown) throws IOException, JspException {
+  protected void writeInfo(Writer out, long totalItemCount, boolean allItemsShown, long firstShown, long lastShown) throws IOException {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "class", infoStyleClass);
     JspUtil.writeCloseStartTag(out);

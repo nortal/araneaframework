@@ -64,6 +64,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   private final class ParameterizedTransition implements Closure, Serializable {
+    private static final long serialVersionUID = 1L;
     private final Closure transition;
     private final Widget activeFlow;
     private int transitionType;

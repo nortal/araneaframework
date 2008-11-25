@@ -33,148 +33,152 @@ import org.araneaframework.backend.list.model.ListQuery;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BackendListDataProvider extends BaseListDataProvider {
-	private static final Log log = LogFactory.getLog(BackendListDataProvider.class);
-	private Set dataUpdateListeners = new HashSet(1);
-	
-	public static final boolean USE_CACHE_BY_DEFAULT = false; 
 
-	protected ComparatorExpression orderExpr;
-	protected Expression filterExpr;
+  private static final long serialVersionUID = 1L;
 
-	protected Long lastStart;
-	protected Long lastCount;
+  private static final Log log = LogFactory.getLog(BackendListDataProvider.class);
 
-	protected ListItemsData lastItemRange;
+  private Set dataUpdateListeners = new HashSet(1);
 
-	private boolean forceReload = false;
-	protected boolean useCache = USE_CACHE_BY_DEFAULT;
+  public static final boolean USE_CACHE_BY_DEFAULT = false;
 
-	/**
-	 * Instantiates the backend list data provider and sets whether to use caching.
-	 * 
-	 * @param useCache whether to use caching.
-	 */
-	public BackendListDataProvider(boolean useCache) {
-		this.useCache = useCache;
-	}
-	/**
-	 * Instantiates the backend list data provider with cache disabled.
-	 */
-	public BackendListDataProvider() {
-		// empty		
-	}
+  protected ComparatorExpression orderExpr;
 
-	public void init() throws Exception {
-		// for subclasses to implement if needed
-	}
+  protected Expression filterExpr;
 
-	public void destroy() throws Exception {
-		// for subclasses to implement if needed
-	}
+  protected Long lastStart;
 
-	/**
-	 * Sets the filter of the list.
-	 */
-	public void setFilterExpression(Expression filterExpr) {
-		this.filterExpr = filterExpr;
+  protected Long lastCount;
 
-		forceReload();
-		notifyDataChangeListeners();
-	}
+  protected ListItemsData lastItemRange;
 
-	/**
-	 * Sets the order of the list.
-	 */
-	public void setOrderExpression(ComparatorExpression orderExpr) {
-		this.orderExpr = orderExpr;
-		forceReload();
-		notifyDataChangeListeners();
-	}
+  private boolean forceReload = false;
 
-	/**
-	 * Empty.
-	 */
-	public void refreshData() throws Exception {
-		forceReload();
-		notifyDataChangeListeners();
-	}
+  protected boolean useCache = USE_CACHE_BY_DEFAULT;
 
-	/** @since 1.1 */
-	protected void forceReload() {
-		this.forceReload = true;
-	}
+  /**
+   * Instantiates the backend list data provider and sets whether to use
+   * caching.
+   * 
+   * @param useCache whether to use caching.
+   */
+  public BackendListDataProvider(boolean useCache) {
+    this.useCache = useCache;
+  }
 
-	/**
-	 * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve the
-	 * item.
-	 */
-	public Object getItem(Long index) throws Exception {
-		return getItemRange(index, new Long(1));
-	}
+  /**
+   * Instantiates the backend list data provider with cache disabled.
+   */
+  public BackendListDataProvider() {
+  // empty
+  }
 
-	/**
-	 * Returns the total item count.
-	 */
-	public Long getItemCount() throws Exception {
-		return getItemRange(new Long(0), new Long(1)).getTotalCount();
-	}
+  public void init() throws Exception {
+  // for subclasses to implement if needed
+  }
 
-	/**
-	 * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve all
-	 * items.
-	 */
-	public ListItemsData getAllItems() throws Exception {
-		return getItemRange(new Long(0), null);
-	}
+  public void destroy() throws Exception {
+  // for subclasses to implement if needed
+  }
 
-	public ListItemsData getItemRange(Long startIdx, Long count)
-			throws Exception {
-		if (!this.useCache || this.forceReload
-				|| !startIdx.equals(this.lastStart)
-				|| (count == null || this.lastCount == null)
-				&& count != this.lastCount || count != null
-				&& this.lastCount != null && !count.equals(this.lastCount)) {
-			ListQuery query = new ListQuery();
-			query.setListStructure(listStructure);
-			query.setItemRangeStart(startIdx);
-			query.setItemRangeCount(count);
-			query.setFilterInfo(this.filterInfo);
-			query.setOrderInfo(this.orderInfo);
-			query.setFilterExpression(this.filterExpr);
-			query.setOrderExpression(this.orderExpr);			
-			this.lastItemRange = getItemRange(query);
-			
-			if (log.isTraceEnabled()) {
-				log.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx) + ", count=" + String.valueOf(count));
-			}
-		}
+  /**
+   * Sets the filter of the list.
+   */
+  public void setFilterExpression(Expression filterExpr) {
+    this.filterExpr = filterExpr;
+    forceReload();
+    notifyDataChangeListeners();
+  }
 
-		this.forceReload = false;
-		this.lastStart = startIdx;
-		this.lastCount = count;
+  /**
+   * Sets the order of the list.
+   */
+  public void setOrderExpression(ComparatorExpression orderExpr) {
+    this.orderExpr = orderExpr;
+    forceReload();
+    notifyDataChangeListeners();
+  }
 
-		return this.lastItemRange;
-	}
-	
-	/** @since 1.1 */
-	protected void notifyDataChangeListeners() {
-		for (Iterator i = dataUpdateListeners.iterator(); i.hasNext(); ) {
-			DataUpdateListener listener = (DataUpdateListener) i.next();
-			listener.onDataUpdate();
-		}
-	}
-	
-	public void addDataUpdateListener(DataUpdateListener listener) {
-		dataUpdateListeners.add(listener);
-	}
+  /**
+   * Empty.
+   */
+  public void refreshData() throws Exception {
+    forceReload();
+    notifyDataChangeListeners();
+  }
 
-	public void removeDataUpdateListener(DataUpdateListener listener) {
-		dataUpdateListeners.remove(listener);
-	}
-	
-	/**
-	 * This method should be overidden to return a range of items from the list data.
-	 * 
-	 */
-	protected abstract ListItemsData getItemRange(ListQuery query) throws Exception;
+  /** @since 1.1 */
+  protected void forceReload() {
+    this.forceReload = true;
+  }
+
+  /**
+   * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve the item.
+   */
+  public Object getItem(Long index) throws Exception {
+    return getItemRange(index, new Long(1));
+  }
+
+  /**
+   * Returns the total item count.
+   */
+  public Long getItemCount() throws Exception {
+    return getItemRange(new Long(0), new Long(1)).getTotalCount();
+  }
+
+  /**
+   * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve all
+   * items.
+   */
+  public ListItemsData getAllItems() throws Exception {
+    return getItemRange(new Long(0), null);
+  }
+
+  public ListItemsData getItemRange(Long startIdx, Long count) throws Exception {
+    if (!this.useCache || this.forceReload || !startIdx.equals(this.lastStart)
+        || (count == null || this.lastCount == null) && count != this.lastCount
+        || count != null && this.lastCount != null
+        && !count.equals(this.lastCount)) {
+      ListQuery query = new ListQuery();
+      query.setListStructure(listStructure);
+      query.setItemRangeStart(startIdx);
+      query.setItemRangeCount(count);
+      query.setFilterInfo(this.filterInfo);
+      query.setOrderInfo(this.orderInfo);
+      query.setFilterExpression(this.filterExpr);
+      query.setOrderExpression(this.orderExpr);
+      this.lastItemRange = getItemRange(query);
+      if (log.isTraceEnabled()) {
+        log.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx)
+            + ", count=" + String.valueOf(count));
+      }
+    }
+    this.forceReload = false;
+    this.lastStart = startIdx;
+    this.lastCount = count;
+    return this.lastItemRange;
+  }
+
+  /** @since 1.1 */
+  protected void notifyDataChangeListeners() {
+    for (Iterator i = dataUpdateListeners.iterator(); i.hasNext();) {
+      DataUpdateListener listener = (DataUpdateListener) i.next();
+      listener.onDataUpdate();
+    }
+  }
+
+  public void addDataUpdateListener(DataUpdateListener listener) {
+    dataUpdateListeners.add(listener);
+  }
+
+  public void removeDataUpdateListener(DataUpdateListener listener) {
+    dataUpdateListeners.remove(listener);
+  }
+
+  /**
+   * This method should be overidden to return a range of items from the list
+   * data.
+   */
+  protected abstract ListItemsData getItemRange(ListQuery query)
+      throws Exception;
 }

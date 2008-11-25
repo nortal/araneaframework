@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -79,8 +80,8 @@ public class DateControl extends TimestampControl {
 
 
 	  if (!confOverridden) {
-		  ConfigurationContext confCtx = 
-			  getEnvironment().getEntry(ConfigurationContext.class);
+		  ConfigurationContext confCtx =
+		    UilibEnvironmentUtil.getConfiguration(getEnvironment());
 
 		  if (confCtx != null) {
 			  String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_DATE_FORMAT);    

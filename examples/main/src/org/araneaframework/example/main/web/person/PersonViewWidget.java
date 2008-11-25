@@ -55,7 +55,7 @@ public class PersonViewWidget extends TemplateBaseWidget {
 		addWidget("personForm", personForm);
 	}
 	
-	public void handleEventReturn(String eventParameter) throws Exception {
+	public void handleEventReturn() throws Exception {
 		getFlowCtx().cancel();
 	}	
 }

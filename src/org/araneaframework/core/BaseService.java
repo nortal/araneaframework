@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -23,12 +23,14 @@ import org.araneaframework.Service;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * Non-composite service component providing the extra action(Path, InputData, OutputData)
- * to BaseComponent.
+ * Non-composite service component providing the extra action(Path, InputData,
+ * OutputData) to BaseComponent.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public abstract class BaseService extends BaseComponent implements Service {
+public class BaseService extends BaseComponent implements Service {
+
+  private static final long serialVersionUID = 1L;
 
   protected transient InputData currentInputData;
 

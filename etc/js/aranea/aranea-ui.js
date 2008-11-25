@@ -1,5 +1,5 @@
 /**
- * Copyright 2006 Webmedia Group Ltd.
+ * Copyright 2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,7 +199,7 @@ Aranea.UI.markFEContentStatus = function(valid, el) {
  */
 Aranea.UI.appendLocalFEValidationMessages = function(el, html) {
   if (el) el = $(el); else return;
-  if (el) new Insertion.Bottom(el, html);
+  if (el) el.insert(html);
 };
 
 /**

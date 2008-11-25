@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +35,9 @@ import org.araneaframework.http.util.JsonObject;
  * @since 1.1
  */
 public class FormElementValidationActionListener extends StandardActionListener {
+
+  private static final long serialVersionUID = 1L;
+
   public static final String FORM_VALIDATION_REGION_KEY = "aranea-formvalidation";
   protected static final Log log = LogFactory.getLog(FormElementValidationActionListener.class);
 
@@ -43,7 +47,7 @@ public class FormElementValidationActionListener extends StandardActionListener 
     this.baseFormElement = baseFormElement;
   }
 
-  public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+  public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
     if (!isValidationEnabled() && log.isWarnEnabled()) {
       log.warn("Validation listener of '" + this.baseFormElement.getScope() + "' was invoked although validation not enbled. Skipping response.");
       return;
@@ -66,7 +70,7 @@ public class FormElementValidationActionListener extends StandardActionListener 
 
     writeRegion(out, FormElementValidationActionListener.FORM_VALIDATION_REGION_KEY, object.toString());
     
-    MessageContext messageContext = baseFormElement.getEnvironment().getEntry(MessageContext.class);
+    MessageContext messageContext = EnvironmentUtil.getMessageContext(baseFormElement.getEnvironment());
     if(messageContext != null) {
       UpdateRegionProvider messageRegion = messageContext;
 

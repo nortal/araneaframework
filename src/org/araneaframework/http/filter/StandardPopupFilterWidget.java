@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.filter;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -235,7 +236,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
   protected void event(Path path, InputData input) throws Exception {
     if (input.getGlobalData().containsKey(PopupWindowContext.POPUPS_CLOSE_KEY)) {
-      ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
+      ThreadContext threadCtx = EnvironmentUtil.getThreadContext(getEnvironment());
       Object id = threadCtx.getCurrentId();
       threadCtx.close(id);
       if (log.isDebugEnabled())

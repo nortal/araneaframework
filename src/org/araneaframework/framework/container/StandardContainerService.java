@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.container;
 
@@ -32,10 +32,15 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardContainerService extends BaseFilterService {
+
+  private static final long serialVersionUID = 1L;
+
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
+
   private static final Log log = LogFactory.getLog(StandardContainerService.class);
+
   /**
    * The key of the action path parameter in the request.
    */
@@ -48,7 +53,7 @@ public class StandardContainerService extends BaseFilterService {
   protected Path getActionPath(InputData input) {
     return new StandardPath((String) input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
   }
-  
+
   /**
    * Determines if the request contains an action. Checks if the ACTION_PATH_INPUT_DATA_PARAMETER
    * is set in the request.

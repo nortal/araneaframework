@@ -25,29 +25,30 @@ import org.araneaframework.uilib.form.control.TextControl;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class ClientViewWidget extends TemplateBaseWidget {
-	private ExampleData.Client client;
-	
-	public ClientViewWidget(ExampleData.Client client) {
-		this.client = client;
-	}
 
-	protected void init() throws Exception {
-		setViewSelector("release/demos/clientView");
+  private static final long serialVersionUID = 1L;
 
-		BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(client);
-		form.addBeanElement("sex", "sed.Sex", new TextControl(), true);
-		form.addBeanElement("forename", "sed.Forename", new TextControl(), true);
-		form.addBeanElement("surname", "sed.Surname", new TextControl(),  true);
-		form.addBeanElement("country", "common.Country", new TextControl(), true);
-		
-		addWidget("form", form);
-	}
+  private ExampleData.Client client;
 
-	public ExampleData.Client getClient() {
-		return client;
-	}
-	
-	private void handleEventReturn() {
-		getFlowCtx().cancel();
-	}
+  public ClientViewWidget(ExampleData.Client client) {
+    this.client = client;
+  }
+
+  protected void init() throws Exception {
+    setViewSelector("release/demos/clientView");
+    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(client);
+    form.addBeanElement("sex", "sed.Sex", new TextControl(), true);
+    form.addBeanElement("forename", "sed.Forename", new TextControl(), true);
+    form.addBeanElement("surname", "sed.Surname", new TextControl(), true);
+    form.addBeanElement("country", "common.Country", new TextControl(), true);
+    addWidget("form", form);
+  }
+
+  public ExampleData.Client getClient() {
+    return client;
+  }
+
+  public void handleEventReturn() {
+    getFlowCtx().cancel();
+  }
 }

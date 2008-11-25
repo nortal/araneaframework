@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -31,7 +31,7 @@ public abstract class StandardEventListener implements EventListener {
    * This method is marked final. Subclasses should implement
    * {@link #processEvent(Object, String, InputData)}.
    */
-  public final void processEvent(Object eventId, InputData input)
+  public final void processEvent(String eventId, InputData input)
       throws Exception {
     String eventParameter = (String) input.getGlobalData().get(
         ApplicationWidget.EVENT_PARAMETER_KEY);
@@ -47,7 +47,6 @@ public abstract class StandardEventListener implements EventListener {
    * @param input The request data of the event.
    * @throws Exception Any runtime exception that may occur.
    */
-  public abstract void processEvent(Object eventId, String eventParam,
+  public abstract void processEvent(String eventId, String eventParam,
       InputData input) throws Exception;
-
 }

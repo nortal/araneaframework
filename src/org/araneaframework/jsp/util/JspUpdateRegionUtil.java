@@ -19,7 +19,6 @@ package org.araneaframework.jsp.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.util.NameUtil;
@@ -28,7 +27,7 @@ import org.araneaframework.uilib.util.NameUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class JspUpdateRegionUtil {
-  public static List parseUpdateRegionNames(String updateRegions) throws JspException  {
+  public static List parseUpdateRegionNames(String updateRegions) {
     return JspUtil.parseMultiValuedAttribute(updateRegions);
   }
 
@@ -36,14 +35,14 @@ public class JspUpdateRegionUtil {
     return regionName;
   }
 
-  public static List getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) throws JspException {
+  public static List getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) {
     List result = JspUpdateRegionUtil.getUpdateRegionLocalNames(pageContext, updateRegions);
     result.addAll(JspUpdateRegionUtil.getUpdateRegionGlobalNames(pageContext, globalUpdateRegions));
 
     return result;
   }
 
-  public static List getUpdateRegionLocalNames(PageContext pageContext, String updateRegions) throws JspException  {
+  public static List getUpdateRegionLocalNames(PageContext pageContext, String updateRegions) {
     List result = new ArrayList();
 
     String contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);
@@ -57,7 +56,7 @@ public class JspUpdateRegionUtil {
     return result;
   }  
 
-  public static List getUpdateRegionGlobalNames(PageContext pageContext, String globalUpdateRegions) throws JspException  {
+  public static List getUpdateRegionGlobalNames(PageContext pageContext, String globalUpdateRegions) {
     List result = new ArrayList();
 
     for (Iterator i = parseUpdateRegionNames(globalUpdateRegions).iterator(); i.hasNext();) {

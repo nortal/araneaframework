@@ -15,6 +15,7 @@
  **/
 package org.araneaframework.uilib.list.structure.filter;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -170,7 +171,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @return the global configuration context.
 	 */
 	public ConfigurationContext getConfiguration() {
-		return this.list.getEnvironment().getEntry(ConfigurationContext.class);
+		return UilibEnvironmentUtil.getConfiguration(this.list.getEnvironment());
 	}
 
 	/**

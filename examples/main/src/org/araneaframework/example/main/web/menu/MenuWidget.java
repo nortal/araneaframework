@@ -80,20 +80,20 @@ import org.araneaframework.uilib.support.FlowCreator;
  */
 public class MenuWidget extends TemplateMenuWidget  {
   private static final long serialVersionUID = 1L;
-private MenuItem araneaMenu;
+
+  private MenuItem araneaMenu;
 
   public MenuWidget(Widget topWidget) throws Exception {
 	super(topWidget);
   }
 
   protected void init() throws Exception {
-    super.init();
-    
+    super.init(); // It is necessary here to invoke parent code also.
     addWidget("footer", new FooterWidget());
     addEventListener("logout", new ProxyEventListener(this));
     addEventListener("mainPage", new ProxyEventListener(this));
   }
-  
+
   public void handleEventLogout() throws Exception {
     (getEnvironment().requireEntry(SecurityContext.class)).logout();
   }
@@ -109,7 +109,7 @@ private MenuItem araneaMenu;
 	
 	protected MenuItem buildMenu() throws Exception {
 		MenuItem result = new MenuItem();
-		araneaMenu = result.addMenuItem(null, new MenuItem("Aranea_1_1", ReleaseWidget.class));
+		araneaMenu = result.addMenuItem(null, new MenuItem("AraneaRelease", ReleaseWidget.class));
 		// Aranea 1.1 features/demos
 		araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
 		araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));

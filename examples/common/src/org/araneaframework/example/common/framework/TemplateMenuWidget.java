@@ -22,6 +22,7 @@ import java.util.Locale;
 import org.araneaframework.Widget;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.core.BaseMenuWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -35,7 +36,11 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class TemplateMenuWidget extends BaseMenuWidget implements LocaleChangeListener {
+
+  private static final long serialVersionUID = 1L;
+
   private FormWidget form;
+
   private FormElement langSelect;
 
   // CONSTRUCTOR 
@@ -59,7 +64,9 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     SelectControl select = new SelectControl();
     
     select.addOnChangeEventListener(new OnChangeEventListener() {
-		public void onChange() throws Exception {
+        private static final long serialVersionUID = 1L;
+
+        public void onChange() throws Exception {
 			if (langSelect.convertAndValidate()) {
 				String lang = (String) langSelect.getValue();
 				getL10nCtx().setLocale(new Locale(lang, ""));
@@ -87,7 +94,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
   }
 
   protected LocalizationContext getL10nCtx() {
-    return (LocalizationContext)getEnvironment().getEntry(LocalizationContext.class);
+    return EnvironmentUtil.getLocalizationContext(getEnvironment());
   }
 
   // returns the name of currently running flow class, 

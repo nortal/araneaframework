@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.builder.expression;
 
@@ -184,14 +184,22 @@ public class StandardExpressionToSqlExprBuilder extends
   static class GreaterThanTranslator extends ComparingExprToSqlExprTranslator {
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
-      return new SqlGreaterThanExpression(sql1, sql2);
+      boolean allowEqual = false;
+      if (expr instanceof GreaterThanExpression) {
+        allowEqual = ((GreaterThanExpression) expr).getAllowsEqual();
+      }
+      return new SqlGreaterThanExpression(sql1, sql2, allowEqual);
     }
   }
 
   static class LowerThanTranslator extends ComparingExprToSqlExprTranslator {
     protected SqlExpression translateComparable(Expression expr,
         SqlExpression sql1, SqlExpression sql2) {
-      return new SqlLowerThanExpression(sql1, sql2);
+      boolean allowEquals = false;
+      if (expr instanceof LowerThanExpression) {
+        allowEquals = ((LowerThanExpression) expr).getAllowsEqual();
+      }
+      return new SqlLowerThanExpression(sql1, sql2, allowEquals);
     }
   }
 

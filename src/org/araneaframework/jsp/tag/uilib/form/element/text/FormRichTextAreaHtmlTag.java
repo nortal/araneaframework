@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -36,7 +35,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 	public static final String EDITOR_SELECTOR = "richTextEditor";
 
-	protected String getStyleClass() throws JspException  {
+	protected String getStyleClass() {
 		return EDITOR_SELECTOR;
 	}
 

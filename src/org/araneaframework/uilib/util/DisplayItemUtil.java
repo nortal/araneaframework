@@ -33,8 +33,10 @@ import org.araneaframework.uilib.support.DisplayItem;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class DisplayItemUtil implements java.io.Serializable {
+public class DisplayItemUtil implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+  
   //*********************************************************************
   //* PUBLIC METHODS
   //*********************************************************************
@@ -143,23 +145,30 @@ public class DisplayItemUtil implements java.io.Serializable {
   
   /**
    * Returns whether <code>value</code> is found in the select items.
+   * 
+   * @param displayItems The items that should be checked whether given
+   *          <code>value</code> is one of them.
    * @param value the value that is controlled.
    * @return whether <code>value</code> is found in the select items.
    */
   public static boolean isValueInItems(Collection displayItems, String value) {
     Assert.noNullElementsParam(displayItems, "displayItems");
-    
-    for (Iterator i = displayItems.iterator(); i.hasNext(); ) {
-    	DisplayItem currentItem = (DisplayItem) i.next();
+
+    for (Iterator i = displayItems.iterator(); i.hasNext();) {
+      DisplayItem currentItem = (DisplayItem) i.next();
       String currentValue = currentItem.getValue();
-      if (value == null && currentValue == null && !currentItem.isDisabled())
-        return true;      
-      if (value != null && value.equals(currentValue) && !currentItem.isDisabled()) 
+      boolean disabled = currentItem.isDisabled();
+
+      if (value == null && currentValue == null && !disabled) {
         return true;
+      }
+      if (value != null && value.equals(currentValue) && !disabled) {
+        return true;
+      }
     }
     return false;
   }
-  
+
   /**
    * Returns display item label by the specified value.
    * 
@@ -180,7 +189,7 @@ public class DisplayItemUtil implements java.io.Serializable {
     }
     return "";
   }
-  
+
   /**
    * Returns display item index by the specified value.
    * 
@@ -188,20 +197,53 @@ public class DisplayItemUtil implements java.io.Serializable {
    * @param value display item value.
    * @return display item index by the specified value.
    */
-	public static int getValueIndex(List displayItems, String value) {
+  public static int getValueIndex(List displayItems, String value) {
     Assert.noNullElementsParam(displayItems, "displayItems");
-    
-		for (ListIterator i = displayItems.listIterator(); i.hasNext(); ) {
-			DisplayItem item = (DisplayItem) i.next();
-			if ((value == null && item.getValue() == null) ||
-					value != null && item.getValue() != null && value.equals(item.getValue())) {
-				return i.previousIndex();
-			}
-		}
-		
-		return -1;
-	}      
-  
+    for (ListIterator i = displayItems.listIterator(); i.hasNext();) {
+      DisplayItem item = (DisplayItem) i.next();
+      if ((value == null && item.getValue() == null) || value != null
+          && item.getValue() != null && value.equals(item.getValue())) {
+        return i.previousIndex();
+      }
+    }
+    return -1;
+  }      
+
+  /**
+   * Checks whether the <code>item</code> (that is not yet added to
+   * <code>items</code>) would not have an other item with the same value
+   * already in the <code>items</code> list.
+   * <p>
+   * If that constraint is violated, an assertion exception will be thrown.
+   * 
+   * @param items The display items of the control
+   * @param item An item to be added
+   */
+  public static void assertUnique(List items, DisplayItem item) {
+    Assert.isTrue(!items.contains(item), "The DisplayItems of the"
+        + "SelectControl must have different values - not like with '"
+        + item.getValue() + "'.");
+  }
+
+  /**
+   * Checks whether the <code>itemsToAdd</code> (that are not yet added to
+   * <code>items</code>) would not have an other item with the same value
+   * already in the <code>items</code> list.
+   * <p>
+   * If that constraint is violated, an assertion exception will be thrown.
+   * 
+   * @param items The display items of the control
+   * @param itemsToAdd Items to be added
+   */
+  public static void assertUnique(List items, Collection itemsToAdd) {
+    for (Iterator i = itemsToAdd.iterator(); i.hasNext();) {
+      DisplayItem item = (DisplayItem) i.next();
+      Assert.isTrue(!items.contains(item), "The DisplayItems of the"
+          + "SelectControl must have different values - not like with '"
+          + item.getValue() + "'.");
+    }
+  }
+
   private static class BeanToPropertyValueTransformer implements Transformer, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final BeanMapper bm;

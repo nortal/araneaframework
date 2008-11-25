@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.tree;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private List childNodeWrappers;
 
   private static class ChildNodeWrapper implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private TreeNodeWidget node;
     private String widgetId;
@@ -153,7 +156,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleEventListener extends StandardEventListener {
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       toggleCollapsed();
     }
   }
@@ -161,7 +164,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleActionListener extends StandardActionListener {
     private static final long serialVersionUID = 1L;
 
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam,
+        InputData input, OutputData output) throws Exception {
       toggleCollapsed();
       render(output);
     }
@@ -172,7 +176,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected TreeContext getTreeCtx() {
-    return getEnvironment().getEntry(TreeContext.class);
+    return UilibEnvironmentUtil.getTreeContext(getEnvironment());
   }
 
   // returns List<TreeNodeWidget>

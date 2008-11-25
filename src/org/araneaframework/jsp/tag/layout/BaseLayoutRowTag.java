@@ -52,11 +52,11 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
     return EVAL_BODY_INCLUDE;
   }
   
-  public String getCellClass() throws JspException {
+  public String getCellClass() {
     return cellIter.hasNext() ? (String)cellIter.next() : null;
   }
 
-  public String getStyleClass() throws JspException {
+  public String getStyleClass() {
     cellIter.reset();
     RowClassProvider rowClassProvider = (RowClassProvider)getContextEntry(RowClassProvider.KEY);
     String result = rowClassProvider != null? rowClassProvider.getRowClass():null;

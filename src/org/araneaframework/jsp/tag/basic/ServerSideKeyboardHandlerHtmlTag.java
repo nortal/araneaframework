@@ -132,7 +132,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
   
 	
 
-	public static final String createHandlerToCallEvent(PageContext pageContext, UiUpdateEvent event) throws JspException{
+	public static final String createHandlerToCallEvent(PageContext pageContext, UiUpdateEvent event) {
 		if (event.getTarget() == null) {
           event.setTarget(JspWidgetUtil.getContextWidgetFullId(pageContext));
 		}

@@ -129,8 +129,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     this.renderMode = tmpMode;
   }
 
-  protected boolean writeEventAttribute(Writer out) throws IOException,
-  JspException {
+  protected boolean writeEventAttribute(Writer out) throws IOException {
     UiUpdateEvent event = new UiUpdateEvent();
     event.setId(OnClickEventListener.ON_CLICK_EVENT);
     event.setTarget(formFullId+"."+ derivedId);

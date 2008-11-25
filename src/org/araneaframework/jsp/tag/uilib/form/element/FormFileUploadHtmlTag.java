@@ -89,6 +89,12 @@ public class FormFileUploadHtmlTag extends BaseFormElementHtmlTag {
     return EVAL_PAGE;
   }
 
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "The 'size' attribute for file upload input." 
+   */   
   public void setSize(String size) throws JspException {
     this.size = (Long)evaluate("size", size, Long.class);
   }

@@ -36,7 +36,7 @@ public class SampleImageTag extends BaseImageHtmlTag {
 	/**
 	 * Static method to write out image with given code with default style.
 	 */
-	public  void writeImage(Writer out, String code) throws JspException, IOException {
+	public  void writeImage(Writer out, String code) throws IOException {
 		writeImage(out, code, "aranea-image", getStyleClass(), null);
 	}
   
@@ -50,7 +50,7 @@ public class SampleImageTag extends BaseImageHtmlTag {
 		super.setCode(code);
 	}
   
-	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws JspException, IOException {
+	public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass, String title) throws IOException {
 		String url = FileImportUtil.getImportString(src, pageContext.getRequest());
 		writeImage(out, url, width, height, alt, styleClass, title);
 	}

@@ -1,5 +1,7 @@
 package org.araneaframework.example.main.web.testing;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,7 +13,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.OverlayRootWidget;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.uilib.core.MenuContext;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.event.OnChangeEventListener;
@@ -22,18 +23,24 @@ import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 public class ModalDialogTestWidget extends TemplateBaseWidget {
+
+  private static final long serialVersionUID = 1L;
+
   private FormWidget form;
   private List menuitems = new ArrayList();
   
   protected void init() throws Exception {
     setViewSelector("testing/modalDialogTest");
-    MenuWidget menuWidget = (MenuWidget)getEnvironment().getEntry(MenuContext.class);
+    MenuWidget menuWidget = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
     new MenuItemCollector().visit(menuWidget.getMenu(), menuitems);
     
     form = new FormWidget();
     SelectControl select = new SelectControl();
     select.addItem(new DisplayItem(null, t("select.choose")));
     select.addOnChangeEventListener(new OnChangeEventListener() {
+
+      private static final long serialVersionUID = 1L;
+
       public void onChange() throws Exception {
         if (form.getElement("classSelect").convertAndValidate()) {
           String className = (String) form.getValueByFullName("classSelect");
@@ -52,7 +59,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
     addWidget("form", form);
   }
 
-  private void handleEventReturn() {
+  public void handleEventReturn() {
     getFlowCtx().cancel();
   }
 
@@ -69,6 +76,9 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
   }
   
   private static class WrapperWidget extends TemplateBaseWidget {
+
+    private static final long serialVersionUID = 1L;
+
     private Widget wrapped;
     
     public WrapperWidget(Widget wrapped) {
@@ -79,22 +89,22 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
       setViewSelector("testing/renderChild");
       addWidget("wrapped", wrapped);
     }
-    
-    private void handleEventGobacknow() {
+
+    public void handleEventGobacknow() {
       getFlowCtx().cancel();
     }
   }
 
   private class MenuItemCollector {
     public void visit(MenuItem menu, List itemList) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-      Class c = menu.getClass();
       Field classfld = menu.getClass().getDeclaredField("flowClass");
       
       if (classfld != null) {
         classfld.setAccessible(true);
         Class clazz = (Class) classfld.get(menu);
-        if (clazz != null)
+        if (clazz != null && !itemList.contains(clazz)) {
           itemList.add(clazz);
+        }
       }
 
       Map subMenu = menu.getSubMenu();

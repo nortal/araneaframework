@@ -16,6 +16,7 @@
 
 package org.araneaframework.tests.framework.router;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
@@ -70,8 +71,7 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
   
   public void testCloseRemoves() throws Exception, Throwable {
     service._getService().action(MockUtil.getPath(), input, output);
-    ThreadContext sess = 
-      child1.getTheEnvironment().getEntry(ThreadContext.class);
+    ThreadContext sess = EnvironmentUtil.requireThreadContext(child1.getTheEnvironment());
     assertNotNull(sess.getService("child1"));
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
@@ -79,15 +79,15 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
   }
 
   public void testServiceExpiration() throws Exception {
-    ThreadContext ctx = child1.getTheEnvironment().getEntry(ThreadContext.class);
-    ctx.addService("newService", new BaseService() {}, new Long(1000));
+    ThreadContext ctx = EnvironmentUtil.requireThreadContext(child1.getTheEnvironment());
+    ctx.addService("newService", new BaseService(), new Long(1000));
     Thread.sleep(1200);
     assertNotNull("Action is not yet called.", ctx.getService("newService"));
     service._getService().action(MockUtil.getPath(), input, output);
     assertNull("Action is called when service should already be expired.", ctx.getService("newService"));
     
     // make sure that in addition to killing expired services, their lifetimes are updated in action()
-    ctx.addService("nextService", new BaseService() {}, new Long(2000));
+    ctx.addService("nextService", new BaseService(), new Long(2000));
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter(ThreadContext.THREAD_SERVICE_KEY, "nextService");
     input = new StandardServletInputData(req);

@@ -16,11 +16,7 @@
 
 package org.araneaframework.uilib.event;
 
-import java.lang.reflect.Method;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
@@ -45,8 +41,6 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
 public class ProxyOnClickEventListener implements OnClickEventListener {
 
   private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(ProxyOnClickEventListener.class);
 
   /**
    * The widget where the event handler will be invoked.
@@ -81,28 +75,7 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
   }
 
   public void onClick() throws Exception {
-    Method eventHandler;
-
-    // lets try to find a handle method with an empty argument
-    try {
-      eventHandler = ProxiedHandlerUtil.getEventHandler(eventId, eventTarget);
-      eventHandler.invoke(eventTarget, new Object[] {});
-      return;
-    } catch (NoSuchMethodException e) {/* OK */}
-
-    // lets try to find a method with a String type argument
-    try {
-      eventHandler = ProxiedHandlerUtil.getEventHandler(eventId, eventTarget,
-          new Class[] { String.class });
-      eventHandler.invoke(eventTarget, new Object[] { null });
-      return;
-    } catch (NoSuchMethodException e) {/* OK */}
-
-    if (log.isWarnEnabled()) {
-      log.warn("Widget '" + eventTarget.getScope() + "' cannot deliver "
-          + "event as no event listeners were registered for the event id '"
-          + eventId + "'!" + Assert.thisToString(eventTarget));
-    }
+    ProxiedHandlerUtil.invokeEventHandler(eventId, null, eventTarget);
   }
 
 }

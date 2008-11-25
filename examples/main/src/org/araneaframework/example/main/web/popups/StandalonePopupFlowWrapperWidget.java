@@ -35,6 +35,7 @@ import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.core.PopupFlowWrapperWidget;
@@ -46,129 +47,137 @@ import org.araneaframework.uilib.core.PopupFlowWrapperWidget;
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
-	private Widget widget;
-	private ClientSideReturnService finishingService;
-	private Service cancellingService;
-	
-	public StandalonePopupFlowWrapperWidget(BaseUIWidget widget) {
-		this.widget = widget;
-	}
-	
-	public void setFinishService(ClientSideReturnService service) {
-		this.finishingService = service;
-	}
-	
-	public ClientSideReturnService getFinishService() {
-		return finishingService;
-	}
-	
-	public void setCancelService(Service service) {
-		cancellingService = service;
-	}
-	
-	public Service getCancelService() {
-		return cancellingService;
-	}
-	
-	protected Environment getChildWidgetEnvironment() throws Exception {
-		return new StandardEnvironment(super.getChildWidgetEnvironment(), FlowContext.class, this);
-	}
+public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
+  implements FlowContext {
 
-	protected void init() throws Exception {
-		addWidget("widget", widget);
-	}
+  private static final long serialVersionUID = 1L;
 
-	protected void render(OutputData output) throws Exception {
-		widget._getWidget().render(output);
-	}
+  private Widget widget;
 
-	protected FlowContext getFlowCtx() {
-		return getEnvironment().requireEntry(FlowContext.class);
-	}
+  private ClientSideReturnService finishingService;
 
-	public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
-		getFlowCtx().addNestedEnvironmentEntry(scope, entryId, envEntry);
-	}
+  private Service cancellingService;
 
-	public void cancel() {
-		ThreadContext threadCtx = getThreadContext();
-		TopServiceContext topCtx = getTopServiceContext();
-	    try {
-	      // close the session-thread serving popupflow
-	    	threadCtx.close(threadCtx.getCurrentId());
+  public StandalonePopupFlowWrapperWidget(BaseUIWidget widget) {
+    this.widget = widget;
+  }
 
-	      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
-	      Assert.notNull(cancellingService);
-	      threadCtx.addService(rndThreadId, cancellingService);
-	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
-	    } catch (Exception e) {
-	      ExceptionUtil.uncheckException(e);
-	    }
-	}
+  public void setFinishService(ClientSideReturnService service) {
+    this.finishingService = service;
+  }
 
-	public void finish(Object result) {
-		ThreadContext threadCtx = getThreadContext();
-		TopServiceContext topCtx = getTopServiceContext();
-	    try {
-	    	threadCtx.close(threadCtx.getCurrentId());
+  public ClientSideReturnService getFinishService() {
+    return finishingService;
+  }
 
-	      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+  public void setCancelService(Service service) {
+    cancellingService = service;
+  }
 
-	      finishingService.setResult(result);
-	      threadCtx.addService(rndThreadId, finishingService);
-	      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(), (String)topCtx.getCurrentId(), rndThreadId));
-	    } catch (Exception e) {
-	      ExceptionUtil.uncheckException(e);
-	    }
-	}
-	
-	protected TopServiceContext getTopServiceContext() {
-		return getEnvironment().getEntry(TopServiceContext.class);
-	}
-	
-	protected ThreadContext getThreadContext() {
-		return getEnvironment().getEntry(ThreadContext.class);
-	}
 
-	public FlowReference getCurrentReference() {
-		return getFlowCtx().getCurrentReference();
-	}
+  public Service getCancelService() {
+    return cancellingService;
+  }
 
-	public boolean isNested() {
-		return getFlowCtx().isNested();
-	}
+  protected Environment getChildWidgetEnvironment() throws Exception {
+    return new StandardEnvironment(super.getChildWidgetEnvironment(),
+        FlowContext.class, this);
+  }
 
-	public void replace(Widget flow) {
-		replace(flow, null);
-	}
+  protected void init() throws Exception {
+    addWidget("widget", widget);
+  }
 
-	public void replace(Widget flow, Configurator configurator) {
-	}
+  protected void render(OutputData output) throws Exception {
+    widget._getWidget().render(output);
+  }
 
-	public void reset(EnvironmentAwareCallback callback) {
-		throw new IllegalStateException();
-	}
+  protected FlowContext getFlowCtx() {
+    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+  }
 
-	public void start(Widget flow, Handler handler) {
-		start(flow, null, handler);
-	}
+  public void addNestedEnvironmentEntry(ApplicationWidget scope,
+      Object entryId, Object envEntry) {
+    getFlowCtx().addNestedEnvironmentEntry(scope, entryId, envEntry);
+  }
 
-	public void start(Widget flow) {
-		start(flow, null, null);
-	}
+  public void cancel() {
+    ThreadContext threadCtx = getThreadContext();
+    TopServiceContext topCtx = getTopServiceContext();
+    try {
+      // close the session-thread serving popupflow
+      threadCtx.close(threadCtx.getCurrentId());
+      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+      Assert.notNull(cancellingService);
+      threadCtx.addService(rndThreadId, cancellingService);
+      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(
+          ((HttpInputData) getInputData()).getContainerURL(),
+          (String) topCtx.getCurrentId(), rndThreadId));
 
-	public void start(Widget flow, Configurator configurator, Handler handler) {
-		getFlowCtx().start(flow, configurator, handler);
-	}
-	
-	protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
-		Map m = new HashMap();
-		m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
-		m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
-		m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-		return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
-	}
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+  }
+
+  public void finish(Object result) {
+    ThreadContext threadCtx = getThreadContext();
+    TopServiceContext topCtx = getTopServiceContext();
+
+    try {
+      threadCtx.close(threadCtx.getCurrentId());
+      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+      finishingService.setResult(result);
+      threadCtx.addService(rndThreadId, finishingService);
+      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(
+          ((HttpInputData) getInputData()).getContainerURL(), (String) topCtx
+              .getCurrentId(), rndThreadId));
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+  }
+
+  protected TopServiceContext getTopServiceContext() {
+    return EnvironmentUtil.getTopServiceContext(getEnvironment());
+  }
+
+  protected ThreadContext getThreadContext() {
+    return EnvironmentUtil.getThreadContext(getEnvironment());
+  }
+
+  public boolean isNested() {
+    return getFlowCtx().isNested();
+  }
+
+  public void replace(Widget flow) {
+    replace(flow, null);
+  }
+
+  public void replace(Widget flow, Configurator configurator) {}
+
+  public void reset(EnvironmentAwareCallback callback) {
+    throw new IllegalStateException();
+  }
+
+  public void start(Widget flow, Handler handler) {
+    start(flow, null, handler);
+  }
+
+  public void start(Widget flow) {
+    start(flow, null, null);
+  }
+
+  public void start(Widget flow, Configurator configurator, Handler handler) {
+    getFlowCtx().start(flow, configurator, handler);
+  }
+
+  protected String getResponseURL(String url, String topServiceId,
+      String threadServiceId) {
+    Map m = new HashMap();
+    m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
+    m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
+    m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
+  }
 
   public void setTransitionHandler(TransitionHandler handler) {
     getFlowCtx().setTransitionHandler(handler);

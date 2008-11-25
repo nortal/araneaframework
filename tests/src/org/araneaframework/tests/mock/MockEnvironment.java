@@ -25,7 +25,7 @@ import org.araneaframework.uilib.ConfigurationContext;
 
 
 /**
- * This class implements {@link UiLibEnviroment} interface
+ * This class implements {@link Environment} interface
  * providing a straightforward implementation, which basically returns the
  * arguments passed without any specific processing. It is used primarily for testing.
  * 
@@ -33,7 +33,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * 
  */
 public class MockEnvironment extends BaseEnvironment {
-  private Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
+  protected Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
 
   public MockEnvironment() {
     contexts.put(ConfigurationContext.class, new MockConfiguration());

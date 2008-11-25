@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.reader;
 
 import java.sql.ResultSet;
-
 
 /**
  * ResultSet column reader.
@@ -33,7 +32,7 @@ import java.sql.ResultSet;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface ResultSetColumnReader {
-  
+
   /**
    * This method should read some custom Java Object from the given <code>ResultSet</code> column.
    * @param columnName column in <code>ResultSet</code>.
@@ -41,6 +40,6 @@ public interface ResultSetColumnReader {
    * @param javaType java type to read to.
    * @return Custom Java Object from the given <code>ResultSet</code> column.
    */
-  Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType);
-  
+  Object readFromResultSet(String columnName, ResultSet resultSet,
+      Class javaType);
 }
