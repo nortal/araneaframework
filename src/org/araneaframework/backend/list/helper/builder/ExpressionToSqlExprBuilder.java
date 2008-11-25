@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper.builder;
 
@@ -24,13 +24,12 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * <code>SqlExpression</code>.
  */
 public interface ExpressionToSqlExprBuilder {
-	/**
-	 * Builds <code>SqlExpression</code> from <code>Expression</code>.
-	 * 
-	 * @param expression
-	 *            <code>Expression</code>.
-	 * @return <code>SqlExpression</code> built from the
-	 *         <code>Expression</code>.
-	 */
-	SqlExpression buildSqlExpression(Expression expression);
+
+  /**
+   * Builds <code>SqlExpression</code> from <code>Expression</code>.
+   * 
+   * @param expression <code>Expression</code>.
+   * @return <code>SqlExpression</code> built from the <code>Expression</code>.
+   */
+  SqlExpression buildSqlExpression(Expression expression);
 }

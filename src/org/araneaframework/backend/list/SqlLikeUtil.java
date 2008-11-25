@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list;
 
@@ -65,7 +65,6 @@ public class SqlLikeUtil {
     WildcardHandler handler = escapeMaskAndCreateHandler(mask, config, escapeChar);
     mask = startMask(handler, mask);
     mask = endMask(handler, mask);
-
     return mask;
   }
 
@@ -129,19 +128,21 @@ public class SqlLikeUtil {
     Assert.notNull(handler, "WildcardHandler is requiered.");
     Assert.notNull(mask, "Mask is required.");
 
-    if (handler.getStartsWith() != handler.shouldStartWith()) {
-      if (handler.getStartsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
-        mask = mask.substring(SQL_LIKE_ANY_STRING_WILDCARD.length());
-      } else if (handler.getStartsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
-        mask = mask.substring(SQL_LIKE_ANY_CHAR_WILDCARD.length());
+    if (handler.getEndsWith() != handler.shouldEndWith()) {
+      if (handler.getEndsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+        mask = mask.substring(0, mask.length()
+            - SQL_LIKE_ANY_STRING_WILDCARD.length());
+      } else if (handler.getEndsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+        mask = mask.substring(0, mask.length()
+            - SQL_LIKE_ANY_CHAR_WILDCARD.length());
       }
-
-      if (handler.shouldStartWith() == WildcardHandler.ANY_STRING_WILDCARD) {
-        mask = SQL_LIKE_ANY_STRING_WILDCARD + mask;
-      } else if (handler.shouldStartWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
-        mask = SQL_LIKE_ANY_CHAR_WILDCARD + mask;
+      if (handler.shouldEndWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+        mask = mask + SQL_LIKE_ANY_STRING_WILDCARD;
+      } else if (handler.shouldEndWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+        mask = mask + SQL_LIKE_ANY_CHAR_WILDCARD;
       }
     }
+
     return mask;
   }
 
@@ -157,21 +158,19 @@ public class SqlLikeUtil {
     Assert.notNull(handler, "WildcardHandler is requiered.");
     Assert.notNull(mask, "Mask is required.");
 
-    if (handler.getEndsWith() != handler.shouldEndWith()) {
-      if (handler.getEndsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
-        mask = mask.substring(0, mask.length()
-            - SQL_LIKE_ANY_STRING_WILDCARD.length());
-      } else if (handler.getEndsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
-        mask = mask.substring(0, mask.length()
-            - SQL_LIKE_ANY_CHAR_WILDCARD.length());
+    if (handler.getStartsWith() != handler.shouldStartWith()) {
+      if (handler.getStartsWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+        mask = mask.substring(SQL_LIKE_ANY_STRING_WILDCARD.length());
+      } else if (handler.getStartsWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+        mask = mask.substring(SQL_LIKE_ANY_CHAR_WILDCARD.length());
       }
-
-      if (handler.shouldEndWith() == WildcardHandler.ANY_STRING_WILDCARD) {
-        mask = mask + SQL_LIKE_ANY_STRING_WILDCARD;
-      } else if (handler.shouldEndWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
-        mask = mask + SQL_LIKE_ANY_CHAR_WILDCARD;
+      if (handler.shouldStartWith() == WildcardHandler.ANY_STRING_WILDCARD) {
+        mask = SQL_LIKE_ANY_STRING_WILDCARD + mask;
+      } else if (handler.shouldStartWith() == WildcardHandler.ANY_CHAR_WILDCARD) {
+        mask = SQL_LIKE_ANY_CHAR_WILDCARD + mask;
       }
     }
+
     return mask;
   }
 
@@ -231,5 +230,4 @@ public class SqlLikeUtil {
     }
     return test;
   }
-
 }

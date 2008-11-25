@@ -20,9 +20,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.araneaframework.Environment;
-import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constraint;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} 
@@ -128,20 +129,18 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    *         <code>Environment</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return getEnvironment().getEntry(ConfigurationContext.class);
+    return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
 
   /**
-   * Transletes the given message key according to the
+   * Translates the given message key according to the
    * <code>LocalizationContext</code>.
    * 
    * @param key The key to find the correct message.
    * @return The localized message from the <code>LocalizationContext</code>.
    */
   protected String t(String key) {
-    LocalizationContext locCtx = 
-     getEnvironment().getEntry(LocalizationContext.class);
-    return locCtx.localize(key);
+    return EnvironmentUtil.getLocalizationContext(getEnvironment()).localize(key);
   }
 
   //*********************************************************************

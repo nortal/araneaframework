@@ -37,7 +37,7 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
     return EVAL_BODY_INCLUDE;
   }
 
-  public String getStyleClass() throws JspException {
+  public String getStyleClass() {
     CellClassProvider cellClassProvider = (CellClassProvider)getContextEntry(CellClassProvider.KEY);
     String result = cellClassProvider != null ? cellClassProvider.getCellClass() : null;
     result = (result != null && result.length() == 0) ? null : result;

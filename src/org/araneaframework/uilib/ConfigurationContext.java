@@ -126,6 +126,20 @@ public interface ConfigurationContext extends Serializable {
   String FORMELEMENT_ERROR_RENDERER = "uilib.widgets.forms.formelement.error.renderer";
 
   /**
+   * This property is of type <code>java.lang.Boolean</code> and specifies
+   * whether data of controls, that have fixed values (i.e.
+   * <code>SelectControl</code>, <code>MultiSelectControl</code>), should be
+   * localized.
+   * <p>
+   * By default, it is not enabled (this may change in near future).
+   * <p>
+   * You can override this setting when you use a tag to render the control.
+   * 
+   * @since 1.2
+   */
+  String LOCALIZE_FIXED_CONTROL_DATA = "uilib.widgets.forms.control.data.localize";
+
+  /**
    * Returns a configuration entry with given name.
    */
   public Object getEntry(String entryName);

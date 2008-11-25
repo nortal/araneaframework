@@ -50,12 +50,12 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
     return EVAL_BODY_INCLUDE;
   }
   
-  public String getRowClass() throws JspException {
+  public String getRowClass() {
     cellIter.reset();
 	return rowIter.hasNext() ? (String)rowIter.next() : null;
   }
   
-  public String getCellClass() throws JspException {
+  public String getCellClass() {
     return cellIter.hasNext() ? (String)cellIter.next() : null;
   }
   

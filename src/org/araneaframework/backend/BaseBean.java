@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend;
 
@@ -33,167 +33,170 @@ import org.araneaframework.backend.util.BeanMapper;
  */
 public abstract class BaseBean implements Serializable, Cloneable {
 
-	private static final Log log = LogFactory.getLog(BaseBean.class);
+  private static final long serialVersionUID = 1L;
 
-	//*******************************************************************
-	// FIELDS
-	//*******************************************************************
+  private static final Log log = LogFactory.getLog(BaseBean.class);
 
-	/**
-	 * Holds names of fields which are marked as changed. Is used for update/insert operations.
-	 */
-	private Set changes = new HashSet();
+  // *******************************************************************
+  // FIELDS
+  // *******************************************************************
 
-	/**
-	 * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.
-	 */
-	private BeanMapper beanMapper;
+  /**
+   * Holds names of fields which are marked as changed. Is used for
+   * update/insert operations.
+   */
+  private Set changes = new HashSet();
 
-	//*******************************************************************
-	// PUBLIC METHODS
-	//*******************************************************************
+  /**
+   * Private VoMapper, used for <code>toString</code> and <code>equals</code>
+   * methods.
+   */
+  private BeanMapper beanMapper;
 
-	/**
-	 * Creates new instance of the GeneralVO.
-	 */
-	protected BaseBean() {
-		beanMapper = new BeanMapper(getClass());
-	}
+  // *******************************************************************
+  // PUBLIC METHODS
+  // *******************************************************************
 
-	/**
-	 * Overrides default <code>toString</code> method.
-	 * <P/>
-	 * 
-	 * @return <code>java.lang.String</code> representation of this value object.
-	 */
-	public String toString() {
-		StringBuffer result = new StringBuffer();
-		List voFields = beanMapper.getFields();
-		for (Iterator i = voFields.iterator(); i.hasNext();) {
-			String field = (String) i.next();
-			result.append(field);
-			result.append("=");
-			result.append("" + beanMapper.getFieldValue(this, field));
-			result.append("; ");
-		}
-		return result.toString();
-	}
+  /**
+   * Creates new instance of the GeneralVO.
+   */
+  protected BaseBean() {
+    beanMapper = new BeanMapper(getClass());
+  }
 
-	/**
-	 * Compares Value Object for equality by their fields.
-	 * 
-	 * @param otherVo
-	 *          Value Object to compare to.
-	 * @return <code>boolean</code>- if Value Object are equal.
-	 */
-	public boolean equals(Object otherVo) {
-		//In case other VO is null, or of other class.
-		if (otherVo == null || (!this.getClass().equals(otherVo.getClass()))) {
-			return false;
-		}
+  /**
+   * Overrides default <code>toString</code> method. <P/>
+   * 
+   * @return <code>java.lang.String</code> representation of this value
+   *         object.
+   */
+  public String toString() {
+    StringBuffer result = new StringBuffer();
+    List voFields = beanMapper.getFields();
+    for (Iterator i = voFields.iterator(); i.hasNext();) {
+      String field = (String) i.next();
+      result.append(field);
+      result.append("=");
+      result.append("" + beanMapper.getFieldValue(this, field));
+      result.append("; ");
+    }
+    return result.toString();
+  }
 
-		//Otherwise compare all fields
-		boolean result = true;
-		List voFields = beanMapper.getFields();
-		for (Iterator i = voFields.iterator(); i.hasNext() && result;) {
-			String field = (String) i.next();
-			result = valuesEqual(beanMapper.getFieldValue(this, field), beanMapper.getFieldValue(otherVo, field));
-		}
-		return result;
-	}
+  /**
+   * Compares Value Object for equality by their fields.
+   * 
+   * @param otherVo Value Object to compare to.
+   * @return <code>boolean</code>- if Value Object are equal.
+   */
+  public boolean equals(Object otherVo) {
+    // In case other VO is null, or of other class.
+    if (otherVo == null || (!this.getClass().equals(otherVo.getClass()))) {
+      return false;
+    }
 
-	/**
-	 * Implements hash using Value Object fields.
-	 */
-	public int hashCode() {
-		int result = 17;
-		List voFields = beanMapper.getFields();
-		for (Iterator i = voFields.iterator(); i.hasNext();) {
-			String field = (String) i.next();
-			result = 37 * result + beanMapper.getFieldValue(this, field).hashCode();
-		}
-		return result;
-	}
+    // Otherwise compare all fields
+    boolean result = true;
+    List voFields = beanMapper.getFields();
 
-	/**
-	 * Overrides default <code>clone()</code> operation.
-	 * <P/>
-	 * 
-	 * @return clone of this object.
-	 */
-	public Object clone() {
-		try {
-			return super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			log.warn("BaseVO threw CloneNotSupportedException, check that everything is defined Cloneable");
-			return null;
-		}
-	}
+    for (Iterator i = voFields.iterator(); i.hasNext() && result;) {
+      String field = (String) i.next();
+      result = valuesEqual(beanMapper.getFieldValue(this, field),
+          beanMapper.getFieldValue(otherVo, field));
+    }
 
-	//*******************************************************************
-	// LEGACY PUBLIC METHODS
-	//*******************************************************************
+    return result;
+  }
 
-	/**
-	 * Getter for property changes.
-	 * <P/>
-	 * 
-	 * @return Value of property changes.
-	 */
-	public Set getChanges() {
-		return changes;
-	}
+  /**
+   * Implements hash using Value Object fields.
+   */
+  public int hashCode() {
+    int result = 17;
+    List voFields = beanMapper.getFields();
+    for (Iterator i = voFields.iterator(); i.hasNext();) {
+      String field = (String) i.next();
+      result = 37 * result + beanMapper.getFieldValue(this, field).hashCode();
+    }
+    return result;
+  }
 
-	/**
-	 * Marks field of the value object as changed eg this field was changed after loading it from the database.
-	 * <P/>
-	 * Useful when value objects are used for insert/update procedures written in PL/SQL instead of EJB methods.
-	 * <P/>
-	 * 
-	 * @param name
-	 *          name of the VO-s field which is being changed.
-	 * @return <code>true</code> if such field does exist and was marked as chaned, <code>false</code> otherwise.
-	 */
-	public boolean addChange(String name) {
-		log.debug("Adding changed field = " + name);
-		try {
-			this.getClass().getMethod("get" + name.substring(0, 1).toUpperCase() + name.substring(1), (Class[])null);
-			changes.add(name);
-			return true;
-		}
-		catch (NoSuchMethodException ex) {
-			log.debug(ex);
-			return false;
-		}
-	}
+  /**
+   * Overrides default <code>clone()</code> operation. <P/>
+   * 
+   * @return clone of this object.
+   */
+  public Object clone() {
+    try {
+      return super.clone();
+    } catch (CloneNotSupportedException e) {
+      log.warn("BaseVO threw CloneNotSupportedException, check that "
+          + "everything is defined Cloneable");
+      return null;
+    }
+  }
 
-	/**
-	 * Changes all fields on this <i>value object</i> as changed.
-	 */
-	public void changeAll() {
-		List voFields = beanMapper.getFields();
-		for (Iterator i = voFields.iterator(); i.hasNext();) {
-			String field = (String) i.next();
-			addChange(field);
-		}
-	}
+  // *******************************************************************
+  // LEGACY PUBLIC METHODS
+  // *******************************************************************
+  /**
+   * Getter for property changes. <P/>
+   * 
+   * @return Value of property changes.
+   */
+  public Set getChanges() {
+    return changes;
+  }
 
-	/**
-	 * Marks all fields as unchanged.
-	 */
-	public void clearChanges() {
-		changes = new HashSet();
-	}
+  /**
+   * Marks field of the value object as changed eg this field was changed after
+   * loading it from the database. <P/> Useful when value objects are used for
+   * insert/update procedures written in PL/SQL instead of EJB methods. <P/>
+   * 
+   * @param name name of the VO-s field which is being changed.
+   * @return <code>true</code> if such field does exist and was marked as
+   *         chaned, <code>false</code> otherwise.
+   */
+  public boolean addChange(String name) {
+    log.debug("Adding changed field = " + name);
+    try {
+      this.getClass().getMethod(
+          "get" + name.substring(0, 1).toUpperCase() + name.substring(1),
+          (Class[]) null);
+      changes.add(name);
+      return true;
+    } catch (NoSuchMethodException ex) {
+      log.debug(ex);
+      return false;
+    }
+  }
 
-	//*******************************************************************
-	// PRIVATE HELPER METHODS
-	//*******************************************************************
+  /**
+   * Changes all fields on this <i>value object</i> as changed.
+   */
+  public void changeAll() {
+    List voFields = beanMapper.getFields();
+    for (Iterator i = voFields.iterator(); i.hasNext();) {
+      String field = (String) i.next();
+      addChange(field);
+    }
+  }
 
-	/**
-	 * Checks for object equality.
-	 */
-	private boolean valuesEqual(Object value1, Object value2) {
-		return (value1 == null) ? value2 == null : value1.equals(value2);
-	}
+  /**
+   * Marks all fields as unchanged.
+   */
+  public void clearChanges() {
+    changes = new HashSet();
+  }
+
+  // *******************************************************************
+  // PRIVATE HELPER METHODS
+  // *******************************************************************
+
+  /**
+   * Checks for object equality.
+   */
+  private boolean valuesEqual(Object value1, Object value2) {
+    return (value1 == null) ? value2 == null : value1.equals(value2);
+  }
 }

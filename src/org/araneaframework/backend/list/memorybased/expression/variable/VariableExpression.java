@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,32 +12,31 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.variable;
 
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.core.Assert;
 
 public class VariableExpression implements Expression, Variable {
 
-	private static final long serialVersionUID = 1L;
-	
-	private String name;
+  private static final long serialVersionUID = 1L;
 
-	public VariableExpression(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException("Name must be provided");
-		}
-		this.name = name;
-	}
+  private String name;
 
-	public String getName() {
-		return this.name;
-	}
+  public VariableExpression(String name) {
+    Assert.notNull(name, "Name must be provided");
+    this.name = name;
+  }
 
-	public Object evaluate(VariableResolver resolver) {
-		return resolver.resolve(this);
-	}
+  public String getName() {
+    return this.name;
+  }
+
+  public Object evaluate(VariableResolver resolver) {
+    return resolver.resolve(this);
+  }
 }

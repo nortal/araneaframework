@@ -22,9 +22,9 @@
     <ui:widgetContext id="menu">
         <div id="header">
             <div class="box1">
-                <a href="#" id="logo">
-                    <tui:image src="gfx/logo_aranea_screen.jpg" alt="Aranea fancy logo"/>
-                </a>
+            	<ui:eventLinkButton id="logo" eventId="mainPage">
+                    <tui:image src="gfx/logo_aranea_screen.jpg" />
+                </ui:eventLinkButton>
 
                 <div id="menu1">
                     <!-- ${viewData.VariableName} allows us to access data 

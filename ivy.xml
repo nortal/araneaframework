@@ -41,6 +41,7 @@
     <dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" />
     <dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" />
     <dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" />
+    <dependency conf="runtime" org="javax.annotation" rev="1.0" name="jsr250-api" />
     <dependency conf="runtime" org="oro" rev="2.0.8" name="oro" />
     <dependency conf="runtime" org="xstream" rev="1.2" name="xstream" />
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -32,18 +32,22 @@ import org.araneaframework.Scope;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * The base class for all Aranea components. Base entities do not make a Composite pattern 
- * and only provide some very basic services (mainly syncronization and messaging service)
+ * The base class for all Aranea components. Base entities do not make a
+ * Composite pattern and only provide some very basic services (mainly
+ * syncronization and messaging service)
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class BaseComponent implements Component {
+public class BaseComponent implements Component {
+
+  private static final long serialVersionUID = 1L;
+  
+  private static final Log log = LogFactory.getLog(BaseComponent.class);
 
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private static final Log log = LogFactory.getLog(BaseComponent.class);
 
   private Environment environment;
 
@@ -70,6 +74,7 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // PUBLIC METHODS
   //*******************************************************************
+
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
@@ -77,6 +82,7 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // PROTECTED METHODS
   //*******************************************************************
+
   /**
    * Init callback. Gets called when the component is initilized.
    * 
@@ -453,6 +459,7 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // PRIVATE METHODS
   //*******************************************************************
+
   private void incCallCount() {
     if (reentrantTLS == null)
       reentrantTLS = new ThreadLocal();
@@ -479,6 +486,7 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // PROTECTED CLASSES
   //*******************************************************************
+
   //component implementation
   protected class ComponentImpl implements Component.Interface {
 
@@ -564,6 +572,7 @@ public abstract class BaseComponent implements Component {
   //*******************************************************************
   // PRIVATE CLASSES
   //*******************************************************************
+
   private static class Counter {
 
     /**

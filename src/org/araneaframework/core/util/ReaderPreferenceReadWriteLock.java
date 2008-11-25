@@ -23,6 +23,9 @@ package org.araneaframework.core.util;
  **/
 
 public class ReaderPreferenceReadWriteLock extends WriterPreferenceReadWriteLock {
+
+  private static final long serialVersionUID = 1L;
+
   protected boolean allowReader() {
     return activeWriter_ == null;
   }

@@ -22,9 +22,10 @@ import org.araneaframework.uilib.form.Data;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
 public class StringListData extends Data {
+
+  private static final long serialVersionUID = 1L;
 
   public StringListData() {
     super(List.class, "List<String>");

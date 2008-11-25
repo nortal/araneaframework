@@ -25,7 +25,9 @@ import org.araneaframework.uilib.form.Data;
  */
 public class DateData extends Data {
 
+  private static final long serialVersionUID = 1L;
+
   public DateData() {
     super(Date.class);
-  }   
+  }
 }

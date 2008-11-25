@@ -16,55 +16,71 @@
 
 package org.araneaframework.http.util;
 
+import org.araneaframework.framework.ExpiringServiceContext;
+import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
+import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.UpdateRegionContext;
 
 /**
- * Utility class that provides shortcuts for accessing some {@link Environment} entries.
+ * Utility class that provides shortcuts for accessing some {@link Environment}
+ * entries.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */
 public abstract class EnvironmentUtil {
+
+  public static TopServiceContext getTopServiceContext(Environment env) {
+    return (TopServiceContext) env.getEntry(TopServiceContext.class);
+  }
+
+  public static TopServiceContext requireTopServiceContext(Environment env) {
+    return (TopServiceContext) env.requireEntry(TopServiceContext.class);
+  }
+
   public static Object getTopServiceId(Environment env) {
-    TopServiceContext topServiceContext = env.getEntry(TopServiceContext.class);
-    if (topServiceContext == null)
-      return null;
-    return topServiceContext.getCurrentId();
+    TopServiceContext topServiceContext = getTopServiceContext(env);
+    return topServiceContext == null ? null : topServiceContext.getCurrentId();
   }
-  
-  public static Object getThreadServiceId(Environment env) {
-    ThreadContext threadContext = env.getEntry(ThreadContext.class);
-    if (threadContext == null)
-      return null;
-    return threadContext.getCurrentId();
-  }
-  
+
   public static Object requireTopServiceId(Environment env) {
-    TopServiceContext topServiceContext = env.requireEntry(TopServiceContext.class);
-    return topServiceContext.getCurrentId();
+    return requireTopServiceContext(env).getCurrentId();
+  }
+
+  public static ThreadContext getThreadContext(Environment env) {
+    return (ThreadContext) env.getEntry(ThreadContext.class);
+  }
+
+  public static ThreadContext requireThreadContext(Environment env) {
+    return (ThreadContext) env.requireEntry(ThreadContext.class);
+  }
+
+  public static Object getThreadServiceId(Environment env) {
+    ThreadContext threadContext = getThreadContext(env);
+    return threadContext == null ? null : threadContext.getCurrentId();
   }
   
   public static Object requireThreadServiceId(Environment env) {
-    ThreadContext threadContext = env.requireEntry(ThreadContext.class);
-    return threadContext.getCurrentId();
+    return requireThreadContext(env).getCurrentId();
   }
-  
+
   // THESE ARE NOT CONNECTED TO SYSTEM FORM
   public static LocalizationContext getLocalizationContext(Environment env) {
     return env.getEntry(LocalizationContext.class);
   }
-  
+
   public static LocalizationContext requireLocalizationContext(Environment env) {
     return env.requireEntry(LocalizationContext.class);
   }
-  
+
   public static FlowContext getFlowContext(Environment env) {
     return env.getEntry(FlowContext.class);
   }
@@ -72,7 +88,7 @@ public abstract class EnvironmentUtil {
   public static FlowContext requireFlowContext(Environment env) {
     return env.requireEntry(FlowContext.class);
   }
-  
+
   public static MessageContext getMessageContext(Environment env) {
     return env.getEntry(MessageContext.class);
   }
@@ -80,20 +96,41 @@ public abstract class EnvironmentUtil {
   public static MessageContext requireMessageContext(Environment env) {
     return env.requireEntry(MessageContext.class);
   }
-  
+
   public static SystemFormContext getSystemFormContext(Environment env) {
     return env.getEntry(SystemFormContext.class);
   }
-  
+
   public static SystemFormContext requireSystemFormContext(Environment env) {
     return env.requireEntry(SystemFormContext.class);
   }
-  
+
   public static UpdateRegionContext getUpdateRegionContext(Environment env) {
     return env.getEntry(UpdateRegionContext.class);
   }
 
   public static UpdateRegionContext requireUpdateRegionContext(Environment env) {
     return env.requireEntry(UpdateRegionContext.class);
+  }
+
+  public static PopupWindowContext getPopupWindowContext(Environment env) {
+    return (PopupWindowContext) env.getEntry(PopupWindowContext.class);
+  }
+
+  public static PopupWindowContext requirePopupWindowContext(Environment env) {
+    return (PopupWindowContext) env.requireEntry(PopupWindowContext.class);
+  }
+
+  public static ContinuationContext getContinuationContext(Environment env) {
+    return (ContinuationContext) env.getEntry(ContinuationContext.class);
+  }
+
+  // Environment item retrieve methods mostly for Aranea core:
+  public static ManagedServiceContext requireManagedService(Environment env) {
+    return (ManagedServiceContext) env.requireEntry(ManagedServiceContext.class);
+  }
+
+  public static ExpiringServiceContext getExpiringServiceContext(Environment env) {
+    return (ExpiringServiceContext) env.getEntry(ExpiringServiceContext.class);
   }
 }

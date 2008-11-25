@@ -49,6 +49,9 @@ import org.araneaframework.http.util.URLUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContextWidget {
+
+  private static final long serialVersionUID = 1L;
+
   protected Widget child;
 
   public PopupFlowWrapperWidget(Widget child) {
@@ -86,7 +89,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public void finish(Object result) {
-    ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
+    ThreadContext threadCtx = EnvironmentUtil.requireThreadContext(getEnvironment());
     getOpenerFlowContext().finish(result);
 
     try {
@@ -123,10 +126,6 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     // XXX: and now what?
   }
 
-  public FlowReference getCurrentReference() {
-    return getLocalFlowContext().getCurrentReference();
-  }
-
   public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
     getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId,
         envEntry);
@@ -137,7 +136,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
   
   private FlowContext getLocalFlowContext() {
-    return getEnvironment().getEntry(FlowContext.class);
+    return EnvironmentUtil.getFlowContext(getEnvironment());
   }
   
   protected String getRequestURL() {
@@ -153,19 +152,25 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
   
   private FlowContext getOpenerFlowContext() {
-    PopupWindowContext popupCtx = 
-      getEnvironment().getEntry(PopupWindowContext.class);
-    // XXX
-    return ((ApplicationWidget) popupCtx.getOpener())
-      .getChildEnvironment().getEntry(FlowContext.class);
+    ApplicationWidget appWidget = (ApplicationWidget) getPopupContext().getOpener();
+    if (appWidget != null) {
+      return EnvironmentUtil.getFlowContext(appWidget.getChildEnvironment());
+    } else {
+      return null;
+    }
   }
   
   protected PopupWindowContext getPopupContext() {
-    return getEnvironment().getEntry(PopupWindowContext.class);
+    return EnvironmentUtil.getPopupWindowContext(getEnvironment());
   }
 
   protected PopupWindowContext getOpenerPopupContext() {
-    return ((ApplicationWidget)getPopupContext().getOpener()).getChildEnvironment().getEntry(PopupWindowContext.class);
+    ApplicationWidget appWidget = (ApplicationWidget) getPopupContext().getOpener();
+    if (appWidget != null) {
+      return EnvironmentUtil.getPopupWindowContext(appWidget.getChildEnvironment());
+    } else {
+      return null;
+    }
   }
 
   public void setTransitionHandler(TransitionHandler handler) {

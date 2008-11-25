@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -44,8 +44,7 @@ public class SeriesMessage implements Message {
 
   /**
    * For each component the messages are processed in the same order as they
-   * appear in the array.
-   * {@inheritDoc}
+   * appear in the array. {@inheritDoc}
    */
   public void send(Object id, Component component) {
     for (int i = 0; i < series.length; i++)

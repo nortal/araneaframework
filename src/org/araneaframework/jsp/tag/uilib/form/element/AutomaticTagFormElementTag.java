@@ -154,7 +154,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Whether the element will send the events that are registered by server-side (by default "true")." 
    */
-  public void setEvents(String events) throws JspException {
+  public void setEvents(String events) {
     this.events = events; 
   }
 
@@ -164,7 +164,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Whether the form will be validated on the client-side when the element generates an event (by default "false")." 
    */
-  public void setValidateOnEvent(String validateOnEvent) throws JspException {
+  public void setValidateOnEvent(String validateOnEvent) {
     this.validateOnEvent = validateOnEvent; 
   }
 
@@ -174,7 +174,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Element tabindex." 
    */
-  public void setTabindex(String tabindex) throws JspException {
+  public void setTabindex(String tabindex) {
     this.tabindex = tabindex;
   }
 
@@ -184,7 +184,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "CSS class without prefix of the dynamically selected tag." 
    */
-  public void setStyleClass(String styleClass) throws JspException {
+  public void setStyleClass(String styleClass) {
     this.styleClass = styleClass;
   }
 
@@ -194,7 +194,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
    */
-  public void setUpdateRegions(String updateRegions) throws JspException {
+  public void setUpdateRegions(String updateRegions) {
     this.updateRegions = updateRegions;
   }
 
@@ -204,7 +204,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
    *   required = "false"
    *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
    */
-  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+  public void setGlobalUpdateRegions(String globalUpdateRegions) {
     this.globalUpdateRegions = globalUpdateRegions;
   }    
 

@@ -62,7 +62,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     addWidget("form", form);
   }
 
-  public void handleEventSave(String eventParameter) throws Exception {
+  public void handleEventSave() throws Exception {
     if (form.convertAndValidate()) {
 
       CompanyMO company = form.writeToBean();
@@ -77,7 +77,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     }
   }
 
-  public void handleEventCancel(String eventParameter) throws Exception {
+  public void handleEventCancel() throws Exception {
     getFlowCtx().cancel();
   }
 }

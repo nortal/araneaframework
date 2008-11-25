@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.sqlexpr.constant;
 
 import org.araneaframework.backend.list.SqlExpression;
 
 public class SqlValueExpression implements SqlExpression {
-	private Object value;
-	public SqlValueExpression(Object value) {
-		this.value = value;
-	}
-	public String toSqlString() {
-		return "?";
-	}
-	public Object[] getValues() {
-		return new Object[] {this.value};
-	}
+
+  private Object value;
+
+  public SqlValueExpression(Object value) {
+    this.value = value;
+  }
+
+  public String toSqlString() {
+    return "?";
+  }
+
+  public Object[] getValues() {
+    return new Object[] { this.value };
+  }
 }

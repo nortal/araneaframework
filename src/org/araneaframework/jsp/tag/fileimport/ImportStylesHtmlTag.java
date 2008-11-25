@@ -30,43 +30,39 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Imports CSS files."
  */
 public class ImportStylesHtmlTag extends BaseFileImportTag {
-	public static final String DEFAULT_GROUP_NAME = "defaultStyles";
-	
-	private String media;
-	
-	public int doStartTag(Writer out) throws Exception {
-		// if filename specified we include the file
-		if (includeFileName != null) {
-			writeContent(out, includeFileName);
-		}
-		else if (includeGroupName != null){
-			writeContent(out, includeGroupName);
-		}
-		else {
-			writeContent(out, DEFAULT_GROUP_NAME);
-		}
-		return EVAL_BODY_INCLUDE;
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The media type the css file should be applied to."
-	 */
-	public void setMedia(String media) throws JspException {
-		this.media = (String) evaluate("media", media, String.class);
-	}
-	 
-	protected void writeContent(Writer out, String srcFile) throws Exception {
-		srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest());
-				
-		JspUtil.writeOpenStartTag(out, "link");
-		JspUtil.writeAttribute(out, "rel", "stylesheet");
-		JspUtil.writeAttribute(out, "type", "text/css");
-		JspUtil.writeAttribute(out, "href", srcFile, false);
-		JspUtil.writeAttribute(out, "media", this.media);	
-		JspUtil.writeCloseStartEndTag(out);
-		out.write("\n");
-	}
+
+  private String media;
+
+  public int doStartTag(Writer out) throws Exception {
+    // if filename specified we include the file
+    if (includeFileName != null) {
+      writeContent(out, includeFileName);
+    } else if (includeGroupName != null) {
+      writeContent(out, includeGroupName + GROUP_CSS_SUFFIX);
+    } else {
+      writeContent(out, DEFAULT_GROUP_NAME + GROUP_CSS_SUFFIX);
+    }
+    return EVAL_BODY_INCLUDE;
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "The media type the css file should be applied to."
+   */
+  public void setMedia(String media) throws JspException {
+    this.media = (String) evaluate("media", media, String.class);
+  }
+
+  protected void writeContent(Writer out, String srcFile) throws Exception {
+    srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest());
+    JspUtil.writeOpenStartTag(out, "link");
+    JspUtil.writeAttribute(out, "rel", "stylesheet");
+    JspUtil.writeAttribute(out, "type", "text/css");
+    JspUtil.writeAttribute(out, "href", srcFile, false);
+    JspUtil.writeAttribute(out, "media", this.media);
+    JspUtil.writeCloseStartEndTag(out);
+    out.write("\n");
+  }
 }

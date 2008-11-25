@@ -143,13 +143,35 @@
         </informaltable>
       </sect3>
 
+		<sect3>
+			<para>Here is the list of all available attributes for the group attribute:</para>
+
+			<orderedlist Numeration="Arabic">
+				<listitem><emphasis>all</emphasis> - imports all of the groups described below.</listitem>
+				<listitem><emphasis>core-all</emphasis> - imports the core Aranea scripts, in addition,
+					popup, modalbox, back-button support (rsh) scripts.</listitem>
+				<listitem><emphasis>core</emphasis> - imports only core aranea scripts that are always needed.</listitem>
+				<listitem><emphasis>calendar</emphasis> - imports only <link linkend="dhtmlcalendar">DHTML calendar</link> scripts.</listitem>
+				<listitem><emphasis>calendar_et</emphasis> - imports only <link linkend="dhtmlcalendar">DHTML calendar</link> scripts
+				with an interface in estonian language.</listitem>
+				<listitem><emphasis>modalbox</emphasis> - imports only <link linkend="modalbox">ModalBox</link> scripts.</listitem>
+				<listitem><emphasis>rsh</emphasis> - imports only back-button support scripts.</listitem>
+				<listitem><emphasis>prototip</emphasis> - imports only <link linkend="prototip">Prototip</link> scripts.</listitem>
+				<listitem><emphasis>logger</emphasis> - imports only <link linkend="log4javascript">log4javascript</link> scripts.</listitem>
+			</orderedlist>
+
+			<para>To use <link linkend="tinymce">TinyMCE editor</link>, you need to include its scripts like this:
+			<programlisting role="jsp">&lt;ui:importScripts file="js/tiny_mce/tiny_mce.js"/&gt;</programlisting></para>
+		</sect3>
+
       <sect3>
         <title>Examples</title>
 
         <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;ui:importScripts/&gt; &lt;!-- imports files from 'defaultScripts' group --&gt;
-&lt;ui:importScripts group="debugScripts"/&gt; &lt;!-- imports additional debug scripts (js logger) --&gt;</programlisting>
+&lt;ui:importScripts/&gt; &lt;!-- imports files from 'all' group --&gt;
+&lt;ui:importScripts group="logger"/&gt; &lt;!-- imports additional debug scripts (js logger) --&gt;</programlisting>
       </sect3>
+
     </sect2>
 
     <sect2>
@@ -168,8 +190,8 @@
       The filter provides the functionality of reading files from the jars on
       the server.</para>
 
-      <para>If no are attributes specified, the default group of css files are
-      loaded.</para>
+      <para>If no are attributes specified, the default group
+      (<emphasis>i.e. all</emphasis>) of css files are loaded.</para>
 
       <sect3>
         <title>Attributes</title>
@@ -220,6 +242,21 @@
           </tgroup>
         </informaltable>
       </sect3>
+
+		<sect3>
+			<para>Here is the list of all available attributes for the group attribute:</para>
+
+			<orderedlist Numeration="Arabic">
+				<listitem><emphasis>all</emphasis> - imports all of the styles (CSS) from the groups described below.</listitem>
+				<listitem><emphasis>aranea</emphasis> - imports only Aranea styles (<emphasis>aranea.css</emphasis>
+				for the page loading message, and <emphasis>comboselect.css</emphasis> for multiselect combo box.</listitem>
+				<listitem><emphasis>calendar</emphasis> - imports only <link linkend="dhtmlcalendar">DHTML calendar</link> styles.</listitem>
+				<listitem><emphasis>contextmenu</emphasis> - imports only <link linkend="contextmenu">Aranea context menu</link> styles.</listitem>
+				<listitem><emphasis>modalbox</emphasis> - imports only <link linkend="modalbox">ModalBox</link> styles.</listitem>
+				<listitem><emphasis>prototip</emphasis> - imports only <link linkend="prototip">Prototip</link> styles.</listitem>
+			</orderedlist>
+		</sect3>
+
     </sect2>
 
     <sect2>

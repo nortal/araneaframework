@@ -1,5 +1,6 @@
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -17,6 +18,9 @@ import org.araneaframework.uilib.support.TextType;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class AutoCompleteTextControl extends TextControl {
+
+  private static final long serialVersionUID = 1L;
+
   public static final String LISTENER_NAME = "autocomplete";
 
   protected long minCompletionLength = 1;
@@ -70,7 +74,10 @@ public class AutoCompleteTextControl extends TextControl {
   }
 
   private class AutoCompleteActionListener implements ActionListener {
-    public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
       List suggestions = dataProvider.getSuggestions(str);
 
@@ -88,8 +95,7 @@ public class AutoCompleteTextControl extends TextControl {
   protected ResponseBuilder resolveResponseBuilder() {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
-      ConfigurationContext confCtx = 
-        getEnvironment().getEntry(ConfigurationContext.class);
+      ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
       if (confCtx != null)
         result = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
     }
@@ -119,14 +125,19 @@ public class AutoCompleteTextControl extends TextControl {
   }
   
   /**
-   * Default {@link AutoCompleteTextControl.ResponseBuilder} used when {@link AutoCompleteTextControl} does not have
-   * its {@link AutoCompleteTextControl.ResponseBuilder} set and {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}
-   * does not specify application-wide {@link AutoCompleteTextControl.ResponseBuilder}.
+   * Default {@link AutoCompleteTextControl.ResponseBuilder} used when
+   * {@link AutoCompleteTextControl} does not have its
+   * {@link AutoCompleteTextControl.ResponseBuilder} set and
+   * {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER} does not
+   * specify application-wide {@link AutoCompleteTextControl.ResponseBuilder}.
    * 
    * @author Steven Jentson (steven@webmedia.ee)
    */
   public static class DefaultResponseBuilder implements ResponseBuilder {
-	public String getResponseContent(List suggestions) {
+
+    private static final long serialVersionUID = 1L;
+
+    public String getResponseContent(List suggestions) {
   	  StringBuffer xml = new StringBuffer();
         xml.append("<ul>");
         for (int i = 0; i < suggestions.size(); i++) {
@@ -141,6 +152,7 @@ public class AutoCompleteTextControl extends TextControl {
     public String getResponseContentType() {
       return "text/xml";
     }
+
   }
   
   /**
@@ -156,6 +168,9 @@ public class AutoCompleteTextControl extends TextControl {
   //* VIEW MODEL
   //*********************************************************************  	
   public class ViewModel extends TextControl.ViewModel {
+
+    private static final long serialVersionUID = 1L;
+
     private long minCompletionLength;
     
     public ViewModel() {

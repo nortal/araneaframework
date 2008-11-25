@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.release.demos;
 
@@ -28,8 +28,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData;
 import org.araneaframework.example.main.release.features.ExampleData.Client;
 import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
-import org.araneaframework.http.UpdateRegionContext;
-import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 import org.araneaframework.uilib.menu.ContextMenuItem;
@@ -39,117 +38,132 @@ import org.araneaframework.uilib.menu.ContextMenuItem.ContextMenuEventEntry;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleChangeListener {
-	protected List friends = new ArrayList();
+public class DemoContextMenuWidget extends TemplateBaseWidget
+  implements LocaleChangeListener {
 
-	private MemoryBasedListDataProvider dataProvider = new DataProvider();
+  private static final long serialVersionUID = 1L;
 
-	//Plays the role of a sequence
-	private Long lastId =  new Long(0);
+  protected List friends = new ArrayList();
 
-	{
-		Random rn = new Random();
-		List allSuggestions = new ArrayList();
+  private MemoryBasedListDataProvider dataProvider = new DataProvider();
 
-		for (Iterator i = Arrays.asList(Locale.getISOCountries()).iterator(); i.hasNext(); ) {
-			allSuggestions.add(new Locale("en", (String)i.next()).getDisplayCountry(Locale.ENGLISH));
-		}
+  // Plays the role of a sequence
+  private Long lastId = new Long(0);
+  {
+    Random rn = new Random();
+    List allSuggestions = new ArrayList();
+    List allCountries = Arrays.asList(Locale.getISOCountries());
 
-		for (int i = 0; i <  ExampleData.males.length; i++) {
-			ExampleData.Client friend = new ExampleData.Client();
-			friend.setForename(ExampleData.males[i]);
-			friend.setId(lastId);
-			friend.setSex("M");
-			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
-			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));
-			friends.add(friend);
-			lastId = new Long(lastId.longValue() + 1);
-		}
+    for (Iterator i = allCountries.iterator(); i.hasNext();) {
+      Locale locale = new Locale("en", (String) i.next());
+      allSuggestions.add(locale.getDisplayCountry(Locale.ENGLISH));
+    }
 
-		for (int i = 0; i <  ExampleData.females.length; i++) {
-			ExampleData.Client friend = new ExampleData.Client();
-			friend.setForename(ExampleData.females[i]);
-			friend.setSex ("F");
-			friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
-			friend.setCountry((String)allSuggestions.get(rn.nextInt(allSuggestions.size())));
-			friends.add(friend);
-			lastId = new Long(lastId.longValue() + 1);
-		}
-	}
+    for (int i = 0; i < ExampleData.males.length; i++) {
+      ExampleData.Client friend = new ExampleData.Client();
+      friend.setForename(ExampleData.males[i]);
+      friend.setId(this.lastId);
+      friend.setSex("M");
+      friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+      friend.setCountry((String) allSuggestions.get(rn.nextInt(allSuggestions.size())));
+      this.friends.add(friend);
+      this.lastId = new Long(this.lastId.longValue() + 1);
+    }
 
-	/* Editable list. */ 
-	private BeanListWidget list;
-	/* Actual holder of editable list rows (resides inside EditableBeanListWidget).
-     Look inside init() method to see where it comes from. */ 
-	private BeanFormListWidget formList;
+    for (int i = 0; i < ExampleData.females.length; i++) {
+      ExampleData.Client friend = new ExampleData.Client();
+      friend.setForename(ExampleData.females[i]);
+      friend.setSex("F");
+      friend
+          .setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+      friend.setCountry((String) allSuggestions.get(rn.nextInt(allSuggestions
+          .size())));
+      this.friends.add(friend);
+      this.lastId = new Long(this.lastId.longValue() + 1);
+    }
+  }
 
-	protected void init() throws Exception {
-		setViewSelector("release/demos/contextMenuDemo");
-		
-		getL10nCtx().addLocaleChangeListener(this);
+  /* Editable list. */
+  private BeanListWidget list;
 
-		createList();
-		attachContextMenu();
-	}
+  protected void init() throws Exception {
+    setViewSelector("release/demos/contextMenuDemo");
+    getL10nCtx().addLocaleChangeListener(this);
+    createList();
+    attachContextMenu();
+  }
 
-	private void createList() {
-		list = new BeanListWidget(ExampleData.Client.class);
-		addWidget("list", list);
-		list.setOrderableByDefault(true);
-		list.addField("sex", "sed.Sex").like();		
-		list.addField("forename", "sed.Forename").like();
-		list.addField("surname", "sed.Surname").like();
-		list.addField("country", "common.Country").like();
-		list.addField("dummy", null, false);
+  private void createList() {
+    this.list = new BeanListWidget(ExampleData.Client.class);
+    addWidget("list", this.list);
+    this.list.setOrderableByDefault(true);
+    this.list.addField("sex", "sed.Sex").like();
+    this.list.addField("forename", "sed.Forename").like();
+    this.list.addField("surname", "sed.Surname").like();
+    this.list.addField("country", "common.Country").like();
+    this.list.addField("dummy", null, false);
+    this.list.setDataProvider(this.dataProvider);
+  }
 
-		list.setDataProvider(dataProvider);
-	}
+  private class DataProvider extends MemoryBasedListDataProvider {
 
-	private class DataProvider extends MemoryBasedListDataProvider {
-		private static final long serialVersionUID = 1L;
-		protected DataProvider() {
-			super(ExampleData.Client.class);
-		}
-		public List loadData() throws Exception {
-			return friends;
-		}
-	}
-	
+    private static final long serialVersionUID = 1L;
+
+    protected DataProvider() {
+      super(ExampleData.Client.class);
+    }
+
+    public List loadData() throws Exception {
+      return DemoContextMenuWidget.this.friends;
+    }
+  }
+
   private ContextMenuWidget createListContextMenu() {
     ContextMenuItem menu = new ContextMenuItem();
-    menu.addMenuItem(new ContextMenuItem(getL10nCtx().localize("common.View"), new ContextMenuEventEntry("viewRecord", this, "cMenuparameterSupplier")));
-    menu.addMenuItem(new ContextMenuItem(getL10nCtx().localize("context.menu.ChangeSex"), new ContextMenuEventEntry("changeSex", this, "cMenuparameterSupplier")));
-    menu.addMenuItem(new ContextMenuItem(getL10nCtx().localize("common.Remove"), new ContextMenuEventEntry("deleteRecord", this, "cMenuparameterSupplier")));
-
+    addMenuItem(menu, "common.View", "viewRecord");
+    addMenuItem(menu, "context.menu.ChangeSex", "changeSex");
+    addMenuItem(menu, "common.Remove", "deleteRecord");
     ContextMenuWidget contextMenuWidget = new ContextMenuWidget(menu);
-    
     return contextMenuWidget;
   }
-  
+
+  private void addMenuItem(ContextMenuItem menu, String labelId, String eventId) {
+    String label = getL10nCtx().localize(labelId);
+    menu.addMenuItem(new ContextMenuItem(label, new ContextMenuEventEntry(
+        eventId, this, "cMenuparameterSupplier")));
+  }
+
   public void onLocaleChange(Locale oldLocale, Locale newLocale) {
     attachContextMenu();
   }
 
   private void attachContextMenu() {
-	list.addWidget("contextmenu", createListContextMenu());
+    this.list.addWidget("contextmenu", createListContextMenu());
   }
 
-  private void handleEventViewRecord(String param) {
-	  Client c = (Client) list.getRowFromRequestId(param);
-	  getFlowCtx().start(new ClientViewWidget(c));
-	  // XXX: this is a hack to work around the shortcoming of partial rendering -- namely when flow is switched,
-	  // the regions that are supposed to be updated are of course lost and old flow remains on end-user screen
-	  (getEnvironment().getEntry(UpdateRegionContext.class)).disableOnce();
+  public void handleEventViewRecord(String param) {
+    Client c = (Client) this.list.getRowFromRequestId(param);
+    getFlowCtx().start(new ClientViewWidget(c));
+    // XXX: this is a hack to work around the shortcoming of partial rendering
+    // -- namely when flow is switched,
+    // the regions that are supposed to be updated are of course lost and old
+    // flow remains on end-user screen
+    EnvironmentUtil.getUpdateRegionContext(getEnvironment()).disableOnce();
   }
-  
-  private void handleEventChangeSex(String param) {
-	  Client c = (Client) list.getRowFromRequestId(param);
-	  if (c.getSex().equals("M")) c.setSex("F");  else c.setSex("M");
+
+  public void handleEventChangeSex(String param) {
+    Client c = (Client) this.list.getRowFromRequestId(param);
+    if (c.getSex().equals("M")) {
+      c.setSex("F");
+    } else {
+      c.setSex("M");
+    }
   }
-  
-  private void handleEventDeleteRecord(String param) {
-	  final Client c = (Client) list.getRowFromRequestId(param);
-	  friends.remove(CollectionUtils.find(friends, new BeanPropertyValueEqualsPredicate("id", c.getId())));
-	  list.refresh();
+
+  public void handleEventDeleteRecord(String param) {
+    final Client c = (Client) this.list.getRowFromRequestId(param);
+    this.friends.remove(CollectionUtils.find(this.friends,
+        new BeanPropertyValueEqualsPredicate("id", c.getId())));
+    this.list.refresh();
   }
 }

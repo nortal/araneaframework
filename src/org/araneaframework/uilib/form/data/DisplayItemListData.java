@@ -25,7 +25,9 @@ import org.araneaframework.uilib.form.Data;
  */
 public class DisplayItemListData extends Data {
 
+  private static final long serialVersionUID = 1L;
+
   public DisplayItemListData() {
     super(List.class, "List<DisplayItem>");
-  }     
+  }
 }

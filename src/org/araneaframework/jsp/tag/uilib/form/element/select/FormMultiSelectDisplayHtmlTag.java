@@ -21,11 +21,13 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.araneaframework.jsp.exception.AraneaJspException;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
@@ -36,8 +38,18 @@ import org.araneaframework.uilib.support.DisplayItem;
  *   description = "Form multiselect display field, represents UiLib "MultiSelectControl"."
  */
 public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
+
   protected static final String NEWLINE_SEPARATOR_CODE ="\\n";
+
   protected String separator = ",&nbsp;";
+
+  /**
+   * A boolean setting to override default configuration of
+   * {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
+   * 
+   * @since 1.2
+   */
+  protected Boolean localizeDisplayItems;
 
   {
     baseStyleClass = "aranea-multi-select-display";
@@ -45,6 +57,11 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
 
   protected int doEndTag(Writer out) throws Exception {        
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
+
+    if (this.localizeDisplayItems == null) {
+      this.localizeDisplayItems = ConfigurationContextUtil
+          .isLocalizeControlData(getEnvironment());
+    }
 
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", getStyleClass());
@@ -55,14 +72,25 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     List selectedItems = new ArrayList(viewModel.getSelectItems());
     for (Iterator i = selectedItems.iterator(); i.hasNext();) {
       DisplayItem displayItem = (DisplayItem) i.next();
-      if (!viewModel.getValueSet().contains(displayItem.getValue())) i.remove();
+      if (!viewModel.getValueSet().contains(displayItem.getValue())) {
+        i.remove();
+      }
     }
 
     for (Iterator i = selectedItems.iterator(); i.hasNext();) {
       DisplayItem displayItem = (DisplayItem) i.next();
 
-      JspUtil.writeEscaped(out, displayItem.getDisplayString());
-      if (i.hasNext()) writeSeparator(out);
+      String label = displayItem.getDisplayString();
+
+      if (this.localizeDisplayItems.booleanValue()) {
+        label = JspUtil.getResourceString(pageContext, label);
+      }
+
+      JspUtil.writeEscaped(out, label);
+
+      if (i.hasNext()) {
+        writeSeparator(out);
+      }
     }
 
     return super.doEndTag(out);  
@@ -78,10 +106,26 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     this.separator = separator;
   }    
 
-  protected void writeSeparator(Writer out) throws IOException, AraneaJspException {
-    if (NEWLINE_SEPARATOR_CODE.equals(separator))      
+  protected void writeSeparator(Writer out) throws IOException {
+    if (NEWLINE_SEPARATOR_CODE.equals(separator)) {      
       JspUtil.writeStartEndTag(out, "br");
-    else 
-      out.write(separator);      
+    } else { 
+      out.write(separator);
+    }
   }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description ="Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
+   * 
+   * @since 1.2
+   */
+  public void setLocalizeDisplayItems(String localizeDisplayItems)
+      throws JspException {
+    this.localizeDisplayItems = (Boolean) evaluateNotNull(
+        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+  }
+
 }

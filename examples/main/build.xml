@@ -78,7 +78,12 @@
 		  </move>
 	</target>
 	
-	<target name="compile" depends="init">
+	<target name="build-all" depends="compile" description="Build the code">
+		<ant dir="../.." target="build-all"/>
+		<antcall target="build"/>
+	</target>
+
+   	<target name="compile" depends="init">
 		<!--Compile Java source files-->
 		<javac destdir="war/WEB-INF/classes"
 			debug="on"

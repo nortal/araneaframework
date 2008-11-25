@@ -38,6 +38,9 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
+
+  private static final long serialVersionUID = 1L;
+
   /** @since 1.1 */
   public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
@@ -232,10 +235,10 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
     if (this.backgroundValidation == null) {
-      FormContext fctx = (getEnvironment().getEntry(FormContext.class));
+      FormContext fctx = UilibEnvironmentUtil.getFormContext(getEnvironment());
       if (fctx != null)
         return fctx.isBackgroundValidation();
-      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfiguration(getEnvironment()));
     }
     return this.backgroundValidation.booleanValue();
   }
@@ -330,6 +333,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel{
+
+    private static final long serialVersionUID = 1L;
     private Map properties;
 
     /**

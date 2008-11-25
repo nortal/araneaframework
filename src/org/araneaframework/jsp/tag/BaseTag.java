@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -292,7 +293,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   //
 
   protected ConfigurationContext getConfiguration() {
-    return getEnvironment().getEntry(ConfigurationContext.class);
+    return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
 
   /**

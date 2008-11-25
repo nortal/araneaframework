@@ -18,6 +18,7 @@ package org.araneaframework.uilib.support;
 
 import java.io.Serializable;
 import org.apache.commons.fileupload.FileItem;
+import org.araneaframework.core.Assert;
 
 
 /**
@@ -29,9 +30,10 @@ import org.apache.commons.fileupload.FileItem;
  * 
  */
 public class FileInfo implements Serializable {
-  private transient FileItem item;
+  private FileItem item;
   
   public FileInfo(FileItem item) {
+    Assert.notNull(item);
     this.item = item;
   }
 

@@ -25,7 +25,9 @@ import org.araneaframework.uilib.form.Data;
  */
 public class LongListData extends Data {
 
+  private static final long serialVersionUID = 1L;
+
   public LongListData() {
     super(List.class, "List<Long>");
-  }    
+  }
 }

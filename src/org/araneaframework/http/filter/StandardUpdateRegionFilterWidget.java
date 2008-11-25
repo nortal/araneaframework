@@ -57,6 +57,9 @@ import org.araneaframework.http.util.JsonObject;
  * @since 1.1
  */
 public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implements UpdateRegionContext {
+
+  private static final long serialVersionUID = 1L;
+
   static private final Log log = LogFactory.getLog(StandardUpdateRegionFilterWidget.class);
 
   private String characterEncoding = "UTF-8";
@@ -323,6 +326,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static class Region implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String content;
     private String mode;
 
@@ -343,6 +348,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static class ComponentLocatorMessage extends RoutedMessage {
 
+    private static final long serialVersionUID = 1L;
+
     private Component component;
 
     public ComponentLocatorMessage(Path path) {
@@ -360,6 +367,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static class RenderMessage extends RoutedMessage {
 
+    private static final long serialVersionUID = 1L;
+
     private OutputData output;
 
     public RenderMessage(Path path, OutputData output) {
@@ -375,6 +384,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   }
 
   public static class UpdateRegionGatherMessage extends BroadcastMessage {
+
+    private static final long serialVersionUID = 1L;
 
     private Map regions = new HashMap();
 

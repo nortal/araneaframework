@@ -18,6 +18,8 @@ package org.araneaframework.uilib.form.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +41,8 @@ import org.araneaframework.uilib.util.DisplayItemUtil;
  */
 public class SelectControl extends StringValueControl  implements DisplayItemContainer {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * A list of {@link DisplayItem}s.
    */
@@ -51,10 +55,10 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   public void addItem(DisplayItem item) {
     Assert.notNullParam(item, "item");
-    
-    items.add(item);
+    DisplayItemUtil.assertUnique(this.items, item);
+    this.items.add(item);
   }
-  
+
   /**
    * Adds a display-items to the element.
    * 
@@ -62,10 +66,10 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   public void addItems(Collection items) {
     Assert.noNullElementsParam(items, "items");
-    
+    DisplayItemUtil.assertUnique(this.items, items);
     this.items.addAll(items);
-  }  
-  
+  }
+
   /**
    * Adds the display-items corresponding to the given value and label fields in Value Object.
    * 
@@ -141,11 +145,11 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * Clears the list of select-items.
    */
   public void clearItems() {
-    items.clear();
+    this.items.clear();
   }
 
   public List getDisplayItems() {
-    return items;
+    return this.items;
   }
 
   public int getValueIndex(String value) {
@@ -162,11 +166,25 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   public DisplayItem getSelectedItem() {
     FormElementContext ctx = getFormElementCtx();
-    if (ctx == null)
+    if (ctx == null) {
       return null;
+    }
 
     int index = getValueIndex((String)ctx.getValue());
     return index >= 0 ? (DisplayItem)getDisplayItems().get(index) : null; 
+  }
+
+  /**
+   * Provides a way to sort the items in this <code>SelectControl</code>. The
+   * <code>comparator</code> parameter is used to compare
+   * <code>DisplayItem</code>s and, therefore, to set the order.
+   * 
+   * @param comparator Any <code>Comparator</code> that is used to define order
+   *          of display items.
+   * @since 1.2
+   */
+  public void sort(Comparator comparator) {
+    Collections.sort(this.items, comparator);
   }
 
   //*********************************************************************
@@ -179,9 +197,9 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   protected void validateNotNull() {
     super.validateNotNull();
-    
+
     String data = innerData == null ? null : ((String[]) innerData)[0];
-    
+
     if (!DisplayItemUtil.isValueInItems(SelectControl.this, data)) 
       throw new SecurityException("A value '" + data + "' not found in the list has been submitted to a select control!");
   }
@@ -195,28 +213,30 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
   }
 
   protected String preprocessRequestParameter(String parameterValue) {
-    //TODO: refactor ugly hack
-    
+    // TODO: refactor ugly hack
     parameterValue = super.preprocessRequestParameter(parameterValue);
-    
-    if (parameterValue != null && !DisplayItemUtil.isValueInItems(SelectControl.this, parameterValue)) 
-      throw new SecurityException("A value '" + parameterValue + "' not found in the list has been submitted to a select control!");
-	  
-    //Handles disabled DisplayItems      
-	  String[] previousValues = (String[]) innerData;		  	    	   
-    
-	  if (previousValues != null && previousValues.length == 1) {
-			int valueIndex = getValueIndex(previousValues[0]);
-			
-			if (valueIndex != -1) {
-				DisplayItem previousDisplayItem = (DisplayItem) getDisplayItems().get(valueIndex);
-				
-				if (previousDisplayItem.isDisabled() && parameterValue == null)
-					return previousDisplayItem.getValue();
-			}
-	  }
-		
-		return parameterValue;
+
+    if (parameterValue != null
+        && !DisplayItemUtil.isValueInItems(SelectControl.this, parameterValue)) {
+      throw new SecurityException("A value '" + parameterValue
+          + "' not found in the list has been submitted to a select control!");
+    }
+
+    // Handles disabled DisplayItems
+    String[] previousValues = (String[]) innerData;
+
+    if (previousValues != null && previousValues.length == 1) {
+      int valueIndex = getValueIndex(previousValues[0]);
+
+      if (valueIndex != -1) {
+        DisplayItem previousDisplayItem = (DisplayItem) getDisplayItems().get(valueIndex);
+
+        if (previousDisplayItem.isDisabled() && parameterValue == null) {
+          return previousDisplayItem.getValue();
+        }
+      }
+    }
+    return parameterValue;
   }
   
   //*********************************************************************
@@ -228,6 +248,8 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    * 
    */
   public class ViewModel extends StringArrayRequestControl.ViewModel {
+
+    private static final long serialVersionUID = 1L;
 
     private List selectItems;
     private Map selectItemMap = new HashMap(); 
@@ -243,7 +265,7 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
       	selectItemMap.put(displayItem.getValue(), displayItem);
       }
     }         
-    
+
     /**
      * Returns a <code>List</code> of {@link DisplayItem}s.
      * @return a <code>List</code> of {@link DisplayItem}s.
@@ -251,15 +273,15 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
     public List getSelectItems() {
       return selectItems;
     }
-    
-		public DisplayItem getSelectItemByValue(String value) {
-			return (DisplayItem) selectItemMap.get(value);
-		}    
-    
+
+    public DisplayItem getSelectItemByValue(String value) {
+      return (DisplayItem) selectItemMap.get(value);
+    }    
+
     public boolean containsItem(String itemValue) {
       return selectItemMap.get(itemValue) != null;
     }
-    
+
     public String getLabelForValue(String itemValue) {
       DisplayItem selectItemByValue = getSelectItemByValue(itemValue);
       return selectItemByValue != null ? selectItemByValue.getDisplayString() : "";

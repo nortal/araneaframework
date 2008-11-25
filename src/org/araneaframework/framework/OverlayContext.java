@@ -141,6 +141,25 @@ public interface OverlayContext extends Serializable {
   void start(Widget flow);
 
   /**
+   * Similar to {@link FlowContext#cancel()} but closes the entire
+   * OverlayContext not just the last flow widget.
+   * 
+   * @since 1.2
+   */
+  void cancel();
+
+  /**
+  /**
+   * Similar to {@link FlowContext#finish(Object)} but closes the entire
+   * OverlayContext not just the last flow widget.
+   * 
+   * @param result The result to return from the overlay context.
+   * 
+   * @since 1.2
+   */
+  void finish(Object result);
+
+  /**
    * This is a marker interface to say that overlay mode is active by putting
    * this interface class into the <code>Environment</code>. The tags may use
    * the <code>Environment</code> to check the mode.

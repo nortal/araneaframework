@@ -1,5 +1,5 @@
 /**
- * Copyright 2007 Webmedia Group Ltd.
+ * Copyright 2008 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,18 +149,23 @@ Aranea.ContextMenu.prototype = {
   },
 
   hide: function(event) {
-    //this.triggeringElement = null;
   	// if event occurred in context menu itself, menu should be cleared by its own handlers
-    if (event && ($(Event.element(event))).descendantOf($(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID)))
-      return true;
-    var x = $$('div.aranea-contextmenu-class');
-    var z = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
-    if (x && x.first()) {
-      z.removeChild(x.first());
-    }
-    if (z) z.hide();
+	var menu = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
+
+	if (menu) {
+		if (event && $(Event.element(event)).descendantOf(menu)) {
+	      return true;
+	    }
+
+		var x = $$('div.aranea-contextmenu-class');
+	    if (x && x.first()) {
+	      menu.removeChild(x.first());
+	    }
+
+	    menu.hide();
+	}
   },
-  
+
   getTriggeringElement: function() {
     return this.triggeringElement;
   }

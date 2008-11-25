@@ -92,7 +92,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     }
   }
 
-  private void writeSystemFormFields(Writer out) throws JspException, IOException {
+  private void writeSystemFormFields(Writer out) throws IOException {
     SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
       Map.Entry entry = (Map.Entry) i.next();

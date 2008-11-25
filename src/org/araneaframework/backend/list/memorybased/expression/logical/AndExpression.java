@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
@@ -21,31 +21,34 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.core.Assert;
 
 /**
  * Composite AND Expression.
  */
 public class AndExpression extends MultiExpression {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/** 
-	 * Returns Boolean.TRUE if all expressions evaluate to Boolean.TRUE, Boolean.FALSE otherwise.
-	 * @return whether all expression evaluated to true
-	 */
-	public Object evaluate(VariableResolver resolver)
-			throws ExpressionEvaluationException {
-		if (this.children.size() == 0) {
-			throw new ExpressionEvaluationException(
-					"At least one children must be provided");
-		}
-		for (Iterator i = this.children.iterator(); i.hasNext();) {
-			Expression expr = (Expression) i.next();
-			Boolean value = (Boolean) expr.evaluate(resolver);
-			if (!Boolean.TRUE.equals(value)) {
-				return Boolean.FALSE;
-			}
-		}
-		return Boolean.TRUE;
-	}
+  /**
+   * Returns Boolean.TRUE if all expressions evaluate to Boolean.TRUE,
+   * Boolean.FALSE otherwise.
+   * 
+   * @return whether all expression evaluated to true
+   */
+  public Object evaluate(VariableResolver resolver)
+      throws ExpressionEvaluationException {
+    Assert.isTrue(this.children.size() > 0,
+        "At least one children must be provided");
+
+    for (Iterator i = this.children.iterator(); i.hasNext();) {
+      Expression expr = (Expression) i.next();
+      Boolean value = (Boolean) expr.evaluate(resolver);
+      if (!Boolean.TRUE.equals(value)) {
+        return Boolean.FALSE;
+      }
+    }
+
+    return Boolean.TRUE;
+  }
 }

@@ -39,10 +39,10 @@ public class WizardFooterTag extends BaseTag {
   public static final String WIZARD_SUBMIT_EVENT_ID = "submit";
   public static final String WIZARD_CANCEL_EVENT_ID = "cancel";
   
-  public static final String WIZARD_GOTO_NEXT_LABEL_ID = "#Next";
-  public static final String WIZARD_GOTO_PREV_LABEL_ID = "#Previous";
-  public static final String WIZARD_SUBMIT_LABEL_ID = "#Submit";
-  public static final String WIZARD_CANCEL_LABEL_ID = "#Cancel";
+  public static final String WIZARD_GOTO_NEXT_LABEL_ID = "list.next";
+  public static final String WIZARD_GOTO_PREV_LABEL_ID = "list.previous";
+  public static final String WIZARD_SUBMIT_LABEL_ID = "list.submit";
+  public static final String WIZARD_CANCEL_LABEL_ID = "list.cancel";
 
   protected int doStartTag(Writer out) throws Exception {
 		  	

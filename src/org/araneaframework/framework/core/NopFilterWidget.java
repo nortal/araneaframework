@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.core;
 
@@ -29,4 +29,5 @@ package org.araneaframework.framework.core;
  */
 public class NopFilterWidget extends BaseFilterWidget {
 
+  private static final long serialVersionUID = 1L;
 }

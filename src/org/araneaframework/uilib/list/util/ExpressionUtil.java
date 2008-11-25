@@ -151,10 +151,13 @@ public class ExpressionUtil {
 	 */	
 	public static Expression ge(Expression expr1,
 			Expression expr2, Comparator comp) {		
-		if (expr1 == null || expr2 == null) {
-			return null;
-		}
-		return or(gt(expr1, expr2, comp), eq(expr1, expr2, comp));
+      if (expr1 == null || expr2 == null) {
+        return null;
+      }
+      if (comp == null) {
+          comp = DEFAULT_COMPARATOR;
+      }
+      return new GreaterThanExpression(expr1, expr2, comp, true);
 	}
 	
 	/**
@@ -162,11 +165,13 @@ public class ExpressionUtil {
 	 */	
 	public static Expression le(Expression expr1,
 			Expression expr2, Comparator comp) {
-		if (expr1 == null || expr2 == null) {
-			return null;
-		}
-
-		return or(lt(expr1, expr2, comp), eq(expr1, expr2, comp));
+      if (expr1 == null || expr2 == null) {
+        return null;
+      }
+      if (comp == null) {
+          comp = DEFAULT_COMPARATOR;
+      }
+      return new LowerThanExpression(expr1, expr2, comp, true);
 	}
 	
 	/**

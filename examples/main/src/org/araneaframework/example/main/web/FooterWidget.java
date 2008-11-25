@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.AraneaVersion;
 import org.araneaframework.OutputData;
@@ -36,7 +37,7 @@ public class FooterWidget extends BaseUIWidget {
   }
 
    protected void render(OutputData output) throws Exception {
-    TemplateMenuWidget menuWidget = (TemplateMenuWidget) getEnvironment().getEntry(MenuContext.class);
+    TemplateMenuWidget menuWidget = (TemplateMenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
 
     /* widget source */
     String flowClassName = menuWidget.getFlowClassName();

@@ -48,7 +48,7 @@ public class CompanyViewWidget extends TemplateBaseWidget {
     putViewData("company" , getGeneralDAO().getById(CompanyMO.class, id));
   }
 
-  public void handleEventReturn(String eventParameter) throws Exception {
+  public void handleEventReturn() throws Exception {
     getFlowCtx().cancel();
   }
 }

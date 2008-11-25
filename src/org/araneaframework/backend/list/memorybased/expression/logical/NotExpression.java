@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
@@ -24,22 +24,22 @@ import org.araneaframework.core.Assert;
 
 public class NotExpression implements CompositeExpression {
 
-	private static final long serialVersionUID = 1L;
-	
-	private Expression expr;
+  private static final long serialVersionUID = 1L;
 
-	public NotExpression(Expression expr) {
-		Assert.notNullParam(this, expr, "expr");
-		this.expr = expr;
-	}
+  private Expression expr;
 
-	public Expression[] getChildren() {
-		return new Expression[] { this.expr };
-	}
+  public NotExpression(Expression expr) {
+    Assert.notNullParam(this, expr, "expr");
+    this.expr = expr;
+  }
 
-	public Object evaluate(VariableResolver resolver)
-			throws ExpressionEvaluationException {
-		Boolean childValue = (Boolean) this.expr.evaluate(resolver);
-		return (!childValue.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
-	}
+  public Expression[] getChildren() {
+    return new Expression[] { this.expr };
+  }
+
+  public Object evaluate(VariableResolver resolver)
+      throws ExpressionEvaluationException {
+    Boolean childValue = (Boolean) this.expr.evaluate(resolver);
+    return (!childValue.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
+  }
 }

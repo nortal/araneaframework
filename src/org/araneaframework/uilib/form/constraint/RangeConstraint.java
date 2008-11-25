@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.text.Collator;
 import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
@@ -130,9 +131,7 @@ public final class RangeConstraint extends BaseConstraint {
 
   // Translates the key into a message that will be displayed to the user.
   private String t(String key, Environment env) {
-    LocalizationContext locCtx = env.getEntry(
-        LocalizationContext.class);
-    return locCtx.localize(key);
+    return EnvironmentUtil.getLocalizationContext(env).localize(key);
   }
 
 }
