@@ -25,13 +25,16 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 
   protected void init() throws Exception {
     setViewSelector("release/demos/tab");
-    addWidget("tabContainer", createTabContainer());
+    addTabContainer();
   }
 
   // Whole method is a hack to determine menu content and show it in different tabs.
-  private TabContainerWidget createTabContainer() throws IllegalAccessException,
+  private TabContainerWidget addTabContainer() throws IllegalAccessException,
       InstantiationException {
     TabContainerWidget containerWidget = new TabContainerWidget();
+
+    // The tab container must be initialized before tabs will be defined:
+    addWidget("tabContainer", containerWidget);
 
     MenuWidget menu = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
     Map araneaDemos = menu.getAraneaMenu().getSubMenu();

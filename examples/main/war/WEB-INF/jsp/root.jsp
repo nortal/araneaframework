@@ -11,9 +11,9 @@
   		]]>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
+			<title>Aranea<ui:entity code="mdash"/>Java Web Framework Construction and Integration Kit</title>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 			<jsp:include page="scripts.jsp"/>
-			<title>Aranea<ui:entity code="mdash"/>Java Web Framework Construction and Integration Kit</title>
 		</head>
 
 		<ui:body>
@@ -33,7 +33,8 @@
 							<!-- Renders the side menu on left side of screen -->
 							<jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 
-								<div id="content">
+							<div id="content">
+								<ui:updateRegion globalId="demo-messages">
 									<div class="msg-info">
 										<div>
 											<div>
@@ -42,21 +43,29 @@
 										</div>
 									</div>
 									<ui:messages type="error" styleClass="msg-error"/>
+								</ui:updateRegion>
 
-									<!-- Renders the menu widget itself. As MenuWidget is subclass
-									     of StandardFlowContainerWidget, this means that actual
-									     widget rendered here is whatever widget is on top of call
-									     stack at the moment of rendering. -->
+								<!-- Renders the menu widget itself. As MenuWidget is subclass
+								     of StandardFlowContainerWidget, this means that actual
+								     widget rendered here is whatever widget is on top of call
+								     stack at the moment of rendering. -->
+								<ui:updateRegion globalId="demo-content">
 									<ui:widgetInclude id="menu"/>
-								</div>
-
-								<div class="clear1"><ui:nbsp/></div>
+									<ui:widgetInclude id="menu"/>
+									<ui:widgetInclude id="menu"/>
+									<ui:widgetInclude id="menu"/>
+								</ui:updateRegion>
 							</div>
-						</ui:systemForm>
+
+							<div class="clear1"><ui:nbsp/></div>
+						</div>
+					</ui:systemForm>
+					<ui:updateRegion globalId="demo-footer">
 						<ui:widgetInclude id="menu.footer"/>
 					</ui:updateRegion>
-				</div>
-			</ui:body>
-		</html>
+				</ui:updateRegion>
+			</div>
+		</ui:body>
+	</html>
 	</ui:widgetContext>
 </jsp:root>

@@ -6,7 +6,7 @@ your cost of migration.
 Overall, the changes were kept close to minimum, and should not cause great
 trouble.
 
-Be sure to aösp read Changelog.txt for additional information on what's changed.
+Be sure to read Changelog.txt for additional information on what's changed.
 
 ----------------------
 Version 1.2 2008-11-25
