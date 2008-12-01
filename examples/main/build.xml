@@ -77,14 +77,20 @@
 				<exclude name="jasper/*jar" />
 				<exclude name="jetty/*jar" />
 			</fileset>
-			<fileset dir="../../lib/runtime/" includes="*.jar" />
+			<fileset dir="../../lib/runtime/" includes="*.jar" excludes="junit.jar,jmock.jar"/>
 			<fileset dir="../../lib/build/">
 				<include name="*.jar" />
+				<exclude name="aopalliance.jar" />
+				<exclude name="cglib-nodep-2.1_3.jar" />
 				<exclude name="checkstyle.jar" />
+				<exclude name="cobertura.jar" />
+				<exclude name="commons-beanutils*.jar" />
+				<exclude name="commons-digester.jar" />
+				<exclude name="cos.jar" />
 				<exclude name="j2ee.jar" />
 				<exclude name="javancss.jar" />
 				<exclude name="jhbasic.jar" />
-				<exclude name="junit.jar" />
+				<exclude name="quartz.jar" />
 				<exclude name="spring-mock.jar" />
 				<exclude name="tlddoc.jar" />
 				<exclude name="xdoclet*.jar" />

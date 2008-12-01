@@ -15,6 +15,7 @@
  */
 package org.araneaframework.framework.container;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
