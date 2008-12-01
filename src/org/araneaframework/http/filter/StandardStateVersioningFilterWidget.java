@@ -300,6 +300,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     versionedStates.clear();
   }
 
+  protected void destroy() throws Exception {
+    expire();
+    if (this.childWidget != null) {
+      super.destroy();
+    }
+  }
+
   /* PROTECTED CLASSES */
   protected static class ClientNavigationNotifierMessage
     extends BroadcastMessage {

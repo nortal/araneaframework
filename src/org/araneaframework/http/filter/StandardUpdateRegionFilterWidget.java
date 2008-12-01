@@ -66,6 +66,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   private Map documentRegions = new HashMap();
   private List renderedRegions = new ArrayList();
   private boolean disabled = false;
+  private boolean disabledForReload = false;
 
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 
@@ -99,7 +100,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     String regionsFromRequest = (String) output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
     
     StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
-    
+
+    // Force reload  if there are no rendered regions (this is due e.g. session expiring):
+    if (renderedRegions.isEmpty() && regionsFromRequest != null) {
+      this.disabledForReload = true;
+    }
+
     if (!renderedRegions.isEmpty()) {
       for (Iterator i = renderedRegions.iterator(); i.hasNext();) {
         regionNames.append(",").append(i.next());
@@ -119,7 +125,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
       Map regionContents = null;
-      if (!disabled) {
+      if (!disabled && !disabledForReload) {
         // Parse widget and region ids
         Map regionIdsByWidgetId = parseRegionNames(regionNames.toString());
 
@@ -132,10 +138,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       PrintWriter writer = httpOutput.getWriter();
       String ajaxRequestId = (String) output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
       writeResponseId(writer, ajaxRequestId);
-      if (disabled) {
+      if (disabled || disabledForReload) {
         // TODO: This has some problems with versioned states, but must be tackled on client-side.
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
           log.debug("Partial rendering is disabled, forcing a reload for full render");
+        }
         disabled = false;
         writeReloadRegion(writer);
       } else {
