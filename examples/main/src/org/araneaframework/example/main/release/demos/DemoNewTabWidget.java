@@ -39,6 +39,7 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
     MenuWidget menu = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
     Map araneaDemos = menu.getAraneaMenu().getSubMenu();
 
+    // Let's add tabs that will be the menu elements of this menu branch:
     for (Iterator i = araneaDemos.entrySet().iterator(); i.hasNext();) {
       Map.Entry entry = (Map.Entry) i.next();
       MenuItem menuItem = ((MenuItem) entry.getValue());

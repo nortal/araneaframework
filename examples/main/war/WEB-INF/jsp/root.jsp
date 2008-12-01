@@ -51,9 +51,6 @@
 								     stack at the moment of rendering. -->
 								<ui:updateRegion globalId="demo-content">
 									<ui:widgetInclude id="menu"/>
-									<ui:widgetInclude id="menu"/>
-									<ui:widgetInclude id="menu"/>
-									<ui:widgetInclude id="menu"/>
 								</ui:updateRegion>
 							</div>
 

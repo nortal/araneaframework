@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.popups;
 
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
@@ -35,15 +36,15 @@ import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.core.PopupFlowWrapperWidget;
 
 /**
- * Similar to {@link PopupFlowWrapperWidget} but this never proxies {@link FlowContext} calls
- * to opening thread's {@link FlowContext} and allows setting the {@link Service} that will
- * be executed upon return from wrapped {@link Widget}.
+ * Similar to {@link PopupFlowWrapperWidget} but this never proxies
+ * {@link FlowContext} calls to opening thread's {@link FlowContext} and allows
+ * setting the {@link Service} that will be executed upon return from wrapped
+ * {@link Widget}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -67,15 +68,15 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
   }
 
   public ClientSideReturnService getFinishService() {
-    return finishingService;
+    return this.finishingService;
   }
 
   public void setCancelService(Service service) {
-    cancellingService = service;
+    this.cancellingService = service;
   }
 
   public Service getCancelService() {
-    return cancellingService;
+    return this.cancellingService;
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
@@ -84,11 +85,11 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
   }
 
   protected void init() throws Exception {
-    addWidget("widget", widget);
+    addWidget("widget", this.widget);
   }
 
   protected void render(OutputData output) throws Exception {
-    widget._getWidget().render(output);
+    this.widget._getWidget().render(output);
   }
 
   protected FlowContext getFlowCtx() {
@@ -106,13 +107,16 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
     try {
       // close the session-thread serving popupflow
       threadCtx.close(threadCtx.getCurrentId());
-      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
-      Assert.notNull(cancellingService);
-      threadCtx.addService(rndThreadId, cancellingService);
-      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(
-          ((HttpInputData) getInputData()).getContainerURL(),
-          (String) topCtx.getCurrentId(), rndThreadId));
 
+      String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+
+      Assert.notNull(this.cancellingService);
+
+      threadCtx.addService(rndThreadId, this.cancellingService);
+
+      ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(
+          ((HttpInputData) getInputData()).getContainerURL(), (String) topCtx
+              .getCurrentId(), rndThreadId));
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
@@ -121,12 +125,13 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
   public void finish(Object result) {
     ThreadContext threadCtx = getThreadContext();
     TopServiceContext topCtx = getTopServiceContext();
-
     try {
       threadCtx.close(threadCtx.getCurrentId());
+
       String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
-      finishingService.setResult(result);
-      threadCtx.addService(rndThreadId, finishingService);
+      this.finishingService.setResult(result);
+      threadCtx.addService(rndThreadId, this.finishingService);
+
       ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(
           ((HttpInputData) getInputData()).getContainerURL(), (String) topCtx
               .getCurrentId(), rndThreadId));
@@ -141,6 +146,13 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
 
   protected ThreadContext getThreadContext() {
     return EnvironmentUtil.getThreadContext(getEnvironment());
+  }
+
+  /**
+   * @deprecated
+   */
+  public FlowReference getCurrentReference() {
+    return getFlowCtx().getCurrentReference();
   }
 
   public boolean isNested() {
@@ -174,8 +186,10 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
     Map m = new HashMap();
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
-    m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
+    m.put(TransactionContext.TRANSACTION_ID_KEY,
+        TransactionContext.OVERRIDE_KEY);
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(
+        url, m));
   }
 
   public void setTransitionHandler(TransitionHandler handler) {
