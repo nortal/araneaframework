@@ -12,35 +12,29 @@ Be sure to read Changelog.txt for additional information on what's changed.
 Version 1.2 2008-11-25
 ----------------------
 
-1) interface FlowContext: removed deprecated stuff along with corresponding
-   code in implementing classes:
-
-	public FlowReference getCurrentReference();
-	public interface FlowReference extends Serializable {...}
-
-2) class ListStructure: changed
+1) class ListStructure: changed
 	protected AndFilter getAndFilter() {...}
    to
 	protected MultiFilter getFilter() {...}
    because the previous one was too specific and didn't allow custom
    MultiFilters (e.g OrFilter).
 
-3) interface OverlayContext: added void cancel() and void finish(Object result)
+2) interface OverlayContext: added void cancel() and void finish(Object result)
    that close the entire OverlayContext and return back to the flow that
    initiated the OverlayContext.
 
-4) intefaces EventListener and ActionListener: changed the type of eventId and
+3) intefaces EventListener and ActionListener: changed the type of eventId and
    actionId from Object to String because it caused too many caused
    unnecessary casts. Also changed implementing classes.
 
-5) Moved event and action handler invoking to ProxiedHandlerUtil:
+4) Moved event and action handler invoking to ProxiedHandlerUtil:
 
 	void invokeEventHandler(String eventId, String eventParam, Widget eventTarget)
 	void invokeActionHandler(String actionId, String actionParam, Widget actionTarget)
 
    Also changed code in many places to use central handler invoking.
 
-6) <ui:importStyles /> and <ui:importScripts /> - the names of the groups have
+5) <ui:importStyles /> and <ui:importScripts /> - the names of the groups have
    been changed:
 
    Styles: all, aranea, calendar, contextmenu, modalbox, prototip

@@ -367,6 +367,13 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 	...
 &lt;/ui:body&gt;</programlisting>
 	</para>
+
+	<para>
+		Finally, you also need to copy <emphasis>etc/js/rsh/blank.html</emphasis>
+		from the Aranea 1.2 release package and place it in the root directory of
+		your WAR bundle (the same directory where WEB-INF is located). This HTML
+		file is needed for compatibility with Internet Explorer.
+	</para>
     </sect2>
   </sect1>
 
