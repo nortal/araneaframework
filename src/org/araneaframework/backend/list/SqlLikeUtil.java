@@ -117,7 +117,7 @@ public class SqlLikeUtil {
   }
 
   /**
-   * Changes the mask so that it would start with a wildcard symbol.
+   * Changes the mask so that that it would start with the given mask.
    * 
    * @param handler A handler for this mask to check wildcards.
    * @param mask A mask to change to include wildcard in the beginning.
@@ -147,7 +147,7 @@ public class SqlLikeUtil {
   }
 
   /**
-   * Changes the mask so that it would end with a wildcard symbol.
+   * Changes the mask so that it would end with the given mask.
    * 
    * @param handler A handler for this mask to check wildcards.
    * @param mask A mask to change to include wildcard in the end.

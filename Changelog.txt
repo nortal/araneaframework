@@ -1,5 +1,17 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
+2008.12.01    | Aranea 1.2
+
+Features and Improvements
+    Update region and focus														| See #721
+    Overlay dialog - positioning and scrolling									| See #723
+
+Bugfixes
+    Exception when session has expired and user navigates back/forward			| See #720
+    Local form element validation does not remove old error messages			| See #719
+    Aranea 1.2 demo app does not work with IE									| See #722
+
+---------------------------------------------------------------------------------------------
 2008.11.18    | Aranea 1.2 RC1
 
 Features and Improvements
@@ -18,6 +30,7 @@ Bugfixes
     DateControl -- anything before 1900 not considered date						| See #545
     Made aranea JavaScripts not depend on state versioning						| See #707
 	ReaderPreferenceReadWriteLock not serializable								| See #714
+	AfterTodayConstraint should not apply to empty fields						| See #690
 
 ---------------------------------------------------------------------------------------------
 2008.05.28    | Aranea 1.2-M1

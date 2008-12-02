@@ -79,6 +79,9 @@ function AraneaPage() {
   /* If servlet URL is not enough for some purposes, encoding function should be overwritten. */
   this.encodeURL = function(url) { return url; };
 
+  // To monitor focused element and to make it focused after content updating by Ajax. (Since 1.2)
+  var focusedFormElementName = null;
+
   /* Indicates whether the page is completely loaded or not. Page is considered to 
    * be loaded when all system onload events have completed execution. */
   var loaded = false;
@@ -508,6 +511,13 @@ AraneaPage.getFileImportString = function(filename) {
 // Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
+
+  // Monitor the currently focused element for Ajax page update (since 1.2)
+  $$("input, select, textarea, button").each(function (formElement) {
+      formElement.observe("focus", function(event) {
+          AraneaPage.focusedFormElementName = this.name;
+      });
+  });
 };
 
 /** Searches for system form in HTML page and registers it in 
@@ -673,6 +683,14 @@ DefaultAraneaAJAXSubmitter.prototype.event_5 = function(systemForm, eventId, wid
       	if (Aranea.ModalBox) {
       	  Aranea.ModalBox.afterUpdateRegionResponseProcessing(systemForm);
         }
+        // Set the previously focused form control focused again (since 1.2)
+        if (AraneaPage.focusedFormElementName) {
+          var formElem = $$('[name="' + AraneaPage.focusedFormElementName + '"]').first();
+          if (formElem) {
+            AraneaPage.focusedFormElementName = null;
+            formElem.focus();
+          }
+      	}
       };
 
       // force the delay here
@@ -1034,7 +1052,7 @@ AraneaPage.FormBackgroundValidationRegionHandler.prototype = {
     Aranea.UI.markFEContentStatus(result.valid, labelSpan);
     
     if (result.valid || result.clientRenderText) {
-      $$('.aranea-formelementerrors ' + result.formElementId).each(
+      $$('[class~="aranea-formelementerrors ' + result.formElementId + '"]').each(
         function(e) { e.remove() }
       );
     } 

@@ -16,14 +16,13 @@
 
 package org.araneaframework.example.main.web;
 
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.AraneaVersion;
 import org.araneaframework.OutputData;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.core.BaseUIWidget;
-import org.araneaframework.uilib.core.MenuContext;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)

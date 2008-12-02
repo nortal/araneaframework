@@ -151,11 +151,16 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
    * to perform the notifications.  This base class simplifies mechanics.
    **/
 
-  protected abstract class Signaller  { // base for ReaderLock and WriterLock
+  protected abstract class Signaller implements Serializable { // base for ReaderLock and WriterLock
+
+    private static final long serialVersionUID = 1L;
+
     abstract void signalWaiters();
   }
 
   protected class ReaderLock extends Signaller implements Sync {
+
+    private static final long serialVersionUID = 1L;
 
     public  void acquire() throws InterruptedException {
       if (Thread.interrupted()) throw new InterruptedException();
@@ -232,7 +237,9 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
 
   }
 
-  protected class WriterLock extends Signaller implements  Sync {
+  protected class WriterLock extends Signaller implements Sync {
+
+    private static final long serialVersionUID = 1L;
 
     public void acquire() throws InterruptedException {
       if (Thread.interrupted()) throw new InterruptedException();

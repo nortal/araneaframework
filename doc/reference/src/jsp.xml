@@ -144,7 +144,7 @@
       </sect3>
 
 		<sect3>
-			<para>Here is the list of all available attributes for the group attribute:</para>
+			<para>Here is the list of all available values for the <literal>group</literal> attribute:</para>
 
 			<orderedlist Numeration="Arabic">
 				<listitem><emphasis>all</emphasis> - imports all of the groups described below.</listitem>
@@ -244,7 +244,7 @@
       </sect3>
 
 		<sect3>
-			<para>Here is the list of all available attributes for the group attribute:</para>
+			<para>Here is the list of all available values for the <literal>group</literal> attribute:</para>
 
 			<orderedlist Numeration="Arabic">
 				<listitem><emphasis>all</emphasis> - imports all of the styles (CSS) from the groups described below.</listitem>

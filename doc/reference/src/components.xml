@@ -2043,6 +2043,18 @@ getFlowCtx().start(new TestFlow(new Long(5)),
                 <entry>Returns the map with current presentation options for overlayed processes.</entry>
               </row>
 
+              <row>
+                <entry><literal>finish(Object result)</literal></entry>
+                <entry>Similar to <literal>FlowContext.finish(Object obj)</literal> but closes the entire
+                <literal>OverlayContext</literal> not just the last flow widget.</entry>
+              </row>
+
+              <row>
+                <entry><literal>cancel()</literal></entry>
+                <entry>Similar to <literal>FlowContext.cancel()</literal> but closes the entire
+                <literal>OverlayContext</literal> not just the last flow widget.</entry>
+              </row>
+
             </tbody>
           </tgroup>
         </informaltable>
