@@ -88,6 +88,7 @@
 				<exclude name="commons-digester.jar" />
 				<exclude name="cos.jar" />
 				<exclude name="j2ee.jar" />
+				<exclude name="junit.jar" />
 				<exclude name="javancss.jar" />
 				<exclude name="jhbasic.jar" />
 				<exclude name="quartz.jar" />
