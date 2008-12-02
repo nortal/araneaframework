@@ -262,7 +262,7 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <para>Aranea also provides a central way to configure some settings that
       affect the way some components work or display data. These settings are
       stored in a <literal>Map</literal>, where the key names are defined in the
-      <literal>org.araneaframework.uilib.ConfigurationContext</literal> interface.
+      <ulink url="/docs/stable/javadoc/org/araneaframework/uilib/ConfigurationContext.html"><literal>org.araneaframework.uilib.ConfigurationContext</literal></ulink> interface.
       </para>
 
 			<para>
@@ -349,6 +349,31 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 		</para>
 	</warning>
 
+	<para>
+		In addition, an update region must be defined in your
+		<emphasis>root.jsp</emphasis> that wraps system form and has a fixed
+		name: <code>araneaGlobalClientHistoryNavigationUpdateRegion</code>.
+		This is the region that is updated when the user moves between pages
+		using the back button of the browser. Here's an example:
+<programlisting role="jsp">&lt;ui:body&gt;
+	...
+	&lt;ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion"&gt;
+		...
+		&lt;ui:systemForm method="post"&gt;
+			...
+		&lt;/ui:systemForm&gt;
+		...
+	&lt;/ui:updateRegion&gt;
+	...
+&lt;/ui:body&gt;</programlisting>
+	</para>
+
+	<para>
+		Finally, you also need to copy <emphasis>etc/js/rsh/blank.html</emphasis>
+		from the Aranea 1.2 release package and place it in the root directory of
+		your WAR bundle (the same directory where WEB-INF is located). This HTML
+		file is needed for compatibility with Internet Explorer.
+	</para>
     </sect2>
   </sect1>
 
@@ -1863,30 +1888,22 @@ class MyServlet extends BaseAraneaDispatcherServlet {
 
           <tbody>
             <row>
-              <entry align="right"><emphasis role="bold">Java
-              class:</emphasis></entry>
-
+              <entry align="right"><emphasis role="bold">Java class:</emphasis></entry>
               <entry><literal>StandardFileImportFilterService</literal></entry>
             </row>
 
             <row>
-              <entry align="right"><emphasis role="bold">Default configuration
-              name:</emphasis></entry>
-
+              <entry align="right"><emphasis role="bold">Default configuration name:</emphasis></entry>
               <entry><literal>araneaFileImportFilter</literal></entry>
             </row>
 
             <row>
-              <entry align="right"><emphasis
-              role="bold">Provides:</emphasis></entry>
-
+              <entry align="right"><emphasis role="bold">Provides:</emphasis></entry>
               <entry>-</entry>
             </row>
 
             <row>
-              <entry align="right"><emphasis role="bold">Depends
-              on:</emphasis></entry>
-
+              <entry align="right"><emphasis role="bold">Depends on:</emphasis></entry>
               <entry>-</entry>
             </row>
           </tbody>
@@ -1896,6 +1913,16 @@ class MyServlet extends BaseAraneaDispatcherServlet {
       <para>This filter is responsible for providing a virtual file system so
       that extensions could make use of the resources included in .JAR files.
       See <xref linkend="framework-extensions" /></para>
+
+	<para>When the file importer is used to provide aranea resources
+	(styles/JavaScripts) it also defines cache time, after which the browser
+	reloads the resources. You can configure this value through
+	<literal>web.xml</literal> configuration parameter (the default time is 1 hour):
+<programlisting role="xml">&lt;context-param&gt;
+	&lt;param-name&gt;fileImporterCacheInMillis&lt;/param-name&gt;
+	&lt;param-value&gt;10800000&lt;/param-value&gt;
+&lt;/context-param&gt;</programlisting>
+	</para>
     </sect2>
 
     <sect2 id="araneaMountingFilter">

@@ -167,6 +167,7 @@ Modalbox.Methods = {
 							beforeStart: function() {
 								Modalbox._setPosition();
 								Modalbox.MBwindow.show();
+								$(document.body).setStyle({overflow: 'hidden'});
 							},
 							afterFinish: function() {
 								Modalbox._setPosition();
@@ -345,18 +346,21 @@ Modalbox.Methods = {
 					this.MBcontent.setStyle({overflow: 'auto', height: maxHeight - $(this.MBheader).getHeight() - 13 + 'px'});
 				}
 
-				Modalbox.resize(0, byHeight, {
-					afterResize: function() {
-						this.MBcontent.show().makePositioned();
-						this.focusableElements = this._findFocusableElements();
-						this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
-						setTimeout(function(){ // MSIE fix
-							if(callback != undefined)
-								callback(); // Executing internal JS from loaded content
-							this.event("afterLoad"); // Passing callback
-						}.bind(this),1);
-					}.bind(this)
+				setTimeout(function() {
+					Modalbox.resize(0, byHeight, {
+						afterResize: function() {
+							Modalbox.MBcontent.show().makePositioned();
+							Modalbox.focusableElements = Modalbox._findFocusableElements();
+							Modalbox._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
+							setTimeout(function(){ // MSIE fix
+								if(callback != undefined)
+									callback(); // Executing internal JS from loaded content
+								Modalbox.event("afterLoad"); // Passing callback
+							}.bind(Modalbox),1);
+						}.bind(Modalbox)
+					});
 				});
+				
 			}.bind(this), 1);
 		} else { // Height is defined. Creating a scrollable window
 			this._setWidth();
@@ -534,8 +538,10 @@ Modalbox.Methods = {
 	
 	_setPosition: function () { // Changed for Aranea
 		//$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
-		var vLeft = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2);
-		var vTop = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 3);
+		var vViewport = $(document.body).viewportOffset();
+
+		var vLeft = Math.round((window.innerWidth - Element.getWidth(this.MBwindow)) / 2 - vViewport.left);
+		var vTop = Math.round((window.innerHeight - Element.getHeight(this.MBwindow)) / 3 - vViewport.top);
 
 		if (vTop > 0) {
 			this.MBwindow.style.left = vLeft + "px";

@@ -20,8 +20,8 @@
 	<ui:importStyles group="templateScreenStyleGroup" media="screen"/>
 	<ui:importStyles file="styles/_styles_print.css" media="print" />
 
-	<!-- Includes stand-alone JavaScript logging (it is not included by default). -->
-	<ui:importScripts group="logger"/>
+	<!-- Includes stand-alone Log4JavaScript logging (it is not included by default). -->
+	<!-- ui:importScripts group="logger"/ -->
 
 	<!-- Imports all Aranea scripts (group="all"). -->
 	<ui:importScripts/>

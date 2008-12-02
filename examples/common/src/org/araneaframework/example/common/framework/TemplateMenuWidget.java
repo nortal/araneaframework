@@ -88,8 +88,8 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
 
   public List getLocales() {
     List result = new ArrayList();
-    result.add(new DisplayItem("en", getL10nCtx().localize("EnglishLang")));
-    result.add(new DisplayItem("et", getL10nCtx().localize("EstonianLang")));
+    result.add(new DisplayItem("en", "EnglishLang"));
+    result.add(new DisplayItem("et", "EstonianLang"));
     return result;
   }
 

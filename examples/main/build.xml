@@ -1,111 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." default="build" name="Aranea Main Example"> 
+<project basedir="." default="build" name="Aranea Main Example">
 	<property environment="env" />
-	
-	<!--Set the classpath-->
-	<path id="classpath">
+
+<!--
+     ======================================================================
+     =                           CLASSPATHS                               =
+     ======================================================================
+-->
+
+	<path id="classpath" description="The classpath to compile the demo application.">
 		<fileset dir="../lib" includes="**/*.jar" />
 		<fileset dir="../../lib" includes="**/*.jar" />
-		<fileset dir="../.." includes="dist/aranea.jar"/>
-		<fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar"/>
+		<fileset dir="../.." includes="dist/aranea.jar" />
+		<fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar" />
 	</path>
-	
-	<!--Set the Jetty classpath-->
-	<path id="classpath.jetty">
+
+	<path id="classpath.jetty" description="The Jetty classpath to run the demo application.">
 		<fileset dir="../lib/jetty" includes="*.jar" />
 		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
-		<fileset dir="${env.ANT_HOME}/lib/" includes="ant-launcher.jar" />
 		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/ant-launcher.jar" />
 	</path>
-	
-	<!-- Clean up build system results -->
-	<target name="clean" description="Clean up build system results">
-        <delete dir="war/WEB-INF/classes" failonerror="false"/>
-        <delete dir="war/WEB-INF/lib" failonerror="false"/>	
-		<delete dir="war/src" failonerror="false"/>	
-		<delete dir="war/jsp" failonerror="false"/>
-		<delete dir="dist" failonerror="false"/>	
-        <delete dir="tmp" failonerror="false"/>
-	</target>
-	
-	<!-- Initialize the build system -->
-	<target name="init">
-		<mkdir dir="war/WEB-INF/classes" />
-		<mkdir dir="war/WEB-INF/lib" />		
-	</target>
-	
-	<path id="classpath.hibernate">
-		<fileset dir="../lib/hibernate" includes="*.jar" />
-	</path>
-	
 
-		
-	<!-- Creates Hibernate mappings from Xdoclet -->	
-	<target name="xdoclet.hibernate" depends="init" description="Creates Hibernate mappings from Java files (Xdoclet)">
+<!--
+     ======================================================================
+     =                   DEMO APP CODE BUILDING                           =
+     ======================================================================
+-->
+
+	<target name="clean" description="Deletes copied and compiled resources.">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="war/WEB-INF/classes"/>
+			<fileset dir="war/WEB-INF/lib"/>
+			<fileset dir="war/jsp"/>
+			<fileset dir="war/src"/>
+			<fileset dir="dist"/>
+			<fileset dir="tmp"/>
+		</delete>
+	</target>
+
+	<target name="init" description="Initializes the build system.">
+		<mkdir dir="war/WEB-INF/classes" />
+		<mkdir dir="war/WEB-INF/lib" />
+	</target>
+
+	<target name="xdoclet.hibernate" depends="init" description="Creates Hibernate mappings from Java files (Xdoclet).">
 		<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
 			<classpath refid="classpath" />
 		</taskdef>
-		<hibernatedoclet destdir="war/WEB-INF/classes/mappings" excludedtags="@version,@author,@todo"
-			force="false" mergedir="war/WEB-INF" verbose="true">
-			<fileset dir="src">
-				<include name="**/model/*.java" />
-			</fileset>
+
+		<hibernatedoclet destdir="war/WEB-INF/classes/mappings" excludedtags="@version,@author,@todo" force="false" mergedir="war/WEB-INF" verbose="true">
 			<packageSubstitution packages="org.araneaframework.example.main.business.model" substituteWith="." useFirst="true" />
+			<fileset dir="src" includes="**/model/*.java"/>
 			<hibernate version="3.0" />
 		</hibernatedoclet>
 	</target>
-	
-	<!-- Create WAR -->
-	<target name="war" depends="build" description="Build the ready-to-deploy war archive">
-		<mkdir dir="dist"/>
-		<war destfile="dist/aranea-template-app.war" webxml="war/WEB-INF/web.xml">
-			<lib dir="war/WEB-INF/lib" excludes="jasper*,jsp-api*,j2ee.jar,ivy*.jar,xdoclet*.jar,xjavadoc.jar"/>
-			<classes dir="war/WEB-INF/classes"/>
-			<zipfileset dir="war/WEB-INF" includes="*" excludes="web.xml,jetty-web.xml" prefix="WEB-INF"/>
-			<zipfileset dir="war/WEB-INF/jsp" prefix="WEB-INF/jsp"/>
-			<zipfileset dir="war/jsp" prefix="jsp"/>
-			<zipfileset dir="war/src" prefix="src"/>
-		</war>
-	</target>
 
-	<!-- Build the code -->
-	<target name="build" depends="xdoclet.hibernate,compile" description="Build the code">
-		<copy todir="war/WEB-INF/lib" flatten="true">
-			<fileset dir="../lib/">
-				<include name="**/*.jar" />
-				<exclude name="jetty/*jar" />
-			</fileset>
-			<fileset dir="../../lib/">
-				<include name="**/*.jar" />
-				<exclude name="j2ee.jar" />
-			</fileset>
-			<fileset file="../../dist/aranea.jar"/>
-			<fileset file="../../examples/common/dist/aranea-examples-common.jar"/>					
-		</copy>
-
-		<copy todir="war/WEB-INF/classes">
-			<fileset dir=".." includes="log4j.xml,commons-logging.properties"/>
-		</copy>
-		<copy todir="war/src/">
-			<fileset dir="src" includes="**/*"/>
-		</copy>
-		<copy todir="war/jsp/">
-			<fileset dir="war/WEB-INF/jsp" includes="**/*.jsp"/>
-		</copy>
-		  <move todir="war/jsp/" includeemptydirs="false">
-		    <fileset dir="war/jsp/"/>
-		    <mapper type="glob" from="*.jsp" to="*.xml"/>
-		  </move>
-	</target>
-	
-	<target name="build-all" depends="xdoclet.hibernate,compile" description="Build the code">
-		<ant dir="../.." target="build-all"/>
-		<antcall target="build"/>
-	</target>
-
-   	<target name="compile" depends="init">
-		<!--Compile Java source files-->
+	<target name="compile" depends="init" description="Compiles Java source files">
 		<javac destdir="war/WEB-INF/classes"
 			debug="on"
 			debuglevel="lines,vars,source"
@@ -114,17 +66,81 @@
 			source="1.3"
 			srcdir="src"
 			includes="**/*.java"
-			classpathref="classpath"
-		/>
-	</target>	
-		
+			classpathref="classpath" />
+	</target>
 
-	<!-- Starts standalone server -->
-	<target name="run-app-only" description="Run in standalone container">
-		<mkdir dir="tmp/jsp" /> 
+	<target name="build" depends="xdoclet.hibernate,compile" description="Copies the needed libraries and files, and builds the Java code">
+
+		<copy todir="war/WEB-INF/lib" flatten="true">
+			<fileset dir="../lib/">
+				<include name="**/*.jar" />
+				<exclude name="jasper/*jar" />
+				<exclude name="jetty/*jar" />
+			</fileset>
+			<fileset dir="../../lib/runtime/" includes="*.jar" excludes="junit.jar,jmock.jar"/>
+			<fileset dir="../../lib/build/">
+				<include name="*.jar" />
+				<exclude name="aopalliance.jar" />
+				<exclude name="cglib-nodep-2.1_3.jar" />
+				<exclude name="checkstyle.jar" />
+				<exclude name="cobertura.jar" />
+				<exclude name="commons-beanutils*.jar" />
+				<exclude name="commons-digester.jar" />
+				<exclude name="cos.jar" />
+				<exclude name="j2ee.jar" />
+				<exclude name="junit.jar" />
+				<exclude name="javancss.jar" />
+				<exclude name="jhbasic.jar" />
+				<exclude name="quartz.jar" />
+				<exclude name="spring-mock.jar" />
+				<exclude name="tlddoc.jar" />
+				<exclude name="xdoclet*.jar" />
+				<exclude name="xjavadoc.jar" />
+			</fileset>
+			<fileset file="../../dist/aranea.jar" />
+			<fileset file="../../examples/common/dist/aranea-examples-common.jar" />
+		</copy>
+
+		<copy todir="war/WEB-INF/classes">
+			<fileset dir=".." includes="log4j.xml,commons-logging.properties" />
+		</copy>
+
+		<!-- We also copy the source code of Java and JSP files to "war/src" and "war/jsp". -->
+
+		<copy todir="war/src/">
+			<fileset dir="src"/>
+		</copy>
+
+		<copy todir="war/jsp/">
+			<fileset dir="war/WEB-INF/jsp" includes="**/*.jsp" />
+			<mapper type="glob" from="*.jsp" to="*.xml" />
+		</copy>
+
+	</target>
+
+	<target name="build-all" depends="xdoclet.hibernate,compile" description="Same as 'build' but also recompiles Aranea-MVC code.">
+		<ant dir="../.." target="build-all" />
+		<antcall target="build" />
+	</target>
+
+	<target name="war" depends="build" description="Creates the ready-to-deploy WAR archive.">
+		<mkdir dir="dist" />
+		<war destfile="dist/aranea-template-app.war">
+			<fileset dir="war" />
+		</war>
+	</target>
+
+<!--
+     ======================================================================
+     =                        RUNNING THE DEMO APP                        =
+     ======================================================================
+-->
+
+	<target name="run-app-only" description="Runs in standalone container">
+		<mkdir dir="tmp/jsp" />
 		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
-      <jvmarg line="-Dsun.io.serialization.extendedDebugInfo=true -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n"/>
-			<arg value="../jetty.xml"/>
+			<jvmarg line="-Dsun.io.serialization.extendedDebugInfo=true -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n" />
+			<arg value="../jetty.xml" />
 			<classpath>
 				<pathelement location="war/WEB-INF/classes" />
 				<path refid="classpath" />
@@ -132,30 +148,26 @@
 			</classpath>
 		</java>
 	</target>
-	
-	<target name="run-app" depends="build, run-app-only" description="Build and run in standalone container"/>
-	
-	<!-- #### HSQLDB #### -->
-	
-	<!-- Run database -->
-	<target name="run-database" description="Run database">
+
+	<target name="run-app" depends="build, run-app-only" description="Builds and runs in standalone container." />
+
+	<target name="run-database" description="Runs the HSQL database for the demo application">
 		<mkdir dir="data" />
-		
+
 		<java classname="org.hsqldb.Server" dir="data" fork="yes">
 			<classpath>
 				<pathelement location="../lib/hsqldb.jar" />
 			</classpath>
-			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" /> 
+			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" />
 		</java>
 	</target>
 
-	<!-- Run database manager -->
-	<target name="run-database-manager" description="Run database manager">
+	<target name="run-database-manager" description="Runs the HSQL database manager for the demo application.">
 		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
 			<classpath>
 				<pathelement location="../lib/hsqldb.jar" />
 			</classpath>
-      <arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
-		</java>				
+			<arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
+		</java>
 	</target>
 </project>

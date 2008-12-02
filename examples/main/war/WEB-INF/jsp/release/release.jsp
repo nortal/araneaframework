@@ -10,17 +10,14 @@
 		<h1><fmt:message key="aranea.welcome" /></h1>
 
 		<h2><fmt:message key="aranea.about.title" /></h2>
-
 		<p><fmt:message key="aranea.about" /></p>
 
 		<h2><fmt:message key="aranea.what.title" /></h2>
-
 		<p><fmt:message key="aranea.what.how" /></p>
 
 		<h2><fmt:message key="aranea.whatsnew" /></h2>
 
 		<p><fmt:message key="aranea.wecomment" /></p>
-
 		<ul>
 			<li><h3><fmt:message key="aranea.item1"/></h3><p><fmt:message key="aranea.item1.desc"/></p></li>
 			<li><h3><fmt:message key="aranea.item2"/></h3><p><fmt:message key="aranea.item2.desc"/></p></li>
@@ -28,7 +25,6 @@
 		</ul>
 
 		<h2><fmt:message key="aranea.whattomigrate.title" /></h2>
-
 		<p><fmt:message key="aranea.migration.help" /></p>
 
 	</ui:widgetContext>
