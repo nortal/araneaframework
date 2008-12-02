@@ -2,9 +2,14 @@ ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
 2008.12.01    | Aranea 1.2
 
+Features and Improvements
+    Update region and focus														| See #721
+    Overlay dialog - positioning and scrolling									| See #723
+
 Bugfixes
     Exception when session has expired and user navigates back/forward			| See #720
     Local form element validation does not remove old error messages			| See #719
+    Aranea 1.2 demo app does not work with IE									| See #722
 
 ---------------------------------------------------------------------------------------------
 2008.11.18    | Aranea 1.2 RC1
