@@ -30,7 +30,6 @@ public class BeanFormWidget<T> extends FormWidget {
   
   private static final Log log = LogFactory.getLog(BaseApplicationWidget.class);
   
-
   private static final long serialVersionUID = 1L;
 
   private static final String[] primitiveTypes = new String[] { "int", "long",

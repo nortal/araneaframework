@@ -93,7 +93,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget
   }
 
   protected FlowContext getFlowCtx() {
-    return (FlowContext) getEnvironment().requireEntry(FlowContext.class);
+    return getEnvironment().requireEntry(FlowContext.class);
   }
 
   public void addNestedEnvironmentEntry(ApplicationWidget scope,

@@ -39,10 +39,6 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
     return getEnvironment().getEntry(BeanFactory.class);
   }
   
-  protected SecurityContext getSecCtx() {
-    return getEnvironment().getEntry(SecurityContext.class);
-  }
-  
   protected PopupWindowContext getPopupCtx() {
     return getEnvironment().requireEntry(PopupWindowContext.class);
   }

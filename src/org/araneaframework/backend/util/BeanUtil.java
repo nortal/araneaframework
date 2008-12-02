@@ -16,12 +16,14 @@
 
 package org.araneaframework.backend.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -61,10 +63,10 @@ public class BeanUtil {
 	 * @return <code>List&lt;String&gt;</code>- the <code>List</code> of Bean
 	 *         field names.
 	 */
-	public static List getFields(Class beanClass) {
+	public static List<String> getFields(Class beanClass) {
 		Assert.notNull(beanClass, "No bean class specified.");
 
-		List result = new ArrayList();
+		List<String> result = new ArrayList<String>();
 		
 		Method[] methods = beanClass.getMethods();
 		for (int i = 0; i < methods.length; i++) {
@@ -81,6 +83,12 @@ public class BeanUtil {
 					//Adding the field...
 					result.add(method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3));					
 				}
+			}
+		}
+		
+		for(Field field : beanClass.getDeclaredFields()){
+			if(!result.contains(field.getName())){
+				result.add(field.getName());
 			}
 		}
 		
@@ -114,7 +122,11 @@ public class BeanUtil {
 		try {
 			Method getter = getSimpleReadMethod(bean.getClass(), field);
 			if (getter != null) {
-				result = getter.invoke(bean, (Object[])null);
+				return result = getter.invoke(bean, (Object[])null);
+			}
+			Field f = getSimpleField(bean.getClass(), field);
+			if(f != null){
+				return f.get(bean);
 			}
 		}
 		catch (InvocationTargetException e) {
@@ -291,12 +303,15 @@ public class BeanUtil {
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
 		
-		Class result = null;
 		Method getter = getSimpleReadMethod(beanClass, field);
 		if (getter != null) {
-			result = getter.getReturnType();
+			return getter.getReturnType();
 		}
-		return result;
+		Field f = getSimpleField(beanClass, field);
+		if(f != null){
+			return f.getType();
+		}
+		return null;
 	}
 	
 	/**
@@ -346,7 +361,7 @@ public class BeanUtil {
 	 * Checks that the field identified by <code>field</code> is a writable
 	 * Bean field.
 	 * <p>
-	 * To enable writing the field, the spcfified <code>beanClass</code> must
+	 * To enable writing the field, the specified <code>beanClass</code> must
 	 * have setter (field's name starts with <code>set</code>) for this field.
 	 * </p>
 	 * 
@@ -457,6 +472,18 @@ public class BeanUtil {
 		return null;
 	}
 	
+	private static Field getSimpleField(Class<?> beanClass, String field){
+    	Validate.notNull(beanClass, "No bean class specified");
+    	Validate.notNull(field, "No field name specified");
+    	
+    	try {
+			Field result = beanClass.getDeclaredField(field);
+			result.setAccessible(true);
+			return result;
+		} catch (NoSuchFieldException e) {
+			return null;
+		}
+	}
 	/**
 	 * Returns read method (getter) for the field.
 	 * <p>
@@ -589,7 +616,10 @@ public class BeanUtil {
 	 * @param clazz
 	 *         the class.
 	 * @return whether the given object type is a Bean type.
+	 * 
+	 * @deprecated as any class with at least one field is "bean" now
 	 */
+	@Deprecated
 	public static boolean isBean(Class clazz) {
 		return (getFields(clazz).size() != 0);
 	}
