@@ -95,13 +95,13 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     try {
       // close the session-thread of popupflow
       Object currentThreadId = threadCtx.getCurrentId();
-	  getOpenerPopupContext().close(currentThreadId.toString());
-	  
-	  Object servingThreadId = getInputData().getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
+      getOpenerPopupContext().close(currentThreadId.toString());
+      
+      Object servingThreadId = getInputData().getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
 
       // if request for closing popup came from the popup window itself
-	  if (currentThreadId.equals(servingThreadId)) {
-	    String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
+      if (currentThreadId.equals(servingThreadId)) {
+        String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
         //popup window is closed with redirect to a page that closes current window and reloads parent.
         threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
         ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String) EnvironmentUtil.requireTopServiceId(getEnvironment()), rndThreadId));
@@ -124,6 +124,13 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   public void reset(EnvironmentAwareCallback callback) {
     getLocalFlowContext().reset(callback);
     // XXX: and now what?
+  }
+
+  /**
+   * @deprecated
+   */
+  public FlowReference getCurrentReference() {
+    return getLocalFlowContext().getCurrentReference();
   }
 
   public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {

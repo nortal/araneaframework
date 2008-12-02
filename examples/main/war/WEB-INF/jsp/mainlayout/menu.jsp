@@ -52,7 +52,7 @@
                     
                     <div class="item">
                     	<ui:form id="form">
-	                    	<ui:select id="langSelect"/>
+	                    	<ui:select id="langSelect" localizeDisplayItems="true"/>
                     	</ui:form>
                     </div>
                 </div>

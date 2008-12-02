@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.web.OverlayRootWidget;
+import org.araneaframework.uilib.core.OverlayRootWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
