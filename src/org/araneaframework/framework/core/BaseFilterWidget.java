@@ -61,6 +61,7 @@ public class BaseFilterWidget extends BaseWidget implements FilterWidget {
    * Sets the child to childWidget.
    */
   public void setChildWidget(Widget childWidget) {
+    Assert.notNull(this, childWidget, "Filter cannot have a null child!");
     this.childWidget = childWidget;
   }
 
