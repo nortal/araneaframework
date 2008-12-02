@@ -19,6 +19,7 @@ package org.araneaframework.http.filter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -102,7 +103,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
 
     // Force reload  if there are no rendered regions (this is due e.g. session expiring):
-    if (renderedRegions.isEmpty() && regionsFromRequest != null) {
+    
+    if (regionsFromRequest != null && !documentRegions.keySet().containsAll(Arrays.asList(regionsFromRequest.split(":")))) {
       this.disabledForReload = true;
     }
 
@@ -144,6 +146,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
           log.debug("Partial rendering is disabled, forcing a reload for full render");
         }
         disabled = false;
+        disabledForReload = false;
         writeReloadRegion(writer);
       } else {
         writeTransactionIdRegion(writer);

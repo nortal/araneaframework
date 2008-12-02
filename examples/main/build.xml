@@ -108,7 +108,7 @@
 		<!-- We also copy the source code of Java and JSP files to "war/src" and "war/jsp". -->
 
 		<copy todir="war/src/">
-			<fileset dir="src" includes="**/*" />
+			<fileset dir="src"/>
 		</copy>
 
 		<copy todir="war/jsp/">

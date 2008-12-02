@@ -207,7 +207,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   public boolean isNested() {
-    return this.callStack.size() != 0;
+    return !this.callStack.isEmpty();
   }
 
   // *******************************************************************
@@ -224,7 +224,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   protected void destroy() throws Exception {
-    if (this.callStack.size() > 0) {
+    if (!this.callStack.isEmpty()) {
       this.callStack.removeFirst();
     }
 
@@ -242,7 +242,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
    */
   protected void render(OutputData output) throws Exception {
     // Don't render empty callstack
-    if (getCallStack().size() == 0) {
+    if (getCallStack().isEmpty()) {
       return;
     }
     CallFrame frame = (CallFrame) this.callStack.getFirst();
@@ -272,7 +272,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   protected CallFrame getActiveCallFrame() {
-    return this.callStack.size() == 0 ? null : (CallFrame) this.callStack
+    return this.callStack.isEmpty() ? null : (CallFrame) this.callStack
         .getFirst();
   }
 
@@ -351,7 +351,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
 
   /** @since 1.1 */
   protected void doFinish(Object returnValue) {
-    if (this.callStack.size() == 0) {
+    if (this.callStack.isEmpty()) {
       throw new EmptyCallStackException();
     }
 
@@ -378,7 +378,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       }
     }
 
-    if (finishable && callStack.size() == 0) {
+    if (this.finishable && this.callStack.isEmpty()) {
       FlowContext parentFlowContainer =
         EnvironmentUtil.getFlowContext(getEnvironment());
 
@@ -390,7 +390,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
 
   /** @since 1.1 */
   protected void doCancel() {
-    if (this.callStack.size() == 0) {
+    if (this.callStack.isEmpty()) {
       throw new EmptyCallStackException();
     }
 
@@ -417,7 +417,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       }
     }
 
-    if (finishable && callStack.size() == 0) {
+    if (this.finishable && this.callStack.isEmpty()) {
       FlowContext parentFlowContainer =
         EnvironmentUtil.getFlowContext(getEnvironment());
       if (parentFlowContainer != null) {
@@ -470,7 +470,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       Object entryId = entry.getKey();
       LinkedList stack = (LinkedList) entry.getValue();
 
-      if (stack.size() > 0) {
+      if (!stack.isEmpty()) {
         Object envEntry = stack.getFirst();
         this.nestedEnvironmentEntries.put(entryId, envEntry);
       }
@@ -524,7 +524,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
         i.remove();
       }
 
-      if (StandardFlowContainerWidget.this.callStack.size() > 0) {
+      if (!StandardFlowContainerWidget.this.callStack.isEmpty()) {
         CallFrame frame = (CallFrame) StandardFlowContainerWidget.this.callStack
             .getFirst();
         _getChildren().put(frame.getName(), frame.getWidget());

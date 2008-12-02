@@ -9,7 +9,7 @@ trouble.
 Be sure to read Changelog.txt for additional information on what's changed.
 
 ----------------------
-Version 1.2 2008-11-25
+Version 1.2 2008-12-02
 ----------------------
 
 1) class ListStructure: changed
@@ -43,4 +43,4 @@ Version 1.2 2008-11-25
             prototip, logger
 
   Note: tinyMCE must still be imported separately (file="js/tiny_mce/tiny_mce.js")
-        due to its dependecies.
+        due to its dependencies.
