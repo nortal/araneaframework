@@ -187,6 +187,7 @@ Modalbox.Methods = {
 					}.bind(this)
 			});
 		} else {
+			$(document.body).setStyle({overflow: 'hidden'});
 			$(this.MBoverlay).setStyle({opacity: this.options.overlayOpacity});
 			$(this.MBwindow).show();
 			this._setPosition(); 
@@ -313,7 +314,7 @@ Modalbox.Methods = {
 		$(this.MBcontent).hide().update("");
 		if(typeof content == 'string') {
 			setTimeout(function() { // Hack to disable content flickering in Firefox
-				this.MBcontent.update(content);
+				this.MBcontent.insert(content);
 			}.bind(this), 1);
 		} else if (typeof content == 'object') { // HTML Object is given
 			var _htmlObj = content.cloneNode(true); // If node already a part of DOM we'll clone it
@@ -540,12 +541,13 @@ Modalbox.Methods = {
 		//$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
 		var vViewport = $(document.body).viewportOffset();
 
-		var vLeft = Math.round((window.innerWidth - Element.getWidth(this.MBwindow)) / 2 - vViewport.left);
-		var vTop = Math.round((window.innerHeight - Element.getHeight(this.MBwindow)) / 3 - vViewport.top);
+		var vLeft = Math.round((document.viewport.getWidth() - Element.getWidth(this.MBwindow)) / 2 - vViewport.left);
+		var vTop = Math.round((document.viewport.getHeight() - Element.getHeight(this.MBwindow)) / 3 - vViewport.top);
 
 		if (vTop > 0) {
-			this.MBwindow.style.left = vLeft + "px";
-			this.MBwindow.style.top = vTop + "px";
+			$(this.MBwindow).setStyle({left: vLeft + "px", top: vTop + "px"});
+//			this.MBwindow.style.left = vLeft + "px";
+//			this.MBwindow.style.top = vTop + "px";
 		} else {
 			$(this.MBwindow).setStyle({left: vLeft + "px"});
 		}

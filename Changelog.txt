@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-2008.12.01    | Aranea 1.2
+2008.12.02    | Aranea 1.2
 
 Features and Improvements
     Update region and focus														| See #721
