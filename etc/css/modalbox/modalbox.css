@@ -10,7 +10,6 @@
 
 #MB_window {
 	position: absolute;
-	top: 0;
 	border: 0 solid;
 	text-align: left;
 	z-index: 10000;

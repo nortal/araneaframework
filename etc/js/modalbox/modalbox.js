@@ -154,27 +154,20 @@ Modalbox.Methods = {
 		this._setPosition();
 		if(this.options.transitions) {
 			$(this.MBoverlay).setStyle({opacity: 0});
+
 			new Effect.Fade(this.MBoverlay, {
 					from: 0, 
 					to: this.options.overlayOpacity, 
 					duration: this.options.overlayDuration,
 					afterFinish: function() {
+
 						// Changed for Aranea:
-						new Effect.Scale(this.MBwindow, 100.0, {
-							scaleContent: false,
-							scaleFromCenter: true,
-							scaleFrom: window.opera ? 0 : 1,
-							beforeStart: function() {
-								Modalbox._setPosition();
-								Modalbox.MBwindow.show();
-								$(document.body).setStyle({overflow: 'hidden'});
-							},
-							afterFinish: function() {
-								Modalbox._setPosition();
-								Modalbox.MBframe.makePositioned();
-								Modalbox.loadContent();
-							}
-						});
+						Modalbox._setPosition();
+						$(document.body).setStyle({overflow: 'hidden'});
+						Modalbox.MBframe.makePositioned();
+						Modalbox.loadContent();
+						Modalbox.MBwindow.show();
+						Modalbox._setPosition();
 
 //						new Effect.SlideDown(this.MBwindow, {
 //							duration: this.options.slideDownDuration, 
@@ -205,13 +198,16 @@ Modalbox.Methods = {
 		var newHeight = ((wHeight - hHeight + byHeight) < cHeight) ? (cHeight + hHeight - wHeight) : byHeight;
 		if(options) this.setOptions(options); // Passing callbacks
 		if(this.options.transitions) {
-			new Effect.ScaleBy(this.MBwindow, byWidth, newHeight, {
-					duration: this.options.resizeDuration, 
-				  	afterFinish: function() { 
-						this.event("_afterResize"); // Passing internal callback
-						this.event("afterResize"); // Passing callback
-					}.bind(this)
-				});
+			setTimeout(function() {
+				new Effect.ScaleBy(this.MBwindow, byWidth, newHeight, {
+						duration: this.options.resizeDuration, 
+					  	afterFinish: function() { 
+							this.event("_afterResize"); // Passing internal callback
+							this.event("afterResize"); // Passing callback
+						}.bind(this)
+					});
+			}.bind(this));;
+			
 		} else {
 			this.MBwindow.setStyle({width: wWidth + byWidth + "px", height: wHeight + newHeight + "px"});
 			setTimeout(function() {
@@ -278,7 +274,6 @@ Modalbox.Methods = {
 								response.extractScripts().map(function(script) { 
 									return eval(script.replace("<!--", "").replace("// -->", ""));
 								}.bind(window));
-								Modalbox._setWidthAndPosition();
 							});
 
 							// Added for Aranea - page preparation:
@@ -347,19 +342,17 @@ Modalbox.Methods = {
 					this.MBcontent.setStyle({overflow: 'auto', height: maxHeight - $(this.MBheader).getHeight() - 13 + 'px'});
 				}
 
-				setTimeout(function() {
-					Modalbox.resize(0, byHeight, {
-						afterResize: function() {
-							Modalbox.MBcontent.show().makePositioned();
-							Modalbox.focusableElements = Modalbox._findFocusableElements();
-							Modalbox._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
-							setTimeout(function(){ // MSIE fix
-								if(callback != undefined)
-									callback(); // Executing internal JS from loaded content
-								Modalbox.event("afterLoad"); // Passing callback
-							}.bind(Modalbox),1);
-						}.bind(Modalbox)
-					});
+				Modalbox.resize(0, byHeight, {
+					afterResize: function() {
+						this.MBcontent.show().makePositioned();
+						this.focusableElements = this._findFocusableElements();
+						this._setFocus(); // Setting focus on first 'focusable' element in content (input, select, textarea, link or button)
+						setTimeout(function(){ // MSIE fix
+							if(callback != undefined)
+								callback(); // Executing internal JS from loaded content
+							this.event("afterLoad"); // Passing callback
+						}.bind(this),1);
+					}.bind(this)
 				});
 				
 			}.bind(this), 1);
@@ -539,15 +532,13 @@ Modalbox.Methods = {
 	
 	_setPosition: function () { // Changed for Aranea
 		//$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
-		var vViewport = $(document.body).viewportOffset();
 
+		var vViewport = $(document.body).viewportOffset();
 		var vLeft = Math.round((document.viewport.getWidth() - Element.getWidth(this.MBwindow)) / 2 - vViewport.left);
 		var vTop = Math.round((document.viewport.getHeight() - Element.getHeight(this.MBwindow)) / 3 - vViewport.top);
 
 		if (vTop > 0) {
-			$(this.MBwindow).setStyle({left: vLeft + "px", top: vTop + "px"});
-//			this.MBwindow.style.left = vLeft + "px";
-//			this.MBwindow.style.top = vTop + "px";
+			$(this.MBwindow).setStyle({position: 'absolute', left: vLeft + "px", top: vTop + "px"});
 		} else {
 			$(this.MBwindow).setStyle({left: vLeft + "px"});
 		}
@@ -592,7 +583,7 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
   initialize: function(element, byWidth, byHeight, options) {
     this.element = $(element)
     var options = Object.extend({
-	  scaleFromTop: false,     // changed for Aranea
+	  scaleFromTop: false,
       scaleMode: 'box',        // 'box' or 'contents' or {} with provided values
       scaleByWidth: byWidth,
 	  scaleByHeight: byHeight

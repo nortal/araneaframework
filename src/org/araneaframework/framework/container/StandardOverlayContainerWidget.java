@@ -75,12 +75,10 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
     DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
     DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
-    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", new Float(0.9));//percentage, if <= 1.0, otherwise in pixels.
     DEFAULT_PRESENTATION_OPTIONS.put("title", null);
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("autoFocusing", Boolean.FALSE);
-    DEFAULT_PRESENTATION_OPTIONS.put("transitions", Boolean.TRUE);
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
+    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", new Float(0.9)); //percentage, if <= 1.0, otherwise in pixels.
   }
 
   {
