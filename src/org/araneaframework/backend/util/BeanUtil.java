@@ -27,6 +27,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.Assert;
 
 /**
@@ -40,12 +42,21 @@ import org.araneaframework.core.Assert;
  * instead of {@link #setFieldValue(Object, String, Object)} to create
  * missing Beans automatically.
  * 
+ * When accessing field the following approach is used:
+ * <ol>
+ * <li> If there is public accessor in bean's class or any superclass, then use it.</li>
+ * <li> If there is declared field with any access modifier in bean's class, then use it.</li>
+ * </ol>
+ * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
  * 
  * @see BeanMapper
  */
 public class BeanUtil {
 	
+  private static final Log log = LogFactory.getLog(BeanUtil.class);
+
     /**
      * The delimiter that separates the components of a nested reference.
      */
@@ -77,19 +88,28 @@ public class BeanUtil {
 					&& !(method.getReturnType().isAssignableFrom(Void.class))) {
 				if (method.getName().startsWith("get") && !"getClass".equals(method.getName())) {
 					//Adding the field...
-					result.add(method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4));
+				  if(log.isTraceEnabled()){
+				    log.trace("Adding field via accessor method " +  method.getName());
+				  }
+				  result.add(method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4));
 				}
 				else if (method.getName().startsWith("is") && (Boolean.class.equals(method.getReturnType()) || boolean.class.equals(method.getReturnType()))) {
 					//Adding the field...
-					result.add(method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3));					
+                  if(log.isTraceEnabled()){
+                    log.trace("Adding field via accessor method " +  method.getName());
+                  }
+                  result.add(method.getName().substring(2, 3).toLowerCase() + method.getName().substring(3));					
 				}
 			}
 		}
 		
 		for(Field field : beanClass.getDeclaredFields()){
-			if(!result.contains(field.getName())){
-				result.add(field.getName());
-			}
+		  if(!result.contains(field.getName())){
+		    if(log.isTraceEnabled()){
+		      log.trace("Adding field directly " +  field.getName());
+		    }
+		    result.add(field.getName());
+		  }
 		}
 		
 		return result;
@@ -99,7 +119,7 @@ public class BeanUtil {
 	 * Returns the value of Bean field identified with name <code>field</code>
 	 * for object <code>bean</code>.
 	 * <p>
-	 * Returns null if no bean specified or such method found.
+	 * Returns null if no bean specified or such method/field found.
 	 * </p>
 	 * <p>
 	 * Only simple fields are supported.
@@ -122,11 +142,17 @@ public class BeanUtil {
 		try {
 			Method getter = getSimpleReadMethod(bean.getClass(), field);
 			if (getter != null) {
-				return result = getter.invoke(bean, (Object[])null);
+              if(log.isTraceEnabled()){
+                log.trace("Returing value via accessor method " +  getter.getName());
+              }
+              return getter.invoke(bean, (Object[])null);
 			}
 			Field f = getSimpleField(bean.getClass(), field);
 			if(f != null){
-				return f.get(bean);
+              if(log.isTraceEnabled()){
+                log.trace("Returing value from field " +  f.getName());
+              }
+              return f.get(bean);
 			}
 		}
 		catch (InvocationTargetException e) {
@@ -142,7 +168,7 @@ public class BeanUtil {
 	 * Returns the value of Bean field identified with name <code>field</code>
 	 * for object <code>bean</code>.
 	 * <p>
-	 * Returns null if no bean specified or such method found.
+	 * Returns null if no bean specified or such method/field found.
 	 * </p>
 	 * 
 	 * @param bean
@@ -165,12 +191,40 @@ public class BeanUtil {
 		return subValue;
 	}
 
+	   /**
+     * Returns the field of the Bean identified with name <code>fieldName</code>
+     * for class <code>beanClass</code>.
+     * <p>
+     * Returns null if no such field found.
+     * </p>
+     * 
+     * @param beanClass
+     *          Class, where to look for the field from
+     * @param fieldName
+     *          The name of VO field.
+     * @return The field.
+     */
+    public static Field getField(Class<?> beanClass, String fieldName) {
+      Validate.notNull(beanClass, "No bean class specified");
+      Validate.notNull(fieldName, "No field name specified");
+
+      String[] fields = StringUtils.split(fieldName, NESTED_DELIM);
+      Class subBeanType = beanClass;
+      for (int i = 0; i < fields.length - 1 && subBeanType != null; i++) {
+        subBeanType = getSimpleFieldType(subBeanType, fields[i]);
+      }
+      if (subBeanType != null) {
+        return getSimpleField(subBeanType, fields[fields.length-1]);
+      }
+      return null;
+    }
+
 	/**
 	 * Sets the value of Bean field identified by name <code>field</code> for
 	 * object <code>bean</code>.
 	 * <p>
 	 * Nothing happens if no bean specified, one of its sub-field is null or
-	 * no such method found.
+	 * no such method/field found.
 	 * </p>
 	 * <p>
 	 * Only simple fields are supported.
@@ -195,7 +249,18 @@ public class BeanUtil {
 		try {
 			Method setter = getSimpleWriteMethod(bean.getClass(), field);
 			if (setter != null) {
-				setter.invoke(bean, new Object[] { value });
+              if(log.isTraceEnabled()){
+                log.trace("Setting value via accessor method " +  setter.getName());
+              }
+              setter.invoke(bean, new Object[] { value });
+              return;
+			}
+			Field f = getSimpleField(bean.getClass(), field);
+			if(f != null){
+			  if(log.isTraceEnabled()){
+			    log.trace("Setting value directly to field " +  f.getName());
+			  }
+			  f.set(bean, value);
 			}
 		}
 		catch (InvocationTargetException e) {
@@ -211,7 +276,7 @@ public class BeanUtil {
 	 * object <code>bean</code>.
 	 * <p>
 	 * Nothing happens if no bean specified, one of its sub-field is null or
-	 * no such method found.
+	 * no such method/field found.
 	 * </p>
 	 * <p>
 	 * If one of the sub-fields (not the last one) is null, they are not
@@ -248,10 +313,10 @@ public class BeanUtil {
 	 * Sets the value of Bean field identified by name <code>field</code> for
 	 * object <code>bean</code>.
 	 * <p>
-	 * Nothing happens if no bean specified or such method found.
+	 * Nothing happens if no bean specified or no such method/field found.
 	 * </p>
 	 * This method is identical to
-	 * {@link #setFieldValue(Object, String, Object)} except that mssing beans
+	 * {@link #setFieldValue(Object, String, Object)} except that missing beans
 	 * in sub-fields (not the last one) of bean Object are created
 	 * automatically.
 	 * 
@@ -286,7 +351,7 @@ public class BeanUtil {
 	/**
 	 * Returns type of Bean field identified by name <code>field</code>.
 	 * <p>
-	 * Null is returned if no such method found.
+	 * Null is returned if no such method/field found.
 	 * </p>
 	 * <p>
 	 * Only simple fields are supported.
@@ -305,11 +370,17 @@ public class BeanUtil {
 		
 		Method getter = getSimpleReadMethod(beanClass, field);
 		if (getter != null) {
-			return getter.getReturnType();
+          if(log.isTraceEnabled()){
+            log.trace("Getting field type as return value of the accessor method " +  getter.getName());
+          }
+          return getter.getReturnType();
 		}
 		Field f = getSimpleField(beanClass, field);
 		if(f != null){
-			return f.getType();
+          if(log.isTraceEnabled()){
+            log.trace("Getting field type directly " +  f.getName());
+          }
+          return f.getType();
 		}
 		return null;
 	}
@@ -317,7 +388,7 @@ public class BeanUtil {
 	/**
 	 * Returns type of Bean field identified by name <code>field</code>.
 	 * <p>
-	 * Null is returned if no such method found.
+	 * Null is returned if no such method/field found.
 	 * </p>
 	 * 
 	 * @param beanClass
@@ -341,38 +412,55 @@ public class BeanUtil {
 	/**
 	 * Checks that the field identified by <code>field</code> is a valid
 	 * Bean field (can be read-only).
-	 * <p>
-	 * To enable reading the field, the spcfified <code>beanClass</code> must
-	 * have getter (field's name starts with <code>get</code> or
-	 * <code>is</code>) for this field.
-	 * </p>
-	 * 
 	 * @param beanClass
 	 *         the class implementing the Bean pattern.
-	 * @param field
+	 * @param fieldName
 	 *          Bean field name.
 	 * @return if this field is in Bean.
 	 */	
-	public static boolean isReadable(Class beanClass, String field) {
-		return (getReadMethod(beanClass, field) != null);
+	public static boolean isReadable(Class<?> beanClass, String fieldName) {
+	  Method readMethod = getReadMethod(beanClass, fieldName);
+	  if(readMethod != null){
+	    if(log.isTraceEnabled()){
+	      log.trace("Field is readable via accessor method " +  readMethod.getName());
+	    }
+	    return true;
+	  }
+	  Field field = getField(beanClass, fieldName);
+	  if(field != null){
+	    if(log.isTraceEnabled()){
+	      log.trace("Field is readable directly " +  field.getName());
+	    }
+	    return true;
+	  }
+	  return false;
 	}
 	
 	/**
 	 * Checks that the field identified by <code>field</code> is a writable
 	 * Bean field.
-	 * <p>
-	 * To enable writing the field, the specified <code>beanClass</code> must
-	 * have setter (field's name starts with <code>set</code>) for this field.
-	 * </p>
-	 * 
 	 * @param beanClass
 	 *         the class implementing the Bean pattern.
-	 * @param field
+	 * @param fieldName
 	 *          Bean field name.
 	 * @return if this field is in Bean.
 	 */
-	public static boolean isWritable(Class beanClass, String field) {
-		return (getWriteMethod(beanClass, field) != null);
+	public static boolean isWritable(Class beanClass, String fieldName) {
+      Method writeMethod = getWriteMethod(beanClass, fieldName);
+      if(writeMethod != null){
+        if(log.isTraceEnabled()){
+          log.trace("Field is writable via accessor method " +  writeMethod.getName());
+        }
+        return true;
+      }
+      Field field = getField(beanClass, fieldName);
+      if(field != null){
+        if(log.isTraceEnabled()){
+          log.trace("Field is writable directly " +  field.getName());
+        }
+        return true;
+      }
+      return false;
 	}
 
 	/**
@@ -472,6 +560,13 @@ public class BeanUtil {
 		return null;
 	}
 	
+	/**
+     * Returns field of the class <code>beanClass</code> specified by name <code>field</code>.
+     * <p>
+     * Null is returned if no such field found.
+     * <p>
+     * Returned field is set to be accessible.
+	 */
 	private static Field getSimpleField(Class<?> beanClass, String field){
     	Validate.notNull(beanClass, "No bean class specified");
     	Validate.notNull(field, "No field name specified");
