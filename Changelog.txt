@@ -1,5 +1,16 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
+Current
+
+Features and Improvements
+	Environment is now parametrized on classes of its entries
+	BeanMapper/BeanUtil has changed the way they access bean's fields:
+		1. If there is public accessor in bean's class or any superclass, then use it.
+		2. If there is field with any access modifier in bean's class, then use it.
+	BeanFormWidget now operates on underlying bean instance	
+	Started parametrizing ListWidget and ListDataProvider
+
+---------------------------------------------------------------------------------------------
 2008.12.01    | Aranea 1.2
 
 Features and Improvements

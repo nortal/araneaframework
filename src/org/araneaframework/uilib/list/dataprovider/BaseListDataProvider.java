@@ -32,7 +32,7 @@ import org.araneaframework.uilib.list.util.ListUtil;
  * 
  * @since 1.1
  */
-public abstract class BaseListDataProvider implements ListDataProvider {
+public abstract class BaseListDataProvider<T> implements ListDataProvider<T> {
 
 	protected ListStructure listStructure;
 	protected Map filterInfo;

@@ -44,13 +44,13 @@ public class BeanFormWidget<T> extends FormWidget {
     this.bean = bean;
     this.beanClass = (Class<T>) bean.getClass();
     this.beanMapper = new BeanMapper(beanClass);
-    _readFromBean();
+    readFromBean();
   }
   
   private BeanFormWidget(Class<T> beanClass){
     try {
       this.bean = beanClass.newInstance();
-      _readFromBean();
+      readFromBean();
     } catch (InstantiationException e) {
       ExceptionUtil.uncheckException(e);
     } catch (IllegalAccessException e) {
@@ -151,19 +151,18 @@ public class BeanFormWidget<T> extends FormWidget {
     return bean;
   }
   
+  /**
+   * Changes the underlying bean of this form and populates form from it. 
+   */
   public void readFromBean(T bean) {
     if(this.bean == bean){
       log.warn("You are reading from the same bean that is already contained in this form!");
     }
     this.bean = bean;
-    _readFromBean();
-  }
-
-  public void readFromBean() {
-    _readFromBean();
+    readFromBean();
   }
   
-  private void _readFromBean() {
+  public void readFromBean() {
     BeanFormWriter writer = new BeanFormWriter(this.beanClass);
     writer.writeFormBean(this, bean);
   }

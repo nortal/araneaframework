@@ -45,8 +45,7 @@
 		<mkdir dir="war/WEB-INF/lib" />
 	</target>
 
-   	<target name="compile" depends="init">
-		<!--Compile Java source files-->
+	 <target name="compile" depends="init" description="Compiles Java source files">
 		<javac destdir="war/WEB-INF/classes"
 			debug="on"
 			debuglevel="lines,vars,source"
