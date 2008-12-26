@@ -45,6 +45,20 @@
 		<mkdir dir="war/WEB-INF/lib" />
 	</target>
 
+   	<target name="compile" depends="init">
+		<!--Compile Java source files-->
+		<javac destdir="war/WEB-INF/classes"
+			debug="on"
+			debuglevel="lines,vars,source"
+			encoding="utf-8"
+			target="1.5"
+			source="1.5"
+			srcdir="src"
+			includes="**/*.java"
+			classpathref="classpath"
+		/>
+	</target>	
+		
 	<target name="build" depends="compile" description="Copies the needed libraries and files, and builds the Java code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
 			<fileset dir="../lib/">
@@ -98,20 +112,7 @@
 		<antcall target="build" />
 	</target>
 
-   	<target name="compile" depends="init">
-		<!--Compile Java source files-->
-		<javac destdir="war/WEB-INF/classes"
-			debug="on"
-			debuglevel="lines,vars,source"
-			encoding="utf-8"
-			target="1.5"
-			source="1.5"
-			srcdir="src"
-			includes="**/*.java"
-			classpathref="classpath"
-		/>
-	</target>	
-		
+
 	<target name="war" depends="build" description="Creates the ready-to-deploy WAR archive.">
 		<mkdir dir="dist" />
 		<war destfile="dist/aranea-template-app.war">
