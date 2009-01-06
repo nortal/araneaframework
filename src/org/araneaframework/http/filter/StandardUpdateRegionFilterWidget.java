@@ -100,12 +100,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     
     StringBuffer regionNames = regionsFromRequest != null ? new StringBuffer(regionsFromRequest) : new StringBuffer();
 
-    // Force reload  if there are no rendered regions (this is due e.g. session expiring):
-    
-//    if (regionsFromRequest != null && !documentRegions.keySet().containsAll(Arrays.asList(regionsFromRequest.split(":")))) {
-//      this.disabledForReload = true;
-//    }
-
     if (!renderedRegions.isEmpty()) {
       for (Iterator i = renderedRegions.iterator(); i.hasNext();) {
         regionNames.append(",").append(i.next());
