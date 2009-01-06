@@ -19,7 +19,6 @@ package org.araneaframework.http.filter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -67,7 +66,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
   private Map documentRegions = new HashMap();
   private List renderedRegions = new ArrayList();
   private boolean disabled = false;
-  private boolean disabledForReload = false;
 
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
 
@@ -104,9 +102,9 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
     // Force reload  if there are no rendered regions (this is due e.g. session expiring):
     
-    if (regionsFromRequest != null && !documentRegions.keySet().containsAll(Arrays.asList(regionsFromRequest.split(":")))) {
-      this.disabledForReload = true;
-    }
+//    if (regionsFromRequest != null && !documentRegions.keySet().containsAll(Arrays.asList(regionsFromRequest.split(":")))) {
+//      this.disabledForReload = true;
+//    }
 
     if (!renderedRegions.isEmpty()) {
       for (Iterator i = renderedRegions.iterator(); i.hasNext();) {
@@ -127,7 +125,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
       Map regionContents = null;
-      if (!disabled && !disabledForReload) {
+      if (!disabled) {
         // Parse widget and region ids
         Map regionIdsByWidgetId = parseRegionNames(regionNames.toString());
 
@@ -140,13 +138,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       PrintWriter writer = httpOutput.getWriter();
       String ajaxRequestId = (String) output.getInputData().getGlobalData().get(AJAX_REQUEST_ID_KEY); 
       writeResponseId(writer, ajaxRequestId);
-      if (disabled || disabledForReload) {
+      if (disabled) {
         // TODO: This has some problems with versioned states, but must be tackled on client-side.
         if (log.isDebugEnabled()) {
           log.debug("Partial rendering is disabled, forcing a reload for full render");
         }
         disabled = false;
-        disabledForReload = false;
         writeReloadRegion(writer);
       } else {
         writeTransactionIdRegion(writer);

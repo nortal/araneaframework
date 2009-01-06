@@ -16,7 +16,6 @@
 
 package org.araneaframework.core;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;

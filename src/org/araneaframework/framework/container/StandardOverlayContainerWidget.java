@@ -71,13 +71,28 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   private FlowContextWidget overlay;
   
   static {
-    // To see all the options, refer to "modalbox.js", lines 21-38.
+    /*  OPTIONS with default values:
+     * 
+     *  overlayClose: false, // Close modal box by clicking on overlay
+     *  width: 500, // Default width in px
+     *  height: 90, // Default height in px
+     *  overlayOpacity: .75, // Default overlay opacity
+     *  overlayDuration: .25, // Default overlay fade in/out duration in seconds
+     *  slideDownDuration: .5, // Default Modalbox appear slide down effect in seconds
+     *  slideUpDuration: .15, // Default Modalbox hiding slide up effect in seconds
+     *  resizeDuration: .2, // Default resize duration seconds
+     *  inactiveFade: true, // Fades MB window on inactive state
+     *  transitions: false, // Toggles transition effects. Transitions are disabled by default
+     *  loadingString: "Please wait. Loading...", // Default loading string message
+     *  method: 'get' // Default Ajax request method
+     */
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
     DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
     DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
-    DEFAULT_PRESENTATION_OPTIONS.put("title", null);
-    DEFAULT_PRESENTATION_OPTIONS.put("autoFocusing", Boolean.FALSE);
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
+    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", new Float(0.9)); //percentage, if <= 1.0, otherwise in pixels.
   }
 

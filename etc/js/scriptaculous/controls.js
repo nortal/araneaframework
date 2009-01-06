@@ -266,7 +266,8 @@ Autocompleter.Base = Class.create({
 
   updateChoices: function(choices) {
     if(!this.changed && this.hasFocus) {
-      this.update.innerHTML = choices;
+      //this.update.innerHTML = choices;
+      $(this.update).update("").insert(choices);
       Element.cleanWhitespace(this.update);
       Element.cleanWhitespace(this.update.down());
 

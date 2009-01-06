@@ -358,7 +358,7 @@ Effect.Opacity = Class.create(Effect.Base, {
     this.element = $(element);
     if (!this.element) throw(Effect._elementDoesNotExistError);
     // make this work on IE on elements without 'layout'
-    if (Prototype.Browser.IE && (!this.element.currentStyle.hasLayout))
+    if (Prototype.Browser.IE && this.element.currentStyle && (!this.element.currentStyle.hasLayout))
       this.element.setStyle({zoom: 1});
     var options = Object.extend({
       from: this.element.getOpacity() || 0.0,
@@ -966,7 +966,7 @@ Effect.Morph = Class.create(Effect.Base, {
         unit  = 'color';
       } else if (property == 'opacity') {
         value = parseFloat(value);
-        if (Prototype.Browser.IE && (!this.element.currentStyle.hasLayout))
+        if (Prototype.Browser.IE && this.element.currentStyle && (!this.element.currentStyle.hasLayout))
           this.element.setStyle({zoom: 1});
       } else if (Element.CSS_LENGTH.test(value)) {
           var components = value.match(/^([\+\-]?[0-9\.]+)(.*)$/);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Webmedia Group Ltd.
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,35 +26,33 @@ Aranea.ModalBox.Options = null;
 
 Aranea.ModalBox.show = function(options) {
   var suffix = $$('.aranea-overlay').length == 0 ? '&araOverlay=true' : '';
+  Object.extend(options, {afterLoad: Aranea.ModalBox.afterLoad});
+
   Modalbox.show(
-		  araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value,
-		  araneaPage().getSystemForm().araThreadServiceId.value, 'override') + suffix,
-		  options);
+      araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value,
+      araneaPage().getSystemForm().araThreadServiceId.value, 'override') + suffix,
+      options);
+
+  if (Prototype.Browser.IE) { //Modalbox does not render well in IE without this line (Prototype bug?):
+	  $(document.body).viewportOffset();
+  }
 };
 
 Aranea.ModalBox.afterLoad = function(content) {
   // if no content is returned, overlay has been closed.
-  if (content != null && content.startsWith("<!-- araOverlaySpecialResponse -->")) {
-	Aranea.ModalBox.close();
+  if (content.startsWith("<!-- araOverlaySpecialResponse -->")) {
+    AraneaPage.findSystemForm();
+    var systemForm = araneaPage().getSystemForm();
 
-	var f = function() {
-	    AraneaPage.findSystemForm();
-	    var systemForm = araneaPage().getSystemForm();
+    if (systemForm.araTransactionId)
+      systemForm.araTransactionId.value = 'inconsistent';
 
-	    if (systemForm.araTransactionId) {
-	      systemForm.araTransactionId.value = 'inconsistent';
-	    }
+    if (window.modalTransport) {
+      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
+      window.modalTransport = null;
+    }
 
-	    if (window.modalTransport) {
-	      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
-	      window.modalTransport = null;
-	    }
-
-	    return new DefaultAraneaSubmitter().event_4(systemForm);
-	};
-
-	var interval = Modalbox && Modalbox.options.transitions ? Modalbox.options.resizeDuration * 4000 : 400;
-	setTimeout(f, interval);
+    return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 };
 
