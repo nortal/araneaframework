@@ -32,7 +32,6 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -48,6 +47,7 @@ import org.araneaframework.uilib.list.structure.filter.FilterHelper;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
 import org.araneaframework.uilib.list.util.ListUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.Event;
 
 /**
@@ -937,8 +937,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
   }
 
   protected void initSequenceHelper() {
-    Long defaultListSize = (Long) getConfiguration().getEntry(
-        ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
+    Long defaultListSize = ConfigurationContextUtil
+        .getDefaultListItemsOnPage(getConfiguration());
     if (defaultListSize != null) {
       this.sequenceHelper.setItemsOnPage(defaultListSize.longValue());
     }
