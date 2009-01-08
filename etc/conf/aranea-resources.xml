@@ -153,7 +153,6 @@
 		<file path="gfx/contextmenu/sub.gif" />
 		<file path="gfx/contextmenu/transparent.gif" />
 		<file path="gfx/modalbox/spinner.gif" />
-		<file path="js/prototype/prototype_update_helper.js"/>
 	</files>
 
 </resources>

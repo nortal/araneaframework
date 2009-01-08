@@ -10,15 +10,22 @@
 
     <xsl:template match="*">
       <xsl:element name="{name()}" namespace="">
-        <xsl:copy-of select="@*"/>
-        <xsl:apply-templates/>
+      	<xsl:choose>
+      		<xsl:when test="name()='jsp-version'">
+      			<xsl:text>2.0</xsl:text>
+      		</xsl:when>
+      		<xsl:otherwise>
+		        <xsl:copy-of select="@*"/>
+		        <xsl:apply-templates/>
+      		</xsl:otherwise>
+        </xsl:choose>
       </xsl:element>
-      <xsl:if test="name()='required'">
-         <xsl:text disable-output-escaping="yes">
-         &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
-         </xsl:text>
-      </xsl:if>
 
+      <xsl:if test="name()='required'">
+		<xsl:text>
+         </xsl:text>	
+		<xsl:element name="rtexprvalue" namespace="">true</xsl:element>
+      </xsl:if>
     </xsl:template>
 
 	<xsl:template match="text()">
