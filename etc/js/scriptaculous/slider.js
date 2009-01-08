@@ -273,3 +273,5 @@ Control.Slider = Class.create({
     this.event = null;
   }
 });
+
+window['scriptaculous/slider.js'] = true;

@@ -134,3 +134,5 @@ var Builder = {
     });
   }
 };
+
+window['scriptaculous/builder.js'] = true;

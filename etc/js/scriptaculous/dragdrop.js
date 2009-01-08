@@ -973,3 +973,5 @@ Element.findChildren = function(element, only, recursive, tagName) {
 Element.offsetSize = function (element, type) {
   return element['offset' + ((type=='vertical' || type=='height') ? 'Height' : 'Width')];
 };
+
+window['scriptaculous/dragdrop.js'] = true;

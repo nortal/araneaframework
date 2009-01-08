@@ -488,7 +488,7 @@ Modalbox.Methods = {
 		}
 
     	var vleft = Math.round((clientWidth - $(this.MBwindow).getWidth()) / 2);
-    	var vtop = Math.round((clientHeight - $(this.MBwindow).getHeight()) / 2);
+    	var vtop = Math.round((clientHeight - $(this.MBwindow).getHeight()) / (Prototype.Browser.IE ? 3 : 2));
 
         if (vtop < 0) vtop = 0;
 

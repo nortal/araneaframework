@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Webmedia Group Ltd.
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -292,7 +292,7 @@ function AraneaPage() {
     var updateRegions = this.getEventUpdateRegions(element);
 
     if (updateRegions && updateRegions.length > 0) {
-      updateRegions = null;
+      updateRegions = null; // Not used any more
       return new DefaultAraneaAJAXSubmitter(systemForm);
     } else {
       if (systemForm.hasClassName('aranea-overlay')) {
@@ -1159,7 +1159,7 @@ _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
 _ap.addSystemLoadEvent(AraneaPage.RSHURLInit);
 _ap.addClientLoadEvent(AraneaPage.RSHInit);
-_ap.addSystemUnLoadEvent(AraneaPage.deinit());
+_ap.addSystemUnLoadEvent(AraneaPage.deinit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */

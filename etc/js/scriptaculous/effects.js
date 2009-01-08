@@ -1128,3 +1128,5 @@ $w('getInlineOpacity forceRerendering setContentZoom collectTextNodes collectTex
 );
 
 Element.addMethods(Effect.Methods);
+
+window['scriptaculous/effects.js'] = true;

@@ -58,3 +58,5 @@ var Scriptaculous = {
 };
 
 Scriptaculous.load();
+
+window['scriptaculous/scriptaculous.js'] = true;
