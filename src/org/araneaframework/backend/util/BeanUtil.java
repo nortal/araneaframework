@@ -74,6 +74,7 @@ public class BeanUtil {
     Assert.notNull(beanClass, MSG_NO_BEAN_CLASS);
     List result = new ArrayList();
     Method[] methods = beanClass.getMethods();
+
     for (int i = 0; i < methods.length; i++) {
       Method method = methods[i];
  
