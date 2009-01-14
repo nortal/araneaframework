@@ -29,6 +29,25 @@ public class StringListData extends Data {
 
   public StringListData() {
     super(List.class, "List<String>");
-    value = new ArrayList();
+    this.value = new ArrayList();
+  }
+
+  /**
+   * This Data object requires special check so that the order of elements in
+   * the values lists would not have any effect on whether the lists contain the
+   * same data.
+   * 
+   * @since 1.2
+   */
+  public boolean isStateChanged() {
+    if (this.markedBaseValue == null && this.value == null) {
+      return false;
+    } else if (this.markedBaseValue == null || this.value == null) {
+      return true;
+    } else {
+      List baseValues = (List) this.markedBaseValue;
+      List values = (List) this.value;
+      return !(baseValues.containsAll(values) && baseValues.size() == values.size());
+    }
   }
 }
