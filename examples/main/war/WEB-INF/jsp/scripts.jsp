@@ -61,7 +61,6 @@
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
 	<script type="text/javascript">araneaPage().setFirebugLogger();</script>
-	
 
 	<!-- You can also use log4javacript logger:
 		<script type="text/javascript">araneaPage().setDefaultLogger();</script>

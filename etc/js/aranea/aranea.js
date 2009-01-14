@@ -1,5 +1,5 @@
 /**
- * Copyright 2008 Webmedia Group Ltd.
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,6 +97,7 @@ function AraneaPage() {
         this.warn = dummy;
         this.error = dummy;
         this.fatal = dummy;
+        dummy = null;
   };
 
   var safariLogger = (window.console && window.console.log) ? new function() {
@@ -107,6 +108,7 @@ function AraneaPage() {
         this.warn = f;
         this.error = f;
         this.fatal = f;
+        f = null;
   } : dummyLogger;
 
   var firebugLogger = (window.console && window.console.debug) ? new function() {
@@ -264,15 +266,22 @@ function AraneaPage() {
     if (preCondition) {
       var f = new Function("element", preCondition);
       if (!f(element)) {
+        f = null;
         return false;
       }
+      f = null;
     }
 
     if (systemForm) {
       this.executeCallbacks(systemForm['id']);
     }
 
-    return (this.findSubmitter(element, systemForm)).event(element);
+    var result = this.findSubmitter(element, systemForm).event(element);
+
+    systemForm = null;
+    preCondition = null;
+
+    return result;
   };
 
   /** 
@@ -282,9 +291,10 @@ function AraneaPage() {
   this.findSubmitter = function(element, systemForm) {
     var updateRegions = this.getEventUpdateRegions(element);
 
-    if (updateRegions && updateRegions.length > 0)
+    if (updateRegions && updateRegions.length > 0) {
+      updateRegions = null; // Not used any more
       return new DefaultAraneaAJAXSubmitter(systemForm);
-    else {
+    } else {
       if (systemForm.hasClassName('aranea-overlay')) {
         return new DefaultAraneaOverlaySubmitter(systemForm);
 	  }
@@ -332,6 +342,8 @@ function AraneaPage() {
 
     if (eventUpdateRegions != null && eventUpdateRegions.length > 0) 
       return new DefaultAraneaAJAXSubmitter().event_5(systemForm, eventId, eventTarget, eventParam, eventUpdateRegions);
+    else if (systemForm.hasClassName('aranea-overlay'))
+      return new DefaultAraneaOverlaySubmitter().event_7(systemForm, eventId, eventTarget, eventParam);
     else
       return new DefaultAraneaSubmitter().event_4(systemForm, eventId, eventTarget, eventParam);
   };
@@ -487,10 +499,11 @@ AraneaPage.findWidgetMarker = function(element) {
   var ancestors = $(element).ancestors();
   for (var i = 0; i < ancestors.length; i++) {
   	var ancestor = ancestors[i];
-  	var marker = ancestor.classNames().find(function(name) {
+  	var marker = $w(ancestor.className).find(function(name) {
       return (name == 'widgetMarker');
     });
-    if (marker) { 
+    if (marker) {
+      marker = null;
       return ancestor; 
     }
   }
@@ -508,7 +521,7 @@ AraneaPage.getFileImportString = function(filename) {
   return araneaPage().getServletURL() + "/fileimporter/" + filename;
 };
 
-// Page initialization function, should be called upon page load.
+//Page initialization function, should be called upon page load.
 AraneaPage.init = function() {
   araneaPage().addSystemLoadEvent(Behaviour.apply);
 
@@ -520,29 +533,43 @@ AraneaPage.init = function() {
   });
 };
 
+//Page deinitialization function, should be called upon page unload.
+AraneaPage.deinit = function() {
+  this.servletURL = null;
+  this.focusedFormElementName = null;
+  this.dummyLogger = null;
+  this.safariLogger = null;
+  this.firebugLogger = null;
+  this.logger = null;
+  this.locale = null;
+  this.systemForm = null;
+
+  this.keepAliveTimers = null;
+  this.systemLoadEvents = null;
+  this.clientLoadEvents = null;
+};
+
 /** Searches for system form in HTML page and registers it in 
   * current AraneaPage object as active systemForm.
   * @param element unused, could be set to some DOM element that definitely falls inside the system form
   * @since 1.1 
   * TODO: badly named, should be deprecated in favour of some well-name function */
 AraneaPage.findSystemForm = function(element) {
-  araneaPage().setSystemForm($A(document.getElementsByTagName('form')).find(
-    function(element) {
-      return $(element).hasAttribute('arn-systemForm');
-    }
-  ));
+  araneaPage().setSystemForm($$('form[arn-systemForm="true"]').first());
 };
 
 function DefaultAraneaSubmitter(form) {
   var systemForm = form;
 
   this.event = function(element) {
-    // event information
-    var widgetId = araneaPage().getEventTarget(element);
-    var eventId = araneaPage().getEventId(element);
-    var eventParam = araneaPage().getEventParam(element);
-    
-    return this.event_4(systemForm, eventId, widgetId, eventParam);
+    if (element) {
+      // event information
+      var widgetId = araneaPage().getEventTarget(element);
+      var eventId = araneaPage().getEventId(element);
+      var eventParam = araneaPage().getEventParam(element);
+
+      return this.event_4(systemForm, eventId, widgetId, eventParam);
+    }
   };
 }
 
@@ -570,6 +597,28 @@ function DefaultAraneaOverlaySubmitter(form) {
     systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
     systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
     systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
+
+    var options = {params: systemForm.serialize(true)};
+    Object.extend(options, Aranea.ModalBox.Options || {});
+    Modalbox.show(systemForm.readAttribute('action') + '?araOverlay=true', options);
+    return false;
+  };
+
+  this.event_7 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
+    // event information
+    var element = $(eventTarget);
+    var widgetId = araneaPage().getEventTarget(element);
+    var eventId = araneaPage().getEventId(element);
+    var eventParam = araneaPage().getEventParam(element);
+
+    systemForm.araWidgetEventPath.value = widgetId ? widgetId : "";
+    systemForm.araWidgetEventHandler.value = eventId ? eventId : "";
+    systemForm.araWidgetEventParameter.value = eventParam ? eventParam : "";
+
+    // copy the content of rich editors to corresponding HTML textinputs/textareas
+    if (window.tinyMCE) {
+      window.tinyMCE.triggerSave();
+    }
 
     var options = {params: systemForm.serialize(true)};
     Object.extend(options, Aranea.ModalBox.Options || {});
@@ -610,7 +659,9 @@ DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor = function(transport) {
 	}
 	if (stateVersion != null && stateVersion.length > 0) {
 		var sForm = araneaPage().getSystemForm();
-		sForm.araClientStateId.value = stateVersion;
+		if (sForm.araClientStateId) {
+			sForm.araClientStateId.value = stateVersion;
+		}
 		if (window.dhtmlHistory) {
 			window.dhtmlHistory.add(stateVersion, true);
 		}
@@ -1108,6 +1159,7 @@ _ap.addSystemLoadEvent(AraneaPage.init);
 _ap.addSystemLoadEvent(AraneaPage.findSystemForm);
 _ap.addSystemLoadEvent(AraneaPage.RSHURLInit);
 _ap.addClientLoadEvent(AraneaPage.RSHInit);
+_ap.addSystemUnLoadEvent(AraneaPage.deinit);
 
 /* Aranea object which provides namespace for objects created/needed by different modules. 
  * @since 1.0.11 */
