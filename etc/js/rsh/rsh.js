@@ -63,6 +63,10 @@ window.dhtmlHistory = {
 		var UA = navigator.userAgent.toLowerCase();
 		var platform = navigator.platform.toLowerCase();
 		var vendor = navigator.vendor || "";
+
+		var m = UA.match(/version\/([\d\.]*)/);
+		var safariVersion = (m && m.size() > 0 ? parseFloat(m.last()) : 0.0);
+
 		if (vendor === "KDE") {
 			this.isKonqueror = true;
 			this.isSupported = false;
@@ -72,7 +76,7 @@ window.dhtmlHistory = {
 		} else if (typeof document.all !== "undefined") {
 			this.isIE = true;
 			this.isSupported = true;
-		} else if (vendor.indexOf("Apple Computer, Inc.") > -1) {
+		} else if (vendor.indexOf("Apple Computer, Inc.") > -1 && safariVersion < 3.0) {
 			this.isSafari = true;
 			this.isSupported = (platform.indexOf("mac") > -1);
 		} else if (UA.indexOf("gecko") != -1) {
