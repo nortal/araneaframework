@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-Current
+15.01.2008   | Aranea 4.1.1.9
 
 Features and Improvements
 	Environment is now parametrized on classes of its entries
