@@ -35,14 +35,14 @@ import org.araneaframework.uilib.list.util.ListUtil;
 public abstract class BaseListDataProvider<T> implements ListDataProvider<T> {
 
 	protected ListStructure listStructure;
-	protected Map filterInfo;
+	protected Map<String, Object> filterInfo;
 	protected OrderInfo orderInfo;
 	
 	public void setListStructure(ListStructure listStructure) {
 		this.listStructure = listStructure;
 	}
 
-	public final void setFilterInfo(Map filterInfo) {
+	public final void setFilterInfo(Map<String, Object> filterInfo) {
 		this.filterInfo = filterInfo;
 		setFilterExpression(ListUtil.toExpression(listStructure.getListFilter(), filterInfo));
 	}

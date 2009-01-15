@@ -47,7 +47,11 @@ public class BeanFormWidget<T> extends FormWidget {
     readFromBean();
   }
   
-  private BeanFormWidget(Class<T> beanClass){
+  /**
+   * @deprecated use <code>BeanFormWidget(T bean)</code> instead.
+   */
+  @Deprecated
+  public BeanFormWidget(Class<T> beanClass){
     try {
       this.bean = beanClass.newInstance();
       readFromBean();
@@ -116,12 +120,12 @@ public class BeanFormWidget<T> extends FormWidget {
   /**
    * NB! The user of this method must take the full responsibility for type checking when using this method.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "deprecation" })
   public <V> BeanFormWidget<V> addBeanSubForm(String id) {
     if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
 
-    BeanFormWidget<V> result = new BeanFormWidget<V>(beanMapper.getFieldType(id));
+    BeanFormWidget<V> result = new BeanFormWidget<V>(beanMapper.getFieldType(id)); //This constructor will be changed into private in some time
     addElement(id, result);
     return result;
   }
@@ -138,6 +142,9 @@ public class BeanFormWidget<T> extends FormWidget {
 			  elementName, mandatory), initialValue, mandatory);
   }
   
+  /**
+   * @deprecated use {@link #writeToBean()} instead, which writes to the underlying bean,
+   */
   @Deprecated
   public T writeToBean(T bean) {
     BeanFormReader reader = new BeanFormReader(this);

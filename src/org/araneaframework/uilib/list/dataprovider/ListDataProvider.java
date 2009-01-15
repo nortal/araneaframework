@@ -67,7 +67,7 @@ public interface ListDataProvider<T> extends Serializable {
 	 * 
 	 * @since 1.1
 	 */
-	public void setFilterInfo(Map filterInfo);
+	public void setFilterInfo(Map<String, Object> filterInfo);
 	
 	/**
 	 * This method should be used to receive the current ordering info.
