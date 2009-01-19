@@ -67,8 +67,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>ConfigurationContext</code>.
    */
   protected ConfigurationContext getConfiguration() {
-    return (ConfigurationContext) getEnvironment().requireEntry(
-        ConfigurationContext.class);
+    return getEnvironment().requireEntry(ConfigurationContext.class);
   }
 
   /**
@@ -110,7 +109,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>MountContext</code>.
    */
   protected MountContext getMountCtx() {
-    return (MountContext) getEnvironment().requireEntry(MountContext.class);
+    return getEnvironment().requireEntry(MountContext.class);
   }
 
   /**
@@ -120,7 +119,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>BeanFactory</code>.
    */
   protected BeanFactory getBeanFactory() {
-    return (BeanFactory) getEnvironment().requireEntry(BeanFactory.class);
+    return getEnvironment().requireEntry(BeanFactory.class);
   }
 
   /**
@@ -131,7 +130,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @return The <code>OverlayContext</code>.
    */
   protected OverlayContext getOverlayCtx() {
-    return (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+    return getEnvironment().requireEntry(OverlayContext.class);
   }
 
   /**
@@ -144,8 +143,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1.3
    */
   protected ConfirmationContext getConfirmationCtx() {
-    return (ConfirmationContext) getEnvironment().requireEntry(
-        ConfirmationContext.class);
+    return getEnvironment().requireEntry(ConfirmationContext.class);
   }
 
   /**
@@ -156,8 +154,7 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * @since 1.1.3
    */
   protected PopupWindowContext getPopupCtx() {
-    return (PopupWindowContext) getEnvironment().requireEntry(
-        PopupWindowContext.class);
+    return getEnvironment().requireEntry(PopupWindowContext.class);
   }
 
   /**
@@ -189,10 +186,10 @@ public class BaseUIWidget extends BaseApplicationWidget {
    */
   protected void render(OutputData output) throws Exception {
     if (viewSelector == null)
-      throw new RuntimeException("Widget '" + getClass().getName()
-          + "' does not have a view selector!");
-    JspContext jspCtx = (JspContext) getEnvironment().requireEntry(
-        JspContext.class);
+      throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 
+    
+    JspContext jspCtx = getEnvironment().requireEntry(JspContext.class);
+    
     String jsp = resolveJspName(jspCtx, viewSelector);
     ServletUtil.include(jsp, this, output);
   }

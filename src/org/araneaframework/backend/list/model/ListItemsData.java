@@ -18,6 +18,7 @@ package org.araneaframework.backend.list.model;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,15 +28,16 @@ import java.util.List;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class ListItemsData implements Serializable {
+public class ListItemsData<T> implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   /** @since 1.1 */
+  @SuppressWarnings("unchecked")
   public static final ListItemsData EMPTY = new ListItemsData(
       Collections.EMPTY_LIST, new Long(0L));
 
-  private List itemRange;
+  private List<T> itemRange;
 
   private Long totalCount;
 
@@ -43,22 +45,25 @@ public class ListItemsData implements Serializable {
   public ListItemsData() {}
 
   /** @since 1.0.11 */
-  public ListItemsData(List itemRange, Long totalCount) {
+  public ListItemsData(List<T> itemRange, Long totalCount) {
     this.itemRange = itemRange;
     this.totalCount = totalCount;
   }
 
+  public static <E> ListItemsData<E> getEmpty(){
+    return new ListItemsData<E>(new LinkedList<E>(), 0L);
+  }
   /**
    * @return Returns the itemRange.
    */
-  public List getItemRange() {
+  public List<T> getItemRange() {
     return this.itemRange;
   }
 
   /**
    * @param itemRange The itemRange to set.
    */
-  public void setItemRange(List itemRange) {
+  public void setItemRange(List<T> itemRange) {
     this.itemRange = itemRange;
   }
 

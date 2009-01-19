@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.list.dataprovider;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,13 +31,13 @@ import org.araneaframework.backend.list.model.ListQuery;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class BackendListDataProvider extends BaseListDataProvider {
+public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T> {
 
   private static final long serialVersionUID = 1L;
 
   private static final Log log = LogFactory.getLog(BackendListDataProvider.class);
 
-  private Set dataUpdateListeners = new HashSet(1);
+  private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
 
   public static final boolean USE_CACHE_BY_DEFAULT = false;
 
@@ -50,7 +49,7 @@ public abstract class BackendListDataProvider extends BaseListDataProvider {
 
   protected Long lastCount;
 
-  protected ListItemsData lastItemRange;
+  protected ListItemsData<T> lastItemRange;
 
   private boolean forceReload = false;
 
@@ -115,26 +114,26 @@ public abstract class BackendListDataProvider extends BaseListDataProvider {
   /**
    * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve the item.
    */
-  public Object getItem(Long index) throws Exception {
-    return getItemRange(index, new Long(1));
+  public T getItem(Long index) throws Exception {
+    return getItemRange(index, Long.valueOf(1)).getItemRange().get(0);
   }
 
   /**
    * Returns the total item count.
    */
   public Long getItemCount() throws Exception {
-    return getItemRange(new Long(0), new Long(1)).getTotalCount();
+    return getItemRange(Long.valueOf(0), Long.valueOf(1)).getTotalCount();
   }
 
   /**
    * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve all
    * items.
    */
-  public ListItemsData getAllItems() throws Exception {
-    return getItemRange(new Long(0), null);
+  public ListItemsData<T> getAllItems() throws Exception {
+    return getItemRange(Long.valueOf(0), null);
   }
 
-  public ListItemsData getItemRange(Long startIdx, Long count) throws Exception {
+  public ListItemsData<T> getItemRange(Long startIdx, Long count) throws Exception {
     if (!this.useCache || this.forceReload || !startIdx.equals(this.lastStart)
         || (count == null || this.lastCount == null) && count != this.lastCount
         || count != null && this.lastCount != null
@@ -161,8 +160,7 @@ public abstract class BackendListDataProvider extends BaseListDataProvider {
 
   /** @since 1.1 */
   protected void notifyDataChangeListeners() {
-    for (Iterator i = dataUpdateListeners.iterator(); i.hasNext();) {
-      DataUpdateListener listener = (DataUpdateListener) i.next();
+    for (DataUpdateListener listener : dataUpdateListeners) {
       listener.onDataUpdate();
     }
   }
@@ -176,9 +174,9 @@ public abstract class BackendListDataProvider extends BaseListDataProvider {
   }
 
   /**
-   * This method should be overidden to return a range of items from the list
+   * This method should be overridden to return a range of items from the list
    * data.
    */
-  protected abstract ListItemsData getItemRange(ListQuery query)
+  protected abstract ListItemsData<T> getItemRange(ListQuery query)
       throws Exception;
 }

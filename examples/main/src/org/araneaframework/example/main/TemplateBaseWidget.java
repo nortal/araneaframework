@@ -21,6 +21,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.Scope;
 import org.araneaframework.example.common.framework.ViewSelectorAware;
 import org.araneaframework.example.main.business.data.IGeneralDAO;
+import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.integration.spring.SpringInjectionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.springframework.beans.factory.BeanFactory;
@@ -35,7 +36,11 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
   private static final long serialVersionUID = 1L;
 
   protected BeanFactory getBeanFactory() {
-    return (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    return getEnvironment().getEntry(BeanFactory.class);
+  }
+  
+  protected PopupWindowContext getPopupCtx() {
+    return getEnvironment().requireEntry(PopupWindowContext.class);
   }
   
   public IGeneralDAO getGeneralDAO() {

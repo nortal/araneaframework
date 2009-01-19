@@ -62,7 +62,7 @@ import org.araneaframework.uilib.util.Event;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author Rein Raudjärv
  */
-public class ListWidget extends BaseUIWidget implements ListContext {
+public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private static final long serialVersionUID = 1L;
 
@@ -100,7 +100,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
   protected ListStructure listStructure; // should not be accessible by public
 
   // methods
-  protected ListDataProvider dataProvider;
+  protected ListDataProvider<T> dataProvider;
 
   protected TypeHelper typeHelper;
 
@@ -114,13 +114,13 @@ public class ListWidget extends BaseUIWidget implements ListContext {
   // info Map and vice-versa
   protected OrderInfo orderInfo = new OrderInfo();
 
-  protected List itemRange;
+  protected List<T> itemRange;
 
-  protected Map requestIdToRow = new HashMap();
+  protected Map<String, T> requestIdToRow = new HashMap<String, T>();
 
-  protected List selectedItems = new LinkedList();
+  protected List<T> selectedItems = new LinkedList<T>();
 
-  private List initEvents = new ArrayList();
+  private List<Runnable> initEvents = new ArrayList<Runnable>();
 
   private boolean changed = true;
 
@@ -154,6 +154,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @see #getSelectedRows()
    * @see #getSelectedRow()
    */
+  @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
     String listPath = getScope().toPath().toString();
@@ -161,7 +162,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
     // Path is used to read only those value-names that start with given prefix:
     Path path = new StandardPath(listPath + "." + LIST_CHECK_SCOPE);
     Map listData = input.getScopedData(path);
-    List rowKeys = new LinkedList();
+    List<Integer> rowKeys = new LinkedList<Integer>();
     // Now we read index numbers of selected rows:
     for (Iterator i = listData.entrySet().iterator(); i.hasNext();) {
       Map.Entry reqParam = (Map.Entry) i.next();
@@ -188,8 +189,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
       this.selectedItems.clear();
     }
     // Let's store the selected rows:
-    for (Iterator i = rowKeys.iterator(); i.hasNext();) {
-      Object rowItem = getRowFromRequestId(i.next().toString());
+    for (Integer key : rowKeys) {
+      T rowItem = getRowFromRequestId(key.toString());
       if (!this.selectedItems.contains(rowItem)) {
         this.selectedItems.add(rowItem);
       }
@@ -207,7 +208,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
       if (rowKey != null) {
         rowKey = rowKey.substring(listPath.length() + LIST_RADIO_SCOPE.length()
             + 2);
-        Object rowItem = getRowFromRequestId(rowKey);
+        T rowItem = getRowFromRequestId(rowKey);
         // In case of radio buttons, we discard the previous value,
         // because only one row can be selected:
         if (!this.selectedItems.contains(rowItem)) {
@@ -271,7 +272,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
-  public List getSelectedRows() {
+  public List<T> getSelectedRows() {
     return this.selectedItems;
   }
 
@@ -287,10 +288,10 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
-  public Object getSelectedRow() {
+  public T getSelectedRow() {
     Assert.isTrue(this.selectedItems.size() <= 1,
         "Selected rows count was expected to be not more than one.");
-    Object rowItem = null;
+    T rowItem = null;
     if (this.selectedItems.size() == 1) {
       rowItem = this.selectedItems.get(0);
     }
@@ -302,7 +303,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * load.
    */
   public void resetSelectedRows() {
-    this.selectedItems = new LinkedList();
+    this.selectedItems = new LinkedList<T>();
     removeViewData(LIST_CHECK_SCOPE);
     removeViewData(LIST_RADIO_SCOPE);
   }
@@ -332,7 +333,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * 
    * @return the {@link ListDataProvider}used to fill the list with data.
    */
-  public ListDataProvider getDataProvider() {
+  public ListDataProvider<T> getDataProvider() {
     return this.dataProvider;
   }
 
@@ -342,7 +343,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @param dataProvider the {@link ListDataProvider}used to fill the list with
    *            data.
    */
-  public void setDataProvider(ListDataProvider dataProvider) {
+  public void setDataProvider(ListDataProvider<T> dataProvider) {
     if (this.dataProvider != null) {
       this.dataProvider
           .removeDataUpdateListener(this.dataProviderDataUpdateListener);
@@ -806,7 +807,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
       throw new IllegalStateException(
           "DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
     }
-    ListItemsData itemRangeData;
+    ListItemsData<T> itemRangeData;
     try {
       itemRangeData = this.dataProvider.getItemRange(new Long(
           this.sequenceHelper.getCurrentPageFirstItemIndex()), new Long(
@@ -826,7 +827,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * 
    * @return the current item range.
    */
-  public List getItemRange() {
+  public List<T> getItemRange() {
     if (this.itemRange == null || this.checkChanged()
         || this.sequenceHelper.checkChanged() || this.typeHelper.checkChanged()
         || this.filterHelper.checkChanged()) {
@@ -846,7 +847,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * @param requestId request identifier.
    * @return list row object.
    */
-  public Object getRowFromRequestId(String requestId) {
+  public T getRowFromRequestId(String requestId) {
     return this.requestIdToRow.get(requestId);
   }
 
@@ -858,7 +859,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
       event.run();
     } else if (!isInitialized()) {
       if (this.initEvents == null) {
-        this.initEvents = new ArrayList();
+        this.initEvents = new ArrayList<Runnable>();
       }
       this.initEvents.add(event);
     }
@@ -866,8 +867,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
   protected void runInitEvents() {
     if (this.initEvents != null) {
-      for (Iterator it = this.initEvents.iterator(); it.hasNext();) {
-        Runnable event = (Runnable) it.next();
+      for (Iterator<Runnable> it = this.initEvents.iterator(); it.hasNext();) {
+        Runnable event = it.next();
         event.run();
       }
     }
@@ -879,6 +880,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}and
    * getting the initial item range.
    */
+  @Override
   protected void init() throws Exception {
     this.sequenceHelper = createSequenceHelper();
     addEventListener("nextPage", new NextPageEventHandler());
@@ -918,7 +920,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
     return new FilterHelper(this);
   }
 
-  protected void initFilterForm() throws Exception {
+  protected void initFilterForm() {
     if (this.form == null) {
       this.form = new FormWidget();
     }
@@ -952,7 +954,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Destoys the list and contained data provider and filter form.
+   * Destroys the list and contained data provider and filter form.
    * 
    * @throws Exception
    */
@@ -976,6 +978,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
    * 
    * @return {@link ViewModel}- list widget view model.
    */
+  @Override
   public Object getViewModel() {
     return new ViewModel();
   }
@@ -1176,8 +1179,8 @@ public class ListWidget extends BaseUIWidget implements ListContext {
       return;
     }
     this.requestIdToRow.clear();
-    for (ListIterator i = this.itemRange.listIterator(); i.hasNext();) {
-      Object row = i.next();
+    for (ListIterator<T> i = this.itemRange.listIterator(); i.hasNext();) {
+      T row = i.next();
       this.requestIdToRow.put(Integer.toString(i.previousIndex()), row);
     }
   }
@@ -1276,7 +1279,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    private List itemRange;
+    private List<T> itemRange;
 
     private SequenceHelper.ViewModel sequence;
 
@@ -1305,7 +1308,7 @@ public class ListWidget extends BaseUIWidget implements ListContext {
      * 
      * @return item range.
      */
-    public List getItemRange() {
+    public List<T> getItemRange() {
       return this.itemRange;
     }
 

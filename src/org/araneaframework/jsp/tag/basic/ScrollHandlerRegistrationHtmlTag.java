@@ -32,7 +32,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
    protected int doEndTag(Writer out) throws Exception {
-     WindowScrollPositionContext scrollHandler = (WindowScrollPositionContext) getEnvironment().getEntry(WindowScrollPositionContext.class);
+     WindowScrollPositionContext scrollHandler = getEnvironment().getEntry(WindowScrollPositionContext.class);
 
      if (scrollHandler != null) {
        registerScrollHandler(out, scrollHandler);

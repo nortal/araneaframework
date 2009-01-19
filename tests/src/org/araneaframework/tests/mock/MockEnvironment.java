@@ -33,7 +33,7 @@ import org.araneaframework.uilib.ConfigurationContext;
  * 
  */
 public class MockEnvironment extends BaseEnvironment {
-  protected Map contexts = new HashMap();
+  protected Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
 
   public MockEnvironment() {
     contexts.put(ConfigurationContext.class, new MockConfiguration());
@@ -41,7 +41,8 @@ public class MockEnvironment extends BaseEnvironment {
     contexts.put(MessageContext.class, new MockMessageContext());
   }
 
-  public Object getEntry(Object key) {
-    return contexts.get(key);
+  @SuppressWarnings("unchecked")
+  public <T> T getEntry(Class<T> key) {
+    return (T) contexts.get(key);
   }	
 }

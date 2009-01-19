@@ -33,7 +33,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class OverlayRegistrationHtmlTag extends BaseTag {
   protected int doEndTag(Writer out) throws Exception {
-    OverlayContext overlayCtx = (OverlayContext) getEnvironment().requireEntry(OverlayContext.class);
+    OverlayContext overlayCtx = getEnvironment().requireEntry(OverlayContext.class);
 
     if (overlayCtx.isOverlayActive()) {
       JspUtil.writeOpenStartTag(out, "script");

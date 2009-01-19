@@ -103,9 +103,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget
       transHelper.resetTransactionId();
     }
 
-    SystemFormContext systemFormContext =
-      (SystemFormContext) getEnvironment().requireEntry(SystemFormContext.class);
-
+    SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
 
     log.debug("New transaction id '" + getTransactionId() + "'.");

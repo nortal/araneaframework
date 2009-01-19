@@ -65,7 +65,7 @@ public class BeanMapper implements Serializable {
    * Initializes the BeanMapper.
    * 
    * @param beanClass the class implementing the Bean pattern.
-   * @param createMissingBeans whetther to create missing beans during writing
+   * @param createMissingBeans whether to create missing beans during writing
    *            bean subfields (default is false).
    */
   public BeanMapper(Class beanClass, boolean createMissingBeans) {

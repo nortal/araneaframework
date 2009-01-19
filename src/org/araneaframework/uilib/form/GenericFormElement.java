@@ -288,7 +288,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   /** @since 1.1 this method is protected (private before 1.1). */
   protected MessageContext getMessageCtx() {
-    return (MessageContext) getEnvironment().requireEntry(MessageContext.class);
+    return getEnvironment().requireEntry(MessageContext.class);
   }
 
   /**

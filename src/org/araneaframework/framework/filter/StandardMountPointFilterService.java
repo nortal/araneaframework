@@ -37,13 +37,11 @@ import org.araneaframework.http.filter.StandardMountingFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardMountPointFilterService extends BaseFilterService {
-
   private static final long serialVersionUID = 1L;
 
   protected void action(Path path, InputData input, OutputData output)
       throws Exception {
-    MountContext mountCtx = (MountContext) getEnvironment().requireEntry(
-        MountContext.class);
+    MountContext mountCtx = getEnvironment().requireEntry(MountContext.class);
     Message mountMsg = mountCtx.getMountedMessage(input);
     if (mountMsg != null) {
       mountMsg.send(null, childService);

@@ -703,7 +703,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       if (activeFlow == null) {
         return;
       }
-      WindowScrollPositionContext scrollCtx = (WindowScrollPositionContext) activeFlow
+      WindowScrollPositionContext scrollCtx = activeFlow
           .getEnvironment().getEntry(WindowScrollPositionContext.class);
       if (scrollCtx != null) {
         switch (transitionType) {

@@ -17,8 +17,9 @@
 package org.araneaframework.core;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
@@ -29,14 +30,7 @@ import org.araneaframework.Environment;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardEnvironment extends BaseEnvironment {
-
-  private static final long serialVersionUID = 1L;
-
-  private static final String space = " ";
-
-  private static final String lf = "\n";
-
-  private Map entries;
+  private Map<Class<?>,Object> entries;
 
   private Environment parentEnv;
 
@@ -47,7 +41,7 @@ public class StandardEnvironment extends BaseEnvironment {
    * @param env the parent environment
    * @param entries a map of the entries in the Environment
    */
-  public StandardEnvironment(Environment env, Map entries) {
+  public StandardEnvironment(Environment env, Map<Class<?>,Object> entries) {
     Assert.notNullParam(entries, "entries");
     this.entries = entries;
     parentEnv = env;
@@ -62,9 +56,9 @@ public class StandardEnvironment extends BaseEnvironment {
    * @param value a value corresponding to given key in the map of the
    *            Environment entries.
    */
-  public StandardEnvironment(Environment env, Object key, Object value) {
+  public <T> StandardEnvironment(Environment env, Class<T> key, T value) {
     Assert.notNullParam(key, "key");
-    entries = new HashMap(1);
+    entries = new HashMap<Class<?>,Object>(1);
     entries.put(key, value);
     parentEnv = env;
   }
@@ -75,7 +69,7 @@ public class StandardEnvironment extends BaseEnvironment {
    * 
    * @return a map with the entries.
    */
-  public Map getEntryMap() {
+  public Map<Class<?>,Object> getEntryMap() {
     return entries;
   }
 
@@ -89,9 +83,10 @@ public class StandardEnvironment extends BaseEnvironment {
    * @return the Object under the key provided
    * @throws AraneaNoSuchEnvironmentEntryException
    */
-  public Object getEntry(Object key) {
+  @SuppressWarnings("unchecked")
+  public <T> T getEntry(Class<T> key) {
     if (entries.containsKey(key)) {
-      return entries.get(key);
+      return (T) entries.get(key);
     }
     if (parentEnv == null) {
       return null;
@@ -104,18 +99,16 @@ public class StandardEnvironment extends BaseEnvironment {
   }
 
   private String toString(int pad) {
-    String padding = StringUtils.leftPad("", pad, space);
+    String padding = StringUtils.leftPad("", pad, " ");
     StringBuffer result = new StringBuffer();
     if (entries != null) {
-      for (Iterator i = entries.entrySet().iterator(); i.hasNext();) {
-        Map.Entry e = (Map.Entry) i.next();
-        result.append(padding + e.getKey() + "="
-            + ObjectUtils.identityToString(e.getValue()) + lf);
+      for (Entry<Class<?>, Object> entry : entries.entrySet()) {
+        result.append(padding + entry.getKey() + "=" + ObjectUtils.identityToString(entry.getValue()) + "\n");
       }
     }
     if (parentEnv instanceof StandardEnvironment) {
       result.append(((StandardEnvironment) parentEnv).toString(pad
-          + (space.length() * 2)));
+          + 2));
     }
     result.append("\n");
     return result.toString();

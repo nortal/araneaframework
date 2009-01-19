@@ -40,7 +40,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>ConfigurationContext</code> or <code>null</code>.
    */
   public static ConfigurationContext getConfiguration(Environment env) {
-    return (ConfigurationContext) env.getEntry(ConfigurationContext.class);
+    return env.getEntry(ConfigurationContext.class);
   }
 
   /**
@@ -51,7 +51,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>FormContext</code> or <code>null</code>.
    */
   public static FormContext getFormContext(Environment env) {
-    return (FormContext) env.getEntry(FormContext.class);
+    return env.getEntry(FormContext.class);
   }
 
   /**
@@ -62,7 +62,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>TreeContext</code> or <code>null</code>.
    */
   public static TreeContext getTreeContext(Environment env) {
-    return (TreeContext) env.getEntry(TreeContext.class);
+    return env.getEntry(TreeContext.class);
   }
 
   /**
@@ -73,7 +73,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>TreeNodeContext</code> or <code>null</code>.
    */
   public static TreeNodeContext getTreeNodeContext(Environment env) {
-    return (TreeNodeContext) env.getEntry(TreeNodeContext.class);
+    return env.getEntry(TreeNodeContext.class);
   }
 
   /**
@@ -84,7 +84,7 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
    * @return The <code>MenuContext</code> or <code>null</code>.
    */
   public static MenuContext getMenuContext(Environment env) {
-    return (MenuContext) env.getEntry(MenuContext.class);
+    return env.getEntry(MenuContext.class);
   }
 
 }

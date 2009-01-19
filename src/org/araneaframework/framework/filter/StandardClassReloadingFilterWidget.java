@@ -67,7 +67,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
   }
 
   private ClassLoader newClassLoader() throws MalformedURLException {
-    ServletContext sctx = (ServletContext) getEnvironment().getEntry(ServletContext.class);
+    ServletContext sctx = getEnvironment().getEntry(ServletContext.class);
     return new ReloadingClassloader(new URL[] {sctx.getResource("/WEB-INF/classes")},
         ClassLoaderUtil.getDefaultClassLoader());
   }

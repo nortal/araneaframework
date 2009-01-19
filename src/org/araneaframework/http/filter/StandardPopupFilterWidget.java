@@ -283,7 +283,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
   
   protected TopServiceContext getTopServiceCtx() {
-    return ((TopServiceContext)getEnvironment().requireEntry(TopServiceContext.class));
+    return (getEnvironment().requireEntry(TopServiceContext.class));
   }
   
   protected String getRequestURL() {

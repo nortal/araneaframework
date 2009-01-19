@@ -117,7 +117,7 @@ public abstract class ServletUtil {
     setAttribute(req, attributeBackupMap, Environment.ENVIRONMENT_KEY, env);
     setAttribute(req, attributeBackupMap, LOCALIZATION_CONTEXT_KEY, buildLocalizationContext(env));
 
-    ServletContext servletContext = (ServletContext) env.requireEntry(ServletContext.class);
+    ServletContext servletContext = env.requireEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(req, res);
 
     restoreAttributes(req, attributeBackupMap);

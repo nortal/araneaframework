@@ -21,11 +21,11 @@ import org.araneaframework.core.NoSuchEnvironmentEntryException;
 
 /**
  * A special data structure providing encapsulation of data needed by different components. 
- * Every Aranea component has an environment. The environment can be inhereted from the parent
+ * Every Aranea component has an environment. The environment can be inherited from the parent
  * or be standalone. No component knows from which component the Environment comes from.
  * <br><br>
  * Component does know about the hooks in the environment. As different contexts are added to
- * the environment the component in need of them is reponsible of checking them and acting upon
+ * the environment the component in need of them is responsible of checking them and acting upon
  * them. 
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -44,7 +44,7 @@ public interface Environment extends Serializable {
    * Returns the entry with the specified key from this Environment. 
    * Returns null if the entry is not present in the environment.
    */
-  public Object getEntry(Object key);
+  public <T> T getEntry(Class<T> key);
   
   /**
    * Does the same as {@link #getEntry(Object)}, but throws a {@link NoSuchEnvironmentEntryException} if 
@@ -52,5 +52,5 @@ public interface Environment extends Serializable {
    * 
    * @throws NoSuchEnvironmentEntryException If environment entry could not be found.
    */
-  public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException;
+  public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException;
 }

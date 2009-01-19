@@ -71,7 +71,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
 
     FormElementContext result;
     try {
-      result = (FormElementContext)getEnvironment().requireEntry(FormElementContext.class);
+      result = getEnvironment().requireEntry(FormElementContext.class);
     } catch (NoSuchEnvironmentEntryException e) {
       throw new FieldConstraintException(Assert.thisToString(this) + " could not determine FormElementContext, this is probably caused by applying field constraint to something other than FormElement.", e);
     }

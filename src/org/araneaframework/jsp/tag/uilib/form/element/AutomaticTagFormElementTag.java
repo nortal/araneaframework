@@ -89,7 +89,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
     if(viewSelector == null)
       throw new JspException("The form element view selector was not passed!.");
     
-    JspContext config = (JspContext) getEnvironment().requireEntry(JspContext.class);
+    JspContext config = getEnvironment().requireEntry(JspContext.class);
     Map tagMapping = config.getTagMapping(viewSelector.getUri());
     
     if(tagMapping == null)

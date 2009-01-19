@@ -180,7 +180,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @return the localization context.
 	 */
 	protected LocalizationContext getL10nCtx() {		
-		return (LocalizationContext) this.list.getEnvironment().requireEntry(LocalizationContext.class);
+		return this.list.getEnvironment().requireEntry(LocalizationContext.class);
 	}
 
 	/**

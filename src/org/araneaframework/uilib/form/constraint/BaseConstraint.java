@@ -133,7 +133,7 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   }
 
   /**
-   * Transletes the given message key according to the
+   * Translates the given message key according to the
    * <code>LocalizationContext</code>.
    * 
    * @param key The key to find the correct message.

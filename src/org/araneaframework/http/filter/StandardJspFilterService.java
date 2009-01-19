@@ -79,7 +79,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   }
   
   public String getFormAction() {
-    return ((ServletConfig) getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
+    return (getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
   }
   
   public Map getTagMapping(String uri){
@@ -97,7 +97,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
   public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
       ServletContext ctx = 
-        (ServletContext) getEnvironment().getEntry(ServletContext.class);
+        getEnvironment().getEntry(ServletContext.class);
       String[] locations = TldLocationsCache.getInstance(ctx).getLocation(uri);
       if (locations != null) {
         URL realLoc = null;        

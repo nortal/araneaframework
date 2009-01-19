@@ -25,11 +25,10 @@ import org.araneaframework.Environment;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseEnvironment implements Environment {
-
-  public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException {
+  public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException {
     Assert.notNullParam(this, key, "key");
 
-    Object result = getEntry(key);
+    T result = getEntry(key);
 
     if (result == null) {
       throw new NoSuchEnvironmentEntryException(key);

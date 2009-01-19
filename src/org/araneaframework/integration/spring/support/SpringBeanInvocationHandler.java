@@ -34,7 +34,7 @@ public class SpringBeanInvocationHandler implements InvocationHandler, Serializa
   }
   
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    BeanFactory bf = (BeanFactory) env.getEntry(BeanFactory.class);
+    BeanFactory bf = env.getEntry(BeanFactory.class);
     
     //XXX: This is a bit evil, but otherwise Serialization debug fails
     //The check is done in the constructor to ensure that generally

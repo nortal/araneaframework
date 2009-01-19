@@ -113,7 +113,7 @@ public class BodyHtmlTag extends PresentationTag {
 
   /** @since 1.1 */
   protected void writeConfirmationScript(Writer out) throws Exception {
-    ConfirmationContext ctx = (ConfirmationContext) getEnvironment().getEntry(ConfirmationContext.class);
+    ConfirmationContext ctx = getEnvironment().getEntry(ConfirmationContext.class);
     if (ctx == null) return;
 
     String message = ctx.getConfirmationMessage();

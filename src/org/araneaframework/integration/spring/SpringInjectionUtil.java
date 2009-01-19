@@ -41,7 +41,7 @@ public final class SpringInjectionUtil {
 	/**
 	 * Injects dependencies from the {@link BeanFactory} to the given
 	 * <code>object</code>. {@link BeanFactory} is taken from the provided {@link Environment}.
-	 * <p>s
+	 * <p>
 	 * The method looks for the following members of the <code>object</code>:
 	 * <ul>
 	 * <li> methods that have a form of
@@ -49,7 +49,7 @@ public final class SpringInjectionUtil {
 	 * <li>methods that have a form of
 	 * <code>@Resource set&lt;DependencyInterfaceName&gt;(&lt;DependencyInterfaceName&gt;)</code>
 	 * <li>fields that annotated with {@link Resource} annotation, have name corresponding to the Spring bean being injected and
-	 * of type of one the interfaces that bean implements.
+	 * of type of one of the interfaces that bean implements.
 	 * </ul>
 	 * <p>
 	 * There is a way to make all widgets have their dependencies injected
@@ -86,7 +86,7 @@ public final class SpringInjectionUtil {
 	 * 				eligible for dependency injection.
 	 */
 	public static void injectBeans(Environment env, Object object) {
-		BeanFactory bf = (BeanFactory) env.getEntry(BeanFactory.class);
+		BeanFactory bf = env.getEntry(BeanFactory.class);
 
 		injectMethods(env, object, bf);
 		injectFields(env, object, bf);
@@ -100,6 +100,7 @@ public final class SpringInjectionUtil {
 			objectClass = objectClass.getSuperclass();
 		} while (objectClass != null);
 	}
+
 
 	private static void injectFieldsForClass(Environment env, Object object,
 			BeanFactory bf, Class<? extends Object> objectClass) {

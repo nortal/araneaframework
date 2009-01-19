@@ -57,21 +57,20 @@ implements ServletServiceAdapterComponent {
 
   private static final long serialVersionUID = 1L;
 
+	private static final ThreadLocal<InputData> localInput = new ThreadLocal<InputData>();
+	private static final ThreadLocal<OutputData> localOutput = new ThreadLocal<OutputData>();
   private Service childService;
 
-	private static final ThreadLocal localInput = new ThreadLocal();
-	private static final ThreadLocal localOutput = new ThreadLocal();
 
 	protected void init() throws Exception {
 		childService._getComponent().init(getScope(), new BaseEnvironment() {
-
-          private static final long serialVersionUID = 1L;
-
-          public Object getEntry(Object key) {
+		  
+		  @SuppressWarnings("unchecked")
+      public <T> T getEntry(Class<T> key) {
 				if (InputData.class.equals(key))
-					return localInput.get();
+					return (T) localInput.get();
 				if (OutputData.class.equals(key))
-					return localOutput.get();
+					return (T) localOutput.get();
 				return getEnvironment().getEntry(key);
 			}  
 		});

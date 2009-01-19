@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ **/
 
 package org.araneaframework.uilib.list;
 
@@ -26,32 +26,36 @@ import org.araneaframework.core.Assert;
  * 
  * @see ListWidget
  */
-public class BeanListWidget extends ListWidget {
-	
-	private static final long serialVersionUID = 1L;
-	
-	protected final Class beanType;
-	
-	/**
-	 * Constructs a {@link BeanListWidget} for specified Bean type.
-	 * 
-	 * @param beanType list element type.
-	 */
-	public BeanListWidget(Class beanType) {
-		super();
-		Assert.notNullParam(this, beanType, "beanType");
-		this.beanType = beanType;
-	}
-	
-	protected TypeHelper createTypeHelper() {
-		return new TypeHelper() {			
-			public Class getFieldType(String fieldId) {
-				Class result = super.getFieldType(fieldId);
-				if (result == null) {
-					result = BeanUtil.getFieldType(beanType, fieldId);
-				}
-				return result;
-			}
-		};	
-	}
+public class BeanListWidget<T> extends ListWidget<T> {
+
+  private static final long serialVersionUID = 1L;
+
+  protected final Class<T> beanType;
+
+  /**
+   * Constructs a {@link BeanListWidget} for specified Bean type.
+   * 
+   * @param beanType
+   *          list element type.
+   */
+  public BeanListWidget(Class<T> beanType) {
+    super();
+    Assert.notNullParam(this, beanType, "beanType");
+    this.beanType = beanType;
+  }
+
+  @Override
+  protected TypeHelper createTypeHelper() {
+    return new TypeHelper() {
+
+      @Override
+      public Class<?> getFieldType(String fieldId) {
+        Class<?> result = super.getFieldType(fieldId);
+        if (result == null) {
+          result = BeanUtil.getFieldType(beanType, fieldId);
+        }
+        return result;
+      }
+    };
+  }
 }

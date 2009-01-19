@@ -54,7 +54,7 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 	private static final long serialVersionUID = 1L;
 	
 	public MessageSource getMessageSource() {
-		return (WebApplicationContext) getEnvironment().getEntry(WebApplicationContext.class);
+		return getEnvironment().getEntry(WebApplicationContext.class);
 	}
 	
 	public String getMessage(String code, Object[] args, String defaultMessage) {

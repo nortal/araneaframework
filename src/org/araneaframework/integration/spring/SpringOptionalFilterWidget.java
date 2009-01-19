@@ -62,7 +62,7 @@ public class SpringOptionalFilterWidget extends BaseFilterWidget {
    * instance of {@link FilterWidget}
    */
   protected void init() throws Exception {
-    BeanFactory bf = (BeanFactory) getEnvironment().getEntry(BeanFactory.class);
+    BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
     try {
       FilterWidget filter = (FilterWidget) bf.getBean(beanId);
       filter.setChildWidget(childWidget);

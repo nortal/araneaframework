@@ -33,7 +33,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
   private static final long serialVersionUID = 1L;
   private static final Log log = LogFactory.getLog(CompanyEditWidget.class);
   private Long id = null;
-  private BeanFormWidget form;
+  private BeanFormWidget<CompanyMO> form;
 
   /**
    * Constructor for adding new company. 
@@ -53,23 +53,19 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
     log.debug("CompanyEditWidget init called");
 
-    form = new BeanFormWidget(CompanyMO.class);
+    CompanyMO company = id != null ? (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id) : new CompanyMO();
+
+    form = new BeanFormWidget<CompanyMO>(company);
     form.addBeanElement("name", "#Name", new TextControl(), true);
     form.addBeanElement("address", "#Address", new TextControl(), true);
-
-    if (id != null) {
-      CompanyMO company = (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id);   
-      form.readFromBean(company);
-    }
 
     addWidget("form", form);
   }
 
   public void handleEventSave() throws Exception {
     if (form.convertAndValidate()) {
-      CompanyMO company = id != null ? (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id) : new CompanyMO();
 
-      company = (CompanyMO) form.writeToBean(company);
+      CompanyMO company = form.writeToBean();
 
       if (id != null) {
         getGeneralDAO().edit(company);

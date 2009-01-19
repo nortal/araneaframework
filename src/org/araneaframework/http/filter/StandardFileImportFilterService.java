@@ -83,7 +83,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
       throws Exception {
 
     if (!isInitialized) {
-      ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
+      ServletConfig config = getEnvironment().getEntry(ServletConfig.class);
       initialize(config.getServletContext());
     }
 
@@ -147,7 +147,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
   }
 
   private void loadFiles(List files, OutputStream out) throws Exception {
-    ServletContext context = (ServletContext) getEnvironment().getEntry(ServletContext.class);
+    ServletContext context = getEnvironment().getEntry(ServletContext.class);
 
     for (Iterator iter = files.iterator(); iter.hasNext();) {
       String fileName = (String) iter.next();

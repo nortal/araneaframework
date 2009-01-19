@@ -169,7 +169,7 @@ public class FormElement extends GenericFormElement implements FormElementContex
    * @throws ConverterNotFoundException if converter cannot be found.
    */
   public Converter findConverter() {
-    ConfigurationContext confCtx = (ConfigurationContext) getEnvironment()
+    ConfigurationContext confCtx = getEnvironment()
         .requireEntry(ConfigurationContext.class);
 
     try {
