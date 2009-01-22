@@ -109,6 +109,9 @@
 					</ui:formElement>
 					<c:if test="${widget.nested}">
 						<ui:eventButton eventId="return" labelId="modal.demo.previous"/>
+						<c:if test="${widget.overlay}">
+							<ui:eventButton eventId="close" labelId="modal.demo.closeOverlay"/>
+						</c:if>
 					</c:if>
 				</tui:componentActions>
 			</tui:component>

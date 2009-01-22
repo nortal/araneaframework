@@ -23,7 +23,6 @@ import org.araneaframework.backend.list.memorybased.ExpressionEvaluationExceptio
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
-import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
 
 /**
  * Expression for EndsWith condition. Supports both database query and
@@ -47,9 +46,13 @@ public class EndsWithExpression extends LikeExpression {
       throws ExpressionEvaluationException {
     String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
     String maskStr = ObjectUtils.toString(mask.getValue());
-    boolean result = RegexpLikeUtil.isEndsWith(stringToCompare, maskStr,
-        ignoreCase, configuration);
-    return result ? Boolean.TRUE : Boolean.FALSE;
+
+    if (this.ignoreCase) {
+      stringToCompare = stringToCompare.toLowerCase();
+      maskStr = maskStr.toLowerCase();
+    }
+
+    return new Boolean(stringToCompare.endsWith(maskStr));
   }
 
 }

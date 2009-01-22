@@ -20,50 +20,85 @@
  * @since 1.1
  */
 
-Aranea.ModalBox = {};
-Aranea.ModalBox.ModalBoxFileName = 'js/modalbox/modalbox.js';
-Aranea.ModalBox.Options = null;
+Aranea.ModalBox = Class.create({
 
-Aranea.ModalBox.show = function(options) {
-  var suffix = $$('.aranea-overlay').length == 0 ? '&araOverlay=true' : '';
-  Object.extend(options, {afterLoad: Aranea.ModalBox.afterLoad});
+	ModalBoxFileName: 'js/modalbox/modalbox.js',
 
-  Modalbox.show(
-      araneaPage().getSubmitURL(araneaPage().getSystemForm().araTopServiceId.value,
-      araneaPage().getSystemForm().araThreadServiceId.value, 'override') + suffix,
-      options);
+	Options: null,
 
-  if (Prototype.Browser.IE) { //Modalbox does not render well in IE without this line (Prototype bug?):
-	  $(document.body).viewportOffset();
-  }
-};
+	getRequestURL: function() {
+		var url = null;
+		var form = araneaPage().getSystemForm();
 
-Aranea.ModalBox.afterLoad = function(content) {
-  // if no content is returned, overlay has been closed.
-  if (content != null && content.startsWith("<!-- araOverlaySpecialResponse -->")) {
-    AraneaPage.findSystemForm();
-    var systemForm = araneaPage().getSystemForm();
+		if ($$('.aranea-overlay').length) {
+			url = form.readAttribute('action') + '?araOverlay=true';
+		} else {
+			url = araneaPage().getSubmitURL(form.araTopServiceId.value,
+			      form.araThreadServiceId.value, 'override') + '&araOverlay=true';
+		}
 
-    if (systemForm.araTransactionId) {
-      systemForm.araTransactionId.value = 'inconsistent';
-    }
+		form = null;
+		return url;
+	},
 
-    if (window.modalTransport) {
-      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
-      window.modalTransport = null;
-    }
+	show: function(options) {
+	    this.Options = { afterLoad: this.afterLoad };
+	    Object.extend(this.Options, options);
 
-    return new DefaultAraneaSubmitter().event_4(systemForm);
-  }
-};
+	    Modalbox.show(this.getRequestURL(), this.Options);
 
-// gets executed after update region response has been processed completely
-Aranea.ModalBox.afterUpdateRegionResponseProcessing = function(activeSystemForm) {
-  if (activeSystemForm.hasClassName('aranea-overlay') && Modalbox) {
-    Modalbox.resizeToContent(Aranea.ModalBox.Options);
-  }
-};
+		if (Prototype.Browser.IE) { //Modalbox does not render well in IE without this line (Prototype bug?):
+			$(document.body).viewportOffset();
+		}
+	},
 
-Aranea.ModalBox.close = function() {
-  if (Modalbox) Modalbox.hide();
-};
+	isCloseOverlay: function(content) {
+		return content && content.startsWith("<!-- araOverlaySpecialResponse -->");
+	},
+
+	afterLoad: function(content) {
+		AraneaPage.findSystemForm();
+		araneaPage().addSystemLoadEvent(AraneaPage.init);
+		araneaPage().onload();
+
+		if (_overlay.isCloseOverlay(content)) {
+			_overlay.close();
+			_overlay.reloadPage();
+		}
+
+	},
+
+	// gets executed after update region response has been processed completely
+	afterUpdateRegionResponseProcessing: function(activeSystemForm) {
+		if (activeSystemForm.hasClassName('aranea-overlay') && Modalbox) {
+			Modalbox.resizeToContent(this.Options);
+		}
+	},
+
+	close: function() {
+		if (Modalbox) Modalbox.hide();
+	},
+
+	reloadPage: function() {
+		AraneaPage.findSystemForm();
+		var systemForm = araneaPage().getSystemForm();
+
+		if (systemForm.araTransactionId) {
+			systemForm.araTransactionId.value = 'inconsistent';
+		}
+
+		if (window.modalTransport) {
+			DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
+			window.modalTransport = null;
+		}
+
+		return new DefaultAraneaSubmitter().event_4(systemForm);
+	}
+
+});
+
+var _overlay = new Aranea.ModalBox();
+
+function araneaOverlay() {
+	return _overlay;
+}
