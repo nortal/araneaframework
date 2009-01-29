@@ -269,4 +269,3 @@ function init(){createCommandLineFunctions();initialized=true;}
 init();})();function addWindowLoadListener(listener){var oldOnload=window.onload;if(typeof window.onload!="function"){window.onload=listener;}else{window.onload=function(evt){if(oldOnload){oldOnload(evt);}
 listener(evt);};}}
 addWindowLoadListener(function(){pageLoaded=true;log4javascript.dispatchEvent("load",{});});window.log4javascript=log4javascript;})();
-window['log4javascript/log4javascript.js'] = true;

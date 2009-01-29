@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,31 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 /**
  * Utility functions.
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @author Alar Kvell (alar@araneaframework.org)
  */
- 
-// b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically 
-// created with the createElement method. To create an element with a name attribute, 
-// include the attribute and value when using the createElement method.
-// http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
+
+/**
+ * b/c braindead IE: The NAME attribute cannot be set at run time on elements dynamically
+ * created with the createElement method. To create an element with a name attribute,
+ * include the attribute and value when using the createElement method.
+ * http://www.thunderguy.com/semicolon/2005/05/23/setting-the-name-attribute-in-internet-explorer/
+ * 
+ * @deprecated since 1.2.1; use Prototype for this task as this function does it now. To be removed in 2.0 
+ */
 function createNamedElement(type, name) {
-   var element = null;
-   // Try the IE way; this fails on standards-compliant browsers
-   try {
-      element = document.createElement('<'+type+' name="'+name+'">');
-   } catch (e) {
-   }
-   if (!element || element.nodeName != type.toUpperCase()) {
-      // Non-IE browser; use canonical method to create named element
-      element = document.createElement(type);
-      element.name = name;
-   }
-   return element;
+   return new Element(type, { 'name': name });;
 }
 
 function getElementByIdORName(str) {
@@ -63,9 +56,9 @@ function setElementAttr(elementStr, attrName, attrValue) {
  *
  * @since 1.1
  */
-Text = Class.create();
-Text.prototype = {
+var Text = Class.create({
   pos: 0,
+
   initialize: function(text) {
     this.text = text;
   },
@@ -99,6 +92,4 @@ Text.prototype = {
   toString: function() {
     return this.text.substr(this.pos);
   }
-};
-
-window['aranea-util.js'] = true;
+});

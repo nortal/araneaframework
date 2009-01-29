@@ -297,5 +297,3 @@ if (araneaPage && typeof araneaPage == "function") {
 
   Ajax.Responders.register({ onCreate: clearTips, onComplete: clearTips });
 }
-
-window['prototip/prototip.js'] = true;

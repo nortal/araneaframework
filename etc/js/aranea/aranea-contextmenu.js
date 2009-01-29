@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,78 +12,74 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 
-Aranea.ContextMenuHTMLBuilder={};
-Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID = 'aranea-contextmenu-div';
-Aranea.ContextMenuHTMLBuilder.createMenuDIV = function() {
-  var node = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
-  if (node) return node;
+Aranea.ContextMenuHTMLBuilder = Class.create();
+Object.extend(Aranea.ContextMenuHTMLBuilder, {
 
-  node = Builder.node('div', {'id':Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID }, '');
-  document.body.appendChild(node);
-  Element.hide(node);
-  return node;
-};
+  MENU_DIV_ID: 'aranea-contextmenu-div',
 
-Aranea.ContextMenuHTMLBuilder.MENU_TEMPLATE = 
-    new Template('<ul>#{result}</ul>');
-Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE = 
-    new Template('<li><a href="javascript:" onclick="#{onclick}">#{label}</a></li>');
-Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE = 
-    new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>');
-Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE = 
-    new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();');
-Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE = 
-    new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, #{actionCallback}, function() {}, null); araneaContextMenu.hide();');
-Aranea.ContextMenuHTMLBuilder.buildMenu = function(menu) {
-  if (menu.label) {
-    var entrytemplate = Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE;
-    if (menu.submenu && menu.submenu.length > 0) {
-      menu.subresult = "";
-      $A(menu.submenu).each(function(entry) {
-        menu.subresult = menu.subresult + Aranea.ContextMenuHTMLBuilder.buildMenu(entry);
-      });
+  MENU_TEMPLATE: new Template('<ul>#{result}</ul>'),
 
-      return Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE.evaluate(menu);
-    } else {
-      if (menu.type == "action") {
-        menu.onclick = Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE.evaluate(menu);
-      } else if (menu.type == "event") {
-        menu.onclick = Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE.evaluate(menu);
-      }
-      return entrytemplate.evaluate(menu);
+  ENTRY_TEMPLATE: new Template('<li><a href="javascript:" onclick="#{onclick}">#{label}</a></li>'),
+
+  COMBO_TEMPLATE: new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>'),
+
+  EVENT_TEMPLATE: new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();'),
+
+  ACTION_TEMPLATE: new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, #{actionCallback}, function() {}, null); araneaContextMenu.hide();'),
+
+  createMenuDIV: function() {
+    var node = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
+
+    if (!node) {
+      node = new Element('div', {'id': Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID });
+      document.body.appendChild(node);
+      node.hide();
     }
-  }
 
-  var content = "";
-  $A(menu.submenu).each(function(entry) {
-    content = content + Aranea.ContextMenuHTMLBuilder.buildMenu(entry);
-  });
-  return Aranea.ContextMenuHTMLBuilder.MENU_TEMPLATE.evaluate({ result : content });
-};
+    return node;
+  },
 
-Aranea.ContextMenuHolder = Class.create();
-Aranea.ContextMenuHolder.setMenuOptions = function(menu) {
-  if (menu.submenu) {
-    Object.extend(menu.submenu, menu.options);
+  buildMenu: function(menu) {
+    if (menu.label) {
+      var entrytemplate = Aranea.ContextMenuHTMLBuilder.ENTRY_TEMPLATE;
+      if (menu.submenu && menu.submenu.length > 0) {
+        menu.subresult = "";
+        $A(menu.submenu).each(function(entry) {
+          menu.subresult = menu.subresult + Aranea.ContextMenuHTMLBuilder.buildMenu(entry);
+        });
+
+        return Aranea.ContextMenuHTMLBuilder.COMBO_TEMPLATE.evaluate(menu);
+      } else {
+        if (menu.type == "action") {
+          menu.onclick = Aranea.ContextMenuHTMLBuilder.ACTION_TEMPLATE.evaluate(menu);
+        } else if (menu.type == "event") {
+          menu.onclick = Aranea.ContextMenuHTMLBuilder.EVENT_TEMPLATE.evaluate(menu);
+        }
+        return entrytemplate.evaluate(menu);
+      }
+    }
+
+    var content = "";
     $A(menu.submenu).each(function(entry) {
-      Object.extend(entry, menu.options);
+      content = content + Aranea.ContextMenuHTMLBuilder.buildMenu(entry);
     });
-
-    Aranea.ContextMenuHolder.setMenuOptions(menu.submenu);
+    return Aranea.ContextMenuHTMLBuilder.MENU_TEMPLATE.evaluate({ result : content });
   }
-};
-Aranea.ContextMenuHolder.prototype = {
+
+});
+
+Aranea.ContextMenuHolder = Class.create({
+
   menus: {},
 
-  initialize: function() {
-  },
+  initialize: function() {},
 
   addMenu: function(widgetId, menu, options) {
     this.menus[widgetId] = menu;
@@ -97,11 +93,24 @@ Aranea.ContextMenuHolder.prototype = {
   getMenus: function() {
     return this.menus;
   }
-};
+});
 
-Aranea.ContextMenu = Class.create();
-Aranea.ContextMenu.prototype = {
+Object.extend(Aranea.ContextMenuHolder, {
+  setMenuOptions = function(menu) {
+    if (menu.submenu) {
+      Object.extend(menu.submenu, menu.options);
+      $A(menu.submenu).each(function(entry) {
+        Object.extend(entry, menu.options);
+      });
+
+      Aranea.ContextMenuHolder.setMenuOptions(menu.submenu);
+    }
+  }
+});
+Aranea.ContextMenu = Class.create({
+
   contextMenuHolder: null,
+
   triggeringElement: null,
 
   initialize: function(contextMenuHolder) {
@@ -109,9 +118,9 @@ Aranea.ContextMenu.prototype = {
   },
 
   buildMenu: function(widgetId) {
-    var node = Builder.node('div', {'class': 'aranea-contextmenu-class'}, '');
+    var node = new Element('div', {'class': 'aranea-contextmenu-class'});
     menu = this.contextMenuHolder.getMenus()[widgetId];
-    Element.update(node, Aranea.ContextMenuHTMLBuilder.buildMenu(menu));
+    node.update(Aranea.ContextMenuHTMLBuilder.buildMenu(menu));
     return node;
   },
   
@@ -169,12 +178,11 @@ Aranea.ContextMenu.prototype = {
   getTriggeringElement: function() {
     return this.triggeringElement;
   }
-};
+
+});
 
 var araneaContextMenuHolder = new Aranea.ContextMenuHolder();
 var araneaContextMenu = new Aranea.ContextMenu(araneaContextMenuHolder);
 
 Event.observe(document, 'contextmenu', araneaContextMenu.show.bindAsEventListener(araneaContextMenu));
 Event.observe(document, 'mousedown', araneaContextMenu.hide.bindAsEventListener(araneaContextMenu));
-
-window['aranea-contextmenu.js'] = true;

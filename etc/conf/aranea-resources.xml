@@ -49,8 +49,10 @@
 
 	<files content-type="text/javascript" group="all.js">
 		<file path="js/rsh/rsh.js" />
-		<file path="js/behaviour/behaviour.js" />
 		<file path="js/prototype/prototype.js" />
+		<file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
 		<file path="js/aranea/aranea-locale.js" />
 		<file path="js/aranea/aranea.js" />
 		<file path="js/aranea/aranea-ui.js" />
@@ -62,9 +64,6 @@
 		<file path="js/aranea/aranea-popups.js" />
 		<file path="js/aranea/aranea-rsh.js" />
 		<file path="js/aranea/aranea-modalbox.js" />
-		<file path="js/scriptaculous/builder.js" />
-		<file path="js/scriptaculous/effects.js" />
-		<file path="js/scriptaculous/controls.js" />
 		<file path="js/modalbox/modalbox.js" />
 		<file path="js/prototip/prototip.js" />
 		<file path="js/calendar/calendar.js" />
@@ -74,8 +73,10 @@
 
 	<files content-type="text/javascript" group="core-all.js">
 		<file path="js/rsh/rsh.js" />
-		<file path="js/behaviour/behaviour.js" />
 		<file path="js/prototype/prototype.js" />
+        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
 		<file path="js/aranea/aranea-locale.js" />
 		<file path="js/aranea/aranea.js" />
 		<file path="js/aranea/aranea-ui.js" />
@@ -87,13 +88,9 @@
 		<file path="js/aranea/aranea-popups.js" />
 		<file path="js/aranea/aranea-rsh.js" />
 		<file path="js/aranea/aranea-modalbox.js" />
-		<file path="js/scriptaculous/builder.js" />
-		<file path="js/scriptaculous/effects.js" />
-		<file path="js/scriptaculous/controls.js" />
 	</files>
 
 	<files content-type="text/javascript" group="core.js">
-		<file path="js/behaviour/behaviour.js" />
 		<file path="js/prototype/prototype.js" />
 		<file path="js/aranea/aranea-locale.js" />
 		<file path="js/aranea/aranea.js" />
@@ -101,7 +98,6 @@
 		<file path="js/aranea/aranea-keyboard.js" />
 		<file path="js/aranea/aranea-util.js" />
 		<file path="js/aranea/aranea-behaviour.js" />
-		<file path="js/aranea/aranea-popups.js" />
 	</files>
 
 	<files content-type="text/javascript" group="calendar.js">
@@ -117,10 +113,22 @@
 	</files>
 
 	<files content-type="text/javascript" group="modalbox.js">
-		<file path="js/aranea/aranea-modalbox.js" />
-		<file path="js/scriptaculous/builder.js" />
+        <file path="js/aranea/aranea-modalbox.js" />
+        <file path="js/modalbox/modalbox.js" />
+	</files>
+
+	<files content-type="text/javascript" group="scriptaculous.js">
+        <file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
+	</files>
+
+	<files content-type="text/javascript" group="popup.js">
+        <file path="js/aranea/aranea-popups.js" />
+	</files>
+
+	<files content-type="text/javascript" group="tree.js">
+        <file path="js/aranea/aranea-tree.js" />
 	</files>
 
 	<files content-type="text/javascript" group="rsh.js">
@@ -145,6 +153,7 @@
 		<file path="js/tiny_mce/tiny_mce.js" />
 		<file path="js/tiny_mce/tiny_mce_src.js" />
 		<file path="js/tiny_mce/tiny_mce_popup.js" />
+		<file path="js/behaviour/behaviour.js" />
 	</files>
 
 	<files content-type="image/gif">

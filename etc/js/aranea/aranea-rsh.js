@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 /**
  * Initialization scripts for using Really Simple History (http://code.google.com/p/reallysimplehistory/)
@@ -28,7 +28,7 @@
  * @param historyData RSH managed history data for that hash
  */
 AraneaPage.RSHListener = function(newLocation, historyData) {
-  araneaPage().debug('Detected navigation event ' + newLocation + " history: " + historyData);
+  _ap.debug('Detected navigation event ' + newLocation + " history: " + historyData);
 
   if (newLocation && !newLocation.startsWith("HTTP")) {
     window.dhtmlHistoryListenerRequestedState = newLocation;

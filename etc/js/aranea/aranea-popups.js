@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 var Aranea = Aranea ? Aranea : {};
 /** @since 1.1 */
@@ -55,7 +55,7 @@ Aranea.Popups.submitThreadCloseRequest = function(win) {
       }
   	}
     if (systemForm) {
-      var closeParam = createNamedElement("input", "popupClose");
+      var closeParam = new Element("input", { "name": "popupClose" });
       closeParam.setAttribute("type", "hidden");
       closeParam.setAttribute("value", "true");
       systemForm.appendChild(closeParam);
@@ -136,5 +136,3 @@ Aranea.Popups.delayedCloseWindow = function(delay) {
 /* @deprecated
    @since 1.0 **/
 var closeWindow = Aranea.Popups.delayedCloseWindow; 
-
-window['aranea-popups.js'] = true;

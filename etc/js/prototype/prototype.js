@@ -4318,5 +4318,3 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 /*--------------------------------------------------------------------------*/
 
 Element.addMethods();
-
-window['prototype/prototype.js'] = true;

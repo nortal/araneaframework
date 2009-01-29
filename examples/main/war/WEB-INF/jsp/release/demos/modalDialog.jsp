@@ -103,7 +103,9 @@
 				<!-- pure design tag -->
 				<tui:componentActions>
 					<ui:eventButton eventId="nextFlow" labelId="modal.demo.startnext"/>
-					<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
+                    <c:if test="${not widget.overlay}">
+	       				<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
+                    </c:if>
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>

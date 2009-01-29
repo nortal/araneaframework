@@ -138,7 +138,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     Map result = new HashMap(2);
     result.put("minChars", String.valueOf(viewModel.getMinCompletionLength()));
     if (!viewModel.isDisabled() && events && viewModel.isOnChangeEventRegistered())
-      result.put("afterUpdateElement", "function(el, selectedEl) { AraneaPage.findSystemForm(); " + JspWidgetCallUtil.getSubmitScriptForEvent(getOnChangeEvent()) + "}");
+      result.put("afterUpdateElement", "function(el, selectedEl) { araneaPage().findSystemForm(); " + JspWidgetCallUtil.getSubmitScriptForEvent(getOnChangeEvent()) + "}");
     return result;
   }
   

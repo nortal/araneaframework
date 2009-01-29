@@ -53,5 +53,3 @@ if(Prototype.Browser.Gecko && navigator.userAgent.indexOf("Win") > 0){
   else
     Sound.play = function(){};
 }
-
-window['scriptaculous/sound.js'] = true;
