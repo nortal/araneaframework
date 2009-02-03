@@ -69,7 +69,9 @@ public class SelectControl extends StringValueControl implements DisplayItemCont
    */
   public void addItem(DisplayItem item) {
     Assert.notNullParam(item, "item");
-    DisplayItemUtil.assertUnique(this.items, item);
+    if (this.valuesUnique) {
+      DisplayItemUtil.assertUnique(this.items, item);
+    }
     this.items.add(item);
   }
 
@@ -80,7 +82,9 @@ public class SelectControl extends StringValueControl implements DisplayItemCont
    */
   public void addItems(Collection items) {
     Assert.noNullElementsParam(items, "items");
-    DisplayItemUtil.assertUnique(this.items, items);
+    if (this.valuesUnique) {
+      DisplayItemUtil.assertUnique(this.items, items);
+    }
     this.items.addAll(items);
   }
 
