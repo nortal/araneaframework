@@ -89,6 +89,11 @@ public class Data implements java.io.Serializable, FormElementAware {
 
     if (value != null && !(typeClass.isAssignableFrom(value.getClass()))) {
       throw new DataItemTypeViolatedException(this, feCtx, value);
+    } else if (value instanceof String) {
+      String text = (String) value;
+      if (text.length() == 0) {
+        value = null;
+      }
     }
 
     this.value = value;
