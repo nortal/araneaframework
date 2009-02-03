@@ -40,6 +40,7 @@
 	<target name="clean" description="Clean up build and dist directories">
 		<delete dir="build" failonerror="false"/>
 		<delete dir="${dist.dir}" failonerror="false"/>
+		<delete dir="etc/js/aranea" includes="*.js" failonerror="false"/>
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
@@ -202,7 +203,46 @@
 		</manifest>
 	</target>
 
-	<target name="jar" depends="compile,tld,make-manifest" description="Builds Aranea JAR file">
+	<target name="js" description="Compresses aranea*.js JavaScript files">
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea.js aranea.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-behaviour.js aranea-behaviour.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea.js aranea.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-contextmenu.js aranea-contextmenu.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-keyboard.js aranea-keyboard.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-locale.js aranea-locale.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-modalbox.js aranea-modalbox.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-popups.js aranea-popups.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-rsh.js aranea-rsh.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-tree.js aranea-tree.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-ui.js aranea-ui.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js.exe" dir="etc/js/aranea/">
+			<arg line="src/aranea-util.js aranea-util.js"/>
+		</exec>
+	</target>
+
+	<target name="jar" depends="js,compile,tld,make-manifest" description="Builds Aranea JAR file">
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${dist.dir}/modules" />
 		<mkdir dir="${dist.dir}/integration" />
