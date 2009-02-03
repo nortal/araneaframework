@@ -30,12 +30,12 @@ Object.extend(Aranea.ModalBox, {
 
   getRequestURL: function() {
     var url = null;
-    var form = araneaPage().getSystemForm();
+    var form = _ap.getSystemForm();
 
     if ($$('.aranea-overlay').length) {
       url = form.readAttribute('action') + '?araOverlay=true';
     } else {
-      url = araneaPage().getSubmitURL(form.araTopServiceId.value,
+      url = _ap.getSubmitURL(form.araTopServiceId.value,
             form.araThreadServiceId.value, 'override') + '&araOverlay=true';
     }
 
@@ -60,8 +60,8 @@ Object.extend(Aranea.ModalBox, {
   afterLoad: function(content) {
     var f = function() {
       AraneaPage.findSystemForm();
-      araneaPage().addSystemLoadEvent(AraneaPage.init);
-      araneaPage().onload();
+      _ap.addSystemLoadEvent(AraneaPage.init);
+      _ap.onload();
 
       if (Aranea.ModalBox.isCloseOverlay(content)) {
         Aranea.ModalBox.close();
@@ -84,7 +84,7 @@ Object.extend(Aranea.ModalBox, {
 
   reloadPage: function() {
     AraneaPage.findSystemForm();
-    var systemForm = araneaPage().getSystemForm();
+    var systemForm = _ap.getSystemForm();
 
     if (systemForm.araTransactionId) {
       systemForm.araTransactionId.value = 'inconsistent';

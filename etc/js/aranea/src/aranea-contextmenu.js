@@ -30,9 +30,9 @@ Object.extend(Aranea.ContextMenuHTMLBuilder, {
 
   COMBO_TEMPLATE: new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>'),
 
-  EVENT_TEMPLATE: new Template('araneaPage().event_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();'),
+  EVENT_TEMPLATE: new Template('_ap.event_6(_ap.getSystemForm(), \'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();'),
 
-  ACTION_TEMPLATE: new Template('araneaPage().action_6(araneaPage().getSystemForm(), \'#{id}\', \'#{target}\', #{param}, #{actionCallback}, function() {}, null); araneaContextMenu.hide();'),
+  ACTION_TEMPLATE: new Template('_ap.action_6(_ap.getSystemForm(), \'#{id}\', \'#{target}\', #{param}, #{actionCallback}, function() {}, null); araneaContextMenu.hide();'),
 
   createMenuDIV: function() {
     var node = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
@@ -96,7 +96,7 @@ Aranea.ContextMenuHolder = Class.create({
 });
 
 Object.extend(Aranea.ContextMenuHolder, {
-  setMenuOptions = function(menu) {
+  setMenuOptions: function(menu) {
     if (menu.submenu) {
       Object.extend(menu.submenu, menu.options);
       $A(menu.submenu).each(function(entry) {

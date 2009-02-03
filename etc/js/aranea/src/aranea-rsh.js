@@ -33,14 +33,14 @@ AraneaPage.RSHListener = function(newLocation, historyData) {
   if (newLocation && !newLocation.startsWith("HTTP")) {
     window.dhtmlHistoryListenerRequestedState = newLocation;
     // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
-    araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
+    _ap.event_6(_ap.getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
   }
 
   window.dhtmlHistory.firstLoad = false;
   window.dhtmlHistory.ignoreLocationChange = false;
 };
 
-/** Initializes history object, overriding default JSON stringifier and default JSON parser. */
+// Initializes history object, overriding default JSON stringifier and default JSON parser.
 window.dhtmlHistory.create({
   toJSON: function(o) {
     return Object.toJSON(o);
@@ -50,4 +50,7 @@ window.dhtmlHistory.create({
   }
 });
 
-window.dhtmlHistory.initialize(AraneaPage.RSHListener);
+document.observe('dom:loaded', function() {
+  window.dhtmlHistory.initialize();
+  window.dhtmlHistory.addListener(AraneaPage.RSHListener);
+});
