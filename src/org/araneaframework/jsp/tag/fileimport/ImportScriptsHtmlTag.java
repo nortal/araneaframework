@@ -52,7 +52,7 @@ public class ImportScriptsHtmlTag extends BaseFileImportTag {
     JspUtil.writeOpenStartTag(out, "script");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeAttribute(out, "src", srcFile, false);
-    JspUtil.writeCloseStartTag(out);
+    JspUtil.writeCloseStartTag_SS(out);
     JspUtil.writeEndTag(out, "script");
     out.write("\n");
   }
