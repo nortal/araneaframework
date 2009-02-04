@@ -160,6 +160,25 @@
 				<listitem><emphasis>logger</emphasis> - imports only <link linkend="log4javascript">log4javascript</link> scripts.</listitem>
 			</orderedlist>
 
+			<note>
+				<para>Since 1.2.1 these Aranea JavaScript files (groups) are compressed for faster download. However, it also possible
+				to see these scripts in more readable form by appenging "-devel" to these group names, e.g. <emphasis>all</emphasis>
+				vs. <emphasis>all-devel</emphasis>. These groups don't have the <emphasis>devel</emphasis> version:</para>
+				<itemizedlist makr="opencircle">
+					<listitem><emphasis>calendar</emphasis></listitem>
+					<listitem><emphasis>calendar_et</emphasis></listitem>
+					<listitem><emphasis>prototip</emphasis></listitem>
+					<listitem><emphasis>logger</emphasis> (always compressed)</listitem>
+				</itemizedlist>
+
+				<para>If you are used to including <emphasis>aranea*.js</emphasis> scripts one-by-one then your scripts will be
+					automatically compressed. To include original scripts, insert "src/" right before the file name, e.g.
+					<programlisting role="jsp">&lt;ui:importScripts file="js/aranea/aranea.js"/&gt;</programlisting>
+					to:
+					<programlisting role="jsp">&lt;ui:importScripts file="js/aranea/src/aranea.js"/&gt;</programlisting>
+				</para>
+			</note>
+
 			<para>To use <link linkend="tinymce">TinyMCE editor</link>, you need to include its scripts like this:
 			<programlisting role="jsp">&lt;ui:importScripts file="js/tiny_mce/tiny_mce.js"/&gt;</programlisting></para>
 		</sect3>
