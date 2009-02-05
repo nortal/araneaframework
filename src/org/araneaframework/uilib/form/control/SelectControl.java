@@ -39,7 +39,7 @@ import org.araneaframework.uilib.util.DisplayItemUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class SelectControl extends StringValueControl  implements DisplayItemContainer {
+public class SelectControl extends StringValueControl implements DisplayItemContainer {
 
   private static final long serialVersionUID = 1L;
 
@@ -48,6 +48,20 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   protected List items = new ArrayList();
 
+  protected boolean valuesUnique = true;
+
+  public SelectControl() {}
+
+  /**
+   * Creates a <code>SelectControl</code> and provides a way to change whether
+   * the values must be unique or not (be default, they must be unique).
+   * 
+   * @param valuesUnique Whether select items must be unique (default: true).
+   */
+  public SelectControl(boolean valuesUnique) {
+    this.valuesUnique = valuesUnique;
+  }
+
   /**
    * Adds a select-item to the element.
    * 
@@ -55,7 +69,9 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   public void addItem(DisplayItem item) {
     Assert.notNullParam(item, "item");
-    DisplayItemUtil.assertUnique(this.items, item);
+    if (this.valuesUnique) {
+      DisplayItemUtil.assertUnique(this.items, item);
+    }
     this.items.add(item);
   }
 
@@ -66,7 +82,9 @@ public class SelectControl extends StringValueControl  implements DisplayItemCon
    */
   public void addItems(Collection items) {
     Assert.noNullElementsParam(items, "items");
-    DisplayItemUtil.assertUnique(this.items, items);
+    if (this.valuesUnique) {
+      DisplayItemUtil.assertUnique(this.items, items);
+    }
     this.items.addAll(items);
   }
 

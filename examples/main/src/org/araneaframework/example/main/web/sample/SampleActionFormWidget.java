@@ -101,7 +101,7 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
   }
 
   protected BigDecimal calculateTotal(BigDecimal price, Integer quantity) {
-    return price.multiply(new BigDecimal(quantity.intValue()));
+    return price.multiply(new BigDecimal(quantity.doubleValue()));
   }
 
   protected BigDecimal calculateVatTotal(BigDecimal total, BigDecimal vat) {

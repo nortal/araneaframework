@@ -25,7 +25,6 @@ import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
-import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
 
 public class LikeExpression implements CompositeExpression, StringExpression {
 
@@ -63,10 +62,15 @@ public class LikeExpression implements CompositeExpression, StringExpression {
 
   public Object evaluate(VariableResolver resolver)
       throws ExpressionEvaluationException {
-    return RegexpLikeUtil.isLike(
-        ObjectUtils.toString(this.expr.evaluate(resolver)),
-        ObjectUtils.toString(this.mask.getValue()),
-        this.ignoreCase, this.configuration) ? Boolean.TRUE : Boolean.FALSE;
+    String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
+    String maskStr = ObjectUtils.toString(mask.getValue());
+
+    if (this.ignoreCase) {
+      stringToCompare = stringToCompare.toLowerCase();
+      maskStr = maskStr.toLowerCase();
+    }
+
+    return new Boolean(stringToCompare.indexOf(maskStr) >= 0);
   }
 
   public Expression[] getChildren() {

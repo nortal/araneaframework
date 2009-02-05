@@ -24,7 +24,7 @@
 	<!-- ui:importScripts group="logger"/ -->
 
 	<!-- Imports all Aranea scripts (group="all"). -->
-	<ui:importScripts/>
+	<ui:importScripts group="all-devel"/>
 
 	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->
 	<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
@@ -50,13 +50,18 @@
 	-->
 
 	<!--
-		<ui:importScripts group="core-all"/>
-		<ui:importScripts group="core"/>
-		<ui:importScripts group="calendar"/>
-		<ui:importScripts group="calendar_et"/>
-		<ui:importScripts group="modalbox"/>
-		<ui:importScripts group="rsh"/>
-		<ui:importScripts group="prototip"/>
+		<ui:importScripts group="core-all"/> - all aranea*.js files + dependencies
+		- or -
+		<ui:importScripts group="core"/> - only the core of needed aranea*.js files
+		<ui:importScripts group="calendar"/> - calendar scripts provided by Aranea 
+		<ui:importScripts group="calendar_et"/> - calendar scripts in Estonian provided by Aranea
+		<ui:importScripts group="scriptaculous"/> - required scriptaculous files if you use modalbox (overlay) with the "core" group
+		<ui:importScripts group="modalbox"/> - modalbox (overlay) provided by Aranea
+		<ui:importScripts group="popup"/> - to enable Aranea popups
+		<ui:importScripts group="tree"/> - to enable Aranea Trees
+		<ui:importScripts group="rsh"/> - for browser back-forward navigation (also enable StandardStateVersioningFilterWidget in aranea-conf.xml)
+		<ui:importScripts group="prototip"/> - for tooltips 
+		<ui:importScripts group="logger"/> - imports log4javascript (enable it with "araneaPage().setDefaultLogger()")
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->

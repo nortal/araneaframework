@@ -164,7 +164,7 @@ public class BodyHtmlTag extends PresentationTag {
     if (!servletUrl.equals(encodedServletUrl)) {
       String urlSuffix = encodedServletUrl.substring(servletUrl.length());
       String function = "function(url) { return (url + '" + urlSuffix + "'); }";
-      out.write("_ap.override('encodeURL'," + function + ");");
+      out.write("Object.extend(_ap, { encodeURL:" + function + " });");
     }
   }
 

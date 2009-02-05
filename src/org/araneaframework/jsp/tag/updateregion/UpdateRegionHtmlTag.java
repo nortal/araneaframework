@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.updateregion;
 
+import javax.servlet.jsp.JspException;
 import java.io.Writer;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -32,10 +33,29 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
+
+  /**
+   * The name of the tag that wraps the update region. Client-side scripts don't
+   * depend on the tag type, they just require the element to have an ID.
+   * @since 1.2.1
+   */
+  protected String tag = "span";
+
+  /**
+   * @since 1.2.1
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Provides a way to use custom HTML tag (default: SPAN). Does not break client-side scripts. Use with caution!"
+   */
+  public void setTag(String tag) throws JspException {
+    this.tag = (String) evaluateNotNull("tag", tag, String.class);
+  }
+
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
-    JspUtil.writeOpenStartTag(out, "span");
+    JspUtil.writeOpenStartTag(out, this.tag);
     JspUtil.writeAttribute(out, "id",  fullId);
     JspUtil.writeCloseStartTag(out);
     
@@ -47,7 +67,7 @@ public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
   protected int doEndTag(Writer out) throws Exception {
     out.write("<!--END:" + fullId + "-->");
     
-    JspUtil.writeEndTag(out, "span");
+    JspUtil.writeEndTag(out, this.tag);
     
     return super.doEndTag(out);
   }

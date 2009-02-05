@@ -976,5 +976,3 @@ Form.Element.DelayedObserver = Class.create({
     this.callback(this.element, $F(this.element));
   }
 });
-
-window['scriptaculous/controls.js'] = true;

@@ -26,19 +26,21 @@ import org.apache.commons.lang.enums.Enum;
  */
 public class TextType extends Enum implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   // Please note that the string values are used in javascript.
   // So you can't change them.
-  
+
   /**
    * Any text. 
    */
   public final static TextType TEXT = new TextType("TEXT");  
-  
+
   /**
    * String containing numbers only. 
    */
   public final static TextType NUMBER_ONLY = new TextType("NUMBER_ONLY");   
-  
+
   /**
    * E-mail.
    */

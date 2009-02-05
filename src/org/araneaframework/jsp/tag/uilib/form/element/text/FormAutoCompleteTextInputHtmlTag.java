@@ -2,7 +2,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationService;
@@ -103,39 +102,44 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 	  append(".value");
     return result.toString();
   }
-  
+
   /* ***********************************************************************************
    * Script for registration of the new autocompleter.
    * ***********************************************************************************/
   protected String constructACRegistrationScript(AutoCompleteTextControl.ViewModel viewModel, StringBuffer acRequestUrl) {
-	StringBuffer script = new StringBuffer();
-    script.append("_ap.addClientLoadEvent(function() {new Ajax.Autocompleter(\"");
+    StringBuffer script = new StringBuffer();
+    script.append("Aranea.Behaviour.doAutoCompleteInputSetup('");
     script.append(getFullFieldId());
-    script.append("\", \"ACdiv.");
-    script.append(getFullFieldId());
-    script.append("\", ");
-    script.append(acRequestUrl);
-    script.append("\", {");
-    
-    // Autocompleter options
-    for (Iterator i = getOptionMap().entrySet().iterator(); i.hasNext(); ) {
-    	Map.Entry entry = (Map.Entry) i.next();
-    	script.append((String)entry.getKey());
-    	script.append(":");
-    	script.append((String)entry.getValue());
-    	if (i.hasNext()) script.append(",");
+    script.append("', ");
+
+    if (viewModel.isOnChangeEventRegistered()) {
+      script.append("'");
+      script.append(OnChangeEventListener.ON_CHANGE_EVENT);
+      script.append("', ");
+    } else {
+      script.append("null, null");
     }
 
-    script.append("});});");
+    if (this.updateRegions != null && this.updateRegions.length() > 0) {
+      script.append("'");
+      script.append(this.updateRegions);
+      script.append("', ");
+    } else {
+      script.append("null, ");
+    }
 
-	return script.toString();
+    script.append("{minChars: ");
+    script.append(String.valueOf(viewModel.getMinCompletionLength()));
+    script.append("});");
+
+    return script.toString();
   }
   
   /** @since 1.0.2 */
   protected Map getOptionMap() {
     AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
 
-    Map result = new HashMap(2);
+    Map result = new HashMap(1);
     result.put("minChars", String.valueOf(viewModel.getMinCompletionLength()));
     if (!viewModel.isDisabled() && events && viewModel.isOnChangeEventRegistered())
       result.put("afterUpdateElement", "function(el, selectedEl) { AraneaPage.findSystemForm(); " + JspWidgetCallUtil.getSubmitScriptForEvent(getOnChangeEvent()) + "}");
