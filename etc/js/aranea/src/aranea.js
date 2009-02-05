@@ -659,11 +659,12 @@ Object.extend(AraneaPage, {
     _ap.addSystemLoadEvent(Aranea.Behaviour.apply);
 
   // Monitor the currently focused element for Ajax page update (since 1.2)
-//  $$("input, select, textarea, button").each(function (formElement) {
-//      formElement.observe("focus", function(event) {
-//          this.focusedFormElementName = this.name;
-//      });
-//  });
+  $$("input, select, textarea, button").each(function (formElement) {
+      formElement.observe("focus", function(event) {
+        _ap.focusedFormElementName = event.element().name;
+        _ap.debug("Focused: " + _ap.focusedFormElementName);
+      });
+  });
 
   },
 
@@ -688,6 +689,10 @@ Object.extend(AraneaPage, {
     return _ap.getSystemForm();
   },
 
+  /**
+   * RSH initialization for state versioning. Has effect only when
+   * "aranea-rsh.js" is also included in the page.
+   */
   initRSHURL: function() {
     if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
 
@@ -902,6 +907,11 @@ var DefaultAraneaSubmitter = Class.create({
 
 });
 
+/**
+ * This class extends the default submitter, and overrides event() to initiate 
+ * an AJAX request and to process result specifically for the overlay mode.
+ * It expects that aranea-modalbox.js is successfully loaded.
+ */
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
   event: function(element) {
@@ -938,13 +948,6 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 });
 
 var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
-
-  /**
-   * The delay after which Ajax.Request onComplete expects all the DOM updates
-   * to have taken place, in milliseconds.
-   * @since 1.1
-   */
-  contentUpdateWaitDelay: 30,
 
   updateRegions: null,
 
@@ -1054,14 +1057,16 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
         var formElem = $$('[name="' + _ap.focusedFormElementName + '"]').first();
         if (formElem) {
           _ap.focusedFormElementName = null;
-          formElem.focus();
+          try {
+            formElem.focus();
+          } catch (e) {}
           formElem = null;
         }
       }
     }.bind(this);
 
     // force the delay here
-    setTimeout(f, this.contentUpdateWaitDelay);
+    setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
   },
 
   onAjaxFailure: function(transport) {
@@ -1087,6 +1092,13 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 });
 
 Object.extend(DefaultAraneaAJAXSubmitter, {
+
+  /**
+   * The delay after which Ajax.Request onComplete expects all the DOM updates
+   * to have taken place, in milliseconds.
+   * @since 1.1
+   */
+  contentUpdateWaitDelay: 30,
 
   /**
    * @since 1.2

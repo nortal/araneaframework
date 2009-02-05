@@ -161,11 +161,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
       if (this.stateSavedTL != null) {
         this.stateSavedTL.set(null);
       }
-
-      if (log.isDebugEnabled()) {
-        log.debug("Setting childWidget to null");
-      }
-
       this.childWidget = null;
     }
   }
@@ -185,10 +180,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
     try {
       initStateSavedTL();
       restoreState(output.getInputData());
-
-      if (log.isDebugEnabled()) {
-        log.debug("after restore: childWidget = " + this.childWidget);
-      }
 
       super.render(output);
 
@@ -214,11 +205,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
       setResponseStateHeader(output, this.lastStateId);
     } finally {
       this.stateSavedTL.set(null);
-
-      if (log.isDebugEnabled()) {
-        log.debug("Setting childWidget to null(2)");
-      }
-
       this.childWidget = null;
     }
   }
