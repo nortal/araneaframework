@@ -73,7 +73,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "multiple", "true");
+    JspUtil.writeAttribute(out, "multiple", "multiple");
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 

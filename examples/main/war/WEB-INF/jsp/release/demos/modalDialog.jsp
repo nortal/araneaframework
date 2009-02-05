@@ -103,12 +103,17 @@
 				<!-- pure design tag -->
 				<tui:componentActions>
 					<ui:eventButton eventId="nextFlow" labelId="modal.demo.startnext"/>
-					<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
+                    <c:if test="${not widget.overlay}">
+	       				<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
+                    </c:if>
 					<ui:formElement id="button">
 						<ui:button/>
 					</ui:formElement>
 					<c:if test="${widget.nested}">
 						<ui:eventButton eventId="return" labelId="modal.demo.previous"/>
+						<c:if test="${widget.overlay}">
+							<ui:eventButton eventId="close" labelId="modal.demo.closeOverlay"/>
+						</c:if>
 					</c:if>
 				</tui:componentActions>
 			</tui:component>

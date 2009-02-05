@@ -160,6 +160,25 @@
 				<listitem><emphasis>logger</emphasis> - imports only <link linkend="log4javascript">log4javascript</link> scripts.</listitem>
 			</orderedlist>
 
+			<note>
+				<para>Since 1.2.1 these Aranea JavaScript files (groups) are compressed for faster download. However, it also possible
+				to see these scripts in more readable form by appenging "-devel" to these group names, e.g. <emphasis>all</emphasis>
+				vs. <emphasis>all-devel</emphasis>. These groups don't have the <emphasis>devel</emphasis> version:</para>
+				<itemizedlist makr="opencircle">
+					<listitem><emphasis>calendar</emphasis></listitem>
+					<listitem><emphasis>calendar_et</emphasis></listitem>
+					<listitem><emphasis>prototip</emphasis></listitem>
+					<listitem><emphasis>logger</emphasis> (always compressed)</listitem>
+				</itemizedlist>
+
+				<para>If you are used to including <emphasis>aranea*.js</emphasis> scripts one-by-one then your scripts will be
+					automatically compressed. To include original scripts, insert "src/" right before the file name, e.g.
+					<programlisting role="jsp">&lt;ui:importScripts file="js/aranea/aranea.js"/&gt;</programlisting>
+					to:
+					<programlisting role="jsp">&lt;ui:importScripts file="js/aranea/src/aranea.js"/&gt;</programlisting>
+				</para>
+			</note>
+
 			<para>To use <link linkend="tinymce">TinyMCE editor</link>, you need to include its scripts like this:
 			<programlisting role="jsp">&lt;ui:importScripts file="js/tiny_mce/tiny_mce.js"/&gt;</programlisting></para>
 		</sect3>
@@ -1950,9 +1969,9 @@
     </sect2>
 
     <sect2>
-      <title>&lt;ui:updateRegion&gt; and &lt;ui:updateRegionRows&gt;</title>
+      <title>&lt;ui:updateRegion&gt;,  &lt;ui:updateRegionRow&gt;, and &lt;ui:updateRegionRows&gt;</title>
 
-      <para>These two tags define the update regions in the output that can be
+      <para>These three tags define the update regions in the output that can be
       updated via AJAX requests. The update regions chosen to be updated when
       some event occurs is decided by tags that take the
       <literal>updateRegion</literal> attribute (See <xref
@@ -1960,9 +1979,11 @@
 
       <para>The <literal>&lt;ui:updateRegion&gt;</literal> should be used when
       defining updateregion when the region is not contained in HTML table
-      (layout). The <literal>&lt;ui:updateRegionRows&gt;</literal> is for
-      defining a region which is contained in HTML table and contains table
-      rows itself. Updating just cells is not possible.</para>
+      (layout). The <literal>&lt;ui:updateRegionRow&gt;</literal> is basically
+      a table row (<literal>td</literal>) and is for updating a table row.
+      The <literal>&lt;ui:updateRegionRows&gt;</literal> is for defining a
+      region which is an HTML table body, and contains table rows itself.
+      Updating only single cells is not possible due to browser incompatibilities.</para>
 
       <sect3>
         <informaltable frame="all">
@@ -2027,10 +2048,15 @@
 
 &lt;ui:layout&gt;
   &lt;!-- Second update region, placed inside HTML table --&gt;
-  &lt;ui:updateRegionRows id="insideTable"/&gt;
+  &lt;ui:updateRegionRows id="insideTable"&gt;
     &lt;ui:row&gt;
       ...
     &lt;/ui:row&gt;
+    &lt;!-- Third update region for updating a row, placed inside HTML table --&gt;
+    &lt;ui:updateRegionRow id="aRow"&gt;
+      &lt;ui:cell&gt;...&lt;/ui:cell&gt;
+      &lt;ui:cell&gt;...&lt;/ui:cell&gt;
+    &lt;/ui:updateRegionRow/&gt;
   &lt;/ui:updateRegionRows&gt;
 &lt;/ui:layout&gt;
 

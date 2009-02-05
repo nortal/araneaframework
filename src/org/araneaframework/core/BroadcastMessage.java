@@ -50,13 +50,15 @@ public abstract class BroadcastMessage implements Message {
    *      org.araneaframework.Component)
    */
   public final void send(Object id, Component component) {
-    component._getComponent().propagate(this);
-    try {
-      if (componentClass == null
-          || componentClass.isAssignableFrom(component.getClass()))
-        this.execute(component);
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
+    if (component != null) {
+      component._getComponent().propagate(this);
+      try {
+        if (componentClass == null
+            || componentClass.isAssignableFrom(component.getClass()))
+          this.execute(component);
+      } catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
     }
   }
 

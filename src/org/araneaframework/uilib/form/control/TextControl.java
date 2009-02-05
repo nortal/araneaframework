@@ -31,7 +31,11 @@ import org.araneaframework.uilib.util.ValidationUtil;
  * 
  */
 public class TextControl extends StringValueControl implements FilteredInputControl {
+
+  private static final long serialVersionUID = 1L;
+
   private InputFilter inputFilter;
+
   protected TextType textType = TextType.TEXT;
   
   /**
@@ -90,7 +94,17 @@ public class TextControl extends StringValueControl implements FilteredInputCont
   public void setTextType(TextType textType) {
     this.textType = textType;
   }
-  
+
+  /**
+   * Returns the type of this <code>TextControl</code>.
+   * 
+   * @return the <code>TextType</code> of this <code>TextControl</code>.
+   * @since 1.2.1
+   */
+  public TextType getTextType() {
+    return this.textType;
+  }
+
   /** @since 1.0.11 */
   public InputFilter getInputFilter() {
     return inputFilter;
@@ -158,7 +172,11 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @author <a href="mailto:olegm@webmedia.ee">Oleg Mürk</a>
    */
   public class ViewModel extends StringValueControl.ViewModel {
+
+    private static final long serialVersionUID = 1L;
+
     protected String textType;
+
     protected InputFilter inputFilter;
     
     protected ViewModel() {

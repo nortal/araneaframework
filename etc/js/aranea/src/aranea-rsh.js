@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 /**
  * Initialization scripts for using Really Simple History (http://code.google.com/p/reallysimplehistory/)
@@ -28,19 +28,19 @@
  * @param historyData RSH managed history data for that hash
  */
 AraneaPage.RSHListener = function(newLocation, historyData) {
-  araneaPage().debug('Detected navigation event ' + newLocation + " history: " + historyData);
+  _ap.debug('Detected navigation event ' + newLocation + " history: " + historyData);
 
   if (newLocation && !newLocation.startsWith("HTTP")) {
     window.dhtmlHistoryListenerRequestedState = newLocation;
     // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
-    araneaPage().event_6(araneaPage().getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
+    _ap.event_6(_ap.getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
   }
 
   window.dhtmlHistory.firstLoad = false;
   window.dhtmlHistory.ignoreLocationChange = false;
 };
 
-/** Initializes history object, overriding default JSON stringifier and default JSON parser. */
+// Initializes history object, overriding default JSON stringifier and default JSON parser.
 window.dhtmlHistory.create({
   toJSON: function(o) {
     return Object.toJSON(o);
@@ -50,4 +50,7 @@ window.dhtmlHistory.create({
   }
 });
 
-window.dhtmlHistory.initialize(AraneaPage.RSHListener);
+document.observe('dom:loaded', function() {
+  window.dhtmlHistory.initialize();
+  window.dhtmlHistory.addListener(AraneaPage.RSHListener);
+});

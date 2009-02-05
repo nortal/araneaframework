@@ -429,7 +429,7 @@ Modalbox.Methods = {
 	_removeElements: function () {
 		if(navigator.appVersion.match(/\bMSIE\b/)) {
 			this._prepareIE("", ""); // If set to auto MSIE will show horizontal scrolling
-			window.scrollTo(this.initScrollX, this.initScrollY);
+//			window.scrollTo(this.initScrollX, this.initScrollY);
 		}
 		Element.remove(this.MBoverlay);
 		Element.remove(this.MBwindow);
@@ -602,5 +602,3 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
     this.element.setStyle(d);
   }
 });
-
-window['js/modalbox/modalbox.js'] = true;
