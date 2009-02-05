@@ -406,6 +406,10 @@ var AraneaPage = Class.create({
       }
     }
 
+    if (!systemForm) {
+      systemForm = AraneaPage.findSystemForm();
+    }
+
     if (Object.isFunction(eventParam)) {
       eventParam = eventParam();
     }

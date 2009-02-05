@@ -283,7 +283,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
           + requestStateId + "'.");
     }
 
-    if (requestStateId == null) {
+    if (requestStateId == null || requestStateId.trim().length() == 0) {
       requestStateId = this.lastStateId;
     }
 

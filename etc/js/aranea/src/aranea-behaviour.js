@@ -169,8 +169,11 @@ Object.extend(Aranea.Behaviour, {
     url.push(form.araThreadServiceId.value);
     url.push("&araServiceActionPath=");
     url.push(name);
-    url.push("&araServiceActionHandler=autocomplete&araClientStateId=");
-    url.push(form.araClientStateId.value);
+    url.push("&araServiceActionHandler=autocomplete");
+    if (form.araClientStateId) {
+      url.push("&araClientStateId=");
+      url.push(form.araClientStateId.value);
+    }
     return url.join('');
   },
 
