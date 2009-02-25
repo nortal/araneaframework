@@ -23,7 +23,7 @@
                 <ui:label />
               </ui:cell>
 
-              <ui:cell styleClass="inpt">
+              <ui:cell styleClass="data">
                 <ui:automaticFormElement />
               </ui:cell>
             </ui:formElement>
