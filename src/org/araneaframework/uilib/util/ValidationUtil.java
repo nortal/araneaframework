@@ -53,7 +53,7 @@ public abstract class ValidationUtil {
 
     for (int i = 0; tokenizer.hasMoreTokens(); i++) {
       if (useJoda) {
-        result = parseJoda(tokenizer.nextToken(), dateTimeString);
+        result = JodaDateUtil.parseJoda(tokenizer.nextToken(), dateTimeString);
       } else {
         result = parseJDK(tokenizer.nextToken(), dateTimeString);
       }
@@ -110,42 +110,6 @@ public abstract class ValidationUtil {
     } catch (ClassNotFoundException e) {
       return false;
     }
-  }
-
-  protected static ParsedDate parseJoda(String pattern, String value) {
-    if (log.isTraceEnabled()) {
-      log.trace("Using Joda with pattern '" + pattern + "' to parse date '" + value + "'.");
-    }
-
-    if (value.trim().length() == pattern.length()) {
-      try {
-        org.joda.time.DateTime date = org.joda.time.format.DateTimeFormat.forPattern(pattern).parseDateTime(value);
-
-        if (date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
-          // The DateTime.toDate() does not always return the exact date in a JDK
-          // Date object. (Note that it is NOT a Joda Date API bug!) Therefore we
-          // copy fields one by one.
-          Calendar cal = Calendar.getInstance();
-          cal.setLenient(false);
-          cal.set(Calendar.YEAR, date.year().get());
-          cal.set(Calendar.MONTH, date.monthOfYear().get() - 1);
-          cal.set(Calendar.DAY_OF_MONTH, date.dayOfMonth().get());
-          cal.set(Calendar.HOUR, date.hourOfDay().get());
-          cal.set(Calendar.MINUTE, date.minuteOfHour().get());
-          cal.set(Calendar.SECOND, date.secondOfMinute().get());
-          cal.set(Calendar.MILLISECOND, date.millisOfSecond().get());
-
-          if (log.isTraceEnabled()) {
-            String text = org.joda.time.format.DateTimeFormat.forPattern(pattern).print(date);
-            log.trace("Parsed Joda date '" + text + "'; JDK Date version: '"
-                + cal.getTime() + "'.");
-          }
-
-          return new ParsedDate(cal.getTime(), pattern);
-        }
-      } catch (Exception e) {}
-    }
-    return null;
   }
 
   public static class ParsedDate {
