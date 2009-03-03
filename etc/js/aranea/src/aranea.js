@@ -55,9 +55,6 @@ var AraneaStore = Class.create({
 var AraneaEventStore = Class.create(AraneaStore, {
 
   processEvent: function(event) {
-    _ap.getLogger().trace('Starting to process event: ' +
-        Object.inspect(event));
-
     if (Object.isFunction(event)) {
       event();
     } else {
@@ -106,8 +103,14 @@ var AraneaPage = Class.create({
     return url;
   },
 
+  // Enables/disables the effect of "focusedFormElementName" and "focusableElements":
+  autofocus: true,
+
   // To monitor focused element and to make it focused after content updating by Ajax. (Since 1.2)
   focusedFormElementName: null,
+
+  // The elements that will be observed for tracking focus:
+  focusableElements: "input, select, textarea, button",
 
   /* Indicates whether the page is completely loaded or not. Page is considered to
    * be loaded when all system onload events have completed execution. */
@@ -342,6 +345,8 @@ var AraneaPage = Class.create({
       return false;
     }
 
+    this.setLoaded(false);
+
     var systemForm = $(element).ancestors().find(function(element) {
       return element.tagName.toLowerCase() == 'form' && element.hasAttribute('arn-systemForm');
     });
@@ -351,10 +356,9 @@ var AraneaPage = Class.create({
     if (preCondition) {
       var f = new Function('element', preCondition);
       if (!f(element)) {
-        f = null;
+  	    this.setLoaded(true);
         return false;
       }
-      f = null;
       preCondition = null;
     }
 
@@ -658,22 +662,29 @@ Object.extend(AraneaPage, {
     return _ap.getServletURL() + '/fileimporter/' + filename;
   },
 
-  //Page initialization function, should be called upon page load.
+  /**
+   * Page initialization function, should be called upon page load.
+   */
   init: function() {
+    _ap.debug("Executing AraneaPage.init()");
     _ap.addSystemLoadEvent(Aranea.Behaviour.apply);
 
-  // Monitor the currently focused element for Ajax page update (since 1.2)
-  $$("input, select, textarea, button").each(function (formElement) {
-      formElement.observe("focus", function(event) {
-        _ap.focusedFormElementName = event.element().name;
-        _ap.debug("Focused: " + _ap.focusedFormElementName);
+    // Monitor the currently focused element for Ajax page update (since 1.2)
+    if (_ap.autofocus) {
+      $$(_ap.focusableElements).each(function (formElement) {
+          formElement.observe("focus", function(event) {
+            _ap.focusedFormElementName = event.element().name;
+            _ap.debug("Focused: " + _ap.focusedFormElementName);
+          });
       });
-  });
-
+    }
   },
 
-//Page deinitialization function, should be called upon page unload.
+  /**
+   * Page deinitialization function, should be called upon page unload.
+   */
   deinit: function() {
+    _ap.debug("Executing AraneaPage.deinit()");
     _ap = null;
   },
 
@@ -684,6 +695,7 @@ Object.extend(AraneaPage, {
    * TODO: badly named, should be deprecated in favour of some well-name function
    */
   findSystemForm: function() {
+    _ap.debug("Executing AraneaPage.findSystemForm()");
     var forms = $$('form.aranea-overlay[arn-systemForm="true"]');
     if (!forms || forms.length == 0) {
       forms = $$('form[arn-systemForm="true"]');
@@ -698,6 +710,7 @@ Object.extend(AraneaPage, {
    * "aranea-rsh.js" is also included in the page.
    */
   initRSHURL: function() {
+    _ap.debug("Executing AraneaPage.initRSHURL()");
     if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
 
       window.dhtmlHistory.firstLoad = true;
@@ -797,6 +810,7 @@ Object.extend(AraneaPage, {
    * @since 1.1
    */
   handleRequestException: function(request, exception) {
+    _ap.setLoaded(true);
     throw exception;
   },
 
@@ -1057,10 +1071,10 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
       }
 
       // Set the previously focused form control focused again (since 1.2)
-      if (_ap.focusedFormElementName) {
+      if (_ap.autofocus && _ap.focusedFormElementName) {
         var formElem = $$('[name="' + _ap.focusedFormElementName + '"]').first();
+        _ap.focusedFormElementName = null;
         if (formElem) {
-          _ap.focusedFormElementName = null;
           try {
             formElem.focus();
           } catch (e) {}
@@ -1075,13 +1089,9 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
   onAjaxFailure: function(transport) {
     AraneaPage.hideLoadingMessage();
-    var logmsg = 'Partial rendering: received erroneous response (';
-    logmsg += transport.responseText.length
-    logmsg += ' characters): ';
-    logmsg += transport.status;
-    logmsg += ' ';
-    logmsg += transport.statusText;
-    _ap.debug(logmsg);
+    _ap.debug(['Partial rendering: received erroneous response (',
+               transport.responseText.length, ' characters): ',
+               transport.status, ' ', transport.statusText].join(''));
 
     // Doesn't work quite well for javascript and CSS, but fine for plain HTML
     document.write(transport.responseText);
@@ -1154,9 +1164,12 @@ AraneaPage.DocumentRegionHandler = Class.create({
     var text = new Text(content);
     var length = text.readLine();
     var properties = text.readCharacters(length).evalJSON();
+
     var id = properties.id;
     var mode = properties.mode;
     var domContentString = text.toString();
+
+    _ap.debug("Updating document region '" + id + "'...");
 
     if (mode == 'update') {
       $(id).update(domContentString);
