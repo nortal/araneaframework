@@ -16,11 +16,10 @@
 
 package org.araneaframework.uilib.form.constraint;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.text.Collator;
 import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;

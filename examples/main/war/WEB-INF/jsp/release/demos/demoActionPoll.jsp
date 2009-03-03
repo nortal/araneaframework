@@ -8,36 +8,25 @@
 
   <ui:widgetContext>
 	<script type="text/javascript">
-		var widgetId = '<c:out value="${widgetId}" />';
-
-		var pollAddErrorMessage = function(msg) {
-			var errdiv = $$('div.msg-error').first();
-			errdiv.insert(msg);
-			errdiv.show();
-		};
-
 		var pollingUpdater = function(request, response) {
+
+			// If the region does not exist, quit:
+			if ($$('div.msg-error').length == 0) {
+				clearInterval(intervalActionId);
+			}
+
 			var text = request.responseText;
 			if (text != 'NOTHING') {
-				pollAddErrorMessage(text);
+				$$('div.msg-error').first().insert(text).show();
 			}
 		};
 
 		var pollingAction = function() {
-			// Params:   action(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams)
-			araneaPage().action(null, "pollrequest", widgetId, null, pollingUpdater);
+			// Params:   action(element, actionId, actionTarget, actionParam, actionCallback[, options, sync, extraParams])
+			araneaPage().action(null, "pollrequest", '<c:out value="${widgetId}" />', null, pollingUpdater);
 		};
 
 		var intervalActionId = setInterval(pollingAction, 3000);
-
-		var removePolling = function(event) {
-			clearInterval(intervalActionId);
-			Event.stopObserving(event.element, 'click', removePolling); 
-		}
-
-		$$('a, button, input[type="button"]').each(function(elem) {
-			elem.observe('click', removePolling);
-		});
 	</script>
   </ui:widgetContext>
 </jsp:root>

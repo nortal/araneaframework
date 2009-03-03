@@ -36,7 +36,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long size;
   protected String onChangePrecondition;
-  protected String disabledRenderMode = "disabled";
+  protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
 
   {
     baseStyleClass = "aranea-text";
