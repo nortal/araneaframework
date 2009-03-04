@@ -341,7 +341,9 @@ var AraneaPage = Class.create({
     if (this.isSubmitted() || !this.isLoaded()) {
       return false;
     }
-
+    
+    this.setLoaded(false);
+    
     var systemForm = $(element).ancestors().find(function(element) {
       return element.tagName.toLowerCase() == 'form' && element.hasAttribute('arn-systemForm');
     });
@@ -351,6 +353,7 @@ var AraneaPage = Class.create({
     if (preCondition) {
       var f = new Function('element', preCondition);
       if (!f(element)) {
+    	this.setLoaded(true);
         f = null;
         return false;
       }
@@ -797,6 +800,7 @@ Object.extend(AraneaPage, {
    * @since 1.1
    */
   handleRequestException: function(request, exception) {
+	_ap.setLoaded(true);
     throw exception;
   },
 
