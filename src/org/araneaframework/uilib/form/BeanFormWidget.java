@@ -52,6 +52,8 @@ public class BeanFormWidget<T> extends FormWidget {
    */
   @Deprecated
   public BeanFormWidget(Class<T> beanClass){
+    this.beanClass = beanClass;
+    this.beanMapper = new BeanMapper(beanClass);
     try {
       this.bean = beanClass.newInstance();
       readFromBean();
@@ -60,8 +62,6 @@ public class BeanFormWidget<T> extends FormWidget {
     } catch (IllegalAccessException e) {
       ExceptionUtil.uncheckException(e);
     }
-    this.beanClass = beanClass;
-    this.beanMapper = new BeanMapper(beanClass);
   }
 
   private Data inferDataType(String fieldId, boolean mandatory) {
