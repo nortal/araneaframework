@@ -39,6 +39,7 @@ public class BeanListWidget extends ListWidget {
     Assert.notNullParam(this, beanType, "beanType");
     this.beanType = beanType;
     this.typeHelper = createTypeHelper();
+    this.listStructure = createListStructure();
   }
 
   protected TypeHelper createTypeHelper() {
