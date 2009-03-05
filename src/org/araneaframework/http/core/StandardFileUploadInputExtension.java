@@ -27,6 +27,7 @@ import org.araneaframework.http.FileUploadInputExtension;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFileUploadInputExtension implements FileUploadInputExtension {
+  private static final long serialVersionUID = 1L;
   private Exception uploadException;
   private Map fileItems = new HashMap();
 

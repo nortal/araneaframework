@@ -23,7 +23,7 @@
 	<!-- Includes stand-alone Log4JavaScript logging (it is not included by default). -->
 	<!-- ui:importScripts group="logger"/ -->
 
-	<!-- Imports all Aranea scripts (group="all"). -->
+	<!-- Imports all Aranea scripts (default group="all"). -->
 	<ui:importScripts group="all-devel"/>
 
 	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->

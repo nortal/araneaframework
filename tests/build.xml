@@ -54,6 +54,7 @@
 				fork="yes"
 				haltonfailure="false"
 		>
+			<sysproperty key="user.dir" value="${basedir}"/>
 			<classpath location="${src.build.dir}"/>
 			<classpath location="${tests.build.dir}"/>
 			<classpath refid="classpath"/>

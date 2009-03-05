@@ -177,10 +177,13 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	 * @since 1.0.3
 	 */
 	protected String getTimeSelectScript(String selectId, Integer value, int valueCount) {
-	    StringBuffer sb = new StringBuffer();
-	    sb.append("Aranea.UI.addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
-	    sb.append(value != null ? value.toString():"null").append(");");
-
+	    StringBuffer sb = new StringBuffer("Aranea.UI.addOptions('");
+	    sb.append(selectId);
+	    sb.append("',");
+	    sb.append(String.valueOf(valueCount));
+	    sb.append(",");
+	    sb.append(value != null ? value.toString() : "null");
+	    sb.append(");");
 	    return sb.toString();
 	}
 

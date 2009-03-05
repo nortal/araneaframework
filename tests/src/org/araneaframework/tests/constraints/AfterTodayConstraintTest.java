@@ -31,14 +31,22 @@ import org.araneaframework.uilib.form.data.DateData;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class AfterTodayConstraintTest extends TestCase {
+
   public static class FakeDateControl extends DateControl {
-    public boolean isRead() { return true; }
+
+    private static final long serialVersionUID = 1L;
+
+    public boolean isRead() {
+      return true;
+    }
   }
 
   public static final long DAY = 1000l * 60 * 60 * 24;
 
   private FormWidget form;
+
   private FormElement dateElement;
+
   private ConstraintTestHelper helper;
 
   public void setUp() throws Exception {
@@ -89,11 +97,11 @@ public class AfterTodayConstraintTest extends TestCase {
         true);
   }
   
-  // in case of date being null, after today constraint should invalidate
+  // in case of date being null, after today constraint should validate
   public void testNull() throws Exception {
     helper.testConstraintValidness(
         new AfterTodayConstraint(false), 
         null, 
-        false);
+        true);
   }
 }

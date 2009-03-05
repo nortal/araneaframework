@@ -287,7 +287,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
       requestStateId = this.lastStateId;
     }
 
-    if (!this.versionedStates.containsKey(requestStateId)) {
+    if (this.versionedStates.get(requestStateId) == null) {
       if (log.isWarnEnabled()) {
         log.warn("Received request for restoration of state '" + requestStateId
             + "' which was not found within versioned states.");

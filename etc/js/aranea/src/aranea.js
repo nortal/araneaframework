@@ -24,7 +24,7 @@ var AraneaStore = Class.create({
   _objects: null,
 
   initialize: function() {
-	this._objects = new Array();
+	this._objects = [];
   },
 
   add: function(object) {
@@ -32,7 +32,7 @@ var AraneaStore = Class.create({
   },
 
   clear: function() {
-    this._objects = new Array();
+    this._objects = [];
   },
 
   length: function() {
@@ -47,6 +47,10 @@ var AraneaStore = Class.create({
     var length = this._objects.length;
     for(var i = 0; i < length; i++) {
       f(this._objects[i]);
+      if (length == i + 1) {
+        // The array may grow during this for-each.
+        length = this._objects.length;
+      }
     }
   }
 
@@ -356,7 +360,7 @@ var AraneaPage = Class.create({
     if (preCondition) {
       var f = new Function('element', preCondition);
       if (!f(element)) {
-  	    this.setLoaded(true);
+        this.setLoaded(true);
         return false;
       }
       preCondition = null;
@@ -596,7 +600,11 @@ var AraneaPage = Class.create({
    * server-side must have identical setting for these settings to have effect.
    */
   setBackgroundValidation: function(useAjax) {
-    this.ajaxValidation = new Boolean(useAjax);
+    if (typeof useAjax == 'boolean') {
+      this.ajaxValidation = useAjax;
+    } else {
+      throw new Error("AraneaPage.setBackgroundValidation() accepts only Boolean parameters.");
+    }
   }
 });
 
@@ -610,11 +618,11 @@ Object.extend(AraneaPage, {
    */
   getDefaultKeepAlive: function(topServiceId, threadServiceId, keepAliveKey) {
     return function() {
-	    var url = _ap.getSubmitURL(topServiceId, threadServiceId, 'override');
-	    url += '&' + keepAliveKey + '=true';
+        var url = _ap.getSubmitURL(topServiceId, threadServiceId, 'override');
+        url += '&' + keepAliveKey + '=true';
 
-	    _ap.debug('Sending async service keepalive request to URL "' + url +'"');
-	    var keepAlive = new Ajax.Request(url, { method: 'post' });
+        _ap.debug('Sending async service keepalive request to URL "' + url +'"');
+        var keepAlive = new Ajax.Request(url, { method: 'post' });
     };
   },
 
@@ -747,9 +755,9 @@ Object.extend(AraneaPage, {
   loadingMessageId: 'aranea-loading-message',
 
   /**
-   * @since 1.1
+   * @since 1.2
    */
-  reloadOnNoDocumentRegions: false,
+  reloadOnNoDocumentRegions: true,
 
   /**
    * Add a handler that is invoked for custom data region in updateregions AJAX
@@ -1009,7 +1017,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
     $(systemForm.id).request({
       parameters: this.getAjaxParameters(neededAraTransactionId, ajaxRequestId,
-    		  updateRegions, neededAraClientStateId),
+          updateRegions, neededAraClientStateId),
       onSuccess: this.onAjaxSuccess.curry(ajaxRequestId).bind(this),
       onComplete: this.onAjaxComplete.bind(this),
       onFailure: this.onAjaxFailure.bind(this),
@@ -1020,7 +1028,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
   },
 
   getAjaxParameters: function(neededAraTransactionId, ajaxRequestId,
-		  updateRegions, neededAraClientStateId) {
+      updateRegions, neededAraClientStateId) {
     return {
         araTransactionId: neededAraTransactionId,
         ajaxRequestId: ajaxRequestId,
@@ -1431,15 +1439,3 @@ AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgrou
  * @since 1.0.11
  */
 var Aranea = Aranea ? Aranea : {};
-
-Element.update_super = Element.update;
-Element.update = function(element, content) {
-  AraneaPage.DocumentRegionHandler.doDOMCleanup(element);
-  Element.update_super(element, content);
-};
-
-Element.replace_super = Element.replace;
-Element.replace = function(element, content) {
-  AraneaPage.DocumentRegionHandler.doDOMCleanup(element);
-  Element.replace_super(element, content);
-};

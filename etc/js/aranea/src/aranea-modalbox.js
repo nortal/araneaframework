@@ -65,7 +65,7 @@ Object.extend(Aranea.ModalBox, {
 
       if (Aranea.ModalBox.isCloseOverlay(content)) {
         Aranea.ModalBox.close();
-//      Aranea.ModalBox.reloadPage();
+        Aranea.ModalBox.reloadPage();
       }
     };
     setTimeout(f);

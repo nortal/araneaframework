@@ -28,6 +28,8 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public abstract class BroadcastMessage implements Message {
 
+  private static final long serialVersionUID = 1L;
+
   private Class componentClass;
 
   public BroadcastMessage() {}

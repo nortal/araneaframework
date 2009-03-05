@@ -35,6 +35,8 @@ import org.araneaframework.core.util.ExceptionUtil;
 public abstract class BaseApplicationComponent extends BaseComponent
   implements ApplicationComponent {
 
+  private static final long serialVersionUID = 1L;
+
   //*******************************************************************
   // PROTECTED CLASSES
   //*******************************************************************

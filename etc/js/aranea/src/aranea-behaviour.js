@@ -32,27 +32,20 @@ function setFormElementContext(el) {
   }
 }
 
-function formElementValidationActionCall(el) {
+function formElementValidationActionCall(event) {
   // element serialization here is crucial, otherwise multi-valued controls only submit the most recent value
-  _ap.action(el, 'bgValidate', el.id, null, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, $(el).serialize(true));
+  _ap.action(event.target, 'bgValidate', event.target.id, null,
+      function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null,
+      $(event.target).serialize(true));
 }
 
 /** @since 1.1 */
 function setFormElementValidation(el){
   if (el && !el._formElementValidationBehaviourAttached) {
-    if(!_ap.getBackgroundValidation() && !(el.hasAttribute('arn-bgValidate'))) {
+    if (!_ap.getBackgroundValidation() && $(el).getAttribute('arn-bgValidate') != 'true') {
       return;
     }
-
-    if ((el.hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true')) {
-      return;
-    }
-
-    var elId = el.getAttribute("id");
-    var actionValidate = function(event) {
-      formElementValidationActionCall(el);
-    };
-    Event.observe(elId, 'change', actionValidate);
+    Event.observe(el, 'change', formElementValidationActionCall);
     el._formElementValidationBehaviourAttached = true;
   }
 }
@@ -120,6 +113,7 @@ Object.extend(Aranea.Behaviour, {
    * @since 1.2.1
    */
   apply: function() {
+    _ap.debug("Applying behaviour rules to form elements...");
     $$('a.aranea-link-button', 'a.aranea-link', 'a.aranea-tab-link').each(function(el) {
       setCloningUrl(el);
     });
@@ -148,6 +142,7 @@ Object.extend(Aranea.Behaviour, {
     $$('input.aranea-file-upload').each(function(el) {
       setFormElementContext(el);
     });
+
   },
 
   /**
