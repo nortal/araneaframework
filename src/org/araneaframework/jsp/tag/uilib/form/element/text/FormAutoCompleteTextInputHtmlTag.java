@@ -59,10 +59,8 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEndTag(out, "div");
 
-    StringBuffer acRequestUrl = constructACUrl();
-
     JspUtil.writeStartTag_SS(out, "script type=\"text/javascript\"");
-   	out.write(constructACRegistrationScript(viewModel, acRequestUrl));
+   	out.write(constructACRegistrationScript(viewModel, constructACUrl()));
    	JspUtil.writeEndTag(out, "script");
 
     super.doEndTag(out);
@@ -111,19 +109,14 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 	StringBuffer script = new StringBuffer();
     script.append("_ap.addClientLoadEvent(function() {new Ajax.Autocompleter(\"");
     script.append(getFullFieldId());
-    script.append("\", \"ACdiv.");
-    script.append(getFullFieldId());
-    script.append("\", ");
-    script.append(acRequestUrl);
-    script.append("\", {");
-    
-    // Autocompleter options
-    for (Iterator i = getOptionMap().entrySet().iterator(); i.hasNext(); ) {
-    	Map.Entry entry = (Map.Entry) i.next();
-    	script.append((String)entry.getKey());
-    	script.append(":");
-    	script.append((String)entry.getValue());
-    	if (i.hasNext()) script.append(",");
+    script.append("', ");
+
+    if (viewModel.isOnChangeEventRegistered()) {
+      script.append("'");
+      script.append(OnChangeEventListener.ON_CHANGE_EVENT);
+      script.append("', ");
+    } else {
+      script.append("null, null, ");
     }
 
     script.append("});});");
