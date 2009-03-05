@@ -20,13 +20,11 @@
  * @since 1.1
  */
 
-Aranea.ModalBox = Class.create();
-
-Object.extend(Aranea.ModalBox, {
+Aranea.ModalBox = {
 
   ModalBoxFileName: 'js/modalbox/modalbox.js',
 
-  Options: null,
+  Options: {},
 
   getRequestURL: function() {
     var url = null;
@@ -59,13 +57,13 @@ Object.extend(Aranea.ModalBox, {
 
   afterLoad: function(content) {
     var f = function() {
-      AraneaPage.findSystemForm();
-      _ap.addSystemLoadEvent(AraneaPage.init);
-      _ap.onload();
-
       if (Aranea.ModalBox.isCloseOverlay(content)) {
         Aranea.ModalBox.close();
         Aranea.ModalBox.reloadPage();
+      } else {
+        AraneaPage.findSystemForm();
+        _ap.addSystemLoadEvent(AraneaPage.init);
+        _ap.onload();
       }
     };
     setTimeout(f);
@@ -83,8 +81,7 @@ Object.extend(Aranea.ModalBox, {
   },
 
   reloadPage: function() {
-    AraneaPage.findSystemForm();
-    var systemForm = _ap.getSystemForm();
+    var systemForm = AraneaPage.findSystemForm();
 
     if (systemForm.araTransactionId) {
       systemForm.araTransactionId.value = 'inconsistent';
@@ -98,4 +95,4 @@ Object.extend(Aranea.ModalBox, {
     return new DefaultAraneaSubmitter().event_4(systemForm);
   }
 
-});
+}
