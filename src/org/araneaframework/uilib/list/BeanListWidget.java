@@ -16,14 +16,12 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;
 
 /**
  * ListWidget that is aware of field types according to the Bean type.
  * 
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
- * 
  * @see ListWidget
  */
 public class BeanListWidget<T> extends ListWidget<T> {
@@ -35,27 +33,21 @@ public class BeanListWidget<T> extends ListWidget<T> {
   /**
    * Constructs a {@link BeanListWidget} for specified Bean type.
    * 
-   * @param beanType
-   *          list element type.
+   * @param beanType list element type.
    */
   public BeanListWidget(Class<T> beanType) {
-    super();
     Assert.notNullParam(this, beanType, "beanType");
     this.beanType = beanType;
+    this.typeHelper = createTypeHelper();
+    this.listStructure = createListStructure();
   }
 
-  @Override
   protected TypeHelper createTypeHelper() {
-    return new TypeHelper() {
-
-      @Override
-      public Class<?> getFieldType(String fieldId) {
-        Class<?> result = super.getFieldType(fieldId);
-        if (result == null) {
-          result = BeanUtil.getFieldType(beanType, fieldId);
-        }
-        return result;
-      }
-    };
+    // beanType == null when the constructor of the parent class is executed.
+    if (this.beanType == null) {
+      return super.createTypeHelper();
+    } else {
+      return new BeanTypeHelper(this.beanType);
+    }
   }
 }
