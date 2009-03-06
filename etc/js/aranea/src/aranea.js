@@ -699,8 +699,8 @@ Object.extend(AraneaPage, {
   /**
    * Searches for system form in HTML page and registers it in the current
    * AraneaPage object as active systemForm.
+   * @return The active system form that was found. 
    * @since 1.1
-   * TODO: badly named, should be deprecated in favour of some well-name function
    */
   findSystemForm: function() {
     _ap.debug("Executing AraneaPage.findSystemForm()");
