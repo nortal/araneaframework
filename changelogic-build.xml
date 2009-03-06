@@ -272,19 +272,6 @@ ALL YOUR CHANGES WILL BE LOST ON NEXT AUTOMATIC UPDATE.
 		/>
 	</target>
 
-	<target
-		name="checkout_checkpoint"
-		description="Check out a checkpoint. You will be prompted for the checkpoint string."
-		depends="init"
-	>
-		<property name="checkout_checkpoint.checkpoint" value=""/>
-		<property name="checkout.dir" value=".."/>
-		<checkoutcheckpoint
-			revision="${checkout_checkpoint.checkpoint}"
-			checkoutDir="${checkout.dir}"
-		/>
-	</target>
-
 	<target 
 		name="integrate" 
 		description="Start integration of a change. You will be prompted for the change number."
