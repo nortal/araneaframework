@@ -25,6 +25,7 @@ Bugfixes
     BeanUtil.isWritable returns false when the setter is actually available     | See #727
     Modalbox design problems with IE                                            | See #729
     Autocompleter and scrolling ability of search results                       | See #730
+    ListQuery not serializable with BeanListWidget                              | See #757
 
 ---------------------------------------------------------------------------------------------
 2008.12.02    | Aranea 1.2 RC2
