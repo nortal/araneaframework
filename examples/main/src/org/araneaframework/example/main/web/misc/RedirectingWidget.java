@@ -19,36 +19,38 @@ package org.araneaframework.example.main.web.misc;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.http.HttpOutputData;
-
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class RedirectingWidget extends TemplateBaseWidget {
 
-	  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   public void init() throws Exception {
     setViewSelector("misc/redirect");
-    addEventListener("redirect", new ProxyEventListener(this));
-	}
-  
+  }
+
   public void handleEventRedirect() throws Exception {
     ((HttpOutputData) getOutputData()).sendRedirect("http://www.araneaframework.org");
   }
   
   public void handleEventMountAndRedirect() throws Exception {
-    String url = getMountCtx().mount(getInputData(), "/mount/test", new MountContext.MessageFactory() {
-      public Message buildMessage(String url, String suffix, InputData input, OutputData output) {
-        return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");
-      }
-    });
-    
+    String url = getMountCtx().mount(getInputData(), "/mount/test",
+        new MountContext.MessageFactory() {
+
+          private static final long serialVersionUID = 1L;
+
+          public Message buildMessage(String url, String suffix,
+              InputData input, OutputData output) {
+            return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");
+          }
+        });
+
     ((HttpOutputData) getOutputData()).sendRedirect(url);
   }
 }

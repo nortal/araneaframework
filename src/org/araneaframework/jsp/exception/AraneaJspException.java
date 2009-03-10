@@ -21,22 +21,25 @@ import javax.servlet.jsp.JspException;
 /**
  * Exception thrown by Aranea JSP tags.
  * 
- * @author Oleg Mürk 
+ * @author Oleg Mürk
  */
 public class AraneaJspException extends JspException {
-	public AraneaJspException() {
-		super();
-	}
-	
-	public AraneaJspException(String message) {
-		super(message);
-	}
-	
-	public AraneaJspException(Throwable cause) {
-		super(cause);
-	}
-	
-	public AraneaJspException(String message, Throwable cause) {
-		super(message, cause);
-	}
+
+  private static final long serialVersionUID = 1L;
+
+  public AraneaJspException() {
+    super();
+  }
+
+  public AraneaJspException(String message) {
+    super(message);
+  }
+
+  public AraneaJspException(Throwable cause) {
+    super(cause);
+  }
+
+  public AraneaJspException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

@@ -17,13 +17,19 @@
 package org.araneaframework.jsp.exception;
 
 /**
- * Exception thrown when some tag that expects to operate on some {@link org.araneaframework.uilib.form.FormElement} 
- * does not know {@link org.araneaframework.uilib.form.FormElement} id, and cannot deduce it from pagecontext either. 
+ * Exception thrown when some tag that expects to operate on some
+ * {@link org.araneaframework.uilib.form.FormElement} does not know
+ * {@link org.araneaframework.uilib.form.FormElement} id, and cannot deduce it
+ * from pagecontext either.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class MissingFormElementIdAraneaJspException extends AraneaJspException {
-	public MissingFormElementIdAraneaJspException(Object object) {
-		super("You must set the 'id' either directly or using 'ui:formElement' for tag '" + object.getClass() + "'");
-	}
+
+  private static final long serialVersionUID = 1L;
+
+  public MissingFormElementIdAraneaJspException(Object object) {
+    super("You must set the 'id' either directly or using 'ui:formElement' "
+        + "for tag '" + object.getClass() + "'");
+  }
 }

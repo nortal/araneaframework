@@ -45,6 +45,7 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
+  private static final long serialVersionUID = 1L;
   private static final Log log = LogFactory.getLog(BaseAraneaDispatcherServlet.class);
   private ServletServiceAdapterComponent serviceAdapter;
   

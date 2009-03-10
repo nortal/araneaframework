@@ -26,6 +26,8 @@ import org.araneaframework.Environment;
  */
 public abstract class BaseEnvironment implements Environment {
 
+  private static final long serialVersionUID = 1L;
+
   public Object requireEntry(Object key) throws NoSuchEnvironmentEntryException {
     Assert.notNullParam(this, key, "key");
 

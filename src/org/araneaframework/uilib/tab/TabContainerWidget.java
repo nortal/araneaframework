@@ -59,6 +59,8 @@ public class TabContainerWidget extends BaseApplicationWidget
 
   protected TabWidget selected;
 
+  protected String defaultSelectedTabId;
+
   /**
    * This is just to make sure that we do not initialize ANY tabs after
    * destroying process has already begun.
@@ -153,6 +155,31 @@ public class TabContainerWidget extends BaseApplicationWidget
     return Collections.unmodifiableMap(this.tabs);
   }
 
+  /**
+   * Provides the current default ID of a tab that will be automatically
+   * selected once added. A <code>null</code> value means that no default ID is
+   * used.
+   * 
+   * @return The ID of the tab that will be auomatically selected.
+   * @since 1.2.1
+   */
+  public String getDefaultSelectedTabId() {
+    return this.defaultSelectedTabId;
+  }
+
+  /**
+   * Sets a default ID of a tab that will be automatically selected once added.
+   * A <code>null</code> value means that no default ID is used. Should be
+   * called before tabs are added.
+   * 
+   * @param defaultSelectedTabId
+   * @see #selectTab(String)
+   * @since 1.2.1
+   */
+  public void setDefaultSelectedTabId(String defaultSelectedTabId) {
+    this.defaultSelectedTabId = defaultSelectedTabId;
+  }
+
   /*****************************************************************************
    * TabRegistrationContext IMPL
    ****************************************************************************/
@@ -160,12 +187,17 @@ public class TabContainerWidget extends BaseApplicationWidget
    * @see org.araneaframework.uilib.tab.TabRegistrationContext#registerTab(org.araneaframework.uilib.tab.TabWidget)
    */
   public TabWidget registerTab(TabWidget tabWidget) {
-    boolean first = this.tabs.isEmpty();
-    TabWidget result = (TabWidget) this.tabs.put(tabWidget.getScope().getId()
-        .toString(), tabWidget);
-    if (first && !this.dying) {
-      selectFirst();
+    String id = tabWidget.getScope().getId().toString();
+    TabWidget result = (TabWidget) this.tabs.put(id, tabWidget);
+
+    if (!this.dying) {
+      if (this.tabs.size() == 1) {
+        selectFirst();
+      } else if (this.defaultSelectedTabId != null && this.tabs.containsKey(this.defaultSelectedTabId)) {
+        selectTab(this.defaultSelectedTabId);
+      }
     }
+
     return result;
   }
 
@@ -173,12 +205,16 @@ public class TabContainerWidget extends BaseApplicationWidget
    * @see org.araneaframework.uilib.tab.TabRegistrationContext#unregisterTab(org.araneaframework.uilib.tab.TabWidget)
    */
   public TabWidget unregisterTab(TabWidget tabWidget) {
-    TabWidget result = (TabWidget) this.tabs.remove(tabWidget.getScope()
-        .getId().toString());
+    String id = tabWidget.getScope().getId().toString();
+    TabWidget result = (TabWidget) this.tabs.remove(id);
     if (result == this.selected) {
       this.selected = null;
       if (!this.dying) {
-        selectFirst();
+        if (this.defaultSelectedTabId == null) {
+          selectFirst();
+        } else if (this.tabs.containsKey(this.defaultSelectedTabId)) {
+          selectTab(this.defaultSelectedTabId);
+        }
       }
     }
     return result;

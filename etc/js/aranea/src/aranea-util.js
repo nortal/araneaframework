@@ -33,20 +33,22 @@ function createNamedElement(type, name) {
 }
 
 function getElementByIdORName(str) {
-  var r = document.getElementById(str);
-  if (r)
-    return r;
-  var elements = document.getElementsByName(str);
-  // if more or less than one match, do not return anything
-  if (elements.length == 1)
-    r = elements[0];
+  var r = $(str);
+  if (!r) {
+    var elements = $$('[name="' + str + '"]');
+    // if more or less than one match, do not return anything
+    if (elements.length == 1) {
+      r = elements.first();
+      elements = null;
+    }
+  }
   return r;
 }
 
 function setElementAttr(elementStr, attrName, attrValue) {
   var el = getElementByIdORName(elementStr);
   if (el) {
-    el.setAttribute(attrName, attrValue);
+    el.writeAttribute(attrName, attrValue);
   }
 }
 

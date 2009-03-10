@@ -52,10 +52,10 @@ Object.extend(Aranea.UI, {
    * @since 1.1
    */
   fillTimeText: function(el, hourSelect, minuteSelect) {
-    if ($(hourSelect).value=='' && $(minuteSelect).value=='') {
-      $(el).value = '';
+    if ($(hourSelect).present() || $(minuteSelect).present()) {
+      $(el).value = $F(hourSelect) + ':' + $F(minuteSelect);
     } else {
-      $(el).value=$(hourSelect).value+':'+$(minuteSelect).value;
+      $(el).clear();
     }
   },
 
@@ -63,13 +63,11 @@ Object.extend(Aranea.UI, {
    * @since 1.1
    */
   fillTimeSelect: function(timeInput, hourSelect, minuteSelect) {
-    timestr = $(timeInput).value;
+    timestr = $F(timeInput).strip();
     separatorPos = timestr.indexOf(':');
     hours = timestr.substr(0, separatorPos);
-    hourValue = hours.length==1 ? '0' + hours : hours;
-    minuteValue = timestr.substr(separatorPos + 1, $(timeInput).value.length);
-    $(hourSelect).value = hourValue;
-    $(minuteSelect).value = minuteValue;
+    $(hourSelect).value = hours.length == 1 ? '0' + hours : hours;
+    $(minuteSelect).value = timestr.substr(separatorPos + 1);
   },
 
   /**
@@ -86,7 +84,7 @@ Object.extend(Aranea.UI, {
       var opt = new Element('option', { 'value': value }).update(value);
 
       if (i == x) {
-        opt.setAttribute('selected', 'selected');
+        opt.writeAttribute('selected', 'selected');
       }
       select.appendChild(opt);
     }
@@ -221,7 +219,7 @@ Object.extend(Aranea.UI, {
 
   	for (var i = 0; i < arrFormElems.length; i++) {
   	  var elem = arrFormElems[i];
-  	  if (elem.getAttribute('type') == 'checkbox' && elem.id != null
+  	  if (elem.readAttribute('type') == 'checkbox' && elem.id != null
   	        && elem.id.startsWith(chkSelectAll.id)) {
   	      elem.checked = chkSelectAll.checked;
   	  }
@@ -253,7 +251,7 @@ Object.extend(Aranea.UI, {
   	for (var i = 0; i < arrFormElems.length; i++) {
   		var elem = arrFormElems[i];
 
-  		if (elem.getAttribute('type') == 'checkbox'
+  		if (elem.readAttribute('type') == 'checkbox'
   				&& elem.id != null && elem.id != prefix
   				&& elem.id.startsWith(prefix)) {
 

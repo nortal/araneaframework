@@ -21,10 +21,8 @@
 
 var AraneaStore = Class.create({
 
-  _objects: null,
-
   initialize: function() {
-	this._objects = new Array();
+	this._objects = [];
   },
 
   add: function(object) {
@@ -32,7 +30,7 @@ var AraneaStore = Class.create({
   },
 
   clear: function() {
-    this._objects = new Array();
+    this._objects = [];
   },
 
   length: function() {
@@ -47,6 +45,10 @@ var AraneaStore = Class.create({
     var length = this._objects.length;
     for(var i = 0; i < length; i++) {
       f(this._objects[i]);
+      if (length == i + 1) {
+        // The array may grow during this for-each.
+        length = this._objects.length;
+      }
     }
   }
 
@@ -55,9 +57,6 @@ var AraneaStore = Class.create({
 var AraneaEventStore = Class.create(AraneaStore, {
 
   processEvent: function(event) {
-    _ap.getLogger().trace('Starting to process event: ' +
-        Object.inspect(event));
-
     if (Object.isFunction(event)) {
       event();
     } else {
@@ -106,8 +105,14 @@ var AraneaPage = Class.create({
     return url;
   },
 
+  // Enables/disables the effect of "focusedFormElementName" and "focusableElements":
+  autofocus: true,
+
   // To monitor focused element and to make it focused after content updating by Ajax. (Since 1.2)
   focusedFormElementName: null,
+
+  // The elements that will be observed for tracking focus:
+  focusableElements: "input, select, textarea, button",
 
   /* Indicates whether the page is completely loaded or not. Page is considered to
    * be loaded when all system onload events have completed execution. */
@@ -212,7 +217,7 @@ var AraneaPage = Class.create({
     * Sets the active system form in this AraneaPage.
     * @since 1.1 */
   setSystemForm: function(_systemForm) {
-    this.debug('AraneaPage: Setting systemform to: ' + _systemForm);
+    this.debug('AraneaPage: Setting systemform to: ' + Object.inspect(_systemForm));
     this.systemForm = _systemForm;
   },
 
@@ -224,8 +229,8 @@ var AraneaPage = Class.create({
     }.bind(this));
   },
 
-  getAttribute: function(element, attribute) {
-    return String.interpret(element.getAttribute(attribute));
+  readAttribute: function(element, attribute) {
+    return String.interpret(element.readAttribute(attribute));
   },
 
   /**
@@ -233,7 +238,7 @@ var AraneaPage = Class.create({
    * @since 1.1
    */
   getEventTarget: function(element) {
-    return this.getAttribute(element, 'arn-trgtwdgt');
+    return this.readAttribute(element, 'arn-trgtwdgt');
   },
 
   /**
@@ -241,26 +246,26 @@ var AraneaPage = Class.create({
    * @since 1.1
    */
   getEventId: function(element) {
-    return this.getAttribute(element, 'arn-evntId');
+    return this.readAttribute(element, 'arn-evntId');
   },
 
   /** Returns event parameter that should be sent to server when event(element) is called.
     * @since 1.1 */
   getEventParam: function(element) {
-    return this.getAttribute(element, 'arn-evntPar');
+    return this.readAttribute(element, 'arn-evntPar');
   },
 
   /** Returns update regions that should be sent to server when event(element) is called.
     * @since 1.1 */
   getEventUpdateRegions: function(element) {
-    return this.getAttribute(element, 'arn-updrgns');
+    return this.readAttribute(element, 'arn-updrgns');
   },
 
   /** Returns closure that should be evaluated when event(element) is called and
     * needs to decide whether server-side event invocation is needed.
     * @since 1.1 */
   getEventPreCondition: function(element) {
-    return this.getAttribute(element, 'arn-evntCond');
+    return this.readAttribute(element, 'arn-evntCond');
   },
 
   /** Timer that executes keepalive calls, if any. */
@@ -342,6 +347,8 @@ var AraneaPage = Class.create({
       return false;
     }
 
+    this.setLoaded(false);
+
     var systemForm = $(element).ancestors().find(function(element) {
       return element.tagName.toLowerCase() == 'form' && element.hasAttribute('arn-systemForm');
     });
@@ -351,10 +358,9 @@ var AraneaPage = Class.create({
     if (preCondition) {
       var f = new Function('element', preCondition);
       if (!f(element)) {
-        f = null;
+        this.setLoaded(true);
         return false;
       }
-      f = null;
       preCondition = null;
     }
 
@@ -398,10 +404,13 @@ var AraneaPage = Class.create({
       return false;
     }
 
+    this.setLoaded(false);
+
     if (eventPrecondition) {
       var f = new Function(eventPrecondition);
       if (!f()) {
         f = null;
+        this.setLoaded(true);
         return false;
       }
     }
@@ -592,7 +601,11 @@ var AraneaPage = Class.create({
    * server-side must have identical setting for these settings to have effect.
    */
   setBackgroundValidation: function(useAjax) {
-    this.ajaxValidation = new Boolean(useAjax);
+    if (typeof useAjax == 'boolean') {
+      this.ajaxValidation = useAjax;
+    } else {
+      throw("AraneaPage.setBackgroundValidation() accepts only Boolean parameters.");
+    }
   }
 });
 
@@ -606,11 +619,11 @@ Object.extend(AraneaPage, {
    */
   getDefaultKeepAlive: function(topServiceId, threadServiceId, keepAliveKey) {
     return function() {
-	    var url = _ap.getSubmitURL(topServiceId, threadServiceId, 'override');
-	    url += '&' + keepAliveKey + '=true';
+        var url = _ap.getSubmitURL(topServiceId, threadServiceId, 'override');
+        url += '&' + keepAliveKey + '=true';
 
-	    _ap.debug('Sending async service keepalive request to URL "' + url +'"');
-	    var keepAlive = new Ajax.Request(url, { method: 'post' });
+        _ap.debug('Sending async service keepalive request to URL "' + url +'"');
+        var keepAlive = new Ajax.Request(url, { method: 'post' });
     };
   },
 
@@ -658,32 +671,40 @@ Object.extend(AraneaPage, {
     return _ap.getServletURL() + '/fileimporter/' + filename;
   },
 
-  //Page initialization function, should be called upon page load.
+  /**
+   * Page initialization function, should be called upon page load.
+   */
   init: function() {
+    _ap.debug("Executing AraneaPage.init()");
     _ap.addSystemLoadEvent(Aranea.Behaviour.apply);
 
-  // Monitor the currently focused element for Ajax page update (since 1.2)
-  $$("input, select, textarea, button").each(function (formElement) {
-      formElement.observe("focus", function(event) {
-        _ap.focusedFormElementName = event.element().name;
-        _ap.debug("Focused: " + _ap.focusedFormElementName);
+    // Monitor the currently focused element for Ajax page update (since 1.2)
+    if (_ap.autofocus) {
+      $$(_ap.focusableElements).each(function (formElement) {
+          formElement.observe("focus", function(event) {
+            _ap.focusedFormElementName = event.element().name;
+            _ap.debug("Focused: " + _ap.focusedFormElementName);
+          });
       });
-  });
-
+    }
   },
 
-//Page deinitialization function, should be called upon page unload.
+  /**
+   * Page deinitialization function, should be called upon page unload.
+   */
   deinit: function() {
+    _ap.debug("Executing AraneaPage.deinit()");
     _ap = null;
   },
 
   /**
    * Searches for system form in HTML page and registers it in the current
    * AraneaPage object as active systemForm.
+   * @return The active system form that was found. 
    * @since 1.1
-   * TODO: badly named, should be deprecated in favour of some well-name function
    */
   findSystemForm: function() {
+    _ap.debug("Executing AraneaPage.findSystemForm()");
     var forms = $$('form.aranea-overlay[arn-systemForm="true"]');
     if (!forms || forms.length == 0) {
       forms = $$('form[arn-systemForm="true"]');
@@ -698,6 +719,7 @@ Object.extend(AraneaPage, {
    * "aranea-rsh.js" is also included in the page.
    */
   initRSHURL: function() {
+    _ap.debug("Executing AraneaPage.initRSHURL()");
     if (window.dhtmlHistory && _ap.getSystemForm().araClientStateId) {
 
       window.dhtmlHistory.firstLoad = true;
@@ -734,9 +756,9 @@ Object.extend(AraneaPage, {
   loadingMessageId: 'aranea-loading-message',
 
   /**
-   * @since 1.1
+   * @since 1.2
    */
-  reloadOnNoDocumentRegions: false,
+  reloadOnNoDocumentRegions: true,
 
   /**
    * Add a handler that is invoked for custom data region in updateregions AJAX
@@ -797,6 +819,7 @@ Object.extend(AraneaPage, {
    * @since 1.1
    */
   handleRequestException: function(request, exception) {
+    _ap.setLoaded(true);
     throw exception;
   },
 
@@ -919,6 +942,7 @@ var DefaultAraneaSubmitter = Class.create({
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
   event: function(element) {
+    element = $(element);
     if (!element) {
       return true;
     }
@@ -929,7 +953,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
     this.systemForm.araWidgetEventHandler.value = this.eventId;
     this.systemForm.araWidgetEventParameter.value = this.eventParam;
 
-    Aranea.ModalBox.show({ params: this.systemForm.serialize(true) });
+    Aranea.ModalBox.update({ params: this.systemForm.serialize(true) });
     return false;
   },
 
@@ -945,7 +969,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
       window.tinyMCE.triggerSave();
     }
 
-    Aranea.ModalBox.show({ params: systemForm.serialize(true) });
+    Aranea.ModalBox.update({ params: systemForm.serialize(true) });
     return false;
   }
 
@@ -995,7 +1019,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
     $(systemForm.id).request({
       parameters: this.getAjaxParameters(neededAraTransactionId, ajaxRequestId,
-    		  updateRegions, neededAraClientStateId),
+          updateRegions, neededAraClientStateId),
       onSuccess: this.onAjaxSuccess.curry(ajaxRequestId).bind(this),
       onComplete: this.onAjaxComplete.bind(this),
       onFailure: this.onAjaxFailure.bind(this),
@@ -1006,7 +1030,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
   },
 
   getAjaxParameters: function(neededAraTransactionId, ajaxRequestId,
-		  updateRegions, neededAraClientStateId) {
+      updateRegions, neededAraClientStateId) {
     return {
         araTransactionId: neededAraTransactionId,
         ajaxRequestId: ajaxRequestId,
@@ -1057,10 +1081,10 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
       }
 
       // Set the previously focused form control focused again (since 1.2)
-      if (_ap.focusedFormElementName) {
+      if (_ap.autofocus && _ap.focusedFormElementName) {
         var formElem = $$('[name="' + _ap.focusedFormElementName + '"]').first();
+        _ap.focusedFormElementName = null;
         if (formElem) {
-          _ap.focusedFormElementName = null;
           try {
             formElem.focus();
           } catch (e) {}
@@ -1075,13 +1099,9 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
   onAjaxFailure: function(transport) {
     AraneaPage.hideLoadingMessage();
-    var logmsg = 'Partial rendering: received erroneous response (';
-    logmsg += transport.responseText.length
-    logmsg += ' characters): ';
-    logmsg += transport.status;
-    logmsg += ' ';
-    logmsg += transport.statusText;
-    _ap.debug(logmsg);
+    _ap.debug(['Partial rendering: received erroneous response (',
+               transport.responseText.length, ' characters): ',
+               transport.status, ' ', transport.statusText].join(''));
 
     // Doesn't work quite well for javascript and CSS, but fine for plain HTML
     document.write(transport.responseText);
@@ -1154,9 +1174,12 @@ AraneaPage.DocumentRegionHandler = Class.create({
     var text = new Text(content);
     var length = text.readLine();
     var properties = text.readCharacters(length).evalJSON();
+
     var id = properties.id;
     var mode = properties.mode;
     var domContentString = text.toString();
+
+    _ap.debug("Updating document region '" + id + "'...");
 
     if (mode == 'update') {
       $(id).update(domContentString);
@@ -1242,7 +1265,7 @@ AraneaPage.MessageRegionHandler = Class.create({
     $$(this.regionClass).each((function(region) {
       var messages = null;
       if (region.hasAttribute(this.regionTypeAttribute)) {
-        var type = region.getAttribute(this.regionTypeAttribute);
+        var type = region.readAttribute(this.regionTypeAttribute);
         if (messagesByType[type]) {
           messages = messagesByType[type];
           if (messages.size() > 0) {
@@ -1418,15 +1441,3 @@ AraneaPage.addRegionHandler('aranea-formvalidation', new AraneaPage.FormBackgrou
  * @since 1.0.11
  */
 var Aranea = Aranea ? Aranea : {};
-
-Element.update_super = Element.update;
-Element.update = function(element, content) {
-  AraneaPage.DocumentRegionHandler.doDOMCleanup(element);
-  Element.update_super(element, content);
-};
-
-Element.replace_super = Element.replace;
-Element.replace = function(element, content) {
-  AraneaPage.DocumentRegionHandler.doDOMCleanup(element);
-  Element.replace_super(element, content);
-};

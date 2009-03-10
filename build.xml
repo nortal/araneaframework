@@ -207,7 +207,7 @@
 		<condition property="suffix" value=".exe" else="">
 			<os family="windows"/>
 		</condition>
-		<chmod file="${basedir}/etc/js/cruncher/js${suffix}" perm="u+x"/>
+		<chmod file="${basedir}/etc/js/cruncher/js${suffix}" perm="u+rx"/>
 		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
 			<arg line="src/aranea.js aranea.js"/>
 		</exec>

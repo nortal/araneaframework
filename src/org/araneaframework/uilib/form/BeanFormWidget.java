@@ -101,6 +101,18 @@ public class BeanFormWidget extends FormWidget {
     return result;
   }
 
+  /**
+   * Retrieves the sub form that is expected to be a <code>BeanFormWidget</code>.
+   * Otherwise similar to {@link FormWidget#getSubFormByFullName(String)}
+   * 
+   * @param fullName The full name of the sub form.
+   * @return The sub form as a <code>BeanFormWidget</code> or <code>null</code>.
+   * @since 1.2.1
+   */
+  public BeanFormWidget getSubBeanFormByFullName(String fullName) {
+    return (BeanFormWidget) super.getSubFormByFullName(fullName);
+  }
+
   public FormElement addBeanElement(String elementName, String labelId,
       Control control, boolean mandatory) {
     return super.addElement(elementName, labelId, control, inferDataType(

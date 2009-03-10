@@ -20,8 +20,10 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class MockExpression implements Expression {
 
-	public Object evaluate(VariableResolver resolver) {
-		throw new UnsupportedOperationException("Evaluating is not supported");
-	}
+  private static final long serialVersionUID = 1L;
+
+  public Object evaluate(VariableResolver resolver) {
+      throw new UnsupportedOperationException("Evaluating is not supported");
+  }
 
 }

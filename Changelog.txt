@@ -1,11 +1,15 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-2009.02.05    | Aranea 1.2.1
+2009.03.10    | Aranea 1.2.1
 
 Features and Improvements
     Add getTextType to TextControl                                              | See #734
     Ability to use other tag than SPAN for update region                        | See #741
     A new tag: <ui:updateRegionRow/>                                            | See #747
+    Specify tab that will be selected by default                                | See #748
+    Seamless validation -- too active for timecontrol with hr/min select        | See #546
+    Handy FlowContext Handler implementations [patch]                           | See 
+    (added RefreshingListsFlowContextHandler and DefaultHandler)                |     #716
 
 Bugfixes
     List filtering problems with regular expressions and SQL escaping           | See #731
@@ -13,6 +17,10 @@ Bugfixes
     aranea.js still depends on Modalbox                                         | See #739
     FormElement.isStateChanged() and distinction between "" and null            | See #744
     BeanMapper.getFieldType broken for collections with generics                | See #745
+    BeanFormWidget should have its own getSubFormByFullName                     | See #750
+    ui:dateTimeInput tag renders its inputs inside a <table> <tr> <td>          | See #749
+    <ui:textareaDisplay/>'s text content must be escaped                        | See #751
+    The onChangeEventListener for TextareaControl is not invoked due to tag     | See #755
 
 Optimization
     Memory leaks with Aranea javascripts (phase 1)                              | See #736

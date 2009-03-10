@@ -27,6 +27,8 @@ import org.araneaframework.InputData;
  */
 public abstract class StandardEventListener implements EventListener {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * This method is marked final. Subclasses should implement
    * {@link #processEvent(Object, String, InputData)}.

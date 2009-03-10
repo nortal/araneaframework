@@ -70,7 +70,7 @@ var AraneaTree = Class.create({
   action: function(element, actionId, scopedActionTarget, actionParam, onComplete, options) {
     var treeNode = this.getSurroundingTreeOrNode(element);
     var tree = this.getSurroundingTree(treeNode);
-    var sync = !tree.hasAttribute('arn-tree-sync') || tree.getAttribute('arn-tree-sync').toLowerCase() != 'false';
+    var sync = !tree.hasAttribute('arn-tree-sync') || tree.readAttribute('arn-tree-sync').toLowerCase() != 'false';
     var fullActionTarget = scopedActionTarget ? treeNode.id + '.' + scopedActionTarget : treeNode.id;
     var actionCallback = this.getUpdateFunction(treeNode.id, onComplete);
     _ap.action(tree, actionId, fullActionTarget, actionParam, actionCallback, options, sync);
