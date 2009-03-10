@@ -21,8 +21,6 @@
 
 var AraneaStore = Class.create({
 
-  _objects: null,
-
   initialize: function() {
 	this._objects = [];
   },
@@ -606,7 +604,7 @@ var AraneaPage = Class.create({
     if (typeof useAjax == 'boolean') {
       this.ajaxValidation = useAjax;
     } else {
-      throw new Error("AraneaPage.setBackgroundValidation() accepts only Boolean parameters.");
+      throw("AraneaPage.setBackgroundValidation() accepts only Boolean parameters.");
     }
   }
 });
@@ -945,7 +943,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
   event: function(element) {
     element = $(element);
-    if (!$(element)) {
+    if (!element) {
       return true;
     }
 
