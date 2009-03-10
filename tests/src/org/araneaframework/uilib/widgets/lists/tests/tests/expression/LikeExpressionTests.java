@@ -38,7 +38,7 @@ public class LikeExpressionTests extends TestCase {
 	private Expression jerry;
 	
 	private Value om;
-	private Value tm;
+	private Value to;
 	
 	private LikeConfiguration config;
 
@@ -48,7 +48,7 @@ public class LikeExpressionTests extends TestCase {
 		this.tom = new MockValueExpression("Tom");
 		this.jerry = new MockValueExpression("Jerry");
 		this.om = new MockValueExpression("om");
-		this.tm = new MockValueExpression("t.m");
+		this.to = new MockValueExpression("to");
 		
 		this.config = new LikeConfiguration();
 	}
@@ -58,7 +58,7 @@ public class LikeExpressionTests extends TestCase {
 		this.tom = null;
 		this.jerry = null;
 		this.om = null;
-		this.tm = null;
+		this.to = null;
 		this.config = null;
 	}
 
@@ -91,10 +91,10 @@ public class LikeExpressionTests extends TestCase {
 				new LikeExpression(this.tom, this.om, false, config)
 						.evaluate(this.resolver));
 		assertEquals("LikeExpression must return true", Boolean.TRUE,
-				new LikeExpression(this.tom, this.tm, true, config)
+				new LikeExpression(this.tom, this.to, true, config)
 						.evaluate(this.resolver));
 		assertEquals("LikeExpression must return false", Boolean.FALSE,
-				new LikeExpression(this.tom, this.tm, false, config)
+				new LikeExpression(this.tom, this.to, false, config)
 						.evaluate(this.resolver));
 		assertEquals("LikeExpression must return false", Boolean.FALSE,
 				new LikeExpression(this.jerry, this.om, false, config)

@@ -25,7 +25,11 @@ import org.araneaframework.Environment;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class BaseEnvironment implements Environment {
+
+  private static final long serialVersionUID = 1L;
+
   public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException {
+
     Assert.notNullParam(this, key, "key");
 
     T result = getEntry(key);

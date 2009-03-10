@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.util;
 
+import org.araneaframework.core.Assert;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import java.io.FileWriter;
@@ -37,6 +38,7 @@ public abstract class RelocatableUtil {
    * Serializes {@link RelocatableService} to byte array.
    */
   public static byte[] serializeRelocatable(RelocatableService service) {
+    Assert.notNullParam(service, "service");
     Relocatable.Interface relocatable = service._getRelocatable();
     Environment env = relocatable.getCurrentEnvironment();
     relocatable.overrideEnvironment(null);
@@ -53,6 +55,8 @@ public abstract class RelocatableUtil {
    * so that it is possible to debug the issue by looking at partial XML dump. 
    */
   public static byte[] serializeRelocatable(RelocatableService service, String fileName) {
+    Assert.notNullParam(service, "service");
+    Assert.notNullParam(fileName, "fileName");
     try {
       return serializeRelocatable(service);
     } catch (SerializationException e) {

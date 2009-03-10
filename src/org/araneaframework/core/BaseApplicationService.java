@@ -44,6 +44,8 @@ import org.araneaframework.core.util.ExceptionUtil;
 public abstract class BaseApplicationService extends BaseService
   implements ApplicationService {
 
+  private static final long serialVersionUID = 1L;
+
   private static final Log log = LogFactory.getLog(BaseApplicationService.class);
 
   //*******************************************************************

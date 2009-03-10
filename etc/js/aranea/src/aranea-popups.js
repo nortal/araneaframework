@@ -50,14 +50,13 @@ Aranea.Popups.submitThreadCloseRequest = function(win) {
   if (win && win.document) {
     var systemForm = null;
     for (var i = 0; i < win.document.forms.length; i++) {
-      if (win.document.forms[i].getAttribute('arn-systemForm')) {
+      if (win.document.forms[i].readAttribute('arn-systemForm')) {
 	    systemForm = win.document.forms[i];
       }
   	}
     if (systemForm) {
       var closeParam = new Element("input", { "name": "popupClose" });
-      closeParam.setAttribute("type", "hidden");
-      closeParam.setAttribute("value", "true");
+      closeParam.writeAttribute({"type": "hidden", "value": "true"});
       systemForm.appendChild(closeParam);
       win._ap.event_6(systemForm, null, null, null, null, null);
     }

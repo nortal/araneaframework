@@ -32,36 +32,29 @@ function setFormElementContext(el) {
   }
 }
 
-function formElementValidationActionCall(el) {
+function formElementValidationActionCall(event) {
   // element serialization here is crucial, otherwise multi-valued controls only submit the most recent value
-  _ap.action(el, 'bgValidate', el.id, null, function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null, $(el).serialize(true));
+  _ap.action(event.target, 'bgValidate', event.target.id, null,
+      function(transport) {AraneaPage.processResponse(transport.responseText);}, null, null,
+      $(event.target).serialize(true));
 }
 
 /** @since 1.1 */
 function setFormElementValidation(el){
   if (el && !el._formElementValidationBehaviourAttached) {
-    if(!_ap.getBackgroundValidation() && !(el.hasAttribute('arn-bgValidate'))) {
+    if (!_ap.getBackgroundValidation() && $(el).readAttribute('arn-bgValidate') != 'true') {
       return;
     }
-
-    if ((el.hasAttribute('arn-bgValidate')) && (($(el).getAttribute('arn-bgValidate')) != 'true')) {
-      return;
-    }
-
-    var elId = el.getAttribute("id");
-    var actionValidate = function(event) {
-      formElementValidationActionCall(el);
-    };
-    Event.observe(elId, 'change', actionValidate);
+    Event.observe(el, 'change', formElementValidationActionCall);
     el._formElementValidationBehaviourAttached = true;
   }
 }
 
 function setCloningUrl(el) {
   if (el._cloningUrlBehaviourAttached) return;
-  var eventId = el.getAttribute('arn-evntId');
-  var eventParam = el.getAttribute('arn-evntPar');
-  var eventTarget = el.getAttribute('arn-trgtwdgt');
+  var eventId = el.readAttribute('arn-evntId');
+  var eventParam = el.readAttribute('arn-evntPar');
+  var eventTarget = el.readAttribute('arn-trgtwdgt');
 
   var form = _ap.getSystemForm();
 
@@ -86,7 +79,7 @@ function setCloningUrl(el) {
 }
 
 function applyCharacterFilter(el) {
-  var filter = el.getAttribute('arn-charFilter');
+  var filter = el.readAttribute('arn-charFilter');
   if (filter) {
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
     if (!Prototype.Browser.IE && !Prototype.Browser.Opera) {
@@ -100,7 +93,7 @@ function applyCharacterFilter(el) {
 /** TODO: this is not really used in current behaviour rules (only by tooltip tag) */
 function setToolTip(el){
   if (el && Tip) {
-    var toolTip = el.getAttribute("arn-toolTip");
+    var toolTip = el.readAttribute("arn-toolTip");
     if (toolTip) {
       return new Tip(el, toolTip);
     }
@@ -120,6 +113,7 @@ Object.extend(Aranea.Behaviour, {
    * @since 1.2.1
    */
   apply: function() {
+    _ap.debug("Applying behaviour rules to form elements...");
     $$('a.aranea-link-button', 'a.aranea-link', 'a.aranea-tab-link').each(function(el) {
       setCloningUrl(el);
     });
@@ -148,6 +142,7 @@ Object.extend(Aranea.Behaviour, {
     $$('input.aranea-file-upload').each(function(el) {
       setFormElementContext(el);
     });
+
   },
 
   /**

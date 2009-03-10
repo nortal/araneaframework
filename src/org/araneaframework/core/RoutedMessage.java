@@ -29,6 +29,8 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public abstract class RoutedMessage implements Message {
 
+  private static final long serialVersionUID = 1L;
+
   private static final Log log = LogFactory.getLog(RoutedMessage.class);
 
   private Path path;

@@ -17,7 +17,7 @@ Modalbox.Methods = {
 	overrideAlert: false, // Override standard browser alert message with ModalBox
 	focusableElements: new Array(),
 	options: {
-                title : null,
+		title : null,
 		//title: "ModalBox Window", // Title of the ModalBox window
 		overlayClose: false, // Close modal box by clicking on overlay
 		width: 500, // Default width in px
@@ -106,7 +106,7 @@ Modalbox.Methods = {
 	
 	hide: function(options) { // External hide method to use from external HTML and JS
 		if(this.initialized) {
-			if(options) Object.extend(this.options, options); // Passing callbacks
+			if(options && typeof options.element != 'function') Object.extend(this.options, options); // Passing callbacks
 			if(this.options.transitions)
 				Effect.SlideUp(this.MBwindow, { duration: this.options.slideUpDuration, afterFinish: this._deinit.bind(this) } );
 			else {
@@ -219,26 +219,17 @@ Modalbox.Methods = {
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) {
-							    var ss = script.replace("<!--", "").replace("// -->", "");
-							    return eval(ss);
+								var ss = script.replace("<!--", "").replace("// -->", "");
+								return eval(ss);
 							}.bind(window));
 							this._putContent(transport.responseText);
 							// again -- for correct centering
 							this._setPosition();
- 							AraneaPage.findSystemForm();
-							var f = function() {
-                                _ap.addSystemLoadEvent(AraneaPage.init);
-                                DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
-								araneaPage().onload();
-								window.modalTransport = null;
-							};
-							// -- force the delay here
-							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
 						}.bind(this),
-					onException: function(AjaxRequest, exc) {
-					  araneaPage().debug("Exception has occured while processing or receiving Modalbox request.");
-					  araneaPage().debug(exc);
-					}.bind(this)
+						onException: function(AjaxRequest, exc) {
+							araneaPage().debug("Exception has occured while processing or receiving Modalbox request.");
+							araneaPage().debug(exc);
+						}.bind(this)
 					});
 					
 			} else if (typeof this.content == 'object') {// HTML Object is given
@@ -427,27 +418,26 @@ Modalbox.Methods = {
 	},
 	
 	_removeElements: function () {
-		if(navigator.appVersion.match(/\bMSIE\b/)) {
+		$(this.MBoverlay).remove();
+		$(this.MBwindow).remove();
+		if(Prototype.Browser.IE && !navigator.appVersion.match(/\b7.0\b/)) {
 			this._prepareIE("", ""); // If set to auto MSIE will show horizontal scrolling
-//			window.scrollTo(this.initScrollX, this.initScrollY);
+			window.scrollTo(this.initScrollX, this.initScrollY);
 		}
-		Element.remove(this.MBoverlay);
-		Element.remove(this.MBwindow);
 		
 		/* Replacing prefixes 'MB_' in IDs for the original content */
-		if(typeof this.content == 'object' && this.content.id && this.content.id.match(/MB_/)) {
-			this.content.getElementsBySelector('*[id]').each(function(el){ el.id = el.id.replace(/MB_/, ""); });
-			this.content.id = this.content.id.replace(/MB_/, "");
+		if(typeof this.content == 'object') {
+			if(this.content.id && this.content.id.match(/MB_/)) {
+				this.content.id = this.content.id.replace(/MB_/, "");
+			}
+			this.content.select('*[id]').each(function(el){ el.id = el.id.replace(/MB_/, ""); });
 		}
 		/* Initialized will be set to false */
 		this.initialized = false;
-		
-		if(navigator.appVersion.match(/\bMSIE\b/))
-			this._toggleSelects(); // Toggle back 'select' elements in IE
 		this.event("afterHide"); // Passing afterHide callback
 		this.setOptions(this._options); //Settings options object into intial state
 	},
-	
+
 	_setOverlay: function () {
 		if(navigator.appVersion.match(/\bMSIE\b/)) {
 			this._prepareIE("100%", "hidden");
@@ -460,39 +450,14 @@ Modalbox.Methods = {
 	},
 	
 	_setPosition: function () {
-		//$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
-		//var left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2);
-		//var top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2);
-		//
-		//if (top < 0) top = 0;
-		//
-		//this.MBwindow.style.left = left + "px";
-		//this.MBwindow.style.top = top + "px";
-		//$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
+		var clientHeight = document.viewport.getHeight();
+		var clientWidth = document.viewport.getWidth();
+		var vleft = Math.round((clientWidth - $(this.MBwindow).getWidth()) / 2);
+		var vtop = Math.round((clientHeight - $(this.MBwindow).getHeight()) / 2);
 
-    	var clientWidth = 0;
-    	var clientHeight = 0;
+		if (vtop < 0) vtop = 0;
 
-    	if (typeof(window.innerWidth) == 'number') {
-    		//Non-IE
-			clientWidth = window.innerWidth;
-			clientHeight = window.innerHeight;
-    	} else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-			//IE 6+ in 'standards compliant mode'
-    		clientWidth = document.documentElement.clientWidth;
-    		clientHeight = document.documentElement.clientHeight;
-		} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
-			//IE 4 compatible
-			clientWidth = document.body.clientWidth;
-			clientHeight = document.body.clientHeight;
-		}
-
-    	var vleft = Math.round((clientWidth - $(this.MBwindow).getWidth()) / 2);
-    	var vtop = Math.round((clientHeight - $(this.MBwindow).getHeight()) / (Prototype.Browser.IE ? 3 : 2));
-
-        if (vtop < 0) vtop = 0;
-
-        $(this.MBwindow).setStyle({left: vleft + "px", top: vtop + "px"});
+		$(this.MBwindow).setStyle({left: vleft + "px", top: vtop + "px"});
 	},
 	
 	_setWidthAndPosition: function () {

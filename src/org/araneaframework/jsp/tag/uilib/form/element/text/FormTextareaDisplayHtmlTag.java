@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import java.io.Writer;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
@@ -48,7 +49,7 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
     JspUtil.writeCloseStartTag(out);
 
     if (viewModel.getSimpleValue() != null) {
-      String text = viewModel.getSimpleValue();
+      String text = StringEscapeUtils.escapeHtml(viewModel.getSimpleValue());
       text = StringUtils.replace(text, "\n", "<br/>\n");
       text = StringUtils.replace(text, "  ", " &nbsp;");
       if (escapeSingleSpaces) {

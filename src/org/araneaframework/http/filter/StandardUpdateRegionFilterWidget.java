@@ -145,8 +145,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
         writeDocumentRegions(writer, regionContents);
       }
       writer.flush();
-    }
-    finally {
+    } finally {
       arUtil.commit();
       disabled = false;
       renderedRegions.clear();

@@ -54,6 +54,7 @@
     <dependency conf="build" org="javancss" rev="28.49" name="jhbasic" />
     <dependency conf="build" org="javancss" rev="28.49" name="ccl" />
     <dependency conf="build" org="javax" rev="1.4" name="j2ee" />
+    <dependency conf="build" org="joda-time" rev="1.6" name="joda-time" />
     <dependency conf="build" org="jstl" rev="1.0.3" name="jstl" />
     <dependency conf="build" org="junit" rev="3.8.1" name="junit" />
     <dependency conf="build" org="taglibs" rev="1.0.6" name="standard" />

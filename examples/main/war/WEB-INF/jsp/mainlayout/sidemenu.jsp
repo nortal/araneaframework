@@ -32,7 +32,7 @@
 									eventParam="${topMenuItem.value.label}.${item.value.label}"
 									labelId="${item.value.label}"
 									styleClass="${activeStyle}"
-									globalUpdateRegions="demo-messages, sidemenu, demo-content, demo-footer"/>
+									globalUpdateRegions="demo-messages,sidemenu,demo-content,demo-footer"/>
 
 								<!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}" styleClass="${activeStyle}"><fmt:message key="${item.value.label}"/></ui:link-->
 								<c:if test="${item.value.holder}">
@@ -43,14 +43,14 @@
 													eventParam="${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"
 													labelId="${subitem.value.label}"
 													styleClass="${activeStyle}"
-													globalUpdateRegions="demo-messages, sidemenu, demo-content, demo-footer"/>
+													globalUpdateRegions="demo-messages,sidemenu,demo-content,demo-footer"/>
 												<!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}" styleClass="${activeStyle}"><fmt:message key="${subitem.value.label}"/></ui:link -->
 											</c:if>
 											<c:if test="${not subitem.value.selected}">
 												<ui:eventLinkButton eventId="menuSelect"
 													eventParam="${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"
 													labelId="${subitem.value.label}"
-													globalUpdateRegions="demo-messages, sidemenu, demo-content, demo-footer"/>
+													globalUpdateRegions="demo-messages,sidemenu,demo-content,demo-footer"/>
 	
 												<!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"><fmt:message key="${subitem.value.label}"/></ui:link-->
 											</c:if></li>
@@ -62,7 +62,7 @@
 								<ui:eventLinkButton eventId="menuSelect"
 									eventParam="${topMenuItem.value.label}.${item.value.label}"
 									labelId="${item.value.label}"
-									globalUpdateRegions="demo-messages, sidemenu, demo-content, demo-footer"/>
+									globalUpdateRegions="demo-messages,sidemenu,demo-content,demo-footer"/>
 								<!-- ui:link href="${containerURL}/mount/${widgetId}/${topMenuItem.value.label}.${item.value.label}"><fmt:message key="${item.value.label}"/></ui:link  -->
 							</c:if></li>
 						</c:forEach>

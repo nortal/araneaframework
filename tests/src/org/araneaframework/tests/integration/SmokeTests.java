@@ -16,11 +16,29 @@
 
 package org.araneaframework.tests.integration;
 
+import org.araneaframework.InputData;
+import org.araneaframework.core.EventListener;
+import org.araneaframework.framework.container.StandardFlowContainerWidget;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.TransactionContext;
+import junit.framework.TestSuite;
+import junit.framework.Test;
+import org.araneaframework.mock.core.MockEventfulStandardWidget;
+import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.mock.web.MockServletConfig;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import org.araneaframework.http.ServletServiceAdapterComponent;
+import org.araneaframework.mock.servlet.MockServlet;
 import junit.framework.TestCase;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * XXX: why is the whole test commented out?
+ * TODO: this class contains some really legacy code, it must be updated.
  */
 public class SmokeTests extends TestCase {
 /*  private MockServlet servlet;

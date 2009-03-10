@@ -187,7 +187,9 @@ public class BodyHtmlTag extends PresentationTag {
    * @since 1.1 */
   protected void writeAjaxValidationScript(Writer out) throws IOException {
     Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
-    out.write("_ap.setBackgroundValidation(" + String.valueOf(validationEnabled) +");");
+    if (validationEnabled != null) {
+      out.write("_ap.setBackgroundValidation(" + validationEnabled +");");
+    }
   }
 
   /**

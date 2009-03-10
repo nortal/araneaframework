@@ -57,8 +57,8 @@ public class LogicalExpressionTests extends TestCase {
 		log.debug("Testing AndExpression");
 		try {
 			new AndExpression().evaluate(this.resolver);
-			fail("AndExpression must throw an exception");
-		} catch (ExpressionEvaluationException e) {
+			fail("AndExpression must throw an exception, because it has no child expressions");
+		} catch (IllegalArgumentException e) {
 			// normal
 		}
 		try {
