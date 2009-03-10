@@ -8,16 +8,20 @@
 
   <ui:widgetContext>
 	<script type="text/javascript">
+		window.hasExecuted = false;
+
 		var pollingUpdater = function(request, response) {
 
 			// If the region does not exist, quit:
-			if ($$('div.msg-error').length == 0) {
+			if (window.hasExecuted &amp;&amp; $$('div.msg-error').first().empty()) {
 				clearInterval(intervalActionId);
+				window.hasExecuted = null;
 			}
 
 			var text = request.responseText;
 			if (text != 'NOTHING') {
 				$$('div.msg-error').first().insert(text).show();
+				window.hasExecuted = true;
 			}
 		};
 

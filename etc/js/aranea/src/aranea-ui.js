@@ -84,7 +84,7 @@ Object.extend(Aranea.UI, {
       var opt = new Element('option', { 'value': value }).update(value);
 
       if (i == x) {
-        opt.setAttribute('selected', 'selected');
+        opt.writeAttribute('selected', 'selected');
       }
       select.appendChild(opt);
     }
@@ -219,7 +219,7 @@ Object.extend(Aranea.UI, {
 
   	for (var i = 0; i < arrFormElems.length; i++) {
   	  var elem = arrFormElems[i];
-  	  if (elem.getAttribute('type') == 'checkbox' && elem.id != null
+  	  if (elem.readAttribute('type') == 'checkbox' && elem.id != null
   	        && elem.id.startsWith(chkSelectAll.id)) {
   	      elem.checked = chkSelectAll.checked;
   	  }
@@ -251,7 +251,7 @@ Object.extend(Aranea.UI, {
   	for (var i = 0; i < arrFormElems.length; i++) {
   		var elem = arrFormElems[i];
 
-  		if (elem.getAttribute('type') == 'checkbox'
+  		if (elem.readAttribute('type') == 'checkbox'
   				&& elem.id != null && elem.id != prefix
   				&& elem.id.startsWith(prefix)) {
 

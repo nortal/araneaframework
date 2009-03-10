@@ -219,7 +219,7 @@ var AraneaPage = Class.create({
     * Sets the active system form in this AraneaPage.
     * @since 1.1 */
   setSystemForm: function(_systemForm) {
-    this.debug('AraneaPage: Setting systemform to: ' + _systemForm);
+    this.debug('AraneaPage: Setting systemform to: ' + Object.inspect(_systemForm));
     this.systemForm = _systemForm;
   },
 
@@ -231,8 +231,8 @@ var AraneaPage = Class.create({
     }.bind(this));
   },
 
-  getAttribute: function(element, attribute) {
-    return String.interpret(element.getAttribute(attribute));
+  readAttribute: function(element, attribute) {
+    return String.interpret(element.readAttribute(attribute));
   },
 
   /**
@@ -240,7 +240,7 @@ var AraneaPage = Class.create({
    * @since 1.1
    */
   getEventTarget: function(element) {
-    return this.getAttribute(element, 'arn-trgtwdgt');
+    return this.readAttribute(element, 'arn-trgtwdgt');
   },
 
   /**
@@ -248,26 +248,26 @@ var AraneaPage = Class.create({
    * @since 1.1
    */
   getEventId: function(element) {
-    return this.getAttribute(element, 'arn-evntId');
+    return this.readAttribute(element, 'arn-evntId');
   },
 
   /** Returns event parameter that should be sent to server when event(element) is called.
     * @since 1.1 */
   getEventParam: function(element) {
-    return this.getAttribute(element, 'arn-evntPar');
+    return this.readAttribute(element, 'arn-evntPar');
   },
 
   /** Returns update regions that should be sent to server when event(element) is called.
     * @since 1.1 */
   getEventUpdateRegions: function(element) {
-    return this.getAttribute(element, 'arn-updrgns');
+    return this.readAttribute(element, 'arn-updrgns');
   },
 
   /** Returns closure that should be evaluated when event(element) is called and
     * needs to decide whether server-side event invocation is needed.
     * @since 1.1 */
   getEventPreCondition: function(element) {
-    return this.getAttribute(element, 'arn-evntCond');
+    return this.readAttribute(element, 'arn-evntCond');
   },
 
   /** Timer that executes keepalive calls, if any. */
@@ -406,10 +406,13 @@ var AraneaPage = Class.create({
       return false;
     }
 
+    this.setLoaded(false);
+
     if (eventPrecondition) {
       var f = new Function(eventPrecondition);
       if (!f()) {
         f = null;
+        this.setLoaded(true);
         return false;
       }
     }
@@ -941,7 +944,8 @@ var DefaultAraneaSubmitter = Class.create({
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
   event: function(element) {
-    if (!element) {
+    element = $(element);
+    if (!$(element)) {
       return true;
     }
 
@@ -951,7 +955,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
     this.systemForm.araWidgetEventHandler.value = this.eventId;
     this.systemForm.araWidgetEventParameter.value = this.eventParam;
 
-    Aranea.ModalBox.show({ params: this.systemForm.serialize(true) });
+    Aranea.ModalBox.update({ params: this.systemForm.serialize(true) });
     return false;
   },
 
@@ -967,7 +971,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
       window.tinyMCE.triggerSave();
     }
 
-    Aranea.ModalBox.show({ params: systemForm.serialize(true) });
+    Aranea.ModalBox.update({ params: systemForm.serialize(true) });
     return false;
   }
 
@@ -1263,7 +1267,7 @@ AraneaPage.MessageRegionHandler = Class.create({
     $$(this.regionClass).each((function(region) {
       var messages = null;
       if (region.hasAttribute(this.regionTypeAttribute)) {
-        var type = region.getAttribute(this.regionTypeAttribute);
+        var type = region.readAttribute(this.regionTypeAttribute);
         if (messagesByType[type]) {
           messages = messagesByType[type];
           if (messages.size() > 0) {

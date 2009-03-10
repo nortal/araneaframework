@@ -42,7 +42,7 @@ function formElementValidationActionCall(event) {
 /** @since 1.1 */
 function setFormElementValidation(el){
   if (el && !el._formElementValidationBehaviourAttached) {
-    if (!_ap.getBackgroundValidation() && $(el).getAttribute('arn-bgValidate') != 'true') {
+    if (!_ap.getBackgroundValidation() && $(el).readAttribute('arn-bgValidate') != 'true') {
       return;
     }
     Event.observe(el, 'change', formElementValidationActionCall);
@@ -52,9 +52,9 @@ function setFormElementValidation(el){
 
 function setCloningUrl(el) {
   if (el._cloningUrlBehaviourAttached) return;
-  var eventId = el.getAttribute('arn-evntId');
-  var eventParam = el.getAttribute('arn-evntPar');
-  var eventTarget = el.getAttribute('arn-trgtwdgt');
+  var eventId = el.readAttribute('arn-evntId');
+  var eventParam = el.readAttribute('arn-evntPar');
+  var eventTarget = el.readAttribute('arn-trgtwdgt');
 
   var form = _ap.getSystemForm();
 
@@ -79,7 +79,7 @@ function setCloningUrl(el) {
 }
 
 function applyCharacterFilter(el) {
-  var filter = el.getAttribute('arn-charFilter');
+  var filter = el.readAttribute('arn-charFilter');
   if (filter) {
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
     if (!Prototype.Browser.IE && !Prototype.Browser.Opera) {
@@ -93,7 +93,7 @@ function applyCharacterFilter(el) {
 /** TODO: this is not really used in current behaviour rules (only by tooltip tag) */
 function setToolTip(el){
   if (el && Tip) {
-    var toolTip = el.getAttribute("arn-toolTip");
+    var toolTip = el.readAttribute("arn-toolTip");
     if (toolTip) {
       return new Tip(el, toolTip);
     }
