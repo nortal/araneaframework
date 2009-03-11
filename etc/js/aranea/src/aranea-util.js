@@ -83,7 +83,7 @@ var Text = Class.create({
 
   readCharacters: function(characters) {
     var content = this.text.substr(this.pos, parseInt(characters));
-    this.pos=this.pos + parseInt(characters);
+    this.pos = this.pos + parseInt(characters);
     return content;
   },
 

@@ -47,7 +47,7 @@ public class StringListData extends Data {
     } else {
       List baseValues = (List) this.markedBaseValue;
       List values = (List) this.value;
-      return !(baseValues.containsAll(values) && baseValues.size() == values.size());
+      return !(baseValues.size() == values.size() && baseValues.containsAll(values));
     }
   }
 }
