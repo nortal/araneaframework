@@ -39,7 +39,7 @@ Object.extend(Aranea.ContextMenuHTMLBuilder, {
 
     if (!node) {
       node = new Element('div', {'id': Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID });
-      document.body.appendChild(node);
+      $(document.body).insert(node);
       node.hide();
     }
 

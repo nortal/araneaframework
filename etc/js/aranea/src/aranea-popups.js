@@ -14,9 +14,95 @@
  * limitations under the License.
  */
 
-var Aranea = Aranea ? Aranea : {};
-/** @since 1.1 */
-Aranea.Popups = {};
+/**
+ * Functionality for popups. Requires "aranea.js" to be executed beforehand.
+ * @since 1.1
+ */
+Aranea.Popups = {
+
+  //popup maps
+  popups: {},
+
+  //popup properties, used for all types of popups
+  popupProperties: {},
+
+  //opened windows
+  openedPopupWindows: {},
+
+  /* @since 1.1 **/
+  addPopup: function(popupId, windowProperties, url) {
+    this.popups[popupId] = popupId;
+    this.popupProperties[popupId] = {};
+    this.popupProperties[popupId].windowProperties = windowProperties;
+    this.popupProperties[popupId].url = url;
+  },
+
+  /* @since 1.1 **/
+  submitThreadCloseRequest: function(win) {
+    if (win && win.document) {
+      var systemForm = null;
+      for (var i = 0; i < win.document.forms.length; i++) {
+        if (win.document.forms[i].readAttribute('arn-systemForm')) {
+          systemForm = win.document.forms[i];
+        }
+      }
+      if (systemForm) {
+        systemForm.appendChild(new Element("input",
+                { "name": "popupClose", "type": "hidden", "value": "true" }));
+        win._ap.event_6(systemForm);
+      }
+    }
+  },
+
+  /* @since 1.1 **/
+  closeOpenedPopupWindows: function() {
+    for (var popupId in this.openedPopupWindows) {
+      var w = this.openedPopupWindows[popupId];
+      if (w) {
+        this.submitThreadCloseRequest(w);
+        w.close();
+      }
+    }
+  },
+
+  /* @since 1.1 **/
+  openPopup: function(popupId) {
+    var w = window.open(this.popupProperties[popupId].url, popupId,
+        this.popupProperties[popupId].windowProperties);
+    if (w) {
+      this.openedPopupWindows[popupId] = w;
+      w.focus();
+    }
+  },
+
+  /* @since 1.1 **/
+  processPopups: function() {
+    for (var popupId in this.popups) {
+      this.openPopup(popupId, this.popupProperties[popupId]);
+    }
+    this.popups = {};
+    this.popupProperties = {};
+  },
+
+  /* @since 1.1 **/
+  applyReturnValue: function(value, elementId) {
+    if (window.opener) {
+    	window.opener.document.getElementById(elementId).value = value;
+    }
+  },
+
+  /* @since 1.1 **/
+  reloadParentWindow: function(url) {
+    if (window.opener) {
+      window.opener.document.location.href = url;
+    }
+  },
+
+  /* @since 1.1 **/
+  delayedCloseWindow: function(delay) {
+    setTimeout('window.close()', delay);
+  }
+};
 
 /** @deprecated 
     @useless */
@@ -24,114 +110,18 @@ function onWindowUnload() {
   Aranea.Popups.closeOpenedPopupWindows();
 }
 
-//popup maps
-Aranea.Popups.popups = new Object();
-
-// popup properties, used for all types of popups
-Aranea.Popups.popupProperties = new Object();
-
-// opened windows
-Aranea.Popups.openedPopupWindows = new Object();
-
-/* @since 1.1 **/
-Aranea.Popups.addPopup = function(popupId, windowProperties, url) {
-  Aranea.Popups.popups[popupId] = popupId;
-  Aranea.Popups.popupProperties[popupId] = new Object();
-  Aranea.Popups.popupProperties[popupId].windowProperties = windowProperties;
-  Aranea.Popups.popupProperties[popupId].url = url;
-};
-
-/* @deprecated
-   @since 1.0 **/
+/**
+ * All of the following code is deprecated and dates back to 1.0.
+ * Will be removed in 2.0.
+ * @deprecated
+ * @since 1.0
+ */
 var addPopup = Aranea.Popups.addPopup;
-
-/* @since 1.1 **/
-Aranea.Popups.submitThreadCloseRequest = function(win) {
-  if (win && win.document) {
-    var systemForm = null;
-    for (var i = 0; i < win.document.forms.length; i++) {
-      if (win.document.forms[i].readAttribute('arn-systemForm')) {
-	    systemForm = win.document.forms[i];
-      }
-  	}
-    if (systemForm) {
-      var closeParam = new Element("input", { "name": "popupClose" });
-      closeParam.writeAttribute({"type": "hidden", "value": "true"});
-      systemForm.appendChild(closeParam);
-      win._ap.event_6(systemForm, null, null, null, null, null);
-    }
-  }
-};
-
-/* @deprecated
-   @since 1.0 **/
 var submitThreadCloseRequest = Aranea.Popups.submitThreadCloseRequest;
-
-/* @since 1.1 **/
-Aranea.Popups.closeOpenedPopupWindows = function() {
-  for (var popupId in Aranea.Popups.openedPopupWindows) {
-    var w = Aranea.Popups.openedPopupWindows[popupId];
-    if (w) {
-      Aranea.Popups.submitThreadCloseRequest(w);
-      w.close();
-    }
-  }
-};
-
-/* @deprecated
-   @since 1.0 **/
 var closeOpenedPopupWindows = Aranea.Popups.closeOpenedPopupWindows;
-
-/* @since 1.1 **/
-Aranea.Popups.openPopup = function(popupId) {
-  var w = window.open(Aranea.Popups.popupProperties[popupId].url, popupId, Aranea.Popups.popupProperties[popupId].windowProperties);
-  if (w) {
-    Aranea.Popups.openedPopupWindows[popupId] = w;
-    w.focus();
-  }
-};
 var openPopup = Aranea.Popups.openPopup;
-
-/* @since 1.1 **/
-Aranea.Popups.processPopups = function() {
-  for (var popupId in Aranea.Popups.popups) {
-    Aranea.Popups.openPopup(popupId, Aranea.Popups.popupProperties[popupId]);
-  }
-  Aranea.Popups.popups = new Object();
-  Aranea.Popups.popupProperties = new Object();
-};
-
-/* @deprecated
-   @since 1.0 **/
 var processPopups = Aranea.Popups.processPopups;
-
-/* @since 1.1 **/
-Aranea.Popups.applyReturnValue = function(value, elementId) {
-  if (window.opener) {
-  	window.opener.document.getElementById(elementId).value = value;
-  }
-};
-
-/* @deprecated
-   @since 1.0 **/
 var applyReturnValue = Aranea.Popups.applyReturnValue;
-
-/* @since 1.1 **/
-Aranea.Popups.reloadParentWindow = function(url) {
-  if (window.opener) {
-    window.opener.document.location.href=url;
-  }
-};
-
-/** @deprecated
-    @since 1.0 */
 var reloadParentWindow = Aranea.Popups.reloadParentWindow;
+var closeWindow = Aranea.Popups.delayedCloseWindow;
 
-/* @since 1.1 **/
-Aranea.Popups.delayedCloseWindow = function(delay) {
-  setTimeout('window.close()', delay);
-};
-
-/* @deprecated
-   @since 1.0 **/
-var closeWindow = Aranea.Popups.delayedCloseWindow; 

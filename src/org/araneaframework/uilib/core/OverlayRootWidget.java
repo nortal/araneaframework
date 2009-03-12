@@ -102,10 +102,7 @@ public class OverlayRootWidget extends BaseUIWidget {
    * @param child The sub widget (required) to render.
    */
   public OverlayRootWidget(Widget child) {
-    Assert.notNullParam(child, "child");
-    this.child = child;
-    this.viewSelector = DEFAULT_ROOT_PAGE;
-    this.errorPage = DEFAULT_ERROR_PAGE;
+    this(child, DEFAULT_ROOT_PAGE, DEFAULT_ERROR_PAGE);
   }
 
   /**
@@ -122,6 +119,7 @@ public class OverlayRootWidget extends BaseUIWidget {
    *          that full path must be given.
    */
   public OverlayRootWidget(Widget child, String viewSelector, String errorPage) {
+    Assert.notNullParam(child, "child");
     this.child = child;
     this.viewSelector = viewSelector;
     this.errorPage = errorPage;
