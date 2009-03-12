@@ -110,22 +110,22 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     StringBuffer script = new StringBuffer();
     script.append("Aranea.Behaviour.doAutoCompleteInputSetup('");
     script.append(getFullFieldId());
-    script.append("', ");
+    script.append("',");
 
     if (viewModel.isOnChangeEventRegistered()) {
       script.append("'");
       script.append(OnChangeEventListener.ON_CHANGE_EVENT);
-      script.append("', ");
+      script.append("',");
     } else {
-      script.append("null, null");
+      script.append("null,");
     }
 
     if (this.updateRegions != null && this.updateRegions.length() > 0) {
       script.append("'");
       script.append(this.updateRegions);
-      script.append("', ");
+      script.append("',");
     } else {
-      script.append("null, ");
+      script.append("null,");
     }
 
     script.append("{minChars: ");
