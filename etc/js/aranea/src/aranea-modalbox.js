@@ -69,7 +69,7 @@ Aranea.ModalBox = {
         // Aranea initialization
         this.afterLoad(transport);
 
-    }.bind(this),
+      }.bind(this),
 
       onException: function(request, exception){
         if (failure) {
