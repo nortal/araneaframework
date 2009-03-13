@@ -281,8 +281,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       NotRenderedMessage.INSTANCE.send(null, componentLocatorMessage.getComponent());
 
       // send a message that renders the identified component
-      Message renderMessage = new RenderMessage(new StandardPath(widgetId), output);
-      propagate(renderMessage);
+      propagate(new RenderMessage(new StandardPath(widgetId), output));
 
       if (disabled)  // Our filter was disabled during rendering this widget
         return null; // force page to reload for full render

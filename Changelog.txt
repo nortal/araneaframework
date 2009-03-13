@@ -11,6 +11,15 @@ Features and Improvements
 	Started parametrizing ListWidget and ListDataProvider
 
 ---------------------------------------------------------------------------------------------
+2009.03.13    | Aranea 1.2.1.1
+
+Features and Improvements
+    Add Aranea.ModalBox.doRequest(options, success, failure)                    | See #765
+
+Bugfixes
+    <ui:autoCompleteTextInput/> renders script errors                           | See #764
+
+---------------------------------------------------------------------------------------------
 2009.03.10    | Aranea 1.2.1
 
 Features and Improvements
