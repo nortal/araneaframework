@@ -63,7 +63,7 @@ Aranea.ModalBox = {
         var response = transport.responseText.strip();
 
         if (success) {
-          success(content);
+          success(response);
         }
 
         // Aranea initialization
@@ -76,6 +76,8 @@ Aranea.ModalBox = {
           failure(request, excpetion);
         } else {
           this.close();
+          _ap.debug("Exception has occured while processing or receiving Modalbox request.");
+          _ap.debug(exc);
           throw('Modal dialog loading error: ' + exception);
         }
       }.bind(this)
@@ -87,8 +89,8 @@ Aranea.ModalBox = {
    * The main function called either to start the overlay mode.
    * Feel free to override this and/or "update" for your own needs.
    */
-  show: function(options) {
-    this.Options = Object.extend({afterLoad: this.afterLoad}, options);
+  show: function(params) {
+	this.Options = params;
     this.update(this.Options);
   },
 
@@ -98,11 +100,14 @@ Aranea.ModalBox = {
    * @since 1.2.1
    */
   update: function(params) {
-    Modalbox.show(this.getRequestURL(), Object.extend(this.Options, params));
-    if (Prototype.Browser.IE) {
-      // Modalbox does not render well in IE without this line (Prototype bug?):
-      $(document.body).viewportOffset();
-    }
+    this.doRequest(Object.extend(this.Options, params), function(content) {
+      Modalbox.show(content, Object.extend(Aranea.ModalBox.Options, params));
+      if (Prototype.Browser.IE) {
+        // Modalbox does not render well in IE without this line (Prototype bug?):
+        $(document.body).viewportOffset();
+      }
+      AraneaPage.findSystemForm();
+    });
   },
 
   /**
