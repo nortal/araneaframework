@@ -106,7 +106,6 @@ Aranea.ModalBox = {
         // Modalbox does not render well in IE without this line (Prototype bug?):
         $(document.body).viewportOffset();
       }
-      AraneaPage.findSystemForm();
     });
   },
 
@@ -129,16 +128,16 @@ Aranea.ModalBox = {
     AraneaPage.findSystemForm().writeAttribute("ara-overlay", "true");
     var f = function() {
       if (this.isCloseOverlay(transport.responseText)) {
+        DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
         this.close();
-        this.reloadPage(); 
+        this.reloadPage();
       } else {
         DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
         _ap.addSystemLoadEvent(AraneaPage.init);
         _ap.onload();
-        window.modalTransport = null;
       }
     };
-    setTimeout(f.bind(Aranea.ModalBox));
+    f.bind(Aranea.ModalBox).defer();
   },
 
   /**
