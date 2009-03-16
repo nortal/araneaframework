@@ -383,7 +383,7 @@ var AraneaPage = Class.create({
   findSubmitter: function(element, systemForm) {
     if (this.getEventUpdateRegions(element).length > 0) {
       return new DefaultAraneaAJAXSubmitter(systemForm);
-    } else if (this.systemForm.hasClassName('aranea-overlay')) {
+    } else if (systemForm.hasClassName('aranea-overlay')) {
       return new DefaultAraneaOverlaySubmitter(systemForm);
     } else {
       return new DefaultAraneaSubmitter(systemForm);
