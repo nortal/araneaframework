@@ -26,7 +26,6 @@ import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
-
 /**
  * Element tag.
  * 
@@ -38,20 +37,22 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Defines an HTML element."
  */
 public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
-	public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
+
+  public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
 
 	protected String name = null;
+
 	protected Map attributes = new HashMap();
+
 	protected boolean hasContent = false;
-	
+
 	public void setPageContext(PageContext pageContext) {
-		attributes = new HashMap();
-		hasContent = false;
-		name = null;
-		
+		this.attributes = new HashMap();
+		this.hasContent = false;
+		this.name = null;
 		super.setPageContext(pageContext);
 	}
-	
+
 	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
@@ -68,18 +69,18 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 	 * After tag.
 	 */
 	protected int doEndTag(Writer out) throws Exception {
-		if (hasContent)
-			JspUtil.writeEndTag_SS(out, name);
-		else {
-			JspUtil.writeAttributes(out, attributes);
+		if (this.hasContent) {
+			JspUtil.writeEndTag_SS(out, this.name);
+		} else {
+		  writeAttributes(out);
 			JspUtil.writeCloseStartEndTag_SS(out);
 		}
 		return super.doEndTag(out);
 	}
-	
+
 	public void addAttribute(String name, String value) throws JspException {
 		value = (String)evaluate("value", value, String.class);
-		attributes.put(name, value);
+		this.attributes.put(name, value);
 	}
 
 	protected void onContent() {
@@ -87,7 +88,7 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 	}
 
 	protected void writeAttributes(Writer out) throws Exception {
-		JspUtil.writeAttributes(out, attributes);
+		JspUtil.writeAttributes(out, this.attributes);
 	}
 
 	/* ***********************************************************************************

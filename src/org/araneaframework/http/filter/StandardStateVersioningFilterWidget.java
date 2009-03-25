@@ -133,9 +133,6 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
   }
 
   protected synchronized void initStateSavedTL() {
-    if (this.stateSavedTL == null) {
-      this.stateSavedTL = new ThreadLocal();
-    }
     this.stateSavedTL.set(Boolean.FALSE);
   }
 
@@ -158,9 +155,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
       setResponseStateHeader(output, this.lastStateId);
 
     } finally {
-      if (this.stateSavedTL != null) {
-        this.stateSavedTL.set(null);
-      }
+      this.stateSavedTL.set(null);
       this.childWidget = null;
     }
   }

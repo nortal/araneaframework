@@ -39,7 +39,7 @@ public class ElementContentHtmlTag extends BaseTag {
     parent.onContent();
 
     parent.writeAttributes(out);
-    JspUtil.writeCloseStartTag(out);
+    JspUtil.writeCloseStartTag_SS(out);
 
     return EVAL_BODY_INCLUDE;
   }

@@ -195,7 +195,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			return onChangePrecondition;
 		}
 
-		String timeInputRef = new StringBuffer("document.getElementById('")
+		String timeInputRef = new StringBuffer("$F('")
 				.append(timeInputId)
 				.append("')")
 				.toString();
@@ -205,9 +205,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		precondition.append(timeInputId);
 		precondition.append("') && ((");
 		precondition.append(timeInputRef);
-		precondition.append(".value.length==5) || (");
+		precondition.append(".length==5) || (");
 		precondition.append(timeInputRef);
-		precondition.append(".value.length==0))");
+		precondition.append(".length==0))");
 		return precondition.toString();
 	}
 
@@ -231,8 +231,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	protected String getSelectOnChangePrecondition(String timeInputId) {
 		String precondition = onChangePrecondition;
 		if (precondition == null) {
-			precondition = "return (document.getElementById('" + timeInputId
-					+ "').value.length==5)";
+			precondition = "return $F('" + timeInputId
+					+ "').length==5";
 		}
 		return precondition;
 	}

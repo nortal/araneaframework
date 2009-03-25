@@ -39,7 +39,7 @@ import org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag;
  * For example, if you specify the element as "someButton", and event as "click", then
  * when the required keyboard event occures, the following javascript will be executed:
  * <pre>
- *   var el = document.getElementById("<form-id>.someButton");
+ *   var el = $("<form-id>.someButton");
  *   el.click();
  * </pre>
  * </li>
@@ -212,7 +212,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 	 * event on the element.
 	 * The generated handler might look like this:
 	 * <pre>
-	 *  function() { return document.getElementById('fullElementId').click(); };
+	 *  function() { return $('fullElementId').click(); };
 	 * </pre>
 	 * This string might be given as a parameter to a javascript function "uiRegisterKeypressHandler".
 	 *
