@@ -211,11 +211,11 @@ Modalbox.Methods = {
 				if(htmlRegExp.test(this.content)) { // Plain HTML given as a parameter
 					this._insertContent(this.content);
 					this._putContent(this.content);
+					// again -- for correct centering
+					this._setPosition();
 				} else 
 					new Ajax.Request( this.content, { method: this.options.method.toLowerCase(), parameters: this.options.params, 
 						onComplete: function(transport) {
-							window.modalTransport = transport;
-
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) {
@@ -227,8 +227,8 @@ Modalbox.Methods = {
 							this._setPosition();
 						}.bind(this),
 						onException: function(AjaxRequest, exc) {
-							araneaPage().debug("Exception has occured while processing or receiving Modalbox request.");
-							araneaPage().debug(exc);
+							_ap.debug("Exception has occured while processing or receiving Modalbox request.");
+							_ap.debug(exc);
 						}.bind(this)
 					});
 					
