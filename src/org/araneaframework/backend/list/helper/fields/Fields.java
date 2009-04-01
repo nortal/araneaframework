@@ -48,7 +48,7 @@ public interface Fields {
    * 
    * @return List&lt;String&gt; the names of the fields used in SELECT.
    */
-  Collection getNames();
+  Collection<String> getNames();
 
   /**
    * Return the list of fields read from the {@link java.sql.ResultSet}.
@@ -56,5 +56,5 @@ public interface Fields {
    * @return List&lt;String&gt; the names of the fields read from the
    *         {@link java.sql.ResultSet}.
    */
-  Collection getResultSetNames();
+  Collection<String> getResultSetNames();
 }

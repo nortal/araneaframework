@@ -18,7 +18,6 @@ package org.araneaframework.backend.list.helper.fields;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -34,7 +33,7 @@ import java.util.List;
  */
 public class ConcatFields implements Fields {
 
-  private List children = new ArrayList();
+  private List<Fields> children = new ArrayList<Fields>();
 
   /**
    * Adds an instance of {@link Fields} which results are used.
@@ -43,21 +42,19 @@ public class ConcatFields implements Fields {
     children.add(fields);
   }
 
-  public Collection getNames() {
+  public Collection<String> getNames() {
     // Concatenate all fields without duplicating any name
-    Collection result = new LinkedHashSet();
-    for (Iterator it = children.iterator(); it.hasNext();) {
-      Fields child = (Fields) it.next();
+    Collection<String> result = new LinkedHashSet<String>();
+    for (Fields child : children) {
       result.addAll(child.getNames());
     }
     return result;
   }
 
-  public Collection getResultSetNames() {
+  public Collection<String> getResultSetNames() {
     // Concatenate all fields without duplicating any name
-    Collection result = new LinkedHashSet();
-    for (Iterator it = children.iterator(); it.hasNext();) {
-      Fields child = (Fields) it.next();
+    Collection<String> result = new LinkedHashSet<String>();
+    for (Fields child : children) {
       result.addAll(child.getResultSetNames());
     }
     return result;

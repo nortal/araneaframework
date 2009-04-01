@@ -48,7 +48,7 @@ public class SqlStatement implements Serializable, Cloneable {
     this(null);
   }
 
-  public List getParams() {
+  public List<Object> getParams() {
     return this.parameters;
   }
 

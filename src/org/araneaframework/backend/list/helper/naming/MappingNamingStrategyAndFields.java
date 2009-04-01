@@ -69,19 +69,19 @@ public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
    * Field name --&gt; Database column name (all these fields are in
    * <code>SELECT</code>)
    */
-  private Map fieldToColumnName = new HashMap();
+  private Map<String, String> fieldToColumnName = new HashMap<String, String>();
 
   /**
    * Field name --&gt; Database column alias (all these fields are in
    * <code>SELECT</code>)
    */
-  private Map fieldToColumnAlias = new LinkedHashMap();
+  private Map<String, String> fieldToColumnAlias = new LinkedHashMap<String, String>();
 
   /**
    * Field name --&gt; Result set column name (all these fields are in the result
    * set)
    */
-  private Map fieldToResultSetColumn = new LinkedHashMap();
+  private Map<String, String> fieldToResultSetColumn = new LinkedHashMap<String, String>();
 
   /**
    * Adds a <b>field name</b> to database <b>column name</b> and <b>column
@@ -184,24 +184,24 @@ public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
 
   // Fields
 
-  public Collection getNames() {
+  public Collection<String> getNames() {
     return fieldToColumnAlias.keySet();
   }
 
-  public Collection getResultSetNames() {
+  public Collection<String> getResultSetNames() {
     return fieldToResultSetColumn.keySet();
   }
 
   // NamingStrategy
 
   public String fieldToColumnName(String variableName) {
-    return (String) fieldToColumnName.get(variableName);
+    return fieldToColumnName.get(variableName);
   }
 
   public String fieldToColumnAlias(String variableName) {
-    String result = (String) fieldToColumnAlias.get(variableName);
+    String result = fieldToColumnAlias.get(variableName);
     if (result == null) {
-      result = (String) fieldToResultSetColumn.get(variableName);
+      result = fieldToResultSetColumn.get(variableName);
     }
     return result;
   }
