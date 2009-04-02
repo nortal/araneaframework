@@ -965,6 +965,7 @@ public abstract class BaseListSqlHelper {
         fieldNames[i] = fieldName;
         fieldTypes[i] = beanMapper.getFieldType(fieldName);
         columnNames[i] = namingStrategy.fieldToColumnAlias(fieldName);
+        i++;
       }
     }
 
