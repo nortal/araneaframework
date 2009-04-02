@@ -20,7 +20,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.util.BeanUtil;
@@ -67,7 +66,7 @@ import org.araneaframework.uilib.util.NameUtil;
  */
 public class StandardFields implements Fields {
 
-  private Collection fields;
+  private Collection<String> fields;
 
   private String globalPrefix;
 
@@ -75,7 +74,7 @@ public class StandardFields implements Fields {
    * Create an instance of {@link StandardFields} using an empty set of fields.
    */
   public StandardFields() {
-    fields = new ArrayList();
+    fields = new ArrayList<String>();
   }
 
   /**
@@ -92,7 +91,7 @@ public class StandardFields implements Fields {
    * Create an instance of {@link StandardFields} using the specified set of
    * fields..
    */
-  public StandardFields(Collection fields) {
+  public StandardFields(Collection<String> fields) {
     this.fields = fields;
   }
 
@@ -126,12 +125,12 @@ public class StandardFields implements Fields {
     return this;
   }
 
-  public StandardFields addFields(String prefix, Collection fields) {
+  public StandardFields addFields(String prefix, Collection<String> fields) {
     this.fields.addAll(addPrefix(prefix, fields));
     return this;
   }
 
-  public StandardFields removeFields(String prefix, Collection fields) {
+  public StandardFields removeFields(String prefix, Collection<String> fields) {
     this.fields.removeAll(addPrefix(prefix, fields));
     return this;
   }
@@ -158,11 +157,11 @@ public class StandardFields implements Fields {
     return addFields(structure.getFields().keySet());
   }
 
-  public StandardFields addFields(Collection fields) {
+  public StandardFields addFields(Collection<String> fields) {
     return addFields(null, fields);
   }
 
-  public StandardFields removeFields(Collection fields) {
+  public StandardFields removeFields(Collection<String> fields) {
     return removeFields(null, fields);
   }
 
@@ -190,11 +189,11 @@ public class StandardFields implements Fields {
     return removeFields(prefix, BeanUtil.getFields(beanClass));
   }
 
-  public Collection getNames() {
+  public Collection<String> getNames() {
     return fields;
   }
 
-  public Collection getResultSetNames() {
+  public Collection<String> getResultSetNames() {
     return fields;
   }
 
@@ -206,13 +205,12 @@ public class StandardFields implements Fields {
         result);
   }
 
-  private Collection addPrefix(String prefix, Collection fields) {
+  private Collection<String> addPrefix(String prefix, Collection<String> fields) {
     if (prefix == null || prefix.length() == 0) {
       return fields;
     }
-    List result = new ArrayList(fields.size());
-    for (Iterator it = fields.iterator(); it.hasNext();) {
-      String field = (String) it.next();
+    List<String> result = new ArrayList<String>(fields.size());
+    for (String field : fields) {
       result.add(addPrefix(prefix, field));
     }
     return result;

@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.core.Assert;
 
@@ -33,26 +32,26 @@ public class SqlStatement implements Serializable, Cloneable {
 
   protected String query;
 
-  protected List parameters;
+  protected List<Object> parameters;
 
-  public SqlStatement(String query, List parameters) {
+  public SqlStatement(String query, List<Object> parameters) {
     this.query = query;
     this.parameters = parameters;
   }
 
   public SqlStatement(String query) {
-    this(query, new ArrayList());
+    this(query, new ArrayList<Object>());
   }
 
   public SqlStatement() {
     this(null);
   }
 
-  public List getParams() {
+  public List<Object> getParams() {
     return this.parameters;
   }
 
-  public void setParams(List params) {
+  public void setParams(List<Object> params) {
     Assert.notNull(params,
         "Parameters list can not be NULL, use an empty list instead");
     this.parameters = params;
@@ -73,8 +72,8 @@ public class SqlStatement implements Serializable, Cloneable {
    * @param param a parameter.
    */
   public void addParam(int index, Object param) {
-    if (param instanceof List) {
-      addAllParams(index, (List) param);
+    if (param instanceof List<?>) {
+      addAllParams(index, (List<?>) param);
     } else {
       this.parameters.add(index, param);
     }
@@ -96,7 +95,7 @@ public class SqlStatement implements Serializable, Cloneable {
    * @param index index at witch the specified parameters will be inserted.
    * @param params parameters.
    */
-  public void addAllParams(int index, List params) {
+  public void addAllParams(int index, List<?> params) {
     this.parameters.addAll(index, params);
   }
 
@@ -132,9 +131,9 @@ public class SqlStatement implements Serializable, Cloneable {
    * 
    * @param params parameters.
    */
-  public void addAllParams(List params) {
-    for (Iterator i = params.iterator(); i.hasNext();) {
-      addParam(i.next());
+  public void addAllParams(List<Object> params) {
+    for (Object param : params) {
+      addParam(param);
     }
   }
 
@@ -151,8 +150,9 @@ public class SqlStatement implements Serializable, Cloneable {
    * 
    * @see java.lang.Object#clone()
    */
+  @Override
   public Object clone() {
-    return new SqlStatement(this.query, new ArrayList(this.parameters));
+    return new SqlStatement(this.query, new ArrayList<Object>(this.parameters));
   }
 
   // *********************************************************************
