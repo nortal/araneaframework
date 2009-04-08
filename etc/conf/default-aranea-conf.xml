@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-   <!-- ########## ARANEA CONFIGURATION ########## -->
+  <!-- ########## ARANEA CONFIGURATION ########## -->
 
   <bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent"
     singleton="false">
@@ -242,7 +242,7 @@
     singleton="false">
   </bean>
 
-  	<bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget"
+  <bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget"
     id="araneaUpdateRegionFilter" singleton="false">
   </bean>
 

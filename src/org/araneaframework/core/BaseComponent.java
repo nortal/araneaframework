@@ -69,7 +69,7 @@ public class BaseComponent implements Component {
 
   private transient int reentrantCallCount = 0;
 
-  private transient ThreadLocal reentrantTLS = new ThreadLocal();
+  private transient ThreadLocal reentrantTLS;
 
   //*******************************************************************
   // PUBLIC METHODS
@@ -461,6 +461,8 @@ public class BaseComponent implements Component {
   //*******************************************************************
 
   private void incCallCount() {
+    if (reentrantTLS == null)
+      reentrantTLS = new ThreadLocal();
     if (reentrantTLS.get() == null)
       reentrantTLS.set(new Counter(0));
     callCount++;
@@ -477,7 +479,7 @@ public class BaseComponent implements Component {
   }
 
   private int getReentrantCount() {
-    return reentrantTLS.get() == null ? 0
+    return (reentrantTLS == null || reentrantTLS.get() == null) ? 0
         : ((Counter) reentrantTLS.get()).counter;
   }
 

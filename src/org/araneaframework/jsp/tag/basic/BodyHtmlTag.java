@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.basic;
 
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
@@ -186,10 +187,8 @@ public class BodyHtmlTag extends PresentationTag {
    * @see ConfigurationContext#BACKGROUND_FORM_VALIDATION
    * @since 1.1 */
   protected void writeAjaxValidationScript(Writer out) throws IOException {
-    Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
-    if (validationEnabled != null) {
-      out.write("_ap.setBackgroundValidation(" + validationEnabled +");");
-    }
+    boolean validationEnabled = ConfigurationContextUtil.isBackgroundFormValidationEnabled(getConfiguration());
+    out.write("_ap.setBackgroundValidation(" + validationEnabled +");");
   }
 
   /**

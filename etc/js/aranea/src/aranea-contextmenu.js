@@ -158,27 +158,26 @@ Aranea.ContextMenu = Class.create({
   },
 
   hide: function(event) {
-  	// if event occurred in context menu itself, menu should be cleared by its own handlers
-	var menu = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
+    // if event occurred in context menu itself, menu should be cleared by its own handlers
+    var menu = $(Aranea.ContextMenuHTMLBuilder.MENU_DIV_ID);
 
-	if (menu) {
-		if (event && $(Event.element(event)).descendantOf(menu)) {
-	      return true;
-	    }
+    if (menu) {
+      if (event && $(Event.element(event)).descendantOf(menu)) {
+        return true;
+      }
 
-		var x = $$('div.aranea-contextmenu-class');
-	    if (x && x.first()) {
-	      menu.removeChild(x.first());
-	    }
+      var x = $$('div.aranea-contextmenu-class');
+      if (x && x.first()) {
+        menu.removeChild(x.first());
+      }
 
-	    menu.hide();
-	}
+      menu.hide();
+    }
   },
 
   getTriggeringElement: function() {
     return this.triggeringElement;
   }
-
 });
 
 var araneaContextMenuHolder = new Aranea.ContextMenuHolder();
