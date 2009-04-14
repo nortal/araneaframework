@@ -806,7 +806,7 @@ Object.extend(AraneaPage, {
     var hasRegions = this.receivedRegionCounters['document']
                   || this.receivedRegionCounters['reload']
                   || this.receivedRegionCounters['popups']
-                  || this.receivedRegionCounters['aranea-formvalidation']
+                  || this.receivedRegionCounters['aranea-formvalidation'];
     if (this.reloadOnNoDocumentRegions && !hasRegions) {
       _ap.debug('No document regions were received, forcing a reload of the page');
       if (this.regionHandlers['reload']) {

@@ -121,11 +121,11 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     Assert.notNull(overlay);
     Assert.notNull(main);
     addWidget(OVERLAY_CHILD_KEY, overlay);
-    addWidget(MAIN_CHILD_KEY, main);
     overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
         new OverlayActivityMarkerContext() {
-          private static final long serialVersionUID = 1L;
-        });
+      private static final long serialVersionUID = 1L;
+    });
+    addWidget(MAIN_CHILD_KEY, main);
   }
 
   protected void update(InputData input) throws Exception {
