@@ -190,7 +190,7 @@ Object.extend(Aranea.Behaviour, {
       var form = AraneaPage.findSystemForm();
 
       if (!options) {
-        options = new Object();
+        options = {};
       }
 
       if (eventType && !options.afterUpdateElement) {
