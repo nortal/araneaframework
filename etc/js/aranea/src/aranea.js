@@ -799,7 +799,7 @@ Object.extend(AraneaPage, {
         _ap.debug('Region type: "' + key + '" (' + length + ' characters)');
         this.regionHandlers[key].process(content);
       } else {
-        _ap.logger.error('Region type: "' + key + '" is unknown!');
+        throw('Region type: "' + key + '" is unknown!');
       }
     }
 

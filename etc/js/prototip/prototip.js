@@ -27,7 +27,7 @@ var Tips = {
     if(tip.tooltip) tip.wrapper.remove();
     if(tip.underlay) tip.underlay.remove();
   }
-}
+};
 
 var Tip = Class.create();
 Tip.defaultClassName = "tooltip";
@@ -285,12 +285,11 @@ Function.prototype.safeBind = function() {
   }
 }
 
-if (araneaPage && typeof araneaPage == "function") {
+if (Object.isFunction(araneaPage)) {
   // See task 548
   var clearTips = function() {
     //Tips.tips.all(function(tip){ Tips.remove(tip.element); });
-    var tipdivs = $$('div.prototip-tooltip-wrapper');
-    tipdivs.each(function(node) {
+    $$('div.prototip-tooltip-wrapper').each(function(node) {
       document.body.removeChild(node);
     });
   };

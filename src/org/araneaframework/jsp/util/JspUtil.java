@@ -85,7 +85,7 @@ public class JspUtil {
    */
   public static void include(PageContext pageContext, String path) throws ServletException, IOException {
 	// starting with '/' is absolute path (may add prefix), otherwise path is relative (unchanged).
-    pageContext.include(path.startsWith("/") ? "/content" + path : path);
+    pageContext.include(path);
   }
   
   /**
@@ -319,20 +319,7 @@ public class JspUtil {
    * Writes out escaped attribute string. <code>null</code> values are omitted. 
    */
   public static void writeEscapedAttribute(Writer out, String value) throws IOException {
-    if (value == null) return;
-    
-    for(int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);
-      switch (c) {
-        case '<': out.write("&lt;"); break;
-        case '>': out.write("&gt;"); break;
-        case '&': out.write("&amp;"); break;
-        case '"': out.write("&quot;"); break;
-        case '\n': out.write("&xA;"); break;        
-        default:
-          out.write(c);
-      }     
-    }
+    StringEscapeUtils.escapeHtml(out, value);
   }
   
   /**
@@ -343,30 +330,15 @@ public class JspUtil {
    *        and set it to false if you write javascript inside a &lt;script&gt; tag. 
    */
   public static void writeEscapedScriptString(Writer out, String value, boolean escapeEntities) throws IOException {
-    if (value == null) return;
-        
-    for(int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);
-      switch (c) {
-        case '<': out.write(escapeEntities ? "&lt;" : "<"); break;
-        case '>': out.write(escapeEntities ? "&gt;" : ">"); break;
-        case '&': out.write(escapeEntities ? "&amp;": "&"); break;
-        case '"': out.write(escapeEntities ? "&quot;": "\""); break;
-        case '\'': out.write("\\'"); break;
-        case '\n': out.write("\\n"); break;
-        case '\\': out.write("\\\\"); break;
-        default:
-          out.write(c);
-      }     
-    }
+    StringEscapeUtils.escapeHtml(out, StringEscapeUtils.escapeJavaScript(value));
   }
-  
+
   public static void writeEventAttributes(Writer out, UiEvent event) throws IOException {
     out.write(" ");
     out.write(event.getEventAttributes().toString());
     out.write(" ");
   }
-  
+
   /**
    * Writes out hidden html input element with give name and value.
    */ 
