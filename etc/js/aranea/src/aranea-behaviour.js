@@ -42,11 +42,16 @@ function formElementValidationActionCall(event) {
 /** @since 1.1 */
 function setFormElementValidation(el){
   if (el && !el._formElementValidationBehaviourAttached) {
-    if (!_ap.getBackgroundValidation() && $(el).readAttribute('arn-bgValidate') != 'true') {
+    if($(el).readAttribute('arn-bgValidate') == 'false'){
       return;
     }
-    Event.observe(el, 'change', formElementValidationActionCall);
-    el._formElementValidationBehaviourAttached = true;
+    
+    if($(el).readAttribute('arn-bgValidate') == 'true' || _ap.getBackgroundValidation()){
+      Event.observe(el, 'change', formElementValidationActionCall);
+      el._formElementValidationBehaviourAttached = true;
+    }
+    
+    return;
   }
 }
 
