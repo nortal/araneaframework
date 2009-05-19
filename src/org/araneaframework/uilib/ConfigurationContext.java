@@ -140,6 +140,12 @@ public interface ConfigurationContext extends Serializable {
   String LOCALIZE_FIXED_CONTROL_DATA = "uilib.widgets.forms.control.data.localize";
 
   /**
+   * This property should be set as a <code>Boolean</code> to specify whether
+   * the tags should evaluate JSP EL. Default is <code>true</code>.
+   */
+  public static final String TAGS_EL_EVALUATE = "uilib.tags.el.evaluate";
+
+  /**
    * Returns a configuration entry with given name.
    */
   public Object getEntry(String entryName);
