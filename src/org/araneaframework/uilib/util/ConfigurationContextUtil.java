@@ -46,4 +46,11 @@ public abstract class ConfigurationContextUtil {
     Boolean setting = (Boolean) conf.getEntry(ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA);
     return setting == null ? Boolean.FALSE : setting;
   }
+
+  /**
+   * @since 1.1.0.1
+   */
+  public static boolean isELEvaluationEnabled(ConfigurationContext cctx) {
+   return "true".equalsIgnoreCase((String) cctx.getEntry(ConfigurationContext.TAGS_EL_EVALUATE));
+  }
 }

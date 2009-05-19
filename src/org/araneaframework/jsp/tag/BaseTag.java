@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tag;
 
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -222,13 +223,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Evaluates attribute value.
    */
   protected Object evaluate(String attributeName, String attributeValue, Class classObject) throws JspException {
-    return ExpressionEvaluatorManager.evaluate(
-        attributeName, 
-        attributeValue, 
-        classObject, 
-        this, 
-        pageContext
-    );
+    boolean elEnabled = ConfigurationContextUtil.isELEvaluationEnabled(getConfiguration());
+    return !elEnabled ? attributeValue : ExpressionEvaluatorManager.evaluate(
+        attributeName, attributeValue, classObject, this, this.pageContext);
   }
 
   /* ***********************************************************************************
