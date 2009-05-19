@@ -43,6 +43,17 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     // due to autocomplete component attaching its own eventlisteners in javascript. Not sure why!
     // Attaching base onblur with Event.observe() does not work quite correctly either. It is probably caused 
     // by browser workaround in scriptaculous library.
+
+    if (this.onChangePrecondition == null) {
+      this.onChangePrecondition = "return ";
+    } else if (!this.onChangePrecondition.endsWith(";")) {
+      this.onChangePrecondition += " return ";
+    } else {
+      this.onChangePrecondition += " && ";
+    }
+
+    this.onChangePrecondition += "!$('ACdiv." + getFullFieldId() + "').visible();";
+
     writeTextInput(out, "text", true, attributes);
 
     JspUtil.writeOpenStartTag(out, "div");

@@ -18,8 +18,9 @@
 	<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 
 	<path id="classpath">
-		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
 		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/development" includes="*.jar"/>
 	</path>
 
 	<!-- Clean up build system results -->
@@ -41,7 +42,7 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build,runtime"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="demo,development,build,runtime"/>
 	</target>
 
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
@@ -116,7 +117,6 @@
 		<!-- 1. Generate taglib XML from annotations in *Tag.java files. -->
 		<webdoclet destdir="build/tmp/presentation/META-INF">
 			<fileset dir="src" includes="**/*Tag.java"/>
-
 			<jsptaglib validatexml="true"
 				shortName="ui"
 				displayname="Aranea UI"
