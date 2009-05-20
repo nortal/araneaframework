@@ -39,4 +39,11 @@ public abstract class ConfigurationContextUtil {
     FormElementValidationErrorRenderer r = (FormElementValidationErrorRenderer) cctx.getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
     return r;
   }
+
+  /**
+   * @since 1.1.0.1
+   */
+  public static boolean isELEvaluationEnabled(ConfigurationContext cctx) {
+   return "true".equalsIgnoreCase((String) cctx.getEntry(ConfigurationContext.TAGS_EL_EVALUATE));
+  }
 }
