@@ -155,6 +155,9 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 
       // first we try load an override
       URL fileURL = context.getResource("/" + OVERRIDE_PREFIX + "/" + fileName);
+      if (fileURL == null) {
+        fileURL = context.getResource("/" + fileName);
+      }
 
       if (fileURL == null) {
         // fallback to the original
