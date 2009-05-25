@@ -16,6 +16,9 @@
 
 package org.araneaframework.uilib;
 
+import org.araneaframework.integration.spring.SpringExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.DefaultExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.ExpressionEvaluationManager;
 import java.io.Serializable;
 
 /**
@@ -105,10 +108,14 @@ public interface ConfigurationContext extends Serializable {
   public static final String FORMELEMENT_ERROR_RENDERER = "uilib.widgets.forms.formelement.error.renderer";
 
   /**
-   * This property should be set as a <code>Boolean</code> to specify whether
-   * the tags should evaluate JSP EL. Default is <code>true</code>.
+   * This property should be set as a class implementing
+   * {@link ExpressionEvaluationManager} to specify a custom EL evaluation
+   * manager. If none is provided, the
+   * {@link DefaultExpressionEvaluationManager} will be used, or
+   * {@link SpringExpressionEvaluationManager} in a Spring framework
+   * application.
    */
-  public static final String TAGS_EL_EVALUATE = "uilib.tags.el.evaluate";
+  public static final String TAGS_EL_MANAGER = "uilib.tags.el.manager";
 
   /**
    * Returns a configuration entry with given name.

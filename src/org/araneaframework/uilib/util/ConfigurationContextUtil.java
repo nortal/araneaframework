@@ -15,6 +15,8 @@
 **/
 package org.araneaframework.uilib.util;
 
+import org.araneaframework.jsp.tag.DefaultExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.ExpressionEvaluationManager;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
 
@@ -43,7 +45,9 @@ public abstract class ConfigurationContextUtil {
   /**
    * @since 1.1.0.1
    */
-  public static boolean isELEvaluationEnabled(ConfigurationContext cctx) {
-   return "true".equalsIgnoreCase((String) cctx.getEntry(ConfigurationContext.TAGS_EL_EVALUATE));
+  public static ExpressionEvaluationManager getResolver(ConfigurationContext cctx) {
+    ExpressionEvaluationManager mgr = (ExpressionEvaluationManager) cctx
+        .getEntry(ConfigurationContext.TAGS_EL_MANAGER);
+    return mgr != null ? mgr : new DefaultExpressionEvaluationManager();
   }
 }
