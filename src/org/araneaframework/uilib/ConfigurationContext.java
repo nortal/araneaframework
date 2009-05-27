@@ -17,8 +17,8 @@
 package org.araneaframework.uilib;
 
 import org.araneaframework.integration.spring.SpringExpressionEvaluationManager;
-import org.araneaframework.jsp.tag.DefaultExpressionEvaluationManager;
-import org.araneaframework.jsp.tag.ExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
 import java.io.Serializable;
 
 /**

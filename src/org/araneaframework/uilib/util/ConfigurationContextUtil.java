@@ -15,8 +15,8 @@
 **/
 package org.araneaframework.uilib.util;
 
-import org.araneaframework.jsp.tag.DefaultExpressionEvaluationManager;
-import org.araneaframework.jsp.tag.ExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
 
