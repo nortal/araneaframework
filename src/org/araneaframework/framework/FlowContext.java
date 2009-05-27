@@ -136,10 +136,13 @@ public interface FlowContext extends Serializable {
   void setTransitionHandler(TransitionHandler handler);
 
   /**
-   * Returns currently active <code>FlowContext.TransitionHandler</code>.
+   * Returns currently active <code>FlowContext.TransitionHandler</code>. If the
+   * most current child is a {@link FlowContextWidget}, it will take its
+   * currenty active <code>FlowContext.TransitionHandler</code> (recursively)
+   * (since 1.2.2).
    * 
    * @since 1.1
-   */ 
+   */
   TransitionHandler getTransitionHandler();
 
   /**
