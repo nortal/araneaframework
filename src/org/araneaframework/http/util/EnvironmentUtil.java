@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.util;
 
+import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.Environment;
@@ -132,5 +133,13 @@ public abstract class EnvironmentUtil {
 
   public static ExpiringServiceContext getExpiringServiceContext(Environment env) {
     return (ExpiringServiceContext) env.getEntry(ExpiringServiceContext.class);
+  }
+
+  public static ConfirmationContext getConfirmationContext(Environment env) {
+    return (ConfirmationContext) env.getEntry(ConfirmationContext.class);
+  }
+
+  public static ConfirmationContext requireConfirmationContext(Environment env) {
+    return (ConfirmationContext) env.requireEntry(ConfirmationContext.class);
   }
 }

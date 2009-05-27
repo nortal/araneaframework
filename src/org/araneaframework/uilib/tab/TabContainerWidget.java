@@ -11,6 +11,8 @@
 
 package org.araneaframework.uilib.tab;
 
+import java.io.Serializable;
+import org.apache.commons.collections.Closure;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
@@ -60,6 +62,8 @@ public class TabContainerWidget extends BaseApplicationWidget
   protected TabWidget selected;
 
   protected String defaultSelectedTabId;
+
+  protected TabSwitchListener tabSwitchListener = new DefaultTabSwitchListener();
 
   /**
    * This is just to make sure that we do not initialize ANY tabs after
@@ -127,16 +131,15 @@ public class TabContainerWidget extends BaseApplicationWidget
   }
 
   public boolean selectTab(String id) {
-    if (this.selected != null) {
-      this.selected.deleselectTab();
+    TabWidget target = StringUtils.isEmpty(id) ? null : (TabWidget) this.tabs.get(id);
+    Closure switchClosure = new TabSwitchClosure(target);
+
+    if (target != null
+        && this.tabSwitchListener.onSwitch(this.selected, target, switchClosure)) {
+      switchClosure.execute(target);
     }
-    if (!StringUtils.isEmpty(id)) {
-      this.selected = (TabWidget) this.tabs.get(id);
-      this.selected.enableTab();
-    } else {
-      this.selected = null;
-    }
-    return this.selected != null;
+
+    return target != null;
   }
 
   public boolean isTabSelected(String id) {
@@ -178,6 +181,15 @@ public class TabContainerWidget extends BaseApplicationWidget
    */
   public void setDefaultSelectedTabId(String defaultSelectedTabId) {
     this.defaultSelectedTabId = defaultSelectedTabId;
+  }
+
+  public void setTabSwitchListener(TabSwitchListener tabSwitchListener) {
+    Assert.notNullParam(this, tabSwitchListener, "tabSwitchListener");
+    this.tabSwitchListener = tabSwitchListener;
+  }
+
+  public TabSwitchListener getTabSwitchListener() {
+    return this.tabSwitchListener;
   }
 
   /*****************************************************************************
@@ -277,4 +289,38 @@ public class TabContainerWidget extends BaseApplicationWidget
       super.destroy();
     }
   }
+
+  /**
+   * This closure handles tab switching of this instance of
+   * {@link TabContainerWidget}. It can be executed only once (per instance).
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @since 1.2.2
+   */
+  public class TabSwitchClosure implements Closure, Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private TabWidget newSelectedTab;
+    private boolean executed;
+
+    public TabSwitchClosure(TabWidget newSelectedTab) {
+      Assert.notNullParam(this, newSelectedTab, "newSelectedTab");
+      this.newSelectedTab = newSelectedTab;
+    }
+
+    public void execute(Object obj) {
+      if (!this.executed) {
+        if (selected != null) {
+          selected.deleselectTab();
+        }
+
+        selected = this.newSelectedTab;
+        selected.enableTab();
+
+        this.executed = true;
+      }
+    }
+  }
+
 }
