@@ -995,8 +995,13 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
     this.storeEventData(element);
 
-    return this.event_5(this.systemForm, this.eventId, this.widgetId,
+    var result = this.event_5(this.systemForm, this.eventId, this.widgetId,
         this.eventParam, this.updateRegions);
+
+    // If element is checkbox or radio then always return true because it would
+    // block the element behaviour (e.g. checkbox would not change state).
+    var type = element.type == null ? null : element.type.toLowerCase();
+    return type == 'checkbox' || type == 'radio' || result;
   },
 
   event_5: function(systemForm, eventId, widgetId, eventParam, updateRegions) {
