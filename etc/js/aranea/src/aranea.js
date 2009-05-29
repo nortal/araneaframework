@@ -370,6 +370,7 @@ var AraneaPage = Class.create({
 
     var result = this.findSubmitter(element, systemForm).event(element);
 
+    // To avoid memory leaks:
     systemForm = null;
     element = null;
 
@@ -923,7 +924,8 @@ var DefaultAraneaSubmitter = Class.create({
       return true;
     }
     this.storeEventData(element);
-    return this.event_4(this.systemForm, this.eventId, this.widgetId, this.eventParam);
+    return this.handleResult(element, this.event_4(this.systemForm,
+        this.eventId, this.widgetId, this.eventParam));
   },
 
   event_4: function(systemForm, eventId, widgetId, eventParam) {
@@ -934,8 +936,18 @@ var DefaultAraneaSubmitter = Class.create({
     _ap.setSubmitted();
     systemForm.submit();
     return false;
-  }
+  },
 
+  /**
+   * @since 1.2.2
+   */
+  handleResult: function(element, result) {
+    // If element is checkbox or radio then we return the oppposite value.
+    // When a request is successful, we return false, but this would block
+    // checkbox or radio to be selected. Therefore, we need to flip the value.
+    var type = element.type == null ? null : element.type.toLowerCase();
+    return type == 'checkbox' || type == 'radio' ? !result : result;
+  }
 });
 
 /**
@@ -958,7 +970,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
     this.systemForm.araWidgetEventParameter.value = this.eventParam;
 
     Aranea.ModalBox.update({ params: this.systemForm.serialize(true) });
-    return false;
+    return this.handleResult(element, false);
   },
 
   event_7: function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
@@ -995,13 +1007,8 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
     this.storeEventData(element);
 
-    var result = this.event_5(this.systemForm, this.eventId, this.widgetId,
-        this.eventParam, this.updateRegions);
-
-    // If element is checkbox or radio then always return true because it would
-    // block the element behaviour (e.g. checkbox would not change state).
-    var type = element.type == null ? null : element.type.toLowerCase();
-    return type == 'checkbox' || type == 'radio' || result;
+    return this.handleResult(element, this.event_5(this.systemForm, this.eventId, this.widgetId,
+        this.eventParam, this.updateRegions));
   },
 
   event_5: function(systemForm, eventId, widgetId, eventParam, updateRegions) {
