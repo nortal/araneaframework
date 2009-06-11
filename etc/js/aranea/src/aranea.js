@@ -22,15 +22,17 @@
 var AraneaStore = Class.create({
 
   initialize: function() {
-	this._objects = [];
+    this._objects = [];
   },
 
   add: function(object) {
-    this._objects.push(object);
+    if (object) {
+      this._objects.push(object);
+    }
   },
 
   clear: function() {
-    this._objects = [];
+    this._objects.clear();
   },
 
   length: function() {
@@ -42,13 +44,8 @@ var AraneaStore = Class.create({
   },
 
   forEach: function(f) {
-    var length = this._objects.length;
-    for(var i = 0; i < length; i++) {
+    for (var i = 0; i < this._objects.length; i++) {
       f(this._objects[i]);
-      if (length == i + 1) {
-        // The array may grow during this for-each.
-        length = this._objects.length;
-      }
     }
   }
 
@@ -687,6 +684,9 @@ Object.extend(AraneaPage, {
             _ap.debug("Focused: " + _ap.focusedFormElementName);
           });
       });
+    }
+    if (AraneaPage.ajaxUploadInit) {
+      AraneaPage.ajaxUploadInit();
     }
   },
 

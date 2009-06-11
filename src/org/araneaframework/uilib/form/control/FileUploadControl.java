@@ -16,13 +16,26 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.util.Iterator;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.RequestContext;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.MultipartStream;
+import org.apache.commons.fileupload.FileUpload;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.framework.FileUploadContext;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -34,10 +47,20 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  */
 public class FileUploadControl extends BaseControl {
+
+  private static final Log log = LogFactory.getLog(FileUploadControl.class);
+
+  public static final String LISTENER_NAME = "fileUpload";
+
   protected List permittedMimeFileTypes;
   
   protected boolean uploadSucceeded = true;
   protected boolean mimeTypePermitted = true;
+
+  protected void init() throws Exception {
+    super.init();
+    addActionListener(LISTENER_NAME, new FileUploadActionListener());
+  }
 
   public boolean isRead() {
     return innerData != null;
@@ -168,6 +191,23 @@ public class FileUploadControl extends BaseControl {
     return new ViewModel();
   }
 
+  private class FileUploadActionListener implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+      FileInfo file = (FileInfo) innerData;
+      convertAndValidate();
+      if (file == null) {
+        log.debug("Did not get a file!");
+        ServletUtil.getResponse(output).getWriter().write("FAIL");
+      } else {
+        log.debug("Got file '" + file.getOriginalFilename() + "'");
+        ServletUtil.getResponse(output).getWriter().write("OK");
+      }
+    }
+  }
+  
   // *********************************************************************
   // * VIEW MODEL
   // *********************************************************************

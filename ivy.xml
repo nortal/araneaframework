@@ -51,6 +51,7 @@
 		<dependency conf="runtime" org="base64" rev="1.0" name="base64" transitive="false"/>
 		<dependency conf="runtime" org="commons-collections" rev="3.2.1" name="commons-collections" transitive="false"/>
 		<dependency conf="runtime" org="commons-fileupload" rev="1.2.1" name="commons-fileupload" transitive="false"/>
+		<dependency conf="runtime" org="commons-io" rev="1.4" name="commons-io" transitive="false"/>
 		<dependency conf="runtime" org="commons-lang" rev="2.4" name="commons-lang" transitive="false"/>
 		<dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" transitive="false"/>
 		<dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" transitive="false"/>
