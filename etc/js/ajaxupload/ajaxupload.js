@@ -12,10 +12,6 @@
  *
  * For the full changelog please visit:
  * http://valums.com/ajax-upload-changelog/
- * 
- * NOTE from Aranea:
- * This file was largely modified to better integrate with Prototype JS library.
- * It is not meant to be compatible with the original.
  */
 
 // assigning methods to our class
@@ -25,10 +21,10 @@ var AjaxUpload = Class.create({
 		this._input = null;
 		this.options = {
 			// Location of the server-side upload script
-			action: 'upload.php',
+			action: '',
 
 			// File upload name
-			name: 'araServiceActionParameter',
+			name: '',
 
 			// Additional parameters to send
 			data: {},
@@ -37,26 +33,25 @@ var AjaxUpload = Class.create({
 			autoSubmit: true,
 
 			// When user selects a file, useful with autoSubmit disabled
-			onChange: function(file, extension) {},
+			onChange: function(file, extension, options) {},
 
 			// Callback to fire before file is uploaded
 			// You can return false to cancel upload
-			onSubmit: function(file, extension) {},
+			onSubmit: function(file, extension, options) {},
 
 			// Fired when file upload is completed
-			onComplete: function(file, response) {},
+			onComplete: function(file, responseText, failMsg, options) {},
 
 			// Fired when hidden iframe is loaded. Usually you don't need to override it.
-			iframeOnLoad: this._defaultIframeOnLoad,
+			iframeOnLoad: this.defaultIframeOnLoad,
 
-			// The target of the upload (put here to be accessible to event listeners).
 			target: $(target).addClassName('ajax-upload')
 		};
 
 		// Merge the users options with our defaults
 		Object.extend(this.options, options);
 
-		this._addForm(document.body);
+		this._addForm();
 		this._addTargetListeners();
 	},
 
@@ -72,16 +67,16 @@ var AjaxUpload = Class.create({
 	/**
 	 * Creates form, that will be submitted to iframe
 	 */
-	_addForm: function(parent, input) {
-
+	_addForm: function() {
 		var form = new Element('form', {
 				name: AjaxUpload.getUID(),
 				method: 'post',
 				enctype: 'multipart/form-data',
+				encoding: 'multipart/form-data',
 				action: this.options.action
 		});
 
-		$(parent).insert(form);
+		$(document.body).insert(form);
 
 		// Create hidden input element for each data key
 		for (var prop in this.options.data){
@@ -89,7 +84,7 @@ var AjaxUpload = Class.create({
 		}
 
 		// Add input element for this form:
-		this._input = input ? input.remove() : new Element('input', { type: 'file', name: this.options.name, 'class': 'ajax-upload' });
+		this._input = new Element('input', { type: 'file', name: this.options.name, 'class': 'ajax-upload' });
 		this._input.setStyle({
 			position : 'absolute',
 			margin: '-5px 0 0 -175px',
@@ -107,6 +102,9 @@ var AjaxUpload = Class.create({
 	},
 
 	_addTargetListeners: function () {
+		if (!this._input) {
+			throw('AjaxUpload: No input to observe provided!');
+		}
 
 		// 1. Submiting file:
 		Event.observe(this._input, 'change', function(event) {
@@ -157,25 +155,20 @@ var AjaxUpload = Class.create({
 		// Remove ie6 "This page contains both secure and nonsecure items" prompt
 		// http://tinyurl.com/77w9wh
 		var iframe = new Element('iframe', {
-			src: "javascript:false;",
+			src: "about:blank;",
 			name: id,
 			id: id});
 
 		$(document.body).insert(iframe.hide());
-
-		this._addIframeEventListener(iframe);
+		Event.observe(iframe, 'load', this.options.iframeOnLoad.bind(this));
 
 		return iframe;
-	},
-
-	_addIframeEventListener: function(iframe) {
-		Event.observe(iframe, 'load', this.options.iframeOnLoad.bind(this));
 	},
 
 	/**
 	 * Upload file without refreshing the page
 	 */
-	submit : function(){
+	submit: function(){
 		if (!this.fileProvided()) {
 			return false;	// there is no file
 		}
@@ -186,7 +179,7 @@ var AjaxUpload = Class.create({
 		// execute user event
 		if (this.options.onSubmit.call(this, file, ext, this.options) != false) {
 			var form = this._input.up('form')
-			form.target=this._addIframe().name;
+			form.target = this._addIframe().name;
 			form.submit();
 			form = null;
 			// The iframe will remove itself when submit is completed.
@@ -196,43 +189,47 @@ var AjaxUpload = Class.create({
 	},
 
 	getFileName: function() {
-		return this._input.value.replace(/.*(\/|\\)/, "");
+		return this._input &&  this._input.value ?
+				this._input.value.replace(/.*(\/|\\)/, "") : '';
 	},
 
 	getFileExt: function() {
-		var file = this._input.value;
-		return (/[.]/.exec(file)) ? /[^.]+$/.exec(file.toLowerCase()) : '';
+		var file = this._input ? this._input.value : null;
+		return file ? (/[.]/.exec(file) ? /[^.]+$/.exec(file.toLowerCase()) : '') : '';
 	},
 
 	fileProvided: function() {
 		return this._input && this._input.value != '';
 	},
 
-	_defaultIframeOnLoad: function(event) {
-		var iframe = event.element()
-		_ap.debug('Received FILE UPLOAD iframe load: src="' + iframe.src);
-		if (iframe.src != 'about:blank') {
+	defaultIframeOnLoad: function(event) {
+		var iframe = event.target ? event.element() : null;
+		_ap.debug('File upload iframe onload - ' + (iframe && iframe.src));
+		if (iframe && iframe.src != 'about:blank') {
 			var doc = AjaxUpload.getDocument(iframe);
 			var content = AjaxUpload.getContent(doc);
 
 			_ap.debug('File upload iframe onload - content: "'
 					+ (content ? content.substring(0, 80) : content)
+					+ (content && content.length > 80 ? '...' : '')
 					+ '" (length: ' + content.length + ')');
 
-			if (content === 'OK' || content === 'FAIL') {
+			if (content && content.indexOf('OK') == 0 || content.indexOf('FAIL') == 0) {
 				AjaxUpload.onLoad(iframe, this.options, this.getFileName(), content);
 			} else if (doc.body) {
 				doc.body.innerHTML = '';
 			}
+
+			iframe = null;
+			doc = null;
 		}
 	}
 });
 
 Object.extend(AjaxUpload, {
-
 	getBox: function(element) {
-		var offset = $(element).cumulativeOffset();
-		return {
+		var offset = $(element) ? $(element).cumulativeOffset() : null;
+		return !offset ? null : {
 			left: offset.left,
 			right: offset.left + element.offsetWidth,
 			top: offset.top,
@@ -241,7 +238,7 @@ Object.extend(AjaxUpload, {
 	},
 
 	/**
-	 * Generates unique id
+	 * Function generates unique id
 	 */
 	getUID: function() {
 		this._id = this._id ? this._id : 0;
@@ -249,8 +246,8 @@ Object.extend(AjaxUpload, {
 	},
 
 	getDocument: function(iframe) {
-		return iframe.contentDocument ? iframe.contentDocument :
-			(frames[iframe.id] ? frames[iframe.id].document : null);
+		return iframe && iframe.contentDocument ? iframe.contentDocument :
+			(iframe && frames[iframe.id] ? frames[iframe.id].document : null);
 	},
 
 	getContent: function(doc) {
@@ -276,7 +273,13 @@ Object.extend(AjaxUpload, {
 	},
 
 	onLoad: function(iframe, settings, file, content) {
-		settings.onComplete.call(this, file, content, settings);
+		var failMsg;
+
+		if (content.indexOf('FAIL(') == 0) {
+			failMsg = content.substring(content.indexOf('(') + 1, content.lastIndexOf(')'));
+		}
+
+		settings.onComplete.call(this, file, content, failMsg, settings);
 
 		// Reload blank page, so that reloading main page
 		// does not re-submit the post. Also, remember to

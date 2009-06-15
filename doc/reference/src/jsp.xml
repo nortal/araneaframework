@@ -157,6 +157,7 @@
 				<listitem><emphasis>modalbox</emphasis> - imports only <link linkend="modalbox">ModalBox</link> scripts.</listitem>
 				<listitem><emphasis>rsh</emphasis> - imports only back-button support scripts.</listitem>
 				<listitem><emphasis>prototip</emphasis> - imports only <link linkend="prototip">Prototip</link> scripts.</listitem>
+				<listitem><emphasis>ajaxupload</emphasis> - imports only <link linkend="ajaxupload">AJAX upload</link> functionality scripts.</listitem>
 				<listitem><emphasis>logger</emphasis> - imports only <link linkend="log4javascript">log4javascript</link> scripts.</listitem>
 			</orderedlist>
 
@@ -168,6 +169,7 @@
 					<listitem><emphasis>calendar</emphasis></listitem>
 					<listitem><emphasis>calendar_et</emphasis></listitem>
 					<listitem><emphasis>prototip</emphasis></listitem>
+					<listitem><emphasis>ajaxupload</emphasis></listitem>
 					<listitem><emphasis>logger</emphasis> (always compressed)</listitem>
 				</itemizedlist>
 

@@ -64,11 +64,13 @@
 		<file path="js/aranea/aranea-popups.js" />
 		<file path="js/aranea/aranea-rsh.js" />
 		<file path="js/aranea/aranea-modalbox.js" />
+		<file path="js/aranea/aranea-ajaxupload.js" />
 		<file path="js/modalbox/modalbox.js" />
 		<file path="js/prototip/prototip.js" />
 		<file path="js/calendar/calendar.js" />
 		<file path="js/calendar/calendar-en.js" />
 		<file path="js/calendar/calendar-setup.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
 	</files>
 
 	<files content-type="text/javascript" group="all-devel.js">
@@ -88,11 +90,13 @@
 		<file path="js/aranea/src/aranea-popups.js" />
 		<file path="js/aranea/src/aranea-rsh.js" />
 		<file path="js/aranea/src/aranea-modalbox.js" />
+		<file path="js/aranea/src/aranea-ajaxupload.js" />
 		<file path="js/modalbox/modalbox.js" />
 		<file path="js/prototip/prototip.js" />
 		<file path="js/calendar/calendar.js" />
 		<file path="js/calendar/calendar-en.js" />
 		<file path="js/calendar/calendar-setup.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
 	</files>
 
 	<files content-type="text/javascript" group="core-all.js">
@@ -205,6 +209,16 @@
 	<files content-type="text/javascript" group="rsh-devel.js">
 		<file path="js/rsh/rsh.js" />
 		<file path="js/aranea/src/aranea-rsh.js" />
+	</files>
+
+	<files content-type="text/javascript" group="ajaxupload.js">
+		<file path="js/aranea/aranea-ajaxupload.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
+	</files>
+
+	<files content-type="text/javascript" group="ajaxupload-devel.js">
+		<file path="js/aranea/src/aranea-ajaxupload.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
 	</files>
 
 	<files content-type="text/javascript" group="prototip.js">

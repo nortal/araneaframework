@@ -16,13 +16,9 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.PrintWriter;
 import java.util.Iterator;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.RequestContext;
-import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.MultipartStream;
-import org.apache.commons.fileupload.FileUpload;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
@@ -56,6 +52,8 @@ public class FileUploadControl extends BaseControl {
   
   protected boolean uploadSucceeded = true;
   protected boolean mimeTypePermitted = true;
+  protected boolean ajaxRequest;
+  protected List ajaxMessages = new LinkedList();
 
   protected void init() throws Exception {
     super.init();
@@ -85,6 +83,13 @@ public class FileUploadControl extends BaseControl {
     return "FileInfo";
   }
 
+  protected void addError(String error) {
+    if (this.ajaxRequest) {
+      this.ajaxMessages.add(error);
+    } else {
+      super.addError(error);
+    }
+  }
   // *********************************************************************
   // * INTERNAL METHODS
   // *********************************************************************
@@ -197,10 +202,27 @@ public class FileUploadControl extends BaseControl {
 
     public void processAction(String actionId, InputData input, OutputData output) throws Exception {
       FileInfo file = (FileInfo) innerData;
+      ajaxRequest = true;
       convertAndValidate();
-      if (file == null) {
+
+      if (file == null || file.getSize() == 0) {
         log.debug("Did not get a file!");
-        ServletUtil.getResponse(output).getWriter().write("FAIL");
+        PrintWriter out = ServletUtil.getResponse(output).getWriter();
+        out.write("FAIL");
+
+        if (!ajaxMessages.isEmpty()) {
+          out.print("(");
+          for (Iterator i = ajaxMessages.iterator(); i.hasNext(); ) {
+            out.print(i.next());
+            if (i.hasNext()) {
+              out.print("\n");
+            }
+          }
+          out.print(")");
+          ajaxMessages.clear();
+        }
+
+        ajaxRequest = false;
       } else {
         log.debug("Got file '" + file.getOriginalFilename() + "'");
         ServletUtil.getResponse(output).getWriter().write("OK");
