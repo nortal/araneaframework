@@ -39,26 +39,28 @@ Object.extend(AraneaPage, {
 		var opts = Object.clone(this.AjaxUploadOptions);
 		$$('input[type=file].ajax-upload,form#overlaySystemForm input[type=file]').each(function(element) {
 			new AjaxUpload(element, Object.extend(opts, {
+				name: element ? element.name : '',
 				action: AraneaPage.getAjaxUploadURL(element),
 				data: AraneaPage.getAjaxUploadFormData(form, element)
-			});
+			}));
 		});
 		form = null;
 	},
 
 	// Default options. Feel free to modify, esp. onComplete:
 	AjaxUploadOptions: {
-		name: 'araServiceActionParameter',
 		autoSubmit: true,
 		onChange: function(file, extension, options) {},
 		onSubmit: function(file, extension, options) {},
 		onComplete: function(file, responseText, failMsg, options) {
-			_ap.debug("File upload completed. File=" + file + "; response=" + responseText);
+			_ap.debug('File upload completed. File="' + file + '"; response="' + responseText + '".');
 			if (responseText == 'OK') {
 				$(options.target).hide().insert({after:
 					'<a href="#" onclick="$(this).previous().show().next().remove(); return false;">' + file + '</a>'});
 			} else {
-				alert(failMsg ? failMsg : 'File upload failed. Please try again!');
+				alert(failMsg ? failMsg : 'Uploading file "' + file +
+						'" failed. There could have been a problem\nwith the connection or the ' +
+						'file was too big. Please try again!');
 			}
 		}
 	}

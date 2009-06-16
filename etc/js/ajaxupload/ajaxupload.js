@@ -69,7 +69,6 @@ var AjaxUpload = Class.create({
 	 */
 	_addForm: function() {
 		var form = new Element('form', {
-				name: AjaxUpload.getUID(),
 				method: 'post',
 				enctype: 'multipart/form-data',
 				encoding: 'multipart/form-data',
@@ -155,7 +154,7 @@ var AjaxUpload = Class.create({
 		// Remove ie6 "This page contains both secure and nonsecure items" prompt
 		// http://tinyurl.com/77w9wh
 		var iframe = new Element('iframe', {
-			src: "about:blank;",
+			src: "javascript:false;",
 			name: id,
 			id: id});
 
@@ -204,20 +203,23 @@ var AjaxUpload = Class.create({
 
 	defaultIframeOnLoad: function(event) {
 		var iframe = event.target ? event.element() : null;
-		_ap.debug('File upload iframe onload - ' + (iframe && iframe.src));
 		if (iframe && iframe.src != 'about:blank') {
 			var doc = AjaxUpload.getDocument(iframe);
 			var content = AjaxUpload.getContent(doc);
+
+			if (doc.body) {
+				doc.body.innerHTML = '';
+			}
 
 			_ap.debug('File upload iframe onload - content: "'
 					+ (content ? content.substring(0, 80) : content)
 					+ (content && content.length > 80 ? '...' : '')
 					+ '" (length: ' + content.length + ')');
 
-			if (content && content.indexOf('OK') == 0 || content.indexOf('FAIL') == 0) {
-				AjaxUpload.onLoad(iframe, this.options, this.getFileName(), content);
-			} else if (doc.body) {
-				doc.body.innerHTML = '';
+			if (content && content.indexOf('OK') == 0 || content.indexOf('FAIL') >= 0) {
+				var fileName = this.getFileName();
+				this._input.value = '';
+				AjaxUpload.onLoad(iframe, this.options, fileName, content);
 			}
 
 			iframe = null;
@@ -272,19 +274,17 @@ Object.extend(AjaxUpload, {
 		return response;
 	},
 
-	onLoad: function(iframe, settings, file, content) {
+	onLoad: function(iframe, settings, fileName, content) {
+		// Reload blank page, so that reloading main page does not re-submit the post.
+		iframe.src = "about:blank"; //load event fired
+		iframe.remove();
+
 		var failMsg;
 
 		if (content.indexOf('FAIL(') == 0) {
 			failMsg = content.substring(content.indexOf('(') + 1, content.lastIndexOf(')'));
 		}
 
-		settings.onComplete.call(this, file, content, failMsg, settings);
-
-		// Reload blank page, so that reloading main page
-		// does not re-submit the post. Also, remember to
-		// delete the frame
-		iframe.src = "about:blank"; //load event fired
-		iframe.remove();
+		settings.onComplete.call(this, fileName, content, failMsg, settings);
 	}
 });

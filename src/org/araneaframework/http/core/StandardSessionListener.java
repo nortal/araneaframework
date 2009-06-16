@@ -16,6 +16,8 @@
 
 package org.araneaframework.http.core;
 
+import javax.servlet.http.HttpSession;
+import org.araneaframework.core.Assert;
 import java.util.Collections;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -37,12 +39,6 @@ public class StandardSessionListener implements HttpSessionListener {
 
   public static final Log log = LogFactory.getLog(StandardSessionListener.class);
 
-  protected boolean destroyComponents = true;
-
-  public void setDestroyComponents(boolean destroyComponents) {
-    this.destroyComponents = destroyComponents;
-  }
-
   public void sessionCreated(HttpSessionEvent sessEvent) {
     if (log.isDebugEnabled()) {
       log.debug("Session '" + sessEvent.getSession().getId() + "' created");
@@ -50,9 +46,7 @@ public class StandardSessionListener implements HttpSessionListener {
   }
 
   public void sessionDestroyed(HttpSessionEvent sessEvent) {
-
-    if (sessEvent.getSession().getAttribute(
-        StandardHttpSessionRouterService.SESSION_SERVICE_KEY) != null) {
+    if (containsSessionService(sessEvent)) {
       // Aranea component hierarchy handle is present in session.
       // Invoke their destruction.
       destroyComponents(sessEvent);
@@ -64,15 +58,26 @@ public class StandardSessionListener implements HttpSessionListener {
   }
 
   /**
+   * Checks whether the session contains Aranea session service. If it is not in
+   * the session then it is a sign that Aranea components have not been created
+   * for this session.
+   * 
+   * @param sessEvent The session event object.
+   * @return Whether the session contains session service.
+   */
+  protected boolean containsSessionService(HttpSessionEvent sessEvent) {
+    Assert.notNullParam(this, sessEvent, "sessEvent");
+    HttpSession session = sessEvent.getSession();
+    return session != null && session.getAttribute(
+        StandardHttpSessionRouterService.SESSION_SERVICE_KEY) != null;
+  }
+
+  /**
    * Propagates <code>destroy()</code> on all Aranea components.
    * 
    * @since 1.2.2
    */
   protected void destroyComponents(HttpSessionEvent sessEvent) {
-    if (!this.destroyComponents) {
-      return;
-    }
-
     RelocatableDecorator service =
       (RelocatableDecorator) sessEvent.getSession().getAttribute(
             StandardHttpSessionRouterService.SESSION_SERVICE_KEY);

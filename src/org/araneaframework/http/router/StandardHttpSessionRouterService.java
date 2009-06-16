@@ -185,21 +185,19 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   private synchronized RelocatableService getOrCreateSessionService(HttpSession sess) {
     Environment newEnv = new StandardEnvironment(getEnvironment(), HttpSession.class, sess);
-    
-    RelocatableService result = null;   
-    
-    if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
-      log.debug("Created HTTP session '"+sess.getId()+"'");
-      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));        
-      
-      result._getComponent().init(getScope(), newEnv);
 
+    RelocatableService result = null;   
+
+    if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
+      log.debug("HTTP session '" + sess.getId() + "' was started.");
+      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));
+      result._getComponent().init(getScope(), newEnv);
     } else {
       result = (RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
       result._getRelocatable().overrideEnvironment(newEnv);
-      log.debug("Reusing HTTP session '"+sess.getId()+"'");
+      log.debug("Reusing HTTP session '" + sess.getId() + "'");
     }
-    
+
     return result;
   }
 
