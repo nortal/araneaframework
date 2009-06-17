@@ -43,6 +43,7 @@ Object.extend(AraneaPage, {
 				action: AraneaPage.getAjaxUploadURL(element),
 				data: AraneaPage.getAjaxUploadFormData(form, element)
 			}));
+			element.removeClassName('ajax-upload');
 		});
 		form = null;
 	},
