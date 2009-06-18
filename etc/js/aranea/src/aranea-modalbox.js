@@ -243,4 +243,4 @@ Aranea.ModalBox = {
         }
     );
   }
-}
+};

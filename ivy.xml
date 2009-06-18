@@ -77,6 +77,7 @@
 
 		<!-- "test" -->
 		<dependency conf="test" org="springframework" rev="1.2.6" name="spring-mock"/>
+		<dependency conf="test" org="junit" rev="4.6" name="junit"/>
 
 		<!-- "demo" -->
 		<dependency conf="demo" org="hibernate" rev="3.0" name="hibernate" transitive="false"/>

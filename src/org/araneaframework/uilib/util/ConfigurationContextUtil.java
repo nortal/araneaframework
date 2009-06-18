@@ -51,6 +51,6 @@ public abstract class ConfigurationContextUtil {
    * @since 1.1.0.1
    */
   public static boolean isELEvaluationEnabled(ConfigurationContext cctx) {
-   return "true".equalsIgnoreCase((String) cctx.getEntry(ConfigurationContext.TAGS_EL_EVALUATE));
+   return !"false".equalsIgnoreCase((String) cctx.getEntry(ConfigurationContext.TAGS_EL_EVALUATE));
   }
 }

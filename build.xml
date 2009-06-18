@@ -160,10 +160,10 @@
 			<arg line="src/aranea.js aranea.js"/>
 		</exec>
 		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-behaviour.js aranea-behaviour.js"/>
+			<arg line="src/aranea-ajaxupload.js aranea-ajaxupload.js"/>
 		</exec>
 		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea.js aranea.js"/>
+			<arg line="src/aranea-behaviour.js aranea-behaviour.js"/>
 		</exec>
 		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
 			<arg line="src/aranea-contextmenu.js aranea-contextmenu.js"/>
