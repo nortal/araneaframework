@@ -16,10 +16,8 @@
 			</tui:componentHeader>
 
 			<tui:component>
-				<ui:updateRegion id="test" tag="div">
-					<p><fmt:message key="ac.demo.intro" /></p>
-					<p><fmt:message key="ac.demo.howto" /></p>
-				</ui:updateRegion>
+				<p><fmt:message key="ac.demo.intro" /></p>
+				<p><fmt:message key="ac.demo.howto" /></p>
 				<br />
 
 				<tui:componentForm>
@@ -32,7 +30,7 @@
 							</ui:cell>
 
 							<ui:cell styleClass="inpt">
-								<ui:autoCompleteTextInput updateRegions="test"/>
+								<ui:autoCompleteTextInput/>
 							</ui:cell>
 						</ui:formElement>
 

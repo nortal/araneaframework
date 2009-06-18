@@ -894,6 +894,7 @@ Object.extend(AraneaPage, {
 /**
  * A common callback for submitters. The callback handles common data manipulation and validation.
  * This callback should be used to add some custom features to submit data or submit response.
+ * @since 1.2.2
  */
 AraneaPage.SubmitCallback = {
   /**

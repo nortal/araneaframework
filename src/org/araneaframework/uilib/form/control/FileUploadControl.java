@@ -196,7 +196,11 @@ public class FileUploadControl extends BaseControl {
     return new ViewModel();
   }
 
-  private class FileUploadActionListener implements ActionListener {
+  /**
+   * The default implementation for AJAX file upload listener.
+   * @since 1.2.2
+   */
+  protected class FileUploadActionListener implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
