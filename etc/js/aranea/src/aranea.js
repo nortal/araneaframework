@@ -348,7 +348,7 @@ var AraneaPage = Class.create({
     
     this.setLoaded(false);
 
-    var systemForm = $(element).up('form#overlaySystemForm, form#systemForm');
+    var systemForm = $(element).up('form');
     var preCondition = this.getEventPreCondition(element);
 
     if (preCondition) {
