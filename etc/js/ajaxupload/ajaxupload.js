@@ -17,7 +17,7 @@
 // assigning methods to our class
 var AjaxUpload = Class.create({
 
-	initialize: function(target, options){
+	initialize: function(target, options) {
 		this._input = null;
 		this.options = {
 
@@ -60,8 +60,8 @@ var AjaxUpload = Class.create({
 	},
 
 	// removes ajaxupload
-	destroy: function(){
-		if (this._input){
+	destroy: function() {
+		if (this._input) {
 			this._input.up('form').remove();
 			this._input = null;
 		}

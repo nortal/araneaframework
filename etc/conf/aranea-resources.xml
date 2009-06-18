@@ -48,7 +48,7 @@
 <!-- ============================================================ -->
 
 	<files content-type="text/javascript" group="all.js">
-		<file path="js/rsh/rsh.compressed.js" />
+		<file path="js/rsh/rsh.js" />
 		<file path="js/prototype/prototype.js" />
 		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
@@ -100,7 +100,7 @@
 	</files>
 
 	<files content-type="text/javascript" group="core-all.js">
-		<file path="js/rsh/rsh.compressed.js" />
+		<file path="js/rsh/rsh.js" />
 		<file path="js/prototype/prototype.js" />
         <file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
@@ -202,7 +202,7 @@
 	</files>
 
 	<files content-type="text/javascript" group="rsh.js">
-		<file path="js/rsh/rsh.compressed.js" />
+		<file path="js/rsh/rsh.js" />
 		<file path="js/aranea/aranea-rsh.js" />
 	</files>
 

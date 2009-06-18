@@ -29,8 +29,8 @@
  * @deprecated since 1.2.1; use Prototype for this task as this function does it now. To be removed in 2.0 
  */
 function createNamedElement(type, name) {
-   return new Element(type, { 'name': name });;
-}
+   return new Element(type, { 'name': name });
+};
 
 function getElementByIdORName(str) {
   var r = $(str);
@@ -43,14 +43,14 @@ function getElementByIdORName(str) {
     }
   }
   return r;
-}
+};
 
 function setElementAttr(elementStr, attrName, attrValue) {
   var el = getElementByIdORName(elementStr);
   if (el) {
     el.writeAttribute(attrName, attrValue);
   }
-}
+};
 
 /**
  * A wrapper around String that lets to read text by lines and by chunks of
