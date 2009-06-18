@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="ivy-doc.xsl"?>
-<ivy-module
-	version="2.0"
+<ivy-module version="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
 
@@ -11,14 +10,19 @@
 		revision="${araneaframework.version}"
 		status="${araneaframework.status}">
 
-		<license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html" />
-		<ivyauthor name="Martti Tamm" url="http://www.araneaframework.org/" />
+		<license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+		<ivyauthor name="Martti Tamm" url="http://www.araneaframework.org/"/>
 		<description homepage="http://www.araneaframework.org/">Aranea MVC web framework</description>
 	</info>
 
 	<configurations defaultconfmapping="*->runtime">
+
 		<conf name="runtime" description="The runtime dependecies for Aranea."/>
-		<conf name="build" description="The configuration to build Aranea." visibility="private"/>
+		<conf name="build" description="The libraries to compile  Aranea (in addition to runtime libraries)." visibility="private"/>
+		<conf name="build-util" description="Additional build-time utilities to build Aranea release bundle." visibility="private"/>
+		<conf name="test" description="Additional libraries to run tests." visibility="private"/>
+		<conf name="demo" description="Additional libraries to run demos." visibility="private"/>
+
 		<conf name="aranea" description="The entire Aranea runtime library."/>
 		<conf name="aranea-backend" description="The Aranea lists library."/>
 		<conf name="aranea-core" description="The Aranea core library."/>
@@ -27,73 +31,61 @@
 		<conf name="aranea-jsp" description="The Aranea JSP library."/>
 		<conf name="aranea-uilib" description="The Aranea MVC library."/>
 		<conf name="aranea-integration-spring" description="The Aranea-Spring integration library."/>
+
 	</configurations>
 
 	<publications>
-		<artifact name="aranea" conf="aranea" />
-		<artifact name="aranea-backend" conf="aranea-backend" />
-		<artifact name="aranea-core" conf="aranea-core" />
-		<artifact name="aranea-framework" conf="aranea-framework" />
-		<artifact name="aranea-http" conf="aranea-http" />
-		<artifact name="aranea-jsp" conf="aranea-jsp" />
-		<artifact name="aranea-uilib" conf="aranea-uilib" />
-		<artifact name="aranea-integration-spring" conf="aranea-integration-spring" />
+		<artifact name="aranea" conf="aranea"/>
+		<artifact name="aranea-backend" conf="aranea-backend"/>
+		<artifact name="aranea-core" conf="aranea-core"/>
+		<artifact name="aranea-framework" conf="aranea-framework"/>
+		<artifact name="aranea-http" conf="aranea-http"/>
+		<artifact name="aranea-jsp" conf="aranea-jsp"/>
+		<artifact name="aranea-uilib" conf="aranea-uilib"/>
+		<artifact name="aranea-integration-spring" conf="aranea-integration-spring"/>
 	</publications>
 
 	<dependencies defaultconfmapping="*->default">
 
 		<!-- "runtime" -->
-		<dependency conf="runtime" org="base64" rev="1.0" name="base64" />
-		<dependency conf="runtime" org="commons-collections" rev="3.2.1" name="commons-collections" />
-		<dependency conf="runtime" org="commons-el" rev="1.0" name="commons-el" />
-		<dependency conf="runtime" org="commons-fileupload" rev="1.2.1" name="commons-fileupload" />
-		<dependency conf="runtime" org="commons-io" rev="1.4" name="commons-io" />
-		<dependency conf="runtime" org="commons-lang" rev="2.4" name="commons-lang" />
-		<dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" />
-		<dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" />
-		<dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" />
-		<dependency conf="runtime" org="oro" rev="2.0.8" name="oro" />
-		<dependency conf="runtime" org="xstream" rev="1.2" name="xstream" />
+		<dependency conf="runtime" org="base64" rev="1.0" name="base64" transitive="false"/>
+		<dependency conf="runtime" org="commons-collections" rev="3.2.1" name="commons-collections" transitive="false"/>
+		<dependency conf="runtime" org="commons-fileupload" rev="1.2.1" name="commons-fileupload" transitive="false"/>
+		<dependency conf="runtime" org="commons-io" rev="1.4" name="commons-io" transitive="false"/>
+		<dependency conf="runtime" org="commons-lang" rev="2.4" name="commons-lang" transitive="false"/>
+		<dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" transitive="false"/>
+		<dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" transitive="false"/>
+		<dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" transitive="false"/>
+		<dependency conf="runtime" org="xstream" rev="1.2" name="xstream"/>
 
 		<!-- "buildtime" -->
-		<dependency conf="build" org="asm" rev="2.2.1" name="asm" />
-		<dependency conf="build" org="asm" rev="1.5.3" name="asm-attrs" />
-		<dependency conf="build" org="checkstyle" rev="4.4" name="checkstyle" />
-		<dependency conf="build" org="cobertura" rev="1.7" name="cobertura" />
-		<dependency conf="build" org="javancss" rev="28.49" name="javancss" />
-		<dependency conf="build" org="javancss" rev="28.49" name="jhbasic" />
-		<dependency conf="build" org="javancss" rev="28.49" name="ccl" />
-		<dependency conf="build" org="javax" rev="1.4" name="j2ee" />
-		<dependency conf="build" org="joda-time" rev="1.6" name="joda-time" />
-		<dependency conf="build" org="jstl" rev="1.0.3" name="jstl" />
-		<dependency conf="build" org="junit" rev="3.8.1" name="junit" />
-		<dependency conf="build" org="taglibs" rev="1.0.6" name="standard" />
-		<dependency conf="build" org="taglibrarydoc" rev="1.3" name="tlddoc" />
-		<dependency conf="build" org="springframework" rev="1.2.6" name="spring" />
-		<dependency conf="build" org="springframework" rev="1.2.6" name="spring-mock" />
-		<dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet" />
-		<dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet-web-module" />
-		<dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet-hibernate-module" />
-		<dependency conf="build" org="xdoclet" rev="1.2.3" name="xdoclet-xdoclet-module" />
-		<dependency conf="build" org="xdoclet" rev="1.1" name="xjavadoc" />
+		<dependency conf="build" org="javax" rev="1.4" name="j2ee" transitive="false"/>
+		<dependency conf="build" org="joda-time" rev="1.6" name="joda-time" transitive="false"/>
+		<dependency conf="build" org="javax.servlet" rev="1.0.6" name="jstl" transitive="false"/>
+		<dependency conf="build" org="springframework" rev="1.2.6" name="spring" transitive="false"/>
+		<dependency conf="build" org="taglibs" rev="1.0.6" name="standard" transitive="false"/>
+		<dependency conf="build" org="xerces" rev="2.9.1" name="xercesImpl"/>
 
-		<!-- Ignore these dependecies in "build" conf -->
-		<exclude module="commons-collections" conf="build" />
-		<exclude module="commons-lang" conf="build" />
-		<exclude module="commons-logging" conf="build" />
-		<exclude module="oro" conf="build" />
+		<!-- "build-util" -->
+		<dependency conf="build-util" org="checkstyle" rev="4.4" name="checkstyle" transitive="false"/>
+		<dependency conf="build-util" org="taglibrarydoc" rev="1.3" name="tlddoc" transitive="false"/>
+		<dependency conf="build-util" org="xdoclet" rev="1.2.3" name="xdoclet"/>
+		<dependency conf="build-util" org="xdoclet" rev="1.2.3" name="xdoclet-web-module" force="true"/>
+		<dependency conf="build-util" org="xdoclet" rev="1.2.3" name="xdoclet-hibernate-module" transitive="false"/>
+		<dependency conf="build-util" org="xdoclet" rev="1.2.3" name="xdoclet-xdoclet-module" transitive="false"/>
+		<dependency conf="build-util" org="xdoclet" rev="1.1" name="xjavadoc" transitive="false"/>
 
-		<!-- Ignore these dependecies in every conf -->
-		<exclude module="activation" />
-		<exclude module="ant" />
-		<exclude module="avalon-framework" />
-		<exclude module="connector" />
-		<exclude module="jta" />
-		<exclude module="log4j" />
-		<exclude module="mail" />
-		<exclude module="portlet-api" />
-		<exclude module="servletapi" />
-		<exclude module="servlet-api" />
+		<!-- "test" -->
+		<dependency conf="test" org="springframework" rev="1.2.6" name="spring-mock"/>
+
+		<!-- "demo" -->
+		<dependency conf="demo" org="hibernate" rev="3.0" name="hibernate" transitive="false"/>
+		<dependency conf="demo" org="commons-beanutils" rev="1.8.0" name="commons-beanutils" transitive="false"/>
+		<dependency conf="demo" org="commons-el" rev="1.0" name="commons-el" transitive="false"/>
+
+		<exclude conf="runtime" artifact="jmock"/>
+		<exclude conf="runtime" artifact="junit"/>
+		<exclude conf="runtime" artifact="xpp3_min"/>
 
 	</dependencies>
 

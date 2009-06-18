@@ -19,7 +19,7 @@ public class ExampleOverlayDemoMessageFactory implements MessageFactory {
 
   public Message buildMessage(String url, final String suffix, InputData input,
       OutputData output) {
-    return new SeriesMessage(new Message[] { new OverlayBroadcastMessage() });
+    return new OverlayBroadcastMessage();
   }
 
   private class OverlayBroadcastMessage extends BroadcastMessage {

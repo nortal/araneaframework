@@ -432,7 +432,7 @@ public class BeanUtil {
    * @return write method (setter) for the field.
    */
   public static Method getWriteMethod(Class beanClass, String field) {
-    return getWriteMethod(beanClass, field);
+    return getSimpleWriteMethod(beanClass, field, null);
   }
 
   /**

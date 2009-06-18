@@ -13,12 +13,13 @@ import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
+import org.araneaframework.uilib.form.control.FileUploadControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.DateData;
+import org.araneaframework.uilib.form.data.FileInfoData;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
@@ -55,12 +56,12 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
         new BooleanData(), false);
     this.form.addElement("dateTime", "common.datetime", new DateTimeControl(),
         new DateData(), false);
-    this.form.addElement("time", "common.time", new TimeControl(),
-        new DateData(), false);
     this.form.addElement("date", "common.date", new DateControl(),
         new DateData(), false);
     this.form.addElement("number", "common.float", new FloatControl(),
         new BigDecimalData(), false);
+    this.form.addElement("upload", "common.file", new FileUploadControl(),
+        new FileInfoData(), false);
 
 
     // Require the number input field to be filled. It could have been achieved

@@ -33,19 +33,57 @@ boolean selectTab(String id);</programlisting>
 			For its children, TabContainerWidget is accessible from <literal>Environment</literal> as <literal>TabContainerContext</literal>.
 		</para>
 	
-    </sect2>
-    
-    <sect2 id="TabJsptags">
-    	<title>Tab JSP tags</title>
-    	
-    	<sect3 id="uitabcontainer">
-    		<title>&lt;ui:tabContainer&gt;</title>
-    		<para>
-    			Opens the tab container context and renders the labels for all tabs inside this container.
-    		</para>
-    		
-    		  <sect4 id="uitabcontainerattrs">
-        <title>Attributes</title>
+		<para>
+			Since Aranea 1.2.2, one can also add a tab switch listener. The listener is invoked right before the current tab is about to be
+			replaced with a new tab. Here note that the current tab may be <literal>null</literal> (when the <literal>selectTab()</literal>
+			method was not called before). The listener is defined as a sub-interface of <literal>TabContainerContext</literal>:
+		</para>
+		<programlisting role="java"><![CDATA[
+  /**
+   * An interface for tab switch listeners. Tab switch occurs when the currently
+   * selected tab changes.
+   * @since 1.2.2
+   */
+  interface TabSwitchListener extends Serializable {
+
+    /**
+     * A listener for tab switching. Before the selected tab will be replaced
+     * with a new one, this method is called to check whether the switch is
+     * allowed. Note that the <code>selectedTab</code> parameter may be
+     * <code>null</code> if no tab is currently selected.
+     * <p>
+     * The last parameter is a tab switch closure that is executed only when the
+     * listener returns <code>true</code> or when the listener executes it
+     * itself. Therefore, this closure can also be used with
+     * {@link ConfirmationContext#confirm(Closure, String)}.
+     * 
+     * @param selectedTab The currently selected tab. May be <code>null</code>.
+     * @param newTab The tab that will replace the current one.
+     * @param switchClosure A closure that handles tab switch.
+     * @return <code>true</code>, if the switch is allowed.
+     */
+    boolean onSwitch(TabWidget selectedTab, TabWidget newTab, Closure switchClosure);
+
+  }]]>	</programlisting>
+
+	<para>
+		The default implementation is <literal>DefaultTabSwitchListener</literal>, which basically corresponds to the default behaviour.
+		However, one can easily write and set their own handler for a tab container. In addition, the <literal>switchClosure</literal> parameter
+		helps integrating this solution with the <link linkend="ConfirmationContext">ConfirmationContext</link>.
+	</para>
+	
+	</sect2>
+
+	<sect2 id="TabJsptags">
+		<title>Tab JSP tags</title>
+		<sect3 id="uitabcontainer">
+			<title>&lt;ui:tabContainer&gt;</title>
+			<para>
+				Opens the tab container context and renders the labels for all tabs inside this container.
+			</para>
+			
+			  <sect4 id="uitabcontainerattrs">
+		<title>Attributes</title>
 
         <informaltable frame="topbot">
           <tgroup cols="3">

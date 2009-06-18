@@ -77,7 +77,7 @@ Aranea.ModalBox = {
         } else {
           this.close();
           _ap.debug("Exception has occured while processing or receiving Modalbox request.");
-          _ap.debug(exc);
+          _ap.debug(exception);
           throw('Modal dialog loading error: ' + exception);
         }
       }.bind(this)

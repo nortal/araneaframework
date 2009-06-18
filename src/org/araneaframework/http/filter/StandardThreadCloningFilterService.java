@@ -89,9 +89,9 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     } else if (snapshotRequested(input)) {
       this.threadSnapshot = takeSnapshot((RelocatableService)childService);
       super.action(path, input, output);
-    }
-    else
+    } else {
       super.action(path, input, output);
+    }
     this.threadSnapshot = null;
   }
   
@@ -104,7 +104,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     clone._getService().action(path, input, output);
     
     // return URL where cloned service resides
-    return ((HttpOutputData) getOutputData()).encodeURL((getResponseURL(getRequestURL(), (String)getTopServiceCtx().getCurrentId(), cloneServiceId)));
+    return ((HttpOutputData) getOutputData()).encodeURL(getResponseURL(getRequestURL(), (String)getTopServiceCtx().getCurrentId(), cloneServiceId));
   }
   
   protected void redirect(String location) throws Exception {

@@ -115,7 +115,12 @@ Object.extend(Aranea.Behaviour, {
   apply: function() {
     _ap.debug("Applying behaviour rules to form elements...");
     $$('a.aranea-link-button', 'a.aranea-link', 'a.aranea-tab-link').each(function(el) {
-      setCloningUrl(el);
+      if (el.hasAttribute('href')) {
+        var href = el.readAttribute('href');
+        if (!href || href.indexOf("://") < 0) {
+          setCloningUrl(el);
+        }
+      }
     });
 
     $$('input.aranea-text',
@@ -185,7 +190,7 @@ Object.extend(Aranea.Behaviour, {
       var form = AraneaPage.findSystemForm();
 
       if (!options) {
-        options = new Object();
+        options = {};
       }
 
       if (eventType && !options.afterUpdateElement) {

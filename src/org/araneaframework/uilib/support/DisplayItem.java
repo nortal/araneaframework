@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.support;
 
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 
@@ -99,7 +100,10 @@ public class DisplayItem implements java.io.Serializable {
    * @since 1.2
    */
   public boolean equals(Object obj) {
-    DisplayItem other = (DisplayItem) obj;
-    return other == this || other.value == this.value;
+    if (obj != null && obj instanceof DisplayItem) {
+      DisplayItem other = (DisplayItem) obj;
+      return StringUtils.equals(other.value, this.value);
+    }
+    return false;
   }
 }

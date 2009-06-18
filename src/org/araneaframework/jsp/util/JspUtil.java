@@ -24,14 +24,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Set;
 import java.util.StringTokenizer;
-
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
-
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.Environment;
+import org.araneaframework.framework.SystemFormContext;
+import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
+import org.araneaframework.http.JspContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -79,7 +85,7 @@ public class JspUtil {
    */
   public static void include(PageContext pageContext, String path) throws ServletException, IOException {
 	// starting with '/' is absolute path (may add prefix), otherwise path is relative (unchanged).
-    pageContext.include(path.startsWith("/") ? "/content" + path : path);
+    pageContext.include(path);
   }
   
   /**
@@ -103,8 +109,8 @@ public class JspUtil {
   	}
   }
 
-  public static LocalizationContext getLocalizationContext(PageContext pageContext) {
-    return (LocalizationContext) pageContext.getRequest().getAttribute(ServletUtil.LOCALIZATION_CONTEXT_KEY);
+  public static LocalizationContext getLocalizationContext(javax.servlet.jsp.JspContext jspContext) {
+    return (LocalizationContext) getPageContext(jspContext).getRequest().getAttribute(ServletUtil.LOCALIZATION_CONTEXT_KEY);
   }
   
   /**
@@ -313,20 +319,7 @@ public class JspUtil {
    * Writes out escaped attribute string. <code>null</code> values are omitted. 
    */
   public static void writeEscapedAttribute(Writer out, String value) throws IOException {
-    if (value == null) return;
-    
-    for(int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);
-      switch (c) {
-        case '<': out.write("&lt;"); break;
-        case '>': out.write("&gt;"); break;
-        case '&': out.write("&amp;"); break;
-        case '"': out.write("&quot;"); break;
-        case '\n': out.write("&xA;"); break;        
-        default:
-          out.write(c);
-      }     
-    }
+    StringEscapeUtils.escapeHtml(out, value);
   }
   
   /**
@@ -337,30 +330,15 @@ public class JspUtil {
    *        and set it to false if you write javascript inside a &lt;script&gt; tag. 
    */
   public static void writeEscapedScriptString(Writer out, String value, boolean escapeEntities) throws IOException {
-    if (value == null) return;
-        
-    for(int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);
-      switch (c) {
-        case '<': out.write(escapeEntities ? "&lt;" : "<"); break;
-        case '>': out.write(escapeEntities ? "&gt;" : ">"); break;
-        case '&': out.write(escapeEntities ? "&amp;": "&"); break;
-        case '"': out.write(escapeEntities ? "&quot;": "\""); break;
-        case '\'': out.write("\\'"); break;
-        case '\n': out.write("\\n"); break;
-        case '\\': out.write("\\\\"); break;
-        default:
-          out.write(c);
-      }     
-    }
+    StringEscapeUtils.escapeHtml(out, StringEscapeUtils.escapeJavaScript(value));
   }
-  
+
   public static void writeEventAttributes(Writer out, UiEvent event) throws IOException {
     out.write(" ");
     out.write(event.getEventAttributes().toString());
     out.write(" ");
   }
-  
+
   /**
    * Writes out hidden html input element with give name and value.
    */ 
@@ -415,8 +393,60 @@ public class JspUtil {
       if (errMsg != null) 
         message.append(")");
       throw new AraneaJspException(message.toString());
-    }
-    else
+    } else {
       return value;
+    }
+  }
+
+  /**
+   * Retrieves PageContext from a JSP context. This mean basically casting, but
+   * sometimes is simpler.
+   * @param jspContext A regular JSP context.
+   * @return A PageContext.
+   */
+  public static PageContext getPageContext(javax.servlet.jsp.JspContext jspContext) {
+    return (PageContext) jspContext;
+  }
+
+  /**
+   * Retieves Aranea Environment form JSP context.
+   * @param jspContext A regular JSP context.
+   * @return An Environment object.
+   * @since 1.2.2
+   */
+  public static Environment getEnvironment(javax.servlet.jsp.JspContext jspContext) {
+    ServletRequest request = getPageContext(jspContext).getRequest();
+    return ServletUtil.getEnvironment(request);
+  }
+
+  /**
+   * Retrieves JSP configuration data context.
+   * @param jspContext A regular JSP context.
+   * @return JSP configuration context.
+   * @since 1.2.2
+   */
+  public static JspContext getConfiguration(javax.servlet.jsp.JspContext jspContext) {
+    return (JspContext) getEnvironment(jspContext).requireEntry(JspContext.class);
+  }
+
+  public static boolean hasOverlayMarker(javax.servlet.jsp.JspContext jspContext) {
+    return getEnvironment(jspContext).getEntry(OverlayActivityMarkerContext.class) != null;
+  }
+
+  public static Set getSystemFormContextEntries(javax.servlet.jsp.JspContext jspContext) {
+    SystemFormContext systemFormContext = EnvironmentUtil.requireSystemFormContext(
+        getEnvironment(jspContext));
+    return systemFormContext.getFields().entrySet();
+  }
+
+  public static String getServletURL(javax.servlet.jsp.JspContext jspContext) {
+    PageContext pageContext = getPageContext(jspContext);
+    return ServletUtil.getInputData(pageContext.getRequest()).getContainerURL();
+  }
+
+  public static String getFormActionURL(javax.servlet.jsp.JspContext jspContext) {
+    PageContext pageContext = getPageContext(jspContext);
+    HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+    return response.encodeURL(getServletURL(jspContext));
   }
 }

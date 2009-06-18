@@ -22,15 +22,17 @@
 var AraneaStore = Class.create({
 
   initialize: function() {
-	this._objects = [];
+    this._objects = [];
   },
 
   add: function(object) {
-    this._objects.push(object);
+    if (object) {
+      this._objects.push(object);
+    }
   },
 
   clear: function() {
-    this._objects = [];
+    this._objects.clear();
   },
 
   length: function() {
@@ -42,13 +44,8 @@ var AraneaStore = Class.create({
   },
 
   forEach: function(f) {
-    var length = this._objects.length;
-    for(var i = 0; i < length; i++) {
+    for (var i = 0; i < this._objects.length; i++) {
       f(this._objects[i]);
-      if (length == i + 1) {
-        // The array may grow during this for-each.
-        length = this._objects.length;
-      }
     }
   }
 
@@ -349,10 +346,7 @@ var AraneaPage = Class.create({
 
     this.setLoaded(false);
 
-    var systemForm = $(element).ancestors().find(function(element) {
-      return element.tagName.toLowerCase() == 'form' && element.hasAttribute('arn-systemForm');
-    });
-
+    var systemForm = $(element).up('form#overlaySystemForm, form#systemForm');
     var preCondition = this.getEventPreCondition(element);
 
     if (preCondition) {
@@ -370,6 +364,7 @@ var AraneaPage = Class.create({
 
     var result = this.findSubmitter(element, systemForm).event(element);
 
+    // To avoid memory leaks:
     systemForm = null;
     element = null;
 
@@ -687,6 +682,9 @@ Object.extend(AraneaPage, {
           });
       });
     }
+    if (AraneaPage.ajaxUploadInit) {
+      AraneaPage.ajaxUploadInit();
+    }
   },
 
   /**
@@ -799,11 +797,15 @@ Object.extend(AraneaPage, {
         _ap.debug('Region type: "' + key + '" (' + length + ' characters)');
         this.regionHandlers[key].process(content);
       } else {
-        _ap.logger.error('Region type: "' + key + '" is unknown!');
+        throw('Region type: "' + key + '" is unknown!');
       }
     }
 
-    if (this.reloadOnNoDocumentRegions && !this.receivedRegionCounters['document']) {
+    var hasRegions = this.receivedRegionCounters['document']
+                  || this.receivedRegionCounters['reload']
+                  || this.receivedRegionCounters['popups']
+                  || this.receivedRegionCounters['aranea-formvalidation'];
+    if (this.reloadOnNoDocumentRegions && !hasRegions) {
       _ap.debug('No document regions were received, forcing a reload of the page');
       if (this.regionHandlers['reload']) {
         this.regionHandlers['reload'].process();
@@ -889,6 +891,125 @@ Object.extend(AraneaPage, {
 
 });
 
+/**
+ * A common callback for submitters. The callback handles common data manipulation and validation.
+ * This callback should be used to add some custom features to submit data or submit response.
+ * @since 1.2.2
+ */
+AraneaPage.SubmitCallback = {
+  /**
+   * The only method that element-submitters should call. It takes the type of request, the form
+   * containing the element to be submitted, and the function that does the submit work.
+   */
+  doRequest: function(type, form, element, eventFn) {
+    if (!element) {
+      return false;
+    }
+
+    var widgetId = _ap.getEventTarget(element);
+    var eventId = _ap.getEventId(element);
+    var eventParam = _ap.getEventParam(element);
+    var eventUpdateRgns = _ap.getEventUpdateRegions(element);
+
+    var result;
+    if (eventFn) {
+      result = eventFn(form, eventId, widgetId, eventParam, eventUpdateRgns);
+    }
+
+    return this.getRequestResult(type, element, result);
+  },
+
+  /**
+   * This method is called to return the result of element-submit. Here is a nice place to implement
+   * custom features depending on the element or request type. Feel free to override.
+   */
+   getRequestResult: function(type, element, result) {
+    // If element is checkbox or radio then we return the oppposite value. When a request is
+    // successful and false is returned, it would block checkbox or radio to be selected. Therefore,
+    // we need to flip the value.
+    var type = element.type == null ? null : element.type.toLowerCase();
+    return type == 'checkbox' || type == 'radio' ? !result : result;
+  },
+
+  /**
+   * The method that is called by submitters to store submit data in the form.
+   */
+  prepare: function(type, form, widgetId, eventId, eventParam) {
+    var data = {
+      type: String.interpret(type),
+      form: form,
+      widgetId: String.interpret(widgetId),
+      eventId: String.interpret(eventId),
+      eventParam: String.interpret(eventParam)
+    };
+    return this.processData(data);
+  },
+
+  /**
+   * Processes the submit data. It calls following methods of this object:
+   * 1. processSubmitData - to optionally modify the submit data; 
+   * 2. storeSubmitData - to store the submit data in the form (if submit is allowed).
+   * 3. Adds isSubmitAllowed, beforeSubmit, afterSubmit callbacks to data.
+   */
+  processData: function(data) {
+    this.processSubmitData(data);
+    this.storeSubmitData(data);
+    data.isSubmitAllowed = this.isSubmitAllowed.curry(data);
+    data.beforeSubmit = this.beforeSubmit.curry(data);
+    data.afterSubmit = this.afterSubmit.curry(data);
+    return data;
+  },
+
+  /**
+   * A callback to optionally modify submit data.
+   */
+  processSubmitData: function(data) {},
+
+  /**
+   * A callback to store submit data in the form.
+   */
+  storeSubmitData: function(data) {
+    if (data.form) {
+      data.form.araWidgetEventPath.value = data.widgetId;
+      data.form.araWidgetEventHandler.value = data.eventId;
+      data.form.araWidgetEventParameter.value = data.eventParam;
+    }
+  },
+
+  /**
+   * A callback that is checked to enable or disable submit.
+   */
+  isSubmitAllowed: function(data) {
+    return true;
+  },
+
+  /**
+   * A callback that is called before each submit (no matter whether it is AJAX or not).
+   * This method includes default behaviour.
+   */
+  beforeSubmit: function(data) {
+    if (data.type != DefaultAraneaSubmitter.prototype.TYPE) {
+      // copy the content of rich editors to corresponding HTML textinputs/textareas
+      if (window.tinyMCE) {
+        window.tinyMCE.triggerSave();
+      }
+    }
+    if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
+      _ap.debug('GOOD: showLoadingMessage');
+      AraneaPage.showLoadingMessage();
+    }
+  },
+
+  /**
+  * A callback that is called after each submit (no matter whether it is AJAX or not).
+  * This method includes default behaviour.
+  */
+  afterSubmit: function(data) {
+    if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
+      AraneaPage.hideLoadingMessage();
+    }
+  }
+};
 
 // Here are three submitter classes for the standard HTTP submit, AJAX update
 // region submit, and AJAX overlay submit.
@@ -899,39 +1020,30 @@ Object.extend(AraneaPage, {
  */
 var DefaultAraneaSubmitter = Class.create({
 
-  systemForm: null,
-  widgetId: null,
-  eventId: null,
-  eventParam: null,
+  TYPE: 'SUBMIT',
 
   initialize: function(form) {
     this.systemForm = form;
   },
 
-  storeEventData: function(element) {
-      this.widgetId = _ap.getEventTarget(element);
-      this.eventId = _ap.getEventId(element);
-      this.eventParam = _ap.getEventParam(element);
-  },
-
   event: function(element) {
-    if (!element) {
-      return true;
-    }
-    this.storeEventData(element);
-    return this.event_4(this.systemForm, this.eventId, this.widgetId, this.eventParam);
+    return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_4.bind(this));
   },
 
   event_4: function(systemForm, eventId, widgetId, eventParam) {
-    systemForm.araWidgetEventPath.value = widgetId;
-    systemForm.araWidgetEventHandler.value = eventId;
-    systemForm.araWidgetEventParameter.value = eventParam;
+    var callback = AraneaPage.SubmitCallback.prepare(
+        this.TYPE, systemForm, widgetId, eventId, eventParam);
 
-    _ap.setSubmitted();
-    systemForm.submit();
+    if (callback.isSubmitAllowed()) {
+      callback.beforeSubmit();
+      _ap.setSubmitted();
+      systemForm.submit();
+      callback.afterSubmit();
+    }
+
+    callback = null;
     return false;
   }
-
 });
 
 /**
@@ -941,92 +1053,72 @@ var DefaultAraneaSubmitter = Class.create({
  */
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
+  TYPE: 'OVERLAY',
+
   event: function(element) {
-    element = $(element);
-    if (!element) {
-      return true;
-    }
-
-    this.storeEventData(element);
-
-    this.systemForm.araWidgetEventPath.value = this.widgetId;
-    this.systemForm.araWidgetEventHandler.value = this.eventId;
-    this.systemForm.araWidgetEventParameter.value = this.eventParam;
-
-    Aranea.ModalBox.update({ params: this.systemForm.serialize(true) });
-    return false;
+    return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_7.bind(this));
   },
 
-  event_7: function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions) {
+  event_7: function(systemForm, eventId, widgetId, eventParam) {
+    var callback = AraneaPage.SubmitCallback.prepare(
+        this.TYPE, systemForm, widgetId, eventId, eventParam);
 
-    // event information
-    systemForm.araWidgetEventPath.value = eventTarget;
-    systemForm.araWidgetEventHandler.value = eventId;
-    systemForm.araWidgetEventParameter.value = eventParam;
+    if (callback.isSubmitAllowed()) {
+      callback.beforeSubmit();
 
-    // copy the content of rich editors to corresponding HTML textinputs/textareas
-    if (window.tinyMCE) {
-      window.tinyMCE.triggerSave();
+      Aranea.ModalBox.update({ params: systemForm.serialize(true) });
+
+      callback.afterSubmit();
     }
 
-    Aranea.ModalBox.update({ params: systemForm.serialize(true) });
+    callback = null;
     return false;
   }
-
 });
 
 var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
-  updateRegions: null,
-
-  storeEventData: function($super, element) {
-	$super(element);
-    this.updateRegions = _ap.getEventUpdateRegions(element);
-  },
+  TYPE: 'AJAX',
 
   event: function(element) {
-    if (!element) {
-      return true;
-    }
-
-    this.storeEventData(element);
-
-    return this.event_5(this.systemForm, this.eventId, this.widgetId,
-        this.eventParam, this.updateRegions);
+    return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_5.bind(this));
   },
 
   event_5: function(systemForm, eventId, widgetId, eventParam, updateRegions) {
-    systemForm.araWidgetEventPath.value = String.interpret(widgetId);
-    systemForm.araWidgetEventHandler.value = String.interpret(eventId);
-    systemForm.araWidgetEventParameter.value = String.interpret(eventParam);
+    this.callback = AraneaPage.SubmitCallback.prepare(
+            this.TYPE, systemForm, widgetId, eventId, eventParam);
 
-    // copy the content of rich editors to corresponding HTML textinputs/textareas
-    if (window.tinyMCE) {
-      window.tinyMCE.triggerSave();
+    if (this.callback.isSubmitAllowed()) {
+      this.callback.beforeSubmit();
+
+      var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
+      var neededAraClientStateId = systemForm.araClientStateId ? systemForm.araClientStateId.value : null;
+      var neededAraTransactionId = 'override';
+
+      if (updateRegions == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
+        neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
+        window.dhtmlHistoryListenerRequestedState = null;
+        neededAraTransactionId = 'inconsistent';
+      }
+
+      $(systemForm.id).request({
+        parameters: this.getAjaxParameters(neededAraTransactionId, ajaxRequestId,
+            updateRegions, neededAraClientStateId),
+        onSuccess: this.onAjaxSuccess.curry(ajaxRequestId).bind(this),
+        onComplete: this.onAjaxComplete.bind(this),
+        onFailure: this.onAjaxFailure.bind(this),
+        onException: this.onAjaxException.bind(this)
+      });
     }
-
-    var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
-    var neededAraClientStateId = systemForm.araClientStateId ? systemForm.araClientStateId.value : null;
-    var neededAraTransactionId = 'override';
-
-    if (updateRegions == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
-      neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
-      window.dhtmlHistoryListenerRequestedState = null;
-      neededAraTransactionId = 'inconsistent';
-    }
-
-    AraneaPage.showLoadingMessage();
-
-    $(systemForm.id).request({
-      parameters: this.getAjaxParameters(neededAraTransactionId, ajaxRequestId,
-          updateRegions, neededAraClientStateId),
-      onSuccess: this.onAjaxSuccess.curry(ajaxRequestId).bind(this),
-      onComplete: this.onAjaxComplete.bind(this),
-      onFailure: this.onAjaxFailure.bind(this),
-      onException: this.onAjaxException.bind(this)
-    });
 
     return false;
+  },
+
+  afterRequest: function() {
+    if (this.callback) {
+      this.callback.afterSubmit();
+      this.callback = null;
+    }
   },
 
   getAjaxParameters: function(neededAraTransactionId, ajaxRequestId,
@@ -1040,8 +1132,6 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
   },
 
   onAjaxSuccess: function(ajaxRequestId, transport) {
-    AraneaPage.hideLoadingMessage();
-
     // This gets executed twice, it may be that during update region processing
     // something already needs current stateId presence, e.g. the reloading region
     // handler. As it's likely that whole system form will be replaced completely
@@ -1051,16 +1141,16 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
     var logmsg = '';
 
     if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + '\n') {
-      logmsg += 'Partial rendering: received successful response';
-      logmsg += ' (' + transport.responseText.length + ' characters)';
-      logmsg += ': ' + transport.status + ' ' + transport.statusText;
+      logmsg += 'Partial rendering: received successful response (';
+      logmsg += transport.responseText.length + ' characters): ';
+      logmsg += transport.status + ' ' + transport.statusText;
       _ap.debug(logmsg);
       AraneaPage.processResponse(transport.responseText);
       AraneaPage.init();
     } else {
-      logmsg += 'Partial rendering: received erroneous response';
-      logmsg += ' (' + transport.responseText.length + ' characters)';
-      logmsg += ': ' + transport.status + ' ' + transport.statusText;
+      logmsg += 'Partial rendering: received erroneous response (';
+      logmsg += transport.responseText.length + ' characters): ';
+      logmsg += transport.status + ' ' + transport.statusText;
       _ap.debug(logmsg);
       // Doesn't work quite well for javascript and CSS, but fine for plain HTML
       document.write(transport.responseText);
@@ -1091,6 +1181,8 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
           formElem = null;
         }
       }
+
+      this.afterRequest();
     }.bind(this);
 
     // force the delay here
@@ -1098,7 +1190,6 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
   },
 
   onAjaxFailure: function(transport) {
-    AraneaPage.hideLoadingMessage();
     _ap.debug(['Partial rendering: received erroneous response (',
                transport.responseText.length, ' characters): ',
                transport.status, ' ', transport.statusText].join(''));
@@ -1106,11 +1197,12 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
     // Doesn't work quite well for javascript and CSS, but fine for plain HTML
     document.write(transport.responseText);
     document.close();
+    this.afterRequest();
   },
 
   onAjaxException: function(request, exception) {
-    AraneaPage.hideLoadingMessage();
     AraneaPage.handleRequestException(request, exception);
+    this.afterRequest();
   }
 
 });
@@ -1190,45 +1282,6 @@ AraneaPage.DocumentRegionHandler = Class.create({
     }
 
     _ap.addSystemLoadEvent(_ap.findSystemForm);
-  }
-});
-
-Object.extend(AraneaPage.DocumentRegionHandler, {
-  /**
-   * Does DOM cleanup to avoid memory leaks when content is updated. An
-   * "invisible" second parameter is used to detect whether the clean-up is
-   * done with the element or not. If arguments.length = 1 then the input
-   * element is not changed, only its child-elements will be checked.
-   * 
-   * Override this method (Object.extend()) to add additional cleanups.
-   */
-  doDOMCleanup: function(element) {
-    if (!element || !element.childNodes) {
-      return;
-    }
-
-    var childNodeCount = element.childNodes.length;
-    if (childNodeCount > 0) {
-      for (var i = 0; i < childNodeCount; i++) {
-        this.doDOMCleanup(element.childNodes[i], true);
-      }
-    }
-
-    if (arguments.length == 1) {
-      return;
-    }
-
-    var props = Object.keys(element);
-    if (props) {
-      props.each(function(prop) {
-        try {
-          if (prop.startsWith('_') || (!prop.startsWith('ara-') && Object.isFunction(element[prop]))) {
-            element[prop] = null;
-          }
-        } catch (e) {}
-      });
-      props = null;
-    }
   }
 });
 

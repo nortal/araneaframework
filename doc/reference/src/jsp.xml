@@ -157,6 +157,7 @@
 				<listitem><emphasis>modalbox</emphasis> - imports only <link linkend="modalbox">ModalBox</link> scripts.</listitem>
 				<listitem><emphasis>rsh</emphasis> - imports only back-button support scripts.</listitem>
 				<listitem><emphasis>prototip</emphasis> - imports only <link linkend="prototip">Prototip</link> scripts.</listitem>
+				<listitem><emphasis>ajaxupload</emphasis> - imports only <link linkend="ajaxupload">AJAX upload</link> functionality scripts.</listitem>
 				<listitem><emphasis>logger</emphasis> - imports only <link linkend="log4javascript">log4javascript</link> scripts.</listitem>
 			</orderedlist>
 
@@ -168,6 +169,7 @@
 					<listitem><emphasis>calendar</emphasis></listitem>
 					<listitem><emphasis>calendar_et</emphasis></listitem>
 					<listitem><emphasis>prototip</emphasis></listitem>
+					<listitem><emphasis>ajaxupload</emphasis></listitem>
 					<listitem><emphasis>logger</emphasis> (always compressed)</listitem>
 				</itemizedlist>
 
@@ -1216,51 +1218,6 @@
   &lt;/ui:widgetContext&gt;
 ...</programlisting>
       </sect3>
-    </sect2>
-
-    <sect2>
-       
-
-      <title>&lt;ui:globalWidgetInclude&gt;</title>
-
-       Much like 
-
-      <literal>&lt;ui:widgetInclude&gt;</literal>
-
-      , but this tag allows to include not only descendants of current context widget but any widget that is accessible from global scope. 
-      
-            <sect3>
-        <title>Attributes</title>
-
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="2*" />
-
-            <colspec colwidth="1*" />
-
-            <colspec colwidth="4*" />
-
-            <thead>
-              <row>
-                <entry>Attribute</entry>
-
-                <entry>Required</entry>
-
-                <entry>Description</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry>id</entry>
-                <entry><emphasis>yes</emphasis></entry>
-                <entry>A dot-separated full widget identifier.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </sect3>
-      
     </sect2>
   </sect1>
 
