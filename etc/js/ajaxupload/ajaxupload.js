@@ -20,6 +20,10 @@ var AjaxUpload = Class.create({
 	initialize: function(target, options){
 		this._input = null;
 		this.options = {
+
+			// A flag to disable submitting files
+			disabled: false,
+
 			// Location of the server-side upload script
 			action: '',
 
@@ -125,7 +129,7 @@ var AjaxUpload = Class.create({
 			this._input = $(this._input);
 			if (!this._input) {
 				return;
-			} else if (this._disabled) {
+			} else if (this.options.disabled) {
 				this._input.hide();
 				return;
 			}
@@ -185,6 +189,8 @@ var AjaxUpload = Class.create({
 		} else { // clear input to allow user to select same file:
 			this._input.value = '';
 		}
+
+		this.options.target.value = '';
 	},
 
 	getFileName: function() {

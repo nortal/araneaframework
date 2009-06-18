@@ -50,18 +50,23 @@ Object.extend(AraneaPage, {
 
 	// Default options. Feel free to modify, esp. onComplete:
 	AjaxUploadOptions: {
+		disabled: false,
 		autoSubmit: true,
 		onChange: function(file, extension, options) {},
 		onSubmit: function(file, extension, options) {},
 		onComplete: function(file, responseText, failMsg, options) {
 			_ap.debug('File upload completed. File="' + file + '"; response="' + responseText + '".');
 			if (responseText == 'OK') {
+				// Hides the file input and shows a link instead with the file name. Once the link
+				// is clicked, the link will be removed and the file input will be shown again.
 				$(options.target).hide().insert({after:
 					'<a href="#" onclick="$(this).previous().show().next().remove(); return false;">' + file + '</a>'});
 			} else {
-				alert(failMsg ? failMsg : 'Uploading file "' + file +
-						'" failed. There could have been a problem\nwith the connection or the ' +
-						'file was too big. Please try again!');
+				if (!failMsg) {
+					failMsg = 'Uploading file "' + file + '" failed. There could have been a '
+						+ 'problem\nwith the connection or the file was too big. Please try again!';
+				}
+				alert(failMsg);
 			}
 		}
 	}

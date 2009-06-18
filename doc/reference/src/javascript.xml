@@ -536,7 +536,49 @@ AraneaPage.SubmitCallback.beforeSubmit(data)
 // This method includes default behaviour. Feel free to override.
 AraneaPage.SubmitCallback.afterSubmit(data)
 			</programlisting>
-			
 		</para>
+
+		<para>
+			The Aranea 1.2.2 release also introduced automatic file upload JavaScript API. You
+			usually don't have to modify it except for the upload options part, especially the
+			<literal>onComplete</literal> function. However, here's the entire API.
+		</para>
+
+		<para><programlisting role="javascript">
+// This method returns the URL where to submit the file. The element parameter is not used, but
+// you can modify the method to use the parameter. 
+AraneaPage.getAjaxUploadURL(element);
+
+// This method provides the data as { formField1: value1, formField2: value2, ...} that will be
+// added to the form later. This data should be needed in the query.
+AraneaPage.getAjaxUploadFormData(systemForm, element)
+
+// This method is called by AraneaPage.init() to initialize file inputs with AJAX uplaod features.
+// You can modify here the logic that is used for file input lookup.
+AraneaPage.ajaxUploadInit()
+
+// These are the default options that are used with the AJAX file upload. Feel free to override them.
+AraneaPage.AjaxUploadOptions = {
+	disabled: false,
+	autoSubmit: true,
+	onChange: function(file, extension, options) {},
+	onSubmit: function(file, extension, options) {},
+	onComplete: function(file, responseText, failMsg, options) {
+		_ap.debug('File upload completed. File="' + file + '"; response="' + responseText + '".');
+		if (responseText == 'OK') { // Otherwise responseText == 'FAIL'
+			// Hides the file input and shows a link instead with the file name. Once the link is
+			// clicked, the link will be removed and the file input will be shown again.
+			$(options.target).hide().insert({after:
+				'&lt;a href="#" onclick="$(this).previous().show().next().remove(); return false;"&gt;' + file + '&lt;/a&gt;'});
+		} else {
+			if (!failMsg) {
+				failMsg = 'Uploading file "' + file + '" failed. There could have been a '
+					+ 'problem\nwith the connection or the file was too big. Please try again!';
+			}
+			alert(failMsg);
+		}
+	}
+}
+		</programlisting></para>
 	</sect1>
 </chapter>

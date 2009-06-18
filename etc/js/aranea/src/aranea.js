@@ -1058,7 +1058,7 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
     return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_7.bind(this));
   },
 
-  event_7: function(systemForm, eventId, eventTarget, eventParam) {
+  event_7: function(systemForm, eventId, widgetId, eventParam) {
     var callback = AraneaPage.SubmitCallback.prepare(
         this.TYPE, systemForm, widgetId, eventId, eventParam);
 
