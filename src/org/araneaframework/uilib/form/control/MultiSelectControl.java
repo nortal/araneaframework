@@ -313,25 +313,36 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
     private Map selectItemMap = new HashMap();
 
     private Set valueSet = new HashSet();
+
+    /**
+     * Contains the values as <String,DisplayItem>, where String is the value of
+     * the displayItem.
+     * 
+     * @since 1.2.2
+     */
+    private Map valuesMap = new HashMap();
+
     
     /**
      * Takes an outer class snapshot.     
      */    
     public ViewModel() {
       this.selectItems = items;
-      
+
       for (Iterator i = selectItems.iterator(); i.hasNext(); ) {
-      	DisplayItem displayItem = (DisplayItem) i.next();
-      	selectItemMap.put(displayItem.getValue(), displayItem);
+        DisplayItem displayItem = (DisplayItem) i.next();
+        this.selectItemMap.put(displayItem.getValue(), displayItem);
       }
 
-  		String[] values = getValues();
-  		if (values != null) {		
-  			for(int i = 0; i < values.length; i++)
-  				valueSet.add(values[i]);
-  		}      
-    }         
-    
+        String[] values = getValues();
+      if (values != null) {
+        for (int i = 0; i < values.length; i++) {
+          this.valueSet.add(values[i]);
+          this.valuesMap.put(values[i], getSelectItemByValue(values[i]));
+        }
+      }
+    }
+
     /**
      * Returns a <code>List</code> of {@link DisplayItem}s.
      * @return a <code>List</code> of {@link DisplayItem}s.
@@ -339,13 +350,18 @@ public class MultiSelectControl extends StringArrayRequestControl implements Dis
     public List getSelectItems() {
       return selectItems;
     }
+
+    public DisplayItem getSelectItemByValue(String value) {
+      return (DisplayItem) selectItemMap.get(value);
+    }
+
+    public Set getValueSet() {
+      return valueSet;
+    }
+
     
-		public DisplayItem getSelectItemByValue(String value) {
-			return (DisplayItem) selectItemMap.get(value);
-		}
-		
-		public Set getValueSet() {
-			return valueSet;
-		}
+    public Map getValuesMap() {
+      return this.valuesMap;
+    }
   }
 }

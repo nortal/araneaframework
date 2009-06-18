@@ -16,6 +16,9 @@
 
 package org.araneaframework.http.util;
 
+import org.araneaframework.core.ApplicationService;
+import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.framework.OverlayContext;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -150,7 +153,7 @@ public abstract class ServletUtil {
    * outside the current servlet context. If the path begins with a "/" it is interpreted
    * as relative to the current context root. 
    */
-  public static void includeRelative(String filePath, Environment env, OutputData output) throws Exception {
+  public static void includeRelative(String filePath, OutputData output) throws Exception {
     log.debug("Including a resource from the relative path '" + filePath + "'");
     
     getRequest(output.getInputData()).getRequestDispatcher(filePath).include(
@@ -200,6 +203,22 @@ public abstract class ServletUtil {
       new StringAdapterResourceBundle(localizationContext.getResourceBundle()),
       localizationContext.getLocale()
     );
+  }
+
+  /**
+   * Provides a way to check whether the request is one of Aranea AJAX requests.
+   * Note that it does not work with unparsed multipart request.
+   * 
+   * @param req The incoming request.
+   * @return A Boolean indicating whether the request is one of Aranea AJAX
+   *         requests.
+   * @since 1.2.2
+   */
+  public static boolean isAraneaAjaxRequest(ServletRequest req) {
+    Map params = req.getParameterMap() != null ? req.getParameterMap() : new HashMap();
+    return params.containsKey(ApplicationService.ACTION_HANDLER_ID_KEY)
+        || params.containsKey(UpdateRegionContext.UPDATE_REGIONS_KEY)
+        || params.containsKey(OverlayContext.OVERLAY_REQUEST_KEY);
   }
 
   /**

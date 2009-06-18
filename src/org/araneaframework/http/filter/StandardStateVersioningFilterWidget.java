@@ -133,8 +133,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
   }
 
   protected synchronized void initStateSavedTL() {
-    if (this.stateSavedTL == null) {
-      this.stateSavedTL = new ThreadLocal();
+    if (this.stateSavedTL == null) {    
+      this.stateSavedTL = new ThreadLocal();    
     }
     this.stateSavedTL.set(Boolean.FALSE);
   }

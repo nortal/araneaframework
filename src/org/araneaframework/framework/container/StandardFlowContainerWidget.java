@@ -15,7 +15,6 @@
  */
 package org.araneaframework.framework.container;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +39,7 @@ import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.http.WindowScrollPositionContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are
@@ -166,20 +166,31 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   public TransitionHandler getTransitionHandler() {
+    // The default handler is StandardTransitionHandler:
+    TransitionHandler result = new StandardTransitionHandler();
     CallFrame activeCallFrame = getActiveCallFrame();
+
     if (activeCallFrame != null) {
-      TransitionHandler transitionHandler =
-        activeCallFrame.getTransitionHandler();
-      return transitionHandler != null ? transitionHandler
-          : new StandardTransitionHandler();
+      if (activeCallFrame.getWidget() instanceof FlowContextWidget) {
+        FlowContextWidget flow = (FlowContextWidget) activeCallFrame.getWidget();
+        result = flow.getTransitionHandler();
+
+      } else if (activeCallFrame.getTransitionHandler() != null) {
+        result = activeCallFrame.getTransitionHandler();
+      }
     }
-    return new StandardTransitionHandler();
+
+    return result;
   }
 
   public void setTransitionHandler(TransitionHandler transitionHandler) {
     CallFrame activeCallFrame = getActiveCallFrame();
     if (activeCallFrame != null) {
-      activeCallFrame.setTransitionHandler(transitionHandler);
+      if (activeCallFrame instanceof FlowContextWidget) {
+        ((FlowContextWidget) activeCallFrame).setTransitionHandler(getTransitionHandler());
+      } else {
+        activeCallFrame.setTransitionHandler(transitionHandler);
+      }
     }
   }
 
@@ -431,8 +442,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     Assert.notNullParam(flow, "flow");
 
     CallFrame previousFrame = (CallFrame) this.callStack.removeFirst();
-    CallFrame frame = makeCallFrame(flow, configurator, previousFrame
-        .getHandler(), previousFrame);
+    CallFrame frame = makeCallFrame(flow, configurator,
+        previousFrame.getHandler(), previousFrame);
 
     if (log.isDebugEnabled()) {
       log.debug("Replacing flow '"

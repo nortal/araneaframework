@@ -130,13 +130,13 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
   }
 
   protected boolean writeEventAttribute(Writer out) throws IOException {
-    UiUpdateEvent event = new UiUpdateEvent();
-    event.setId(OnClickEventListener.ON_CLICK_EVENT);
-    event.setTarget(formFullId+"."+ derivedId);
-    event.setUpdateRegionNames(updateRegionNames);
-    event.setEventPrecondition(onClickPrecondition);
-
     if (viewModel.isOnClickEventRegistered()) {
+      UiUpdateEvent event = new UiUpdateEvent();
+      event.setId(OnClickEventListener.ON_CLICK_EVENT);
+      event.setTarget(formFullId+"."+ derivedId);
+      event.setUpdateRegionNames(updateRegionNames);
+      event.setEventPrecondition(onClickPrecondition);
+
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }

@@ -24,81 +24,112 @@ import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
-
 /**
  * Element tag.
  * 
  * @author Oleg Mürk
- * 
  * @jsp.tag
- *   name = "element"
- *   body-content = "JSP"
- *   description = "Defines an HTML element."
+ *      name = "element"
+ *      body-content = "JSP"
+ *      description = "Defines an HTML element."
  */
 public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
-	public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
 
-	protected String name = null;
-	protected Map attributes = new HashMap();
-	protected boolean hasContent = false;
-	
-	public void setPageContext(PageContext pageContext) {
-		attributes = new HashMap();
-		hasContent = false;
-		name = null;
-		
-		super.setPageContext(pageContext);
-	}
-	
-	protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
+  public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
 
-		addContextEntry(KEY, this);
-		addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
+  protected String name = null;
 
-		JspUtil.writeOpenStartTag(out, name);
+  protected Map attributes = new HashMap();
 
-		// Continue
-		return EVAL_BODY_INCLUDE;		
-	}
+  protected boolean hasContent = false;
 
-	/**
-	 * After tag.
-	 */
-	protected int doEndTag(Writer out) throws Exception {
-		if (hasContent)
-			JspUtil.writeEndTag_SS(out, name);
-		else {
-			JspUtil.writeAttributes(out, attributes);
-			JspUtil.writeCloseStartEndTag_SS(out);
-		}
-		return super.doEndTag(out);
-	}
-	
-	public void addAttribute(String name, String value) throws JspException {
-		value = (String)evaluate("value", value, String.class);
-		attributes.put(name, value);
-	}
+  protected boolean renderTag = true;
 
-	protected void onContent() {
-		this.hasContent = true;
-	}
+  protected boolean forceRenderBody = false;
 
-	protected void writeAttributes(Writer out) throws Exception {
-		JspUtil.writeAttributes(out, attributes);
-	}
+  public void setPageContext(PageContext pageContext) {
+    this.attributes = new HashMap();
+    this.hasContent = false;
+    this.name = null;
+    super.setPageContext(pageContext);
+  }
 
-	/* ***********************************************************************************
-	 * Tag attributes
-	 * ***********************************************************************************/
+  protected int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true" 
-	 *   description = "HTML element name."
-	 */
-	public void setName(String name) throws JspException {
-		this.name = (String)evaluateNotNull("name", name, String.class);
-	}
+    if (!this.renderTag && !this.forceRenderBody) {
+      return SKIP_BODY;
+    }
+
+    addContextEntry(KEY, this);
+    addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
+
+    if (this.renderTag) {
+      JspUtil.writeOpenStartTag(out, name);
+    }
+
+    // Continue
+    return EVAL_BODY_INCLUDE;
+  }
+
+  /**
+   * After tag.
+   */
+  protected int doEndTag(Writer out) throws Exception {
+    if (this.renderTag) {
+      if (this.hasContent) {
+        JspUtil.writeEndTag_SS(out, this.name);
+      } else {
+        JspUtil.writeAttributes(out, this.attributes);
+        JspUtil.writeCloseStartEndTag_SS(out);
+      }
+    }
+    return super.doEndTag(out);
+  }
+
+  protected void onContent(Writer out) throws Exception {
+    if (this.renderTag) {
+      this.hasContent = true;
+      JspUtil.writeAttributes(out, this.attributes);
+      JspUtil.writeCloseStartTag_SS(out);
+    }
+  }
+  
+  public void addAttribute(String name, String value) throws JspException {
+    value = (String) evaluate("value", value, String.class);
+    this.attributes.put(name, value);
+  }
+
+  // Tag attributes
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "true"
+   *    description = "HTML element name."
+   */
+  public void setName(String name) throws JspException {
+    this.name = (String) evaluateNotNull("name", name, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "A Boolean that indicates whether the tag can be rendered or not. Default: true."
+   */
+  public void setRenderTag(boolean renderTag) {
+    this.renderTag = renderTag;
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "A Boolean that indicates whether the body is rendered (even if the tag is not rendered) or not. Default: false."
+   */
+  public void setForceRenderBody(boolean forceRenderBody) {
+    this.forceRenderBody = forceRenderBody;
+  }
+
 }

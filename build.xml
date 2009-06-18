@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project 
-	xmlns:ivy="antlib:org.apache.ivy.ant"
+<project xmlns:ivy="antlib:org.apache.ivy.ant"
 	basedir="." 
 	default="build" 
 	name="Aranea" >
@@ -18,11 +17,27 @@
 
 	<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 
-	<property name="ivy.settings.file" value="ivysettings.xml"/>
-
-	<path id="classpath">
-		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+	<path id="build.cp">
 		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/test/" includes="*.jar"/>
+	</path>
+
+	<path id="build.util.cp">
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build-util/" includes="*.jar"/>
+	</path>
+
+	<path id="test.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/test/" includes="*.jar"/>
+	</path>
+
+	<path id="runtime.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
 	</path>
 
 	<!-- Clean up build system results -->
@@ -44,7 +59,7 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="build,runtime" />
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="demo,build,build-util,test,runtime"/>
 	</target>
 
   <property name="ivy.report.dir" value="build/reports/ivy" />
@@ -82,13 +97,16 @@
 	</target>
 
 	<target name="init-ivy" description="Initializes ivy path and settings">
+		<condition property="ivy.settings.file" value="ivysettings_unix.xml" else="ivysettings.xml">
+			<os family="unix"/>
+		</condition>
+
 		<path id="ivy.lib.path">
-			<fileset dir="lib/ivy" includes="*.jar"/>
+			<fileset dir="lib/ivy/" includes="*.jar"/>
 		</path>
 
 		<taskdef resource="org/apache/ivy/ant/antlib.xml"
-	             uri="antlib:org.apache.ivy.ant"
-	             classpathref="ivy.lib.path"/>
+			uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
 
 		<ivy:settings file="${ivy.settings.file}" />
 	</target>
@@ -119,7 +137,7 @@
 			srcdir="src"
 			deprecation="yes"
 		>
-			<classpath refid="classpath"/>
+			<classpath refid="build.cp"/>
 			<include name="**/*.java" />
 		</javac>
 	</target>
@@ -283,7 +301,7 @@
 	<target name="javadoc" description="Generates JavaDoc from Aranaea source code">
 		<mkdir dir="${dist.dir}/doc/javadoc/" />
 		<javadoc 
-			classpathref="classpath"
+			classpathref="build.util.cp"
 			encoding="UTF-8"
 			docencoding="UTF-8"
 			packagenames="org.araneaframework.*" 
@@ -385,7 +403,7 @@
 	</target>
 
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
-		<taskdef resource="checkstyletask.properties" classpathref="classpath"/>
+		<taskdef resource="checkstyletask.properties" classpathref="build.util.cp"/>
 		<checkstyle config="checkstyle_checks.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<formatter type="xml" tofile="checkstyle_report.xml"/>

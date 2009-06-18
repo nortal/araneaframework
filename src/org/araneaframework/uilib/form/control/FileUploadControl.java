@@ -16,13 +16,22 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.framework.FileUploadContext;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -34,10 +43,22 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  */
 public class FileUploadControl extends BaseControl {
+
+  private static final Log log = LogFactory.getLog(FileUploadControl.class);
+
+  public static final String LISTENER_NAME = "fileUpload";
+
   protected List permittedMimeFileTypes;
   
   protected boolean uploadSucceeded = true;
   protected boolean mimeTypePermitted = true;
+  protected boolean ajaxRequest;
+  protected List ajaxMessages = new LinkedList();
+
+  protected void init() throws Exception {
+    super.init();
+    addActionListener(LISTENER_NAME, new FileUploadActionListener());
+  }
 
   public boolean isRead() {
     return innerData != null;
@@ -62,6 +83,13 @@ public class FileUploadControl extends BaseControl {
     return "FileInfo";
   }
 
+  protected void addError(String error) {
+    if (this.ajaxRequest) {
+      this.ajaxMessages.add(error);
+    } else {
+      super.addError(error);
+    }
+  }
   // *********************************************************************
   // * INTERNAL METHODS
   // *********************************************************************
@@ -168,6 +196,44 @@ public class FileUploadControl extends BaseControl {
     return new ViewModel();
   }
 
+  /**
+   * The default implementation for AJAX file upload listener.
+   * @since 1.2.2
+   */
+  protected class FileUploadActionListener implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+      FileInfo file = (FileInfo) innerData;
+      ajaxRequest = true;
+      convertAndValidate();
+
+      if (file == null || file.getSize() == 0) {
+        log.debug("Did not get a file!");
+        PrintWriter out = ServletUtil.getResponse(output).getWriter();
+        out.write("FAIL");
+
+        if (!ajaxMessages.isEmpty()) {
+          out.print("(");
+          for (Iterator i = ajaxMessages.iterator(); i.hasNext(); ) {
+            out.print(i.next());
+            if (i.hasNext()) {
+              out.print("\n");
+            }
+          }
+          out.print(")");
+          ajaxMessages.clear();
+        }
+
+        ajaxRequest = false;
+      } else {
+        log.debug("Got file '" + file.getOriginalFilename() + "'");
+        ServletUtil.getResponse(output).getWriter().write("OK");
+      }
+    }
+  }
+  
   // *********************************************************************
   // * VIEW MODEL
   // *********************************************************************

@@ -43,8 +43,7 @@ public abstract class JspScriptUtil {
   }
   
   public static void writeElementAttributeScript(Writer out, String elementId, String attribute, String value) throws IOException {
-    out.write("<script type=\"text/javascript\">");
-    out.write("document.getElementById('" + elementId + "')." + attribute + "="+value+";");
-    out.write("</script>");
+    out.write("<script type=\"text/javascript\">$('" + elementId
+        + "').writeAttribute('" + attribute + "', '" + value + "');</script>");
   }
 }

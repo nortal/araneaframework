@@ -60,6 +60,12 @@ public class BeanUtil {
 
   private static final Log log = LogFactory.getLog(BeanUtil.class);
 
+  protected static final String MSG_NO_BEAN_CLASS = "No bean class specified.";
+
+  protected static final String MSG_NO_FIELD_NAME = "No field name specified";
+
+  protected static final String MSG_NO_BEAN_OBJECT = "No bean object specified.";
+
   /**
    * The delimiter that separates the components of a nested reference.
    */
@@ -520,8 +526,25 @@ public class BeanUtil {
    * @return write method (setter) for the field.
    */
   public static Method getWriteMethod(Class beanClass, String field) {
-    Validate.notNull(beanClass, "No bean class specified");
-    Validate.notNull(field, "No field name specified");
+    return getSimpleWriteMethod(beanClass, field);
+  }
+
+  /**
+   * Returns write method (setter) for the field.
+   * <p>
+   * Null is returned if no such method found.
+   * 
+   * @param beanClass the class implementing the Bean pattern.
+   * @param field Bean field name.
+   * @param paramType The (optional) parameter type of this setter. May be
+   *          <code>null</code> to indicate that the type must be identified as
+   *          the return value of the setter of this property.
+   * @return write method (setter) for the field.
+   * @since 1.2
+   */
+  public static Method getWriteMethod(Class beanClass, String field, Class paramType) {
+    Validate.notNull(beanClass, MSG_NO_BEAN_CLASS);
+    Validate.notNull(field, MSG_NO_FIELD_NAME);
 
     String[] fields = StringUtils.split(field, NESTED_DELIM);
     Class subBeanType = beanClass;

@@ -69,10 +69,8 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "tabindex", tabindex);
 
     if (viewModel.isDisabled()) {
-      if (viewModel.isDisabled()) {
-        JspUtil.writeAttribute(out, this.disabledRenderMode,
-            this.disabledRenderMode);
-      }
+      JspUtil.writeAttribute(out, this.disabledRenderMode,
+          this.disabledRenderMode);
     }
 
     if (events && viewModel.isOnChangeEventRegistered()) {

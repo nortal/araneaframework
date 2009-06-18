@@ -61,7 +61,6 @@ window.dhtmlHistory = {
 		
 		/*set user-agent flags*/
 		var UA = navigator.userAgent.toLowerCase();
-		var platform = navigator.platform.toLowerCase();
 		var vendor = navigator.vendor || "";
 
 		var m = UA.match(/version\/([\d\.]*)/);
@@ -78,7 +77,7 @@ window.dhtmlHistory = {
 			this.isSupported = true;
 		} else if (vendor.indexOf("Apple Computer, Inc.") > -1 && safariVersion < 3.0) {
 			this.isSafari = true;
-			this.isSupported = (platform.indexOf("mac") > -1);
+			this.isSupported = true;
 		} else if (UA.indexOf("gecko") != -1) {
 			this.isGecko = true;
 			this.isSupported = true;

@@ -47,83 +47,82 @@ Aranea.KB = {};
 //NOTE by TP: this actually is only correct for one keyboard layout only...
 /** @since 1.1 */
 Aranea.KB.special_keys = {
-	'esc':27,
-	'escape':27,
-	'tab':9,
-	'space':32,
-	'return':13,
-	'enter':13,
-	'backspace':8,
+  'esc':27,
+  'escape':27,
+  'tab':9,
+  'space':32,
+  'return':13,
+  'enter':13,
+  'backspace':8,
 
-	'scrolllock':145,
-	'scroll_lock':145,
-	'scroll':145,
-	'capslock':20,
-	'caps_lock':20,
-	'caps':20,
-	'numlock':144,
-	'num_lock':144,
-	'num':144,
-	
-	'pause':19,
-	'break':19,
-	
-	'insert':45,
-	'home':36,
-	'delete':46,
-	'end':35,
-	
-	'pageup':33,
-	'page_up':33,
-	'pu':33,
+  'scrolllock':145,
+  'scroll_lock':145,
+  'scroll':145,
+  'capslock':20,
+  'caps_lock':20,
+  'caps':20,
+  'numlock':144,
+  'num_lock':144,
+  'num':144,
 
-	'pagedown':34,
-	'page_down':34,
-	'pd':34,
+  'pause':19,
+  'break':19,
 
-	'left':37,
-	'up':38,
-	'right':39,
-	'down':40,
+  'insert':45,
+  'home':36,
+  'delete':46,
+  'end':35,
 
-	'f1':112,
-	'f2':113,
-	'f3':114,
-	'f4':115,
-	'f5':116,
-	'f6':117,
-	'f7':118,
-	'f8':119,
-	'f9':120,
-	'f10':121,
-	'f11':122,
-	'f12':123
+  'pageup':33,
+  'page_up':33,
+  'pu':33,
+
+  'pagedown':34,
+  'page_down':34,
+  'pd':34,
+
+  'left':37,
+  'up':38,
+  'right':39,
+  'down':40,
+
+  'f1':112,
+  'f2':113,
+  'f3':114,
+  'f4':115,
+  'f5':116,
+  'f6':117,
+  'f7':118,
+  'f8':119,
+  'f9':120,
+  'f10':121,
+  'f11':122,
+  'f12':123
 };
-
 
 //Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
 //NOTE by TP: this actually is only correct for one keyboard layout only...
 /** @since 1.1 */
 Aranea.KB.shift_nums = {
-	"`":"~",
-	"1":"!",
-	"2":"@",
-	"3":"#",
-	"4":"$",
-	"5":"%",
-	"6":"^",
-	"7":"&",
-	"8":"*",
-	"9":"(",
-	"0":")",
-	"-":"_",
-	"=":"+",
-	";":":",
-	"'":"\"",
-	",":"<",
-	".":">",
-	"/":"?",
-	"\\":"|"
+  "`":"~",
+  "1":"!",
+  "2":"@",
+  "3":"#",
+  "4":"$",
+  "5":"%",
+  "6":"^",
+  "7":"&",
+  "8":"*",
+  "9":"(",
+  "0":")",
+  "-":"_",
+  "=":"+",
+  ";":":",
+  "'":"\"",
+  ",":"<",
+  ".":">",
+  "/":"?",
+  "\\":"|"
 }
  
  /**
@@ -225,51 +224,51 @@ Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCo
     }
   }
 };
- 
- /**
-  * Invokes all handlers registered for given keycode and with matching elementprefix.
-  * if a handler returns false, the remaining handlers are not invoked
-  */
- Aranea.KB.UiHandlerRegistry.prototype.invokeHandlers = function(elementName, keyCode, event) {
-   var keyHandlers = this.handlers[keyCode];
-   var elHandlers = null;
-   
-   var elPrefix = elementName;
-   while (1) {
-   	 if (this.handlers[elPrefix]) {
-       elHandlers = this.handlers[elPrefix];
-       break;
-   	 }
-   	 var i = elPrefix.lastIndexOf('.');
-   	 if (i < 0) break;
 
-   	 elPrefix = elPrefix.substring(0, i);
-   }
+  /**
+   * Invokes all handlers registered for given keycode and with matching elementprefix.
+   * if a handler returns false, the remaining handlers are not invoked
+   */
+  Aranea.KB.UiHandlerRegistry.prototype.invokeHandlers = function(elementName, keyCode, event) {
+    var keyHandlers = this.handlers[keyCode];
+    var elHandlers = null;
    
-   if (elHandlers) {
-   	 var executed = false;
-   	 _ap.debug("Invoking element handlers, count=" + elHandlers.length);
-   	 for (var i = elHandlers.length - 1; i >= 0; i--){
-         var handlerFunction = elHandlers[i].handler;
-         var elementPrefix   = elHandlers[i].elementPrefix;
-         _ap.debug("Invoking element handler: " + i);
-         executed = handlerFunction(event, elementName) || executed;
-	  }
-   }
+    var elPrefix = elementName;
+    while (1) {
+      if (this.handlers[elPrefix]) {
+        elHandlers = this.handlers[elPrefix];
+        break;
+      }
+      var i = elPrefix.lastIndexOf('.');
+      if (i < 0) break;
 
-   if (keyHandlers){
-   	 _ap.debug("Invoking key handlers, count=" + keyHandlers.length);
-     for (var i = keyHandlers.length - 1; i >= 0; i--){
-       var handlerFunction = keyHandlers[i].handler;
-       var elementPrefix   = keyHandlers[i].elementPrefix;
-       if (elementPrefix == elementName.substring(0, elementPrefix.length)) {
-         _ap.debug("Invoking key handler: " + handlerFunction.toString());
-         handlerFunction(event, elementName);
-       }
-     }
-   }
+      elPrefix = elPrefix.substring(0, i);
+    }
+
+    if (elHandlers) {
+      var executed = false;
+      _ap.debug("Invoking element handlers, count=" + elHandlers.length);
+      for (var i = elHandlers.length - 1; i >= 0; i--){
+        var handlerFunction = elHandlers[i].handler;
+        var elementPrefix   = elHandlers[i].elementPrefix;
+        _ap.debug("Invoking element handler: " + i);
+        executed = handlerFunction(event, elementName) || executed;
+      }
+  }
+
+  if (keyHandlers){
+    _ap.debug("Invoking key handlers, count=" + keyHandlers.length);
+    for (var i = keyHandlers.length - 1; i >= 0; i--){
+      var handlerFunction = keyHandlers[i].handler;
+      var elementPrefix   = keyHandlers[i].elementPrefix;
+      if (elementPrefix == elementName.substring(0, elementPrefix.length)) {
+        _ap.debug("Invoking key handler: " + handlerFunction.toString());
+        handlerFunction(event, elementName);
+      }
+    }
+  }
 };
- 
+
 /**
  * This variable will hold the handlers for the Keypress event.
  */
@@ -284,19 +283,20 @@ var aranea_keyboardinputfilter_last_keydown_keycode = null;
  */
 Aranea.KB.getKeyboardInputFilterFunction = function(filter) {
   var f = function(kev) {
-  	araneaPage().getLogger().debug(kev.type + " detected!" + "event.charCode="+kev.charCode+", event.keyCode="+kev.keyCode+".");
-  	araneaPage().getLogger().debug("ctrlKey="+kev.ctrlKey + " altKey="+kev.altKey + " kev.metaKey=" + kev.metaKey);
-  	if (kev.type == "keydown") {
+    _ap.debug(kev.type + " detected!" + "event.charCode="+kev.charCode+", event.keyCode="+kev.keyCode+".");
+    _ap.debug("ctrlKey="+kev.ctrlKey + " altKey="+kev.altKey + " kev.metaKey=" + kev.metaKey);
+    if (kev.type == "keydown") {
       aranea_keyboardinputfilter_last_keydown_keycode = kev.keycode;
       return true;
-  	}
-    
-    if (kev.ctrlKey) 
+    }
+
+    if (kev.ctrlKey)  {
       return; // Does this mess with AltGr on some browsers?
-  	
+    }
+
     var charcode = kev.charCode;
-    araneaPage().getLogger().debug("Handling keypress. Last keydown code=" + aranea_keyboardinputfilter_last_keydown_keycode + ". event.charCode="+charcode+", event.keyCode="+kev.keyCode+". Active filter="+filter);
-  
+    _ap.debug("Handling keypress. Last keydown code=" + aranea_keyboardinputfilter_last_keydown_keycode + ". event.charCode="+charcode+", event.keyCode="+kev.keyCode+". Active filter="+filter);
+
     // if charcode is present, we assume it to be correct (at the time of writing this
     // only gecko based browsers seem to set the charcode properly).
     if (charcode) {
@@ -331,56 +331,57 @@ var getKeyboardInputFilterFunction = Aranea.KB.getKeyboardInputFilterFunction;
 
 Aranea.KB.KeyComboHandler = function(shortcut, callback) {
     var f2 = function(event, element) {
-	  	var e = event;
-	
-		//Find Which key is pressed
-	  	var code = event.keyCode ? event.keyCode : event.which;
-		var character = String.fromCharCode(code).toLowerCase();
+      var e = event;
 
-		var keys = shortcut.toLowerCase().split("+");
-		//Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
-		var kp = 0;
-	
-		//Special Keys - and their codes
-	
-		for(var i=0; k=keys[i],i<keys.length; i++) {
-			//Modifiers
-			if(k == 'ctrl' || k == 'control') {
-				if(e.ctrlKey) { kp++; }
-			} else if(k ==  'shift') {
-				if(e.shiftKey) { kp++; }
-			} else if(k == 'alt') {
-				if(e.altKey)  { 
-					kp++ ;
-				}
-			} else if(k.length > 1) { //If it is a special key
-				if(Aranea.KB.special_keys[k] == code) { kp++; }
-			} else { //The special keys did not match
-				if(character == k) kp++;
-				else {
-					if(Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
-						character = Aranea.KB.shift_nums[character]; 
-						if(character == k) { 
-							kp++;
-						}
-					}
-				}
-			}
-		}
+      //Find Which key is pressed
+      var code = event.keyCode ? event.keyCode : event.which;
+      var character = String.fromCharCode(code).toLowerCase();
 
-		if(kp == keys.length) {
-			araneaPage().debug("Executing keyboard handler for keycombo '" + shortcut + "'.");
-			callback(e);
-	
-			//if(!opt['propagate']) { //Stop the event
-				//Event.stop(e);
-				return true;
-			//}
-		}
-		
-		return false;
+      var keys = shortcut.toLowerCase().split("+");
+      //Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
+      var kp = 0;
+
+      //Special Keys - and their codes
+
+      for(var i=0; k=keys[i],i<keys.length; i++) {
+        //Modifiers
+        if (k == 'ctrl' || k == 'control') {
+          if(e.ctrlKey) { kp++; }
+          } else if(k ==  'shift') {
+            if(e.shiftKey) { kp++; }
+          } else if(k == 'alt') {
+            if(e.altKey)  { 
+              kp++ ;
+            }
+          } else if(k.length > 1) { //If it is a special key
+            if(Aranea.KB.special_keys[k] == code) { kp++; }
+          } else { //The special keys did not match
+            if(character == k) {
+              kp++;
+            } else {
+              if (Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
+                character = Aranea.KB.shift_nums[character];
+                if (character == k) {
+                  kp++;
+                }
+              }
+            }
+          }
+      }
+
+      if (kp == keys.length) {
+        _ap.debug("Executing keyboard handler for keycombo '" + shortcut + "'.");
+        callback(e);
+
+        //if(!opt['propagate']) { //Stop the event
+          //Event.stop(e);
+        return true;
+        //}
+      }
+
+      return false;
     };
-  
+
   return f2;
 };
 

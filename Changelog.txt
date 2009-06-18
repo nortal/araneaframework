@@ -11,6 +11,26 @@ Features and Improvements
 	Started parametrizing ListWidget and ListDataProvider
 
 ---------------------------------------------------------------------------------------------
+2009.06.18    | Aranea 1.2.2
+
+Features and Improvements
+    TabContainerWidget can add tab-switch-listeners                             | See #700
+    Add FileInfo.getFileName() to return the file name without path             | See #783
+    Add AJAX file upload support                                                | See #584
+    Add JavaScript page pre/post submit event listeners                         | See #728
+    Divide dependencies into smaller groups (Ivy)                               | See #822
+
+Bugfixes
+    Wrong Modal dialog position in IE (7.0)                                     | See #740
+    StandardOverlayContainerWidget must init overlayChild first                 | See #761
+    AutoCompleteTextControl: onChangeEventListener does not work                | See #264
+    <ui:widgetInclude id="..." page="relativePage.jsp" /> throws NPE            | See #795
+    TransitionHandlers not visible to all flow containers                       | See #700
+    AraneaPage.event(el) should return true for checkboxes, radios              | See #784
+    Allow ListWidget.setFullPages() before ListWidget.init()                    | See #796
+    Safari goes to infinite switching between links                             | See #809
+
+---------------------------------------------------------------------------------------------
 2009.03.13    | Aranea 1.2.1.1
 
 Features and Improvements

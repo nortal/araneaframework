@@ -152,7 +152,14 @@ public class SqlStatement implements Serializable, Cloneable {
    */
   @Override
   public Object clone() {
-    return new SqlStatement(this.query, new ArrayList<Object>(this.parameters));
+    SqlStatement clone = null;
+    try {
+      clone = (SqlStatement) super.clone();
+      clone.query = this.query;
+      clone.parameters = this.parameters;
+    } catch (CloneNotSupportedException e) {
+    }
+    return clone;
   }
 
   // *********************************************************************

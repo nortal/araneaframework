@@ -18,7 +18,7 @@
 
 		<ui:body>
 			<div id="cont1">
-	            <ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion">
+				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion">
 					<ui:systemForm method="post">
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>

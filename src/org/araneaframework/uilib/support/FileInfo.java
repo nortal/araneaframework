@@ -16,6 +16,10 @@
 
 package org.araneaframework.uilib.support;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.FilenameFilter;
+
 import java.io.Serializable;
 import org.apache.commons.fileupload.FileItem;
 import org.araneaframework.core.Assert;
@@ -52,7 +56,18 @@ public class FileInfo implements Serializable {
   public String getOriginalFilename() {
     return item.getName();
   }
-  
+
+  /**
+   * Returns only the file name (without path). Usually it is the same result as in
+   * {@link #getOriginalFilename()}, except in IE, where path is generally also included.
+   * 
+   * @return the filename without path info.
+   * @since 1.2.2
+   */
+  public String getFileName() {
+    return item.getName() != null ? FilenameUtils.getName(item.getName()) : null;
+  }
+
   /**
    * Returns the file size.
    * @return the file size.

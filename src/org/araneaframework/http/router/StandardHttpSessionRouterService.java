@@ -118,10 +118,12 @@ public class StandardHttpSessionRouterService extends BaseService {
    * @since 1.1
    */
   protected void doAction(Path path, InputData input, OutputData output, HttpSession sess) throws Exception {
+
     /*
      * Both "synchronized" and "unsynchronized" requests use the session object
      * to synchronize critical sections dealing with locking in this method.
      */
+
     synchronized (sess) {
       ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
       if (lock == null) {
@@ -130,35 +132,34 @@ public class StandardHttpSessionRouterService extends BaseService {
       }
       lock.readLock().acquire();
     }
-    
+
     RelocatableService service = getOrCreateSessionService(sess);
-    
+
     try {
       service._getService().action(path, input, output);
-    }
-    finally {
+
+    } finally {
       ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
       lock.readLock().release();
     }
-    
+
     synchronized (sess) {
       ReadWriteLock lock = (ReadWriteLock) locks.get(sess);
       if (lock.writeLock().attempt(0)) {
         try {
-          log.info("Propagating session updates to cluster nodes");
-
+          log.info("Propagating changes to session");
           service._getRelocatable().overrideEnvironment(null);
 
           try {
             sess.setAttribute(SESSION_SERVICE_KEY, service);
-          }
-          catch (IllegalStateException  e) {
+
+          } catch (IllegalStateException e) {
             log.warn("Session invalidated before request was finished.");
           }
-        }
-        finally {
+
+        } finally {
           locks.remove(sess); // XXX why do we remove the lock? why not do lock.writeLock().release();
-        }        
+        }
       }
     }
   }
@@ -184,21 +185,19 @@ public class StandardHttpSessionRouterService extends BaseService {
   
   private synchronized RelocatableService getOrCreateSessionService(HttpSession sess) {
     Environment newEnv = new StandardEnvironment(getEnvironment(), HttpSession.class, sess);
-    
+
     RelocatableService result = null;   
-    
+
     if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
-      log.debug("Created HTTP session '"+sess.getId()+"'");
-      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));        
-      
+      log.debug("HTTP session '" + sess.getId() + "' was started.");
+      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));
       result._getComponent().init(getScope(), newEnv);
-    }
-    else {
+    } else {
       result = (RelocatableService) sess.getAttribute(SESSION_SERVICE_KEY);
       result._getRelocatable().overrideEnvironment(newEnv);
-      log.debug("Reusing HTTP session '"+sess.getId()+"'");
+      log.debug("Reusing HTTP session '" + sess.getId() + "'");
     }
-    
+
     return result;
   }
 

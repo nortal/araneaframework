@@ -128,6 +128,18 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
+  /**
+   * This an initial value for whether the list should show full pages. It is
+   * set by {@link #showDefaultPages()} and {@link #showFullPages()} methods if
+   * the sequence helper is not set, and read by the {@link #init()} method
+   * while initializing the sequnce helper.
+   * <p>
+   * This behaviour could be revised in the future.
+   * 
+   * @since 1.2.2
+   */
+  private Boolean showFullPages;
+
   // *********************************************************************
   // * CONSTRUCTOR
   // *********************************************************************
@@ -701,14 +713,22 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Expands the list showing all items.
    */
   public void showFullPages() {
-    getSequenceHelper().showFullPages();
+    if (getSequenceHelper() != null) {
+      getSequenceHelper().showFullPages();
+    } else {
+      this.showFullPages = Boolean.TRUE;
+    }
   }
 
   /**
    * Collapses the list, showing only the current page.
    */
   public void showDefaultPages() {
-    getSequenceHelper().showDefaultPages();
+    if (getSequenceHelper() != null) {
+      getSequenceHelper().showDefaultPages();
+    } else {
+      this.showFullPages = Boolean.FALSE;
+    }
   }
 
   /* ========== List State reading and modifying ========== */
@@ -905,7 +925,15 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   protected SequenceHelper createSequenceHelper() {
-    return new SequenceHelper(getConfiguration());
+    SequenceHelper seqHelper = new SequenceHelper(getConfiguration());
+    if (this.showFullPages != null) {
+      if (this.showFullPages.booleanValue()) {
+        seqHelper.showFullPages();
+      } else {
+        seqHelper.showDefaultPages();
+      }
+    }
+    return seqHelper;
   }
 
   protected TypeHelper createTypeHelper() {

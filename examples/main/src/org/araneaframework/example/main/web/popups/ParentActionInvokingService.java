@@ -41,13 +41,12 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 		this.widgetId = widgetId;
 	}
 	
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
-		HttpServletResponse response = ServletUtil.getResponse(output);
-		String script = 
-		  "if (window.opener) { window.opener.setTimeout(\"" +
-		    "araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', window['tehcallback']);" +
-		  "\", 0); }" +
-		  "window.close();";
+    protected void action(Path path, InputData input, OutputData output) throws Exception {
+        HttpServletResponse response = ServletUtil.getResponse(output);
+        String script = "if (window.opener) { window.opener.setTimeout('"
+        + "araneaPage().action($('" + this.widgetId + "'), 'testAction', '"
+        + this.widgetId.substring(0, this.widgetId.lastIndexOf('.')) + "' , '"
+        + this.value + "', window['tehcallback']);', 0); } window.close();";
 
 		String responseStr = 
 			"<html>" +

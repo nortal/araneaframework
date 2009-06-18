@@ -2534,8 +2534,13 @@ el.click();</programlisting>
     <sect2>
       <title>&lt;ui:fileUpload&gt;</title>
 
-      <para>Form file upload field, represents
-      <literal>FileUploadControl</literal>.</para>
+      <para>
+        Form file upload field, represents <literal>FileUploadControl</literal>.
+        File upload can upload the file automatically once it is selected. This would enable file
+        uploads on pages with update regions and overlay. To make a file upload submit its data
+        without rendering the page, add a CSS class to the input named <literal>ajax-upload</literal>.
+        See more info at the <xref linkend="javascript"/> part of the documentation.
+      </para>
 
       <sect3>
         <title>Attributes</title>

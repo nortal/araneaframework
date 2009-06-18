@@ -186,13 +186,8 @@ Object.extend(Aranea.UI, {
    * @since 1.1
    */
   appendLocalFEValidationMessages: function(el, html) {
-    if (el) {
-    	el = $(el);
-    } else {
-    	return;
-    }
-    if (el) {
-    	el.insert(html);
+    if ($(el)) {
+      $(el).insert(html);
     }
   },
 

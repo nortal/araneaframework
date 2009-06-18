@@ -67,13 +67,13 @@
 							</ui:cell>
 						</ui:formElement>
 
-						<ui:formElement id="time">
+						<ui:formElement id="number">
 							<ui:cell>
 								<ui:label />
 							</ui:cell>
 
 							<ui:cell>
-								<ui:timeInput />
+								<ui:floatInput />
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
@@ -89,13 +89,13 @@
 							</ui:cell>
 						</ui:formElement>
 
-						<ui:formElement id="number">
+						<ui:formElement id="upload">
 							<ui:cell>
 								<ui:label />
 							</ui:cell>
 
 							<ui:cell>
-								<ui:floatInput />
+								<ui:fileUpload />
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
