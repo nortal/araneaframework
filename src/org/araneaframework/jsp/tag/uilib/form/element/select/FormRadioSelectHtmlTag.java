@@ -74,10 +74,9 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
       FormRadioSelectItemHtmlTag item = new FormRadioSelectItemHtmlTag();
       registerSubtag(item);
       item.setHtmlId(radioId);
-      label.setRadioId(radioId);
 
       if (labelBefore) {
-        writeLabel(label, derivedId, displayItem.getValue());
+        writeLabel(label, derivedId, radioId, displayItem.getValue());
       }
 
       item.setId(derivedId);
@@ -106,7 +105,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
       executeEndTagAndUnregister(item);
 
       if (!labelBefore) {
-        writeLabel(label, derivedId, displayItem.getValue());
+        writeLabel(label, derivedId, radioId, displayItem.getValue());
       }
 
       if ("horizontal".equals(type)) {
@@ -157,9 +156,10 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   protected void writeLabel(FormRadioSelectItemLabelHtmlTag label, String id,
-      String value) throws JspException {
+      String radioId, String value) throws JspException {
     registerSubtag(label);
     label.setId(id);
+    label.setRadioId(radioId);
     label.setValue(evaluateLabel(value));
     executeStartSubtag(label);
     executeEndTagAndUnregister(label);
