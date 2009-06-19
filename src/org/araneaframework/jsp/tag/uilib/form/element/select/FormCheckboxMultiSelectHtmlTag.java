@@ -83,6 +83,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
       String checkboxId = viewModel.getScope().toString()
           + displayItem.getValue();
 
+      registerSubtag(item);
       item.setHtmlId(checkboxId);
       label.setCheckboxId(checkboxId);
 
@@ -90,7 +91,6 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
         writeLabel(label, derivedId, displayItem.getValue());
       }
 
-      registerSubtag(item);
       item.setId(derivedId);
       item.setValue(displayItem.getValue());
       item.setEvents(events ? "true" : "false");
