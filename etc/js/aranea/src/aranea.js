@@ -914,13 +914,29 @@ AraneaPage.SubmitCallback = {
     var eventParam = _ap.getEventParam(element);
     var eventUpdateRgns = _ap.getEventUpdateRegions(element);
 
+    var data = {
+        type: String.interpret(type),
+        form: form,
+        widgetId: String.interpret(widgetId),
+        eventId: String.interpret(eventId),
+        eventParam: String.interpret(eventParam),
+        eventUpdateRgns: String.interpret(eventUpdateRgns)
+    };
+
+    this.processEventData(data);
+
     var result;
     if (eventFn) {
-      result = eventFn(form, eventId, widgetId, eventParam, eventUpdateRgns);
+      result = eventFn(data.form, data.eventId, data.widgetId, data.eventParam, data.eventUpdateRgns);
     }
 
     return this.getRequestResult(type, element, result);
   },
+
+  /**
+  * A callback to optionally modify data that is passed to submitters.
+  */
+  processEventData: function(data) {},
 
   /**
    * This method is called to return the result of element-submit. Here is a nice place to implement
