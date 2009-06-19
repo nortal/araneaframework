@@ -84,7 +84,6 @@
 				<exclude name="cglib-nodep-2.1_3.jar" />
 				<exclude name="checkstyle.jar" />
 				<exclude name="cobertura.jar" />
-				<exclude name="commons-beanutils*.jar" />
 				<exclude name="commons-digester.jar" />
 				<exclude name="cos.jar" />
 				<exclude name="j2ee.jar" />
