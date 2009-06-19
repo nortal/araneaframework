@@ -920,7 +920,7 @@ AraneaPage.SubmitCallback = {
         eventUpdateRgns: String.interpret(eventUpdateRgns)
     };
 
-    this.processEventData(data)
+    this.processEventData(data);
 
     var result;
     if (eventFn) {
