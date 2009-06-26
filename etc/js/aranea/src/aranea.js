@@ -520,7 +520,7 @@ var AraneaPage = Class.create({
    * @param extraParams more parameters, i.e "p1=v1&p2=v2"
    */
   action: function(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
-    return AraneaPage.SubmitCallback.doRequest(AraneaPage.TYPE_REQ_ACTION, this.systemForm,
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_ACTION, this.systemForm,
         actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams,
         this.action_6.bind(this));
   },
@@ -537,7 +537,7 @@ var AraneaPage = Class.create({
    * @param extraParams more parameters, i.e "p1=v1&p2=v2"
    */
   action_6: function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
-    var callback = AraneaPage.SubmitCallback.prepare(AraneaPage.TYPE_REQ_ACTION, systemForm,
+    var callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_ACTION, systemForm,
         actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams);
 
     if (callback.isRequestAllowed()) {
@@ -914,7 +914,7 @@ Object.extend(AraneaPage, {
  * This callback should be used to add some custom features to submit data or submit response.
  * @since 1.2.2
  */
-AraneaPage.SubmitCallback = {
+AraneaPage.RequestCallback = {
 
   /**
    * A central method that creates event/action data object.
@@ -1085,12 +1085,12 @@ var DefaultAraneaSubmitter = Class.create({
   },
 
   event: function(element) {
-    return AraneaPage.SubmitCallback.doRequest(AraneaPage.TYPE_REQ_SUBMIT, this.systemForm, element,
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_SUBMIT, this.systemForm, element,
         this.event_4.bind(this));
   },
 
   event_4: function(systemForm, eventId, widgetId, eventParam) {
-    var callback = AraneaPage.SubmitCallback.prepare(AraneaPage.TYPE_REQ_SUBMIT, systemForm,
+    var callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_SUBMIT, systemForm,
         eventId, widgetId, eventParam);
 
     if (callback.isRequestAllowed()) {
@@ -1112,12 +1112,12 @@ var DefaultAraneaSubmitter = Class.create({
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
   event: function(element) {
-    return AraneaPage.SubmitCallback.doRequest(AraneaPage.TYPE_REQ_OVERLAY, this.systemForm,
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_OVERLAY, this.systemForm,
         element, this.event_7.bind(this));
   },
 
   event_7: function(systemForm, eventId, widgetId, eventParam) {
-    var callback = AraneaPage.SubmitCallback.prepare(AraneaPage.TYPE_REQ_OVERLAY, systemForm,
+    var callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_OVERLAY, systemForm,
         eventId, widgetId, eventParam);
 
     if (callback.isRequestAllowed()) {
@@ -1134,12 +1134,12 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
   event: function(element) {
-    return AraneaPage.SubmitCallback.doRequest(AraneaPage.TYPE_REQ_AJAX, this.systemForm, element,
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_AJAX, this.systemForm, element,
         this.event_5.bind(this));
   },
 
   event_5: function(systemForm, eventId, widgetId, eventParam, updateRegions) {
-    this.callback = AraneaPage.SubmitCallback.prepare(AraneaPage.TYPE_REQ_AJAX, systemForm,
+    this.callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_AJAX, systemForm,
         eventId, widgetId, eventParam);
 
     if (this.callback.isRequestAllowed()) {

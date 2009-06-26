@@ -514,47 +514,47 @@ function araneaPage() {
 // actionOptions - options that are passed to action Ajax.Request (see Prototype doc).
 // actionSync - a boolean indication whether the action request should be synchronous (default: false).
 // actionExtraParams - a string specifying additional action request params (e.g. 'p1=v1&p2=v2').
-AraneaPage.SubmitCallback.getData(args);
+AraneaPage.RequestCallback.getData(args);
 
 // The only method that element-submitters should call. It takes the type of request, the form
 // containing the element to be submitted, and the function that does the submit work.
-AraneaPage.SubmitCallback.doRequest(type, form, element, eventHandler)
-AraneaPage.SubmitCallback.doRequest(type, form, eventId, targetId, eventParam, eventHandler)
-AraneaPage.SubmitCallback.doRequest(type, form, actionId, targetId, actionParam, actionCallback,
+AraneaPage.RequestCallback.doRequest(type, form, element, eventHandler)
+AraneaPage.RequestCallback.doRequest(type, form, eventId, targetId, eventParam, eventHandler)
+AraneaPage.RequestCallback.doRequest(type, form, actionId, targetId, actionParam, actionCallback,
 	actionOptions, sync, extraParams)
 
 // A callback to optionally modify data that is passed to request handlers.
-AraneaPage.SubmitCallback.processRequestHandlerData(data);
+AraneaPage.RequestCallback.processRequestHandlerData(data);
 
 // This method is called to return the result of element-submit. Here is a nice place to implement
 // custom features depending on the element or request type. Feel free to override.
-AraneaPage.SubmitCallback.getRequestHandlerResult(type, element, result);
+AraneaPage.RequestCallback.getRequestHandlerResult(type, element, result);
 
 // The method that is called by submitters to store submit data in the form.
-AraneaPage.SubmitCallback.prepare(type, form, id, targetId, param)
+AraneaPage.RequestCallback.prepare(type, form, id, targetId, param)
 
-// Processes the request data. It calls following methods of this SubmitCallback class:
+// Processes the request data. It calls following methods of this RequestCallback class:
 // 1. processRequestData - to optionally modify the submit data; 
 // 2. storeRequestData - to store the submit data in the form (if submit is allowed).
 // 3. Adds isRequestAllowed, beforeRequest, afterRequest callbacks to data.
-AraneaPage.SubmitCallback.prepareData(data)
+AraneaPage.RequestCallback.prepareData(data)
 
 // A callback to optionally modify request data.
-AraneaPage.SubmitCallback.processRequestData(data)
+AraneaPage.RequestCallback.processRequestData(data)
 
 // A callback to store request data in the form.
-AraneaPage.SubmitCallback.storeRequestData(data)
+AraneaPage.RequestCallback.storeRequestData(data)
 
 // A callback that is checked to enable or disable request. Feel free to override.
-AraneaPage.SubmitCallback.isRequestAllowed(data) {
+AraneaPage.RequestCallback.isRequestAllowed(data) {
 
 // A callback that is called always before each request (no matter whether it is AJAX or not).
 // This method includes default behaviour. Feel free to override.
-AraneaPage.SubmitCallback.beforeRequest(data)
+AraneaPage.RequestCallback.beforeRequest(data)
 
 // A callback that is called after each request (no matter whether it is AJAX or not).
 // This method includes default behaviour. Feel free to override.
-AraneaPage.SubmitCallback.afterRequest(data)
+AraneaPage.RequestCallback.afterRequest(data)
 			</programlisting>
 		</para>
 
