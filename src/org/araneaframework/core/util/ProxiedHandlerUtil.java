@@ -42,6 +42,10 @@ public abstract class ProxiedHandlerUtil {
 
   public static final String ACTION_HANDLER_PREFIX = "handleAction";
 
+  public static final String PARAMETER_SEPARTOR_RESOLVER = "getParameterSeparator";
+
+  public static final String DEFAULT_PARAMETER_SEPARTOR = ";";
+
   /**
    * Provides a method of <code>eventTarget</code> that can handle the event.
    * If there is no such method ("handleEvent[EventId]()") then
@@ -160,47 +164,7 @@ public abstract class ProxiedHandlerUtil {
    */
   public static void invokeEventHandler(String eventId, String eventParam, Widget eventTarget)
       throws Exception {
-
-    // lets try to find a handle method with an empty argument
-    Method eventHandler = getEventHandler(eventId, eventTarget);
-    if (eventHandler != null) {
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + eventHandler.getName()
-            + "()' of class '" + eventTarget.getClass().getName() + "'.");
-      }
-      eventHandler.invoke(eventTarget, new Object[] {});
-      return;
-    }
-
-    // lets try to find a method with a String type argument
-    eventHandler = getEventHandler(eventId, eventTarget, new Class[] { String.class });
-    if (eventHandler != null) {
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + eventHandler.getName()
-            + "(String)' of class '" + eventTarget.getClass().getName() + "'.");
-      }
-      eventHandler.invoke(eventTarget, new Object[] { eventParam });
-      return;
-    }
-
-    // lets try to find a method with a String[] type argument
-    eventHandler = getEventHandler(eventId, eventTarget, new Class[] { String[].class });
-    if (eventHandler != null) {
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + eventHandler.getName()
-            + "(String[])' of class '" + eventTarget.getClass().getName() + "'.");
-      }
-      // split() is null-safe method:
-      String[] params = StringUtils.split(eventParam, ';');
-      eventHandler.invoke(eventTarget, new Object[] { params });
-      return;
-    }
-
-    if (log.isWarnEnabled()) {
-      log.warn("Widget '" + eventTarget.getScope() + "' cannot deliver "
-          + "event as no event listeners were registered for the event id '"
-          + eventId + "'!" + Assert.thisToString(eventTarget));
-    }
+    invoke(true, eventId, eventParam, eventTarget);
   }
 
   /**
@@ -228,56 +192,88 @@ public abstract class ProxiedHandlerUtil {
    * @throws Exception Any unexpected exception that may occur (e.g. while
    *             invoking the method).
    */
-  public static void invokeActionHandler(String actionId,
-      String actionParam, Widget actionTarget) throws Exception {
+  public static void invokeActionHandler(String actionId, String actionParam, Widget actionTarget)
+      throws Exception {
+    invoke(false, actionId, actionParam, actionTarget);
+  }
 
+  private static void invoke(boolean event, String id, String param, Widget target) throws Exception {
     // lets try to find a handle method with an empty argument
-    Method actionHandler = getActionHandler(actionId, actionTarget);
-    if (actionHandler != null) {
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + actionHandler.getName()
-            + "()' of class '" + actionTarget.getClass().getName() + "'.");
-      }
-      actionHandler.invoke(actionTarget, new Object[] {});
+    if (invoke(event, target, id, param, null)) {
       return;
     }
 
     // lets try to find a method with a String type argument
-    actionHandler = getActionHandler(actionId, actionTarget, new Class[] { String.class });  
-    if (actionHandler != null) {
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + actionHandler.getName()
-            + "(String)' of class '" + actionTarget.getClass().getName() + "'.");
-      }
-      actionHandler.invoke(actionTarget, new Object[] { actionParam });
+    if (invoke(event, target, id, param, String.class)) {
       return;
     }
 
     // lets try to find a method with a String[] type argument
-    actionHandler = getActionHandler(actionId, actionTarget, new Class[] { String.class });  
-    if (actionHandler != null) {
-      if (log.isDebugEnabled()) {
-        log.debug("Calling method '" + actionHandler.getName()
-            + "(String[])' of class '" + actionTarget.getClass().getName() + "'.");
-      }
-      // split() is null-safe method:
-      String[] params = StringUtils.split(actionParam, ';');
-      actionHandler.invoke(actionTarget, new Object[] { params });
+    if (invoke(event, target, id, param, String[].class)) {
       return;
     }
 
     if (log.isWarnEnabled()) {
-      StringBuffer logMessage = new StringBuffer("ProxyActionListener");
-      if (actionTarget != null) {
-        logMessage.append(" '" + actionTarget.getScope() + "'");
+      StringBuffer msg = new StringBuffer("Proxy");
+      msg.append(event ? "Event" : "Action");
+      msg.append("Listener");
+      if (target != null) {
+        msg.append(" '" + target.getScope() + "'");
       }
-      logMessage.append(" cannot deliver action as no action listeners were "
-          + "registered for the action id '");
-      logMessage.append(actionId);
-      logMessage.append("'!");
-      logMessage.append(Assert.thisToString(actionTarget));
-      log.warn(logMessage);
+      msg.append(" cannot deliver ");
+      msg.append(event ? "event" : "action");
+      msg.append(" as no listeners were registered for the id '");
+      msg.append(id);
+      msg.append("'!");
+      msg.append(Assert.thisToString(target));
+      log.warn(msg);
     }
   }
 
+  private static boolean invoke(boolean event, Widget target, String id, String param, Class paramType) throws Exception {
+    Class[] paramTypes = paramType == null ? EMTPY_CLASS_ARRAY : new Class[] { paramType };
+    Method handler = event ? getEventHandler(id, target, paramTypes) : getActionHandler(id, target, paramTypes);
+
+    if (handler == null) {
+      return false;
+    }
+
+    if (log.isDebugEnabled()) {
+      log.debug("Calling method '" + handler.getName() + "(" + paramType + ")' of class '"
+          + target.getClass().getName() + "'.");
+    }
+
+    Object[] params = new Object[0];
+    if (String.class == paramType) {
+      params = new Object[] { param };
+    } else if (String[].class == paramType) {
+      params = new Object[] { StringUtils.split(param, getParameterSeparator(target, param)) };
+    }
+
+    handler.invoke(target, params);
+    return true;
+  }
+
+  private static String getParameterSeparator(Widget target, String param) {
+    String result = null;
+
+    try {
+      Method resolver = target.getClass().getDeclaredMethod(PARAMETER_SEPARTOR_RESOLVER,
+          new Class[] { String.class });
+
+      if (String.class.equals(resolver.getReturnType())) {
+        if (!resolver.isAccessible()) {
+          resolver.setAccessible(true);
+        }
+        result = (String) resolver.invoke(target, new Object[] { param });
+      }
+
+    } catch (NoSuchMethodException e) {
+      log.debug("The action/event target does not have the '" + PARAMETER_SEPARTOR_RESOLVER + "' method.");
+    } catch (Exception e) {
+      log.warn("Unexpected exception while resolving parameter separator.", e);
+    }
+
+    return result != null ? result : DEFAULT_PARAMETER_SEPARTOR;
+  }
 }

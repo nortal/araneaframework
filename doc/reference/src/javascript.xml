@@ -513,7 +513,7 @@ function araneaPage() {
 // actionCallback - a function that is called after action request completes.
 // actionOptions - options that are passed to action Ajax.Request (see Prototype doc).
 // actionSync - a boolean indication whether the action request should be synchronous (default: false).
-// actionExtraParams - a string specifying additional action request params (e.g. 'p1=v1&p2=v2').
+// actionExtraParams - a string specifying additional action request params (e.g. 'p1=v1&amp;p2=v2').
 AraneaPage.RequestCallback.getData(args);
 
 // The only method that element-submitters should call. It takes the type of request, the form

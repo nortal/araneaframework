@@ -1128,13 +1128,13 @@ if (fileUploadExt.uploadSucceeded()) {
       <literal>org.araneaframework.core.EventListener</literal>:</para>
 
       <para><programlisting role="java">public interface EventListener extends Serializable {
-  public void processEvent(Object eventId, InputData input) throws Exception;
+  public void processEvent(String eventId, InputData input) throws Exception;
 }</programlisting></para>
 
       <para>The event listeners are registered as following:</para>
 
       <para><programlisting role="java">addEventListener("myEvent", new EventListener() {
-  public void processEvent(Object eventId, InputData input) throws Exception {
+  public void processEvent(String eventId, InputData input) throws Exception {
     log.debug("Received event: " + eventId);
   }
 }</programlisting></para>
@@ -1147,10 +1147,18 @@ if (fileUploadExt.uploadSucceeded()) {
       parameter:</para>
 
       <para><programlisting role="java">addEventListener("myEvent", new StandardEventListener() {
-  public void processEvent(Object eventId, String eventParam, InputData input) throws Exception;
+  public void processEvent(String eventId, String eventParam, InputData input) throws Exception;
     log.debug("Received event " + eventId + " with parameter " + parameter);
-  }
-}</programlisting></para>
+  }}</programlisting></para>
+
+      <para>In case you want to receive multiple event parameters, you may choose to implement
+      <literal>MultiParamEventListener</literal>. The default separator used to split up the values
+      is a semi-comma. Here's an example:</para>
+
+      <para><programlisting role="java">addEventListener("myEvent", new MultiParamEventListener() {
+  public void processEvent(String eventId, String[] eventParams, InputData input) throws Exception;
+    log.debug("Received event " + eventId + " with " + eventParams.length + " parameter(s).");
+  }}</programlisting></para>
 
       <para>Another useful way to process events is to register a proxy event
       listener
@@ -1164,13 +1172,31 @@ if (fileUploadExt.uploadSucceeded()) {
 // This method handles the event that was registered in init().
 public void handleEventMyEvent(String parameter) {
     log.debug("Received event myEvent with parameter " + parameter);
+}
+
+// In case of receiving multiple parameters, you might prefer this:
+public void handleEventMyEvent(String[] parameters) {
+    log.debug("Received event myEvent with " + parameters.length + " parameter(s).");
 }</programlisting></para>
 
       <para>The convention is that the proxy event listener translates an
       event "&lt;event&gt;" into a method call
-      <literal>handleEvent&lt;event&gt;</literal> making the first letter of
+      <literal>handleEvent&lt;Event&gt;</literal> making the first letter of
       &lt;event&gt; uppercase. The <literal>"String parameter</literal>" is
-      optional and can be omitted.</para>
+      optional and can be omitted. First, the proxy event listener tries to call
+      <literal>handleEvent&lt;Event&gt;()</literal>,
+      then <literal>handleEvent&lt;Event&gt;(String param)</literal>, and finally
+      <literal>handleEvent&lt;Event&gt;(String[] params)</literal>, whichever succeeds first
+      (after the first event handler is found and finishes its work successfully, then the latter
+      ones are not called).</para>
+
+      <para>In the case of <literal>String[]</literal> parameters, the array contains the parameter
+      value split up into array. The default value separator is a semi-comma, but you can override
+      it by adding a custom method <literal>getParameterSeparator(String value)</literal> (also
+      supported by <literal>MultiParamEventListener</literal>), which
+      should return a separator of the value. For, example you can provide the event param as
+      <literal>"123;456;789;"</literal>, and with the array parameter type they would be provided as
+      <literal>new String[] { "123", "456", "789" }</literal>.</para>
 
       <para>A useful feature is the method
       <literal>setGlobalEventListener(EventListener listener)</literal> that
@@ -1195,13 +1221,19 @@ public void handleEventMyEvent(String parameter) {
       conversations with server, without requiring full form submits and generating whole view.
       </para>
 
-	<para>Actions are handled by the classes extending <literal>org.araneaframework.core.ActionListener</literal>
+      <para>Actions are handled by the classes extending <literal>org.araneaframework.core.ActionListener</literal>
 <programlisting role="java">public interface ActionListener extends Serializable {
-  public void processAction(Object actionId, InputData input, OutputData output) throws Exception;
+  public void processAction(String actionId, InputData input, OutputData output) throws Exception;
 }</programlisting> and their registration is analogous to event listeners:
 <programlisting role="java">addActionListener("actionId", new SomeActionListener());</programlisting>
-	</para>
-	
+      </para>
+
+      <para>Similarily to event listeners, there are also two default implementations of
+      <literal>ActionListener</literal>: <literal>StandardActionListener</literal> and
+      <literal>MultiParamActionListener</literal>. They are used like corresponding event listeners
+      except that ActionListeners are also provided with <literal>OutputData</literal> to handle
+      response.</para>
+
  </sect2>
 
     <sect2 id="widgets-environment">

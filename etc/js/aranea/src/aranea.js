@@ -1060,9 +1060,9 @@ AraneaPage.RequestCallback = {
   },
 
   /**
-  * A callback that is called after each request (no matter whether it is AJAX or not).
-  * This method includes default behaviour. Feel free to override.
-  */
+   * A callback that is called after each request (no matter whether it is AJAX or not).
+   * This method includes default behaviour. Feel free to override.
+   */
   afterRequest: function(data) {
     _ap.submitted = false;
     if (data.type == AraneaPage.TYPE_REQ_AJAX) {
