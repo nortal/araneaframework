@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.form.FormElementContext;
@@ -197,10 +198,6 @@ public class DateTimeControl extends BaseControl {
     }
   }
   
-  /**
-   * Returns {@link ViewModel}.
-   * @return {@link ViewModel}.
-   */
   public Object getViewModel() throws Exception {
     return new ViewModel();
   }
@@ -218,73 +215,113 @@ public class DateTimeControl extends BaseControl {
     dateControl.setFormElementCtx(formElementContext);
     timeControl.setFormElementCtx(formElementContext);
   }
-  
-  
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************    
-  
+
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
+
   /**
    * Represents a date-time control view model.
+   * 
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    * 
    */
   public class ViewModel extends BaseControl.ViewModel {
 
-    private static final long serialVersionUID = 1L;
+    protected String time;
 
-    private String time;
-    private String date;
-    
-    private DateControl.ViewModel dateViewModel;
-    private TimeControl.ViewModel timeViewModel;
-    
-    private boolean hasOnChangeEventListeners;
+    protected String date;
+
+    protected Integer hour;
+
+    protected Integer minute;
+
+    protected Integer second;
+
+    protected DateControl.ViewModel dateViewModel;
+
+    protected TimeControl.ViewModel timeViewModel;
+
+    protected boolean hasOnChangeEventListeners;
 
     /**
-     * Takes an outer class snapshot.     
-     */    
+     * Takes an outer class snapshot.
+     */
     public ViewModel() throws Exception {
-      dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
-      String[] timeInnerData = (String[]) timeControl.innerData;
-      this.time = timeInnerData == null ? null : timeInnerData[0];
-      
-      timeViewModel = (TimeControl.ViewModel) timeControl._getViewable().getViewModel();
-      String[] dateInnerData = (String[]) dateControl.innerData;
-      this.date = dateInnerData == null ? null : dateInnerData[0];
-      
-      this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();    
-    }       
-    
+      this.dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
+      this.date = dateControl.innerData == null ? null : ((String[]) dateControl.innerData)[0];
+
+      this.timeViewModel = (TimeControl.ViewModel) timeControl._getViewable().getViewModel();
+      this.time = timeControl.innerData == null ? null : ((String[]) timeControl.innerData)[0];
+
+      this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();
+      parseTime();
+    }
+
     /**
      * Returns time as <code>String</code>.
+     * 
      * @return time as <code>String</code>.
      */
     public String getTime() {
-      return time;
+      return this.time;
     }
 
     /**
      * Returns date as <code>String</code>.
+     * 
      * @return date as <code>String</code>.
      */
     public String getDate() {
-      return date;
+      return this.date;
     }
-    
+
     /**
      * @since 1.0.3
      */
     public boolean isOnChangeEventRegistered() {
-      return hasOnChangeEventListeners;
-    } 
+      return this.hasOnChangeEventListeners;
+    }
 
     public DateControl.ViewModel getDateViewModel() {
-      return dateViewModel;
+      return this.dateViewModel;
     }
 
     public TimeControl.ViewModel getTimeViewModel() {
-      return timeViewModel;
-    } 
-  }  
+      return this.timeViewModel;
+    }
+
+    protected void parseTime() throws Exception {
+      if (this.time != null) {
+        try {
+          Date date = this.timeViewModel.getCurrentSimpleDateTimeFormat().parse(this.time);
+          Calendar cal = Calendar.getInstance();
+          cal.setTime(date);
+          this.hour = new Integer(cal.get(Calendar.HOUR_OF_DAY));
+          this.minute = new Integer(cal.get(Calendar.MINUTE));
+          this.second = new Integer(cal.get(Calendar.SECOND));
+        } catch (Exception e) {}
+      }
+    }
+
+    public Integer getHour() {
+      return this.hour;
+    }
+
+    public Integer getMinute() {
+      return this.minute;
+    }
+
+    public Integer getSecond() {
+      return this.second;
+    }
+
+    public boolean isDateDisabled() {
+      return isDisabled() || this.dateViewModel.isDisabled();
+    }
+
+    public boolean isTimeDisabled() {
+      return isDisabled() || this.timeViewModel.isDisabled();
+    }
+  }
 }
