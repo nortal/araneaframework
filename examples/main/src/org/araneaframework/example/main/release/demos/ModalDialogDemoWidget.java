@@ -1,6 +1,8 @@
 
 package org.araneaframework.example.main.release.demos;
 
+import org.araneaframework.http.HttpInputData;
+
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
@@ -90,6 +92,9 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   }
 
   public void handleEventTestSimpleForm() throws Exception {
+    HttpInputData input = (HttpInputData) getInputData();
+    input.pushPathPrefix("pathDemo");
+    input.popPathPrefix();
     this.form.convertAndValidate();
   }
 

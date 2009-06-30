@@ -16,6 +16,10 @@
 
 package org.araneaframework.uilib.util;
 
+import org.joda.time.format.DateTimeFormat;
+
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +46,7 @@ public abstract class JodaDateUtil {
 
     if (value.trim().length() == pattern.length()) {
       try {
-        org.joda.time.DateTime date = org.joda.time.format.DateTimeFormat.forPattern(pattern).parseDateTime(value);
+        DateTime date = DateTimeFormat.forPattern(pattern).parseDateTime(value);
 
         if (date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
           // The DateTime.toDate() does not always return the exact date in a JDK
@@ -59,7 +63,7 @@ public abstract class JodaDateUtil {
           cal.set(Calendar.MILLISECOND, date.millisOfSecond().get());
 
           if (log.isTraceEnabled()) {
-            String text = org.joda.time.format.DateTimeFormat.forPattern(pattern).print(date);
+            String text = DateTimeFormat.forPattern(pattern).print(date);
             log.trace("Parsed Joda date '" + text + "'; JDK Date version: '"
                 + cal.getTime() + "'.");
           }

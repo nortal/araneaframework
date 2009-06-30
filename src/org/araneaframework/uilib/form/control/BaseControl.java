@@ -74,11 +74,6 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
     BaseControl.this.value = value;
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * @return {@link ViewModel}.
-   * @throws Exception 
-   */
   public Object getViewModel() throws Exception {
     return new ViewModel();
   }
