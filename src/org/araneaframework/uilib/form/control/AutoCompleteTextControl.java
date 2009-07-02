@@ -1,5 +1,7 @@
 package org.araneaframework.uilib.form.control;
 
+import java.util.LinkedList;
+
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.util.List;
@@ -23,29 +25,124 @@ public class AutoCompleteTextControl extends TextControl {
 
   public static final String LISTENER_NAME = "autocomplete";
 
-  protected long minCompletionLength = 1;
+  public static final int DEFAULT_MIN_INPUT_LENGTH = 1;
+
+  protected int minCompletionLength = DEFAULT_MIN_INPUT_LENGTH;
   protected DataProvider dataProvider;
   protected ResponseBuilder responseBuilder;
+  protected List localData = new LinkedList();
 
+  /**
+   * The default constructor for creating autocomplete input. If the local data nor data provider
+   * are not specified, the user will not get any suggestions. The default minimum character count
+   * {@value #DEFAULT_MIN_INPUT_LENGTH} (before suggestions are shown) will be used.
+   */
   public AutoCompleteTextControl() {}
 
   /**
-   * @param minCompletionLength number of chars that must be input before suggestions are provided
+   * Constructor for creating autocomplete input with data that is sent to the client side when the
+   * control is rendered. Therefore, no AJAX requests will be done when local data is provided. If
+   * the parameter <code>localData</code> is an empty list or <code>null</code>, the user will not
+   * get any suggestions (unless a data provider is not <code>null</code>). The default minimum
+   * character count {@value #DEFAULT_MIN_INPUT_LENGTH} (before suggestions are shown) will be used.
+   * 
+   * @param localData A list of <code>String</code>s that will be suggested to the user.
+   * @since 1.2.3
    */
-  public AutoCompleteTextControl(long minCompletionLength) {
+  public AutoCompleteTextControl(List localData) {
+    this.localData = localData;
+  }
+
+  /**
+   * Constructor for creating autocomplete input with the minimum number of characters before the
+   * suggestions are shown. If the local data nor data provider are not specified, the user will not
+   * get any suggestions.
+   * 
+   * @param minCompletionLength Number of chars that must be input before suggestions are provided.
+   */
+  public AutoCompleteTextControl(int minCompletionLength) {
     this.minCompletionLength = minCompletionLength;
   }
 
+  /**
+   * Constructor for creating autocomplete input with data that is sent to the client side when the
+   * control is rendered, and with the minimum number of characters before the suggestions are
+   * shown. No AJAX requests will be done when local data is provided. If the parameter
+   * <code>localData</code> is an empty list or <code>null</code>, the user will not get any
+   * suggestions (unless a data provider is not <code>null</code>).
+   * 
+   * @param localData A list of <code>String</code>s that will be suggested to the user.
+   * @param minCompletionLength Number of chars that must be typed before suggestions are provided.
+   * @since 1.2.3
+   */
+  public AutoCompleteTextControl(List localData, int minCompletionLength) {
+    this(minCompletionLength);
+    this.localData = localData;
+  }
+
+  /**
+   * Constructor for creating autocomplete input with the given input type. The latter is used to
+   * validate the input data. The default type is {@link TextType#TEXT}, which is basically not
+   * validated. If the local data nor data provider are not specified, the user will not get any
+   * suggestions. The default minimum character count {@value #DEFAULT_MIN_INPUT_LENGTH} (before
+   * suggestions are shown) will be used.
+   * 
+   * @param textType The type of the input text ({@link TextType#TEXT}, {@link TextType#EMAIL},
+   *          {@link TextType#NUMBER_ONLY}).
+   */
   public AutoCompleteTextControl(TextType textType) {
     super(textType);
   }
 
   /**
-   * @param minCompletionLength number of chars that must be input before suggestions are provided
+   * Constructor for creating autocomplete input with data that is sent to the client side when the
+   * control is rendered, and with the given input type. The latter is used to validate the input
+   * data. The default type is {@link TextType#TEXT}, which is basically not validated. If the local
+   * data nor data provider are not specified, the user will not get any suggestions. The default
+   * minimum character count {@value #DEFAULT_MIN_INPUT_LENGTH} (before suggestions are shown) will
+   * be used.
+   * 
+   * @param localData A list of <code>String</code>s that will be suggested to the user.
+   * @param textType The type of the input text ({@link TextType#TEXT}, {@link TextType#EMAIL},
+   *          {@link TextType#NUMBER_ONLY}).
+   * @since 1.2.3
    */
-  public AutoCompleteTextControl(TextType textType, long minCompletionLength) {
-    super(textType);
+  public AutoCompleteTextControl(List localData, TextType textType) {
+    this(textType);
+    this.localData = localData;
+  }
+
+  /**
+   * Constructor for creating autocomplete input with the given input type, and with the minimum
+   * number of characters before the suggestions are shown. The second parameter is used to validate
+   * the input data. The default type is {@link TextType#TEXT}, which is basically not validated. If
+   * the local data nor data provider are not specified, the user will not get any suggestions.
+   * 
+   * @param textType The type of the input text ({@link TextType#TEXT}, {@link TextType#EMAIL},
+   *          {@link TextType#NUMBER_ONLY}).
+   * @param minCompletionLength Number of chars that must be input before suggestions are provided.
+   */
+  public AutoCompleteTextControl(TextType textType, int minCompletionLength) {
+    this(textType);
     this.minCompletionLength = minCompletionLength;
+  }
+
+  /**
+   * Constructor for creating autocomplete input with data that is sent to the client side when the
+   * control is rendered, and with the given input type, and with the minimum number of characters
+   * before the suggestions are shown. The former is used to validate the input data. The default
+   * type is {@link TextType#TEXT}, which is basically not validated. If the local data nor data
+   * provider are not specified, the user will not get any suggestions.
+   * 
+   * @param localData A list of <code>String</code>s that will be suggested to the user.
+   * @param textType The type of the input text ({@link TextType#TEXT}, {@link TextType#EMAIL},
+   *          {@link TextType#NUMBER_ONLY}).
+   * @param minCompletionLength Number of chars that must be input before suggestions are provided.
+   * @since 1.2.3
+   */
+  public AutoCompleteTextControl(List localData, TextType textType, int minCompletionLength) {
+    this(textType, minCompletionLength);
+    this.localData = localData;
   }
 
   protected void init() throws Exception {
@@ -53,10 +150,27 @@ public class AutoCompleteTextControl extends TextControl {
     addActionListener(LISTENER_NAME, new AutoCompleteActionListener());
   }
 
+  /**
+   * Sets the data provider for this autocomplete. If the local data is also provided, this data
+   * provider won't be used. If the local data nor data provider are not specified, the user will
+   * not get any suggestions.
+   */
   public void setDataProvider(DataProvider dataProvider) {
     this.dataProvider = dataProvider;
   }
-  
+
+  /**
+   * Sets the data that is sent to the client side when the control is rendered. If it is provided,
+   * the data provider won't be used. If the local data nor data provider are not specified, the
+   * user will not get any suggestions.
+   * 
+   * @param localData A list of <code>String</code>s that are suggested to the user.
+   * @since 1.2.3
+   */
+  public void setLocalData(List localData) {
+    this.localData = localData;
+  }
+
   /** @since 1.0.4 */
   public void setResponseBuilder(ResponseBuilder responseBuilder) {
     this.responseBuilder = responseBuilder;
@@ -171,14 +285,28 @@ public class AutoCompleteTextControl extends TextControl {
 
     private static final long serialVersionUID = 1L;
 
-    private long minCompletionLength;
-    
+    private int minCompletionLength;
+
+    private List localData;
+
+    private boolean dataProviderExists;
+
     public ViewModel() {
       this.minCompletionLength = AutoCompleteTextControl.this.minCompletionLength;
+      this.localData = AutoCompleteTextControl.this.localData;
+      this.dataProviderExists = AutoCompleteTextControl.this.dataProvider != null;
     }
 
     public long getMinCompletionLength() {
       return minCompletionLength;
+    }
+
+    public List getLocalData() {
+      return this.localData;
+    }
+
+    public boolean isDataProviderExists() {
+      return this.dataProviderExists;
     }
   }
 }

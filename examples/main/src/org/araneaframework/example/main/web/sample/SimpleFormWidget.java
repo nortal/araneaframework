@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.main.web.sample;
 
-import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -24,16 +23,17 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
-import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.JodaDateControl;
+import org.araneaframework.uilib.form.control.JodaDateTimeControl;
+import org.araneaframework.uilib.form.control.JodaTimeControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
-import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.BooleanData;
-import org.araneaframework.uilib.form.data.DateData;
+import org.araneaframework.uilib.form.data.JodaDateData;
 import org.araneaframework.uilib.form.data.StringData;
+import org.joda.time.DateTime;
 
 
 /**
@@ -69,15 +69,15 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     
     // and here we add form elements to form without the extra step taken previously. 
     simpleForm.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
-    simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
-    simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
-    simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
+    simpleForm.addElement("dateTime", "common.datetime", new JodaDateTimeControl(), new JodaDateData(), false);
+    simpleForm.addElement("time", "common.time", new JodaTimeControl(), new JodaDateData(), false);
+    simpleForm.addElement("date", "common.date", new JodaDateControl(), new JodaDateData(), false);
     simpleForm.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
     // require the number input field to be filled. It could have been achieved already
     // on formelement creation by setting mandatory attribute to true
     simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
     // sets initial value of form element
-    simpleForm.setValueByFullName("dateTime", new Date());
+    simpleForm.setValueByFullName("dateTime", new DateTime());
 
     // here are two controls that are either disabled or read-only:
     simpleForm.addElement("disabledCtrl", "common.disabled", new TextareaControl(), new StringData(), t("common.disabled"), false).setDisabled(true);

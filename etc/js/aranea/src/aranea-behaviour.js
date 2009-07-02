@@ -185,7 +185,7 @@ Object.extend(Aranea.Behaviour, {
    * @param options - Options for Ajax.Autocompleter.
    * @since 1.2.1
    */
-  doAutoCompleteInputSetup: function(name, eventType, updateRegions, options) {
+  doAutoCompleteInputSetup: function(name, eventType, updateRegions, options, data) {
     _ap.addClientLoadEvent(function() {
       var form = AraneaPage.findSystemForm();
 
@@ -203,7 +203,11 @@ Object.extend(Aranea.Behaviour, {
 
       form = null;
       var url = Aranea.Behaviour.getAutoCompleteURL(name);
-      new Ajax.Autocompleter(name, "ACdiv." + name, url, options);
+      if (data && typeof data == 'boolean') {
+        new Ajax.Autocompleter(name, "ACdiv." + name, url, options);
+      } else if (Object.isArray(data) && data.length > 0) {
+        new Autocompleter.Local(name, "ACdiv." + name, data, options);
+      }
     });
   }
 });

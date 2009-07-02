@@ -1,5 +1,7 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
  */
 public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected String divClass = "autocompletediv";  
+  protected String localDataVar;
 
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("AutoCompleteTextControl");
@@ -136,7 +139,17 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
     script.append("{minChars: ");
     script.append(String.valueOf(viewModel.getMinCompletionLength()));
-    script.append("});");
+    script.append("},");
+
+    if (this.localDataVar != null) {
+      script.append("'").append(this.localDataVar).append("'");
+    } else if (viewModel.getLocalData() == null || viewModel.getLocalData().isEmpty()) {
+      script.append(viewModel.isDataProviderExists());
+    } else {
+      script.append("[\"").append(StringUtils.join(viewModel.getLocalData(), "\",\"")).append("\"]");
+    }
+
+    script.append(");");
 
     return script.toString();
   }
@@ -168,5 +181,17 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    */
   public void setDivClass(String divClass) throws JspException {
     this.divClass = (String) evaluate("divClass", divClass, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   * type = "java.lang.String"
+   * required = "false"
+   * description = "If using local data for this autocomplete, one can define the JS data array in a
+   *        JSP page, and make the autocomplete use that data array by reference. Therefore, one can
+   *        provide the variable name that points to an array."
+   */
+  public void setLocalDataVar(String localDataVar) throws JspException {
+    this.localDataVar = (String) evaluate("localDataVar", localDataVar, String.class);
   }
 }
