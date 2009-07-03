@@ -81,6 +81,7 @@ function setCloningUrl(el) {
 function applyCharacterFilter(el) {
   var filter = el.readAttribute('arn-charFilter');
   if (filter) {
+    filter += '\t';
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
     Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
     Event.observe(el, "paste", onCharacterFilterPaste); //quirksmode (does not work in Opera)
