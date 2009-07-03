@@ -90,27 +90,29 @@ function applyCharacterFilter(el) {
 }
 
 function onCharacterFilterPaste(event) {
-  event.stop();
+  characterFilterInputMonitor.curry(event.element()).defer();
 }
 
 function monitorCharacterFilterInput(input) {
   input = $(input);
   if (!input) return;
-  window.setInterval(function() {
-      if (!$(input)) return;
-      var filter = input.readAttribute('arn-charFilter')
-      var value = $F(input);
-      if (value == null) return;
-      for (var i = 0; i < value.length; i++) {
-        if (filter.indexOf(value.charAt(i)) == -1) {
-          value = value.substring(0, i) + value.substring(i + 1);
-          i--;
-        }
-      }
-      if ($F(input) != value) {
-        input.value = value;
-      }
-    }, 1000);
+  window.setInterval(characterFilterInputMonitor.curry(input), 1000);
+}
+
+function characterFilterInputMonitor(input) {
+  if (!$(input)) return;
+  var filter = input.readAttribute('arn-charFilter')
+  var value = $F(input);
+  if (value == null) return;
+  for (var i = 0; i < value.length; i++) {
+    if (filter.indexOf(value.charAt(i)) == -1) {
+      value = value.substring(0, i) + value.substring(i + 1);
+      i--;
+    }
+  }
+  if ($F(input) != value) {
+    input.value = value;
+  }
 }
 
 /** TODO: this is not really used in current behaviour rules (only by tooltip tag) */
