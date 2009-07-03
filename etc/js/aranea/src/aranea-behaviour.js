@@ -107,7 +107,9 @@ function monitorCharacterFilterInput(input) {
           i--;
         }
       }
-      input.value = value;
+      if ($F(input) != value) {
+        input.value = value;
+      }
     }, 1000);
 }
 
