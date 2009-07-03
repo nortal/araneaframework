@@ -83,7 +83,7 @@ function applyCharacterFilter(el) {
   if (filter) {
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
     Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
-    Event.observe(el, "paste", onCharacterFilterPaste);
+    Event.observe(el, "paste", onCharacterFilterPaste); //quirksmode (does not work in Opera)
     monitorCharacterFilterInput(el);
   }
 }
@@ -96,6 +96,7 @@ function monitorCharacterFilterInput(input) {
   input = $(input);
   if (!input) return;
   window.setInterval(function() {
+      if (!$(input)) return;
       var filter = input.readAttribute('arn-charFilter')
       var value = $F(input);
       if (value == null) return;
