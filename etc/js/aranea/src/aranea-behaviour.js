@@ -82,12 +82,31 @@ function applyCharacterFilter(el) {
   var filter = el.readAttribute('arn-charFilter');
   if (filter) {
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
-    if (!Prototype.Browser.IE && !Prototype.Browser.Opera) {
-      Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
-    } else {
-      el.attachEvent('onkeypress', function() { getKeyboardInputFilterFunction(filter)(window.event); });
-    }
+    Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
+    Event.observe(el, "paste", onCharacterFilterPaste);
+    monitorCharacterFilterInput(el);
   }
+}
+
+function onCharacterFilterPaste(event) {
+  event.stop();
+}
+
+function monitorCharacterFilterInput(input) {
+  input = $(input);
+  if (!input) return;
+  window.setInterval(function() {
+      var filter = input.readAttribute('arn-charFilter')
+      var value = $F(input);
+      if (value == null) return;
+      for (var i = 0; i < value.length; i++) {
+        if (filter.indexOf(value.charAt(i)) == -1) {
+          value = value.substring(0, i) + value.substring(i + 1);
+          i--;
+        }
+      }
+      input.value = value;
+    }, 1000);
 }
 
 /** TODO: this is not really used in current behaviour rules (only by tooltip tag) */
