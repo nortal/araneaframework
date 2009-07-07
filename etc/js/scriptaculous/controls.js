@@ -46,7 +46,7 @@ Autocompleter.Base = Class.create({
     this.element     = element;
     this.update      = $(update);
     this.hasFocus    = false;
-    this.hasUpdateFocus = false;
+    this.hasUpdateFocus = 0;
     this.changed     = false;
     this.active      = false;
     this.index       = 0;
@@ -90,10 +90,7 @@ Autocompleter.Base = Class.create({
 
     Event.observe(this.element, 'blur', this.onBlur.bindAsEventListener(this));
     Event.observe(this.element, 'keydown', this.onKeyPress.bindAsEventListener(this));
-
-    Event.observe(this.update, 'focus', function() { this.hasUpdateFocus = true; }.bind(this));
-    Event.observe(this.update, 'blur', function() { this.hasUpdateFocus = false; }.bind(this));
-
+    Event.observe(this.update, 'mousedown', function() { this.hasUpdateFocus = true; }.bind(this));
 },
 
   show: function() {

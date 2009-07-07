@@ -10,7 +10,7 @@
 	<script type="text/javascript">
 		window.hasExecuted = false;
 
-		var pollingUpdater = function(request, response) {
+		var pollingUpdater = function(request) {
 
 			// If the region does not exist, quit:
 			if (window.hasExecuted &amp;&amp; $$('div.msg-error:first').first().empty()) {
