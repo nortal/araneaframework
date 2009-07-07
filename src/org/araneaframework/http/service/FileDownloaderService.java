@@ -38,8 +38,7 @@ public class FileDownloaderService extends FileDownloaderWidget {
     super(file);
   }
 
-  public FileDownloaderService(byte[] fileContent, String contentType,
-      String fileName) {
+  public FileDownloaderService(byte[] fileContent, String contentType, String fileName) {
     super(fileContent, contentType, fileName);
   }
 

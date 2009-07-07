@@ -905,8 +905,34 @@ Object.extend(AraneaPage, {
           top: document.documentElement.scrollTop + 'px'
       });
     }
-  }
+  },
 
+  /**
+   * The default request callback used by AraneaPage.downloadFile, which receives URL or 'error' to
+   * do something with it. By default, the URL is used to load that file, and nothing is done with
+   * 'error'. This can be customized, of course.
+   * @param transport The Prototype AJAX request object to read server response.
+   * @since 1.2.3
+   */
+  fileDownloadActionCallback: function(transport) {
+    var url = transport.responseText;
+    if (url != 'error') {
+      araneaPage().debug('Downloading file from "' + url + '".');
+      $(document.body).insert(new Element('iframe', {src: url}).hide());
+    }
+  },
+
+  /**
+   * This method handles file downloading with AJAX (action) request. This expects that there is an
+   * FileDownloadActionListener registered on the server side, and the given data is sent to invoke
+   * that listener. The callback method used is AraneaPage.fileDownloadActionCallback, however, it
+   * can be redefined.
+   * @since 1.2.3
+   */
+  downloadFile: function(actionId, actionTarget, actionParam) {
+    araneaPage().action(null, actionId, actionTarget, actionParam, this.fileDownloadActionCallback);
+    return false;
+  }
 });
 
 /**
