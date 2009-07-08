@@ -919,6 +919,10 @@ Object.extend(AraneaPage, {
     if (url != 'error') {
       araneaPage().debug('Downloading file from "' + url + '".');
       $(document.body).insert(new Element('iframe', {src: url}).hide());
+      window.setTimeout(function() {
+        $$('iframe[src=' + url + ']').invoke('remove');
+        araneaPage().debug('Removed iframe for "' + url + '".');
+      }, 10000);
     }
   },
 
