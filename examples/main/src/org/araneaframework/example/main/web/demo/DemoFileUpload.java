@@ -137,8 +137,6 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
   private class FileUploadButtonListener implements OnClickEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     public void onClick() throws Exception {
       form.getElementByFullName("file").convertAndValidate();
       FileInfo fileInfo = (FileInfo) form.getValueByFullName("file");

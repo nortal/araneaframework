@@ -1813,41 +1813,211 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 			One can access the <literal>PopupWindowContext</literal> by getting it from
 			the <literal>Environment</literal>. If it is accessed from a widget that extends
 			<literal>BaseUIWidget</literal>, the <literal>getPopupCtx()</literal> method can
-			be used.
+			be used. (Since <literal>PopupWindowContext</literal> is mainly used inside
+			<literal>BaseUIWidget</literal> then the examples below will use the
+			<literal>getPopupCtx()</literal> approach.)
+			</para>
+
+			<para><informaltable frame="topbot">
+				<tgroup cols="2">
+					<colspec colwidth="1*" />
+					<colspec colwidth="1*" />
+					<thead>
+						<row>
+							<entry align="left">Method</entry>
+							<entry align="left">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry><literal>String open(Message startMessage, PopupWindowProperties properties, Widget opener)</literal></entry>
+							<entry>Uses a message that opens a widget inside a new popup.</entry>
+						</row>
+
+						<row>
+							<entry><literal>String open(Service service, PopupWindowProperties properties, Widget opener)</literal></entry>
+							<entry>Uses a service that serves the data for a new popup.</entry>
+						</row>
+
+						<row>
+							<entry><literal>String openMounted(String url, PopupWindowProperties properties)</literal></entry>
+							<entry>Opens the mount URL in a popup.</entry>
+						</row>
+
+						<row>
+							<entry><literal>open(String url, PopupWindowProperties properties)</literal></entry>
+							<entry>Opens the given URL in a popup.</entry>
+						</row>
+
+						<row>
+							<entry><literal>boolean close(String id) throws Exception</literal></entry>
+							<entry>Closes the popup with given ID (the ID is returend when the popup is created).</entry>
+						</row>
+
+						<row>
+							<entry><literal>Widget getOpener()</literal></entry>
+							<entry>Provides the popup opener.</entry>
+						</row>
+
+						<row>
+							<entry><literal>Map getPopups()</literal></entry>
+							<entry>Returns a map with popups (the key is the ID of the popup, and
+							the value is an instance of <literal>PopupServiceInfo</literal>.</entry>
+						</row>
+
+					</tbody>
+				</tgroup>
+			</informaltable></para>
+
+			<para>
+			To enable popups at JSP layer, one must also register it inside the system form like
+			the following code example does:
+
+<programlisting role="jsp">...
+  &lt;ui:body&gt;
+    ...
+      &lt;ui:systemForm method="post"&gt;
+        ...
+          &lt;ui:registerPopups/&gt;
+        ...
+      &lt;/ui:systemForm&gt;
+    ...
+  &lt;/ui:body&gt;
+...</programlisting>
 			</para>
 
 			<para>
-			Here is an example on how to the server enables the user to download a file:
-
-<programlisting role="java">  PopupWindowContext popupContext = (PopupWindowContext) getEnvironment().getEntry(PopupWindowContext.class);
-  popupContext.open(new FileDownloaderService(selectedFile), new PopupWindowProperties(), null);</programlisting>
-
-			In the example above, the first parameter is the service that downloads the file
-			to the user's computer, and the second one is the popup window properties. Sometimes 
-			one may want to also specify the widget that caused the popup to open.
-			Therefore, the last parameter in the example is the opener, which usually is
-			<literal>null</literal>, but may be provided as <literal>this</literal> (the caller widget).
-			(The popup widget can access the opener by <literal>PopupWindowContext.getOpener()</literal>.)
+			Standard implementation of <literal>PopupWindowContext</literal> is described in
+			<xref linkend="araneaPopupFilter"/>.
 			</para>
 
-			<para>
-			The following is an example from Aranea sample application (<literal>SamplePopupWidget</literal>)
-			on how to open a popup widget (from a widget that extends <literal>BaseUIWidget</literal>):
+			<sect3 id="SimpleFileDownloading">
+				<title>Simple File Downloading with Popups</title>
+
+				<para>
+				Here is an example on how the server component can provide file downloading operation:
+
+<programlisting role="java">getPopupCtx().open(
+    new FileDownloaderService(selectedFile),
+    new PopupWindowProperties(), null);</programlisting>
+
+				In the example above, the first parameter is the service that downloads the file
+				to the user's computer, and the second one is the popup window properties. Sometimes 
+				one may want to also specify the widget that caused the popup to open.
+				Therefore, the last parameter in the example is the opener, which usually is
+				<literal>null</literal>, but may be provided as <literal>this</literal> (the caller widget).
+				(The popup widget can access the opener by <literal>PopupWindowContext.getOpener()</literal>.)
+				</para>
+			</sect3>
+
+			<sect3 id="AjaxFileDownloading">
+				<title>AJAX File Downloading with Popups</title>
+				<para>
+				Another way to provide the file downloading option is without a page load: the AJAX
+				solution. To make it work, one would have to register a
+				<literal>org.araneaframework.http.core.FileDownloadActionListener</literal> as an
+				action listener in widget. The latter expects the popup window context and the file
+				to download or a callback to provide the file info. Since mostly one needs to
+				provide the file once it is requested, the following example demonstrates the
+				callback solution on the server side in a widget:
+
+<programlisting role="java">  public void init() throws Exception {
+    // ... other init() code here ...
+    addActionListener("download", new FileDownloadActionListener(
+        getPopupCtx(), new DemoFileHandler()));
+  }
+
+  // Our custom implementation handler to provide file data to FileDownloadActionListener:
+  private class DemoFileHandler extends FileDownloadActionListener.FileDownloadHandler {
+
+    protected void prepareServiceData(String actionId, String actionParam, InputData input,
+        OutputData output) {
+      // The action parameter, in this case, is a list row ID.
+      if (actionParam != null) {
+        FileInfo file = (FileInfo) list.getRowFromRequestId(actionParam);
+        this.readData(file);
+      }
+    }
+  }</programlisting>
+				As you may notice, the listener is registered with the ID "<literal>download</literal>"
+				(which is later used to invoke the listener), and the listener uses action parameter to
+				return the correct file from a <literal>ListWidget</literal>. Here the file info is
+				stored as a <literal>FileInfo</literal> object, but usually one has just bytes and the
+				file name. In the latter case, a simple solution is just to set the file data as
+<programlisting role="java">protected void prepareServiceData(String actionId, String actionParam,
+    InputData input, OutputData output) {
+
+  byte[] fileBytes = null;
+
+  // ... Retrieve the data ...
+
+  // Store the data in variables (you don't have to define the class variables):
+  this.file = fileBytes;
+  this.fileName = "demo.pdf";
+  this.contentType = "application/pdf";
+}
+</programlisting>
+
+				The <literal>FileDownloadActionListener</literal> contains also some other methods for
+				some specific purposes. Check the JavaDoc for that, if you want to customize the default
+				logic of that class.
+				</para>
+
+				<para>The second part of AJAX file downloading is the client part invoking that file
+				downloading action listener, which is quite easy:
+<programlisting role="xml">&lt;a href="javascript:false"
+  onclick="return AraneaPage.downloadFile('download','${widgetId}','${rowRequestId}');"&gt;
+    Click me to download the PDF!
+&lt;/a&gt;
+</programlisting>
+				So the main work is handled by <literal>AraneaPage.downloadFile</literal>, which takes
+				the action listener ID, the widget path of the containing action listener, and an
+				optional parameter for the action listener as parameters. If the file downloading does
+				not work then always check first the <literal>onclick</literal> value to make sure that
+				it really has correct request values!
+				</para>
+
+				<para>However, the code above is not all that you need to know. The remaining part is
+				what happens when the request is done? The request callback that is used, is named
+				<literal>AraneaPage.fileDownloadActionCallback(transport)</literal>. The default
+				implementation checks that result is not equal to "<literal>error</literal>". If so then
+				it creates an invisible <literal>iframe</literal>, which points to the URL returned by
+				the file downloading action listener. The value "<literal>error</literal>" is returned
+				in case <emphasis>something goes wrong</emphasis>. To create a custom solution (for
+				response handling) relpacing the default one, just override that method.
+				</para>
+
+				<para>
+				Another aspect that should be acknowledged is the file downloading action listener part,
+				especially how the URL is generated and returned. As it is shown above, the
+				<literal>FileDownloadActionListener</literal> requires a <literal>PopupWindowContext</literal>
+				that is used to open a popup window to download the specified file in a separate thread.
+				The threads are closed when the next request is sent to the server. Therefore, the URL
+				returned by the action listener is actually the URL of the popup (that is different
+				with each request because with every request a new popup is opened).
+				</para>
+			</sect3>
+
+			<sect3 id="OpeningCustomWidgetInPopoup">
+				<title>Opening a Custom Widget In a Popoup</title>
+				<para>
+				The following is an example from Aranea sample application (<literal>SamplePopupWidget</literal>)
+				on how to open a popup widget (from a widget that extends <literal>BaseUIWidget</literal>):
 
 <programlisting role="java">  getPopupCtx().open(
     new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form"), 
     new PopupWindowProperties(), this);</programlisting>
 
-			Here it must send a <literal>Message</literal> to the components that starts
-			new widgets to produce the desired effect. The <literal>LoginAndMenuSelectMessage</literal>
-			is a <literal>SeriesMessage</literal> that first uses the flow context from the
-			child environment of the login widget to start a new root context. Then the menu select
-			widget searches the menu widget to select the given menu item. Below  are the codes
-			for messages.
-			</para>
+				Here it must send a <literal>Message</literal> to the components that starts
+				new widgets to produce the desired effect. The <literal>LoginAndMenuSelectMessage</literal>
+				is a <literal>SeriesMessage</literal> that first uses the flow context from the
+				child environment of the login widget to start a new root context. Then the menu select
+				widget searches the menu widget to select the given menu item. Below  are the codes
+				for messages.
+				</para>
 
-			<para>
-			The code for the <literal>LoginAndMenuSelectMessage</literal>:
+				<para>
+				The code for the <literal>LoginAndMenuSelectMessage</literal>:
 <programlisting role="java">public class LoginAndMenuSelectMessage extends SeriesMessage {
 
   public LoginAndMenuSelectMessage(String menuPath) {
@@ -1857,10 +2027,10 @@ getFlowCtx().start(new TestFlow(new Long(5)),
   }
 
 }</programlisting>
-			</para>
+				</para>
 
-			<para>
-			The code for the <literal>LoginMessage</literal>:
+				<para>
+				The code for the <literal>LoginMessage</literal>:
 <programlisting role="java">public class LoginMessage extends BroadcastMessage {
 
   protected void execute(Component component) throws Exception {
@@ -1875,10 +2045,10 @@ getFlowCtx().start(new TestFlow(new Long(5)),
   }
 
 }</programlisting>
-			</para>
+				</para>
 
-			<para>
-			The code for the <literal>MenuSelectMessage</literal>:
+				<para>
+				The code for the <literal>MenuSelectMessage</literal>:
 <programlisting role="java">public class MenuSelectMessage extends BroadcastMessage {
 
   private String menuPath;
@@ -1895,83 +2065,9 @@ getFlowCtx().start(new TestFlow(new Long(5)),
   }
 
 }</programlisting>
-			</para>
-
-      <para><informaltable frame="topbot">
-          <tgroup cols="2">
-            <colspec colwidth="1*" />
-
-            <colspec colwidth="1*" />
-
-            <thead>
-              <row>
-                <entry align="left">Method</entry>
-
-                <entry align="left">Description</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry><literal>String open(Message startMessage, PopupWindowProperties properties, Widget opener)</literal></entry>
-                <entry>Uses a message that opens a widget inside a new popup.</entry>
-              </row>
-
-              <row>
-                <entry><literal>String open(Service service, PopupWindowProperties properties, Widget opener)</literal></entry>
-                <entry>Uses a service that serves the data for a new popup.</entry>
-              </row>
-
-              <row>
-                <entry><literal>String openMounted(String url, PopupWindowProperties properties)</literal></entry>
-                <entry>Opens the mount URL in a popup.</entry>
-              </row>
-
-              <row>
-                <entry><literal>open(String url, PopupWindowProperties properties)</literal></entry>
-                <entry>Opens the given URL in a popup.</entry>
-              </row>
-
-              <row>
-                <entry><literal>boolean close(String id) throws Exception</literal></entry>
-                <entry>Closes the popup with given ID (the ID is returend when the popup is created).</entry>
-              </row>
-
-              <row>
-                <entry><literal>Widget getOpener()</literal></entry>
-                <entry>Provides the popup opener.</entry>
-              </row>
-
-              <row>
-                <entry><literal>Map getPopups()</literal></entry>
-                <entry>Returns a map with popups (the key is the ID of the popup, and
-                the value is an instance of <literal>PopupServiceInfo</literal>.</entry>
-              </row>
-
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </para>
-
-			<para>
-			To enable popups at JSP layer, one must also register it inside the system form as
-			the following code snippet does from <literal>root.jsp</literal> of the Aranea Demo Application:
-
-<programlisting role="jsp">...
-  &lt;ui:body&gt;
-
-    &lt;div id="cont1"&gt;
-      &lt;ui:systemForm method="POST"&gt;
-        &lt;ui:register.../&gt;
-        &lt;ui:registerPopups/&gt;
-...</programlisting>
-			</para>
-
-      <para>
-        Standard implementation of <literal>PopupWindowContext</literal> is described in
-        <xref linkend="araneaPopupFilter"/>.
-      </para>
-    </sect2>
+				</para>
+			</sect3>
+		</sect2>
 
 		<sect2 id="OverlayContext">
 			<title>OverlayContext</title>
