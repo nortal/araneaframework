@@ -59,6 +59,8 @@ public class StandardServletInputData implements HttpInputData {
 
   private String servletPath;
 
+  private boolean useFullURL = true;
+
   /**
    * Constructs a StandardServletInputData from the request.
    * 
@@ -157,11 +159,13 @@ public class StandardServletInputData implements HttpInputData {
 
   public String getContainerURL() {
     StringBuffer url = new StringBuffer();
-    url.append(this.req.getScheme());
-    url.append("://");
-    url.append(this.req.getServerName());
-    url.append(":");
-    url.append(this.req.getServerPort());
+    if (this.useFullURL) {
+      url.append(this.req.getScheme());
+      url.append("://");
+      url.append(this.req.getServerName());
+      url.append(":");
+      url.append(this.req.getServerPort());
+    }
     url.append(this.req.getContextPath());
     url.append(this.servletPath);
     return url.toString();
@@ -228,5 +232,9 @@ public class StandardServletInputData implements HttpInputData {
     } catch (UnsupportedEncodingException e) {
       ExceptionUtil.uncheckException(e);
     }
+  }
+
+  public void setUseFullURL(boolean useFullURL) {
+    this.useFullURL = useFullURL;
   }
 }

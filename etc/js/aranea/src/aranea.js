@@ -916,14 +916,8 @@ Object.extend(AraneaPage, {
    */
   fileDownloadActionCallback: function(transport) {
     var url = transport.responseText;
-    if (url != 'error') {
-      araneaPage().debug('Downloading file from "' + url + '".');
-      $(document.body).insert(new Element('iframe', {src: url}).hide());
-      window.setTimeout(function() {
-        $$('iframe[src=' + url + ']').invoke('remove');
-        araneaPage().debug('Removed iframe for "' + url + '".');
-      }, 10000);
-    }
+    araneaPage().debug('Got file download URL "' + url + '".');
+    return  url != 'error' ? url : null;
   },
 
   /**
@@ -933,9 +927,15 @@ Object.extend(AraneaPage, {
    * can be redefined.
    * @since 1.2.3
    */
-  downloadFile: function(actionId, actionTarget, actionParam) {
-    araneaPage().action(null, actionId, actionTarget, actionParam, this.fileDownloadActionCallback);
-    return false;
+  downloadFile: function(actionId, actionTarget, actionParam, options) {
+    options = Object.extend({ asynchronous: false }, options);
+    var callback = this.fileDownloadActionCallback;
+    callback = callback.wrap(function(proceed, options, transport) {
+      options.resultURL = proceed(transport);
+    });
+    callback = callback.curry(options);
+    araneaPage().action(null, actionId, actionTarget, actionParam, callback, options);
+    return options.resultURL;
   }
 });
 

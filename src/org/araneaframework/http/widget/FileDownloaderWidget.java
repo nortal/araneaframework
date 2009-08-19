@@ -40,7 +40,7 @@ public class FileDownloaderWidget extends DownloaderWidget {
   
   protected String fileName;
   
-  protected boolean contentDispositionInline = true;
+  protected Boolean contentDispositionInline;
   
   public FileDownloaderWidget(FileInfo file) {
     super(file.readFileContent(), file.getContentType());
@@ -63,14 +63,14 @@ public class FileDownloaderWidget extends DownloaderWidget {
    * Returns value of currently used content-disposition response header.
    * @return false if content-disposition header is set to "attachment"
    */
-  public boolean isContentDispositionInline() {
+  public Boolean isContentDispositionInline() {
     return contentDispositionInline;
   }
 
   /**
    * Sets content-disposition header to "inline" (true) or "attachment" (false).
    */
-  public void setContentDispositionInline(boolean contentDispositionInline) {
+  public void setContentDispositionInline(Boolean contentDispositionInline) {
     this.contentDispositionInline = contentDispositionInline;
   }
   
@@ -110,10 +110,14 @@ public class FileDownloaderWidget extends DownloaderWidget {
         Map.Entry entry = (Map.Entry) i.next();
         response.setHeader((String) entry.getKey(), (String) entry.getValue());
       }
-    } else {
-      response.setHeader("Content-Disposition",
-          (contentDispositionInline ? "inline" : "attachment") + "; filename="
-              + fileName + "; size=" + getData().length + ";");
+    } else if (this.contentDispositionInline != null) {
+      StringBuffer result = new StringBuffer(this.contentDispositionInline.booleanValue() ? "inline" : "attachment");
+      result.append("; filename=");
+      result.append(this.fileName);
+      result.append("; size=");
+      result.append(getData().length);
+      result.append(";");
+      response.setHeader("Content-Disposition", result.toString());
     }
 
     response.setContentLength(getData().length);
@@ -121,7 +125,6 @@ public class FileDownloaderWidget extends DownloaderWidget {
     close();
   }
 
-  protected void close() {
-  }
+  protected void close() {}
 
 }

@@ -33,7 +33,7 @@ import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class TimestampControl extends EmptyStringNullableControl implements FilteredInputControl {
+public abstract class TimestampControl extends StringValueControl implements FilteredInputControl {
   
   //*********************************************************************
   // FIELDS

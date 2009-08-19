@@ -66,13 +66,16 @@ Aranea.Popups = {
   },
 
   /* @since 1.1 **/
-  openPopup: function(popupId) {
-    var w = window.open(this.popupProperties[popupId].url, popupId,
-        this.popupProperties[popupId].windowProperties);
-    if (w) {
-      this.openedPopupWindows[popupId] = w;
-      w.focus();
-    }
+  openPopup: function(popupId, popupData) {
+    var f = function(id, data) {
+      var w = window.open(data.url, id, data.windowProperties);
+      if (w) {
+        this.openedPopupWindows[id] = w;
+        w.focus();
+        w = null;
+      }
+    };
+    f.bind(this).defer(popupId, popupData);
   },
 
   /* @since 1.1 **/

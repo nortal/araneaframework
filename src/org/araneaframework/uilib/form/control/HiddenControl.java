@@ -21,7 +21,7 @@ package org.araneaframework.uilib.form.control;
  * 
  * @author Konstantin Tretjakov
  */
-public class HiddenControl extends EmptyStringNullableControl {
+public class HiddenControl extends StringValueControl {
  
 	//*********************************************************************
   //* PUBLIC METHODS

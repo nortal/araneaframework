@@ -112,7 +112,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
             + "If it did not, please relax your popup blocker settings.");
 
     FileDownloaderService service = new FileDownloaderService(selectedFile);
-    service.setContentDispositionInline(false);
+    service.setContentDispositionInline(Boolean.FALSE);
 
     PopupWindowProperties p = new PopupWindowProperties();
     getPopupCtx().open(service, p, null);

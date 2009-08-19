@@ -152,7 +152,7 @@ public class FileDownloadActionListener extends StandardActionListener {
 
       FileDownloaderService service = new FileDownloaderService(this.file, this.contentType,
           this.fileName);
-      service.setContentDispositionInline(false);
+      service.setContentDispositionInline(Boolean.FALSE);
       return service;
     }
 

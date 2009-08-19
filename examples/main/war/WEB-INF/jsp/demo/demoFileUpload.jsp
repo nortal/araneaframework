@@ -53,16 +53,24 @@
 						<ui:listRows>
 							<ui:row>
 								<ui:cell>
-									<!--ui:listRowLinkButton eventId="selectFile">
-										<c:out value="${row.originalFilename}" />
-									</ui:listRowLinkButton-->
+									<c:set var="method" value="AraneaPage.downloadFile('download','${widgetId}','${rowRequestId}');" />
 									<jsp:element name="a">
 										<jsp:attribute name="href">javascript:false;</jsp:attribute>
 										<jsp:attribute name="onclick" trim="true">
-											return AraneaPage.downloadFile('download','<c:out value="${widgetId}"/>','<c:out value="${rowRequestId}"/>');
+											this.href = <c:out value="${method}"/>;
 										</jsp:attribute>
 										<jsp:body>
-											<c:out value="${row.originalFilename}" />
+											<c:out value="${row.fileName}" />
+										</jsp:body>
+									</jsp:element>
+									<ui:entity code="nbsp"/>
+									<jsp:element name="a">
+										<jsp:attribute name="href">javascript:false;</jsp:attribute>
+										<jsp:attribute name="onclick" trim="true">
+											var result = <c:out value="${method}"/>; if (result) window.open(result);
+										</jsp:attribute>
+										<jsp:body>
+											(open in a popup)
 										</jsp:body>
 									</jsp:element>
 								</ui:cell>

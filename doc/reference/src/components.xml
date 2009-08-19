@@ -1981,10 +1981,10 @@ getFlowCtx().start(new TestFlow(new Long(5)),
 				what happens when the request is done? The request callback that is used, is named
 				<literal>AraneaPage.fileDownloadActionCallback(transport)</literal>. The default
 				implementation checks that result is not equal to "<literal>error</literal>". If so then
-				it creates an invisible <literal>iframe</literal>, which points to the URL returned by
-				the file downloading action listener. The value "<literal>error</literal>" is returned
-				in case <emphasis>something goes wrong</emphasis>. To create a custom solution (for
-				response handling) relpacing the default one, just override that method.
+				it creates an invisible <literal>a</literal> element, which points to the URL returned by
+				the file downloading action listener, and which is clicked . The value "<literal>error</literal>"
+				is returned in case <emphasis>something goes wrong</emphasis>. To create a custom solution (for
+				response handling) replacing the default one, just override that method.
 				</para>
 
 				<para>
