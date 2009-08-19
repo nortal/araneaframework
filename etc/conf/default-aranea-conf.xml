@@ -251,14 +251,6 @@
     id="araneaConfirmationFilter" singleton="false">
   </bean>    
 
-  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false">
-    <property name="confEntries">
-      <map>
-        <entry key="uilib.tags.el.manager">
-          <bean class="org.araneaframework.integration.spring.SpringExpressionEvaluationManager"/>
-        </entry>
-      </map>
-    </property>
-  </bean>
+  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
 
 </beans>
