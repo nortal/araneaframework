@@ -255,4 +255,5 @@
   </bean>
 
   <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
+
 </beans>
