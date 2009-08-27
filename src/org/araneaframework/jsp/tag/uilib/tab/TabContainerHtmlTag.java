@@ -152,10 +152,10 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 
 		if (labelWidgetFullId.startsWith(contextWidgetFullId)) {
 			WidgetIncludeTag includeTag = new WidgetIncludeTag();
-			String labelWidgetRelativeId = labelWidgetFullId.substring(contextWidgetFullId.length());
-			includeTag.setId(labelWidgetRelativeId);
-			registerAndExecuteStartTag(includeTag);
-			executeEndTagAndUnregister(includeTag);
+			registerSubtag(includeTag);
+			includeTag.setId(labelWidgetFullId.substring(contextWidgetFullId.length()));
+			executeSubtag(includeTag);
+			unregisterSubtag(includeTag);
 		} else {
 			throw new AraneaJspException("Unable to determine id of labelWidget '" + labelWidgetFullId  + "' relative to contextwidget '" + contextWidgetFullId + "'.");
 		}
