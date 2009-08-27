@@ -710,7 +710,7 @@ Object.extend(AraneaPage, {
    */
   deinit: function() {
     _ap.debug("Executing AraneaPage.deinit()");
-    _ap = null;
+    $$('input.ajax-upload-target').invoke('remove');
   },
 
   /**
@@ -1230,6 +1230,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
       logmsg += transport.status + ' ' + transport.statusText;
       _ap.debug(logmsg);
       AraneaPage.processResponse(transport.responseText);
+      AraneaPage.deinit();
       AraneaPage.init();
     } else {
       logmsg += 'Partial rendering: received erroneous response (';
