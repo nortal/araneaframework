@@ -31,6 +31,8 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class DownloaderWidget extends BaseApplicationWidget {
+
+  private static final long serialVersionUID = 1L;
   protected byte[] data;
   protected String contentType;
   protected Map<String, String> headers;

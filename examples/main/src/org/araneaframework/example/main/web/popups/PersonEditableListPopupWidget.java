@@ -153,6 +153,9 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   private class PopupFlowListener implements OnClickEventListener {
+
+    private static final long serialVersionUID = 1L;
+
     private PersonMO person;
     public PopupFlowListener(PersonMO eventParam) {
       this.person = eventParam;
@@ -167,6 +170,9 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   private class PopupClientListener implements OnClickEventListener {
+
+    private static final long serialVersionUID = 1L;
+
     private Widget starter;
     private Widget receiver;
 
@@ -192,6 +198,9 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   private class PopupClientListenerActionInvoker implements OnClickEventListener {
+
+    private static final long serialVersionUID = 1L;
+
     private Widget starter;
     private Widget receiver;
 
@@ -217,7 +226,10 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   private class TestActionListener extends StandardActionListener {
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
       StringBuffer s = new StringBuffer("alert('this is a message from action that came back to haunt you, return value being: ");
       s.append(actionParam);
       s.append("')");
@@ -227,7 +239,10 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private class MyHandler implements FlowContext.Handler { 
+  private class MyHandler implements FlowContext.Handler {
+
+    private static final long serialVersionUID = 1L;
+
     private BeanFormWidget form; 
     private PersonMO rowObject; 
 
@@ -236,8 +251,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       this.rowObject = rowObject; 
     }
 
-    public void onCancel() throws Exception {
-    }
+    public void onCancel() throws Exception {}
 
     public void onFinish(Object returnValue) { 
       rowObject.setName(returnValue.toString());
@@ -258,10 +272,12 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   public String getTitle() {
-    if (usePopupFlow)
+    if (usePopupFlow) {
       return "Server-side return";
-    if (useAction)
+    } else if (useAction) {
       return "Client-side return calling serverside action";
-    return "Client-side return";
+    } else {
+      return "Client-side return";
+    }
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.router;
 
@@ -33,66 +33,83 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * Router service that kills child services after specified period of inactivity is over.
- * This implementation checks for child services whose lifetime has expired only when 
- * servicing request. 
+ * Router service that kills child services after specified period of inactivity
+ * is over. This implementation checks for child services whose lifetime has
+ * expired only when servicing request.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class BaseExpiringServiceRouterService extends BaseServiceRouterService implements ExpiringServiceContext {
+public abstract class BaseExpiringServiceRouterService
+  extends BaseServiceRouterService implements ExpiringServiceContext {
 
-  private static final Log log = LogFactory.getLog(BaseExpiringServiceRouterService.class);
-  private Map<Object, TimeCapsule> timeCapsules;
-  private Map<String, Long> serviceTTLMap;
-  
-  public Map<String, Long> getServiceTTLMap() {
-    if (serviceTTLMap == null)
+  private static final long serialVersionUID = 1L;
+
+  private static final Log log = LogFactory.getLog(
+      BaseExpiringServiceRouterService.class);
+
+  private Map timeCapsules;
+
+  private Map serviceTTLMap;
+
+  public Map getServiceTTLMap() {
+    if (serviceTTLMap == null) {
       return null;
+    }
     return Collections.unmodifiableMap(serviceTTLMap);
   }
-  
-  @Override
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
+
+  protected void action(Path path, InputData input, OutputData output)
+      throws Exception {
     TimeCapsule capsule = null;
+
     if (timeCapsules != null) {
       killExpiredServices(System.currentTimeMillis());
-      capsule = getTimeCapsules().get(getServiceId(input));
+      capsule = (TimeCapsule) getTimeCapsules().get(getServiceId(input));
     }
- 
+
     serviceTTLMap = null;
+
     if (capsule != null) {
-      if (getEnvironment().getEntry(ExpiringServiceContext.class) != null) {
-        serviceTTLMap = (getEnvironment().getEntry(ExpiringServiceContext.class)).getServiceTTLMap();
+      ExpiringServiceContext esc =
+        EnvironmentUtil.getExpiringServiceContext(getEnvironment());
+
+      if (esc != null) {
+        serviceTTLMap = esc.getServiceTTLMap();
       }
+
       if (serviceTTLMap == null) {
-        serviceTTLMap = new HashMap<String, Long>();
+        serviceTTLMap = new HashMap();
       }
 
       serviceTTLMap.put(getKeepAliveKey(), capsule.getTimeToLive());
     }
 
     if (!isKeepAlive(input)) {
-    	super.action(path, input, output);
+      super.action(path, input, output);
     } else {
       if (log.isDebugEnabled())
-        log.debug(Assert.thisToString(this) + " received keepalive for service '" + getServiceId(input).toString() + "'");
+        log.debug(Assert.thisToString(this)
+            + " received keepalive for service '"
+            + getServiceId(input).toString() + "'");
     }
 
-    if (capsule != null)
+    if (capsule != null) {
       capsule.setLastActivity(new Long(System.currentTimeMillis()));
+    }
   }
 
-  @Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
-    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
-    entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
+  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+    Map entries = new HashMap();
+    entries.put(ManagedServiceContext.class,
+        new ServiceRouterContextImpl(serviceId));
     entries.put(ExpiringServiceContext.class, this);
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+    return new StandardEnvironment(super.getChildEnvironment(serviceId),
+        entries);
   }
-  
-  @Override
+
   protected void closeService(Object serviceId) {
     super.closeService(serviceId);
     getTimeCapsules().remove(serviceId);
@@ -100,13 +117,17 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
   protected void killExpiredServices(long now) {
     synchronized (getTimeCapsules()) {
-      for (Iterator<Map.Entry<Object, TimeCapsule>> i = getTimeCapsules().entrySet().iterator(); i.hasNext(); ) {
-        Map.Entry<Object, TimeCapsule> entry = i.next();
-        if (entry.getValue().isExpired(now)) {
+      for (Iterator i = getTimeCapsules().entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+
+        if (((TimeCapsule) entry.getValue()).isExpired(now)) {
           super.closeService(entry.getKey());
           i.remove();
-          if (log.isDebugEnabled())
-            log.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey().toString() + "'.");
+
+          if (log.isDebugEnabled()) {
+            log.debug(Assert.thisToString(this) + " killed expired service '"
+                + entry.getKey().toString() + "'.");
+          }
         }
       }
     }
@@ -119,32 +140,35 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
    * 
    * @return a keepalive key for this {@link BaseExpiringServiceRouterService}
    */
-  public abstract String getKeepAliveKey();
+  public abstract Object getKeepAliveKey();
 
   protected boolean isKeepAlive(InputData input) {
     return input.getGlobalData().get(getKeepAliveKey()) != null;
   }
 
-  private synchronized Map<Object, TimeCapsule> getTimeCapsules() {
+  private synchronized Map getTimeCapsules() {
     if (timeCapsules == null)
-      timeCapsules = Collections.synchronizedMap(new HashMap<Object, TimeCapsule>());
-
+      timeCapsules = Collections.synchronizedMap(new HashMap());
     return timeCapsules;
   }
 
   public static class TimeCapsule implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Long ttl;
+
     private Long lastActivity;
-    
+
     public TimeCapsule(Long timeToLive) {
       this.ttl = timeToLive;
       lastActivity = new Long(new Date().getTime());
     }
-    
+
     public void setLastActivity(Long lastActivity) {
       this.lastActivity = lastActivity;
     }
-    
+
     public Long getTimeToLive() {
       return this.ttl;
     }
@@ -153,18 +177,20 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
       return (time > lastActivity.longValue() + ttl.longValue());
     }
   }
-  
-  protected class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl {
-    protected ServiceRouterContextImpl(String serviceId) {
+
+  protected class ServiceRouterContextImpl
+    extends BaseServiceRouterService.ServiceRouterContextImpl {
+
+    private static final long serialVersionUID = 1L;
+
+    protected ServiceRouterContextImpl(Object serviceId) {
       super(serviceId);
     }
 
-    @Override
-    public Service addService(String id, Service service, Long timeToLive) {
+    public Service addService(Object id, Service service, Long timeToLive) {
       Service result = super.addService(id, service);
       if (timeToLive != null)
         getTimeCapsules().put(id, new TimeCapsule(timeToLive));
-
       return result;
     }
   }

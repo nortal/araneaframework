@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project 
-	xmlns:ivy="antlib:org.apache.ivy.ant"
+<project xmlns:ivy="antlib:org.apache.ivy.ant"
 	basedir="." 
 	default="build" 
 	name="Aranea" >
@@ -18,10 +17,27 @@
 
 	<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 
-	<property name="ivy.settings.file" value="ivysettings.xml"/>
+	<path id="build.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/test/" includes="*.jar"/>
+	</path>
 
-	<path id="classpath">
-		<fileset dir="${lib.dir}/default/" includes="*.jar"/>
+	<path id="build.util.cp">
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build-util/" includes="*.jar"/>
+	</path>
+
+	<path id="test.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/test/" includes="*.jar"/>
+	</path>
+
+	<path id="runtime.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
 	</path>
 
 	<!-- Clean up build system results -->
@@ -39,17 +55,26 @@
 	<target name="clean" description="Clean up build and dist directories">
 		<delete dir="build" failonerror="false"/>
 		<delete dir="${dist.dir}" failonerror="false"/>
+		<delete dir="etc/js/aranea" includes="*.js" failonerror="false"/>
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="demo,build,build-util,test,runtime"/>
 	</target>
 
+  <property name="ivy.report.dir" value="build/reports/ivy" />
+  <!-- Generates a report of dependencies -->
+  <target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
+    <ivy:resolve file="ivy.xml" />
+    <ivy:report todir="${ivy.report.dir}"/>
+  </target>
+  
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
-	<target name="publish" depends="clean-all,init-ivy,build"
+	<target name="publish" depends="init-ivy"
 		description="Publishes the JAR from dist directory to ivy repository.">
 
-		<ivy:resolve/>
+    
+		<ivy:resolve conf="runtime"/>
 
 		<mkdir dir="publishtmp"/>
 		<copydir dest="publishtmp" src="${dist.dir}" includes="**/*.jar" flatten="true"/>
@@ -61,6 +86,7 @@
 			status="${araneaframework.status}"
 			resolver="repository"
 			overwrite="true"
+			pubdate="now"
 		/>
 
 		<delete dir="publishtmp"/>
@@ -71,18 +97,21 @@
 	</target>
 
 	<target name="init-ivy" description="Initializes ivy path and settings">
+		<condition property="ivy.settings.file" value="ivysettings_unix.xml" else="ivysettings.xml">
+			<os family="unix"/>
+		</condition>
+
 		<path id="ivy.lib.path">
-			<fileset dir="lib/ivy" includes="*.jar"/>
+			<fileset dir="lib/ivy/" includes="*.jar"/>
 		</path>
 
 		<taskdef resource="org/apache/ivy/ant/antlib.xml"
-	             uri="antlib:org.apache.ivy.ant"
-	             classpathref="ivy.lib.path"/>
+			uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
 
-		<ivy:configure file="${ivy.settings.file}" />
+		<ivy:settings file="${ivy.settings.file}" />
 	</target>
 
-	<target name="build" depends="tld, jar" description="Builds the Aranea source code" />
+	<target name="build" depends="jar" description="Builds the Aranea source code" />
 
 	<target name="build-all" depends="build" description="Build the code and examples">
 		<ant dir="examples/common" target="build" inheritall="false"/>
@@ -93,84 +122,8 @@
 		<ant dir="examples/widgetHelloName" target="build" inheritall="false"/>
 	</target>
 
-	<target name="tld-check" description="Checks if TLD files need an update.">
-		<uptodate property="tld-check.uptodate" targetfile="build/tmp/presentation/META-INF/aranea-standard.tld">
-			<srcfiles dir="src/org/araneaframework/jsp/tag"/>
-		</uptodate>
-	</target>
-
-	<target name="tld" depends="tld-check,init" unless="tld-check.uptodate"
-		description="Creates and updates TLD files.">
-
-		<mkdir dir="build/tmp/presentation/META-INF" />
-
-		<taskdef
-			name="webdoclet"
-			classname="org.xdoclet.ant.XDocletTask"
-			classpathref="classpath"
-		/>
-
-		<webdoclet>
-			<fileset 
-				dir="src" includes="**/*Tag.java"/>
-
-			<component
-        classname="org.xdoclet.plugin.web.TaglibPlugin" 
-        validate="true"
-				shortName="ui"
-				displayname="Aranea UI"
-				uri="http://araneaframework.org/tag-library/standard"
-				description="Aranea User Interface Tag Library"
-        jspversion="2.0"
-        destdir="build/tmp/presentation/META-INF" 
-			/>
-		</webdoclet>
-
-		<!-- 
-		  Secondary TLD, attributes defined to be /rtexprvalue/s, so that JSP > 2 
-		  EL evaluator evaluates them -->
-
-		<xslt style="etc/build/rt_tld-transform.xsl" in="build/tmp/presentation/META-INF/aranea-standard.tld" out="build/tmp/presentation/META-INF/aranea-standard_rt.tld" classpathref="classpath">
-		        <!-- 
-			<xmlcatalog>
-				<dtd publicid="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" location="jar:file:lib/default/jsp-api.jar!/javax/servlet/jsp/resources/web-jsptaglibrary_1_2.dtd"/>
-			</xmlcatalog> -->
-		</xslt>
-		<replace file="build/tmp/presentation/META-INF/aranea-standard_rt.tld" token="http://araneaframework.org/tag-library/standard" value="http://araneaframework.org/tag-library/standard_rt"/>
-
-		<!-- Creation of tag class descriptor file (contains xdoclet attribute annotation 
-		     information for all tag files; even those that do not have @jsp.tag information). -->
-		<webdoclet destdir="build/tmp/presentation/META-INF">
-			<fileset dir="src" includes="**/*Tag.java"/>
-
-			<configparam name="validatexml" value="true"/>
-			<configparam name="Shortname" value="aui"/>
-			<configparam name="Uri" value="http://araneaframework.org/tag-library/standard"/>
-			<configparam name="Jspversion" value="1.2"/>
-			<configparam name="Taglibversion" value="1.0"/>
-
-			<xmltemplate templatefile="etc/build/taglib_tcd.xdt"  destinationfile="aranea-standard.tcd"/>
-		</webdoclet>
-	</target>
-
-	<target name="compile-etc" depends="init" description="Compiles source code from etc/src directory">
-		<mkdir dir="build/classes"/>
-		<javac destdir="build/classes"
-			debug="on"
-			debuglevel="lines,vars,source"
-			encoding="utf-8"
-			target="1.5"
-			source="1.5"
-			srcdir="etc/src"
-			deprecation="yes"
-		>
-			<classpath refid="classpath"/>
-			<include name="**/*.java" />
-		</javac>
-	</target>
-
 	<target name="compile" depends="init"
-		description="Compiles source code from src and etc/src directory">
+		description="Compiles source code from src directory">
 
 		<mkdir dir="build/classes" />
 
@@ -185,7 +138,7 @@
 			deprecation="yes"
       compiler="javac1.5"
 		>
-			<classpath refid="classpath"/>
+			<classpath refid="build.cp"/>
 			<include name="**/*.java" />
 		</javac>
 	</target>
@@ -199,7 +152,50 @@
 		</manifest>
 	</target>
 
-	<target name="jar" depends="compile,tld,make-manifest" description="Builds Aranea JAR file">
+	<target name="js" description="Compresses aranea*.js JavaScript files">
+		<condition property="suffix" value=".exe" else="">
+			<os family="windows"/>
+		</condition>
+		<chmod file="${basedir}/etc/js/cruncher/js${suffix}" perm="u+rx"/>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea.js aranea.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-ajaxupload.js aranea-ajaxupload.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-behaviour.js aranea-behaviour.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-contextmenu.js aranea-contextmenu.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-keyboard.js aranea-keyboard.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-locale.js aranea-locale.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-modalbox.js aranea-modalbox.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-popups.js aranea-popups.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-rsh.js aranea-rsh.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-tree.js aranea-tree.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-ui.js aranea-ui.js"/>
+		</exec>
+		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
+			<arg line="src/aranea-util.js aranea-util.js"/>
+		</exec>
+	</target>
+
+	<target name="jar" depends="js,compile,make-manifest" description="Builds Aranea JAR file">
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${dist.dir}/modules" />
 		<mkdir dir="${dist.dir}/integration" />
@@ -271,7 +267,8 @@
 			<fileset dir="etc" includes="js/**/*"/>
 			<fileset dir="etc" includes="css/**/*"/>
 			<fileset dir="etc" includes="gfx/**/*"/>
-			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+			<fileset dir="etc" includes="*.tld"/>
+			<fileset dir="etc" includes="*.tcd"/>
 		</jar>
 
 		<!-- INTEGRATION -->
@@ -298,16 +295,14 @@
 				<include name="org/araneaframework/**/*"/>
 			</fileset>
 
-			<fileset dir="etc" excludes="build/,src/"/>
-
-			<fileset dir="build/tmp/presentation" includes="META-INF/**/*"/>
+			<fileset dir="etc" excludes="build/"/>
 		</jar>
 	</target>
 
 	<target name="javadoc" description="Generates JavaDoc from Aranaea source code">
 		<mkdir dir="${dist.dir}/doc/javadoc/" />
 		<javadoc 
-			classpathref="classpath"
+			classpathref="build.util.cp"
 			encoding="UTF-8"
 			docencoding="UTF-8"
 			packagenames="org.araneaframework.*" 
@@ -329,15 +324,8 @@
 		</zip>
 	</target>
 
-	<target name="tlddoc" depends="tld" description="Generates documentation for JSP tags.">
-		<java fork="true" jar="${lib.dir}/default/tlddoc.jar" failonerror="true">
-			<arg line="-d ${dist.dir}/doc/tlddocs"/>
-			<arg value="build/tmp/presentation/META-INF/aranea-standard.tld"/>
-		</java>
-	</target>
-
 	<!-- Build internal documentation -->
-	<target name="doc" depends="init, javadoc, tlddoc" description="Build internal documentation">
+	<target name="doc" depends="init, javadoc" description="Build internal documentation">
 		<ant target="build" dir="doc/reference" />
 		<ant target="build" dir="doc/tutorial" />
 		<ant target="build" dir="doc/intro" />
@@ -416,8 +404,8 @@
 	</target>
 
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
-		<taskdef resource="checkstyletask.properties" classpathref="classpath"/>
-		<checkstyle config="sun_checks.xml">
+		<taskdef resource="checkstyletask.properties" classpathref="build.util.cp"/>
+		<checkstyle config="checkstyle_checks.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<formatter type="xml" tofile="checkstyle_report.xml"/>
 		</checkstyle>

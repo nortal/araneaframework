@@ -30,28 +30,41 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoActionPollWidget extends TemplateBaseWidget {
-	protected void init() throws Exception {
-		setViewSelector("release/demos/demoActionPoll");
-		addActionListener("pollrequest", new TaskPollingListener());
-	}
 
-	public class TaskPollingListener extends StandardActionListener {
-		private Random rn = new Random();
-		int lastRandom = 0;
+  private static final long serialVersionUID = 1L;
 
-		public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
-			int random = rn.nextInt(100);
-			lastRandom = random;
-			
-			HttpOutputData httpOutput = (HttpOutputData) output;
-			String s = "NOTHING";
-			
-			if (rn.nextInt(3) == 1) {
-				s = MessageUtil.localizeAndFormat("poll.taskmsg", new Object[] { String.valueOf(random),  new SimpleDateFormat("HH:mm.ss").format(new Date()) } , getEnvironment()) + "<br/>"; 
-			}
+  protected void init() throws Exception {
+    setViewSelector("release/demos/demoActionPoll");
+    addActionListener("pollrequest", new TaskPollingListener());
+  }
 
-			httpOutput.setContentType("text/xml");
-			httpOutput.getWriter().write(s);
-		}
-	}
+  public class TaskPollingListener extends StandardActionListener {
+
+    private static final long serialVersionUID = 1L;
+
+    private Random rn = new Random();
+
+    int lastRandom = 0;
+
+    public void processAction(String actionId, String actionParam,
+        InputData input, OutputData output) throws Exception {
+
+      int random = rn.nextInt(100);
+      lastRandom = random;
+      HttpOutputData httpOutput = (HttpOutputData) output;
+      String s = "NOTHING";
+
+      if (rn.nextInt(3) == 1) {
+        s = MessageUtil.localizeAndFormat("poll.taskmsg",
+            new Object[] {String.valueOf(random),
+            new SimpleDateFormat("HH:mm.ss").format(new Date()) },
+            getEnvironment())
+            + "<br/>";
+      }
+      httpOutput.setContentType("text/xml");
+      httpOutput.getWriter().write(s);
+    }
+
+  }
+
 }

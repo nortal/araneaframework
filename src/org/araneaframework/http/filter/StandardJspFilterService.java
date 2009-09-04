@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.filter;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -43,8 +44,10 @@ import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
 
+  private static final long serialVersionUID = 1L;
+
   // URI -> Map<TagInfo>
-  private Map<String, Map<String, TagInfo>> taglibs = new HashMap<String, Map<String, TagInfo>>();
+  private Map taglibs = new HashMap();
   
   private String submitCharset;
   private String jspPath = "/WEB-INF/jsp";
@@ -79,20 +82,19 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     return (getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
   }
   
-  public Map<String, TagInfo> getTagMapping(String uri){
+  public Map getTagMapping(String uri){
     return getTagMap(uri);
   }
   
   public ConfigurationContext getConfiguration() {
-    return getEnvironment().getEntry(ConfigurationContext.class);
+    return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
   
-  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(getEnvironment(), JspContext.class, this);
   }
   
-  public Map<String, TagInfo> getTagMap(String uri) {
+  public Map getTagMap(String uri) {
     if (!taglibs.containsKey(uri)) {
       ServletContext ctx = 
         getEnvironment().getEntry(ServletContext.class);
@@ -114,11 +116,11 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
       }
     }
 
-    return taglibs.get(uri);
+    return (Map) taglibs.get(uri);
   }
 
-  private Map<String, TagInfo> readTldMapping(URL location) throws IOException {
-    Map<String, TagInfo> result = new HashMap<String, TagInfo>();
+  private Map readTldMapping(URL location) throws IOException {
+    Map result = new HashMap();
 
     InputStream tldStream = location.openStream();
 

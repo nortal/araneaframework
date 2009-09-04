@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -60,12 +61,10 @@ public class TimeControl extends TimestampControl {
 		return "Timestamp";
 	}
 	
-	@Override
-  public void init() throws Exception {
+	public void init() throws Exception {
 		super.init();
 		if (!confOverridden) {
-			ConfigurationContext confCtx = 
-				getEnvironment().getEntry(ConfigurationContext.class);
+			ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
 
 			if(confCtx != null) {
 				String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
@@ -83,7 +82,6 @@ public class TimeControl extends TimestampControl {
 	  //*********************************************************************  	
 	
 	/** @since 1.1 */ 
-  @Override
   protected void addWrongTimeFormatError() {
 	addError(
         MessageUtil.localizeAndFormat(

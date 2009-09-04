@@ -16,6 +16,9 @@
 
 package org.araneaframework.uilib;
 
+import org.araneaframework.integration.spring.SpringExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
+import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
 import java.io.Serializable;
 
 /**
@@ -124,6 +127,30 @@ public interface ConfigurationContext extends Serializable {
    * is used.
    */
   String FORMELEMENT_ERROR_RENDERER = "uilib.widgets.forms.formelement.error.renderer";
+
+  /**
+   * This property is of type <code>java.lang.Boolean</code> and specifies
+   * whether data of controls, that have fixed values (i.e.
+   * <code>SelectControl</code>, <code>MultiSelectControl</code>), should be
+   * localized.
+   * <p>
+   * By default, it is not enabled (this may change in near future).
+   * <p>
+   * You can override this setting when you use a tag to render the control.
+   * 
+   * @since 1.2
+   */
+  String LOCALIZE_FIXED_CONTROL_DATA = "uilib.widgets.forms.control.data.localize";
+
+  /**
+   * This property should be set as a class implementing
+   * {@link ExpressionEvaluationManager} to specify a custom EL evaluation
+   * manager. If none is provided, the
+   * {@link DefaultExpressionEvaluationManager} will be used, or
+   * {@link SpringExpressionEvaluationManager} in a Spring framework
+   * application.
+   */
+  public static final String TAGS_EL_MANAGER = "uilib.tags.el.manager";
 
   /**
    * Returns a configuration entry with given name.

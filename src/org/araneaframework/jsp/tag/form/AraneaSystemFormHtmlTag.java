@@ -18,7 +18,9 @@ package org.araneaframework.jsp.tag.form;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.Map;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
@@ -44,7 +46,6 @@ import org.araneaframework.jsp.util.JspUtil;
 public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {  
   private JspContext config;
   
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     config = getEnvironment().requireEntry(JspContext.class);
 
@@ -68,7 +69,6 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     return EVAL_BODY_INCLUDE;
   }
   
-  @Override
   protected int doEndTag(Writer out) throws Exception {
     writeVersionedStateInfo(out);
     return super.doEndTag(out);
@@ -79,7 +79,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
    */
   protected void writeVersionedStateInfo(Writer out) throws Exception {
     String regionsFromRequest = (String) getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
-    StateVersioningContext stateVersionCtx = (StateVersioningContext) getEnvironment().getEntry(StateVersioningContext.class);
+    StateVersioningContext stateVersionCtx = getEnvironment().getEntry(StateVersioningContext.class);
     if (regionsFromRequest == null && stateVersionCtx != null) {
       State state = stateVersionCtx.saveState();
       
@@ -94,8 +94,9 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
 
   private void writeSystemFormFields(Writer out) throws IOException {
     SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
-    for (Map.Entry<String, String> entry : systemFormContext.getFields().entrySet()) {
-      JspUtil.writeHiddenInputElement(out, entry.getKey(), entry.getValue());
+    for (Iterator i = systemFormContext.getFields().entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      JspUtil.writeHiddenInputElement(out, (String) entry.getKey(), (String) entry.getValue());
     }
   }
   
@@ -103,13 +104,11 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
    * Implementation of SystemForm abstract methods
    * ***********************************************************************************/
 
-  @Override
   protected String getAcceptCharset() {
     return config.getSubmitCharset();
   }
 
-  @Override
-  protected String getFormAction(){
+  protected String getFormAction() throws JspException {
     return ((HttpInputData) getOutputData().getInputData()).getContainerURL();
   }
 }

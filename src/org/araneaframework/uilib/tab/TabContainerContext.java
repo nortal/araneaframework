@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.tab;
 
+import org.araneaframework.framework.ConfirmationContext;
+import org.apache.commons.collections.Closure;
 import java.io.Serializable;
 import java.util.Map;
 import org.araneaframework.Widget;
@@ -120,4 +122,53 @@ public interface TabContainerContext extends Serializable {
    * @return A map of tabs.
    */
   Map<String, TabWidget> getTabs();
+
+  /**
+   * Sets the listener for tab switch events. There can be only one listener per
+   * tab container. The <code>tabSwitchListener</code> parameter cannot be
+   * <code>null</code>. Tab switch occurs when the currently
+   * selected tab changes.
+   * 
+   * @param tabSwitchListener A listener for listening tab switch events.
+   * @since 1.2.2
+   */
+  void setTabSwitchListener(TabSwitchListener tabSwitchListener);
+
+  /**
+   * Returns the current listener for tab switch events.
+   * 
+   * @return the current listener for tab switch events.
+   * @since 1.2.2
+   */
+  TabSwitchListener getTabSwitchListener();
+
+  /**
+   * An interface for tab switch listeners. Tab switch occurs when the currently
+   * selected tab changes.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @since 1.2.2
+   */
+  interface TabSwitchListener extends Serializable {
+
+    /**
+     * A listener for tab switching. Before the selected tab will be replaced
+     * with a new one, this method is called to check whether the switch is
+     * allowed. Note that the <code>selectedTab</code> parameter may be
+     * <code>null</code> if no tab is currently selected.
+     * <p>
+     * The last parameter is a tab switch closure that is executed only when the
+     * listener returns <code>true</code> or when the listener executes it
+     * itself. Therefore, this closure can also be used with
+     * {@link ConfirmationContext#confirm(Closure, String)}.
+     * 
+     * @param selectedTab The currently selected tab. May be <code>null</code>.
+     * @param newTab The tab that will replace the current one.
+     * @param switchClosure A closure that handles tab switch.
+     * @return <code>true</code>, if the switch is allowed.
+     */
+    boolean onSwitch(TabWidget selectedTab, TabWidget newTab, Closure switchClosure);
+
+  }
+
 }

@@ -12,109 +12,182 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 public class BeanFormWidget<T> extends FormWidget {
-//  private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
-  private BeanMapper<T> beanMapper;
+  
+  private static final Log log = LogFactory.getLog(BaseApplicationWidget.class);
+  
+  private static final long serialVersionUID = 1L;
+
+  private static final String[] primitiveTypes = new String[] { "int", "long",
+      "short", "double", "float", "boolean", "byte", "char" };
+
+  private BeanMapper beanMapper;
   private Class<T> beanClass;
   private T bean;
-  
-  public BeanFormWidget(Class<T> beanClass, T bean) {
-    this.beanClass = beanClass;
-    this.beanMapper = new BeanMapper<T>(beanClass);
+
+  @SuppressWarnings("unchecked")
+  public BeanFormWidget(T bean) {
     this.bean = bean;
-  }
-  
-  public BeanFormWidget(Class<T> beanClass) {
-    this.beanClass = beanClass;
-    this.beanMapper = new BeanMapper<T>(beanClass);
-    try {
-      this.bean = beanClass.newInstance();
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-  }
-  
-  @Override
-  protected void init() throws Exception {
-    super.init();
+    this.beanClass = (Class<T>) bean.getClass();
+    this.beanMapper = new BeanMapper(beanClass);
     readFromBean();
   }
   
-  public BeanFormWidget<?> addBeanSubForm(String id) {
-    return addBeanSubForm(id, Object.class);
+  /**
+   * @deprecated use <code>BeanFormWidget(T bean)</code> instead.
+   */
+  @Deprecated
+  public BeanFormWidget(Class<T> beanClass){
+    this.beanClass = beanClass;
+    this.beanMapper = new BeanMapper(beanClass);
+    try {
+      this.bean = beanClass.newInstance();
+      readFromBean();
+    } catch (InstantiationException e) {
+      ExceptionUtil.uncheckException(e);
+    } catch (IllegalAccessException e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
-  
-  public <E> BeanFormWidget<E> addBeanSubForm(String id, Class<E> fieldType) {
+
+  private Data inferDataType(String fieldId, boolean mandatory) {
+    if (!this.beanMapper.isReadable(fieldId)) {
+      throw new AraneaRuntimeException("Could not infer type for bean field '"
+          + fieldId + "'!");
+    }
+    Class type = this.beanMapper.getFieldType(fieldId);
+    if (type.isPrimitive()) {
+      if (!mandatory) {
+        throw new AraneaRuntimeException("Form element '" + fieldId
+            + "' corresponding to JavaBean's primitive-typed field was not "
+            + "specified as mandatory.");
+      }
+      switch (ArrayUtils.indexOf(primitiveTypes, type.getName())) {
+        case 0: {
+          type = Integer.class;
+          break;
+        }
+        case 1: {
+          type = Long.class;
+          break;
+        }
+        case 2: {
+          type = Short.class;
+          break;
+        }
+        case 3: {
+          type = Double.class;
+          break;
+        }
+        case 4: {
+          type = Float.class;
+          break;
+        }
+        case 5: {
+          type = Boolean.class;
+          break;
+        }
+        case 6: {
+          type = Byte.class;
+          break;
+        }
+        case 7: {
+          type = Character.class;
+          break;
+        }
+        default:
+          throw new AraneaRuntimeException(
+              "Could not infer type for bean field '" + fieldId + "'!");
+      }
+    }
+    return new Data(type);
+  }
+
+  /**
+   * NB! The user of this method must take the full responsibility for type checking when using this method.
+   */
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  public <V> BeanFormWidget<V> addBeanSubForm(String id) {
     if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
-    if(!beanMapper.getFieldType(id).isAssignableFrom(fieldType)){
-      throw new AraneaRuntimeException("The field '" + id + "' has different type than the provided " + fieldType);
-    }
-    BeanFormWidget<E> result = null;
-    try {
-      result = new BeanFormWidget<E>(fieldType, (E)PropertyUtils.getProperty(bean, id));
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
+
+    BeanFormWidget<V> result = new BeanFormWidget<V>(beanMapper.getFieldType(id)); //This constructor will be changed into private in some time
     addElement(id, result);
     return result;
   }
-  
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
-    Object initialValue = null;
-    try {
-      initialValue = PropertyUtils.getProperty(bean, elementName);
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    } 
-    return addBeanElement(elementName, labelId, control, (D)initialValue, mandatory);
-  }  
-  
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
-    return super.addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
+
+  /**
+   * Retrieves the sub form that is expected to be a <code>BeanFormWidget</code>.
+   * Otherwise similar to {@link FormWidget#getSubFormByFullName(String)}
+   * 
+   * @param fullName The full name of the sub form.
+   * @return The sub form as a <code>BeanFormWidget</code> or <code>null</code>.
+   * @since 1.2.1
+   */
+  public BeanFormWidget getSubBeanFormByFullName(String fullName) {
+    return (BeanFormWidget) super.getSubFormByFullName(fullName);
   }
 
+  public FormElement addBeanElement(String elementName, String labelId,
+      Control control, boolean mandatory) {
+    return super.addElement(elementName, labelId, control, inferDataType(
+        elementName, mandatory), mandatory);
+  }
+
+  public FormElement addBeanElement(String elementName, String labelId,
+		  Control control, Object initialValue, boolean mandatory) {
+	  return super.addElement(elementName, labelId, control, inferDataType(
+			  elementName, mandatory), initialValue, mandatory);
+  }
+  
+  /**
+   * @deprecated use {@link #writeToBean()} instead, which writes to the underlying bean,
+   */
   @Deprecated
   public T writeToBean(T bean) {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(bean);
     return bean;
   }
-  
-  @Deprecated
-  public void readFromBean(T bean) {
-    BeanFormWriter<T> writer = new BeanFormWriter<T>(beanClass);
-    writer.writeFormBean(this, bean);
-  }
 
-  public void readFromBean() {
-    BeanFormWriter<T> writer = new BeanFormWriter<T>(beanClass);
-    writer.writeFormBean(this, bean);
-  }
-  
   public T writeToBean() {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(bean);
     return bean;
   }
   
-  public T getBean() {
-    return bean;
+  /**
+   * Changes the underlying bean of this form and populates form from it. 
+   */
+  public void readFromBean(T bean) {
+    if(this.bean == bean){
+      log.warn("You are reading from the same bean that is already contained in this form!");
+    }
+    this.bean = bean;
+    readFromBean();
+  }
+  
+  public void readFromBean() {
+    BeanFormWriter writer = new BeanFormWriter(this.beanClass);
+    writer.writeFormBean(this, bean);
   }
   
   public Class<T> getBeanClass() {
-    return beanClass;
-  }  
-  
+    return this.beanClass;
+  }
+
 }

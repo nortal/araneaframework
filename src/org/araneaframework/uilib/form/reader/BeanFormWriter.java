@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.reader;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.uilib.form.Data;
@@ -24,57 +25,60 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
 
-
 /**
  * This class allows one to write Value Objects to forms.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
-public class BeanFormWriter<T> implements Serializable {
-  protected BeanMapper<T> beanMapper;
+public class BeanFormWriter implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
+  protected BeanMapper beanMapper;
 
   /**
    * Creates the class initializing the Value Object class.
    * 
-	 * @param voClass the Value Object class.
-	 */
-  public BeanFormWriter(Class<T> voClass) {
-    beanMapper = new BeanMapper<T>(voClass);
+   * @param voClass the Value Object class.
+   */
+  public BeanFormWriter(Class voClass) {
+    beanMapper = new BeanMapper(voClass);
   }
 
   /**
    * Writes the Value Object values to form where possible.
    * 
-	 * @param form {@link FormWidget} to write to.
-	 * @param vo Value Object to read from.
-	 */
-  public void writeFormBean(FormWidget form, T vo) {
-    List<String> voFields = beanMapper.getFields();
+   * @param form {@link FormWidget} to write to.
+   * @param vo Value Object to read from.
+   */
+  public void writeFormBean(FormWidget form, Object vo) {
+    List voFields = beanMapper.getFields();
 
-    for (String field : voFields) {
+    for (Iterator i = voFields.iterator(); i.hasNext(); ) {
+      String field = (String) i.next();
       GenericFormElement element = form.getElement(field);
+
       if (element != null) {
-        if (element instanceof FormElement) {          
+        if (element instanceof FormElement) {
+
           Data data = ((FormElement) element).getData();
           if (data != null) {
             data.setValue(beanMapper.getFieldValue(vo, field));
           }
-        }
-        else if (element instanceof FormWidget) {
-          BeanFormWriter subVoWriter = getInstance(beanMapper.getFieldType(field));
 
+        } else if (element instanceof FormWidget) {
+
+          BeanFormWriter subVoWriter = new BeanFormWriter(beanMapper.getFieldType(field));
           Object subVO = beanMapper.getFieldValue(vo, field);
-          
           if (subVO != null) {
             subVoWriter.writeFormBean((FormWidget) element, subVO);
           }
+
         }
       }
+
     }
+
   }
-  
-  public static <E> BeanFormWriter<E> getInstance(Class<E> clazz) {
-    return new BeanFormWriter<E>(clazz);
-  }
+
 }

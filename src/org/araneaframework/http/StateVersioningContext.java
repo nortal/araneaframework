@@ -85,9 +85,9 @@ public interface StateVersioningContext extends Serializable {
   }
 
   /**
-   * Interface that should be implemented by {@link org.araneaframework.Component}s 
-   * who wish to be notified when client uses browser history mechanism for navigating
-   * application states.
+   * Interface that should be implemented by
+   * {@link org.araneaframework.Component}s who wish to be notified when client
+   * uses browser history mechanism for navigating application states.
    * 
    * @since 1.2
    * @author Taimo Peelo (taimo@araneaframework.org)

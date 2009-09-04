@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
@@ -29,11 +29,13 @@ import org.araneaframework.OutputData;
  */
 public abstract class StandardActionListener implements ActionListener {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * This method is marked final. Subclasses should implement
    * {@link #processAction(Object, String, InputData, OutputData)}.
    */
-  public final void processAction(Object actionId, InputData input,
+  public final void processAction(String actionId, InputData input,
       OutputData output) throws Exception {
 
     String actionParam = input.getGlobalData().get(
@@ -53,7 +55,7 @@ public abstract class StandardActionListener implements ActionListener {
    * @param output The response data.
    * @throws Exception Any runtime exception that might occur.
    */
-  public abstract void processAction(Object actionId, String actionParam,
+  public abstract void processAction(String actionId, String actionParam,
       InputData input, OutputData output) throws Exception;
 
 }

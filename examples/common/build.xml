@@ -63,7 +63,7 @@
 	</target>
 	  
 	<!-- Build project -->
-	<target name="build" depends="init, compile, tld" description="Build project">
+	<target name="build" depends="init, compile" description="Build project">
 		
 		<mkdir dir="dist"/>
 		
@@ -72,7 +72,7 @@
 		-->
 		<jar jarfile="dist/${build.jar.filename}" compress="true">
 			<fileset dir="${web.dir}"/>
-			<fileset dir="build/tld" includes="**/*.tld"/>
+			<fileset dir="${module.basedir}" includes="**/*.tld"/>
 			<fileset dir="${build.classes.dir}" includes="**/*.class"/>
 		</jar>
 	</target>
@@ -83,45 +83,4 @@
 		<delete dir="dist" failonerror="false" />
 	</target>
 
-	<target name="tld-check">
-		<uptodate property="tld-check.uptodate" targetfile="build/tld/META-INF/aranea-template.tld">						
-			<srcfiles dir="src/org/araneaframework/example/common/tags"/>
-	        <srcfiles dir="../../src/org/araneaframework/jsp/tag"/>  
-		</uptodate>
-	</target>
-	
-	<target name="tld" depends="tld-check,init" unless="tld-check.uptodate">	
-		<mkdir dir="build/tld/META-INF" />
-		
-		<taskdef
-			name="webdoclet"
-			classname="xdoclet.modules.web.WebDocletTask"
-			classpathref="classpath"
-		/> 
-		
-		<webdoclet destdir="build/tld/META-INF"
-			force="false"
-		>
-			<fileset dir="${src.dir}" includes="**/*Tag.java"/>
-			
-			<jsptaglib validatexml="true"
-				shortName="aranea-tag-library-template"
-				filename="aranea-template.tld"
-				uri="http://araneaframework.org/tag-library/template"
-				description="Template-App Tag Library"
-			/>
-		</webdoclet>
-		
-		<java classname="org.araneaframework.buildutil.TcdAndTldMerger" fork="true">
-			<arg value="META-INF/aranea-standard.tcd"/>
-			<arg value="build/tld/META-INF/aranea-template.tld"/>
-			<arg value="build/tld/META-INF/temporary-template.tld"/>
-			<classpath>
-				<path refid="classpath"/> 
-				<pathelement location="build/classes"/>
-			</classpath>
-		</java>
-		
-		<move file="build/tld/META-INF/temporary-template.tld" tofile="build/tld/META-INF/aranea-template.tld"/>
- 	</target>
 </project>

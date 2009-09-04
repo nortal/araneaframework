@@ -36,66 +36,63 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  *   description = "The JSP specified by the path given in <i>page</i> is included as the widget with id specified in <i>id</i>."
  */
 public class WidgetIncludeTag extends BaseIncludeTag {
-	protected String widgetId;
-	protected String page;
-	
-	public WidgetIncludeTag() {
-		widgetId = null;
-		page = null;
-	}
 
-	@Override
-  protected int doEndTag(Writer out) throws Exception {   
-    ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), widgetId);
-		
-		WidgetContextTag widgetContextTag = new WidgetContextTag();
-		registerSubtag(widgetContextTag);
-		widgetContextTag.setId(widgetId);
-		executeStartSubtag(widgetContextTag);
-		
-		OutputData output = getOutputData();
-		
-		try {
-      hideGlobalContextEntries(pageContext);
-			if (page == null) {
-				out.flush();
-				widget._getWidget().render(output);
-			}
-			else {
-				JspContext config = getEnvironment().requireEntry(JspContext.class);
-				JspUtil.include(pageContext, config.getJspPath() + "/" + page);
-			}
-		}
-		finally {
+  protected String widgetId;
+
+  protected String page;
+
+  public WidgetIncludeTag() {
+    widgetId = null;
+    page = null;
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
+    ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(
+        getContextWidget(), widgetId);
+    WidgetContextTag widgetContextTag = new WidgetContextTag();
+    registerSubtag(widgetContextTag);
+    widgetContextTag.setId(widgetId);
+    executeStartSubtag(widgetContextTag);
+    OutputData output = getOutputData();
+    try {
+      if (page == null) {
+        hideGlobalContextEntries(pageContext);
+        out.flush();
+        widget._getWidget().render(output);
+      } else {
+        JspContext config = (JspContext) getEnvironment().requireEntry(
+            JspContext.class);
+        JspUtil.include(pageContext, config.getJspPath() + "/" + page);
+      }
+    } finally {
       restoreGlobalContextEntries(pageContext);
-			executeEndTagAndUnregister(widgetContextTag);
-		}
-		
-		super.doEndTag(out);
-		return EVAL_PAGE;
-	}	
+      executeEndTagAndUnregister(widgetContextTag);
+    }
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
 
-	/* ***********************************************************************************
-	 * Tag attributes
-	 * ***********************************************************************************/
+  /*
+   * Tag attributes
+   */
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Widget id." 
-	 */
-	public void setId(String widgetId) throws JspException {
-		this.widgetId = evaluateNotNull("widgetId", widgetId, String.class);		
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Path to JSP." 
-	 */
-	public void setPage(String page){
-		this.page = evaluate("page", page, String.class);
-	}
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Widget id."
+   */
+  public void setId(String widgetId) throws JspException {
+    this.widgetId = (String) evaluateNotNull("widgetId", widgetId, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Path to JSP."
+   */
+  public void setPage(String page) throws JspException {
+    this.page = (String) evaluate("page", page, String.class);
+  }
 }

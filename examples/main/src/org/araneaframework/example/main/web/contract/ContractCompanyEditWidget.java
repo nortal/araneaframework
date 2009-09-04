@@ -47,7 +47,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
     addEventListener("chooseCompany", new ProxyEventListener(this));
   }
   
-  public void handleEventChooseCompany(String eventParameter) throws Exception {
+  public void handleEventChooseCompany() throws Exception {
 	  getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler() {
 		      private static final long serialVersionUID = 1L;
       public void onFinish(Object returnValue) throws Exception {

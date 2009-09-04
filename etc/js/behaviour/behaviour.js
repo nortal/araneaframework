@@ -100,5 +100,3 @@ var Behaviour = {
 		}
 	}
 };
-
-window['behaviour/behaviour.js'] = true;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.container;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
@@ -32,7 +32,6 @@ import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
-import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -43,6 +42,9 @@ import org.araneaframework.http.util.ServletUtil;
  * @since 1.1
  */
 public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * <p> 
    * Map containing the default overlay presentation options. 
@@ -57,25 +59,41 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    *   <li>resizeDuration: 0.0</li>
    * </ul>
    */
-  public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
+  public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
   private static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
   private static final String MAIN_CHILD_KEY = "m";
   private static final String OVERLAY_CHILD_KEY = "o";
   
-  protected Map<String, String> presentationOptions = new LinkedHashMap<String, String>();
+  protected Map presentationOptions = new LinkedMap();
 
   private Widget main;
   private FlowContextWidget overlay;
   
   static {
+    /*  OPTIONS with default values:
+     * 
+     *  overlayClose: false, // Close modal box by clicking on overlay
+     *  width: 500, // Default width in px
+     *  height: 90, // Default height in px
+     *  overlayOpacity: .75, // Default overlay opacity
+     *  overlayDuration: .25, // Default overlay fade in/out duration in seconds
+     *  slideDownDuration: .5, // Default Modalbox appear slide down effect in seconds
+     *  slideUpDuration: .15, // Default Modalbox hiding slide up effect in seconds
+     *  resizeDuration: .2, // Default resize duration seconds
+     *  inactiveFade: true, // Fades MB window on inactive state
+     *  transitions: false, // Toggles transition effects. Transitions are disabled by default
+     *  loadingString: "Please wait. Loading...", // Default loading string message
+     *  method: 'get' // Default Ajax request method
+     */
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", "false");
-    DEFAULT_PRESENTATION_OPTIONS.put("width", "800");
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
+    DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
     DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
     DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.0));
+    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", new Float(0.9)); //percentage, if <= 1.0, otherwise in pixels.
   }
 
   {
@@ -94,71 +112,72 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     return overlay.isNested();
   }
 
-  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), OverlayContext.class, this);
   }
 
-  @Override
   protected void init() throws Exception {
     super.init();
-    Assert.notNull(main);
     Assert.notNull(overlay);
-    addWidget(MAIN_CHILD_KEY, main);
+    Assert.notNull(main);
     addWidget(OVERLAY_CHILD_KEY, overlay);
-    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class, new OverlayActivityMarkerContext(){});
+    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
+        new OverlayActivityMarkerContext() {
+      private static final long serialVersionUID = 1L;
+    });
+    addWidget(MAIN_CHILD_KEY, main);
   }
 
-  @Override
   protected void update(InputData input) throws Exception {
-    if (isOverlayActive())
+    if (isOverlayActive()) {
       overlay._getWidget().update(input);
-    else
+    } else {
       main._getWidget().update(input);
+    }
   }
 
-  @Override
   protected void event(Path path, InputData input) throws Exception {
   	assertActiveHierarchy(path,  "Cannot deliver event to wrong hierarchy!");
     super.event(path, input);
   }
 
-  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
   	assertActiveHierarchy(path,  "Cannot deliver action to wrong hierarchy!");
     super.action(path, input, output);
   }
 
   /**
-	 * Asserts that the current widget is in the active hierarchy. If not, the
-	 * execution will fail with an exception.
-	 * 
-	 * @param path Path of the widget (from the request).
-	 * @param message A description message to include with the exception.
-	 * @since 1.1.2
-	 */
-	protected void assertActiveHierarchy(Path path, String message) {
-		if (path != null && path.hasNext()) {
-			String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
-			Assert.isTrue(!key.equals(path.getNext()), message);
-		}
-	}
+   * Asserts that the current widget is in the active hierarchy. If not, the
+   * execution will fail with an exception.
+   * 
+   * @param path Path of the widget (from the request).
+   * @param message A description message to include with the exception.
+   * @since 1.1.2
+   */
+  protected void assertActiveHierarchy(Path path, String message) {
+    if (path != null && path.hasNext()) {
+      String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
+      Assert.isTrue(!key.equals(path.getNext()), message);
+    }
+  }
 
-	@Override
   protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
+    if (output.getInputData().getGlobalData().containsKey(
+        OverlayContext.OVERLAY_REQUEST_KEY)) {
       overlay._getWidget().render(output);
-
       if (!isOverlayActive()) {
-        // response should be empty as nothing was rendered when overlay did not contain an active flow
-        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
+        // response should be empty as nothing was rendered when overlay did not
+        // contain an active flow
+        // write out a hack of a response that should be interpreted by
+        // Aranea.ModalBox.afterLoad
         HttpServletResponse response = ServletUtil.getResponse(output);
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
       }
     } else {
       main._getWidget().render(output);
       if (!isOverlayActive()) { // overlay has become inactive for some reason
-        UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
+        UpdateRegionContext urCtx = EnvironmentUtil
+            .getUpdateRegionContext(getEnvironment());
         urCtx.disableOnce();
       }
     }
@@ -190,11 +209,20 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   /* The presentation options of this overlay. */
-  public Map<String, String> getOverlayOptions() {
+  public Map getOverlayOptions() {
     return presentationOptions;
   }
 
-  public void setOverlayOptions(Map<String, String> presentationOptions) {
-    this.presentationOptions = presentationOptions; 
+  public void setOverlayOptions(Map presentationOptions) {
+    this.presentationOptions = presentationOptions;
   }
+
+  public void finish(Object result) {
+    overlay.finish(result);
+  }
+
+  public void cancel() {
+    overlay.cancel();
+  }
+
 }

@@ -14,16 +14,24 @@ import org.araneaframework.framework.MountContext.MessageFactory;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class ExampleOverlayDemoMessageFactory implements MessageFactory {
-	public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
-		return new SeriesMessage(new Message[] {
-			new BroadcastMessage() {
-				protected void execute(Component component) throws Exception {
-					if (component instanceof MenuWidget) {
-						((MenuWidget) component).start(new ModalDialogDemoWidget());
-					}
-				}
-			}
-		});
-	}
+
+  private static final long serialVersionUID = 1L;
+
+  public Message buildMessage(String url, final String suffix, InputData input,
+      OutputData output) {
+    return new OverlayBroadcastMessage();
+  }
+
+  private class OverlayBroadcastMessage extends BroadcastMessage {
+
+    private static final long serialVersionUID = 1L;
+
+    protected void execute(Component component) throws Exception {
+      if (component instanceof MenuWidget) {
+        ((MenuWidget) component).start(new ModalDialogDemoWidget());
+      }
+    }
+
+  }
 
 }

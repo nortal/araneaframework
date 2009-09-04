@@ -16,10 +16,13 @@
 
 package org.araneaframework.jsp.tag.basic;
 
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.http.util.EnvironmentUtil;
@@ -56,7 +59,6 @@ public class BodyHtmlTag extends PresentationTag {
   /** Scripts registered by nested tags. */
   protected StringBuffer afterBodyEndScripts = null;
   
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
 
@@ -82,7 +84,6 @@ public class BodyHtmlTag extends PresentationTag {
     return r;
   }
 
-  @Override
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "body");
     return super.doEndTag(out);
@@ -124,16 +125,17 @@ public class BodyHtmlTag extends PresentationTag {
 
   /** Writes scripts that register client-side keepalive events for server-side expiring services. */
   protected void writeKeepAliveRegistrationScripts(Writer out) throws IOException {
-    ExpiringServiceContext expiringServiceContext = getEnvironment().getEntry(ExpiringServiceContext.class);
+    ExpiringServiceContext expiringServiceContext = EnvironmentUtil.getExpiringServiceContext(getEnvironment());
     if (expiringServiceContext == null)
       return;
-	  Map<String, Long> expiringServiceMap = expiringServiceContext.getServiceTTLMap();
+	  Map expiringServiceMap = expiringServiceContext.getServiceTTLMap();
     if (expiringServiceMap != null && !expiringServiceMap.isEmpty()) { // there are some expiring services
-      for (Map.Entry<String, Long> entry : expiringServiceMap.entrySet()) {
+      for (Iterator i = expiringServiceMap.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
         Object keepAliveKey = "'"+ entry.getKey() + "'";
         // TODO: keepalives are just invoked a little (4 seconds) more often from client side,
         // than specified in configuration, there could be a better way.
-        Long serviceTTL = new Long((entry.getValue().longValue() - 4000));
+        Long serviceTTL = new Long((((Long) entry.getValue()).longValue() - 4000));
 
         Object topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
         Object threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
@@ -163,7 +165,7 @@ public class BodyHtmlTag extends PresentationTag {
     if (!servletUrl.equals(encodedServletUrl)) {
       String urlSuffix = encodedServletUrl.substring(servletUrl.length());
       String function = "function(url) { return (url + '" + urlSuffix + "'); }";
-      out.write("_ap.override('encodeURL'," + function + ");");
+      out.write("Object.extend(_ap, { encodeURL:" + function + " });");
     }
   }
 
@@ -185,8 +187,8 @@ public class BodyHtmlTag extends PresentationTag {
    * @see ConfigurationContext#BACKGROUND_FORM_VALIDATION
    * @since 1.1 */
   protected void writeAjaxValidationScript(Writer out) throws IOException {
-    Boolean validationEnabled = (Boolean) getConfiguration().getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
-    out.write("_ap.setBackgroundValidation(" + String.valueOf(validationEnabled) +");");
+    boolean validationEnabled = ConfigurationContextUtil.isBackgroundFormValidationEnabled(getConfiguration());
+    out.write("_ap.setBackgroundValidation(" + validationEnabled +");");
   }
 
   /**
@@ -236,8 +238,8 @@ public class BodyHtmlTag extends PresentationTag {
    * required = "false"
    * description = "Overwrite the standard Aranea JSP HTML body onload event. Use with caution."
    */
-  public void setOnload(String onload){
-    this.onload = evaluate("onload", onload, String.class);
+  public void setOnload(String onload) throws JspException {
+    this.onload = (String) evaluate("onload", onload, String.class);
   }
   
   /**
@@ -246,8 +248,8 @@ public class BodyHtmlTag extends PresentationTag {
    * required = "false"
    * description = "Overwrite the standard Aranea JSP HTML body onunload event. Use with caution."
    */
-  public void setOnunload(String onunload){
-    this.onunload = evaluate("onunload", onunload, String.class);
+  public void setOnunload(String onunload) throws JspException {
+    this.onunload = (String) evaluate("onunload", onunload, String.class);
   }
 
   /**

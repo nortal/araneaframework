@@ -16,14 +16,32 @@
 
 package org.araneaframework.tests.integration;
 
+import org.araneaframework.InputData;
+import org.araneaframework.core.EventListener;
+import org.araneaframework.framework.container.StandardFlowContainerWidget;
+import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.framework.TransactionContext;
+import junit.framework.TestSuite;
+import junit.framework.Test;
+import org.araneaframework.mock.core.MockEventfulStandardWidget;
+import org.araneaframework.framework.filter.StandardTransactionFilterWidget;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.mock.web.MockServletConfig;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import org.araneaframework.http.ServletServiceAdapterComponent;
+import org.araneaframework.mock.servlet.MockServlet;
 import junit.framework.TestCase;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * XXX: why is the whole test commented out?
+ * TODO: this class contains some really legacy code, it must be updated.
  */
 public class SmokeTests extends TestCase {
-  /*private MockServlet servlet;
+/*  private MockServlet servlet;
   private ServletServiceAdapterComponent adapter;
   
   private Map initedAdapters = new HashMap();
@@ -64,7 +82,7 @@ public class SmokeTests extends TestCase {
   }
   
   public void testSmoke() throws Exception {
-    adapter = (ServletServiceAdapterComponent)initAdapter("smokeTest.xml");
+    adapter = initAdapter("smokeTest.xml");
     adapter.service(req, resp);
     //success if no exception thrown
     fail();
@@ -72,7 +90,7 @@ public class SmokeTests extends TestCase {
   //
   
   public void testSerialization() throws Exception {
-    adapter = (ServletServiceAdapterComponent)initAdapter("serializationTestsConf.xml");
+    adapter = initAdapter("serializationTestsConf.xml");
     
     BeanFactory factory = servlet.getFactory();
     MockViewPortWidget widget = (MockViewPortWidget)factory.getBean("rootWidget");
@@ -85,7 +103,7 @@ public class SmokeTests extends TestCase {
     String event = "theEvent";
     String widgetKey =StandardViewPortWidget.CHILD_KEY;
     
-    adapter = (ServletServiceAdapterComponent)initAdapter("repeatedRequest.xml");
+    adapter = initAdapter("repeatedRequest.xml");
     // lets get reference to the bean doing the heavy-lifting
     // its a singleton, so we're cool
     BeanFactory factory = servlet.getFactory();
@@ -115,7 +133,7 @@ public class SmokeTests extends TestCase {
   }
   
   public void testDestroyPropagates() throws Exception {
-    adapter = (ServletServiceAdapterComponent)initAdapter("repeatedRequest.xml");
+    adapter = initAdapter("repeatedRequest.xml");
     
     MockViewPortWidget widget = (MockViewPortWidget)servlet.getFactory().getBean("rootWidget");
     // initializes everything
@@ -131,7 +149,7 @@ public class SmokeTests extends TestCase {
     String childKey = "aWidget";
     String event = "tehEvent";
     
-    adapter = (ServletServiceAdapterComponent)initAdapter("simpleFilters.xml");
+    adapter = initAdapter("simpleFilters.xml");
     
     MockViewPortWidget widget = (MockViewPortWidget)servlet.getFactory().getBean("rootWidget");
     MockStandardWidget childWidget = new MockStandardWidget();
@@ -155,5 +173,5 @@ public class SmokeTests extends TestCase {
   public static void main(String args[]) {
     junit.textui.TestRunner.run(suite());
   }
-  */
+*/  
 }

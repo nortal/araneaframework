@@ -47,6 +47,10 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
 
   @Override
   protected void validateConstraint() {
+    if (getValue() == null) {
+      return;
+    }
+
     Calendar today = Calendar.getInstance();
 
     if (allowToday) {
@@ -61,8 +65,7 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
       today.set(Calendar.MILLISECOND, 999);
     }
 
-    if ((getValue() == null)
-        || (today.getTime().compareTo((Date) getValue()) == 1)) {
+    if (today.getTime().compareTo((Date) getValue()) == 1) {
       if (!allowToday) {
         addError(MessageUtil.localizeAndFormat(UiLibMessages.DATE_BEFORE_TODAY,
             t(getLabel()), getEnvironment()));

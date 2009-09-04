@@ -1,5 +1,6 @@
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -17,6 +18,9 @@ import org.araneaframework.uilib.support.TextType;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class AutoCompleteTextControl extends TextControl {
+
+  private static final long serialVersionUID = 1L;
+
   public static final String LISTENER_NAME = "autocomplete";
 
   protected long minCompletionLength = 1;
@@ -44,7 +48,6 @@ public class AutoCompleteTextControl extends TextControl {
     this.minCompletionLength = minCompletionLength;
   }
 
-  @Override
   protected void init() throws Exception {
     super.init();
     addActionListener(LISTENER_NAME, new AutoCompleteActionListener());
@@ -67,13 +70,16 @@ public class AutoCompleteTextControl extends TextControl {
   }
 
   public interface DataProvider extends Serializable {
-    public List<String> getSuggestions(String input);
+    public List getSuggestions(String input);
   }
 
   private class AutoCompleteActionListener implements ActionListener {
-    public void processAction(Object actionId, InputData input, OutputData output) throws Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
       String str = innerData == null ? null : ((String[]) innerData)[0];
-      List<String> suggestions = dataProvider.getSuggestions(str);
+      List suggestions = dataProvider.getSuggestions(str);
 
       ResponseBuilder responseBuilder = resolveResponseBuilder();
 
@@ -89,8 +95,7 @@ public class AutoCompleteTextControl extends TextControl {
   protected ResponseBuilder resolveResponseBuilder() {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
-      ConfigurationContext confCtx = 
-        getEnvironment().getEntry(ConfigurationContext.class);
+      ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
       if (confCtx != null)
         result = (ResponseBuilder)confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
     }
@@ -111,7 +116,7 @@ public class AutoCompleteTextControl extends TextControl {
      * @param suggestions suggested completions that should be included in response
      * @return appropriate response content
      */
-    public String getResponseContent(List<String> suggestions);
+    public String getResponseContent(List suggestions);
     /**
      * Returns response content type. 
      * @return response content type
@@ -120,19 +125,24 @@ public class AutoCompleteTextControl extends TextControl {
   }
   
   /**
-   * Default {@link AutoCompleteTextControl.ResponseBuilder} used when {@link AutoCompleteTextControl} does not have
-   * its {@link AutoCompleteTextControl.ResponseBuilder} set and {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}
-   * does not specify application-wide {@link AutoCompleteTextControl.ResponseBuilder}.
+   * Default {@link AutoCompleteTextControl.ResponseBuilder} used when
+   * {@link AutoCompleteTextControl} does not have its
+   * {@link AutoCompleteTextControl.ResponseBuilder} set and
+   * {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER} does not
+   * specify application-wide {@link AutoCompleteTextControl.ResponseBuilder}.
    * 
    * @author Steven Jentson (steven@webmedia.ee)
    */
   public static class DefaultResponseBuilder implements ResponseBuilder {
-	public String getResponseContent(List<String> suggestions) {
+
+    private static final long serialVersionUID = 1L;
+
+    public String getResponseContent(List suggestions) {
   	  StringBuffer xml = new StringBuffer();
         xml.append("<ul>");
         for (int i = 0; i < suggestions.size(); i++) {
   		  xml.append("<li>");
-  		  xml.append(StringEscapeUtils.escapeHtml(suggestions.get(i)));
+  		  xml.append(StringEscapeUtils.escapeHtml((String) suggestions.get(i)));
   		  xml.append("</li>");
         }
         xml.append("</ul>");
@@ -142,6 +152,7 @@ public class AutoCompleteTextControl extends TextControl {
     public String getResponseContentType() {
       return "text/xml";
     }
+
   }
   
   /**
@@ -149,8 +160,7 @@ public class AutoCompleteTextControl extends TextControl {
    * 
    * @return {@link ViewModel}.
    */
-  @Override
-  public ViewModel getViewModel() {
+  public Object getViewModel() {
     return new ViewModel();
   }
 
@@ -158,6 +168,9 @@ public class AutoCompleteTextControl extends TextControl {
   //* VIEW MODEL
   //*********************************************************************  	
   public class ViewModel extends TextControl.ViewModel {
+
+    private static final long serialVersionUID = 1L;
+
     private long minCompletionLength;
     
     public ViewModel() {

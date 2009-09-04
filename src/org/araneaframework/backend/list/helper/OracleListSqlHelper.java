@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.helper;
 
@@ -20,118 +20,111 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.model.ListQuery;
 
-
 /**
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public class OracleListSqlHelper extends ListSqlHelper {
 
-	protected SqlStatement statement = new SqlStatement();
+  protected SqlStatement statement = new SqlStatement();
 
-	protected String countSqlQuery = null;	
-	
-	public OracleListSqlHelper(DataSource dataSource, ListQuery query) {
-		super(dataSource, query);
-	}
-	public OracleListSqlHelper(DataSource dataSource) {
-		super(dataSource);
-	}
-	public OracleListSqlHelper(ListQuery query) {
-		super(query);
-	}
-	public OracleListSqlHelper() {
-		super();
-	}
+  protected String countSqlQuery = null;
 
-	@Override
+  public OracleListSqlHelper(DataSource dataSource, ListQuery query) {
+    super(dataSource, query);
+  }
+
+  public OracleListSqlHelper(DataSource dataSource) {
+    super(dataSource);
+  }
+
+  public OracleListSqlHelper(ListQuery query) {
+    super(query);
+  }
+
+  public OracleListSqlHelper() {
+    super();
+  }
+
   protected SqlStatement getCountSqlStatement() {
-		if (this.countSqlQuery != null) {
-			return new SqlStatement(this.countSqlQuery, this.statement
-					.getParams());
-		}
-		String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
-				this.statement.getQuery()).append(")").toString();
-		return new SqlStatement(temp, this.statement.getParams());
-	}
+    if (this.countSqlQuery != null) {
+      return new SqlStatement(this.countSqlQuery, this.statement.getParams());
+    }
 
-	@Override
+    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
+        this.statement.getQuery()).append(")").toString();
+
+    return new SqlStatement(temp, this.statement.getParams());
+  }
+
   protected SqlStatement getRangeSqlStatement() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT * FROM ("
-				+ "SELECT rownum listRowNum, listItemData.* FROM (");
-		sb.append(this.statement.getQuery());
-		sb.append(") listItemData"
-				+ ") WHERE listRowNum >= ?");
-		if (this.itemRangeCount != null) {
-			sb.append(" AND listRowNum <= ?");
-		}
+    StringBuffer sb = new StringBuffer();
+    sb.append("SELECT * FROM ("
+        + "SELECT rownum listRowNum, listItemData.* FROM (");
+    sb.append(this.statement.getQuery());
+    sb.append(") listItemData" + ") WHERE listRowNum >= ?");
 
-		SqlStatement temp = new SqlStatement(sb.toString());
-		temp.addAllParams(this.statement.getParams());
-		temp.addParam(new Long(this.itemRangeStart.longValue() + 1));
-		if (this.itemRangeCount != null) {
-			temp.addParam(new Long(this.itemRangeStart.longValue()
-					+ this.itemRangeCount.longValue()));
-		}
-		return temp;
-	}
+    if (this.itemRangeCount != null) {
+      sb.append(" AND listRowNum <= ?");
+    }
 
-	/**
-	 * Sets the SQL query that will be used to retrieve the item range from the
-	 * list and count the items. The SQL query must start with SELECT expression
-	 * including the word "SELECT".
-	 * 
-	 * @param sqlQuery
-	 *            the SQL query that will be used to retrieve the item range
-	 *            from the list and count the items.
-	 */
-	@Override
+    SqlStatement temp = new SqlStatement(sb.toString());
+    temp.addAllParams(this.statement.getParams());
+    temp.addParam(new Long(this.itemRangeStart.longValue() + 1));
+
+    if (this.itemRangeCount != null) {
+      temp.addParam(new Long(this.itemRangeStart.longValue()
+          + this.itemRangeCount.longValue()));
+    }
+
+    return temp;
+  }
+
+  /**
+   * Sets the SQL query that will be used to retrieve the item range from the
+   * list and count the items. The SQL query must start with SELECT expression
+   * including the word "SELECT".
+   * 
+   * @param sqlQuery the SQL query that will be used to retrieve the item range
+   *            from the list and count the items.
+   */
   public void setSqlQuery(String sqlQuery) {
-		this.statement.setQuery(sqlQuery);
-	}
+    this.statement.setQuery(sqlQuery);
+  }
 
-	/**
-	 * Sets the SQL query used to count the items in the database.
-	 * 
-	 * @param countSqlQuery
-	 *            the SQL query used to count the items in the database.
-	 */
-	@Override
+  /**
+   * Sets the SQL query used to count the items in the database.
+   * 
+   * @param countSqlQuery the SQL query used to count the items in the database.
+   */
   public void setCountSqlQuery(String countSqlQuery) {
-		this.countSqlQuery = countSqlQuery;
-	}
+    this.countSqlQuery = countSqlQuery;
+  }
 
-	/**
-	 * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter for
-	 * later setting.
-	 * 
-	 * @param valueType
-	 *            the type of the NULL value.
-	 */
-	@Override
+  /**
+   * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter for
+   * later setting.
+   * 
+   * @param valueType the type of the NULL value.
+   */
   public void addNullParam(int valueType) {
-		this.statement.addNullParam(valueType);
-	}
+    this.statement.addNullParam(valueType);
+  }
 
-	/**
-	 * Adds a <code>PreparedStatement</code> parameter for later setting.
-	 * 
-	 * @param param
-	 *            a <code>PreparedStatement</code> parameter.
-	 */
-	@Override
+  /**
+   * Adds a <code>PreparedStatement</code> parameter for later setting.
+   * 
+   * @param param a <code>PreparedStatement</code> parameter.
+   */
   public void addStatementParam(Object param) {
-		this.statement.addParam(param);
-	}
+    this.statement.addParam(param);
+  }
 
-	/**
-	 * Adds <code>PreparedStatement</code> parameters for later setting.
-	 * 
-	 * @param params
-	 *            <code>PreparedStatement</code> parameters.
-	 */
-	@Override
+  /**
+   * Adds <code>PreparedStatement</code> parameters for later setting.
+   * 
+   * @param params <code>PreparedStatement</code> parameters.
+   */
   public void addStatementParams(List params) {
-		this.statement.addAllParams(params);
-	}
+    this.statement.addAllParams(params);
+  }
 }

@@ -31,18 +31,21 @@ import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
- * This widget may contain other widgets (called pages) as children.
- * It routes init() and event() to all of its children
- * and render() to only current active child.
- * 
+ * This widget may contain other widgets (called pages) as children. It routes
+ * init() and event() to all of its children and render() to only current active
+ * child.
+ * <p>
  * It recieves following events:
- * 1. eventId: "goto", eventParam: pageIndex.
- * 2. eventId: "submit".
- * 3. eventId: "cancel".
+ * <ol>
+ * <li>eventId: "goto", eventParam: pageIndex.</li>
+ * <li>eventId: "submit".</li>
+ * <li>eventId: "cancel".</li>
+ * </ol>
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class StandardWizardWidget extends BaseUIWidget implements WizardContext {
+
 	private static final Log log = LogFactory.getLog(StandardWizardWidget.class);
 	
 	public static final String CURRENT_PAGE_KEY = "currentPage";
@@ -213,13 +216,13 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 	}
 	
 	@Override
-  protected void render(OutputData output) throws Exception {
+	protected void render(OutputData output) throws Exception {
 		log.debug("StandardWizardWidget render called");    
 		getCurrentPage()._getWidget().render(output);
 	}
 	
 	@Override
-  protected void destroy() throws Exception {
+	protected void destroy() throws Exception {
 		clearPages();
 	}
 	

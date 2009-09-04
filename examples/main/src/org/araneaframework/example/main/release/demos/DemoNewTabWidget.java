@@ -1,3 +1,4 @@
+
 package org.araneaframework.example.main.release.demos;
 
 import java.lang.reflect.Field;
@@ -9,45 +10,60 @@ import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.uilib.core.MenuContext;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.tab.TabContainerWidget;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
- * Demonstrates usage of tabs&mdash;{@link TabContainerWidget}.
+ * Demonstrates usage of tabs &mdash; {@link TabContainerWidget}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoNewTabWidget extends TemplateBaseWidget {
-	protected void init() throws Exception {
-	    setViewSelector("release/demos/tab");
-	    
-	    TabContainerWidget containerWidget = new TabContainerWidget();
-	    addWidget("tabContainer", containerWidget);
-	    
-	    addTabs(containerWidget);
-	}
 
-	// whole method is a hack to determine menu content and show it in different tabs
-	private void addTabs(TabContainerWidget containerWidget) throws IllegalAccessException, InstantiationException {
-		Map araneaDemos = ((MenuWidget)getEnvironment().getEntry(MenuContext.class)).getAraneaMenu().getSubMenu();
-	    for (Iterator i = araneaDemos.entrySet().iterator(); i.hasNext();) {
-	    	Map.Entry entry = (Map.Entry) i.next();
-	    	MenuItem menuItem = ((MenuItem)entry.getValue());
+  private static final long serialVersionUID = 1L;
 
-	    	Field classfield = (Field) CollectionUtils.find(
-	    		Arrays.asList(menuItem.getClass().getDeclaredFields()), new BeanPropertyValueEqualsPredicate("name", "flowClass"));
+  protected void init() throws Exception {
+    setViewSelector("release/demos/tab");
+    addTabContainer();
+  }
 
-	    	if (classfield == null)
-	    		continue;
-	    	
-	    	classfield.setAccessible(true);
-	    	Class clazz = (Class) classfield.get(menuItem);
+  // Whole method is a hack to determine menu content and show it in different tabs.
+  private TabContainerWidget addTabContainer() throws IllegalAccessException,
+      InstantiationException {
+    TabContainerWidget containerWidget = new TabContainerWidget();
 
-	    	containerWidget.addTab((String)entry.getKey(), menuItem.getLabel(), (Widget)clazz.newInstance());
-	    	// show tab for current widget too, if it was found from menu: but disable it
-	    	if (this.getClass().equals(clazz))
-	    		containerWidget.disableTab((String)entry.getKey());
-	    }
-	}
+    // The tab container must be initialized before tabs will be defined:
+    addWidget("tabContainer", containerWidget);
+
+    MenuWidget menu = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
+    Map araneaDemos = menu.getAraneaMenu().getSubMenu();
+
+    // Let's add tabs that will be the menu elements of this menu branch:
+    for (Iterator i = araneaDemos.entrySet().iterator(); i.hasNext();) {
+      Map.Entry entry = (Map.Entry) i.next();
+      MenuItem menuItem = ((MenuItem) entry.getValue());
+
+      Field classfield = (Field) CollectionUtils.find(
+          Arrays.asList(menuItem.getClass().getDeclaredFields()),
+          new BeanPropertyValueEqualsPredicate("name", "flowClass"));
+
+      if (classfield == null) {
+        continue;
+      }
+
+      classfield.setAccessible(true);
+
+      Class clazz = (Class) classfield.get(menuItem);
+      containerWidget.addTab((String) entry.getKey(), menuItem.getLabel(),
+          (Widget) clazz.newInstance());
+
+      // show tab for current widget too, if it was found from menu, but disable it
+      if (this.getClass().equals(clazz)) {
+        containerWidget.disableTab((String) entry.getKey());
+      }
+    }
+
+    return containerWidget;
+  }
 }

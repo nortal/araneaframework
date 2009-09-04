@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -42,7 +43,7 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormElement<C,D> extends GenericFormElement implements FormElementContext<C,D>, RenderStateAware {
+public class FormElement extends GenericFormElement implements FormElementContext, RenderStateAware {
   /** 
    * The property key for custom {@link FormElementValidationErrorRenderer} that may be set
    * for this {@link FormElement}.
@@ -52,11 +53,11 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   //*******************************************************************
   // FIELDS
   //*******************************************************************
-  private List<Event> initEvents = new ArrayList<Event>();
+  private List initEvents = new ArrayList();
 	
-  protected Control<C> control;
-  protected Converter<C,D> converter;
-  protected Data<D> data;
+  protected Control control;
+  protected Converter converter;
+  protected Data data;
   
   protected String label;
   
@@ -93,7 +94,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @return the {@link BaseConverter}.
    */
-  public Converter<C,D> getConverter() {
+  public Converter getConverter() {
     return converter;
   }
 
@@ -102,7 +103,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @param converter The {@link BaseConverter}to set.
    */
-  public void setConverter(Converter<C,D> converter) {
+  public void setConverter(Converter converter) {
     this.converter = converter;
     
     if (converter != null)
@@ -114,7 +115,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @return {@link Data}.
    */
-  public Data<D> getData() {
+  public Data getData() {
     return data;
   }
 
@@ -123,10 +124,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @param data {@link Data}.
    */
-  @SuppressWarnings("unchecked")
-  public void setData(Data<D> data) {
+  public void setData(Data data) {
     this.data = data;
-    data.setFormElementCtx((FormElementContext<Object, D>) this);
+    data.setFormElementCtx(this);
   }
 
   /**
@@ -134,7 +134,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @return {@link Control}.
    */
-  public Control<C> getControl() {
+  public Control getControl() {
     return control;
   }
 
@@ -143,15 +143,14 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @param control {@link Control}.
    */
-  @SuppressWarnings("unchecked")
-  public void setControl(Control<C> control) {
+  public void setControl(Control control) {
     Assert.notNullParam(control, "control");
     
     destroyControl();
 
     this.control = control;
     
-    control.setFormElementCtx((FormElementContext<C, Object>) this);
+    control.setFormElementCtx(this);
     
     if (isInitialized())
       control._getComponent().init(getScope(), getEnvironment());
@@ -167,17 +166,17 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   /**
    * Finds a {@link BaseConverter}corresponding to current control and data item.
    * 
-   * @throws AraneaRuntimeException if converter cannot be found.
+   * @throws ConverterNotFoundException if converter cannot be found.
    */
-  @SuppressWarnings("unchecked")
-  public Converter<C,D> findConverter() {
+  public Converter findConverter() {
     ConfigurationContext confCtx = getEnvironment()
         .requireEntry(ConfigurationContext.class);
 
     try {
 
       return ConverterFactory.getInstance(confCtx).findConverter(
-          getControl().getRawValueType(), getData().getValueType());
+          getControl().getRawValueType(), getData().getValueType(),
+          getEnvironment());
 
     } catch (ConverterNotFoundException e) {
       throw new AraneaRuntimeException("Could not find a field value "
@@ -194,43 +193,37 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     return (getControl() != null && getControl().isRead());
   }
   
-  @Override
   public void setDisabled(boolean disabled) {
   	this.disabled = disabled;
   }
 	
-	@Override
-  public boolean isDisabled() {
+	public boolean isDisabled() {
 	  return this.disabled;
 	}	  
 
-  @Override
   public void markBaseState() {
     if (getData() != null)
       getData().markBaseState();
   }
   
-  @Override
   public void restoreBaseState() {
     if (getData() != null)
       getData().restoreBaseState();
   }
   
-  @Override
   public boolean isStateChanged() {
     if (getData() != null)
       return getData().isStateChanged();
     return false;
   }    
   
-  @Override
-  public D getValue() {
+  public Object getValue() {
     if (getData() != null)
       return data.getValue();
     return null;
   }
 
-  public void setValue(D value) {
+  public void setValue(Object value) {
     if (getData() != null)
       getData().setValue(value);
   } 
@@ -243,13 +236,11 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     this.mandatory = mandatory;
   }
   
-  @Override
   public void addError(String error) {
     super.addError(error);
     getFormElementValidationErrorRenderer().addError(this, error);
   }
   
-  @Override
   public void clearErrors() {
     getFormElementValidationErrorRenderer().clearErrors(this);
     super.clearErrors();
@@ -274,7 +265,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced by this {@link FormElement}.
    * @since 1.1 */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfiguration(getEnvironment()));
     if (result == null) {
       result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
     }
@@ -294,7 +285,6 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   //* INTERNAL METHODS
   //*********************************************************************  	
   
-  @Override
   protected void update(InputData input) throws Exception {
     if (isDisabled() || !isRendered()) {
     	setIgnoreEvents(true);
@@ -311,20 +301,17 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     }
   }
 
-  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (!isDisabled() && isRendered()) {
       super.action(path, input, output);
     }
   }
 
-  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (!path.hasNext() && !isDisabled() && !isIgnoreEvents())
       getControl()._getWidget().event(path, input);
   }
   
-  @Override
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
     super.handleAction(input, output);
@@ -332,7 +319,6 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
       control._getService().action(null, input, output);
   }
   
-  @Override
   public Environment getConstraintEnvironment() {
 	return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
   }
@@ -342,7 +328,6 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return {@link ViewModel}.
    * @throws Exception 
    */
-  @Override
   public Object getViewModel() throws Exception {
     return new ViewModel();
   }
@@ -353,12 +338,11 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
       event.run();
     } else if (!isInitialized()) {
       if (initEvents == null)
-        initEvents = new ArrayList<Event>();
+        initEvents = new ArrayList();
       initEvents.add(event);
     }
   }
   
-  @Override
   protected void init() throws Exception {
     super.init();
     
@@ -382,7 +366,6 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    return new FormElementValidationActionListener(this);
   }
 
-  @Override
   protected void destroy() throws Exception {
     destroyControl();
   }
@@ -390,9 +373,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   /**
    * Uses {@link BaseConverter}to convert the {@link BaseControl}value to the {@link Data}value.
    */
-  @Override
   protected void convertInternal() {
-    D newDataValue = null;
+    Object newDataValue = null;
 
     //There is only point to convert and set the data if it is present
     if (getData() != null && getControl() != null) {
@@ -413,7 +395,6 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     }
   }
 	
-  @Override
   protected boolean validateInternal() throws Exception {
     if (getControl() != null)
       getControl().validate();
@@ -421,8 +402,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     return super.validateInternal();
   }
   
-	@Override
-  public void accept(String id, FormElementVisitor visitor) {
+	public void accept(String id, FormElementVisitor visitor) {
 		visitor.visit(id, this);
 	}
 	
@@ -430,7 +410,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @since 1.0.5 */
   protected void runInitEvents() {
     if (initEvents != null) {
-      for (Runnable event : initEvents) {
+      for (Iterator it = initEvents.iterator(); it.hasNext();) {
+        Runnable event = (Runnable) it.next();
         event.run();
       }
     }

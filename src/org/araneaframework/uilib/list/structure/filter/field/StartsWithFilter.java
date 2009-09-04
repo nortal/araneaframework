@@ -29,6 +29,7 @@ import org.araneaframework.uilib.list.structure.filter.FilterContext;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * A filter for StartsWith expressions. Handles also form element adding.
@@ -82,9 +83,8 @@ public class StartsWithFilter extends BaseFieldFilter {
 		// private
 	}
 
-	@Override
-  public void init(Environment env) {
-		ConfigurationContext cfg = env.getEntry(ConfigurationContext.class);
+	public void init(Environment env) {
+		ConfigurationContext cfg = UilibEnvironmentUtil.getConfiguration(env);
 		if (cfg != null) {
 			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);
 		}

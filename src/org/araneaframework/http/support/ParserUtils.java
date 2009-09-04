@@ -87,7 +87,6 @@ public class ParserUtils {
             factory.setValidating(validating);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver(entityResolver);
-            //XXX is it needed?
             builder.setErrorHandler(errorHandler);
             document = builder.parse(is);
 	} catch (ParserConfigurationException ex) {
@@ -168,8 +167,7 @@ public class ParserUtils {
                             treeNode.setBody(body);
                     }
                 } else {
-                    //XXX is this needed?
-                    TreeNode treeChild = convert(treeNode, child);
+                    convert(treeNode, child);
                 }
             }
         }
@@ -187,7 +185,7 @@ class MyErrorHandler implements ErrorHandler {
     // Logger
     private static final Log log = LogFactory.getLog(MyErrorHandler.class);
 
-    public void warning(SAXParseException ex) {
+    public void warning(SAXParseException ex) throws SAXException {
         if (log.isDebugEnabled())
             log.debug("ParserUtils: warning ", ex);
         // We ignore warnings

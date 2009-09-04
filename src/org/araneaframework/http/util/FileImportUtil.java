@@ -38,9 +38,10 @@ public abstract  class FileImportUtil {
   public final static String getImportString(String fileName) {
     Assert.notEmptyParam(fileName, "fileName");
 
-    StringBuffer sb = new StringBuffer("/" + StandardFileImportFilterService.FILE_IMPORTER_NAME + "/");
+    StringBuffer sb = new StringBuffer("/");
+    sb.append(StandardFileImportFilterService.FILE_IMPORTER_NAME);
+    sb.append("/");
     sb.append(fileName);
-
     return sb.toString();
   }
 

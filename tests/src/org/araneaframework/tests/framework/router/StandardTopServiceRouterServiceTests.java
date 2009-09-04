@@ -16,6 +16,8 @@
 
 package org.araneaframework.tests.framework.router;
 
+import org.araneaframework.Environment;
+import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
@@ -45,7 +47,6 @@ public class StandardTopServiceRouterServiceTests extends TestCase {
   
   private Map map;
   
-  @Override
   public void setUp() throws Exception {
     service = new StandardTopServiceRouterService();
     map = new HashMap();
@@ -67,11 +68,11 @@ public class StandardTopServiceRouterServiceTests extends TestCase {
     
     service.setDefaultServiceId("child1");
   }
-  
+
   public void testCloseRemoves() throws Exception {
     service._getService().action(MockUtil.getPath(), input, output);
-    TopServiceContext sess = 
-      child1.getTheEnvironment().getEntry(TopServiceContext.class);
+    Environment env = child1.getTheEnvironment();
+    TopServiceContext sess = EnvironmentUtil.requireTopServiceContext(env);
     sess.close("child1");
     assertTrue(child1.getDestroyCalled());
   }

@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.list;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,81 +31,103 @@ import java.util.List;
  */
 public class OrderInfo implements Serializable {
 
-	protected List<OrderInfoField> fields = new ArrayList<OrderInfoField>();
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Returns the ordering fields.
-	 * 
-	 * @return the ordering fields.
-	 */
-	public List<OrderInfoField> getFields() {
-		return this.fields;
-	}
+  protected List fields = new ArrayList();
 
-	/**
-	 * Clears ordering fields.
-	 */
-	public void clearFields() {
-		this.fields.clear();
-	}
+  /**
+   * Returns the ordering fields.
+   * 
+   * @return the ordering fields.
+   */
+  public List getFields() {
+    return this.fields;
+  }
 
-	/**
-	 * Adds an ordering field.
-	 * 
-	 * @param field
-	 *            an ordering field.
-	 */
-	public void addField(OrderInfoField field) {
-		this.fields.add(field);
-	}
+  /**
+   * Clears ordering fields.
+   */
+  public void clearFields() {
+    this.fields.clear();
+  }
 
-	/**
-	 * Returns view model.
-	 * 
-	 * @return view model.
-	 */
-	public ViewModel getViewModel() {
-		return new ViewModel();
-	}
+  /**
+   * Adds an ordering field.
+   * 
+   * @param field an ordering field.
+   */
+  public void addField(OrderInfoField field) {
+    this.fields.add(field);
+  }
 
-	/**
-	 * View model.
-	 * 
-	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-	 */
-	public class ViewModel implements Serializable {
-		private List<OrderInfoField.ViewModel> fields = new ArrayList<OrderInfoField.ViewModel>();
+  /**
+   * Returns view model.
+   * 
+   * @return view model.
+   */
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
 
-		/**
-		 * Takes a snapshot of outer class state.
-		 */
-		public ViewModel() {
-			for (OrderInfoField orderInfoField : OrderInfo.this.fields) {
-				this.fields.add(orderInfoField.getViewModel());
-			}
-		}
+  /**
+   * View model.
+   * 
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   */
+  public class ViewModel implements Serializable {
 
-		/**
-		 * Returns the ordering fields.
-		 * 
-		 * @return the ordering fields.
-		 */
-		public List<OrderInfoField.ViewModel> getFields() {
-			return this.fields;
-		}
-	}
-	
-	@Override
+    private static final long serialVersionUID = 1L;
+
+    private List fields = new ArrayList();
+
+    /**
+     * Contains values <String,Boolean> when the list field ID of type String
+     * has been ordered ascending (true) or descending (false).
+     * 
+     * @since 1.2.2
+     */
+    private Map fieldsMap = new HashMap();
+
+    /**
+     * Takes a snapshot of outer class state.
+     */
+    public ViewModel() {
+      for (Iterator i = OrderInfo.this.fields.iterator(); i.hasNext();) {
+        OrderInfoField field = (OrderInfoField) i.next();
+        this.fields.add(field.getViewModel());
+        this.fieldsMap.put(field.getId(), new Boolean(field.isAscending()));
+      }
+    }
+
+    /**
+     * Returns the ordering fields.
+     * 
+     * @return the ordering fields.
+     */
+    public List getFields() {
+      return this.fields;
+    }
+
+    /**
+     * @since 1.2.2
+     * @return
+     */
+    public Map getFieldsMap() {
+      return this.fieldsMap;
+    }
+
+  }
+
   public String toString() {
-		StringBuffer sb = new StringBuffer("OrderInfo (");
-		for (Iterator<OrderInfoField> i = this.fields.iterator(); i.hasNext();) {
-			OrderInfoField field = i.next();
-			sb.append(field.toString());
-			if (i.hasNext()) {
-				sb.append("; ");				
-			}
-		}
-		sb.append(")");
-		return sb.toString();	
-	}
+    StringBuffer sb = new StringBuffer("OrderInfo (");
+    for (Iterator i = this.fields.iterator(); i.hasNext();) {
+      OrderInfoField field = (OrderInfoField) i.next();
+      sb.append(field.toString());
+      if (i.hasNext()) {
+        sb.append("; ");
+      }
+    }
+    sb.append(")");
+    return sb.toString();
+  }
 }

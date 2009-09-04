@@ -42,7 +42,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
 
   private static final long serialVersionUID = 1L;
 
-  private BeanFormWidget simpleForm;
+  private BeanFormWidget<FormDataModel> simpleForm;
 
   /**
    * Builds the form.
@@ -50,8 +50,8 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
   protected void init() throws Exception {
     setViewSelector("sample/simpleBeanForm");
 
-    // Creation of new bean form for FormDataModel class:
-    simpleForm = new BeanFormWidget(FormDataModel.class);
+    // Creation of new bean form bound to the instance of FormDataModel class:
+    simpleForm = new BeanFormWidget<FormDataModel>(getDefaultValues());
 
     // Now that we have created a form, we will need to add form elements.
     // form elements consist of four basic things - label, Control that
@@ -66,7 +66,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     // 
     // Notice, we don't have to specify data type, because it can be read from
     // the bean field. Also, the primitive fields are always mandatory, because
-    // they cannot accpet null values.
+    // they cannot accept null values.
 
     simpleForm.addElement("caseSensitive", "demo.beanForm.caseSensitive",
         new CheckboxControl(), new BooleanData(), false);
@@ -84,7 +84,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
         new FloatControl(), false);
 
     // Primitive field mappings (notice the fields are mandatory, because they
-    // cannot accpet null values - Aranea would throw an exception):
+    // cannot accept null values - Aranea would throw an exception):
     simpleForm.addBeanElement("siblingsCount", "demo.beanForm.siblingsCount",
         new NumberControl(), true);
     simpleForm.addBeanElement("peopleCount", "demo.beanForm.peopleCount",
@@ -93,9 +93,6 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
         new FloatControl(), true);
     simpleForm.addBeanElement("preciseWeight", "demo.beanForm.preciseWeight",
         new FloatControl(), true);
-
-    // Here we set the values of the previously defined fields:
-    setDefaultValues(simpleForm);
 
     // We use a simple option of not defining the button here. Instead, we just
     // use a JSP tag that renders the button and also invokes the event.
@@ -114,8 +111,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     // (error messages are added automatically to the messagecontext
     // though, user will not be without feedback)
     if (simpleForm.convertAndValidate()) {
-      FormDataModel data = new FormDataModel();
-      simpleForm.writeToBean(data);
+      FormDataModel data = simpleForm.writeToBean();
 
       // We can display the result simply like that:
       getMessageCtx().showInfoMessage("Checkbox value is: " + data.isCaseSensitive());
@@ -127,11 +123,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     }
   }
 
-  // This method illustrates how easy is to bind bean fields and syncronize the
-  // values between bean fields and input controls.
-  // First, we set the values of the bean fields, then we update control values
-  // by invoking readFromBean(Object) method of the BeanFormWidget.
-  private void setDefaultValues(BeanFormWidget simpleBeanFormWidget) {
+  private FormDataModel getDefaultValues(){
     FormDataModel formData = new FormDataModel();
     formData.setCaseSensitive(true);
     formData.setSearchString("Where am I?");
@@ -143,7 +135,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     formData.setPeopleCount(66500000000L);
     formData.setWeight(77.8F);
     formData.setPreciseWeight(77.8989);
-    simpleBeanFormWidget.readFromBean(formData);
+    return formData;
   }
 
   /**

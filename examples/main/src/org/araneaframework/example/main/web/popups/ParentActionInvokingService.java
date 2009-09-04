@@ -24,6 +24,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -40,13 +41,12 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 		this.widgetId = widgetId;
 	}
 	
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
-		HttpServletResponse response = ServletUtil.getResponse(output);
-		String script = 
-		  "if (window.opener) { window.opener.setTimeout(\"" +
-		    "araneaPage().action(document.getElementById('" + widgetId  + "'), 'testAction', '" + widgetId.substring(0, widgetId.lastIndexOf('.')) + "' , '" + value + "', window['tehcallback']);" +
-		  "\", 0); }" +
-		  "window.close();";
+    protected void action(Path path, InputData input, OutputData output) throws Exception {
+        HttpServletResponse response = ServletUtil.getResponse(output);
+        String script = "if (window.opener) { window.opener.setTimeout('"
+        + "araneaPage().action($('" + this.widgetId + "'), 'testAction', '"
+        + this.widgetId.substring(0, this.widgetId.lastIndexOf('.')) + "' , '"
+        + this.value + "', window['tehcallback']);', 0); } window.close();";
 
 		String responseStr = 
 			"<html>" +
@@ -69,7 +69,7 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 

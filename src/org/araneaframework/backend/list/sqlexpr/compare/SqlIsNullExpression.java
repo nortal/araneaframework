@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.sqlexpr.compare;
 
 import org.araneaframework.backend.list.SqlExpression;
-
+import org.araneaframework.core.Assert;
 
 public class SqlIsNullExpression implements SqlExpression {
-	private SqlExpression expr;
-	public SqlIsNullExpression(SqlExpression expr) {
-		if (expr == null) {
-			throw new RuntimeException("SqlExpression must be provided");
-		}
-		this.expr = expr;
-	}
-	public String toSqlString() {
-		return this.expr.toSqlString() + " IS NULL";
-	}
-	public Object[] getValues() {
-		return this.expr.getValues();
-	}
+
+  private SqlExpression expr;
+
+  public SqlIsNullExpression(SqlExpression expr) {
+    Assert.notNull(expr, "SqlExpression must be provided");
+    this.expr = expr;
+  }
+
+  public String toSqlString() {
+    return this.expr.toSqlString() + " IS NULL";
+  }
+
+  public Object[] getValues() {
+    return this.expr.getValues();
+  }
 }

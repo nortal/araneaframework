@@ -1,63 +1,252 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+ * Here are described the resources of Aranea JSP that can be imported using
+ * <ui:importStyles/> and <ui:importScripts/>. Style and script resources are
+ * separated by the "type" attribute.
+ * This file must be included in aranea*.jar.
+-->
+
 <resources>
-  <files content-type="text/css" group="defaultStyles">
-    <file path="css/aranea/aranea.css" />
-    <file path="css/calendar/calendar.css" />
-    <file path="css/contextmenu/contextmenu.css" />
-    <file path="css/modalbox/modalbox.css"/>
-    <file path="css/prototip/prototip.css"/>
-  </files>
 
-  <files content-type="text/javascript" group="defaultScripts">
-    <file path="js/behaviour/behaviour.js" />
+<!-- ============================================================ -->
+<!--                        Style groups                          -->
+<!-- ============================================================ -->
 
-    <file path="js/prototype/prototype.js" />
-    
-    <file path="js/aranea/aranea-locale.js" />
-    <file path="js/aranea/aranea.js" />
-    <file path="js/aranea/aranea-ui.js" />
-    <file path="js/aranea/aranea-contextmenu.js"/>
+	<files content-type="text/css" group="all.css">
+		<file path="css/aranea/aranea.css" />
+		<file path="css/aranea/comboselect.css" />
+		<file path="css/calendar/calendar.css" />
+		<file path="css/contextmenu/contextmenu.css" />
+		<file path="css/modalbox/modalbox.css" />
+		<file path="css/prototip/prototip.css" />
+	</files>
 
-    <file path="js/aranea/aranea-keyboard.js" />
-    <file path="js/aranea/aranea-util.js" />
-    <file path="js/aranea/aranea-tree.js" />
-    <file path="js/aranea/aranea-behaviour.js" />
-    <file path="js/aranea/aranea-popups.js" />
-    <file path="js/aranea/aranea-modalbox.js" />
+	<files content-type="text/css" group="aranea.css">
+		<file path="css/aranea/aranea.css" />
+		<file path="css/aranea/comboselect.css" />
+	</files>
 
-    <file path="js/scriptaculous/builder.js" />
-    <file path="js/scriptaculous/effects.js" />
-    <file path="js/scriptaculous/controls.js" />
+	<files content-type="text/css" group="calendar.css">
+		<file path="css/calendar/calendar.css" />
+	</files>
 
-    <file path="js/calendar/calendar.js" />
-    <file path="js/calendar/calendar-en.js" />
-    <file path="js/calendar/calendar-setup.js" />
+	<files content-type="text/css" group="contextmenu.css">
+		<file path="css/contextmenu/contextmenu.css" />
+	</files>
 
-    <file path="js/modalbox/modalbox.js"/>
+	<files content-type="text/css" group="modalbox.css">
+		<file path="css/modalbox/modalbox.css" />
+	</files>
 
-    <file path="js/prototip/prototip.js"/>
-  </files>
+	<files content-type="text/css" group="prototip.css">
+		<file path="css/prototip/prototip.css" />
+	</files>
 
-  <files content-type="text/javascript" group="debugScripts">
-    <file path="js/log4javascript/log4javascript.js" />
-  </files>
-  
-  <!-- other scripts that should not be omnipresent but which must be accessible to fileimporter -->
-  <files content-type="text/javascript">
-    <file path="js/calendar/calendar-et.js"/>
-    <file path="js/rsh/rsh.js" />
-    <file path="js/aranea/aranea-rsh.js"/>
-  </files>
+<!-- ============================================================ -->
+<!--                       Script groups                          -->
+<!-- ============================================================ -->
 
-  <files content-type="text/javascript" group="aranea-rsh">
-    <file path="js/rsh/rsh.js" />
-    <file path="js/aranea/aranea-rsh.js"/>
-  </files>
+	<files content-type="text/javascript" group="all.js">
+		<file path="js/rsh/rsh.js" />
+		<file path="js/prototype/prototype.js" />
+		<file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
+		<file path="js/aranea/aranea-locale.js" />
+		<file path="js/aranea/aranea.js" />
+		<file path="js/aranea/aranea-ui.js" />
+		<file path="js/aranea/aranea-contextmenu.js" />
+		<file path="js/aranea/aranea-keyboard.js" />
+		<file path="js/aranea/aranea-util.js" />
+		<file path="js/aranea/aranea-tree.js" />
+		<file path="js/aranea/aranea-behaviour.js" />
+		<file path="js/aranea/aranea-popups.js" />
+		<file path="js/aranea/aranea-rsh.js" />
+		<file path="js/aranea/aranea-modalbox.js" />
+		<file path="js/aranea/aranea-ajaxupload.js" />
+		<file path="js/modalbox/modalbox.js" />
+		<file path="js/prototip/prototip.js" />
+		<file path="js/calendar/calendar.js" />
+		<file path="js/calendar/calendar-en.js" />
+		<file path="js/calendar/calendar-setup.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
+	</files>
 
-  <files content-type="image/gif">
-    <file path="gfx/ico_calendar.gif" />
-    <file path="gfx/contextmenu/shade.gif" />
-    <file path="gfx/contextmenu/sub.gif" />
-    <file path="gfx/contextmenu/transparent.gif"/>
-  </files>
+	<files content-type="text/javascript" group="all-devel.js">
+		<file path="js/rsh/rsh.js" />
+		<file path="js/prototype/prototype.js" />
+		<file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
+		<file path="js/aranea/src/aranea-locale.js" />
+		<file path="js/aranea/src/aranea.js" />
+		<file path="js/aranea/src/aranea-ui.js" />
+		<file path="js/aranea/src/aranea-contextmenu.js" />
+		<file path="js/aranea/src/aranea-keyboard.js" />
+		<file path="js/aranea/src/aranea-util.js" />
+		<file path="js/aranea/src/aranea-tree.js" />
+		<file path="js/aranea/src/aranea-behaviour.js" />
+		<file path="js/aranea/src/aranea-popups.js" />
+		<file path="js/aranea/src/aranea-rsh.js" />
+		<file path="js/aranea/src/aranea-modalbox.js" />
+		<file path="js/aranea/src/aranea-ajaxupload.js" />
+		<file path="js/modalbox/modalbox.js" />
+		<file path="js/prototip/prototip.js" />
+		<file path="js/calendar/calendar.js" />
+		<file path="js/calendar/calendar-en.js" />
+		<file path="js/calendar/calendar-setup.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
+	</files>
+
+	<files content-type="text/javascript" group="core-all.js">
+		<file path="js/rsh/rsh.js" />
+		<file path="js/prototype/prototype.js" />
+        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
+		<file path="js/aranea/aranea-locale.js" />
+		<file path="js/aranea/aranea.js" />
+		<file path="js/aranea/aranea-ui.js" />
+		<file path="js/aranea/aranea-contextmenu.js" />
+		<file path="js/aranea/aranea-keyboard.js" />
+		<file path="js/aranea/aranea-util.js" />
+		<file path="js/aranea/aranea-tree.js" />
+		<file path="js/aranea/aranea-behaviour.js" />
+		<file path="js/aranea/aranea-popups.js" />
+		<file path="js/aranea/aranea-rsh.js" />
+		<file path="js/aranea/aranea-modalbox.js" />
+	</files>
+
+	<files content-type="text/javascript" group="core-all-devel.js">
+		<file path="js/rsh/rsh.js" />
+		<file path="js/prototype/prototype.js" />
+        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
+		<file path="js/aranea/src/aranea-locale.js" />
+		<file path="js/aranea/src/aranea.js" />
+		<file path="js/aranea/src/aranea-ui.js" />
+		<file path="js/aranea/src/aranea-contextmenu.js" />
+		<file path="js/aranea/src/aranea-keyboard.js" />
+		<file path="js/aranea/src/aranea-util.js" />
+		<file path="js/aranea/src/aranea-tree.js" />
+		<file path="js/aranea/src/aranea-behaviour.js" />
+		<file path="js/aranea/src/aranea-popups.js" />
+		<file path="js/aranea/src/aranea-rsh.js" />
+		<file path="js/aranea/src/aranea-modalbox.js" />
+	</files>
+
+	<files content-type="text/javascript" group="core.js">
+		<file path="js/prototype/prototype.js" />
+		<file path="js/aranea/aranea-locale.js" />
+		<file path="js/aranea/aranea.js" />
+		<file path="js/aranea/aranea-ui.js" />
+		<file path="js/aranea/aranea-keyboard.js" />
+		<file path="js/aranea/aranea-util.js" />
+		<file path="js/aranea/aranea-behaviour.js" />
+	</files>
+
+	<files content-type="text/javascript" group="core-devel.js">
+		<file path="js/prototype/prototype.js" />
+		<file path="js/aranea/src/aranea-locale.js" />
+		<file path="js/aranea/src/aranea.js" />
+		<file path="js/aranea/src/aranea-ui.js" />
+		<file path="js/aranea/src/aranea-keyboard.js" />
+		<file path="js/aranea/src/aranea-util.js" />
+		<file path="js/aranea/src/aranea-behaviour.js" />
+	</files>
+
+	<files content-type="text/javascript" group="calendar.js">
+		<file path="js/calendar/calendar.js" />
+		<file path="js/calendar/calendar-en.js" />
+		<file path="js/calendar/calendar-setup.js" />
+	</files>
+
+	<files content-type="text/javascript" group="calendar_et.js">
+		<file path="js/calendar/calendar.js" />
+		<file path="js/calendar/calendar-et.js" />
+		<file path="js/calendar/calendar-setup.js" />
+	</files>
+
+	<files content-type="text/javascript" group="modalbox.js">
+        <file path="js/aranea/aranea-modalbox.js" />
+        <file path="js/modalbox/modalbox.js" />
+	</files>
+
+	<files content-type="text/javascript" group="modalbox-devel.js">
+        <file path="js/aranea/src/aranea-modalbox.js" />
+        <file path="js/modalbox/modalbox.js" />
+	</files>
+
+	<files content-type="text/javascript" group="scriptaculous.js">
+        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/effects.js" />
+		<file path="js/scriptaculous/controls.js" />
+	</files>
+
+	<files content-type="text/javascript" group="popup.js">
+        <file path="js/aranea/aranea-popups.js" />
+	</files>
+
+	<files content-type="text/javascript" group="popup-devel.js">
+        <file path="js/aranea/src/aranea-popups.js" />
+	</files>
+
+	<files content-type="text/javascript" group="tree.js">
+        <file path="js/aranea/aranea-tree.js" />
+	</files>
+
+	<files content-type="text/javascript" group="tree-devel.js">
+        <file path="js/aranea/src/aranea-tree.js" />
+	</files>
+
+	<files content-type="text/javascript" group="rsh.js">
+		<file path="js/rsh/rsh.js" />
+		<file path="js/aranea/aranea-rsh.js" />
+	</files>
+
+	<files content-type="text/javascript" group="rsh-devel.js">
+		<file path="js/rsh/rsh.js" />
+		<file path="js/aranea/src/aranea-rsh.js" />
+	</files>
+
+	<files content-type="text/javascript" group="ajaxupload.js">
+		<file path="js/aranea/aranea-ajaxupload.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
+	</files>
+
+	<files content-type="text/javascript" group="ajaxupload-devel.js">
+		<file path="js/aranea/src/aranea-ajaxupload.js" />
+		<file path="js/ajaxupload/ajaxupload.js" />
+	</files>
+
+	<files content-type="text/javascript" group="prototip.js">
+		<file path="js/prototip/prototip.js" />
+	</files>
+
+	<files content-type="text/javascript" group="logger.js">
+		<file path="js/log4javascript/log4javascript.js" />
+	</files>
+
+	<!--
+		Other scripts that should not be omnipresent but which must be
+		accessible to fileimporter.
+	-->
+
+	<files content-type="text/javascript">
+		<file path="js/tiny_mce/tiny_mce.js" />
+		<file path="js/tiny_mce/tiny_mce_src.js" />
+		<file path="js/tiny_mce/tiny_mce_popup.js" />
+		<file path="js/behaviour/behaviour.js" />
+	</files>
+
+	<files content-type="image/gif">
+		<file path="gfx/ico_calendar.gif" />
+		<file path="gfx/contextmenu/shade.gif" />
+		<file path="gfx/contextmenu/sub.gif" />
+		<file path="gfx/contextmenu/transparent.gif" />
+		<file path="gfx/modalbox/spinner.gif" />
+	</files>
+
 </resources>

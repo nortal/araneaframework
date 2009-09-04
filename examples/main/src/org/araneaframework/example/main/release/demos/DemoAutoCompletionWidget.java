@@ -26,21 +26,27 @@ public class DemoAutoCompletionWidget extends TemplateBaseWidget {
     form = new FormWidget();
     
     AutoCompleteTextControl actc = new AutoCompleteTextControl();
-    actc.setDataProvider(new DemoACDataProvider(new LocalizationContextProvider() {
-		public LocalizationContext getL10nCtx() {
-			return DemoAutoCompletionWidget.this.getL10nCtx();
-		}
-    }));
-    actc.addOnChangeEventListener(
-    	new OnChangeEventListener() {
-    		public void onChange() throws Exception {
-    			form.convertAndValidate();
-    			getMessageCtx().showInfoMessage(
-    					t("release.ac.onchangetext") +" " + form.getValueByFullName("acinput") 
-    			);
-    		}
-    	}
-    );
+    actc.setDataProvider(new DemoACDataProvider(
+        new LocalizationContextProvider() {
+
+          private static final long serialVersionUID = 1L;
+
+          public LocalizationContext getL10nCtx() {
+            return DemoAutoCompletionWidget.this.getL10nCtx();
+          }
+        }));
+
+    actc.addOnChangeEventListener(new OnChangeEventListener() {
+
+      private static final long serialVersionUID = 1L;
+
+      public void onChange() throws Exception {
+        form.convertAndValidate();
+        getMessageCtx().showInfoMessage(
+            t("release.ac.onchangetext") + " "
+                + form.getValueByFullName("acinput"));
+      }
+    });
 
     form.addElement("acinput", "common.Country", actc, new StringData(), false);
 

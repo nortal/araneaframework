@@ -75,7 +75,7 @@ public class DemoFormList extends TemplateBaseWidget {
 		addWidget("editableList", formList);
 	}
 	
-	public void handleEventReturn(String param) throws Exception {
+	public void handleEventReturn() throws Exception {
 		getFlowCtx().cancel();
 	}
 

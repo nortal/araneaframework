@@ -16,13 +16,22 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.NoSuchNarrowableException;
 import org.araneaframework.framework.FileUploadContext;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -33,13 +42,24 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class FileUploadControl extends BaseControl<FileInfo> {
-  protected List<String> permittedMimeFileTypes;
+public class FileUploadControl extends BaseControl {
+
+  private static final Log log = LogFactory.getLog(FileUploadControl.class);
+
+  public static final String LISTENER_NAME = "fileUpload";
+
+  protected List permittedMimeFileTypes;
   
   protected boolean uploadSucceeded = true;
   protected boolean mimeTypePermitted = true;
+  protected boolean ajaxRequest;
+  protected List ajaxMessages = new LinkedList();
 
-  @Override
+  protected void init() throws Exception {
+    super.init();
+    addActionListener(LISTENER_NAME, new FileUploadActionListener());
+  }
+
   public boolean isRead() {
     return innerData != null;
   }
@@ -50,7 +70,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
    * @param permittedMimeFileTypes
    *          the MIME file types that will be permitted.
    */
-  public void setPermittedMimeFileTypes(List<String> permittedMimeFileTypes) {
+  public void setPermittedMimeFileTypes(List permittedMimeFileTypes) {
     this.permittedMimeFileTypes = permittedMimeFileTypes;
   }
 
@@ -63,6 +83,13 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     return "FileInfo";
   }
 
+  protected void addError(String error) {
+    if (this.ajaxRequest) {
+      this.ajaxMessages.add(error);
+    } else {
+      super.addError(error);
+    }
+  }
   // *********************************************************************
   // * INTERNAL METHODS
   // *********************************************************************
@@ -77,7 +104,6 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   /**
    * Reads the {@link FileInfo}data from request {@link HttpInputData}.
    */
-  @Override
   protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = getFileUploadInputExtension(request);
     // this is acceptable, see comments in getFileUploadInputExtension()
@@ -113,7 +139,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     // FileUploadInputExtension extension does not exist in InputData which is
     // extended only when request is multipart, while cloning filter always sends ordinary GET.
     try {
-      fileUpload = request.narrow(FileUploadInputExtension.class);
+      fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
     }
     catch (NoSuchNarrowableException e) {
       // If no fileupload extension is present and fileupload filter is enabled, control should
@@ -122,9 +148,8 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     return fileUpload;
   }
 
-  @Override
   public void convert() {
-    value = (FileInfo) innerData;
+    value = innerData;
     
     if (!uploadSucceeded) {
       Long sizeLimit = (getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
@@ -137,7 +162,6 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     }
   }
 
-  @Override
   public void validate() {
     boolean fieldFilled = false;
     FileInfo info = (FileInfo)innerData;
@@ -168,11 +192,48 @@ public class FileUploadControl extends BaseControl<FileInfo> {
    * 
    * @return {@link ViewModel}.
    */
-  @Override
-  public ViewModel getViewModel() {
+  public Object getViewModel() {
     return new ViewModel();
   }
 
+  /**
+   * The default implementation for AJAX file upload listener.
+   * @since 1.2.2
+   */
+  protected class FileUploadActionListener implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+      FileInfo file = (FileInfo) innerData;
+      ajaxRequest = true;
+      convertAndValidate();
+
+      if (file == null || file.getSize() == 0) {
+        log.debug("Did not get a file!");
+        PrintWriter out = ServletUtil.getResponse(output).getWriter();
+        out.write("FAIL");
+
+        if (!ajaxMessages.isEmpty()) {
+          out.print("(");
+          for (Iterator i = ajaxMessages.iterator(); i.hasNext(); ) {
+            out.print(i.next());
+            if (i.hasNext()) {
+              out.print("\n");
+            }
+          }
+          out.print(")");
+          ajaxMessages.clear();
+        }
+
+        ajaxRequest = false;
+      } else {
+        log.debug("Got file '" + file.getOriginalFilename() + "'");
+        ServletUtil.getResponse(output).getWriter().write("OK");
+      }
+    }
+  }
+  
   // *********************************************************************
   // * VIEW MODEL
   // *********************************************************************
@@ -180,9 +241,9 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
-  public class ViewModel extends BaseControl<FileInfo>.ViewModel {
+  public class ViewModel extends BaseControl.ViewModel {
 
-    private List<String> permittedMimeFileTypes;
+    private List permittedMimeFileTypes;
 
     /**
      * Takes an outer class snapshot.
@@ -196,7 +257,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
      * 
      * @return the MIME file types that will be permitted.
      */
-    public List<String> getPermittedMimeFileTypes() {
+    public List getPermittedMimeFileTypes() {
       return permittedMimeFileTypes;
     }
   }

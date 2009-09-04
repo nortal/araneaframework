@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +34,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
@@ -57,15 +58,15 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * A list of registered tags.
    */
-  private Set<ContainedTagInterface> registeredTags;
+  private Set registeredTags;
 
   /**
    * Map: scope -> (Map: key -> backup attribute value)
    */ 
-  private Map<Integer, Map<String, Object>> attributeBackup;
+  private Map attributeBackup;
 
-  private Set<String> globalContextEntries;
-  private Map<String, Object> hiddenContextEntries;
+  private Set globalContextEntries;
+  private Map hiddenContextEntries;
   public static final String GLOBAL_CONTEXT_ENTRIES_KEY = "org.araneaframework.jsp.tag.BaseTag.GLOBAL_CONTEXT_ENTRIES";
 
   /* ***********************************************************************************
@@ -79,14 +80,14 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
     this.pageContext = pageContext;
 
     // Internal initialization
-    registeredTags = new HashSet<ContainedTagInterface>(); 
-    attributeBackup = new HashMap<Integer, Map<String, Object>>();
+    registeredTags = new HashSet(); 
+    attributeBackup = new HashMap();
   }
 
   /**
    * Start tag.
    */
-  public final int doStartTag() throws JspException{
+  public final int doStartTag() throws JspException {
     try {
       return doStartTag(pageContext.getOut());
     }
@@ -104,7 +105,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * End tag
    */	
-  public final int doEndTag() throws JspException{
+  public final int doEndTag() throws JspException {
     try {
       return doEndTag(pageContext.getOut());
     }
@@ -180,7 +181,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Read attribute value in PageContext.REQUEST_SCOPE and ensure that it is defined.
    * @throws JspException when entry corresponding to key is not found
    */
-  protected Object requireContextEntry(String key) throws JspException{
+  protected Object requireContextEntry(String key) throws JspException {
     return JspUtil.requireContextEntry(pageContext, key);
   }
 
@@ -189,7 +190,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * executing this action.
    */
   protected void addContextEntry(String key, Object value) {
-    Map<String, Object> attributeBackupMap = getBackupContextEntryMap(PageContext.REQUEST_SCOPE);	
+    Map attributeBackupMap = getBackupContextEntryMap(PageContext.REQUEST_SCOPE);	
 
     // Backup value
     Object currentAttribute = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
@@ -211,8 +212,8 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * Evaluates attribute value and checks that it is not null.
    */
-  protected <T> T evaluateNotNull(String attributeName, String attributeValue, Class<T> classObject) throws JspException{
-    T value = evaluate(attributeName, attributeValue, classObject);
+  protected Object evaluateNotNull(String attributeName, String attributeValue, Class classObject) throws JspException {
+    Object value = evaluate(attributeName, attributeValue, classObject);
     if (value == null)
       throw new AraneaJspException("Attribute '" + attributeName + "' should not evaluate to null");
     return value;
@@ -221,19 +222,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * Evaluates attribute value.
    */
-  @SuppressWarnings("unchecked")
-  protected <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject) {
-    try {
-      return (T) ExpressionEvaluatorManager.evaluate(
-          attributeName, 
-          attributeValue, 
-          classObject, 
-          this, 
-          pageContext
-      );
-    } catch (JspException e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
+  protected Object evaluate(String attributeName, String attributeValue, Class classObject) throws JspException {
+    return ConfigurationContextUtil.getResolver(getConfiguration()).evaluate(
+        attributeName, attributeValue, classObject, this.pageContext);
   }
 
   /* ***********************************************************************************
@@ -260,7 +251,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * Executes registered subtag.
    */
-  protected int executeSubtag(ContainedTagInterface subtag) throws JspException{
+  protected int executeSubtag(ContainedTagInterface subtag) throws JspException {
     int result = subtag.doStartTag();
     if (result == Tag.EVAL_BODY_INCLUDE)
       return subtag.doEndTag(); 
@@ -271,23 +262,23 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * Executes start of registered subtag.
    */
-  protected int executeStartSubtag(ContainedTagInterface subtag) throws JspException{
+  protected int executeStartSubtag(ContainedTagInterface subtag) throws JspException {
     return subtag.doStartTag();
   }
 
   /**
    * Executes end of registered subtag.
    */
-  protected int executeEndSubtag(ContainedTagInterface subtag) throws JspException{
+  protected int executeEndSubtag(ContainedTagInterface subtag) throws JspException {
     return subtag.doEndTag();
   }
 
-  protected int registerAndExecuteStartTag(ContainedTagInterface subtag) throws JspException{
+  protected int registerAndExecuteStartTag(ContainedTagInterface subtag) throws JspException {
     registerSubtag(subtag);
     return executeStartSubtag(subtag);
   }
 
-  protected int executeEndTagAndUnregister(ContainedTagInterface subtag) throws JspException{		
+  protected int executeEndTagAndUnregister(ContainedTagInterface subtag) throws JspException {		
     int result = executeEndSubtag(subtag);
     unregisterSubtag(subtag);
     return result;
@@ -298,7 +289,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   //
 
   protected ConfigurationContext getConfiguration() {
-    return getEnvironment().getEntry(ConfigurationContext.class);
+    return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
 
   /**
@@ -342,8 +333,8 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * PRIVATE internal method for releasing the subtags
    * ***********************************************************************************/	
   private void releaseTags() {
-    for (Iterator<ContainedTagInterface> i = registeredTags.iterator(); i.hasNext();) {
-      ContainedTagInterface subtag = i.next();
+    for (Iterator i = registeredTags.iterator(); i.hasNext();) {
+      ContainedTagInterface subtag = (ContainedTagInterface) i.next();
 
       subtag.doFinally();      
       subtag.release();
@@ -358,13 +349,13 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * Get backup attribute map for given scope. 
    */
-  private Map<String, Object> getBackupContextEntryMap(int scope) {
+  private Map getBackupContextEntryMap(int scope) {
     if (attributeBackup == null)
-      attributeBackup = new HashMap<Integer, Map<String, Object>>();
+      attributeBackup = new HashMap();
 
-    Map<String, Object> map = attributeBackup.get(new Integer(scope));
+    Map map =(Map) attributeBackup.get(new Integer(scope));
     if (map == null) {
-      map = new HashMap<String, Object>();
+      map = new HashMap();
       attributeBackup.put(new Integer(scope), map);
     }
     return map;
@@ -376,17 +367,19 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   private void restoreAllContextEntries() {
     if (attributeBackup == null) return;
 
-    for (Map.Entry<Integer, Map<String, Object>> attributeBackupEntry : attributeBackup.entrySet()) {
-      int scope = attributeBackupEntry.getKey().intValue();
-      Map<String, Object> attributeBackupMap = attributeBackupEntry.getValue();
+    for(Iterator i = attributeBackup.entrySet().iterator(); i.hasNext();) {
+      Map.Entry attributeBackupEntry = (Map.Entry)i.next();
+      int scope = ((Integer)attributeBackupEntry.getKey()).intValue();
+      Map attributeBackupMap = (Map)attributeBackupEntry.getValue();
 
-      for (Map.Entry<String, Object> entry2 : attributeBackupMap.entrySet()) {
+      for(Iterator j = attributeBackupMap.entrySet().iterator(); j.hasNext();) {
+        Map.Entry entry2 = (Map.Entry)j.next();
         Object oldAttribute = entry2.getValue();
-        setGlobalContextEntry(entry2.getKey(), oldAttribute);
+        setGlobalContextEntry((String)entry2.getKey(), oldAttribute);
         if (oldAttribute != null)
-          pageContext.setAttribute(entry2.getKey(), oldAttribute, scope);
+          pageContext.setAttribute((String)entry2.getKey(), oldAttribute, scope);
         else
-          pageContext.removeAttribute(entry2.getKey(), scope);
+          pageContext.removeAttribute((String)entry2.getKey(), scope);
       }
     }
 
@@ -398,7 +391,6 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Hiding and restoring contextentries when a child widget is rendered
    * ***********************************************************************************/
 
-  @SuppressWarnings("unchecked")
   private void setGlobalContextEntry(String key, Object value) {
     if (hiddenContextEntries != null) {
       hiddenContextEntries = null;
@@ -409,9 +401,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
         globalContextEntries.remove(key);
     } else {
       if (globalContextEntries == null) {
-        globalContextEntries = (Set<String>) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
+        globalContextEntries = (Set) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
         if (globalContextEntries == null) {
-          globalContextEntries = new HashSet<String>();
+          globalContextEntries = new HashSet();
           addContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY, globalContextEntries);
           // Hide contextentries that are set in ServletUtil.include
           globalContextEntries.add(ServletUtil.UIWIDGET_KEY);
@@ -431,19 +423,18 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   /**
    * @since 1.1
    */
-  @SuppressWarnings("unchecked")
   protected void hideGlobalContextEntries(PageContext pageContext) {
     if (globalContextEntries == null)
-      globalContextEntries = (Set<String>) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
+      globalContextEntries = (Set) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
     if (globalContextEntries == null || globalContextEntries.size() == 0)
       return;
     if (hiddenContextEntries != null) {
       hiddenContextEntries = null;
       throw new AraneaRuntimeException("ContextEntries were not restored properly");
     }
-    hiddenContextEntries = new HashMap<String, Object>();
-    for (Iterator<String> i = globalContextEntries.iterator(); i.hasNext(); ) {
-      String key = i.next();
+    hiddenContextEntries = new HashMap();
+    for (Iterator i = globalContextEntries.iterator(); i.hasNext(); ) {
+      String key = (String) i.next();
       Object value = pageContext.getAttribute(key, PageContext.REQUEST_SCOPE);
       if (value != null) {
         hiddenContextEntries.put(key, value);
@@ -458,8 +449,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   protected void restoreGlobalContextEntries(PageContext pageContext) {
     if (hiddenContextEntries == null)
       return;
-    for (Map.Entry<String, Object> entry : hiddenContextEntries.entrySet()) {
-      pageContext.setAttribute(entry.getKey(), entry.getValue(), PageContext.REQUEST_SCOPE);
+    for (Iterator i = hiddenContextEntries.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      pageContext.setAttribute((String) entry.getKey(), entry.getValue(), PageContext.REQUEST_SCOPE);
     }
     hiddenContextEntries = null;
   }

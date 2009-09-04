@@ -39,10 +39,9 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
    * @since 1.1 */
   protected String id;
 
-  protected List<String> cellClasses;
+  protected List cellClasses;
   private ResettableIterator cellIter;
 
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -53,20 +52,14 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
     return EVAL_BODY_INCLUDE;
   }
   
-  public String getCellClass(){
+  public String getCellClass() {
     return cellIter.hasNext() ? (String)cellIter.next() : null;
   }
 
-  @Override
-  public String getStyleClass(){
+  public String getStyleClass() {
     cellIter.reset();
     RowClassProvider rowClassProvider = (RowClassProvider)getContextEntry(RowClassProvider.KEY);
-    String result = null;
-    try {
-      result = rowClassProvider != null? rowClassProvider.getRowClass():null;
-    } catch (JspException e) {
-      //Do nothing
-    }
+    String result = rowClassProvider != null? rowClassProvider.getRowClass():null;
     result = (result != null && result.length() == 0) ? null : result;
 
     String superStyleClass = super.getStyleClass();
@@ -91,8 +84,8 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
    *   required = "false"
    *   description = "Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout."
    */
-  public void setCellClasses(String cellClasses){
-    this.cellClasses = JspUtil.parseMultiValuedAttribute(evaluate("cellClasses", cellClasses, String.class));
+  public void setCellClasses(String cellClasses) throws JspException {
+    this.cellClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
   }
   
   /**
@@ -101,8 +94,8 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
    *   required = "false"
    *   description = "Whether row's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass."
    */
-  public void setOverrideLayout(String overrideLayout){
-    this.overrideLayout = (evaluate("overrideLayout", overrideLayout, Boolean.class)).booleanValue();
+  public void setOverrideLayout(String overrideLayout) throws JspException {
+    this.overrideLayout = ((Boolean)evaluate("overrideLayout", overrideLayout, Boolean.class)).booleanValue();
   }
   
   /**
@@ -112,7 +105,7 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
    *   description = "HTML id of this row."
    * @since 1.1
    */
-  public void setId(String id){
-    this.id =evaluate("id", id, String.class);
+  public void setId(String id) throws JspException {
+    this.id =(String)evaluate("id", id, String.class);
   }
 }

@@ -35,13 +35,11 @@ import org.araneaframework.jsp.util.JspUtil;
 public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
 	public static final String EDITOR_SELECTOR = "richTextEditor";
 
-	@Override
-  protected String getStyleClass() {
+	protected String getStyleClass() {
 		return EDITOR_SELECTOR;
 	}
 
-	@Override
-  protected int doStartTag(Writer out) throws Exception {
+	protected int doStartTag(Writer out) throws Exception {
 		initializeRichEditor(out);
 		
 		return super.doStartTag(out);

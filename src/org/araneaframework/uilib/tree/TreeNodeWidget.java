@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.tree;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -50,13 +51,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private boolean collapsed = true;
   private boolean collapsedDecide = false;
   private Widget initDisplay;
-  private List<TreeNodeWidget> initNodes;
+  private List initNodes;
   private TreeNodeWidget parentNode;
   private int index = -1;
   private int nextChildIndex = 0;
-  private List<ChildNodeWrapper> childNodeWrappers;
+  private List childNodeWrappers;
 
   private static class ChildNodeWrapper implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private TreeNodeWidget node;
     private String widgetId;
@@ -104,7 +107,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * @param nodes
    *          list of {@link TreeNodeWidget}s added as children.
    */
-  public TreeNodeWidget(Widget display, List<TreeNodeWidget> nodes) {
+  public TreeNodeWidget(Widget display, List nodes) {
     this(display, nodes, true);
     collapsedDecide = true;
   }
@@ -120,14 +123,13 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
    * @param collapsed
    *          if tree node will be collapsed (children hidden) by default.
    */
-  public TreeNodeWidget(Widget display, List<TreeNodeWidget> nodes, boolean collapsed) {
+  public TreeNodeWidget(Widget display, List nodes, boolean collapsed) {
     this(display);
     Assert.notNullParam(nodes, "nodes");
     initNodes = nodes;
     this.collapsed = collapsed;
   }
 
-  @Override
   protected void init() throws Exception {
     Assert.notNull(parentNode, "parentNode must be set");
     Assert.isTrue(index > -1, "index must be set");
@@ -154,8 +156,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleEventListener extends StandardEventListener {
     private static final long serialVersionUID = 1L;
 
-    @Override
-    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       toggleCollapsed();
     }
   }
@@ -163,8 +164,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleActionListener extends StandardActionListener {
     private static final long serialVersionUID = 1L;
 
-    @Override
-    public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam,
+        InputData input, OutputData output) throws Exception {
       toggleCollapsed();
       render(output);
     }
@@ -175,11 +176,11 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected TreeContext getTreeCtx() {
-    return getEnvironment().getEntry(TreeContext.class);
+    return UilibEnvironmentUtil.getTreeContext(getEnvironment());
   }
 
   // returns List<TreeNodeWidget>
-  protected List<TreeNodeWidget> loadChildren() {
+  protected List loadChildren() {
     if (getTreeCtx().getDataProvider() != null) {
       return getTreeCtx().getDataProvider().getChildren(this);
     }
@@ -208,7 +209,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
       }
     } else {
       if (!hasNodes()) {
-        List<TreeNodeWidget> children = loadChildren();
+        List children = loadChildren();
         if (children != null)
           addAllNodes(children);
       }
@@ -228,7 +229,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   public int addNode(TreeNodeWidget node) {
     Assert.notNullParam(node, "node");
     if (childNodeWrappers == null)
-      childNodeWrappers = new ArrayList<ChildNodeWrapper>();
+      childNodeWrappers = new ArrayList();
 
     int nodeIndex = childNodeWrappers.size();
     String widgetId = Integer.toString(nextChildIndex++);
@@ -245,7 +246,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     Assert.notNullParam(node, "node");
     Assert.isTrue(nodeIndex >= 0 && nodeIndex < getNodeCount(), "nodeIndex must be >= 0 and less than nodeCount");
     if (childNodeWrappers == null)
-      childNodeWrappers = new ArrayList<ChildNodeWrapper>();
+      childNodeWrappers = new ArrayList();
 
     String widgetId = Integer.toString(nextChildIndex++);
 
@@ -274,10 +275,10 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return nodeWrapper.getNode();
   }
 
-  public void addAllNodes(List<TreeNodeWidget> nodes) {
+  public void addAllNodes(List nodes) {
     Assert.notNullParam(nodes, "nodes");
-    for (TreeNodeWidget element : nodes) {
-      addNode(element);
+    for (Iterator i = nodes.iterator(); i.hasNext(); ) {
+      addNode((TreeNodeWidget) i.next());
     }
   }
 
@@ -285,8 +286,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     if (childNodeWrappers == null)
       return;
 
-    for (Iterator<ChildNodeWrapper> i = childNodeWrappers.iterator(); i.hasNext(); ) {
-      ChildNodeWrapper nodeWrapper = i.next();
+    for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
+      ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
       removeWidget(nodeWrapper.getWidgetId());
     }
     childNodeWrappers.clear();
@@ -303,15 +304,15 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected ChildNodeWrapper getNodeWrapper(int nodeIndex) {
-    return childNodeWrappers.get(nodeIndex);
+    return (ChildNodeWrapper) childNodeWrappers.get(nodeIndex);
   }
 
   // returns List<TreeNodeWidget>
-  public List<TreeNodeWidget> getNodes() {
-    List<TreeNodeWidget> nodes = new ArrayList<TreeNodeWidget>(getNodeCount());
+  public List getNodes() {
+    List nodes = new ArrayList(getNodeCount());
     if (childNodeWrappers != null) {
-      for (Iterator<ChildNodeWrapper> i = childNodeWrappers.iterator(); i.hasNext(); ) {
-        ChildNodeWrapper nodeWrapper = i.next();
+      for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
+        ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
         nodes.add(nodeWrapper.getNode());
       }
     }
@@ -361,7 +362,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   // RENDERING METHODS
   //*******************************************************************  
 
-  @Override
   protected void render(OutputData output) throws Exception {
     TreeRenderer renderer = getTreeCtx().getRenderer();
     Assert.notNull(renderer, "renderer must be set");
@@ -386,8 +386,8 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
         renderer.renderChildrenStart(out, this);
       }
       if (!isCollapsed() && hasNodes()) {
-        for (Iterator<ChildNodeWrapper> i = childNodeWrappers.iterator(); i.hasNext(); ) {
-          ChildNodeWrapper nodeWrapper = i.next();
+        for (Iterator i = childNodeWrappers.iterator(); i.hasNext(); ) {
+          ChildNodeWrapper nodeWrapper = (ChildNodeWrapper) i.next();
           TreeNodeWidget node = nodeWrapper.getNode();
           renderer.renderChildStart(out, this, node);
           out.flush();
@@ -404,14 +404,14 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   protected void renderDisplayPrefixRecursive(Writer out, TreeRenderer renderer) throws Exception {
-    LinkedList<TreeNodeContext> parents = new LinkedList<TreeNodeContext>();
+    LinkedList parents = new LinkedList();
     TreeNodeContext parent = getParentNode();
     while (parent != null) {
       parents.addFirst(parent);
       parent = parent.getParentNode();
     }
-    for (Iterator<TreeNodeContext> i = parents.iterator(); i.hasNext(); ) {
-      renderer.renderDisplayPrefix(out, i.next(), false);
+    for (Iterator i = parents.iterator(); i.hasNext(); ) {
+      renderer.renderDisplayPrefix(out, (TreeNodeContext) i.next(), false);
     }
     renderer.renderDisplayPrefix(out, this, true);
   }

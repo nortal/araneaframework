@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -48,23 +48,22 @@ public class MessagesHtmlTag extends PresentationTag {
     baseStyleClass = "aranea-messages";
   }
 
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     return SKIP_BODY;
   }
 
-  @Override
   protected int doEndTag(Writer out) throws Exception {
     super.doEndTag(out);
 
     MessageContext messageContext = getEnvironment().requireEntry(MessageContext.class);
-    Map<String, Collection<String>> messageMap = messageContext.getMessages();
+    Map messageMap = messageContext.getMessages();
 
-    List<Entry<String, Collection<String>>> entries = new ArrayList<Entry<String, Collection<String>>>();
+    List entries = new ArrayList();
     if (messageMap != null) {
-      for (Map.Entry<String, Collection<String>> entry : messageMap.entrySet()) {
-        if (type == null || entry.getKey().equals(type)) {
+      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        if (type == null || ((String)entry.getKey()).equals(type)) {
           entries.add(entry);
         }
       }
@@ -81,7 +80,7 @@ public class MessagesHtmlTag extends PresentationTag {
   /**
    * @since 1.1
    */
-  protected void writeMessagesStart(Writer out, List<Entry<String, Collection<String>>> entries) throws Exception {
+  protected void writeMessagesStart(Writer out, List entries) throws Exception {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", getDivId());
     JspUtil.writeAttribute(out, "class", getStyleClass());
@@ -96,19 +95,19 @@ public class MessagesHtmlTag extends PresentationTag {
   /**
    * @since 1.1
    */
-  protected void writeMessagesEnd(Writer out, List<Entry<String, Collection<String>>> entries) throws Exception {
+  protected void writeMessagesEnd(Writer out, List entries) throws Exception {
     JspUtil.writeEndTag(out, "div");
   }
 
   /**
    * @since 1.1
    */
-  protected void writeMessages(Writer out, List<Entry<String, Collection<String>>> entries) throws Exception {
-    for (Iterator<Entry<String, Collection<String>>> i = entries.iterator(); i.hasNext(); ) {
-      Collection<String> messages = i.next().getValue();
+  protected void writeMessages(Writer out, List entries) throws Exception {
+    for (Iterator i = entries.iterator(); i.hasNext(); ) {
+      Collection messages = (Collection) ((Map.Entry) i.next()).getValue();
 
-      for (Iterator<String> j = messages.iterator(); j.hasNext();) {
-        writeMessageBody(out, j.next());
+      for (Iterator j = messages.iterator(); j.hasNext();) {
+        writeMessageBody(out, (String) j.next());
         if (j.hasNext())
           writeMessageSeparator(out);
       }
@@ -149,8 +148,8 @@ public class MessagesHtmlTag extends PresentationTag {
    * required = "false"
    * description = "Type of messages to show."
    */
-  public void setType(String type){
-    this.type = evaluate("type", type, String.class);
+  public void setType(String type) throws JspException {
+    this.type = (String) evaluate("type", type, String.class);
   }
   
   /**
@@ -161,8 +160,8 @@ public class MessagesHtmlTag extends PresentationTag {
    * 
    * @since 1.1
    */
-  public void setDivId(String divId){
-    this.divId = evaluate("divId", divId, String.class);
+  public void setDivId(String divId) throws JspException {
+    this.divId = (String) evaluate("divId", divId, String.class);
   }
 
   /**

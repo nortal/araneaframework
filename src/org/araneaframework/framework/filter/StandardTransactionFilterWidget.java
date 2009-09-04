@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.framework.filter;
 
@@ -36,9 +36,13 @@ import org.araneaframework.framework.util.TransactionHelper;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardTransactionFilterWidget extends BaseFilterWidget implements TransactionContext {
+public class StandardTransactionFilterWidget extends BaseFilterWidget
+  implements TransactionContext {
 
-  private static final Log log = LogFactory.getLog(StandardTransactionFilterWidget.class);
+  private static final long serialVersionUID = 1L;
+
+  private static final Log log = LogFactory.getLog(
+      StandardTransactionFilterWidget.class);
 
   private TransactionHelper transHelper;
 
@@ -55,13 +59,13 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   @Override
   protected void init() throws Exception {
     transHelper = new TransactionHelper();
-
     super.init();
   }
 
   @Override
   protected Environment getChildWidgetEnvironment() {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(), TransactionContext.class, this);
+    return new StandardEnvironment(super.getChildWidgetEnvironment(),
+        TransactionContext.class, this);
   }
 
   @Override
@@ -75,9 +79,9 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     consistent = isConsistent(input);
     if (isConsistent()) {
       childWidget._getWidget().update(input);
-    }
-    else {
-      log.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing update().");
+    } else {
+      log.debug("Transaction id '" + getTransactionId(input)
+          + "' not consistent for routing update().");
     }
   }
 
@@ -85,9 +89,9 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   protected void event(Path path, InputData input) throws Exception {
     if (isConsistent()) {
       childWidget._getWidget().event(path, input);
-    }
-    else {
-      log.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing event().");
+    } else {
+      log.debug("Transaction id '" + getTransactionId(input)
+          + "' not consistent for routing event().");
     }
   }
 
@@ -98,14 +102,18 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    */
   @Override
   protected void render(OutputData output) throws Exception {
-    // CONFIRM: when transactionid was overriden in request, new transaction id should not be generated
-    if (transHelper.getCurrentTransactionId() == null || !transHelper.isOverride(getTransactionId(getInputData())))
+    // CONFIRM: when transactionid was overriden in request, new transaction id
+    // should not be generated
+    if (transHelper.getCurrentTransactionId() == null
+        || !transHelper.isOverride(getTransactionId(getInputData()))) {
       transHelper.resetTransactionId();
+    }
 
     SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
 
     log.debug("New transaction id '" + getTransactionId() + "'.");
+
     childWidget._getWidget().render(output);
   }
 
@@ -131,7 +139,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   protected Object getTransactionId(InputData input) throws Exception {
     return input.getGlobalData().get(TransactionContext.TRANSACTION_ID_KEY);
   }
-  
+
   public Long getNextTransactionId() {
     return transHelper.getNextTransactionId();
   }

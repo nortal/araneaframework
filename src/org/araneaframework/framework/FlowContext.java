@@ -86,7 +86,7 @@ public interface FlowContext extends Serializable {
   public void finish(Object result);
   
   /**
-   * Finished the current flow passing control back to the calling flow. 
+   * Finishes the current flow passing control back to the calling flow. 
    * Should be interpreted by the calling flow as a unsuccessful return. 
    */
   public void cancel();  
@@ -136,10 +136,13 @@ public interface FlowContext extends Serializable {
   void setTransitionHandler(TransitionHandler handler);
 
   /**
-   * Returns currently active <code>FlowContext.TransitionHandler</code>.
+   * Returns currently active <code>FlowContext.TransitionHandler</code>. If the
+   * most current child is a {@link FlowContextWidget}, it will take its
+   * currenty active <code>FlowContext.TransitionHandler</code> (recursively)
+   * (since 1.2.2).
    * 
    * @since 1.1
-   */ 
+   */
   TransitionHandler getTransitionHandler();
 
   /**
@@ -164,7 +167,9 @@ public interface FlowContext extends Serializable {
    * @since 1.1
    */
   interface TransitionHandler extends Serializable {
+
     /**
+     * The implementation should handle the transition with given data.
      * @param eventType <code>FlowContext.START<code> .. <code>FlowContext.RESET<code>
      * @param activeFlow active flow at the moment of transition request
      * @param transition <code>Serializable</code> closure that needs to be executed for transition to happen

@@ -43,6 +43,6 @@ public class MenuWidget extends BaseMenuWidget {
 	      }        
 	      putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
 	      
-	      ServletUtil.include("/WEB-INF/jsp/menuError.jsp", this, output);		
+	      ServletUtil.include("/WEB-INF/jsp/error.jsp", this, output);		
 	}
 }

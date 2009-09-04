@@ -42,7 +42,7 @@ import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
  *   description = "Widget action url tag.<br/> 
            Makes available following page scope variables: 
            <ul>
-             <li><i>widgetActionUrl</i> - URL which points to widget's action.</li>
+             <li><i>widgetActionUrl</i> - URL which points to widget's action.
            </ul> "
  */
 public class WidgetActionUrlTag extends BaseWidgetTag {
@@ -51,15 +51,14 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
 
   protected String actionId;
 
-  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     addContextEntry(WIDGET_ACTION_URL_KEY, getWidgetActionUrl());
     return EVAL_BODY_INCLUDE;    
   }
 
-  protected String getWidgetActionUrl(){
-    Map<String, String> m = new HashMap<String, String>();
+  protected String getWidgetActionUrl() {
+    Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, EnvironmentUtil.requireThreadServiceId(getEnvironment()));
@@ -70,7 +69,6 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
     return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(((HttpInputData) getOutputData().getInputData()).getContainerURL(), m));
   }
 
-  @Override
   public void doFinally() {
     super.doFinally();
     actionId = null;
@@ -83,7 +81,7 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
    *   description = "Action id" 
    */
   public void setActionId(String actionId) throws JspException {
-    this.actionId = evaluateNotNull("actionId", actionId, String.class);
+    this.actionId = (String)evaluateNotNull("actionId", actionId, String.class);
   }
 
 }

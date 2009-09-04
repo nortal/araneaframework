@@ -1,6 +1,7 @@
 package org.araneaframework.uilib.event;
 
 import java.lang.reflect.Method;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
@@ -44,7 +45,7 @@ import org.araneaframework.uilib.form.reader.BeanFormReader;
  * @see ProxyOnChangeEventListener
  * @see ProxyOnClickEventListener
  */
-public final class ValidatingProxyEventListener<T> implements EventListener {
+public final class ValidatingProxyEventListener implements EventListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -54,7 +55,7 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
 
   private FormWidget form;
 
-  private Class<T> modelType;
+  private Class modelType;
 
   /**
    * Initializes this event listener with target widget (<code>eventTarget</code>)
@@ -68,11 +69,10 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
    * @param modelType The class of the data object.
    */
   public ValidatingProxyEventListener(Widget eventTarget, FormWidget form,
-      Class<T> modelType) {
+      Class modelType) {
     Assert.notNullParam(form, "form");
     Assert.notNullParam(eventTarget, "eventTarget");
     Assert.notNullParam(modelType, "modelType");
-
     this.eventTarget = eventTarget;
     this.form = form;
     this.modelType = modelType;
@@ -87,51 +87,48 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
    * @param eventTarget The target widget that has the event listeners
    * @param form The bean form widget that holds the data to collect.
    */
-  public ValidatingProxyEventListener(Widget eventTarget, BeanFormWidget<T> form) {
+  public ValidatingProxyEventListener(Widget eventTarget, BeanFormWidget form) {
     Assert.notNullParam(form, "form");
     Assert.notNullParam(eventTarget, "eventTarget");
-
     this.eventTarget = eventTarget;
     this.form = form;
     this.modelType = form.getBeanClass();
   }
 
-  public void processEvent(Object eventId, InputData input) throws Exception {
+  public void processEvent(String eventId, InputData input) throws Exception {
+
     if (!form.convertAndValidate()) {
       return;
     }
 
     BeanFormReader reader = new BeanFormReader(form);
-    T bean = reader.getBean(modelType);
-    String eventParameter = input.getGlobalData().get(
-        ApplicationWidget.EVENT_PARAMETER_KEY);
+    Object bean = reader.getBean(modelType);
+
+    String eventParameter = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
 
     String eventHandlerName = "handleEvent"
-        + ((String) eventId).substring(0, 1).toUpperCase()
-        + ((String) eventId).substring(1);
-
-    Method eventHandler;
+        + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
 
     // lets try to find a handle method with a bean argument
-    try {
-      eventHandler = ProxiedHandlerUtil.getEventHandler((String) eventId,
-          eventTarget, modelType);
+    Method eventHandler = ProxiedHandlerUtil.getEventHandler(eventId,
+        eventTarget, new Class[] { modelType });
 
+    if (eventHandler != null) {
       if (log.isDebugEnabled()) {
         log.debug("Calling method '" + eventHandlerName + "("
             + modelType.getName() + ")' of class '"
             + eventTarget.getClass().getName() + "'.");
       }
 
-      eventHandler.invoke(eventTarget, bean);
+      eventHandler.invoke(eventTarget, new Object[] { bean });
       return;
-    } catch (NoSuchMethodException e) {/* OK */}
+    }
 
     // lets try to find a method with a bean and a String type argument
-    try {
-      eventHandler = ProxiedHandlerUtil.getEventHandler((String) eventId,
-          eventTarget, modelType, String.class);
+    eventHandler = ProxiedHandlerUtil.getEventHandler(eventId, eventTarget,
+        new Class[] { modelType, String.class });
 
+    if (eventHandler != null) {
       if (log.isDebugEnabled()) {
         log.debug("Calling method '" + eventHandlerName + "("
             + modelType.getName() + ", String)' of class '"
@@ -140,13 +137,33 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
 
       eventHandler.invoke(eventTarget, new Object[] { bean, eventParameter });
       return;
-    } catch (NoSuchMethodException e) {/* OK */}
+    }
+
+    // lets try to find a method with a bean and a String[] type argument
+    eventHandler = ProxiedHandlerUtil.getEventHandler(eventId, eventTarget,
+        new Class[] { modelType, String[].class });
+
+    if (eventHandler != null) {
+      if (log.isDebugEnabled()) {
+        log.debug("Calling method '" + eventHandlerName + "("
+            + modelType.getName() + ", String[])' of class '"
+            + eventTarget.getClass().getName() + "'.");
+      }
+
+      // split() is null-safe method:
+      String[] params = StringUtils.split(eventParameter, ';');
+
+      eventHandler.invoke(eventTarget, new Object[] { bean, params });
+
+      return;
+    }
 
     if (log.isWarnEnabled()) {
       log.warn("Widget '" + eventTarget.getScope() + "' cannot deliver "
           + "event as no event listeners were registered for the event id '"
           + eventId + "'!" + Assert.thisToString(eventTarget));
     }
+
   }
 
 }

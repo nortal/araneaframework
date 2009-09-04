@@ -16,8 +16,12 @@
 
 package org.araneaframework.http.util;
 
+import org.araneaframework.core.ApplicationService;
+import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.framework.OverlayContext;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
@@ -95,7 +99,7 @@ public abstract class ServletUtil {
     if (log.isDebugEnabled())
       log.debug("Including a resource from the absolute path '" + filePath + "'");
 
-    Map<String, Object> attributeBackupMap = new HashMap<String, Object>();
+    Map attributeBackupMap = new HashMap();
     if (widget != null) {
       setAttribute(req, attributeBackupMap, UIWIDGET_KEY, widget);
       setAttribute(req, attributeBackupMap, WidgetContextTag.CONTEXT_WIDGET_KEY, widget);
@@ -123,7 +127,7 @@ public abstract class ServletUtil {
   }
 
 
-  private static void setAttribute(HttpServletRequest req, Map<String, Object> attributeBackupMap, String name, Object value) {
+  private static void setAttribute(HttpServletRequest req, Map attributeBackupMap, String name, Object value) {
     attributeBackupMap.put(name, req.getAttribute(name));
     if (value != null) {
       req.setAttribute(name, value);
@@ -132,12 +136,13 @@ public abstract class ServletUtil {
     }
   }
   
-  private static void restoreAttributes(HttpServletRequest req, Map<String, Object> attributeBackupMap) {
-    for (Map.Entry<String, Object> entry : attributeBackupMap.entrySet()) {
+  private static void restoreAttributes(HttpServletRequest req, Map attributeBackupMap) {
+    for (Iterator i = attributeBackupMap.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
       if (entry.getValue() != null) {
-        req.setAttribute(entry.getKey(), entry.getValue());
+        req.setAttribute((String) entry.getKey(), entry.getValue());
       } else {
-        req.removeAttribute(entry.getKey());
+        req.removeAttribute((String) entry.getKey());
       }
     }
   }
@@ -148,7 +153,7 @@ public abstract class ServletUtil {
    * outside the current servlet context. If the path begins with a "/" it is interpreted
    * as relative to the current context root. 
    */
-  public static void includeRelative(String filePath, Environment env, OutputData output) throws Exception {
+  public static void includeRelative(String filePath, OutputData output) throws Exception {
     log.debug("Including a resource from the relative path '" + filePath + "'");
     
     getRequest(output.getInputData()).getRequestDispatcher(filePath).include(
@@ -161,7 +166,7 @@ public abstract class ServletUtil {
   }
   
   public static HttpServletRequest getRequest(InputData input) {
-    return input.narrow(HttpServletRequest.class);
+    return (HttpServletRequest) input.narrow(HttpServletRequest.class);
   }
   
   public static void setRequest(InputData input, HttpServletRequest req) {
@@ -169,7 +174,7 @@ public abstract class ServletUtil {
   }
   
   public static HttpServletResponse getResponse(OutputData output) {
-    return output.narrow(HttpServletResponse.class);
+    return (HttpServletResponse) output.narrow(HttpServletResponse.class);
   }
   
   public static void setResponse(OutputData output, HttpServletResponse res) {
@@ -191,13 +196,29 @@ public abstract class ServletUtil {
 
   /** @since 1.1 */
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
-    LocalizationContext localizationContext = env.getEntry(LocalizationContext.class);
+    LocalizationContext localizationContext = EnvironmentUtil.getLocalizationContext(env);
     if (localizationContext == null)
       return null;
     return new javax.servlet.jsp.jstl.fmt.LocalizationContext(
       new StringAdapterResourceBundle(localizationContext.getResourceBundle()),
       localizationContext.getLocale()
     );
+  }
+
+  /**
+   * Provides a way to check whether the request is one of Aranea AJAX requests.
+   * Note that it does not work with unparsed multipart request.
+   * 
+   * @param req The incoming request.
+   * @return A Boolean indicating whether the request is one of Aranea AJAX
+   *         requests.
+   * @since 1.2.2
+   */
+  public static boolean isAraneaAjaxRequest(ServletRequest req) {
+    Map params = req.getParameterMap() != null ? req.getParameterMap() : new HashMap();
+    return params.containsKey(ApplicationService.ACTION_HANDLER_ID_KEY)
+        || params.containsKey(UpdateRegionContext.UPDATE_REGIONS_KEY)
+        || params.containsKey(OverlayContext.OVERLAY_REQUEST_KEY);
   }
 
   /**
@@ -212,14 +233,12 @@ public abstract class ServletUtil {
       this.bundle = bundle;
     }
     
-    @Override
     protected Object handleGetObject(String key) {
       Object object = bundle.getObject(key);
       return (object != null) ? object.toString() : null;
     } 
     
-    @Override
-    public Enumeration<String> getKeys() {
+    public Enumeration getKeys() {
       return bundle.getKeys();
     }
   }

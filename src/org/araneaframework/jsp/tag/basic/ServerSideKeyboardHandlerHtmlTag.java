@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
@@ -45,8 +46,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   required = "false"
 	 *   description = "See keyboardHandler tag." 
 	 */
-	public void setScope(String scope){
-		this.scope = evaluate("scope", scope, String.class);
+	public void setScope(String scope) throws JspException{
+		this.scope = (String) evaluate("scope", scope, String.class);
 	}
 	
 	/**
@@ -55,8 +56,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   required = "false"
 	 *   description = "" 
 	 */
-  public void setWidgetId(String widgetId){
-      event.setTarget(evaluate("widgetId", widgetId, String.class));
+  public void setWidgetId(String widgetId) throws JspException {
+      event.setTarget((String) evaluate("widgetId", widgetId, String.class));
   }
 	
 	/**
@@ -65,8 +66,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   required = "false"
 	 *   description = "" 
 	 */
-	public void setEventId(String eventId){
-		event.setId(evaluate("eventId", eventId, String.class));
+	public void setEventId(String eventId) throws JspException {
+		event.setId((String) evaluate("eventId", eventId, String.class));
 	}
 	
 	/**
@@ -75,8 +76,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   required = "false"
 	 *   description = "" 
 	 */
-	public void setEventParam(String eventParam){
-		event.setParam(evaluate("eventParam", eventParam, String.class));
+	public void setEventParam(String eventParam) throws JspException {
+		event.setParam((String) evaluate("eventParam", eventParam, String.class));
 	}
   
 	/**
@@ -85,8 +86,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code><ui:updateRegion></code> for details." 
 	 */
-  public void setUpdateRegions(String updateRegions){
-    this.updateRegions = evaluate("updateRegions", updateRegions, String.class);
+  public void setUpdateRegions(String updateRegions) throws JspException {
+    this.updateRegions = (String) evaluate("updateRegions", updateRegions, String.class);
   }
   
 	/**
@@ -95,8 +96,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	 *   required = "false"
 	 *   description = "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code> for details." 
 	 */
-  public void setGlobalUpdateRegions(String globalUpdateRegions){
-    this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
+  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
+    this.globalUpdateRegions = (String) evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }  
   
 
@@ -105,8 +106,8 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
   * Sets the precondition, default value is <code>null</code>
   * @see org.araneaframework.jsp.tag.uilib.form.element.BaseFormButtonTag#setOnClickPrecondition
   */
-  public void setPrecondition(String precondition){
-    event.setEventPrecondition(evaluate("precondition", precondition, String.class));
+  public void setPrecondition(String precondition) throws JspException {
+    event.setEventPrecondition((String) evaluate("precondition", precondition, String.class));
   }	
 	
 	
@@ -114,8 +115,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
 	// Implementation
 	//
 		
-	@Override
-  protected int doStartTag(Writer out) throws Exception {
+	protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 
 		event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions));
@@ -132,7 +132,7 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag{
   
 	
 
-	public static final String createHandlerToCallEvent(PageContext pageContext, UiUpdateEvent event){
+	public static final String createHandlerToCallEvent(PageContext pageContext, UiUpdateEvent event) {
 		if (event.getTarget() == null) {
           event.setTarget(JspWidgetUtil.getContextWidgetFullId(pageContext));
 		}

@@ -27,17 +27,32 @@ import org.araneaframework.example.main.web.person.PersonAddEditWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExamplePersonMountMessageFactory implements MessageFactory {
-  public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
-    return new SeriesMessage(new Message[] {
-        new LoginMessage(),
-        new BroadcastMessage() {
-          protected void execute(Component component) throws Exception {
-            if (component instanceof MenuWidget) {
-              ((MenuWidget) component).start(new PersonAddEditWidget(new Long(suffix)));
-            }
-          }
-        }
-    });
+
+  private static final long serialVersionUID = 1L;
+
+  public Message buildMessage(String url, final String suffix, InputData input,
+      OutputData output) {
+    return new SeriesMessage(new Message[] { new LoginMessage(),
+        new OpenWidgetMessage(suffix) });
+  }
+
+  private class OpenWidgetMessage extends BroadcastMessage {
+
+    private static final long serialVersionUID = 1L;
+
+    private String suffix;
+
+    public OpenWidgetMessage(String suffix) {
+      this.suffix = suffix;
+    }
+
+    protected void execute(Component component) throws Exception {
+      if (component instanceof MenuWidget) {
+        MenuWidget menu = (MenuWidget) component;
+        menu.start(new PersonAddEditWidget(new Long(suffix)));
+      }
+    }
+
   }
 
 }

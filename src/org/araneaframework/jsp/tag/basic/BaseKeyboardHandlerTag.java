@@ -126,14 +126,14 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	if (StringUtils.isBlank(handler)) throw new JspException("handler may not be empty in the KeyboardHandlerHtmlTag");
 	if (StringUtils.isBlank(scope)) scope = "";
 	
-	JspUtil.writeStartTag(out, "script");
+	JspUtil.writeStartTag_SS(out, "script type='text/javascript'");
 	out.write("Aranea.KB.registerKeypressHandler('");
 	out.write(scope);
 	out.write("', ");
 	out.write(keyCode);
 	out.write(", ");
 	JspUtil.writeEscaped(out, handler);
-	out.write(");\n");
+	out.write(");");
 	JspUtil.writeEndTag_SS(out, "script");
   }
   
@@ -141,14 +141,14 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
 	  if (StringUtils.isBlank(handler)) throw new JspException("handler may not be empty in the KeyboardHandlerHtmlTag");
 	  if (StringUtils.isBlank(scope)) scope = "";
 
-	  JspUtil.writeStartTag(out, "script");
+	  JspUtil.writeStartTag_SS(out, "script type='text/javascript'");
 	  out.write("Aranea.KB.registerKeyComboHandler('");
 	  out.write(scope);
 	  out.write("', '");
 	  out.write(keyCombo);
 	  out.write("', ");
 	  JspUtil.writeEscaped(out, handler);
-	  out.write(");\n");
+	  out.write(");");
 	  JspUtil.writeEndTag_SS(out, "script");
   }
 

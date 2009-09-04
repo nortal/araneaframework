@@ -41,25 +41,27 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
-	private Environment closableComponentEnv;
+
+  private static final long serialVersionUID = 1L;
+
+  private Environment closableComponentEnv;
 	
 	public WindowClosingService(Environment closableComponentEnv) {
 		this.closableComponentEnv = closableComponentEnv;
 	}
 	
-	@Override
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
+	protected void action(Path path, InputData input, OutputData output) throws Exception {
 		HttpServletResponse response = ServletUtil.getResponse(output);
 		
-		PopupWindowContext popupCtx = (closableComponentEnv.getEntry(PopupWindowContext.class));
+		PopupWindowContext popupCtx = EnvironmentUtil.getPopupWindowContext(getEnvironment());
 		BaseApplicationWidget opener = null;
 		if (popupCtx != null)
 			opener = (BaseApplicationWidget) popupCtx.getOpener();
 		
 		StandardPopupServiceInfo serviceInfo = null;
 		if (opener != null) {
-			String threadId = EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
-			String topserviceId = EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
+			String threadId = (String) EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
+			String topserviceId = (String) EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
 			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
 			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
 			serviceInfo.setTransactionOverride(false);
@@ -98,7 +100,7 @@ public class WindowClosingService extends BaseService {
 		byteOutputStream.writeTo(out);
 		out.flush();
 
-		ManagedServiceContext mngCtx = getEnvironment().getEntry(ManagedServiceContext.class);
+		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
 		mngCtx.close(mngCtx.getCurrentId());
 	}
 }

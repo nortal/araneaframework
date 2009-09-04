@@ -38,6 +38,8 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * The container (a root) that holds the menu items.
    */
@@ -68,7 +70,6 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * <code>FlowContext.cancel()</code>).
    * @exception Exception Any non-specific exception that may occur.
    */
-  @Override
   protected void init() throws Exception {
     super.init();
     setFinishable(false);
@@ -77,7 +78,6 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     // initMenuSelectorMountSupport();
   }
 
-  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), MenuContext.class, this);
   }
@@ -93,6 +93,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
       return;
 
     mc.mount(getInputData(), "/" + getScope() + "/", new MountContext.MessageFactory() {
+
+      private static final long serialVersionUID = 1L;
+
       public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
         //TODO: Allow the bookmarks to work with login widget
 //        int i = suffix.indexOf('/');
@@ -103,7 +106,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
 //        final String menuItemId = suffix.substring(i + 1);
         
         return new RoutedMessage(getScope().toPath()) {
-          @Override
+
+          private static final long serialVersionUID = 1L;
+
           protected void execute(Component component) throws Exception {
             ((BaseMenuWidget) component).selectMenuItem(suffix);
           }
@@ -115,8 +120,10 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * Menu selection listener.
    */
   protected class ItemSelectionListener extends StandardEventListener {
-    @Override
-    public void processEvent(Object eventId, String eventParam, InputData input) throws Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
     	BaseMenuWidget.this.selectMenuItem(eventParam);
     }
   }
@@ -127,6 +134,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     selectionPath = menuItemPath;
 
     reset(new EnvironmentAwareCallback() {
+
+      private static final long serialVersionUID = 1L;
+
       public void call(Environment env) throws Exception {
         if (newFlow != null)
           start(newFlow);

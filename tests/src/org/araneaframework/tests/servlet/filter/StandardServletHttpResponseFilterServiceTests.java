@@ -16,6 +16,7 @@
 
 package org.araneaframework.tests.servlet.filter;
 
+import org.araneaframework.http.util.ServletUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
@@ -33,46 +34,44 @@ import org.springframework.mock.web.MockHttpServletResponse;
  *
  */
 public class StandardServletHttpResponseFilterServiceTests extends TestCase {
-  //private StandardServletHttpFilterService parent;
-	
+
   private StandardHttpResponseFilterService parent;
   private MockEventfulStandardService child;
   
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
-  
+
   @Override
   public void setUp() throws Exception {
     req = new MockHttpServletRequest();
     res = new MockHttpServletResponse();
-    
+
     output = new StandardServletOutputData(req, res);
-    
+
     parent = new StandardHttpResponseFilterService();
     child = new MockEventfulStandardService();
     parent.setChildService(child);
     MockLifeCycle.begin(parent);
   }
-  
+
   public void testNullContentType() throws Exception {
    parent.setContentType(null);
    try {
      parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
      fail("Was able to call action, with Content-Type being null");
-   }
-   catch(AraneaRuntimeException e) {
+   } catch(AraneaRuntimeException e) {
      //success
    }
   }
-  
+
   public void testContentType() throws Exception {
     parent.setContentType("text/css");
     parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    //assertTrue("text/css".equals(output.getResponse().getContentType()));
+    assertTrue("text/css".equals(ServletUtil.getResponse(output).getContentType()));
   }
-  
+
   public void testCacheable() throws Exception {
     parent.setContentType("text/css");
     parent.setCacheable(false);
@@ -86,7 +85,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
     parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
     assertTrue(res.getHeader("Cache-Control")!=null);
   }
-  
+
   public void testAddCookies() throws Exception {
     Map map = new HashMap();
     
@@ -103,7 +102,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
     assertTrue("Wtf".equals(res.getCookie("theDaily").getValue()));
     assertTrue("Brillant".equals(res.getCookie("Paula").getValue()));
   }
-  
+
   public void testAddHeaders() throws Exception {
     Map map = new HashMap();
     
@@ -118,23 +117,25 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
     assertTrue("chunked".equals(res.getHeader("Transfer-Encoding")));
     assertTrue("gzip".equals(res.getHeader("Content-Encoding")));
   }
-  
+
   public void testCacheHoldingTime() throws Exception {
     parent.setContentType("text/css");
     parent.setCacheable(true);
     parent.setCacheHoldingTime(1000);
     
     parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    
-    assertTrue(res.getHeaders("Cache-Control").indexOf("max-age=1")!=-1);
+    assertTrue(res.getHeaders("Cache-Control").size() > 0);
+    assertTrue(res.getHeaders("Cache-Control").get(0) instanceof String);
+    String header = (String) res.getHeaders("Cache-Control").get(0);
+    assertTrue(header.indexOf("max-age=1") != -1);
   }
-  
+
   public void testActionGetsCalled() throws Exception {
     parent.setContentType("text/css");
     parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
     assertTrue(child.getActionCalled());
   }
-  
+
   public void testDestroyDestroysChild() throws Exception {
     parent._getComponent().destroy();
     assertTrue(child.getDestroyCalled());

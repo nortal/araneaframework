@@ -45,18 +45,17 @@ public class PersonViewWidget extends TemplateBaseWidget {
 	protected void init() throws Exception {
 		setViewSelector("person/personView");
 
-		BeanFormWidget personForm = new BeanFormWidget(PersonMO.class);
+		BeanFormWidget<PersonMO> personForm = new BeanFormWidget<PersonMO>((PersonMO) getGeneralDAO().getById(PersonMO.class, personId));
 		personForm.addBeanElement("name", "#First name", new DisplayControl(), true);
 		personForm.addBeanElement("surname", "#Last name", new DisplayControl(), false);
 		personForm.addBeanElement("phone", "#Phone no", new DisplayControl(), true);
 		personForm.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
 		personForm.addBeanElement("salary", "#Salary", new FloatControl(), false);
-		personForm.readFromBean(getGeneralDAO().getById(PersonMO.class, personId));
 
 		addWidget("personForm", personForm);
 	}
 	
-	public void handleEventReturn(String eventParameter) throws Exception {
+	public void handleEventReturn() throws Exception {
 		getFlowCtx().cancel();
 	}	
 }

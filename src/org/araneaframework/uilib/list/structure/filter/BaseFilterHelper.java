@@ -15,6 +15,7 @@
  **/
 package org.araneaframework.uilib.list.structure.filter;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -58,12 +59,12 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	public static final String HIGH_SUFFIX = "_end"; 
 
 	/** The associated list */
-	protected final ListWidget<?> list;
+	protected final ListWidget list;
 
 	private boolean strict = false;	
 
 	// Map<String,String> - custom labels for fields
-	private Map<String, String> labels = new HashMap<String, String>();
+	private Map labels = new HashMap();
 	
 	private boolean changed = true;
 	
@@ -72,11 +73,11 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @param list list.
 	 */
-	public BaseFilterHelper(ListWidget<?> list) {
+	public BaseFilterHelper(ListWidget list) {
 		this(list, true);
 	}
 	
-	private BaseFilterHelper(ListWidget<?> list, boolean createCopy) {
+	private BaseFilterHelper(ListWidget list, boolean createCopy) {
 		Validate.notNull(list);
 		this.list = list;
 	}
@@ -99,7 +100,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	}
 
 	/**
-	 * Sets the current case sensitivity behavior.
+	 * Sets the current case sensitivity behaivor.
 	 * 
 	 * @param ignoreCase whether to ignore case.
 	 */
@@ -120,6 +121,14 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 		return getTypeHelper().getLocale();
 	}
 	
+//	/**
+//	 * Sets the current locale.
+//	 * 
+//	 * @param locale new locale.
+//	 */
+//	protected void _setLocale(Locale locale) {
+//		getTypeHelper().setLocale(locale);
+//	}
 
 	/**
 	 * Returns whether new filters should be strict.
@@ -134,7 +143,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	}
 
 	/**
-	 * Sets the current strictness behavior.
+	 * Sets the current strickness behaivor.
 	 * 
 	 * @param strict whether new filters should be strict.
 	 */
@@ -162,7 +171,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * @return the global configuration context.
 	 */
 	public ConfigurationContext getConfiguration() {
-		return this.list.getEnvironment().getEntry(ConfigurationContext.class);
+		return UilibEnvironmentUtil.getConfiguration(this.list.getEnvironment());
 	}
 
 	/**
@@ -205,7 +214,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * the original field itself.
 	 */
 	public String getFieldLabel(String fieldId) {
-		String result = this.labels.get(fieldId);
+		String result = (String) this.labels.get(fieldId);
 		if (result == null) {
 			result = list.getFieldLabel(fieldId);
 		}
@@ -213,13 +222,13 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 		if (result == null) {
 			if (fieldId.endsWith(LOW_SUFFIX)) {
 				String listFieldId = getFieldIdFromLowValueId(fieldId);
-				String fieldLabel = this.labels.get(listFieldId);
+				String fieldLabel = (String) this.labels.get(listFieldId);
 				if (fieldLabel == null) fieldLabel = list.getFieldLabel(listFieldId);
 
 				result = FilterFormUtil.getLabelForLowField(getL10nCtx(), fieldLabel);
 			} else if (fieldId.endsWith(HIGH_SUFFIX)) {
 				String listFieldId = getFieldIdFromHighValueId(fieldId);
-				String fieldLabel = this.labels.get(listFieldId);
+				String fieldLabel = (String) this.labels.get(listFieldId);
 				if (fieldLabel == null) fieldLabel = list.getFieldLabel(listFieldId);
 				
 				result = FilterFormUtil.getLabelForHighField(getL10nCtx(), fieldLabel);
@@ -236,7 +245,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @see TypeHelper#addFieldType(String, Class)
 	 */
-	protected void _addFieldType(String fieldId, Class<?> type) {
+	protected void _addFieldType(String fieldId, Class type) {
 		getTypeHelper().addFieldType(fieldId, type);
 		fireChange();
 	}
@@ -252,8 +261,8 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @see TypeHelper#getFieldType(String)
 	 */
-	public Class<?> getFieldType(String fieldId) {
-		Class<?> result = getTypeHelper().getFieldType(fieldId);
+	public Class getFieldType(String fieldId) {
+		Class result = getTypeHelper().getFieldType(fieldId);
 		if (result == null) {
 			if (fieldId.endsWith(LOW_SUFFIX)) {				
 				result = getFieldType(getFieldIdFromLowValueId(fieldId));
@@ -273,7 +282,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @see TypeHelper#addCustomComparator(String, Comparator)
 	 */
-	public void addCustomComparator(String fieldId, Comparator<?> comp) {
+	public void addCustomComparator(String fieldId, Comparator comp) {
 		getTypeHelper().addCustomComparator(fieldId, comp);
 		fireChange();
 	}
@@ -283,8 +292,8 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
 	 * 
 	 * @see TypeHelper#getFieldComparator(String)
 	 */
-	public Comparator<?> getFieldComparator(String fieldId) {
-		Comparator<?> result = getTypeHelper().getFieldComparator(fieldId);
+	public Comparator getFieldComparator(String fieldId) {
+		Comparator result = getTypeHelper().getFieldComparator(fieldId);
 		if (result == null) {
 			if (fieldId.endsWith(LOW_SUFFIX)) {				
 				result = getFieldComparator(getFieldIdFromLowValueId(fieldId));
