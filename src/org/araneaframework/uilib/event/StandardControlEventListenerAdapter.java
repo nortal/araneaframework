@@ -130,7 +130,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
    * Fires <code>onChange</code> or <code>onClick</code> event listeners, if
    * they are in the request.
    */
-  public void processEvent(Object eventId, InputData input) throws Exception {
+  public void processEvent(String eventId, InputData input) throws Exception {
     if (OnChangeEventListener.ON_CHANGE_EVENT.equals(eventId)) {
       if (onChangeEventListeners != null)
         for (Iterator<OnChangeEventListener> i = onChangeEventListeners.iterator(); i.hasNext();) {

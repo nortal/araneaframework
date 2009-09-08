@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0"
+>
+  <tlib-version>1.0</tlib-version>
+  <short-name>aranea-tag-library-template</short-name>
+  <uri>http://araneaframework.org/tag-library/template</uri>
+  <tag>
+    <name>wizardBody</name>
+    <tag-class>org.araneaframework.example.common.tags.wizard.WizardBodyTag</tag-class>
+    <body-content>JSP</body-content>
+  </tag>
+  <tag>
+    <name>componentHeader</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentHeaderTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>wizardFooter</name>
+    <tag-class>org.araneaframework.example.common.tags.wizard.WizardFooterTag</tag-class>
+    <body-content>empty</body-content>
+  </tag>
+  <tag>
+    <name>wizardIfPage</name>
+    <tag-class>org.araneaframework.example.common.tags.wizard.WizardIfPageTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <name>index</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>componentForm</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentFormTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description>Width of the layout.</description>
+      <name>width</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Default style of rows in this layout. This is multi-valued attribute.</description>
+      <name>rowClasses</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Default styleclass of cells in this layout. This is multi-valued attribute.</description>
+      <name>cellClasses</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>wizard</name>
+    <tag-class>org.araneaframework.example.common.tags.wizard.WizardTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description>Widget id.</description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>componentListFooter</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentListFooterTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <description>Data string id for empty list message.</description>
+      <name>noDataStringId</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Style for list footer info.</description>
+      <name>infoStyleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Style for list footer numbers.</description>
+      <name>numberStyleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+      <name>updateRegions</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+      <name>globalUpdateRegions</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+  </tag>
+  <tag>
+    <name>componentName</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentNameTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+  </tag>
+  <tag>
+    <name>component</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute><description>CSS class for secondary DIV that is written out by this tag. By default this is w100p - maximum component width is set.</description>
+      <name>widthClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+  </tag>
+  <tag>
+    <name>componentListHeader</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentListHeaderTag</tag-class>
+    <body-content>empty</body-content>
+    
+    <attribute><description>Enumerates the regions of markup to be updated in this widget scope. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+      <name>updateRegions</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Enumerates the regions of markup to be updated globally. Please see &lt;code&gt;&lt;ui:updateRegion&gt;&lt;/code&gt; for details.</description>
+      <name>globalUpdateRegions</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout.</description>
+      <name>cellClasses</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Whether row's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass.</description>
+      <name>overrideLayout</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>HTML id of this row.</description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+  </tag>
+  <tag>
+    <name>wizardHeader</name>
+    <tag-class>org.araneaframework.example.common.tags.wizard.WizardHeaderTag</tag-class>
+    <body-content>JSP</body-content>
+    
+  </tag>
+  <tag>
+    <name>componentActions</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentActionsTag</tag-class>
+    <body-content>JSP</body-content>
+    
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+  </tag>
+  <tag>
+    <name>componentList</name>
+    <tag-class>org.araneaframework.example.common.tags.example.component.ComponentListTag</tag-class>
+    <body-content>JSP</body-content>
+    
+    <attribute><description>Width of the layout.</description>
+      <name>width</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Default style of rows in this layout. This is multi-valued attribute.</description>
+      <name>rowClasses</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Default styleclass of cells in this layout. This is multi-valued attribute.</description>
+      <name>cellClasses</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+  </tag>
+  <tag>
+    <name>image</name>
+    <tag-class>org.araneaframework.example.common.tags.presentation.SampleImageTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute><description>Image code.</description>
+      <name>code</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Image src.</description>
+      <name>src</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Image width</description>
+      <name>width</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Image height.</description>
+      <name>height</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+      
+    </attribute>
+    <attribute><description>Image alternate text.</description>
+      <name>alt</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute><description>Image title</description>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute><description>Inline style for HTML tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute><description>CSS class for the tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
+</taglib>

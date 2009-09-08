@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.constraint;
 import java.text.Collator;
 import org.araneaframework.Environment;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -80,7 +80,6 @@ public final class RangeConstraint extends BaseConstraint {
    * Makes sure that either any of the form elements has a <code>null</code>
    * value, or the low field value is less then high field value.
    */
-  @Override
   protected void validateConstraint() {
     Object valueLo = fieldLo.getData().getValue();
     Object valueHi = fieldHi.getData().getValue();
@@ -131,9 +130,7 @@ public final class RangeConstraint extends BaseConstraint {
 
   // Translates the key into a message that will be displayed to the user.
   private String t(String key, Environment env) {
-    LocalizationContext locCtx = env.getEntry(
-        LocalizationContext.class);
-    return locCtx.localize(key);
+    return EnvironmentUtil.getLocalizationContext(env).localize(key);
   }
 
 }

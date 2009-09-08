@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list.structure.filter.field;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -82,9 +83,8 @@ public class EndsWithFilter extends BaseFieldFilter {
 		// private
 	}
 
-	@Override
-  public void init(Environment env) {
-		ConfigurationContext cfg = env.getEntry(ConfigurationContext.class);
+	public void init(Environment env) {
+		ConfigurationContext cfg = UilibEnvironmentUtil.getConfiguration(env);
 		if (cfg != null) {
 			configuration = (LikeConfiguration) cfg.getEntry(ConfigurationContext.LIKE_CONFIGURATION);
 		}

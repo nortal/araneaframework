@@ -28,63 +28,58 @@ import org.araneaframework.tests.mock.MockEnvironment;
 
 /**
  * {@link Component} lifecycle constraint satisfiability.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LifeCycleTests extends TestCase {
-    // tests that dead component stays dead
-	public void testPermantentDeath() throws Exception {
-		BaseComponent c = new BaseComponent(){};
-		
-		c._getComponent().init(null, new MockEnvironment());
-		c._getComponent().destroy();
-		
-		try {
-			c._getComponent().init(null, new MockEnvironment());
 
-			fail("Attempted to reanimate destroyed Component -- exception should have occured.");
-		} catch (Exception e) {
-            // good
-		}
-	}
-	
-	// invalid leftover calls are those that activate the methods that directly 
-	// depend on request or response
-	public void testInvalidLeftOverCalls() throws Exception {
-		BaseWidget w = new BaseWidget() {};
-		w._getComponent().init(null, new MockEnvironment());
-		w._getComponent().destroy();
-		
-		try {
-			w._getComponent().destroy();
-			fail("Double destroy() is prohibited.");
-		} catch (IllegalStateException e) {
-			// fine
-		}
-	}
-	
-	// all leftover calls are considered valid 
-	public void testValidLeftOverCalls() throws Exception {
-	  BaseApplicationWidget w = new BaseApplicationWidget() {};
-		w._getComponent().init(null, new MockEnvironment());
-		w._getComponent().destroy();
-		
-		w._getComponent().propagate(new BroadcastMessage() {
-				@Override
-        protected void execute(Component component) throws Exception {
-					return;
-				}
-			});
-		
-		w.addWidget("new", new BaseApplicationWidget() {});
-		w.removeWidget("new");
+  // tests that dead component stays dead
+  public void testPermantentDeath() throws Exception {
+    BaseComponent c = new BaseComponent();
+    c._getComponent().init(null, new MockEnvironment());
+    c._getComponent().destroy();
+    try {
+      c._getComponent().init(null, new MockEnvironment());
+      fail("Attempted to reanimate destroyed Component -- exception should have occured.");
+    } catch (Exception e) {
+      // good
+    }
+  }
 
-		w._getComponent().disable();
-		w._getComponent().enable();
-		
-		w._getService().action(null, new MockInputData(), new MockOutputData());
+  // invalid leftover calls are those that activate the methods that directly
+  // depend on request or response
+  public void testInvalidLeftOverCalls() throws Exception {
+    BaseWidget w = new BaseWidget();
+    w._getComponent().init(null, new MockEnvironment());
+    w._getComponent().destroy();
+    try {
+      w._getComponent().destroy();
+      fail("Double destroy() is prohibited.");
+    } catch (IllegalStateException e) {
+      // fine
+    }
+  }
 
-		w._getWidget().update(new MockInputData());
-		w._getWidget().event(null, new MockInputData());
-		w._getWidget().render(new MockOutputData());
-	}
+  // all leftover calls are considered valid
+  public void testValidLeftOverCalls() throws Exception {
+    BaseApplicationWidget w = new BaseApplicationWidget();
+    w._getComponent().init(null, new MockEnvironment());
+    w._getComponent().destroy();
+    w._getComponent().propagate(new BroadcastMessage() {
+
+      private static final long serialVersionUID = 1L;
+
+      protected void execute(Component component) throws Exception {
+        return;
+      }
+    });
+    w.addWidget("new", new BaseApplicationWidget());
+    w.removeWidget("new");
+    w._getComponent().disable();
+    w._getComponent().enable();
+    w._getService().action(null, new MockInputData(), new MockOutputData());
+    w._getWidget().update(new MockInputData());
+    w._getWidget().event(null, new MockInputData());
+    w._getWidget().render(new MockOutputData());
+  }
 }

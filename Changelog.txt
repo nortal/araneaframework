@@ -1,5 +1,114 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
+15.01.2008   | Aranea 4.1.1.9
+
+Features and Improvements
+	Environment is now parametrized on classes of its entries
+	BeanMapper/BeanUtil has changed the way they access bean's fields:
+		1. If there is public accessor in bean's class or any superclass, then use it.
+		2. If there is field with any access modifier in bean's class, then use it.
+	BeanFormWidget now operates on underlying bean instance	
+	Started parametrizing ListWidget and ListDataProvider
+
+---------------------------------------------------------------------------------------------
+2009.06.18    | Aranea 1.2.2
+
+Features and Improvements
+    TabContainerWidget can add tab-switch-listeners                             | See #700
+    Add FileInfo.getFileName() to return the file name without path             | See #783
+    Add AJAX file upload support                                                | See #584
+    Add JavaScript page pre/post submit event listeners                         | See #728
+    Divide dependencies into smaller groups (Ivy)                               | See #822
+
+Bugfixes
+    Wrong Modal dialog position in IE (7.0)                                     | See #740
+    StandardOverlayContainerWidget must init overlayChild first                 | See #761
+    AutoCompleteTextControl: onChangeEventListener does not work                | See #264
+    <ui:widgetInclude id="..." page="relativePage.jsp" /> throws NPE            | See #795
+    TransitionHandlers not visible to all flow containers                       | See #700
+    AraneaPage.event(el) should return true for checkboxes, radios              | See #784
+    Allow ListWidget.setFullPages() before ListWidget.init()                    | See #796
+    Safari goes to infinite switching between links                             | See #809
+
+---------------------------------------------------------------------------------------------
+2009.03.13    | Aranea 1.2.1.1
+
+Features and Improvements
+    Add Aranea.ModalBox.doRequest(options, success, failure)                    | See #765
+
+Bugfixes
+    <ui:autoCompleteTextInput/> renders script errors                           | See #764
+
+---------------------------------------------------------------------------------------------
+2009.03.10    | Aranea 1.2.1
+
+Features and Improvements
+    Add getTextType to TextControl                                              | See #734
+    Ability to use other tag than SPAN for update region                        | See #741
+    A new tag: <ui:updateRegionRow/>                                            | See #747
+    Specify tab that will be selected by default                                | See #748
+    Seamless validation -- too active for timecontrol with hr/min select        | See #546
+    Handy FlowContext Handler implementations [patch]                           | See 
+    (added RefreshingListsFlowContextHandler and DefaultHandler)                |     #716
+
+Bugfixes
+    List filtering problems with regular expressions and SQL escaping           | See #731
+    Ability to have nonunique DisplayItems in SelectControl                     | See #742
+    aranea.js still depends on Modalbox                                         | See #739
+    FormElement.isStateChanged() and distinction between "" and null            | See #744
+    BeanMapper.getFieldType broken for collections with generics                | See #745
+    BeanFormWidget should have its own getSubFormByFullName                     | See #750
+    ui:dateTimeInput tag renders its inputs inside a <table> <tr> <td>          | See #749
+    <ui:textareaDisplay/>'s text content must be escaped                        | See #751
+    The onChangeEventListener for TextareaControl is not invoked due to tag     | See #755
+
+Optimization
+    Memory leaks with Aranea javascripts (phase 1)                              | See #736
+
+---------------------------------------------------------------------------------------------
+2009.01.08    | Aranea 1.2
+
+Bugfixes
+    StringListData & isStateChanged                                             | See #637
+    BeanUtil.isWritable returns false when the setter is actually available     | See #727
+    Modalbox design problems with IE                                            | See #729
+    Autocompleter and scrolling ability of search results                       | See #730
+    ListQuery not serializable with BeanListWidget                              | See #757
+
+---------------------------------------------------------------------------------------------
+2008.12.02    | Aranea 1.2 RC2
+
+Features and Improvements
+    Update region and focus                                                     | See #721
+    Overlay dialog - positioning and scrolling                                  | See #723
+
+Bugfixes
+    Exception when session has expired and user navigates back/forward          | See #720
+    Local form element validation does not remove old error messages            | See #719
+    Aranea 1.2 demo app does not work with IE                                   | See #722
+
+---------------------------------------------------------------------------------------------
+2008.11.18    | Aranea 1.2 RC1
+
+Features and Improvements
+    Updated third-party scripts                                                 | See #678
+    cancel() and finish(Object) for OverlayContext                              | See #708
+    OrFilter for list rows filtering and for entire filter elements             | See #701
+    file importer writes into response header Cache-Control: max-age=3600       | See #669
+    Lower-than-or-equal and greater-than-or-equal constraints                   | See #704
+    EnvrionmentUtil enhancement                                                 | See #703
+    DefaultResultSetColumnReader: error message needs to be more precise        | See #702
+    OrFilter for list rows filtering and for entire filter elements             | See #701
+    DisplayItem + SelectControl refactor                                        | See #272
+
+Bugfixes
+    Upgrade Aranea 1.2M code to contain previous bugfixes                       | See #693
+    DateControl -- anything before 1900 not considered date                     | See #545
+    Made aranea JavaScripts not depend on state versioning                      | See #707
+    ReaderPreferenceReadWriteLock not serializable                              | See #714
+    AfterTodayConstraint should not apply to empty fields                       | See #690
+
+---------------------------------------------------------------------------------------------
 2008.05.28    | Aranea 1.2-M1
 
 Features and Improvements
@@ -9,6 +118,19 @@ Features and Improvements
 Deprecation & API changes
     Deprecated StandardClientStateFilterWidget and                             | See 
     NoSerializedClientStateException were removed                              |     change #638
+
+---------------------------------------------------------------------------------------------
+2008.07.25    | Aranea 1.1.6
+
+Bugfixes
+   Aranea 1.1.5 bugs                                                          | See #691
+   BaseFormTextInputHtmlTag has no default disabledRenderedMode                  | See #692
+
+---------------------------------------------------------------------------------------------
+2008.06.27    | Aranea 1.1.5
+
+Bugfixes
+   Ivy XML should not require Aranea-dependable projects download all JARs    | See #681
 
 ---------------------------------------------------------------------------------------------
 2008.06.19    | Aranea 1.1.5-M1
@@ -158,12 +280,12 @@ Bugfixes
     Fixed circular lazyness problem causing too many refreshes in ListWidget  | See #540
 
 Deprecation & API changes
-	Deprecated BeanFormWidget.writeBean() & readBean() were removed           | See #474
-	Removed throw clauses from                                                | --------
-	                           MemoryBasedListDataprovider.refreshData()      |   
-	                           UpdateRegionProvider.getRegions()              | See
-	                           ListOrder.init(), ListOrder.destroy()          |   #137
-	                           ListFilter.init(), ListFilter.destroy()        | --------
+    Deprecated BeanFormWidget.writeBean() & readBean() were removed           | See #474
+    Removed throw clauses from                                                | --------
+                               MemoryBasedListDataprovider.refreshData()      |   
+                               UpdateRegionProvider.getRegions()              | See
+                               ListOrder.init(), ListOrder.destroy()          |   #137
+                               ListFilter.init(), ListFilter.destroy()        | --------
 ---------------------------------------------------------------------------------------------
 2007.10.01    | Aranea 1.1-M4
 
@@ -206,7 +328,7 @@ Deprecation & API changes
 
 Features and Improvements
     Aranea specific request parameters got prefixes ('araTransactionId', ...) | See
-    There were some name clashes otherwise in integration projects.           |     change #414	
+    There were some name clashes otherwise in integration projects.           |     change #414    
     TcdAndTldMerger is bundled inside aranea.jar                              | See #434
     Some minor documentation updates                                          | See change #426, #448
 
@@ -404,13 +526,13 @@ Bugfixes
 2006.10.13    | Aranea 1.0
 
 Features and Improvements
-	Reference manual updates
-	Updated to compile with Java 1.3
-	Tutorial splitted: introduction & main tutorial
-	Library dependencies folders reorganized
+    Reference manual updates
+    Updated to compile with Java 1.3
+    Tutorial splitted: introduction & main tutorial
+    Library dependencies folders reorganized
 
 Bugfixes
-	Some small fixes
+    Some small fixes
 
 ---------------------------------------------------------------------------------------------
 2006.10.09    | Aranea 1.0-RC4
@@ -590,7 +712,7 @@ General changes
 
         Jars needed to run the example applications have moved from ./lib     | See #78
         to ./examples/lib directory.                                          |
-	
+    
 Infrastructure changes
         Nightly builds available.                                             | See #39
 

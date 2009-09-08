@@ -167,7 +167,7 @@ public class FormUtil {
 
 	  if (!form.convertAndValidate()) {
 	    throw new ValidationFailureException("The form '" + form.getScope()
-          + "' has " + form.getErrors().size() + " validation error(s).");
+          + "' has validation errors.");
 	  }
 	}
 

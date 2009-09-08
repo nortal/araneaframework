@@ -28,7 +28,6 @@ import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.structure.filter.FilterContext;
-import org.araneaframework.uilib.list.structure.filter.field.BaseFieldFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.FormUtil;
@@ -90,11 +89,12 @@ public class InFilter extends BaseFieldFilter {
   }
 
   public Expression buildExpression(Map filterInfo) {
-    if (!isActive(filterInfo)) {
+    List valueIds = (List) filterInfo.get(getValueId());
+
+    if (!isActive(filterInfo) || valueIds.isEmpty()) {
       return null;
     }
 
-    List valueIds = (List) filterInfo.get(getValueId());
     Iterator valueIdIterator = valueIds.iterator();
     List values = new LinkedList();
 

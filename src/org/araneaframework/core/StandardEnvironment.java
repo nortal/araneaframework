@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
@@ -26,89 +28,89 @@ import org.araneaframework.Environment;
  * A simple {@link org.araneaframework.Environment} implementation.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
  */
 public class StandardEnvironment extends BaseEnvironment {
-  private Map<Class<?>, Object> entries;
+  private Map<Class<?>,Object> entries;
+
   private Environment parentEnv;
-  
+
   /**
-   * Constructs an object with the given parent Environment and with the entries data.
+   * Constructs an object with the env parent Environment and with the entries
+   * data.
+   * 
    * @param env the parent environment
    * @param entries a map of the entries in the Environment
-   * @throws ClassCastException if the value of any provided entry is not assignment-compatible with its key, as per {@link Environment} contract.
    */
-  public StandardEnvironment(Environment env, Map<Class<?>, Object> entries) {
+  public StandardEnvironment(Environment env, Map<Class<?>,Object> entries) {
     Assert.notNullParam(entries, "entries");
-    
-    for(Map.Entry<Class<?>, Object> entry : entries.entrySet()) {
-      if(!entry.getKey().isInstance(entry.getValue())) {
-        throw new ClassCastException("Some of the entries provided break the Environment contract");
-      }
-    }
     this.entries = entries;
     parentEnv = env;
   }
-  
+
   /**
-   * Constructs an object with the given parent Environment and entries data containing &lt;key, value&gt;.
+   * Constructs an object with the env parent Environment and entries data
+   * containing &lt;key, value&gt;.
+   * 
    * @param env the parent environment
    * @param key a key of the value in the map of the Environment entries.
-   * @param value a value corresponding to given key in the map of the Environment entries.
+   * @param value a value corresponding to given key in the map of the
+   *            Environment entries.
    */
-  @SuppressWarnings("unchecked")
   public <T> StandardEnvironment(Environment env, Class<T> key, T value) {
     Assert.notNullParam(key, "key");
-    
-    entries = new HashMap<Class<?>, Object>(1);
+    entries = new HashMap<Class<?>,Object>(1);
     entries.put(key, value);
     parentEnv = env;
   }
-  
+
+  /**
+   * Returns the map with the entries in this Environment. An entry is a key
+   * value pair.
+   * 
+   * @return a map with the entries.
+   */
+  public Map<Class<?>,Object> getEntryMap() {
+    return entries;
+  }
+
   /**
    * Returns the corresponding value of this Envrionment's entries. If none is
-   * found from the entries then the entry is returned from the parent environment.
-   * If a value to the key does not exist, <code>null</code> is returned.
+   * found from the entries then the entry is returned from the parent
+   * environment. If a value to the key does not exist,
+   * AraneaNoSuchEnvironmentEntryException is thrown.
+   * 
    * @param key the key of the entry
-   * @return the value under the key provided or <code>null</code> if not found
+   * @return the Object under the key provided
+   * @throws AraneaNoSuchEnvironmentEntryException
    */
   @SuppressWarnings("unchecked")
   public <T> T getEntry(Class<T> key) {
     if (entries.containsKey(key)) {
       return (T) entries.get(key);
     }
-    
     if (parentEnv == null) {
       return null;
     }
-    
-    return parentEnv.getEntry(key); 
+    return parentEnv.getEntry(key);
   }
 
-  @Override
   public String toString() {
     return toString(0);
   }
-  
-  private static final String space = " ";
-  private static final String lf = "\n";
-  
-  @SuppressWarnings("unchecked")
-  private String toString(int pad) {
-    String padding = StringUtils.leftPad("", pad, space);
-    StringBuffer result = new StringBuffer();
 
+  private String toString(int pad) {
+    String padding = StringUtils.leftPad("", pad, " ");
+    StringBuffer result = new StringBuffer();
     if (entries != null) {
-      for (Map.Entry<Class<?>, Object> e : entries.entrySet()) {
-        result.append(padding + e.getKey() + "=" + ObjectUtils.identityToString(e.getValue()) + lf);
+      for (Entry<Class<?>, Object> entry : entries.entrySet()) {
+        result.append(padding + entry.getKey() + "=" + ObjectUtils.identityToString(entry.getValue()) + "\n");
       }
     }
-
     if (parentEnv instanceof StandardEnvironment) {
-      result.append(((StandardEnvironment)parentEnv).toString(pad+(space.length()*2)));
+      result.append(((StandardEnvironment) parentEnv).toString(pad
+          + 2));
     }
-
-    result.append(lf);
+    result.append("\n");
     return result.toString();
   }
 }

@@ -23,7 +23,7 @@ import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.layout.LayoutRowHtmlTag;
-import org.araneaframework.jsp.tag.uilib.list.ListTag;
+// TODO import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -67,8 +67,8 @@ public class ComponentListHeaderTag extends LayoutRowHtmlTag {
   
   protected void writeHeader(Writer out) throws Exception {
     // Get list data
-    String listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
-    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    String listId = (String)requireContextEntry(/* TODO ListTag.LIST_FULL_ID_KEY*/ "");    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel)requireContextEntry(/* TODO ListTag.LIST_VIEW_MODEL_KEY */ "");
     
     // Get order data
     ListStructure.ViewModel listStructureViewModel = viewModel.getListStructure();

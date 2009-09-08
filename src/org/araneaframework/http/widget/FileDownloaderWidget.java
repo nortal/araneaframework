@@ -16,6 +16,7 @@
 
 package org.araneaframework.http.widget;
 
+import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
@@ -32,6 +33,9 @@ import org.araneaframework.uilib.support.FileInfo;
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class FileDownloaderWidget extends DownloaderWidget {
+
+  private static final long serialVersionUID = 1L;
+
   protected FileInfo file;
   
   protected String fileName;
@@ -51,7 +55,7 @@ public class FileDownloaderWidget extends DownloaderWidget {
   }
 
   /** @since 1.1 */
-  public FileDownloaderWidget(byte[] fileContent, Map<String, String> headers) {
+  public FileDownloaderWidget(byte[] fileContent, Map headers) {
     super(fileContent, headers);
   }
   
@@ -96,18 +100,24 @@ public class FileDownloaderWidget extends DownloaderWidget {
     return fileName;
   }
 
-  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    super.action(path, input, output);
-
     HttpServletResponse response = ServletUtil.getResponse(output);
-    if (headers != null) {
-      for (Map.Entry<String, String> entry : headers.entrySet()) {
-        response.setHeader(entry.getKey(), entry.getValue());
-      }
-    } else
-      response.setHeader("Content-Disposition", (contentDispositionInline ? "inline;" : "attachment;") + "filename=" + fileName);
 
+    response.setContentType(getContentType());
+
+    if (headers != null) {
+      for (Iterator i = headers.entrySet().iterator(); i.hasNext();) {
+        Map.Entry entry = (Map.Entry) i.next();
+        response.setHeader((String) entry.getKey(), (String) entry.getValue());
+      }
+    } else {
+      response.setHeader("Content-Disposition",
+          (contentDispositionInline ? "inline" : "attachment") + "; filename="
+              + fileName + "; size=" + getData().length + ";");
+    }
+
+    response.setContentLength(getData().length);
+    response.getOutputStream().write(getData());
     close();
   }
 

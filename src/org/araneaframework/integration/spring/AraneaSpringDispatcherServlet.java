@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.integration.spring;
 
@@ -41,147 +41,167 @@ import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * Aranea dispatcher servlet that assembles Aranea components according
- * to the configuration specified in Spring bean configuration files.
+ * Aranea dispatcher servlet that assembles Aranea components according to the
+ * configuration specified in Spring bean configuration files.
  */
-public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {   
+public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
+
+  private static final long serialVersionUID = 1L;
+
   private static boolean isSpringWebPresent = true;
-  
+
   static {
     try {
       Class.forName("org.springframework.web.context.WebApplicationContext");
-    }
-    catch (ClassNotFoundException e) {
+    } catch (ClassNotFoundException e) {
       isSpringWebPresent = false;
     }
   }
-  
-  public static final String ARANEA_START = "araneaApplicationStart";  
-  
+
+  public static final String ARANEA_START = "araneaApplicationStart";
+
   public static final String ARANEA_DEFAULT_CONF_XML = "conf/default-aranea-conf.xml";
+
   public static final String ARANEA_DEFAULT_CONF_PROPERTIES = "conf/default-aranea-conf.properties";
-  
+
   public static final String DEFAULT_ARANEA_ROOT = "araneaApplicationRoot";
+
   public static final String DEFAULT_ARANEA_CUSTOM_CONF_XML = "/WEB-INF/aranea-conf.xml";
+
   public static final String DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES = "/WEB-INF/aranea-conf.properties";
-  
+
   public static final String ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER = "araneaCustomConfXML";
+
   public static final String ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER = "araneaCustomConfProperties";
+
   public static final String ARANEA_START_CLASS_INIT_PARAMETER = "araneaApplicationStart";
+
   public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
-  
+
   protected BeanFactory webCtx;
+
   protected BeanFactory beanFactory;
-  
-  @Override
-  public void init() throws ServletException {    
-    //Reading init-param's
-    String araneaCustomConfXml = DEFAULT_ARANEA_CUSTOM_CONF_XML;    
-    if (getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER) != null)
-      araneaCustomConfXml = getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER);    
-    
-    String araneaCustomConfProperties = DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES;    
-    if (getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER) != null)
-    	araneaCustomConfProperties = getServletConfig().getInitParameter(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER);    
-    
-    isSpringWebPresent = 
-    	isSpringWebPresent ? WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null : isSpringWebPresent;
-    
+
+  public void init() throws ServletException {
+    // Reading init-param's
+    String araneaCustomConfXml = DEFAULT_ARANEA_CUSTOM_CONF_XML;
+    String araneaCustomConfProperties = DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES;
+
+    if (getParam(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER) != null) {
+      araneaCustomConfXml = getParam(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER);
+    }
+
+    if (getParam(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER) != null) {
+      araneaCustomConfProperties = getParam(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER);
+    }
+
     if (isSpringWebPresent()) {
-      //Getting the Spring loaded main web application context
-      webCtx  = WebApplicationContextUtils.getWebApplicationContext(getServletContext());        
-      beanFactory = ((ConfigurableApplicationContext) webCtx).getBeanFactory();           
+      isSpringWebPresent = WebApplicationContextUtils
+          .getWebApplicationContext(getServletContext()) != null;
     }
-    else {    
-      beanFactory = new DefaultListableBeanFactory();
+
+    if (isSpringWebPresent()) {
+      // Getting the Spring loaded main web application context
+      this.webCtx = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+      this.beanFactory = ((ConfigurableApplicationContext) this.webCtx).getBeanFactory();
+    } else {
+      this.beanFactory = new DefaultListableBeanFactory();
     }
-    
+
     // Loading default Aranea configuration
-    XmlBeanDefinitionReader confReader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) beanFactory);
+    XmlBeanDefinitionReader confReader =
+      new XmlBeanDefinitionReader((BeanDefinitionRegistry) this.beanFactory);
     confReader.loadBeanDefinitions(new ClassPathResource(ARANEA_DEFAULT_CONF_XML));
-    
-    //Loading default properties
+
+    // Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
     cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
     cfg.setIgnoreUnresolvablePlaceholders(true);
-        
-    //Loading custom properties
+
+    // Loading custom properties
     Properties localConf = new Properties();
     try {
-      if (getServletContext().getResource(araneaCustomConfProperties) != null)
+      if (getServletContext().getResource(araneaCustomConfProperties) != null) {
         localConf.load(getServletContext().getResourceAsStream(araneaCustomConfProperties));
-    }
-    catch (IOException e) {
+      }
+    } catch (IOException e) {
       throw new ServletException(e);
     }
+
     cfg.setProperties(localConf);
     cfg.setLocalOverride(true);
-    
-    //Loading custom configuration 
+
+    // Loading custom configuration
     try {
-      if (getServletContext().getResource(araneaCustomConfXml) != null) {    
-        confReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), araneaCustomConfXml));
+      if (getServletContext().getResource(araneaCustomConfXml) != null) {
+        confReader.loadBeanDefinitions(
+            new ServletContextResource(getServletContext(), araneaCustomConfXml));
       }
-    }
-    catch (MalformedURLException e) {
+    } catch (MalformedURLException e) {
       throw new AraneaRuntimeException(e);
     }
-    
-    //Applying properties to active configuration
-    cfg.postProcessBeanFactory((ConfigurableListableBeanFactory) beanFactory);
-    
-    //Reading the starting widget from an init parameter
+
+    // Applying properties to active configuration
+    cfg.postProcessBeanFactory((ConfigurableListableBeanFactory) this.beanFactory);
+
+    // Reading the starting widget from an init parameter
     if (getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER) != null) {
-      Class<?> startClass;
+      Class startClass;
       try {
-        startClass = ClassLoaderUtil.loadClass(
-            getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
-      }
-      catch (ClassNotFoundException e) {
+        startClass = ClassLoaderUtil.loadClass(getServletConfig()
+            .getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
+      } catch (ClassNotFoundException e) {
         throw new AraneaRuntimeException(e);
       }
-      
+
       RootBeanDefinition startBeanDef = new RootBeanDefinition(startClass);
       startBeanDef.setSingleton(false);
-      ((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(ARANEA_START, startBeanDef);
+      ((BeanDefinitionRegistry) this.beanFactory).registerBeanDefinition(
+          ARANEA_START, startBeanDef);
     }
-    
-    super.init();        
-  }  
-  
-  @Override
+
+    super.init();
+  }
+
+  private String getParam(String paramName) {
+    return getServletConfig().getInitParameter(paramName);
+  }
+
   protected ServletServiceAdapterComponent buildRootComponent() {
-    //Getting the Aranea root component name
-    String araneaRoot = DEFAULT_ARANEA_ROOT;    
-    if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER) != null)
-      araneaRoot = getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER);    
-    
-    //Creating the root bean
-    ServletServiceAdapterComponent adapter = 
-      (ServletServiceAdapterComponent) beanFactory.getBean(araneaRoot);
+    // Getting the Aranea root component name
+    String araneaRoot = DEFAULT_ARANEA_ROOT;
+    if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER) != null) {
+      araneaRoot = getServletConfig().getInitParameter(
+          ARANEA_ROOT_INIT_PARAMETER);
+    }
+
+    // Creating the root bean
+    ServletServiceAdapterComponent adapter =
+        (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
+
     return adapter;
   }
-  
-  @Override
-  protected Map<Class<?>, Object> getEnvironmentEntries() { 
-    Map<Class<?>, Object> result = new HashMap<Class<?>, Object>();
-    result.put(BeanFactory.class, beanFactory);   
+
+  protected Map getEnvironmentEntries() {
+    Map result = new HashMap();
+    result.put(BeanFactory.class, this.beanFactory);
     if (isSpringWebPresent()) {
-      result.put(ApplicationContext.class, webCtx);
-      result.put(WebApplicationContext.class, webCtx);
+      result.put(ApplicationContext.class, this.webCtx);
+      result.put(WebApplicationContext.class, this.webCtx);
     }
     return result;
   }
 
   /**
-   * Returns <code>true</code> iff Spring web application context is present. When
-   * web application context is present, dispatcher servlet will use it, instead of
-   * creating new BeanFactory itself. 
+   * Returns <code>true</code> if Spring web application context is present.
+   * When web application context is present, dispatcher servlet will use it,
+   * instead of creating new BeanFactory itself. This method should only be
+   * called after {@link AraneaSpringDispatcherServlet#init()} has run.
    * 
-   * This method should only be called after {@link AraneaSpringDispatcherServlet#init()} has run.
    * @since 1.1
    */
   protected boolean isSpringWebPresent() {
     return isSpringWebPresent;
   }
+
 }

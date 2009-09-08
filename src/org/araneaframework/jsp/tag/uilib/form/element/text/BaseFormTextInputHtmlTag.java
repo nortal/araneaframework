@@ -35,7 +35,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long size;
   protected String onChangePrecondition;
-  protected String disabledRenderMode;
+  protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
 
   {
     baseStyleClass = "aranea-text";
@@ -121,7 +121,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       // this is _not_ good, but there seems to be no other way
       JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
       if (onChangePrecondition == null)
-    	  onChangePrecondition = "return Aranea.UI.isChanged('" + name + "');";
+        onChangePrecondition = "return Aranea.UI.isChanged('" + name + "');";
       this.writeSubmitScriptForUiEvent(out, "onblur", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
     }
     JspUtil.writeAttributes(out, attributes);

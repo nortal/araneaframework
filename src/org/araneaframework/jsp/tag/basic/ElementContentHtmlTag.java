@@ -18,7 +18,6 @@ package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
 import org.araneaframework.jsp.tag.BaseTag;
-import org.araneaframework.jsp.util.JspUtil;
 
 
 /**
@@ -37,10 +36,7 @@ public class ElementContentHtmlTag extends BaseTag {
     super.doStartTag(out);
 
     ElementHtmlTag parent = (ElementHtmlTag)requireContextEntry(ElementHtmlTag.KEY);
-    parent.onContent();
-
-    parent.writeAttributes(out);
-    JspUtil.writeCloseStartTag(out);
+    parent.onContent(out);
 
     return EVAL_BODY_INCLUDE;
   }

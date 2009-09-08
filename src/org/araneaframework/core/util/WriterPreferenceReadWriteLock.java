@@ -17,6 +17,8 @@
 
 package org.araneaframework.core.util;
 
+import java.io.Serializable;
+
 /** 
  * A ReadWriteLock that prefers waiting writers over
  * waiting readers when there is contention. This class
@@ -32,7 +34,9 @@ package org.araneaframework.core.util;
  * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
  **/
 
-public class WriterPreferenceReadWriteLock implements ReadWriteLock {
+public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   protected long activeReaders_ = 0; 
   protected Thread activeWriter_ = null;
@@ -147,11 +151,16 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock {
    * to perform the notifications.  This base class simplifies mechanics.
    **/
 
-  protected abstract class Signaller  { // base for ReaderLock and WriterLock
+  protected abstract class Signaller implements Serializable { // base for ReaderLock and WriterLock
+
+    private static final long serialVersionUID = 1L;
+
     abstract void signalWaiters();
   }
 
   protected class ReaderLock extends Signaller implements Sync {
+
+    private static final long serialVersionUID = 1L;
 
     public  void acquire() throws InterruptedException {
       if (Thread.interrupted()) throw new InterruptedException();
@@ -229,7 +238,9 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock {
 
   }
 
-  protected class WriterLock extends Signaller implements  Sync {
+  protected class WriterLock extends Signaller implements Sync {
+
+    private static final long serialVersionUID = 1L;
 
     public void acquire() throws InterruptedException {
       if (Thread.interrupted()) throw new InterruptedException();

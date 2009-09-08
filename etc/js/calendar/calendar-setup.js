@@ -213,5 +213,3 @@ Calendar.setup = function (params) {
 
 	return cal;
 };
-
-window['calendar/calendar-setup.js'] = true;

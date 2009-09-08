@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased;
 
 import java.io.Serializable;
 import java.util.Map;
-
 
 /**
  * General interface for objects that can create an expression.
@@ -27,17 +26,16 @@ import java.util.Map;
  * 
  * @see Expression
  * @see ExpressionFactory
- * 
  * @author Rein Raudjärv
  */
 public interface ExpressionBuilder extends Serializable {
-	/**
-	 * Builds <code>Expression</code>.
-	 * 
-	 * @param data
-	 *            object that can be used to configure building the expressions.
-	 * @return <code>Expression</code> that is built according to the
-	 *         <code>data</code> or null if no expression has been built.
-	 */
-	Expression buildExpression(Map<String, Object> data);
+
+  /**
+   * Builds <code>Expression</code>.
+   * 
+   * @param data object that can be used to configure building the expressions.
+   * @return <code>Expression</code> that is built according to the
+   *         <code>data</code> or null if no expression has been built.
+   */
+  Expression buildExpression(Map data);
 }

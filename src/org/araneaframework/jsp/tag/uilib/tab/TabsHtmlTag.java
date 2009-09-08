@@ -41,15 +41,16 @@ public class TabsHtmlTag extends BaseTag {
 	@Override
   protected int doStartTag(Writer out) throws Exception {
 		TabContainerHtmlTag tabContainerHtmlTag = new TabContainerHtmlTag();
+		registerSubtag(tabContainerHtmlTag);
 		tabContainerHtmlTag.setId(id);
-		registerAndExecuteStartTag(tabContainerHtmlTag);
+		executeStartSubtag(tabContainerHtmlTag);
 		
 		TabBodyTag tabBodyTag = new TabBodyTag();
 		registerAndExecuteStartTag(tabBodyTag);
 		executeEndTagAndUnregister(tabBodyTag);
 
 		executeEndTagAndUnregister(tabContainerHtmlTag);
-		
+
 		return SKIP_BODY;
 	}
 

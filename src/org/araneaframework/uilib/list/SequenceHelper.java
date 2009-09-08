@@ -405,7 +405,8 @@ public class SequenceHelper implements Serializable {
      */
     protected ViewModel() {
       this.firstPage = new Long(0);
-      this.lastPage = new Long(SequenceHelper.this.getPageCount() - 1);
+      long pageCount = SequenceHelper.this.getPageCount();
+      this.lastPage = new Long(pageCount > 0 ? pageCount - 1: pageCount);
       
       this.blockFirstPage = new Long(SequenceHelper.this.getBlockFirstPage());
       this.blockLastPage = new Long(SequenceHelper.this.getBlockLastPage());

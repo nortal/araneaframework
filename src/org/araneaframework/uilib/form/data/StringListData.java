@@ -22,12 +22,32 @@ import org.araneaframework.uilib.form.Data;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
-public class StringListData extends Data<List<String>> {
+public class StringListData extends Data {
+
+  private static final long serialVersionUID = 1L;
 
   public StringListData() {
     super(List.class, "List<String>");
-    value = new ArrayList<String>();
+    this.value = new ArrayList();
+  }
+
+  /**
+   * This Data object requires special check so that the order of elements in
+   * the values lists would not have any effect on whether the lists contain the
+   * same data.
+   * 
+   * @since 1.2
+   */
+  public boolean isStateChanged() {
+    if (this.markedBaseValue == null && this.value == null) {
+      return false;
+    } else if (this.markedBaseValue == null || this.value == null) {
+      return true;
+    } else {
+      List baseValues = (List) this.markedBaseValue;
+      List values = (List) this.value;
+      return !(baseValues.size() == values.size() && baseValues.containsAll(values));
+    }
   }
 }

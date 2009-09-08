@@ -32,6 +32,9 @@ import org.springframework.beans.factory.BeanFactory;
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
 public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSelectorAware {
+
+  private static final long serialVersionUID = 1L;
+
   protected BeanFactory getBeanFactory() {
     return getEnvironment().getEntry(BeanFactory.class);
   }
@@ -57,9 +60,11 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
   }
   
   protected class ComponentImpl extends BaseUIWidget.ComponentImpl {
+
+    private static final long serialVersionUID = 1L;
+
     public void init(Scope scope, Environment env) {
       SpringInjectionUtil.injectBeans(env, TemplateBaseWidget.this);
-  
       super.init(scope, env);
     }
   }

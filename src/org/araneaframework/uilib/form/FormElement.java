@@ -274,7 +274,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced by this {@link FormElement}.
    * @since 1.1 */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()));
+    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfiguration(getEnvironment()));
     if (result == null) {
       result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
     }

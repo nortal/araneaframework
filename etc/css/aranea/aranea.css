@@ -5,10 +5,9 @@
 	color: white;
 	background-color: #e01601;
 	border: 1px solid black;
-	width: 100px;
-	height: 50px;
-	padding-left: 4px;
+	padding: 10px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	font-size: 11px;
+	white-space: nowrap;
 }

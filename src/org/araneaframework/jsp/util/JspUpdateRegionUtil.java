@@ -27,7 +27,7 @@ import org.araneaframework.uilib.util.NameUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class JspUpdateRegionUtil {
-  public static List<String> parseUpdateRegionNames(String updateRegions)  {
+  public static List parseUpdateRegionNames(String updateRegions) {
     return JspUtil.parseMultiValuedAttribute(updateRegions);
   }
 
@@ -35,35 +35,45 @@ public class JspUpdateRegionUtil {
     return regionName;
   }
 
-  public static List<String> getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) {
-    List<String> result = JspUpdateRegionUtil.getUpdateRegionLocalNames(pageContext, updateRegions);
+  public static List getUpdateRegionNames(PageContext pageContext, String updateRegions, String globalUpdateRegions) {
+    List result = JspUpdateRegionUtil.getUpdateRegionLocalNames(pageContext, updateRegions);
     result.addAll(JspUpdateRegionUtil.getUpdateRegionGlobalNames(pageContext, globalUpdateRegions));
 
     return result;
   }
 
-  public static List<String> getUpdateRegionLocalNames(PageContext pageContext, String updateRegions)  {
-    List<String> result = new ArrayList<String>();
+  public static List getUpdateRegionLocalNames(PageContext pageContext, String updateRegions) {
+    List result = new ArrayList();
 
     String contextWidgetId = JspWidgetUtil.getContextWidgetFullId(pageContext);
 
-    for (String regionName : parseUpdateRegionNames(updateRegions)) {
+    for (Iterator i = parseUpdateRegionNames(updateRegions).iterator(); i.hasNext();) {
+      String regionName = (String) i.next();
+
       result.add(NameUtil.getFullName(contextWidgetId, regionName));
     }
 
     return result;
   }  
 
-  public static List<String> getUpdateRegionGlobalNames(PageContext pageContext, String globalUpdateRegions)  {
-    return parseUpdateRegionNames(globalUpdateRegions);
+  public static List getUpdateRegionGlobalNames(PageContext pageContext, String globalUpdateRegions) {
+    List result = new ArrayList();
+
+    for (Iterator i = parseUpdateRegionNames(globalUpdateRegions).iterator(); i.hasNext();) {
+      String regionName = (String) i.next();
+
+      result.add(regionName);
+    }
+
+    return result;
   }
 
-  public static String formatUpdateRegionsJS(List<String> updateRegions) {
+  public static String formatUpdateRegionsJS(List updateRegions) {
     StringBuffer result = new StringBuffer();
 
     if (updateRegions != null) {
-      for (Iterator<String> i = updateRegions.iterator(); i.hasNext();) {
-        String region = i.next();
+      for (Iterator i = updateRegions.iterator(); i.hasNext();) {
+        String region = (String) i.next();
         if (region.indexOf(',') != -1)
           throw new AraneaRuntimeException("Updateregion name '" + region + "' cannot contain ','");
 

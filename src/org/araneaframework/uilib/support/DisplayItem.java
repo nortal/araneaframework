@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.support;
 
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 
@@ -28,10 +29,14 @@ import org.araneaframework.uilib.form.control.SelectControl;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DisplayItem implements java.io.Serializable {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Item's label.
    */
   protected String displayString;
+
   /**
    * Item's value.
    */
@@ -89,5 +94,16 @@ public class DisplayItem implements java.io.Serializable {
 	
   public void setDisabled(boolean disabled) {
     this.disabled = disabled;
+  }
+
+  /**
+   * @since 1.2
+   */
+  public boolean equals(Object obj) {
+    if (obj != null && obj instanceof DisplayItem) {
+      DisplayItem other = (DisplayItem) obj;
+      return StringUtils.equals(other.value, this.value);
+    }
+    return false;
   }
 }

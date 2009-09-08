@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -47,7 +46,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvider {
+public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvider<T> {
 	private static final Log log = LogFactory.getLog(MemoryBasedListDataProvider.class);
 	private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
 	
@@ -156,7 +155,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	 *            0-based index of processed item
 	 * @return processed item.
 	 */
-	public Object getItem(Long index) throws Exception {
+	public T getItem(Long index) throws Exception {
 		process(this.currentFilter, this.currentOrder, this.allData,
 				this.processedData);
 		return this.processedData.get(index.intValue());
@@ -168,7 +167,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	public void setOrderExpression(ComparatorExpression orderExpr) {
 		this.doOrder = true;
 		if (orderExpr != null) {
-			this.currentOrder = new BeanOrder<T>(orderExpr);
+			this.currentOrder = new BeanOrder(orderExpr);
 		} else {
 			this.currentOrder = null;
 		}
@@ -207,8 +206,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	
 	/** @since 1.1 */
 	protected void notifyDataChangeListeners() {
-		for (Iterator<DataUpdateListener> i = dataUpdateListeners.iterator(); i.hasNext(); ) {
-			DataUpdateListener listener = i.next();
+		for (DataUpdateListener listener : dataUpdateListeners) {
 			listener.onDataUpdate();
 		}
 	}
@@ -228,7 +226,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	/**
 	 * Processes the list items, filtering and ordering them, if there is need.
 	 */
-	protected void process(BeanFilter beanFilter, Comparator<T> beanOrder,
+	protected void process(BeanFilter beanFilter, Comparator<? super T> beanOrder,
 			List<T> all, List<T> processed) {
 		if (this.doFilter) {
 			filter(beanFilter, all, processed);
@@ -255,9 +253,9 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 			filtered.addAll(all);
 			return;
 		}
-		for (T vo : all) {
-			if (beanFilter.suits(vo)) {
-				filtered.add(vo);
+		for (T element : all) {
+			if (beanFilter.suits(element)) {
+				filtered.add(element);
 			}
 		}
 	}
@@ -265,7 +263,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	/**
 	 * Orders the items.
 	 */
-	protected void order(Comparator<T> comparator, List<T> ordered) {
+	protected void order(Comparator<? super T> comparator, List<T> ordered) {
 		log.debug("Ordering list itmes");
 		if (comparator != null) {
 			Collections.sort(ordered, comparator);
@@ -285,10 +283,10 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	 * 
 	 * @return sublist of the given list.
 	 */
-	public static <T> List<T> getSubList(List<T> records, int start, int end) {
+	public static <E> List<E> getSubList(List<E> records, int start, int end) {
 		int len = end - start + 1;
 
-		List<T> subRecords = null;
+		List<E> subRecords = null;
 		if (start < 0) {
 			start = 0;
 		}
@@ -297,28 +295,28 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 		if (end < 0) {
 			subRecords = records;
 		} else if (start >= records.size()) {
-			subRecords = new ArrayList<T>();
+			subRecords = new ArrayList<E>();
 		} else {
 			if (end > records.size()) {
 				end = records.size();
 			}
 
-			List<T> subList = records.subList(start, end);
-			List<T> tmpRecords = new ArrayList<T>();
+			List<E> subList = records.subList(start, end);
+			ArrayList<E> tmpRecords = new ArrayList<E>();
 			for (int i = 0; i < subList.size(); i++) {
 				tmpRecords.add(subList.get(i));
 			}
 			subRecords = tmpRecords;
 		}
 
-		return new ArrayList<T>(subRecords);
+		return new ArrayList<E>(subRecords);
 	}
 
 	// *********************************************************************
 	// * INNER CLASSES
 	// *********************************************************************
 
-	class BeanOrder<V> implements Comparator<V>, Serializable {
+	class BeanOrder implements Comparator<T>, Serializable {
 		
 		private static final long serialVersionUID = 1L;
 
@@ -334,7 +332,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 					MemoryBasedListDataProvider.this.beanClass);
 		}
 
-		public int compare(V o1, V o2) {
+		public int compare(T o1, T o2) {
 			this.resolver1.setBean(o1);
 			this.resolver2.setBean(o2);
 			try {

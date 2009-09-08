@@ -65,7 +65,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 		this.list.getDataProvider().refreshData();
 	}
 	
-	public void handleEventAdd(String eventParameter) throws Exception {
+	public void handleEventAdd() throws Exception {
 		getFlowCtx().start(new ContractAddEditWidget(), 
 				new FlowContext.Handler() {
 					          private static final long serialVersionUID = 1L;
@@ -91,7 +91,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 		getFlowCtx().start(new ContractAddEditWidget(id));
 	}
 	
-	public void handleEventCancel(String eventParameter) throws Exception {
+	public void handleEventCancel() throws Exception {
 		getFlowCtx().cancel();
 	}
 	

@@ -17,7 +17,7 @@ Modalbox.Methods = {
 	overrideAlert: false, // Override standard browser alert message with ModalBox
 	focusableElements: new Array(),
 	options: {
-                title : null,
+		title : null,
 		//title: "ModalBox Window", // Title of the ModalBox window
 		overlayClose: false, // Close modal box by clicking on overlay
 		width: 500, // Default width in px
@@ -106,7 +106,7 @@ Modalbox.Methods = {
 	
 	hide: function(options) { // External hide method to use from external HTML and JS
 		if(this.initialized) {
-			if(options) Object.extend(this.options, options); // Passing callbacks
+			if(options && typeof options.element != 'function') Object.extend(this.options, options); // Passing callbacks
 			if(this.options.transitions)
 				Effect.SlideUp(this.MBwindow, { duration: this.options.slideUpDuration, afterFinish: this._deinit.bind(this) } );
 			else {
@@ -132,6 +132,7 @@ Modalbox.Methods = {
 		this._setOverlay();
 		this._setWidth();
 		this._setPosition();
+        Element.setStyle(document.body, {overflow: 'hidden'});
 		if(this.options.transitions) {
 			Element.setStyle(this.MBoverlay, {opacity: 0});
 			new Effect.Fade(this.MBoverlay, {
@@ -210,33 +211,25 @@ Modalbox.Methods = {
 				if(htmlRegExp.test(this.content)) { // Plain HTML given as a parameter
 					this._insertContent(this.content);
 					this._putContent(this.content);
+					// again -- for correct centering
+					this._setPosition();
 				} else 
 					new Ajax.Request( this.content, { method: this.options.method.toLowerCase(), parameters: this.options.params, 
 						onComplete: function(transport) {
-							window.modalTransport = transport;
 							var response = new String(transport.responseText);
 							this._insertContent(transport.responseText.stripScripts());
 							response.extractScripts().map(function(script) {
-							    var ss = script.replace("<!--", "").replace("// -->", "");
-							    return eval(ss);
+								var ss = script.replace("<!--", "").replace("// -->", "");
+								return eval(ss);
 							}.bind(window));
 							this._putContent(transport.responseText);
 							// again -- for correct centering
 							this._setPosition();
- 							AraneaPage.findSystemForm();
-							var f = function() {
-                                _ap.addSystemLoadEvent(AraneaPage.init);
-                                DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
-								araneaPage().onload();
-								window.modalTransport = null;
-							};
-							// -- force the delay here
-							setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
 						}.bind(this),
-					onException: function(AjaxRequest, exc) {
-					  araneaPage().debug("Exception has occured while processing or receiving Modalbox request.");
-					  araneaPage().debug(exc);
-					}.bind(this)
+						onException: function(AjaxRequest, exc) {
+							_ap.debug("Exception has occured while processing or receiving Modalbox request.");
+							_ap.debug(exc);
+						}.bind(this)
 					});
 					
 			} else if (typeof this.content == 'object') {// HTML Object is given
@@ -252,9 +245,10 @@ Modalbox.Methods = {
 	_insertContent: function(content){
 		Element.extend(this.MBcontent);
 		this.MBcontent.update("");
-		if(typeof content == 'string')
-			this.MBcontent.hide().update(content);
-		else if (typeof this.content == 'object') { // HTML Object is given
+		if(typeof content == 'string') {
+			this.MBcontent.hide().insert(content); // Changed 'update' to 'insert' - (MT, 2009-01-06)
+			this.MBcontent.setStyle({overflow: 'visible', height: 'auto'});
+		} else if (typeof this.content == 'object') { // HTML Object is given
 			var _htmlObj = content.cloneNode(true); // If node already a part of DOM we'll clone it
 			// If clonable element has ID attribute defined, modifying it to prevent duplicates
 			if(this.content.id) this.content.id = "MB_" + this.content.id;
@@ -269,8 +263,19 @@ Modalbox.Methods = {
 	
 	_putContent: function(theContent){
 		// Prepare and resize modal box for content
-		if(this.options.height == this._options.height)
-			Modalbox.resize(0, this.MBcontent.getHeight() - Element.getHeight(this.MBwindow) + Element.getHeight(this.MBheader), {
+		var byHeight = $(this.MBcontent).getHeight() - $(this.MBwindow).getHeight() + $(this.MBheader).getHeight();
+
+		// This is added for Aranea:
+		var maxHeight = this.options.maxHeight;	// if less or equal to 1 then consider it as percentage
+		maxHeight = (maxHeight && maxHeight <= 1) ? document.documentElement.clientHeight * maxHeight : null;
+
+		if(this.options.height == this._options.height) {
+			// This condition is added for Aranea:
+			if (maxHeight && maxHeight < this.MBcontent.getHeight()) {
+				byHeight = maxHeight - $(this.MBwindow).getHeight();
+				this.MBcontent.setStyle({overflow: 'auto', height: maxHeight - $(this.MBheader).getHeight() - 13 + 'px'});
+			}
+			Modalbox.resize(0, byHeight, {
 				afterResize: function(){
 					this.MBcontent.show();
 					this.focusableElements = this._findFocusableElements();
@@ -278,7 +283,7 @@ Modalbox.Methods = {
 					this.event("afterLoad", theContent); // Passing callback
 				}.bind(this)
 			});
-		else { // Height is defined. Creating a scrollable window
+		} else { // Height is defined. Creating a scrollable window
 			this._setWidth();
 			this.MBcontent.setStyle({overflow: 'auto', height: Element.getHeight(this.MBwindow) - Element.getHeight(this.MBheader) - 13 + 'px'});
 			this.MBcontent.show();
@@ -413,27 +418,26 @@ Modalbox.Methods = {
 	},
 	
 	_removeElements: function () {
-		if(navigator.appVersion.match(/\bMSIE\b/)) {
+		$(this.MBoverlay).remove();
+		$(this.MBwindow).remove();
+		if(Prototype.Browser.IE && !navigator.appVersion.match(/\b7.0\b/)) {
 			this._prepareIE("", ""); // If set to auto MSIE will show horizontal scrolling
 			window.scrollTo(this.initScrollX, this.initScrollY);
 		}
-		Element.remove(this.MBoverlay);
-		Element.remove(this.MBwindow);
 		
 		/* Replacing prefixes 'MB_' in IDs for the original content */
-		if(typeof this.content == 'object' && this.content.id && this.content.id.match(/MB_/)) {
-			this.content.getElementsBySelector('*[id]').each(function(el){ el.id = el.id.replace(/MB_/, ""); });
-			this.content.id = this.content.id.replace(/MB_/, "");
+		if(typeof this.content == 'object') {
+			if(this.content.id && this.content.id.match(/MB_/)) {
+				this.content.id = this.content.id.replace(/MB_/, "");
+			}
+			this.content.select('*[id]').each(function(el){ el.id = el.id.replace(/MB_/, ""); });
 		}
 		/* Initialized will be set to false */
 		this.initialized = false;
-		
-		if(navigator.appVersion.match(/\bMSIE\b/))
-			this._toggleSelects(); // Toggle back 'select' elements in IE
 		this.event("afterHide"); // Passing afterHide callback
 		this.setOptions(this._options); //Settings options object into intial state
 	},
-	
+
 	_setOverlay: function () {
 		if(navigator.appVersion.match(/\bMSIE\b/)) {
 			this._prepareIE("100%", "hidden");
@@ -446,13 +450,14 @@ Modalbox.Methods = {
 	},
 	
 	_setPosition: function () {
-        //$(this.MBwindow).setStyle({left: Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 ) + "px"});
-        var left = Math.round((Element.getWidth(document.body) - Element.getWidth(this.MBwindow)) / 2 );
-        var top = Math.round((Element.getHeight(document.body) - Element.getHeight(this.MBwindow)) / 2 );
-        if (top < 0) top = 0;
+		var clientHeight = document.viewport.getHeight();
+		var clientWidth = document.viewport.getWidth();
+		var vleft = Math.round((clientWidth - $(this.MBwindow).getWidth()) / 2);
+		var vtop = Math.round((clientHeight - $(this.MBwindow).getHeight()) / 2);
 
-        this.MBwindow.style.left = left + "px";
-        this.MBwindow.style.top = top + "px";
+		if (vtop < 0) vtop = 0;
+
+		$(this.MBwindow).setStyle({left: vleft + "px", top: vtop + "px"});
 	},
 	
 	_setWidthAndPosition: function () {
@@ -562,5 +567,3 @@ Object.extend(Object.extend(Effect.ScaleBy.prototype, Effect.Base.prototype), {
     this.element.setStyle(d);
   }
 });
-
-window['js/modalbox/modalbox.js'] = true;

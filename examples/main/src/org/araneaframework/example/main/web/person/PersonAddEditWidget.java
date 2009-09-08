@@ -39,7 +39,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 	
 	/* The form. Person data (represented by class PersonMO) will be binded to it, thus 
 	   usage of BeanFormWidget instead of FormWidget. */
-	private BeanFormWidget form;
+	private BeanFormWidget<PersonMO> form;
 
 	/**
 	 * Constructor for adding new person.
@@ -66,9 +66,12 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 		addWidget("personForm", form);
 	}
 
-	private BeanFormWidget buildPersonEditForm() throws Exception {
-		/* Create the form, specifying the class of data that is binded to this form. */
-		BeanFormWidget form = new BeanFormWidget(PersonMO.class);
+	private BeanFormWidget<PersonMO> buildPersonEditForm() throws Exception {
+    // get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID); 
+    PersonMO person = editMode ? (PersonMO) getGeneralDAO().getById(PersonMO.class, personId) : new PersonMO();
+		
+    /* Create the form, specifying the class of data that is binded to this form. */
+		BeanFormWidget<PersonMO> form = new BeanFormWidget(PersonMO.class, person);
 		
 		/* Adding the elements is done like in our SimpleFormWidget example, except
 		 * that Data type is determined from bean class automatically and specifying
@@ -81,23 +84,14 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 		form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
 		form.addBeanElement("salary", "#Salary", new FloatControl(), false);
 		
-		if (editMode) {
-			/* fetch the person with given ID from database */
-			PersonMO person = (PersonMO) getGeneralDAO().getById(PersonMO.class, personId);
-			/* and fill the form with current person data */
-			form.readFromBean(person);
-		} /* otherwise we have no data and all form fields are initially left blank */
-
 		return form;
 	}
 	
-	public void handleEventSave(String eventParameter) throws Exception {
+	public void handleEventSave() throws Exception {
 		// if form data is found to be valid  
 		if (form.convertAndValidate()) {
-			// get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID); 
-			PersonMO person = personId != null ? (PersonMO) getGeneralDAO().getById(PersonMO.class, personId) : new PersonMO();
 			// read the application user supplied data from form into model object.
-			person = (PersonMO) form.writeToBean(person);
+		  PersonMO person = form.writeToBean();
 			
 			if (editMode) {
 				// updates person object in database
@@ -118,7 +112,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 	}
 	
 	/* Cancels the adding/editing of current person, returns to calling flow */
-	public void handleEventCancel(String eventParameter) throws Exception {
+	public void handleEventCancel() throws Exception {
 		getFlowCtx().cancel();
 	}
 }

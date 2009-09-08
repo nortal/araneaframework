@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.list.structure;
 
+import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -41,12 +42,12 @@ public class ListStructure extends BaseListStructure {
 	private boolean orderableByDefault = false;
 	
 	private boolean initialized = false;
-	private List<Event> initEvents = null;
+	private List initEvents = null;
 	
 	public void init(Environment env) throws Exception {
 		if (initEvents != null) {
-			for (Iterator<Event> it = initEvents.iterator(); it.hasNext();) {
-				Runnable event = it.next();
+			for (Iterator it = initEvents.iterator(); it.hasNext();) {
+				Runnable event = (Runnable) it.next();
 				event.run();
 			}
 		}
@@ -66,7 +67,7 @@ public class ListStructure extends BaseListStructure {
 			event.run();
 		} else {
 			if (initEvents == null)
-				initEvents = new ArrayList<Event>();
+				initEvents = new ArrayList();
 			initEvents.add(event);
 		}		
 	}
@@ -99,11 +100,11 @@ public class ListStructure extends BaseListStructure {
 		addField(id, label, getTypeHelper().getFieldType(id), orderable);
 	}
 
-	public void addField(String id, String label, Class<?> type) {
+	public void addField(String id, String label, Class type) {
 		addField(id, label, type, isOrderableByDefault());
 	}
 
-	public void addField(String id, String label, Class<?> type, boolean orderable) {
+	public void addField(String id, String label, Class type, boolean orderable) {
 		addField(new ListField(id, label));
 		if (type != null) {
 			getTypeHelper().addFieldType(id, type);
@@ -129,7 +130,7 @@ public class ListStructure extends BaseListStructure {
 		final SimpleFieldOrder fieldOrder = new SimpleFieldOrder(fieldId); 
 		addInitEvent(new Event() {
 			public void run() {
-				Comparator<?> comp = typeHelper.getFieldComparator(fieldId);
+				Comparator comp = typeHelper.getFieldComparator(fieldId);
 				Validate.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
 				fieldOrder.setComparator(comp);
 			}
@@ -137,7 +138,7 @@ public class ListStructure extends BaseListStructure {
 		addOrder(fieldOrder);		
 	}
 	
-	protected void addFieldOrder(String fieldId, Comparator<?> comparator) {
+	protected void addFieldOrder(String fieldId, Comparator comparator) {
 		addOrder(new SimpleFieldOrder(fieldId, comparator));
 	}
 	
@@ -156,23 +157,33 @@ public class ListStructure extends BaseListStructure {
 	public void clearOrders() {
 		getMultiFieldOrder().clearFieldOrders();
 	}
-	
-	/*
-	 * Filters
-	 */
-	
-	protected AndFilter getAndFilter() {
-		return (AndFilter) this.filter;
+
+  // Filters
+
+  /**
+   * Provides a way to change the filter that will contain other filters.
+   * Therefore it must be MultiFilter. Specify your custom filter before the
+   * list is initialized. The default filter is AndFilter.
+   * 
+   * @param filter The new filter to use.
+   * @since 1.2
+   */
+  public void setFilter(MultiFilter filter) {
+    this.filter = filter;
+  }
+
+	protected MultiFilter getFilter() {
+		return (MultiFilter) this.filter;
 	}
 	
 	public void addFilter(ListFilter filter) {
-		getAndFilter().addFilter(filter);
+		getFilter().addFilter(filter);
 	}
 	
 	public FieldFilter getFieldFilter(String field) {
-		Iterator<ListFilter> i = getAndFilter().getFilters().iterator();
+		Iterator i = getFilter().getFilters().iterator();
 		while (i.hasNext()) {
-			ListFilter listFilter = i.next();
+			ListFilter listFilter = (ListFilter) i.next();
 			if (listFilter instanceof FieldFilter) {
 				FieldFilter columnFilter = (FieldFilter) listFilter;
 				if (columnFilter.getFieldId().equals(field)) {
@@ -184,6 +195,6 @@ public class ListStructure extends BaseListStructure {
 	}
 	
 	public void clearFilters() {
-		getAndFilter().clearFilters();
+		getFilter().clearFilters();
 	}
 }

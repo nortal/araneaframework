@@ -30,7 +30,6 @@ public abstract class BaseImageHtmlTag extends BaseImageTag {
      baseStyleClass = "aranea-image";
   }
   
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     writeImageLocal(out, src, width, height, alt, getStyleClass(), title); 
@@ -40,12 +39,15 @@ public abstract class BaseImageHtmlTag extends BaseImageTag {
   /**
    * Method to write out image with given properties and default style.
    */ 
-  public void writeImage(Writer out, String src, String width, String height, String title) throws IOException {
-	  writeImage(out, src, width, height, null, getStyleClass(), title);
+  public void writeImage(Writer out, String src, String width, String height,
+      String title) throws IOException {
+    writeImage(out, src, width, height, null, getStyleClass(), title);
   }
 
-  public void writeImageLocal(Writer out, String src, String width, String height, String alt, String styleClass,  String title) throws IOException {
-	  writeImage(out, src,width, height, alt, styleClass, title);
+  public void writeImageLocal(Writer out, String src, String width,
+      String height, String alt, String styleClass, String title)
+      throws IOException {
+    writeImage(out, src, width, height, alt, styleClass, title);
   }
 
   /* ***********************************************************************************

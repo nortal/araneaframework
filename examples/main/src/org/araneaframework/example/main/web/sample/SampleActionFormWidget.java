@@ -75,7 +75,8 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
 
     addActionListener("quantityChange", new StandardActionListener() {
       private static final long serialVersionUID = 1L;
-      public void processAction(Object actionId, String actionParam, InputData input, OutputData output) throws Exception {
+      public void processAction(String actionId, String actionParam,
+          InputData input, OutputData output) throws Exception {
         // TODO numberFormatException handling
         quantity.setValue(new Integer(actionParam));
         calculate();
@@ -100,7 +101,7 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
   }
 
   protected BigDecimal calculateTotal(BigDecimal price, Integer quantity) {
-    return price.multiply(new BigDecimal(quantity.intValue()));
+    return price.multiply(new BigDecimal(quantity.doubleValue()));
   }
 
   protected BigDecimal calculateVatTotal(BigDecimal total, BigDecimal vat) {

@@ -78,7 +78,6 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 		return EVAL_PAGE;
 	}
 	
-	@Override
   protected void writeAttributes(Writer out) throws Exception {
 		Iterator<Map.Entry<String, Object>> ite = attributes.entrySet().iterator();
 		

@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.basic;
 
+import org.apache.commons.lang.StringUtils;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
@@ -41,21 +42,31 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "Defines an attribute of the containing element."
  */
 public class AttributeHtmlTag extends BaseTag {
+
   protected String name;
+
   protected String value;
-  
+
+  /**
+   * @since 1.2.2
+   */
+  protected boolean omitEmpty = true;
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    String elementKey = (String)getContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY);
+
+    if (!(this.omitEmpty && StringUtils.isBlank(this.value))) {
+      String elementKey = (String)getContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY);
+
     if (elementKey != null) {
-    	  writeAttributeScript(out, elementKey);
-    	  return SKIP_BODY;
+      writeAttributeScript(out, elementKey);
+      return SKIP_BODY;
     }
-    
+
     AttributedTagInterface attributedTag = (AttributedTagInterface)requireContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY);
     attributedTag.addAttribute(name, value);
+    }
 
     return SKIP_BODY;
   }
@@ -64,18 +75,18 @@ public class AttributeHtmlTag extends BaseTag {
     out.write("<script type=\"text/javascript\">");
     out.write("setElementAttr(\"");
     out.write(elementKey);
-	out.write("\", \"");
-	out.write(name);
-	out.write("\", \"");
-	out.write(value);
-	out.write("\");");
+    out.write("\", \"");
+    out.write(name);
+    out.write("\", \"");
+    out.write(value);
+    out.write("\");");
     out.write("</script>");
   }
-  
+
   /* ***********************************************************************************
    * Tag attributes
    * ***********************************************************************************/
- 
+
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -94,5 +105,15 @@ public class AttributeHtmlTag extends BaseTag {
    */
   public void setValue(String value){
     this.value = evaluate("value", value, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   description = "Whether to omit this attribute, if value is empty."
+   * @since 1.2.2 
+   */
+  public void setOmitEmpty(boolean omitEmpty) {
+    this.omitEmpty = omitEmpty;
   }
 }

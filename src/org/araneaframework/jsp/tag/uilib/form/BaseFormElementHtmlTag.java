@@ -172,7 +172,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
      * @since 1.1 */
     protected void writeBackgroundValidationAttribute(Writer out) throws Exception {
       if (this.backgroundValidation != 
-            ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfigurationContext(getEnvironment()))) {
+            ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil.getConfiguration(getEnvironment()))) {
         JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, String.valueOf(this.backgroundValidation));
       }
     }

@@ -41,7 +41,7 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "Service action url tag.<br/> 
            Makes available following page scope variables: 
            <ul>
-             <li><i>serviceActionUrl</i> - URL which points to service.</li>
+             <li><i>serviceActionUrl</i> - URL which points to service.
            </ul> "
  */
 public class ServiceActionUrlTag extends BaseTag {
@@ -50,22 +50,20 @@ public class ServiceActionUrlTag extends BaseTag {
 
   protected String id;
 
-  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     addContextEntry(WIDGET_ACTION_URL_KEY, getWidgetActionUrl());
     return EVAL_BODY_INCLUDE;    
   }
 
-  protected String getWidgetActionUrl(){
-    Map<String, String> m = new HashMap<String, String>();
+  protected String getWidgetActionUrl() {
+    Map m = new HashMap();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, id);
     return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(((HttpInputData) getOutputData().getInputData()).getContainerURL(), m));
   }
 
-  @Override
   public void doFinally() {
     super.doFinally();
     id = null;
@@ -78,7 +76,7 @@ public class ServiceActionUrlTag extends BaseTag {
    *   description = "Service id." 
    */
   public void setId(String id) throws JspException {
-    this.id = evaluateNotNull("id", id, String.class);
+    this.id = (String)evaluateNotNull("id", id, String.class);
   }
 
 }

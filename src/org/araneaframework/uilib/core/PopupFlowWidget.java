@@ -21,6 +21,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.support.PopupWindowProperties;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * A (pseudo)widget that allows opening flows in popup windows by starting flows almost the usual way.
@@ -58,12 +59,10 @@ public class PopupFlowWidget extends BaseApplicationWidget {
     this.properties = properties;
   }
 
-  @Override
   protected void init() throws Exception {
     super.init();
 
-    PopupWindowContext popupCtx = 
-      getEnvironment().getEntry(PopupWindowContext.class);
+    PopupWindowContext popupCtx = EnvironmentUtil.getPopupWindowContext(getEnvironment());
     popupCtx.open(msg, properties, this);
     msg = null;
   }

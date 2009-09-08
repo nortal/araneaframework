@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.tree;
 
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -28,6 +29,8 @@ import org.araneaframework.uilib.tree.TreeWidget;
  * @author Alar Kvell (alar@araneaframework.org)
  */
 public class ComplexTreeWidget extends TemplateBaseWidget {
+
+  private static final long serialVersionUID = 1L;
 
   protected TreeWidget tree;
 
@@ -43,6 +46,8 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
   }
 
   public static class ComplexTreeFirstDisplayWidget extends BaseUIWidget {
+
+    private static final long serialVersionUID = 1L;
 
     protected void init() throws Exception {
       setViewSelector("tree/complexTreeFirstDisplay");
@@ -63,12 +68,14 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return getEnvironment().getEntry(TreeNodeContext.class);
+      return UilibEnvironmentUtil.getTreeNodeContext(getEnvironment());
     }
 
   }
 
   public static class ComplexTreeSecondDisplayWidget extends BaseUIWidget {
+
+    private static final long serialVersionUID = 1L;
 
     protected void init() throws Exception {
       setViewSelector("tree/complexTreeSecondDisplay");
@@ -79,12 +86,14 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return getEnvironment().getEntry(TreeNodeContext.class);
+      return UilibEnvironmentUtil.getTreeNodeContext(getEnvironment());
     }
 
   }
 
   public static class ComplexTreeThirdDisplayWidget extends BaseUIWidget {
+
+    private static final long serialVersionUID = 1L;
 
     protected void init() throws Exception {
       setViewSelector("tree/complexTreeThirdDisplay");
@@ -95,7 +104,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
-      return getEnvironment().getEntry(TreeNodeContext.class);
+      return UilibEnvironmentUtil.getTreeNodeContext(getEnvironment());
     }
 
   }

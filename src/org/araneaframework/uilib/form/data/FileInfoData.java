@@ -20,14 +20,15 @@ import java.io.Serializable;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.support.FileInfo;
 
-
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class FileInfoData extends Data<FileInfo> implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   public FileInfoData() {
     super(FileInfo.class);
-  } 
+  }
 }

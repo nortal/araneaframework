@@ -38,13 +38,12 @@ public class FormElementValueDisplayTag extends BaseFormElementDisplayTag {
 	 *   required = "true"
 	 *   description = "Name of the page scope variable to put the element value into." 
 	 */
-  public void setVar(String var){
+  public void setVar(String var) {
     this.var = var;
   }  
   
   /**
    */
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     

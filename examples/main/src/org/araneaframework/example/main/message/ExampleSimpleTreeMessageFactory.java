@@ -27,16 +27,26 @@ import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExampleSimpleTreeMessageFactory implements MessageFactory {
-  public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
-    return new SeriesMessage(new Message[] {
-        new LoginMessage(),
-        new BroadcastMessage() {
-          protected void execute(Component component) throws Exception {
-            if (component instanceof MenuWidget) {
-              ((MenuWidget) component).start(new SimpleTreeWidget());
-            }
-          }
-        }
-    });
+
+  private static final long serialVersionUID = 1L;
+
+  public Message buildMessage(String url, final String suffix, InputData input,
+      OutputData output) {
+    return new SeriesMessage(new Message[] { new LoginMessage(),
+        new OpenWidgetMessage() });
   }
+
+  private class OpenWidgetMessage extends BroadcastMessage {
+
+    private static final long serialVersionUID = 1L;
+
+    protected void execute(Component component) throws Exception {
+      if (component instanceof MenuWidget) {
+        MenuWidget menu = (MenuWidget) component;
+        menu.start(new SimpleTreeWidget());
+      }
+    }
+
+  }
+
 }

@@ -29,38 +29,31 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Imports js files"
  */
 public class ImportScriptsHtmlTag extends BaseFileImportTag {
-	public static final String DEFAULT_GROUP_NAME = "defaultScripts";
-	
-	@Override
+
   public int doStartTag(Writer out) throws Exception {
-		// if filename specified we include the file
-		if (includeFileName != null) {
-			writeContent(out, includeFileName);
-		}
-		// if groupname specified we include the group
-		else if (includeGroupName != null) {
-			writeContent(out, includeGroupName);
-		}
-		// we default to the default group name
-		else {
-			writeContent(out, DEFAULT_GROUP_NAME);
-		}
-		return EVAL_BODY_INCLUDE;
-	}
-	
-	@Override
+    // if filename specified we include the file
+    if (includeFileName != null) {
+      writeContent(out, includeFileName);
+    } else if (includeGroupName != null) {
+      writeContent(out, includeGroupName + GROUP_JS_SUFFIX);
+    } else {
+      writeContent(out, DEFAULT_GROUP_NAME + GROUP_JS_SUFFIX);
+    }
+    return EVAL_BODY_INCLUDE;
+  }
+
   protected void writeContent(Writer out, String srcFile) throws Exception {
-		writeHtmlScriptsInclude(out, FileImportUtil.getImportString(srcFile, pageContext.getRequest()));
-		out.write("\n");
-	}
-	
-	public static void writeHtmlScriptsInclude(Writer out, String srcFile) throws Exception {
-		JspUtil.writeOpenStartTag(out, "script");
-		JspUtil.writeAttribute(out, "language", "JavaScript1.2");
-		JspUtil.writeAttribute(out, "type", "text/javascript");
-		JspUtil.writeAttribute(out, "src", srcFile, false);
-		JspUtil.writeCloseStartTag(out);
-		JspUtil.writeEndTag(out, "script");
-		out.write("\n");
-	}
+    writeHtmlScriptsInclude(out, FileImportUtil.getImportString(srcFile,
+        pageContext.getRequest()));
+  }
+
+  public static void writeHtmlScriptsInclude(Writer out, String srcFile)
+      throws Exception {
+    JspUtil.writeOpenStartTag(out, "script");
+    JspUtil.writeAttribute(out, "type", "text/javascript");
+    JspUtil.writeAttribute(out, "src", srcFile, false);
+    JspUtil.writeCloseStartTag_SS(out);
+    JspUtil.writeEndTag(out, "script");
+    out.write("\n");
+  }
 }

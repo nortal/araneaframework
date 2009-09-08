@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,29 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression.compare;
 
 import java.util.Comparator;
 import org.araneaframework.backend.list.memorybased.Expression;
 
-
 public class ComparedEqualsExpression extends ComparableExpression {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public ComparedEqualsExpression(Expression expr1, Expression expr2,
-			Comparator comparator) {
-		super(expr1, expr2, comparator);
-	}
+  public ComparedEqualsExpression(Expression expr1, Expression expr2,
+      Comparator comparator) {
+    super(expr1, expr2, comparator);
+  }
 
-	public ComparedEqualsExpression(Expression expr1, Expression expr2) {
-		super(expr1, expr2);
-	}
+  public ComparedEqualsExpression(Expression expr1, Expression expr2) {
+    super(expr1, expr2);
+  }
 
-	@Override
   protected boolean doEvaluate(Object value1, Object value2) {
-		return this.comparator.compare(value1, value2) == 0;
-	}
+    return this.comparator.compare(value1, value2) == 0;
+  }
 }

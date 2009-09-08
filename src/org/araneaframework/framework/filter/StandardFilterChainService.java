@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.filter;
 
@@ -25,24 +25,25 @@ import org.araneaframework.framework.core.BaseFilterService;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class StandardFilterChainService extends BaseFilterService {
-  private List<FilterService> filterChain;  
-  
-  public void setFilterChain(List<FilterService> filterChain) {
+
+  private static final long serialVersionUID = 1L;
+
+  private List filterChain;
+
+  public void setFilterChain(List filterChain) {
     this.filterChain = filterChain;
   }
-  
-  @Override
-  protected void init() throws Exception {      
-    if (filterChain != null)
-      for (ListIterator<FilterService> i = filterChain.listIterator(filterChain.size()); i.hasPrevious();) {
-        FilterService filter = i.previous();
-        
+
+  protected void init() throws Exception {
+    if (filterChain != null) {
+      ListIterator i = filterChain.listIterator(filterChain.size());
+      for (; i.hasPrevious();) {
+        FilterService filter = (FilterService) i.previous();
         filter.setChildService(childService);
         childService = filter;
       }
-    
+    }
     filterChain = null;
-    
-    super.init();       
+    super.init();
   }
 }

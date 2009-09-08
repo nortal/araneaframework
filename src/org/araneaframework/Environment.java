@@ -22,19 +22,14 @@ import org.araneaframework.core.NoSuchEnvironmentEntryException;
 /**
  * A special data structure providing encapsulation of data needed by different components. 
  * Every Aranea component has an environment. The environment can be inherited from the parent
- * or be stand-alone. No component knows from which component the Environment comes from.
- * <p>
+ * or be standalone. No component knows from which component the Environment comes from.
+ * <br><br>
  * Component does know about the hooks in the environment. As different contexts are added to
  * the environment the component in need of them is responsible of checking them and acting upon
  * them. 
- * <p>
- * Since version XXX of Aranea there are some restrictions of the content of the environments: the keys
- * should be class literals and the values should be the instances of the key's class. So each
- * implementation of this interface should enforce that restriction.
- * 
+ *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * @author Nikita Salnikov-Tarnovski (<a href="mailto:nikem@webmedia.ee">nikem@webmedia.ee</a>)
  */
 public interface Environment extends Serializable {
   
@@ -49,10 +44,10 @@ public interface Environment extends Serializable {
    * Returns the entry with the specified key from this Environment. 
    * Returns null if the entry is not present in the environment.
    */
-  public <T> T getEntry(Class<T> clazz);
+  public <T> T getEntry(Class<T> key);
   
   /**
-   * Does the same as {@link #getEntry(Class)}, but throws a {@link NoSuchEnvironmentEntryException} if 
+   * Does the same as {@link #getEntry(Object)}, but throws a {@link NoSuchEnvironmentEntryException} if 
    * entry cannot be found. 
    * 
    * @throws NoSuchEnvironmentEntryException If environment entry could not be found.

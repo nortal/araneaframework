@@ -18,12 +18,14 @@ package org.araneaframework.uilib.form.data;
 
 import org.araneaframework.uilib.form.Data;
 
-
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BooleanData extends Data<Boolean> {
+
+  private static final long serialVersionUID = 1L;
+
   public BooleanData() {
     super(Boolean.class);
     setValue(Boolean.FALSE);

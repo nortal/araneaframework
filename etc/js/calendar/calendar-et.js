@@ -125,5 +125,3 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
 Calendar._TT["WK"] = "&nbsp;";
 Calendar._TT["TIME"] = "Aeg:";
-
-window['calendar/calendar-et.js'] = true;

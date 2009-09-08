@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,36 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.sqlexpr.compare;
 
 import org.araneaframework.backend.list.SqlExpression;
 
-
 public class SqlGreaterThanExpression extends SqlComparableExpression {
-	public SqlGreaterThanExpression(SqlExpression expr1, SqlExpression expr2) {
-		super(expr1, expr2);
-	}
-	@Override
+
+  private boolean allowEquals = false;
+
+  public SqlGreaterThanExpression(SqlExpression expr1, SqlExpression expr2) {
+    super(expr1, expr2);
+  }
+
+  /**
+   * Greates a new <code>SqlGreaterThanExpression</code> that can also be
+   * greater-than-or-equal expression. The latter is determined by the boolean
+   * parameter <code>allowEquals</code>.
+   * 
+   * @param expr1 The expression that should be greater than the other.
+   * @param expr2 The expression that should be lower than the other.
+   * @param allowEquals Whether expressions can also be equal. By default: equality not allowed.
+   * @since 1.2
+   */
+  public SqlGreaterThanExpression(SqlExpression expr1, SqlExpression expr2, boolean allowEquals) {
+    super(expr1, expr2);
+    this.allowEquals = allowEquals;
+  }
+
   protected String getOperator() {
-		return ">";
-	}
+    return this.allowEquals ? ">=" : ">";
+  }
 }

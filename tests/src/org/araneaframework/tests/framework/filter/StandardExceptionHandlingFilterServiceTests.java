@@ -51,12 +51,14 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
   
   private Throwable exception;
   
-  @Override
   public void setUp() throws Exception {
     factoryCreatedService = new MockEventfulStandardService();
     factoryCreatedService._getComponent().init(null, MockUtil.getEnv());
     
     factory = new ExceptionHandlerFactory() {
+
+      private static final long serialVersionUID = 1L;
+
       public Service buildExceptionHandler(Throwable e, Environment environment) {
         StandardExceptionHandlingFilterServiceTests.this.exception = e;
         factoryCreatedService = new MockEventfulStandardService();
@@ -93,7 +95,9 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
     
     service = new StandardCriticalExceptionHandlingFilterService();
     child = new MockEventfulBaseService() {
-      @Override
+
+      private static final long serialVersionUID = 1L;
+
       public void action(Path path, InputData input, OutputData output) throws Exception {
         ((StandardServletOutputData)output).getOutputStream().write(new byte[] {1});
         throw exception;

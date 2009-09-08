@@ -1,145 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project basedir="." default="build" name="Aranea tests">
-  <property name="src.build.dir" value="../build/classes" />
-  <property name="tests.build.dir" value="build/classes" />
-  <property name="tests.reports.dir" value="build/reports" />
-  <property name="src.instrumented.build.dir" value="build/instrumented" />
-  <property name="src.dir" value="../src" />
-  <property name="tests.src.dir" value="src" />
-  <property name="build.coverage.dir" value="build/coverage" />
-
-  <!--Set the classpath-->
-  <path id="classpath">
-    <fileset dir="../lib" includes="**/*.jar" />
-    <fileset dir="../dist" includes="**/*.jar" />
-  </path>
-
-  <!-- Clean up build system results -->
-  <target name="clean" description="Clean up build system results">
-    <delete dir="build" failonerror="false" />
-    <delete dir="dist" failonerror="false" />
-  </target>
-
-  <!-- Build the code -->
-  <target name="build" depends="compile" description="Build the code">
-  </target>
-
-  <target name="compile">
-    <mkdir dir="build/classes" />
-
-    <!--Compile Java source files-->
-    <javac destdir="build/classes" debug="on" debuglevel="lines,vars,source" encoding="utf-8" srcdir="src">
-      <classpath refid="classpath" />
-      <include name="**/*.java" />
-    </javac>
-
-    <mkdir dir="dist" />
-    <jar destfile="dist/aranea-tests.jar">
-      <fileset dir="build/classes">
-        <include name="org/araneaframework/**/*" />
-      </fileset>
-    </jar>
-  </target>
-
-  <!-- test the system -->
-  <target name="run-tests" depends="build" description="Run the junit tests">
-    <mkdir dir="${tests.reports.dir}" />
-    <junit printsummary="yes" fork="yes" haltonfailure="false">
-      <classpath location="${src.build.dir}" />
-      <classpath location="${tests.build.dir}" />
-      <classpath refid="classpath" />
-      <formatter type="xml" />
-      <batchtest todir="${tests.reports.dir}">
-        <fileset dir="${tests.build.dir}">
-          <include name="**/*Test.class" />
-          <include name="**/*Tests.class" />
-          <!-- exclude abstract tests -->
-          <exclude name="**/BaseMessageContextTests.class" />
-        </fileset>
-      </batchtest>
-    </junit>
-    <junitreport todir="${tests.reports.dir}">
-      <fileset dir="${tests.reports.dir}" includes="*.xml" />
-      <report todir="${tests.reports.dir}/html" />
-    </junitreport>
-  </target>
-
-  <target name="run-perf-tests" depends="build" description="Runs performance tests">
+<project basedir="." default="build" name="Aranea tests"> 
+	<property name="src.build.dir" value="../build/classes"/>
+	<property name="tests.build.dir" value="build/classes"/>
+	<property name="tests.reports.dir" value="build/reports"/>
+	<property name="src.instrumented.build.dir" value="build/instrumented"/>
+	<property name="src.dir" value="../src"/>
+	<property name="tests.src.dir" value="src"/>
+	<property name="build.coverage.dir" value="build/coverage"/>
+	
+	<!--Set the classpath-->
+	<path id="classpath">
+		<fileset dir="../lib" includes="**/*.jar"/>
+		<fileset dir="../dist" includes="**/*.jar"/>
+	</path>
+	
+	<!-- Clean up build system results -->
+	<target name="clean" description="Clean up build system results">
+		<delete dir="build" failonerror="false"/>
+		<delete dir="dist" failonerror="false"/>
+	</target>
+	
+	<!-- Build the code -->
+	<target name="build" depends="compile" description="Build the code">
+	</target>
+	
+	<target name="compile">
+		<mkdir dir="build/classes" />
+		
+		<!--Compile Java source files-->
+		<javac destdir="build/classes"
+			debug="on"
+			debuglevel="lines,vars,source"
+			encoding="utf-8"
+			srcdir="src"
+			target="1.3"
+		>
+			<classpath refid="classpath"/>
+			<include name="**/*.java" />
+		</javac>
+		
+		<mkdir dir="dist"/>
+		<jar destfile="dist/aranea-tests.jar">
+			<fileset dir="build/classes">
+			  <include name="org/araneaframework/**/*"/>	
+			</fileset>
+		</jar>
+	</target>
+	
+	<!-- test the system -->
+	<target name="run-tests" depends="build" description="Run the junit tests">
+		<mkdir dir="${tests.reports.dir}" />
+		<junit printsummary="yes"
+				fork="yes"
+				haltonfailure="false"
+		>
+			<sysproperty key="user.dir" value="${basedir}"/>
+			<classpath location="${src.build.dir}"/>
+			<classpath location="${tests.build.dir}"/>
+			<classpath refid="classpath"/>
+			<formatter type="xml" />
+			<batchtest todir="${tests.reports.dir}">
+				<fileset dir="${tests.build.dir}">
+					<include name="**/*Test.class"/>
+					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+  
+  <target name="run-perf-tests" depends="build"
+          description="Runs performance tests">
     <junit haltonfailure="yes" fork="yes">
-      <test name="org.araneaframework.perftests.TimedSmokeTests" />
-      <formatter type="plain" usefile="false" />
-      <classpath location="${src.build.dir}" />
-      <classpath location="${tests.build.dir}" />
+      <test name="org.araneaframework.perftests.TimedSmokeTests"/>
+      <formatter type="plain" usefile="false"/>
+  		<classpath location="${src.build.dir}"/>
+  		<classpath location="${tests.build.dir}"/>
+      <classpath refid="classpath"/>
     </junit>
   </target>
 
-  <target name="coverage" depends="cover-tests" description="Generate coverage information">
-    <mkdir dir="${build.coverage.dir}" />
-    <mkdir dir="${build.coverage.dir}/srcCopy" />
-    <copy todir="${build.coverage.dir}/srcCopy">
-      <fileset dir="${src.dir}" />
-      <fileset dir="${tests.src.dir}" />
-    </copy>
+	<target name="coverage" depends="cover-tests" description="Generate coverage information"> 
+		<mkdir dir="${build.coverage.dir}"/>
+		<mkdir dir="${build.coverage.dir}/srcCopy"/>
+		<copy todir="${build.coverage.dir}/srcCopy">
+			<fileset dir="${src.dir}"/>
+			<fileset dir="${tests.src.dir}"/>
+		</copy>
 
-    <cobertura-report srcdir="${build.coverage.dir}/srcCopy" destdir="${build.coverage.dir}" />
-  </target>
+		<cobertura-report srcdir="${build.coverage.dir}/srcCopy" destdir="${build.coverage.dir}"/>
+	</target>
+	
+	<target name="coverage2" depends="cover-tests-fail-integration"> 
+		<mkdir dir="${build.coverage.dir}"/>
+		<mkdir dir="${build.coverage.dir}/srcCopy"/>
+		<copy todir="${build.coverage.dir}/srcCopy">
+			<fileset dir="${src.dir}"/>
+			<fileset dir="${tests.src.dir}"/>
+		</copy>
 
-  <target name="coverage2" depends="cover-tests-fail-integration">
-    <mkdir dir="${build.coverage.dir}" />
-    <mkdir dir="${build.coverage.dir}/srcCopy" />
-    <copy todir="${build.coverage.dir}/srcCopy">
-      <fileset dir="${src.dir}" />
-      <fileset dir="${tests.src.dir}" />
-    </copy>
+		<cobertura-report srcdir="${build.coverage.dir}/srcCopy" destdir="${build.coverage.dir}"/>
+	</target>
+	
+	<!-- test the system -->
+	<target name="cover-tests" depends="instrument">
+		<mkdir dir="${tests.reports.dir}" />
+		<junit printsummary="yes"
+				fork="yes"
+				haltonfailure="false"
+			  showoutput="yes"
+		>
+			<classpath location="${src.instrumented.build.dir}"/>
+			<classpath location="${tests.build.dir}"/>
+			<classpath refid="classpath"/>
+			
+			<formatter type="xml" />
+			<batchtest todir="${tests.reports.dir}">
+				<fileset dir="${tests.build.dir}">
+					<include name="**/*Test.class"/>
+					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- test the system without integration tests -->
+	<target name="cover-tests-fail-integration" depends="instrument">
+		<mkdir dir="${tests.reports.dir}" />
+		<junit printsummary="yes"
+				fork="yes"
+				haltonfailure="false"
+			  showoutput="yes"
+		>
+			<classpath location="${src.instrumented.build.dir}"/>
+			<classpath location="${tests.build.dir}"/>
+			<classpath refid="classpath"/>
+			<formatter type="xml" />
+			<batchtest todir="${tests.reports.dir}">
+				<fileset dir="${tests.build.dir}">
+					<include name="**/*Test.class"/>
+					<include name="**/*Tests.class"/>
+					<!-- exclude abstract tests -->
+					<exclude name="**/BaseMessageContextTests.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
 
-    <cobertura-report srcdir="${build.coverage.dir}/srcCopy" destdir="${build.coverage.dir}" />
-  </target>
-
-  <!-- test the system -->
-  <target name="cover-tests" depends="instrument">
-    <mkdir dir="${tests.reports.dir}" />
-    <junit printsummary="yes" fork="yes" haltonfailure="false" showoutput="yes">
-      <classpath location="${src.instrumented.build.dir}" />
-      <classpath location="${tests.build.dir}" />
-      <classpath refid="classpath" />
-
-      <formatter type="xml" />
-      <batchtest todir="${tests.reports.dir}">
-        <fileset dir="${tests.build.dir}">
-          <include name="**/*Test.class" />
-          <include name="**/*Tests.class" />
-          <!-- exclude abstract tests -->
-          <exclude name="**/BaseMessageContextTests.class" />
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-
-  <!-- test the system without integration tests -->
-  <target name="cover-tests-fail-integration" depends="instrument">
-    <mkdir dir="${tests.reports.dir}" />
-    <junit printsummary="yes" fork="yes" haltonfailure="false" showoutput="yes">
-      <classpath location="${src.instrumented.build.dir}" />
-      <classpath location="${tests.build.dir}" />
-      <classpath refid="classpath" />
-      <formatter type="xml" />
-      <batchtest todir="${tests.reports.dir}">
-        <fileset dir="${tests.build.dir}">
-          <include name="**/*Test.class" />
-          <include name="**/*Tests.class" />
-          <!-- exclude abstract tests -->
-          <exclude name="**/BaseMessageContextTests.class" />
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-
-  <target name="instrument" depends="build">
-    <cobertura-instrument todir="${src.instrumented.build.dir}">
-      <fileset dir="${src.build.dir}">
-        <include name="**/*.class" />
-      </fileset>
-    </cobertura-instrument>
-  </target>
+	<target name="instrument" depends="build">
+		<cobertura-instrument todir="${src.instrumented.build.dir}">
+			<fileset dir="${src.build.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</cobertura-instrument>
+	</target>
 </project>

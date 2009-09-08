@@ -57,17 +57,6 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		}
 	}
 
-	protected void init() throws Exception {
-		setViewSelector("release/demos/friendlyUpdateDemo");
-		getL10nCtx().addLocaleChangeListener(this);
-		
-		companyForm = buildCompanyForm();
-		invoiceForm = buildInvoiceForm();
-
-		addWidget("companyForm", companyForm);
-		addWidget("invoiceForm", invoiceForm);
-	}
-
 	private BeanFormWidget<Invoice> buildInvoiceForm() {
 		BeanFormWidget<Invoice> result = new BeanFormWidget<Invoice>(Invoice.class);
 		result.addBeanElement("id", "ufriendly.component.invoice.id", new TextControl(new Long(10), new Long(10)), true);
@@ -107,120 +96,155 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
 		}
 	}
 	
-	private void handleEventResetCompanyForm() throws Exception {
-		companyForm.readFromBean(new Firm());
-	}
-	
-	private Firm generateFirm(Long arkNumber) {
-		Firm result = new Firm();
-		result.setArkNumber(arkNumber);
-		
-		Random rnd = new Random();
+  protected void init() throws Exception {
+    setViewSelector("release/demos/friendlyUpdateDemo");
+    getL10nCtx().addLocaleChangeListener(this);
+    this.companyForm = buildCompanyForm();
+    this.invoiceForm = buildInvoiceForm();
+    addWidget("companyForm", this.companyForm);
+    addWidget("invoiceForm", this.invoiceForm);
+  }
 
-		result.setBankAccount(RandomStringUtils.randomNumeric(16));
 
-		String registryCountry = allCountries.get(rnd.nextInt(allCountries.size()));
-		String postalCountry = allCountries.get(rnd.nextInt(allCountries.size()));
-		
-		String registryStreet = ExampleData.fungi[rnd.nextInt(ExampleData.fungi.length)];
-		String postalStreet = ExampleData.fungi[rnd.nextInt(ExampleData.fungi.length)];
-		
-		String registryhouse = String.valueOf(rnd.nextInt(500));
-		String postalhouse = String.valueOf(rnd.nextInt(200));
+  public void handleEventResetCompanyForm() throws Exception {
+    this.companyForm.readFromBean(new Firm());
+  }
 
-		result.setRegistryAddress(registryStreet + "-" + registryhouse + ", " + registryCountry);
-		result.setPostalAddress(postalStreet + "-" + postalhouse + ", " + postalCountry);
-		result.setVatNumber(new Long(Math.abs(rnd.nextLong())));
-		result.setFirmType(new Integer(rnd.nextInt(3) + 1));
+  private Firm generateFirm(Long arkNumber) {
+    Firm result = new Firm();
+    result.setArkNumber(arkNumber);
 
-		return result;
-	}
-	
-	private SelectControl buildFirmTypeSelect() {
-		SelectControl result = new SelectControl();
-		
-		result.addItem(new DisplayItem("0", t("select.choose")));
-		result.addItem(new DisplayItem("1", t("ufriendly.public.limited")));
-		result.addItem(new DisplayItem("2", t("ufriendly.npo")));
-		result.addItem(new DisplayItem("3", t("ufriendly.private.limited")));
+    Random rnd = new Random();
 
-		return result;
-	}
-	
-	public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-		String value = firmElement.getControl().getRawValue();
-		SelectControl c = buildFirmTypeSelect();
-		c.setRawValue(value);
-		firmElement.setControl(c);
-	}
+    result.setBankAccount(RandomStringUtils.randomNumeric(16));
+    String registryCountry = (String) allCountries.get(rnd.nextInt(allCountries.size()));
+    String postalCountry = (String) allCountries.get(rnd.nextInt(allCountries.size()));
+    String registryStreet = ExampleData.fungi[rnd.nextInt(ExampleData.fungi.length)];
+    String postalStreet = ExampleData.fungi[rnd.nextInt(ExampleData.fungi.length)];
+    String registryhouse = String.valueOf(rnd.nextInt(500));
+    String postalhouse = String.valueOf(rnd.nextInt(200));
+    result.setRegistryAddress(registryStreet + "-" + registryhouse + ", "
+        + registryCountry);
+    result.setPostalAddress(postalStreet + "-" + postalhouse + ", "
+        + postalCountry);
+    result.setVatNumber(new Long(Math.abs(rnd.nextLong())));
+    result.setFirmType(new Integer(rnd.nextInt(3) + 1));
+    return result;
+  }
 
-	public static class Firm implements Serializable {
-		private Long arkNumber;
-		private String registryAddress;
-		private String postalAddress;
-		private String bankAccount;
-		private Long vatNumber;
-		private Integer firmType;
-		public Long getArkNumber() {
-			return arkNumber;
-		}
-		public void setArkNumber(Long arkNumber) {
-			this.arkNumber = arkNumber;
-		}
-		public String getRegistryAddress() {
-			return registryAddress;
-		}
-		public void setRegistryAddress(String registryAddress) {
-			this.registryAddress = registryAddress;
-		}
-		public String getPostalAddress() {
-			return postalAddress;
-		}
-		public void setPostalAddress(String postalAddress) {
-			this.postalAddress = postalAddress;
-		}
-		public String getBankAccount() {
-			return bankAccount;
-		}
-		public void setBankAccount(String bankAccount) {
-			this.bankAccount = bankAccount;
-		}
-		public Long getVatNumber() {
-			return vatNumber;
-		}
-		public void setVatNumber(Long vatNumber) {
-			this.vatNumber = vatNumber;
-		}
-		public Integer getFirmType() {
-			return firmType;
-		}
-		public void setFirmType(Integer firmType) {
-			this.firmType = firmType;
-		}
-	}
-	
-	public static class Invoice implements Serializable {
-		private String id;
-		private Date date;
-		private BigDecimal sum;
+  private SelectControl buildFirmTypeSelect() {
+    SelectControl result = new SelectControl();
+    result.addItem(new DisplayItem("0", t("select.choose")));
+    result.addItem(new DisplayItem("1", t("ufriendly.public.limited")));
+    result.addItem(new DisplayItem("2", t("ufriendly.npo")));
+    result.addItem(new DisplayItem("3", t("ufriendly.private.limited")));
+    return result;
+  }
 
-		public String getId() {
-			return id;
-		}
-		public void setId(String id) {
-			this.id = id;
-		}
-		public Date getDate() {
-			return date;
-		}
-		public void setDate(Date date) {
-			this.date = date;
-		}
-		public BigDecimal getSum() {
-			return sum;
-		}
-		public void setSum(BigDecimal sum) {
-			this.sum = sum;
-		}
-	}
+  public void onLocaleChange(Locale oldLocale, Locale newLocale) {
+    Object value = this.firmElement.getControl().getRawValue();
+    SelectControl c = buildFirmTypeSelect();
+// TODO    c.setRawValue(value);
+    this.firmElement.setControl(c);
+  }
+
+  public static class Firm implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long arkNumber;
+
+    private String registryAddress;
+
+    private String postalAddress;
+
+    private String bankAccount;
+
+    private Long vatNumber;
+
+    private Integer firmType;
+
+    public Long getArkNumber() {
+      return this.arkNumber;
+    }
+
+    public void setArkNumber(Long arkNumber) {
+      this.arkNumber = arkNumber;
+    }
+
+    public String getRegistryAddress() {
+      return this.registryAddress;
+    }
+
+    public void setRegistryAddress(String registryAddress) {
+      this.registryAddress = registryAddress;
+    }
+
+    public String getPostalAddress() {
+      return this.postalAddress;
+    }
+
+    public void setPostalAddress(String postalAddress) {
+      this.postalAddress = postalAddress;
+    }
+
+    public String getBankAccount() {
+      return this.bankAccount;
+    }
+
+    public void setBankAccount(String bankAccount) {
+      this.bankAccount = bankAccount;
+    }
+
+    public Long getVatNumber() {
+      return this.vatNumber;
+    }
+
+    public void setVatNumber(Long vatNumber) {
+      this.vatNumber = vatNumber;
+    }
+
+    public Integer getFirmType() {
+      return this.firmType;
+    }
+
+    public void setFirmType(Integer firmType) {
+      this.firmType = firmType;
+    }
+  }
+
+  public static class Invoice implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private String id;
+
+    private Date date;
+
+    private BigDecimal sum;
+
+    public String getId() {
+      return this.id;
+    }
+
+    public void setId(String id) {
+      this.id = id;
+    }
+
+    public Date getDate() {
+      return this.date;
+    }
+
+    public void setDate(Date date) {
+      this.date = date;
+    }
+
+    public BigDecimal getSum() {
+      return this.sum;
+    }
+
+    public void setSum(BigDecimal sum) {
+      this.sum = sum;
+    }
+  }
 }

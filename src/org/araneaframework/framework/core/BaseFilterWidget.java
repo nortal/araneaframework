@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.core;
 
@@ -45,63 +45,61 @@ import org.araneaframework.framework.FilterWidget;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class BaseFilterWidget extends BaseWidget  implements FilterWidget {
+public class BaseFilterWidget extends BaseWidget implements FilterWidget {
+
+  private static final long serialVersionUID = 1L;
+
   protected Widget childWidget;
 
   public BaseFilterWidget() {}
+
   public BaseFilterWidget(Widget childWidget) {
     setChildWidget(childWidget);
   }
-  
-  
+
   /**
    * Sets the child to childWidget.
    */
   public void setChildWidget(Widget childWidget) {
+    Assert.notNull(this, childWidget, "Filter cannot have a null child!");
     this.childWidget = childWidget;
   }
-  
+
   public Widget getChildWidget() {
     return childWidget;
   }
-  
-  @Override
+
   protected void init() throws Exception {
     Assert.notNull(this, childWidget, "Filter cannot have a null child!");
-    
-    this.childWidget._getComponent().init(getScope(), getChildWidgetEnvironment());
+    this.childWidget._getComponent().init(getScope(),
+        getChildWidgetEnvironment());
   }
-  
-  @Override
-  protected void propagate(Message message) throws Exception {   
+
+  protected void propagate(Message message) throws Exception {
     message.send(null, childWidget);
   }
-  
-  @Override
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
+
+  protected void action(Path path, InputData input, OutputData output)
+      throws Exception {
     this.childWidget._getService().action(path, input, output);
   }
-  
-  @Override
+
   protected void update(InputData input) throws Exception {
     this.childWidget._getWidget().update(input);
   }
-  
-  @Override
+
   protected void event(Path path, InputData input) throws Exception {
     this.childWidget._getWidget().event(path, input);
   }
 
-  @Override
   protected void render(OutputData output) throws Exception {
     this.childWidget._getWidget().render(output);
   }
-  
-  @Override
+
   protected void destroy() throws Exception {
     this.childWidget._getComponent().destroy();
   }
-  
+
   /**
    * By default returns the widget's Environment. The child is
    * initilized with the return value of this method.

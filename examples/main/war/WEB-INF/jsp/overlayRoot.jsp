@@ -1,10 +1,12 @@
 <jsp:root
 	xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
-	version="1.2">
+	version="2.0">
 	<ui:systemForm id="overlaySystemForm" method="POST" styleClass="aranea-overlay">
+		<ui:messages type="error" styleClass="msg-error"/>
+		<ui:messages type="warning" styleClass="msg-warning"/>
 		<div class="msg-info">
 			<div>
 				<div>
@@ -12,7 +14,6 @@
 				</div>
 			</div>
 		</div>
-		<ui:messages type="error" styleClass="msg-error"/>
 		<ui:widgetInclude id="c"/>
 	</ui:systemForm>
 </jsp:root>

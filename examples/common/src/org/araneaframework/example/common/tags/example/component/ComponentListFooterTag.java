@@ -23,7 +23,7 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.PresentationTag;
-import org.araneaframework.jsp.tag.uilib.list.ListTag;
+// TODO import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.jsp.util.JspScriptUtil;
 import org.araneaframework.jsp.util.JspUpdateRegionUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -93,8 +93,8 @@ public class ComponentListFooterTag extends PresentationTag {
     this.updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
 
     // Get list data
-    listId = (String)requireContextEntry(ListTag.LIST_FULL_ID_KEY);    
-    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel)requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    listId = (String)requireContextEntry(/* TODO ListTag.LIST_FULL_ID_KEY */ "");    
+    ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(/* TODO ListTag.LIST_VIEW_MODEL_KEY */ "");
 
     // Get sequnce data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();

@@ -16,9 +16,9 @@
 
 package org.araneaframework.uilib.form.converter;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
@@ -31,86 +31,102 @@ import org.araneaframework.uilib.support.ConverterKey;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
  */
 public class ConverterFactory implements ConverterProvider {
+
+  private static final long serialVersionUID = 1L;
+
   /** @since 1.1 */
   public static final ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
+
   protected final Map<ConverterKey, Converter<?,?>> converters = new HashMap<ConverterKey, Converter<?,?>>();
 
   protected ConverterFactory() {
-    //String -> Type
-    converters.put(new ConverterKey("String", "Boolean"), new StringToBooleanConverter());
-    converters.put(new ConverterKey("String", "Long"), new StringToLongConverter());
-    converters.put(new ConverterKey("String", "Integer"), new StringToIntegerConverter());
-    converters.put(new ConverterKey("String", "BigDecimal"), new StringToBigDecimalConverter());
+    // String -> Type
+    converters.put(new ConverterKey("String", "Boolean"),
+        new StringToBooleanConverter());
+    converters.put(new ConverterKey("String", "Long"),
+        new StringToLongConverter());
+    converters.put(new ConverterKey("String", "Integer"),
+        new StringToIntegerConverter());
+    converters.put(new ConverterKey("String", "BigDecimal"),
+        new StringToBigDecimalConverter());
+    converters.put(new ConverterKey("BigDecimal", "Float"),
+        new BigDecimalToFloatConverter());
+    converters.put(new ConverterKey("BigDecimal", "Double"),
+        new BigDecimalToDoubleConverter());
+    converters.put(new ConverterKey("BigInteger", "Long"),
+        new BigIntegerToLongConverter());
+    converters.put(new ConverterKey("BigInteger", "Integer"),
+        new BigIntegerToIntegerConverter());
 
-    converters.put(new ConverterKey("BigDecimal", "Float"), new BigDecimalToFloatConverter());
-    converters.put(new ConverterKey("BigDecimal", "Double"), new BigDecimalToDoubleConverter());
+    // List<String> -> List<Type>
+    converters.put(new ConverterKey("List<String>", "List"),
+        new ListConverter(new IdenticalConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Boolean>"),
+        new ListConverter(new StringToBooleanConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Boolean>"),
+        new ListConverter(new StringToBooleanConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Long>"),
+        new ListConverter(new StringToLongConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Integer>"),
+        new ListConverter(new StringToIntegerConverter()));
+    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"),
+        new ListConverter(new StringToBigDecimalConverter()));
 
-    converters.put(new ConverterKey("BigInteger", "Long"), new BigIntegerToLongConverter());
-    converters.put(new ConverterKey("BigInteger", "Integer"), new BigIntegerToIntegerConverter());
+    // Boolean -> Type
+    converters.put(new ConverterKey("Boolean", "String"), new ReverseConverter(
+        new StringToBooleanConverter()));
+    converters.put(new ConverterKey("Boolean", "Long"),
+        new BooleanToLongConverter());
+    converters.put(new ConverterKey("Boolean", "YN"),
+        new BooleanToYNConverter());
 
-    //List<String> -> List<Type>
-    converters
-        .put(new ConverterKey("List<String>", "List<Boolean>"), new ListConverter<String, Boolean>(new StringToBooleanConverter()));
-    converters.put(new ConverterKey("List<String>", "List<Long>"), new ListConverter<String, Long>(new StringToLongConverter()));
-    converters
-        .put(new ConverterKey("List<String>", "List<Integer>"), new ListConverter<String, Integer>(new StringToIntegerConverter()));
-    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"), new ListConverter<String, BigDecimal>(
-        new StringToBigDecimalConverter()));
+    // Date -> Type
+    converters.put(new ConverterKey("Timestamp", "Date"),
+        new TimestampToDateConverter());
 
-    //Boolean -> Type
-    converters.put(new ConverterKey("Boolean", "String"), new ReverseConverter(new StringToBooleanConverter()));
-    converters.put(new ConverterKey("Boolean", "Long"), new BooleanToLongConverter());
-
-    converters.put(new ConverterKey("Boolean", "YN"), new BooleanToYNConverter());
-
-    //Date -> Type
-    converters.put(new ConverterKey("Timestamp", "Date"), new TimestampToDateConverter());
-
-    //Long -> Type
-    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(new BooleanToLongConverter()));    
+    // Long -> Type
+    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(
+        new BooleanToLongConverter()));
   }
 
   /**
-   * This method finds a {@link BaseConverter}corresponding to the two types given.
+   * This method finds a {@link BaseConverter}corresponding to the two types
+   * given.
    * 
-   * @param fromType
-   *          from type.
-   * @param toType
-   *          to type.
+   * @param fromType from type.
+   * @param toType to type.
    * @return {@link BaseConverter}corresponding to the types given.
-   * 
-   * @throws ConverterNotFoundException
-   *           if {@link BaseConverter}is not found
+   * @throws ConverterNotFoundException if {@link BaseConverter}is not found
    */
   public Converter<?,?> findConverter(String fromType, String toType) throws ConverterNotFoundException {
-    if (fromType == null || toType == null) throw new ConverterNotFoundException(fromType, toType);
+    if (fromType == null || toType == null)
+      throw new ConverterNotFoundException(fromType, toType);
     if (fromType.equals(toType)) {
       return new IdenticalConverter();
-    }
-    else if ("Object".equals(fromType) || "Object".equals(toType)) {
+    } else if ("Object".equals(fromType) || "Object".equals(toType)) {
       return new IdenticalConverter();
-    }
-    else {
-      Converter<?,?> result = converters.get(new ConverterKey(fromType, toType));
-
-      if (result == null) throw new ConverterNotFoundException(fromType, toType);
-
+    } else {
+      Converter result = ((Converter) converters.get(new ConverterKey(fromType,
+          toType)));
+      if (result == null)
+        throw new ConverterNotFoundException(fromType, toType);
       return result.newConverter();
     }
   }
 
   /**
-   * Returns an instance of a <code>ConverterFactory</code>. This method is here to simplify the configuration of the
-   * <code>ConverterFactory</code> in future.
+   * Returns an instance of a <code>ConverterFactory</code>. This method is here
+   * to simplify the configuration of the <code>ConverterFactory</code> in
+   * future.
    * 
    * @return an instance of a <code>ConverterFactory</code>.
    */
   public static ConverterProvider getInstance(ConfigurationContext configuration) {
-    ConverterProvider confConverterProvider = (ConverterProvider) configuration.getEntry(ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
+    ConverterProvider confConverterProvider = (ConverterProvider) configuration
+        .getEntry(ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
     if (confConverterProvider == null) {
       confConverterProvider = DEFAULT_CONVERTER_FACTORY;
     }
-
     return confConverterProvider;
   }
 }

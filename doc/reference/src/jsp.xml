@@ -143,13 +143,56 @@
         </informaltable>
       </sect3>
 
+		<sect3>
+			<para>Here is the list of all available values for the <literal>group</literal> attribute:</para>
+
+			<orderedlist Numeration="Arabic">
+				<listitem><emphasis>all</emphasis> - imports all of the groups described below.</listitem>
+				<listitem><emphasis>core-all</emphasis> - imports the core Aranea scripts, in addition,
+					popup, modalbox, back-button support (rsh) scripts.</listitem>
+				<listitem><emphasis>core</emphasis> - imports only core aranea scripts that are always needed.</listitem>
+				<listitem><emphasis>calendar</emphasis> - imports only <link linkend="dhtmlcalendar">DHTML calendar</link> scripts.</listitem>
+				<listitem><emphasis>calendar_et</emphasis> - imports only <link linkend="dhtmlcalendar">DHTML calendar</link> scripts
+				with an interface in estonian language.</listitem>
+				<listitem><emphasis>modalbox</emphasis> - imports only <link linkend="modalbox">ModalBox</link> scripts.</listitem>
+				<listitem><emphasis>rsh</emphasis> - imports only back-button support scripts.</listitem>
+				<listitem><emphasis>prototip</emphasis> - imports only <link linkend="prototip">Prototip</link> scripts.</listitem>
+				<listitem><emphasis>ajaxupload</emphasis> - imports only <link linkend="ajaxupload">AJAX upload</link> functionality scripts.</listitem>
+				<listitem><emphasis>logger</emphasis> - imports only <link linkend="log4javascript">log4javascript</link> scripts.</listitem>
+			</orderedlist>
+
+			<note>
+				<para>Since 1.2.1 these Aranea JavaScript files (groups) are compressed for faster download. However, it also possible
+				to see these scripts in more readable form by appenging "-devel" to these group names, e.g. <emphasis>all</emphasis>
+				vs. <emphasis>all-devel</emphasis>. These groups don't have the <emphasis>devel</emphasis> version:</para>
+				<itemizedlist makr="opencircle">
+					<listitem><emphasis>calendar</emphasis></listitem>
+					<listitem><emphasis>calendar_et</emphasis></listitem>
+					<listitem><emphasis>prototip</emphasis></listitem>
+					<listitem><emphasis>ajaxupload</emphasis></listitem>
+					<listitem><emphasis>logger</emphasis> (always compressed)</listitem>
+				</itemizedlist>
+
+				<para>If you are used to including <emphasis>aranea*.js</emphasis> scripts one-by-one then your scripts will be
+					automatically compressed. To include original scripts, insert "src/" right before the file name, e.g.
+					<programlisting role="jsp">&lt;ui:importScripts file="js/aranea/aranea.js"/&gt;</programlisting>
+					to:
+					<programlisting role="jsp">&lt;ui:importScripts file="js/aranea/src/aranea.js"/&gt;</programlisting>
+				</para>
+			</note>
+
+			<para>To use <link linkend="tinymce">TinyMCE editor</link>, you need to include its scripts like this:
+			<programlisting role="jsp">&lt;ui:importScripts file="js/tiny_mce/tiny_mce.js"/&gt;</programlisting></para>
+		</sect3>
+
       <sect3>
         <title>Examples</title>
 
         <programlisting role="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;ui:importScripts/&gt; &lt;!-- imports files from 'defaultScripts' group --&gt;
-&lt;ui:importScripts group="debugScripts"/&gt; &lt;!-- imports additional debug scripts (js logger) --&gt;</programlisting>
+&lt;ui:importScripts/&gt; &lt;!-- imports files from 'all' group --&gt;
+&lt;ui:importScripts group="logger"/&gt; &lt;!-- imports additional debug scripts (js logger) --&gt;</programlisting>
       </sect3>
+
     </sect2>
 
     <sect2>
@@ -168,8 +211,8 @@
       The filter provides the functionality of reading files from the jars on
       the server.</para>
 
-      <para>If no are attributes specified, the default group of css files are
-      loaded.</para>
+      <para>If no are attributes specified, the default group
+      (<emphasis>i.e. all</emphasis>) of css files are loaded.</para>
 
       <sect3>
         <title>Attributes</title>
@@ -220,6 +263,21 @@
           </tgroup>
         </informaltable>
       </sect3>
+
+		<sect3>
+			<para>Here is the list of all available values for the <literal>group</literal> attribute:</para>
+
+			<orderedlist Numeration="Arabic">
+				<listitem><emphasis>all</emphasis> - imports all of the styles (CSS) from the groups described below.</listitem>
+				<listitem><emphasis>aranea</emphasis> - imports only Aranea styles (<emphasis>aranea.css</emphasis>
+				for the page loading message, and <emphasis>comboselect.css</emphasis> for multiselect combo box.</listitem>
+				<listitem><emphasis>calendar</emphasis> - imports only <link linkend="dhtmlcalendar">DHTML calendar</link> styles.</listitem>
+				<listitem><emphasis>contextmenu</emphasis> - imports only <link linkend="contextmenu">Aranea context menu</link> styles.</listitem>
+				<listitem><emphasis>modalbox</emphasis> - imports only <link linkend="modalbox">ModalBox</link> styles.</listitem>
+				<listitem><emphasis>prototip</emphasis> - imports only <link linkend="prototip">Prototip</link> styles.</listitem>
+			</orderedlist>
+		</sect3>
+
     </sect2>
 
     <sect2>
@@ -1161,51 +1219,6 @@
 ...</programlisting>
       </sect3>
     </sect2>
-
-    <sect2>
-       
-
-      <title>&lt;ui:globalWidgetInclude&gt;</title>
-
-       Much like 
-
-      <literal>&lt;ui:widgetInclude&gt;</literal>
-
-      , but this tag allows to include not only descendants of current context widget but any widget that is accessible from global scope. 
-      
-            <sect3>
-        <title>Attributes</title>
-
-        <informaltable frame="all">
-          <tgroup cols="3">
-            <colspec colwidth="2*" />
-
-            <colspec colwidth="1*" />
-
-            <colspec colwidth="4*" />
-
-            <thead>
-              <row>
-                <entry>Attribute</entry>
-
-                <entry>Required</entry>
-
-                <entry>Description</entry>
-              </row>
-            </thead>
-
-            <tbody>
-              <row>
-                <entry>id</entry>
-                <entry><emphasis>yes</emphasis></entry>
-                <entry>A dot-separated full widget identifier.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </sect3>
-      
-    </sect2>
   </sect1>
 
   <sect1>
@@ -1913,9 +1926,9 @@
     </sect2>
 
     <sect2>
-      <title>&lt;ui:updateRegion&gt; and &lt;ui:updateRegionRows&gt;</title>
+      <title>&lt;ui:updateRegion&gt;,  &lt;ui:updateRegionRow&gt;, and &lt;ui:updateRegionRows&gt;</title>
 
-      <para>These two tags define the update regions in the output that can be
+      <para>These three tags define the update regions in the output that can be
       updated via AJAX requests. The update regions chosen to be updated when
       some event occurs is decided by tags that take the
       <literal>updateRegion</literal> attribute (See <xref
@@ -1923,9 +1936,11 @@
 
       <para>The <literal>&lt;ui:updateRegion&gt;</literal> should be used when
       defining updateregion when the region is not contained in HTML table
-      (layout). The <literal>&lt;ui:updateRegionRows&gt;</literal> is for
-      defining a region which is contained in HTML table and contains table
-      rows itself. Updating just cells is not possible.</para>
+      (layout). The <literal>&lt;ui:updateRegionRow&gt;</literal> is basically
+      a table row (<literal>td</literal>) and is for updating a table row.
+      The <literal>&lt;ui:updateRegionRows&gt;</literal> is for defining a
+      region which is an HTML table body, and contains table rows itself.
+      Updating only single cells is not possible due to browser incompatibilities.</para>
 
       <sect3>
         <informaltable frame="all">
@@ -1990,10 +2005,15 @@
 
 &lt;ui:layout&gt;
   &lt;!-- Second update region, placed inside HTML table --&gt;
-  &lt;ui:updateRegionRows id="insideTable"/&gt;
+  &lt;ui:updateRegionRows id="insideTable"&gt;
     &lt;ui:row&gt;
       ...
     &lt;/ui:row&gt;
+    &lt;!-- Third update region for updating a row, placed inside HTML table --&gt;
+    &lt;ui:updateRegionRow id="aRow"&gt;
+      &lt;ui:cell&gt;...&lt;/ui:cell&gt;
+      &lt;ui:cell&gt;...&lt;/ui:cell&gt;
+    &lt;/ui:updateRegionRow/&gt;
   &lt;/ui:updateRegionRows&gt;
 &lt;/ui:layout&gt;
 

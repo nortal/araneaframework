@@ -68,9 +68,9 @@ public class AutomaticFormElementUtil {
 
     CONTROLS_TO_EDITABLE_TAGS.put(CheckboxControl.class, "checkbox");
 
-    CONTROLS_TO_EDITABLE_TAGS.put(FileUploadControl.class, "fileUpload");
+// TODO    CONTROLS_TO_EDITABLE_TAGS.put(FileUploadControl.class, "fileUpload");
 
-    CONTROLS_TO_EDITABLE_TAGS.put(MultiSelectControl.class, "multiSelect");
+// TODO    CONTROLS_TO_EDITABLE_TAGS.put(MultiSelectControl.class, "multiSelect");
     CONTROLS_TO_EDITABLE_TAGS.put(SelectControl.class, "select");
 
     CONTROLS_TO_EDITABLE_TAGS.put(TextareaControl.class, "textarea");
@@ -85,7 +85,7 @@ public class AutomaticFormElementUtil {
     //-------------------------------------------------------------
     CONTROLS_TO_DISPLAY_TAGS.put(CheckboxControl.class, "checkboxDisplay");
 
-    CONTROLS_TO_DISPLAY_TAGS.put(MultiSelectControl.class, "multiSelectDisplay");
+// TODO    CONTROLS_TO_DISPLAY_TAGS.put(MultiSelectControl.class, "multiSelectDisplay");
     CONTROLS_TO_DISPLAY_TAGS.put(SelectControl.class, "selectDisplay");
 
     CONTROLS_TO_DISPLAY_TAGS.put(TextareaControl.class, "textareaDisplay");

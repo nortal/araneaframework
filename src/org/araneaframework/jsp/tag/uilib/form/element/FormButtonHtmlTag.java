@@ -48,7 +48,6 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     baseStyleClass = "aranea-button";
   }
 
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -92,7 +91,6 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     return EVAL_BODY_INCLUDE;
   }
 
-  @Override
   protected int doEndTag(Writer out) throws Exception {
 
     if (renderMode.equals(FormButtonHtmlTag.RENDER_BUTTON)) {
@@ -132,13 +130,13 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
   }
 
   protected boolean writeEventAttribute(Writer out) throws IOException {
-    UiUpdateEvent event = new UiUpdateEvent();
-    event.setId(OnClickEventListener.ON_CLICK_EVENT);
-    event.setTarget(formFullId+"."+ derivedId);
-    event.setUpdateRegionNames(updateRegionNames);
-    event.setEventPrecondition(onClickPrecondition);
-
     if (viewModel.isOnClickEventRegistered()) {
+      UiUpdateEvent event = new UiUpdateEvent();
+      event.setId(OnClickEventListener.ON_CLICK_EVENT);
+      event.setTarget(formFullId+"."+ derivedId);
+      event.setUpdateRegionNames(updateRegionNames);
+      event.setEventPrecondition(onClickPrecondition);
+
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }

@@ -24,33 +24,20 @@
            functionality, but extend the functionality of both framework and <emphasis>UiLib</emphasis>.
            </para>
 
-          <sect2>
-            <title>Behaviour (<ulink url="http://bennolan.com/behaviour/">http://bennolan.com/behaviour/</ulink>)</title>
-            <para>
-              Neat little library allowing usage of CSS selectors for applying behaviour to HTML page elements. It is required
-              for full function of Aranea pages rendered with Aranea JSP tags. It has been customised to use Prototype library
-              selector functions and allow behaviour addition for subtrees (without processing whole page).
+			<note>
+				<para><emphasis>Behaviour</emphasis> library was removed since 1.2.1 because it was out-of-date and because
+				<emphasis>Prototype</emphasis> can now do its work. To reduce the scripts on the client-side, it was
+				reasonable to avoid <emphasis>Behaviour</emphasis>.</para>
+			</note>
 
-              <itemizedlist spacing="compact">
-                <listitem>
-                  keyboard handlers are registered for form elements.
-                </listitem>
-                <listitem>
-                  addition of urls (&lt;href=&quot;...&quot;) to page elements that allow cloning of the session thread (opening
-                  link in new window&mdash;and in different session thread).
-                </listitem>
-              </itemizedlist>
-            </para>
-          </sect2> 
-          
-          <sect2>
+          <sect2 id="dhtmlcalendar">
             <title>The DHTML Calendar (<ulink url="http://www.dynarch.com/projects/calendar/">http://www.dynarch.com/projects/calendar/</ulink>)</title>
             <para>
                Nice DHTML calendar, required if one wants to use Aranea JSP <emphasis>&lt;ui:dateInput&gt;</emphasis> or <emphasis>&lt;ui:dateTimeInput&gt;</emphasis> tags.
             </para>
           </sect2>
           
-          <sect2>
+          <sect2 id="prototype">
             <title>Prototype (<ulink url="http://www.prototypejs.org/">http://www.prototypejs.org/</ulink>)</title>
             <para>
                Prototype is a JavaScript framework that aims to ease development of dynamic web applications. Aranea partial rendering
@@ -60,7 +47,7 @@
             </para>
           </sect2>
           
-          <sect2>
+          <sect2 id="scriptaculous">
             <title>script.aculo.us (<ulink url="http://script.aculo.us/">http://script.aculo.us/</ulink>)</title>
             <para>
                script.aculo.us provides easy-to-use, cross-browser user interface JavaScript libraries. Only subset of script.aculo.us
@@ -69,7 +56,7 @@
             </para>
           </sect2>
 
-          <sect2>
+          <sect2 id="tinymce">
             <title>TinyMCE (<ulink url="http://tinymce.moxiecode.com/">http://tinymce.moxiecode.com/</ulink>)</title>
             <para>
                TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control. Required for using Aranea 
@@ -77,7 +64,7 @@
             </para>
           </sect2>
           
-          <sect2>
+          <sect2 id="prototip">
           	<title>Prototip (<ulink url="http://www.nickstakenburg.com/projects/prototip/">http://www.nickstakenburg.com/projects/prototip/</ulink>)</title>
           	<para>
           	  Prototip allows to easily create both simple and complex tooltips using the Prototype javascript 
@@ -87,7 +74,7 @@
           </sect2>
           
           
-           <sect2>
+           <sect2 id="modalbox">
           	<title>ModalBox (<ulink url="http://www.wildbit.com/labs/modalbox/">http://www.wildbit.com/labs/modalbox/</ulink>)</title>
           	<para>
           	  ModalBox is a JavaScript technique for creating modern modal dialogs or even wizards 
@@ -95,8 +82,8 @@
           	</para>
           </sect2>
 
-          <sect2>
-            <title>log4javascript (<ulink url="http://www.timdown.co.uk/log4javascript/">http://www.timdown.co.uk/log4javascript/</ulink>)</title>
+          <sect2 id="log4javascript">
+            <title>log4javascript (<ulink url="http://log4javascript.org/">http://log4javascript.org/</ulink>)</title>
             <para>
 	            Note that this is now deprecated in favour of <ulink url="http://www.getfirebug.com/">Firebug's</ulink> built in 
 	            logging facilities. Logging to Firebug console is enabled with <emphasis>AraneaPage.setFirebugLogger()</emphasis>.
@@ -104,7 +91,7 @@
             <para>
                log4javascript is a JavaScript logging framework similar to Java logging framework log4j. 
                Include log4javascript
-               scripts and call <emphasis>AraneaPage.setDefaultLogger()</emphasis> to receive a popup window where
+               scripts and call <emphasis>araneaPage().setDefaultLogger()</emphasis> to receive a popup window where
                Aranea JS debug output is logged. When <ulink url="www.getfirebug.com">Firebug</ulink> is active, its 
                logging to its console can be activated with <emphasis>AraneaPage.setFirebugLogger()</emphasis>.
             </para>
@@ -115,279 +102,483 @@
 	<sect1 id="aranea_clientside_js" xreflabel="Aranea Clientside Javascript">
 		<title>Aranea Clientside Javascript</title>
 		<para>
-			Aranea uses javascript to do form submits. This provides AJAX enabled webapps and more control over
-			form submitting logic. Each page served by Aranea has associated <emphasis>AraneaPage</emphasis> object:
+			Aranea uses javascript to do form submits. The code is sent to the client-side in compressed form. The script
+			enables AJAX enabled webapps and provides more control over form submitting logic. Each page served by Aranea has
+			associated <emphasis>AraneaPage</emphasis> object:
 		</para>
 
 		<para>
-<programlisting role="javascript">/* AraneaPage object is present on each page served by Aranea and contains common
- * functionality for setting/getting page related variables, events and functions. */
-function AraneaPage() {
-  /* Getters and setters for URL of aranea dispatcher servlet serving current page. */ 
-  function getServletURL();
-  function setServletURL(url);
-  
-  /* Should act as HttpServletResponse.encodeURL(), but on client-side. */
-  function encodeURL(url);
+<programlisting role="javascript">/**
+ *  Exactly one AraneaPage object is present on each page served by Aranea and
+ *  contains common functionality for setting page related variables, events and
+ *  functions.
+ */
 
-  /** Indicates whether the page is completely loaded or not. Page is considered to 
-   * be loaded when all system onload events have been executed */
-  function isLoaded();
-  /** Sets loading status of the page */
-  function setLoaded(loaded);
-  
-  /* Sets the javascript logger that does not output anything. */
-  function setDummyLogger();
-  /* Sets the javascript logger which logs to firebug console. */
-  function setFirebugLogger();
-  
-  /* Returns the server-side reported locale (AraneaLocale). */
-  function getLocale();
+// Servlet URL is set on every page load.
+araneaPage().getServletURL();
+araneaPage().setServletURL(url);
 
-  /** Indicates whether some form on page is (being) submitted already
-    * by traditional HTTP request. When form is already being submitted,
-    * submit functions will not resubmit it. */
-  function isSubmitted();
-  /* Custom submit functions using plain HTTP request should call this before submit. */
-  function setSubmitted();
-  
-  /** @return systemForm HTML form considered active by this AraneaPage
-    * @since 1.1 */
-  function getSystemForm();
-  /** 
-  * Sets the active system form in this AraneaPage. 
-  * @since 1.1 */
-  function setSystemForm(_systemForm);
+// If servlet URL is not enough for some purposes, encoding function should be overwritten.
+araneaPage().encodeURL(url)
 
-  /** Add events that should be executed upon page load/unload to execution queue. */
-  function addSystemLoadEvent(event);
-  function addClientLoadEvent(event);
-  function addSystemUnLoadEvent(event);
+// Indicates whether the page is completely loaded or not. Page is considered to
+// be loaded when all system onload events have completed execution.
+araneaPage().isLoaded()
+araneaPage().setLoaded(b)
 
-  /** Called on page load, executes registered system -- after which page is considered 
-    * loaded and client load events are executed too. */
-  function onload();
-  /** Called on page unload (takes place after plain HTTP Request or navigation to
-    * another URL), executes registered unload events. */
-  function onunload();
-  
-  /** Adds callback executed before next form submit. */
-  function addSubmitCallback(callback);
+// Dummy logger is practically no logger.
+araneaPage().setDummyLogger()
 
-  /** Add callback executed before form with given id is submitted next time. */
-  function addSubmitCallback(systemFormId, callback);
+// Makes Aranea scripts use log4javascript logger.
+araneaPage().setDefaultLogger()
 
-  /** Executes all callbacks that should run before submitting the form with given id. 
-    * Executed callbacks are removed. */
-  function executeCallbacks(systemFormId);
+// Makes Aranea scripts use Firebug logger.
+araneaPage().setFirebugLogger()
 
-  /** 
-   * Chooses appropriate submitting method and submittable form given the HTML element
-   * that initiated the submit request. Applies the appropriate paramater values
-   * and submits the systemForm which owns the element. This is one of the most often
-   * used functions here. */
-  function event(element);
+araneaPage().setLogger(theLogger)
+araneaPage().getLogger()
 
-  /** 
-   * This function can be overwritten to support additional submit methods. 
-   * It is called by event() to determine the appropriate form submitter.
-   */
-  function findSubmitter(element, systemForm);
-  
-  /** Returns the id of a component who should receive events generated by DOM element.
-    * @since 1.1 */
-  function getEventTarget(element);
+// locale - should be used only for server-side reported locale.
+araneaPage().getLocale()
+araneaPage().setLocale(locale)
 
-  /** Returns event id that should be sent to server when event(element) is called.
-    * @since 1.1 */
-  function getEventId(element);
+// Indicates whether some form on page is (being) submitted already
+// by traditional HTTP request.
+araneaPage().isSubmitted()
+araneaPage().setSubmitted()
 
-  /** Returns event parameter that should be sent to server when event(element) is called.
-    * @since 1.1 */
-  function getEventParam(element);
+// Returns the active system form in this AraneaPage
+araneaPage().getSystemForm()
 
-  /** Returns update regions that should be sent to server when event(element) is called.
-    * @since 1.1 */
-  function getEventUpdateRegions(element);
+araneaPage().setSystemForm(_systemForm)
+araneaPage().setSystemFormEncoding(encoding)
 
-  /** Returns closure that should be evaluated when event(element) is called and
-    * needs to decide whether server-side event invocation is needed.
-    * @since 1.1 */
-  function getEventPreCondition(element);
+// Returns the path of the component who should receive events generated by DOM element.
+araneaPage().getEventTarget(element)
 
-  /** Another submit function, takes all params that are possible to 
-    * use with Aranea JSP currently. 
-    * @param systemForm form that will be submitted 
-    * @param eventId event identifier sent to the server 
-    * @param eventTarget event target identifier (widget id) 
-    * @param eventParam event parameter 
-    * @param eventPrecondition closure, submit is only performed when its evaluation returns true
-    * @param eventUpdateRegions identifiers for regions that should be regenerated on server-side */
-  function event_6(systemForm, eventId, eventTarget, 
-                    eventParam, eventPrecondition, eventUpdateRegions);
-                    
-   /**
-   * Returns URL that can be used to invoke full HTTP request with some predefined request parameters.
-   * @param topServiceId server-side top service identifier
-   * @param threadServiceId server-side thread service identifier
-   * @param araTransactionId transaction id expected by the server
-   * @param extraParams more parameters, i.e "p1=v1&amp;p2=v2"
-   */
-  function getSubmitURL(topServiceId, threadServiceId, araTransactionId, extraParams);
+// Returns event id that should be sent to server when event(element) is called.
+araneaPage().getEventId(element) {
 
-  /**
-   * Returns URL that can be used to make server-side action-invoking 
-   * XMLHttpRequest with some predefined request parameters.
-   * @param systemForm form containing information about top service and thread service identifiers
-   * @param actionId action identifier sent to the server 
-   * @param actionTarget action target identifier (widget id) 
-   * @param actionParam action parameter
-   * @param sync whether this action is synchronized or not 
-   * @param extraParams more parameters, i.e "p1=v1&amp;p2=v2"
-   */
-  function getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync, extraParams);
+// Returns event parameter that should be sent to server when event(element) is called.
+araneaPage().getEventParam(element)
 
-  /**
-   * Invokes server-side action listener by performing XMLHttpRequest with correct parameters.
-   * @param element unused currently, should be set to DOM element that triggers action invocation 
-   * @param actionId action identifier sent to the server 
-   * @param actionTarget action target identifier (widget id) 
-   * @param actionParam action parameter
-   * @param actionCallback callback executed when action response arrives
-   * @param options XMLHttpRequest options, see: http://prototypejs.org/api/ajax/options
-   * @param sync whether this action is synchronized on server-side or not (default is synchronized)
-   * @param extraParams more parameters, i.e "p1=v1&amp;p2=v2"
-   */
-  function action(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams);
-  
-  /**
-   * Invokes server-side action listener by performing XMLHttpRequest with correct parameters.
-   * @param systemForm form that triggers the action request 
-   * @param actionId action identifier sent to the server 
-   * @param actionTarget action target identifier (widget id) 
-   * @param actionParam action parameter
-   * @param actionCallback callback executed when action response arrives
-   * @param options XMLHttpRequest options, see: http://prototypejs.org/api/ajax/options
-   * @param sync whether this action is synchronized on server-side or not (default is synchronized)
-   * @param extraParams more parameters, i.e "p1=v1&amp;p2=v2"
-   */
-  function action_6(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams);
+// Returns update regions that should be sent to server when event(element) is called.
+araneaPage().getEventUpdateRegions(element)
 
-  /** 
-   * Provides preferred way of overriding AraneaPage object functions. 
-   * @param functionName name of AraneaPage function that should be overridden. 
-   * @param f replacement function 
-   */
-  function override(functionName, f);
-  
-  /** Returns the flag that determines whether background validation is used by 
-    * for all forms (FormWidgets) in the application. */
-  function getBackgroundValidation();
-  /** Sets the background form validation flag on client side. Note that server-side
-    * must have identical setting for these settings to have effect. */
-  function setBackgroundValidation(useAjax);
-  
-  /**
-   * Add a handler that is invoked for custom data region in updateregions AJAX
-   * request. process function will be invoked on the handler
-   * during processing the response. Data specific to this handler will be
-   * passed as the first parameter to that function (String).
-   * @param key update region type identifier
-   * @param handler callback that should process region content
-   *
-   * @since 1.1
-   */
-  function addRegionHandler(key, handler);
-  
-  /**
-   * Process response of an updateregions AJAX request. Should be called only
-   * on successful response. Invokes registered region handlers.
-   *
-   * @since 1.1
-   */
-  function processResponse(responseText);
-  
-  /**
-   * Exception handler that is invoked on Ajax.Request errors.
-   *
-   * @since 1.1
-   */
-  function handleRequestException(request, exception);
-  
- /**
-   * Create or show loading message at the top corner of the document. Called
-   * before initiating an updateregions Ajax.Request.
-   *
-   * @since 1.1
-   */
-  function showLoadingMessage();
-  
-  /**
-   * Hide loading message. Called after the completion of updateregions Ajax.Request.
-   *
-   * @since 1.1
-   */
-  function hideLoadingMessage();
-  
-  /**
-   * Build loading message. Called when an existing message element is not
-   * found.
-   *
-   * @since 1.1
-   */
-  function buildLoadingMessage();
-  
-  /**
-   * Perform positioning of loading message (if needed in addition to CSS).
-   * Called before making the message element visible. This implementation
-   * provides workaround for IE 6, which doesn't support
-   * position: fixed CSS attribute; the element is manually
-   * positioned at the top of the document. If you don't need this, overwrite
-   * this with an empty function:
-   * AraneaPage.positionLoadingMessage = Prototype.emptyFunction;
-   *
-   * @since 1.1
-   */
-  function positionLoadingMessage();
-  
-  /** 
-   * Adds keepalive function f that is executed periodically after time 
-   * milliseconds has passed 
-   */
-  function addKeepAlive(f, time);
+// Returns closure that should be evaluated when event(element) is called and
+// needs to decide whether server-side event invocation is needed.
+araneaPage().getEventPreCondition(element)
 
-  /** Clears/removes all registered keepalive functions. */
-  function clearKeepAlives();
-  
-  /** Logs message on DEBUG level, if logger is present. */
-  function debug(message);
-}
+// Adds a load event listener that is executed once when the page loaded.
+araneaPage().addSystemLoadEvent(event)
 
-/** Random request id generator. Sent only with XMLHttpRequests which apply to certain update regions.
-  * Currently only purpose of it is easier debugging (identifying requests). */
-AraneaPage.getRandomRequestId() = function() { /* ... */ };
+// Adds a load event listener that is executed once when the page or part of it is loaded.
+araneaPage().addClientLoadEvent(event)
 
-/* Returns a default keepalive function -- to make periodical requests to expiring thread
- * or top level services. */
-AraneaPage.getDefaultKeepAlive = function(topServiceId, threadServiceId, keepAliveKey);
+// Adds a unload event listener that is executed once when the page unloaded.
+araneaPage().addSystemUnLoadEvent(event)
 
-/** Searches for widget marker around the given element. 
-  * If found, returns the marker DOM element, else returns null. */
-AraneaPage.findWidgetMarker = function(element);
+araneaPage().onload()
+araneaPage().onunload()
 
-/** Searches for system form in HTML page and registers it in 
-  * current AraneaPage object as active systemForm.
-  * @param element unused, could be set to some DOM element that definitely falls inside the system form
-  * @since 1.1 */
-AraneaPage.findSystemForm = function(element);
+// Adds callback executed before next form submit. */
+araneaPage().addSubmitCallback(callback)
 
-/** Page initialization function, should be called upon page load. */
-AraneaPage.init();
+// Add callback executed before form with given id is submitted next time.
+araneaPage().addSystemFormSubmitCallback(systemFormId, callback) {
 
-/* Aranea page object is accessible in two ways -- _ap and araneaPage() */
-_ap = new AraneaPage();
-function araneaPage() { return _ap; }</programlisting>
+// Executes all callbacks that should run before submitting the form with given id.
+// Executed callbacks are removed.
+araneaPage().executeCallbacks(systemFormId)
+
+// Chooses appropriate submitting method and submittable form given the HTML element
+// that initiated the submit request. Applies the appropriate parameter values
+// and submits the systemForm which owns the element.
+araneaPage().event(element)
+
+// Returns either form submitter, AJAX submitter, or overlay submitter.
+// This function can be overwritten to support additional submit methods.
+// It is called by event() to determine the appropriate form submitter.
+araneaPage().findSubmitter(element, systemForm)
+
+// Another submit function, takes all params that are possible to use with Aranea JSP currently.
+araneaPage().event_6(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+
+// Returns URL that can be used to invoke full HTTP request with some predefined request parameters.
+araneaPage().getSubmitURL(topServiceId, threadServiceId, araTransactionId, extraParams)
+
+// Returns URL that can be used to make server-side action-invoking
+// XMLHttpRequest with some predefined request parameters.
+araneaPage().getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync, extraParams)
+
+// Invokes server-side action listener by performing XMLHttpRequest with correct parameters.
+araneaPage().action(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams)
+
+// Invokes server-side action listener by performing XMLHttpRequest with correct parameters.
+araneaPage().action_6(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams)
+
+// Method to log a message at DEBUG level.
+// A shortcut for araneaPage().getLogger().debug(message).
+araneaPage().debug(message)
+
+// Adds keepalive function f that is executed periodically after time milliseconds has passed.
+araneaPage().addKeepAlive: function(f, time)
+
+// Clears/removes all registered keepalive functions.
+araneaPage().clearKeepAlives()
+
+// Returns the flag that determines whether background validation is used by
+// for all forms (FormWidgets) in the application.
+araneaPage().getBackgroundValidation()
+
+// Proivdes a way to turn on/off background validation. The parameter is a boolean.
+araneaPage().setBackgroundValidation(useAjax)
+
+// ============================================================================
+//                           STATIC METHODS
+// ============================================================================
+
+// Returns a default keepalive function -- to make periodical requests to
+// expiring thread or top level services.
+AraneaPage.getDefaultKeepAlive(topServiceId, threadServiceId, keepAliveKey)
+
+// Searches for widget marker around the given element. If found, returns the
+// marker DOM element, else returns null.
+AraneaPage.findWidgetMarker(element)
+
+// Random request ID generator. Sent only with XMLHttpRequests which apply to
+// certain update regions. Currently its only purpose is easier debugging
+// (identifying requests).
+AraneaPage.getRandomRequestId()
+
+// Returns the full URL for importing given file.
+// The same URL that &lt;ui:importScripts&gt; outputs.
+AraneaPage.getFileImportString(filename)
+
+// Page initialization function, it is called upon page load.
+AraneaPage.init()
+
+// Page deinitialization function, it is called upon page unload.
+AraneaPage.deinit()
+
+// Searches for system form in HTML page and registers it in the current
+// AraneaPage object as active systemForm. Also returns the found form.
+AraneaPage.findSystemForm()
+
+// RSH initialization for state versioning. Has effect only when "aranea-rsh.js"
+// is also included in the page.
+AraneaPage.initRSHURL()
+
+// Properties for loading message:
+AraneaPage.loadingMessageContent: 'Loading...',
+AraneaPage.loadingMessageId: 'aranea-loading-message',
+AraneaPage.reloadOnNoDocumentRegions: false,
+
+// Add a handler that is invoked for custom data region in updateregions AJAX
+// request. process() function will be invoked on the handler
+// during processing the response. Data specific to this handler will be
+// passed as the first parameter to that function (String).
+AraneaPage.addRegionHandler(key, handler)
+
+// Process response of an updateregions AJAX request. Should be called only
+// on successful response. Invokes registered region handlers.
+AraneaPage.processResponse(responseText)
+
+AraneaPage.handleRequestException(request, exception)
+
+// Create or show loading message at the top corner of the document. Called
+// before initiating an updateregions Ajax.Request.
+AraneaPage.showLoadingMessage()
+
+// Hide loading message. Called after the completion of updateregions Ajax.Request.
+AraneaPage.hideLoadingMessage()
+
+// Builds the loading message that is by default shown in the right-top corner.
+// The default loading message built here also depends on aranea.css.
+// This method is always called during AJAX request. You are free to override it.
+AraneaPage.buildLoadingMessage()
+
+// Perform positioning of loading message (if needed in addition to CSS).
+// Called before making the message element visible. This implementation
+// provides workaround for IE 6, which doesn't support
+// &lt;code&gt;position: fixed&lt;/code&gt; CSS attribute; the element is manually
+// positioned at the top of the document. If you don't need this, overwrite
+// this with an empty function:
+// <code>Object.extend(AraneaPage, { positionLoadingMessage: Prototype.emptyFunction });</code>
+AraneaPage.positionLoadingMessage(element)
+
+
+// ============================================================================
+//                           FORM SUBMITTERS
+// ============================================================================
+
+// Here are three submitter classes for the standard HTTP submit, AJAX update
+// region submit, and AJAX overlay submit.
+
+// The standard HTTP submitter. Whether it's POST or GET depends on the
+// "method" attribute of the "form" element. (The default is GET submit.)
+var DefaultAraneaSubmitter = Class.create(
+
+  // Local variables:
+
+  systemForm: null,
+
+  widgetId: null,
+
+  eventId: null,
+
+  eventParam: null,
+
+  // Constructor:
+
+  initialize(form)
+
+  // Methods:
+
+  // "Private" method that is called by event to store event data in local
+  // variables.
+  storeEventData(element)
+
+  // Starts a submitting process. Here data is collected. Main work is done by
+  // event_4().
+  event(element)
+
+  // Does a plain form submit using given parameters.
+  event_4(systemForm, eventId, widgetId, eventParam)
+});
+
+// This class extends the default submitter, and overrides event() to initiate
+// an AJAX request and to process result specifically for the overlay mode.
+// It expects that aranea-modalbox.js is successfully loaded.
+var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
+
+  event(element)
+
+  event_7(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+
+});
+
+// This class extends the default submitter, and overrides event() to initiate
+// an AJAX request and to process result specifically for update regions.
+var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
+
+  // Local variable:
+  updateRegions: null,
+
+  event(element)
+
+  event_5(systemForm, eventId, widgetId, eventParam, updateRegions)
+
+  // Returns AJAX parameters for the request.
+  getAjaxParameters(neededAraTransactionId, ajaxRequestId,
+		  updateRegions, neededAraClientStateId)
+
+  // Is called when the request completes successfully.
+  onAjaxSuccess(ajaxRequestId, transport)
+
+  // Is called when the request is completed.
+  onAjaxComplete(transport)
+
+  // Is called when the request fails.
+  onAjaxFailure(transport)
+
+  // Is called when an exception is called during request.
+  onAjaxException(request, exception)
+
+});
+
+// The delay after which Ajax.Request onComplete expects all the DOM updates
+// to have taken place, in milliseconds.
+DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay = 30
+
+// An HTTP transport processor looking for state versioning info.
+DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport)
+
+// Region handler that updates transaction id of system form.
+AraneaPage.TransactionIdRegionHandler = Class.create({
+  process(content)
+});
+
+// The Region handler that updates DOM element content.
+AraneaPage.DocumentRegionHandler = Class.create({
+  process(content)
+});
+
+// Does DOM cleanup to avoid memory leaks when content is updated. An
+// "invisible" second parameter is used to detect whether the clean-up is
+// done with the element or not. If arguments.length = 1 then the input
+// element is not changed, only its child-elements will be checked.
+// Override this method (Object.extend()) to create your own cleanups.
+AraneaPage.DocumentRegionHandler.doDOMCleanup(element)
+
+// Handles messages that came with an AJAX request. These are the messages from
+// the MessageContext. You do not need to put "messages" into your update
+// regions if you have marked your messages with class "aranea-messages" and
+// attribute "arn-msgs-type" with value of message type, because this handler
+// knows how to update these messages.
+// You may also override certain functionality to customize this class for your
+// own needs.
+AraneaPage.MessageRegionHandler = Class.create({
+
+  regionClass: '.aranea-messages'
+
+  regionTypeAttribute: 'arn-msgs-type'
+
+  messageSeparator: '&lt;br/&gt;'
+
+  process(content)
+
+  // The input parameter is a map of messages by message type. This method goes
+  // through all elements where class="aranea-messages", adds new messages to
+  // them or hides messages if they were not in the response data.
+  updateRegions(messagesByType)
+
+  // This method adds messages (array) to given region (element).
+  showMessageRegion(region, messages)
+
+  // Hides given message region, and changes its content if necessary.
+  hideMessageRegion(region)
+
+  // Looks up the element that contains messages in given region.
+  // Its content will be updated with new messages.
+  findContentElement(region)
+
+  // Looks up the element of the region that is intented for wrapping the messages.
+  // It will be hidden, if no messages were in the response data.
+  findDisplayElement(region)
+
+  // Formats the messages (array) and returns them as String where messages are
+  // separated by messageSeparator. The result is used to update the content of
+  // content element (findContentElement(region)).
+  buildRegionContent(messages)
+});
+
+// Region handler that opens popup windows.
+AraneaPage.PopupRegionHandler = Class.create({
+
+  process(content)
+
+  openPopups(popups)
+
+});
+
+// Region handler that forces a reload of the page by submitting the system
+// form.
+AraneaPage.ReloadRegionHandler = Class.create({
+  process(content)
+});
+
+// A region handler for form background validation.
+AraneaPage.FormBackgroundValidationRegionHandler = Class.create({
+
+  process(content)
+
+  getParentSpan(formelement)
+
+  getLabelSpan(formelement)
+
+  getParentElement(el, tagName, className)
+
+});
+
+
+// Aranea page object is accessible in two ways: _ap and araneaPage().
+var _ap = new AraneaPage();
+function araneaPage() {
+  return _ap;
+}</programlisting>
       </para>
 
+		<para>
+			Since Aranea 1.2.2, the JavaScript API also includes submit callback API, which can be
+			used to provide more control over submitting. It contains methods that can be overridden
+			to change or add some some behaviour.
+		</para>
+
+		<para>
+			<programlisting role="javascript">
+/**
+ * A common callback for API submitters. The callback handles common data manipulation and validation.
+ * This callback should be used to add some custom features to submit data or submit response.
+ */
+
+// The only method that element-submitters should call. It takes the type of request, the form
+// containing the element to be submitted, and the function that does the submit work.
+AraneaPage.SubmitCallback.doRequest(type, form, element, eventFn);
+
+// This method is called to return the result of element-submit. Here is a nice place to implement
+// custom features depending on the element or request type. Feel free to override.
+AraneaPage.SubmitCallback.getRequestResult(type, element, result);
+
+// The method that is called by submitters to store submit data in the form.
+AraneaPage.SubmitCallback.prepare(type, form, widgetId, eventId, eventParam)
+
+// Processes the submit data. It calls following methods of this object:
+// 1. processSubmitData - to optionally modify the submit data;
+// 2. storeSubmitData - to store the submit data in the form (if submit is allowed).
+// 3. Adds isSubmitAllowed, beforeSubmit, afterSubmit callbacks to data.
+AraneaPage.SubmitCallback.processData(data)
+
+// A callback to optionally modify submit data. Feel free to override.
+AraneaPage.SubmitCallback.processSubmitData: function(data) {},
+
+// A callback to store submit data in the form.
+AraneaPage.SubmitCallback.storeSubmitData(data)
+
+// A callback that is checked to enable or disable submit. Feel free to override.
+isSubmitAllowed(data) {
+
+// A callback that is called before each submit (no matter whether it is AJAX or not).
+// This method includes default behaviour. Feel free to override.
+AraneaPage.SubmitCallback.beforeSubmit(data)
+
+// A callback that is called after each submit (no matter whether it is AJAX or not).
+// This method includes default behaviour. Feel free to override.
+AraneaPage.SubmitCallback.afterSubmit(data)
+			</programlisting>
+		</para>
+
+		<para>
+			The Aranea 1.2.2 release also introduced automatic file upload JavaScript API. You
+			usually don't have to modify it except for the upload options part, especially the
+			<literal>onComplete</literal> function. However, here's the entire API.
+		</para>
+
+		<para><programlisting role="javascript">
+// This method returns the URL where to submit the file. The element parameter is not used, but
+// you can modify the method to use the parameter. 
+AraneaPage.getAjaxUploadURL(element);
+
+// This method provides the data as { formField1: value1, formField2: value2, ...} that will be
+// added to the form later. This data should be needed in the query.
+AraneaPage.getAjaxUploadFormData(systemForm, element)
+
+// This method is called by AraneaPage.init() to initialize file inputs with AJAX uplaod features.
+// You can modify here the logic that is used for file input lookup.
+AraneaPage.ajaxUploadInit()
+
+// These are the default options that are used with the AJAX file upload. Feel free to override them.
+AraneaPage.AjaxUploadOptions = {
+	disabled: false,
+	autoSubmit: true,
+	onChange: function(file, extension, options) {},
+	onSubmit: function(file, extension, options) {},
+	onComplete: function(file, responseText, failMsg, options) {
+		_ap.debug('File upload completed. File="' + file + '"; response="' + responseText + '".');
+		if (responseText == 'OK') { // Otherwise responseText == 'FAIL'
+			// Hides the file input and shows a link instead with the file name. Once the link is
+			// clicked, the link will be removed and the file input will be shown again.
+			$(options.target).hide().insert({after:
+				'&lt;a href="#" onclick="$(this).previous().show().next().remove(); return false;"&gt;' + file + '&lt;/a&gt;'});
+		} else {
+			if (!failMsg) {
+				failMsg = 'Uploading file "' + file + '" failed. There could have been a '
+					+ 'problem\nwith the connection or the file was too big. Please try again!';
+			}
+			alert(failMsg);
+		}
+	}
+}
+		</programlisting></para>
 	</sect1>
 </chapter>

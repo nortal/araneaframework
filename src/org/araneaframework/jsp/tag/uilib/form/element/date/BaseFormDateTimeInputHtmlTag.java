@@ -177,10 +177,13 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	 * @since 1.0.3
 	 */
 	protected String getTimeSelectScript(String selectId, Integer value, int valueCount) {
-	    StringBuffer sb = new StringBuffer();
-	    sb.append("Aranea.UI.addOptions('"+selectId+"'," + String.valueOf(valueCount)+ ",");
-	    sb.append(value != null ? value.toString():"null").append(");");
-
+	    StringBuffer sb = new StringBuffer("Aranea.UI.addOptions('");
+	    sb.append(selectId);
+	    sb.append("',");
+	    sb.append(String.valueOf(valueCount));
+	    sb.append(",");
+	    sb.append(value != null ? value.toString() : "null");
+	    sb.append(");");
 	    return sb.toString();
 	}
 
@@ -192,7 +195,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 			return onChangePrecondition;
 		}
 
-		String timeInputRef = new StringBuffer("document.getElementById('")
+		String timeInputRef = new StringBuffer("$F('")
 				.append(timeInputId)
 				.append("')")
 				.toString();
@@ -202,9 +205,9 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 		precondition.append(timeInputId);
 		precondition.append("') && ((");
 		precondition.append(timeInputRef);
-		precondition.append(".value.length==5) || (");
+		precondition.append(".length==5) || (");
 		precondition.append(timeInputRef);
-		precondition.append(".value.length==0))");
+		precondition.append(".length==0))");
 		return precondition.toString();
 	}
 
@@ -228,8 +231,8 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
 	protected String getSelectOnChangePrecondition(String timeInputId) {
 		String precondition = onChangePrecondition;
 		if (precondition == null) {
-			precondition = "return (document.getElementById('" + timeInputId
-					+ "').value.length==5)";
+			precondition = "return $F('" + timeInputId
+					+ "').length==5";
 		}
 		return precondition;
 	}

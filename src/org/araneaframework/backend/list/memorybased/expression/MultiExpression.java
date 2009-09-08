@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.backend.list.memorybased.expression;
 
@@ -24,19 +24,22 @@ import org.araneaframework.backend.list.memorybased.Expression;
  * Composite Expression containing other expressions.
  */
 public abstract class MultiExpression implements CompositeExpression {
-	protected List<Expression> children = new ArrayList<Expression>();
 
-	/**
-	 * Adds expression to this composite MultiExpression.
-	 * @param expression expression to add
-	 * @return this MultiExpression with added expression
-	 */
-	public MultiExpression add(Expression expression) {
-		this.children.add(expression);
-		return this;
-	}
+  protected List children = new ArrayList();
 
-	public Expression[] getChildren() {
-		return this.children.toArray(new Expression[this.children.size()]);
-	}
+  /**
+   * Adds expression to this composite MultiExpression.
+   * 
+   * @param expression expression to add
+   * @return this MultiExpression with added expression
+   */
+  public MultiExpression add(Expression expression) {
+    this.children.add(expression);
+    return this;
+  }
+
+  public Expression[] getChildren() {
+    return (Expression[]) this.children.toArray(new Expression[this.children
+        .size()]);
+  }
 }

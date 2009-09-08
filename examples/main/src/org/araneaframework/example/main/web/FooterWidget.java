@@ -22,7 +22,7 @@ import org.araneaframework.OutputData;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.core.BaseUIWidget;
-import org.araneaframework.uilib.core.MenuContext;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -36,7 +36,7 @@ public class FooterWidget extends BaseUIWidget {
   }
 
    protected void render(OutputData output) throws Exception {
-    TemplateMenuWidget menuWidget = (TemplateMenuWidget) getEnvironment().getEntry(MenuContext.class);
+    TemplateMenuWidget menuWidget = (TemplateMenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
 
     /* widget source */
     String flowClassName = menuWidget.getFlowClassName();
