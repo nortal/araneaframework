@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form;
 
 import org.apache.commons.beanutils.PropertyUtils;
+
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -24,7 +25,7 @@ import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 public class BeanFormWidget<T> extends FormWidget {
-//  private static final String[] primitiveTypes = new String[] {"int", "long", "short", "double", "float", "boolean", "byte", "char"};
+
   private BeanMapper<T> beanMapper;
   private Class<T> beanClass;
   private T bean;
@@ -54,7 +55,8 @@ public class BeanFormWidget<T> extends FormWidget {
   public BeanFormWidget<?> addBeanSubForm(String id) {
     return addBeanSubForm(id, Object.class);
   }
-  
+
+  @SuppressWarnings("unchecked")
   public <E> BeanFormWidget<E> addBeanSubForm(String id, Class<E> fieldType) {
     if (!beanMapper.isReadable(id))
       throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
@@ -63,7 +65,7 @@ public class BeanFormWidget<T> extends FormWidget {
     }
     BeanFormWidget<E> result = null;
     try {
-      result = new BeanFormWidget<E>(fieldType, (E)PropertyUtils.getProperty(bean, id));
+      result = new BeanFormWidget<E>(fieldType, (E) PropertyUtils.getNestedProperty(bean, id));
     } catch (Exception e) {
       throw ExceptionUtil.uncheckException(e);
     }
@@ -71,6 +73,7 @@ public class BeanFormWidget<T> extends FormWidget {
     return result;
   }
   
+  @SuppressWarnings("unchecked")
   public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
     Object initialValue = null;
     try {
@@ -79,8 +82,9 @@ public class BeanFormWidget<T> extends FormWidget {
       throw ExceptionUtil.uncheckException(e);
     } 
     return addBeanElement(elementName, labelId, control, (D)initialValue, mandatory);
-  }  
-  
+  }
+
+  @SuppressWarnings("unchecked")
   public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
     return super.addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
   }

@@ -4,10 +4,10 @@
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.0">
-	<!-- This is a master page of Aranea framework template application (examples/main/war/WEB-INF/jsp/root.jsp) -->
+	<!-- This is a master page of Aranea framework template application. -->
 	<ui:widgetContext>
 		<![CDATA[
-	   		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	        		
+			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   		]]>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
@@ -23,7 +23,7 @@
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>
 						<ui:registerOverlay/>
-	
+
 						<!-- Renders the menu on top of the screen -->
 						<jsp:include page="/WEB-INF/jsp/mainlayout/menu.jsp"/>
 						<div class="stripe1"><ui:nbsp/></div>

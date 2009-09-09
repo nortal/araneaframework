@@ -37,6 +37,7 @@ public class MockBeanFactory implements BeanFactory {
     return bean;
   }
 
+  @SuppressWarnings("unchecked")
   public Object getBean(String arg0, Class arg1) throws BeansException {
     return null;
   }
@@ -49,6 +50,7 @@ public class MockBeanFactory implements BeanFactory {
     return false;
   }
 
+  @SuppressWarnings("unchecked")
   public Class getType(String arg0) throws NoSuchBeanDefinitionException {
     return null;
   }
@@ -59,5 +61,18 @@ public class MockBeanFactory implements BeanFactory {
 
   public String getBeanId() {
     return beanId;
+  }
+
+  public Object getBean(String arg0, Object[] arg1) throws BeansException {
+    return null;
+  }
+
+  public boolean isPrototype(String arg0) throws NoSuchBeanDefinitionException {
+    return false;
+  }
+
+  @SuppressWarnings("unchecked")
+  public boolean isTypeMatch(String arg0, Class arg1) throws NoSuchBeanDefinitionException {
+    return false;
   }
 }

@@ -2,6 +2,7 @@
 package org.araneaframework.http.filter;
 
 import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.RandomStringUtils;
@@ -41,18 +42,16 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.2
  */
-public class StandardStateVersioningFilterWidget extends BaseFilterWidget
-  implements StateVersioningContext {
+@SuppressWarnings("unchecked")
+public class StandardStateVersioningFilterWidget extends BaseFilterWidget implements StateVersioningContext {
 
   private static final long serialVersionUID = 1L;
 
-  private static final Log log = LogFactory.getLog(
-      StandardStateVersioningFilterWidget.class);
+  private static final Log log = LogFactory.getLog(StandardStateVersioningFilterWidget.class);
 
   /**
-   * Default number of states that is stored when this
-   * {@link StandardStateVersioningFilterWidget} is present in component
-   * hierarchy.
+   * Default number of states that is stored when this {@link StandardStateVersioningFilterWidget} is present in
+   * component hierarchy.
    */
   public static final int DEFAULT_MAX_STATES_STORED = 20;
 
@@ -64,11 +63,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
   protected String lastStateId = null;
 
   /**
-   * This <code>ThreadLocal</code> is used to hold a <code>Boolean</code>, which
-   * indicates whether the state has been saved during current request/response
-   * cycle.
+   * This <code>ThreadLocal</code> is used to hold a <code>Boolean</code>, which indicates whether the state has been
+   * saved during current request/response cycle.
    */
-  private transient ThreadLocal stateSavedTL = new ThreadLocal();
+  private transient ThreadLocal<Boolean> stateSavedTL = new ThreadLocal<Boolean>();
 
   /**
    * Map of states that this versioning system keeps track of. When using client
@@ -77,7 +75,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
    * server-side state storage
    * <code>Map&lt;String stateId, byte[] serializedState&gt;</code>
    */
-  protected LRUMap versionedStates = new LRUMap(DEFAULT_MAX_STATES_STORED);
+  protected Map<String, byte[]> versionedStates = new LRUMap(DEFAULT_MAX_STATES_STORED);
 
   // Overrides for BaseFilterWidget methods
   /**
@@ -124,7 +122,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
     }
 
     this.maxVersionedStates = maxVersionedStates;
-    Map currentStates = this.versionedStates;
+    Map<String, byte[]> currentStates = this.versionedStates;
     this.versionedStates = new LRUMap(this.maxVersionedStates);
 
     if (currentStates != null) {
@@ -134,7 +132,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
 
   protected synchronized void initStateSavedTL() {
     if (this.stateSavedTL == null) {    
-      this.stateSavedTL = new ThreadLocal();    
+      this.stateSavedTL = new ThreadLocal<Boolean>();    
     }
     this.stateSavedTL.set(Boolean.FALSE);
   }
@@ -186,7 +184,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
       // Execute this IF-block when state has not been stored yet:
       if (Boolean.FALSE.equals(this.stateSavedTL.get())) {
 
-        String regions = (String) output.getInputData().getGlobalData().get(
+        String regions = output.getInputData().getGlobalData().get(
             UpdateRegionContext.UPDATE_REGIONS_KEY);
 
         // This first condition is true when the "regions" contains
@@ -301,7 +299,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
   }
 
   protected byte[] getState(String stateId) {
-    return (byte[]) this.versionedStates.get(stateId);
+    return this.versionedStates.get(stateId);
   }
 
   /**
@@ -309,7 +307,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget
    * {@link StateVersioningContext#STATE_ID_REQUEST_KEY} from current request.
    */
   protected String getStateId(InputData input) {
-    return (String) input.getGlobalData().get(STATE_ID_REQUEST_KEY);
+    return input.getGlobalData().get(STATE_ID_REQUEST_KEY);
   }
 
   /**

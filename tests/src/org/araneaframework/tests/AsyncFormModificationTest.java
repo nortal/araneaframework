@@ -1,5 +1,7 @@
 package org.araneaframework.tests;
 
+import java.math.BigDecimal;
+
 import junit.framework.TestCase;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.tests.mock.MockEnvironment;
@@ -39,20 +41,21 @@ public class AsyncFormModificationTest extends TestCase {
 	}
 	
 	/* Test whether the createElement() with initialValue set produces 
-	 * expected results when FormElement is left uninited. */
+	 * expected results when FormElement is left uninitiated. */
 	public void testSetValue_2() throws Exception {
 		String value = "newvalue";
 		
 		FormWidget form = makeForm();
-		FormElement el = form.createElement("labelId", new TextControl(), new StringData(), value, false);
+		FormElement<String, String> el = form.createElement("labelId", new TextControl(), new StringData(), value, false);
 
 		assertEquals("Element value incorrect", value, el.getValue());
 	}
 	
-	/* Test that replacing inited FormElement's Data changes FormElement's value to Data's value.
+	/* Test that replacing initiated FormElement's Data changes FormElement's value to Data's value.
 	 * After that, make sure that Control sees the same value (meaning that asynchronous form 
 	 * modifications work). */
-	public void testSetValue_3() throws Exception {
+	@SuppressWarnings("unchecked")
+  public void testSetValue_3() throws Exception {
 		String value = "newvalue";
 		Data<String> data = new StringData();
 		data.setValue(value);
@@ -68,8 +71,8 @@ public class AsyncFormModificationTest extends TestCase {
 		assertEquals("Inited formelement's Control value differs from Data value", value, viewModel.getSimpleValue());
 	}
 	
-	/* Test that replacing uninited FormElement's Data changes FormElement's value to Data's value.
-	 * After that, demonstrate that Control inside uninited FormElement is still unaware of its value. */
+	/* Test that replacing uninitiated FormElement's Data changes FormElement's value to Data's value.
+	 * After that, demonstrate that Control inside uninitiated FormElement is still unaware of its value. */
 	public void testSetValue_4() throws Exception {
 		String value = "newvalue";
 		Data<String> data = new StringData();
@@ -90,7 +93,8 @@ public class AsyncFormModificationTest extends TestCase {
 	}
 	
 	/* Test that convert() retains the Control contents when request with invalid form field content comes in. */
-	public void testConvert_1() throws Exception {
+  @SuppressWarnings("unchecked")
+  public void testConvert_1() throws Exception {
 		String notNumber = "qwe";
 		String someText = "someText";
 		
@@ -117,13 +121,20 @@ public class AsyncFormModificationTest extends TestCase {
 	    testForm.convert();
 
 	    assertEquals(someText, testForm.getControlByFullName("text").getRawValue());
-	    String simpleValue = ((FloatControl.ViewModel) ((BaseControl)testForm.getControlByFullName("number")).getViewModel()).getSimpleValue();
+	    String simpleValue = getSimpleValue(testForm, "number");
 	    assertEquals(notNumber, simpleValue);
 	    
 	    // this is not true (because of legacy code in StringArrayRequestControl.process())
 	    assertEquals(someText, testForm.getControlByFullName("text").getRawValue());
 
-	    simpleValue = ((FloatControl.ViewModel) ((BaseControl)testForm.getControlByFullName("number")).getViewModel()).getSimpleValue();
+        simpleValue = getSimpleValue(testForm, "number");
 	    assertEquals(notNumber, simpleValue);
+	}
+
+	@SuppressWarnings("unchecked")
+  private String getSimpleValue(FormWidget form, String elementName) throws Exception {
+      BaseControl<BigDecimal> baseControl = (BaseControl<BigDecimal>) form.getControlByFullName(elementName);
+      FloatControl.ViewModel viewModel = (FloatControl.ViewModel) baseControl.getViewModel();
+      return viewModel.getSimpleValue();
 	}
 }

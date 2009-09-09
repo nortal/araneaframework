@@ -142,9 +142,9 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
   }
 
   public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-    Object value = this.firmElement.getControl().getRawValue();
+    String value = this.firmElement.getControl().getRawValue();
     SelectControl c = buildFirmTypeSelect();
-// TODO    c.setRawValue(value);
+    c.setRawValue(value);
     this.firmElement.setControl(c);
   }
 

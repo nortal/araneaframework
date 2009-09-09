@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:ivy="antlib:org.apache.ivy.ant"
-	basedir="." 
-	default="build" 
-	name="Aranea" >
-
-	<description>
-		Code build script.
-	</description>
+<project xmlns:ivy="antlib:org.apache.ivy.ant" basedir="." default="build" name="Aranea">
 
 	<property file="version.properties"/>
 	<property name="project.title" value="Aranea Web Framework"/>
@@ -59,21 +52,21 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="demo,build,build-util,test,runtime"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="demo,build,build-util,jetty,test,runtime"/>
 	</target>
 
-  <property name="ivy.report.dir" value="build/reports/ivy" />
-  <!-- Generates a report of dependencies -->
-  <target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
-    <ivy:resolve file="ivy.xml" />
-    <ivy:report todir="${ivy.report.dir}"/>
-  </target>
-  
+	<property name="ivy.report.dir" value="build/reports/ivy" />
+	<!-- Generates a report of dependencies -->
+	<target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
+		<ivy:resolve file="ivy.xml" />
+		<ivy:report todir="${ivy.report.dir}"/>
+	</target>
+
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
 	<target name="publish" depends="init-ivy"
 		description="Publishes the JAR from dist directory to ivy repository.">
 
-    
+
 		<ivy:resolve conf="runtime"/>
 
 		<mkdir dir="publishtmp"/>
