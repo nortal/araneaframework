@@ -18,8 +18,6 @@ package org.araneaframework.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
@@ -52,9 +50,9 @@ public abstract class BaseApplicationService extends BaseService
   // FIELDS
   //*******************************************************************
 
-  private Map actionListeners;
+  private Map<String, List<ActionListener>> actionListeners;
 
-  private Map viewData;
+  private Map<String, Object> viewData;
 
   //*******************************************************************
   // PROTECTED CLASSES
@@ -77,7 +75,7 @@ public abstract class BaseApplicationService extends BaseService
 
     private static final long serialVersionUID = 1L;
 
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
@@ -86,7 +84,7 @@ public abstract class BaseApplicationService extends BaseService
     }
 
     public Component detach(Object key) {
-      return (Component) _getChildren().remove(key);
+      return _getChildren().remove(key);
     }
   }
 
@@ -104,11 +102,11 @@ public abstract class BaseApplicationService extends BaseService
     /**
      * Returns the children of this StandardService.
      */
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
-    public Map getData() {
+    public Map<String, Object> getData() {
       return getViewData();
     }
   }
@@ -117,18 +115,20 @@ public abstract class BaseApplicationService extends BaseService
   // PRIVATE METHODS
   //*******************************************************************
 
-  private synchronized Map getActionListeners() {
-    if (actionListeners == null) {
-      actionListeners = new LinkedMap(1);
+  @SuppressWarnings("unchecked")
+  private synchronized Map<String, List<ActionListener>> getActionListeners() {
+    if (this.actionListeners == null) {
+      this.actionListeners = new LinkedMap(1);
     }
-    return actionListeners;
+    return this.actionListeners;
   }
 
-  private synchronized Map getViewData() {
-    if (viewData == null) {
-      viewData = new LinkedMap(1);
+  @SuppressWarnings("unchecked")
+  private synchronized Map<String, Object> getViewData() {
+    if (this.viewData == null) {
+      this.viewData = new LinkedMap(1);
     }
-    return viewData;
+    return this.viewData;
   }
 
   //*******************************************************************
@@ -146,17 +146,18 @@ public abstract class BaseApplicationService extends BaseService
   /**
    * Adds the ActionListener listener with the specified action id. 
    */
-  public void addActionListener(Object actionId, ActionListener listener) {
+  public void addActionListener(String actionId, ActionListener listener) {
     Assert.notNullParam(this, actionId, "actionId");
     Assert.notNullParam(this, listener, "listener");
 
-    List list = (List) getActionListeners().get(actionId);
+    List<ActionListener> list = getActionListeners().get(actionId);
 
     if (list == null) {
-      list = new ArrayList(1);
+      list = new ArrayList<ActionListener>(1);
     }
 
     list.add(listener);
+
     getActionListeners().put(actionId, list);
   }
 
@@ -165,10 +166,8 @@ public abstract class BaseApplicationService extends BaseService
    */
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
-
-    Iterator ite = (new HashMap(getActionListeners())).values().iterator();
-    while (ite.hasNext()) {
-      ((List) ite.next()).remove(listener);
+    for (List<ActionListener> listeners : getActionListeners().values()) {
+      listeners.remove(listener);
     }
   }
 
@@ -203,7 +202,8 @@ public abstract class BaseApplicationService extends BaseService
   /**
    * Returns an unmodifiable map of the children.
    */
-  public Map getChildren() {
+  @SuppressWarnings("unchecked")
+  public Map<Object, Component> getChildren() {
     return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
   }
 
@@ -320,7 +320,7 @@ public abstract class BaseApplicationService extends BaseService
    */
   protected String getActionId(InputData input) {
     Assert.notNull(this, input, "Cannot extract action id from a null input!");
-    return (String) input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
+    return input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
   }
 
   protected void propagate(Message message) throws Exception {
@@ -353,35 +353,30 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Calls the approriate listener
+   * Calls the appropriate listener.
    */
-  protected void handleAction(InputData input, OutputData output)
-      throws Exception {
+  protected void handleAction(InputData input, OutputData output) throws Exception {
     String actionId = getActionId(input);
 
     if (actionId == null) {
-      log.warn("Service '" + getScope()
-          + "' cannot deliver action for a null action id!"
-          + Assert.thisToString(this));
+      log.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
       return;
     }
 
-    List listener = actionListeners != null ? null : (List) actionListeners
-        .get(actionId);
+    List<ActionListener> listeners = this.actionListeners != null ? null : this.actionListeners.get(actionId);
 
-    log.debug("Delivering action '" + actionId + "' to service '" + getClass()
-        + "'");
+    log.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");
 
-    if (listener != null && listener.size() > 0) {
-      Iterator ite = (new ArrayList(listener)).iterator();
-      while (ite.hasNext()) {
-        ((ActionListener) ite.next()).processAction(actionId, input, output);
+    if (listeners != null && !listeners.isEmpty()) {
+      for (ActionListener listener : listeners) {
+        listener.processAction(actionId, input, output);
       }
       return;
     }
 
-    log.warn("Service '" + getScope() + "' cannot deliver action as no "
-        + "action listeners were registered for action id '" + actionId + "'!"
-        + Assert.thisToString(this));
+    if (log.isWarnEnabled()) {
+      log.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
+          + "id '" + actionId + "'!" + Assert.thisToString(this));
+    }
   }
 }

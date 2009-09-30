@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,13 +24,11 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class FormRow implements Serializable {
+public class FormRow<K, R> implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  protected K rowKey;
 
-  protected Object rowKey;
-
-  protected Object row;
+  protected R row;
 
   protected FormWidget rowForm;
 
@@ -38,10 +36,9 @@ public class FormRow implements Serializable {
 
   protected boolean open;
 
-  protected BaseFormListWidget formList;
+  protected BaseFormListWidget<K, R> formList;
 
-  public FormRow(BaseFormListWidget formList, Object rowKey, Object row,
-      String rowFormId, FormWidget rowForm, boolean open) {
+  public FormRow(BaseFormListWidget<K, R> formList, K rowKey, R row, String rowFormId, FormWidget rowForm, boolean open) {
     this.rowKey = rowKey;
     this.row = row;
     this.rowForm = rowForm;
@@ -50,14 +47,23 @@ public class FormRow implements Serializable {
     this.formList = formList;
   }
 
+  /**
+   * Opens the current list row for editing.
+   */
   public void open() {
     this.open = true;
   }
 
+  /**
+   * Closes the current list row from editing.
+   */
   public void close() {
     this.open = false;
   }
 
+  /**
+   * Resets the current row by removing it from the current form.
+   */
   public void reset() {
     getFormList().resetFormRow(getKey());
   }
@@ -68,7 +74,7 @@ public class FormRow implements Serializable {
    * @return editable row form.
    */
   public FormWidget getForm() {
-    return rowForm;
+    return this.rowForm;
   }
 
   /**
@@ -76,8 +82,8 @@ public class FormRow implements Serializable {
    * 
    * @return editable row key.
    */
-  public Object getKey() {
-    return rowKey;
+  public K getKey() {
+    return this.rowKey;
   }
 
   /**
@@ -86,7 +92,7 @@ public class FormRow implements Serializable {
    * @return whether the row is open.
    */
   public boolean isOpen() {
-    return open;
+    return this.open;
   }
 
   /**
@@ -104,22 +110,22 @@ public class FormRow implements Serializable {
    * @return editable row form id.
    */
   public String getFormId() {
-    return rowFormId;
+    return this.rowFormId;
   }
 
   /**
-   * Returns assosiated list row object.
+   * Returns associated list row object.
    * 
-   * @return assosiated list row object.
+   * @return associated list row object.
    */
-  public Object getRow() {
+  public R getRow() {
     return this.row;
   }
 
   /**
-   * Sets assosiated list row object.
+   * Sets associated list row object.
    */
-  public void setRow(Object row) {
+  public void setRow(R row) {
     this.row = row;
   }
 
@@ -128,8 +134,8 @@ public class FormRow implements Serializable {
    * 
    * @return editable list.
    */
-  public BaseFormListWidget getFormList() {
-    return formList;
+  public BaseFormListWidget<K, R> getFormList() {
+    return this.formList;
   }
 
   /**
@@ -173,10 +179,11 @@ public class FormRow implements Serializable {
 
     /**
      * Returns editable row form id.
+     * 
      * @return editable row form id.
      */
     public String getRowFormId() {
-      return rowFormId;
+      return this.rowFormId;
     }
   }
 }

@@ -19,7 +19,7 @@
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  */
-Object.extend(AraneaPage, {
+Object.extend(Aranea.Page, {
 	getAjaxUploadURL: function(element) {
 		return _ap.encodeURL(_ap.getServletURL());
 	},

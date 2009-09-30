@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,13 @@
 
 package org.araneaframework.example.main.web.demo;
 
-import java.lang.reflect.Method;
+import org.apache.commons.beanutils.MethodUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.demos.DemoAutoCompletionWidget;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.Control;
-import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.form.control.BaseControl;
@@ -35,64 +35,66 @@ import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * Interactive onchange event listener test for the troublesome date/time controls 
- * and their JSP tags -- which should be buried. 
+ * Interactive onchange event listener test for the troublesome date/time controls and their JSP tags -- which should be
+ * buried.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
-	private static final long serialVersionUID = 1L;
-	private FormWidget simpleForm;
 
-	protected void init() throws Exception {
-		setViewSelector("demo/demoOnChangeListeners");
+  private FormWidget simpleForm;
 
-		simpleForm = new FormWidget();
+  protected void init() throws Exception {
+    setViewSelector("demo/demoOnChangeListeners");
 
-		simpleForm.addElement("dateTime1", "common.datetime", buildControl(DateTimeControl.class), new DateData(), false);
-		simpleForm.addElement("time1", "common.time", buildControl(TimeControl.class), new DateData(), false);
-		simpleForm.addElement("date1", "common.date", buildControl(DateControl.class), new DateData(), false);
-		
-		simpleForm.addElement("dateTime2", "common.datetime", buildControl(DateTimeControl.class), new DateData(), false);
-		simpleForm.addElement("time2", "common.time", buildControl(TimeControl.class), new DateData(), false);
-		simpleForm.addElement("date2", "common.date", buildControl(DateControl.class), new DateData(), false);
-		
-		simpleForm.addElement("suggestBox", "demo.suggestive.textinput", buildControl(AutoCompleteTextControl.class), new StringData(), false);
-		((AutoCompleteTextControl)
-				simpleForm.getControlByFullName("suggestBox"))
-					.setDataProvider(new DemoAutoCompletionWidget.DemoACDataProvider(new DemoAutoCompletionWidget.LocalizationContextProvider() {
-						public LocalizationContext getL10nCtx() {
-							return DemoOnChangeListenersWidget.this.getL10nCtx();
-						}
-					}));
-		
-		simpleForm.addElement("float1", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
-		simpleForm.addElement("float2", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
+    this.simpleForm = new FormWidget();
+    this.simpleForm.addElement("dateTime1", "common.datetime", buildControl(DateTimeControl.class), new DateData(),
+        false);
+    this.simpleForm.addElement("time1", "common.time", buildControl(TimeControl.class), new DateData(), false);
+    this.simpleForm.addElement("date1", "common.date", buildControl(DateControl.class), new DateData(), false);
+    this.simpleForm.addElement("dateTime2", "common.datetime", buildControl(DateTimeControl.class), new DateData(),
+        false);
+    this.simpleForm.addElement("time2", "common.time", buildControl(TimeControl.class), new DateData(), false);
+    this.simpleForm.addElement("date2", "common.date", buildControl(DateControl.class), new DateData(), false);
+    this.simpleForm.addElement("suggestBox", "demo.suggestive.textinput", buildControl(AutoCompleteTextControl.class),
+        new StringData(), false);
+    this.simpleForm.addElement("float1", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
+    this.simpleForm.addElement("float2", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
 
-		addWidget("listenerForm", simpleForm);
-	}
-	
-	private Control buildControl(Class clazz) throws Exception {
-		Control c = (Control) clazz.newInstance();
-		Method m = clazz.getMethod("addOnChangeEventListener", new Class[] {OnChangeEventListener.class});
-		m.invoke(c, new Object[] {new DemoChangeEventListener(c)});
-		return c;
-	}
+    AutoCompleteTextControl control = (AutoCompleteTextControl) simpleForm.getControlByFullName("suggestBox");
+    control.setDataProvider(new DemoAutoCompletionWidget.DemoACDataProvider(
+        new DemoAutoCompletionWidget.LocalizationContextProvider() {
 
-	private class DemoChangeEventListener implements OnChangeEventListener {
-		private static final long serialVersionUID = 1L;
-		private Control eventSource;
+          public LocalizationContext getL10nCtx() {
+            return DemoOnChangeListenersWidget.this.getL10nCtx();
+          }
+        }));
 
-		public DemoChangeEventListener(Control eventSource) {
-			this.eventSource = eventSource;
-		}
+    addWidget("listenerForm", this.simpleForm);
+  }
 
-		public void onChange() throws Exception {
-			FormElement element = (FormElement) ((BaseControl) eventSource).getFormElementCtx();
-			Object oldValue = element.getValue();
-			simpleForm.convert();
-			Object newValue = element.getValue();
-			getMessageCtx().showInfoMessage("'" + t(element.getLabel()) + "' triggered onChange: '" + oldValue + "' --> '" + newValue + "'");
-		}
-	}
+  @SuppressWarnings("unchecked")
+  private Control<?> buildControl(Class<?> clazz) throws Exception {
+    Control<?> c = (Control<?>) clazz.newInstance();
+    MethodUtils.invokeExactMethod(c, "addOnChangeEventListener", new DemoChangeEventListener(c));
+    return c;
+  }
+
+  private class DemoChangeEventListener<T> implements OnChangeEventListener {
+
+    private Control<T> eventSource;
+
+    public DemoChangeEventListener(Control<T> eventSource) {
+      this.eventSource = eventSource;
+    }
+
+    public void onChange() throws Exception {
+      FormElementContext<T, Object> element = ((BaseControl<T>) this.eventSource).getFormElementCtx();
+      Object oldValue = element.getValue();
+      simpleForm.convert();
+      Object newValue = element.getValue();
+      getMessageCtx().showInfoMessage(
+          "'" + t(element.getLabel()) + "' triggered onChange: '" + oldValue + "' --> '" + newValue + "'");
+    }
+  }
 }

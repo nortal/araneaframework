@@ -16,17 +16,16 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
-import org.araneaframework.uilib.ConfigurationContext;
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
 
 /**
  * Standard select form element tag.
@@ -66,8 +65,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     assertControlType("MultiSelectControl");
 
     if (!"horizontal".equals(type) && !"vertical".equals(type)) {
-      throw new AraneaJspException(
-          "Attribute 'type' can be only either 'horizontal' or 'vertical'!");
+      throw new AraneaJspException("Attribute 'type' can be only either 'horizontal' or 'vertical'!");
     }
 
     // Prepare
@@ -75,13 +73,9 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
 
-    for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem displayItem = (DisplayItem) i.next();
-
-      // set the corresponding HTML id for label and checkbox so that clicking
-      // on label sets the checkbox value too
-      String checkboxId = viewModel.getScope().toString()
-          + displayItem.getValue();
+    for (DisplayItem displayItem : viewModel.getSelectItems()) {
+      // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
+      String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
 
       registerSubtag(item);
       item.setHtmlId(checkboxId);
@@ -135,16 +129,15 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    *    required = "false"
    *    description = "The way the checkboxes will be rendered - can be either 'vertical' or 'horizontal'. By default 'horizontal'."
    */
-  public void setType(String type) throws JspException {
-    this.type = (String) evaluate("type", type, String.class);
+  public void setType(String type) {
+    this.type = evaluate("type", type, String.class);
   }
 
   /**
    * @jsp.attribute type = "java.lang.String" required = "false" description ="Boolean that controls whether label is before or after each checkbox. False by default."
    */
   public void setLabelBefore(String labelBefore) throws JspException {
-    this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore,
-        Boolean.class)).booleanValue();
+    this.labelBefore = evaluateNotNull("labelBefore", labelBefore, Boolean.class);
   }
 
   /**
@@ -156,8 +149,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = (Boolean) evaluateNotNull(
-        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 
   protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label,
@@ -172,8 +164,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
   protected String evaluateLabel(String value) {
     if (this.localizeDisplayItems == null) {
-      this.localizeDisplayItems = ConfigurationContextUtil
-          .isLocalizeControlData(getEnvironment());
+      this.localizeDisplayItems = ConfigurationContextUtil.isLocalizeControlData(getEnvironment());
     }
 
     if (this.localizeDisplayItems.booleanValue()) {

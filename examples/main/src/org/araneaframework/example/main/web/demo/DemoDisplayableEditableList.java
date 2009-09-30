@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,8 +16,8 @@
 
 package org.araneaframework.example.main.web.demo;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.util.DataDTO;
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -34,102 +34,92 @@ import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
 import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
 
-
 /**
  * Editable list component.
- *
- * Seperate forms are used for individual rows, so that client-side validation
- * would work on the same separate rows.
- *
+ * 
+ * Separate forms are used for individual rows, so that client-side validation would work on the same separate rows.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class DemoDisplayableEditableList extends TemplateBaseWidget {
-	  private static final long serialVersionUID = 1L;
 
-  public DemoDisplayableEditableList() {		
-	}
+  private BeanFormListWidget<Long, DataDTO> formListWidget;
 
-	private BeanFormListWidget editableRows;
-	private Map data = new LinkedMap();
+  private Map<Long, DataDTO> editableRows = new LinkedHashMap<Long, DataDTO>();
 
-	//Plays the role of a sequence
-	private Long lastId;
+  // Plays the role of a sequence
+  private Long lastId;
 
-	{
-		//Just making the initial data
-		//In reality it should have been read from the database
-		data.put(new Long(1), new DataDTO(new Long(1), Boolean.TRUE, new Long(10), "12313"));
-		data.put(new Long(2), new DataDTO(new Long(2), Boolean.FALSE, new Long(123), "werwer"));
-		data.put(new Long(3), new DataDTO(new Long(3), Boolean.TRUE, new Long(10), "adfhadfh"));
+  public DemoDisplayableEditableList() {
+    // Just making the initial data. In reality it should have been read from the database
+    this.editableRows.put(1L, new DataDTO(1L, Boolean.TRUE, 10L, "12313"));
+    this.editableRows.put(2L, new DataDTO(2L, Boolean.FALSE, 123L, "werwer"));
+    this.editableRows.put(3L, new DataDTO(3L, Boolean.TRUE, 10L, "adfhadfh"));
+    this.lastId = new Long(3);
+  }
 
-		lastId = new Long(3);
-	}
-
-	/**
-	 * Builds the form with one checkbox, one textbox and a button.
-	 */
-	public void init() throws Exception {
+  /**
+   * Builds the form with one checkbox, one textbox and a button.
+   */
+  public void init() throws Exception {
     setViewSelector("demo/demoDisplayableEditableList");
-		
-		editableRows = 
-      new BeanFormListWidget(
-          new DemoEditableRowHandler(), 
-          new MapFormListModel(data),
-          DataDTO.class);
+    this.formListWidget = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(),
+        new MapFormListModel<DataDTO>(this.editableRows), DataDTO.class);
+    addWidget("editableList", this.formListWidget);
+  }
 
-		addWidget("editableList", editableRows);
-	}
+  /**
+   * A custom implementation of valid only individual form row handler that deals with DataDTOs.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   */
+  public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler<Long, DataDTO> {
 
-	public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-		    private static final long serialVersionUID = 1L;
+    public Long getRowKey(DataDTO row) {
+      return row.getId();
+    }
 
-    public Object getRowKey(Object row) {
-			return ((DataDTO) row).getId();
-		}
+    @SuppressWarnings("unchecked")
+    public void initFormRow(FormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
+      BeanFormWidget<DataDTO> rowForm = (BeanFormWidget<DataDTO>) editableRow.getForm();
 
-		public void saveValidRow(FormRow editableRow) throws Exception {
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)editableRow.getForm()).writeToBean(new DataDTO());
-			rowData.setId((Long) editableRow.getKey());
-			data.put(editableRow.getKey(), rowData);
+      addCommonFormFields(rowForm);
 
-			editableRow.close();
-		}
+      FormListUtil.addEditSaveButtonToRowForm("#", formListWidget, rowForm, getRowKey(row));
+      FormListUtil.addDeleteButtonToRowForm("#", formListWidget, rowForm, getRowKey(row));
 
-		public void deleteRow(Object key) throws Exception {
-			data.remove(key);
-		}
+      rowForm.readFromBean(row);
+    }
 
-		public void addValidRow(FormWidget addForm) throws Exception {
-			lastId = new Long(lastId.longValue() + 1);
+    public void initAddForm(FormWidget addForm) throws Exception {
+      addCommonFormFields(addForm);
+      FormListUtil.addAddButtonToAddForm("#", formListWidget, addForm);
+    }
 
-			DataDTO rowData = (DataDTO) ((BeanFormWidget)addForm).writeToBean(new DataDTO());
-			rowData.setId(lastId);
+    @SuppressWarnings("unchecked")
+    public void saveValidRow(FormRow<Long, DataDTO> editableRow) throws Exception {
+      DataDTO rowData = ((BeanFormWidget<DataDTO>) editableRow.getForm()).writeToBean();
+      rowData.setId(editableRow.getKey());
+      editableRow.setRow(rowData);
+      editableRows.put(editableRow.getKey(), rowData);
+      editableRow.close();
+    }
 
-			data.put(lastId, rowData);
-		}
+    public void deleteRow(Long key) throws Exception {
+      editableRows.remove(key);
+    }
 
-		public void initFormRow(FormRow editableRow, Object row) throws Exception {
-			editableRow.close();
-			
-			BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
-			
-			addCommonFormFields(rowForm);
-			
-			FormListUtil.addEditSaveButtonToRowForm("#", editableRows, rowForm, getRowKey(row));
-			FormListUtil.addDeleteButtonToRowForm("#", editableRows, rowForm, getRowKey(row));
-			
-			rowForm.readFromBean(row);
-		}
+    @SuppressWarnings("unchecked")
+    public void addValidRow(FormWidget addForm) throws Exception {
+      DataDTO rowData = ((BeanFormWidget<DataDTO>) addForm).writeToBean();
+      rowData.setId(++lastId);
+      editableRows.put(lastId, rowData);
+    }
 
-		public void initAddForm(FormWidget addForm) throws Exception {
-			addCommonFormFields(addForm);
-			FormListUtil.addAddButtonToAddForm("#", editableRows, addForm);
-		}
-
-		private void addCommonFormFields(FormWidget form) throws Exception {
-			form.addElement("stringField", "#String field", new TextControl(), new StringData(), true);
-			form.addElement("longField", "#Long field", new NumberControl(), new LongData(), true);
-			form.addElement("booleanField", "#Boolean field", new CheckboxControl(), new BooleanData(), true);
-		}
-	}
+    private void addCommonFormFields(FormWidget form) throws Exception {
+      form.addElement("stringField", "#String field", new TextControl(), new StringData(), true);
+      form.addElement("longField", "#Long field", new NumberControl(), new LongData(), true);
+      form.addElement("booleanField", "#Boolean field", new CheckboxControl(), new BooleanData(), true);
+    }
+  }
 }

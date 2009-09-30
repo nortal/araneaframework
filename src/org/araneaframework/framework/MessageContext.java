@@ -43,6 +43,7 @@ import org.araneaframework.http.UpdateRegionProvider;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface MessageContext extends UpdateRegionProvider {
+
   /** @since 1.1 */
   public static final String MESSAGE_REGION_KEY = "messages";
 
@@ -65,7 +66,7 @@ public interface MessageContext extends UpdateRegionProvider {
    * Shows a message <code>message</code> of type <code>type</code> to the user. 
    * Message is cleared after the user sees it once.
    */
-  public void showMessage(String type, String message);
+  public void showMessage(String type, String message, Object... params);
   
   /**
    * Shows <code>messages</code> of given <code>type</code> to the user. 
@@ -93,7 +94,7 @@ public interface MessageContext extends UpdateRegionProvider {
   /**
    * Shows an error message to the user.
    */
-  public void showErrorMessage(String message);
+  public void showErrorMessage(String message, Object... params);
   
   /**
    * Hides an error message from user.
@@ -104,7 +105,7 @@ public interface MessageContext extends UpdateRegionProvider {
   /**
    * Shows a warning message to the user.
    */
-  public void showWarningMessage(String message);
+  public void showWarningMessage(String message, Object... params);
 
   /**
    * Hides a warning message from user.
@@ -115,7 +116,7 @@ public interface MessageContext extends UpdateRegionProvider {
   /**
    * Shows an informative message to the user.
    */
-  public void showInfoMessage(String message);
+  public void showInfoMessage(String message, Object... params);
   
   /**
    * Hides an info message from user.
@@ -132,7 +133,7 @@ public interface MessageContext extends UpdateRegionProvider {
    * Shows a permanent message <code>message</code> of type <code>type</code> to the user. 
    * The message will be shown until hidden explicitly. 
    */
-  public void showPermanentMessage(String type, String message);
+  public void showPermanentMessage(String type, String message, Object... params);
   
   /**
    * Clears the specific permanent message, under all message types where it might be present.
@@ -171,4 +172,14 @@ public interface MessageContext extends UpdateRegionProvider {
    * @since 1.1
    */
   public Map<String, Collection<String>> getMessages();
+
+  public interface MessageData {
+
+    String getResolvedMessage();
+
+    String getMessage();
+
+    Object[] getMessageParameters();
+
+  }
 }

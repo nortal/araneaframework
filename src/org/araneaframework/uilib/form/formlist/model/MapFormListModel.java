@@ -16,22 +16,20 @@
 
 package org.araneaframework.uilib.form.formlist.model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.araneaframework.uilib.form.formlist.FormListModel;
 
-public class MapFormListModel implements FormListModel {
+public class MapFormListModel<T> implements FormListModel<T> {
 
-  private static final long serialVersionUID = 1L;
+  private Map<?, T> map;
 
-  private Map map;
-
-  public MapFormListModel(Map map) {
+  public MapFormListModel(Map<?, T> map) {
     this.map = map;
   }
 
-  public List getRows() {
-    return new ArrayList(map.values());
+  public List<T> getRows() {
+    return new LinkedList<T>(this.map.values());
   }
 }

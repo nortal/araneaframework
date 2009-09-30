@@ -15,7 +15,7 @@ public interface IGeneralDAO {
 	 *          object's Id.
 	 * @return object with the specified Id and class.
 	 */
-	public abstract GeneralMO getById(Class clazz, Long id);
+	public abstract GeneralMO getById(Class<?> clazz, Long id);
 
 	/**
 	 * Reads all objects with specified class. Returned objects can be casted into
@@ -25,7 +25,7 @@ public interface IGeneralDAO {
 	 *          objects' class.
 	 * @return all objects with the specified class.
 	 */
-	public abstract List getAll(Class clazz);
+	public abstract List<?> getAll(Class<?> clazz);
 
 	/**
 	 * Stores a new object and returns its Id.
@@ -52,6 +52,5 @@ public interface IGeneralDAO {
 	 * @param id
 	 *          object's Id.
 	 */
-	public abstract void remove(Class clazz, Long id);
-
+	public abstract void remove(Class<?> clazz, Long id);
 }

@@ -40,25 +40,20 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
 
   public class TaskPollingListener extends StandardActionListener {
 
-    private static final long serialVersionUID = 1L;
-
     private Random rn = new Random();
 
     int lastRandom = 0;
 
-    public void processAction(String actionId, String actionParam,
-        InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
 
-      int random = rn.nextInt(100);
-      lastRandom = random;
+      int random = this.rn.nextInt(100);
+      this.lastRandom = random;
       HttpOutputData httpOutput = (HttpOutputData) output;
       String s = "NOTHING";
 
-      if (rn.nextInt(3) == 1) {
-        s = MessageUtil.localizeAndFormat("poll.taskmsg",
-            new Object[] {String.valueOf(random),
-            new SimpleDateFormat("HH:mm.ss").format(new Date()) },
-            getEnvironment())
+      if (this.rn.nextInt(3) == 1) {
+        s = MessageUtil.localizeAndFormat("poll.taskmsg", new Object[] { String.valueOf(random),
+            new SimpleDateFormat("HH:mm.ss").format(new Date()) }, getEnvironment())
             + "<br/>";
       }
       httpOutput.setContentType("text/xml");

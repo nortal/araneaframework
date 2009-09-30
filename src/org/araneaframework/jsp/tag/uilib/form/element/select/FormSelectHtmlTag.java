@@ -17,7 +17,6 @@
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -104,8 +103,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
           .isLocalizeControlData(getEnvironment());
     }
 
-    for(Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem item = (DisplayItem)i.next();
+    for(DisplayItem item : viewModel.getSelectItems()) {
       if (!item.isDisabled()) {
         String value = item.getValue();
         String label = item.getDisplayString();
@@ -146,8 +144,8 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Number of select elements visible at once." 
    */
-  public void setSize(String size) throws JspException {
-    this.size = (Long)evaluate("size", size, Long.class);
+  public void setSize(String size) {
+    this.size = evaluate("size", size, Long.class);
   }
 
   /**
@@ -156,8 +154,8 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
    *   required = "false"
    *   description = "Precondition for deciding whether go to server side or not." 
    */
-  public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
-    this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  public void setOnChangePrecondition(String onChangePrecondition){
+    this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 
   /**
@@ -169,8 +167,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = (Boolean) evaluateNotNull(
-        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.release.demos;
 
@@ -36,7 +36,7 @@ public class ClientViewWidget extends TemplateBaseWidget {
 
   protected void init() throws Exception {
     setViewSelector("release/demos/clientView");
-    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget(ExampleData.Client.class, client);
+    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(ExampleData.Client.class, this.client);
     form.addBeanElement("sex", "sed.Sex", new TextControl(), true);
     form.addBeanElement("forename", "sed.Forename", new TextControl(), true);
     form.addBeanElement("surname", "sed.Surname", new TextControl(), true);
@@ -45,7 +45,7 @@ public class ClientViewWidget extends TemplateBaseWidget {
   }
 
   public ExampleData.Client getClient() {
-    return client;
+    return this.client;
   }
 
   public void handleEventReturn() {

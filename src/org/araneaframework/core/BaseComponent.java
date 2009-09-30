@@ -17,7 +17,6 @@
 package org.araneaframework.core;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,17 +31,14 @@ import org.araneaframework.Scope;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * The base class for all Aranea components. Base entities do not make a
- * Composite pattern and only provide some very basic services (mainly
- * syncronization and messaging service)
+ * The base class for all Aranea components. Base entities do not make a Composite pattern and only provide some very
+ * basic services (mainly syncronization and messaging service)
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class BaseComponent implements Component {
 
-  private static final long serialVersionUID = 1L;
-  
   private static final Log log = LogFactory.getLog(BaseComponent.class);
 
   //*******************************************************************
@@ -132,11 +128,11 @@ public class BaseComponent implements Component {
   }
 
   public Environment getEnvironment() {
-    return environment;
+    return this.environment;
   }
 
   public Scope getScope() {
-    return scope;
+    return this.scope;
   }
 
   /**
@@ -146,11 +142,11 @@ public class BaseComponent implements Component {
    * @return <code>true</code>, if the component has been initialized.
    */
   public boolean isInitialized() {
-    return state != UNBORN;
+    return this.state != UNBORN;
   }
 
   public boolean isAlive() {
-    return state == ALIVE;
+    return this.state == ALIVE;
   }
 
   /**
@@ -160,7 +156,7 @@ public class BaseComponent implements Component {
    * @return <code>true</code>, if the component has been destroyed.
    */
   public boolean isDead() {
-    return state == DEAD;
+    return this.state == DEAD;
   }
 
   /**
@@ -188,16 +184,19 @@ public class BaseComponent implements Component {
    */
   protected synchronized void _waitNoCall() throws InterruptedException {
     long waitStart = System.currentTimeMillis();
-    while (callCount != reentrantCallCount) {
+
+    while (this.callCount != this.reentrantCallCount) {
       this.wait(1000);
-      if (callCount != reentrantCallCount) {
-        log.warn("Deadlock or starvation suspected, call count '" + callCount
-            + "', reentrant call count '" + reentrantCallCount + "'");
+
+      if (this.callCount != this.reentrantCallCount) {
+        if (log.isWarnEnabled()) {
+          log.warn("Deadlock or starvation suspected, call count '" + this.callCount + "', reentrant call count '"
+              + this.reentrantCallCount + "'");
+        }
+
         if (waitStart < System.currentTimeMillis() - 10000) {
-          log.error("Deadlock or starvation not solved in 10s, call count '"
-              + callCount + "', reentrant call count '" + reentrantCallCount
-              + "'", new AraneaRuntimeException(
-              "Deadlock or starvation suspected!"));
+          log.error("Deadlock or starvation not solved in 10s, call count '" + callCount + "', reentrant call count '"
+              + reentrantCallCount + "'", new AraneaRuntimeException("Deadlock or starvation suspected!"));
           return;
         }
       }
@@ -234,16 +233,18 @@ public class BaseComponent implements Component {
    * is doing the calling
    */
   protected synchronized void _startWaitingCall() {
-    if (getReentrantCount() >= 1)
-      reentrantCallCount++;
+    if (getReentrantCount() >= 1) {
+      this.reentrantCallCount++;
+    }
   }
 
   /**
-   * Decrements internal callcount counter.
+   * Decrements internal call count counter.
    */
   protected synchronized void _endWaitingCall() {
-    if (getReentrantCount() >= 1)
-      reentrantCallCount--;
+    if (getReentrantCount() >= 1) {
+      this.reentrantCallCount--;
+    }
   }
 
   /**
@@ -255,8 +256,7 @@ public class BaseComponent implements Component {
    */
   protected void _checkCall() throws IllegalStateException {
     if (!isInitialized()) {
-      throw new IllegalStateException("Component '" + getClass().getName()
-          + "' was never initialized!");
+      throw new IllegalStateException("Component '" + getClass().getName() + "' was never initialized!");
     }
   }
 
@@ -269,8 +269,7 @@ public class BaseComponent implements Component {
    */
   protected void _strictCheckCall() throws IllegalStateException {
     if (!isAlive()) {
-      throw new IllegalStateException("Component '" + getClass().getName()
-          + "' is not alive!");
+      throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive!");
     }
   }
 
@@ -279,10 +278,11 @@ public class BaseComponent implements Component {
    */
   protected Map<Object, Component> _getChildren() {
     synchronized (this) {
-      if (children == null)
-        children = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
+      if (this.children == null) {
+        this.children = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
+      }
     }
-    return children;
+    return this.children;
   }
 
   /**
@@ -290,10 +290,11 @@ public class BaseComponent implements Component {
    */
   protected Map<Object, Component> _getDisabledChildren() {
     synchronized (this) {
-      if (disabledChildren == null)
-        disabledChildren = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
+      if (this.disabledChildren == null) {
+        this.disabledChildren = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
+      }
     }
-    return disabledChildren;
+    return this.disabledChildren;
   }
 
   /**
@@ -313,11 +314,9 @@ public class BaseComponent implements Component {
   protected void _addComponent(Object key, Component component, Scope scope,
       Environment env) {
 
-    Assert.notNull(this, component, "The component for key '" + key
-        + "' is required.");
+    Assert.notNull(this, component, "The component for key '" + key + "' is required.");
 
-    Assert.notNull(this, key, "Cannot add a component of class '"
-        + component.getClass() + "' under a null key!");
+    Assert.notNull(this, key, "Cannot add a component of class '" + component.getClass() + "' under a null key!");
 
     // Only Strings are supported by this implementation
     Assert.isInstanceOfParam(String.class, key, "key");
@@ -325,8 +324,9 @@ public class BaseComponent implements Component {
 
     // cannot add a child with key that clashes with a disabled child's key
     if (_getChildren().containsKey(key)) {
-      if (_getDisabledChildren().containsKey(key))
+      if (_getDisabledChildren().containsKey(key)) {
         _enableComponent(key);
+      }
       _removeComponent(key);
     }
 
@@ -345,13 +345,16 @@ public class BaseComponent implements Component {
    */
   protected void _removeComponent(Object key) {
     Assert.notNullParam(this, key, "key");
+
     //Only Strings are supported by this implementation
     Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
+
     Component comp = _getChildren().get(key);
     if (comp == null) {
       return;
     }
+
     //Sequence is very important, and guarantees that there won't 
     //be a second destroy call if the first one doesn't succeed.
     _getChildren().remove(key);
@@ -366,14 +369,18 @@ public class BaseComponent implements Component {
    */
   protected void _disableComponent(Object key) {
     Assert.notNullParam(this, key, "key");
+
     //Only Strings are supported by this implementation
     Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
+
     boolean enabled = _getChildren().containsKey(key);
     boolean disabled = _getDisabledChildren().containsKey(key);
+
     if (!enabled && !disabled) {
       throw new NoSuchComponentException(key);
     }
+
     if (enabled) {
       _getChildren().get(key)._getComponent().disable();
       _getDisabledChildren().put(key, _getChildren().remove(key));
@@ -388,14 +395,18 @@ public class BaseComponent implements Component {
    */
   protected void _enableComponent(Object key) {
     Assert.notNullParam(this, key, "key");
+
     //Only Strings are supported by this implementation
     Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
+
     boolean enabled = _getChildren().containsKey(key);
     boolean disabled = _getDisabledChildren().containsKey(key);
+
     if (!disabled && !enabled) {
       throw new NoSuchComponentException(key);
     }
+
     if (disabled) {
       _getChildren().put(key, _getDisabledChildren().remove(key));
       _getChildren().get(key)._getComponent().enable();
@@ -410,21 +421,21 @@ public class BaseComponent implements Component {
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  protected void _relocateComponent(Composite parent, Environment newEnv,
-      Object keyFrom, Object keyTo) {
-    Assert.notNull(this, parent, "Cannot relocate a component from under key '"
-        + keyFrom + "' to key '" + keyTo + "' from a null parent!");
+  protected void _relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
+    Assert.notNull(this, parent, "Cannot relocate a component from under key '" + keyFrom + "' to key '" + keyTo
+        + "' from a null parent!");
+
     Assert.notNull(this, parent._getComposite().getChildren().get(keyFrom),
         "The component to be relocated must be a child under key '" + keyFrom + "'!");
-    Assert.isTrue(this,
-            parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable,
-            "The component of class '"
-                + parent._getComposite().getChildren().get(keyFrom).getClass()
-                + "' to be relocated from under key '" + keyFrom + "' to key '"
-                + keyTo + "' must implement Relocatable!");
+
+    Assert.isTrue(this, parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable,
+        "The component of class '" + parent._getComposite().getChildren().get(keyFrom).getClass()
+            + "' to be relocated from under key '" + keyFrom + "' to key '" + keyTo + "' must implement Relocatable!");
+
     //Only Strings are supported by this implementation
     Assert.isInstanceOfParam(String.class, keyFrom, "keyFrom");
     Assert.isInstanceOfParam(String.class, keyTo, "keyTo");
+
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
     _getChildren().put(keyTo, comp);
@@ -443,12 +454,15 @@ public class BaseComponent implements Component {
    */
   protected void _propagate(Message message) {
     Assert.notNullParam(this, message, "message");
-    if (children == null || isDead())
+    if (this.children == null || isDead()) {
       return;
+    }
+
     Iterator<Object> ite = (new LinkedHashMap<Object, Component>(_getChildren())).keySet().iterator();
     while (ite.hasNext()) {
       Object key = ite.next();
       Component component = _getChildren().get(key);
+
       // message has not destroyed previously existing child
       if (component != null) {
         message.send(key, component);
@@ -461,26 +475,29 @@ public class BaseComponent implements Component {
   //*******************************************************************
 
   private void incCallCount() {
-    if (reentrantTLS == null)
-      reentrantTLS = new ThreadLocal<Counter>();
-    if (reentrantTLS.get() == null)
-      reentrantTLS.set(new Counter(0));
-    callCount++;
-    reentrantTLS.get().counter++;
-    if (getReentrantCount() > 1)
-      reentrantCallCount++;
+    if (this.reentrantTLS == null) {
+      this.reentrantTLS = new ThreadLocal<Counter>();
+    }
+    if (this.reentrantTLS.get() == null) {
+      this.reentrantTLS.set(new Counter());
+    }
+    this.callCount++;
+    this.reentrantTLS.get().counter++;
+    if (getReentrantCount() > 1) {
+      this.reentrantCallCount++;
+    }
   }
 
   private void decCallCount() {
-    if (getReentrantCount() > 1)
-      reentrantCallCount--;
-    callCount--;
-    reentrantTLS.get().counter--;
+    if (getReentrantCount() > 1) {
+      this.reentrantCallCount--;
+    }
+    this.callCount--;
+    this.reentrantTLS.get().counter--;
   }
 
   private int getReentrantCount() {
-    return (reentrantTLS == null || reentrantTLS.get() == null) ? 0
-        : reentrantTLS.get().counter;
+    return (this.reentrantTLS == null || this.reentrantTLS.get() == null) ? 0 : this.reentrantTLS.get().counter;
   }
 
   //*******************************************************************
@@ -494,11 +511,12 @@ public class BaseComponent implements Component {
 
     public synchronized void init(Scope scope, Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
-      Assert.isTrue(this, !isInitialized(),
-          "Cannot initialize the component more than once!");
+      Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
+
       BaseComponent.this._setScope(scope);
       BaseComponent.this._setEnvironment(env);
-      state = ALIVE;
+      BaseComponent.this.state = ALIVE;
+
       try {
         BaseComponent.this.init();
       } catch (Exception e) {
@@ -510,24 +528,28 @@ public class BaseComponent implements Component {
       _startWaitingCall();
       _strictCheckCall();
       try {
-        /* XXX synch logic a bit weird. 
-         * Second call to destroy should fail, not wait. */
         _waitNoCall();
+
         synchronized (this) {
-          if (children != null)
-            for (Iterator<Object> i = new HashMap<Object, Component>(_getChildren()).keySet().iterator(); i.hasNext();) {
-              _removeComponent(i.next());
+          if (BaseComponent.this.children != null) {
+            for (Object key : _getChildren().keySet()) {
+              _removeComponent(key);
             }
-          if (disabledChildren != null)
-            for (Iterator<Object> i = _getDisabledChildren().keySet().iterator(); i.hasNext();) {
-              Component comp = _getDisabledChildren().get(i.next());
+          }
+
+          if (BaseComponent.this.disabledChildren != null) {
+            for (Object key : _getDisabledChildren().keySet()) {
+              Component comp = _getDisabledChildren().get(key);
               if (comp != null) {
                 comp._getComponent().destroy();
               }
             }
+          }
+
           BaseComponent.this.destroy();
         }
-        state = DEAD;
+
+        BaseComponent.this.state = DEAD;
       } catch (Exception e) {
         ExceptionUtil.uncheckException(e);
       } finally {
@@ -579,13 +601,5 @@ public class BaseComponent implements Component {
      * The value of the counter
      */
     public int counter;
-
-    /**
-     * Initializes the counter with a value.
-     * @param counter value of the counter
-     */
-    public Counter(int counter) {
-      this.counter = counter;
-    }
   }
 }

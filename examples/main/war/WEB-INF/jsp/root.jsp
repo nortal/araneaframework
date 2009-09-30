@@ -3,7 +3,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
-	version="2.0">
+	version="2.1">
 	<!-- This is a master page of Aranea framework template application. -->
 	<ui:widgetContext>
 		<![CDATA[
@@ -18,7 +18,7 @@
 
 		<ui:body>
 			<div id="cont1">
-				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion">
+				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion" tag="div">
 					<ui:systemForm method="post">
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>
@@ -34,7 +34,7 @@
 							<jsp:include page="/WEB-INF/jsp/mainlayout/sidemenu.jsp"/>
 
 							<div id="content">
-								<ui:updateRegion globalId="demo-messages">
+								<ui:updateRegion globalId="demo-messages" tag="div">
 									<div class="msg-info">
 										<div>
 											<div>
@@ -49,7 +49,7 @@
 								     of StandardFlowContainerWidget, this means that actual
 								     widget rendered here is whatever widget is on top of call
 								     stack at the moment of rendering. -->
-								<ui:updateRegion globalId="demo-content">
+								<ui:updateRegion globalId="demo-content" tag="div">
 									<ui:widgetInclude id="menu"/>
 								</ui:updateRegion>
 							</div>
@@ -57,7 +57,7 @@
 							<div class="clear1"><ui:nbsp/></div>
 						</div>
 					</ui:systemForm>
-					<ui:updateRegion globalId="demo-footer">
+					<ui:updateRegion globalId="demo-footer" tag="div">
 						<ui:widgetInclude id="menu.footer"/>
 					</ui:updateRegion>
 				</ui:updateRegion>

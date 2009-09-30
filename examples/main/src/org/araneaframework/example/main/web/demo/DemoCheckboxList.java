@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.demo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -30,76 +30,74 @@ import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRo
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
-
 /**
  * This is an example of component with a single list.
  */
 public class DemoCheckboxList extends TemplateBaseWidget {
-	  private static final long serialVersionUID = 1L;
-  private EditableBeanListWidget checkList;
-	private Map data = new HashMap();
 
-	{
-		Random rnd = new Random();
+  private EditableBeanListWidget<Long, DataDTO> checkList;
 
-		for (int i = 0; i < 100; i += 3) {
-			//Just making the initial data
-			//In reality it should have been read from the database
-			data.put(new Long(i + 1), new DataDTO(new Long(i + 1), Boolean.TRUE, new Long(rnd.nextLong() % 100), "Strange"));
-			data.put(new Long(i + 2), new DataDTO(new Long(i + 2), Boolean.FALSE, new Long(rnd.nextLong() % 100), "Peculiar"));
-			data.put(new Long(i + 3), new DataDTO(new Long(i + 3), Boolean.TRUE, new Long(rnd.nextLong() % 100), "Queer"));
-		}
-	}
+  private Map<Long, DataDTO> data = new HashMap<Long, DataDTO>();
 
-	public void init() throws Exception {
-		setViewSelector("demo/demoCheckboxList");
+  public DemoCheckboxList() {
+    Random rnd = new Random();
 
-		checkList = new EditableBeanListWidget(new DemoCheckboxListRowHandler(), DataDTO.class);
-		checkList.setDataProvider(new DemoCheckboxListDataProvider());
-		addWidget("checkList", checkList);
+    // Just making the initial data. In reality it should have been read from the database:
+    for (int i = 0; i < 100; i += 3) {
+      this.data.put(i + 1L, new DataDTO(i + 1L, true, rnd.nextLong() % 100L, "Strange"));
+      this.data.put(i + 2L, new DataDTO(i + 2L, false, rnd.nextLong() % 100L, "Peculiar"));
+      this.data.put(i + 3L, new DataDTO(i + 3L, true, rnd.nextLong() % 100L, "Queer"));
+    }
+  }
 
-		checkList.addField("booleanField", "#Boolean");
-		checkList.addField("stringField", "#String");
-		checkList.addField("longField", "#Long");
+  public void init() throws Exception {
+    setViewSelector("demo/demoCheckboxList");
 
-		checkList.setInitialOrder("longField", false);		
-	}
+    this.checkList = new EditableBeanListWidget<Long, DataDTO>(new DemoCheckboxListRowHandler(), DataDTO.class);
+    this.checkList.setDataProvider(new DemoCheckboxListDataProvider());
+    addWidget("checkList", checkList);
 
-	public void handleEventSave() throws Exception {
-		checkList.getFormList().saveCurrentRows();
-	}
-	
-	public void handleEventReturn() throws Exception {
-		getFlowCtx().cancel();
-	}
+    this.checkList.addField("booleanField", "#Boolean");
+    this.checkList.addField("stringField", "#String");
+    this.checkList.addField("longField", "#Long");
+    this.checkList.setInitialOrder("longField", false);
+  }
 
-	public class DemoCheckboxListRowHandler extends ValidOnlyIndividualFormRowHandler {
-		    private static final long serialVersionUID = 1L;
+  public void handleEventSave() {
+    this.checkList.getFormList().saveCurrentRows();
+  }
 
-    public Object getRowKey(Object row) {
-			return ((DataDTO) row).getId();
-		}
+  public void handleEventReturn() {
+    getFlowCtx().cancel();
+  }
 
-		public void saveValidRow(FormRow editableRow) {
-			DataDTO rowData = (DataDTO) data.get(editableRow.getKey());
-			rowData.setBooleanField((Boolean) editableRow.getForm().getValueByFullName("booleanField"));
-		}
+  public class DemoCheckboxListRowHandler extends ValidOnlyIndividualFormRowHandler<Long, DataDTO> {
 
-		public void initFormRow(FormRow editableRow, Object row) throws Exception {
-			((BeanFormWidget)editableRow.getForm()).addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
-			((BeanFormWidget)editableRow.getForm()).readFromBean(row);
-		}
-	}
+    public Long getRowKey(DataDTO row) {
+      return row.getId();
+    }
 
-	public class DemoCheckboxListDataProvider extends MemoryBasedListDataProvider {
-		    private static final long serialVersionUID = 1L;
+    public void saveValidRow(FormRow<Long, DataDTO> editableRow) {
+      DataDTO rowData = editableRow.getRow();
+      rowData.setBooleanField((Boolean) editableRow.getForm().getValueByFullName("booleanField"));
+    }
+
+    @SuppressWarnings("unchecked")
+    public void initFormRow(FormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
+      BeanFormWidget<DataDTO> form = (BeanFormWidget<DataDTO>) editableRow.getForm();
+      form.addBeanElement("booleanField", "#Boolean field", new CheckboxControl(), true);
+      form.readFromBean(editableRow.getRow());
+    }
+  }
+
+  public class DemoCheckboxListDataProvider extends MemoryBasedListDataProvider<DataDTO> {
 
     public DemoCheckboxListDataProvider() {
-			super(DataDTO.class);
-		}
+      super(DataDTO.class);
+    }
 
-		public List loadData() throws Exception {
-			return new ArrayList(data.values());
-		}
-	}
+    public List<DataDTO> loadData() throws Exception {
+      return new LinkedList<DataDTO>(DemoCheckboxList.this.data.values());
+    }
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.demo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
@@ -29,147 +29,205 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.form.data.StringListData;
-import org.araneaframework.uilib.support.DisplayItem;
 
 /**
+ * A form demo that shows interaction between select and multi-select boxes.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoComplexForm extends TemplateBaseWidget {
-  private static final long serialVersionUID = 1L;
-  /* Different controls and widgets we want to be accessible all the time are 
-       made instance variables by convention. */
-	private FormWidget complexForm;
-	/* SelectControl - control which provides various selections from which one must be picked. */
-	private SelectControl beastSelectionControl;
-	/* MultiSelectControl - provides various selections from which zero to many can be picked */
-	private MultiSelectControl concreteBeastMultiSelectionControl;
 
-	protected void init() throws Exception {
-		setViewSelector("demo/demoComplexForm");
-		putViewData("formLabel", "Complex_Form");
-		
-		beastSelectionControl = new SelectControl();
-		/* SelectControls can be added DisplayItems, one by one ... */
-		beastSelectionControl.addItem(new DisplayItem(null, t("select.choose")));
-		/* or whole collections of value objects, which must have getters for specified value
-         * and displayString fields (here, for sampleValue and sampleDisplayString). Note that 
-         * both value and displayString must be of String class */
-		beastSelectionControl.addFromBeanCollection(getSelectItems(), "sampleValue", "sampleDisplayString");
+  private static final String FE_BEAST_DESC = "selectedBeastDesc";
 
-		/* Adds the onChange event listener to selectControl */
-		beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
-			      private static final long serialVersionUID = 1L;
+  private static final String FE_BEAST_MULTI_SELECT = "concreteBeastControl";
+
+  private static final String MSG_CHANGED = "demo.complexForm.multiSelect.changed";
+
+  /*
+   * Different controls and widgets we want to be accessible all the time are made instance variables by convention.
+   */
+  private FormWidget complexForm;
+
+  /*
+   * SelectControl - control which provides various selections from which one must be picked.
+   */
+  private SelectControl<SelectItem> beastSelectionControl;
+
+  protected void init() throws Exception {
+    setViewSelector("demo/demoComplexForm");
+    putViewData("formLabel", "demo.complexForm.ajax");
+
+    // Note that the constructor takes the value property and the label property of the target class:
+    this.beastSelectionControl = new SelectControl<SelectItem>(SelectItem.class, "value", "label");
+
+    // Items can be added to SelectControls one by one or all-together:
+    this.beastSelectionControl.addItem("select.choose", null);
+    this.beastSelectionControl.addItems(getSelectItems());
+
+    /* Adds the onChange event listener to selectControl */
+    this.beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
 
       public void onChange() throws Exception {
-				/* Form must be converted before new values can be read from form.
-				   As we want to be sure that entered data is valid (no random strings
-				   where numbers are expected, length and content constraints are met)
-				   we usually also validate data before using it for anything. */
-				if (complexForm.convertAndValidate()) {
-					// DemoComplexForm.this.getMessageCtx().showInfoMessage("Value in multiselect has changed to " + (String)beastSelectionControl.getRawValue() + ".");
-					// get the value from control (aka what beast was selected).
-					String selectedBeast = beastSelectionControl.getRawValue();
-	
-                    // if no beast is selected in our select control, we remove the other 
-                    // elements from form that depend directly on selection being made - 
-                    // the controls providing possibily for more specific beast selection.
-					if (selectedBeast == null) {
-						complexForm.removeElement("concreteBeastControl");
-						complexForm.removeElement("selectedBeastDesc");
-						return;
-					}
 
-					// create the multiselectcontrol allowing selection of some beasts of selected type.
-					concreteBeastMultiSelectionControl = new MultiSelectControl();
-					for (Iterator i = getMultiSelectItems(selectedBeast).iterator(); i.hasNext(); ) {
-						String current = (String) i.next();
-						concreteBeastMultiSelectionControl.addItem(new DisplayItem(current, current));
-					}
-					
-					// finally add both beast group description and beast selection control to this widget.  
-					complexForm.addElement("concreteBeastControl", "#"+ t("common.Choose")+ " " + selectedBeast, concreteBeastMultiSelectionControl, new StringListData(), false);
-					complexForm.addElement("selectedBeastDesc", "#"+ t("common.Description"), new DisplayControl(), new StringData(), false);
-					// if not dealing with beanforms, form element values are typically set this way
-					complexForm.setValueByFullName("selectedBeastDesc", new SelectItem(selectedBeast).getDescription());
-				}
-			}
-		});
-		
-		complexForm = new FormWidget();
-		complexForm.addElement("beastSelection", "natures.beasts", beastSelectionControl, new StringData(), false);
-		
-		addWidget("complexForm", complexForm);
-	}
+        // Form must be converted before new values can be read from form. As we want to be sure that entered data is
+        // valid (no random strings where numbers are expected, length and content constraints are met) we usually also
+        // validate data before using it for anything.
 
-	// HELPER METHODS AND CLASSES
-	private Collection getSelectItems() {
-		List list = new ArrayList();
-		// note that SelectItem is just an inner class and not anything special
-		list.add(new SelectItem("  Bird  "));
-		list.add(new SelectItem(" Animal "));
-		list.add(new SelectItem("  Fish  "));
-		list.add(new SelectItem(" Dragon "));
-		return list;
-	}
+        if (DemoComplexForm.this.complexForm.convertAndValidate()) {
+   
+          // Get the value from control (what beast was selected).
 
-	private static final String[] birds = new String[] {"Chicken", "Goose", "Duck", "Swan"};
-	private static final String[] animals = new String[] {"Piglet", "Pooh", "Tiger", "Cangaroo"};
-	private static final String[] fishes = new String[] {"Willy", "Nemo", "Dory", "Marlin"};
-	private static final String[] dragons = new String[] {"Smaug", "Chrysophylax", "Devon & Cornwall"};
+          SelectItem selectedBeast = DemoComplexForm.this.beastSelectionControl.getRawValue();
 
-	private Collection getMultiSelectItems(String selectItem) {
-		List result = new ArrayList();
-		if (selectItem.equals("Bird")) {
-			result.addAll(Arrays.asList(birds));
-		} else if (selectItem.equals("Animal")) {
-			result.addAll(Arrays.asList(animals));
-		} else if (selectItem.equals("Fish")) {
-			result.addAll(Arrays.asList(fishes));
-		} else if (selectItem.equals("Dragon")) {
-			result.addAll(Arrays.asList(dragons));
-		}
+          // If no beast is selected in our select control, we remove the other elements from form that depend directly
+          // on selection being made - the controls providing possibility for more specific beast selection.
 
-		return result;
-	}
+          if (selectedBeast == null) {
+            DemoComplexForm.this.complexForm.removeElement(FE_BEAST_MULTI_SELECT);
+            DemoComplexForm.this.complexForm.removeElement(FE_BEAST_DESC);
+            return;
+          }
 
-	public static class SelectItem {
-		public String sampleValue;
-		public String sampleDisplayString;
-		
-		public SelectItem(String value) {
-			this.sampleValue = value.trim();
-			this.sampleDisplayString = "> " + value + " <";
-		}
+          DemoComplexForm.this.getMessageCtx().showInfoMessage(MSG_CHANGED, selectedBeast.label);
 
-		public String getSampleDisplayString() {
-			return sampleDisplayString;
-		}
+          // Continue with adding multi-select controls:
+          addBeastMultiSelect(DemoComplexForm.this.complexForm, selectedBeast);
+        }
+      }
+    });
 
-		public void setSampleDisplayString(String sampleDisplayString) {
-			this.sampleDisplayString = sampleDisplayString;
-		}
+    this.complexForm = new FormWidget();
+    this.complexForm.addElement("beastSelection", "natures.beasts", this.beastSelectionControl, new StringData());
 
-		public String getSampleValue() {
-			return sampleValue;
-		}
+    addWidget("complexForm", this.complexForm);
+  }
 
-		public void setSampleValue(String sampleValue) {
-			this.sampleValue = sampleValue;
-		}
-		
-		public String getDescription() {
-			String result = "";
-			if (sampleValue.equals("Bird")) {
-				result = "Birds are bipedal, warm-blooded, oviparous vertebrates characterized primarily by feathers, forelimbs modified as wings, and hollow bones.";
-			} else if (sampleValue.equals("Animal")) {
-				result = "Animals are a major group of organisms, classified as the kingdom Animalia or Metazoa. In general they are multicellular, capable of locomotion and responsive to their environment, and feed by consuming other organisms. Their body plan becomes fixed as they develop, usually early on in their development as embryos, although some undergo a process of metamorphosis later on.";
-			} else if (sampleValue.equals("Fish")) {
-				result = "A fish is a poikilothermic (cold-blooded) water-dwelling vertebrate with gills.";
-			} else if (sampleValue.equals("Dragon")) {
-				result = "A dragon is a legendary creature, typically depicted as a large and powerful serpent or other reptile, with magical or spiritual qualities.";
-			}
-			return result;
-		}
-	}
+  /**
+   * Adds a more specific multi-select depending on the selected beast. Also adds description (display) element with
+   * information about the selected beast.
+   */
+  private void addBeastMultiSelect(FormWidget form, SelectItem selectedBeast) {
+
+    // Create the MultiSelectControl allowing selection of some more specific beasts of selected type:
+    MultiSelectControl<SelectItem> beastMultiSelect = new MultiSelectControl<SelectItem>("label", "value");
+
+    for (String label : getMultiSelectItems(selectedBeast)) {
+      beastMultiSelect.addItem(new SelectItem(label));
+    }
+
+    // Finally add both beast group description and beast selection control to this widget:
+    form.addElement(FE_BEAST_MULTI_SELECT, "#" + t("common.Choose") + " " + t(selectedBeast.label), beastMultiSelect,
+        new StringListData());
+
+    form.addElement(FE_BEAST_DESC, "common.Description", new DisplayControl(), new StringData());
+
+    // If not dealing with bean forms, form element values are typically set this way
+    DemoComplexForm.this.complexForm.setValueByFullName(FE_BEAST_DESC, selectedBeast.getDescription());
+  }
+
+  /**
+   * Returns the main select data items. Note that SelectItem is just an inner class of this class and not anything
+   * special.
+   * 
+   * @return A list of select items to show.
+   */
+  private List<SelectItem> getSelectItems() {
+    List<SelectItem> list = new ArrayList<SelectItem>();
+    list.add(new SelectItem(BIRD));
+    list.add(new SelectItem(ANIMAL));
+    list.add(new SelectItem(FISH));
+    list.add(new SelectItem(DRAGON));
+    return list;
+  }
+
+  /**
+   * Return the data for the more specific multi-select depending on the value that was selected in the main select
+   * control.
+   * 
+   * @param selectItem The value that was selected in the main select.
+   * @return A list of String containing the label keys to resolve the label (and value) of the multi-select items.
+   */
+  private Collection<String> getMultiSelectItems(SelectItem selectItem) {
+    String value = selectItem == null ? null : selectItem.value;
+    List<String> result = new ArrayList<String>();
+
+    if (BIRD.equals(value)) {
+      result.addAll(Arrays.asList(DemoComplexForm.BIRDS));
+
+    } else if (ANIMAL.equals(value)) {
+      result.addAll(Arrays.asList(DemoComplexForm.ANIMALS));
+
+    } else if (FISH.equals(value)) {
+      result.addAll(Arrays.asList(DemoComplexForm.FISHES));
+
+    } else if (DRAGON.equals(value)) {
+      result.addAll(Arrays.asList(DemoComplexForm.DRAGONS));
+    }
+
+    return result;
+  }
+
+  // ==========================================================================================
+  //  The data to show is defined here. The constants contain the keys to resolve labels,
+  //  while the last part of the key following the last dot is used as the corresponding value
+  // ==========================================================================================
+
+  private static final String BIRD = "demo.complexForm.value.bird";
+
+  private static final String ANIMAL = "demo.complexForm.value.animal";
+
+  private static final String FISH = " demo.complexForm.value.fish";
+
+  private static final String DRAGON = "demo.complexForm.value.dragon";
+
+  private static final String[] BIRDS = new String[] { BIRD + ".chicken", BIRD + ".goose", BIRD + ".duck",
+      BIRD + ".swan" };
+
+  private static final String[] ANIMALS = new String[] { ANIMAL + ".piglet", ANIMAL + ".pooh", ANIMAL + ".tiger",
+      ANIMAL + ".cangaroo" };
+
+  private static final String[] FISHES = new String[] { FISH + ".willy", FISH + ".nemo", FISH + ".dory",
+      FISH + ".marlin" };
+
+  private static final String[] DRAGONS = new String[] { DRAGON + ".smaug", DRAGON + ".chrysophylax", DRAGON + ".devon" };
+
+  // =============================================================================================
+  //  Here is the select item model used in this demo. Also note that Aranea comes by default
+  //  with two similar classes: DisplayItem and BeanDisplayItem. However, we have some additional
+  //  custom logic defined here as regards to interpreting the value of this item.
+  // =============================================================================================
+
+  public static class SelectItem {
+
+    private String value;
+
+    private String label;
+
+    public SelectItem(String label) {
+      this.label = label;
+      this.value = StringUtils.substringAfterLast(label, ".");
+    }
+
+    public String getLabel() {
+      return this.label;
+    }
+
+    public String getValue() {
+      return this.value;
+    }
+
+    public String getDescription() {
+      String result = "";
+      if (BIRD.equals(this.value)) {
+        result = "demo.complexForm.desc.bird";
+      } else if (ANIMAL.equals(this.value)) {
+        result = "demo.complexForm.desc.animal";
+      } else if (FISH.equals(this.value)) {
+        result = "demo.complexForm.desc.fish";
+      } else if (DRAGON.equals(this.value)) {
+        result = "demo.complexForm.desc.dragon";
+      }
+      return result;
+    }
+  }
 }
-

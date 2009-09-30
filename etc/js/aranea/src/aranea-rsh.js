@@ -22,35 +22,32 @@
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 
+var Aranea = Aranea ? Aranea : {};
 /** 
  * RSH event listener, RSH notifies this about the location changes (URL in browser window). 
  * @param newLocation the hash part of the new location URL 
  * @param historyData RSH managed history data for that hash
  */
-AraneaPage.RSHListener = function(newLocation, historyData) {
-  _ap.debug('Detected navigation event ' + newLocation + " history: " + historyData);
+Aranea.RSHListener = function(newLocation, historyData) {
+	Aranea.Logger.debug('Detected navigation event ' + newLocation + " history: " + historyData);
 
-  if (newLocation && !newLocation.startsWith("HTTP")) {
-    window.dhtmlHistoryListenerRequestedState = newLocation;
-    // this.event_6 = function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
-    _ap.event_6(_ap.getSystemForm(), null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
-  }
+	if (newLocation && !newLocation.startsWith("HTTP")) {
+		window.dhtmlHistoryListenerRequestedState = newLocation;
+		// event(eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions, systemForm)
+		Aranea.Page.event(null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
+	}
 
-  window.dhtmlHistory.firstLoad = false;
-  window.dhtmlHistory.ignoreLocationChange = false;
+	window.dhtmlHistory.firstLoad = false;
+	window.dhtmlHistory.ignoreLocationChange = false;
 };
 
 // Initializes history object, overriding default JSON stringifier and default JSON parser.
 window.dhtmlHistory.create({
-  toJSON: function(o) {
-    return Object.toJSON(o);
-  }, 
-  fromJSON: function(s) {
-    return s.evalJSON();
-  }
+	toJSON:  Object.toJSON,
+	fromJSON: String.evalJSON
 });
 
 document.observe('dom:loaded', function() {
-  window.dhtmlHistory.initialize();
-  window.dhtmlHistory.addListener(AraneaPage.RSHListener);
+	window.dhtmlHistory.initialize();
+	window.dhtmlHistory.addListener(AraneaPage.RSHListener);
 });

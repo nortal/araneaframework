@@ -15,232 +15,220 @@
  */
 
 /**
+ * Aranea integration scripts with ModalBox (http://okonet.ru/projects/modalbox/) to provide the overlay mode effects.
+ * However, one can re-implement some methods (update(), afterUpdateRegionResponseProcessing(), close(),
+ * closeWithAjax()) to use another kind of library for rendering overlay effects.
+ * 
+ * The main functions called are Aranea.ModalBox.show() and Aranea.ModalBox.update(), the rest are called by them. The
+ * configuration data is stored in Aranea.ModalBox.Options.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @author Alar Kvell (alar@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1
  */
+Aranea = Aranea ? Aranea : {};
 Aranea.ModalBox = {
 
-  /**
-   * The script file currently used for overlay popup.
-   * Will be removed in future, because it's not used.
-   */
-  ModalBoxFileName: 'js/modalbox/modalbox.js',
+	MODALBOX_CLOSE_MSG: '<!-- araOverlaySpecialResponse -->',
 
-  /**
-   * Returns the URL for submitting to in overlay mode.
-   * @since 1.2.1
-   */
-  getRequestURL: function() {
-    var form = _ap.getSystemForm();
-    var url = null;
+	/**
+	 * Returns the URL for submitting to in overlay mode.
+	 * @since 1.2.1
+	 */
+	getRequestURL: function() {
+		if (Aranea.Data.systemForm.hasClassName('aranea-overlay')) {
+			return Aranea.Data.systemForm.readAttribute('action');
+		} else {
+			return Aranea.Page.getSubmitURL({ araTransactionId: 'override', araOverlay: true });
+		}
+	},
 
-    if ($$('.aranea-overlay').length) {
-      url = form.readAttribute('action');
-    } else {
-      url = _ap.getSubmitURL(form.araTopServiceId.value,
-            form.araThreadServiceId.value, 'override') + '&araOverlay=true';
-    }
+	/**
+	 * A simple implementation of request with optional callbacks for both success and failure. When no callbacks are
+	 * defined, no content will be updated. However, default error reaction is that overlay will be closed.
+	 * @param options Options for Ajax.Request and this for this function (options.method).
+	 * @param success A function (transport data as parameter) called when AJAX request completes successfully.
+	 * @param failure A function (transport data and exception as parameters) called when AJAX request fails.
+	 * @since 1.2.1.1
+	 */
+	doRequest: function(options, success, failure) {
+		new Ajax.Request(this.getRequestURL(), {
+			method: options.method,
+			parameters: options.params,
+			onSuccess: function(transport) {
+				// The returned HTML:
+				var response = transport.responseText.strip();
+				if (success) {
+					success(response);
+				}
+				// Aranea initialization:
+				this.afterLoad(transport);
+			}.bind(this),
 
-    return url;
-  },
+			onException: function(request, exception){
+				if (failure) {
+					failure(request, exception);
+				} else {
+					this.close();
+					Aranea.Logger.error("Exception has occured while processing Modalbox request.", exception);
+					throw('Modal dialog loading error: ' + exception);
+				}
+			}.bind(this)
+		});
+	},
 
-  /**
-   * A simple implementation of request with optional callbacks for both success
-   * and failure. When no callbacks are defined, no content will be updated.
-   * However, default error reaction is that overlay will be closed.
-   * @since 1.2.1.1
-   */
-  doRequest: function(options, success, failure) {
+	/**
+	 * The main function called either to start the overlay mode. Feel free to override this and/or "update" for your
+	 * own needs. The parameter should contain settings passed by the OverlayContext.
+	 * 
+	 * @param params The data from the OverlayContext.
+	 */
+	show: function(params) {
+		this.Options = params;
+		this.update(this.Options);
+	},
 
-    new Ajax.Request(this.getRequestURL(), { method: options.method,
+	/**
+	 * This function is called by events to update the content of overlay dialog. Parameter contains the data to be used
+	 * in the request passed by the OverlayContext. The data will be also stored in Aranea.ModalBox.Options.
+	 * 
+	 * @param params The data from the OverlayContext.
+	 * @since 1.2.1
+	 */
+	update: function(params) {
+		this.doRequest(Object.extend(this.Options, params), function(content) {
+			Modalbox.show(content, Object.extend(Aranea.ModalBox.Options, params));
+			if (Prototype.Browser.IE) {
+				// Modalbox does not render well in IE without this line (Prototype bug?):
+				document.viewport.getScrollOffsets();
+			}
+		});
+	},
 
-      parameters: options.params,
+	/**
+	 * Utility method for checking whether the response indicates that the overlay mode should be closed.
+	 * 
+	 * @param content The full content from the AJAX request response.
+	 * @return A Boolean value true when the response content indicates that the overlay mode was closed.
+	 * @since 1.2.1
+	 */
+	isCloseOverlay: function(content) {
+		return content && content.startsWith(this.MODALBOX_CLOSE_MSG);
+	},
 
-      onSuccess: function(transport) {
-        // The returned HTML:
-        var response = transport.responseText.strip();
+	/**
+	 * This method is called each time when the request for overlay content ends. The content can be used to check
+	 * whether the overlay mode should be closed. Feel free to override, but be careful to preserve important
+	 * checks/tasks. This method must be called after content update.
+	 * @param transport The AJAX request transport.
+	 */
+	afterLoad: function(transport) {
+		AraneaPage.findSystemForm();
+		var f = function() {
+			DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
+			if (this.isCloseOverlay(transport.responseText)) {
+				this.close();
+				this.reloadPage();
+			} else {
+				Aranea.Page.onLoad();
+			}
+		};
+		f.bind(Aranea.ModalBox).defer();
+	},
 
-        if (success) {
-          success(response);
-        }
+	/**
+	 * Gets executed after update region response has been processed completely. Note that without update regions, this
+	 * is not called. Invoked by "aranea.js". Customize it for your own needs, especially, if you use another overlay
+	 * visual implementation.
+	 */
+	afterUpdateRegionResponseProcessing: function() {
+		if (Modalbox && Aranea.Data.systemForm.hasClassName('aranea-overlay')) {
+			Modalbox.resizeToContent(this.Options);
+		}
+	},
 
-        // Aranea initialization
-        this.afterLoad(transport);
+	/**
+	 * Closes the overlay mode (only visually, client-side).
+	 */
+	close: function() {
+		if (Modalbox) Modalbox.hide();
+	},
 
-      }.bind(this),
+	/**
+	 * Reloads the page. This is usually called when the overlay mode terminates. Reloading will refresh the entire page
+	 * content and status.
+	 * 
+	 * @since 1.2.1
+	 */ 
+	reloadPage: function() {
+		if (Aranea.Data.systemForm.araTransactionId) {
+			Aranea.Data.systemForm.araTransactionId.value = 'inconsistent';
+		}
+		if (window.modalTransport) {
+			DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
+		}
+		return new DefaultAraneaSubmitter().event_4(systemForm);
+	},
 
-      onException: function(request, exception){
-        if (failure) {
-          failure(request, exception);
-        } else {
-          this.close();
-          _ap.debug("Exception has occured while processing or receiving Modalbox request.");
-          _ap.debug(exception);
-          throw('Modal dialog loading error: ' + exception);
-        }
-      }.bind(this)
+	/**
+	 * Closes the overlay mode. It is meant to be used, if you don't have a "Close" button, but you still want to close
+	 * the overlay in some other way (e.g. with an ESC-key). Then the appropriate event will be called by this method.
+	 * Once the overlay is closed, a page reload is also done. It's also recommended that you take a look at
+	 * Aranea.ModalBox.closeWithAjaxHandler to customize it, if needed.
+	 * 
+	 * @param eventId The name of the event handler on the server-side that actually closes the overlay mode.
+	 * @param eventTarget The full Id of the widget of the event handler. In JSP, you can use the value of ${widgetId}.
+	 * @param eventParam An optional parameter to the event handler.
+	 * @since 1.2.1
+	 */
+	closeWithAjax: function(eventId, eventTarget, eventParam) {
+		if (!Aranea.Data.systemForm.hasClassName('aranea-overlay')) {
+			throw("No overlay system form found. You're probably not in overlay mode (yet).");
+		} else if (!Aranea.Data.loaded) {
+			return;
+		}
 
-    });
-},
+		Aranea.Data.loaded = false;
 
-  /**
-   * The main function called either to start the overlay mode.
-   * Feel free to override this and/or "update" for your own needs.
-   */
-  show: function(params) {
-	this.Options = params;
-    this.update(this.Options);
-  },
+		Aranea.Data.systemForm.araWidgetEventPath.value = String.interpret(eventTarget);
+		Aranea.Data.systemForm.araWidgetEventHandler.value = String.interpret(eventId);
+		Aranea.Data.systemForm.araWidgetEventParameter.value = String.interpret(eventParam);
 
-  /**
-   * This function is called by events to update the content of overlay dialog.
-   * Params contains the data to be used in the request.
-   * @since 1.2.1
-   */
-  update: function(params) {
-    this.doRequest(Object.extend(this.Options, params), function(content) {
-      Modalbox.show(content, Object.extend(Aranea.ModalBox.Options, params));
-      if (Prototype.Browser.IE) {
-        // Modalbox does not render well in IE without this line (Prototype bug?):
-        $(document.body).viewportOffset();
-      }
-    });
-  },
+		new Ajax.Request(Aranea.ModalBox.getRequestURL(), {
+				method: Aranea.ModalBox.Options.method,
+				parameters: Aranea.Data.systemForm.serialize(true),
+				onSuccess: function(transport) {
+					if (Aranea.ModalBox.isCloseOverlay(transport.responseText)) {
+						window.modalTransport = transport;
+						this.closeWithAjaxHandler();
+						window.modalTransport = null;
+					} else {
+						throw("Was expecting the request (event) to close the " +
+								"modal dialog, but received non-qualifing response.");
+					}
+				},
+				onFailure: function(transport) {
+					Aranea.Data.loaded = true;
+					Aranea.Logger.debug("Received unexpected error response text:\n" + transport.responseText);
+					throw("Was expecting the request (event) to close the " +
+							"modal dialog, but received non-qualifing (error) response.");
+				},
+				onException: function(ajaxRequest, e) {
+					Aranea.Data.loaded = true;
+					Aranea.Logger.error("Exception has occured while processing or receiving overlay request.", e);
+				}
+			}
+		);
+	},
 
-  /**
-   * Utility method for checking whether the response indicates that the
-   * overlay mode should be closed.
-   * @since 1.2.1
-   */
-  isCloseOverlay: function(content) {
-    return content && content.startsWith("<!-- araOverlaySpecialResponse -->");
-  },
-
-  /**
-   * This method is called each time when the request for overlay content ends.
-   * The content can be used to check whether the overlay mode should be closed.
-   * Feel free to override, but be careful to preserve important checks/tasks.
-   * This method must be called (after content update).
-   */
-  afterLoad: function(transport) {
-    AraneaPage.findSystemForm().writeAttribute("ara-overlay", "true");
-    var f = function() {
-      if (this.isCloseOverlay(transport.responseText)) {
-        DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
-        this.close();
-        this.reloadPage();
-      } else {
-        DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
-        _ap.addSystemLoadEvent(AraneaPage.init);
-        _ap.onload();
-      }
-    };
-    f.bind(Aranea.ModalBox).defer();
-  },
-
-  /**
-   * Gets executed after update region response has been processed completely.
-   * Note that without update regions, this is not called. Invoked by "aranea.js".
-   * Customize it for your own needs.
-   */
-  afterUpdateRegionResponseProcessing: function(activeSystemForm) {
-    if (Modalbox && activeSystemForm.hasClassName('aranea-overlay')) {
-      Modalbox.resizeToContent(this.Options);
-    }
-  },
-
-  /**
-   * Closes the overlay mode (only visually).
-   */
-  close: function() {
-    if (Modalbox) Modalbox.hide();
-  },
-
-  /**
-   * Reloads the page. This is usually called when the overlay mode terminates.
-   * Reloading will refresh the entire page content and status.
-   * @since 1.2.1
-   */ 
-  reloadPage: function(options) {
-    var systemForm = AraneaPage.findSystemForm();
-
-    if (systemForm.araTransactionId) {
-      systemForm.araTransactionId.value = 'inconsistent';
-    }
-
-    if (window.modalTransport) {
-      DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
-      window.modalTransport = null;
-    }
-
-    return new DefaultAraneaSubmitter().event_4(systemForm);
-  },
-
-  /**
-   * Closes the overlay mode. It is meant to be used, if you don't have a "Close"
-   * button, but you still want to close the overlay in some other way (e.g. with
-   * an ESC-key). This method takes following parameters:
-   * @param eventId - the name of the event handler on the server-side that
-   *                  actually closes the overlay mode.
-   * eventTarget - the full id of the widget that contains the event handler.
-   *               In JSP you can use ${widgetId} to retrive the Id.
-   * eventParam - An optional parameter to the event handler.
-   * The first two parameters are mandatory, the event param is not.
-   * Once the overlay is closed, a page reload is also done.
-   * @since 1.2.1
-   */
-  closeWithAjax: function(eventId, eventTarget, eventParam) {
-    if (!eventId) {
-      throw("eventId must not be null");
-    }
-
-    if (!eventTarget) {
-      throw("eventTarget must not be null");
-    }
-
-    var systemForm = $(_ap.getSystemForm());
-
-    if (!systemForm.hasClassName('aranea-overlay')) {
-      throw("No overlay system form found. You're probably not " +
-          "in overlay mode (yet).");
-    }
-
-    if (!_ap.isLoaded()) {
-      return;
-    }
-    _ap.setLoaded(false);
-
-    systemForm.araWidgetEventPath.value = String.interpret(eventTarget);
-    systemForm.araWidgetEventHandler.value = String.interpret(eventId);
-    systemForm.araWidgetEventParameter.value = String.interpret(eventParam);
-
-    new Ajax.Request(Aranea.ModalBox.getRequestURL(),
-        { method: 'post',
-          parameters: systemForm.serialize(true),
-          onSuccess: function(transport) {
-              if (Aranea.ModalBox.isCloseOverlay(transport.responseText)) {
-                window.modalTransport = transport;
-                Aranea.ModalBox.close();
-                Aranea.ModalBox.reloadPage();
-              } else {
-                throw("Was expecting the request (event) to close the " +
-                    "modal dialog, but received non-qualifing response.");
-              }
-            },
-          onFailure: function(transport) {
-            _ap.setLoaded(true);
-            _ap.debug("Received unexpected error response text:\n" + transport.responseText);
-            throw("Was expecting the request (event) to close the " +
-                "modal dialog, but received non-qualifing (error) response.");
-          },
-          onException: function(AjaxRequest, exc) {
-            _ap.setLoaded(true);
-            _ap.debug("Exception has occured while processing or receiving overlay request.");
-            _ap.debug(exc);
-          }
-        }
-    );
-  }
+	/**
+	 * The handler that is called by Aranea.ModalBox.closeWithAjax() when the server-side event handler has closed the
+	 * OverlayContext. You may want to re-implement this method to define how exactly overlay is closed in client-side.
+	 * You may also access the AJAX request transport object through window.modalTransport. 
+	 */
+	closeWithAjaxHandler: function() {
+		Aranea.ModalBox.close();
+		Aranea.ModalBox.reloadPage();
+	}
 };

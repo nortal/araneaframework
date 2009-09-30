@@ -128,9 +128,7 @@
 			target="1.5"
 			source="1.5"
 			srcdir="src"
-			deprecation="yes"
-      compiler="javac1.5"
-		>
+			deprecation="yes">
 			<classpath refid="build.cp"/>
 			<include name="**/*.java" />
 		</javac>

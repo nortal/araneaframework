@@ -19,17 +19,18 @@ package org.araneaframework.uilib.form.formlist;
 import java.io.Serializable;
 
 /**
- * Callback handler that is used to query for the key of the row object.
+ * Callback handler that is used to query for the key of the row object. The generic parameter K corresponds to the type
+ * of the key values, and the generic parameter R corresponds to the type of the row values.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface RowHandler extends Serializable {
+public interface RowHandler<K, R> extends Serializable {
 
   /**
-   * Should return the key that uniquely identifies the row object among others.
+   * The underlying implementation should return the key that uniquely identifies the row object among others.
    * 
-   * @param row row object.
-   * @return the key that uniquely identifies the row object among others.
+   * @param row The row object that must be identified.
+   * @return The key that uniquely identifies the given row object among others.
    */
-  public Object getRowKey(Object row);
+  public K getRowKey(R row);
 }

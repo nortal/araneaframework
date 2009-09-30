@@ -9,6 +9,8 @@
 
 	<property name="example.jar" value="../common/dist/aranea-examples-common.jar"/>
 
+	<property name="jetty.tmp.dir" value="tmp.jetty"/>
+
 	<path id="build.cp">
 		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
 		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
@@ -33,6 +35,7 @@
 
 	<target name="clean" description="Deletes copied and compiled resources.">
 		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${jetty.tmp.dir}" />
 			<fileset dir="war/WEB-INF/classes" />
 			<fileset dir="war/WEB-INF/lib" />
 			<fileset dir="war/jsp" />
@@ -96,8 +99,8 @@
 	-->
 
 	<target name="run-app" description="Runs app in the Jetty server.">
-		<!-- _Dsun.io.serialization.extendedDebugInfo=true _Xdebug _Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n -->
-		<jetty tempdirectory="tmpJetty">
+		<delete dir="${jetty.tmp.dir}"/>
+		<jetty tempdirectory="${jetty.tmp.dir}">
 			<webapp warfile="war" contextPath="/mainExample" />
 			<connectors>
 				<selectChannelConnector port="2000"/>

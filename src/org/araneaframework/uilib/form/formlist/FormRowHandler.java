@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.formlist;
 
@@ -21,50 +21,59 @@ import java.util.Set;
 import org.araneaframework.uilib.form.FormWidget;
 
 /**
- * This class represents the callback interface provided by the programmer to the {@link org.araneaframework.uilib.form.formlist.FormListWidget}. 
+ * This class represents the callback interface provided by the programmer to the
+ * {@link org.araneaframework.uilib.form.formlist.FormListWidget}. This callback allows to respond form list events. The
+ * generic parameter K corresponds to the type of the key values, and the generic parameter R corresponds to the type of
+ * the row values.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public interface FormRowHandler extends RowHandler {
+public interface FormRowHandler<K, R> extends RowHandler<K, R> {
+
   /**
-   * Should initialize the editable row building the form and setting the correct open/close status.
+   * The underlying implementation should initialize (e.g. setting the correct open/close status) the editable row (
+   * <code>formRow)</code>) that represents the given <code>row</code> model object. This method is usually called when
+   * building the form.
    * 
-   * @param formRow editable row.
-   * @param row row object.
+   * @param formRow The editable row to initialize.
+   * @param row The row data object that the editable row represents.
    */
-  public void initFormRow(FormRow formRow, Object row) throws Exception;    
-  
+  public void initFormRow(FormRow<K, R> formRow, R row) throws Exception;
+
   /**
-   * Should initialize the form that will be used to add new rows.
+   * The underlying implementation should initialize the form that will be used to add new rows.
    * 
-   * @param addForm form that will be used to add new rows.
+   * @param addForm An instance of form that will be used to add new rows to the list.
    */
   public void initAddForm(FormWidget addForm) throws Exception;
-  
+
   /**
-   * This method is called when a new row should be added. The row data should be read from the supplied form.
+   * This method is called when a new row was ordered to be added. The row data should be read from the supplied form
+   * (after converting and validating).
    * 
-   * @param addForm the form that will be used to add new rows.
+   * @param addForm The form that will be used to add new rows.
    */
   public void addRow(FormWidget addForm) throws Exception;
-  
+
   /**
-   * This method is called when the specified form rows should be saved.
+   * This method is called when the specified form rows were ordered to be saved to a file, database, etc.
    * 
-   * @param formRows <code>Map&lt;Object key, EditableRow</code>. 
+   * @param formRows A map of row keys that correspond to appropriate {@link FormRow}s to be saved.
    */
-  public void saveRows(Map<Object, FormRow> formRows) throws Exception;
-  
+  public void saveRows(Map<K, FormRow<K, R>> formRows) throws Exception;
+
   /**
-   * This method is called when the rows specified by the supplied set of keys should be deleted. 
+   * This method is called when the rows (specified by the keys in the supplied set) should be deleted.
    * 
-   * @param keys row keys.
+   * @param keys A set of row keys that correspond to form rows that were ordered to be deleted.
    */
-  public void deleteRows(Set<Object> keys) throws Exception;
-  
+  public void deleteRows(Set<K> keys) throws Exception;
+
   /**
-   * This method is called when the supplied row has been opened or closed.
-   * @param formRow editable row.
+   * This method is called when the supplied row has been opened or closed. You can check current status of
+   * <code>formRow</code> by invoking {@link FormRow#isOpen()}.
+   * 
+   * @param formRow The editable form row that was opened or closed.
    */
-  public void openOrCloseRow(FormRow formRow) throws Exception;
+  public void openOrCloseRow(FormRow<K, R> formRow) throws Exception;
 }

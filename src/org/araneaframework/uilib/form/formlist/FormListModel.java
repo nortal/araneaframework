@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.formlist;
 
@@ -20,9 +20,16 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * The interface that defines methods for callbacks that dynamically provide the data a the form list.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * TODO: javadoc
  */
-public interface FormListModel extends Serializable {
-  public List<Object> getRows() throws Exception;
+public interface FormListModel<R> extends Serializable {
+
+  /**
+   * Provides the rows to the form list.
+   * 
+   * @return A list of row data objects.
+   */
+  public List<R> getRows();
 }

@@ -96,29 +96,27 @@ public class BeanFormWidget<T> extends FormWidget {
     return bean;
   }
   
-  @Deprecated
   public void readFromBean(T bean) {
-    BeanFormWriter<T> writer = new BeanFormWriter<T>(beanClass);
+    BeanFormWriter<T> writer = new BeanFormWriter<T>(this.beanClass);
     writer.writeFormBean(this, bean);
   }
 
   public void readFromBean() {
-    BeanFormWriter<T> writer = new BeanFormWriter<T>(beanClass);
-    writer.writeFormBean(this, bean);
+    readFromBean(this.bean);
   }
   
   public T writeToBean() {
     BeanFormReader reader = new BeanFormReader(this);
-    reader.readFormBean(bean);
-    return bean;
+    reader.readFormBean(this.bean);
+    return this.bean;
   }
   
   public T getBean() {
-    return bean;
+    return this.bean;
   }
   
   public Class<T> getBeanClass() {
-    return beanClass;
+    return this.beanClass;
   }  
   
 }

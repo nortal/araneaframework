@@ -49,7 +49,7 @@ public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
    *   description = "Provides a way to use custom HTML tag (default: SPAN). Does not break client-side scripts. Use with caution!"
    */
   public void setTag(String tag) throws JspException {
-    this.tag = (String) evaluateNotNull("tag", tag, String.class);
+    this.tag = evaluateNotNull("tag", tag, String.class);
   }
 
   protected int doStartTag(Writer out) throws Exception {

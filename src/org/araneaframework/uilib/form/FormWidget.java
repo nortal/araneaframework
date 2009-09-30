@@ -357,6 +357,31 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param labelId id of the localized label.
    * @param control the type of control data.
    * @param data the type of data.
+   */
+  public <C,D> FormElement<C,D> addElement(String elementName, String labelId, Control<C> control, Data<D> data) {
+    return this.addElement(elementName, labelId, control, data, false);
+  }
+
+  /**
+   * This method adds a {@link FormElement} to this {@link FormWidget}.
+   * 
+   * @param elementName the name of the form element.
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
+   * @param mandatory whether the element must be present in request.
+   */
+  public <C,D> FormElement<C,D> addElement(String elementName, String labelId, Control<C> control, Data<D> data, D initialValue) {
+    return this.addElement(elementName, labelId, control, data, initialValue, false);
+  }
+
+  /**
+   * This method adds a {@link FormElement} to this {@link FormWidget}.
+   * 
+   * @param elementName the name of the form element.
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
    * @param mandatory whether the element must be present in request.
    */
   public <C,D> FormElement<C,D> addElement(String elementName, String labelId, Control<C> control, Data<D> data, boolean mandatory) {
@@ -364,7 +389,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
     addElement(elementName, result);
     return result;
   }
-  
+
   /**
    * This method adds a {@link FormElement} to this {@link FormWidget}.
    * 

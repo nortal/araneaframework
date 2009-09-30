@@ -21,18 +21,21 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.formlist.FormListModel;
 import org.araneaframework.uilib.list.ListWidget;
 
-public class ListWidgetFormListModel implements FormListModel {
+/**
+ * TODO DOCUMENT IT!
+ * 
+ * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ */
+public class ListWidgetFormListModel<R> implements FormListModel<R> {
 
-  private static final long serialVersionUID = 1L;
+  private ListWidget<R> listWidget;
 
-  private ListWidget listWidget;
-
-  public ListWidgetFormListModel(ListWidget listWidget) {
+  public ListWidgetFormListModel(ListWidget<R> listWidget) {
     Assert.notNullParam(listWidget, "listWidget");
     this.listWidget = listWidget;
   }
 
-  public List getRows() {
-    return listWidget.getItemRange();
+  public List<R> getRows() {
+    return this.listWidget.getItemRange();
   }
 }

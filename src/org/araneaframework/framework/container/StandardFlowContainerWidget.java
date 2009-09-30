@@ -433,13 +433,12 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   protected void doReplace(Widget flow, Configurator configurator) {
     Assert.notNullParam(flow, "flow");
 
-    CallFrame previousFrame = (CallFrame) this.callStack.removeFirst();
+    CallFrame previousFrame = this.callStack.removeFirst();
     CallFrame frame = makeCallFrame(flow, configurator,
         previousFrame.getHandler(), previousFrame);
 
     if (log.isDebugEnabled()) {
-      log.debug("Replacing flow '"
-          + previousFrame.getWidget().getClass().getName() + "' with flow '"
+      log.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + "' with flow '"
           + flow.getClass().getName() + "'");
     }
 
