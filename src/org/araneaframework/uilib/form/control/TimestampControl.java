@@ -96,11 +96,10 @@ public abstract class TimestampControl extends EmptyStringNullableControl<Timest
     
     if (parameterValue != null && getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
     	addError(
-    		MessageUtil.localizeAndFormat(
+    		MessageUtil.localizeAndFormat(getEnvironment(),
     		getInputFilter().getInvalidInputMessage(), 
     		MessageUtil.localize(getLabel(), getEnvironment()), 
-    		getInputFilter().getCharacterFilter(), 
-    		getEnvironment()));
+    		getInputFilter().getCharacterFilter()));
     }
 
     return null;
@@ -109,11 +108,10 @@ public abstract class TimestampControl extends EmptyStringNullableControl<Timest
   /** @since 1.1 */ 
   protected void addWrongTimeFormatError() {
 	addError(
-        MessageUtil.localizeAndFormat(
+        MessageUtil.localizeAndFormat(getEnvironment(),
         UiLibMessages.WRONG_DATE_FORMAT, 
         MessageUtil.localize(getLabel(), getEnvironment()),
-        dateTimeInputPattern,
-        getEnvironment()));
+        dateTimeInputPattern));
   }
 
   /**

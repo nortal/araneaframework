@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
 import org.araneaframework.uilib.form.Converter;
 
 /**
- * Convert the <code>Boolean</code> to <code>String</code>, true - "Y", false -
- * "N" and back.
+ * Convert the <code>Boolean</code> to <code>String</code>, true - "Y", false - "N" and back.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
 public class BooleanToYNConverter extends BaseConverter<Boolean, String> {
+
   /**
    * Converts <code>Boolean</code> to <code>Y|N</code>.
    */
@@ -35,9 +35,9 @@ public class BooleanToYNConverter extends BaseConverter<Boolean, String> {
   }
 
   /**
-	 *  Converts <code>String</code> "Y" to <code>Boolean.TRUE</code> and 
-	 *  any other <code>String</code>, including "N" to <code>Boolean.FALSE</code>. 
-	 */
+   * Converts <code>String</code> "Y" to <code>Boolean.TRUE</code> and any other <code>String</code>, including "N" to
+   * <code>Boolean.FALSE</code>.
+   */
   @Override
   public Boolean reverseConvertNotNull(String data) {
     return data.equals("Y") ? Boolean.TRUE : Boolean.FALSE;

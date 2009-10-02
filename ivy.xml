@@ -5,14 +5,12 @@
 	xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
 
 	<info organisation="araneaframework" module="aranea-mvc" revision="${araneaframework.version}" status="${araneaframework.status}">
-
 		<license name="APL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
 		<ivyauthor name="Martti Tamm" url="http://www.araneaframework.org/"/>
 		<description homepage="http://www.araneaframework.org/">Aranea MVC web framework</description>
 	</info>
 
 	<configurations defaultconfmapping="*->runtime">
-
 		<conf name="runtime" description="The runtime dependecies for Aranea."/>
 		<conf name="build" description="The libraries to compile  Aranea (in addition to runtime libraries)." visibility="private"/>
 		<conf name="build-util" description="Additional build-time utilities to build Aranea release bundle." visibility="private"/>
@@ -28,7 +26,6 @@
 		<conf name="aranea-jsp" description="The Aranea JSP library."/>
 		<conf name="aranea-uilib" description="The Aranea MVC library."/>
 		<conf name="aranea-integration-spring" description="The Aranea-Spring integration library."/>
-
 	</configurations>
 
 	<publications>
@@ -42,7 +39,7 @@
 		<artifact name="aranea-integration-spring" conf="aranea-integration-spring"/>
 	</publications>
 
-	<dependencies defaultconfmapping="*->default">
+	<dependencies defaultconfmapping="*->runtime">
 
 		<!-- "runtime" -->
 		<!-- These files are always required. -->

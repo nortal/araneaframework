@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -20,18 +20,14 @@ import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Constraint that will be applied if the group of constraints is active. To
- * check, if the group is active, the {@link ConstraintGroupHelper} is used. In
- * addition, the latter also gives a more convenient way to create this grouped
- * constraint (see
- * {@link ConstraintGroupHelper#createGroupedConstraint(Constraint, String)}).
+ * Constraint that will be applied if the group of constraints is active. To check, if the group is active, the
+ * {@link ConstraintGroupHelper} is used. In addition, the latter also gives a more convenient way to create this
+ * grouped constraint (see {@link ConstraintGroupHelper#createGroupedConstraint(Constraint, String)}).
  * 
  * @author Ilja Livenson (ilja@webmedia.ee)
  * @see ConstraintGroupHelper
  */
 public class GroupedConstraint extends BaseConstraint {
-
-  private static final long serialVersionUID = 1L;
 
   private ConstraintGroupHelper conditionalConstraintHelper;
 
@@ -40,13 +36,11 @@ public class GroupedConstraint extends BaseConstraint {
   private String group;
 
   /**
-   * Creates a new grouped constraint. The <code>helper</code> should be
-   * common (the same instance) to all constraints as it is used to check
-   * whether the group is active. The group must be registered in the
-   * <code>helper</code> beforehand.
+   * Creates a new grouped constraint. The <code>helper</code> should be common (the same instance) to all constraints
+   * as it is used to check whether the group is active. The group must be registered in the <code>helper</code>
+   * beforehand.
    * <p>
-   * Usually, one should use a more convenient way to add constraints to a group
-   * by using
+   * Usually, one should use a more convenient way to add constraints to a group by using
    * {@link ConstraintGroupHelper#createGroupedConstraint(Constraint, String)}.
    * 
    * @param helper The helper for grouped constraints.
@@ -61,33 +55,29 @@ public class GroupedConstraint extends BaseConstraint {
   }
 
   /**
-   * Validates the constraint, if the group is active. If it is not active, the
-   * validation succeeds.
+   * Validates the constraint, if the group is active. If it is not active, the validation succeeds.
    */
   @Override
   protected void validateConstraint() throws Exception {
-    if (!this.conditionalConstraintHelper.isGroupActive(this.group))
+    if (!this.conditionalConstraintHelper.isGroupActive(this.group)) {
       return;
-    else
-      this.constraint.validate();
-    addErrors(constraint.getErrors());
-    constraint.clearErrors();
+    }
+    this.constraint.validate();
+    addErrors(this.constraint.getErrors());
+    this.constraint.clearErrors();
   }
 
   /**
-   * Provides the <code>ConstraintGroupHelper</code> used by this group
-   * constraint to handle group names.
+   * Provides the <code>ConstraintGroupHelper</code> used by this group constraint to handle group names.
    * 
-   * @return The <code>ConstraintGroupHelper</code> used by this group
-   *         constraint.
+   * @return The <code>ConstraintGroupHelper</code> used by this group constraint.
    */
   public ConstraintGroupHelper getConditionalConstraintHelper() {
-    return conditionalConstraintHelper;
+    return this.conditionalConstraintHelper;
   }
 
   /**
-   * Sets the <code>ConstraintGroupHelper</code> to be used by this group
-   * constraint to handle group names.
+   * Sets the <code>ConstraintGroupHelper</code> to be used by this group constraint to handle group names.
    * 
    * @param conditionalConstraintHelper A new <code>ConstraintGroupHelper</code>.
    */
@@ -97,17 +87,17 @@ public class GroupedConstraint extends BaseConstraint {
 
   @Override
   public void setEnvironment(Environment environment) {
-    constraint.setEnvironment(environment);
+    this.constraint.setEnvironment(environment);
   }
 
   @Override
   public void setCustomErrorMessage(String customErrorMessage) {
-    constraint.setCustomErrorMessage(customErrorMessage);
+    this.constraint.setCustomErrorMessage(customErrorMessage);
   }
 
   @Override
   public void clearErrors() {
-    constraint.clearErrors();
+    this.constraint.clearErrors();
   }
 
 }

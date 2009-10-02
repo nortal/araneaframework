@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -31,58 +31,57 @@ import org.araneaframework.uilib.form.FormElementContext;
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class BaseFieldConstraint extends BaseConstraint {
+public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
 
   // The form field that this constraint applies to.
-  private FormElement field;
+  private FormElement<C, D> field;
 
   /**
-   * An empty constructor that does not bind this constraint with a form
-   * element. The only way to bind a constraint with a form field, is by a
-   * constructor.)
+   * An empty constructor that does not bind this constraint with a form element. The only way to bind a constraint with
+   * a form field, is by a constructor.)
    */
   public BaseFieldConstraint() {}
 
   // Constraints environment should always be set to field environment.
   // however there is no guarantee that field has been initialized when
   // constructor is called, so the environment may be missing crucial entries.
-  // Just setting field constraint works (then constraints environment is set when 
+  // Just setting field constraint works (then constraints environment is set when
   // field is initialized). That would break constraint previously set however.
 
   /**
    * A constructor that binds this constraint with given form element (<code>field</code>)
    * 
-   * @param field The form element to bind this contraint with.
+   * @param field The form element to bind this constraint with.
    */
-  public BaseFieldConstraint(FormElement field) {
+  public BaseFieldConstraint(FormElement<C, D> field) {
     Assert.notNullParam(this, field, "field");
     this.field = field;
   }
 
   /**
-   * Returns the {@link FormElement} that this <code>Constraint</code> is
-   * constraining.
+   * Returns the {@link FormElement} that this <code>Constraint</code> is constraining.
    * 
    * @return constrained {@link FormElement}
    */
-  protected FormElementContext getField() {
-    if (field != null)
-      return field;
+  @SuppressWarnings("unchecked")
+  protected FormElementContext<C, D> getField() {
+    if (this.field != null) {
+      return this.field;
+    }
 
-    FormElementContext result;
+    FormElementContext<C, D> result;
     try {
       result = getEnvironment().requireEntry(FormElementContext.class);
     } catch (NoSuchEnvironmentEntryException e) {
-      throw new FieldConstraintException(Assert.thisToString(this) + " could not determine FormElementContext, this is probably caused by applying field constraint to something other than FormElement.", e);
+      throw new FieldConstraintException(Assert.thisToString(this) + " could not determine FormElementContext, this "
+          + "is probably caused by applying field constraint to something other than FormElement.", e);
     }
     return result;
   }
 
   @Override
   public Environment getEnvironment() {
-    if (field == null)
-	  return super.getEnvironment();
-    return field.getConstraintEnvironment();
+    return this.field == null ? super.getEnvironment() : field.getConstraintEnvironment();
   }
 
   /**
@@ -99,7 +98,7 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
    * 
    * @return the value of the constraint field.
    */
-  protected Object getValue() {
+  protected D getValue() {
     return getField().getValue();
   }
 
@@ -131,23 +130,20 @@ public abstract class BaseFieldConstraint extends BaseConstraint {
   }
 
   /**
-   * Exception thrown when {@link org.araneaframework.uilib.form.FormElement}
-   * associated with {@link BaseFieldConstraint} could not be determined.
+   * Exception thrown when {@link org.araneaframework.uilib.form.FormElement} associated with
+   * {@link BaseFieldConstraint} could not be determined.
    */
   public static class FieldConstraintException extends AraneaRuntimeException {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * Creates the exception without any message or other <code>Throwable</code>.
      */
     public FieldConstraintException() {
       super();
-    } 
+    }
 
     /**
-     * Creates the exception with a descriptive message and the
-     * <code>Throwable</code> that was caught.
+     * Creates the exception with a descriptive message and the <code>Throwable</code> that was caught.
      * 
      * @param message A descriptive message to help solve this issue.
      * @param cause A <code>Throwable</code> that was caught.

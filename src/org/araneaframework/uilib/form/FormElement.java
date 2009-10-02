@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form;
 
@@ -43,33 +43,37 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class FormElement<C,D> extends GenericFormElement implements FormElementContext<C,D>, RenderStateAware {
-  /** 
-   * The property key for custom {@link FormElementValidationErrorRenderer} that may be set
-   * for this {@link FormElement}.
-   * @since 1.1 */
+
+  /**
+   * The property key for custom {@link FormElementValidationErrorRenderer} that may be set for this {@link FormElement}
+   * .
+   * 
+   * @since 1.1
+   */
   public static final String ERROR_RENDERER_PROPERTY_KEY = "FormElementValidationErrorRenderer";
 
-  //*******************************************************************
-  // FIELDS
-  //*******************************************************************
   private List<Event> initEvents = new ArrayList<Event>();
-	
+
   protected Control<C> control;
-  protected Converter<C,D> converter;
+
+  protected Converter<C, D> converter;
+
   protected Data<D> data;
-  
+
   protected String label;
-  
+
   private boolean rendered = false;
+
   private boolean ignoreEvents = true;
-  
+
   protected boolean mandatory = false;
+
   protected boolean disabled;
 
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************
-  
+  // *********************************************************************
+  // * PUBLIC METHODS
+  // *********************************************************************
+
   /**
    * Returns control label.
    * 
@@ -85,7 +89,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @param label control label.
    */
   public void setLabel(String label) {
-  	this.label = label;
+    this.label = label;
   }
 
   /**
@@ -93,8 +97,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @return the {@link BaseConverter}.
    */
-  public Converter<C,D> getConverter() {
-    return converter;
+  public Converter<C, D> getConverter() {
+    return this.converter;
   }
 
   /**
@@ -102,9 +106,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * 
    * @param converter The {@link BaseConverter}to set.
    */
-  public void setConverter(Converter<C,D> converter) {
+  public void setConverter(Converter<C, D> converter) {
     this.converter = converter;
-    
+
     if (converter != null)
       converter.setFormElementCtx(this);
   }
@@ -115,7 +119,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return {@link Data}.
    */
   public Data<D> getData() {
-    return data;
+    return this.data;
   }
 
   /**
@@ -135,7 +139,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return {@link Control}.
    */
   public Control<C> getControl() {
-    return control;
+    return this.control;
   }
 
   /**
@@ -146,15 +150,14 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   @SuppressWarnings("unchecked")
   public void setControl(Control<C> control) {
     Assert.notNullParam(control, "control");
-    
-    destroyControl();
 
+    destroyControl();
     this.control = control;
-    
     control.setFormElementCtx((FormElementContext<C, Object>) this);
-    
-    if (isInitialized())
+
+    if (isInitialized()) {
       control._getComponent().init(getScope(), getEnvironment());
+    }
   }
 
   /** @since 1.1 */
@@ -170,18 +173,16 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @throws AraneaRuntimeException if converter cannot be found.
    */
   @SuppressWarnings("unchecked")
-  public Converter<C,D> findConverter() {
-    ConfigurationContext confCtx = getEnvironment()
-        .requireEntry(ConfigurationContext.class);
+  public Converter<C, D> findConverter() {
+    ConfigurationContext confCtx = getEnvironment().requireEntry(ConfigurationContext.class);
 
     try {
-
-      return ConverterFactory.getInstance(confCtx).findConverter(
-          getControl().getRawValueType(), getData().getValueType());
+      return ConverterFactory.getInstance(confCtx).findConverter(getControl().getRawValueType(),
+          getData().getValueType());
 
     } catch (ConverterNotFoundException e) {
-      throw new AraneaRuntimeException("Could not find a field value "
-          + "converter for field " + getScope().toString(), e);
+      throw new AraneaRuntimeException(
+          "Could not find a field value " + "converter for field " + getScope().toString(), e);
     }
   }
 
@@ -191,64 +192,63 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return whether the form element was present in the last request.
    */
   public boolean isRead() {
-    return (getControl() != null && getControl().isRead());
+    return getControl() != null && getControl().isRead();
   }
-  
+
   @Override
   public void setDisabled(boolean disabled) {
-  	this.disabled = disabled;
+    this.disabled = disabled;
   }
-	
-	@Override
+
+  @Override
   public boolean isDisabled() {
-	  return this.disabled;
-	}	  
+    return this.disabled;
+  }
 
   @Override
   public void markBaseState() {
-    if (getData() != null)
+    if (getData() != null) {
       getData().markBaseState();
+    }
   }
-  
+
   @Override
   public void restoreBaseState() {
-    if (getData() != null)
+    if (getData() != null) {
       getData().restoreBaseState();
+    }
   }
-  
+
   @Override
   public boolean isStateChanged() {
-    if (getData() != null)
-      return getData().isStateChanged();
-    return false;
-  }    
-  
+    return getData() != null ? getData().isStateChanged() : false;
+  }
+
   @Override
   public D getValue() {
-    if (getData() != null)
-      return data.getValue();
-    return null;
+    return getData() != null ? this.data.getValue() : null;
   }
 
   public void setValue(D value) {
-    if (getData() != null)
+    if (getData() != null) {
       getData().setValue(value);
-  } 
+    }
+  }
 
   public boolean isMandatory() {
     return this.mandatory;
   }
-  
+
   public void setMandatory(boolean mandatory) {
     this.mandatory = mandatory;
   }
-  
+
   @Override
   public void addError(String error) {
     super.addError(error);
     getFormElementValidationErrorRenderer().addError(this, error);
   }
-  
+
   @Override
   public void clearErrors() {
     getFormElementValidationErrorRenderer().clearErrors(this);
@@ -256,12 +256,10 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   }
 
   /**
-   * Sets the action listener that deals with background validation of form. It should
-   * be used when custom background validation logic or behaviour is wanted.
-   * Just for using default {@link FormElementValidationActionListener}, only
-   * {@link FormElement#setBackgroundValidation(boolean)} needs to be called with
-   * parameter <code>true</code>.
-   *  
+   * Sets the action listener that deals with background validation of form. It should be used when custom background
+   * validation logic or behavior is wanted. Just for using default {@link FormElementValidationActionListener}, only
+   * {@link FormElement#setBackgroundValidation(boolean)} needs to be called with parameter <code>true</code>.
+   * 
    * @param actionListener custom listener that should handle validation of this {@link FormElement}
    * @since 1.1
    */
@@ -269,18 +267,22 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     clearActionListeners(SEAMLESS_VALIDATION_ACTION_ID);
     addActionListener(SEAMLESS_VALIDATION_ACTION_ID, actionListener);
   }
-  
+
   /**
-   * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced by this {@link FormElement}.
-   * @since 1.1 */
+   * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages
+   *         produced by this {@link FormElement}.
+   * @since 1.1
+   */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = ConfigurationContextUtil.getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfiguration(getEnvironment()));
+    FormElementValidationErrorRenderer result = ConfigurationContextUtil
+        .getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfiguration(getEnvironment()));
     if (result == null) {
       result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
     }
 
-    if (result == null)
+    if (result == null) {
       return StandardFormElementValidationErrorRenderer.INSTANCE;
+    }
 
     return result;
   }
@@ -290,23 +292,23 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     setProperty(ERROR_RENDERER_PROPERTY_KEY, renderer);
   }
 
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-  
+  // *********************************************************************
+  // * INTERNAL METHODS
+  // *********************************************************************
+
   @Override
   protected void update(InputData input) throws Exception {
     if (isDisabled() || !isRendered()) {
-    	setIgnoreEvents(true);
-    	return;
+      setIgnoreEvents(true);
+      return;
     }
     setIgnoreEvents(false);
 
     super.update(input);
-    
-    //There is only point to read from request if we have a control
+
+    // There is only point to read from request if we have a control
     if (getControl() != null) {
-      //Read the control
+      // Read the control
       getControl()._getWidget().update(input);
     }
   }
@@ -323,7 +325,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     if (!path.hasNext() && !isDisabled() && !isIgnoreEvents())
       getControl()._getWidget().event(path, input);
   }
-  
+
   @Override
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
@@ -331,22 +333,23 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     if (control != null && !getActionId(input).equals(SEAMLESS_VALIDATION_ACTION_ID))
       control._getService().action(null, input, output);
   }
-  
+
   @Override
   public Environment getConstraintEnvironment() {
-	return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
+    return new StandardEnvironment(super.getConstraintEnvironment(), FormElementContext.class, this);
   }
 
   /**
    * Returns {@link ViewModel}.
+   * 
    * @return {@link ViewModel}.
-   * @throws Exception 
+   * @throws Exception
    */
   @Override
   public Object getViewModel() throws Exception {
     return new ViewModel();
   }
-  
+
   /** @since 1.0.5 */
   public void addInitEvent(Event event) {
     if (isAlive()) {
@@ -357,15 +360,15 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
       initEvents.add(event);
     }
   }
-  
+
   @Override
   protected void init() throws Exception {
     super.init();
-    
+
     if (getConverter() == null && getData() != null && getControl() != null)
       setConverter(findConverter());
-    
-    if (getControl() != null) 
+
+    if (getControl() != null)
       getControl()._getComponent().init(getScope(), getEnvironment());
 
     runInitEvents();
@@ -373,13 +376,12 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   }
 
   /**
-   * Returns new instance of {@link FormElementValidationActionListener} tied to 
-   * this {@link FormElement}.
+   * Returns new instance of {@link FormElementValidationActionListener} tied to this {@link FormElement}.
    * 
    * @since 1.1
    */
-  protected FormElementValidationActionListener getDefaultBackgroundValidationListener() {
-   return new FormElementValidationActionListener(this);
+  protected FormElementValidationActionListener<C, D> getDefaultBackgroundValidationListener() {
+    return new FormElementValidationActionListener<C, D>(this);
   }
 
   @Override
@@ -394,40 +396,43 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   protected void convertInternal() {
     D newDataValue = null;
 
-    //There is only point to convert and set the data if it is present
+    // There is only point to convert and set the data if it is present
     if (getData() != null && getControl() != null) {
 
       getControl().convert();
 
-      //The data should be set only if control is valid
+      // The data should be set only if control is valid
       if (isValid()) {
-        //We assume that the convertor is present, if control and data are
+        // We assume that the convertor is present, if control and data are
         // here
         newDataValue = getConverter().convert(getControl().getRawValue());
       }
     }
 
     if (getData() != null && isValid()) {
-      // converting should not affect Control's value -- so setDataValue() instead of setValue() 
+      // converting should not affect Control's value -- so setDataValue() instead of setValue()
       getData().setDataValue(newDataValue);
     }
   }
-	
+
   @Override
   protected boolean validateInternal() throws Exception {
     if (getControl() != null)
       getControl().validate();
-    
+
     return super.validateInternal();
   }
-  
-	@Override
+
+  @Override
   public void accept(String id, FormElementVisitor visitor) {
-		visitor.visit(id, this);
-	}
-	
-  /** Called from {@link FormElement#init()} to run queued events.
-   * @since 1.0.5 */
+    visitor.visit(id, this);
+  }
+
+  /**
+   * Called from {@link FormElement#init()} to run queued events.
+   * 
+   * @since 1.0.5
+   */
   protected void runInitEvents() {
     if (initEvents != null) {
       for (Runnable event : initEvents) {
@@ -436,49 +441,53 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     }
     initEvents = null;
   }
-	
-	  /**
-	   * Returns whether this {@link GenericFormElement} was rendered
-	   * in response. Only formelements that were rendered should be read from request.
-	   * @return whether this {@link GenericFormElement} was rendered
-	   */
-	  public boolean isRendered() {
-	    return this.rendered;
-	  }
-	  
-	  /**
-	   * Marks status of this {@link FormElement} rendered.
-	   * Only rendered {@link FormElement}s may read the data from subsequent request.
-	   */
-	  public void rendered() {
-	    _setRendered(true);
-	  }
 
-	/**
-	 * @since 1.1
-	 */
-	public void _setRendered(boolean rendered) {
-		this.rendered = rendered;
-	}
+  /**
+   * Returns whether this {@link GenericFormElement} was rendered in response. Only formelements that were rendered
+   * should be read from request.
+   * 
+   * @return whether this {@link GenericFormElement} was rendered
+   */
+  public boolean isRendered() {
+    return this.rendered;
+  }
 
-	/**
-	 * When this returns true, 
-     * @since 1.1
-     */
-    protected boolean isIgnoreEvents() {
-      return ignoreEvents;
-    }
+  /**
+   * Marks status of this {@link FormElement} rendered. Only rendered {@link FormElement}s may read the data from
+   * subsequent request.
+   */
+  public void rendered() {
+    _setRendered(true);
+  }
 
-    /**
-     * When set 
-     * @since 1.1
-     */
-    protected void setIgnoreEvents(boolean ignoreEvents) {
-      this.ignoreEvents = ignoreEvents;
-    }
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************    
+  /**
+   * @since 1.1
+   */
+  public void _setRendered(boolean rendered) {
+    this.rendered = rendered;
+  }
+
+  /**
+   * When this returns true,
+   * 
+   * @since 1.1
+   */
+  protected boolean isIgnoreEvents() {
+    return ignoreEvents;
+  }
+
+  /**
+   * When set
+   * 
+   * @since 1.1
+   */
+  protected void setIgnoreEvents(boolean ignoreEvents) {
+    this.ignoreEvents = ignoreEvents;
+  }
+
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
 
   /**
    * Represents a simple form element view model.
@@ -489,14 +498,19 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   public class ViewModel extends GenericFormElement.ViewModel {
 
     private Control.ViewModel control;
+
     private String label;
+
     private boolean valid;
+
     private Object value;
+
     protected boolean mandatory;
-    
+
     /**
-     * Takes an outer class snapshot.     
-     * @throws Exception 
+     * Takes an outer class snapshot.
+     * 
+     * @throws Exception
      */
     public ViewModel() throws Exception {
       this.control = (Control.ViewModel) FormElement.this.getControl()._getViewable().getViewModel();
@@ -504,10 +518,11 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
       this.valid = FormElement.this.isValid();
       this.value = FormElement.this.getData() != null ? FormElement.this.getData().getValue() : null;
       this.mandatory = FormElement.this.mandatory;
-    }    
-    
+    }
+
     /**
      * Returns control.
+     * 
      * @return control.
      */
     public Control.ViewModel getControl() {
@@ -516,28 +531,31 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
 
     /**
      * Returns label.
+     * 
      * @return label.
      */
     public String getLabel() {
       return this.label;
     }
-    
+
     /**
-     * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages produced 
-     * by {@link FormElement} represented by this {@link FormElement.ViewModel}
-     * @since 1.1 */
+     * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages
+     *         produced by {@link FormElement} represented by this {@link FormElement.ViewModel}
+     * @since 1.1
+     */
     public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
       return FormElement.this.getFormElementValidationErrorRenderer();
     }
-    
+
     /**
      * Returns whether the element is valid.
+     * 
      * @return whether the element is valid.
      */
     public boolean isValid() {
       return valid;
     }
-    
+
     public boolean isMandatory() {
       return this.mandatory;
     }

@@ -16,24 +16,23 @@
 
 package org.araneaframework.uilib.form.data;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Arrays;
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.uilib.form.Data;
 
 /**
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public class StringListData extends Data<List<String>> {
+public class StringListData extends Data<String[]> {
 
   public StringListData() {
-    super(List<String>.class, "List<String>");
-    this.value = new LinkedList<String>();
+    super(String[].class, "String[]");
+    this.value = new String[0];
   }
 
   /**
-   * This Data object requires special check so that the order of elements in
-   * the values lists would not have any effect on whether the lists contain the
-   * same data.
+   * This Data object requires special check so that the order of elements in the values lists would not have any effect
+   * on whether the lists contain the same data.
    * 
    * @since 1.2
    */
@@ -43,9 +42,11 @@ public class StringListData extends Data<List<String>> {
     } else if (this.markedBaseValue == null || this.value == null) {
       return true;
     } else {
-      List<String> baseValues = this.markedBaseValue;
-      List<String> values = this.value;
-      return !(baseValues.size() == values.size() && baseValues.containsAll(values));
+      String[] baseValues = this.markedBaseValue;
+      String[] values = this.value;
+
+      return !ArrayUtils.isSameLength(baseValues, values)
+          || !Arrays.asList(baseValues).containsAll(Arrays.asList(values));
     }
   }
 }

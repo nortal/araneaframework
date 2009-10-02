@@ -16,20 +16,34 @@
 
 package org.araneaframework.uilib.form.formlist.model;
 
+import org.araneaframework.core.Assert;
+
+import org.araneaframework.uilib.form.formlist.FormListWidget;
+
 import java.util.List;
 import org.araneaframework.uilib.form.formlist.FormListModel;
 
-public class ListFormListModel implements FormListModel {
+/**
+ * A <code>FormListModel</code> implementation that accepts list rows data in a {@link List}. This object can be
+ * provided to {@link FormListWidget} to provide the model data to the list as the list rows.
+ * 
+ * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ */
+public class ListFormListModel<R> implements FormListModel<R> {
 
-  private static final long serialVersionUID = 1L;
+  private List<R> list;
 
-  private List list;
-
-  public ListFormListModel(List list) {
+  /**
+   * Constructs a new <code>FormListModel</code> using the given <code>list</code>. Note that the parameter is required.
+   * 
+   * @param list The values of this list will be used as the rows of the {@link FormListWidget}.
+   */
+  public ListFormListModel(List<R> list) {
+    Assert.notNullParam(list, "list");
     this.list = list;
   }
 
-  public List getRows() {
-    return list;
+  public List<R> getRows() {
+    return this.list;
   }
 }

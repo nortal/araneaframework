@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form;
 
@@ -20,8 +20,9 @@ import java.io.Serializable;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 
 /**
- * Form data converter interface, for converting from one data type to another.
- * See {@link BaseConverter} for description of {@link Converter} purpose in forms.
+ * Form data converter interface, for converting from one data type to another. See {@link BaseConverter} for
+ * description of {@link Converter} purpose in forms. The generic <code>C</code> is the source data type, and the generic
+ * <code>D</code> is the target data type after conversion.
  */
 public interface Converter<C,D> extends Serializable, FormElementAware<C,D> {
 

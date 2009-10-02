@@ -37,7 +37,7 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
 
   protected String type;
 
-  protected Class<T> typeClass;
+  protected Class<?> typeClass;
 
   protected T value;
 
@@ -50,7 +50,7 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
    * 
    * @param type the type of {@link Data}
    */
-  protected Data(Class<T> typeClass, String type) {
+  protected Data(Class<?> typeClass, String type) {
     this.typeClass = typeClass;
     this.type = type;
   }
@@ -61,7 +61,7 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
    * 
    * @param typeClass the <code>Class</code> of {@link Data} values.
    */
-  public Data(Class<T> typeClass) {
+  public Data(Class<?> typeClass) {
     this(typeClass, typeClass.getSimpleName());
   }
 

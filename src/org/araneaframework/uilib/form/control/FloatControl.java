@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.form.control;
 
@@ -23,316 +23,293 @@ import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
-
 /**
- * This class represents a textbox control that accepts only valid 
- * floating-point numbers.
+ * This class represents a textbox control that accepts only valid floating-point numbers.
  * 
- * This class does not support localization. It does not use @link NumberFormat
- * class to parse and format @link BigDecimal objects because @link NumberFormat
- * would convert @link BigDecimal objects into doubles.
+ * This class does not support localization. It does not use @link NumberFormat class to parse and format @link
+ * BigDecimal objects because @link NumberFormat would convert @link BigDecimal objects into doubles.
  * 
- * To customize parsing and formatting one could create a subclass of it and
- * override @link #createBigDecimal(String) and @link #toString(BigDecimal)
- * methods. To use the subclass in JSPs also another JSP Tag must be created
- * to use this implementation and configure validation script.
+ * To customize parsing and formatting one could create a subclass of it and override @link #createBigDecimal(String)
+ * and @link #toString(BigDecimal) methods. To use the subclass in JSPs also another JSP Tag must be created to use this
+ * implementation and configure validation script.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-//FIXME why the hell class is called FloatControl when it works with BigDecimals?
+// FIXME why the hell class is called FloatControl when it works with BigDecimals?
 public class FloatControl extends EmptyStringNullableControl<BigDecimal> implements FilteredInputControl<BigDecimal> {
-	private InputFilter inputFilter;
-	private BigDecimal minValue;
-	private BigDecimal maxValue;
-	private Integer maxScale;
 
-	/**
-	 * Empty.
-	 */
-	public FloatControl() {
-		//Empty
-	}
+  private InputFilter inputFilter;
 
-	/**
-	 * Makes a float control that has minimum, maximum value and maximum scale.
-	 * 
-	 * @param minValue minimum permitted value.
-	 * @param maxValue maximum permitted value.
-	 * @param maxScale maximum permitted scale.
-	 */
-	public FloatControl(BigDecimal minValue, BigDecimal maxValue, Integer maxScale) {
-		setMinValue(minValue);
-		setMaxValue(maxValue);
-		setMaxScale(maxScale);
-	}
+  private BigDecimal minValue;
 
-	/**
-	 * Makes a float control that has minimum and maximum value.
-	 * 
-	 * @param minValue minimum permitted value.
-	 * @param maxValue maximum permitted value.
-	 */
-	public FloatControl(BigDecimal minValue, BigDecimal maxValue) {
-		this(minValue, maxValue, null);
-	}
-	
-	/**
-	 * Sets the maximum value.
-	 * @param maxValue maximum value.
-	 */
-	public void setMaxValue(BigDecimal maxValue) {
-		this.maxValue = maxValue;
-	}
+  private BigDecimal maxValue;
 
-	/**
-	 * Sets the minimum value.
-	 * @param minValue minimum value.
-	 */
-	public void setMinValue(BigDecimal minValue) {
-		this.minValue = minValue;
-	}
-	
-	/**
-	 * Sets the maximum scale.
-	 * @param maxScale maximum scale.
-	 */
-	public void setMaxScale(Integer maxScale) {
-		if (maxScale != null && maxScale.intValue() < 0) {
-			throw new IllegalArgumentException("Maximum scale cannot be negative");
-		}
-		this.maxScale = maxScale;
-	}
+  private Integer maxScale;
 
-	/**
-	 * Returns the maxValue.
-	 * @return the maxValue.
-	 */
-	public BigDecimal getMaxValue() {
-		return maxValue;
-	}
+  /**
+   * Empty.
+   */
+  public FloatControl() {
+  // Empty
+  }
 
-	/**
-	 * Returns the minValue.
-	 * @return the minValue.
-	 */
-	public BigDecimal getMinValue() {
-		return minValue;
-	}
+  /**
+   * Makes a float control that has minimum, maximum value and maximum scale.
+   * 
+   * @param minValue minimum permitted value.
+   * @param maxValue maximum permitted value.
+   * @param maxScale maximum permitted scale.
+   */
+  public FloatControl(BigDecimal minValue, BigDecimal maxValue, Integer maxScale) {
+    setMinValue(minValue);
+    setMaxValue(maxValue);
+    setMaxScale(maxScale);
+  }
 
-	/**
-	 * Returns the maximum scale.
-	 * @return the maximum scale.
-	 */
-	public Integer getMaxScale() {
-		return maxScale;
-	}
+  /**
+   * Makes a float control that has minimum and maximum value.
+   * 
+   * @param minValue minimum permitted value.
+   * @param maxValue maximum permitted value.
+   */
+  public FloatControl(BigDecimal minValue, BigDecimal maxValue) {
+    this(minValue, maxValue, null);
+  }
 
-	/**
-	 * Returns "BigDecimal".
-	 * @return "BigDecimal".
-	 */
-	public String getRawValueType() {
-		return "BigDecimal";
-	}
-	
-	/** @since 1.0.11 */
-	public InputFilter getInputFilter() {
-		return inputFilter;
-	}
+  /**
+   * Sets the maximum value.
+   * 
+   * @param maxValue maximum value.
+   */
+  public void setMaxValue(BigDecimal maxValue) {
+    this.maxValue = maxValue;
+  }
 
-	/** @since 1.0.11 */
-	public void setInputFilter(InputFilter inputFilter) {
-		this.inputFilter = inputFilter;
-	}
-	//*********************************************************************
-	//* INTERNAL METHODS
-	//*********************************************************************  	
+  /**
+   * Sets the minimum value.
+   * 
+   * @param minValue minimum value.
+   */
+  public void setMinValue(BigDecimal minValue) {
+    this.minValue = minValue;
+  }
 
-	/**
-	 * Trims request parameter.
-	 */
-	@Override
+  /**
+   * Sets the maximum scale.
+   * 
+   * @param maxScale maximum scale.
+   */
+  public void setMaxScale(Integer maxScale) {
+    if (maxScale != null && maxScale.intValue() < 0) {
+      throw new IllegalArgumentException("Maximum scale cannot be negative");
+    }
+    this.maxScale = maxScale;
+  }
+
+  /**
+   * Returns the maxValue.
+   * 
+   * @return the maxValue.
+   */
+  public BigDecimal getMaxValue() {
+    return this.maxValue;
+  }
+
+  /**
+   * Returns the minValue.
+   * 
+   * @return the minValue.
+   */
+  public BigDecimal getMinValue() {
+    return this.minValue;
+  }
+
+  /**
+   * Returns the maximum scale.
+   * 
+   * @return the maximum scale.
+   */
+  public Integer getMaxScale() {
+    return this.maxScale;
+  }
+
+  /**
+   * Returns "BigDecimal".
+   * 
+   * @return "BigDecimal".
+   */
+  public String getRawValueType() {
+    return "BigDecimal";
+  }
+
+  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return inputFilter;
+  }
+
+  /** @since 1.0.11 */
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
+  }
+
+  // *********************************************************************
+  // * INTERNAL METHODS
+  // *********************************************************************
+
+  /**
+   * Trims request parameter.
+   */
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
-		String result = super.preprocessRequestParameter(parameterValue);
-		return (result == null ? null : result.trim());
-	}
+    String result = super.preprocessRequestParameter(parameterValue);
+    return result == null ? null : result.trim();
+  }
 
-	/**
-	 * Checks that the submitted data is a valid floating-point number.
-	 * 
-	 */
-	@Override
+  /**
+   * Checks that the submitted data is a valid floating-point number.
+   * 
+   */
+  @Override
   protected BigDecimal fromRequest(String parameterValue) {
-		BigDecimal result = null;
+    BigDecimal result = null;
 
-		try {
-			result = createBigDecimal(parameterValue);
-		}
-		catch (NumberFormatException e) {
-			addError(
-					MessageUtil.localizeAndFormat(
-							UiLibMessages.NOT_A_NUMBER, 
-							MessageUtil.localize(getLabel(), getEnvironment()),
-							getEnvironment()));          
-		}
-		
-	    if (getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
-	    	addError(
-	    		MessageUtil.localizeAndFormat(
-	    		getInputFilter().getInvalidInputMessage(), 
-	    		MessageUtil.localize(getLabel(), getEnvironment()), 
-	    		getInputFilter().getCharacterFilter(), 
-	    		getEnvironment()));
-	    }
+    try {
+      result = createBigDecimal(parameterValue);
+    } catch (NumberFormatException e) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NOT_A_NUMBER, MessageUtil.localize(
+          getLabel(), getEnvironment())));
+    }
 
-		return result;
-	}
+    if (getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), getInputFilter().getInvalidInputMessage(), MessageUtil.localize(
+          getLabel(), getEnvironment()), getInputFilter().getCharacterFilter()));
+    }
 
-	@Override
+    return result;
+  }
+
+  @Override
   protected <E extends BigDecimal> String toResponse(E controlValue) {
-		return toString(controlValue);
-	}
-	
-	/**
-	 * Converts String into BigDecimal. This method can be overrided in subclasses.
-	 * 
-	 * @param str String object
-	 * @return BigDecimal object
-	 * @throws NumberFormatException <tt>str</tt> is not a valid representation
-     *	       of a BigDecimal
-	 */
-	protected BigDecimal createBigDecimal(String str) throws NumberFormatException {
-        if (str == null) {
-            return null;
-        }
-		return new BigDecimal(str);
-	}
-	
-	/**
-	 * Converts BigDecimal into String. This method can be overrided in subclasses.
-	 * 
-	 * @param dec BigDecimal object
-	 * @return String object
-	 */
-	protected String toString(BigDecimal dec) {
-        if (dec == null) {
-            return null;
-        }
-		return dec.toString();
-	}
-	
-	/**
-	 * Checks that the submitted value is in permitted range.
-	 * 
-	 */
-	@Override
+    return toString(controlValue);
+  }
+
+  /**
+   * Converts String into BigDecimal. This method can be overrided in subclasses.
+   * 
+   * @param str String object
+   * @return BigDecimal object
+   * @throws NumberFormatException <tt>str</tt> is not a valid representation of a BigDecimal
+   */
+  protected BigDecimal createBigDecimal(String str) throws NumberFormatException {
+    return str == null ? null : new BigDecimal(str);
+  }
+
+  /**
+   * Converts BigDecimal into String. This method can be overrided in subclasses.
+   * 
+   * @param dec BigDecimal object
+   * @return String object
+   */
+  protected String toString(BigDecimal dec) {
+    return dec == null ? null : dec.toString();
+  }
+
+  /**
+   * Checks that the submitted value is in permitted range.
+   * 
+   */
+  @Override
   protected void validateNotNull() {
-		// minimum and maximum permitted values
-		if (minValue != null && maxValue != null && ((getRawValue().compareTo(minValue) == -1) || getRawValue().compareTo(maxValue) == 1)) {
-			addError(
-					MessageUtil.localizeAndFormat(
-							UiLibMessages.NUMBER_NOT_BETWEEN, 
-							new Object[] {
-									MessageUtil.localize(getLabel(), getEnvironment()),
-									minValue.toString(),
-									maxValue.toString()
-							},          
-							getEnvironment()));           
-		}      
-		else if (minValue != null && getRawValue().compareTo(minValue) == -1) {      
-			addError(
-					MessageUtil.localizeAndFormat(
-							UiLibMessages.NUMBER_NOT_GREATER, 
-							new Object[] {
-									MessageUtil.localize(getLabel(), getEnvironment()),
-									minValue.toString(),
-							},          
-							getEnvironment()));       
-		}    
-		else if (maxValue != null && getRawValue().compareTo(maxValue) == 1) {
-			addError(
-					MessageUtil.localizeAndFormat(
-							UiLibMessages.NUMBER_NOT_LESS, 
-							new Object[] {
-									MessageUtil.localize(getLabel(), getEnvironment()),
-									maxValue.toString(),
-							},          
-							getEnvironment()));         
-		}
-		
-		// maximum permitted scale
-		if (maxScale != null && getRawValue().scale() > maxScale.intValue()) {
-			addError(
-					MessageUtil.localizeAndFormat(
-							UiLibMessages.SCALE_NOT_LESS, 
-							new Object[] {
-									MessageUtil.localize(getLabel(), getEnvironment()),
-									maxScale.toString(),
-							},
-							getEnvironment()));         			
-		}
-	}
+    // minimum and maximum permitted values
+    if (this.minValue != null && this.maxValue != null
+        && ((getRawValue().compareTo(this.minValue) == -1) || getRawValue().compareTo(this.maxValue) == 1)) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN, new Object[] {
+          MessageUtil.localize(getLabel(), getEnvironment()), this.minValue.toString(), maxValue.toString() }));
 
-	/**
-	 * Returns {@link ViewModel}.
-	 * @return {@link ViewModel}.
-	 */
-	@Override
+    } else if (this.minValue != null && getRawValue().compareTo(this.minValue) == -1) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_GREATER, new Object[] {
+          MessageUtil.localize(getLabel(), getEnvironment()), this.minValue.toString(), }));
+
+    } else if (this.maxValue != null && getRawValue().compareTo(this.maxValue) == 1) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_LESS, new Object[] {
+          MessageUtil.localize(getLabel(), getEnvironment()), this.maxValue.toString(), }));
+    }
+
+    // maximum permitted scale
+    if (this.maxScale != null && getRawValue().scale() > this.maxScale.intValue()) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.SCALE_NOT_LESS, new Object[] {
+          MessageUtil.localize(getLabel(), getEnvironment()), this.maxScale.toString(), }));
+    }
+  }
+
+  /**
+   * Returns {@link ViewModel}.
+   * 
+   * @return {@link ViewModel}.
+   */
+  @Override
   public ViewModel getViewModel() {
-		return new ViewModel();
-	}
+    return new ViewModel();
+  }
 
-	//*********************************************************************
-	//* VIEW MODEL
-	//*********************************************************************    
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
 
-	/**
-	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-	 * 
-	 */
-	public class ViewModel extends StringArrayRequestControl<BigDecimal>.ViewModel {
-		private InputFilter inputFilter;
-		private BigDecimal maxValue;
-		private BigDecimal minValue;
-		private Integer maxScale;
+  /**
+   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * 
+   */
+  public class ViewModel extends StringArrayRequestControl<BigDecimal>.ViewModel {
 
-		/**
-		 * Takes an outer class snapshot.     
-		 */    
-		public ViewModel() {
-			this.maxValue = FloatControl.this.getMaxValue();
-			this.minValue = FloatControl.this.getMinValue();
-			this.maxScale = FloatControl.this.getMaxScale();
-			this.inputFilter = FloatControl.this.getInputFilter();
-		}       
+    private InputFilter inputFilter;
 
-		/**
-		 * Returns maximum permitted value.
-		 * @return maximum permitted value.
-		 */
-		public BigDecimal getMaxValue() {
-			return this.maxValue;
-		}
+    private BigDecimal maxValue;
 
-		/**
-		 * Returns minimum permitted value.
-		 * @return minimum permitted value.
-		 */
-		public BigDecimal getMinValue() {
-			return this.minValue;
-		}
+    private BigDecimal minValue;
 
-		/**
-		 * Returns maximum permitted scale.
-		 * @return maximum permitted scale.
-		 */
-		public Integer getMaxScale() {
-			return maxScale;
-		}
-		
-		public InputFilter getInputFilter() {
-			return this.inputFilter;
-		}
-	}
+    private Integer maxScale;
+
+    /**
+     * Takes an outer class snapshot.
+     */
+    public ViewModel() {
+      this.maxValue = FloatControl.this.getMaxValue();
+      this.minValue = FloatControl.this.getMinValue();
+      this.maxScale = FloatControl.this.getMaxScale();
+      this.inputFilter = FloatControl.this.getInputFilter();
+    }
+
+    /**
+     * Returns maximum permitted value.
+     * 
+     * @return maximum permitted value.
+     */
+    public BigDecimal getMaxValue() {
+      return this.maxValue;
+    }
+
+    /**
+     * Returns minimum permitted value.
+     * 
+     * @return minimum permitted value.
+     */
+    public BigDecimal getMinValue() {
+      return this.minValue;
+    }
+
+    /**
+     * Returns maximum permitted scale.
+     * 
+     * @return maximum permitted scale.
+     */
+    public Integer getMaxScale() {
+      return this.maxScale;
+    }
+
+    public InputFilter getInputFilter() {
+      return this.inputFilter;
+    }
+  }
 }

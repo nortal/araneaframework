@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,6 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 
-
 /**
  * This class represents a button.
  * 
@@ -29,11 +28,10 @@ import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
  */
 public class ButtonControl extends BaseControl<String> {
 
-  //*********************************************************************
+  // *********************************************************************
   // FIELDS
-  //*********************************************************************  
+  // *********************************************************************
   protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
-
 
   /**
    * Returns true
@@ -42,41 +40,42 @@ public class ButtonControl extends BaseControl<String> {
   public boolean isRead() {
     return true;
   }
-  
-	/**
+
+  /**
    * @param onClickEventListener {@link OnClickEventListener} which is called when the control is clicked.
    * 
-	 * @see StandardControlEventListenerAdapter#addOnClickEventListener(OnClickEventListener)
-	 */
-	public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
-		eventHelper.addOnClickEventListener(onClickEventListener);
-	}  
-	
+   * @see StandardControlEventListenerAdapter#addOnClickEventListener(OnClickEventListener)
+   */
+  public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
+    eventHelper.addOnClickEventListener(onClickEventListener);
+  }
+
   /**
    * Returns null.
+   * 
    * @return null.
    */
   public String getRawValueType() {
     return null;
   }
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-	
+
+  // *********************************************************************
+  // * INTERNAL METHODS
+  // *********************************************************************
+
   @Override
   protected void init() throws Exception {
     super.init();
-    
+
     setGlobalEventListener(eventHelper);
   }
-  
+
   /**
    * Empty method
    */
   @Override
   protected void readFromRequest(HttpInputData request) {
-    // Button control is not interested in what is submitted
+  // Button control is not interested in what is submitted
   }
 
   /**
@@ -84,14 +83,14 @@ public class ButtonControl extends BaseControl<String> {
    */
   @Override
   public void convertAndValidate() {
-    // Button control is not interested in conversion and validation
+  // Button control is not interested in conversion and validation
   }
 
   /**
    * Does nothing
    */
   protected void prepareResponse() {
-    // Button control does not have data
+  // Button control does not have data
   }
 
   /**
@@ -104,10 +103,10 @@ public class ButtonControl extends BaseControl<String> {
     return new ViewModel();
   }
 
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************    
-  
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
+
   /**
    * Represents a <code>ButtonControl</code> view model.
    * 
@@ -117,20 +116,21 @@ public class ButtonControl extends BaseControl<String> {
   public class ViewModel extends BaseControl<String>.ViewModel {
 
     private boolean hasOnClickEventListeners;
-    
+
     /**
-     * Takes an outer class snapshot.     
-     */    
+     * Takes an outer class snapshot.
+     */
     public ViewModel() {
       this.hasOnClickEventListeners = ButtonControl.this.eventHelper.hasOnClickEventListeners();
     }
-    
+
     /**
      * Returns whether any onClick events have been registered.
+     * 
      * @return whether any onClick events have been registered.
      */
     public boolean isOnClickEventRegistered() {
-      return hasOnClickEventListeners;
+      return this.hasOnClickEventListeners;
     }
-  }  
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
 import org.araneaframework.uilib.form.Converter;
 
 /**
- * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false -
- * 0 and back
+ * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false - 0 and back
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
@@ -36,11 +35,11 @@ public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
   }
 
   /**
-	 *  Converts <code>Long</code> to <code>Boolean</code>. 
-	 */
+   * Converts <code>Long</code> to <code>Boolean</code>.
+   */
   @Override
   public Boolean reverseConvertNotNull(Long data) {
-    return data.longValue() == 0 ? Boolean.FALSE : Boolean.TRUE ;
+    return data.longValue() == 0 ? Boolean.FALSE : Boolean.TRUE;
   }
 
   /**

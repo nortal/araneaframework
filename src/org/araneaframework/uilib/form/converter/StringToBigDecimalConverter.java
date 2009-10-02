@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
-
 
 /**
  * Converts <code>String</code> to <code>BigDecimal</code> and back.
@@ -38,13 +37,10 @@ public class StringToBigDecimalConverter extends BaseConverter<String, BigDecima
     BigDecimal result = null;
     try {
       result = new BigDecimal(data);
-    }
-    catch (NumberFormatException e) {      
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.NOT_A_NUMBER, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          getEnvironment()));       
+    } catch (NumberFormatException e) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(),
+          UiLibMessages.NOT_A_NUMBER,
+          MessageUtil.localize(getLabel(), getEnvironment())));
     }
     return result;
   }
@@ -56,7 +52,7 @@ public class StringToBigDecimalConverter extends BaseConverter<String, BigDecima
   public String reverseConvertNotNull(BigDecimal data) {
     return data.toString();
   }
-  
+
   /**
    * Returns <code>new StringToBigDecimalConverter()</code>
    */

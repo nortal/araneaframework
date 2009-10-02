@@ -16,12 +16,11 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.uilib.ConfigurationContext;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.araneaframework.Environment;
@@ -29,6 +28,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -39,8 +39,6 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
-
-  private static final long serialVersionUID = 1L;
 
   /** @since 1.1 */
   public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
@@ -111,7 +109,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * @return element constraint.
    */
   public Constraint getConstraint() {
-    return constraint;
+    return this.constraint;
   }
 
   /**
@@ -121,8 +119,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public void setConstraint(Constraint constraint) {
     this.constraint = constraint;
-    if (constraint != null && isInitialized())
+    if (constraint != null && isInitialized()) {
       constraint.setEnvironment(getConstraintEnvironment());
+    }
   }
 
   public Environment getConstraintEnvironment() {
@@ -135,7 +134,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * @return whether the element is valid.
    */
   public boolean isValid() {
-    return (errors == null || errors.size() == 0);
+    return CollectionUtils.isEmpty(this.errors);
   }
 
   /**
@@ -153,17 +152,14 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    */
   public void convert() {
     try {
-      converted = false;
-      validated = false;
-
-      if (!isAlive())
+      this.converted = false;
+      this.validated = false;
+      if (!isAlive()) {
         return;
-
+      }
       clearErrors();
-
       convertInternal();
-
-      converted = isValid();
+      this.converted = isValid();
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
@@ -177,16 +173,12 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   public boolean validate() {
     boolean valid = false;
     try {
-      validated = false;
-
-      valid = validateInternal();
-
-      validated = valid;
-      return valid;
+      this.validated = false;
+      this.validated = validateInternal();
+      return this.validated;
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
-
     return valid;
   }
 
@@ -196,33 +188,33 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * @return whether last evaluation (converting and optional validating) has succeeded.
    */
   public boolean isEvaluated() {
-    return converted && validated;
+    return this.converted && this.validated;
   }
 
   /**
    * Since 1.1 this returns an immutable Set.
    */
-  public Set getErrors() {
+  public Set<String> getErrors() {
     return Collections.unmodifiableSet(getMutableErrors());
   }
 
   public void addError(String error) {
     Assert.notEmptyParam(error, "error");
-
     getMutableErrors().add(error);
   }
 
-  public void addErrors(Set errors) {
+  public void addErrors(Set<String> errors) {
     Assert.notNullParam(errors, "errors");
-    for (Iterator i = errors.iterator(); i.hasNext();)
-      addError((String) i.next());
+    for (String error : errors) {
+      addError(error);
+    }
   }
 
   /**
    * Clears element errors.
    */
   public void clearErrors() {
-    errors = null;
+    this.errors = null;
   }
 
   public Object getValue() {
@@ -296,7 +288,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   }
 
   /**
-   * Converts the element value from control to data item
+   * Converts the element value from control to expected data type.
    * 
    * @throws Exception
    */
@@ -318,6 +310,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   }
 
   /**
+   * Provides the current errors in a <code>Set</code> that can be modified
+   * 
    * @since 1.1
    */
   protected Set<String> getMutableErrors() {
@@ -335,11 +329,8 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * This class represents a form element view model.
    * 
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-   * 
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel {
-
-    private static final long serialVersionUID = 1L;
 
     private Map<Object, Object> properties;
 
