@@ -16,6 +16,16 @@
 
 package org.araneaframework.uilib.util;
 
+import org.joda.time.format.DateTimeFormatter;
+
+import org.joda.time.DateTimeZone;
+
+import org.apache.commons.lang.StringUtils;
+
+import org.joda.time.DateTime;
+
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,33 +50,46 @@ public abstract class JodaDateUtil {
       log.trace("Using Joda with pattern '" + pattern + "' to parse date '" + value + "'.");
     }
 
-    if (value.trim().length() == pattern.length()) {
-      try {
-        org.joda.time.DateTime date = org.joda.time.format.DateTimeFormat.forPattern(pattern).parseDateTime(value);
+    if (StringUtils.trimToEmpty(value).length() == pattern.length()) {
+      DateTimeFormatter formatter = DateTimeFormat.forPattern(pattern);
+      DateTime date = null;
+      int offset = 0;
 
-        if (date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
-          // The DateTime.toDate() does not always return the exact date in a JDK
-          // Date object. (Note that it is NOT a Joda Date API bug!) Therefore we
-          // copy fields one by one.
-          Calendar cal = Calendar.getInstance();
-          cal.setLenient(false);
-          cal.set(Calendar.YEAR, date.year().get());
-          cal.set(Calendar.MONTH, date.monthOfYear().get() - 1);
-          cal.set(Calendar.DAY_OF_MONTH, date.dayOfMonth().get());
-          cal.set(Calendar.HOUR_OF_DAY, date.hourOfDay().get());
-          cal.set(Calendar.MINUTE, date.minuteOfHour().get());
-          cal.set(Calendar.SECOND, date.secondOfMinute().get());
-          cal.set(Calendar.MILLISECOND, date.millisOfSecond().get());
-
-          if (log.isTraceEnabled()) {
-            String text = org.joda.time.format.DateTimeFormat.forPattern(pattern).print(date);
-            log.trace("Parsed Joda date '" + text + "'; JDK Date version: '"
-                + cal.getTime() + "'.");
+      while (date == null) {
+        try {
+          date = formatter.withZone(DateTimeZone.forOffsetHours(offset)).parseDateTime(value);
+        } catch (Exception e) {
+          if (offset == 24) {
+            throw new RuntimeException("24 timezone offsets used for parsing date without success.");
           }
-
-          return new ValidationUtil.ParsedDate(cal.getTime(), pattern);
+          offset++;
+          if (log.isTraceEnabled()) {
+            log.trace("Trying to parse date with offset " + offset + "...");
+          }
         }
-      } catch (Exception e) {}
+      }
+
+      if (date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
+        // The DateTime.toDate() does not always return the exact date in a JDK
+        // Date object. (Note that it is NOT a Joda Date API bug!) Therefore we
+        // copy fields one by one.
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, date.year().get());
+        cal.set(Calendar.MONTH, date.monthOfYear().get() - 1);
+        cal.set(Calendar.DAY_OF_MONTH, date.dayOfMonth().get());
+        cal.set(Calendar.HOUR_OF_DAY, date.hourOfDay().get());
+        cal.set(Calendar.MINUTE, date.minuteOfHour().get());
+        cal.set(Calendar.SECOND, date.secondOfMinute().get());
+        cal.set(Calendar.MILLISECOND, date.millisOfSecond().get());
+
+        if (log.isTraceEnabled()) {
+          String text = org.joda.time.format.DateTimeFormat.forPattern(pattern).print(date);
+          log.trace("Parsed Joda date '" + text + "'; JDK Date version: '"
+              + cal.getTime() + "'.");
+        }
+
+        return new ValidationUtil.ParsedDate(cal.getTime(), pattern);
+      }
     }
     return null;
   }

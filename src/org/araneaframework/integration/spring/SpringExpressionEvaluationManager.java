@@ -44,8 +44,8 @@ public class SpringExpressionEvaluationManager implements ExpressionEvaluationMa
 
     Assert.notNullParam(this, classObject, "classObject");
 
-    if (log.isDebugEnabled()) {
-      log.debug("Resolving attribute value '" + attributeValue + "'.");
+    if (log.isTraceEnabled()) {
+      log.trace("Resolving attribute value '" + attributeValue + "'.");
     }
 
     if (Boolean.class.equals(classObject)) {

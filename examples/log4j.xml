@@ -8,6 +8,11 @@
    </appender>
 
    <category name="org.araneaframework" additivity="false">
+	    <priority value="DEBUG"/>
+      <appender-ref ref="CONSOLE"/>
+   </category>
+   
+   <category name="org.araneaframework.uilib.util" additivity="false">
 	    <priority value="ALL"/>
       <appender-ref ref="CONSOLE"/>
    </category>
