@@ -105,7 +105,7 @@ public class TreeTag extends BaseWidgetTag {
       JspUtil.writeOpenStartTag(out, "a");
       JspUtil.writeAttribute(out, "href", "#");
       if (getTree().useActions()) {
-        JspUtil.writeAttribute(out, "onclick", "return AraneaTree.toggleNode(this);");
+        JspUtil.writeAttribute(out, "onclick", "return new AraneaTree().toggleNode(this);");
       } else {
         UiEvent event = new UiEvent("toggle", node.getFullId(), null);
         JspUtil.writeEventAttributes(out, event);

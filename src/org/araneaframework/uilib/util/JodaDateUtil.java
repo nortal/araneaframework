@@ -59,12 +59,12 @@ public abstract class JodaDateUtil {
         try {
           date = formatter.withZone(DateTimeZone.forOffsetHours(offset)).parseDateTime(value);
         } catch (Exception e) {
-          if (offset == 24) {
-            throw new RuntimeException("24 timezone offsets used for parsing date without success.");
+          if (offset == 24) { // 24 == time zones count.
+            break;
           }
           offset++;
           if (log.isTraceEnabled()) {
-            log.trace("Trying to parse date with offset " + offset + "...");
+            log.trace("Trying to parse date with time zone offset " + offset + "...");
           }
         }
       }
