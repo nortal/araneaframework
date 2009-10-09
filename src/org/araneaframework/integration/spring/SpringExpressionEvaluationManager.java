@@ -16,6 +16,10 @@
 
 package org.araneaframework.integration.spring;
 
+import org.apache.commons.lang.ObjectUtils;
+
+import org.apache.commons.beanutils.ConstructorUtils;
+
 import org.araneaframework.core.Assert;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -39,34 +43,36 @@ public class SpringExpressionEvaluationManager implements ExpressionEvaluationMa
 
   protected static final Log log = LogFactory.getLog(SpringExpressionEvaluationManager.class);
 
-  public Object evaluate(String attributeName, String attributeValue,
-      Class classObject, PageContext pageContext) throws JspException {
+  public Object evaluate(String attributeName, String attributeValue, Class classObject, PageContext pageContext)
+      throws JspException {
 
     Assert.notNullParam(this, classObject, "classObject");
 
-    if (log.isDebugEnabled()) {
-      log.debug("Resolving attribute value '" + attributeValue + "'.");
+    if (log.isTraceEnabled()) {
+      log.trace("Resolving attribute value '" + attributeValue + "'.");
     }
 
-    if (Boolean.class.equals(classObject)) {
+    if (attributeValue == null) {
+      return null;
+
+    } else if (String.class.equals(classObject)) {
+      return ExpressionEvaluationUtils.evaluateString(attributeName, attributeValue, pageContext);
+
+    } else if (Boolean.class.equals(classObject)) {
       return Boolean.valueOf(ExpressionEvaluationUtils.evaluateBoolean(attributeName, attributeValue, pageContext));
 
     } else if (Integer.class.equals(classObject)) {
       return new Integer(ExpressionEvaluationUtils.evaluateInteger(attributeName, attributeValue, pageContext));
 
-    } else if (String.class.equals(classObject)) {
-      return ExpressionEvaluationUtils.evaluateString(attributeName, attributeValue, pageContext);
-
     } else if (ExpressionEvaluationUtils.isExpressionLanguage(attributeValue)) {
       return ExpressionEvaluationUtils.evaluate(attributeName, attributeValue, classObject, pageContext);
 
-    } else if (classObject.isInstance(attributeValue)) {
-      return attributeValue;
+    } else if (Object.class.equals(classObject)) {
+      return ObjectUtils.toString(attributeValue);
 
     } else {
       try {
-        return classObject.getConstructor(new Class[] { classObject })
-            .newInstance(new Object[] { attributeValue });
+        return ConstructorUtils.invokeExactConstructor(classObject, attributeValue);
       } catch (Exception e) {
         throw new JspException("Error while changing the type of a JSP tag attribute value.", e);
       }

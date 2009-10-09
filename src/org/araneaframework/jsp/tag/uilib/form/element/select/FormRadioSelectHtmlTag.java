@@ -64,6 +64,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
             // set the corresponding HTML id for label and radiobutton so that clicking on label
             // affects radiobutton selection 			
 			String radioId = viewModel.getScope().toString() + displayItem.getValue();
+			registerSubtag(item);
 			item.setHtmlId(radioId);
 			label.setRadioId(radioId);
 			
