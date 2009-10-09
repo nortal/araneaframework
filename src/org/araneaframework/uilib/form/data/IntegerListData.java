@@ -24,6 +24,6 @@ import org.araneaframework.uilib.form.ListData;
 public class IntegerListData extends ListData<Integer> {
 
   public IntegerListData() {
-    super("List<Integer>");
+    super(Integer.class);
   }
 }

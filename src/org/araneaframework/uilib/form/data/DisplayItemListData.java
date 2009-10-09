@@ -25,6 +25,6 @@ import org.araneaframework.uilib.support.DisplayItem;
 public class DisplayItemListData extends ListData<DisplayItem> {
 
   public DisplayItemListData() {
-    super("List<DisplayItem>");
+    super(DisplayItem.class);
   }
 }

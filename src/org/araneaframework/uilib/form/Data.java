@@ -16,10 +16,11 @@
 
 package org.araneaframework.uilib.form;
 
-import org.apache.commons.lang.ObjectUtils;
-
 import java.io.Serializable;
-
+import java.util.Collection;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.SerializationUtils;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.util.Event;
 
 /**
@@ -35,9 +36,7 @@ import org.araneaframework.uilib.util.Event;
  */
 public class Data<T> implements Serializable, FormElementAware<Object, T> {
 
-  protected String type;
-
-  protected Class<?> typeClass;
+  protected DataType type;
 
   protected T value;
 
@@ -46,38 +45,48 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
   protected FormElement<Object, T> feCtx;
 
   /**
-   * Creates {@link Data} of type <code>type</code>.
+   * Creates a new <code>Data</code> instance for given <code>type</code>.
    * 
-   * @param type the type of {@link Data}
+   * @param type The type of object(s) that this data represents.
+   * @since 2.0
    */
-  protected Data(Class<?> typeClass, String type) {
-    this.typeClass = typeClass;
+  protected Data(DataType type) {
     this.type = type;
   }
 
   /**
-   * Creates {@link Data} for holding objects of given <code>Class</code>. <code>Type</code> is assumed to be simple
-   * class name of given Class.
+   * Creates a new <code>Data</code> instance for type <code>collectionClass</code>&lt;<code>typeClass</code>&gt;.
    * 
-   * @param typeClass the <code>Class</code> of {@link Data} values.
+   * @param collectionClass An optional collection type, if this data represents a collection of <code>typeClass</code> objects.
+   * @param typeClass The type of object that this data represents.
+   * @since 2.0
    */
-  public Data(Class<?> typeClass) {
-    this(typeClass, typeClass.getSimpleName());
+  protected Data(Class<? extends Collection<T>> collectionClass, Class<T> typeClass) {
+    this(new DataType(collectionClass, typeClass));
   }
 
   /**
-   * Returns {@link Data} value.
+   * Creates a new <code>Data</code> instance for type <code>typeClass</code>.
    * 
-   * @return {@link Data} value.
+   * @param typeClass The type of object that this data represents.
+   */
+  public Data(Class<T> typeClass) {
+    this(null, typeClass);
+  }
+
+  /**
+   * Provides the current value of this <code>Data</code>.
+   * 
+   * @return The current value of this <code>Data</code>.
    */
   public T getValue() {
     return this.value;
   }
 
   /**
-   * Sets {@link Data} value.
+   * Sets the value of this <code>Data</code> and the associated {@link Control}.
    * 
-   * @param value {@link Data} value.
+   * @param value The new value for this <code>Data</code>.
    */
   public void setValue(T value) {
     setDataValue(value);
@@ -85,9 +94,10 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
   }
 
   /**
-   * Sets the value of this {@link Data} without modifying underlying {@link Control}. This is used on
-   * {@link FormElement} conversion&mdash;which should not affect {@link Control} values read from request.
+   * Sets the value of this <code>Data</code> without modifying underlying {@link Control}. This is used on
+   * {@link FormElement} conversion when {@link Control} values read from request should not be affected.
    * 
+   * @param value The new value for this <code>Data</code>.
    * @since 1.0.12
    */
   public void setDataValue(T value) {
@@ -95,8 +105,9 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
   }
 
   /**
-   * Sets the value of {@link Control} that is associated with {@link FormElement} which owns this {@link Data}.
+   * Sets the value of {@link Control} that is associated with {@link FormElement} which owns this <code>Data</code>.
    * 
+   * @param value The new value for the associated {@link Control}.
    * @since 1.0.12
    */
   public void setControlValue(final T value) {
@@ -114,30 +125,50 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
   }
 
   /**
-   * Returns {@link Data} type.
+   * Provides the type of this <code>Data</code>.
    * 
-   * @return {@link Data} type.
+   * @return The type of this <code>Data</code>.
    */
-  public String getValueType() {
+  public DataType getValueType() {
     return this.type;
   }
 
   @Override
   public String toString() {
-    return "Data: [Type = " + this.type + "; Value = '" + this.value + "']";
+    return "Data (Type=[" + this.type + "];Value=[" + this.value + "])";
   }
 
   /**
-   * Creates a new instance of this {@link Data} of the same type as this instance, however, value is not set.
+   * Creates a new instance of this <code>Data</code> of the same type as this instance, however, value is not set.
    * 
    * @return A new instance of current this {@link Data} that is of same type.
    */
   public Data<T> newData() {
-    return new Data<T>(this.typeClass, this.type);
+    return new Data<T>(this.type.clone());
   }
 
+  /**
+   * A factory method to create instances of <code>Data</code> for handling objects of given class.
+   * 
+   * @param <V> The type of the <code>clazz</code> and of the new <code>Data</code> object.
+   * @param clazz The type of the data that the new <code>Data</code> will hold.
+   * @return The new instance of <code>Data</code>.
+   */
   public static <V> Data<V> newInstance(Class<V> clazz) {
     return new Data<V>(clazz);
+  }
+
+  /**
+   * A factory method to create instances of <code>Data</code> for handling objects of given classes.
+   * 
+   * @param <V> The type of the <code>clazz</code> and of the new <code>Data</code> object.
+   * @param collectionClazz A collection class indicating that the data will store data for collections of given type.
+   * @param clazz The type of the data that the new <code>Data</code> will hold.
+   * @return The new instance of <code>Data</code>.
+   * @since 2.0
+   */
+  public static <V> Data<V> newInstance(Class<? extends Collection<V>> collectionClazz, Class<V> clazz) {
+    return new Data<V>(collectionClazz, clazz);
   }
 
   /**
@@ -145,15 +176,26 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
    * changed in {@link #isStateChanged()}.
    */
   public void markBaseState() {
-    this.markedBaseValue = this.value;
+    this.markedBaseValue = copyValue();
   }
 
   /**
    * Restores the value of the {@link Data} from the marked base state.
    */
   public void restoreBaseState() {
-    // TODO: maybe deep copy?
     setValue(this.markedBaseValue);
+  }
+
+  /**
+   * This method makes a copy of current value based on the type information. If the value is serializable, it is also
+   * copied, otherwise the same instance is returned.
+   * 
+   * @return A copy of the value if this <code>Data</code>, or just the value as it currently is.
+   * @since 2.0
+   */
+  @SuppressWarnings("unchecked")
+  protected T copyValue() {
+    return this.type.isSerializable() ? (T) SerializationUtils.clone((Serializable) this.value) : this.value;
   }
 
   /**

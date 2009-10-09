@@ -25,6 +25,6 @@ import org.araneaframework.uilib.form.ListData;
 public class BigDecimalListData extends ListData<BigDecimal> {
 
   public BigDecimalListData() {
-    super("List<BigDecimal>");
+    super(BigDecimal.class);
   }
 }

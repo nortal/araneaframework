@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import java.io.Serializable;
+
 import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
@@ -29,7 +31,7 @@ import org.araneaframework.uilib.form.FormElementContext;
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
-public abstract class BaseConverter<C, D> implements java.io.Serializable, Converter<C, D> {
+public abstract class BaseConverter<C, D> implements Serializable, Converter<C, D> {
 
   private FormElementContext<C, D> feCtx;
 

@@ -19,6 +19,8 @@
  */
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.uilib.support.DataType;
+
 import java.io.Serializable;
 import org.araneaframework.Scope;
 import org.araneaframework.Viewable;
@@ -45,14 +47,14 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
   public boolean isRead();
 
   /**
-   * This method should be overriden by the control, returning the type of the value of this
+   * This method should be overridden by the control, returning the type of the value of this
    * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}to
    * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer the values
    * from {@link org.araneaframework.uilib.form.Data}to control and back.
    * 
-   * @return the type of the value of this control
+   * @return The type of the value of this control as specified in the given <code>ValueType</code> object.
    */
-  public abstract String getRawValueType();
+  public abstract DataType getRawValueType();
 
   /**
    * Returns the value of the control (value read from the request). Type of value depends on the

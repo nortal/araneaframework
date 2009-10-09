@@ -24,6 +24,6 @@ import org.araneaframework.uilib.form.ListData;
 public class LongListData extends ListData<Long> {
 
   public LongListData() {
-    super("List<Long>");
+    super(Long.class);
   }
 }

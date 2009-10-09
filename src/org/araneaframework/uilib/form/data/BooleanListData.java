@@ -23,9 +23,7 @@ import org.araneaframework.uilib.form.ListData;
  */
 public class BooleanListData extends ListData<Boolean> {
 
-  private static final long serialVersionUID = 1L;
-
   public BooleanListData() {
-    super("List<Boolean>");
+    super(Boolean.class);
   }
 }

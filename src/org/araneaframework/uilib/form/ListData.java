@@ -16,136 +16,35 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.lang.ObjectUtils;
-import org.araneaframework.uilib.util.Event;
+import org.apache.commons.collections.ListUtils;
+import org.araneaframework.uilib.support.DataType;
 
 /**
- * This class represents typed form element data. Type is used by the
- * {@link org.araneaframework.uilib.form.converter.ConverterFactory} to find the appropriate
- * {@link org.araneaframework.uilib.form.Converter} for converting {@link ListData} held in
- * {@link org.araneaframework.uilib.form.FormElement} to plain object type held in
- * {@link org.araneaframework.uilib.form.Control}. Reverse converting happens much the same, both object type in
- * {@link org.araneaframework.uilib.form.Control} and supposed {@link org.araneaframework.uilib.form.FormElement}
- * {@link ListData} are considered and appropriate {@link org.araneaframework.uilib.form.Converter} chosen.
+ * This class represents <code>List</code>-typed form element data.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @see Data
  */
 public class ListData<T> extends Data<List<T>> {
 
+  public ListData(Class<T> clazz) {
+    super(new DataType(List.class, clazz));
+    this.value = new LinkedList<T>();
+  }
+
   /**
-   * Creates {@link ListData} of list type {@link List}.
+   * This Data object requires special check so that the order of elements in the values lists would not have any effect
+   * on whether the lists contain the same data.
    * 
-   * @param type The type of {@link ListData} as <code>String</code>.
-   */
-  protected ListData(String type) {
-    super(List.class, type);
-  }
-
-  /**
-   * Returns {@link ListData} values.
-   * 
-   * @return {@link ListData} values.
-   */
-  public List<T> getValue() {
-    return this.value;
-  }
-
-  /**
-   * Sets {@link ListData} value.
-   * 
-   * @param value {@link ListData} value.
-   */
-  public void setValue(List<T> value) {
-    setDataValue(value);
-    setControlValue(value);
-  }
-
-  /**
-   * Sets the value of this {@link ListData} without modifying underlying {@link Control}. This is used on
-   * {@link FormElement} conversion &mdash; which should not affect {@link Control} values read from request.
-   * 
-   * @since 1.0.12
-   */
-  public void setDataValue(List<T> value) {
-    this.value = value;
-  }
-
-  /**
-   * Sets the value of {@link Control} that is associated with {@link FormElement} which owns this {@link ListData}.
-   * 
-   * @since 1.0.12
-   */
-  public void setControlValue(final List<T> value) {
-    if (this.feCtx != null) {
-      this.feCtx.addInitEvent(new Event() {
-
-        public void run() {
-          // TODO:this is dangerous in case Data value is set before FE is associated with Control
-          if (feCtx.getControl() != null) {
-            feCtx.getControl().setRawValue(feCtx.getConverter().reverseConvert(value));
-          }
-        }
-      });
-    }
-  }
-
-  /**
-   * Returns {@link ListData} type.
-   * 
-   * @return {@link ListData} type.
-   */
-  public String getValueType() {
-    return this.type;
-  }
-
-  @Override
-  public String toString() {
-    return "Data: [Type = " + this.type + "; Value = '" + this.value + "']";
-  }
-
-  /**
-   * Creates a new instance of this {@link ListData} of the same type as this instance, however, value is not set.
-   * 
-   * @return A new instance of current this {@link ListData} that is of same type.
-   */
-  public ListData<T> newData() {
-    return new ListData<T>(this.type);
-  }
-
-  public static <T> ListData<List<T>> newInstance(Class<List<T>> clazz) {
-    return new ListData<List<T>>(clazz.getSimpleName());
-  }
-
-  /**
-   * Marks the current value of the {@link ListData} as the base state that will be used to determine whether its state
-   * has changed in {@link #isStateChanged()}.
-   */
-  public void markBaseState() {
-    this.markedBaseValue = this.value;
-  }
-
-  /**
-   * Restores the value of the {@link ListData} from the marked base state.
-   */
-  public void restoreBaseState() {
-    // TODO: maybe deep copy?
-    setValue(this.markedBaseValue);
-  }
-
-  /**
-   * Returns whether {@link ListData} state (value) has changed after it was marked.
-   * 
-   * @return whether {@link ListData} state (value) has changed after it was marked.
+   * @since 1.2
    */
   public boolean isStateChanged() {
-    return !ObjectUtils.equals(this.markedBaseValue, this.value);
-  }
-
-  public void setFormElementCtx(FormElementContext<Object, List<T>> feCtx) {
-    if (this.feCtx != feCtx) {
-      this.feCtx = (FormElement<Object, List<T>>) feCtx;
-      setValue(getValue());
+    if (this.markedBaseValue == null || this.value == null) {
+      return this.markedBaseValue != null || this.value != null;
+    } else {
+      return !ListUtils.isEqualList(this.markedBaseValue, this.value);
     }
   }
 }

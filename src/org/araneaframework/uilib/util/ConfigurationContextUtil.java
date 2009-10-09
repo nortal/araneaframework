@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
+
 package org.araneaframework.uilib.util;
+
+import org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder;
+
+import org.araneaframework.uilib.form.converter.ConverterProvider;
 
 import org.araneaframework.Environment;
 import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
@@ -26,20 +31,22 @@ import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
  * @since 1.1
  */
 public abstract class ConfigurationContextUtil {
+
   private ConfigurationContextUtil() {}
-  
+
   public static boolean isBackgroundFormValidationEnabled(ConfigurationContext cctx) {
     Boolean b = (Boolean) cctx.getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
     return b == null ? false : b.booleanValue();
   }
-  
+
   public static Long getDefaultListItemsOnPage(ConfigurationContext cctx) {
     Long l = (Long) cctx.getEntry(ConfigurationContext.DEFAULT_LIST_ITEMS_ON_PAGE);
     return l;
   }
-  
+
   public static FormElementValidationErrorRenderer getFormElementValidationErrorRenderer(ConfigurationContext cctx) {
-    FormElementValidationErrorRenderer r = (FormElementValidationErrorRenderer) cctx.getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
+    FormElementValidationErrorRenderer r = (FormElementValidationErrorRenderer) cctx
+        .getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
     return r;
   }
 
@@ -53,8 +60,15 @@ public abstract class ConfigurationContextUtil {
    * @since 1.1.0.1
    */
   public static ExpressionEvaluationManager getResolver(ConfigurationContext cctx) {
-    ExpressionEvaluationManager mgr = (ExpressionEvaluationManager) cctx
-        .getEntry(ConfigurationContext.TAGS_EL_MANAGER);
+    ExpressionEvaluationManager mgr = (ExpressionEvaluationManager) cctx.getEntry(ConfigurationContext.TAGS_EL_MANAGER);
     return mgr != null ? mgr : new DefaultExpressionEvaluationManager();
+  }
+
+  public static ConverterProvider getCustomConverterProvider(ConfigurationContext conf) {
+    return (ConverterProvider) conf.getEntry(ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
+  }
+
+  public static ResponseBuilder getResponseBuilder(ConfigurationContext conf) {
+    return (ResponseBuilder) conf.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
   }
 }

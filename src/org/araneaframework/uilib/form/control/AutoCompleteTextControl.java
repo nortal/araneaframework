@@ -1,4 +1,24 @@
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.araneaframework.uilib.form.control;
+
+import org.araneaframework.uilib.util.ConfigurationContextUtil;
+
+import org.araneaframework.core.Assert;
 
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.Serializable;
@@ -21,27 +41,51 @@ public class AutoCompleteTextControl extends TextControl {
 
   public static final String LISTENER_NAME = "autocomplete";
 
-  protected long minCompletionLength = 1;
+  public static final int DEFAULT_MIN_COMPLETEION_LENGTH = 1;
+
+  protected long minCompletionLength = DEFAULT_MIN_COMPLETEION_LENGTH;
 
   protected DataProvider dataProvider;
 
   protected ResponseBuilder responseBuilder;
 
+  /**
+   * Constructs a new <code>AutoCompleteTextControl</code> with default minimum completion length (1) and default input
+   * text type.
+   * 
+   * @see #setDataProvider(DataProvider)
+   */
   public AutoCompleteTextControl() {}
 
   /**
-   * @param minCompletionLength number of chars that must be input before suggestions are provided
+   * Constructs a new <code>AutoCompleteTextControl</code> with given minimum completion length and with default input
+   * text type.
+   * 
+   * @param minCompletionLength number of chars that must be input before suggestions are provided.
+   * @see #setDataProvider(DataProvider)
    */
   public AutoCompleteTextControl(long minCompletionLength) {
     this.minCompletionLength = minCompletionLength;
   }
 
+  /**
+   * Constructs a new <code>AutoCompleteTextControl</code> with default minimum completion length (1) and with given
+   * input text type.
+   * 
+   * @param textType The given text type is used for validating input string.
+   * @see #setDataProvider(DataProvider)
+   */
   public AutoCompleteTextControl(TextType textType) {
-    super(textType);
+    this(textType, DEFAULT_MIN_COMPLETEION_LENGTH);
   }
 
   /**
-   * @param minCompletionLength number of chars that must be input before suggestions are provided
+   * Constructs a new <code>AutoCompleteTextControl</code> with given input text type and with given minimum completion
+   * length (1).
+   * 
+   * @param textType The given text type is used for validating input string.
+   * @param minCompletionLength Number of chars that must be inserted before suggestions are provided.
+   * @see #setDataProvider(DataProvider)
    */
   public AutoCompleteTextControl(TextType textType, long minCompletionLength) {
     super(textType);
@@ -54,17 +98,41 @@ public class AutoCompleteTextControl extends TextControl {
     addActionListener(LISTENER_NAME, new AutoCompleteActionListener());
   }
 
+  /**
+   * Sets the data provider that is used to retrieve the data depending on the input text. Note that data provider is
+   * needed once a request comes in. Therefore the parameter must not be <code>null</code>, and should be set after
+   * creating this control!
+   * 
+   * @param dataProvider The data provider that should search and provide suggestions to show depending on the input.
+   *          Must not be <code>null</code>!
+   */
   public void setDataProvider(DataProvider dataProvider) {
+    Assert.notNullParam(this, dataProvider, "dataProvider");
     this.dataProvider = dataProvider;
   }
 
-  /** @since 1.0.4 */
+  /**
+   * Sets the builder for the suggestions fetch responses. The builder should compose HTML presentation of given data
+   * that will be shown to the user. If there are no results, and empty string or null should be returned.
+   * <p>
+   * Note that if no response builders are set, the default builder will be used. However, the parameter to this
+   * function must not be <code>null</code>!
+   * 
+   * @param responseBuilder The builder to render following suggestions responses. Must not be <code>null</code>!
+   * @since 1.0.4
+   */
   public void setResponseBuilder(ResponseBuilder responseBuilder) {
+    Assert.notNullParam(this, dataProvider, "responseBuilder");
     this.responseBuilder = responseBuilder;
   }
 
   /**
-   * @return {@link ResponseBuilder} that will be used to build response with suggestions.
+   * Provides the response builder that will be used for response suggestions text composing. This method will return
+   * either the response builder provided through {@link #setResponseBuilder(ResponseBuilder)}, or the one specified in
+   * {@link ConfigurationContext#AUTO_COMPLETE_RESPONSE_BUILDER}, or if neither provided anything, the default
+   * implementation.
+   * 
+   * @return <code>ResponseBuilder</code> that will be used to build response with suggestions.
    * @since 1.0.4
    */
   public ResponseBuilder getResponseBuilder() {
@@ -97,14 +165,9 @@ public class AutoCompleteTextControl extends TextControl {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
       ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
-      if (confCtx != null)
-        result = (ResponseBuilder) confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
+      result = ConfigurationContextUtil.getResponseBuilder(confCtx);
     }
-
-    if (result == null)
-      result = new DefaultResponseBuilder();
-
-    return result;
+    return result == null ? new DefaultResponseBuilder() : result;
   }
 
   /**
