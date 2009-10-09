@@ -69,10 +69,10 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
 
   protected void registerEnterKeyboardHandler() throws JspException {
     FormEnterKeyboardHandlerHtmlTag tag = new FormEnterKeyboardHandlerHtmlTag();
-    tag.setFullElementId((String)requireContextEntry(FormTag.FORM_FULL_ID_KEY)+"."+id);
     registerSubtag(tag);
-    executeStartSubtag(tag);
-    executeEndTagAndUnregister(tag);
+    tag.setFullElementId((String)requireContextEntry(FormTag.FORM_FULL_ID_KEY)+"."+id);
+    executeSubtag(tag);
+    unregisterSubtag(tag);
   }
 
   protected void writeNonEmpty(Writer out) throws Exception {

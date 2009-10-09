@@ -63,6 +63,8 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
+    registerSubtag(label);
+    registerSubtag(item);
 
     for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
       DisplayItem displayItem = (DisplayItem) i.next();
@@ -74,8 +76,6 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
       label.setCheckboxId(checkboxId);
 
       if (labelBefore) writeLabel(label, derivedId, displayItem.getValue());
-
-      registerSubtag(item);
 
       item.setId(derivedId);
       item.setValue(displayItem.getValue());
@@ -129,7 +129,6 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label, String id, String value) throws JspException {
-    registerSubtag(label);
     label.setId(id);
     label.setValue(value);
     executeStartSubtag(label);

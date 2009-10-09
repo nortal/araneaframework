@@ -101,11 +101,9 @@ public class AutomaticTagFormElementTag extends BaseTag {
       throw new JspException("Unexistant tag was passed to form element view selector!.");
 
     controlTag = (FormElementTagInterface)ClassLoaderUtil.loadClass(tagInfo.getTagClassName()).newInstance();
-    Class tagClass = controlTag.getClass();
-
     registerSubtag(controlTag);
 
-    initTagAttributes(tagClass, controlTag, viewSelector.getAttributes());
+    initTagAttributes(controlTag.getClass(), controlTag, viewSelector.getAttributes());
 
     controlTag.setId(derivedId);
     if(events != null)
