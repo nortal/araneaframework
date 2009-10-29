@@ -28,7 +28,7 @@ import org.araneaframework.uilib.support.DataType;
  * 
  * Since 1.1 this interface extends <code>Serializable</code>.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @see Converter
  * @see ConverterFactory

@@ -23,7 +23,7 @@ import org.araneaframework.uilib.support.DataType;
  * for the current {@link org.araneaframework.uilib.form.control.BaseControl} and {@link org.araneaframework.uilib.form.Data} 
  * could not be found.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class ConverterNotFoundException extends Exception {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -27,13 +27,13 @@ import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
 import org.araneaframework.uilib.support.DataType;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * This class is a Factory pattern implementation, that provides methods to make
  * {@link org.araneaframework.uilib.form.FormElement}s and {@link org.araneaframework.uilib.form.converter.BaseConverter}s.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org) 
  */
 @SuppressWarnings("unchecked")
 public class ConverterFactory implements ConverterProvider {
@@ -41,23 +41,30 @@ public class ConverterFactory implements ConverterProvider {
   /** @since 1.1 */
   public static final ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
 
-  protected final Map<ConverterKey<Class, Class>, Converter> converters = new HashMap<ConverterKey<Class, Class>, Converter>();
+  protected final Map<ConverterKey<Class<?>, Class<?>>, Converter<?, ?>> converters = new HashMap<ConverterKey<Class<?>, Class<?>>, Converter<?, ?>>();
 
   protected ConverterFactory() {
+    // String to a number:
+    addConverter(String.class, Integer.class, new StringToNumberConverter<Integer>(Integer.class));
+    addConverter(String.class, Long.class, new StringToNumberConverter<Long>(Long.class));
+    addConverter(String.class, BigInteger.class, new StringToNumberConverter<BigInteger>(BigInteger.class));
+    addConverter(String.class, Float.class, new StringToNumberConverter<Float>(Float.class));
+    addConverter(String.class, Double.class, new StringToNumberConverter<Double>(Double.class));
+    addConverter(String.class, BigDecimal.class, new StringToNumberConverter<BigDecimal>(BigDecimal.class));
+
     addConverter(String.class, Boolean.class, new StringToBooleanConverter());
-    addConverter(String.class, Long.class, new StringToLongConverter());
-    addConverter(String.class, Integer.class, new StringToIntegerConverter());
-    addConverter(String.class, BigDecimal.class, new StringToBigDecimalConverter());
     addConverter(Boolean.class, Long.class, new BooleanToLongConverter());
     addConverter(Boolean.class, String.class, new BooleanToYNConverter());
+
     addConverter(BigDecimal.class, Float.class, new BigDecimalToFloatConverter());
     addConverter(BigDecimal.class, Double.class, new BigDecimalToDoubleConverter());
     addConverter(BigInteger.class, Long.class, new BigIntegerToLongConverter());
     addConverter(BigInteger.class, Integer.class, new BigIntegerToIntegerConverter());
+
     addConverter(Timestamp.class, Date.class, new TimestampToDateConverter());
   }
 
-  private void addConverter(Class source, Class dest, Converter converter) {
+  private <S, D> void addConverter(Class<?> source, Class<?> dest, Converter<?, ?> converter) {
     this.converters.put(new ConverterKey(source, dest), converter);
   }
 
@@ -75,8 +82,8 @@ public class ConverterFactory implements ConverterProvider {
       throw new ConverterNotFoundException(fromType, toType);
     }
 
-    ConverterKey key = new ConverterKey(fromType.getType(), toType.getType());
-    ConverterKey keyReverse = new ConverterKey(toType.getType(), fromType.getType());
+    ConverterKey<?, ?> key = new ConverterKey(fromType.getType(), toType.getType());
+    ConverterKey<?, ?> keyReverse = new ConverterKey(toType.getType(), fromType.getType());
 
     if (fromType.equals(toType) || fromType.getType().equals(Object.class) || toType.equals(Object.class)) {
       return new IdenticalConverter();
@@ -92,7 +99,7 @@ public class ConverterFactory implements ConverterProvider {
     }
   }
 
-  private Converter addWrappers(DataType fromType, DataType toType, Converter converter) {
+  private Converter<?, ?> addWrappers(DataType fromType, DataType toType, Converter<?, ?> converter) {
     return fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
   }
 
@@ -103,7 +110,7 @@ public class ConverterFactory implements ConverterProvider {
    * @return an instance of a <code>ConverterFactory</code>.
    */
   public static ConverterProvider getInstance(ConfigurationContext conf) {
-    ConverterProvider provider = ConfigurationContextUtil.getCustomConverterProvider(conf);
+    ConverterProvider provider = ConfigurationUtil.getCustomConverterProvider(conf);
     return provider == null ? DEFAULT_CONVERTER_FACTORY : provider;
   }
 }
