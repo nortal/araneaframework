@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.framework.filter;
 
@@ -51,13 +51,12 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
   
   private Throwable exception;
   
+  @Override
   public void setUp() throws Exception {
     factoryCreatedService = new MockEventfulStandardService();
     factoryCreatedService._getComponent().init(null, MockUtil.getEnv());
     
     factory = new ExceptionHandlerFactory() {
-
-      private static final long serialVersionUID = 1L;
 
       public Service buildExceptionHandler(Throwable e, Environment environment) {
         StandardExceptionHandlingFilterServiceTests.this.exception = e;
@@ -96,10 +95,9 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
     service = new StandardCriticalExceptionHandlingFilterService();
     child = new MockEventfulBaseService() {
 
-      private static final long serialVersionUID = 1L;
-
+      @Override
       public void action(Path path, InputData input, OutputData output) throws Exception {
-        ((StandardServletOutputData)output).getOutputStream().write(new byte[] {1});
+        ((StandardServletOutputData) output).getOutputStream().write(new byte[] { 1 });
         throw exception;
       }
     };

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.example.main.web.contract;
 
@@ -21,51 +21,51 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class ContractNotesEditWidget extends TemplateBaseWidget {
-	
-	  private static final long serialVersionUID = 1L;
-  private static final Log log = LogFactory.getLog(ContractNotesEditWidget.class);
-	private FormWidget form;
-	
-	public FormWidget getForm() {
-		return form;
-	}
-	
-	public void setForm(FormWidget form) {
-		this.form = form;
-	}
-	
-	public void setNotes(String notes) {
-		form.setValueByFullName("notes", notes);		
-	}
-	
-	public String getNotes() {
-		return (String) form.getValueByFullName("notes");
-	}
-	
-	public void setTotal(BigDecimal total) {
-		form.setValueByFullName("total", total);
-	}
-	
-	public BigDecimal getTotal() {
-		return (BigDecimal) form.getValueByFullName("total");
-	}
-	
-	protected void init() throws Exception {
-		setViewSelector("contract/contractNotesEdit");
-		log.debug("TemplateContractNotesEditWidget init called");
-		
-		form = new FormWidget();
-		form.addElement("notes", "#Notes", new TextControl(), new StringData(), false);
-		form.addElement("total", "#Total", new FloatControl(), new BigDecimalData(), false);
-		addWidget("form", form);
-	}
+
+  private static final Log LOG = LogFactory.getLog(ContractNotesEditWidget.class);
+
+  private FormWidget form;
+
+  public FormWidget getForm() {
+    return this.form;
+  }
+
+  public void setForm(FormWidget form) {
+    this.form = form;
+  }
+
+  public void setNotes(String notes) {
+    this.form.setValueByFullName("notes", notes);
+  }
+
+  public String getNotes() {
+    return (String) this.form.getValueByFullName("notes");
+  }
+
+  public void setTotal(BigDecimal total) {
+    this.form.setValueByFullName("total", total);
+  }
+
+  public BigDecimal getTotal() {
+    return (BigDecimal) this.form.getValueByFullName("total");
+  }
+
+  protected void init() throws Exception {
+    setViewSelector("contract/contractNotesEdit");
+    LOG.debug("TemplateContractNotesEditWidget init called");
+
+    this.form = new FormWidget();
+    this.form.addElement("notes", "#Notes", new TextControl(), new StringData());
+    this.form.addElement("total", "#Total", new BigDecimalControl(), new BigDecimalData());
+    addWidget("form", this.form);
+  }
 }

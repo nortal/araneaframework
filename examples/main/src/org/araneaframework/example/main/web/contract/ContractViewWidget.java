@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.contract;
 
@@ -23,7 +23,6 @@ import org.araneaframework.example.main.business.model.ContractMO;
 import org.araneaframework.example.main.web.company.CompanyViewWidget;
 import org.araneaframework.example.main.web.person.PersonViewWidget;
 
-
 /**
  * This widget is for displaying a contract. It cancels current call only.
  * 
@@ -31,40 +30,36 @@ import org.araneaframework.example.main.web.person.PersonViewWidget;
  */
 public class ContractViewWidget extends TemplateBaseWidget {
 
-	  private static final long serialVersionUID = 1L;
+  private static final Log LOG = LogFactory.getLog(ContractViewWidget.class);
 
-  private static final Log log = LogFactory.getLog(ContractViewWidget.class);
+  private Long id = null;
 
-	private Long id = null;
+  private ContractMO contract;
 
-	private ContractMO contract;
+  /**
+   * @param id Company's Id.
+   */
+  public ContractViewWidget(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @param id
-	 *          Company's Id.
-	 */
-	public ContractViewWidget(Long id) {
-		super();
-		this.id = id;
-	}
+  protected void init() throws Exception {
+    LOG.debug("TemplateContractViewWidget init called");
+    setViewSelector("contract/contractView");
 
-	protected void init() throws Exception {
-		log.debug("TemplateContractViewWidget init called");
-		setViewSelector("contract/contractView");
-    
-		contract = (ContractMO) getGeneralDAO().getById(ContractMO.class, id);
-		putViewData("contract", contract);
-	}
+    this.contract = getContractDAO().getById(ContractMO.class, this.id);
+    putViewData("contract", this.contract);
+  }
 
-	public void handleEventViewCompany() throws Exception {
-		getFlowCtx().start(new CompanyViewWidget(contract.getCompany().getId()));
-	}
+  public void handleEventViewCompany() {
+    getFlowCtx().start(new CompanyViewWidget(this.contract.getCompany().getId()));
+  }
 
-	public void handleEventViewPerson() throws Exception {
-		getFlowCtx().start(new PersonViewWidget(contract.getPerson().getId()));
-	}
+  public void handleEventViewPerson() {
+    getFlowCtx().start(new PersonViewWidget(this.contract.getPerson().getId()));
+  }
 
-	public void handleEventReturn() throws Exception {
-		getFlowCtx().cancel();
-	}
+  public void handleEventReturn() {
+    getFlowCtx().cancel();
+  }
 }

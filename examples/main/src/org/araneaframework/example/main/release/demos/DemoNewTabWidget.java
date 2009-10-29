@@ -1,9 +1,23 @@
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.araneaframework.example.main.release.demos;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
 import org.apache.commons.collections.CollectionUtils;
@@ -21,8 +35,6 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  */
 public class DemoNewTabWidget extends TemplateBaseWidget {
 
-  private static final long serialVersionUID = 1L;
-
   protected void init() throws Exception {
     setViewSelector("release/demos/tab");
     addTabContainer();
@@ -37,15 +49,13 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
     addWidget("tabContainer", containerWidget);
 
     MenuWidget menu = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
-    Map araneaDemos = menu.getAraneaMenu().getSubMenu();
+    Map<String, MenuItem> araneaDemos = menu.getAraneaMenu().getSubMenu();
 
     // Let's add tabs that will be the menu elements of this menu branch:
-    for (Iterator i = araneaDemos.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      MenuItem menuItem = ((MenuItem) entry.getValue());
+    for (Map.Entry<String, MenuItem> entry : araneaDemos.entrySet()) {
+      MenuItem menuItem = entry.getValue();
 
-      Field classfield = (Field) CollectionUtils.find(
-          Arrays.asList(menuItem.getClass().getDeclaredFields()),
+      Field classfield = (Field) CollectionUtils.find(Arrays.asList(menuItem.getClass().getDeclaredFields()),
           new BeanPropertyValueEqualsPredicate("name", "flowClass"));
 
       if (classfield == null) {
@@ -54,13 +64,12 @@ public class DemoNewTabWidget extends TemplateBaseWidget {
 
       classfield.setAccessible(true);
 
-      Class clazz = (Class) classfield.get(menuItem);
-      containerWidget.addTab((String) entry.getKey(), menuItem.getLabel(),
-          (Widget) clazz.newInstance());
+      Class<?> clazz = (Class<?>) classfield.get(menuItem);
+      containerWidget.addTab(entry.getKey(), menuItem.getLabel(), (Widget) clazz.newInstance());
 
       // show tab for current widget too, if it was found from menu, but disable it
       if (this.getClass().equals(clazz)) {
-        containerWidget.disableTab((String) entry.getKey());
+        containerWidget.disableTab(entry.getKey());
       }
     }
 

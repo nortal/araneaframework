@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FormElementAware<C, D> extends Serializable {
 

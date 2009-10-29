@@ -23,9 +23,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
  */
 public class AlwaysTrueExpression implements Expression {
 
-  private static final long serialVersionUID = 1L;
-
-  public Object evaluate(VariableResolver resolver) {
-    return Boolean.TRUE;
+  public Boolean evaluate(VariableResolver resolver) {
+    return true;
   }
 }

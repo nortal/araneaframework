@@ -21,7 +21,7 @@ import org.araneaframework.core.Assert;
 /**
  * ListWidget that is aware of field types according to the Bean type.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * @see ListWidget
  */
 public class BeanListWidget<T> extends ListWidget<T> {

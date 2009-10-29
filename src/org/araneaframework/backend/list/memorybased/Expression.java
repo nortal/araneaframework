@@ -25,13 +25,11 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 public interface Expression extends Serializable {
 
   /**
-   * Evaluates this <code>Expression</code> by returning its value. The
-   * returned value may also be <code>null</code>.
+   * Evaluates this <code>Expression</code> by returning its value. The returned value may also be <code>null</code>.
    * 
-   * @param resolver Resolver that is used to evalute <code>Variables</code>.
-   * @return the value of this <code>Expression</code>.
+   * @param resolver Resolver that is used to evaluate <code>Variable</code> value.
+   * @return The value of this <code>Expression</code>.
    * @throws ExpressionEvaluationException when the evaluating fails.
    */
-  Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException;
+  Object evaluate(VariableResolver resolver) throws ExpressionEvaluationException;
 }

@@ -16,17 +16,17 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents controls, that have a value of type <code>String</code> and a single request parameter of same
  * type.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class StringValueControl extends EmptyStringNullableControl<String> {
+public abstract class StringValueControl extends BlankStringNullableControl<String> {
 
   private Long minLength;
 
@@ -35,59 +35,43 @@ public abstract class StringValueControl extends EmptyStringNullableControl<Stri
   private boolean trimValue = false;
 
   /**
-   * Sets the maximum length.
+   * Sets the maximum length. A <code>null</code> value means that the maximum length check is not enforced. Any numeric
+   * value will be compared with the length property of a <code>String</code>. By default, no length checks are done.
    * 
-   * @param maxLength maximum length.
+   * @param maxLength The maximum length to be used for validating input <code>String</code>s.
    */
   public void setMaxLength(Long maxLength) {
     this.maxLength = maxLength;
   }
 
   /**
-   * Sets the minimum length.
+   * Sets the minimum length. A <code>null</code> value means that the minimum length check is not enforced. Any numeric
+   * value will be compared with the length property of a <code>String</code>. By default, no length checks are done.
    * 
-   * @param minLength minimum length.
+   * @param minLength The minimum length to be used for validating input <code>String</code>s.
    */
   public void setMinLength(Long minLength) {
     this.minLength = minLength;
   }
 
   /**
-   * Sets whether the value from request will be trimmed.
+   * Sets whether the value from request will be trimmed (default: <code>false</code>).
    * 
-   * @param trimValue whether the value from request will be trimmed.
+   * @param trimValue Whether the value from request will be trimmed.
    */
   public void setTrimValue(boolean trimValue) {
     this.trimValue = trimValue;
   }
 
-  /**
-   * Returns "String".
-   * 
-   * @return "String".
-   */
-  public String getRawValueType() {
-    return "String";
+  public DataType getRawValueType() {
+    return new DataType(String.class);
   }
 
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
-
-  /**
-   * Direct copy.
-   */
   @Override
   protected String fromRequest(String parameterValue) {
-    if (parameterValue != null && this.trimValue) {
-      return parameterValue.trim();
-    }
-    return parameterValue;
+    return this.trimValue ? StringUtils.trimToNull(parameterValue) : parameterValue;
   }
 
-  /**
-   * Direct copy.
-   */
   @Override
   protected String toResponse(String controlValue) {
     return controlValue;
@@ -98,22 +82,15 @@ public abstract class StringValueControl extends EmptyStringNullableControl<Stri
    */
   @Override
   protected void validateNotNull() {
-    if (minLength != null && getRawValue().length() < minLength.longValue()) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.STRING_TOO_SHORT,
-          MessageUtil.localize(getLabel(), getEnvironment()), this.minLength.toString(), getEnvironment()));
+    if (this.minLength != null && getRawValue().length() < this.minLength.longValue()) {
+      addErrorWithLabel(UiLibMessages.STRING_TOO_SHORT, this.minLength.toString());
     }
 
     if (this.maxLength != null && getRawValue().length() > this.maxLength.longValue()) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(),UiLibMessages.STRING_TOO_LONG,
-          MessageUtil.localize(getLabel(), getEnvironment()), this.maxLength.toString()));
+      addErrorWithLabel(UiLibMessages.STRING_TOO_LONG, this.maxLength.toString());
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
@@ -124,6 +101,9 @@ public abstract class StringValueControl extends EmptyStringNullableControl<Stri
   // *********************************************************************
 
   /**
+   * The view model implementation of <code>StringValueControl</code>. The view model provides the data for tags to
+   * render the control.
+   * 
    * @author <a href="mailto:olegm@webmedia.ee">Oleg Mürk</a>
    */
   public class ViewModel extends StringArrayRequestControl<String>.ViewModel {
@@ -141,18 +121,18 @@ public abstract class StringValueControl extends EmptyStringNullableControl<Stri
     }
 
     /**
-     * Returns the minimum length.
+     * Returns the minimum allowed length for the input.
      * 
-     * @return the minimum length.
+     * @return the minimum allowed length for the input.
      */
     public Long getMinLength() {
       return this.minLength;
     }
 
     /**
-     * Returns the maximum length.
+     * Returns the maximum allowed length for the input.
      * 
-     * @return the maximum length.
+     * @return the maximum allowed length for the input.
      */
     public Long getMaxLength() {
       return this.maxLength;

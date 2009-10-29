@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.demo;
 
@@ -39,7 +39,7 @@ import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
  * 
  * Separate forms are used for individual rows, so that client-side validation would work on the same separate rows.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DemoDisplayableEditableList extends TemplateBaseWidget {
 
@@ -71,7 +71,7 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
   /**
    * A custom implementation of valid only individual form row handler that deals with DataDTOs.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    */
   public class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler<Long, DataDTO> {
 

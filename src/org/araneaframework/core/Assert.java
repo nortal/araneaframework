@@ -38,13 +38,13 @@ import java.util.Map;
  * @author Stephen Colebourne
  * @author Gary Gregory
  * @author Norm Deane
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class Assert {
 
   public static String thisToString(Object that) {
     notNull(that, "'this' can never be null, check what you passed to Assert!");
-    return " [this :: " + that.getClass().getName() + "]";
+    return " (in '" + that.getClass().getName() + "')";
   }
   
   public static void isTrue(Object that, boolean expression, String message) {
@@ -79,13 +79,13 @@ public abstract class Assert {
   
   public static void notNullParam(Object object, String parameterName) {
     if (object == null) {
-      throw new IllegalArgumentException("Parameter '" + parameterName + "' must not be null!");
+      throw new IllegalArgumentException("The parameter '" + parameterName + "' must not be null!");
     }
   }
   
   public static void notNullParam(Object that, Object object, String parameterName) {
     if (object == null) {
-      throw new IllegalArgumentException("Parameter '" + parameterName + "' must not be null!" + thisToString(that));
+      throw new IllegalArgumentException("The Parameter '" + parameterName + "' must not be null!" + thisToString(that));
     }
   }
   

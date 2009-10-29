@@ -16,6 +16,14 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.StringTokenizer;
+
+import org.araneaframework.backend.util.BeanUtil;
+
+import org.apache.commons.lang.StringUtils;
+
+import org.araneaframework.uilib.form.control.ButtonControl;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.araneaframework.Component;
@@ -32,7 +40,7 @@ import org.araneaframework.uilib.util.NameUtil;
 /**
  * This class represents a form element that can contain other form elements.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormWidget extends GenericFormElement implements FormContext {
 
@@ -95,6 +103,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
 
     // form is now the actual form to add element into:
     FormWidget form = NestedFormUtil.getDeepestForm(afterId, this);
+    afterId = NameUtil.getLastName(afterId);
+
     form.addFlatElement(id, element, afterId, false);
   }
 
@@ -155,7 +165,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
     Assert.notEmptyParam(id, "id");
     Assert.notNullParam(element, "element");
 
-    if (id.indexOf(".") != -1) {
+    if (StringUtils.contains(id, BeanUtil.NESTED_DELIM)) {
       NestedFormUtil.addElement(this, id, element);
     } else {
       this.elements.put(id, element);
@@ -258,16 +268,33 @@ public class FormWidget extends GenericFormElement implements FormContext {
   // *********************************************************************
 
   /**
-   * Adds a new subform to this {@link FormWidget}.
+   * Adds a new sub-form to this {@link FormWidget}. Since Aranea 2.0 this method accepts nested paths. The nested paths
+   * and sub-forms are created when they don't exist. If path is empty, no changes will be made.
    * 
-   * @param id subform id.
-   * 
-   * @return created subform
+   * @param path The (simple or nested) path of sub-form to add. Nested path has dots separating sub-form IDs in the
+   *          order they will be created (the second sub-form will be the sub-form of the first sub-form, etc).
+   * @return If path is empty or simple (not nested) then the current form widget is returned. Otherwise, the last
+   *         created sub-form widget is returned.
    */
-  public FormWidget addSubForm(String id) {
-    Assert.notEmptyParam(id, "id");
-    FormWidget result = new FormWidget();
-    addElement(id, result);
+  public FormWidget addSubForm(String path) {
+    FormWidget result = this;
+
+    if (!StringUtils.isEmpty(path)) {
+      StringTokenizer tokens = new StringTokenizer(path, BeanUtil.NESTED_DELIM);
+
+      while (tokens.hasMoreTokens()) {
+        String subFormId = tokens.nextToken();
+        FormWidget subForm = result.getSubFormByFullName(subFormId);
+
+        if (subForm == null) {
+          result = new FormWidget();
+          addElement(subFormId, result);
+        } else {
+          result = subForm;
+        }
+      }
+    }
+
     return result;
   }
 
@@ -313,15 +340,41 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   /**
-   * This method adds a {@link FormElement} to this {@link FormWidget}.
+   * This method makes a non-mandatory {@link FormElement} with given {@link Control} and {@link Data}.
+   * 
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @param data the type of data.
+   * @return {@link FormElement} with given configuration
+   */
+  public <C, D> FormElement<C, D> createElement(String labelId, Control<C> control, Data<D> data) {
+    return createElement(labelId, control, data, false);
+  }
+
+  /**
+   * This method makes a non-mandatory {@link FormElement} with given {@link Control}. The form element is not supposed
+   * to have a value (e.g. buttons).
+   * 
+   * @param labelId id of the localized label.
+   * @param control the type of control data.
+   * @return {@link FormElement} with given configuration
+   * @since 2.0
+   */
+  public <C, D> FormElement<C, D> createElement(String labelId, Control<C> control) {
+    return createElement(labelId, control, null, false);
+  }
+
+  /**
+   * This method adds a {@link FormElement} to this {@link FormWidget}. This method is usually used with
+   * {@link ButtonControl}s or similar controls which need no data.
    * 
    * @param elementName the name of the form element.
    * @param labelId id of the localized label.
    * @param control the type of control data.
-   * @param data the type of data.
+   * @since 2.0
    */
-  public <C, D> FormElement<C, D> addElement(String elementName, String labelId, Control<C> control, Data<D> data) {
-    return this.addElement(elementName, labelId, control, data, false);
+  public <C, D> FormElement<C, D> addElement(String elementName, String labelId, Control<C> control) {
+    return addElement(elementName, labelId, control, null, false);
   }
 
   /**
@@ -331,11 +384,23 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param labelId id of the localized label.
    * @param control the type of control data.
    * @param data the type of data.
-   * @param mandatory whether the element must be present in request.
+   */
+  public <C, D> FormElement<C, D> addElement(String elementName, String labelId, Control<C> control, Data<D> data) {
+    return addElement(elementName, labelId, control, data, false);
+  }
+
+  /**
+   * This method adds a {@link FormElement} to this {@link FormWidget}.
+   * 
+   * @param elementName The name of the form element.
+   * @param labelId The ID of the localized label.
+   * @param control The type of control data.
+   * @param data The type of data.
+   * @param initialValue The initial value for this element.
    */
   public <C, D> FormElement<C, D> addElement(String elementName, String labelId, Control<C> control, Data<D> data,
       D initialValue) {
-    return this.addElement(elementName, labelId, control, data, initialValue, false);
+    return addElement(elementName, labelId, control, data, initialValue, false);
   }
 
   /**
@@ -349,10 +414,9 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public <C, D> FormElement<C, D> addElement(String elementName, String labelId, Control<C> control, Data<D> data,
       boolean mandatory) {
-    FormElement<C, D> result = createElement(labelId, control, data, mandatory);
-    addElement(elementName, result);
-    return result;
+    return addElement(elementName, labelId, control, data, null, mandatory);
   }
+
 
   /**
    * This method adds a {@link FormElement} to this {@link FormWidget}.
@@ -361,6 +425,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @param labelId id of the localized label.
    * @param control the type of control data.
    * @param data the type of data.
+   * @param initialValue The initial value for this element.
    * @param mandatory whether the element must be present in request.
    */
   public <C, D> FormElement<C, D> addElement(String elementName, String labelId, Control<C> control, Data<D> data,
@@ -388,15 +453,14 @@ public class FormWidget extends GenericFormElement implements FormContext {
     String currentElementName = NameUtil.getNamePrefix(fullName);
     String nextElementNames = NameUtil.getNameSuffix(fullName);
 
-    if ("".equals(nextElementNames)) {
+    if (nextElementNames == null) {
       result = getElement(currentElementName);
     } else {
       FormWidget nextElement = (FormWidget) getElement(currentElementName);
 
-      if (nextElement == null)
-        return null;
-
-      result = nextElement.getGenericElementByFullName(nextElementNames);
+      if (nextElement != null) {
+        result = nextElement.getGenericElementByFullName(nextElementNames);
+      }
     }
 
     return result;
@@ -483,7 +547,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
   /**
    * Represents a composite form element view model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {

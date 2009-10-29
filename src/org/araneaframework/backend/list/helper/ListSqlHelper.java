@@ -32,18 +32,14 @@ import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.uilib.list.util.Converter;
 
 /**
- * This class provides a standard SQL based implementation of the list. It takes
- * care of the filtering, ordering and returning data to the web components.
+ * This class provides a standard SQL based implementation of the list. It takes care of the filtering, ordering and
+ * returning data to the web components.
  * 
  * @see BaseListSqlHelper
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public abstract class ListSqlHelper extends BaseListSqlHelper {
-
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
 
   protected StandardFields standardFields;
 
@@ -55,10 +51,6 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 
   protected ConverterBasedColumnReader converterBasedColumnReader;
 
-  // *********************************************************************
-  // * CONSTRUCTORS
-  // *********************************************************************
-
   /**
    * Creates <code>ListSqlHelper</code> without initializing any fields.
    */
@@ -67,8 +59,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
   }
 
   /**
-   * Creates <code>ListSqlHelper</code> and provides it with the
-   * <code>DataSource</code>.
+   * Creates <code>ListSqlHelper</code> and provides it with the <code>DataSource</code>.
    */
   public ListSqlHelper(DataSource dataSource) {
     super(dataSource);
@@ -82,8 +73,8 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
   }
 
   /**
-   * Creates <code>ListSqlHelper</code> initializing the appropriate fields
-   * and providing it with the <code>DataSource</code>.
+   * Creates <code>ListSqlHelper</code> initializing the appropriate fields and providing it with the
+   * <code>DataSource</code>.
    */
   public ListSqlHelper(DataSource dataSource, ListQuery query) {
     super(dataSource, query);
@@ -105,24 +96,23 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    */
   public void addFields(Fields newFields) {
     // Update "fields"
-    if (fields == null) {
-      fields = newFields;
-    } else if (fields instanceof ConcatFields) {
-      ((ConcatFields) fields).add(newFields);
+    if (this.fields == null) {
+      this.fields = newFields;
+    } else if (this.fields instanceof ConcatFields) {
+      ((ConcatFields) this.fields).add(newFields);
     } else {
-      Fields old = fields;
+      Fields old = this.fields;
       ConcatFields concat = new ConcatFields();
       concat.add(old);
       concat.add(newFields);
-      fields = concat;
+      this.fields = concat;
     }
   }
 
   /**
    * Add additional naming strategy.
    * <p>
-   * The given <code>namingStrategy</code> is added as last in the context of
-   * {@link OrNamingStrategy}.
+   * The given <code>namingStrategy</code> is added as last in the context of {@link OrNamingStrategy}.
    * 
    * @see NamingStrategy
    */
@@ -133,8 +123,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
   /**
    * Add additional naming strategy.
    * <p>
-   * The given <code>namingStrategy</code> is added as first in the context of
-   * {@link OrNamingStrategy}.
+   * The given <code>namingStrategy</code> is added as first in the context of {@link OrNamingStrategy}.
    * 
    * @see NamingStrategy
    */
@@ -144,17 +133,17 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 
   protected void addNamingStrategy(NamingStrategy newNamingStrategy, boolean first) {
     // Update "namingStrategy"
-    if (namingStrategy == null) {
-      namingStrategy = newNamingStrategy;
+    if (this.namingStrategy == null) {
+      this.namingStrategy = newNamingStrategy;
     } else if (namingStrategy instanceof OrNamingStrategy) {
-      OrNamingStrategy or = (OrNamingStrategy) namingStrategy;
+      OrNamingStrategy or = (OrNamingStrategy) this.namingStrategy;
       if (first) {
         or.addFirst(newNamingStrategy);
       } else {
         or.add(newNamingStrategy);
       }
     } else {
-      NamingStrategy old = namingStrategy;
+      NamingStrategy old = this.namingStrategy;
       OrNamingStrategy or = new OrNamingStrategy();
       or.add(old);
       if (first) {
@@ -162,7 +151,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
       } else {
         or.add(newNamingStrategy);
       }
-      namingStrategy = or;
+      this.namingStrategy = or;
     }
   }
 
@@ -174,125 +163,110 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * @return standard implementation of list of fields.
    */
   public StandardFields getStandardFields() {
-    if (standardFields == null) {
-      standardFields = new StandardFields();
-      addFields(standardFields);
+    if (this.standardFields == null) {
+      this.standardFields = new StandardFields();
+      addFields(this.standardFields);
     }
-    return standardFields;
+    return this.standardFields;
   }
 
-  public void setMappingNamingStrategyAndFields(
-      MappingNamingStrategyAndFields mappingNamingStrategyAndFields) {
+  public void setMappingNamingStrategyAndFields(MappingNamingStrategyAndFields mappingNamingStrategyAndFields) {
     this.mappingNamingStrategyAndFields = mappingNamingStrategyAndFields;
   }
 
   public MappingNamingStrategyAndFields getMappingNamingStrategyAndFields() {
-    if (mappingNamingStrategyAndFields == null) {
-      mappingNamingStrategyAndFields = new MappingNamingStrategyAndFields();
-      addFields(mappingNamingStrategyAndFields);
-      addNamingStrategyAsFirst(mappingNamingStrategyAndFields);
+    if (this.mappingNamingStrategyAndFields == null) {
+      this.mappingNamingStrategyAndFields = new MappingNamingStrategyAndFields();
+      addFields(this.mappingNamingStrategyAndFields);
+      addNamingStrategyAsFirst(this.mappingNamingStrategyAndFields);
     }
-    return mappingNamingStrategyAndFields;
+    return this.mappingNamingStrategyAndFields;
   }
 
-  public void setPrefixMapNamingStrategy(
-      PrefixMapNamingStrategy prefixMapNamingStrategy) {
+  public void setPrefixMapNamingStrategy(PrefixMapNamingStrategy prefixMapNamingStrategy) {
     this.prefixMapNamingStrategy = prefixMapNamingStrategy;
   }
 
   public PrefixMapNamingStrategy getPrefixMapNamingStrategy() {
-    if (prefixMapNamingStrategy == null) {
-      prefixMapNamingStrategy = new PrefixMapNamingStrategy();
-      addNamingStrategy(prefixMapNamingStrategy);
+    if (this.prefixMapNamingStrategy == null) {
+      this.prefixMapNamingStrategy = new PrefixMapNamingStrategy();
+      addNamingStrategy(this.prefixMapNamingStrategy);
     }
-    return prefixMapNamingStrategy;
+    return this.prefixMapNamingStrategy;
   }
 
-  public void setStandardValueConverter(
-      StandardValueConverter standardValueConverter) {
+  public void setStandardValueConverter(StandardValueConverter standardValueConverter) {
     this.standardValueConverter = standardValueConverter;
   }
 
   public StandardValueConverter getStandardValueConverter() {
-    if (standardValueConverter == null) {
-      standardValueConverter = new StandardValueConverter();
-      valueConverter = standardValueConverter;
+    if (this.standardValueConverter == null) {
+      this.standardValueConverter = new StandardValueConverter();
+      this.valueConverter = this.standardValueConverter;
     }
-    return standardValueConverter;
+    return this.standardValueConverter;
   }
 
-  public void setConverterBasedColumnReader(
-      ConverterBasedColumnReader converterBasedColumnReader) {
+  public void setConverterBasedColumnReader(ConverterBasedColumnReader converterBasedColumnReader) {
     this.converterBasedColumnReader = converterBasedColumnReader;
   }
 
   public ConverterBasedColumnReader getConverterBasedColumnReader() {
-    if (converterBasedColumnReader == null) {
-      ResultSetColumnReader defaultResultSetColumnReader =
-          DefaultResultSetColumnReader.getInstance();
-      converterBasedColumnReader = new ConverterBasedColumnReader(
-          defaultResultSetColumnReader);
-      resultSetColumnReader = converterBasedColumnReader;
+    if (this.converterBasedColumnReader == null) {
+      ResultSetColumnReader defaultResultSetColumnReader = DefaultResultSetColumnReader.getInstance();
+      this.converterBasedColumnReader = new ConverterBasedColumnReader(defaultResultSetColumnReader);
+      this.resultSetColumnReader = this.converterBasedColumnReader;
     }
-    return converterBasedColumnReader;
+    return this.converterBasedColumnReader;
   }
 
   /**
-   * Adds a converter for a filter/order expression value. The converter is used
-   * by auomatic SQL query creation according to the filter/order expressions.
+   * Adds a converter for a filter/order expression value. The converter is used by auomatic SQL query creation
+   * according to the filter/order expressions.
    * 
    * @param valueName filter/order expression value name.
    * @param converter converter that is used by <code>convert()</code> method.
    * @see #addResultSetDeconverterForBeanField(String, Converter)
    * @see #addResultSetDeconverterForColumn(String, Converter)
    */
-  public void addDatabaseFieldConverter(String valueName, Converter converter) {
+  public <S, D> void addDatabaseFieldConverter(String valueName, Converter<S, D> converter) {
     getStandardValueConverter().addConverter(valueName, converter);
   }
 
   /**
-   * Adds a deconverter for <code>ResultSet</code>. The converter is used by
-   * {@link BaseListSqlHelper.BeanResultReader} to reverseConvert() values from
-   * <code>ResultSet</code> into bean field format.
+   * Adds a deconverter for <code>ResultSet</code>. The converter is used by {@link BaseListSqlHelper.BeanResultReader}
+   * to reverseConvert() values from <code>ResultSet</code> into bean field format.
    * 
    * @param beanField Bean field name.
-   * @param converter converter that is used by <code>reverseConvert()</code>
-   *            method.
+   * @param converter converter that is used by <code>reverseConvert()</code> method.
    * @see #addDatabaseFieldConverter(String, Converter)
    * @see #addResultSetDeconverterForColumn(String, Converter)
    * @see BaseListSqlHelper.BeanResultReader
    */
-  public void addResultSetDeconverterForBeanField(String beanField,
-      Converter converter) {
-    String columnName = namingStrategy.fieldToColumnAlias(beanField);
+  public <S, D> void addResultSetDeconverterForBeanField(String beanField, Converter<S, D> converter) {
+    String columnName = this.namingStrategy.fieldToColumnAlias(beanField);
     addResultSetDeconverterForColumn(columnName, converter);
   }
 
   /**
-   * Adds a deconverter for <code>ResultSet</code>. The converter is used by
-   * {@link BaseListSqlHelper.BeanResultReader} to reverseConvert() values from
-   * <code>ResultSet</code> into bean field format.
+   * Adds a deconverter for <code>ResultSet</code>. The converter is used by {@link BaseListSqlHelper.BeanResultReader}
+   * to reverseConvert() values from <code>ResultSet</code> into bean field format.
    * 
    * @param columnName ResultSet column name.
-   * @param converter converter that is used by <code>reverseConvert()</code>
-   *            method.
+   * @param converter converter that is used by <code>reverseConvert()</code> method.
    * @see #addDatabaseFieldConverter(String, Converter)
    * @see #addResultSetDeconverterForBeanField(String, Converter)
    * @see BaseListSqlHelper.BeanResultReader
    */
-  public void addResultSetDeconverterForColumn(String columnName,
-      Converter converter) {
-    getConverterBasedColumnReader().addResultSetDeconverterForColumn(
-        columnName, converter);
+  public <S, D> void addResultSetDeconverterForColumn(String columnName, Converter<S, D> converter) {
+    getConverterBasedColumnReader().addResultSetDeconverterForColumn(columnName, converter);
   }
 
   // Mappings
   /**
-   * Adds a <b>field name</b> to database <b>column name</b> and <b>column
-   * alias</b> mapping.
+   * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
    * <p>
-   * A given field is listed in the <code>SELECT</code> but is not read from
-   * the {@link ResultSet}.
+   * A given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
    * 
    * @param fieldName field name.
    * @param columnName database column name.
@@ -302,17 +276,14 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * @see #addDatabaseFieldMapping(String, String)
    * @see #addResultSetMapping(String, String)
    */
-  public void addDatabaseFieldMapping(String fieldName, String columnName,
-      String columnAlias) {
-    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName,
-        columnName, columnAlias);
+  public void addDatabaseFieldMapping(String fieldName, String columnName, String columnAlias) {
+    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName, columnAlias);
   }
 
   /**
    * Adds a <b>field name</b> to database <b>column name</b> mapping.
    * <p>
-   * A given field is listed in the <code>SELECT</code> but is not read from
-   * the {@link ResultSet}.
+   * A given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
    * </p>
    * <p>
    * The corresponding <b>column alias</b> is generated automatically.
@@ -325,15 +296,13 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * @see #addResultSetMapping(String, String)
    */
   public void addDatabaseFieldMapping(String fieldName, String columnName) {
-    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName,
-        columnName);
+    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName);
   }
 
   /**
    * Adds a <b>field name</b> to database <b>column alias</b> mapping.
    * <p>
-   * A given field is not listed in the <code>SELECT</code> but is read from
-   * the {@link ResultSet}.
+   * A given field is not listed in the <code>SELECT</code> but is read from the {@link ResultSet}.
    * </p>
    * 
    * @param fieldName field name.
@@ -344,16 +313,13 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * @see #addDatabaseFieldMapping(String, String)
    */
   public void addResultSetMapping(String fieldName, String columnAlias) {
-    getMappingNamingStrategyAndFields().addResultSetMapping(fieldName,
-        columnAlias);
+    getMappingNamingStrategyAndFields().addResultSetMapping(fieldName, columnAlias);
   }
 
   /**
-   * Adds a <b>field name</b> to database <b>column name</b> and <b>column
-   * alias</b> mapping.
+   * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
    * <p>
-   * A given field is listed in the <code>SELECT</code> and is read from the
-   * {@link ResultSet}.
+   * A given field is listed in the <code>SELECT</code> and is read from the {@link ResultSet}.
    * 
    * @param fieldName field name.
    * @param columnName database column name.
@@ -364,15 +330,13 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * @see #addResultSetMapping(String, String)
    */
   public void addMapping(String fieldName, String columnName, String columnAlias) {
-    getMappingNamingStrategyAndFields().addMapping(fieldName, columnName,
-        columnAlias);
+    getMappingNamingStrategyAndFields().addMapping(fieldName, columnName, columnAlias);
   }
 
   /**
    * Adds a <b>field name</b> to database <b>column name</b>.
    * <p>
-   * A given field is listed in the <code>SELECT</code> and is read from the
-   * {@link ResultSet}.
+   * A given field is listed in the <code>SELECT</code> and is read from the {@link ResultSet}.
    * </p>
    * <p>
    * The corresponding <b>column alias</b> is generated automatically.

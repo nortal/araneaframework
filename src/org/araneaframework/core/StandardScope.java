@@ -27,8 +27,6 @@ import org.araneaframework.Scope;
  */
 public class StandardScope implements Scope {
 
-  private static final long serialVersionUID = 1L;
-
   private Object id;
 
   private Scope parent;

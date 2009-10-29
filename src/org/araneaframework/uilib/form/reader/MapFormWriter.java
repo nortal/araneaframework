@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.GenericFormElement;
 /**
  * This class allows one to write <code>Map</code>s to forms.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class MapFormWriter implements Serializable {

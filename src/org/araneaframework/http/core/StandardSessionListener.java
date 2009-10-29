@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.core;
 
@@ -29,19 +29,18 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.router.StandardHttpSessionRouterService;
 
 /**
- * A session listener which takes care of destroying the session service in the
- * session.
+ * A session listener which takes care of destroying the session service in the session.
  * 
  * @author "Taimo Peelo" (taimo@araneaframework.org)
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSessionListener implements HttpSessionListener {
 
-  public static final Log log = LogFactory.getLog(StandardSessionListener.class);
+  public static final Log LOG = LogFactory.getLog(StandardSessionListener.class);
 
   public void sessionCreated(HttpSessionEvent sessEvent) {
-    if (log.isDebugEnabled()) {
-      log.debug("Session '" + sessEvent.getSession().getId() + "' created");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Session '" + sessEvent.getSession().getId() + "' created");
     }
   }
 
@@ -52,15 +51,14 @@ public class StandardSessionListener implements HttpSessionListener {
       destroyComponents(sessEvent);
     }
 
-    if (log.isDebugEnabled()) {
-      log.debug("Session " + sessEvent.getSession().getId() + " destroyed");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Session " + sessEvent.getSession().getId() + " destroyed");
     }
   }
 
   /**
-   * Checks whether the session contains Aranea session service. If it is not in
-   * the session then it is a sign that Aranea components have not been created
-   * for this session.
+   * Checks whether the session contains Aranea session service. If it is not in the session then it is a sign that
+   * Aranea components have not been created for this session.
    * 
    * @param sessEvent The session event object.
    * @return Whether the session contains session service.
@@ -68,8 +66,7 @@ public class StandardSessionListener implements HttpSessionListener {
   protected boolean containsSessionService(HttpSessionEvent sessEvent) {
     Assert.notNullParam(this, sessEvent, "sessEvent");
     HttpSession session = sessEvent.getSession();
-    return session != null && session.getAttribute(
-        StandardHttpSessionRouterService.SESSION_SERVICE_KEY) != null;
+    return session != null && session.getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY) != null;
   }
 
   /**
@@ -77,23 +74,22 @@ public class StandardSessionListener implements HttpSessionListener {
    * 
    * @since 1.2.2
    */
+  @SuppressWarnings("unchecked")
   protected void destroyComponents(HttpSessionEvent sessEvent) {
-    RelocatableDecorator service =
-      (RelocatableDecorator) sessEvent.getSession().getAttribute(
-            StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
+    RelocatableDecorator service = (RelocatableDecorator) sessEvent.getSession().getAttribute(
+        StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
 
     if (service != null) {
       try {
         Relocatable.Interface relocatable = service._getRelocatable();
 
         if (relocatable.getCurrentEnvironment() == null) {
-          relocatable.overrideEnvironment(new StandardEnvironment(null,
-              Collections.EMPTY_MAP));
+          relocatable.overrideEnvironment(new StandardEnvironment(null, Collections.EMPTY_MAP));
         }
 
         service._getComponent().destroy();
       } catch (Exception e) {
-        log.error("Exception while destroying service in an expired session", e);
+        LOG.error("Exception while destroying service in an expired session", e);
       }
     }
   }

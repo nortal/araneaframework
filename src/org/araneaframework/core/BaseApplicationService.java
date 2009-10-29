@@ -42,9 +42,7 @@ import org.araneaframework.core.util.ExceptionUtil;
 public abstract class BaseApplicationService extends BaseService
   implements ApplicationService {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(BaseApplicationService.class);
+  private static final Log LOG = LogFactory.getLog(BaseApplicationService.class);
 
   //*******************************************************************
   // FIELDS
@@ -340,7 +338,7 @@ public abstract class BaseApplicationService extends BaseService
 
       Service service = (Service) getChildren().get(next);
       if (service == null) {
-        log.warn("Service '" + getScope()
+        LOG.warn("Service '" + getScope()
             + "' could not deliver action as child '" + next
             + "' was not found!" + Assert.thisToString(this));
         return;
@@ -359,13 +357,13 @@ public abstract class BaseApplicationService extends BaseService
     String actionId = getActionId(input);
 
     if (actionId == null) {
-      log.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
+      LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
       return;
     }
 
     List<ActionListener> listeners = this.actionListeners != null ? null : this.actionListeners.get(actionId);
 
-    log.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");
+    LOG.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");
 
     if (listeners != null && !listeners.isEmpty()) {
       for (ActionListener listener : listeners) {
@@ -374,8 +372,8 @@ public abstract class BaseApplicationService extends BaseService
       return;
     }
 
-    if (log.isWarnEnabled()) {
-      log.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
+    if (LOG.isWarnEnabled()) {
+      LOG.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
           + "id '" + actionId + "'!" + Assert.thisToString(this));
     }
   }

@@ -21,21 +21,31 @@ import java.util.Calendar;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents a control that has both date and time.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DateTimeControl extends BaseControl<Timestamp> {
 
-  /** @since 1.0.3 */
+  /**
+   * The event adapter that helps to register and invoke events.
+   * 
+   * @since 1.0.3
+   */
   protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
 
+  /**
+   * The date control that handles the date part of the input.
+   */
   protected DateControl dateControl;
 
+  /**
+   * The time control that handles the time part of the input.
+   */
   protected TimeControl timeControl;
 
   /**
@@ -67,27 +77,20 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     this(new DateControl(dateFormat, defaultDateOutputFormat), new TimeControl(timeFormat, defaultTimeOutputFormat));
   }
 
-  // *******************************************************************
-  // PUBLIC METHODS
-  // *******************************************************************
-
-  /**
-   * Returns "Timestamp".
-   * 
-   * @return "Timestamp".
-   */
-  public String getRawValueType() {
-    return "Timestamp";
+  public DataType getRawValueType() {
+    return new DataType(Timestamp.class);
   }
 
   @Override
   public boolean isRead() {
-    // if date is not present, control cannot have valid value -- see comment
-    // in addTimeToDate() method
+    // if date is not present, control cannot have valid value (see comment in addTimeToDate() method).
     return this.dateControl.isRead();
   }
 
   /**
+   * Adds a {@link OnChangeEventListener}, which is called when the control value is changing.
+   * 
+   * @param onChangeEventListener {@link OnChangeEventListener}, which is called when the control value is changing.
    * @since 1.0.3
    */
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
@@ -95,22 +98,20 @@ public class DateTimeControl extends BaseControl<Timestamp> {
   }
 
   /**
+   * Removes all registered <code>onChange</code> event listeners.
+   * 
    * @since 1.0.3
    */
   public void clearOnChangeEventListeners() {
     this.eventHelper.clearOnChangeEventListeners();
   }
 
-  // *******************************************************************
-  // HELPER METHODS
-  // *******************************************************************
-
   /**
-   * Adds two dates assuming the first being date part and other the time. (dd.MM.yyyy and HH:mm:ss accordingly).
+   * Adds two dates assuming the first being date part and other the time. ("dd.MM.yyyy" and "HH:mm:ss" accordingly).
    * 
-   * @param date the date to add to.
-   * @param time the time to be added.
-   * @return the sum of the date and the time.
+   * @param date The date to add to.
+   * @param time The time to be added.
+   * @return The sum of the date and the time.
    */
   private Timestamp addTimeToDate(Timestamp date, Timestamp time) {
     // if date is null, it means that date part is completely cleared
@@ -132,19 +133,17 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     timeCalendar.setTime(time);
     dateCalendar.set(Calendar.HOUR_OF_DAY, timeCalendar.get(Calendar.HOUR_OF_DAY));
     dateCalendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE));
+    dateCalendar.set(Calendar.SECOND, timeCalendar.get(Calendar.SECOND));
+    dateCalendar.set(Calendar.MILLISECOND, timeCalendar.get(Calendar.MILLISECOND));
     return new Timestamp(dateCalendar.getTime().getTime());
   }
-
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
 
   @Override
   protected void init() throws Exception {
     super.init();
-    setGlobalEventListener(eventHelper);
-    addWidget("date", dateControl);
-    addWidget("time", timeControl);
+    setGlobalEventListener(this.eventHelper);
+    addWidget("date", this.dateControl);
+    addWidget("time", this.timeControl);
   }
 
   /**
@@ -177,19 +176,12 @@ public class DateTimeControl extends BaseControl<Timestamp> {
   @Override
   public void validate() {
     if (isMandatory() && !isRead()) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(),
-          UiLibMessages.MANDATORY_FIELD,
-          MessageUtil.localize(getLabel(), getEnvironment())));
+      addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
   @Override
-  public ViewModel getViewModel() throws Exception {
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -208,15 +200,10 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     this.timeControl.setFormElementCtx(formElementContext);
   }
 
-  // *********************************************************************
-  // * VIEW MODEL
-  // *********************************************************************
-
   /**
-   * Represents a date-time control view model.
+   * Represents a date-time control view model, which provides the data for tags to render the control.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-   * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel extends BaseControl<Timestamp>.ViewModel {
 
@@ -233,16 +220,16 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     /**
      * Takes an outer class snapshot.
      */
-    public ViewModel() throws Exception {
+    public ViewModel() {
       this.dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
-      String[] timeInnerData = (String[]) timeControl.innerData;
+      String[] timeInnerData = (String[]) DateTimeControl.this.timeControl.innerData;
       this.time = timeInnerData == null ? null : timeInnerData[0];
 
       this.timeViewModel = (TimeControl.ViewModel) timeControl._getViewable().getViewModel();
-      String[] dateInnerData = (String[]) dateControl.innerData;
+      String[] dateInnerData = (String[]) DateTimeControl.this.dateControl.innerData;
       this.date = dateInnerData == null ? null : dateInnerData[0];
 
-      this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();
+      this.hasOnChangeEventListeners = DateTimeControl.this.eventHelper.hasOnChangeEventListeners();
     }
 
     /**
@@ -264,16 +251,29 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     }
 
     /**
+     * Provides whether this date-time control has any bound "onChange" event listeners.
+     * 
+     * @return A <code>Boolean</code> indicating whether this control has any bound "onChange" event listeners.
      * @since 1.0.3
      */
     public boolean isOnChangeEventRegistered() {
       return this.hasOnChangeEventListeners;
     }
 
+    /**
+     * Provides the view model of date control.
+     * 
+     * @return The view model of date control.
+     */
     public DateControl.ViewModel getDateViewModel() {
       return this.dateViewModel;
     }
 
+    /**
+     * Provides the view model of time control.
+     * 
+     * @return The view model of time control.
+     */
     public TimeControl.ViewModel getTimeViewModel() {
       return this.timeViewModel;
     }

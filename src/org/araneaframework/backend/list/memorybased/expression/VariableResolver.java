@@ -20,9 +20,8 @@ import java.io.Serializable;
 import org.araneaframework.backend.list.memorybased.Variable;
 
 /**
- * General interface for a resolver that resolves <code>Variables</code>. The
- * <code>VariableResolver</code> implementation may be used to evaluate
- * <code>Variables</code> as well as transforming their names etc.
+ * General interface for a resolver that resolves <code>Variables</code>. The <code>VariableResolver</code>
+ * implementation may be used to evaluate <code>Variables</code> as well as transforming their names etc.
  */
 public interface VariableResolver extends Serializable {
 
@@ -30,7 +29,7 @@ public interface VariableResolver extends Serializable {
    * Resolves a <code>Variable</code>.
    * 
    * @param variable a <code>Variable</code> to resolve.
-   * @return the result of resolving the <code>Variable</code>.
+   * @return The result of resolving the <code>Variable</code>.
    */
   Object resolve(Variable variable);
 }

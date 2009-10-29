@@ -19,8 +19,6 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @since 1.1
  */
 public class TabWidget extends BaseApplicationWidget implements TabContext {
-	private static final long serialVersionUID = 1L;
-
 	/** Child key for tab's label widget. */
 	public static final String LABEL_WIDGET_KEY = "tlw";
 	/** Child key for tab's content widget. */

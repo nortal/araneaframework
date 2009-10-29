@@ -19,25 +19,22 @@ package org.araneaframework.backend.list.helper;
 import java.util.List;
 
 /**
- * Extension of RowCallbackHandler interface that saves the accumulated results
- * as a List.
+ * Extension of RowCallbackHandler interface that saves the accumulated results as a List.
  * <p>
- * Allows to make a results list available in a uniform manner. JdbcTemplate's
- * query methods will return the results list in that case, else returning null
- * (-> result state is solely available from RowCallbackHandler object).
+ * Allows to make a results list available in a uniform manner. JdbcTemplate's query methods will return the results
+ * list in that case, else returning null (-> result state is solely available from RowCallbackHandler object).
  * <p>
- * A convenient out-of-the-box implementation of ResultReader is the
- * RowMapperResultReader adapter which delegates row mapping to a RowMapper.
- * Note that a RowMapper object is typically stateless and thus reusable; just
- * the RowMapperResultReader adapter is stateful.
+ * A convenient out-of-the-box implementation of ResultReader is the RowMapperResultReader adapter which delegates row
+ * mapping to a RowMapper. Note that a RowMapper object is typically stateless and thus reusable; just the
+ * RowMapperResultReader adapter is stateful.
  * 
  * @author Rod Johnson
  */
 public interface ResultReader<T> extends RowCallbackHandler {
 
   /**
-   * Return all results, disconnected from the JDBC ResultSet. Never returns
-   * null; returns the empty collection if there were no results.
+   * Return all results, disconnected from the JDBC ResultSet. Never returns null; returns the empty collection if there
+   * were no results.
    */
   List<T> getResults();
 }

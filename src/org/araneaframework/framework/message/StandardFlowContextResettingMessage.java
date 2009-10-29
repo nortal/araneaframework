@@ -28,15 +28,14 @@ import org.araneaframework.framework.FlowContext;
 
 /**
  * Message that:
- * <ul> 
- *   <li>resets the first encountered {@link org.araneaframework.framework.FlowContext}</li>
- *   <li>starts a specified flow in it</li>
+ * <ul>
+ * <li>resets the first encountered {@link org.araneaframework.framework.FlowContext}</li>
+ * <li>starts a specified flow in it</li>
  * </ul>
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardFlowContextResettingMessage implements Message {
-
-  private static final long serialVersionUID = 1L;
 
   private Widget flow;
 
@@ -59,10 +58,7 @@ public class StandardFlowContextResettingMessage implements Message {
 
   protected void execute(Component component) throws Exception {
     final FlowContext fCtx = (FlowContext) component;
-
     fCtx.reset(new EnvironmentAwareCallback() {
-
-      private static final long serialVersionUID = 1L;
 
       public void call(Environment env) throws Exception {
         FlowContext f = EnvironmentUtil.getFlowContext(env);

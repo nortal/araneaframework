@@ -38,8 +38,6 @@ package org.araneaframework.core;
  */
 public class NoSuchComponentException extends AraneaRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   public NoSuchComponentException(Object key) {
     super("No such component '" + key + "'");
   }

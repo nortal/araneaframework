@@ -25,8 +25,6 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  */
 public class AraneaRuntimeException extends NestableRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   public AraneaRuntimeException(String message, Throwable cause) {
     super(message, cause);
   }

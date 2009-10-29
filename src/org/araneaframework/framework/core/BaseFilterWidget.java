@@ -47,8 +47,6 @@ import org.araneaframework.framework.FilterWidget;
  */
 public class BaseFilterWidget extends BaseWidget implements FilterWidget {
 
-  private static final long serialVersionUID = 1L;
-
   protected Widget childWidget;
 
   public BaseFilterWidget() {}

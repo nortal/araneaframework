@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.araneaframework.tests;
 
 import java.util.List;
@@ -8,73 +24,78 @@ import org.araneaframework.backend.util.BeanMapper;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class BeanMapperTest extends TestCase {
-	public static final Integer IA = new Integer(6);
-	public static final Integer IB = new Integer(8);
 
-	public static class A {
-		private Integer a = IA;
+  public static final Integer IA = new Integer(6);
 
-		public Integer getA() {
-			return a;
-		}
+  public static final Integer IB = new Integer(8);
 
-		public void setA(Integer a) {
-			this.a = a;
-		}
-	}
+  public static class A {
 
-	public static class B extends A {
-		private Integer b = IB;
-		private boolean t = true;
+    private Integer a = IA;
 
-		public Integer getB() {
-			return b;
-		}
+    public Integer getA() {
+      return this.a;
+    }
 
-		public void setB(Integer b) {
-			this.b = b;
-		}
+    public void setA(Integer a) {
+      this.a = a;
+    }
+  }
 
-		public boolean isT() {
-			return t;
-		}
+  public static class B extends A {
 
-		public void setT(boolean t) {
-			this.t = t;
-		}
-	}
-	
-	public void testClassField() {
-		BeanMapper beanMapper = new BeanMapper(A.class);
-		A a = new A();
-		Object o = beanMapper.getFieldValue(a, "a");
+    private Integer b = IB;
 
-		assertEquals(o, IA);
-	}
-	
-	public void testClassAndSuperClassFields() {
-		BeanMapper beanMapper = new BeanMapper(B.class);
-		B b = new B();
+    private boolean t = true;
 
-		assertEquals(beanMapper.getFieldValue(b, "a"), IA);
-		assertEquals(beanMapper.getFieldValue(b, "b"), IB);
-		assertEquals(beanMapper.getFieldValue(b, "t"), Boolean.TRUE);
-	}
-	
-	public void testGetFields() {
-		BeanMapper beanMapper = new BeanMapper(B.class);
+    public Integer getB() {
+      return this.b;
+    }
 
-		List beanFields = beanMapper.getFields();
-		assertTrue(beanFields.contains("a"));
-		assertTrue(beanFields.contains("b"));
-		assertTrue(beanFields.contains("t"));
-	}
-	
-	public void testGetFieldType() {
-		BeanMapper beanMapper = new BeanMapper(B.class);
+    public void setB(Integer b) {
+      this.b = b;
+    }
 
-		assertTrue(Integer.class.equals(beanMapper.getFieldType("a")));
-		assertTrue(Integer.class.equals(beanMapper.getFieldType("b")));
-		assertTrue(boolean.class.equals(beanMapper.getFieldType("t")));
-	}
+    public boolean isT() {
+      return this.t;
+    }
+
+    public void setT(boolean t) {
+      this.t = t;
+    }
+  }
+
+  public void testClassField() {
+    BeanMapper<A> beanMapper = new BeanMapper<A>(A.class);
+    A a = new A();
+    Object o = beanMapper.getProperty(a, "a");
+
+    assertEquals(o, IA);
+  }
+
+  public void testClassAndSuperClassFields() {
+    BeanMapper<B> beanMapper = new BeanMapper<B>(B.class);
+    B b = new B();
+
+    assertEquals(beanMapper.getProperty(b, "a"), IA);
+    assertEquals(beanMapper.getProperty(b, "b"), IB);
+    assertEquals(beanMapper.getProperty(b, "t"), Boolean.TRUE);
+  }
+
+  public void testGetFields() {
+    BeanMapper<B> beanMapper = new BeanMapper<B>(B.class);
+
+    List<String> beanFields = beanMapper.getPropertyNames();
+    assertTrue(beanFields.contains("a"));
+    assertTrue(beanFields.contains("b"));
+    assertTrue(beanFields.contains("t"));
+  }
+
+  public void testGetFieldType() {
+    BeanMapper<B> beanMapper = new BeanMapper<B>(B.class);
+
+    assertTrue(Integer.class.equals(beanMapper.getPropertyType("a")));
+    assertTrue(Integer.class.equals(beanMapper.getPropertyType("b")));
+    assertTrue(boolean.class.equals(beanMapper.getPropertyType("t")));
+  }
 }

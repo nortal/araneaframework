@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.list.filterform;
 
@@ -26,9 +26,9 @@ import org.araneaframework.uilib.support.UiLibMessages;
 
 
 /**
- * Tag that renders the {@link ListWidget}'s filter form clearance button.
- * Should be used inside list filter form (&lt;ui:listFilter&gt; tag).
- * Button uses label specified by {@link ListWidget}&mdash;{@link UiLibMessages#LIST_FILTER_CLEAR_BUTTON_LABEL}.
+ * Tag that renders the {@link ListWidget}'s filter form clearance button. Should be used inside list filter form
+ * (&lt;ui:listFilter&gt; tag). Button uses label specified by {@link ListWidget}&mdash;
+ * {@link UiLibMessages#LIST_FILTER_CLEAR_BUTTON_LABEL}.
  * 
  * @author Oleg Mürk
  * 
@@ -57,28 +57,29 @@ public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
   @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    if (!renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY))
-      writeNonEmpty(out);
 
-    return EVAL_BODY_INCLUDE;    
+    if (!this.renderMode.equals(ListFilterButtonHtmlTag.RENDER_EMPTY)) {
+      writeNonEmpty(out);
+    }
+
+    return EVAL_BODY_INCLUDE;
   }
-  
+
   protected void writeNonEmpty(Writer out) throws Exception {
-    JspUtil.writeOpenStartTag(out, renderMode);
+    JspUtil.writeOpenStartTag(out, this.renderMode);
     // type must be 'button' for both <button> and <input>
     JspUtil.writeAttribute(out, "type", "button");
 
-    if (renderMode.equals(ListFilterButtonHtmlTag.RENDER_INPUT)) {
-      JspUtil.writeAttribute(out, "value", localizedLabel);
+    if (this.renderMode.equals(ListFilterButtonHtmlTag.RENDER_INPUT)) {
+      JspUtil.writeAttribute(out, "value", this.localizedLabel);
       JspUtil.writeCloseStartEndTag_SS(out);
     } else {
       JspUtil.writeCloseStartTag_SS(out);
-      out.write(localizedLabel);
-      JspUtil.writeEndTag_SS(out, renderMode);
+      out.write(this.localizedLabel);
+      JspUtil.writeEndTag_SS(out, this.renderMode);
     }
   }
-  
+
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -86,7 +87,7 @@ public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
    *   description = "Possible values are 'button', 'input' &mdash; clearance button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themself(with an image, for example). Default rendermode is 'button'." 
    */
   public void setRenderMode(String renderMode) throws JspException {
-    String tmpMode = (String) evaluate("renderMode", renderMode, String.class);
+    String tmpMode = evaluate("renderMode", renderMode, String.class);
 
     if (!(RENDER_BUTTON.equals(tmpMode) || RENDER_INPUT.equals(tmpMode)
         || RENDER_EMPTY.equals(tmpMode))) {

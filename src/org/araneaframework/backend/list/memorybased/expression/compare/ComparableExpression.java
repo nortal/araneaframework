@@ -27,10 +27,8 @@ import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 import org.araneaframework.uilib.list.util.comparator.StringComparator;
 
-public abstract class ComparableExpression
-  implements CompositeExpression, StringExpression {
-
-  private static final long serialVersionUID = 1L;
+@SuppressWarnings("unchecked")
+public abstract class ComparableExpression implements CompositeExpression, StringExpression {
 
   protected Expression expr1;
 
@@ -38,8 +36,7 @@ public abstract class ComparableExpression
 
   protected Comparator comparator;
 
-  public ComparableExpression(Expression expr1, Expression expr2,
-      Comparator comparator) {
+  public ComparableExpression(Expression expr1, Expression expr2, Comparator comparator) {
     Assert.notNull(expr1, "Expressions must be provided");
     Assert.notNull(expr2, "Expressions must be provided");
     this.expr1 = expr1;
@@ -55,11 +52,10 @@ public abstract class ComparableExpression
     return this.comparator;
   }
 
-  public final Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
+  public final Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
     Object value1 = this.expr1.evaluate(resolver);
     Object value2 = this.expr2.evaluate(resolver);
-    return doEvaluate(value1, value2) ? Boolean.TRUE : Boolean.FALSE;
+    return doEvaluate(value1, value2);
   }
 
   protected abstract boolean doEvaluate(Object value1, Object value2);

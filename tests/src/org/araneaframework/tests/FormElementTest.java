@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.tests;
 
@@ -31,14 +31,15 @@ import org.araneaframework.uilib.form.data.StringData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormElementTest extends TestCase {
-	public void testDataCycling() throws Exception {
+	@SuppressWarnings("unchecked")
+  public void testDataCycling() throws Exception {
 		MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
 		emptyRequest.addParameter("myTextBox", "");
 
-		FormElement sfe = new FormElement();
+		FormElement<String, Long> sfe = new FormElement<String, Long>();
 		sfe.setLabel("textbox");
 
 		sfe._getComponent().init(null, new MockEnvironment());
@@ -53,7 +54,7 @@ public class FormElementTest extends TestCase {
 		sfe._getWidget().update(new StandardServletInputData(emptyRequest));
 		sfe.convertAndValidate();
 
-		sfe.getData().setValue(new Long(110));
+		sfe.getData().setValue(110L);
 
 		assertEquals("The textbox must have the data item value!",
 				((StringArrayRequestControl.ViewModel) sfe.getControl()
@@ -65,11 +66,12 @@ public class FormElementTest extends TestCase {
 	/** Tests FormWidget getElement methods(); */
 	public void testGetElement() throws Exception {
 		FormWidget form = new FormWidget();
-		FormElement button = form.createElement("my button", new ButtonControl(), null, false);
+
+		FormElement<String, Object> button = form.createElement("my button", new ButtonControl());
 		form.addElement("myButton", button);
 		
 		FormWidget subForm = form.addSubForm("subForm");
-		FormElement textArea = subForm.createElement("my text area", new TextareaControl(), new StringData(), true);
+		FormElement<String, String> textArea = subForm.createElement("my text area", new TextareaControl(), new StringData(), true);
 		subForm.addElement("myTextarea", textArea);
 
 		form._getComponent().init(null, new MockEnvironment());
@@ -88,8 +90,7 @@ public class FormElementTest extends TestCase {
 	
 	  public void testUnInitializedFormElementConversion() throws Exception {
 		  FormWidget form = new FormWidget();
-		  FormElement element = form.createElement( "labelId", new TextControl(), new StringData(), true);
-		  
+		  FormElement<String, String> element = form.createElement( "labelId", new TextControl(), new StringData(), true);
 		  // should succeed
 		  element.convert();
 	  }

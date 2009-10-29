@@ -22,8 +22,6 @@ package org.araneaframework.core;
  */
 public class NoSuchWidgetException extends AraneaRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   public NoSuchWidgetException(Object key) {
     super("No such widget '" + key + "'");
   }

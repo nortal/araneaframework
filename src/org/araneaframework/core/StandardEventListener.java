@@ -23,11 +23,9 @@ import org.araneaframework.InputData;
  * should implement {@link #processEvent(Object, String, InputData)} to provide
  * their own event handling.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class StandardEventListener implements EventListener {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * This method is marked final. Subclasses should implement

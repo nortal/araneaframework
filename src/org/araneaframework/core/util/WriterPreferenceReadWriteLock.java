@@ -13,63 +13,69 @@
   25aug1998  dl               record writer thread
    3May1999  dl               add notifications on interrupt/timeout
 
-*/
+ */
 
 package org.araneaframework.core.util;
 
 import java.io.Serializable;
 
-/** 
- * A ReadWriteLock that prefers waiting writers over
- * waiting readers when there is contention. This class
- * is adapted from the versions described in CPJ, improving
- * on the ones there a bit by segregating reader and writer
- * wait queues, which is typically more efficient.
+/**
+ * A ReadWriteLock that prefers waiting writers over waiting readers when there is contention. This class is adapted
+ * from the versions described in CPJ, improving on the ones there a bit by segregating reader and writer wait queues,
+ * which is typically more efficient.
  * <p>
- * The locks are <em>NOT</em> reentrant. In particular,
- * even though it may appear to usually work OK,
- * a thread holding a read lock should not attempt to
- * re-acquire it. Doing so risks lockouts when there are
- * also waiting writers.
- * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
- **/
+ * The locks are <em>NOT</em> reentrant. In particular, even though it may appear to usually work OK, a thread holding a
+ * read lock should not attempt to re-acquire it. Doing so risks lockouts when there are also waiting writers.
+ * <p>
+ * [<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this
+ * package. </a>]
+ */
 
 public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializable {
 
-  private static final long serialVersionUID = 1L;
+  protected long activeReaders_ = 0;
 
-  protected long activeReaders_ = 0; 
   protected Thread activeWriter_ = null;
+
   protected long waitingReaders_ = 0;
+
   protected long waitingWriters_ = 0;
 
-
   protected final ReaderLock readerLock_ = new ReaderLock();
+
   protected final WriterLock writerLock_ = new WriterLock();
 
-  public Sync writeLock() { return writerLock_; }
-  public Sync readLock() { return readerLock_; }
-
-  /*
-    A bunch of small synchronized methods are needed
-    to allow communication from the Lock objects
-    back to this object, that serves as controller
-  */
-
-
-  protected synchronized void cancelledWaitingReader() { --waitingReaders_; }
-  protected synchronized void cancelledWaitingWriter() { --waitingWriters_; }
-
-
-  /** Override this method to change to reader preference **/
-  protected boolean allowReader() {
-    return activeWriter_ == null && waitingWriters_ == 0;
+  public Sync writeLock() {
+    return this.writerLock_;
   }
 
+  public Sync readLock() {
+    return this.readerLock_;
+  }
+
+  /*
+   * A bunch of small synchronized methods are needed to allow communication from the Lock objects back to this object,
+   * that serves as controller
+   */
+
+  protected synchronized void cancelledWaitingReader() {
+    --this.waitingReaders_;
+  }
+
+  protected synchronized void cancelledWaitingWriter() {
+    --this.waitingWriters_;
+  }
+
+  /** Override this method to change to reader preference */
+  protected boolean allowReader() {
+    return this.activeWriter_ == null && this.waitingWriters_ == 0;
+  }
 
   protected synchronized boolean startRead() {
     boolean allowRead = allowReader();
-    if (allowRead)  ++activeReaders_;
+    if (allowRead) {
+      ++this.activeReaders_;
+    }
     return allowRead;
   }
 
@@ -78,102 +84,102 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
     // The allowWrite expression cannot be modified without
     // also changing startWrite, so is hard-wired
 
-    boolean allowWrite = (activeWriter_ == null && activeReaders_ == 0);
-    if (allowWrite)  activeWriter_ = Thread.currentThread();
+    boolean allowWrite = (this.activeWriter_ == null && this.activeReaders_ == 0);
+    if (allowWrite) {
+      this.activeWriter_ = Thread.currentThread();
+    }
     return allowWrite;
-   }
+  }
 
-
-  /* 
-     Each of these variants is needed to maintain atomicity
-     of wait counts during wait loops. They could be
-     made faster by manually inlining each other. We hope that
-     compilers do this for us though.
-  */
+  /*
+   * Each of these variants is needed to maintain atomicity of wait counts during wait loops. They could be made faster
+   * by manually inlining each other. We hope that compilers do this for us though.
+   */
 
   protected synchronized boolean startReadFromNewReader() {
     boolean pass = startRead();
-    if (!pass) ++waitingReaders_;
+    if (!pass) {
+      ++this.waitingReaders_;
+    }
     return pass;
   }
 
   protected synchronized boolean startWriteFromNewWriter() {
     boolean pass = startWrite();
-    if (!pass) ++waitingWriters_;
+    if (!pass) {
+      ++this.waitingWriters_;
+    }
     return pass;
   }
 
   protected synchronized boolean startReadFromWaitingReader() {
     boolean pass = startRead();
-    if (pass) --waitingReaders_;
+    if (pass) {
+      --this.waitingReaders_;
+    }
     return pass;
   }
 
   protected synchronized boolean startWriteFromWaitingWriter() {
     boolean pass = startWrite();
-    if (pass) --waitingWriters_;
+    if (pass) {
+      --this.waitingWriters_;
+    }
     return pass;
   }
 
   /**
-   * Called upon termination of a read.
-   * Returns the object to signal to wake up a waiter, or null if no such
-   **/
+   * Called upon termination of a read. Returns the object to signal to wake up a waiter, or null if no such
+   */
   protected synchronized Signaller endRead() {
-    if (--activeReaders_ == 0 && waitingWriters_ > 0)
-      return writerLock_;
-    else
+    if (--this.activeReaders_ == 0 && this.waitingWriters_ > 0) {
+      return this.writerLock_;
+    } else {
       return null;
+    }
   }
 
-  
   /**
-   * Called upon termination of a write.
-   * Returns the object to signal to wake up a waiter, or null if no such
-   **/
+   * Called upon termination of a write. Returns the object to signal to wake up a waiter, or null if no such
+   */
   protected synchronized Signaller endWrite() {
-    activeWriter_ = null;
-    if (waitingReaders_ > 0 && allowReader())
-      return readerLock_;
-    else if (waitingWriters_ > 0)
-      return writerLock_;
-    else
+    this.activeWriter_ = null;
+    if (this.waitingReaders_ > 0 && allowReader()) {
+      return this.readerLock_;
+    } else if (this.waitingWriters_ > 0) {
+      return this.writerLock_;
+    } else {
       return null;
+    }
   }
 
-
   /**
-   * Reader and Writer requests are maintained in two different
-   * wait sets, by two different objects. These objects do not
-   * know whether the wait sets need notification since they
-   * don't know preference rules. So, each supports a
-   * method that can be selected by main controlling object
-   * to perform the notifications.  This base class simplifies mechanics.
-   **/
+   * Reader and Writer requests are maintained in two different wait sets, by two different objects. These objects do
+   * not know whether the wait sets need notification since they don't know preference rules. So, each supports a method
+   * that can be selected by main controlling object to perform the notifications. This base class simplifies mechanics.
+   */
 
   protected abstract class Signaller implements Serializable { // base for ReaderLock and WriterLock
-
-    private static final long serialVersionUID = 1L;
 
     abstract void signalWaiters();
   }
 
   protected class ReaderLock extends Signaller implements Sync {
 
-    private static final long serialVersionUID = 1L;
-
-    public  void acquire() throws InterruptedException {
-      if (Thread.interrupted()) throw new InterruptedException();
+    public void acquire() throws InterruptedException {
+      if (Thread.interrupted()) {
+        throw new InterruptedException();
+      }
       InterruptedException ie = null;
-      synchronized(this) {
+      synchronized (this) {
         if (!startReadFromNewReader()) {
           for (;;) {
-            try { 
-              ReaderLock.this.wait();  
-              if (startReadFromWaitingReader())
+            try {
+              ReaderLock.this.wait();
+              if (startReadFromWaitingReader()) {
                 return;
-            }
-            catch(InterruptedException ex){
+              }
+            } catch (InterruptedException ex) {
               cancelledWaitingReader();
               ie = ex;
               break;
@@ -183,44 +189,49 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
       }
       if (ie != null) {
         // fall through outside synch on interrupt.
-        // This notification is not really needed here, 
-        //   but may be in plausible subclasses
-        writerLock_.signalWaiters();
+        // This notification is not really needed here,
+        // but may be in plausible subclasses
+        WriterPreferenceReadWriteLock.this.writerLock_.signalWaiters();
         throw ie;
       }
     }
 
-
     public void release() {
       Signaller s = endRead();
-      if (s != null) s.signalWaiters();
+      if (s != null) {
+        s.signalWaiters();
+      }
     }
 
-
     @Override
-    synchronized void signalWaiters() { ReaderLock.this.notifyAll(); }
+    synchronized void signalWaiters() {
+      ReaderLock.this.notifyAll();
+    }
 
-    public boolean attempt(long msecs) throws InterruptedException { 
-      if (Thread.interrupted()) throw new InterruptedException();
+    public boolean attempt(long msecs) throws InterruptedException {
+      if (Thread.interrupted()) {
+        throw new InterruptedException();
+      }
       InterruptedException ie = null;
-      synchronized(this) {
-        if (msecs <= 0)
+      synchronized (this) {
+        if (msecs <= 0) {
           return startRead();
-        else if (startReadFromNewReader()) 
+        } else if (startReadFromNewReader()) {
           return true;
-        else {
+        } else {
           long waitTime = msecs;
           long start = System.currentTimeMillis();
           for (;;) {
-            try { ReaderLock.this.wait(waitTime);  }
-            catch(InterruptedException ex){
+            try {
+              ReaderLock.this.wait(waitTime);
+            } catch (InterruptedException ex) {
               cancelledWaitingReader();
               ie = ex;
               break;
             }
-            if (startReadFromWaitingReader())
+            if (startReadFromWaitingReader()) {
               return true;
-            else {
+            } else {
               waitTime = msecs - (System.currentTimeMillis() - start);
               if (waitTime <= 0) {
                 cancelledWaitingReader();
@@ -231,9 +242,12 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
         }
       }
       // safeguard on interrupt or timeout:
-      writerLock_.signalWaiters();
-      if (ie != null) throw ie;
-      else return false; // timed out
+      WriterPreferenceReadWriteLock.this.writerLock_.signalWaiters();
+      if (ie != null) {
+        throw ie;
+      } else {
+        return false; // timed out
+      }
     }
 
   }
@@ -243,17 +257,19 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
     private static final long serialVersionUID = 1L;
 
     public void acquire() throws InterruptedException {
-      if (Thread.interrupted()) throw new InterruptedException();
+      if (Thread.interrupted()) {
+        throw new InterruptedException();
+      }
       InterruptedException ie = null;
-      synchronized(this) {
+      synchronized (this) {
         if (!startWriteFromNewWriter()) {
           for (;;) {
-            try { 
-              WriterLock.this.wait();  
-              if (startWriteFromWaitingWriter())
+            try {
+              WriterLock.this.wait();
+              if (startWriteFromWaitingWriter()) {
                 return;
-            }
-            catch(InterruptedException ex){
+              }
+            } catch (InterruptedException ex) {
               cancelledWaitingWriter();
               WriterLock.this.notify();
               ie = ex;
@@ -264,43 +280,50 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
       }
       if (ie != null) {
         // Fall through outside synch on interrupt.
-        //  On exception, we may need to signal readers.
-        //  It is not worth checking here whether it is strictly necessary.
-        readerLock_.signalWaiters();
+        // On exception, we may need to signal readers.
+        // It is not worth checking here whether it is strictly necessary.
+        WriterPreferenceReadWriteLock.this.readerLock_.signalWaiters();
         throw ie;
       }
     }
 
-    public void release(){
+    public void release() {
       Signaller s = endWrite();
-      if (s != null) s.signalWaiters();
+      if (s != null) {
+        s.signalWaiters();
+      }
     }
 
     @Override
-    synchronized void signalWaiters() { WriterLock.this.notify(); }
+    synchronized void signalWaiters() {
+      WriterLock.this.notify();
+    }
 
-    public boolean attempt(long msecs) throws InterruptedException { 
-      if (Thread.interrupted()) throw new InterruptedException();
+    public boolean attempt(long msecs) throws InterruptedException {
+      if (Thread.interrupted()) {
+        throw new InterruptedException();
+      }
       InterruptedException ie = null;
-      synchronized(this) {
-        if (msecs <= 0)
+      synchronized (this) {
+        if (msecs <= 0) {
           return startWrite();
-        else if (startWriteFromNewWriter()) 
+        } else if (startWriteFromNewWriter()) {
           return true;
-        else {
+        } else {
           long waitTime = msecs;
           long start = System.currentTimeMillis();
           for (;;) {
-            try { WriterLock.this.wait(waitTime);  }
-            catch(InterruptedException ex){
+            try {
+              WriterLock.this.wait(waitTime);
+            } catch (InterruptedException ex) {
               cancelledWaitingWriter();
               WriterLock.this.notify();
               ie = ex;
               break;
             }
-            if (startWriteFromWaitingWriter())
+            if (startWriteFromWaitingWriter()) {
               return true;
-            else {
+            } else {
               waitTime = msecs - (System.currentTimeMillis() - start);
               if (waitTime <= 0) {
                 cancelledWaitingWriter();
@@ -311,15 +334,15 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
           }
         }
       }
-      
-      readerLock_.signalWaiters();
-      if (ie != null) throw ie;
-      else return false; // timed out
+
+      WriterPreferenceReadWriteLock.this.readerLock_.signalWaiters();
+      if (ie != null) {
+        throw ie;
+      } else {
+        return false; // timed out
+      }
     }
 
   }
 
-
-
 }
-

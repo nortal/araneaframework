@@ -25,9 +25,9 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * A <code>Constraint</code> that constrains the input length of a {@link FormElement}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StringLengthInRangeConstraint<S> extends BaseFieldConstraint<S, String> {
+public class StringLengthInRangeConstraint extends BaseFieldConstraint {
 
   private int rangeStart;
 
@@ -45,7 +45,7 @@ public class StringLengthInRangeConstraint<S> extends BaseFieldConstraint<S, Str
    * 
    * @param field The form element to be constrained.
    */
-  public StringLengthInRangeConstraint(FormElement<S, String> field) {
+  public StringLengthInRangeConstraint(FormElement<?, ?> field) {
     super(field);
   }
 
@@ -55,7 +55,7 @@ public class StringLengthInRangeConstraint<S> extends BaseFieldConstraint<S, Str
    * <p>
    * If the minimum length is less than 1 then it is not checked.
    * 
-   * @param rangeStart The minumum allowed length of the value.
+   * @param rangeStart The minimum allowed length of the value.
    * @param rangeEnd The maximum allowed length of the value.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
@@ -68,7 +68,7 @@ public class StringLengthInRangeConstraint<S> extends BaseFieldConstraint<S, Str
    */
   @Override
   protected void validateConstraint() {
-    int length = StringUtils.length(getValue());
+    int length = StringUtils.length((String) getValue());
     if (length < this.rangeStart || length > this.rangeEnd) {
       addValidationError();
     }

@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 import org.araneaframework.core.Assert;
 
@@ -165,7 +165,7 @@ public class AutoCompleteTextControl extends TextControl {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
       ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
-      result = ConfigurationContextUtil.getResponseBuilder(confCtx);
+      result = ConfigurationUtil.getResponseBuilder(confCtx);
     }
     return result == null ? new DefaultResponseBuilder() : result;
   }

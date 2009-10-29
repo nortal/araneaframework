@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.comparator;
 
@@ -23,34 +23,38 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * Not-null comparator that compares <code>Boolean</code> values.
  */
-public class BooleanComparator implements Comparator, Serializable {
-	public static final Comparator TRUE_FIRST = new BooleanComparator(true);
-	public static final Comparator FALSE_FIRST = new BooleanComparator(false);
+public class BooleanComparator implements Comparator<Boolean>, Serializable {
 
-	private boolean trueFirst;
+  public static final Comparator<Boolean> TRUE_FIRST = new BooleanComparator(true);
 
-	private BooleanComparator(boolean trueFirst) {
-		this.trueFirst = trueFirst;
-	}
+  public static final Comparator<Boolean> FALSE_FIRST = new BooleanComparator(false);
 
-	public int compare(Object o1, Object o2) {
-		if (o1.equals(o2)) {
-			return 0;
-		}
-		// !o1.equals(o2)
-		if (this.trueFirst) {
-			return Boolean.TRUE.equals(o1) ? -1 : 1;
-		}
-		return Boolean.TRUE.equals(o1) ? 1 : -1;
-	}
-	
-	@Override
+  private boolean trueFirst;
+
+  private BooleanComparator(boolean trueFirst) {
+    this.trueFirst = trueFirst;
+  }
+
+  public int compare(Boolean o1, Boolean o2) {
+    if (o1 == o2) {
+      return 0;
+    }
+    if (this.trueFirst) {
+      return o1 ? -1 : 1;
+    }
+    return o1 ? 1 : -1;
+  }
+
+  @Override
   public boolean equals(Object obj) {
-		return BooleanComparator.class.equals(obj.getClass()) && ((BooleanComparator)obj).trueFirst == trueFirst;
-	}
+    if (BooleanComparator.class == obj.getClass()) {
+      return ((BooleanComparator) obj).trueFirst == this.trueFirst;
+    }
+    return false;
+  }
 
-	@Override
+  @Override
   public int hashCode() {
-		return new HashCodeBuilder(20070327, 1455).append(trueFirst).toHashCode();
-	}
+    return new HashCodeBuilder(20070327, 1455).append(this.trueFirst).toHashCode();
+  }
 }

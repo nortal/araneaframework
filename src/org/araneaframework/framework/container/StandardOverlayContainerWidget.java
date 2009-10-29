@@ -16,9 +16,9 @@
 
 package org.araneaframework.framework.container;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.InputData;
@@ -43,61 +43,116 @@ import org.araneaframework.http.util.ServletUtil;
  */
 public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
 
-  private static final long serialVersionUID = 1L;
-
   /**
    * <p> 
    * Map containing the default overlay presentation options. 
-   * Default values are as follows:</p>
-   * <ul>
-   *   <li>method: post</li>
-   *   <li>overlayClose: false</li>
-   *   <li>width: 800</li>
-   *   <li>slideDownDuration: 0.0</li>
-   *   <li>slideUpDuration: 0.0</li>
-   *   <li>overlayDuration: 0.0</li>
-   *   <li>resizeDuration: 0.0</li>
-   * </ul>
+   * OPTIONS with default values (most default values are defined in the JavaScript file but they all can be overridden
+   * using <code>OverlayContext</code>):
+   * <p>
+   * <table style="border-color: #000" border="1" cellpadding="5" cellspacing="0">
+   *   <tr>
+   *     <th>Option</th>
+   *     <th>Default value</th>
+   *     <th>Description</th>
+   *   </tr>
+   *   <tr>
+   *     <td>overlayClose</td>
+   *     <td>false</td>
+   *     <td>Close modal box by clicking on overlay</td>
+   *   </tr>
+   *   <tr>
+   *     <td>width</td>
+   *     <td>800</td>
+   *     <td>Default width in pixels</td>
+   *   </tr>
+   *   <tr>
+   *     <td>height</td>
+   *     <td>90</td>
+   *     <td>Default height in pixels</td>
+   *   </tr>
+   *   <tr>
+   *     <td>maxHeight</td>
+   *     <td>0.9</td>
+   *     <td>
+   *       If content is very long, defines the maximum height of ModalBox. If value <= 1.0 then the value is a
+   *       percentage of dialog height in contrast to browser window client area height. Otherwise it's in pixels.
+   *     </td>
+   *   </tr>
+   *   <tr>
+   *     <td>overlayOpacity</td>
+   *     <td>0.75</td>
+   *     <td>Default overlay opacity</td>
+   *   </tr>
+   *   <tr>
+   *     <td>overlayDuration</td>
+   *     <td>0</td>
+   *     <td>Default overlay fade in/out duration in seconds</td>
+   *   </tr>
+   *   <tr>
+   *     <td>slideDownDuration</td>
+   *     <td>0</td>
+   *     <td>Default ModalBox appear slide down effect in seconds</td>
+   *   </tr>
+   *   <tr>
+   *     <td>slideUpDuration</td>
+   *     <td>0</td>
+   *     <td>Default ModalBox hiding slide up effect in seconds</td>
+   *   </tr>
+   *   <tr>
+   *     <td>resizeDuration</td>
+   *     <td>0</td>
+   *     <td>Default resize duration seconds</td>
+   *   </tr>
+   *   <tr>
+   *     <td>inactiveFade</td>
+   *     <td>true</td>
+   *     <td>Fades MB window on inactive state transitions</td>
+   *   </tr>
+   *   <tr>
+   *     <td>transitions</td>
+   *     <td>false</td>
+   *     <td>Toggles transition effects</td>
+   *   </tr>
+   *   <tr>
+   *     <td>loadingString</td>
+   *     <td>"Please wait. Loading..."</td>
+   *     <td>Default loading string message</td>
+   *   </tr>
+   *   <tr>
+   *     <td>method</td>
+   *     <td>"post"</td>
+   *     <td>Default AJAX request method</td>
+   *   </tr>
+   * </table>
    */
-  public static final Map DEFAULT_PRESENTATION_OPTIONS = new LinkedMap();
+  public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
+
   private static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
   private static final String MAIN_CHILD_KEY = "m";
+
   private static final String OVERLAY_CHILD_KEY = "o";
-  
-  protected Map presentationOptions = new LinkedMap();
+
+  protected Map<String, String> presentationOptions = new LinkedHashMap<String, String>();
 
   private Widget main;
+
   private FlowContextWidget overlay;
-  
+
   static {
-    /*  OPTIONS with default values:
-     * 
-     *  overlayClose: false, // Close modal box by clicking on overlay
-     *  width: 500, // Default width in px
-     *  height: 90, // Default height in px
-     *  overlayOpacity: .75, // Default overlay opacity
-     *  overlayDuration: .25, // Default overlay fade in/out duration in seconds
-     *  slideDownDuration: .5, // Default Modalbox appear slide down effect in seconds
-     *  slideUpDuration: .15, // Default Modalbox hiding slide up effect in seconds
-     *  resizeDuration: .2, // Default resize duration seconds
-     *  inactiveFade: true, // Fades MB window on inactive state
-     *  transitions: false, // Toggles transition effects. Transitions are disabled by default
-     *  loadingString: "Please wait. Loading...", // Default loading string message
-     *  method: 'get' // Default Ajax request method
-     */
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", Boolean.FALSE);
-    DEFAULT_PRESENTATION_OPTIONS.put("width", new Integer(800));
-    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", String.valueOf(0.0));
-    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", new Float(0.9)); //percentage, if <= 1.0, otherwise in pixels.
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", "false");
+    DEFAULT_PRESENTATION_OPTIONS.put("width", "800");
+    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", "0");
+    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", "0");
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", "0");
+    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", "0");
+    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", "0.9");
   }
 
-  {
-    presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
+  
+  public StandardOverlayContainerWidget() {
+    this.presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
   }
 
   public void setMain(Widget main) {
@@ -109,7 +164,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   public boolean isOverlayActive() {
-    return overlay.isNested();
+    return this.overlay.isNested();
   }
 
   protected Environment getChildWidgetEnvironment() throws Exception {
@@ -118,37 +173,34 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   protected void init() throws Exception {
     super.init();
-    Assert.notNull(overlay);
-    Assert.notNull(main);
-    addWidget(OVERLAY_CHILD_KEY, overlay);
-    overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
-        new OverlayActivityMarkerContext() {
-      private static final long serialVersionUID = 1L;
-    });
-    addWidget(MAIN_CHILD_KEY, main);
+    Assert.notNull(this.overlay);
+    Assert.notNull(this.main);
+    addWidget(OVERLAY_CHILD_KEY, this.overlay);
+    this.overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
+        new OverlayActivityMarkerContext() {});
+    addWidget(MAIN_CHILD_KEY, this.main);
   }
 
   protected void update(InputData input) throws Exception {
     if (isOverlayActive()) {
-      overlay._getWidget().update(input);
+      this.overlay._getWidget().update(input);
     } else {
-      main._getWidget().update(input);
+      this.main._getWidget().update(input);
     }
   }
 
   protected void event(Path path, InputData input) throws Exception {
-  	assertActiveHierarchy(path,  "Cannot deliver event to wrong hierarchy!");
+    assertActiveHierarchy(path, "Cannot deliver event to wrong hierarchy!");
     super.event(path, input);
   }
 
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-  	assertActiveHierarchy(path,  "Cannot deliver action to wrong hierarchy!");
+    assertActiveHierarchy(path, "Cannot deliver action to wrong hierarchy!");
     super.action(path, input, output);
   }
 
   /**
-   * Asserts that the current widget is in the active hierarchy. If not, the
-   * execution will fail with an exception.
+   * Asserts that the current widget is in the active hierarchy. If not, the execution will fail with an exception.
    * 
    * @param path Path of the widget (from the request).
    * @param message A description message to include with the exception.
@@ -162,9 +214,8 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   protected void render(OutputData output) throws Exception {
-    if (output.getInputData().getGlobalData().containsKey(
-        OverlayContext.OVERLAY_REQUEST_KEY)) {
-      overlay._getWidget().render(output);
+    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
+      this.overlay._getWidget().render(output);
       if (!isOverlayActive()) {
         // response should be empty as nothing was rendered when overlay did not
         // contain an active flow
@@ -174,10 +225,9 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
       }
     } else {
-      main._getWidget().render(output);
+      this.main._getWidget().render(output);
       if (!isOverlayActive()) { // overlay has become inactive for some reason
-        UpdateRegionContext urCtx = EnvironmentUtil
-            .getUpdateRegionContext(getEnvironment());
+        UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
         urCtx.disableOnce();
       }
     }
@@ -185,44 +235,44 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   // FlowContext methods
   public void replace(Widget flow) {
-    overlay.replace(flow);
+    this.overlay.replace(flow);
   }
 
   public void replace(Widget flow, Configurator configurator) {
-    overlay.replace(flow, configurator);
+    this.overlay.replace(flow, configurator);
   }
 
   public void reset(EnvironmentAwareCallback callback) {
-    overlay.reset(callback);
+    this.overlay.reset(callback);
   }
 
-  public void start(Widget flow, Configurator configurator, Handler handler) {
-    overlay.start(flow, configurator, handler);
+  public void start(Widget flow, Configurator configurator, Handler<?> handler) {
+    this.overlay.start(flow, configurator, handler);
   }
 
-  public void start(Widget flow, Handler handler) {
-    overlay.start(flow, handler);
+  public void start(Widget flow, Handler<?> handler) {
+    this.overlay.start(flow, handler);
   }
 
   public void start(Widget flow) {
-    overlay.start(flow);
+    this.overlay.start(flow);
   }
 
   /* The presentation options of this overlay. */
-  public Map getOverlayOptions() {
-    return presentationOptions;
+  public Map<String, String> getOverlayOptions() {
+    return this.presentationOptions;
   }
 
-  public void setOverlayOptions(Map presentationOptions) {
+  public void setOverlayOptions(Map<String, String> presentationOptions) {
     this.presentationOptions = presentationOptions;
   }
 
   public void finish(Object result) {
-    overlay.finish(result);
+    this.overlay.finish(result);
   }
 
   public void cancel() {
-    overlay.cancel();
+    this.overlay.cancel();
   }
 
 }

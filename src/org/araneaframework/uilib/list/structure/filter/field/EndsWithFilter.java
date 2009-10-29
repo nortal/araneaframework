@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.list.structure.filter.field;
 
@@ -38,12 +38,10 @@ import org.araneaframework.uilib.list.util.like.LikeConfiguration;
  * 
  * @see EndsWithExpression
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1.3
  */
 public class EndsWithFilter extends BaseFieldFilter {
-
-	private static final long serialVersionUID = 1L;
 
 	private boolean ignoreCase;
 
@@ -106,7 +104,7 @@ public class EndsWithFilter extends BaseFieldFilter {
 		this.ignoreCase = ignoreCase;
 	}
 
-	public Expression buildExpression(Map filterInfo) {
+	public Expression buildExpression(Map<String, Object> filterInfo) {
 		if (!isActive(filterInfo)) {
 			return null;
 		}

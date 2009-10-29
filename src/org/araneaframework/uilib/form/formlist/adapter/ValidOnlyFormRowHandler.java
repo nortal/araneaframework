@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.formlist.FormRow;
 /**
  * A more precise form row handler that narrows row data adding and saving down to only valid rows.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ValidOnlyFormRowHandler<K, R> extends DefaultFormRowHandler<K, R> {
 

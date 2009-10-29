@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.popups;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -28,56 +30,50 @@ import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Sample service that applies the flow return value to opener
- * window widget purely on client-side.
- *
+ * Sample service that applies the flow return value to opener window widget purely on client-side.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class ParentActionInvokingService extends BaseService implements ClientSideReturnService {
-	private String value;
-	private String widgetId;
-	
-	public ParentActionInvokingService(String widgetId) {
-		this.widgetId = widgetId;
-	}
-	
-    protected void action(Path path, InputData input, OutputData output) throws Exception {
-        HttpServletResponse response = ServletUtil.getResponse(output);
-        String script = "if (window.opener) { window.opener.setTimeout('"
-        + "araneaPage().action($('" + this.widgetId + "'), 'testAction', '"
-        + this.widgetId.substring(0, this.widgetId.lastIndexOf('.')) + "' , '"
-        + this.value + "', window['tehcallback']);', 0); } window.close();";
+public class ParentActionInvokingService extends BaseService implements ClientSideReturnService<String> {
 
-		String responseStr = 
-			"<html>" +
-			  "<head>" +
-			    "<script type=\"text/javascript\">"+ script +"</script>" +
-			  "</head>" +
-			  "<body>" + 
-			  "</body>" +
-			"</html>";
+  private String value;
 
-		byte[] rsp = responseStr.getBytes(); 
-		
-		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-		byteOutputStream.write(rsp);
-		
-		response.setContentType("text/html");
-		response.setContentLength(byteOutputStream.size());
-		
-		OutputStream out = response.getOutputStream();
-		byteOutputStream.writeTo(out);
-		out.flush();
+  private String widgetId;
 
-		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
-		mngCtx.close(mngCtx.getCurrentId());
-	}
+  public ParentActionInvokingService(String widgetId) {
+    this.widgetId = widgetId;
+  }
 
-	public Object getResult() {
-		return value;
-	}
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    HttpServletResponse response = ServletUtil.getResponse(output);
+    String script = "if (window.opener) { window.opener.setTimeout('araneaPage().action($('" + this.widgetId
+        + "'), 'testAction', '" + StringUtils.substringBeforeLast(this.widgetId, ".") + "' , '" + this.value
+        + "', window['tehcallback']);', 0); } window.close();";
 
-	public void setResult(Object returnValue) {
-		this.value = returnValue.toString();
-	}
+    String responseStr = "<html><head><script type=\"text/javascript\">" + script
+        + "</script></head><body></body></html>";
+
+    byte[] rsp = responseStr.getBytes();
+
+    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+    byteOutputStream.write(rsp);
+
+    response.setContentType("text/html");
+    response.setContentLength(byteOutputStream.size());
+
+    OutputStream out = response.getOutputStream();
+    byteOutputStream.writeTo(out);
+    out.flush();
+
+    ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
+    mngCtx.close(mngCtx.getCurrentId());
+  }
+
+  public String getResult() {
+    return this.value;
+  }
+
+  public void setResult(String returnValue) {
+    this.value = returnValue.toString();
+  }
 }

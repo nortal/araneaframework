@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.menu;
 
@@ -80,8 +80,6 @@ import org.araneaframework.uilib.support.FlowCreator;
  */
 public class MenuWidget extends TemplateMenuWidget {
 
-  private static final long serialVersionUID = 1L;
-
   private MenuItem araneaMenu;
 
   public MenuWidget(Widget topWidget) throws Exception {
@@ -112,36 +110,33 @@ public class MenuWidget extends TemplateMenuWidget {
   protected MenuItem buildMenu() throws Exception {
     MenuItem result = new MenuItem();
 
-    // Aranea 1.1 features/demos
+    // Aranea 2.0 features/demos
     // Note that here we retrieve the sub menu and add new items to it.
-    this.araneaMenu = result.addMenuItem(new MenuItem("AraneaRelease", ReleaseWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Context_Menus", DemoContextMenuWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Cooperative_Form", FriendlyUpdateDemoWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("AutoComplete", DemoAutoCompletionWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("List", SimpleListWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("SimpleEditableList", SimpleInMemoryEditableList.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Modal_Dialog", ModalDialogDemoWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Tabs_Demo", DemoNewTabWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("TreeComponent", SimpleTreeWidget.class));
-    this.araneaMenu.addMenuItem(new MenuItem("Serverside_Polling", DemoActionPollWidget.class));
+    this.araneaMenu = result.addMenuItem("AraneaRelease", ReleaseWidget.class);
+    this.araneaMenu.addMenuItem("Context_Menus", DemoContextMenuWidget.class);
+    this.araneaMenu.addMenuItem("Easy_AJAX_Update_Regions", EasyAJAXUpdateRegionsWidget.class);
+    this.araneaMenu.addMenuItem("Cooperative_Form", FriendlyUpdateDemoWidget.class);
+    this.araneaMenu.addMenuItem("AutoComplete", DemoAutoCompletionWidget.class);
+    this.araneaMenu.addMenuItem("List", SimpleListWidget.class);
+    this.araneaMenu.addMenuItem("SimpleEditableList", SimpleInMemoryEditableList.class);
+    this.araneaMenu.addMenuItem("Modal_Dialog", ModalDialogDemoWidget.class);
+    this.araneaMenu.addMenuItem("Seamless_Validation", SeamlessFormValidationDemoWidget.class);
+    this.araneaMenu.addMenuItem("Tabs_Demo", DemoNewTabWidget.class);
+    this.araneaMenu.addMenuItem("TreeComponent", SimpleTreeWidget.class);
+    this.araneaMenu.addMenuItem("Serverside_Polling", DemoActionPollWidget.class);
 
     // Management demos:
     // Note that here we refer using the name of the parent menu item to add sub menu items to it.
-    result.addMenuItem(new MenuItem("Management"));
+    result.addMenuItem("Management");
     result.addMenuItem("Management", new MenuItem("Persons"));
 
     // Example use of simple FlowCreator
-    result.addMenuItem("Management.Persons", new MenuItem("View_Add",
-        new FlowCreator() {
+    result.addMenuItem("Management.Persons", new MenuItem("View_Add", new FlowCreator() {
 
-          private static final long serialVersionUID = 1L;
-
-          public Widget createFlow() {
-            return new PersonListWidget(true);
-          }
-        }));
+      public Widget createFlow() {
+        return new PersonListWidget(true);
+      }
+    }));
 
     result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Memory", PersonEditableListWidget.Memory.class));
     result.addMenuItem("Management.Persons", new MenuItem("Editable_List_Backend", PersonEditableListWidget.Backend.class));
@@ -152,67 +147,65 @@ public class MenuWidget extends TemplateMenuWidget {
     result.addMenuItem("Management.Contracts", new MenuItem("Add", ContractAddEditWidget.class));
 
     // The Demos menu:
-    MenuItem demosMenu = result.addMenuItem(new MenuItem("Demos"));
+    MenuItem demosMenu = result.addMenuItem("Demos");
     MenuItem subMenu = null;
 
     // Simple demos:
-    subMenu = demosMenu.addMenuItem(new MenuItem("Simple"));
-    subMenu.addMenuItem(new MenuItem("Simple_Form", SimpleFormWidget.class));
-    subMenu.addMenuItem(new MenuItem("Simple_Bean_Form", SimpleBeanFormWidget.class));
-    subMenu.addMenuItem(new MenuItem("Search_Form", FormComplexConstraintDemoWidget.class));
-    subMenu.addMenuItem(new MenuItem("Popup_Example", SamplePopupWidget.class));
-    subMenu.addMenuItem(new MenuItem("MultiSelect", DemoMultiSelect.class));
-    subMenu.addMenuItem(new MenuItem("RadioSelect", DemoRadioSelect.class));
-    subMenu.addMenuItem(new MenuItem("demo_automaticForm_title", DemoAutomaticFormElement.class));
+    subMenu = demosMenu.addMenuItem("Simple");
+    subMenu.addMenuItem("Simple_Form", SimpleFormWidget.class);
+    subMenu.addMenuItem("Simple_Bean_Form", SimpleBeanFormWidget.class);
+    subMenu.addMenuItem("Search_Form", FormComplexConstraintDemoWidget.class);
+    subMenu.addMenuItem("Popup_Example", SamplePopupWidget.class);
+    subMenu.addMenuItem("MultiSelect", DemoMultiSelect.class);
+    subMenu.addMenuItem("RadioSelect", DemoRadioSelect.class);
+    subMenu.addMenuItem("demo_automaticForm_title", DemoAutomaticFormElement.class);
 
     // Advanced demos:
-    subMenu = demosMenu.addMenuItem(new MenuItem("Advanced"));
-    subMenu.addMenuItem(new MenuItem("File_Upload", DemoFileUpload.class));
-    subMenu.addMenuItem(new MenuItem("Complex_Form", DemoComplexForm.class));
-    subMenu.addMenuItem(new MenuItem("Rich_Text_Editor", DemoRichTextForm.class));
-    subMenu.addMenuItem(new MenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class));
-    subMenu.addMenuItem(new MenuItem("Flow_Navigation_Confirmation", DemoFlowEventConfirmationWidget.class));
-    subMenu.addMenuItem(new MenuItem("demo_filteredinput", FilteredInputDemoWidget.class));
-    subMenu.addMenuItem(new MenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class));
-    subMenu.addMenuItem(new MenuItem("Form_with_Actions", SampleActionFormWidget.class));
-    subMenu.addMenuItem(new MenuItem("ModalDialogTesting", ModalDialogTestWidget.class));
+    subMenu = demosMenu.addMenuItem("Advanced");
+    subMenu.addMenuItem("File_Upload", DemoFileUpload.class);
+    subMenu.addMenuItem("Complex_Form", DemoComplexForm.class);
+    subMenu.addMenuItem("Rich_Text_Editor", DemoRichTextForm.class);
+    subMenu.addMenuItem("Advanced_Popup", DemoAdvancedPopupUsageWidget.class);
+    subMenu.addMenuItem("Flow_Navigation_Confirmation", DemoFlowEventConfirmationWidget.class);
+    subMenu.addMenuItem("demo_filteredinput", FilteredInputDemoWidget.class);
+    subMenu.addMenuItem("OnChangeListeners", DemoOnChangeListenersWidget.class);
+    subMenu.addMenuItem("Form_with_Actions", SampleActionFormWidget.class);
+    subMenu.addMenuItem("ModalDialogTesting", ModalDialogTestWidget.class);
 
     // Form lists demos:
-    subMenu = demosMenu.addMenuItem(new MenuItem("Form_Lists"));
-    subMenu.addMenuItem(new MenuItem("Display_Form", DemoDisplayForm.class));
-    subMenu.addMenuItem(new MenuItem("Editable_List", DemoFormList.class));
-    subMenu.addMenuItem(new MenuItem("In_memory_editable_list", DemoInMemoryEditableList.class));
-    subMenu.addMenuItem(new MenuItem("Editable_checkbox_list", DemoCheckboxList.class));
-    subMenu.addMenuItem(new MenuItem("Displayable_editable_list", DemoDisplayableEditableList.class));
-    subMenu.addMenuItem(new MenuItem("Embedded_Form_List", DemoEmbeddedDisplayableEditableList.class));
+    subMenu = demosMenu.addMenuItem("Form_Lists");
+    subMenu.addMenuItem("Display_Form", DemoDisplayForm.class);
+    subMenu.addMenuItem("Editable_List", DemoFormList.class);
+    subMenu.addMenuItem("In_memory_editable_list", DemoInMemoryEditableList.class);
+    subMenu.addMenuItem("Editable_checkbox_list", DemoCheckboxList.class);
+    subMenu.addMenuItem("Displayable_editable_list", DemoDisplayableEditableList.class);
+    subMenu.addMenuItem("Embedded_Form_List", DemoEmbeddedDisplayableEditableList.class);
 
     // Lists demos:
-    subMenu = demosMenu.addMenuItem(new MenuItem("Lists"));
-    subMenu.addMenuItem(new MenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class));
-    subMenu.addMenuItem(new MenuItem("Multi_List", MultiListWidget.class));
+    subMenu = demosMenu.addMenuItem("Lists");
+    subMenu.addMenuItem("Contacts_SubBeanList", SimpleSubBeanListWidget.class);
+    subMenu.addMenuItem("Multi_List", MultiListWidget.class);
 
     // Trees demos:
-    subMenu = demosMenu.addMenuItem(new MenuItem("Trees"));
-    subMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
-    subMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
-    subMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
+    subMenu = demosMenu.addMenuItem("Trees");
+    subMenu.addMenuItem("Simple_Tree", SimpleTreeWidget.class);
+    subMenu.addMenuItem("Complex_Tree", ComplexTreeWidget.class);
+    subMenu.addMenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class);
 
     // The Misc menu:
-    MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc"));
-    errorMenu.addMenuItem(new MenuItem("Error_on_init", InitErrorWidget.class));
-    errorMenu.addMenuItem(new MenuItem("Error_on_event", EventErrorWidget.class));
-    errorMenu.addMenuItem(new MenuItem("Error_on_render", RenderErrorWidget.class));
-    errorMenu.addMenuItem(new MenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class));
-    errorMenu.addMenuItem(new MenuItem("Redirecting", RedirectingWidget.class));
+    MenuItem errorMenu = result.addMenuItem("Misc");
+    errorMenu.addMenuItem("Error_on_init", InitErrorWidget.class);
+    errorMenu.addMenuItem("Error_on_event", EventErrorWidget.class);
+    errorMenu.addMenuItem("Error_on_render", RenderErrorWidget.class);
+    errorMenu.addMenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class);
+    errorMenu.addMenuItem("Redirecting", RedirectingWidget.class);
 
     return result;
   }
 
-  protected void renderExceptionHandler(OutputData output, Exception e)
-      throws Exception {
+  protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
     if (ExceptionUtils.getRootCause(e) != null) {
-      putViewDataOnce("rootStackTrace",
-          ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
+      putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
     }
     putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e));
     ServletUtil.include("/WEB-INF/jsp/error.jsp", this, output);

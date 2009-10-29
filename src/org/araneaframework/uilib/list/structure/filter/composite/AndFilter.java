@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.list.structure.filter.composite;
 
@@ -23,12 +23,10 @@ import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIte
 import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
-
 public class AndFilter extends MultiFilter {
-	private static final long serialVersionUID = 1L;
 
-	public Expression buildExpression(Map data) {
-		Iterator i = new LaxyExpressionIterator(this.children.iterator(), data);
-		return ExpressionUtil.and(i);
-	}
+  public Expression buildExpression(Map<String, Object> data) {
+    Iterator<Expression> i = new LaxyExpressionIterator(this.children.iterator(), data);
+    return ExpressionUtil.and(i);
+  }
 }

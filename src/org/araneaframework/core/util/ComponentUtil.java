@@ -45,7 +45,7 @@ import org.araneaframework.core.StandardScope;
  * In the example above, it uses the lifecycle listener to remove an
  * <code>Environment</code> entry that was added before.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ComponentUtil {
 

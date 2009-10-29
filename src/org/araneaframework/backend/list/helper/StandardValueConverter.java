@@ -24,8 +24,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.util.Converter;
 
 /**
- * ValueConverter that has a map of Value names and their <code>Converter</code>
- * objects.
+ * ValueConverter that has a map of Value names and their <code>Converter</code> objects.
  * 
  * @see Converter
  * @author Rein Raudjärv
@@ -33,24 +32,26 @@ import org.araneaframework.uilib.list.util.Converter;
  */
 public class StandardValueConverter implements ValueConverter {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Value name --&gt; Converter that is used by convert() method.
+   */
+  private final Map<String, Converter<Object, Object>> converters = new HashMap<String, Converter<Object, Object>>();
 
-  /** Value name --&gt; Converter that is used by convert() method. */
-  private final Map converters = new HashMap();
-
+  @SuppressWarnings("unchecked")
   public void addConverter(String valueName, Converter converter) {
     Assert.notNullParam(converter, "converter");
     this.converters.put(valueName, converter);
   }
 
-  public Object convert(Value value) {
+  @SuppressWarnings("unchecked")
+  public <S, D> D convert(Value<S> value) {
     // Find Converter
-    Converter converter = (Converter) this.converters.get(value.getName());
+    Converter<Object, Object> converter = this.converters.get(value.getName());
     if (converter == null) {
       // No Converter registered
-      return value.getValue();
+      return (D) value.getValue();
     }
     // Convert
-    return converter.convert(value.getValue());
+    return (D) converter.convert(value.getValue());
   }
 }

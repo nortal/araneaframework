@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
  * {@link SelectControl} and {@link MultiSelectControl} manage a list of them. Each item is characterized by its value
  * and label or by target object. If the latter is defined, it is used for resolving label and value.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DisplayItem implements Serializable {
 
@@ -105,6 +105,16 @@ public class DisplayItem implements Serializable {
     setGroupAndOptions(group, childOptions);
   }
 
+  /**
+   * If this item is a group (<code>group == true</code>) then the group may have child options. A convenience method to
+   * specify those properties.
+   * 
+   * @param group A Boolean indicating whether this item represents a group of select items (this item cannot be
+   *          selected).
+   * @param childOptions The <code>DisplayItem</code>s that the group contains (if <code>group == false</code> then
+   *          these child options won't be stored).
+   * @since 2.0
+   */
   protected void setGroupAndOptions(boolean group, Collection<DisplayItem> childOptions) {
     this.group = group;
     this.childOptions = this.group && childOptions != null ? new LinkedList<DisplayItem>(childOptions) : null;
@@ -115,7 +125,7 @@ public class DisplayItem implements Serializable {
    * 
    * @return The value of this item.
    */
-  public String getDisplayString() {
+  public String getLabel() {
     return this.label;
   }
 
@@ -169,11 +179,17 @@ public class DisplayItem implements Serializable {
   /**
    * @since 1.2
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj != null && obj instanceof DisplayItem) {
       DisplayItem other = (DisplayItem) obj;
       return StringUtils.equals(other.value, this.value);
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return 227 * this.value.hashCode();
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure.order;
 
@@ -34,7 +34,7 @@ public class MultiFieldOrder implements ListOrder {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Log log = LogFactory.getLog(MultiFieldOrder.class);
+	private static final Log LOG = LogFactory.getLog(MultiFieldOrder.class);
 	
 	protected Map orders = new HashMap();
 
@@ -70,9 +70,9 @@ public class MultiFieldOrder implements ListOrder {
 	}
 
 	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
-		log.debug("Building ComparatorExpression, orderInfo = " + orderInfo.toString());
+		LOG.debug("Building ComparatorExpression, orderInfo = " + orderInfo.toString());
 		if (orderInfo.getFields().size() == 0) {
-			log.debug("No filterInfoFields specified, returning null");
+			LOG.debug("No filterInfoFields specified, returning null");
 			return null;
 		}
 		

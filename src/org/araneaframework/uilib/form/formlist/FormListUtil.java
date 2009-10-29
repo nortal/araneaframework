@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.formlist.FormListUtil.ButtonOnClickEventLi
 /**
  * Utility methods for adding buttons to {@link FormListWidget} rows and tracking state changes.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class FormListUtil {
 
@@ -128,13 +128,11 @@ public abstract class FormListUtil {
    * @param editableRows editable rows.
    * @return whether the editable rows have been edited since last save.
    */
-  public static boolean isRowFormsStateChanged(Map<?, FormRow<?, ?>> editableRows) {
+  public static <K, R> boolean isRowFormsStateChanged(Map<K, FormRow<K, R>> editableRows) {
     boolean result = false;
-
     for (FormRow<?, ?> editableRow : editableRows.values()) {
       result = result || editableRow.getForm().isStateChanged();
     }
-
     return result;
   }
 

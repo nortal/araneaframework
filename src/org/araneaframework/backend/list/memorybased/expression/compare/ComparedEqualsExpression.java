@@ -19,12 +19,10 @@ package org.araneaframework.backend.list.memorybased.expression.compare;
 import java.util.Comparator;
 import org.araneaframework.backend.list.memorybased.Expression;
 
+@SuppressWarnings("unchecked")
 public class ComparedEqualsExpression extends ComparableExpression {
 
-  private static final long serialVersionUID = 1L;
-
-  public ComparedEqualsExpression(Expression expr1, Expression expr2,
-      Comparator comparator) {
+  public ComparedEqualsExpression(Expression expr1, Expression expr2, Comparator comparator) {
     super(expr1, expr2, comparator);
   }
 

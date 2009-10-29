@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.widget;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -32,44 +35,81 @@ import org.araneaframework.http.util.ServletUtil;
  */
 public class DownloaderWidget extends BaseApplicationWidget {
 
-  private static final long serialVersionUID = 1L;
-  protected byte[] data;
+  protected InputStream dataStream;
+
+  protected int length = -1;
+
   protected String contentType;
+
   protected Map<String, String> headers;
 
   public DownloaderWidget(byte[] data, String contentType) {
-    Assert.notNullParam(data, "data");
-    Assert.notEmptyParam(contentType, "contentType");
-    this.data = data;
-    this.contentType = contentType;
+    this(new ByteArrayInputStream(data), data.length, contentType);
   }
   
   /** @since 1.1 */
   public DownloaderWidget(byte[] data, Map<String, String> headers) {
-    Assert.notNullParam(data, "data");
-    this.data = data;
+    this(new ByteArrayInputStream(data), data.length, null, headers);
+  }
+
+  /** @since 2.0 */
+  public DownloaderWidget(InputStream dataStream, String contentType) {
+    this(dataStream, -1, contentType);
+  }
+
+  /** @since 2.0 */
+  public DownloaderWidget(InputStream dataStream, long length, String contentType) {
+    this(dataStream, length, contentType, null);
+  }
+
+  /** @since 2.0 */
+  public DownloaderWidget(InputStream dataStream, long length, String contentType, Map<String, String> headers) {
+    Assert.notNullParam(dataStream, "dataStream");
+    this.dataStream = dataStream;
+    this.length = (int) length;
+    this.contentType = contentType;
     this.headers = headers;
   }
 
-  public byte[] getData() {
-    return data;
+  public InputStream getData() {
+    return this.dataStream;
   }
 
   public String getContentType() {
-    return contentType;
+    return this.contentType;
   }
   
   /** @since 1.1 */
   public Map<String, String> getHeaders() {
-    return headers;
+    return this.headers;
   }
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
-    response.setContentType(getContentType());
-    response.setContentLength(getData().length);
-    response.getOutputStream().write(getData());
+    beforeFile(response);
+
+    long length = IOUtils.copyLarge(this.dataStream, response.getOutputStream());
+    IOUtils.closeQuietly(this.dataStream);
+
+    afterFile(response, length);
   }
 
+  protected void beforeFile(HttpServletResponse response) {
+    response.setContentType(getContentType());
+    if (this.headers != null) {
+      for (Map.Entry<String, String> header : this.headers.entrySet()) {
+        response.setHeader(header.getKey(), header.getValue());
+      }
+    }
+    if (this.length >= 0) {
+      response.setContentLength(this.length);
+    }
+  }
+
+  protected void afterFile(HttpServletResponse response, long length) {
+    if (this.length < 0 && length >= 0 && length < Integer.MAX_VALUE) {
+      response.setContentLength((int) length);
+    }
+  }
 }

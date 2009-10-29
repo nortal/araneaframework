@@ -40,7 +40,7 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
 
   public static final String FORM_VALIDATION_REGION_KEY = "aranea-formvalidation";
 
-  protected static final Log log = LogFactory.getLog(FormElementValidationActionListener.class);
+  protected static final Log LOG = LogFactory.getLog(FormElementValidationActionListener.class);
 
   private FormElement<C, D> baseFormElement;
 
@@ -50,8 +50,8 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
   }
 
   public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-    if (!isValidationEnabled() && log.isWarnEnabled()) {
-      log.warn("Validation listener of '" + this.baseFormElement.getScope()
+    if (!isValidationEnabled() && LOG.isWarnEnabled()) {
+      LOG.warn("Validation listener of '" + this.baseFormElement.getScope()
           + "' was invoked although validation not enbled. Skipping response.");
       return;
     }
@@ -83,7 +83,7 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
     if (messageContext != null) {
       UpdateRegionProvider messageRegion = messageContext;
       // TODO: general mechanism for writing out UpdateRegions from actions
-      String messageRegionContent = messageRegion.getRegions().get(MessageContext.MESSAGE_REGION_KEY).toString();
+      String messageRegionContent = messageRegion.getRegions(null).get(MessageContext.MESSAGE_REGION_KEY).toString();
       writeRegion(out, MessageContext.MESSAGE_REGION_KEY, messageRegionContent);
     }
   }

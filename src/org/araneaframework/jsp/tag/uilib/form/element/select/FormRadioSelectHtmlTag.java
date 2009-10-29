@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -26,18 +24,19 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
-
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Standard select form element tag.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
- *   name = "radioSelect"
- *   body-content = "JSP"
- *   description = "Form radioselect buttons field, represents UiLib "SelectControl"."
+ *  name = "radioSelect"
+ *  body-content = "JSP"
+ *  description = "Form radio-select buttons field, represents UiLib "SelectControl"."
  */
+@SuppressWarnings("unchecked")
 public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
 
   protected String type = "horizontal";
@@ -53,67 +52,64 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
   public int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");
 
-    if (!"horizontal".equals(type) && !"vertical".equals(type)) {
-      throw new AraneaJspException(
-          "Attribute 'type' can be only either 'horizontal' or 'vertical'!");
+    if (!"horizontal".equals(this.type) && !"vertical".equals(this.type)) {
+      throw new AraneaJspException("Attribute 'type' can be only either 'horizontal' or 'vertical'!");
     }
 
     // Prepare
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 
-    SelectControl.ViewModel viewModel = (SelectControl.ViewModel) controlViewModel;
+    SelectControl<Object>.ViewModel viewModel = (SelectControl.ViewModel) controlViewModel;
     FormRadioSelectItemLabelHtmlTag label = new FormRadioSelectItemLabelHtmlTag();
 
-    for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem displayItem = (DisplayItem) i.next();
-
-      // set the corresponding HTML id for label and radiobutton so that
-      // clicking on label
-      // affects radiobutton selection
+    for (DisplayItem displayItem : viewModel.getSelectItems()) {
+      // Set the same HTML id for label ("for") and radio-button ("id") so that clicking on label affects radio-button
+      // selection:
       String radioId = viewModel.getScope().toString() + displayItem.getValue();
-      FormRadioSelectItemHtmlTag item = new FormRadioSelectItemHtmlTag();
-      registerSubtag(item);
+
+      FormRadioSelectItemHtmlTag item = registerSubtag(new FormRadioSelectItemHtmlTag());
       item.setHtmlId(radioId);
 
-      if (labelBefore) {
-        writeLabel(label, derivedId, radioId, displayItem.getValue());
+      if (this.labelBefore) {
+        writeLabel(label, this.derivedId, radioId, displayItem.getValue());
       }
 
-      item.setId(derivedId);
+      item.setId(this.derivedId);
       item.setValue(displayItem.getValue());
-      item.setEvents(events ? "true" : "false");
-      item.setValidateOnEvent(validateOnEvent ? "true" : "false");
+      item.setEvents(Boolean.toString(this.events));
+      item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
       item.setStyleClass(getStyleClass());
 
-      if (updateRegions != null) {
-        item.setUpdateRegions(updateRegions);
+      if (this.updateRegions != null) {
+        item.setUpdateRegions(this.updateRegions);
       }
 
-      if (globalUpdateRegions != null) {
-        item.setGlobalUpdateRegions(globalUpdateRegions);
+      if (this.globalUpdateRegions != null) {
+        item.setGlobalUpdateRegions(this.globalUpdateRegions);
       }
 
       if (getStyle() != null) {
         item.setStyle(getStyle());
       }
 
-      if (tabindex != null) {
-        item.setTabindex(tabindex);
+      if (this.tabindex != null) {
+        item.setTabindex(this.tabindex);
       }
 
       executeStartSubtag(item);
       executeEndTagAndUnregister(item);
 
-      if (!labelBefore) {
-        writeLabel(label, derivedId, radioId, displayItem.getValue());
+      if (!this.labelBefore) {
+        writeLabel(label, this.derivedId, radioId, displayItem.getValue());
       }
 
-      if ("horizontal".equals(type)) {
+      if ("horizontal".equals(this.type)) {
         out.write("&nbsp;");
-      } else if ("vertical".equals(type)) {
+      } else if ("vertical".equals(this.type)) {
         JspUtil.writeStartEndTag(out, "br");
       }
     }
+
     super.doEndTag(out);
     return EVAL_PAGE;
   }
@@ -127,8 +123,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
    *    required = "false"
    *    description = "The way the radio buttons will be rendered - can be either vertical or horizontal. By default horizontal."
    */
-  public void setType(String type) throws JspException {
-    this.type = (String) evaluate("type", type, String.class);
+  public void setType(String type) {
+    this.type = evaluate("type", type, String.class);
   }
 
   /**
@@ -138,8 +134,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
    *    description = "Boolean that controls whether label is before or after each radio button. False by default."
    */
   public void setLabelBefore(String labelBefore) throws JspException {
-    this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore,
-        Boolean.class)).booleanValue();
+    this.labelBefore = evaluateNotNull("labelBefore", labelBefore, Boolean.class);
   }
 
   /**
@@ -149,14 +144,12 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
    *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
    * @since 1.2
    */
-  public void setLocalizeDisplayItems(String localizeDisplayItems)
-      throws JspException {
-    this.localizeDisplayItems = (Boolean) evaluateNotNull(
-        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+  public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 
-  protected void writeLabel(FormRadioSelectItemLabelHtmlTag label, String id,
-      String radioId, String value) throws JspException {
+  protected void writeLabel(FormRadioSelectItemLabelHtmlTag label, String id, String radioId, String value)
+      throws JspException {
     registerSubtag(label);
     label.setId(id);
     label.setRadioId(radioId);
@@ -166,15 +159,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   protected String evaluateLabel(String value) {
-    if (this.localizeDisplayItems == null) {
-      this.localizeDisplayItems = ConfigurationContextUtil
-          .isLocalizeControlData(getEnvironment());
-    }
-
-    if (this.localizeDisplayItems.booleanValue()) {
-      value = JspUtil.getResourceString(pageContext, value);
-    }
-
-    return value;
+    this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
+    return this.localizeDisplayItems ? JspUtil.getResourceString(this.pageContext, value) : value;
   }
 }

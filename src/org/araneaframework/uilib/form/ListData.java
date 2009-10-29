@@ -24,7 +24,7 @@ import org.araneaframework.uilib.support.DataType;
 /**
  * This class represents <code>List</code>-typed form element data.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @see Data
  */
 public class ListData<T> extends Data<List<T>> {

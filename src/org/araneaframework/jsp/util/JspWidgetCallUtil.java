@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.util;
 
@@ -27,7 +27,7 @@ import org.araneaframework.jsp.UiUpdateEvent;
  * Standard util for producing calls to UiLib widgets in various
  * container frameworks. 
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class JspWidgetCallUtil {
   public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.event(this);";

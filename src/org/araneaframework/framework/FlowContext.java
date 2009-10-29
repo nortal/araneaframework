@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework;
 
@@ -31,7 +31,7 @@ import org.araneaframework.core.ApplicationWidget;
  * @see org.araneaframework.framework.container.StandardFlowContainerWidget
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FlowContext extends Serializable {
   /** @since 1.1 */ 
@@ -57,14 +57,14 @@ public interface FlowContext extends Serializable {
    * {@link #cancel()}. {@link Handler} allows to receive notification, when the subflow ends execution.
    * @since 1.0.9
    */
-  public void start(Widget flow, Handler handler);
+  public void start(Widget flow, Handler<?> handler);
   
   /**
    * Starts a new nested subflow, that can be configured using the configurator. Current flow becomes inactive
    * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
    * when the subflow ends execution.
    */
-  public void start(Widget flow, Configurator configurator, Handler handler);
+  public void start(Widget flow, Configurator configurator, Handler<?> handler);
 
   /**
    * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
@@ -148,8 +148,8 @@ public interface FlowContext extends Serializable {
   /**
    * Callback that will be run when flow has finished some way. 
    */
-  public interface Handler extends Serializable {
-    public void onFinish(Object returnValue) throws Exception;   
+  public interface Handler<T> extends Serializable {
+    public void onFinish(T returnValue) throws Exception;   
     public void onCancel() throws Exception;
   }
   

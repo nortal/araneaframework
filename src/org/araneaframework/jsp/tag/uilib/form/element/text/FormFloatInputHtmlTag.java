@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.jsp.AraneaAttributes;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 
 /**
  * Standard number float form element tag.
@@ -40,7 +40,7 @@ public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
 
-    FloatControl.ViewModel viewModel = ((FloatControl.ViewModel)controlViewModel);
+    BigDecimalControl.ViewModel viewModel = ((BigDecimalControl.ViewModel)controlViewModel);
 
     Map<String, String> attributes = new HashMap<String, String>();
     if (viewModel.getInputFilter() != null) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.router;
 
@@ -21,19 +21,22 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
 
 /**
- * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles threads.
- * Enriches the environment with an object of this class under the key
- * StandardThreadServiceRouterService.class.
+ * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles threads. Enriches the
+ * environment with an object of this class under the key StandardThreadServiceRouterService.class.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardThreadServiceRouterService extends BaseExpiringServiceRouterService {
+
   @Override
   protected Environment getChildEnvironment(String serviceId) throws Exception {
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class, new ServiceRouterContextImpl(serviceId));
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class,
+        new ServiceRouterContextImpl(serviceId));
   }
-  
-  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements ThreadContext {
+
+  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements
+      ThreadContext {
+
     protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
@@ -45,7 +48,7 @@ public class StandardThreadServiceRouterService extends BaseExpiringServiceRoute
   }
 
   @Override
-  public String getKeepAliveKey() { 
+  public String getKeepAliveKey() {
     return ThreadContext.KEEPALIVE_KEY;
   }
 }

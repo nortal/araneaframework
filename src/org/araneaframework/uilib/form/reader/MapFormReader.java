@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.GenericFormElement;
 /**
  * This class allows one to read <code>Map</code>s from {@link org.araneaframework.uilib.form.FormWidget}s.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class MapFormReader {
 

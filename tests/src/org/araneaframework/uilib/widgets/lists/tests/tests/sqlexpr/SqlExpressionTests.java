@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
@@ -25,7 +25,7 @@ import org.araneaframework.backend.list.sqlexpr.constant.SqlValueExpression;
 
 
 public class SqlExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(SqlExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(SqlExpressionTests.class);
 
 	@Override
   public void setUp() {
@@ -38,7 +38,7 @@ public class SqlExpressionTests extends TestCase {
 	}
 
 	public void testSqlStringExpression() {
-		log.debug("Testing SqlStringExpression");
+		LOG.debug("Testing SqlStringExpression");
 		// constructing
 		try {
 			new SqlStringExpression("");
@@ -89,7 +89,7 @@ public class SqlExpressionTests extends TestCase {
 	}
 
 	public void testSqlValueExpression() {
-		log.debug("Testing SqlValueExpression");
+		LOG.debug("Testing SqlValueExpression");
 		// constructing
 		try {
 			new SqlValueExpression(null);

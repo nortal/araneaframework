@@ -180,16 +180,14 @@ public class DemoComplexForm extends TemplateBaseWidget {
 
   private static final String DRAGON = "demo.complexForm.value.dragon";
 
-  private static final String[] BIRDS = new String[] { BIRD + ".chicken", BIRD + ".goose", BIRD + ".duck",
-      BIRD + ".swan" };
+  private static final String[] BIRDS = { BIRD + ".chicken", BIRD + ".goose", BIRD + ".duck", BIRD + ".swan" };
 
-  private static final String[] ANIMALS = new String[] { ANIMAL + ".piglet", ANIMAL + ".pooh", ANIMAL + ".tiger",
+  private static final String[] ANIMALS = { ANIMAL + ".piglet", ANIMAL + ".pooh", ANIMAL + ".tiger",
       ANIMAL + ".cangaroo" };
 
-  private static final String[] FISHES = new String[] { FISH + ".willy", FISH + ".nemo", FISH + ".dory",
-      FISH + ".marlin" };
+  private static final String[] FISHES = { FISH + ".willy", FISH + ".nemo", FISH + ".dory", FISH + ".marlin" };
 
-  private static final String[] DRAGONS = new String[] { DRAGON + ".smaug", DRAGON + ".chrysophylax", DRAGON + ".devon" };
+  private static final String[] DRAGONS = { DRAGON + ".smaug", DRAGON + ".chrysophylax", DRAGON + ".devon" };
 
   // =============================================================================================
   //  Here is the select item model used in this demo. Also note that Aranea comes by default

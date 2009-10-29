@@ -22,7 +22,7 @@ import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.core.Assert;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class HSqlListSqlHelper extends ListSqlHelper {
 
@@ -129,7 +129,7 @@ public class HSqlListSqlHelper extends ListSqlHelper {
    * 
    * @param params <code>PreparedStatement</code> parameters.
    */
-  public void addStatementParams(List params) {
+  public void addStatementParams(List<Object> params) {
     this.statement.addAllParams(params);
   }
 }

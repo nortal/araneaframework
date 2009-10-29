@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.extension;
 
@@ -45,7 +45,7 @@ import org.xml.sax.XMLReader;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class ExternalResourceInitializer {
-	private static final Log log = LogFactory.getLog(ExternalResourceInitializer.class);
+	private static final Log LOG = LogFactory.getLog(ExternalResourceInitializer.class);
 	
 	/**
 	 * Framework application main configuration file.
@@ -69,7 +69,7 @@ public class ExternalResourceInitializer {
 			Enumeration<URL> contextPathResources = getContextResources(context, ARANEA_RESOURCES_FILE_NAME); 
 
 			if (!(classPathResources.hasMoreElements() || contextPathResources.hasMoreElements()))
-				log.warn("Aranea resource configuration file '" + ARANEA_RESOURCES_FILE_NAME + "' not found.");
+				LOG.warn("Aranea resource configuration file '" + ARANEA_RESOURCES_FILE_NAME + "' not found.");
 			loadResources(classPathResources, xr);
 			loadResources(contextPathResources, xr);
 			
@@ -94,7 +94,7 @@ public class ExternalResourceInitializer {
 	protected void loadResources(Enumeration<URL> resources, XMLReader xr) throws IOException, SAXException {
 		while (resources.hasMoreElements()) {
 			URL fileURL = resources.nextElement();
-			log.debug("Adding resources from file'"+fileURL+"'");
+			LOG.debug("Adding resources from file'"+fileURL+"'");
 			xr.parse(new InputSource(fileURL.openStream()));
 		}
 	}

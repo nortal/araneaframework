@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
@@ -32,7 +32,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
 
 public class ComparableExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(ComparableExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(ComparableExpressionTests.class);
 
 	private VariableResolver resolver;
 
@@ -63,7 +63,7 @@ public class ComparableExpressionTests extends TestCase {
 	}
 
 	public void testEqualsExpression() throws ExpressionEvaluationException {
-		log.debug("Testing EqualsExpression");
+		LOG.debug("Testing EqualsExpression");
 		try {
 			new EqualsExpression(null, null).evaluate(this.resolver);
 			fail("EqualsExpression operands can not be nulls");
@@ -97,7 +97,7 @@ public class ComparableExpressionTests extends TestCase {
 
 	public void testComparedEqualsExpression()
 			throws ExpressionEvaluationException {
-		log.debug("Testing ComparedEqualsExpression");
+		LOG.debug("Testing ComparedEqualsExpression");
 		try {
 			new ComparedEqualsExpression(null, null).evaluate(this.resolver);
 			fail("ComparedEqualsExpression operands can not be nulls");
@@ -134,7 +134,7 @@ public class ComparableExpressionTests extends TestCase {
 
 	public void testGreaterThanExpression()
 			throws ExpressionEvaluationException {
-		log.debug("Testing GreaterThanExpression");
+		LOG.debug("Testing GreaterThanExpression");
 		try {
 			new GreaterThanExpression(null, null).evaluate(this.resolver);
 			fail("GreaterThanExpression operands can not be nulls");
@@ -167,7 +167,7 @@ public class ComparableExpressionTests extends TestCase {
 	}
 
 	public void testLowerThanExpression() throws ExpressionEvaluationException {
-		log.debug("Testing LowerThanExpression");
+		LOG.debug("Testing LowerThanExpression");
 		try {
 			new LowerThanExpression(null, null).evaluate(this.resolver);
 			fail("LowerThanExpression operands can not be nulls");
@@ -200,7 +200,7 @@ public class ComparableExpressionTests extends TestCase {
 	}
 
 	public void testIsNullExpression() throws ExpressionEvaluationException {
-		log.debug("Testing IsNullExpression");
+		LOG.debug("Testing IsNullExpression");
 		try {
 			new IsNullExpression(null).evaluate(this.resolver);
 			fail("IsNullExpression operand can not be null");

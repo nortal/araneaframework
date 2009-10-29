@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.filter;
 
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +35,7 @@ import org.araneaframework.http.support.CachingEntityResolver;
 import org.araneaframework.http.support.TldLocationsCache;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,100 +43,89 @@ import org.xml.sax.SAXException;
 
 public class StandardJspFilterService extends BaseFilterService implements JspContext {
 
-  private static final long serialVersionUID = 1L;
-
   // URI -> Map<TagInfo>
-  private Map taglibs = new HashMap();
-  
+  private Map<String, Map<String, TagInfo>> taglibs = new HashMap<String, Map<String,TagInfo>>();
+
   private String submitCharset;
+
   private String jspPath = "/WEB-INF/jsp";
+
   private String jspExtension = ".jsp";
-  
-  // Spring injection parameters  
+
+  // Spring injection parameters
   public void setSubmitCharset(String submitCharset) {
     this.submitCharset = submitCharset;
   }
-  
+
+  public String getSubmitCharset() {
+    return this.submitCharset;
+  }
+
   public void setJspPath(String jspPath) {
     this.jspPath = jspPath;
   }
-  
+
   public String getJspPath() {
-    return jspPath;
+    return this.jspPath;
   }
-  
+
   public void setJspExtension(String jspExtension) {
     this.jspExtension = jspExtension;
   }
-  
+
   public String getJspExtension() {
-    return jspExtension;
+    return this.jspExtension;
   }
 
-  public String getSubmitCharset() {
-    return submitCharset;
-  }
-  
   public String getFormAction() {
-    return (getEnvironment().requireEntry(ServletConfig.class)).getServletContext().getServletContextName();
+    return getEnvironment().requireEntry(ServletConfig.class).getServletContext().getServletContextName();
   }
-  
-  public Map getTagMapping(String uri){
+
+  public Map<String, TagInfo> getTagMapping(String uri) {
     return getTagMap(uri);
   }
-  
+
   public ConfigurationContext getConfiguration() {
     return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
-  
+
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(getEnvironment(), JspContext.class, this);
   }
-  
-  public Map getTagMap(String uri) {
-    if (!taglibs.containsKey(uri)) {
-      ServletContext ctx = 
-        getEnvironment().getEntry(ServletContext.class);
+
+  public Map<String, TagInfo> getTagMap(String uri) {
+    if (!this.taglibs.containsKey(uri)) {
+      ServletContext ctx = getEnvironment().getEntry(ServletContext.class);
       String[] locations = TldLocationsCache.getInstance(ctx).getLocation(uri);
       if (locations != null) {
-        URL realLoc = null;        
-        
-        try {
-          if (locations[1] == null)
-            realLoc = new URL(locations[0]);
-          else
-            realLoc = new URL("jar:" + locations[0] + "!/" + locations[1]);
+        URL realLoc = null;
 
-          taglibs.put(uri, readTldMapping(realLoc));
-        }
-        catch (IOException e) {
+        try {
+          realLoc = new URL(locations[0] == null ? locations[0] : "jar:" + locations[0] + "!/" + locations[1]);
+          this.taglibs.put(uri, readTldMapping(realLoc));
+        } catch (IOException e) {
           throw new AraneaRuntimeException("Failed to read the tag library descriptor for URI '" + uri + "'", e);
         }
       }
     }
 
-    return (Map) taglibs.get(uri);
+    return this.taglibs.get(uri);
   }
 
-  private Map readTldMapping(URL location) throws IOException {
-    Map result = new HashMap();
-
-    InputStream tldStream = location.openStream();
-
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+  private Map<String, TagInfo> readTldMapping(URL location) {
+    Map<String, TagInfo> result = new HashMap<String, TagInfo>();
     Document tldDoc = null;
+
     try {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       builder.setEntityResolver(CachingEntityResolver.getInstance());
-      tldDoc = builder.parse(tldStream);
-    }
-    catch (ParserConfigurationException e) {
+      tldDoc = builder.parse(location.openStream());
+    } catch (ParserConfigurationException e) {
       throw new NestableRuntimeException(e);
-    }
-    catch (SAXException e) {
+    } catch (SAXException e) {
       throw new NestableRuntimeException(e);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new NestableRuntimeException(e);
     }
 
@@ -145,7 +133,6 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
 
     for (int i = 0; i < tagElements.getLength(); i++) {
       TagInfo tagInfo = TagInfo.readTagInfo((Element) tagElements.item(i));
-
       result.put(tagInfo.getTagName(), tagInfo);
     }
 

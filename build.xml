@@ -103,7 +103,7 @@
 		<ivy:settings file="${ivy.settings.file}" />
 	</target>
 
-	<target name="build" depends="jar" description="Builds the Aranea source code" />
+	<target name="build" depends="jar" description="Builds the Aranea source code and JARs." />
 
 	<target name="build-all" depends="build" description="Build the code and examples">
 		<ant dir="examples/common" target="build" inheritall="false"/>
@@ -161,9 +161,6 @@
 		</exec>
 		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
 			<arg line="src/aranea-keyboard.js aranea-keyboard.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-locale.js aranea-locale.js"/>
 		</exec>
 		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
 			<arg line="src/aranea-modalbox.js aranea-modalbox.js"/>

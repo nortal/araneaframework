@@ -33,7 +33,7 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} operates on the form elements or
  * forms providing means to constrain their content.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BaseConstraint implements Serializable, Constraint {
 

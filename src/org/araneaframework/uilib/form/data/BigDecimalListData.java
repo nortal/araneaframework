@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import org.araneaframework.uilib.form.ListData;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BigDecimalListData extends ListData<BigDecimal> {
 

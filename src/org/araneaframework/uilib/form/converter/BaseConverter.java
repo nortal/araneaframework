@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.FormElementContext;
  * {@link org.araneaframework.uilib.form.Control} to the value of {@link org.araneaframework.uilib.form.FormElement}
  * {@link org.araneaframework.uilib.form.Data} and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BaseConverter<C, D> implements Serializable, Converter<C, D> {
 

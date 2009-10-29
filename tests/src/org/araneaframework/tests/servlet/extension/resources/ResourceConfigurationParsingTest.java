@@ -1,7 +1,6 @@
 package org.araneaframework.tests.servlet.extension.resources;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.SAXParserFactory;
 import junit.framework.TestCase;
+import org.apache.commons.io.FileUtils;
 import org.araneaframework.http.extension.ExternalResource;
 import org.araneaframework.http.extension.ExternalResourceConfigurationHandler;
 import org.xml.sax.InputSource;
@@ -55,18 +55,17 @@ public class ResourceConfigurationParsingTest extends TestCase {
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
 
-		String s = new File(".").getAbsolutePath();
-		InputStream stream = new FileInputStream(s + "/etc/extensions/resources/sample.xml");
+		InputStream stream = FileUtils.openInputStream(new File("./tests/etc/resourcesTest.xml"));
 		xr.parse(new InputSource(stream));
 		
 		struct =  handler.getResource();
 	}
 	
 	public void testGetGroups() throws Exception {
-		for(Iterator ite = struct.getGroupNames().iterator();ite.hasNext();) {
-			String groupName = (String)ite.next();
-			if (availableGroups.indexOf(groupName) == -1)
+		for(String groupName : this.struct.getGroupNames()) {
+			if (!availableGroups.contains(groupName)) {
 				fail("Unknown group extracted");
+			}
 		}
 	}
 		

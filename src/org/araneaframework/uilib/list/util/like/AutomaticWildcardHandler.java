@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.like;
 
@@ -22,13 +22,11 @@ package org.araneaframework.uilib.list.util.like;
  * Wildcard is added at the start if there was no wildcard at the end
  *   and it is added at the end if there was no wildcard at the start.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * 
  * @see WildcardHandler
  */
 public class AutomaticWildcardHandler extends BaseWildcardHandler {
-
-  private static final long serialVersionUID = 1L;
 
   public int shouldStartWith() {
     return noWildcards() ? ANY_STRING_WILDCARD : this.startsWith;

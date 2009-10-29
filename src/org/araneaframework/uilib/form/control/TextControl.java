@@ -21,14 +21,12 @@ import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.TextType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 
 /**
- * Class that represents a textbox control.
+ * Class that represents a single-line text input control.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class TextControl extends StringValueControl implements FilteredInputControl<String> {
 
@@ -47,7 +45,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param textType specific type.
    */
   public TextControl(TextType textType) {
-    this.textType = textType;
+    this(textType, null, null);
   }
 
   /**
@@ -57,8 +55,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param maxLength maximum permitted length.
    */
   public TextControl(Long minLength, Long maxLength) {
-    setMinLength(minLength);
-    setMaxLength(maxLength);
+    this(minLength, maxLength, false);
   }
 
   /**
@@ -69,9 +66,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param trimValue whether the value from request will be trimmed.
    */
   public TextControl(Long minLength, Long maxLength, boolean trimValue) {
-    setMinLength(minLength);
-    setMaxLength(maxLength);
-    setTrimValue(trimValue);
+    this(TextType.TEXT, minLength, maxLength, trimValue);
   }
 
   /**
@@ -82,22 +77,36 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param maxLength maximum permitted length.
    */
   public TextControl(TextType textType, Long minLength, Long maxLength) {
-    this.textType = textType;
-    setMinLength(minLength);
-    setMaxLength(maxLength);
+    this(textType, minLength, maxLength, false);
   }
 
   /**
-   * Sets the specific text type.
+   * Makes a text control with specific type, minimum and maximum length constraints, and trimming constraints.
    * 
-   * @param textType the specific text type.
+   * @param textType specific type.
+   * @param minLength minimum permitted length.
+   * @param maxLength maximum permitted length.
+   * @param trimValue whether the value from request will be trimmed.
+   */
+  public TextControl(TextType textType, Long minLength, Long maxLength, boolean trim) {
+    setTextType(textType);
+    setMinLength(minLength);
+    setMaxLength(maxLength);
+    setTrimValue(trim);
+  }
+
+  /**
+   * Sets the specific expected text type for validating the input text.
+   * 
+   * @param textType The specific expected text type for validating the input text.
    */
   public void setTextType(TextType textType) {
     this.textType = textType;
   }
 
   /**
-   * Returns the type of this <code>TextControl</code>.
+   * Returns the type of text for this <code>TextControl</code>. The returned type is used for validating the input
+   * text.
    * 
    * @return the <code>TextType</code> of this <code>TextControl</code>.
    * @since 1.2.1
@@ -106,19 +115,14 @@ public class TextControl extends StringValueControl implements FilteredInputCont
     return this.textType;
   }
 
-  /** @since 1.0.11 */
   public InputFilter getInputFilter() {
     return this.inputFilter;
   }
 
-  /** @since 1.0.11 */
   public void setInputFilter(InputFilter inputFilter) {
     this.inputFilter = inputFilter;
   }
 
-  // *********************************************************************
-  // * INTERNAL INTERFACE
-  // *********************************************************************
   /**
    * In case text control type is other than {@link TextType#TEXT} makes custom checks.
    */
@@ -127,41 +131,29 @@ public class TextControl extends StringValueControl implements FilteredInputCont
     super.validateNotNull();
 
     if (this.textType.equals(TextType.NUMBER_ONLY)) {
-      for (int i = 0; i < getRawValue().length(); i++) {
-        if (!Character.isDigit(getRawValue().charAt(i))) {
-          addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NOT_A_NUMBER,
-              MessageUtil.localize(getLabel(), getEnvironment())));
-          break;
-        }
+      if (!ValidationUtil.isNumeric(getRawValue())) {
+          addErrorWithLabel(UiLibMessages.NOT_A_NUMBER);
       }
     } else if (this.textType.equals(TextType.EMAIL)) {
       if (!ValidationUtil.isEmail(getRawValue())) {
-        addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NOT_AN_EMAIL,
-            MessageUtil.localize(getLabel(), getEnvironment())));
+        addErrorWithLabel(UiLibMessages.NOT_AN_EMAIL);
       }
     }
 
     if (getInputFilter() != null && !StringUtils.containsOnly(this.value, getInputFilter().getCharacterFilter())) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), getInputFilter().getInvalidInputMessage(), MessageUtil.localize(
-          getLabel(), getEnvironment()), getInputFilter().getCharacterFilter()));
+      addErrorWithLabel(getInputFilter().getInvalidInputMessage(), getInputFilter().getCharacterFilter());
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  // *********************************************************************
-  // * VIEW MODEL
-  // *********************************************************************
-
   /**
+   * The view model implementation of <code>TextControl</code>. The view model provides the data for tags to render the
+   * control.
+   * 
    * @author <a href="mailto:olegm@webmedia.ee">Oleg Mürk</a>
    */
   public class ViewModel extends StringValueControl.ViewModel {
@@ -175,10 +167,22 @@ public class TextControl extends StringValueControl implements FilteredInputCont
       this.inputFilter = TextControl.this.getInputFilter();
     }
 
+    /**
+     * The name of the text type that this <code>TextControl</code> accepts.
+     * 
+     * @return The name of the text type that this <code>TextControl</code> accepts.
+     * @see TextType
+     */
     public String getTextType() {
       return this.textType;
     }
 
+    /**
+     * The expected input filtering settings of this <code>TextControl</code>. If <code>null</code> then no filtering
+     * should be done.
+     * 
+     * @return The expected input filtering settings of this <code>TextControl</code>.
+     */
     public InputFilter getInputFilter() {
       return this.inputFilter;
     }

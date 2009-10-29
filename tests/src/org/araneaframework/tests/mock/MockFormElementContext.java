@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.mock;
 
@@ -26,106 +26,103 @@ import org.araneaframework.uilib.form.FormElementContext;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class MockFormElementContext implements FormElementContext {
+public class MockFormElementContext<C, D> implements FormElementContext<C, D> {
 
-	private Set errors;
+  private Set<String> errors;
 
-	private Environment environment;
+  private Environment environment;
 
-	private String label;
+  private String label;
 
-	private boolean mandatory;
+  private boolean mandatory;
 
-	private boolean disabled;
+  private boolean disabled;
 
-	private boolean read;
+  private boolean read;
 
-	private Object value;
+  private D value;
 
-	public MockFormElementContext() {
-	}
+  public MockFormElementContext() {}
 
-	public MockFormElementContext(String label, boolean mandatory,
-			boolean disabled) {
-		this.label = label;
-		this.mandatory = mandatory;
-		this.disabled = disabled;
-	}
+  public MockFormElementContext(String label, boolean mandatory, boolean disabled) {
+    this.label = label;
+    this.mandatory = mandatory;
+    this.disabled = disabled;
+  }
 
-	public boolean isValid() {
-		return (errors == null || errors.size() == 0);
-	}
+  public boolean isValid() {
+    return (this.errors == null || this.errors.size() == 0);
+  }
 
-	public void addError(String error) {
-		getErrors().add(error);
-	}
+  public void addError(String error) {
+    getErrors().add(error);
+  }
 
-	public void addErrors(Set errors) {
-		getErrors().addAll(errors);
-	}
+  public void addErrors(Set<String> errors) {
+    getErrors().addAll(errors);
+  }
 
-	public void clearErrors() {
-		errors.clear();
-	}
+  public void clearErrors() {
+    this.errors.clear();
+  }
 
-	public Environment getEnvironment() {
-		return environment;
-	}
+  public Environment getEnvironment() {
+    return this.environment;
+  }
 
-	public String getLabel() {
-		return label;
-	}
+  public String getLabel() {
+    return this.label;
+  }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+  public void setLabel(String label) {
+    this.label = label;
+  }
 
-	public boolean isMandatory() {
-		return mandatory;
-	}
+  public boolean isMandatory() {
+    return this.mandatory;
+  }
 
-	public void setMandatory(boolean mandatory) {
-		this.mandatory = mandatory;
-	}
+  public void setMandatory(boolean mandatory) {
+    this.mandatory = mandatory;
+  }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+  public boolean isDisabled() {
+    return this.disabled;
+  }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+  public void setDisabled(boolean disabled) {
+    this.disabled = disabled;
+  }
 
-	public boolean isRead() {
-		return read;
-	}
+  public boolean isRead() {
+    return this.read;
+  }
 
-	public void setRead(boolean read) {
-		this.read = read;
-	}
+  public void setRead(boolean read) {
+    this.read = read;
+  }
 
-	public Object getValue() {
-		return value;
-	}
+  public D getValue() {
+    return this.value;
+  }
 
-	public void setValue(Object value) {
-		this.value = value;
-	}
+  public void setValue(D value) {
+    this.value = value;
+  }
 
-	public Set getErrors() {
-		if (errors == null)
-			errors = new HashSet();
-		return errors;
-	}
+  public Set<String> getErrors() {
+    if (this.errors == null) {
+      this.errors = new HashSet<String>();
+    }
+    return this.errors;
+  }
 
-	public Control getControl() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public Control<C> getControl() {
+    return null;
+  }
 
-	public Converter getConverter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public Converter<C, D> getConverter() {
+    return null;
+  }
 
 }

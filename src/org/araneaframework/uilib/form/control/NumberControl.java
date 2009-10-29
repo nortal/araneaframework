@@ -20,16 +20,16 @@ import java.math.BigInteger;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents a textbox control that accepts only valid integer numbers.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class NumberControl extends EmptyStringNullableControl<BigInteger> implements FilteredInputControl<BigInteger> {
+public class NumberControl extends BlankStringNullableControl<BigInteger> implements FilteredInputControl<BigInteger> {
 
   private InputFilter inputFilter;
 
@@ -45,11 +45,10 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
   /**
    * Makes a number control that has minimum and maximum value.
    * 
-   * @param minValue minimum permitted value.
-   * @param maxValue maximum permitted value.
+   * @param minValue The minimum permitted value.
+   * @param maxValue The maximum permitted value.
    */
   public NumberControl(BigInteger minValue, BigInteger maxValue) {
-    super();
     this.minValue = minValue;
     this.maxValue = maxValue;
   }
@@ -57,7 +56,7 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
   /**
    * Sets the maximum permitted value.
    * 
-   * @param maxValue maximum permitted value.
+   * @param maxValue The maximum permitted value.
    */
   public void setMaxValue(BigInteger maxValue) {
     this.maxValue = maxValue;
@@ -66,7 +65,7 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
   /**
    * Sets the minimum permitted value.
    * 
-   * @param minValue minimum permitted value.
+   * @param minValue The minimum permitted value.
    */
   public void setMinValue(BigInteger minValue) {
     this.minValue = minValue;
@@ -75,7 +74,7 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
   /**
    * Returns the maximum permitted value.
    * 
-   * @return the maximum permitted value.
+   * @return The maximum permitted value.
    */
   public BigInteger getMaxValue() {
     return maxValue;
@@ -84,42 +83,30 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
   /**
    * Returns the minimum permitted value.
    * 
-   * @return the minimum permitted value.
+   * @return The minimum permitted value.
    */
   public BigInteger getMinValue() {
     return minValue;
   }
 
-  /**
-   * Returns "BigInteger".
-   * 
-   * @return "BigInteger".
-   */
-  public String getRawValueType() {
-    return "BigInteger";
+  public DataType getRawValueType() {
+    return new DataType(BigInteger.class);
   }
 
-  /** @since 1.0.11 */
   public InputFilter getInputFilter() {
     return this.inputFilter;
   }
 
-  /** @since 1.0.11 */
   public void setInputFilter(InputFilter inputFilter) {
     this.inputFilter = inputFilter;
   }
 
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
-
   /**
-   * Trims request parameter.
+   * Trims the request parameter.
    */
   @Override
   protected String preprocessRequestParameter(String parameterValue) {
-    String result = super.preprocessRequestParameter(parameterValue);
-    return (result == null ? null : result.trim());
+    return StringUtils.trimToNull(super.preprocessRequestParameter(parameterValue));
   }
 
   /**
@@ -132,13 +119,11 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
     try {
       result = parameterValue == null ? null : new BigInteger(parameterValue);
     } catch (NumberFormatException e) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NOT_INTEGER,
-          MessageUtil.localize(getLabel(), getEnvironment())));
+      addErrorWithLabel(UiLibMessages.NOT_INTEGER);
     }
 
     if (getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), getInputFilter().getInvalidInputMessage(),
-          MessageUtil.localize(getLabel(), getEnvironment()), getInputFilter().getCharacterFilter()));
+      addErrorWithLabel(getInputFilter().getInvalidInputMessage(), getInputFilter().getCharacterFilter());
     }
 
     return result;
@@ -151,44 +136,31 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
 
   /**
    * Checks that the submitted value is in permitted range.
-   * 
    */
   @Override
   protected void validateNotNull() {
-    boolean lessThanMin = getRawValue().compareTo(this.minValue) == -1;
-    boolean greaterThanMax = getRawValue().compareTo(this.maxValue) == 1;
+    boolean lessThanMin = this.minValue == null ? false : getRawValue().compareTo(this.minValue) == -1;
+    boolean greaterThanMax = this.maxValue == null ? false : getRawValue().compareTo(this.maxValue) == 1;
 
-    if (this.minValue != null && this.maxValue != null && (lessThanMin || greaterThanMax)) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN,
-          MessageUtil.localize(getLabel(), getEnvironment()), this.minValue.toString(), this.maxValue.toString()));
-
-    } else if (this.minValue != null && lessThanMin) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_GREATER,
-          MessageUtil.localize(getLabel(), getEnvironment()), minValue.toString()));
-
-    } else if (this.maxValue != null && greaterThanMax) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_LESS,
-          MessageUtil.localize(getLabel(), getEnvironment()), maxValue.toString()));
+    if (lessThanMin || greaterThanMax) {
+      addErrorWithLabel(UiLibMessages.NUMBER_NOT_BETWEEN, this.minValue.toString(), this.maxValue.toString());
+    } else if (lessThanMin) {
+      addErrorWithLabel(UiLibMessages.NUMBER_NOT_GREATER, this.minValue.toString());
+    } else if (greaterThanMax) {
+      addErrorWithLabel(UiLibMessages.NUMBER_NOT_LESS, this.maxValue.toString());
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  // *********************************************************************
-  // * VIEW MODEL
-  // *********************************************************************
-
   /**
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * The view model implementation of <code>NumberControl</code>. The view model provides the data for tags to render
+   * the control.
    * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel extends StringArrayRequestControl<BigInteger>.ViewModel {
 
@@ -208,25 +180,30 @@ public class NumberControl extends EmptyStringNullableControl<BigInteger> implem
     }
 
     /**
-     * Returns maximum permitted value.
+     * Returns the maximum permitted value, or <code>null</code>, if not provided.
      * 
-     * @return maximum permitted value.
+     * @return The maximum permitted value, or <code>null</code>, if not provided.
      */
     public BigInteger getMaxValue() {
       return this.maxValue;
     }
 
     /**
-     * Returns minimum permitted value.
+     * Returns the minimum permitted value, or <code>null</code>, if not provided.
      * 
-     * @return minimum permitted value.
+     * @return The minimum permitted value, or <code>null</code>, if not provided.
      */
     public BigInteger getMinValue() {
       return this.minValue;
     }
 
+    /**
+     * Provides the input filter settings of this control, or <code>null</code>, if not provided.
+     * 
+     * @return The input filter settings, or <code>null</code>, if not provided.
+     */
     public InputFilter getInputFilter() {
-      return inputFilter;
+      return this.inputFilter;
     }
   }
 }

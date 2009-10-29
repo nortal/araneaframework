@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.message;
 
@@ -24,8 +24,6 @@ import org.araneaframework.example.main.web.menu.MenuWidget;
  * A message that searches the {@link MenuWidget} to select the given menu item.
  */
 public class MenuSelectMessage extends BroadcastMessage {
-
-  private static final long serialVersionUID = 1L;
 
   private String menuPath;
 
@@ -44,7 +42,7 @@ public class MenuSelectMessage extends BroadcastMessage {
   protected void execute(Component component) throws Exception {
     if (component instanceof MenuWidget) {
       MenuWidget w = (MenuWidget) component;
-      w.selectMenuItem(menuPath);
+      w.selectMenuItem(this.menuPath);
     }
   }
 

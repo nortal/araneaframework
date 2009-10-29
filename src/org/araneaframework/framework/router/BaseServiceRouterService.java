@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.router;
 
@@ -35,99 +35,94 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 
 /**
- * A router service consists of multiple child services, they form a service map.
- * One of the services is a default one.
+ * A router service consists of multiple child services, they form a service map. One of the services is a default one.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseServiceRouterService extends BaseService {
-  private static final Log log = LogFactory.getLog(BaseServiceRouterService.class);
-  
+
+  private static final Log LOG = LogFactory.getLog(BaseServiceRouterService.class);
+
   private Map<String, Service> serviceMap;
+
   protected Object defaultServiceId;
-  
+
   /**
    * Sets the service map. Key is the id of the service, value is the service.
    */
   public void setServiceMap(Map<String, Service> serviceMap) {
-     this.serviceMap = serviceMap;
+    this.serviceMap = serviceMap;
   }
-  
+
   /**
-   * Sets the default service id. The id is used as a key
-   * in the service map.
+   * Sets the default service id. The id is used as a key in the service map.
    */
   public void setDefaultServiceId(Object defaultServiceId) {
     this.defaultServiceId = defaultServiceId;
   }
-  
+
   /**
-   * Initialize all the services in the service map with
-   * <code>getChildEnvironment(Object serviceId)</code>. The serviceId is the key
-   * of the service in the service map. 
+   * Initialize all the services in the service map with <code>getChildEnvironment(Object serviceId)</code>. The
+   * serviceId is the key of the service in the service map.
    */
   @Override
   protected void init() throws Exception {
     // adds serviceMap entries as child services
-    Iterator<Map.Entry<String, Service>> ite = serviceMap.entrySet().iterator();
-    while(ite.hasNext()) {
-      Map.Entry<String, Service> entry = ite.next();
+    for (Map.Entry<String, Service> entry : this.serviceMap.entrySet()) {
       _addComponent(entry.getKey(), entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
     }
     // free extra references
-    serviceMap = null;
+    this.serviceMap = null;
   }
-  
+
   @Override
   protected void propagate(Message message) throws Exception {
-    Iterator<Map.Entry<Object, Component>> ite =  _getChildren().entrySet().iterator();
-    while(ite.hasNext()) {
+    Iterator<Map.Entry<Object, Component>> ite = _getChildren().entrySet().iterator();
+    while (ite.hasNext()) {
       Map.Entry<Object, Component> entry = ite.next();
       message.send(null, entry.getValue());
     }
   }
-  
+
   /**
-   * Uses the map to route the request to the service under getServiceId(input). The id of the
-   * service is determined by <code>getServiceId(input)</code>. If the service id cannot be
-   * determined then the default id is used set via <code>setDefaultServiceId(Object)</code>.
+   * Uses the map to route the request to the service under getServiceId(input). The id of the service is determined by
+   * <code>getServiceId(input)</code>. If the service id cannot be determined then the default id is used set via
+   * <code>setDefaultServiceId(Object)</code>.
    */
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Object currentServiceId = getServiceId(input);
 
-    Assert.notNull(this, currentServiceId, 
-    		"Router found current service id to be null, which means that it could not be " +
-    		"read from request and default value is not defined too.");
+    Assert.notNull(this, currentServiceId, "Router found current service id to be null, which means that it could "
+        + "not be read from request and default value is not defined too.");
 
     if (_getChildren().containsKey(currentServiceId)) {
-      log.debug("Routing action to service '"+currentServiceId+"' under router '" + getClass().getName() + "'");
+      LOG.debug("Routing action to service '" + currentServiceId + "' under router '" + getClass().getName() + "'");
       ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
-    }
-    else {
-      throw new NoSuchServiceException("Service '" + currentServiceId +"' was not found under router '" + getClass().getName() + "'!");
+    } else {
+      throw new NoSuchServiceException("Service '" + currentServiceId + "' was not found under router '"
+          + getClass().getName() + "'!");
     }
   }
-  
-  // Callbacks 
+
+  // Callbacks
   protected Environment getChildEnvironment(String serviceId) throws Exception {
-    return new StandardEnvironment(getEnvironment(), ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
-  }
-  
-  /**
-   * Returns the service id of the request. By default returns the parameter value of the request
-   * under the key <code>getServiceKey()</code>. Returns <code>defaultServiceId</code> when input
-   * has no service information specified.
-   */
-  protected Object getServiceId(InputData input) throws Exception{
-    Object id = getServiceIdFromInput(input);
-    if (id == null)
-      id = getDefaultServiceId();
-    return id;
+    return new StandardEnvironment(getEnvironment(), ManagedServiceContext.class, new ServiceRouterContextImpl(
+        serviceId));
   }
 
   /**
-   * Returns the service id read from input. 
+   * Returns the service id of the request. By default returns the parameter value of the request under the key
+   * <code>getServiceKey()</code>. Returns <code>defaultServiceId</code> when input has no service information
+   * specified.
+   */
+  protected Object getServiceId(InputData input) throws Exception {
+    Object id = getServiceIdFromInput(input);
+    return id == null ? getDefaultServiceId() : id;
+  }
+
+  /**
+   * Returns the service id read from input.
    */
   protected Object getServiceIdFromInput(InputData input) throws Exception {
     return input.getGlobalData().get(getServiceKey());
@@ -137,56 +132,55 @@ public abstract class BaseServiceRouterService extends BaseService {
    * Returns the default service id.
    */
   protected Object getDefaultServiceId() {
-    return defaultServiceId;
+    return this.defaultServiceId;
   }
 
   /**
-   * Every service has its own key under which the service service id can be found in the request.
-   * This method returns that key. 
+   * Every service has its own key under which the service service id can be found in the request. This method returns
+   * that key.
    */
   protected abstract String getServiceKey() throws Exception;
-  
+
   protected void closeService(Object serviceId) {
-    ((Service)_getChildren().get(serviceId))._getComponent().destroy();
+    ((Service) _getChildren().get(serviceId))._getComponent().destroy();
     _getChildren().remove(serviceId);
   }
-  
+
   protected class ServiceRouterContextImpl implements ManagedServiceContext {
+
     private String currentServiceId;
-    
+
     protected ServiceRouterContextImpl(String serviceId) {
-      currentServiceId = serviceId;
+      this.currentServiceId = serviceId;
     }
-    
+
     public String getCurrentId() {
-      return currentServiceId;
+      return this.currentServiceId;
     }
-    
+
     public Service getService(String id) {
-      return (Service)_getChildren().get(id);
+      return (Service) _getChildren().get(id);
     }
-    
+
     public Service addService(String id, Service service) {
       try {
         _addComponent(id, service, null, getChildEnvironment(id));
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
       }
       return service;
     }
-    
+
     public Service addService(String id, Service service, Long timeToLive) {
       Service result = addService(id, service);
-      if (log.isWarnEnabled()) {
-        log.warn(getClass().getName() + 
-        		".addService(Object id, Service service, Long timeToLive) ignores timeToLive attribute." +
-        		"Just addService(Object id, Service service) should be used.");
+      if (LOG.isWarnEnabled()) {
+        LOG.warn(getClass().getName() + ".addService(Object id, Service service, Long timeToLive) ignores timeToLive "
+            + "attribute. Just addService(Object id, Service service) should be used.");
       }
       return result;
     }
 
-	public void close(String id) {
+    public void close(String id) {
       closeService(id);
     }
   }

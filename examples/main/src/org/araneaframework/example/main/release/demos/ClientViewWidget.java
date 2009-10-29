@@ -26,8 +26,6 @@ import org.araneaframework.uilib.form.control.TextControl;
  */
 public class ClientViewWidget extends TemplateBaseWidget {
 
-  private static final long serialVersionUID = 1L;
-
   private ExampleData.Client client;
 
   public ClientViewWidget(ExampleData.Client client) {
@@ -36,7 +34,8 @@ public class ClientViewWidget extends TemplateBaseWidget {
 
   protected void init() throws Exception {
     setViewSelector("release/demos/clientView");
-    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(ExampleData.Client.class, this.client);
+    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(ExampleData.Client.class,
+        this.client);
     form.addBeanElement("sex", "sed.Sex", new TextControl(), true);
     form.addBeanElement("forename", "sed.Forename", new TextControl(), true);
     form.addBeanElement("surname", "sed.Surname", new TextControl(), true);

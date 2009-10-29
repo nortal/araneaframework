@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -51,8 +50,8 @@ public class ImportStylesHtmlTag extends BaseFileImportTag {
    *    required = "false"
    *    description = "The media type the css file should be applied to."
    */
-  public void setMedia(String media) throws JspException {
-    this.media = (String) evaluate("media", media, String.class);
+  public void setMedia(String media) {
+    this.media = evaluate("media", media, String.class);
   }
 
   protected void writeContent(Writer out, String srcFile) throws Exception {

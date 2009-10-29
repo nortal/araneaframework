@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.Converter;
 /**
  * Converts <code>Timestamp</code> to <code>Date</code> and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class TimestampToDateConverter extends BaseConverter<Timestamp, Date> {

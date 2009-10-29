@@ -35,45 +35,42 @@ import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StandardContinuationFilterService extends BaseFilterService
-  implements ContinuationManagerContext, ContinuationContext {
+public class StandardContinuationFilterService extends BaseFilterService implements ContinuationManagerContext,
+    ContinuationContext {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log =
-    LogFactory.getLog(StandardContinuationFilterService.class);
+  private static final Log LOG = LogFactory.getLog(StandardContinuationFilterService.class);
 
   private Service continuation;
 
   protected Environment getChildEnvironment() {
-    return new StandardEnvironment(super.getChildEnvironment(),
-        ContinuationManagerContext.class, this);
+    return new StandardEnvironment(super.getChildEnvironment(), ContinuationManagerContext.class, this);
   }
 
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
 
     try {
       if (isRunning()) {
-        log.debug("Routing action to continuation");
-        continuation._getService().action(path, input, output);
+        LOG.debug("Routing action to continuation");
+        this.continuation._getService().action(path, input, output);
       }
+
       if (!isRunning()) {
         arUtil.rollback();
+
         try {
-          log.debug("Routing action to child service");
-          childService._getService().action(path, input, output);
+          LOG.debug("Routing action to child service");
+          this.childService._getService().action(path, input, output);
         } catch (Exception e) {
-          if (continuation == null) {
+          if (this.continuation == null) {
             throw e;
           }
           arUtil.rollback();
-          log.debug("Routing action to continuation");
-          continuation._getService().action(null, input, output);
+          LOG.debug("Routing action to continuation");
+          this.continuation._getService().action(null, input, output);
         }
       }
     } finally {
@@ -83,30 +80,26 @@ public class StandardContinuationFilterService extends BaseFilterService
 
   public void start(Service continuation) {
     this.continuation = continuation;
-    Map entries = new HashMap();
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     entries.put(ContinuationContext.class, this);
-    continuation._getComponent().init(getScope(),
-        new StandardEnvironment(getEnvironment(), entries));
+    continuation._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), entries));
     throw new AraneaRuntimeException("Continuation set!");
   }
 
   public void finish() {
-    continuation._getComponent().destroy();
-    continuation = null;
+    this.continuation._getComponent().destroy();
+    this.continuation = null;
   }
 
   public boolean isRunning() {
-    return continuation != null;
+    return this.continuation != null;
   }
 
   public void runOnce(Service continuation) {
     BaseFilterService service = new BaseFilterService(continuation) {
 
-      private static final long serialVersionUID = 1L;
-
-      protected void action(Path path, InputData input, OutputData output)
-          throws Exception {
-        childService._getService().action(path, input, output);
+      protected void action(Path path, InputData input, OutputData output) throws Exception {
+        this.childService._getService().action(path, input, output);
         EnvironmentUtil.getContinuationContext(getEnvironment()).finish();
       }
     };

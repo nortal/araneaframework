@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
@@ -31,10 +31,10 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockSqlStringExpressio
 
 
 public class SqlSingleExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(SqlSingleExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(SqlSingleExpressionTests.class);
 
 	public void testSqlNotExpression() {
-		log.debug("Testing SqlNotExpression");
+		LOG.debug("Testing SqlNotExpression");
 		// constructing
 		try {
 			new SqlNotExpression(null);
@@ -65,7 +65,7 @@ public class SqlSingleExpressionTests extends TestCase {
 	}
 
 	public void testSqlUpperExpression() {
-		log.debug("Testing SqlUpperExpression");
+		LOG.debug("Testing SqlUpperExpression");
 		// constructing
 		try {
 			new SqlUpperExpression(null);
@@ -96,7 +96,7 @@ public class SqlSingleExpressionTests extends TestCase {
 	}
 
 	public void testSqlLowerExpression() {
-		log.debug("Testing SqlLowerExpression");
+		LOG.debug("Testing SqlLowerExpression");
 		// constructing
 		try {
 			new SqlLowerExpression(null);
@@ -127,7 +127,7 @@ public class SqlSingleExpressionTests extends TestCase {
 	}
 
 	public void testSqlIsNullExpression() {
-		log.debug("Testing SqlIsNullExpression");
+		LOG.debug("Testing SqlIsNullExpression");
 		// constructing
 		try {
 			new SqlIsNullExpression(null);
@@ -158,7 +158,7 @@ public class SqlSingleExpressionTests extends TestCase {
 	}
 
 	public void testSqlAscendingExpression() {
-		log.debug("Testing SqlAscendingExpression");
+		LOG.debug("Testing SqlAscendingExpression");
 		// constructing
 		try {
 			new SqlAscendingExpression(null);
@@ -189,7 +189,7 @@ public class SqlSingleExpressionTests extends TestCase {
 	}
 
 	public void testSqlDescendingExpression() {
-		log.debug("Testing SqlDescendingExpression");
+		LOG.debug("Testing SqlDescendingExpression");
 		// constructing
 		try {
 			new SqlDescendingExpression(null);
@@ -220,7 +220,7 @@ public class SqlSingleExpressionTests extends TestCase {
 	}
 
 	public void testSqlParanthesesExpression() {
-		log.debug("Testing SqlParanthesesExpression");
+		LOG.debug("Testing SqlParanthesesExpression");
 		// constructing
 		try {
 			new SqlBracketsExpression(null);

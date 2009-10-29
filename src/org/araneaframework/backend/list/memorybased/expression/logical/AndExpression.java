@@ -16,7 +16,6 @@
 
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
-import java.util.Iterator;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
@@ -28,27 +27,19 @@ import org.araneaframework.core.Assert;
  */
 public class AndExpression extends MultiExpression {
 
-  private static final long serialVersionUID = 1L;
-
   /**
-   * Returns Boolean.TRUE if all expressions evaluate to Boolean.TRUE,
-   * Boolean.FALSE otherwise.
+   * Returns Boolean.TRUE if all expressions evaluate to Boolean.TRUE, Boolean.FALSE otherwise.
    * 
    * @return whether all expression evaluated to true
    */
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-    Assert.isTrue(this.children.size() > 0,
-        "At least one children must be provided");
-
-    for (Iterator i = this.children.iterator(); i.hasNext();) {
-      Expression expr = (Expression) i.next();
-      Boolean value = (Boolean) expr.evaluate(resolver);
-      if (!Boolean.TRUE.equals(value)) {
-        return Boolean.FALSE;
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
+    Assert.isTrue(!this.children.isEmpty(), "At least one children must be provided");
+    for (Expression expr : this.children) {
+      Boolean result = (Boolean) expr.evaluate(resolver);
+      if (!result) {
+        return false;
       }
     }
-
-    return Boolean.TRUE;
+    return true;
   }
 }

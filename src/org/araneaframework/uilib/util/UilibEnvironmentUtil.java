@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006-2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.util;
 
@@ -77,14 +77,12 @@ public abstract class UilibEnvironmentUtil extends EnvironmentUtil {
   }
 
   /**
-   * Provides the <code>MenuContext</code> from the
-   * <code>Environment</code>.
-   *
+   * Provides the <code>MenuContext</code> from the <code>Environment</code>.
+   * 
    * @param env The environment to use for lookup (required).
    * @return The <code>MenuContext</code> or <code>null</code>.
    */
   public static MenuContext getMenuContext(Environment env) {
     return env.getEntry(MenuContext.class);
   }
-
 }

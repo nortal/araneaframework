@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control.inputfilter;
 
@@ -25,8 +25,6 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @since 1.0.11
  */
 public class InputFilter implements Serializable {
-	private static final long serialVersionUID = 1L;
-
 	/** Custom HTML attribute for defining filter applied to input field. */
 	public static final String CHARACTER_FILTER_ATTRIBUTE = "arn-charFilter";
 	

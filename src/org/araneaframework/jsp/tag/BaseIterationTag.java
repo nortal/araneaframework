@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag;
 
@@ -26,9 +26,12 @@ import javax.servlet.jsp.tagext.IterationTag;
  * @author Oleg Mürk
  */
 public class BaseIterationTag extends BaseTag implements IterationTag {
+
   /**
-   * Internal callback: afer body.
-   * @throws Exception
+   * Internal callback: after body.
+   * 
+   * @param out The writer to be written to.
+   * @throws Exception Any exception that might occur.
    */
   protected int afterBody(Writer out) throws Exception {
     return SKIP_BODY;
@@ -40,19 +43,16 @@ public class BaseIterationTag extends BaseTag implements IterationTag {
 
   /**
    * Standard implementation of after body.
-   */  
+   */
   public int doAfterBody() throws JspException {
     try {
-      return afterBody(pageContext.getOut());
-    }
-    catch(RuntimeException e) {
+      return afterBody(this.pageContext.getOut());
+    } catch (RuntimeException e) {
       throw e;
-    }
-    catch(JspException e) {
-      throw e;    
-    }    
-    catch(Exception e) {
+    } catch (JspException e) {
+      throw e;
+    } catch (Exception e) {
       throw new JspException(e);
-    }    
+    }
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.service;
 
@@ -35,72 +35,70 @@ import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Service that returns response that closes browser window that made the 
- * request; and if possible, reloads the opener of that window.
- *
+ * Service that returns response that closes browser window that made the request; and if possible, reloads the opener
+ * of that window.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
 
-  private static final long serialVersionUID = 1L;
-
   private Environment closableComponentEnv;
-	
-	public WindowClosingService(Environment closableComponentEnv) {
-		this.closableComponentEnv = closableComponentEnv;
-	}
-	
-	protected void action(Path path, InputData input, OutputData output) throws Exception {
-		HttpServletResponse response = ServletUtil.getResponse(output);
-		
-		PopupWindowContext popupCtx = EnvironmentUtil.getPopupWindowContext(getEnvironment());
-		BaseApplicationWidget opener = null;
-		if (popupCtx != null)
-			opener = (BaseApplicationWidget) popupCtx.getOpener();
-		
-		StandardPopupServiceInfo serviceInfo = null;
-		if (opener != null) {
-			String threadId = (String) EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
-			String topserviceId = (String) EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
-			String url = ((HttpOutputData)getInputData().getOutputData()).encodeURL(((HttpInputData)getInputData()).getContainerURL());
-			serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
-			serviceInfo.setTransactionOverride(false);
-		}
-		
-		String script;
-		
-		if (serviceInfo != null) {
-			script = 
-				"Aranea.Popups.reloadParentWindow('" + serviceInfo.toURL() + "');" +
-				"Aranea.Popups.delayedCloseWindow(50);";
-		} else {
-			script = "Aranea.Popups.delayedCloseWindow(50);";
-		}
 
-		String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
-		
-		String responseStr = 
-			"<html>" +
-			  "<head>" +
-			    "<script type=\"text/javascript\" src=\"" + scriptSrc + "\"></script>" +
-			  "</head>" +
-			  "<body onload=\"" + script + "\">" + 
-			  "</body>" +
-			"</html>";
+  public WindowClosingService(Environment closableComponentEnv) {
+    this.closableComponentEnv = closableComponentEnv;
+  }
 
-		byte[] rsp = responseStr.getBytes(); 
-		
-		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-		byteOutputStream.write(rsp);
-		
-		response.setContentType("text/html");
-		response.setContentLength(byteOutputStream.size());
-		
-		OutputStream out = response.getOutputStream();
-		byteOutputStream.writeTo(out);
-		out.flush();
+  @Override
+  public Environment getEnvironment() {
+    return this.closableComponentEnv != null ? this.closableComponentEnv : super.getEnvironment();
+  }
 
-		ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
-		mngCtx.close(mngCtx.getCurrentId());
-	}
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    HttpServletResponse response = ServletUtil.getResponse(output);
+
+    PopupWindowContext popupCtx = EnvironmentUtil.getPopupWindowContext(getEnvironment());
+    BaseApplicationWidget opener = null;
+
+    if (popupCtx != null) {
+      opener = (BaseApplicationWidget) popupCtx.getOpener();
+    }
+
+    StandardPopupServiceInfo serviceInfo = null;
+    if (opener != null) {
+      String threadId = EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
+      String topserviceId = EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
+      String url = ((HttpOutputData) getInputData().getOutputData()).encodeURL(((HttpInputData) getInputData())
+          .getContainerURL());
+      serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
+      serviceInfo.setTransactionOverride(false);
+    }
+
+    String script;
+
+    if (serviceInfo != null) {
+      script = "Aranea.Popups.reloadParentWindow('" + serviceInfo.toURL() + "');Aranea.Popups.delayedCloseWindow(50);";
+    } else {
+      script = "Aranea.Popups.delayedCloseWindow(50);";
+    }
+
+    String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
+
+    String responseStr = "<html><head><script type=\"text/javascript\" src=\"" + scriptSrc + "\"></script></head>"
+        + "<body onload=\"" + script + "\"></body></html>";
+
+    byte[] rsp = responseStr.getBytes();
+
+    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+    byteOutputStream.write(rsp);
+
+    response.setContentType("text/html");
+    response.setContentLength(byteOutputStream.size());
+
+    OutputStream out = response.getOutputStream();
+    byteOutputStream.writeTo(out);
+    out.flush();
+
+    ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
+    mngCtx.close(mngCtx.getCurrentId());
+  }
 }

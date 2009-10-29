@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * This is just a sample data object that can be used in lists, forms, etc.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DataDTO implements Serializable {
 

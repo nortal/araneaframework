@@ -26,26 +26,28 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class GeneralDAO extends HibernateDaoSupport implements IGeneralDAO {
+public class GeneralDAO<T extends GeneralMO> extends HibernateDaoSupport implements IGeneralDAO<T> {
 
-	public GeneralMO getById(Class<?> clazz, Long id) {
-		return (GeneralMO) getHibernateTemplate().get(clazz, id);
-	}
+  @SuppressWarnings("unchecked")
+  public T getById(Class<T> clazz, Long id) {
+    return (T) getHibernateTemplate().get(clazz, id);
+  }
 
-	public List<?> getAll(Class<?> clazz) {
-		return getHibernateTemplate().find("from " + clazz.getName());
-	}
+  @SuppressWarnings("unchecked")
+  public List<T> getAll(Class<T> clazz) {
+    return getHibernateTemplate().find("from " + clazz.getName());
+  }
 
-	public Long add(GeneralMO object) {
-		getHibernateTemplate().save(object);
-		return object.getId();
-	}
+  public Long add(T object) {
+    getHibernateTemplate().save(object);
+    return object.getId();
+  }
 
-	public void edit(GeneralMO object) {
-		getHibernateTemplate().update(object);
-	}
+  public void edit(T object) {
+    getHibernateTemplate().update(object);
+  }
 
-	public void remove(Class<?> clazz, Long id) {
-		getHibernateTemplate().delete(getById(clazz, id));
-	}
+  public void remove(Class<T> clazz, Long id) {
+    getHibernateTemplate().delete(getById(clazz, id));
+  }
 }

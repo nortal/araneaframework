@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.formlist.FormListModel;
  * A <code>FormListModel</code> implementation that accepts list rows data in a {@link List}. This object can be
  * provided to {@link FormListWidget} to provide the model data to the list as the list rows.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 public class ListFormListModel<R> implements FormListModel<R> {
 

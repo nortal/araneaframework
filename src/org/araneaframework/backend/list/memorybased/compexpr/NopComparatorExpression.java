@@ -28,8 +28,6 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
  */
 public class NopComparatorExpression implements ComparatorExpression {
 
-  private static final long serialVersionUID = 1L;
-
   public int compare(VariableResolver resolver1, VariableResolver resolver2)
       throws ExpressionEvaluationException {
     return 0; // do not order any items

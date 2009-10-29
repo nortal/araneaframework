@@ -26,7 +26,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
-public class AfterTodayConstraint<S> extends BaseFieldConstraint<S, Date> {
+public class AfterTodayConstraint extends BaseFieldConstraint {
 
   /**
    * Specifies whether the current date is included (allowed) or not.
@@ -62,7 +62,7 @@ public class AfterTodayConstraint<S> extends BaseFieldConstraint<S, Date> {
       today.set(Calendar.MILLISECOND, 999);
     }
 
-    if (today.getTime().compareTo(getValue()) == 1) {
+    if (today.getTime().compareTo((Date) getValue()) == 1) {
       if (!this.allowToday) {
         addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.DATE_BEFORE_TODAY, t(getLabel())));
       } else {

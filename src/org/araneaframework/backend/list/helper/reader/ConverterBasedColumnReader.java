@@ -36,16 +36,17 @@ import org.araneaframework.uilib.list.util.Converter;
  * @author Rein Raudjärv
  * @since 1.1
  */
+@SuppressWarnings("unchecked")
 public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
 
-  private final Map converters = new HashMap();
+  private final Map<String, Converter> converters = new HashMap<String, Converter>();
 
   public ConverterBasedColumnReader(ResultSetColumnReader child) {
     super(child);
   }
 
   /**
-   * Adds a deconverter for <code>ResultSet</code>.
+   * Adds a de-converter for <code>ResultSet</code>.
    * <p>
    * The converter is used to {@link Converter#reverseConvert(Object)} values
    * from <code>ResultSet</code>.
@@ -55,17 +56,16 @@ public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
    *            method.
    */
   public void addResultSetDeconverterForColumn(String columnName,
-      Converter converter) {
+      Converter<?, ?> converter) {
     this.converters.put(columnName, converter);
   }
 
-  public Object readFromResultSet(String columnName, ResultSet resultSet,
-      Class javaType) {
+  public <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType) {
 
     // Find converter
-    Converter converter = (Converter) converters.get(columnName);
-    if (converter == null) {
-      // No converter registered
+    Converter converter = this.converters.get(columnName);
+
+    if (converter == null) { // No converter registered
       return super.readFromResultSet(columnName, resultSet, javaType);
     }
 
@@ -77,7 +77,6 @@ public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
     Object value = super.readFromResultSet(columnName, resultSet, javaType);
 
     // Convert
-    value = converter.reverseConvert(value);
-    return value;
+    return (T) converter.reverseConvert(value);
   }
 }

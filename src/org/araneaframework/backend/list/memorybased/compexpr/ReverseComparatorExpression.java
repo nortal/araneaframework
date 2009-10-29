@@ -22,13 +22,9 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.core.Assert;
 
 /**
- * ComparatorExpression that reverses another ComparatorExpression comparation
- * result.
+ * ComparatorExpression that reverses another ComparatorExpression comparison result.
  */
-public class ReverseComparatorExpression
-  implements CompositeComparatorExpression {
-
-  private static final long serialVersionUID = 1L;
+public class ReverseComparatorExpression implements CompositeComparatorExpression {
 
   protected ComparatorExpression expression;
 
@@ -37,8 +33,7 @@ public class ReverseComparatorExpression
     this.expression = expression;
   }
 
-  public int compare(VariableResolver resolver1, VariableResolver resolver2)
-      throws ExpressionEvaluationException {
+  public int compare(VariableResolver resolver1, VariableResolver resolver2) throws ExpressionEvaluationException {
     return this.expression.compare(resolver2, resolver1);
   }
 

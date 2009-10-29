@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.form.formlist;
 
@@ -22,7 +22,7 @@ import org.araneaframework.uilib.form.FormWidget;
 /**
  * Represents one editable row.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormRow<K, R> implements Serializable {
 

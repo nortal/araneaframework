@@ -16,11 +16,8 @@
 
 package org.araneaframework.uilib.support;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-
 import java.io.Serializable;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
  * This class defines the <code>Map</code> key, that is used to find a converter between data held in
@@ -28,7 +25,7 @@ import java.io.Serializable;
  * 
  * @see org.araneaframework.uilib.form.converter.ConverterFactory
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class ConverterKey <C, D> implements Serializable {
 
@@ -83,6 +80,6 @@ public class ConverterKey <C, D> implements Serializable {
    */
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(this.fromType).append(this.toType).hashCode();
+    return 5 * this.fromType.hashCode() + 7 * this.toType.hashCode();
   }
 }

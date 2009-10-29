@@ -16,7 +16,6 @@
 
 package org.araneaframework.backend.list.helper;
 
-import java.util.Iterator;
 import java.util.List;
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.SqlExpression;
@@ -27,8 +26,7 @@ import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 
 /**
- * Extends the <code>ListSqLHelper</code> to support PostgreSQL database
- * queries.
+ * Extends the <code>ListSqLHelper</code> to support PostgreSQL database queries.
  * 
  * @author Roman Tekhov
  * @since 1.1.3
@@ -37,7 +35,7 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 
   protected SqlStatement statement = new SqlStatement();
 
-  protected String countSqlQuery = null;
+  protected String countSqlQuery;
 
   public PostgreListSqlHelper(DataSource dataSource, ListQuery query) {
     super(dataSource, query);
@@ -58,8 +56,7 @@ public class PostgreListSqlHelper extends ListSqlHelper {
       return new SqlStatement(countSqlQuery, statement.getParams());
     }
 
-    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
-        statement.getQuery()).append(") t").toString();
+    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(statement.getQuery()).append(") t").toString();
 
     return new SqlStatement(temp, this.statement.getParams());
   }
@@ -87,16 +84,14 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 
   protected SqlExpression getFieldsSqlExpression() {
     SqlCollectionExpression result = new SqlCollectionExpression();
-    for (Iterator it = fields.getNames().iterator(); it.hasNext();) {
-      String variable = (String) it.next();
-      String dbField = namingStrategy.fieldToColumnName(variable);
-      String dbAlias = namingStrategy.fieldToColumnAlias(variable);
+    for (String fieldName : this.fields.getNames()) {
+      String dbField = this.namingStrategy.fieldToColumnName(fieldName);
+      String dbAlias = this.namingStrategy.fieldToColumnAlias(fieldName);
 
       if (dbAlias.equals(dbField)) {
         result.add(new SqlStringExpression(dbField));
       } else {
-        result.add(new SqlStringExpression(new StringBuffer(dbField).append(
-            " AS ").append(dbAlias).toString()));
+        result.add(new SqlStringExpression(new StringBuffer(dbField).append(" AS ").append(dbAlias).toString()));
       }
     }
     return result;
@@ -122,7 +117,7 @@ public class PostgreListSqlHelper extends ListSqlHelper {
     this.statement.addParam(param);
   }
 
-  public void addStatementParams(List params) {
+  public void addStatementParams(List<Object> params) {
     this.statement.addAllParams(params);
   }
 }

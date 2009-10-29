@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.list;
 
@@ -22,46 +22,46 @@ import org.araneaframework.uilib.form.formlist.FormRowHandler;
 import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class EditableListWidget extends ListWidget {
+public class EditableListWidget<K, R> extends ListWidget<R> {
 
-	protected FormListWidget formList;
+  protected FormListWidget<K, R> formList;
 
-	//*********************************************************************
-	//* CONSTRUCTORS
-	//*********************************************************************	
+  public EditableListWidget(FormRowHandler<K, R> rowHandler) {
+    this.formList = new FormListWidget<K, R>(rowHandler, new ListWidgetFormListModel<R>(this));
+  }
 
-	public EditableListWidget(FormRowHandler rowHandler) {
-    formList = new FormListWidget(rowHandler, new ListWidgetFormListModel(this));
-	}
+  // *********************************************************************
+  // * PUBLIC METHODS
+  // *********************************************************************
 
-	//*********************************************************************
-	//* PUBLIC METHODS
-	//*********************************************************************		
+  /**
+   * Returns the editable row manager.
+   * 
+   * @return the editable row manager.
+   */
+  public FormListWidget<K, R> getFormList() {
+    return this.formList;
+  }
 
-	/**
-	 * Returns the editable row manager.
-	 * @return the editable row manager.
-	 */
-	public FormListWidget getFormList() {
-		return formList;
-	}
+  /**
+   * Sets the <code>FormRowHandler</code> that this list widget will start to use.
+   * 
+   * @param rowHandler The new <code>FormRowHandler</code>. Must not be <code>null</code>.
+   */
+  public void setFormRowHandler(FormRowHandler<K, R> rowHandler) {
+    this.formList.setFormRowHandler(rowHandler);
+  }
 
-	public void setFormRowHandler(FormRowHandler rowHandler) {
-		formList.setFormRowHandler(rowHandler);
-	}
+  // *********************************************************************
+  // * WIDGET METHODS
+  // *********************************************************************
 
-	//*********************************************************************
-	//* WIDGET METHODS
-	//*********************************************************************  	
-
-	@Override
+  @Override
   protected void init() throws Exception {
-		super.init();
-
-		Assert.notNull(formList, "You must provide a form row handler to the editable list!");
-
-		addWidget("formList", formList);
-	}
+    super.init();
+    Assert.notNull(this.formList, "You must provide a form row handler to the editable list!");
+    addWidget("formList", this.formList);
+  }
 }

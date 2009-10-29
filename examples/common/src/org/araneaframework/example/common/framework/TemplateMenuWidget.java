@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.example.common.framework;
 
@@ -27,7 +27,7 @@ import org.araneaframework.uilib.core.BaseMenuWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.control.DefaultSelectControl;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.list.util.FormUtil;
 import org.araneaframework.uilib.support.DisplayItem;
@@ -37,13 +37,10 @@ import org.araneaframework.uilib.support.DisplayItem;
  */
 public abstract class TemplateMenuWidget extends BaseMenuWidget implements LocaleChangeListener {
 
-  private static final long serialVersionUID = 1L;
-
   private FormWidget form;
 
-  private FormElement<String, String> langSelect;
+  private FormElement<DisplayItem, String> langSelect;
 
-  // CONSTRUCTOR 
   public TemplateMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
   }
@@ -52,39 +49,37 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
   protected void init() throws Exception {
     super.init();
 
-    form = new FormWidget();
-    langSelect = FormUtil.createElement("#", new SelectControl(), new StringData(), false);
-    addWidget("form", form);
-    form.addWidget("langSelect", langSelect);
-    
+    this.form = new FormWidget();
+    this.langSelect = FormUtil.createElement("#", new DefaultSelectControl(), new StringData(), false);
+    this.form.addWidget("langSelect", this.langSelect);
+    addWidget("form", this.form);
+
     createLangSelect();
     getL10nCtx().addLocaleChangeListener(this);
   }
 
   public void createLangSelect() throws Exception {
-    SelectControl select = new SelectControl();
-    
+    DefaultSelectControl select = new DefaultSelectControl();
     select.addOnChangeEventListener(new OnChangeEventListener() {
-        private static final long serialVersionUID = 1L;
 
-        public void onChange() throws Exception {
-			if (langSelect.convertAndValidate()) {
-				String lang = langSelect.getValue();
-				getL10nCtx().setLocale(new Locale(lang, ""));
-			}
-		}
+      public void onChange() throws Exception {
+        if (TemplateMenuWidget.this.langSelect.convertAndValidate()) {
+          String lang = TemplateMenuWidget.this.langSelect.getValue();
+          getL10nCtx().setLocale(new Locale(lang, ""));
+        }
+      }
     });
 
     select.addItems(getLocales());
-    langSelect.setControl(select);
-    langSelect.setValue(getL10nCtx().getLocale().getLanguage());
+    this.langSelect.setControl(select);
+    this.langSelect.setValue(getL10nCtx().getLocale().getLanguage());
   }
-  
+
   public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-    String lang = langSelect.getValue();
-    ((SelectControl)langSelect.getControl()).clearItems();
-    ((SelectControl)langSelect.getControl()).addItems(getLocales());
-    langSelect.setValue(lang);
+    String lang = this.langSelect.getValue();
+    ((DefaultSelectControl) this.langSelect.getControl()).clearItems();
+    ((DefaultSelectControl) this.langSelect.getControl()).addItems(getLocales());
+    this.langSelect.setValue(lang);
   }
 
   public List<DisplayItem> getLocales() {
@@ -98,27 +93,25 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     return EnvironmentUtil.getLocalizationContext(getEnvironment());
   }
 
-  // returns the name of currently running flow class, 
+  // returns the name of currently running flow class,
   // so that its source could be located and shown to user
   public String getFlowClassName() {
     String result = null;
 
     try {
-      result = callStack.getFirst().getWidget().getClass().getName();
+      result = this.callStack.getFirst().getWidget().getClass().getName();
     } catch (Exception e) {}
 
     return result;
   }
 
-  // returns the name of currently running flow's view selector, 
+  // returns the name of currently running flow's view selector,
   // so that its source could be located and shown to user
   public String getFlowViewSelector() {
     String result = null;
-
     try {
       result = ((ViewSelectorAware) callStack.getFirst().getWidget()).getViewSelector();
     } catch (Exception e) {}
-
     return result;
   }
 }

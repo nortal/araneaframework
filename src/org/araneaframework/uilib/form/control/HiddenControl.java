@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,33 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
+
+import org.araneaframework.uilib.support.DataType;
 
 /**
  * This is basically a copy of StringValueControl that lacks min/maxlength validation.
  * 
  * @author Konstantin Tretjakov
  */
-public class HiddenControl extends EmptyStringNullableControl<String> {
- 
-	//*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************  		
-	
-  /**
-   * Returns "String".
-   * @return "String".
-   */
-  public String getRawValueType() {
-    return "String";
-  }  
-	
-	//*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-		  
+public class HiddenControl extends BlankStringNullableControl<String> {
+
+  public DataType getRawValueType() {
+    return new DataType(String.class);
+  }
+
   @Override
   protected String fromRequest(String parameterValue) {
     return parameterValue;

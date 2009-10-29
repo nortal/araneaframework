@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 package org.araneaframework.framework;
 
 import java.io.Serializable;
@@ -30,9 +30,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class StandardConfirmationFilterWidget extends BaseFilterWidget implements ConfirmationContext {
-  private static final long serialVersionUID = 1L;
-  private Closure closure;
+public class StandardConfirmationFilterWidget extends BaseFilterWidget implements ConfirmationContext {  private Closure closure;
   private String message;
 
   // PUBLIC API

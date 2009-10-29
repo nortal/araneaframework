@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
  * If you use <code>EditableBeanListWidget</code> then you also might want to add buttons to your form that would invoke
  * events (e.g. to start editing a row or to save a row). To add those buttons, use methods in {@link FormListUtil}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class EditableBeanListWidget<K, R> extends BeanListWidget<R> {
 

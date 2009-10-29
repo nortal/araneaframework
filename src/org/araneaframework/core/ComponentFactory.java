@@ -24,7 +24,7 @@ import org.araneaframework.Environment;
  * A simple factory for creating components.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ComponentFactory extends Serializable {
 

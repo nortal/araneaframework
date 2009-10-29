@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 import org.araneaframework.uilib.form.Data;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class TimestampData extends Data<Timestamp> {
 

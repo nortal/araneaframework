@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package example;
 
@@ -22,12 +22,14 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class NameWidget extends BaseUIWidget {
-	protected void init() throws Exception {        
+
+  @Override
+  protected void init() throws Exception {
     setViewSelector("name");
-	}
-  
+  }
+
   public void handleEventHello() throws Exception {
-    String name = (String) getInputData().getGlobalData().get("name");
+    String name = getInputData().getGlobalData().get("name");
     getFlowCtx().replace(new HelloWidget(name), null);
-  }  
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.dataprovider;
 
@@ -43,11 +43,11 @@ import org.araneaframework.core.util.ExceptionUtil;
  * Note, that all operations on items are made on the list of "processed", that
  * is ordered and filtered items.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvider<T> {
-	private static final Log log = LogFactory.getLog(MemoryBasedListDataProvider.class);
+	private static final Log LOG = LogFactory.getLog(MemoryBasedListDataProvider.class);
 	private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
 	
 	// *******************************************************************
@@ -192,7 +192,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	 * Refreshes the data, including reordering and refiltering.
 	 */
 	public void refreshData() {
-		log.debug("Loading all data");
+		LOG.debug("Loading all data");
 		try {
 			this.allData = loadData();
 		} catch (Exception e) {
@@ -247,7 +247,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	 *            Bean filter.
 	 */
 	protected void filter(BeanFilter beanFilter, List<T> all, List<T> filtered) {
-		log.debug("Filtering list itmes");		
+		LOG.debug("Filtering list itmes");		
 		filtered.clear();
 		if (beanFilter == null) {
 			filtered.addAll(all);
@@ -264,7 +264,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 	 * Orders the items.
 	 */
 	protected void order(Comparator<? super T> comparator, List<T> ordered) {
-		log.debug("Ordering list itmes");
+		LOG.debug("Ordering list itmes");
 		if (comparator != null) {
 			Collections.sort(ordered, comparator);
 		}

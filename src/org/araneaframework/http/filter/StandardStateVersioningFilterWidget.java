@@ -45,9 +45,7 @@ import org.araneaframework.http.util.ServletUtil;
 @SuppressWarnings("unchecked")
 public class StandardStateVersioningFilterWidget extends BaseFilterWidget implements StateVersioningContext {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(StandardStateVersioningFilterWidget.class);
+  private static final Log LOG = LogFactory.getLog(StandardStateVersioningFilterWidget.class);
 
   /**
    * Default number of states that is stored when this {@link StandardStateVersioningFilterWidget} is present in
@@ -110,8 +108,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   public void setMaxVersionedStates(int maxVersionedStates) {
     if (maxVersionedStates < this.versionedStates.size()) {
 
-      if (log.isWarnEnabled()) {
-        log.warn("Changing number of max stored states to "
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Changing number of max stored states to "
             + maxVersionedStates + " failed, because "
             + this.versionedStates.size() + " states already versioned. "
             + "Changing the number of max stored states to "
@@ -141,8 +139,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void action(Path path, InputData input, OutputData output)
       throws Exception {
 
-    if (log.isDebugEnabled()) {
-      log.debug("StandardStateVersioningFilterWidget is routing widget action.");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("StandardStateVersioningFilterWidget is routing widget action.");
     }
 
     try {
@@ -276,8 +274,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   private byte[] getState(InputData input) throws StateExpirationException {
     String requestStateId = getStateId(input);
 
-    if (log.isDebugEnabled()) {
-      log.debug("Received service request for versioned component hierarchy '"
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Received service request for versioned component hierarchy '"
           + requestStateId + "'.");
     }
 
@@ -286,8 +284,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
 
     if (this.versionedStates.get(requestStateId) == null) {
-      if (log.isWarnEnabled()) {
-        log.warn("Received request for restoration of state '" + requestStateId
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Received request for restoration of state '" + requestStateId
             + "' which was not found within versioned states.");
       }
       throw new StateExpirationException("State '" + requestStateId
@@ -351,14 +349,14 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
 
     if (this.childWidget == null) {
-      if (log.isWarnEnabled()) {
-        log.warn("childWidget is null for some unknown reason; returning...");
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("childWidget is null for some unknown reason; returning...");
       }
       return null;
     }
 
-    if (log.isDebugEnabled()) {
-      log.debug("Serializing '" + this.childWidget + "' as state '" + stateId
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Serializing '" + this.childWidget + "' as state '" + stateId
           + "'.");
     }
 
@@ -369,8 +367,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
     State result = new State(serializedChild, stateId);
 
-    if (log.isDebugEnabled()) {
-      log.debug("Registered client state version: " + stateId + " in thread '"
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Registered client state version: " + stateId + " in thread '"
           + EnvironmentUtil.getThreadServiceId(getEnvironment()) + "'.");
     }
 

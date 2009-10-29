@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.core;
 
@@ -66,8 +66,6 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @since 1.2
  */
 public class OverlayRootWidget extends BaseUIWidget {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * The default page to render this overlay root widget and its sub widgets.
@@ -139,7 +137,7 @@ public class OverlayRootWidget extends BaseUIWidget {
    * error page would be returned. However, this flow container provides a
    * way to use custom error page.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 1.1.4
    */
   protected class OverlayFlowContainer extends ExceptionHandlingFlowContainerWidget {

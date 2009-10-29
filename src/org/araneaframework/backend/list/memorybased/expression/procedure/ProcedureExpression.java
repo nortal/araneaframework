@@ -16,19 +16,17 @@
 
 package org.araneaframework.backend.list.memorybased.expression.procedure;
 
+import org.araneaframework.core.Assert;
+
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class ProcedureExpression extends MultiExpression {
 
-  private static final long serialVersionUID = 1L;
-
   private String name;
 
   public ProcedureExpression(String name) {
-    if (name == null) {
-      throw new IllegalArgumentException("Name must be provided");
-    }
+    Assert.notNullParam(name, "name");
     this.name = name;
   }
 

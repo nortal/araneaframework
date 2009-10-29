@@ -22,15 +22,13 @@ import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.core.Assert;
 
-public class VariableComparatorExpression
-  implements ComparatorExpression, Variable {
-
-  private static final long serialVersionUID = 1L;
+public class VariableComparatorExpression implements ComparatorExpression, Variable {
 
   protected String name;
 
-  protected Comparator comparator;
+  protected Comparator<Object> comparator;
 
+  @SuppressWarnings("unchecked")
   public VariableComparatorExpression(String name, Comparator comparator) {
     Assert.notNull(name, "Name must be provided");
     Assert.notNull(comparator, "Comparator must be provided");
@@ -42,14 +40,13 @@ public class VariableComparatorExpression
     return this.name;
   }
 
-  public Comparator getComparator() {
+  public Comparator<?> getComparator() {
     return this.comparator;
   }
 
   public int compare(VariableResolver resolver1, VariableResolver resolver2) {
     Object value1 = resolver1.resolve(this);
     Object value2 = resolver2.resolve(this);
-    int result = this.comparator.compare(value1, value2);
-    return result;
+    return this.comparator.compare(value1, value2);
   }
 }

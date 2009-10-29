@@ -16,10 +16,9 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
-import org.araneaframework.uilib.ConfigurationContext;
+import static org.araneaframework.uilib.util.ConfigurationUtil.getCustomTimeFormat;
+
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents a {@link org.araneaframework.uilib.form.control.TimestampControl}, that holds only time - that
@@ -42,48 +41,31 @@ public class TimeControl extends TimestampControl {
   }
 
   /**
-   * Creates the control initializing the pattern to <code>dateTimeFormat</code>.
+   * Creates the control initializing the time input pattern to <code>dateTimeFormat</code> and the time output pattern
+   * to <code>defaultTimeOutputFormat</code>.
    * 
-   * @param dateTimeFormat the custom pattern.
+   * @param dateTimeFormat The custom date input pattern.
+   * @param defaultTimeOutputFormat The custom date output format.
    */
   public TimeControl(String dateTimeFormat, String defaultTimeOutputFormat) {
     super(dateTimeFormat, defaultTimeOutputFormat);
     this.confOverridden = true;
   }
 
-  /**
-   * Returns "Timestamp".
-   * 
-   * @return "Timestamp".
-   */
-  public String getRawValueType() {
-    return "Timestamp";
-  }
-
   public void init() throws Exception {
     super.init();
     if (!this.confOverridden) {
-      ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
-
-      if (confCtx != null) {
-        String confFormat = (String) confCtx.getEntry(ConfigurationContext.CUSTOM_TIME_FORMAT);
-
-        if (confFormat != null) {
-          this.dateTimeInputPattern = confFormat;
-        }
-
-        String confOutputFormat = (String) confCtx.getEntry(ConfigurationContext.DEFAULT_TIME_OUTPUT_FORMAT);
-
-        if (confOutputFormat != null) {
-          this.dateTimeOutputPattern = confOutputFormat;
-        }
-      }
+      this.dateTimeInputPattern = getCustomTimeFormat(getEnvironment(), true, this.dateTimeInputPattern);
+      this.dateTimeOutputPattern = getCustomTimeFormat(getEnvironment(), false, this.dateTimeOutputPattern);
     }
   }
 
-  /** @since 1.1 */
+  /**
+   * This method inserts the message when parsing fails. This override sends the correct message.
+   * 
+   * @since 1.1
+   */
   protected void addWrongTimeFormatError() {
-    addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.WRONG_TIME_FORMAT, MessageUtil.localize(
-        getLabel(), getEnvironment()), dateTimeInputPattern));
+    addErrorWithLabel(UiLibMessages.WRONG_TIME_FORMAT, this.dateTimeInputPattern);
   }
 }

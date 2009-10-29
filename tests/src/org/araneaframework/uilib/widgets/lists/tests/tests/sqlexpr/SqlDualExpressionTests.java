@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
@@ -28,10 +28,10 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockSqlStringExpressio
 
 
 public class SqlDualExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(SqlDualExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(SqlDualExpressionTests.class);
 
 	public void testSqlEqualsExpression() {
-		log.debug("Testing SqlEqualsExpression");
+		LOG.debug("Testing SqlEqualsExpression");
 		// constructing
 		try {
 			new SqlEqualsExpression(null, null);
@@ -75,7 +75,7 @@ public class SqlDualExpressionTests extends TestCase {
 	}
 
 	public void testSqlGreaterThanExpression() {
-		log.debug("Testing SqlGreaterThanExpression");
+		LOG.debug("Testing SqlGreaterThanExpression");
 		// constructing
 		try {
 			new SqlGreaterThanExpression(null, null);
@@ -119,7 +119,7 @@ public class SqlDualExpressionTests extends TestCase {
 	}
 
 	public void testSqlLowerThanExpression() {
-		log.debug("Testing SqlLowerThanExpression");
+		LOG.debug("Testing SqlLowerThanExpression");
 		// constructing
 		try {
 			new SqlLowerThanExpression(null, null);
@@ -162,7 +162,7 @@ public class SqlDualExpressionTests extends TestCase {
 	}
 
 	public void testSqlLikeExpression() {
-		log.debug("Testing SqlLikeExpression");
+		LOG.debug("Testing SqlLikeExpression");
 		// constructing
 		try {
 			new SqlLikeExpression(null, null);

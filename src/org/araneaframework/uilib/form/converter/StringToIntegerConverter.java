@@ -23,7 +23,7 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * Converts <code>String</code> to <code>Integer</code> and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class StringToIntegerConverter extends BaseConverter<String, Integer> {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
@@ -23,74 +23,80 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
-
 /**
  * Standard button form element tag.
  * 
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "checkbox"
- *   body-content = "JSP"
- *   description = "Form checkbox input field, represents UiLib "CheckboxControl"."
+ *  name = "checkbox"
+ *  body-content = "JSP"
+ *  description = "Form checkbox input field, represents UiLib "CheckboxControl"."
  */
 public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
-	protected String onChangePrecondition;
 
-	{
-		baseStyleClass = "aranea-checkbox";
-	}
+  protected String onChangePrecondition;
 
-	@Override
+  
+  public FormCheckboxHtmlTag() {
+    this.baseStyleClass = "aranea-checkbox";
+  }
+
+  @Override
   protected int doStartTag(Writer out) throws Exception {
-		int r = super.doStartTag(out);
-		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
-		return r;
-	}
+    int r = super.doStartTag(out);
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
+    return r;
+  }
 
-	@Override
+  @Override
+  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
-		assertControlType("CheckboxControl");	
+    assertControlType("CheckboxControl");
 
-		// Prepare
-		String name = this.getFullFieldId();
-		StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+    // Prepare
+    String name = this.getFullFieldId();
+    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
 
-		// Write input tag							
-		JspUtil.writeOpenStartTag(out, "input");
-		JspUtil.writeAttribute(out, "id", name);
-		JspUtil.writeAttribute(out, "name", name);
-		JspUtil.writeAttribute(out, "class", getStyleClass());
-		JspUtil.writeAttribute(out, "style", getStyle());
-		JspUtil.writeAttribute(out, "type", "checkbox");
+    // Write input tag
+    JspUtil.writeOpenStartTag(out, "input");
+    JspUtil.writeAttribute(out, "id", name);
+    JspUtil.writeAttribute(out, "name", name);
+    JspUtil.writeAttribute(out, "class", getStyleClass());
+    JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttribute(out, "type", "checkbox");
 
-		if ("true".equals(viewModel.getSimpleValue()))
-			JspUtil.writeAttribute(out, "checked", "checked");
+    if ("true".equals(viewModel.getSimpleValue())) {
+      JspUtil.writeAttribute(out, "checked", "checked");
+    }
 
-		if (viewModel.isDisabled())
-			JspUtil.writeAttribute(out, "disabled", "disabled");
-		JspUtil.writeAttribute(out, "tabindex", tabindex);
-		if (accessKey != null)
-			JspUtil.writeAttribute(out, "accesskey", accessKey);
+    if (viewModel.isDisabled()) {
+      JspUtil.writeAttribute(out, "disabled", "disabled");
+    }
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    if (this.accessKey != null) {
+      JspUtil.writeAttribute(out, "accesskey", this.accessKey);
+    }
 
-		if (events && viewModel.isOnChangeEventRegistered()) {
-			this.writeSubmitScriptForUiEvent(out, "onclick", derivedId, OnChangeEventListener.ON_CHANGE_EVENT, onChangePrecondition, updateRegionNames);
-		}
-		JspUtil.writeAttributes(out, attributes);
-		writeBackgroundValidationAttribute(out);
-		JspUtil.writeCloseStartEndTag_SS(out);
+    if (viewModel.isOnChangeEventRegistered()) {
+      writeEventAttributes(out, "onclick", OnChangeEventListener.ON_CHANGE_EVENT, this.onChangePrecondition);
+    }
 
-		super.doEndTag(out);
-		return EVAL_PAGE;      
-	}
+    JspUtil.writeAttributes(out, this.attributes);
+    writeBackgroundValidationAttribute(out);
+    JspUtil.writeCloseStartEndTag_SS(out);
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Precondition for deciding whether go to server side or not." 
-	 */	  
-	public void setOnChangePrecondition(String onChangePrecondition) {
-		this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
-	}
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Precondition for deciding whether go to server side or not."
+   */
+  public void setOnChangePrecondition(String onChangePrecondition) {
+    this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  }
 }

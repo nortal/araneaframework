@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.core;
 
@@ -24,11 +24,9 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.http.FileUploadInputExtension;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StandardFileUploadInputExtension implements FileUploadInputExtension {
-  private static final long serialVersionUID = 1L;
-  private Exception uploadException;
+public class StandardFileUploadInputExtension implements FileUploadInputExtension {  private Exception uploadException;
   private Map<String, ? extends FileItem> fileItems = new HashMap<String, FileItem>();
 
   public StandardFileUploadInputExtension(Map<String, ? extends FileItem> fileItems, Exception uploadException) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.business.data;
 
@@ -23,35 +23,34 @@ import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 import org.araneaframework.example.main.business.model.PersonMO;
 
-
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class PersonListDAO {
 
-	protected DataSource dataSource;
+  protected DataSource dataSource;
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+  public void setDataSource(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-	public ListItemsData getItems(ListQuery request) {
-		ListSqlHelper helper = new HSqlListSqlHelper(this.dataSource, request);
+  public ListItemsData<PersonMO> getItems(ListQuery request) {
+    ListSqlHelper helper = new HSqlListSqlHelper(this.dataSource, request);
 
-		// version A
-		
-		helper.getStandardFields().addFields(request.getListStructure()).removeField("dummy");
-		
-		// version B
-		
-//		helper.addMapping("id", "ID");
-//		helper.addMapping("name", "NAME");
-//		helper.addMapping("surname", "SURNAME");
-//		helper.addMapping("phone", "PHONE");
-//		helper.addMapping("birthdate", "BIRTHDATE");
-//		helper.addMapping("salary", "SALARY");
+    // version A
 
-		helper.setSimpleSqlQuery("person");
-		return helper.execute(PersonMO.class);
-	}
+    helper.getStandardFields().addFields(request.getListStructure()).removeField("dummy");
+
+    // version B
+
+    // helper.addMapping("id", "ID");
+    // helper.addMapping("name", "NAME");
+    // helper.addMapping("surname", "SURNAME");
+    // helper.addMapping("phone", "PHONE");
+    // helper.addMapping("birthdate", "BIRTHDATE");
+    // helper.addMapping("salary", "SALARY");
+
+    helper.setSimpleSqlQuery("person");
+    return helper.execute(PersonMO.class);
+  }
 }

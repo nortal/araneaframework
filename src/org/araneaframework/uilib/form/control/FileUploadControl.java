@@ -16,6 +16,10 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.araneaframework.uilib.support.DataType;
+
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +42,7 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * This class represents an HTML form file upload control.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class FileUploadControl extends BaseControl<FileInfo> {
@@ -67,21 +71,21 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   }
 
   /**
-   * Sets the MIME file types that will be permitted,
+   * Sets the MIME file types that will be permitted, or <code>null</code> to indicate that no MIME checks will be done.
    * 
-   * @param permittedMimeFileTypes the MIME file types that will be permitted.
+   * @param permittedMimeFileTypes the MIME file types that will be permitted, or <code>null</code>.
    */
   public void setPermittedMimeFileTypes(List<String> permittedMimeFileTypes) {
     this.permittedMimeFileTypes = permittedMimeFileTypes;
   }
 
-  /**
-   * Returns "FileInfo".
-   * 
-   * @return "FileInfo".
-   */
-  public String getRawValueType() {
-    return "FileInfo";
+  public void setRawValue(FileInfo value) {
+    super.setRawValue(value);
+    this.innerData = value;
+  }
+
+  public DataType getRawValueType() {
+    return new DataType(FileInfo.class);
   }
 
   protected void addError(String error) {
@@ -92,18 +96,15 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     }
   }
 
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
-
   /**
    * Empty. There is no response for file upload control.
    */
   protected void prepareResponse() {}
 
   /**
-   * Reads the {@link FileInfo}data from request {@link HttpInputData}.
+   * Reads the {@link FileInfo} data from request {@link HttpInputData}.
    */
+  @Override
   protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = getFileUploadInputExtension(request);
     // this is acceptable, see comments in getFileUploadInputExtension()
@@ -112,7 +113,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     }
 
     // FIXME: unfortunately this conditional code is unreachable because when request
-    // parsing fails transaction id is usually not set (inconsistent) and update() is never called
+    // parsing fails then transaction ID is usually not set (inconsistent) and update() is never called
     this.uploadSucceeded = fileUpload.uploadSucceeded();
     if (!this.uploadSucceeded) {
       return;
@@ -123,7 +124,6 @@ public class FileUploadControl extends BaseControl<FileInfo> {
       String mimeType = file.getContentType();
 
       this.mimeTypePermitted = this.permittedMimeFileTypes == null || this.permittedMimeFileTypes.contains(mimeType);
-
       if (this.mimeTypePermitted) {
         this.innerData = new FileInfo(file);
       }
@@ -137,14 +137,15 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     }
 
     FileUploadInputExtension fileUpload = null;
-    // Motivation for try: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c
+
+    // Motivation for try: when one opens FileUploadDemo in new window (cloning!), exception occurs b/c
     // FileUploadInputExtension extension does not exist in InputData which is
-    // extended only when request is multipart, while cloning filter always sends ordinary GET.
+    // extended only when request is "multipart", while cloning filter always sends ordinary GET.
     try {
       fileUpload = request.narrow(FileUploadInputExtension.class);
     } catch (NoSuchNarrowableException e) {
-      // If no fileupload extension is present and fileupload filter is enabled, control should
-      // just sit there and be beautiful, otherwise just return null
+      // If no file-upload extension is present and file-upload filter is enabled, control should
+      // just sit there and be beautiful, otherwise just return null.
     }
     return fileUpload;
   }
@@ -161,24 +162,17 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   public void validate() {
     boolean fieldFilled = false;
     FileInfo info = (FileInfo) this.innerData;
-    fieldFilled = info != null && info.getSize() > 0 && info.getOriginalFilename() != null
-        && !info.getOriginalFilename().trim().equals("");
+    fieldFilled = info != null && info.getSize() > 0 && !StringUtils.isBlank(info.getOriginalFilename());
 
-    if ((isMandatory() && !isRead()) || (isMandatory() && !fieldFilled)) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
-          getLabel(), getEnvironment())));
+    if (isMandatory() && !(isRead() && fieldFilled)) {
+      addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
-    if (!mimeTypePermitted) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.FORBIDDEN_MIME_TYPE, MessageUtil.localize(
-          getLabel(), getEnvironment())));
+    if (!this.mimeTypePermitted) {
+      addErrorWithLabel(UiLibMessages.FORBIDDEN_MIME_TYPE);
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
+  @Override
   public ViewModel getViewModel() {
     return new ViewModel();
   }
@@ -190,15 +184,25 @@ public class FileUploadControl extends BaseControl<FileInfo> {
    */
   protected class FileUploadActionListener implements ActionListener {
 
+    /**
+     * The response that is used, when AJAX file upload is successful.
+     */
+    public static final String RESPONSE_OK = "OK";
+
+    /**
+     * The response that is used, when AJAX file upload fails.
+     */
+    public static final String RESPONSE_FAIL = "FAIL";
+
     public void processAction(String actionId, InputData input, OutputData output) throws Exception {
       FileInfo file = (FileInfo) FileUploadControl.this.innerData;
       FileUploadControl.this.ajaxRequest = true;
       convertAndValidate();
 
-      if (file == null || file.getSize() == 0) {
+      if (file == null || file.isFilePresent()) {
         LOG.debug("Did not get a file!");
         PrintWriter out = ServletUtil.getResponse(output).getWriter();
-        out.write("FAIL");
+        out.write(RESPONSE_FAIL);
 
         if (!FileUploadControl.this.ajaxMessages.isEmpty()) {
           out.print("(");
@@ -214,21 +218,22 @@ public class FileUploadControl extends BaseControl<FileInfo> {
           out.print(")");
           FileUploadControl.this.ajaxMessages.clear();
         }
-
-        FileUploadControl.this.ajaxRequest = false;
       } else {
-        LOG.debug("Got file '" + file.getOriginalFilename() + "'");
-        ServletUtil.getResponse(output).getWriter().write("OK");
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Got file '" + file.getOriginalFilename() + "'");
+        }
+        ServletUtil.getResponse(output).getWriter().write(RESPONSE_OK);
       }
+
+      FileUploadControl.this.ajaxRequest = false;
     }
   }
 
-  // *********************************************************************
-  // * VIEW MODEL
-  // *********************************************************************
-
   /**
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * The view model implementation of <code>FileUploadControl</code>. The view model provides the data for tags to
+   * render the control.
+   * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel extends BaseControl<FileInfo>.ViewModel {
 
@@ -248,6 +253,10 @@ public class FileUploadControl extends BaseControl<FileInfo> {
      */
     public List<String> getPermittedMimeFileTypes() {
       return this.permittedMimeFileTypes;
+    }
+    @Override
+    public String getControlType() {
+      return super.getControlType();
     }
   }
 }

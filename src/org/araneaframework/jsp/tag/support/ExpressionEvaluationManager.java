@@ -26,7 +26,7 @@ import javax.servlet.jsp.JspException;
  * Jakarta taglibs is used, in Spring framework application the Spring solution for EL evaluation is automatically used.
  * Anyway the EL evaluation can be overridden with any implementation using {@link ConfigurationContext}.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1.0.1
  */
 public interface ExpressionEvaluationManager extends Serializable {
@@ -41,6 +41,6 @@ public interface ExpressionEvaluationManager extends Serializable {
    * @return Evaluated value of the <code>attributeValue</code>.
    * @throws JspException
    */
-  Object evaluate(String attributeName, String attributeValue, Class<?> classObject, PageContext pageContext)
+  <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject, PageContext pageContext)
       throws JspException;
 }

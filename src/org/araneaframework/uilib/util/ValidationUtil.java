@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.util;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -26,11 +28,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.GenericValidator;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ValidationUtil {
 
-  protected static final Log log = LogFactory.getLog(ValidationUtil.class);
+  protected static final Log LOG = LogFactory.getLog(ValidationUtil.class);
 
   protected static final int MIN_YEAR = 1;
 
@@ -66,8 +68,8 @@ public abstract class ValidationUtil {
   }
 
   protected static ParsedDate parseJDK(String pattern, String value) {
-    if (log.isTraceEnabled()) {
-      log.trace("Using JDK with pattern '" + pattern + "' to parse date '" + value + "'.");
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Using JDK with pattern '" + pattern + "' to parse date '" + value + "'.");
     }
 
     // Checking just year is not enough b/c some strings like "020110999".
@@ -92,8 +94,8 @@ public abstract class ValidationUtil {
         int year = cal.get(Calendar.YEAR);
 
         if (year <= MAX_YEAR && year >= MIN_YEAR) {
-          if (log.isTraceEnabled()) {
-            log.trace("Parsed Java Date: '" + date + "'.");
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("Parsed Java Date: '" + date + "'.");
           }
           return new ParsedDate(date, pattern);
         }
@@ -131,6 +133,18 @@ public abstract class ValidationUtil {
       return this.outputPattern;
     }
 
+  }
+
+  /**
+   * Validates whether the given <code>numberString</code> contains only numbers. This check validates only not empty
+   * <code>String</code>s (returns always <code>true</code> otherwise).
+   * 
+   * @param numberString The <code>String</code> that must contain only unicode digits.
+   * @return <code>true</code>, if the string is <code>null</code>, empty (""), or contains only unicode digits.
+   * @since 2.0
+   */
+  public static boolean isNumeric(String numberString) {
+    return numberString != null && StringUtils.isNumeric(numberString);
   }
 
   /**

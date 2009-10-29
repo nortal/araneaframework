@@ -21,7 +21,7 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DefaultFormElementVisitor extends FormElementVisitor {
 

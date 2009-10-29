@@ -56,7 +56,7 @@ import org.araneaframework.http.util.JsonObject;
  */
 public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implements UpdateRegionContext {
 
-  private static final Log log = LogFactory.getLog(StandardUpdateRegionFilterWidget.class);
+  private static final Log LOG = LogFactory.getLog(StandardUpdateRegionFilterWidget.class);
 
   public static final String AJAX_REQUEST_ID_KEY = "ajaxRequestId";
   public static final String RELOAD_REGION_KEY = "reload";
@@ -111,8 +111,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       return;
     }
 
-    if (log.isDebugEnabled())
-      log.debug("Received request to update regions '" + regionNames + "'");
+    if (LOG.isDebugEnabled())
+      LOG.debug("Received request to update regions '" + regionNames + "'");
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
@@ -132,8 +132,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       writeResponseId(writer, ajaxRequestId);
       if (this.disabled) {
         // TODO: This has some problems with versioned states, but must be tackled on client-side.
-        if (log.isDebugEnabled()) {
-          log.debug("Partial rendering is disabled, forcing a reload for full render");
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Partial rendering is disabled, forcing a reload for full render");
         }
         this.disabled = false;
         writeReloadRegion(writer);
@@ -179,8 +179,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     UpdateRegionGatherMessage regionGatherMessage = new UpdateRegionGatherMessage();
     propagate(regionGatherMessage);
     for (Map.Entry<String, String> entry : regionGatherMessage.getRegions().entrySet()) {
-      if(log.isDebugEnabled()) {
-        log.debug("Updating handler region : " + entry.getKey());
+      if(LOG.isDebugEnabled()) {
+        LOG.debug("Updating handler region : " + entry.getKey());
       }
       if (entry.getValue() != null) {
         writeRegion(out, entry.getKey(), entry.getValue());
@@ -209,8 +209,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String documentRegionId = regionNames[i];
       String widgetId = this.documentRegions.get(documentRegionId);
       if (widgetId == null) {
-        if (log.isWarnEnabled()) {
-          log.warn("Document region '" + documentRegionId + "' not found");
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Document region '" + documentRegionId + "' not found");
         }
         continue;
       }
@@ -260,16 +260,16 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       String widgetId = entry.getKey();
       Set<String> regionIds = entry.getValue();
 
-      if (log.isDebugEnabled()) {
-        log.debug("Rendering widget '" + widgetId + "'");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Rendering widget '" + widgetId + "'");
       }
 
       // send a message to identify the component to be rendered
       ComponentLocatorMessage componentLocatorMessage = new ComponentLocatorMessage(new StandardPath(widgetId));
       propagate(componentLocatorMessage);
       if (componentLocatorMessage.getComponent() == null) {
-        if (log.isWarnEnabled())
-          log.warn("Widget '" + widgetId + "' not found, skipping rendering");
+        if (LOG.isWarnEnabled())
+          LOG.warn("Widget '" + widgetId + "' not found, skipping rendering");
         continue;
       }
 
@@ -287,8 +287,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       for (String id : regionIds) {
         String content = getContentById(widgetContent, id);
         if (content == null) {
-          if (log.isWarnEnabled()) {
-            log.warn("Document region '" + id + "' not found on rendering of widget '" + widgetId + "'");
+          if (LOG.isWarnEnabled()) {
+            LOG.warn("Document region '" + id + "' not found on rendering of widget '" + widgetId + "'");
           }
           continue;
         }
@@ -313,8 +313,8 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     if(endIndex == -1)
       throw new IllegalStateException("Expected END block for AJAX update region with id '" + id + "'.");
 
-    if (log.isDebugEnabled())
-      log.debug("Successfully extracted region '" + id + "' to be included in response.");
+    if (LOG.isDebugEnabled())
+      LOG.debug("Successfully extracted region '" + id + "' to be included in response.");
 
     return source.substring(startIndex + blockStart.length(), endIndex);
   }
@@ -378,13 +378,13 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
     protected void execute(Component component) throws Exception {
       if (component instanceof UpdateRegionProvider) {
-        Map<String, String> newRegions = ((UpdateRegionProvider) component).getRegions();
+        Map<String, String> newRegions = ((UpdateRegionProvider) component).getRegions(null);
         if (newRegions != null && !newRegions.isEmpty()) {
-          if (log.isWarnEnabled()) {
+          if (LOG.isWarnEnabled()) {
             Set<String> duplicateRegions = new HashSet<String>(newRegions.keySet());
             duplicateRegions.retainAll(regions.keySet());
             if (duplicateRegions.size() > 0) {
-              log.warn("UpdateRegionProvider '" + (component.getScope() != null ? component.getScope().toString() : component.getClass().getName()) + "' overwrites previously added regions: " + duplicateRegions.toString());
+              LOG.warn("UpdateRegionProvider '" + (component.getScope() != null ? component.getScope().toString() : component.getClass().getName()) + "' overwrites previously added regions: " + duplicateRegions.toString());
             }
           }
           regions.putAll(newRegions);

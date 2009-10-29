@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.router;
 
@@ -21,19 +21,22 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.SessionServiceContext;
 
 /**
- * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles sessions.
- * Enriches the environment with an object of this class under the key
- * SessionServiceContext.class.
+ * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles sessions. Enriches the
+ * environment with an object of this class under the key SessionServiceContext.class.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardSessionServiceRouterService extends BaseServiceRouterService {
+
   @Override
   protected Environment getChildEnvironment(String serviceId) throws Exception {
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), SessionServiceContext.class, new ServiceRouterContextImpl(serviceId));
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), SessionServiceContext.class,
+        new ServiceRouterContextImpl(serviceId));
   }
-  
-  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements SessionServiceContext {
+
+  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements
+      SessionServiceContext {
+
     protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }

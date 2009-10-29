@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form;
 
@@ -34,7 +34,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
@@ -42,6 +42,7 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  * 
  * @author Oleg Mürk
  */
+@SuppressWarnings("unchecked")
 public class BaseFormElementHtmlTag extends PresentationTag implements FormElementTagInterface {
 
   /** @since 1.1 */
@@ -55,7 +56,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement<?, ?>.ViewModel formElementViewModel;
+  protected FormElement.ViewModel formElementViewModel;
 
   protected Control.ViewModel controlViewModel;
 
@@ -88,53 +89,55 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
   protected String globalUpdateRegions;
 
-  /* ***********************************************************************************
-   * Start & End tags
-   * ***********************************************************************************/
-
-  @SuppressWarnings("unchecked")
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     // Get form data
-    formFullId = (String) requireContextEntry(FormTag.FORM_FULL_ID_KEY);
-    formViewModel = (FormWidget.ViewModel) requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
+    this.formFullId = (String) requireContextEntry(FormTag.FORM_FULL_ID_KEY);
+    this.formViewModel = (FormWidget.ViewModel) requireContextEntry(FormTag.FORM_VIEW_MODEL_KEY);
     FormWidget form = (FormWidget) requireContextEntry(FormTag.FORM_KEY);
 
     // In case the tag is in formElement tag
 
-    derivedId = id;
-    if (derivedId == null && getContextEntry(FormElementTag.ID_KEY) != null)
-      derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
-    if (derivedId == null)
-      throw new MissingFormElementIdAraneaJspException(this);
+    this.derivedId = this.id;
 
-    FormElement fe = (FormElement) JspWidgetUtil.traverseToSubWidget(form, derivedId);
+    if (this.derivedId == null && getContextEntry(FormElementTag.ID_KEY) != null) {
+      this.derivedId = (String) getContextEntry(FormElementTag.ID_KEY);
+    }
+
+    if (this.derivedId == null) {
+      throw new MissingFormElementIdAraneaJspException(this);
+    }
+
+    FormElement fe = (FormElement) JspWidgetUtil.traverseToSubWidget(form, this.derivedId);
     fe.rendered();
 
-    formElementViewModel = (FormElement.ViewModel) fe._getViewable().getViewModel();
+    this.formElementViewModel = (FormElement.ViewModel) fe._getViewable().getViewModel();
 
     // Get control
-    controlViewModel = (formElementViewModel).getControl();
-    localizedLabel = JspUtil.getResourceString(pageContext, formElementViewModel.getLabel());
+    this.controlViewModel = this.formElementViewModel.getControl();
+    this.localizedLabel = JspUtil.getResourceString(this.pageContext, this.formElementViewModel.getLabel());
 
-    // We shall use the accesskey HTML attribute for this form element only if the attribute "accessKey"
+    // We shall use the "accesskey" HTML attribute for this form element only if the attribute "accessKey"
     // was explicitly set (otherwise in most common cases the label tag sets up the access key)
-    if (accessKeyId != null) {
-      accessKey = JspUtil.getResourceStringOrNull(pageContext, accessKeyId);
+    if (this.accessKeyId != null) {
+      this.accessKey = JspUtil.getResourceStringOrNull(this.pageContext, this.accessKeyId);
     }
-    if (accessKey != null && accessKey.length() != 1)
-      accessKey = null;
 
-    if (hasElementContextSpan)
-      writeFormElementContextOpen(out, formFullId, derivedId, true, pageContext);
+    if (this.accessKey != null && this.accessKey.length() != 1) {
+      this.accessKey = null;
+    }
 
-    updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
+    if (this.hasElementContextSpan) {
+      writeFormElementContextOpen(out, this.formFullId, this.derivedId, true, this.pageContext);
+    }
+
+    this.updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(this.pageContext, this.updateRegions, this.globalUpdateRegions);
 
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.getFullFieldId());
 
-    backgroundValidation = fe.isBackgroundValidation();
+    this.backgroundValidation = fe.isBackgroundValidation();
 
     // Continue
     return EVAL_BODY_INCLUDE;
@@ -142,26 +145,24 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    if (hasElementContextSpan) {
+    if (this.hasElementContextSpan) {
       writeFormElementContextClose(out);
-      writeFormElementValidityMarkers(out, formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX + formFullId + "."
-          + derivedId);
+      writeFormElementValidityMarkers(out, this.formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX
+          + this.formFullId + "." + derivedId);
       writeFormElementValidationErrorMessages(out);
     }
-
     return super.doEndTag(out);
   }
 
   /**
    * @since 1.1
    */
-  @SuppressWarnings("unchecked")
   protected void writeFormElementValidationErrorMessages(Writer out) throws JspException, AraneaJspException,
       IOException {
-    if (!formElementViewModel.isValid()) {
+    if (!this.formElementViewModel.isValid()) {
       FormWidget form = (FormWidget) requireContextEntry(FormTag.FORM_KEY);
-      String errors = formElementViewModel.getFormElementValidationErrorRenderer().getClientRenderText(
-          (FormElement) JspWidgetUtil.traverseToSubWidget(form, derivedId));
+      String errors = this.formElementViewModel.getFormElementValidationErrorRenderer().getClientRenderText(
+          (FormElement) JspWidgetUtil.traverseToSubWidget(form, this.derivedId));
       out.write(errors);
     }
   }
@@ -169,10 +170,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
   @Override
   public void doFinally() {
     super.doFinally();
-    formViewModel = null;
-    formElementViewModel = null;
-    controlViewModel = null;
-    backgroundValidation = false;
+    this.formViewModel = null;
+    this.formElementViewModel = null;
+    this.controlViewModel = null;
+    this.backgroundValidation = false;
   }
 
   /**
@@ -185,61 +186,74 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    * @since 1.1
    */
   protected void writeBackgroundValidationAttribute(Writer out) throws Exception {
-    if (this.backgroundValidation != ConfigurationContextUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil
+    if (this.backgroundValidation != ConfigurationUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil
         .getConfiguration(getEnvironment()))) {
       JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, String
           .valueOf(this.backgroundValidation));
     }
   }
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
+  protected void writeEventAttributes(Writer out, String jsEvent, String araneaEvent, String condition) throws Exception {
+    if (this.events) {
+      this.writeSubmitScriptForUiEvent(out, jsEvent, this.derivedId, araneaEvent, condition, this.updateRegionNames);
+    }
 
+  }
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Element id, can also be inherited."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Element id, can also be inherited."
    */
   public void setId(String id) throws JspException {
     this.id = evaluateNotNull("id", id, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Whether the element will send the events that are registered by server-side (by default 'true')."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether the element will send the events that are registered by server-side (by default 'true')."
    */
   public void setEvents(String events) throws JspException {
-    this.events = (evaluateNotNull("events", events, Boolean.class)).booleanValue();
+    this.events = evaluateNotNull("events", events, Boolean.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Whether the form will be validated on the client-side when the element generates an event (by default "
-   *                false")."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether the form will be validated on the client-side when the element generates an event (by default: false)."
    */
   public void setValidateOnEvent(String validateOnEvent) throws JspException {
-    this.validateOnEvent = (evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class)).booleanValue();
+    this.validateOnEvent = evaluateNotNull("validateOnEvent", validateOnEvent, Boolean.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "HTML tabindex for the element."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "HTML tabindex for the element."
    */
   public void setTabindex(String tabindex) throws JspException {
     this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Enumerates the regions of markup to be updated in this widget scope. Please see
-   *                <code><ui:updateRegion></code> for details."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code>&lt;ui:updateRegion&gt;</code> for details."
    */
   public void setUpdateRegions(String updateRegions) {
     this.updateRegions = evaluate("updateRegions", updateRegions, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Enumerates the regions of markup to be updated globally. Please see <code><ui:updateRegion></code>
-   *                for details."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Enumerates the regions of markup to be updated globally. Please see <code>&lt;ui:updateRegion&gt;</code> for details."
    */
   public void setGlobalUpdateRegions(String globalUpdateRegions) {
     this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
@@ -250,7 +264,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    * element and is to be implemented in each form element separately.
    * 
    * Usually you won't need to specify the access key for the element at all, but rather for the element's label. It's
-   * ok to specify null, empty string, or nothing for this property.
+   * OK to specify null, empty string, or nothing for this property.
    */
   public void setAccessKeyId(String accessKeyId) {
     this.accessKeyId = evaluate("accessKeyId", accessKeyId, String.class);
@@ -260,16 +274,17 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    * Computes field name.
    */
   protected String getFullFieldId() {
-    return formFullId + "." + derivedId;
+    return this.formFullId + "." + this.derivedId;
   }
 
   /**
    * Asserts that associated control is of given type. If the condition does not hold, throws exception.
    */
   protected void assertControlType(String type) throws JspException {
-    if (!controlViewModel.getControlType().equals(type))
-      throw new AraneaJspException("Control of type '" + type + "' expected in form element '" + derivedId
-          + "' instead of '" + controlViewModel.getControlType() + "'");
+    if (!this.controlViewModel.getControlType().equals(type)) {
+      throw new AraneaJspException("Control of type '" + type + "' expected in form element '" + this.derivedId
+          + "' instead of '" + this.controlViewModel.getControlType() + "'");
+    }
   }
 
   public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId,
@@ -283,11 +298,18 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
   }
 
   /**
-   * Write a span with random id around the element, and register this span with javascript (done by external behavior
-   * scripts, span functions as keyboard handler). Default implementation does not use any parameters except
+   * Write a span with random ID around the element, and register this SPAN with javascript (done by external behavior
+   * scripts, SPAN functions as keyboard handler). Default implementation does not use any parameters except
    * <code>Writer</code> and <code>PageContext</code>.
+   * 
+   * @param out The writer to write to.
+   * @param fullFormId The full form ID.
+   * @param elementId The current element ID.
+   * @param isPresent 
+   * @param pageContext The JSP page context.
+   * @param idPrefix The prefix for the ID.
+   * @throws Exception
    */
-
   public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent,
       PageContext pageContext, String idPrefix) throws Exception {
     // Enclose the element in a <span id=someuniqueid>
@@ -311,9 +333,9 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
   }
 
   /**
-   * Closes the span opened by writeFormElementContextOpen
+   * Closes the SPAN opened by writeFormElementContextOpen
    * 
-   * @param out
+   * @param out The writer where to write.
    * @throws IOException
    */
   public static void writeFormElementContextClose(Writer out) throws IOException {
@@ -355,7 +377,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    * @see #setHasElementContextSpan
    */
   protected boolean getHasElementContextSpan() {
-    return hasElementContextSpan;
+    return this.hasElementContextSpan;
   }
 
   /**
@@ -363,7 +385,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    */
   protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId,
       String precondition, List<String> updateRegions) throws IOException {
-    UiUpdateEvent event = new UiUpdateEvent(eventId, formFullId + "." + id, null, updateRegions);
+    UiUpdateEvent event = new UiUpdateEvent(eventId, this.formFullId + "." + id, null, updateRegions);
     event.setEventPrecondition(precondition);
     JspUtil.writeEventAttributes(out, event);
     JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
@@ -379,7 +401,6 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
     String resultRenderMode = evaluateNotNull("disabledRenderMode", renderMode, String.class);
 
     if (!resultRenderMode.equals(RENDER_DISABLED_DISABLED) && !resultRenderMode.equals(RENDER_DISABLED_READONLY)) {
-
       throw new JspException("Valid options for the disabledRenderMode attribute are '" + RENDER_DISABLED_DISABLED
           + "' and '" + RENDER_DISABLED_READONLY + "'. The value '" + resultRenderMode + "' is not valid.");
     }

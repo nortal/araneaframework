@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.Serializable;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -28,14 +29,15 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class is a control generalization that provides methods common to all HTML form controls. The methods include
  * XML output and error handling.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class BaseControl<T> extends BaseApplicationWidget implements java.io.Serializable, Control<T> {
+public abstract class BaseControl<T> extends BaseApplicationWidget implements Serializable, Control<T> {
 
   // *******************************************************************
   // FIELDS
@@ -74,14 +76,8 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements ja
     BaseControl.this.value = value;
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   * @throws Exception
-   */
   @Override
-  public BaseControl<T>.ViewModel getViewModel() throws Exception {
+  public BaseControl<T>.ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -177,6 +173,19 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements ja
     this.feCtx.addError(error);
   }
 
+  protected void addErrorWithLabel(String errorMsg) {
+    addErrorWithLabel(errorMsg, null);
+  }
+
+  protected void addErrorWithLabel(String errorMsg, Object lastParam) {
+    addErrorWithLabel(errorMsg, lastParam, null);
+  }
+
+  protected void addErrorWithLabel(String errorMsg, Object lastParam1, Object lastParam2) {
+    addError(MessageUtil.localizeAndFormat(getEnvironment(), errorMsg, MessageUtil.localize(getLabel(),
+        getEnvironment()), lastParam1, lastParam2));
+  }
+
   /**
    * Returns whether the control is disabled.
    * 
@@ -213,7 +222,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements ja
   /**
    * Represents a general control view model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel implements Control.ViewModel {
 
@@ -229,16 +238,14 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements ja
      * Takes an outer class snapshot.
      */
     public ViewModel() {
-      String className = BaseControl.this.getClass().getName();
-      // Recognizes Controls that are defined as (anonymous) nested classes.
-      // Prior to 1.5 getDeclaringClass() does not exist, so just look for '$'.
-      if (className.indexOf('$') != -1) {
-        className = BaseControl.this.getClass().getSuperclass().getName();
+      Class<?> clazz = BaseControl.this.getClass();
+
+      // Recognizes Controls that are defined as (anonymous) nested classes:
+      if (clazz.getDeclaringClass() != null) {
+        clazz = clazz.getDeclaringClass();
       }
 
-      className = className.substring(className.lastIndexOf(".") + 1);
-
-      this.controlType = className;
+      this.controlType = clazz.getSimpleName();
       this.mandatory = BaseControl.this.isMandatory();
       this.disabled = BaseControl.this.isDisabled();
       this.label = BaseControl.this.getLabel();

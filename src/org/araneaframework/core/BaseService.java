@@ -30,8 +30,6 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public class BaseService extends BaseComponent implements Service {
 
-  private static final long serialVersionUID = 1L;
-
   protected transient InputData currentInputData;
 
   protected transient OutputData currentOutputData;

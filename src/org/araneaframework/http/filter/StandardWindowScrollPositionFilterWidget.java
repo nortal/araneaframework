@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.filter;
 
@@ -29,20 +29,18 @@ import org.araneaframework.http.WindowScrollPositionContext;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget implements WindowScrollPositionContext {
-  private static final Log log = LogFactory.getLog(StandardWindowScrollPositionFilterWidget.class);
-  
-  private static final long serialVersionUID = 1L;
-  protected LinkedList<String[]> savedCoordinates = new LinkedList<String[]>();
+  private static final Log LOG = LogFactory.getLog(StandardWindowScrollPositionFilterWidget.class);
+    protected LinkedList<String[]> savedCoordinates = new LinkedList<String[]>();
   protected String windowScrollX;
   protected String windowScrollY;
   
   /* ************************************************************************
    * WindowScrollPositionContext interface methods.
-   * ************************************************************************/
+   * ********************************************************************** */
   public void reset() {
     resetCurrent();
     savedCoordinates.clear();
-    log.debug("RESETTED all coords ");
+    LOG.debug("RESETTED all coords ");
   }
   
   public void pop() {
@@ -51,13 +49,13 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
       windowScrollX = coords[0];
       windowScrollY = coords[1];
       
-      log.debug("popped to coords " + windowScrollX + " " + windowScrollY);
+      LOG.debug("popped to coords " + windowScrollX + " " + windowScrollY);
     }
   }
 
   public void push() {
     savedCoordinates.addFirst(new String[] {windowScrollX, windowScrollY});
-    log.debug("pushed coords " + windowScrollX + " " + windowScrollY);
+    LOG.debug("pushed coords " + windowScrollX + " " + windowScrollY);
     resetCurrent();
   }
 
@@ -76,7 +74,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   public void scrollTo(String x, String y) {
     windowScrollX = x;
     windowScrollY = y;
-    log.debug("scrolled to " + x + " " + y);
+    LOG.debug("scrolled to " + x + " " + y);
   }
 
   /* *********************************************************************** */
@@ -90,7 +88,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     windowScrollX = input.getGlobalData().get(WINDOW_SCROLL_X_KEY);
     windowScrollY = input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
     
-    log.debug("REQUEST COORDS READ TO BE  to " + windowScrollX + " " + windowScrollY);
+    LOG.debug("REQUEST COORDS READ TO BE  to " + windowScrollX + " " + windowScrollY);
 
     super.update(input);
   }

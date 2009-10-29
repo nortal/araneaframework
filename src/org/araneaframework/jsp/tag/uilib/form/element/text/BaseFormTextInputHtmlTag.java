@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
@@ -50,7 +50,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -83,15 +83,18 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   /* ***********************************************************************************
    * INPUT writing functions
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   protected void writeTextInput(Writer out, String inputType) throws Exception {
     writeTextInput(out, inputType, true, new HashMap<String, String>());
   }
 
-  protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map<String, String> customAttributes) throws Exception {
+  @SuppressWarnings("unchecked")
+  protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map<String, String> customAttributes)
+      throws Exception {
+
     String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl<?>.ViewModel) controlViewModel;
+    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) controlViewModel;
 
     // Write
     JspUtil.writeOpenStartTag(out, "input");
@@ -102,8 +105,8 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "type", inputType);
     if (writeValue)
       JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
-    JspUtil.writeAttribute(out, "size", size);
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
+    JspUtil.writeAttribute(out, "size", this.size);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
     
     writeBackgroundValidationAttribute(out);
 

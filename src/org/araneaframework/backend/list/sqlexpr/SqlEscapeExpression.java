@@ -21,7 +21,7 @@ import org.araneaframework.backend.list.sqlexpr.compare.SqlLikeExpression;
 import org.araneaframework.core.Assert;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * @see SqlLikeExpression
  */
 public class SqlEscapeExpression implements SqlExpression {

@@ -1,5 +1,5 @@
-/**
- * Copyright 2007 Webmedia Group Ltd.
+/*
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package org.araneaframework.example.main.release.demos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -38,53 +36,48 @@ import org.araneaframework.uilib.menu.ContextMenuItem.ContextMenuEventEntry;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class DemoContextMenuWidget extends TemplateBaseWidget
-  implements LocaleChangeListener {
+public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleChangeListener {
 
-  private static final long serialVersionUID = 1L;
+  /* Editable list. */
+  private BeanListWidget<ExampleData.Client> list;
 
-  protected List friends = new ArrayList();
+  protected List<ExampleData.Client> friends = new ArrayList<ExampleData.Client>();
 
-  private MemoryBasedListDataProvider dataProvider = new DataProvider();
+  private MemoryBasedListDataProvider<ExampleData.Client> dataProvider = new DataProvider();
 
   // Plays the role of a sequence
   private Long lastId = new Long(0);
-  {
-    Random rn = new Random();
-    List allSuggestions = new ArrayList();
-    List allCountries = Arrays.asList(Locale.getISOCountries());
 
-    for (Iterator i = allCountries.iterator(); i.hasNext();) {
-      Locale locale = new Locale("en", (String) i.next());
-      allSuggestions.add(locale.getDisplayCountry(Locale.ENGLISH));
+  
+  public DemoContextMenuWidget() {
+    Random rn = new Random();
+    List<String> allSuggestions = new ArrayList<String>();
+
+    for (String country  : Locale.getISOCountries()) {
+      allSuggestions.add(new Locale("en", country).getDisplayCountry(Locale.ENGLISH));
     }
 
-    for (int i = 0; i < ExampleData.males.length; i++) {
+    for (String male : ExampleData.males) {
       ExampleData.Client friend = new ExampleData.Client();
-      friend.setForename(ExampleData.males[i]);
+      friend.setForename(male);
       friend.setId(this.lastId);
       friend.setSex("M");
       friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
-      friend.setCountry((String) allSuggestions.get(rn.nextInt(allSuggestions.size())));
+      friend.setCountry(allSuggestions.get(rn.nextInt(allSuggestions.size())));
       this.friends.add(friend);
-      this.lastId = new Long(this.lastId.longValue() + 1);
+      this.lastId = this.lastId++;
     }
 
-    for (int i = 0; i < ExampleData.females.length; i++) {
+    for (String female : ExampleData.females) {
       ExampleData.Client friend = new ExampleData.Client();
-      friend.setForename(ExampleData.females[i]);
+      friend.setForename(female);
       friend.setSex("F");
-      friend
-          .setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
-      friend.setCountry((String) allSuggestions.get(rn.nextInt(allSuggestions
-          .size())));
+      friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
+      friend.setCountry(allSuggestions.get(rn.nextInt(allSuggestions.size())));
       this.friends.add(friend);
-      this.lastId = new Long(this.lastId.longValue() + 1);
+      this.lastId = this.lastId++;
     }
   }
-
-  /* Editable list. */
-  private BeanListWidget list;
 
   protected void init() throws Exception {
     setViewSelector("release/demos/contextMenuDemo");
@@ -94,8 +87,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget
   }
 
   private void createList() {
-    this.list = new BeanListWidget(ExampleData.Client.class);
-    addWidget("list", this.list);
+    this.list = new BeanListWidget<ExampleData.Client>(ExampleData.Client.class);
     this.list.setOrderableByDefault(true);
     this.list.addField("sex", "sed.Sex").like();
     this.list.addField("forename", "sed.Forename").like();
@@ -103,17 +95,16 @@ public class DemoContextMenuWidget extends TemplateBaseWidget
     this.list.addField("country", "common.Country").like();
     this.list.addField("dummy", null, false);
     this.list.setDataProvider(this.dataProvider);
+    addWidget("list", this.list);
   }
 
-  private class DataProvider extends MemoryBasedListDataProvider {
-
-    private static final long serialVersionUID = 1L;
+  private class DataProvider extends MemoryBasedListDataProvider<ExampleData.Client> {
 
     protected DataProvider() {
       super(ExampleData.Client.class);
     }
 
-    public List loadData() throws Exception {
+    public List<ExampleData.Client> loadData() throws Exception {
       return DemoContextMenuWidget.this.friends;
     }
   }
@@ -129,8 +120,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget
 
   private void addMenuItem(ContextMenuItem menu, String labelId, String eventId) {
     String label = getL10nCtx().localize(labelId);
-    menu.addMenuItem(new ContextMenuItem(label, new ContextMenuEventEntry(
-        eventId, this, "cMenuparameterSupplier")));
+    menu.addMenuItem(new ContextMenuItem(label, new ContextMenuEventEntry(eventId, this, "cMenuparameterSupplier")));
   }
 
   public void onLocaleChange(Locale oldLocale, Locale newLocale) {
@@ -142,8 +132,9 @@ public class DemoContextMenuWidget extends TemplateBaseWidget
   }
 
   public void handleEventViewRecord(String param) {
-    Client c = (Client) this.list.getRowFromRequestId(param);
+    Client c = this.list.getRowFromRequestId(param);
     getFlowCtx().start(new ClientViewWidget(c));
+
     // XXX: this is a hack to work around the shortcoming of partial rendering
     // -- namely when flow is switched,
     // the regions that are supposed to be updated are of course lost and old
@@ -152,18 +143,13 @@ public class DemoContextMenuWidget extends TemplateBaseWidget
   }
 
   public void handleEventChangeSex(String param) {
-    Client c = (Client) this.list.getRowFromRequestId(param);
-    if (c.getSex().equals("M")) {
-      c.setSex("F");
-    } else {
-      c.setSex("M");
-    }
+    Client c = this.list.getRowFromRequestId(param);
+    c.setSex(c.getSex().equals("M") ? "F" : "M");
   }
 
   public void handleEventDeleteRecord(String param) {
-    final Client c = (Client) this.list.getRowFromRequestId(param);
-    this.friends.remove(CollectionUtils.find(this.friends,
-        new BeanPropertyValueEqualsPredicate("id", c.getId())));
+    final Client c = this.list.getRowFromRequestId(param);
+    this.friends.remove(CollectionUtils.find(this.friends, new BeanPropertyValueEqualsPredicate("id", c.getId())));
     this.list.refresh();
   }
 }

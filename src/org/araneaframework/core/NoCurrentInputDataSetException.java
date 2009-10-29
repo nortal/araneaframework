@@ -21,8 +21,6 @@ package org.araneaframework.core;
  */
 public class NoCurrentInputDataSetException extends AraneaRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   public NoCurrentInputDataSetException(String msg) {
     super(msg);
   }

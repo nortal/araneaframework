@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.formlist.FormListWidget;
  * retrieved and returned in {@link #getRows()}). This object can be provided to {@link FormListWidget} to provide the
  * model data to the list as the list rows.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 public class MapFormListModel<R> implements FormListModel<R> {
 

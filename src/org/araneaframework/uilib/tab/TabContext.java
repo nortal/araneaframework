@@ -8,7 +8,7 @@ import org.araneaframework.core.ApplicationWidget;
  * This interface identifies a tab widget.
  * 
  * @see TabContainerContext
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1.3
  */
 public interface TabContext extends ApplicationWidget {

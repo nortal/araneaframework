@@ -21,7 +21,7 @@ import java.util.List;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface DisplayItemContainer<T> {
 

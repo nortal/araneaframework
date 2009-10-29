@@ -24,18 +24,15 @@ import org.araneaframework.Path;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * A filter that logs the time it takes for the child service to complete its
- * action method (serving the request). The logging statement can have a message
- * set via <code>setMessage()</code>.
+ * A filter that logs the time it takes for the child service to complete its action method (serving the request). The
+ * logging statement can have a message set via <code>setMessage()</code>.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardStatisticFilterService extends BaseFilterService {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(StandardStatisticFilterService.class);
+  private static final Log LOG = LogFactory.getLog(StandardStatisticFilterService.class);
 
   private String message;
 
@@ -46,11 +43,11 @@ public class StandardStatisticFilterService extends BaseFilterService {
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     long start = System.currentTimeMillis();
-    childService._getService().action(path, input, output);
-    log.info(message + (System.currentTimeMillis() - start) + " ms.");
+    this.childService._getService().action(path, input, output);
+    LOG.info(this.message + (System.currentTimeMillis() - start) + " ms.");
   }
 
   public String getMessage() {
-    return message;
+    return this.message;
   }
 }

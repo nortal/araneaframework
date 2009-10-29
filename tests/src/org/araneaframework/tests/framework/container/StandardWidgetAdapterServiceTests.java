@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.framework.container;
 
@@ -56,7 +56,7 @@ public class StandardWidgetAdapterServiceTests extends TestCase {
   }
   
   public void testDoesNotActionUpdatesEventsRendersOnFirstRequest() throws Exception {
-    Map globalData = new HashMap();
+    Map<String, String> globalData = new HashMap<String, String>();
     globalData.put(ApplicationService.ACTION_PATH_KEY, "");
     MockInputData input = new MockInputData(globalData);
     adapter._getService().action(MockUtil.getPath(), input, MockUtil.getOutput());

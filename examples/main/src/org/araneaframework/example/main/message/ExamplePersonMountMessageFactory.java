@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.message;
 
@@ -28,17 +28,11 @@ import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExamplePersonMountMessageFactory implements MessageFactory {
 
-  private static final long serialVersionUID = 1L;
-
-  public Message buildMessage(String url, final String suffix, InputData input,
-      OutputData output) {
-    return new SeriesMessage(new Message[] { new LoginMessage(),
-        new OpenWidgetMessage(suffix) });
+  public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
+    return new SeriesMessage(new Message[] { new LoginMessage(), new OpenWidgetMessage(suffix) });
   }
 
   private class OpenWidgetMessage extends BroadcastMessage {
-
-    private static final long serialVersionUID = 1L;
 
     private String suffix;
 
@@ -49,10 +43,8 @@ public class ExamplePersonMountMessageFactory implements MessageFactory {
     protected void execute(Component component) throws Exception {
       if (component instanceof MenuWidget) {
         MenuWidget menu = (MenuWidget) component;
-        menu.start(new PersonAddEditWidget(new Long(suffix)));
+        menu.start(new PersonAddEditWidget(new Long(this.suffix)));
       }
     }
-
   }
-
 }

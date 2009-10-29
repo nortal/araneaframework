@@ -21,7 +21,7 @@ import org.araneaframework.uilib.form.Converter;
 /**
  * Convert the <code>Boolean</code> to <code>Long</code>, true - 1, false - 0 and back
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
@@ -31,7 +31,7 @@ public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
    */
   @Override
   public Long convertNotNull(Boolean data) {
-    return data.booleanValue() ? new Long(1) : new Long(0);
+    return data.booleanValue() ? 1L : 0L;
   }
 
   /**
@@ -39,7 +39,7 @@ public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
    */
   @Override
   public Boolean reverseConvertNotNull(Long data) {
-    return data.longValue() == 0 ? Boolean.FALSE : Boolean.TRUE;
+    return data.longValue() != 0;
   }
 
   /**

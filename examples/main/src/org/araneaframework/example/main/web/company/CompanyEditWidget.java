@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.example.main.web.company;
 
@@ -24,25 +24,28 @@ import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.TextControl;
 
 /**
- * This widget is for adding new and editing existing companies.
- * It retruns the Id of stored company or cancels current call. 
+ * This widget is for adding new and editing existing companies. It retruns the Id of stored company or cancels current
+ * call.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class CompanyEditWidget extends TemplateBaseWidget {
-  private static final long serialVersionUID = 1L;
-  private static final Log log = LogFactory.getLog(CompanyEditWidget.class);
+
+  private static final Log LOG = LogFactory.getLog(CompanyEditWidget.class);
+
   private Long id = null;
+
   private BeanFormWidget<CompanyMO> form;
 
   /**
-   * Constructor for adding new company. 
+   * Constructor for adding new company.
    */
   public CompanyEditWidget() {}
 
   /**
-   * Constructor for editing existing company with specified Id.
-   * @param id Company's Id.
+   * Constructor for editing existing company with specified ID.
+   * 
+   * @param id Existing company's ID.
    */
   public CompanyEditWidget(Long id) {
     this.id = id;
@@ -50,30 +53,28 @@ public class CompanyEditWidget extends TemplateBaseWidget {
 
   protected void init() throws Exception {
     setViewSelector("company/companyAddEdit");
-    putViewData("formLabel", id != null ? "company.edit.form.label" : "company.add.form.label");
-    log.debug("CompanyEditWidget init called");
+    putViewData("formLabel", this.id != null ? "company.edit.form.label" : "company.add.form.label");
+    LOG.debug("CompanyEditWidget init called");
 
-    CompanyMO company = id != null ? (CompanyMO) getGeneralDAO().getById(CompanyMO.class, id) : new CompanyMO();
+    CompanyMO company = this.id != null ? getCompanyDAO().getById(CompanyMO.class, this.id) : new CompanyMO();
 
-    form = new BeanFormWidget(CompanyMO.class, company);
-    form.addBeanElement("name", "#Name", new TextControl(), true);
-    form.addBeanElement("address", "#Address", new TextControl(), true);
-
-    addWidget("form", form);
+    this.form = new BeanFormWidget<CompanyMO>(CompanyMO.class, company);
+    this.form.addBeanElement("name", "#Name", new TextControl(), true);
+    this.form.addBeanElement("address", "#Address", new TextControl(), true);
+    addWidget("form", this.form);
   }
 
   public void handleEventSave() throws Exception {
-    if (form.convertAndValidate()) {
+    if (this.form.convertAndValidate()) {
+      CompanyMO company = this.form.writeToBean();
 
-      CompanyMO company = form.writeToBean();
-
-      if (id != null) {
-        getGeneralDAO().edit(company);
+      if (this.id != null) {
+        getCompanyDAO().edit(company);
       } else {
-        id = getGeneralDAO().add(company);                
+        this.id = getCompanyDAO().add(company);
       }
-      log.debug("Company saved, id = " + id);
-      getFlowCtx().finish(id);
+      LOG.debug("Company saved, id = " + this.id);
+      getFlowCtx().finish(this.id);
     }
   }
 

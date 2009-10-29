@@ -16,19 +16,19 @@
 
 package org.araneaframework.uilib.form.control;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 
 /**
  * This class represents a multi-select control (a.k.a. multi-choice list).
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
-public class MultiSelectControl<T> extends BaseSelectControl<T, Collection<T>> {
+public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
 
   /**
    * Creates a new instance of MultiSelectControl, and also defines item label and value property names. Note that when
@@ -58,7 +58,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, Collection<T>> {
   }
 
   @Override
-  protected Collection<T> fromRequestParameters(String[] parameterValues) {
+  protected List<T> fromRequestParameters(String[] parameterValues) {
     List<T> items = new LinkedList<T>();
     for (String value : parameterValues) {
       items.add(DisplayItemUtil.getBean(this, value));
@@ -67,7 +67,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, Collection<T>> {
   }
 
   @Override
-  protected String[] toResponseParameters(Collection<T> controlValues) {
+  protected String[] toResponseParameters(List<T> controlValues) {
     List<String> values = new LinkedList<String>();
     for (T value : controlValues) {
       values.add(DisplayItemUtil.getBeanValue(value, this.valueProperty));
@@ -75,7 +75,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, Collection<T>> {
     return (String[]) values.toArray();
   }
 
-  public String getRawValueType() {
-    return "List<T>";
+  public DataType getRawValueType() {
+    return new DataType(List.class, this.itemClass);
   }
 }

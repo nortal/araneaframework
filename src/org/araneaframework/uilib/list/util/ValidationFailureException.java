@@ -5,12 +5,10 @@ import org.araneaframework.core.AraneaRuntimeException;
 /**
  * Represents a validation failure.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1.4
  */
 public class ValidationFailureException extends AraneaRuntimeException {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * Constructs a new validation failure exception. It should also contain a

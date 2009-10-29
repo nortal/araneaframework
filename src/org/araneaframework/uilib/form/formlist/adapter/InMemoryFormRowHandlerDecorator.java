@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
 /**
  * Decorator that uses the {@link InMemoryFormListHelper} to assign temporary keys to new objects.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class InMemoryFormRowHandlerDecorator<K, R> implements FormRowHandler<K, R> {
 

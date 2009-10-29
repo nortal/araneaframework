@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,70 +12,72 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
 
 /**
  * Layout cell base tag.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseLayoutCellTag extends PresentationTag {
+
   protected boolean overrideLayout = true;
-  
+
   /**
-   * HTML id of the cell. 
-   * @since 1.1 */
+   * HTML id of the cell.
+   * 
+   * @since 1.1
+   */
   protected String id;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   public String getStyleClass() {
-    CellClassProvider cellClassProvider = (CellClassProvider)getContextEntry(CellClassProvider.KEY);
+    CellClassProvider cellClassProvider = (CellClassProvider) getContextEntry(CellClassProvider.KEY);
     String result = cellClassProvider != null ? cellClassProvider.getCellClass() : null;
-    result = (result != null && result.length() == 0) ? null : result;
-    
+    result = StringUtils.defaultIfEmpty(result, null);
+
     String superStyleClass = super.getStyleClass();
     if (superStyleClass != null) {
       StringBuffer sb = new StringBuffer(superStyleClass);
 
-      if (!overrideLayout && result != null)
+      if (!this.overrideLayout && result != null) {
         sb.append(' ').append(result);
-      
+      }
+
       result = sb.toString();
     }
     return result;
   }
-  
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
+
+  // Tag attributes
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether cell's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description ="Whether cell's styleClass completely overrides styleClass provided by surrounding layout (default behavior), or is appended to layout's styleClass."
    */
-  public void setOverrideLayout(String overrideLayout) throws JspException {
-    this.overrideLayout = ((Boolean)evaluate("overrideLayout", overrideLayout, Boolean.class)).booleanValue();
+  public void setOverrideLayout(String overrideLayout) {
+    this.overrideLayout = evaluate("overrideLayout", overrideLayout, Boolean.class);
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "HTML id of this row."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "HTML id of this row."
    * @since 1.1
    */
-  public void setId(String id) throws JspException {
-    this.id =(String)evaluate("id", id, String.class);
+  public void setId(String id) {
+    this.id = evaluate("id", id, String.class);
   }
 }

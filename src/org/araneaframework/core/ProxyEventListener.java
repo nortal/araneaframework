@@ -23,13 +23,11 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class ProxyEventListener implements EventListener {
 
-  private static final long serialVersionUID = 1L;
-
-  public static final Log log = LogFactory.getLog(ProxyEventListener.class);
+  public static final Log LOG = LogFactory.getLog(ProxyEventListener.class);
 
   protected Widget eventTarget;
 
@@ -38,7 +36,7 @@ public class ProxyEventListener implements EventListener {
   }
 
   public void processEvent(String eventId, InputData input) throws Exception {
-    String eventParam = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
-    ProxiedHandlerUtil.invokeEventHandler(eventId, eventParam, eventTarget);
+    String eventParam = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
+    ProxiedHandlerUtil.invokeEventHandler(eventId, eventParam, this.eventTarget);
   }
 }

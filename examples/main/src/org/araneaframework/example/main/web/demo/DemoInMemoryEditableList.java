@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.demo;
 
@@ -31,33 +31,32 @@ import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.BeanFormRow;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
-import org.araneaframework.uilib.form.formlist.FormRow;
 import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
-import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualBeanFormRowHandler;
 
 /**
  * Editable list component. Seperate forms are used for individual rows, so that
  * client-side validation would work on the same separate rows.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
-  private static final long serialVersionUID = 1L;
+  private BeanFormListWidget<Long, DataDTO> formList;
 
-  private BeanFormListWidget formList;
+  private List<DataDTO> data = new ArrayList<DataDTO>();
 
-  private List data = new ArrayList();
+  private InMemoryFormListHelper<Long, DataDTO> inMemoryHelper;
 
-  private InMemoryFormListHelper inMemoryHelper;
-
-  {
+  
+  public DemoInMemoryEditableList() {
     // Just making the initial data.
     // In reality it should have been read from the database.
-    data.add(new DataDTO(new Long(1), Boolean.TRUE, new Long(10), "12313"));
-    data.add(new DataDTO(new Long(2), Boolean.FALSE, new Long(123), "werwer"));
-    data.add(new DataDTO(new Long(3), Boolean.TRUE, new Long(10), "adfhadfh"));
+    this.data.add(new DataDTO(1L, Boolean.TRUE, 10L, "12313"));
+    this.data.add(new DataDTO(2L, Boolean.FALSE, 123L, "werwer"));
+    this.data.add(new DataDTO(3L, Boolean.TRUE, 10L, "adfhadfh"));
   }
 
   /**
@@ -65,9 +64,9 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
    */
   public void init() throws Exception {
     setViewSelector("demo/demoInMemoryEditableList");
-    formList = new BeanFormListWidget(new DemoEditableRowHandler(), DataDTO.class);
-    inMemoryHelper = new InMemoryFormListHelper(formList, data);
-    addWidget("editableList", formList);
+    this.formList = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(), DataDTO.class);
+    this.inMemoryHelper = new InMemoryFormListHelper<Long, DataDTO>(this.formList, this.data);
+    addWidget("editableList", this.formList);
   }
 
   public void handleEventTest() throws Exception {}
@@ -77,9 +76,8 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
   }
 
   public void handleEventClose(String parameter) throws Exception {
-    if (FormListUtil.convertAndValidateRowForms(formList.getFormRows())
-        && !FormListUtil.isRowFormsStateChanged(formList.getFormRows())
-        || "true".equals(parameter)) {
+    if (FormListUtil.convertAndValidateRowForms(this.formList.getFormRows())
+        && !FormListUtil.isRowFormsStateChanged(this.formList.getFormRows()) || "true".equals(parameter)) {
       getFlowCtx().cancel();
     } else {
       putViewDataOnce("askCloseConfirmation", "true");
@@ -88,8 +86,6 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
   private class FeedBackProvidingListener implements OnClickEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     public void onClick() throws Exception {
       getMessageCtx().showInfoMessage("Added: " + inMemoryHelper.getAdded().values());
       getMessageCtx().showInfoMessage("Updated: " + inMemoryHelper.getUpdated().values());
@@ -97,38 +93,32 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
     }
   }
 
-  private class DemoEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
+  private class DemoEditableRowHandler extends ValidOnlyIndividualBeanFormRowHandler<Long, DataDTO> {
 
-    private static final long serialVersionUID = 1L;
-
-    public Object getRowKey(Object row) {
-      return ((DataDTO) row).getId();
+    public Long getRowKey(DataDTO row) {
+      return row.getId();
     }
 
-    public void saveValidRow(FormRow editableRow) throws Exception {
-      BeanFormWidget form = (BeanFormWidget) editableRow.getForm();
-
+    public void saveValidRow(BeanFormRow<Long, DataDTO> editableRow) throws Exception {
       // Reading data
-      DataDTO rowData = (DataDTO) form.writeToBean(editableRow.getRow());
+      DataDTO rowData = editableRow.getForm().writeToBean();
 
       // Saving data
       inMemoryHelper.update(editableRow.getKey(), rowData);
-      form.markBaseState();
+      editableRow.getForm().markBaseState();
     }
 
-    public void deleteRow(Object key) throws Exception {
+    public void deleteRow(Long key) throws Exception {
       // Deleting data
       inMemoryHelper.delete(key);
     }
 
-    public void addValidRow(FormWidget addForm) throws Exception {
-      BeanFormWidget form = (BeanFormWidget) addForm;
-      DataDTO rowData = (DataDTO) form.writeToBean(new DataDTO());
-      inMemoryHelper.add(rowData);
+    public void addValidRow(BeanFormWidget<DataDTO> addForm) throws Exception {
+      inMemoryHelper.add(addForm.writeToBean());
     }
 
-    public void initFormRow(FormRow editableRow, Object row) throws Exception {
-      BeanFormWidget rowForm = (BeanFormWidget) editableRow.getForm();
+    public void initFormRow(BeanFormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
+      BeanFormWidget<DataDTO> rowForm = editableRow.getForm();
       addCommonFormFields(rowForm);
 
       // We override the default event listeners with FeedBackProvidingListener.
@@ -160,7 +150,6 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       form.addElement("longField", "#Long field", new NumberControl(), new LongData(), true);
       form.addElement("booleanField", "#Boolean field", new CheckboxControl(), new BooleanData(), true);
     }
-
   }
 
 }

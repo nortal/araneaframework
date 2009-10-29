@@ -22,13 +22,13 @@ import org.araneaframework.example.main.business.model.ContractMO;
 
 /**
  * Quick'n'dirty fix for the ever annoying problem with broken contracts when persons or companies are deleted.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class ContractDAO extends GeneralDAO implements IContractDAO {
+public class ContractDAO extends GeneralDAO<ContractMO> implements IContractDAO {
 
-  @SuppressWarnings("unchecked")
   public void removeByPersonId(Long personId) {
-    List<ContractMO> l = (List<ContractMO>) getAll(ContractMO.class);
+    List<ContractMO> l = getAll(ContractMO.class);
     List<ContractMO> toDelete = new ArrayList<ContractMO>();
 
     for (ContractMO contract : l) {
@@ -40,9 +40,8 @@ public class ContractDAO extends GeneralDAO implements IContractDAO {
     getHibernateTemplate().deleteAll(toDelete);
   }
 
-  @SuppressWarnings("unchecked")
   public void removeByCompanyId(Long companyId) {
-    List<ContractMO> l = (List<ContractMO>) getAll(ContractMO.class);
+    List<ContractMO> l = getAll(ContractMO.class);
     List<ContractMO> toDelete = new ArrayList<ContractMO>();
     for (ContractMO contract : l) {
       if (contract.getCompany().getId().equals(companyId)) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
+
+import org.araneaframework.uilib.support.DataType;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -22,150 +24,147 @@ import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 import org.araneaframework.uilib.util.ValidationUtil;
 import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
 
-
 /**
- * This class represents a generalization of controls that have a value
- * of type <code>Timestamp</code>. 
+ * This class represents a generalization of controls that have a value of type <code>Timestamp</code>.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class TimestampControl extends EmptyStringNullableControl<Timestamp> implements FilteredInputControl<Timestamp> {
-  
-  //*********************************************************************
-  // FIELDS
-  //*********************************************************************    
+public abstract class TimestampControl extends BlankStringNullableControl<Timestamp> implements
+    FilteredInputControl<Timestamp> {
 
   /**
-   * The date-time format used by the element for parsing.
+   * The date-time format used by the control for parsing request data.
    */
   protected String dateTimeInputPattern;
-  protected String dateTimeOutputPattern;
-
-  protected boolean confOverridden = false;
-  
-  private InputFilter inputFilter;
-  
-  //*********************************************************************
-  // CONSTRUCTORS
-  //*********************************************************************     
 
   /**
-   * Creates the control setting it's date format pattern to the one provided.
-   * 
-   * @param dateTimeFormat date format pattern for {@link SimpleDateFormat}.
+   * The date-time format used by the control for outputting date-time value for rendering.
    */
-  public TimestampControl(String dateTimeFormat, String defaultOutputFormat) {
-    this.dateTimeInputPattern = dateTimeFormat;
-    this.dateTimeOutputPattern = defaultOutputFormat;
-  }  
+  protected String dateTimeOutputPattern;
 
-  /** @since 1.0.11 */
-  public InputFilter getInputFilter() {
-    return inputFilter;
+  /**
+   * Controls whether a custom format has been specified.
+   */
+  protected boolean confOverridden = false;
+
+  /**
+   * The custom input filter for this control. This can be enforced both client-side and server-side.
+   */
+  private InputFilter inputFilter;
+
+  /**
+   * Creates the control setting its date format patterns to the ones provided.
+   * 
+   * @param dateTimeInputFormat A date input parsing pattern to be used with {@link SimpleDateFormat}.
+   * @param dateTimeOutputPattern A date output pattern to be used with {@link SimpleDateFormat}.
+   */
+  public TimestampControl(String dateTimeInputFormat, String dateTimeOutputPattern) {
+    this.dateTimeInputPattern = dateTimeInputFormat;
+    this.dateTimeOutputPattern = dateTimeOutputPattern;
   }
 
-  /** @since 1.0.11 */
+  public InputFilter getInputFilter() {
+    return this.inputFilter;
+  }
+
   public void setInputFilter(InputFilter inputFilter) {
     this.inputFilter = inputFilter;
   }
 
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
+  public DataType getRawValueType() {
+    return new DataType(Timestamp.class);
+  }
 
-  /**
-   * Parses the parameter using the <code>dateTimeFormat</code>, 
-   * trying to get <code>Timestamp</code>. Adds a 
-   * <code>error.form.date.wrongformat</code> error message if
-   * it fails.
-   */
   @Override
   protected Timestamp fromRequest(String parameterValue) {
-  	ValidationUtil.ParsedDate result = parseDate(parameterValue);
-    
+    ValidationUtil.ParsedDate result = parseDate(parameterValue);
+
     if (result != null) {
-      dateTimeOutputPattern = result.getOutputPattern();
-    	return new Timestamp(result.getDate().getTime());
+      this.dateTimeOutputPattern = result.getOutputPattern();
+      return new Timestamp(result.getDate().getTime());
     }
-    
+
     addWrongTimeFormatError();
-    
-    if (parameterValue != null && getInputFilter() != null && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
-    	addError(
-    		MessageUtil.localizeAndFormat(getEnvironment(),
-    		getInputFilter().getInvalidInputMessage(), 
-    		MessageUtil.localize(getLabel(), getEnvironment()), 
-    		getInputFilter().getCharacterFilter()));
+
+    if (parameterValue != null && getInputFilter() != null
+        && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+      addErrorWithLabel(getInputFilter().getInvalidInputMessage(), getInputFilter().getCharacterFilter());
     }
 
     return null;
   }
 
-  /** @since 1.1 */ 
+  /**
+   * Adds an error message to indicate that the input date could not be parsed with our pattern.
+   * 
+   * @since 1.1
+   */
   protected void addWrongTimeFormatError() {
-	addError(
-        MessageUtil.localizeAndFormat(getEnvironment(),
-        UiLibMessages.WRONG_DATE_FORMAT, 
-        MessageUtil.localize(getLabel(), getEnvironment()),
-        dateTimeInputPattern));
+    addErrorWithLabel(UiLibMessages.WRONG_DATE_FORMAT, this.dateTimeInputPattern);
   }
 
   /**
-   * Used by {@link TimestampControl#fromRequest(String)} to convert value
-   * read from request to a <code>Date</code> in default <code>TimeZone</code>
-   * and <code>Locale</code>.
+   * Used by {@link TimestampControl#fromRequest(String)} to convert value read from request to a <code>Date</code> in
+   * default <code>TimeZone</code> and <code>Locale</code>.
    * 
+   * @param parameterValue The request parameter that should be parsed.
+   * @return The <code>ParsedDate</code> object containg the information about parsed value.
    * @since 1.0.3
    */
   protected ParsedDate parseDate(String parameterValue) {
-    return ValidationUtil.parseDate(parameterValue, dateTimeInputPattern);
+    return ValidationUtil.parseDate(parameterValue, this.dateTimeInputPattern);
   }
 
-  /**
-   * Formats the value using <code>dateTimeFormat</code>.
-   */
   @Override
-  protected String toResponse(Timestamp controlValue) {    
+  protected String toResponse(Timestamp controlValue) {
     return new SimpleDateFormat(dateTimeOutputPattern).format(controlValue);
   }
-  
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************  	
-  
-  /**
-   * Returns {@link ViewModel}.
-   * @return {@link ViewModel}.
-   */
+
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  //*********************************************************************
-  //* VIEWMODEL
-  //*********************************************************************  	
-  
+  // *********************************************************************
+  // * VIEWMODEL
+  // *********************************************************************
+
+  /**
+   * The view model implementation of <code>TimestampControl</code>. The view model provides the data for tags to render
+   * the control.
+   */
   public class ViewModel extends StringArrayRequestControl<Timestamp>.ViewModel {
+
     private String dateTimeOutputPattern;
+
     private InputFilter inputFilter;
-    
+
     /**
-     * Takes an outer class snapshot.     
+     * Takes an outer class snapshot.
      */
     public ViewModel() {
       this.dateTimeOutputPattern = TimestampControl.this.dateTimeOutputPattern;
       this.inputFilter = TimestampControl.this.getInputFilter();
     }
-    
+
+    /**
+     * Provides the formatter using the specified output pattern formatter.
+     * 
+     * @return The formatter that can be use for rendering the values.
+     */
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
       return new SimpleDateFormat(dateTimeOutputPattern);
     }
-    
+
+    /**
+     * The filtering settings of this control that are used for validating the input. If <code>null</code> then no input
+     * filtering should be done.
+     * 
+     * @return The input filtering settings, or <code>null</code>.
+     */
     public InputFilter getInputFilter() {
       return this.inputFilter;
     }

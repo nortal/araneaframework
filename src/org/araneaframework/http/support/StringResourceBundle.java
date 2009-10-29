@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.http.support;
 
@@ -20,15 +20,14 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 public class StringResourceBundle extends ResourceBundle {
-	@Override
+
+  @Override
   public Enumeration<String> getKeys() {
-		return null;
-	}
+    return null;
+  }
 
   @Override
   protected Object handleGetObject(String key) {
-	if (key.length() > 0 && key.charAt(0) == '#')
-      return key.substring(1);
-	return null;
+    return key.length() > 0 && key.charAt(0) == '#' ? key.substring(1) : null;
   }
 }

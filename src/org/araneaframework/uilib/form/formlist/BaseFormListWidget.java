@@ -33,7 +33,7 @@ import org.araneaframework.uilib.form.visitor.FormElementVisitor;
  * structure. The generic parameter K corresponds to the type of the key values, and the generic parameter R corresponds
  * to the type of the row values.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
 
@@ -428,7 +428,7 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
   // *********************************************************************
 
   @Override
-  public Object getViewModel() throws Exception {
+  public Object getViewModel() {
     return new ViewModel();
   }
 

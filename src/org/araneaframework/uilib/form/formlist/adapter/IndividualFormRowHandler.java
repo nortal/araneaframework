@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.formlist.FormRow;
  * A row handler that simplifies responding to list form events by just implementing methods to handle rows
  * individually. The methods are {@link #deleteRow(Object)} and {@link #saveRow(FormRow)}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class IndividualFormRowHandler<K, R> extends DefaultFormRowHandler<K, R> {
 

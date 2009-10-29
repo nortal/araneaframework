@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
@@ -25,7 +27,7 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * This class is a generalization of controls that have a single <code>String[]</code> request parameter.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
 
@@ -99,11 +101,6 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
@@ -158,7 +155,7 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
   /**
    * Represents a view model of a control with a single array request parameter.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel extends BaseControl<T>.ViewModel {
 
@@ -201,5 +198,14 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
       return this.hasOnChangeEventListeners;
     }
 
+    /**
+     * Provides whether the given value is a the value of the control.
+     * 
+     * @param value The value to check.
+     * @return <code>true</code> when the given value is the value of this control.
+     */
+    public boolean containsValue(String value) {
+      return ArrayUtils.contains(this.values, value);
+    }
   }
 }

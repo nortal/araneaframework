@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.tree;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -38,26 +38,22 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(UnsynchronizedTreeWidget.class);
+  private static final Log LOG = LogFactory.getLog(UnsynchronizedTreeWidget.class);
 
   private TreeWidget tree;
 
   protected void init() throws Exception {
     setViewSelector("tree/unsynchronizedTree");
-    tree = new TreeWidget(new UnsynchronizedTreeDataProvider());
-    tree.setUseActions(true);
-    tree.setUseSynchronizedActions(false);
-    addWidget("tree", tree);
+    this.tree = new TreeWidget(new UnsynchronizedTreeDataProvider());
+    this.tree.setUseActions(true);
+    this.tree.setUseSynchronizedActions(false);
+    addWidget("tree", this.tree);
   }
 
-  public static class UnsynchronizedTreeDataProvider implements TreeDataProvider {
+  public static class UnsynchronizedTreeDataProvider implements TreeDataProvider{
 
-    private static final long serialVersionUID = 1L;
-
-    public List getChildren(TreeNodeContext parent) {
-      List children = new ArrayList();
+    public List<TreeNodeWidget> getChildren(TreeNodeContext parent) {
+      List<TreeNodeWidget> children = new ArrayList<TreeNodeWidget>();
       for (int i = 0; i < 5; i++) {
         children.add(new TreeNodeWidget(new UnsynchronizedTreeDisplayWidget()));
       }
@@ -67,48 +63,37 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
     public boolean hasChildren(TreeNodeContext parent) {
       return parent.getParentCount() < 5;
     }
-
   }
 
   public static class UnsynchronizedTreeDisplayWidget extends BaseUIWidget {
-
-    private static final long serialVersionUID = 1L;
 
     private int counter;
 
     protected void init() throws Exception {
       setViewSelector("tree/unsynchronizedTreeDisplay");
       putViewData("counter", new Integer(counter));
-
       addActionListener("test", new StandardActionListener() {
 
-        private static final long serialVersionUID = 1L;
-
         public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
+          LOG.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           putViewData("counter", new Integer(++counter));
-          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
+//TODO          getTreeNodeCtx().renderNode(output); // Boilerplate code
         }
 
       });
 
       addActionListener("sleep", new StandardActionListener() {
 
-        private static final long serialVersionUID = 1L;
-
         public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          log.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
+          LOG.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           Thread.sleep(10000);
-          getTreeNodeCtx().renderNode(output);                                                     // Boilerplate code
+//TODO          getTreeNodeCtx().renderNode(output); // Boilerplate code
         }
-
       });
     }
 
     protected TreeNodeContext getTreeNodeCtx() {
       return UilibEnvironmentUtil.getTreeNodeContext(getEnvironment());
     }
-
   }
-
 }

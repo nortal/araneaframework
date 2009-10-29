@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.contract;
 
@@ -24,39 +24,38 @@ import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.example.main.web.company.CompanyListWidget;
 import org.araneaframework.framework.FlowContext;
 
-
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class ContractCompanyEditWidget extends TemplateBaseWidget {
-	  private static final long serialVersionUID = 1L;
-  private static final Log log = LogFactory.getLog(ContractCompanyEditWidget.class);
-	private CompanyMO company = null;
+
+  private static final Log LOG = LogFactory.getLog(ContractCompanyEditWidget.class);
+
+  private CompanyMO company = null;
 
   public CompanyMO getCompany() {
-		return company;
-	}
+    return company;
+  }
 
-	public void setCompany(CompanyMO company) {
-		this.company = company;
-	}
+  public void setCompany(CompanyMO company) {
+    this.company = company;
+  }
 
-	protected void init() throws Exception {
-    log.debug("TemplateContractCompanyWidget init called");
+  protected void init() throws Exception {
+    LOG.debug("TemplateContractCompanyWidget init called");
     setViewSelector("contract/contractCompanyEdit");
     addEventListener("chooseCompany", new ProxyEventListener(this));
   }
-  
+
   public void handleEventChooseCompany() throws Exception {
-	  getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler() {
-		      private static final long serialVersionUID = 1L;
-      public void onFinish(Object returnValue) throws Exception {
-			  Long id = (Long) returnValue;
-			  setCompany((CompanyMO) getGeneralDAO().getById(CompanyMO.class, id));
-			  log.debug("Company with id of " + id + " set to this contract");
-		  }
-		  public void onCancel() throws Exception {
-		  }
-	  });
+    getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler<Long>() {
+
+      public void onFinish(Long id) throws Exception {
+        setCompany(getCompanyDAO().getById(CompanyMO.class, id));
+        LOG.debug("Company with id of " + id + " set to this contract");
+      }
+
+      public void onCancel() throws Exception {}
+    });
   }
 }

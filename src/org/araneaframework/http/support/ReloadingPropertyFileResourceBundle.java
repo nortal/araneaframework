@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.support;
 
@@ -33,29 +33,32 @@ import org.araneaframework.core.util.ClassLoaderUtil;
  * @since {since}
  */
 public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBundle {
-  
-  private static final Log log = LogFactory.getLog(ReloadingPropertyFileResourceBundle.class);
 
-  protected String propertyResource = "resources";  
+  private static final Log LOG = LogFactory.getLog(ReloadingPropertyFileResourceBundle.class);
+
+  protected String propertyResource = "resources";
 
   protected long lastReloadTime;
+
   protected long checkTime;
+
   protected long lastModified = 0;
-  
+
   protected Map<String, String> properties = new HashMap<String, String>();
 
-
   public ReloadingPropertyFileResourceBundle() {}
-  
+
   public ReloadingPropertyFileResourceBundle(String propertyResource) {
     this.propertyResource = propertyResource;
   }
-  
+
   @Override
   protected Object handleGetObject(String key) {
-    if (key == null) throw new NullPointerException();
+    if (key == null) {
+      throw new NullPointerException();
+    }
 
-    if (checkTime != -1 && System.currentTimeMillis() - lastReloadTime > checkTime) {
+    if (this.checkTime != -1 && System.currentTimeMillis() - this.lastReloadTime > this.checkTime) {
       reloadProperties();
     }
 
@@ -64,57 +67,54 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
 
   private void reloadProperties() {
     try {
-      String resourceName = propertyResource + "_" + getLocale().getLanguage() + ".properties";
+      String resourceName = this.propertyResource + "_" + getLocale().getLanguage() + ".properties";
       URL propertyURL = ClassLoaderUtil.findResource(resourceName);
 
       if (propertyURL == null) {
-        resourceName = propertyResource + ".properties";
+        resourceName = this.propertyResource + ".properties";
         propertyURL = ClassLoaderUtil.findResource(resourceName);
       }
-      
+
       if (propertyURL == null) {
-        log.warn("Localization resources for '" + getLocale().getLanguage() + "' were not found!");
+        LOG.warn("Localization resources for '" + getLocale().getLanguage() + "' were not found!");
         return;
       }
 
       File propertyFile = new File(propertyURL.getFile());
 
-      if (lastModified < propertyFile.lastModified()) {
+      if (this.lastModified < propertyFile.lastModified()) {
 
-        log.debug("Reloading localization data from property file '" + propertyFile + "'.");
+        LOG.debug("Reloading localization data from property file '" + propertyFile + "'.");
 
         Properties result = new Properties();
-        result.load(new FileInputStream(propertyURL.getFile()));   
-        
+        result.load(new FileInputStream(propertyURL.getFile()));
+
         loadData(result);
 
-        lastReloadTime = System.currentTimeMillis();
-        lastModified = propertyFile.lastModified();
+        this.lastReloadTime = System.currentTimeMillis();
+        this.lastModified = propertyFile.lastModified();
       }
-    }
-    catch (RuntimeException re) {
+    } catch (RuntimeException re) {
       throw re;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new NestableRuntimeException(e);
     }
   }
-  
+
   protected Object handleGetCachedObject(String key) {
-    return properties.get(key);
+    return this.properties.get(key);
   }
 
   protected void loadData(Properties newProperties) throws Exception {
-    properties = new HashMap<String, String>();
+    this.properties = new HashMap<String, String>();
 
-    for (Enumeration i = newProperties.propertyNames(); i.hasMoreElements();) {
+    for (Enumeration<?> i = newProperties.propertyNames(); i.hasMoreElements();) {
       String key = (String) i.nextElement();
       String value = newProperties.getProperty(key);
-
-      properties.put(key, value);
+      this.properties.put(key, value);
     }
   }
-  
+
   @Override
   public Enumeration<String> getKeys() {
     return null;

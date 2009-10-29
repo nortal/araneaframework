@@ -16,11 +16,12 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This class represents a textarea control.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class TextareaControl extends StringValueControl {
 
@@ -30,10 +31,10 @@ public class TextareaControl extends StringValueControl {
   public TextareaControl() {}
 
   /**
-   * Makes a text control with specific type and minimum and maximum length constraints.
+   * Makes a text control with specific minimum and maximum length constraints.
    * 
-   * @param minLength minimum permitted length.
-   * @param maxLength maximum permitted length.
+   * @param minLength The minimum permitted length.
+   * @param maxLength The maximum permitted length.
    */
   public TextareaControl(Long minLength, Long maxLength) {
     setMinLength(minLength);
@@ -41,11 +42,11 @@ public class TextareaControl extends StringValueControl {
   }
 
   /**
-   * Makes a text control with specific type and minimum and maximum length constraints.
+   * Makes a text control with specific minimum and maximum length constraints and trimming condition.
    * 
-   * @param minLength minimum permitted length.
-   * @param maxLength maximum permitted length.
-   * @param trimValue whether the value from request will be trimmed.
+   * @param minLength The minimum permitted length.
+   * @param maxLength The maximum permitted length.
+   * @param trimValue Whether the value from request will be trimmed.
    */
   public TextareaControl(Long minLength, Long maxLength, boolean trimValue) {
     setMinLength(minLength);
@@ -53,27 +54,11 @@ public class TextareaControl extends StringValueControl {
     setTrimValue(trimValue);
   }
 
-  // *********************************************************************
-  // * INTERNAL INTERFACE
-  // *********************************************************************
-
   /**
    * Takes away &lt;CR&gt; added by Intenet Explorer.
    */
   @Override
   protected String preprocessRequestParameter(String parameterValue) {
-    String superProcessed = super.preprocessRequestParameter(parameterValue);
-
-    if (superProcessed == null) {
-      return null;
-    }
-
-    StringBuffer stripped = new StringBuffer(superProcessed);
-    int lastCr = stripped.toString().lastIndexOf("\r");
-    while (lastCr != -1) {
-      stripped.delete(lastCr, lastCr + 1);
-      lastCr = stripped.toString().lastIndexOf("\r");
-    }
-    return stripped.toString();
+    return StringUtils.remove(super.preprocessRequestParameter(parameterValue), '\r');
   }
 }

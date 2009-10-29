@@ -1,4 +1,4 @@
-/**
+/*
  * 
  */
 package org.araneaframework.http.support;
@@ -17,7 +17,7 @@ public class CachingEntityResolver implements EntityResolver {
   private CachingEntityResolver() {}
   
   // Logger
-  private static final Log log = LogFactory.getLog(CachingEntityResolver.class);
+  private static final Log LOG = LogFactory.getLog(CachingEntityResolver.class);
 
   public InputSource resolveEntity(String publicId, String systemId)
   throws SAXException {   
@@ -34,8 +34,8 @@ public class CachingEntityResolver implements EntityResolver {
         return isrc;
       }
     }
-    if (log.isDebugEnabled())
-      log.debug("Entity resolving failed '" + publicId + " " + systemId + "'.");
+    if (LOG.isDebugEnabled())
+      LOG.debug("Entity resolving failed '" + publicId + " " + systemId + "'.");
     return null;
   }
   

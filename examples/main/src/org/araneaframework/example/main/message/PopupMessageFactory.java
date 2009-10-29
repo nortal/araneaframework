@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
-
+ */
 
 package org.araneaframework.example.main.message;
 
@@ -28,45 +27,42 @@ import org.araneaframework.framework.RootFlowContext;
 import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
 
 /**
- * Wrapper around the flow that is started from new session-thread. It pretends
- * to be {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies
- * method calls current <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} 
- * and to {@link org.araneaframework.framework.FlowContext} that requested starting of wrapped flow.
+ * Wrapper around the flow that is started from new session-thread. It pretends to be
+ * {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies method calls current
+ * <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} and to
+ * {@link org.araneaframework.framework.FlowContext} that requested starting of wrapped flow.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupMessageFactory implements MessageFactory, Serializable {
-	  private static final long serialVersionUID = 1L;
 
   public Message buildMessage(Widget widget) {
-		return new MainExampleMessage(widget);
-	}
-	
-	public static class MainExampleMessage implements Message {
-    private static final long serialVersionUID = 1L;
-    Widget flow;
-		
-		public MainExampleMessage(Widget flow) {
-			this.flow = flow;
-		}
-		
-		public final void send(Object id, Component component){
-			if (!(component instanceof RootFlowContext)) {
-				component._getComponent().propagate(this);
-			}
-			else {
-				try {
-					this.execute(component);
-				}
-				catch (Exception e) {
-					throw ExceptionUtil.uncheckException(e);
-				}
-			}
-		}
+    return new MainExampleMessage(widget);
+  }
 
-		protected void execute(Component component) throws Exception {
-			FlowContext fCtx = (FlowContext) component;
-			fCtx.start(new RootWidget(flow));
-		}
-	}
+  public static class MainExampleMessage implements Message {
+
+    Widget flow;
+
+    public MainExampleMessage(Widget flow) {
+      this.flow = flow;
+    }
+
+    public final void send(Object id, Component component) {
+      if (component instanceof RootFlowContext) {
+        try {
+          this.execute(component);
+        } catch (Exception e) {
+          throw ExceptionUtil.uncheckException(e);
+        }
+      } else {
+        component._getComponent().propagate(this);
+      }
+    }
+
+    protected void execute(Component component) throws Exception {
+      FlowContext fCtx = (FlowContext) component;
+      fCtx.start(new RootWidget(this.flow));
+    }
+  }
 }

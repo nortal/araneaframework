@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.integration.spring;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,9 +39,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  */
 public class SpringOptionalFilterWidget extends BaseFilterWidget {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory
+  private static final Log LOG = LogFactory
       .getLog(SpringOptionalFilterWidget.class);
 
   private String beanId;
@@ -69,9 +67,9 @@ public class SpringOptionalFilterWidget extends BaseFilterWidget {
       filter.setChildWidget(childWidget);
       childWidget = filter;
 
-      log.debug("Found optional bean '" + beanId + "'");
+      LOG.debug("Found optional bean '" + beanId + "'");
     } catch (NoSuchBeanDefinitionException e) {
-      log.debug("Could not find optional bean '" + beanId + "'");
+      LOG.debug("Could not find optional bean '" + beanId + "'");
     }
     super.init();
   }

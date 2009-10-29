@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.constraints;
 
@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.BaseFieldConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 
 /**
@@ -54,7 +54,7 @@ public class GeneralConstraintContractTest extends TestCase {
   
   /** Test that setting field constraint to null works and does not throw exception */
   public void testFieldNullConstraint() throws Exception {
-    FormElement el = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    FormElement el = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
     el.setConstraint(new NotEmptyConstraint());
     el.setConstraint(null);
     form.addElement("number", el);
@@ -64,7 +64,7 @@ public class GeneralConstraintContractTest extends TestCase {
   
   /** Test that setting {@link FormWidget} constraint to null works and does not throw exception */
   public void testFormNullConstraint() throws Exception {
-    form.addElement("number","#number", new FloatControl(), new BigDecimalData(), false);
+    form.addElement("number","#number", new BigDecimalControl(), new BigDecimalData(), false);
     form.getElement("number").setConstraint(new NotEmptyConstraint());
     form.getElement("number").setConstraint(null);
 
@@ -78,7 +78,7 @@ public class GeneralConstraintContractTest extends TestCase {
   public void testEnvironmentPropagation() throws Exception {
     // test propagation when both formwidget and formelement are inited when constraint is set
     // and constraint is set on a formelement
-	form.addElement("number","#number", new FloatControl(), new BigDecimalData(), false);
+	form.addElement("number","#number", new BigDecimalControl(), new BigDecimalData(), false);
 	NotEmptyConstraint constraint = new NotEmptyConstraint();
 	form.getElement("number").setConstraint(constraint);
 	assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
@@ -93,7 +93,7 @@ public class GeneralConstraintContractTest extends TestCase {
     // test propagation when constraint is set on a formelement that is not yet
 	// inited and is added to formwidget after setting the constraint
     form.removeElement("number");
-    FormElement element = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    FormElement element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint();
     element.setConstraint(constraint);
     form.addElement("number", element);
@@ -102,7 +102,7 @@ public class GeneralConstraintContractTest extends TestCase {
     // test propagation when constraint is set on a formwidget while element is not yet inited
 	// and is added to formwidget after setting the constraint
     form.removeElement("number");
-    element = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint(element);
     form.setConstraint(constraint);
     form.addElement("number", element);
@@ -111,7 +111,7 @@ public class GeneralConstraintContractTest extends TestCase {
     // test propagation when constraint is set on uninited formwidget while element is not yet inited
 	// and is added to formwidget after setting the constraint
     form = new FormWidget();
-    element = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint(element);
     form.setConstraint(constraint);
     form.addElement("number", element);
@@ -120,7 +120,7 @@ public class GeneralConstraintContractTest extends TestCase {
     
     // test propagation when constraint is set on uninited formelement belonging to uninited formwidget
     form = new FormWidget();
-    element = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint();
     element.setConstraint(constraint);
     form.addElement("number", element);

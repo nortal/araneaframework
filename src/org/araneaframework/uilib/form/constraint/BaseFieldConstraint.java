@@ -31,10 +31,10 @@ import org.araneaframework.uilib.form.FormElementContext;
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
+public abstract class BaseFieldConstraint extends BaseConstraint {
 
   // The form field that this constraint applies to.
-  private FormElement<C, D> field;
+  private FormElement field;
 
   /**
    * An empty constructor that does not bind this constraint with a form element. The only way to bind a constraint with
@@ -53,7 +53,7 @@ public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
    * 
    * @param field The form element to bind this constraint with.
    */
-  public BaseFieldConstraint(FormElement<C, D> field) {
+  public BaseFieldConstraint(FormElement field) {
     Assert.notNullParam(this, field, "field");
     this.field = field;
   }
@@ -64,12 +64,12 @@ public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
    * @return constrained {@link FormElement}
    */
   @SuppressWarnings("unchecked")
-  protected FormElementContext<C, D> getField() {
+  protected FormElementContext getField() {
     if (this.field != null) {
       return this.field;
     }
 
-    FormElementContext<C, D> result;
+    FormElementContext result;
     try {
       result = getEnvironment().requireEntry(FormElementContext.class);
     } catch (NoSuchEnvironmentEntryException e) {
@@ -98,7 +98,7 @@ public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
    * 
    * @return the value of the constraint field.
    */
-  protected D getValue() {
+  protected Object getValue() {
     return getField().getValue();
   }
 

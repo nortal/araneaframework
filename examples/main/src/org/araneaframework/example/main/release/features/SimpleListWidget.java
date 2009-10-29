@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.release.features;
 
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.business.util.TestVO;
+import org.araneaframework.example.main.business.util.DemoVO;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
@@ -30,62 +30,60 @@ import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
  * This is an example of component with a single list.
  */
 public class SimpleListWidget extends TemplateBaseWidget {
-  private static final long serialVersionUID = 1L;
 
-  protected ListWidget simpleList;
-    
+  protected ListWidget<DemoVO> simpleList;
+
   protected void init() throws Exception {
-	setViewSelector("release/features/simpleList");
-	
-	simpleList = new BeanListWidget(TestVO.class);
-	addWidget("simpleList", simpleList);
-	simpleList.setDataProvider(new SimpleListDataProvider());
-	simpleList.setOrderableByDefault(true);
-	simpleList.addField("booleanValue", "#Boolean");
-	simpleList.addField("stringValue", "#String");
-	simpleList.addField("longValue", "#Long");
-	simpleList.setInitialOrder("longValue", true);
-  }  
-  
-  private static class SimpleListDataProvider extends MemoryBasedListDataProvider {
-    private static final long serialVersionUID = 1L;
-    protected List data = new ArrayList();
-    
+    setViewSelector("release/features/simpleList");
+
+    this.simpleList = new BeanListWidget<DemoVO>(DemoVO.class);
+    addWidget("simpleList", simpleList);
+    this.simpleList.setDataProvider(new SimpleListDataProvider());
+    this.simpleList.setOrderableByDefault(true);
+    this.simpleList.addField("booleanValue", "#Boolean");
+    this.simpleList.addField("stringValue", "#String");
+    this.simpleList.addField("longValue", "#Long");
+    this.simpleList.setInitialOrder("longValue", true);
+  }
+
+  private static class SimpleListDataProvider extends MemoryBasedListDataProvider<DemoVO> {
+
+    protected List<DemoVO> data = new ArrayList<DemoVO>();
+
     public SimpleListDataProvider() {
-      super(TestVO.class);
+      super(DemoVO.class);
       Random rnd = new Random();
-      
-      for(int i = 0; i < 100; i++) {
-        TestVO test1 = new TestVO();
+
+      for (int i = 0; i < 100; i++) {
+        DemoVO test1 = new DemoVO();
         test1.setId(new Long(1 + i));
         test1.setBooleanValue(Boolean.TRUE);
-
         test1.setStringValue(new Locale("en", Locale.getISOCountries()[i]).getDisplayCountry(Locale.ENGLISH));
         test1.setLongValue(new Long(rnd.nextLong() % 100));
-        data.add(test1);
-    
-        TestVO test2 = new TestVO();
+        this.data.add(test1);
+
+        DemoVO test2 = new DemoVO();
         test2.setId(new Long(2 + i));
         test2.setBooleanValue(Boolean.TRUE);
         test2.setStringValue("Peculiar");
         test2.setLongValue(new Long(rnd.nextLong() % 100));
-        data.add(test2);
-    
-        TestVO test3 = new TestVO();
+        this.data.add(test2);
+
+        DemoVO test3 = new DemoVO();
         test3.setId(new Long(3 + i));
         test3.setBooleanValue(Boolean.FALSE);
         test3.setStringValue("Queer");
         test3.setLongValue(new Long(rnd.nextLong() % 100));
-        data.add(test3);
-      }      
-    }    
+        this.data.add(test3);
+      }
+    }
 
-    public List loadData() {
-      return data;
+    public List<DemoVO> loadData() {
+      return this.data;
     }
   }
-  
+
   public void handleEventReturn() throws Exception {
-	  getFlowCtx().cancel();
-  }	
+    getFlowCtx().cancel();
+  }
 }

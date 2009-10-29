@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib;
 
@@ -21,8 +21,7 @@ import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * Adds a marker to the page which is used to identify the widget to which
- * the content belongs.
+ * Adds a marker to the page which is used to identify the widget to which the content belongs.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
@@ -33,33 +32,34 @@ import org.araneaframework.jsp.util.JspUtil;
  *   can be used as many times as needed (content of one widget might be in several unconnected pieces)."
  */
 public class WidgetMarkerTag extends BaseWidgetTag {
-	public static final String MARKERCLASS = "widgetMarker";
-	
-	protected String tag = null;
-	
-	@Override
-  public int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		
-		JspUtil.writeOpenStartTag(out, tag == null ? "div" : tag);
-		JspUtil.writeAttribute(out, "class", MARKERCLASS);
-		JspUtil.writeAttribute(out, AraneaAttributes.WIDGET_ID, widget.getScope().toString());
-		JspUtil.writeCloseStartTag(out);
 
-		return EVAL_BODY_INCLUDE;
-	}
-	
-	@Override
+  public static final String MARKERCLASS = "widgetMarker";
+
+  protected String tag = null;
+
+  @Override
+  public int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
+    JspUtil.writeOpenStartTag(out, this.tag == null ? "div" : this.tag);
+    JspUtil.writeAttribute(out, "class", MARKERCLASS);
+    JspUtil.writeAttribute(out, AraneaAttributes.WIDGET_ID, this.widget.getScope().toString());
+    JspUtil.writeCloseStartTag(out);
+
+    return EVAL_BODY_INCLUDE;
+  }
+
+  @Override
   protected int doEndTag(Writer out) throws Exception {
-		JspUtil.writeEndTag(out, tag == null ? "div" : tag);
-		return super.doEndTag(out);
-	}
-	
+    JspUtil.writeEndTag(out, this.tag == null ? "div" : this.tag);
+    return super.doEndTag(out);
+  }
+
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "UiLib widget id." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "UiLib widget id."
    */
   public void setTag(String tag) throws Exception {
     this.tag = evaluateNotNull("tag", tag, String.class);

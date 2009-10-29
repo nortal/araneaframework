@@ -32,7 +32,7 @@ import org.araneaframework.uilib.util.Event;
  * {@link org.araneaframework.uilib.form.Control} and supposed {@link org.araneaframework.uilib.form.FormElement}
  * {@link Data} are considered and appropriate {@link org.araneaframework.uilib.form.Converter} chosen.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class Data<T> implements Serializable, FormElementAware<Object, T> {
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.popups;
 
 import org.araneaframework.Service;
 
-public interface ClientSideReturnService extends Service {
-  public void setResult(Object returnValue);
-  public Object getResult();
+public interface ClientSideReturnService<T> extends Service {
+
+  public void setResult(T returnValue);
+
+  public T getResult();
 }

@@ -22,7 +22,7 @@ import org.araneaframework.core.Assert;
 /**
  * This utility class contains methods for managing exceptions.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ExceptionUtil {
 
@@ -56,7 +56,7 @@ public abstract class ExceptionUtil {
    * 
    * @since 1.0.11
    */
-  public static RuntimeException uncheckException(String message, Exception e) {
+  public static RuntimeException uncheckException(String message, Exception e) throws RuntimeException {
     Assert.notNullParam(e, "e");
     throw new NestableRuntimeException(message, e);
   }

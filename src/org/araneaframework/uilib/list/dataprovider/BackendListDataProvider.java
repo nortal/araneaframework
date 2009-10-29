@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.dataprovider;
 
@@ -29,13 +29,11 @@ import org.araneaframework.backend.list.model.ListQuery;
  * This class provides a basic list data provider implementation that may be
  * used with SQL- or PL/SQL-based lists.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T> {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(BackendListDataProvider.class);
+  private static final Log LOG = LogFactory.getLog(BackendListDataProvider.class);
 
   private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
 
@@ -147,8 +145,8 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
       query.setFilterExpression(this.filterExpr);
       query.setOrderExpression(this.orderExpr);
       this.lastItemRange = getItemRange(query);
-      if (log.isTraceEnabled()) {
-        log.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx)
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx)
             + ", count=" + String.valueOf(count));
       }
     }

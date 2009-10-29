@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,36 +12,36 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.converter;
 
 import org.araneaframework.uilib.list.util.Converter;
 
 /**
- * Converter that reverses the converting direction of another
- * <code>converter</code>.
+ * Converter that reverses the converting direction of another <code>converter</code>.
  */
-public class ReverseConverter implements Converter {
-	protected Converter converter;
+public class ReverseConverter<S, D> implements Converter<S, D> {
 
-	public ReverseConverter(Converter converter) {
-		this.converter = converter;
-	}
+  protected Converter<D, S> converter;
 
-	public Object convert(Object data) throws ConversionException {
-		return this.converter.reverseConvert(data);
-	}
+  public ReverseConverter(Converter<D, S> converter) {
+    this.converter = converter;
+  }
 
-	public Object reverseConvert(Object data) throws ConversionException {
-		return this.converter.convert(data);
-	}
+  public D convert(S data) throws ConversionException {
+    return this.converter.reverseConvert(data);
+  }
 
-	public Class getSourceType() {
-		return this.converter.getDestinationType();
-	}
+  public S reverseConvert(D data) throws ConversionException {
+    return this.converter.convert(data);
+  }
 
-	public Class getDestinationType() {
-		return this.converter.getSourceType();
-	}
+  public Class<S> getSourceType() {
+    return this.converter.getDestinationType();
+  }
+
+  public Class<D> getDestinationType() {
+    return this.converter.getSourceType();
+  }
 }

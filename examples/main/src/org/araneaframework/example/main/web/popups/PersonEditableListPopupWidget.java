@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.popups;
 
@@ -37,7 +37,7 @@ import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
@@ -47,142 +47,146 @@ import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
 public class PersonEditableListPopupWidget extends TemplateBaseWidget {
-  private static final long serialVersionUID = 1L;
-  protected static final Log log = LogFactory.getLog(PersonEditableListPopupWidget.class);
-  private  IContractDAO contractDAO; 
 
-  private MemoryBasedListDataProvider dataProvider = new DataProvider();
+  protected static final Log LOG = LogFactory.getLog(PersonEditableListPopupWidget.class);
+
+  private IContractDAO contractDAO;
+
+  private MemoryBasedListDataProvider<PersonMO> dataProvider = new DataProvider();
+
+  private EditableBeanListWidget<Long, PersonMO> list;
+
+  private BeanFormListWidget<Long, PersonMO> formList;
 
   private boolean usePopupFlow = true;
-  private boolean useAction = false;
 
-  private EditableBeanListWidget list;
-  private BeanFormListWidget formList;
+  private boolean useAction = false;
 
   protected void init() throws Exception {
     setViewSelector("person/popupeditableList");
 
-    list = new EditableBeanListWidget(new PersonEditableRowHandler(), PersonMO.class);
-    this.formList = list.getFormList();
-    addWidget("list", list);
-    list.setOrderableByDefault(true);
-    list.addField("id", "#Id", false);
-    list.addField("name", "#First name").like();
-    list.addField("surname", "#Last name").like();
-    list.addField("phone", "#Phone no").like();		
-    list.addField("birthdate", "#Birthdate").range();
-    list.addField("salary", "#Salary").range();
-    list.addField("dummy", null, false);
-
-    list.setDataProvider(dataProvider);
+    this.list = new EditableBeanListWidget<Long, PersonMO>(new PersonEditableRowHandler(), PersonMO.class);
+    this.formList = this.list.getFormList();
+    addWidget("list", this.list);
+    this.list.setOrderableByDefault(true);
+    this.list.addField("id", "#Id", false);
+    this.list.addField("name", "#First name").like();
+    this.list.addField("surname", "#Last name").like();
+    this.list.addField("phone", "#Phone no").like();
+    this.list.addField("birthdate", "#Birthdate").range();
+    this.list.addField("salary", "#Salary").range();
+    this.list.addField("dummy", null, false);
+    this.list.setDataProvider(this.dataProvider);
   }
 
-  private class DataProvider extends MemoryBasedListDataProvider {
-    private static final long serialVersionUID = 1L;
-    private List data;
+  private class DataProvider extends MemoryBasedListDataProvider<PersonMO> {
+
+    private List<PersonMO> data;
 
     protected DataProvider() {
       super(PersonMO.class);
     }
-    public List loadData() throws Exception {
-      if (data == null)
-        data = getGeneralDAO().getAll(PersonMO.class);
-      return data;
+
+    public List<PersonMO> loadData() throws Exception {
+      if (this.data == null) {
+        this.data = getPersonDAO().getAll(PersonMO.class);
+      }
+      return this.data;
     }
   }
 
-  public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler {
-    private static final long serialVersionUID = 1L;
+  public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler<Long, PersonMO> {
 
-    public Object getRowKey(Object rowData) {
-      return ((PersonMO) rowData).getId();
+    public Long getRowKey(PersonMO rowData) {
+      return rowData.getId();
     }
 
-    public void saveValidRow(FormRow editableRow) throws Exception {
+    public void saveValidRow(FormRow<Long, PersonMO> editableRow) throws Exception {}
 
-    }
-
-    public void deleteRow(Object key) throws Exception {
-      Long id = (Long) key;
-      contractDAO.removeByPersonId(id);
-      getGeneralDAO().remove(PersonMO.class, id);
+    public void deleteRow(Long key) throws Exception {
+      contractDAO.removeByPersonId(key);
+      getPersonDAO().remove(PersonMO.class, key);
       list.getDataProvider().refreshData();
     }
 
+    @SuppressWarnings("unchecked")
     public void addValidRow(FormWidget addForm) throws Exception {
-      PersonMO rowData = (PersonMO) (((BeanFormWidget)addForm).writeToBean(new PersonMO()));
-      getGeneralDAO().add(rowData);
+      PersonMO rowData = (((BeanFormWidget<PersonMO>) addForm).writeToBean());
+      getPersonDAO().add(rowData);
       list.getDataProvider().refreshData();
       formList.resetAddForm();
     }
 
-    public void initFormRow(FormRow editableRow, Object rowData) throws Exception {
-      BeanFormWidget rowForm = (BeanFormWidget)editableRow.getForm();
+    @SuppressWarnings("unchecked")
+    public void initFormRow(FormRow<Long, PersonMO> editableRow, PersonMO rowData) throws Exception {
+      BeanFormWidget<PersonMO> rowForm = (BeanFormWidget<PersonMO>) editableRow.getForm();
       addCommonFormFields(rowForm);
 
-      FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData, rowForm) , "popupButton");
+      FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData, rowForm),
+          "popupButton");
       rowForm.addActionListener("testAction", new TestActionListener());
       rowForm.readFromBean(rowData);
     }
 
+    @SuppressWarnings("unchecked")
     public void initAddForm(FormWidget addForm) throws Exception {
-      addCommonFormFields((BeanFormWidget)addForm);
+      addCommonFormFields((BeanFormWidget<PersonMO>) addForm);
       FormListUtil.addAddButtonToAddForm("#", formList, addForm);
     }
 
-
-    private void addCommonFormFields(BeanFormWidget form) throws Exception {
+    private void addCommonFormFields(BeanFormWidget<PersonMO> form) throws Exception {
       form.addBeanElement("name", "#First name", new TextControl(), true);
-      form.addBeanElement("surname", "#Last name", new TextControl(),  true);
+      form.addBeanElement("surname", "#Last name", new TextControl(), true);
       form.addBeanElement("phone", "#Phone no", new TextControl(), false);
       form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
+      form.addBeanElement("salary", "#Salary", new BigDecimalControl(), false);
     }
   }
 
   private class PopupListenerFactory {
+
     public OnClickEventListener createListener(Object data, Widget w) {
-      if (usePopupFlow)
-        return new PopupFlowListener((PersonMO)data);
-
-      if (useAction)
+      if (usePopupFlow) {
+        return new PopupFlowListener((PersonMO) data);
+      } else if (useAction) {
         return new PopupClientListenerActionInvoker(PersonEditableListPopupWidget.this, w);
-
+      }
       return new PopupClientListener(PersonEditableListPopupWidget.this, w);
     }
   }
 
   private class PopupFlowListener implements OnClickEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     private PersonMO person;
+
     public PopupFlowListener(PersonMO eventParam) {
       this.person = eventParam;
     }
 
+    @SuppressWarnings("unchecked")
     public void onClick() throws Exception {
-      FormRow formRow = list.getFormList().getFormRows().get(list.getFormList().getFormRowHandler().getRowKey(person)); 
-      final BeanFormWidget rowForm = (BeanFormWidget) formRow.getForm(); 
-      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(), new PopupMessageFactory());
-      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person)); 
+      Long key = list.getFormList().getFormRowHandler().getRowKey(this.person);
+      FormRow<Long, PersonMO> formRow = list.getFormList().getFormRows().get(key);
+      final BeanFormWidget<PersonMO> rowForm = (BeanFormWidget<PersonMO>) formRow.getForm();
+      PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(),
+          new PopupMessageFactory());
+      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person));
     }
   }
 
   private class PopupClientListener implements OnClickEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     private Widget starter;
+
     private Widget receiver;
 
     public PopupClientListener(Widget opener, Widget receiver) {
-      starter = opener;
+      this.starter = opener;
       this.receiver = receiver;
     }
 
     public void onClick() throws Exception {
-      String widgetId = receiver.getScope().toString();
+      String widgetId = this.receiver.getScope().toString();
       widgetId = widgetId + ".name";
 
       StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
@@ -193,24 +197,23 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       p.setWidth("1000");
       p.setScrollbars("yes");
 
-      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
+      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, this.starter);
     }
   }
 
   private class PopupClientListenerActionInvoker implements OnClickEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     private Widget starter;
+
     private Widget receiver;
 
     public PopupClientListenerActionInvoker(Widget opener, Widget receiver) {
-      starter = opener;
+      this.starter = opener;
       this.receiver = receiver;
     }
 
     public void onClick() throws Exception {
-      String widgetId = receiver.getScope().toString();
+      String widgetId = this.receiver.getScope().toString();
       widgetId = widgetId + ".name";
 
       StandalonePopupFlowWrapperWidget toStart = new StandalonePopupFlowWrapperWidget(new NameWidget());
@@ -221,16 +224,15 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       p.setWidth("1000");
       p.setScrollbars("yes");
 
-      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, starter);
+      getPopupCtx().open(new PopupMessageFactory().buildMessage(toStart), p, this.starter);
     }
   }
 
   private class TestActionListener extends StandardActionListener {
 
-    private static final long serialVersionUID = 1L;
-
     public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-      StringBuffer s = new StringBuffer("alert('this is a message from action that came back to haunt you, return value being: ");
+      StringBuffer s = new StringBuffer(
+          "alert('this is a message from action that came back to haunt you, return value being: ");
       s.append(actionParam);
       s.append("')");
 
@@ -239,24 +241,23 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private class MyHandler implements FlowContext.Handler {
+  private class MyHandler implements FlowContext.Handler<String> {
 
-    private static final long serialVersionUID = 1L;
+    private BeanFormWidget<PersonMO> form;
 
-    private BeanFormWidget form; 
-    private PersonMO rowObject; 
+    private PersonMO rowObject;
 
-    public MyHandler(BeanFormWidget form, PersonMO rowObject) { 
-      this.form = form; 
-      this.rowObject = rowObject; 
+    public MyHandler(BeanFormWidget<PersonMO> form, PersonMO rowObject) {
+      this.form = form;
+      this.rowObject = rowObject;
     }
 
     public void onCancel() throws Exception {}
 
-    public void onFinish(Object returnValue) { 
-      rowObject.setName(returnValue.toString());
-      form.readFromBean(rowObject);
-    } 
+    public void onFinish(String returnValue) {
+      this.rowObject.setName(returnValue);
+      this.form.readFromBean(this.rowObject);
+    }
   }
 
   public void injectContractDAO(IContractDAO contractDAO) {

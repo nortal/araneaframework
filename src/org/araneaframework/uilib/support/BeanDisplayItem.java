@@ -35,7 +35,7 @@ import org.araneaframework.uilib.form.control.SelectControl;
  * {@link SelectControl} and {@link MultiSelectControl} manage a list of them. Each item is characterized by its value
  * and label and target object.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public class BeanDisplayItem<T> extends DisplayItem {

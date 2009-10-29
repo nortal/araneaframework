@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.release.demos;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,14 +31,14 @@ import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
- * Widget that shows two simple trees. One tree uses events for submit links and
- * the other uses actions (in that case only the current tree node and its
- * children are rendered).
+ * Widget that shows two simple trees. One tree uses events for submit links and the other uses actions (in that case
+ * only the current tree node and its children are rendered).
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SimpleTreeWidget extends TemplateBaseWidget {
+
   protected void init() throws Exception {
     setViewSelector("release/demos/tree/simpleTree");
 
@@ -50,40 +52,37 @@ public class SimpleTreeWidget extends TemplateBaseWidget {
   }
 
   private class SimpleTreeDataProvider implements TreeDataProvider {
-    public List getChildren(TreeNodeContext parent) {
-      List children = new ArrayList();
 
-      Iterator i = getResourceIterator(parent);
+    public List<TreeNodeWidget> getChildren(TreeNodeContext parent) {
+      List<TreeNodeWidget> children = new ArrayList<TreeNodeWidget>();
+      Iterator<String> i = getResourceIterator(parent);
 
       if (i == null || !i.hasNext()) {
         return null;
       }
 
       while (i.hasNext()) {
-        children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget(i.next().toString())));
+        children.add(new TreeNodeWidget(new SimpleTreeDisplayWidget(i.next())));
       }
 
       return children;
     }
 
     public boolean hasChildren(TreeNodeContext parent) {
-      return (getChildren(parent) != null && !getChildren(parent).isEmpty());
+      return getChildren(parent) != null && !getChildren(parent).isEmpty();
     }
 
-    private Iterator getResourceIterator(TreeNodeContext widget) {
+    @SuppressWarnings("unchecked")
+    private Iterator<String> getResourceIterator(TreeNodeContext widget) {
       ServletContext servletContext = SimpleTreeWidget.this.getEnvironment().getEntry(ServletContext.class);
-      String path = null;
-      if (widget instanceof TreeWidget)
-        path = "/";
-      else
-        path = ((SimpleTreeDisplayWidget)widget.getDisplayWidget()).getPath();
-      Set set = servletContext.getResourcePaths(path);
+      String path = widget instanceof TreeWidget ? "/" : ((SimpleTreeDisplayWidget) widget.getDisplayWidget()).getPath();
+      Set<String> set = servletContext.getResourcePaths(path);
       return set != null ? set.iterator() : null;
     }
-
   }
 
   public static class SimpleTreeDisplayWidget extends BaseUIWidget {
+
     private String path;
 
     public SimpleTreeDisplayWidget(String name) {
@@ -95,15 +94,18 @@ public class SimpleTreeWidget extends TemplateBaseWidget {
     }
 
     public String getPath() {
-      return path;
+      return this.path;
     }
 
+    /**
+     * Retrieves the name of the tree node from the path as the string following the last forward slash ("/"). If the
+     * path ends with the forward slash, it is removed first.
+     * 
+     * @return The name of the tree node.
+     */
     public String getName() {
-      if (!path.endsWith("/"))
-        return path.substring(path.lastIndexOf("/") + 1);
-
-      String s = path.substring(0, path.length() - 1);
-      return s.substring(s.lastIndexOf("/"));
+      String path = StringUtils.chomp(this.path, "/");
+      return StringUtils.substringAfterLast(path, "/");
     }
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.sample;
 
@@ -25,38 +25,37 @@ import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.StringData;
 
 public class InvisibleElementFormWidget extends TemplateBaseWidget {
-  private static final long serialVersionUID = 1L;
+
   private FormWidget form;
+
   private String initialName;
-  
-  public InvisibleElementFormWidget() {
-  }
-  
+
+  public InvisibleElementFormWidget() {}
+
   public InvisibleElementFormWidget(String initialName) {
     this.initialName = initialName;
   }
-  
+
   protected void init() throws Exception {
     setViewSelector("sample/invisibleElementForm");
-  
-    form = new FormWidget();
 
-    //Adding form controls
-    form.addElement("firstName", "#First name", new TextControl(), new StringData(), initialName, true);
-    form.addElement("lastName", "#Last name", new TextControl(), new StringData(), true);
-    
+    // Creating form and adding form controls
+    this.form = new FormWidget();
+    this.form.addElement("firstName", "#First name", new TextControl(), new StringData(), this.initialName, true);
+    this.form.addElement("lastName", "#Last name", new TextControl(), new StringData(), true);
+    this.form.addElement("showTitle", "#", createCheckbox(), new BooleanData(), false);
+    this.form.addElement("title", "#Title", new TextControl(), new StringData(), false);
+    addWidget("form", this.form); // Adds the form as sub-widget that can be accessed from JSP.
+  }
+
+  private CheckboxControl createCheckbox() {
     CheckboxControl showTitleCtl = new CheckboxControl();
     showTitleCtl.addOnChangeEventListener(new ProxyOnChangeEventListener(this, "showTitle"));
-    form.addElement("showTitle", "#", showTitleCtl, new BooleanData(), false);
-    
-    form.addElement("title", "#Title", new TextControl(), new StringData(), false);
-    
-    //Putting the widget
-    addWidget("form", form);    
+    return showTitleCtl;
   }
 
   public void handleEventShowTitle() throws Exception {
-    //It's enough to convert and validate since we'll be using the element value in JSP
-    form.getElementByFullName("showTitle").convertAndValidate();
+    // It's enough to convert and validate since we'll be using the element value in JSP
+    this.form.getElementByFullName("showTitle").convertAndValidate();
   }
 }

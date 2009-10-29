@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,66 +12,58 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.comparator;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Comparator that compares <code>null</code> values and uses another not-null
- * <code>Comparator</code> in other cases.
+ * Comparator that compares <code>null</code> values and uses another not-null <code>Comparator</code> in other cases.
  */
-public class NullComparator<T> implements Comparator<T>, Serializable {
+@SuppressWarnings("unchecked")
+public class NullComparator implements Comparator<Object>, Serializable {
 
-	private static final long serialVersionUID = 1L;
+  private Comparator notNullComparator;
 
-	private Comparator<T> notNullComparator;
+  private boolean nullFirst;
 
-	private boolean nullFirst;
+  public NullComparator(Comparator notNullComparator, boolean nullFirst) {
+    this.notNullComparator = notNullComparator;
+    this.nullFirst = nullFirst;
+  }
 
-	public NullComparator(Comparator<T> notNullComparator, boolean nullFirst) {
-		this.notNullComparator = notNullComparator;
-		this.nullFirst = nullFirst;
-	}
-	
-	public Comparator<T> getNotNullComparator() {
-		return this.notNullComparator;
-	}
+  public Comparator getNotNullComparator() {
+    return this.notNullComparator;
+  }
 
-	public int compare(T o1, T o2) {
-		if (o1 == null && o2 == null) {
-			return 0;
-		}
-		if (o1 == null) {
-			// o1 == null && o2 != null
-			return this.nullFirst ? -1 : 1;
-		}
-		if (o2 == null) {
-			// o1 != null && o2 == null
-			return this.nullFirst ? 1 : -1;
-		}
-		return this.notNullComparator.compare(o1, o2);
-	}
-	
-	@Override
+  public int compare(Object o1, Object o2) {
+    Comparator<Object> comparator = null;
+    if (this.nullFirst) {
+      comparator = ComparatorUtils.nullHighComparator(this.notNullComparator);
+    } else {
+      comparator = ComparatorUtils.nullLowComparator(this.notNullComparator);
+    }
+    return comparator.compare(o1, o2);
+  }
+
+  @Override
   public boolean equals(Object obj) {
-		if (obj instanceof NullComparator == false) {
-			return false;
-		}
+    if (obj instanceof NullComparator == false) {
+      return false;
+    } else if (this == obj) {
+      return true;
+    }
 
-		if (this == obj) {
-			return true;
-		}
+    NullComparator rhs = (NullComparator) obj;
+    return this.nullFirst == rhs.nullFirst && this.notNullComparator.equals(rhs.notNullComparator);
+  }
 
-		NullComparator rhs = (NullComparator) obj;
-		return nullFirst == rhs.nullFirst && notNullComparator.equals(rhs.notNullComparator);
-	}
-
-	@Override
+  @Override
   public int hashCode() {
-		return new HashCodeBuilder(20070327, 1229).append(nullFirst).append(notNullComparator).toHashCode();
-	}
+    return new HashCodeBuilder(20070327, 1229).append(this.nullFirst).append(this.notNullComparator).toHashCode();
+  }
 }

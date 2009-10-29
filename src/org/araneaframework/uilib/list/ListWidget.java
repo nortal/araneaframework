@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version
  * 2.0 (the "License"); you may not use this file except in compliance with the
  * License. You may obtain a copy of the License at
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,6 +28,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -47,26 +47,22 @@ import org.araneaframework.uilib.list.structure.filter.FilterHelper;
 import org.araneaframework.uilib.list.structure.order.FieldOrder;
 import org.araneaframework.uilib.list.util.ListUtil;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.Event;
 
 /**
- * This class is the base widget for lists. It interacts with the user and uses
- * the data from
- * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}to make
- * a user view into the list. It uses helper classes to do ordering, filtering
- * and sequencing (breaking the list into pages).
+ * This class is the base widget for lists. It interacts with the user and uses the data from {@link ListDataProvider}to
+ * make a user view into the list. It uses helper classes to do ordering, filtering and sequencing (breaking the list
+ * into pages).
  * <p>
  * Note that {@link ListWidget} must be initialized before it can be configured.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Rein Raudjärv
  */
 public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
-  private static final long serialVersionUID = 1L;
-
-  protected static final Log log = LogFactory.getLog(ListWidget.class);
+  protected static final Log LOG = LogFactory.getLog(ListWidget.class);
 
   public static final String LIST_CHECK_SCOPE = "checked";
 
@@ -74,9 +70,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   public static final String LIST_CHECK_VALUE = "checked";
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
   /**
    * The filter form id.
    */
@@ -109,7 +102,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected SequenceHelper sequenceHelper; // should not be accessible by
 
   // public methods
-  protected FormWidget form = new FormWidget(); // is transfomed into filter
+  protected FormWidget form = new FormWidget(); // is transformed into filter
 
   // info Map and vice-versa
   protected OrderInfo orderInfo = new OrderInfo();
@@ -128,13 +121,14 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
+  private Map<String, EventListener> listEventListeners;
+
   /**
-   * This an initial value for whether the list should show full pages. It is
-   * set by {@link #showDefaultPages()} and {@link #showFullPages()} methods if
-   * the sequence helper is not set, and read by the {@link #init()} method
-   * while initializing the sequnce helper.
+   * This an initial value for whether the list should show full pages. It is set by {@link #showDefaultPages()} and
+   * {@link #showFullPages()} methods if the sequence helper is not set, and read by the {@link #init()} method while
+   * initializing the sequence helper.
    * <p>
-   * This behaviour could be revised in the future.
+   * This behavior could be revised in the future.
    * 
    * @since 1.2.2
    */
@@ -150,16 +144,40 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     this.typeHelper = createTypeHelper();
     this.filterHelper = createFilterHelper();
     this.listStructure = createListStructure();
+    initEventListeners();
+  }
+
+  private void initEventListeners() {
+    this.listEventListeners.put("nextPage", new NextPageEventHandler());
+    this.listEventListeners.put("previousPage", new PreviousPageEventHandler());
+    this.listEventListeners.put("nextBlock", new NextBlockEventHandler());
+    this.listEventListeners.put("previousBlock", new PreviousBlockEventHandler());
+    this.listEventListeners.put("firstPage", new FirstPageEventHandler());
+    this.listEventListeners.put("lastPage", new LastPageEventHandler());
+    this.listEventListeners.put("jumpToPage", new JumpToPageEventHandler());
+    this.listEventListeners.put("showAll", new ShowAllEventHandler());
+    this.listEventListeners.put("showSlice", new ShowSliceEventHandler());
+    this.listEventListeners.put("order", new OrderEventHandler());
+  }
+
+  /**
+   * Returns all registered list event listeners in a map that can be modified. Note that changes to the provided event
+   * listeners map are relevant until this list is initialized. After that, the changes won't have any effect.
+   * 
+   * @return A modifiable map of event listeners that this list initializes in {@link #init()}.
+   * @since 2.0
+   */
+  public Map<String, EventListener> getListEventListeners() {
+    return this.listEventListeners;
   }
 
   // *********************************************************************
   // * LIST ROW CHECK BOXES AND RADIO BUTTONS
   // *********************************************************************
   /**
-   * Reads information about selected check boxes and radio buttons, and stores
-   * this information. It is possible to make all selected check boxes (from
-   * previous pages as well) stored (see
-   * {@link #setSelectFromMultiplePages(boolean)} for more information).
+   * Reads information about selected check boxes and radio buttons, and stores this information. It is possible to make
+   * all selected check boxes (from previous pages as well) stored (see {@link #setSelectFromMultiplePages(boolean)} for
+   * more information).
    * 
    * @since 1.1.3
    * @see #setSelectFromMultiplePages(boolean)
@@ -170,26 +188,27 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected void update(InputData input) throws Exception {
     super.update(input);
     String listPath = getScope().toPath().toString();
+
     // 1. Selected check boxes.
     // Path is used to read only those value-names that start with given prefix:
     Path path = new StandardPath(listPath + "." + LIST_CHECK_SCOPE);
-    Map listData = input.getScopedData(path);
+    Map<String, String> listData = input.getScopedData(path);
     List<Integer> rowKeys = new LinkedList<Integer>();
+
     // Now we read index numbers of selected rows:
-    for (Iterator i = listData.entrySet().iterator(); i.hasNext();) {
-      Map.Entry reqParam = (Map.Entry) i.next();
-      if (reqParam.getKey() != null
-          && LIST_CHECK_VALUE.equals(reqParam.getValue())) {
+    for (Map.Entry<String, String> reqParam : listData.entrySet()) {
+      if (reqParam.getKey() != null && LIST_CHECK_VALUE.equals(reqParam.getValue())) {
         rowKeys.add(new Integer(reqParam.getKey().toString()));
       }
     }
+
     // Sort the rows in the order displayed on the page:
     Collections.sort(rowKeys);
-    if (log.isDebugEnabled()) {
-      log.debug("List [" + getScope().getId()
-          + "]: Collect selected list rows from multiple pages: "
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("List [" + getScope().getId() + "]: Collect selected list rows from multiple pages: "
           + this.selectFromMultiplePages);
     }
+
     // If the items may be collected from multiple pages then we must remove
     // only the rows currently visible (because some of them may have been
     // selected before, but now may be no more checked.)
@@ -200,6 +219,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     } else {
       this.selectedItems.clear();
     }
+
     // Let's store the selected rows:
     for (Integer key : rowKeys) {
       T rowItem = getRowFromRequestId(key.toString());
@@ -207,19 +227,22 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
         this.selectedItems.add(rowItem);
       }
     }
+
     // We make these visible for the list check box tag, so that
     // they could be rendered checked.
     putViewData(LIST_CHECK_SCOPE, this.selectedItems);
+
     // 2. Selected radio button:
     // Path is used to read only those value-names that start with given prefix:
     listData = input.getScopedData(getScope().toPath());
+
     // In case of radio buttons, we expect only one value.
     if (!listData.isEmpty()) {
       listData.get(LIST_RADIO_SCOPE);
-      String rowKey = (String) listData.get(LIST_RADIO_SCOPE);
+      String rowKey = listData.get(LIST_RADIO_SCOPE);
+
       if (rowKey != null) {
-        rowKey = rowKey.substring(listPath.length() + LIST_RADIO_SCOPE.length()
-            + 2);
+        rowKey = rowKey.substring(listPath.length() + LIST_RADIO_SCOPE.length() + 2);
         T rowItem = getRowFromRequestId(rowKey);
         // In case of radio buttons, we discard the previous value,
         // because only one row can be selected:
@@ -230,43 +253,36 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
         putViewData(LIST_RADIO_SCOPE, rowKey);
       }
     }
-    if (log.isDebugEnabled()) {
-      log.debug("List [" + getScope().getId()
-          + "]: Number of selected list rows: " + this.selectedItems.size());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("List [" + getScope().getId() + "]: Number of selected list rows: " + this.selectedItems.size());
     }
   }
 
   /**
-   * Specifies whether selected rows (check boxes) should be collected from only
-   * one page or from multiple pages. Default is from one page (<code>false</code>).
+   * Specifies whether selected rows (check boxes) should be collected from only one page or from multiple pages.
+   * Default is from one page (<code>false</code>).
    * <p>
-   * If the selected rows are collected from all pages then the selected objects
-   * are remembered in an instance variable. The
-   * <code>&lt;ui:listCheckBox/&gt;</code> tag renders them checked when the
-   * user returns to the previous page. It uses the <code>equals()</code>
-   * method to compare whether the row is among selected rows or not.
+   * If the selected rows are collected from all pages then the selected objects are remembered in an instance variable.
+   * The <code>&lt;ui:listCheckBox/&gt;</code> tag renders them checked when the user returns to the previous page. It
+   * uses the <code>equals()</code> method to compare whether the row is among selected rows or not.
    * <p>
-   * The default is to select rows only from the current page because it is
-   * memory efficient, especially when a database (backend) data provider is
-   * used.
+   * The default is to select rows only from the current page because it is memory efficient, especially when a database
+   * (backend) data provider is used.
    * 
-   * @param selectFromMultiplePages If <code>true</code> then rows can be
-   *            collected from multiple pages. If <code>false</code> then rows
-   *            can be collected from the current page.
+   * @param selectFromMultiplePages If <code>true</code> then rows can be collected from multiple pages. If
+   *          <code>false</code> then rows can be collected from the current page.
    */
   public void setSelectFromMultiplePages(boolean selectFromMultiplePages) {
     this.selectFromMultiplePages = selectFromMultiplePages;
   }
 
   /**
-   * Provides whether the selected items are collected from multiple pages
-   * (returns <code>true</code>) or only from the current page (returns
-   * <code>false</code>).
+   * Provides whether the selected items are collected from multiple pages (returns <code>true</code>) or only from the
+   * current page (returns <code>false</code>).
    * <p>
    * It changes only the behaviour of the check boxes.
    * 
-   * @return whether the selected items are collected from multiple pages or
-   *         not.
+   * @return whether the selected items are collected from multiple pages or not.
    * @see #setSelectFromMultiplePages(boolean)
    */
   public boolean isSelectFromMultiplePages() {
@@ -274,11 +290,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Collects the selected rows. The objects are not necessarily in the same
-   * order as in the list.
+   * Collects the selected rows. The objects are not necessarily in the same order as in the list.
    * <p>
-   * This method does not distinguish how rows were selected (i.e. check box vs.
-   * radio button).
+   * This method does not distinguish how rows were selected (i.e. check box vs. radio button).
    * 
    * @return A list of row objects.
    * @see #setSelectFromMultiplePages(boolean)
@@ -289,20 +303,17 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Collects one single selected row (for example, in case of radio button
-   * list). If there is more than one select row, an exception will be thrown.
-   * In case when no rows is selected, <code>null</code> will be returned.
+   * Collects one single selected row (for example, in case of radio button list). If there is more than one select row,
+   * an exception will be thrown. In case when no rows is selected, <code>null</code> will be returned.
    * <p>
-   * This method does not distinguish how rows were selected (i.e. check box vs.
-   * radio button).
+   * This method does not distinguish how rows were selected (i.e. check box vs. radio button).
    * 
    * @return A single selected row object.
    * @see #setSelectFromMultiplePages(boolean)
    * @since 1.1.3
    */
   public T getSelectedRow() {
-    Assert.isTrue(this.selectedItems.size() <= 1,
-        "Selected rows count was expected to be not more than one.");
+    Assert.isTrue(this.selectedItems.size() <= 1, "Selected rows count was expected to be not more than one.");
     T rowItem = null;
     if (this.selectedItems.size() == 1) {
       rowItem = this.selectedItems.get(0);
@@ -311,8 +322,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Resets the selected rows so they wouldn't appear selected on the next page
-   * load.
+   * Resets the selected rows so they wouldn't appear selected on the next page load.
    */
   public void resetSelectedRows() {
     this.selectedItems = new LinkedList<T>();
@@ -320,10 +330,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     removeViewData(LIST_RADIO_SCOPE);
   }
 
-  // *********************************************************************
-  // * PUBLIC METHODS
-  // *********************************************************************
   /* ========== List configuration ========== */
+
   /**
    * Returns the {@link ListStructure}used to describe the list.
    * 
@@ -352,17 +360,16 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Sets the {@link ListDataProvider}used to fill the list with data.
    * 
-   * @param dataProvider the {@link ListDataProvider}used to fill the list with
-   *            data.
+   * @param dataProvider the {@link ListDataProvider}used to fill the list with data.
    */
   public void setDataProvider(ListDataProvider<T> dataProvider) {
     if (this.dataProvider != null) {
-      this.dataProvider
-          .removeDataUpdateListener(this.dataProviderDataUpdateListener);
+      this.dataProvider.removeDataUpdateListener(this.dataProviderDataUpdateListener);
     }
+
     this.dataProvider = dataProvider;
-    this.dataProvider
-        .addDataUpdateListener(this.dataProviderDataUpdateListener);
+    this.dataProvider.addDataUpdateListener(this.dataProviderDataUpdateListener);
+
     try {
       if (isInitialized()) {
         initDataProvider();
@@ -370,6 +377,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
+
     fireChange();
   }
 
@@ -410,11 +418,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Returns the {@link FieldFilterHelper} used to help with adding filters for
-   * specified field.
+   * Returns the {@link FieldFilterHelper} used to help with adding filters for specified field.
    * 
-   * @return the {@link FieldFilterHelper} used to help with adding filters for
-   *         specified field.
+   * @return the {@link FieldFilterHelper} used to help with adding filters for specified field.
    */
   public FieldFilterHelper getFilterHelper(String fieldId) {
     return new FieldFilterHelper(this.filterHelper, fieldId);
@@ -437,6 +443,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /* ========== FormWidget proxy methods ========== */
+
   /**
    * Returns the filter form.
    * 
@@ -472,6 +479,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /* ========== ListStructure Proxy methods ========== */
+
   /**
    * Returns <code>true</code> if all fields are added orderable by default.
    * 
@@ -484,8 +492,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Sets whether all fields are added orderable by default.
    * 
-   * @param orderableByDefault whether all fields are added orderable by
-   *            default.
+   * @param orderableByDefault whether all fields are added orderable by default.
    */
   public void setOrderableByDefault(boolean orderableByDefault) {
     getListStructure().setOrderableByDefault(orderableByDefault);
@@ -496,7 +503,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * 
    * @return {@link ListField}s.
    */
-  public List getFields() {
+  public List<ListField> getFields() {
     return getListStructure().getFieldList();
   }
 
@@ -524,8 +531,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Adds a list field.
    * <p>
-   * The added field is orderable if {@link #isOrderableByDefault()} returns
-   * <code>true</code>.
+   * The added field is orderable if {@link #isOrderableByDefault()} returns <code>true</code>.
    * 
    * @param id list field Id.
    * @param label list field label.
@@ -550,14 +556,13 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Adds a list field.
    * <p>
-   * The added field is orderable if {@link #isOrderableByDefault()} returns
-   * <code>true</code>.
+   * The added field is orderable if {@link #isOrderableByDefault()} returns <code>true</code>.
    * 
    * @param id list field Id.
    * @param label list field label.
    * @param type list field type.
    */
-  public FieldFilterHelper addField(String id, String label, Class type) {
+  public FieldFilterHelper addField(String id, String label, Class<?> type) {
     getListStructure().addField(id, label, type);
     return getFilterHelper(id);
   }
@@ -570,23 +575,32 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @param type list field type.
    * @param orderable whether this list field should be orderable or not.
    */
-  public FieldFilterHelper addField(String id, String label, Class type,
-      boolean orderable) {
+  public FieldFilterHelper addField(String id, String label, Class<?> type, boolean orderable) {
     getListStructure().addField(id, label, type, orderable);
     return getFilterHelper(id);
   }
 
   /**
-   * Adds a non-orderable field that is not bound to any column. The label is
-   * not mandatory. This method is convenient to use when one wants to create a
-   * check box or radio button column to allow user mark the rows.
+   * Adds a non-orderable field that is not bound to any column. The label is not mandatory. This method is convenient
+   * to use when one wants to create a check box or radio button column to allow user mark the rows.
    * 
    * @param id list field Id. Is required, and must be distinguished.
-   * @param label list field label. If provided, will be used as the label of
-   *            the column.
+   * @param label list field label. If provided, will be used as the label of the column.
    */
   public void addEmptyField(String id, String label) {
     getListStructure().addField(id, label, false);
+  }
+
+  /**
+   * Adds a non-orderable field that is not bound to any column. The label won't be provided. This method is convenient
+   * to use when one wants to create a check box or radio button column to allow user mark the rows.
+   * 
+   * @param id list field Id. Is required, and must be distinguished.
+   * @param label list field label. If provided, will be used as the label of the column.
+   * @since 2.0
+   */
+  public void addEmptyField(String id) {
+    addEmptyField(id, null);
   }
 
   /**
@@ -623,12 +637,12 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   /* ========== TypeHelper Proxy methods ========== */
   /**
-   * Returns type of list field. Returns null if no such field or type for this
-   * field is available.
+   * Returns type of list field. Returns null if no such field or type for this field is available.
    * 
    * @param fieldId field identifier.
    * @return field type
    */
+  @SuppressWarnings("unchecked")
   public Class getFieldType(String fieldId) {
     return this.typeHelper.getFieldType(fieldId);
   }
@@ -636,6 +650,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Returns {@link Comparator} for the specified field.
    */
+  @SuppressWarnings("unchecked")
   public Comparator getFieldComparator(String fieldId) {
     return this.typeHelper.getFieldComparator(fieldId);
   }
@@ -645,7 +660,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * 
    * @since 1.1.4
    */
-  public void setFieldComparator(String fieldId, Comparator comparator) {
+  public void setFieldComparator(String fieldId, Comparator<?> comparator) {
     this.typeHelper.addCustomComparator(fieldId, comparator);
   }
 
@@ -664,6 +679,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /* ========== SequenceHelper Proxy methods ========== */
+
   /**
    * Returns how many items will be displayed on one page.
    * 
@@ -716,7 +732,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     if (getSequenceHelper() != null) {
       getSequenceHelper().showFullPages();
     } else {
-      this.showFullPages = Boolean.TRUE;
+      this.showFullPages = true;
     }
   }
 
@@ -727,7 +743,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     if (getSequenceHelper() != null) {
       getSequenceHelper().showDefaultPages();
     } else {
-      this.showFullPages = Boolean.FALSE;
+      this.showFullPages = false;
     }
   }
 
@@ -737,7 +753,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * 
    * @return <code>Map</code> containing filter information.
    */
-  public Map getFilterInfo() {
+  public Map<String, Object> getFilterInfo() {
     return ListUtil.readFilterInfo(this.form);
   }
 
@@ -746,7 +762,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * 
    * @param filterInfo <code>Map</code> containing filter information.
    */
-  public void setFilterInfo(Map filterInfo) {
+  public void setFilterInfo(Map<String, Object> filterInfo) {
     if (filterInfo != null) {
       if (isInitialized()) {
         propagateListDataProviderWithFilter(filterInfo);
@@ -755,7 +771,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     }
   }
 
-  private void propagateListDataProviderWithFilter(Map filterInfo) {
+  private void propagateListDataProviderWithFilter(Map<String, Object> filterInfo) {
     if (this.dataProvider != null) {
       this.dataProvider.setFilterInfo(filterInfo);
     }
@@ -806,10 +822,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Forces the list data provider to refresh the data.
    */
   public void refresh() {
-    if (this.dataProvider == null) {
-      throw new IllegalStateException(
-          "DataProvider was NULL in ListWidget.refresh().");
-    }
+    Assert.notNull(this.dataProvider, "DataProvider was NULL in ListWidget.refresh().");
     try {
       this.dataProvider.refreshData();
       this.selectedItems.clear();
@@ -823,21 +836,16 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Refreshes the current item range, reloading the shown items.
    */
   public void refreshCurrentItemRange() {
-    if (this.dataProvider == null) {
-      throw new IllegalStateException(
-          "DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
-    }
+    Assert.notNull(this.dataProvider, "DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
     ListItemsData<T> itemRangeData;
     try {
-      itemRangeData = this.dataProvider.getItemRange(new Long(
-          this.sequenceHelper.getCurrentPageFirstItemIndex()), new Long(
-          this.sequenceHelper.getItemsOnPage()));
+      itemRangeData = this.dataProvider.getItemRange(this.sequenceHelper.getCurrentPageFirstItemIndex(),
+          this.sequenceHelper.getItemsOnPage());
     } catch (Exception e) {
       throw new AraneaRuntimeException(e);
     }
     this.itemRange = itemRangeData.getItemRange();
-    this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount()
-        .intValue());
+    this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
     this.sequenceHelper.validateSequence();
     makeRequestIdToRowMapping();
   }
@@ -848,9 +856,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @return the current item range.
    */
   public List<T> getItemRange() {
-    if (this.itemRange == null || this.checkChanged()
-        || this.sequenceHelper.checkChanged() || this.typeHelper.checkChanged()
-        || this.filterHelper.checkChanged()) {
+    if (this.itemRange == null || this.checkChanged() || this.sequenceHelper.checkChanged()
+        || this.typeHelper.checkChanged() || this.filterHelper.checkChanged()) {
       refreshCurrentItemRange();
       // trigger all checks to reliably reset the change status of the list.
       this.checkChanged();
@@ -874,6 +881,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   // *******************************************************************
   // WIDGET METHODS
   // *******************************************************************
+
   public void addInitEvent(Event event) {
     if (isAlive()) {
       event.run();
@@ -887,32 +895,26 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected void runInitEvents() {
     if (this.initEvents != null) {
-      for (Iterator<Runnable> it = this.initEvents.iterator(); it.hasNext();) {
-        Runnable event = it.next();
-        event.run();
+      for (Runnable runnable : this.initEvents) {
+        runnable.run();
       }
     }
     this.initEvents = null;
   }
 
   /**
-   * Initilizes the list, initializing contained filter form and the
-   * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}and
-   * getting the initial item range.
+   * Initializes the list, initializing contained filter form and the
+   * {@link org.araneaframework.uilib.list.dataprovider.ListDataProvider}and getting the initial item range.
    */
   @Override
   protected void init() throws Exception {
     this.sequenceHelper = createSequenceHelper();
-    addEventListener("nextPage", new NextPageEventHandler());
-    addEventListener("previousPage", new PreviousPageEventHandler());
-    addEventListener("nextBlock", new NextBlockEventHandler());
-    addEventListener("previousBlock", new PreviousBlockEventHandler());
-    addEventListener("firstPage", new FirstPageEventHandler());
-    addEventListener("lastPage", new LastPageEventHandler());
-    addEventListener("jumpToPage", new JumpToPageEventHandler());
-    addEventListener("showAll", new ShowAllEventHandler());
-    addEventListener("showSlice", new ShowSliceEventHandler());
-    addEventListener("order", new OrderEventHandler());
+
+    // Registers all defined event listeners for this list.
+    for (Map.Entry<String, EventListener> event : this.listEventListeners.entrySet()) {
+      addEventListener(event.getKey(), event.getValue());
+    }
+
     initFilterForm();
     initSequenceHelper();
     this.typeHelper.init(getEnvironment());
@@ -952,23 +954,19 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     if (this.form == null) {
       this.form = new FormWidget();
     }
-    FormElement filterButton = this.form.addElement(FILTER_BUTTON_ID,
-        UiLibMessages.LIST_FILTER_BUTTON_LABEL, new ButtonControl(), null,
-        false);
-    ((ButtonControl) filterButton.getControl())
-        .addOnClickEventListener(new FilterEventHandler());
-    FormElement clearButton = this.form.addElement(FILTER_RESET_BUTTON_ID,
-        UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL, new ButtonControl(),
-        null, false);
-    ((ButtonControl) clearButton.getControl())
-        .addOnClickEventListener(new FilterClearEventHandler());
+
+    ButtonControl button = new ButtonControl(new FilterEventHandler());
+    this.form.addElement(FILTER_BUTTON_ID, UiLibMessages.LIST_FILTER_BUTTON_LABEL, button);
+
+    button = new ButtonControl(new FilterClearEventHandler());
+    this.form.addElement(FILTER_RESET_BUTTON_ID, UiLibMessages.LIST_FILTER_CLEAR_BUTTON_LABEL, button);
+
     this.form.markBaseState();
     addWidget(FILTER_FORM_NAME, this.form);
   }
 
   protected void initSequenceHelper() {
-    Long defaultListSize = ConfigurationContextUtil
-        .getDefaultListItemsOnPage(getConfiguration());
+    Long defaultListSize = ConfigurationUtil.getDefaultListItemsOnPage(getConfiguration());
     if (defaultListSize != null) {
       this.sequenceHelper.setItemsOnPage(defaultListSize.longValue());
     }
@@ -1022,8 +1020,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextPage();
     }
   }
@@ -1035,8 +1032,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToPreviousPage();
     }
   }
@@ -1048,8 +1044,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextBlock();
     }
   }
@@ -1061,8 +1056,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToPreviousBlock();
     }
   }
@@ -1074,8 +1068,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToFirstPage();
     }
   }
@@ -1087,8 +1080,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToLastPage();
     }
   }
@@ -1100,8 +1092,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       int page;
       try {
         page = Integer.parseInt(eventParam);
@@ -1119,8 +1110,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
       ListWidget.this.sequenceHelper.showFullPages();
     }
@@ -1133,8 +1123,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
       ListWidget.this.sequenceHelper.showDefaultPages();
     }
@@ -1144,33 +1133,22 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles single column ordering.
    */
   protected void order(String fieldName) throws Exception {
-    log.debug("Processing Single Column Order");
+    LOG.debug("Processing Single Column Order");
     boolean ascending = true;
-    List orderFields = this.orderInfo.getFields();
-    OrderInfoField currentOrderField = (OrderInfoField) (orderFields.size() > 0 ? orderFields
-        .get(0)
-        : null);
-    if (currentOrderField != null) {
-      if (currentOrderField.getId().equals(fieldName)
-          && currentOrderField.isAscending()) {
-        ascending = false;
-      }
-    }
+
+    List<OrderInfoField> orderFields = this.orderInfo.getFields();
+    OrderInfoField currentOrder = orderFields.size() > 0 ? orderFields.get(0) : null;
+    ascending = currentOrder == null || !currentOrder.getId().equals(fieldName) || !currentOrder.isAscending();
+
     this.orderInfo.clearFields();
     this.orderInfo.addField(new OrderInfoField(fieldName, ascending));
     propagateListDataProviderWithOrderInfo(this.orderInfo);
-
-    // XXX: why is this commented code here?
-    // listDataProvider.setOrderInfo(orderInfo);
     filter();
   }
 
   protected class OrderEventHandler extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       // single column ordering
       if (eventParam.length() > 0) {
         order(eventParam);
@@ -1178,19 +1156,16 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
       }
 
       // multi column ordering
-      OrderInfo orderInfo = MultiOrderHelper.getOrderInfo(getOrderInfoMap(input
-          .getScopedData(getScope().toPath())));
+      OrderInfo orderInfo = MultiOrderHelper.getOrderInfo(getOrderInfoMap(input.getScopedData(getScope().toPath())));
       propagateListDataProviderWithOrderInfo(orderInfo);
     }
 
-    private Map getOrderInfoMap(Map data) {
-      Map orderInfoMap = new HashMap();
-      for (Iterator i = data.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-        String key = (String) entry.getKey();
+    private Map<String, Number> getOrderInfoMap(Map<String, String> data) {
+      Map<String, Number> orderInfoMap = new HashMap<String, Number>();
+      for (Map.Entry<String, String> entry : data.entrySet()) {
+        String key = entry.getKey();
         if (key.startsWith(ORDER_FORM_NAME)) {
-          orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), entry
-              .getValue());
+          orderInfoMap.put(key.substring(ORDER_FORM_NAME.length()), Integer.parseInt(entry.getValue()));
         }
       }
       return orderInfoMap;
@@ -1198,7 +1173,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Creates mapping between rows and request ids.
+   * Creates mapping between rows and request IDs.
    * 
    * @since 1.1
    */
@@ -1208,8 +1183,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     }
     this.requestIdToRow.clear();
     for (ListIterator<T> i = this.itemRange.listIterator(); i.hasNext();) {
-      T row = i.next();
-      this.requestIdToRow.put(Integer.toString(i.previousIndex()), row);
+      this.requestIdToRow.put(Integer.toString(i.previousIndex()), i.next());
     }
   }
 
@@ -1218,7 +1192,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   protected void filter() throws Exception {
     if (this.form.convertAndValidate() && this.form.isStateChanged()) {
-      Map filterInfo = ListUtil.readFilterInfo(this.form);
+      Map<String, Object> filterInfo = ListUtil.readFilterInfo(this.form);
       propagateListDataProviderWithFilter(filterInfo);
       this.form.markBaseState();
       this.sequenceHelper.setCurrentPage(0);
@@ -1229,6 +1203,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Handles filter clearing.
    */
+  @SuppressWarnings("unchecked")
   protected void clearFilter() {
     clearForm(this.form);
     propagateListDataProviderWithFilter(Collections.EMPTY_MAP);
@@ -1237,11 +1212,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   protected static void clearForm(FormWidget compositeFormElement) {
-    for (Iterator i = compositeFormElement.getElements().values().iterator(); i
-        .hasNext();) {
-      GenericFormElement element = (GenericFormElement) i.next();
-      if (element instanceof FormElement) {
-        ((FormElement) element).setValue(null);
+    for (GenericFormElement element : compositeFormElement.getElements().values()) {
+      if (element instanceof FormElement<?, ?>) {
+        ((FormElement<?, ?>) element).setValue(null);
         element.markBaseState();
       } else if (element instanceof FormWidget) {
         clearForm((FormWidget) element);
@@ -1285,10 +1258,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     }
   }
 
-  protected class DataProviderDataUpdateListener
-    implements ListDataProvider.DataUpdateListener {
-
-    private static final long serialVersionUID = 1L;
+  protected class DataProviderDataUpdateListener implements ListDataProvider.DataUpdateListener {
 
     public void onDataUpdate() {
       fireChange();
@@ -1304,8 +1274,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel {
-
-    private static final long serialVersionUID = 1L;
 
     private List<T> itemRange;
 
@@ -1327,8 +1295,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
       this.sequence = ListWidget.this.sequenceHelper.getViewModel();
       this.listStructure = ListWidget.this.listStructure.getViewModel();
       this.orderInfo = ListWidget.this.getOrderInfo().getViewModel();
-      this.filterForm = (FormWidget.ViewModel) ListWidget.this.form
-          ._getViewable().getViewModel();
+      this.filterForm = (FormWidget.ViewModel) ListWidget.this.form._getViewable().getViewModel();
     }
 
     /**

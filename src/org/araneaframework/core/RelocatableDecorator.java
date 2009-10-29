@@ -37,7 +37,7 @@ import org.araneaframework.Relocatable.RelocatableWidget;
  * decorator is swappable.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class RelocatableDecorator extends BaseService
   implements Serializable, RelocatableService, RelocatableWidget,
@@ -46,8 +46,6 @@ public class RelocatableDecorator extends BaseService
   // *******************************************************************
   // FIELDS
   // *******************************************************************
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * The child service that is made relocatable.

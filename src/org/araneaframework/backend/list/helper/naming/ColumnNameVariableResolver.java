@@ -29,8 +29,6 @@ import org.araneaframework.core.Assert;
  */
 public class ColumnNameVariableResolver implements VariableResolver {
 
-  private static final long serialVersionUID = 1L;
-
   private final NamingStrategy namingStrategy;
 
   public ColumnNameVariableResolver(NamingStrategy namingStrategy) {

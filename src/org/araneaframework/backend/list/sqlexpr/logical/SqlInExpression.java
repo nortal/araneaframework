@@ -16,6 +16,8 @@
 
 package org.araneaframework.backend.list.sqlexpr.logical;
 
+import java.util.Collections;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -42,7 +44,7 @@ public class SqlInExpression extends SqlCollectionExpression {
     Assert.notNull(expr1, "All arguments must be provided");
     Assert.notEmpty(exprs, "All arguments must be provided");
 
-    List exprList = Arrays.asList(exprs);
+    List<SqlExpression> exprList = Arrays.asList(exprs);
     Assert.noNullElements(exprList, "All arguments in array must be provided");
 
     this.expr1 = expr1;
@@ -50,15 +52,15 @@ public class SqlInExpression extends SqlCollectionExpression {
   }
 
   public Object[] getValues() {
-    List values = new ArrayList();
+    List<Object> values = new ArrayList<Object>();
     Object[] childValues = this.expr1.getValues();
 
     if (childValues != null) {
-      values.addAll(Arrays.asList(childValues));
+      Collections.addAll(values, childValues);
     }
 
-    for (Iterator it = this.children.iterator(); it.hasNext();) {
-      childValues = ((SqlExpression) it.next()).getValues();
+    for (Iterator<SqlExpression> i = this.children.iterator(); i.hasNext();) {
+      childValues = i.next().getValues();
       if (childValues != null) {
         values.addAll(Arrays.asList(childValues));
       }
@@ -72,8 +74,8 @@ public class SqlInExpression extends SqlCollectionExpression {
    */
   public String toSqlString() {
     StringBuffer sb = new StringBuffer();
-    if (this.children.size() > 0) {
-      sb.append(expr1.toSqlString());
+    if (!this.children.isEmpty()) {
+      sb.append(this.expr1.toSqlString());
       sb.append(" IN (");
       sb.append(super.toSqlString());
       sb.append(")");

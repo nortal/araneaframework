@@ -1,5 +1,5 @@
-/**
- * Copyright 2007 Webmedia Group Ltd.
+/*
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.release;
 
@@ -22,8 +22,6 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  * @author Taimo Peelo
  */
 public class ReleaseWidget extends TemplateBaseWidget {
-
-  private static final long serialVersionUID = 1L;
 
   protected void init() throws Exception {
     setViewSelector("release/release");

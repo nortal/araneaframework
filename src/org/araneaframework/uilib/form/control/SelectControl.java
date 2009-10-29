@@ -16,16 +16,17 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.support.DataType;
+
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
-
 /**
  * This class represents a select box (a.k.a. drop-down) control.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 public class SelectControl<T> extends BaseSelectControl<T, T> {
 
@@ -57,23 +58,20 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
   }
 
   /**
-   * Returns {@link DisplayItem} corresponding to selected element. Current
-   * value by which seleced element is determined is reported by the {@link FormElement} 
-   * to which this {@link SelectControl})belongs. If no {@link FormElement} is
+   * Returns {@link DisplayItem} corresponding to selected element. Current value by which seleced element is determined
+   * is reported by the {@link FormElement} to which this {@link SelectControl})belongs. If no {@link FormElement} is
    * associated with {@link SelectControl}, this method returns <code>null</code>.
+   * 
    * @return {@link DisplayItem} corresponding to selected element.
    * @since 1.0.5
    */
   public T getSelectedItem() {
-    if (getFormElementCtx() == null) {
-      return null;
-    }
-    return DisplayItemUtil.getBean(this, (String) getFormElementCtx().getValue());
+    return getFormElementCtx() == null ? null : DisplayItemUtil.getBean(this, (String) getFormElementCtx().getValue());
   }
 
   @Override
   protected T fromRequestParameters(String[] parameterValues) {
-    String value = parameterValues != null && parameterValues.length > 1 ? parameterValues[0] : null;
+    String value = parameterValues != null && parameterValues.length > 0 ? parameterValues[0] : null;
     return value != null ? DisplayItemUtil.getBean(this, value) : null;
   }
 
@@ -82,8 +80,8 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
     return new String[] { DisplayItemUtil.getBeanValue(controlValue, this.valueProperty) };
   }
 
-  public String getRawValueType() {
-    return "String";
-  }  
+  public DataType getRawValueType() {
+    return new DataType(String.class);
+  }
 
 }

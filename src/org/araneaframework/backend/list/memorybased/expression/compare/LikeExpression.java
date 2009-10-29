@@ -28,20 +28,17 @@ import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 public class LikeExpression implements CompositeExpression, StringExpression {
 
-  private static final long serialVersionUID = 1L;
-
   protected Expression expr;
 
-  protected Value mask;
+  protected Value<String> mask;
 
   protected boolean ignoreCase;
 
   protected LikeConfiguration configuration;
 
-  public LikeExpression(Expression expr, Value mask, boolean ignoreCase,
-      LikeConfiguration configuration) {
-    Assert.notNull(expr, "Expression must be provided.");
-    Assert.notNull(mask, "Mask value must be provided.");
+  public LikeExpression(Expression expr, Value<String> mask, boolean ignoreCase, LikeConfiguration configuration) {
+    Assert.notNullParam(expr, "Expression must be provided.");
+    Assert.notNullParam(mask, "Mask value must be provided.");
     this.expr = expr;
     this.mask = mask;
     this.ignoreCase = ignoreCase;
@@ -52,25 +49,24 @@ public class LikeExpression implements CompositeExpression, StringExpression {
     return this.ignoreCase;
   }
 
-  public Value getMask() {
+  public Value<String> getMask() {
     return this.mask;
   }
 
   public LikeConfiguration getConfiguration() {
-    return configuration;
+    return this.configuration;
   }
 
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-    String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
-    String maskStr = ObjectUtils.toString(mask.getValue());
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
+    String stringToCompare = ObjectUtils.toString(this.expr.evaluate(resolver));
+    String maskStr = this.mask.getValue();
 
     if (this.ignoreCase) {
       stringToCompare = stringToCompare.toLowerCase();
       maskStr = maskStr.toLowerCase();
     }
 
-    return new Boolean(stringToCompare.indexOf(maskStr) >= 0);
+    return stringToCompare.indexOf(maskStr) >= 0;
   }
 
   public Expression[] getChildren() {

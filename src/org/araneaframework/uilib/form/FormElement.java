@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.uilib.support.DataType;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.Environment;
@@ -33,14 +35,14 @@ import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.Event;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormElement<C,D> extends GenericFormElement implements FormElementContext<C,D>, RenderStateAware {
 
@@ -176,13 +178,14 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   public Converter<C, D> findConverter() {
     ConfigurationContext confCtx = getEnvironment().requireEntry(ConfigurationContext.class);
 
-    try {
-      return ConverterFactory.getInstance(confCtx).findConverter(getControl().getRawValueType(),
-          getData().getValueType());
+    DataType source = getControl().getRawValueType();
+    DataType dest = getData().getValueType();
 
+    try {
+      return ConverterFactory.getInstance(confCtx).findConverter(source, dest);
     } catch (ConverterNotFoundException e) {
-      throw new AraneaRuntimeException(
-          "Could not find a field value " + "converter for field " + getScope().toString(), e);
+      throw new AraneaRuntimeException("Could not find a field value converter (" + source + "->" + dest
+          + ") for field '" + getScope().toString() + "'!", e);
     }
   }
 
@@ -274,7 +277,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @since 1.1
    */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = ConfigurationContextUtil
+    FormElementValidationErrorRenderer result = ConfigurationUtil
         .getFormElementValidationErrorRenderer(UilibEnvironmentUtil.getConfiguration(getEnvironment()));
     if (result == null) {
       result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
@@ -346,7 +349,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @throws Exception
    */
   @Override
-  public Object getViewModel() throws Exception {
+  public Object getViewModel() {
     return new ViewModel();
   }
 
@@ -492,7 +495,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   /**
    * Represents a simple form element view model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {
@@ -512,7 +515,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
      * 
      * @throws Exception
      */
-    public ViewModel() throws Exception {
+    public ViewModel() {
       this.control = (Control.ViewModel) FormElement.this.getControl()._getViewable().getViewModel();
       this.label = FormElement.this.getLabel();
       this.valid = FormElement.this.isValid();

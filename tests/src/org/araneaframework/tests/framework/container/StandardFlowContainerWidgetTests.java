@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.framework.container;
 
@@ -60,7 +60,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     childWidget = new MockEventfulBaseWidget();
     childWidget2 = new MockEventfulBaseWidget();
     
-    env = new StandardEnvironment(null, new HashMap());
+    env = new StandardEnvironment(null, new HashMap<Class<?>, Object>());
     
     stackWidget = new StandardFlowContainerWidget(topWidget);
     stackWidget._getComponent().init(null, env);
@@ -108,8 +108,7 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     assertEquals(true, childWidget2.getDestroyCalled());
   }
   
-  protected static class MemoizingFlowContextHandler implements FlowContext.Handler {
-    private static final long serialVersionUID = 1L;
+  protected static class MemoizingFlowContextHandler implements FlowContext.Handler<Object> {
     private Object returnValue = null;
     private boolean finished;
     private boolean cancelled;
@@ -137,7 +136,6 @@ public class StandardFlowContainerWidgetTests extends TestCase {
   }
   
   protected static class MemoizingFlowContextConfigurator implements FlowContext.Configurator {
-    private static final long serialVersionUID = 1L;
     private boolean configured;
     private Widget flow;
 

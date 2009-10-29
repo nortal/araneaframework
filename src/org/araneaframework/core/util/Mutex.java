@@ -106,7 +106,7 @@ package org.araneaframework.core.util;
 
 public class Mutex implements Sync  {
 
-  /** The lock status **/
+  /** The lock status */
   protected boolean inuse_ = false;
 
   public void acquire() throws InterruptedException {

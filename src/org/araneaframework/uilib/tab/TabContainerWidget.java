@@ -51,7 +51,7 @@ import org.araneaframework.core.WidgetFactory;
  */
 public class TabContainerWidget extends BaseApplicationWidget implements TabContainerContext, TabRegistrationContext {
 
-  private static final Log log = LogFactory.getLog(TabContainerWidget.class);
+  private static final Log LOG = LogFactory.getLog(TabContainerWidget.class);
 
   public static final String TAB_SELECT_EVENT_ID = "activateTab";
 
@@ -183,7 +183,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   /*****************************************************************************
    * TabRegistrationContext IMPL
-   ****************************************************************************/
+   ************************************************************************** */
   /**
    * @see org.araneaframework.uilib.tab.TabRegistrationContext#registerTab(org.araneaframework.uilib.tab.TabWidget)
    */
@@ -223,12 +223,12 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   /*****************************************************************************
    * Tab selection listener.
-   ****************************************************************************/
+   ************************************************************************** */
   protected class SelectionEventListener extends StandardEventListener {
 
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
-      if (log.isTraceEnabled()) {
-        log.trace(ClassUtils.getShortClassName(TabContainerWidget.class) + " received tab selection event for tab '"
+      if (LOG.isTraceEnabled()) {
+        LOG.trace(ClassUtils.getShortClassName(TabContainerWidget.class) + " received tab selection event for tab '"
             + eventParam + "'.");
       }
       selectTab(eventParam);
@@ -237,7 +237,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   /*****************************************************************************
    * Overrides for disableWidget()/enableWidget()
-   ****************************************************************************/
+   ************************************************************************** */
   public void disableWidget(Object key) {
     if (!this.tabs.containsKey(key)) {
       super.disableWidget(key);
@@ -276,7 +276,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
    * This closure handles tab switching of this instance of {@link TabContainerWidget}. It can be executed only once
    * (per instance).
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 1.2.2
    */
   public class TabSwitchClosure implements Closure, Serializable {

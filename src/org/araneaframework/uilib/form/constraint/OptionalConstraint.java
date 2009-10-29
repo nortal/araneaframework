@@ -24,9 +24,9 @@ import org.araneaframework.uilib.form.Constraint;
  * around the <code>Constraint</code>, and the wrapped <code>Constraint</code> will be applied only if the constrained
  * field has been read from the request.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class OptionalConstraint<C, D> extends BaseFieldConstraint<C, D> {
+public class OptionalConstraint extends BaseFieldConstraint {
 
   private Constraint constraint;
 

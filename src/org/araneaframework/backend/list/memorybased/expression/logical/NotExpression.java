@@ -24,8 +24,6 @@ import org.araneaframework.core.Assert;
 
 public class NotExpression implements CompositeExpression {
 
-  private static final long serialVersionUID = 1L;
-
   private Expression expr;
 
   public NotExpression(Expression expr) {
@@ -37,9 +35,7 @@ public class NotExpression implements CompositeExpression {
     return new Expression[] { this.expr };
   }
 
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-    Boolean childValue = (Boolean) this.expr.evaluate(resolver);
-    return (!childValue.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
+    return !((Boolean) this.expr.evaluate(resolver));
   }
 }

@@ -25,139 +25,151 @@ import org.araneaframework.core.util.ExceptionUtil;
 /**
  * Non-composite widget component.
  * <p>
- * Compared to BaseService has the following extra
- * functionality:
+ * Compared to BaseService has the following extra functionality:
  * <ul>
  * <li>update(InputData) - update the state of the widget with the data in InputData</li>
- *  <li>event(Path, InputData) - handling a event</li>
- *  <li>render(OutputData) - rendering this Widget to OutputData</li>
+ * <li>event(Path, InputData) - handling a event</li>
+ * <li>render(OutputData) - rendering this Widget to OutputData</li>
  * </ul>
  * </p>
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class BaseWidget extends BaseService implements Widget {
 
-  private static final long serialVersionUID = 1L;
-
   /**
    * Returns a widget's internal implementation.
+   * 
    * @return the widget's implementation
    */
   public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
-    
+
   protected class WidgetImpl implements Widget.Interface {
-    
-    private static final long serialVersionUID = 1L;
 
     public void update(InputData input) {
       Assert.notNullParam(this, input, "input");
 
       _startCall();
-      currentInputData = input;
+      BaseWidget.this.currentInputData = input;
       try {
         BaseWidget.this.update(input);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         try {
           handleWidgetException(e);
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
         }
-      }
-      finally {
-        currentInputData = null;
+      } finally {
+        BaseWidget.this.currentInputData = null;
         _endCall();
-      } 
+      }
     }
-    
+
     public void event(Path path, InputData input) {
       Assert.notNullParam(this, input, "input");
-      
+
       _startCall();
-      currentInputData = input;
+      BaseWidget.this.currentInputData = input;
+
       try {
         BaseWidget.this.event(path, input);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         try {
           handleWidgetException(e);
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
         }
-      }
-      finally {
-        currentInputData = null;
+      } finally {
+        BaseWidget.this.currentInputData = null;
         _endCall();
       }
     }
-    
+
     public void render(OutputData output) {
       Assert.notNullParam(this, output, "output");
-      
+
       _startCall();
-      currentOutputData = output;
+      BaseWidget.this.currentOutputData = output;
+
       try {
         BaseWidget.this.render(output);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         try {
           handleWidgetException(e);
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
         }
-      }
-      finally {
-        currentOutputData = null;
+      } finally {
+        BaseWidget.this.currentOutputData = null;
         _endCall();
       }
     }
-  }   
-    
+  }
+
   protected void handleWidgetException(Exception e) throws Exception {
     handleException(e);
   }
-    
-  // Callbacks
+
+  /**
+   * A callback that is called upon widget request cycle beginning. Among widget three callbacks, this is called first.
+   * 
+   * @param input The incoming data.
+   * @throws Exception Any exception that my occur.
+   */
   protected void update(InputData input) throws Exception {}
+
+  /**
+   * A callback that is called when an event is sent to the widget. Among widget three callbacks, this is called second.
+   * 
+   * @param path The path information about the event target.
+   * @param input The incoming data.
+   * @throws Exception Any exception that my occur.
+   */
   protected void event(Path path, InputData input) throws Exception {}
+
+  /**
+   * A callback that is called upon widget rendering. Among widget three callbacks, this is called last.
+   * 
+   * @param output The outgoing data.
+   * @throws Exception Any exception that my occur.
+   */
   protected void render(OutputData output) throws Exception {}
-  
+
   @Override
   protected InputData getInputData() {
-  	InputData input = super.getInputData();
-  	OutputData output = super.getOutputData();
+    InputData input = super.getInputData();
+    OutputData output = super.getOutputData();
 
-  	// lets try to give a not null answer to the user
-  	if (input == null && output != null) {
+    // lets try to give a not null answer to the user
+    if (input == null && output != null) {
       return output.getInputData();
-  	}
-  	
-  	// as last resort, look in the Environment -- when result cannot be found be
-  	// before, this probably means that we are still in widgets init() method.
-  	if (input == null)
+    }
+
+    // as last resort, look in the Environment -- when result cannot be found be
+    // before, this probably means that we are still in widgets init() method.
+    if (input == null) {
       input = getEnvironment().getEntry(InputData.class);
-  	
-  	return input;
+    }
+
+    return input;
   }
-  
+
   @Override
   protected OutputData getOutputData() {
-  	OutputData output = super.getOutputData();
-  	InputData input = super.getInputData();
-  	if (output == null && input != null) {
-  		return input.getOutputData();
-  	}
+    OutputData output = super.getOutputData();
+    InputData input = super.getInputData();
+    if (output == null && input != null) {
+      return input.getOutputData();
+    }
 
-  	// as last resort, look in the Environment -- when result cannot be found be
-  	// before, this probably means that we are still in widgets init() method.
-  	if (output == null)
+    // as last resort, look in the Environment -- when result cannot be found be
+    // before, this probably means that we are still in widgets init() method.
+    if (output == null) {
       output = getEnvironment().getEntry(OutputData.class);
+    }
 
-  	return output;
+    return output;
   }
 }

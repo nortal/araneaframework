@@ -42,7 +42,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public class BaseApplicationWidget extends BaseWidget implements ApplicationWidget {
 
-  private static final Log log = LogFactory.getLog(BaseApplicationWidget.class);
+  private static final Log LOG = LogFactory.getLog(BaseApplicationWidget.class);
 
   private Map<String, List<EventListener>> eventListeners;
 
@@ -192,8 +192,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       Widget pWidget = (Widget) getChildren().get(next);
 
       if (pWidget == null) {
-        if (log.isWarnEnabled()) {
-          log.warn("Widget '" + getScope() + "' could not deliver event as child '" + next
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Widget '" + getScope() + "' could not deliver event as child '" + next
               + "' was not found or not a Widget!" + Assert.thisToString(this));
         }
         return;
@@ -218,16 +218,16 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     String eventId = getEventId(input);
 
     if (eventId == null) {
-      if (log.isWarnEnabled()) {
-        log.warn("Widget '" + getScope() + "' cannot deliver event for a null action id!" + Assert.thisToString(this));
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Widget '" + getScope() + "' cannot deliver event for a null action id!" + Assert.thisToString(this));
       }
       return;
     }
 
     List<EventListener> listeners = this.eventListeners == null ? null : eventListeners.get(eventId);
 
-    if (log.isTraceEnabled()) {
-      log.trace("Delivering event '" + eventId + "' to widget '" + getScope() + "', type: '" + getClass().getName()
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Delivering event '" + eventId + "' to widget '" + getScope() + "', type: '" + getClass().getName()
           + "'");
     }
 
@@ -245,8 +245,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       throw new EventException(this, String.valueOf(getScope()), eventId, e);
     }
 
-    if (log.isWarnEnabled()) {
-      log.warn("Widget '" + getScope() + "' cannot deliver event as no event listeners were registered for the event "
+    if (LOG.isWarnEnabled()) {
+      LOG.warn("Widget '" + getScope() + "' cannot deliver event as no event listeners were registered for the event "
           + "id '" + eventId + "'!" + Assert.thisToString(this));
     }
 
@@ -264,7 +264,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
       Service service = (Service) getChildren().get(next);
       if (service == null) {
-        log.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
+        LOG.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
             + Assert.thisToString(this));
         return;
       }
@@ -282,16 +282,16 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     String actionId = getActionId(input);    
 
     if (actionId == null) {
-      if (log.isWarnEnabled()) {
-        log.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
       }
       return;
     }
 
     List<ActionListener> listeners = this.actionListeners == null ? null : this.actionListeners.get(actionId); 
 
-    if (log.isTraceEnabled()) {
-      log.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName()
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName()
           + "'");
     }
 
@@ -302,8 +302,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       return;
     }
 
-    if (log.isWarnEnabled()) {
-      log.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
+    if (LOG.isWarnEnabled()) {
+      LOG.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
           + "id '" + actionId + "'!" + Assert.thisToString(this));
     }
   }
@@ -512,9 +512,11 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Returns the view model. Usually overridden.
+   * Returns the view model of this control. The view model is used to retrieve data that MVC view layer can access.
+   * Note that returned view model and its type is entirely the sole responsibility of the control. However, the
+   * controls may change the return type to their implementation of view model.
    */
-  public Object getViewModel() throws Exception {
+  public Object getViewModel() {
     return new ViewModel();
   }
 

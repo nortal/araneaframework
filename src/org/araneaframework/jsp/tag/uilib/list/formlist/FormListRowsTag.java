@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
-package org.araneaframework.jsp.tag.uilib.list.formlist;				
+package org.araneaframework.jsp.tag.uilib.list.formlist;
 
 import java.io.Writer;
 import java.util.ListIterator;
@@ -23,78 +23,74 @@ import org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRow;
 
-
 /**
  * List widget rows tag.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "formListRows"
  *   body-content = "JSP"
  *   description = "Iterating tag that gives access to each row and row form on the UiLib editable list current page.
-					The editable row is accessible as "formRow" variable."
+ *                  The editable row is accessible as "formRow" variable."
  */
-public class FormListRowsTag extends BaseListRowsTag {
-  
-	public static final String EDITABLE_ROW_KEY = "formRow";
-	
-	protected FormListWidget.ViewModel editableListViewModel;
-	protected String editableListId;
-	
-	protected FormTag rowForm = new FormTag();
-	
-	protected String var = "row";
-	
-	@Override
+@SuppressWarnings("unchecked")
+public class FormListRowsTag<R> extends BaseListRowsTag {
+
+  public static final String EDITABLE_ROW_KEY = "formRow";
+
+  protected FormListWidget<Object, Object>.ViewModel editableListViewModel;
+
+  protected String editableListId;
+
+  protected FormTag rowForm = new FormTag();
+
+  protected String var = "row";
+
+  @Override
   public int doStartTag(Writer out) throws Exception {
-		editableListViewModel = (FormListWidget.ViewModel)requireContextEntry(FormListTag.FORM_LIST_VIEW_MODEL_KEY);
-		editableListId = (String)requireContextEntry(FormListTag.FORM_LIST_ID_KEY);
-		return super.doStartTag(out);
-	}
-  
+    this.editableListViewModel = (FormListWidget.ViewModel) requireContextEntry(FormListTag.FORM_LIST_VIEW_MODEL_KEY);
+    this.editableListId = (String) requireContextEntry(FormListTag.FORM_LIST_ID_KEY);
+    return super.doStartTag(out);
+  }
+
   //
   // Attributes
   //
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Name of variable that represents individual row (by default "row")." 
-	 */
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Name of variable that represents individual row (by default "row")."
+   */
   public void setVar(String var) {
     this.var = var;
   }
-	
-  //
-  // Implementation
-  //
-	
-	@Override
-  protected ListIterator<?> getIterator() {
-		return editableListViewModel.getRows().listIterator();
-	}
 
-	@Override
+  @Override
+  protected ListIterator<?> getIterator() {
+    return this.editableListViewModel.getRows().listIterator();
+  }
+
+  @Override
   protected void doForEachRow(Writer out) throws Exception {
-		super.doForEachRow(out);		
-		
-	  	Object currentRowKey = editableListViewModel.getRowHandler().getRowKey(currentRow);
-	  	FormRow.ViewModel currentEditableRow = editableListViewModel.getFormRows().get(currentRowKey);
-	  	
-	  	addContextEntry(EDITABLE_ROW_KEY, currentEditableRow);
-	  	addContextEntry(var, currentRow);	
-	  	
-	    registerSubtag(rowForm);
-	    rowForm.setId(editableListId + "." + currentEditableRow.getRowFormId());
-	    executeStartSubtag(rowForm);
-	}
-    
+    super.doForEachRow(out);
+
+    Object currentRowKey = this.editableListViewModel.getRowHandler().getRowKey(this.currentRow);
+    FormRow.ViewModel currentEditableRow = this.editableListViewModel.getFormRows().get(currentRowKey);
+
+    addContextEntry(EDITABLE_ROW_KEY, currentEditableRow);
+    addContextEntry(this.var, this.currentRow);
+
+    registerSubtag(this.rowForm);
+    this.rowForm.setId(this.editableListId + "." + currentEditableRow.getRowFormId());
+    executeStartSubtag(this.rowForm);
+  }
+
   @Override
   protected int afterBody(Writer out) throws Exception {
-  	executeEndTagAndUnregister(rowForm);
-  	
-  	return super.afterBody(out);   
-  } 
+    executeEndTagAndUnregister(this.rowForm);
+    return super.afterBody(out);
+  }
 }

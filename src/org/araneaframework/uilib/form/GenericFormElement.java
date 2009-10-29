@@ -30,13 +30,13 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Represents a general form element, a node in form element hierarchy.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
 
@@ -62,6 +62,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   // * PUBLIC METHODS
   // *********************************************************************
 
+  @Override
   protected void init() throws Exception {
     super.init();
     if (this.constraint != null) {
@@ -232,7 +233,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
       FormContext fctx = UilibEnvironmentUtil.getFormContext(getEnvironment());
       if (fctx != null)
         return fctx.isBackgroundValidation();
-      return ConfigurationContextUtil.isBackgroundFormValidationEnabled(getEnvironment().getEntry(ConfigurationContext.class));
+      return ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment().getEntry(ConfigurationContext.class));
     }
     return this.backgroundValidation.booleanValue();
   }
@@ -328,7 +329,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * This class represents a form element view model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel {
 

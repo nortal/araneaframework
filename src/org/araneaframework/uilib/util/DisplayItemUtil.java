@@ -19,21 +19,25 @@ package org.araneaframework.uilib.util;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * Represents the items put into {@link org.araneaframework.uilib.form.control.SelectControl}or
  * {@link org.araneaframework.uilib.form.control.MultiSelectControl}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class DisplayItemUtil implements Serializable {
 
@@ -74,11 +78,7 @@ public abstract class DisplayItemUtil implements Serializable {
   public static String getBeanValue(Object bean, String property) {
     String value = null;
     if (bean != null) {
-      try {
-        value = ObjectUtils.toString(PropertyUtils.getProperty(bean, property));
-      } catch (Exception e) {
-        ExceptionUtil.uncheckException(e);
-      }
+      value = ObjectUtils.toString(BeanUtil.getPropertyValue(bean, property));
     }
     return value;
   }
@@ -109,17 +109,35 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param value display item value.
    * @return display item label by the specified value.
    */
-  public static <T> String getLabelForValue(Collection<T> items, String labelProperty, String valueProperty,
-      String value) {
+  public static <T> DisplayItem getSelectedItemByValue(List<DisplayItem> items, String valueProperty, T value) {
     if (CollectionUtils.isNotEmpty(items)) {
-      for (T item : items) {
+      for (DisplayItem item : items) {
         String currentValue = getBeanValue(item, valueProperty);
-        if (StringUtils.equals(value, currentValue)) {
-          return getBeanValue(item, labelProperty);
+        if (ObjectUtils.equals(item.getValue(), currentValue)) {
+          return item;
         }
       }
     }
-    return "";
+    return null;
+  }
+
+  /**
+   * Returns display item label by the specified value.
+   * 
+   * @param items display items.
+   * @param value display item value.
+   * @return display item label by the specified value.
+   */
+  public static <T> List<DisplayItem> getSelectedItems(List<DisplayItem> items, String[] values) {
+    List<DisplayItem> results = new LinkedList<DisplayItem>();
+    if (CollectionUtils.isNotEmpty(items)) {
+      for (DisplayItem item : items) {
+        if (ArrayUtils.contains(values, item.getValue())) {
+          results.add(item);
+        }
+      }
+    }
+    return results;
   }
 
   /**
@@ -169,4 +187,14 @@ public abstract class DisplayItemUtil implements Serializable {
       Assert.isTrue(uniqueItems.size() < items.size(), "The *SelectControl items must have unique values.");
     }
   }
+
+  public static <T> void addItemsFromBeanCollection(SelectControl<DisplayItem> select, List<T> params,
+      Transformer labelTransformer, Transformer valueTransformer) {
+    for (T param : params) {
+      String label = ObjectUtils.toString(labelTransformer.transform(param));
+      String value = ObjectUtils.toString(valueTransformer.transform(param));
+      select.addItem(label, value);
+    }
+  }
+
 }

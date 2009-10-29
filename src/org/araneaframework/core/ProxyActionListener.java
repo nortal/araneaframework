@@ -22,13 +22,11 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.0.11
  */
 public class ProxyActionListener implements ActionListener {
-
-  private static final long serialVersionUID = 1L;
 
   protected Widget actionTarget;
 

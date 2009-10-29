@@ -12,30 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
+import org.araneaframework.uilib.support.DataType;
 
 /**
  * This class represents a button.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class ButtonControl extends BaseControl<String> {
 
-  // *********************************************************************
-  // FIELDS
-  // *********************************************************************
   protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
 
   /**
-   * Returns true
+   * Creates a new button control.
    */
+  public ButtonControl() {}
+
+  /**
+   * Creates a new button control with given "onClick" event listener.
+   * 
+   * @param onClickEventListener The listener that listens to click events of this button.
+   * @since 2.0
+   */
+  public ButtonControl(OnClickEventListener onClickEventListener) {
+    addOnClickEventListener(onClickEventListener);
+  }
+
   @Override
   public boolean isRead() {
     return true;
@@ -47,70 +55,39 @@ public class ButtonControl extends BaseControl<String> {
    * @see StandardControlEventListenerAdapter#addOnClickEventListener(OnClickEventListener)
    */
   public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
-    eventHelper.addOnClickEventListener(onClickEventListener);
+    this.eventHelper.addOnClickEventListener(onClickEventListener);
   }
 
   /**
-   * Returns null.
+   * Returns null, because <code>ButtonControl</code> does not have any data.
    * 
-   * @return null.
+   * @return <code>null</code>.
    */
-  public String getRawValueType() {
+  public DataType getRawValueType() {
     return null;
   }
-
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
 
   @Override
   protected void init() throws Exception {
     super.init();
-
-    setGlobalEventListener(eventHelper);
+    setGlobalEventListener(this.eventHelper);
   }
 
   /**
-   * Empty method
+   * Empty method. Button control is not interested in conversion and validation.
    */
   @Override
-  protected void readFromRequest(HttpInputData request) {
-  // Button control is not interested in what is submitted
-  }
+  public void convertAndValidate() {}
 
-  /**
-   * Empty method
-   */
-  @Override
-  public void convertAndValidate() {
-  // Button control is not interested in conversion and validation
-  }
-
-  /**
-   * Does nothing
-   */
-  protected void prepareResponse() {
-  // Button control does not have data
-  }
-
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  // *********************************************************************
-  // * VIEW MODEL
-  // *********************************************************************
-
   /**
    * Represents a <code>ButtonControl</code> view model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    * 
    */
   public class ViewModel extends BaseControl<String>.ViewModel {

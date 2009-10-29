@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.updateregion;
 
@@ -30,7 +30,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Defines an update region for asynchronous updating using AJAX request. Use its "id" to select the updated regions
                using the "updateRegions" attribute of elements capable of sending events. This attribute accepts a comma-separated
                list of regions to be updated with the request."
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
 

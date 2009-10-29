@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.araneaframework.example.main.web.demo;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
@@ -9,38 +25,37 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * Demonstrates {@link FormElement} rendering with JSP &lt;ui:automaticFormElement&gt;
- * tag, which allows dynamically changing the tag with which {@link FormElement}
- * is rendered.
+ * Demonstrates {@link FormElement} rendering with JSP &lt;ui:automaticFormElement&gt; tag, which allows dynamically
+ * changing the tag with which {@link FormElement} is rendered.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoAutomaticFormElement extends TemplateBaseWidget {
-	private FormWidget form;
-	private FormElement first;
-	private boolean editable = false;
 
-	protected void init() throws Exception {
-		setViewSelector("demo/demoAutomaticFormElement");
-		
-		form = new FormWidget();
-		first = form.addElement("first", "#First", new TextControl(), new StringData(), "InitialFirst", false);
-		changeFormTags();
-		
-		addWidget("form", form);
-	}
+  private FormWidget form;
 
-	public void handleEventReverse() {
-		changeFormTags();
-	}
+  private FormElement<String, String> first;
 
-	private void changeFormTags() {
-		editable = !editable;
-		if (!editable) {
-			AutomaticFormElementUtil.setFormElementTag(first, "textInputDisplay", new TagAttr[] { new TagAttr("styleClass", "name") });
-		}
-		else {
-			AutomaticFormElementUtil.setFormElementTag(first, "textInput", new TagAttr[] { new TagAttr("styleClass", "inpt") });
-		}
-	}
+  private boolean editable = false;
+
+  protected void init() throws Exception {
+    setViewSelector("demo/demoAutomaticFormElement");
+    this.form = new FormWidget();
+    this.first = this.form.addElement("first", "#First", new TextControl(), new StringData(), "InitialFirst");
+    changeFormTags();
+    addWidget("form", this.form);
+  }
+
+  public void handleEventReverse() {
+    changeFormTags();
+  }
+
+  private void changeFormTags() {
+    this.editable = !this.editable;
+    if (!this.editable) {
+      AutomaticFormElementUtil.setFormElementTag(first, "textInputDisplay", new TagAttr("styleClass", "name"));
+    } else {
+      AutomaticFormElementUtil.setFormElementTag(first, "textInput", new TagAttr("styleClass", "inpt"));
+    }
+  }
 }

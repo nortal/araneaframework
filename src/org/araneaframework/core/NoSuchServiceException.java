@@ -22,8 +22,6 @@ package org.araneaframework.core;
  */
 public class NoSuchServiceException extends AraneaRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   public NoSuchServiceException(Object key) {
     super("No such service '" + key + "'");
   }

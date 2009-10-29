@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure.filter.field;
 
@@ -28,7 +28,7 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
 /**
  * Base implementation for {@link FieldFilter}.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public abstract class BaseFieldFilter extends BaseFilter implements FieldFilter {
 
@@ -72,7 +72,7 @@ public abstract class BaseFieldFilter extends BaseFilter implements FieldFilter 
 	
 	// Building expressions
 	
-	protected boolean isActive(Map filterInfo) {
+	protected boolean isActive(Map<String, Object> filterInfo) {
 		return isConstant() || filterInfo.containsKey(getValueId());
 	}
 	
@@ -80,7 +80,7 @@ public abstract class BaseFieldFilter extends BaseFilter implements FieldFilter 
 		return ExpressionUtil.var(getFieldId());
 	}
 	
-	protected ValueExpression buildValueExpression(Map filterInfo) {
+	protected ValueExpression buildValueExpression(Map<String, Object> filterInfo) {
 		Object val = isConstant() ? getValue() : filterInfo.get(getValueId());
 		return ExpressionUtil.value(getValueId(), val);
 	}

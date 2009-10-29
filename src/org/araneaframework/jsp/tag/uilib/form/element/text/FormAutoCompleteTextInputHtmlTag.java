@@ -62,7 +62,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
   /* ***********************************************************************************
    * Script for registration of the new autocompleter.
-   * ***********************************************************************************/
+   * ********************************************************************************* */
   protected String constructACRegistrationScript(AutoCompleteTextControl.ViewModel viewModel) {
     StringBuffer script = new StringBuffer("Aranea.Behaviour.doAutoCompleteInputSetup('");
     script.append(getFullFieldId());
@@ -93,7 +93,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
   /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
   
   /**
    * @jsp.attribute

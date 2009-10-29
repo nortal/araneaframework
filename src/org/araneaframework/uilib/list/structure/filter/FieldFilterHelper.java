@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 package org.araneaframework.uilib.list.structure.filter;
 
 import org.araneaframework.core.Assert;
@@ -24,7 +24,7 @@ import org.araneaframework.uilib.list.TypeHelper;
 /**
  * One list field specific proxy for {@link FilterHelper}.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * 
  * @see FilterHelper
  * @see ListWidget
@@ -580,16 +580,16 @@ public class FieldFilterHelper extends BaseFilterHelper {
 	public FilterHelper range(String lowValueId, String highValueId) {
 		return this.helper.range(fieldId, lowValueId, highValueId);
 	}
-	public FilterHelper range(Control lowControl, Control highControl) {
+	public FilterHelper range(Control<?> lowControl, Control<?> highControl) {
 		return this.helper.range(fieldId, lowControl, highControl);
 	}
-	public FilterHelper range(String lowValueId, String highValueId, Control lowControl, Control highControl) {
+	public FilterHelper range(String lowValueId, String highValueId, Control<?> lowControl, Control<?> highControl) {
 		return this.helper.range(fieldId, lowValueId, highValueId, lowControl, highControl);
 	}
-	public FilterHelper range(FormElement lowElement, FormElement highElement) {
+	public FilterHelper range(FormElement<?, ?> lowElement, FormElement<?, ?> highElement) {
 		return this.helper.range(fieldId, lowElement, highElement);
 	}
-	public FilterHelper range(String lowValueId, String highValueId, FormElement lowElement, FormElement highElement) {
+	public FilterHelper range(String lowValueId, String highValueId, FormElement<?, ?> lowElement, FormElement<?, ?> highElement) {
 		return this.helper.range(fieldId, lowValueId, highValueId, lowElement, highElement);
 	}
 	
@@ -615,19 +615,19 @@ public class FieldFilterHelper extends BaseFilterHelper {
         return this.helper.in(fieldId, valueId);
     }
     /** @since 1.1.4 */
-    public FilterHelper in(Control control) {
+    public FilterHelper in(Control<?> control) {
         return this.helper.in(fieldId, control);
     }
     /** @since 1.1.4 */
-    public FilterHelper in(String valueId, Control control) {
+    public FilterHelper in(String valueId, Control<?> control) {
         return this.helper.in(fieldId, valueId, control);
     }
     /** @since 1.1.4 */
-    public FilterHelper in(FormElement element) {
+    public FilterHelper in(FormElement<?, ?> element) {
         return this.helper.in(fieldId, element);
     }
     /** @since 1.1.4 */
-    public FilterHelper in(String valueId, FormElement element) {
+    public FilterHelper in(String valueId, FormElement<?, ?> element) {
         return this.helper.in(fieldId, valueId, element);
     }
     

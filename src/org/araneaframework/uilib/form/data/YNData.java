@@ -18,6 +18,6 @@ package org.araneaframework.uilib.form.data;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class YNData extends StringData {}

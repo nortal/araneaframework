@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.reader;
 
@@ -28,7 +28,7 @@ import org.araneaframework.uilib.form.formlist.FormRow;
  * This class allows one to read <code>List</code> s from
  * {@link org.araneaframework.uilib.form.formlist.FormListWidget}s.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class ListFormReader<K, V> {
 

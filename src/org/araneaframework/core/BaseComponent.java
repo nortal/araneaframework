@@ -35,11 +35,11 @@ import org.araneaframework.core.util.ExceptionUtil;
  * basic services (mainly syncronization and messaging service)
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BaseComponent implements Component {
 
-  private static final Log log = LogFactory.getLog(BaseComponent.class);
+  private static final Log LOG = LogFactory.getLog(BaseComponent.class);
 
   //*******************************************************************
   // FIELDS
@@ -189,13 +189,13 @@ public class BaseComponent implements Component {
       this.wait(1000);
 
       if (this.callCount != this.reentrantCallCount) {
-        if (log.isWarnEnabled()) {
-          log.warn("Deadlock or starvation suspected, call count '" + this.callCount + "', reentrant call count '"
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Deadlock or starvation suspected, call count '" + this.callCount + "', reentrant call count '"
               + this.reentrantCallCount + "'");
         }
 
         if (waitStart < System.currentTimeMillis() - 10000) {
-          log.error("Deadlock or starvation not solved in 10s, call count '" + callCount + "', reentrant call count '"
+          LOG.error("Deadlock or starvation not solved in 10s, call count '" + callCount + "', reentrant call count '"
               + reentrantCallCount + "'", new AraneaRuntimeException("Deadlock or starvation suspected!"));
           return;
         }

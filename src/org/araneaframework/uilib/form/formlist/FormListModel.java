@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * The interface that defines methods for callbacks that dynamically provide the data a the form list.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FormListModel<R> extends Serializable {
 

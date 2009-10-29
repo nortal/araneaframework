@@ -21,20 +21,18 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 
 /**
- * An <code>ActionListener</code> for a service. If a service needs a specific
- * action routed to them, they will add an <code>ActionListener</code>.
+ * An <code>ActionListener</code> for a service. If a service needs a specific action routed to them, they will add an
+ * <code>ActionListener</code>.
  */
 public interface ActionListener extends Serializable {
 
   /**
-   * Action processing method. Implementation should be able to handle
-   * different <code>actionId</code>s.
+   * Action processing method. Implementation should be able to handle different <code>actionId</code>s.
    * 
    * @param actionId The ID of the incoming action.
    * @param input The request data.
    * @param output The response data.
    * @throws Exception Any runtime exception that might occur.
    */
-  public void processAction(String actionId, InputData input, OutputData output)
-      throws Exception;
+  public void processAction(String actionId, InputData input, OutputData output) throws Exception;
 }

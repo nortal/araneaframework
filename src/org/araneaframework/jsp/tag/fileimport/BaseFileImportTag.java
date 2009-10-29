@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,50 +12,61 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.fileimport;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
+ * Base implementation for writing references to files in the aranea JAR or other deployment files.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public abstract class BaseFileImportTag extends BaseTag {
 
   public static final String DEFAULT_GROUP_NAME = "all";
+
   public static final String GROUP_CSS_SUFFIX = ".css";
+
   public static final String GROUP_JS_SUFFIX = ".js";
 
-    protected String includeGroupName;
-	protected String includeFileName;
+  protected String includeGroupName;
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The name of the group of files that should get included."
-	 */
-	public void setGroup(String group) throws JspException {
-		this.includeGroupName = (String) evaluate("group", group, String.class);
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "The name of the file that should get included."
-	 */
-	public void setFile(String file) throws JspException {
-		this.includeFileName = (String) evaluate("file", file, String.class);
-	}
-		
-	public int doEndTag(Writer out) throws Exception {
-		return EVAL_PAGE;
-	}
-	
-	protected abstract void writeContent(Writer out, String key) throws Exception;
+  protected String includeFileName;
+
+
+  public int doEndTag(Writer out) throws Exception {
+    return EVAL_PAGE;
+  }
+
+  /**
+   * The sub classes should implement this method for including a resource with given key.
+   * 
+   * @param out The writer for rendered output.
+   * @param key The key for resource lookup.
+   * @throws Exception Any exception that may occur.
+   */
+  protected abstract void writeContent(Writer out, String key) throws Exception;
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "The name of the group of files that should get included."
+   */
+  public void setGroup(String group) {
+    this.includeGroupName = evaluate("group", group, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "The name of the file that should get included."
+   */
+  public void setFile(String file) {
+    this.includeFileName = evaluate("file", file, String.class);
+  }
 }

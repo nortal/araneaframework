@@ -32,42 +32,33 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * Stores system form fields that will be written out in &lt;ui:systemForm&gt;
- * tag. This implementation adds <code>topServiceId</code> and
- * <code>threadServiceId</code> automatically, since
- * <code>SystemFormContext</code> is usually located below them in the
- * hierarchy.
+ * Stores system form fields that will be written out in &lt;ui:systemForm&gt; tag. This implementation adds
+ * <code>topServiceId</code> and <code>threadServiceId</code> automatically, since <code>SystemFormContext</code> is
+ * usually located below them in the hierarchy.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */
-public class StandardSystemFormFilterService extends BaseFilterService
-  implements SystemFormContext {
+public class StandardSystemFormFilterService extends BaseFilterService implements SystemFormContext {
 
-  private static final long serialVersionUID = 1L;
-
-  private Map fields = new HashMap();
+  private Map<String, String> fields = new HashMap<String, String>();
 
   protected Environment getChildEnvironment() {
-    return new StandardEnvironment(super.getChildEnvironment(),
-        SystemFormContext.class, this);
+    return new StandardEnvironment(super.getChildEnvironment(), SystemFormContext.class, this);
   }
 
   /**
-   * Registers the <code>topServiceId</code> and <code>threadServiceId</code>
-   * fields from the <code>Envrionment</code>.
+   * Registers the <code>topServiceId</code> and <code>threadServiceId</code> fields from the <code>Envrionment</code>.
    */
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
-    fields.clear();
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    this.fields.clear();
     Object topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
 
     if (topServiceId != null) {
       addField(TopServiceContext.TOP_SERVICE_KEY, topServiceId.toString());
     }
 
-    Object threadServiceId =
-      EnvironmentUtil.getThreadServiceId(getEnvironment());
+    Object threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
 
     if (threadServiceId != null) {
       addField(ThreadContext.THREAD_SERVICE_KEY, threadServiceId.toString());
@@ -79,10 +70,10 @@ public class StandardSystemFormFilterService extends BaseFilterService
   public void addField(String key, String value) {
     Assert.notEmptyParam(key, "key");
     Assert.notNullParam(value, "value");
-    fields.put(key, value);
+    this.fields.put(key, value);
   }
 
-  public Map getFields() {
+  public Map<String, String> getFields() {
     return Collections.unmodifiableMap(fields);
   }
 }

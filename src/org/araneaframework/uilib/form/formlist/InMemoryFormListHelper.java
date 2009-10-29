@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
  * Helper that facilitates holding the editable list rows in memory without saving them to database. Useful when the
  * editable list should be persisted only in the very end of user session.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class InMemoryFormListHelper<K, R> implements Serializable {
 

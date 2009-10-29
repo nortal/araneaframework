@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.data.StringData;
 
 /**
  * A simple demo showing how to use AutoCompleteControl.
- *  
+ * 
  * @author Steven Jentson (steven@webmedia.ee)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -47,11 +47,13 @@ public class DemoAutoCompletionWidget extends TemplateBaseWidget {
     this.form = new FormWidget();
     AutoCompleteTextControl actc = new AutoCompleteTextControl();
     actc.setDataProvider(new DemoACDataProvider(new LocalizationContextProvider() {
+
       public LocalizationContext getL10nCtx() {
         return DemoAutoCompletionWidget.this.getL10nCtx();
       }
     }));
     actc.addOnChangeEventListener(new OnChangeEventListener() {
+
       public void onChange() throws Exception {
         form.convertAndValidate();
         getMessageCtx().showInfoMessage(t("release.ac.onchangetext") + " " + form.getValueByFullName("acinput"));

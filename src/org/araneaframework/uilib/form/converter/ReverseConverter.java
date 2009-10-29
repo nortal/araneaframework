@@ -22,7 +22,7 @@ import org.araneaframework.uilib.form.FormElementContext;
 /**
  * Reverses the conversion of a contained converter.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class ReverseConverter<C, D> extends BaseConverter<C, D> {

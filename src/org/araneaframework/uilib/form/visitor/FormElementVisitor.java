@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
 import org.araneaframework.uilib.util.NameUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class FormElementVisitor implements Serializable {
 
@@ -50,7 +50,7 @@ public abstract class FormElementVisitor implements Serializable {
   /**
    * Represents a context element paired with its id.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   private static class IdElementPair implements Serializable {
 

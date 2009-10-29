@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure.filter.advanced;
 
@@ -25,8 +25,6 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 
 public abstract class BaseRangeInRangeFilter extends BaseFilter {
-	
-	private static final long serialVersionUID = 1L;
 	
 	// Fields
 	private String lowFieldId;
@@ -72,7 +70,7 @@ public abstract class BaseRangeInRangeFilter extends BaseFilter {
 	
 	// Building expressions
 	
-	protected boolean isActive(Map filterInfo) {
+	protected boolean isActive(Map<String, Object> filterInfo) {
 		return filterInfo.containsKey(getLowValueId()) || 
 			filterInfo.containsKey(getHighValueId());
 	}
@@ -85,7 +83,7 @@ public abstract class BaseRangeInRangeFilter extends BaseFilter {
 		return ExpressionUtil.var(getHighFieldId());
 	}
 	
-	protected ValueExpression buildLowValueExpression(Map filterInfo) {
+	protected ValueExpression<Object> buildLowValueExpression(Map<String, Object> filterInfo) {
 		Object value = filterInfo.get(getLowValueId());
 		if (value == null) {
 			return null;
@@ -94,7 +92,7 @@ public abstract class BaseRangeInRangeFilter extends BaseFilter {
 		return ExpressionUtil.value(getLowValueId(), value);
 	}
 	
-	protected ValueExpression buildHighValueExpression(Map filterInfo) {
+	protected ValueExpression<Object> buildHighValueExpression(Map<String, Object> filterInfo) {
 		Object value = filterInfo.get(getHighValueId());
 		if (value == null) {
 			return null;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,28 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.example.main.web.demo;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.event.ProxyOnClickEventListener;
-import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * Sample widget for using the rich textarea tag. The widget shows an area with
- * richtext controls. When users submits the area's contents it is displayed in
- * a preview div.
+ * Sample widget for using the rich textarea tag. The widget shows an area with rich-text controls. When users submits
+ * the area's contents it is displayed in a preview div.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class DemoRichTextForm extends TemplateBaseWidget {
-
-  private static final long serialVersionUID = 1L;
 
   private FormWidget form;
 
@@ -44,18 +40,13 @@ public class DemoRichTextForm extends TemplateBaseWidget {
 
     this.form = new FormWidget();
     this.areaContents = new StringData();
-    this.areaContents.setValue(defaultContents);
+    this.areaContents.setValue(DemoRichTextForm.DEFAULT_CONTENT);
 
     // Now we add the rich text area the same way as a plain text area:
-    FormElement el = form.createElement("#Element", new TextareaControl(),
-        areaContents, false);
-    this.form.addElement("richArea", el);
+    this.form.addElement("richArea", "#Element", new TextareaControl(), areaContents);
 
     // Let's also add a button with a listener attached to it:
-    ButtonControl button = new ButtonControl();
-    button.addOnClickEventListener(new ProxyOnClickEventListener(this,
-        "testForm"));
-    this.form.addElement("button", "#Preview", button, null, false);
+    this.form.addElement("button", "#Preview", new ButtonControl(new ProxyOnClickEventListener(this, "testForm")));
 
     if (isRunningInOverlay()) {
       getOverlayCtx().getOverlayOptions().put("height", "600");
@@ -75,7 +66,7 @@ public class DemoRichTextForm extends TemplateBaseWidget {
     putViewData("preview", this.areaContents.getValue());
   }
 
-  private static final String defaultContents = "<div class='post' id='post-12'>"
+  private static final String DEFAULT_CONTENT = "<div class='post' id='post-12'>"
       + "<h2><a href='http://blog.araneaframework.org/2006/05/16/aranea-web-framework-10-m3-released/' rel='bookmark' title='Permanent Link to Aranea Web Framework 1.0 M3 Released'>Aranea Web Framework 1.0 M3 Released</a></h2>"
       + "<small>May 16th, 2006 <!-- by ekabanov --></small>"
       + "<div class='entry'>"

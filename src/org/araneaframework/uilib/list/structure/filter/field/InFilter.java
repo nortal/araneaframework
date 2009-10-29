@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.list.structure.filter.field;
 
@@ -42,17 +42,14 @@ import org.araneaframework.uilib.util.Event;
  */
 public class InFilter extends BaseFieldFilter {
 
-  private static final long serialVersionUID = 1L;
-
-  protected Comparator comparator;
+  protected Comparator<?> comparator;
 
   /**
    * @param fieldId database column name
    * @param valueId FormElement id
    * @return a new instance of <code>InFilter</code>.
    */
-  public static InFilter getInstance(final FilterContext ctx,
-      final String fieldId, String valueId) {
+  public static InFilter getInstance(final FilterContext ctx, final String fieldId, String valueId) {
     InFilter filter = new InFilter();
     filter.setFieldId(fieldId);
     filter.setValueId(valueId);
@@ -64,13 +61,12 @@ public class InFilter extends BaseFieldFilter {
     FilterFormUtil.createElement(ctx, id);
   }
 
-  public static void addToForm(FilterContext ctx, String id, FormElement element) {
+  public static void addToForm(FilterContext ctx, String id, FormElement<?, ?> element) {
     NestedFormUtil.addElement(ctx.getForm(), id, element);
   }
 
-  public static void addToForm(FilterContext ctx, String id, Control control, Data data) {
-    FormElement result = FormUtil.createElement(
-        FilterFormUtil.TEMPORARY_LABEL, control, data, false);
+  public static void addToForm(FilterContext ctx, String id, Control<?> control, Data<?> data) {
+    FormElement<?, ?> result = FormUtil.createElement(FilterFormUtil.TEMPORARY_LABEL, control, data, false);
 
     FilterFormUtil.setLabel(ctx, result, id);
     addToForm(ctx, id, result);
@@ -79,24 +75,25 @@ public class InFilter extends BaseFieldFilter {
   // private
   private InFilter() {}
 
-  public Comparator getComparator() {
-    return comparator;
+  public Comparator<?> getComparator() {
+    return this.comparator;
   }
 
-  public void setComparator(Comparator comparator) {
+  public void setComparator(Comparator<?> comparator) {
     Assert.isInstanceOfParam(this, Serializable.class, comparator, "comparator");
     this.comparator = comparator;
   }
 
-  public Expression buildExpression(Map filterInfo) {
-    List valueIds = (List) filterInfo.get(getValueId());
+  @SuppressWarnings("unchecked")
+  public Expression buildExpression(Map<String, Object> filterInfo) {
+    List<String> valueIds = (List<String>) filterInfo.get(getValueId());
 
     if (!isActive(filterInfo) || valueIds.isEmpty()) {
       return null;
     }
 
-    Iterator valueIdIterator = valueIds.iterator();
-    List values = new LinkedList();
+    Iterator<String> valueIdIterator = valueIds.iterator();
+    List<Object> values = new LinkedList<Object>();
 
     for (int i = 0; valueIdIterator.hasNext(); i++) {
       values.add(ExpressionUtil.value(getValueId() + i, valueIdIterator.next()));
@@ -108,8 +105,6 @@ public class InFilter extends BaseFieldFilter {
 
   protected class OnInitEvent implements Event {
 
-    private static final long serialVersionUID = 1L;
-
     protected FilterContext ctx;
 
     protected String fieldId;
@@ -120,7 +115,7 @@ public class InFilter extends BaseFieldFilter {
     }
 
     public void run() {
-      setComparator(ctx.getFieldComparator(fieldId));
+      setComparator(this.ctx.getFieldComparator(this.fieldId));
     }
 
   }

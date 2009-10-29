@@ -21,7 +21,7 @@ import org.araneaframework.uilib.form.Converter;
 /**
  * Does not change the data.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class IdenticalConverter<T> extends BaseConverter<T, T> {
 

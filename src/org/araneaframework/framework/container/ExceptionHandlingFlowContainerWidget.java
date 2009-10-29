@@ -55,12 +55,12 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * <code>init()</code> method, also include the <code>super.init();</code>
  * line to that method.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ExceptionHandlingFlowContainerWidget
   extends StandardFlowContainerWidget {
 
-  private static final Log log = LogFactory
+  private static final Log LOG = LogFactory
       .getLog(ExceptionHandlingFlowContainerWidget.class);
 
   /**
@@ -138,9 +138,9 @@ public abstract class ExceptionHandlingFlowContainerWidget
   protected void handleWidgetException(Exception e) throws Exception {
     this.exception = e;
     if (ExceptionUtils.getRootCause(e) != null) {
-      log.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
+      LOG.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
     } else {
-      log.error("Critical exception occured: ", e);
+      LOG.error("Critical exception occured: ", e);
     }
     UpdateRegionContext updateRegionContext = EnvironmentUtil
         .getUpdateRegionContext(getEnvironment());
@@ -202,7 +202,7 @@ public abstract class ExceptionHandlingFlowContainerWidget
       super.render(output);
     } catch (Exception e) {
       arUtil.rollback();
-      log.error("Handling error:", e);
+      LOG.error("Handling error:", e);
       renderExceptionHandler(output, e);
       this.exception = null;
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http;
+
+import org.araneaframework.framework.LocalizationContext;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -29,6 +31,7 @@ public interface UpdateRegionProvider extends Serializable {
 
   /**
    * Will be called only when updateregion filter is activated on AJAX requests.
+   * @param locCtx TODO
    * 
    * @return map containing regions that will be passed to client-side. Map must
    *         have region names as <code>String</code> keys and region contents
@@ -38,6 +41,6 @@ public interface UpdateRegionProvider extends Serializable {
    *         <code>null</code> value, then that region is not included in
    *         response.
    */
-  Map<String, String> getRegions();
+  Map<String, String> getRegions(LocalizationContext locCtx);
 
 }

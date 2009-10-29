@@ -29,8 +29,6 @@ import org.araneaframework.OutputData;
  */
 public abstract class StandardActionListener implements ActionListener {
 
-  private static final long serialVersionUID = 1L;
-
   /**
    * This method is marked final. Subclasses should implement
    * {@link #processAction(Object, String, InputData, OutputData)}.

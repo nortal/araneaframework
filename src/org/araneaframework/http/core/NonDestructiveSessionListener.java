@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.core;
 
@@ -28,9 +28,9 @@ import javax.servlet.http.HttpSessionEvent;
 public class NonDestructiveSessionListener extends StandardSessionListener {
 
   public void sessionDestroyed(HttpSessionEvent sessEvent) {
-    if (containsSessionService(sessEvent) && log.isDebugEnabled()) {
-      log.debug("Not destroying the Aranea components in the session session.");
-      log.debug("Session " + sessEvent.getSession().getId() + " destroyed");
+    if (containsSessionService(sessEvent) && LOG.isDebugEnabled()) {
+      LOG.debug("Not destroying the Aranea components in the session session.");
+      LOG.debug("Session " + sessEvent.getSession().getId() + " destroyed");
     }
   }
 

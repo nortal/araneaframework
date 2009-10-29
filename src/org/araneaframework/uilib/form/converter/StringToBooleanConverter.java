@@ -21,7 +21,7 @@ import org.araneaframework.uilib.form.Converter;
 /**
  * Converts <code>String</code> to <code>Boolean</code> and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class StringToBooleanConverter extends BaseConverter<String, Boolean> {

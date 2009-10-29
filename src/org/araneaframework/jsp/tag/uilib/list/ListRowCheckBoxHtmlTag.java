@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.list;
 
@@ -24,12 +24,12 @@ import org.araneaframework.uilib.list.ListWidget;
 
 /**
  * @jsp.tag
- *   name = "listRowCheckBox"
- *   body-content = "empty"
- *   display-name = "listRowCheckBox"
- *   description = "Represents a list row check box. If you want, you can bind its state to the list row model object Boolean field value."
+ *  name = "listRowCheckBox"
+ *  body-content = "empty"
+ *  display-name = "listRowCheckBox"
+ *  description = "Represents a list row check box. If you want, you can bind its state to the list row model object Boolean field value."
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1.3
  */
 public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
@@ -63,7 +63,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
     JspUtil.writeAttribute(out, "name", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "value", value != null ? value : LIST_CHECK_VALUE);
+    JspUtil.writeAttribute(out, "value", this.value != null ? this.value : LIST_CHECK_VALUE);
 
     JspUtil.writeAttribute(out, "tabindex", tabindex);
     JspUtil.writeAttribute(out, "accessKey", accesskey);
@@ -74,7 +74,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
       JspUtil.writeAttribute(out, "checked", "checked");
     }
 
-    if (disabled) {
+    if (this.disabled) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
@@ -84,8 +84,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
       JspUtil.writeOpenStartTag(out, "label");
       JspUtil.writeAttribute(out, "for", id);
       JspUtil.writeCloseStartTag_SS(out);
-      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext,
-          this.labelId));
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, this.labelId));
       JspUtil.writeStartEndTag(out, "label");
     }
 
@@ -93,14 +92,12 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   }
 
   /**
-   * Creates the onclick event script, including the onclick script that the
-   * user specifies through attribute value.
+   * Creates the onclick event script, including the onclick script that the user specifies through attribute value.
    * 
    * @return The entire script for check box onclick event.
    */
   protected String getOnclickScript() {
-    String tmp = this.onClickEventId == null ? this.onclick
-        : this.eventPrecondition;
+    String tmp = this.onClickEventId == null ? this.onclick : this.eventPrecondition;
 
     StringBuffer result = new StringBuffer();
     if (tmp != null) {
@@ -118,13 +115,11 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   }
 
   /**
-   * Creates the check box ID. Note that it is very important how the ID looks
-   * like. It means that the ID of the row check box must begin with the ID
-   * value of the select-all check box to make the JavaScript methods work.
+   * Creates the check box ID. Note that it is very important how the ID looks like. It means that the ID of the row
+   * check box must begin with the ID value of the select-all check box to make the JavaScript methods work.
    * 
    * @return The ID that will be used for the generated check box.
-   * @throws JspException This method requires listId and rowRequestId entries
-   *             from the context.
+   * @throws JspException This method requires listId and rowRequestId entries from the context.
    */
   protected String getCheckBoxId() throws JspException {
     String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
@@ -133,19 +128,18 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   }
 
   /**
-   * This method decides whether the check box should be checked or not. If the
-   * attribute <code>checked</code> is <code>true</code> then it will always
-   * render it checked. Otherwise, it also looks from <code>viewData</code>
+   * This method decides whether the check box should be checked or not. If the attribute <code>checked</code> is
+   * <code>true</code> then it will always render it checked. Otherwise, it also looks from <code>viewData</code>
    * whether the row has been checked (by the user) before.
    * 
-   * @return A Boolean indicating whether the check box should be rendered
-   *         checked.
-   * @throws JspException This method expects to have access to
-   *             <code>ROW_KEY</code> and list view model in the JSP context.
+   * @return A Boolean indicating whether the check box should be rendered checked.
+   * @throws JspException This method expects to have access to <code>ROW_KEY</code> and list view model in the JSP
+   *           context.
    */
+  @SuppressWarnings("unchecked")
   protected boolean isChecked() throws JspException {
     Object row = requireContextEntry(BaseListRowsTag.ROW_KEY);
-    ListWidget.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    ListWidget<?>.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     List<?> checkedRows = (List<?>) viewModel.getData().get(SELECTION_SCOPE);
 
     boolean prevChecked = checkedRows != null && checkedRows.contains(row);
@@ -155,9 +149,9 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Allows a custom value for this check box (when it is submitted). Default value is <code>selected</code>."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Allows a custom value for this check box (when it is submitted). Default value is  <code>selected</code>."
    */
   public void setValue(String value) throws JspException {
     this.value = evaluateNotNull("value", value, String.class);

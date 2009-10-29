@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework;
 
@@ -22,69 +22,71 @@ import java.util.Set;
 import org.araneaframework.http.UpdateRegionProvider;
 
 /**
- * A context for adding messages to a central pool of messages for later 
- * output with a consistent look. 
- * <p>A good example is {@link org.araneaframework.framework.filter.StandardMessagingFilterWidget}.
- * It registers a MessageContext in the environment and if a childservice needs to output a
- * message which should have a consistent look (location on the screen, styles etc.) it adds
- * the message via <code>showMessage(String,String)</code>.
+ * A context for adding messages to a central pool of messages for later output with a consistent look.
+ * <p>
+ * A good example is {@link org.araneaframework.framework.filter.StandardMessagingFilterWidget}. It registers a
+ * MessageContext in the environment and if a childservice needs to output a message which should have a consistent look
+ * (location on the screen, styles etc.) it adds the message via <code>showMessage(String,String)</code>.
  * </p>
  * <p>
- * A widget can use the MessageContext from the environment to output the accumulated
- * messages.
+ * A widget can use the MessageContext from the environment to output the accumulated messages.
  * </p>
  * <p>
- * Permanent messages should stay in MessageContext until explicitly cleared, other messages should
- * be cleared after the user has seen them once.
+ * Permanent messages should stay in MessageContext until explicitly cleared, other messages should be cleared after the
+ * user has seen them once.
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface MessageContext extends UpdateRegionProvider {
 
-  /** @since 1.1 */
+  /**
+   * @since 1.1
+   */
   public static final String MESSAGE_REGION_KEY = "messages";
 
   /**
-   * A message type indicating its an error message. 
+   * A message type indicating its an error message.
    */
   public static final String ERROR_TYPE = "error";
-  
+
   /**
    * A message type indicating its an info message.
    */
-  public static final String WARNING_TYPE = "warning";   
-  
+  public static final String WARNING_TYPE = "warning";
+
   /**
    * A message type indicating its an info message.
    */
   public static final String INFO_TYPE = "info";
 
   /**
-   * Shows a message <code>message</code> of type <code>type</code> to the user. 
-   * Message is cleared after the user sees it once.
+   * Shows a message <code>message</code> of type <code>type</code> to the user. Message is cleared after the user sees
+   * it once.
    */
   public void showMessage(String type, String message, Object... params);
-  
+
   /**
-   * Shows <code>messages</code> of given <code>type</code> to the user. 
-   * Messages are cleared after the user sees them once.
+   * Shows <code>messages</code> of given <code>type</code> to the user. Messages are cleared after the user sees them
+   * once.
    * 
    * @param messages Set&lt;String&gt;
    * @since 1.1
    */
   public void showMessages(String type, Set<String> messages);
-  
+
   /**
-   * Removes a message <code>message</code> of type <code>type</code>. 
+   * Removes a message <code>message</code> of type <code>type</code>.
+   * 
    * @since 1.1
    */
   public void hideMessage(String type, String message);
-  
+
   /**
-   * Removes messages <code>message</code> of type <code>type</code>. 
+   * Removes messages <code>message</code> of type <code>type</code>.
+   * 
    * @param messages Set&lt;String&gt;
    * 
    * @since 1.1
@@ -95,13 +97,14 @@ public interface MessageContext extends UpdateRegionProvider {
    * Shows an error message to the user.
    */
   public void showErrorMessage(String message, Object... params);
-  
+
   /**
    * Hides an error message from user.
+   * 
    * @since 1.1
    */
   public void hideErrorMessage(String message);
-  
+
   /**
    * Shows a warning message to the user.
    */
@@ -109,6 +112,7 @@ public interface MessageContext extends UpdateRegionProvider {
 
   /**
    * Hides a warning message from user.
+   * 
    * @since 1.1
    */
   public void hideWarningMessage(String message);
@@ -117,65 +121,74 @@ public interface MessageContext extends UpdateRegionProvider {
    * Shows an informative message to the user.
    */
   public void showInfoMessage(String message, Object... params);
-  
+
   /**
    * Hides an info message from user.
+   * 
    * @since 1.1
    */
   public void hideInfoMessage(String message);
-  
+
   /**
    * Clears all non-permanent messages.
    */
   public void clearMessages();
 
   /**
-   * Shows a permanent message <code>message</code> of type <code>type</code> to the user. 
-   * The message will be shown until hidden explicitly. 
+   * Shows a permanent message <code>message</code> of type <code>type</code> to the user. The message will be shown
+   * until hidden explicitly.
    */
   public void showPermanentMessage(String type, String message, Object... params);
-  
+
   /**
    * Clears the specific permanent message, under all message types where it might be present.
+   * 
    * @param message to be removed from permanent messages
    */
   public void hidePermanentMessage(String message);
-  
+
   /**
    * Clears all of the permanent messages.
    */
   public void clearPermanentMessages();
-  
+
   /**
    * Clears all messages (both permanent and usual).
-   */  
+   */
   public void clearAllMessages();
-  
+
   /**
-   * Returns all messages as a Map. The keys
-   * of the Map are the different message types encountered so far and under the keys
-   * are the messages in a Collection.
+   * Returns all messages as a Map. The keys of the Map are the different message types encountered so far and under the
+   * keys are the messages in a Collection.
    * <p>
    * A child service should do as follows to access the messages
-   * <pre>
-   * <code>
-   * ...
+   * <pre><code>...
    * MessageContext msgCtx = (MessageContext) getEnvironment().requireEntry(MessageContext.class);
    * Map map = msgCtx.getMessages();
    * Collection list = (Collection) map.get(MessageContext.ERROR_TYPE); // collection contains all the error messages
    * </code>
    * </pre>
-   * The map could be null if this service was not used. The collection is null if no messages of
-   * that type been added to the messages. 
-   * </p>
+   * <p>
+   * The map could be null if this service was not used. The collection is null if no messages of that type been added
+   * to the messages.
    * 
+   * @return A map of message types and their corresponding values.
    * @since 1.1
    */
-  public Map<String, Collection<String>> getMessages();
+  public Map<String, Collection<MessageData>> getMessages();
+
+  /**
+   * Returns all messages after resolving their values. Otherwise similar to {@link #getMessages()}.
+   * 
+   * @param locCtx The localization context that is used for resolving.
+   * @return A map of message types and their corresponding values.
+   * @since 2.0
+   */
+  public Map<String, Collection<String>> getResolvedMessages(LocalizationContext locCtx);
 
   public interface MessageData {
 
-    String getResolvedMessage();
+    String getResolvedMessage(LocalizationContext locCtx);
 
     String getMessage();
 

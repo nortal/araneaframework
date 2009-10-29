@@ -27,11 +27,11 @@ import org.apache.commons.logging.LogFactory;
  * the database. NB! Every and one class and/or method that utilizes database
  * connection, statement and/or result set should use this class.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DbUtil {
 
-  private static final Log log = LogFactory.getLog(DbUtil.class);
+  private static final Log LOG = LogFactory.getLog(DbUtil.class);
 
   private DbUtil() {
   // static methods only - hide constructor
@@ -50,21 +50,21 @@ public class DbUtil {
       try {
         rs.close();
       } catch (Exception e) {
-        log.warn("Resultset can not be closed.", e);
+        LOG.warn("Resultset can not be closed.", e);
       }
     }
     if (stmt != null) {
       try {
         stmt.close();
       } catch (Exception e) {
-        log.warn("Statement can not be closed.", e);
+        LOG.warn("Statement can not be closed.", e);
       }
     }
     if (con != null) {
       try {
         con.close();
       } catch (Exception e) {
-        log.warn("Connection can not be closed.", e);
+        LOG.warn("Connection can not be closed.", e);
       }
     }
   }

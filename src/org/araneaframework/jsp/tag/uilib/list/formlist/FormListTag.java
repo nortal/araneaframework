@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
@@ -23,7 +23,7 @@ import org.araneaframework.jsp.tag.uilib.list.ListTag;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "formList"
@@ -36,42 +36,42 @@ import org.araneaframework.uilib.form.formlist.FormListWidget;
            </ul> "
  */
 public class FormListTag extends BaseWidgetTag {
-	protected FormListWidget.ViewModel formListViewModel;
-	
-	public final static String FORM_LIST_ID_KEY = "formListId";
-	public final static String FORM_LIST_VIEW_MODEL_KEY = "formList";	
-	/**
-	 *
-	 */
-	@Override
+
+  protected FormListWidget.ViewModel formListViewModel;
+
+  public final static String FORM_LIST_ID_KEY = "formListId";
+
+  public final static String FORM_LIST_VIEW_MODEL_KEY = "formList";
+
+  @Override
+  @SuppressWarnings("unchecked")
   public int doStartTag(Writer out) throws Exception {
-		if (id == null) {
-			String listId = (String) requireContextEntry(ListTag.LIST_ID_KEY);
-			id = listId + ".formList";
-		}
-		
-		super.doStartTag(out);
+    if (this.id == null) {
+      this.id = (String) requireContextEntry(ListTag.LIST_ID_KEY) + ".formList";
+    }
 
-		try {
-			formListViewModel = (FormListWidget.ViewModel) viewModel;
-		} catch (ClassCastException e) {
-			throw new AraneaJspException("Could not acquire form list view model. <ui:formList> should have id specified or should be in context of real FormListWidget.", e);
-		}
-		
-		// Set variables
-		addContextEntry(FORM_LIST_ID_KEY, id);
-		addContextEntry(FORM_LIST_VIEW_MODEL_KEY, formListViewModel);		
+    super.doStartTag(out);
 
-		return EVAL_BODY_INCLUDE; 
-	}
+    try {
+      this.formListViewModel = (FormListWidget.ViewModel) viewModel;
+    } catch (ClassCastException e) {
+      throw new AraneaJspException("Could not acquire form list view model. <ui:formList> should have id specified "
+          + "or should be in context of real FormListWidget.", e);
+    }
 
-	/* ***********************************************************************************
-	 * FINALLY - reset some fields to allow safe reuse from tag pool.
-	 * ***********************************************************************************/
-	@Override
+    addContextEntry(FORM_LIST_ID_KEY, this.id);
+    addContextEntry(FORM_LIST_VIEW_MODEL_KEY, this.formListViewModel);
+    return EVAL_BODY_INCLUDE;
+  }
+
+  /* ***********************************************************************************
+   * FINALLY - reset some fields to allow safe reuse from tag pool.
+   * ********************************************************************************* */
+
+  @Override
   public void doFinally() {
-		super.doFinally();
-		id = null;
-		formListViewModel = null;
-	}
+    super.doFinally();
+    this.id = null;
+    this.formListViewModel = null;
+  }
 }

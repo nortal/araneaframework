@@ -22,28 +22,34 @@ import org.araneaframework.framework.FilterService;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * Utility widget that creates a chain of given filter services. This class is mostly used in configuration when a chain
+ * of services needs to be specified so that requests/responses would go through them in the specified order. Therefore,
+ * this widget takes (upon initialization) the specified list of services, takes the last one, makes it the parent of
+ * current child widget, and updates the current child widget to the last service, and so on until all services are
+ * processed the same way. The result is a chain of services in the specified order. The list of filter services is
+ * released when the chain is completed.
+ * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardFilterChainService extends BaseFilterService {
 
-  private static final long serialVersionUID = 1L;
+  private List<FilterService> filterChain;
 
-  private List filterChain;
-
-  public void setFilterChain(List filterChain) {
+  public void setFilterChain(List<FilterService> filterChain) {
     this.filterChain = filterChain;
   }
 
   protected void init() throws Exception {
-    if (filterChain != null) {
-      ListIterator i = filterChain.listIterator(filterChain.size());
-      for (; i.hasPrevious();) {
-        FilterService filter = (FilterService) i.previous();
-        filter.setChildService(childService);
-        childService = filter;
+    if (this.filterChain != null) {
+      // We move from the back of the list backwards:
+      ListIterator<FilterService> i = this.filterChain.listIterator(this.filterChain.size());
+      while (i.hasPrevious()) {
+        FilterService filter = i.previous();
+        filter.setChildService(this.childService);
+        this.childService = filter;
       }
     }
-    filterChain = null;
+    this.filterChain = null;
     super.init();
   }
 }

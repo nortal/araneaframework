@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.constraints;
 
@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.constraint.AndConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
 import org.araneaframework.uilib.form.constraint.NumberInRangeConstraint;
 import org.araneaframework.uilib.form.constraint.OrConstraint;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.StringData;
@@ -47,7 +47,7 @@ public class CompositeConstraintTest extends TestCase {
     form = new FormWidget();
     textInput1 = form.createElement("#text1", new TextControl(), new StringData(), false);
     textInput2 = form.createElement("#text2", new TextControl(), new StringData(), false);
-    numberInput = form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
+    numberInput = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
     form.addElement("text1", textInput1);
     form.addElement("text2", textInput2);
     form.addElement("number", numberInput);

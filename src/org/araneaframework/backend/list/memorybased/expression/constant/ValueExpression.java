@@ -20,20 +20,18 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
-public class ValueExpression implements Expression, Value {
-
-  private static final long serialVersionUID = 1L;
+public class ValueExpression<T> implements Expression, Value<T> {
 
   private String name;
 
-  private Object value;
+  private T value;
 
-  public ValueExpression(String name, Object value) {
+  public ValueExpression(String name, T value) {
     this.name = name;
     this.value = value;
   }
 
-  public ValueExpression(Object value) {
+  public ValueExpression(T value) {
     this(null, value);
   }
 
@@ -41,11 +39,11 @@ public class ValueExpression implements Expression, Value {
     return this.name;
   }
 
-  public Object getValue() {
+  public T getValue() {
     return this.value;
   }
 
-  public Object evaluate(VariableResolver resolver) {
+  public T evaluate(VariableResolver resolver) {
     return this.value;
   }
 }

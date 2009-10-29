@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.demo;
 
@@ -26,9 +26,9 @@ import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.form.control.BaseControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
-import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.DateData;
@@ -48,20 +48,18 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
     setViewSelector("demo/demoOnChangeListeners");
 
     this.simpleForm = new FormWidget();
-    this.simpleForm.addElement("dateTime1", "common.datetime", buildControl(DateTimeControl.class), new DateData(),
-        false);
-    this.simpleForm.addElement("time1", "common.time", buildControl(TimeControl.class), new DateData(), false);
-    this.simpleForm.addElement("date1", "common.date", buildControl(DateControl.class), new DateData(), false);
-    this.simpleForm.addElement("dateTime2", "common.datetime", buildControl(DateTimeControl.class), new DateData(),
-        false);
-    this.simpleForm.addElement("time2", "common.time", buildControl(TimeControl.class), new DateData(), false);
-    this.simpleForm.addElement("date2", "common.date", buildControl(DateControl.class), new DateData(), false);
+    this.simpleForm.addElement("dateTime1", "common.datetime", buildControl(DateTimeControl.class), new DateData());
+    this.simpleForm.addElement("time1", "common.time", buildControl(TimeControl.class), new DateData());
+    this.simpleForm.addElement("date1", "common.date", buildControl(DateControl.class), new DateData());
+    this.simpleForm.addElement("dateTime2", "common.datetime", buildControl(DateTimeControl.class), new DateData());
+    this.simpleForm.addElement("time2", "common.time", buildControl(TimeControl.class), new DateData());
+    this.simpleForm.addElement("date2", "common.date", buildControl(DateControl.class), new DateData());
     this.simpleForm.addElement("suggestBox", "demo.suggestive.textinput", buildControl(AutoCompleteTextControl.class),
-        new StringData(), false);
-    this.simpleForm.addElement("float1", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
-    this.simpleForm.addElement("float2", "common.float", buildControl(FloatControl.class), new BigDecimalData(), false);
+        new StringData());
+    this.simpleForm.addElement("float1", "common.float", buildControl(BigDecimalControl.class), new BigDecimalData());
+    this.simpleForm.addElement("float2", "common.float", buildControl(BigDecimalControl.class), new BigDecimalData());
 
-    AutoCompleteTextControl control = (AutoCompleteTextControl) simpleForm.getControlByFullName("suggestBox");
+    AutoCompleteTextControl control = (AutoCompleteTextControl) this.simpleForm.getControlByFullName("suggestBox");
     control.setDataProvider(new DemoAutoCompletionWidget.DemoACDataProvider(
         new DemoAutoCompletionWidget.LocalizationContextProvider() {
 
@@ -74,8 +72,8 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
   }
 
   @SuppressWarnings("unchecked")
-  private Control<?> buildControl(Class<?> clazz) throws Exception {
-    Control<?> c = (Control<?>) clazz.newInstance();
+  private <T> Control<T> buildControl(Class<T> clazz) throws Exception {
+    Control<T> c = (Control<T>) clazz.newInstance();
     MethodUtils.invokeExactMethod(c, "addOnChangeEventListener", new DemoChangeEventListener(c));
     return c;
   }

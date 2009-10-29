@@ -21,45 +21,47 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.set.ListOrderedSet;
+import org.apache.commons.lang.ObjectUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.JsonArray;
 import org.araneaframework.http.util.JsonObject;
 
 /**
- * Adds a {@link org.araneaframework.framework.MessageContext} implementation to
- * the environment that can be used to add messages for later output.
+ * Adds a {@link org.araneaframework.framework.MessageContext} implementation to the environment that can be used to add
+ * messages for later output.
  * <p>
  * An example how to add messages to the context follows:
  * 
  * <pre>
- * <code>
+ * &lt;code&gt;
  * ...
- * MessageContext messageContext = (MessageContext)getEnvironment().get(CallContext.class);
+ * MessageContext messageContext = getEnvironment().get(MessageContext.class);
  * messageContext.addMessage(MessageContext.INFO_TYPE, &quot;Hello message!&quot;);
- * </code>
+ * &lt;/code&gt;
  * </pre>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class StandardMessagingFilterWidget extends BaseFilterWidget
-  implements MessageContext {
+public class StandardMessagingFilterWidget extends BaseFilterWidget implements MessageContext {
 
-  private static final long serialVersionUID = 1L;
+  protected Map<String, Collection<MessageData>> permanentMessages;
 
-  protected Map permanentMessages;
-
-  protected Map messages;
+  protected Map<String, Collection<MessageData>> messages;
 
   protected void update(InputData input) throws Exception {
     clearMessages();
@@ -70,53 +72,172 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }
 
+  public void showMessage(String type, final String message, final Object... params) {
+    this.messages = storeMessage(type, message, this.messages, params);
+  }
+
+  public void hideMessage(String type, String message) {
+    Assert.notEmptyParam(type, "type");
+    removeMessage(type, message, this.messages);
+  }
+
+  public void showMessages(String type, Set<String> messages) {
+    Assert.notNullParam(messages, "messages");
+    for (String message : messages) {
+      showMessage(type, message);
+    }
+  }
+
+  public void hideMessages(String type, Set<String> messages) {
+    Assert.notNullParam(messages, "messages");
+    for (String message : messages) {
+      hideMessage(type, message);
+    }
+  }
+
+  public void showPermanentMessage(String type, String message, Object... params) {
+    this.permanentMessages = storeMessage(type, message, this.permanentMessages, params);
+  }
+
+  public void hidePermanentMessage(String message) {
+    this.permanentMessages = removeMessage(null, message, this.permanentMessages);
+  }
+
+  public void showErrorMessage(String message, Object... params) {
+    showMessage(ERROR_TYPE, message, params);
+  }
+
+  public void hideErrorMessage(String message) {
+    hideMessage(ERROR_TYPE, message);
+  }
+
+  public void showInfoMessage(String message, Object... params) {
+    showMessage(INFO_TYPE, message, params);
+  }
+
+  public void hideInfoMessage(String message) {
+    hideMessage(INFO_TYPE, message);
+  }
+
+  public void showWarningMessage(String message, Object... params) {
+    showMessage(WARNING_TYPE, message, params);
+  }
+
+  public void hideWarningMessage(String message) {
+    hideMessage(WARNING_TYPE, message);
+  }
+
+  public void clearMessages() {
+    if (this.messages != null) {
+      this.messages.clear();
+    }
+  }
+
+  public void clearPermanentMessages() {
+    if (this.permanentMessages != null) {
+      this.permanentMessages.clear();
+    }
+  }
+
+  public void clearAllMessages() {
+    clearMessages();
+    clearPermanentMessages();
+  }
+
+  public Map<String, Collection<MessageData>> getMessages() {
+    // add permanent messages to-one time messages for rendering all messages together
+    this.messages = addPermanentMessages(this.messages);
+    return Collections.unmodifiableMap(this.messages);
+  }
+
+  public Map<String, Collection<String>> getResolvedMessages(LocalizationContext locCtx) {
+    Map<String, Collection<String>> result = new HashMap<String, Collection<String>>();
+    for (Map.Entry<String, Collection<MessageData>> msgs : getMessages().entrySet()) {
+      if (CollectionUtils.isNotEmpty(msgs.getValue())) {
+        List<String> results = new LinkedList<String>();
+        result.put(msgs.getKey(), results);
+        for (MessageData msg : msgs.getValue()) {
+          results.add(msg.getResolvedMessage(locCtx));
+        }
+      }
+    }
+    return result;
+  }
+
+  public Map<String, String> getRegions(LocalizationContext locCtx) {
+    JsonObject messagesByType = new JsonObject();
+    Map<String, Collection<String>> messageMap = getResolvedMessages(locCtx);
+
+    if (messageMap != null) {
+      for (Map.Entry<String, Collection<String>> entry : messageMap.entrySet()) {
+        if (entry.getValue() != null) {
+          String type = entry.getKey();
+          JsonArray messages = new JsonArray();
+          for (String message : entry.getValue()) {
+            messages.appendString(message);
+          }
+          messagesByType.setProperty(type, messages.toString());
+        }
+      }
+    }
+
+    return Collections.singletonMap(MESSAGE_REGION_KEY, messagesByType.toString());
+  }
+
   /**
-   * Stores message of given type in given messageMap (created if
-   * <code>null</code> at invocation).
+   * Stores message of given type in given messageMap (created if <code>null</code> at invocation).
+   * 
+   * @param type The type of message to store (one of the constants in {@link MessageContext}). 
+   * @param message The message to store permanently until removed.
+   * @param messageMap The messages map where the message should be stored.
+   * @param params Optional parameters to be resolved in the message.
+   * @return The same message map taken as a parameter
    */
-  protected Map storeMessage(final String type, final String message,
-      Map messageMap) {
+  @SuppressWarnings("unchecked")
+  protected Map<String, Collection<MessageData>> storeMessage(String type, String message,
+      Map<String, Collection<MessageData>> messageMap, Object... params) {
 
     Assert.notEmptyParam(type, "type");
     Assert.notEmptyParam(message, "message");
 
     if (messageMap == null) {
-      messageMap = new LinkedMap();
+      messageMap = new LinkedHashMap<String, Collection<MessageData>>();
     }
 
-    Collection messages = (Collection) messageMap.get(type);
+    Collection<MessageData> messages = messageMap.get(type);
     if (messages == null) {
-      messages = ListOrderedSet.decorate(new HashSet());
+      messages = ListOrderedSet.decorate(new HashSet<String>());
       messageMap.put(type, messages);
     }
 
-    messages.add(message);
+    messages.add(new StandardMessageData(message, params));
     return messageMap;
   }
 
   /**
-   * Removes the given <code>message</code> from given message
-   * <code>type</code> in <code>messageMap</code>. When given
-   * <code>type</code> is <code>NULL</code>, removes the given
-   * <code>message</code> from all types.
+   * Removes the given <code>message</code> from given message <code>type</code> in <code>messageMap</code>. When given
+   * <code>type</code> is <code>NULL</code>, removes the given <code>message</code> from all types.
    */
-  protected Map removeMessage(String type, final String message, Map messageMap) {
+  protected Map<String, Collection<MessageData>> removeMessage(String msgType, final String message,
+      Map<String, Collection<MessageData>> messageMap) {
     Assert.notEmptyParam(message, "message");
 
-    if (messageMap == null) {
-      return null;
-    }
-
-    for (Iterator i = messageMap.entrySet().iterator(); i.hasNext();) {
-      Map.Entry next = (Map.Entry) i.next();
-      if (type == null || next.getKey().equals(type)) {
-        Collection messages = (Collection) (next).getValue();
-        messages.remove(message);
-        if (type != null) {
-          break;
+    if (messageMap != null) {
+      for (Map.Entry<String, Collection<MessageData>> entry : messageMap.entrySet()) {
+        if (msgType == null || entry.getKey().equals(msgType)) {
+          Collection<MessageData> messages = entry.getValue();
+          for (Iterator<MessageData> i = messages.iterator(); i.hasNext();) {
+            if (ObjectUtils.equals(i.next().getMessage(), message)) {
+              i.remove();
+            }
+          }
+          if (msgType != null) {
+            break;
+          }
         }
       }
     }
+
 
     return messageMap;
   }
@@ -126,137 +247,46 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget
    * 
    * @return given message map with permanent messages added.
    */
-  protected Map addPermanentMessages(Map msgs) {
-    if (msgs == null){
-      msgs = new LinkedMap();
+  protected Map<String, Collection<MessageData>> addPermanentMessages(Map<String, Collection<MessageData>> msgs) {
+    if (msgs == null) {
+      msgs = new LinkedHashMap<String, Collection<MessageData>>();
+    }
+    if (this.permanentMessages == null) {
+      return msgs;
     }
 
-    for (Iterator i = permanentMessages.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      Collection typedMessages = (Collection) msgs.get(entry.getKey());
+    for (Map.Entry<String, Collection<MessageData>> entry : this.permanentMessages.entrySet()) {
+      Collection<MessageData> destMessages = msgs.get(entry.getKey());
 
-      if (typedMessages == null) {
+      if (destMessages == null) {
         msgs.put(entry.getKey(), entry.getValue());
       } else {
-        typedMessages.addAll((Collection) entry.getValue());
+        destMessages.addAll(entry.getValue());
       }
     }
 
     return msgs;
   }
 
-  public void showMessage(String type, final String message) {
-    messages = storeMessage(type, message, messages);
-  }
+  protected class StandardMessageData implements MessageData {
+    private String message;
+    private Object[] parameters;
 
-  public void showMessages(String type, Set messages) {
-    Assert.notNullParam(messages, "messages");
-    for (Iterator i = messages.iterator(); i.hasNext();) {
-      showMessage(type, (String) i.next());
+    protected StandardMessageData(String message, Object... parameters) {
+      this.message = message;
+      this.parameters = parameters;
     }
-  }
 
-  public void hideMessage(String type, String message) {
-    Assert.notEmptyParam(type, "type");
-    removeMessage(type, message, messages);
-  }
-
-  public void hideMessages(String type, Set messages) {
-    Assert.notNullParam(messages, "messages");
-    for (Iterator i = messages.iterator(); i.hasNext();) {
-      hideMessage(type, (String) i.next());
+    public String getMessage() {
+      return this.message;
     }
-  }
 
-  public void showPermanentMessage(String type, final String message) {
-    permanentMessages = storeMessage(type, message, permanentMessages);
-  }
-
-  public void hidePermanentMessage(String message) {
-    permanentMessages = removeMessage(null, message, permanentMessages);
-  }
-
-  public void showErrorMessage(String message) {
-    showMessage(ERROR_TYPE, message);
-  }
-
-  public void hideErrorMessage(String message) {
-    hideMessage(ERROR_TYPE, message);
-  }
-
-  public void showInfoMessage(String message) {
-    showMessage(INFO_TYPE, message);
-  }
-
-  public void hideInfoMessage(String message) {
-    hideMessage(INFO_TYPE, message);
-  }
-
-  public void showWarningMessage(String message) {
-    showMessage(WARNING_TYPE, message);
-  }
-
-  public void hideWarningMessage(String message) {
-    hideMessage(WARNING_TYPE, message);
-  }
-
-  public void clearMessages() {
-    if (messages != null)
-      messages.clear();
-  }
-
-  public void clearPermanentMessages() {
-    if (permanentMessages != null)
-      permanentMessages.clear();
-  }
-
-  public void clearAllMessages() {
-    clearMessages();
-    clearPermanentMessages();
-  }
-
-  public Map getMessages() {
-    if (permanentMessages != null) {
-      // add permanent messages to-one time messages for rendering
-      messages = addPermanentMessages(messages);
+    public Object[] getMessageParameters() {
+      return this.parameters;
     }
-    if (messages == null) {
-      return null;
+
+    public String getResolvedMessage(LocalizationContext locCtx) {
+      return locCtx.getMessage(this.message, this.parameters);
     }
-    return Collections.unmodifiableMap(messages);
-  }
-
-  /* ************************************************************************************
-   * Internal inner classes
-   * ************************************************************************************/
-
-  /**
-   * @since 1.1
-   */
-  public Map getRegions() {
-    JsonObject messagesByType = new JsonObject();
-    Map messageMap = getMessages();
-
-    if (messageMap != null) {
-      for (Iterator i = messageMap.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-
-        if (entry.getValue() == null) {
-          continue;
-        }
-
-        String type = (String) entry.getKey();
-        JsonArray messages = new JsonArray();
- 
-        for (Iterator j = ((Collection) entry.getValue()).iterator(); j.hasNext();) {
-          String message = (String) j.next();
-          messages.appendString(message);
-        }
-        messagesByType.setProperty(type, messages.toString());
-      }
-    }
-    Map regions = new HashMap(1);
-    regions.put(MessageContext.MESSAGE_REGION_KEY, messagesByType.toString());
-    return regions;
   }
 }

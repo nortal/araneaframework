@@ -35,22 +35,17 @@ import org.araneaframework.core.util.ReaderPreferenceReadWriteLock;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
- * Serializes the the session during the request routing. This filter helps to
- * be aware of serializing issues during development. If the session does not
- * serialize, exception is thrown. <br>
+ * Serializes the the session during the request routing. This filter helps to be aware of serializing issues during
+ * development. If the session does not serialize, exception is thrown. <br>
  * <br>
- * The serialized session can be output to a file by setting the xml session
- * path. The path must be valid & writable.
+ * The serialized session can be output to a file by setting the xml session path. The path must be valid & writable.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardSerializingAuditFilterService extends BaseFilterService {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(
-      StandardSerializingAuditFilterService.class);
+  private static final Log LOG = LogFactory.getLog(StandardSerializingAuditFilterService.class);
 
   private String testXmlSessionPath;
 
@@ -61,8 +56,8 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
   }
 
   /**
-   * Sets the path where to write the serialized class in xml format. The path
-   * must be valid and writeable. Example: "/home/user/tmp".
+   * Sets the path where to write the serialized class in xml format. The path must be valid and writable. Example:
+   * "/home/user/tmp".
    * 
    * @param testXmlSessionPath
    */
@@ -70,39 +65,41 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
     this.testXmlSessionPath = testXmlSessionPath;
   }
 
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
-    callRWLock.readLock().acquire();
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    this.callRWLock.readLock().acquire();
 
     try {
-      ((Relocatable) childService)._getRelocatable().overrideEnvironment(
-          getChildEnvironment());
+      getRelocatable()._getRelocatable().overrideEnvironment(getChildEnvironment());
       super.action(path, input, output);
     } finally {
-      callRWLock.readLock().release();
+      this.callRWLock.readLock().release();
     }
 
-    if (callRWLock.writeLock().attempt(0)) {
+    if (this.callRWLock.writeLock().attempt(0)) {
       try {
-        ((Relocatable) childService)._getRelocatable().overrideEnvironment(null);
+        getRelocatable()._getRelocatable().overrideEnvironment(null);
         HttpSession sess = getEnvironment().getEntry(HttpSession.class);
-        byte[] serialized = SerializationUtils.serialize(childService);
+        byte[] serialized = SerializationUtils.serialize(this.childService);
 
-        log.debug("Serialized session size: " + serialized.length);
+        LOG.debug("Serialized session size: " + serialized.length);
 
-        if (testXmlSessionPath != null) {
-          String dumpPath = testXmlSessionPath + "/" + sess.getId() + ".xml";
+        if (this.testXmlSessionPath != null) {
+          String dumpPath = this.testXmlSessionPath + "/" + sess.getId() + ".xml";
 
-          log.debug("Dumping session XML to '" + dumpPath + "'");
+          LOG.debug("Dumping session XML to '" + dumpPath + "'");
 
           XStream xstream = new XStream(new DomDriver());
           PrintWriter writer = new PrintWriter(new FileWriter(dumpPath));
-          xstream.toXML(childService, writer);
+          xstream.toXML(this.childService, writer);
           writer.close();
         }
       } finally {
-        callRWLock.writeLock().release();
+        this.callRWLock.writeLock().release();
       }
     }
+  }
+
+  protected Relocatable getRelocatable() {
+    return (Relocatable) this.childService;
   }
 }

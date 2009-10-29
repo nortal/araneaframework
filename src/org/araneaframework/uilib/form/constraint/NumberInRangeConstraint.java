@@ -24,9 +24,9 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * This constraint checks that the number value would be inside a given range.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class NumberInRangeConstraint<C, D> extends BaseFieldConstraint<C, D> {
+public class NumberInRangeConstraint extends BaseFieldConstraint {
 
   private BigInteger rangeStart;
 
@@ -43,7 +43,7 @@ public class NumberInRangeConstraint<C, D> extends BaseFieldConstraint<C, D> {
    * 
    * @param field The form element that this constraint should be bound to.
    */
-  public NumberInRangeConstraint(FormElement<C, D> field) {
+  public NumberInRangeConstraint(FormElement<?, ?> field) {
     super(field);
   }
 
@@ -75,7 +75,7 @@ public class NumberInRangeConstraint<C, D> extends BaseFieldConstraint<C, D> {
     boolean lessThan = this.rangeStart != null ? value.compareTo(this.rangeStart) == -1 : false;
     boolean greaterThan = this.rangeEnd != null ? value.compareTo(this.rangeEnd) == 1 : false;
 
-    if (lessThan || greaterThan) {
+    if (lessThan && greaterThan) {
       addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()),
           this.rangeStart.toString(), this.rangeEnd.toString()));
     } else if (lessThan) {

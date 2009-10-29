@@ -20,11 +20,26 @@ import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.support.FileInfo;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FileInfoData extends Data<FileInfo> {
 
   public FileInfoData() {
     super(FileInfo.class);
+  }
+
+  @Override
+  public boolean isStateChanged() {
+    if (this.markedBaseValue == null && isValueNull()) {
+      return false;
+    } else if (this.markedBaseValue == null || isValueNull()) {
+      return true;
+    } else {
+      return !this.markedBaseValue.equals(this.value);
+    }
+  }
+
+  private boolean isValueNull() {
+    return this.value == null || this.value.isFilePresent();
   }
 }

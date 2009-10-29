@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 
 package org.araneaframework.tests.framework.filter;
+
+import org.araneaframework.framework.MessageContext.MessageData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +45,7 @@ public abstract class BaseMessageContextTests extends TestCase {
   protected void setUp() throws Exception {
     msgCtx = getMessageContext();
 
-    // assertions do not allow filter widgets without childs :)
+    // assertions do not allow filter widgets without children :)
     ((FilterWidget)msgCtx).setChildWidget(new BaseWidget());
 
     Environment env = new StandardEnvironment(null, new HashMap<Class<?>, Object>());
@@ -52,7 +54,7 @@ public abstract class BaseMessageContextTests extends TestCase {
 
   // add nothing, test emptiness
   public void testEmpty_1() throws Exception {
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertTrue("MessageMap must be null or empty.", messages == null || messages.size() == 0);
   }
 
@@ -61,7 +63,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     msgCtx.showInfoMessage("TestMessage");
     msgCtx.clearMessages();
 
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertTrue("MessageMap must be null or empty.", messages == null || messages.size() == 0);
   }
 
@@ -71,7 +73,7 @@ public abstract class BaseMessageContextTests extends TestCase {
 
     ((Widget)msgCtx)._getWidget().update(new MockInputData());
 
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertTrue("MessageMap must be null or empty.", messages == null || messages.size() == 0);
   }
 
@@ -79,7 +81,7 @@ public abstract class BaseMessageContextTests extends TestCase {
   public void testNonEmpty_1() throws Exception {
     msgCtx.showInfoMessage("surviving message");
 
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("MessageMap must contain ONE element!", messages.size() == 1);
   }
@@ -90,7 +92,7 @@ public abstract class BaseMessageContextTests extends TestCase {
 
     ((Widget)msgCtx)._getWidget().update(new MockInputData());
 
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("MessageMap must contain ONE element!", messages.size() == 1);
   }
@@ -101,14 +103,13 @@ public abstract class BaseMessageContextTests extends TestCase {
     msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
     msgCtx.showErrorMessage("Another error message added with defined interface method.");
 
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("Messages must contain ONE elements!", messages.size() == 1);
 
-    Object errorMessages = messages.get(MessageContext.ERROR_TYPE);
-    assertTrue("Messages must be in java.util.Collection", errorMessages instanceof Collection);
-
-    assertTrue("There must be THREE error messages", ((Collection)errorMessages).size() == 3);
+    Collection<MessageData> errorMessages = messages.get(MessageContext.ERROR_TYPE);
+    assertNotNull("Error messages must not be null", errorMessages);
+    assertTrue("There must be THREE error messages", errorMessages.size() == 3);
   }
 
   // test that message hiding works
@@ -121,19 +122,15 @@ public abstract class BaseMessageContextTests extends TestCase {
     msgCtx.hideWarningMessage("warningmessage");
     msgCtx.hideErrorMessage("errormessage");
 
-    Map messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
 
-    Object infoMessages = messages.get(MessageContext.INFO_TYPE);
-    Object warningMessages = messages.get(MessageContext.WARNING_TYPE);
-    Object errorMessages = messages.get(MessageContext.ERROR_TYPE);
+    Collection<MessageData> infoMessages = messages.get(MessageContext.INFO_TYPE);
+    Collection<MessageData> warningMessages = messages.get(MessageContext.WARNING_TYPE);
+    Collection<MessageData> errorMessages = messages.get(MessageContext.ERROR_TYPE);
 
-    assertTrue("infoMessages must be in java.util.Collection", infoMessages instanceof Collection);
-    assertTrue("warningMessages must be in java.util.Collection", warningMessages instanceof Collection);
-    assertTrue("errorMessages must be in java.util.Collection", errorMessages instanceof Collection);
-
-    assertTrue("infoMessages must be empty", ((Collection)infoMessages).isEmpty());
-    assertTrue("warningMessages must be empty", ((Collection)warningMessages).isEmpty());
-    assertTrue("errorMessages must be empty", ((Collection)errorMessages).isEmpty());
+    assertTrue("infoMessages must be empty", infoMessages.isEmpty());
+    assertTrue("warningMessages must be empty", warningMessages.isEmpty());
+    assertTrue("errorMessages must be empty", errorMessages.isEmpty());
 
     // also test that only messages of given type are hidden (cleared)
     msgCtx.showInfoMessage("simplemessage");
@@ -142,7 +139,7 @@ public abstract class BaseMessageContextTests extends TestCase {
     infoMessages = messages.get(MessageContext.INFO_TYPE);
     warningMessages = messages.get(MessageContext.WARNING_TYPE);
 
-    assertTrue("Info message must be present, since only warning was hidden", !((Collection)infoMessages).isEmpty());
+    assertTrue("Info message must be present, since only warning was hidden", !infoMessages.isEmpty());
   }
 
   // test that hiding of permanent messages works
@@ -153,14 +150,12 @@ public abstract class BaseMessageContextTests extends TestCase {
 
     msgCtx.hidePermanentMessage("permanent message");
 
-    Map<String, Collection<String>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("Messages must contain ONE element!", messages.size() == 1);
 
-    Object errorMessages = messages.get(MessageContext.ERROR_TYPE);
-    assertTrue("Messages must be in java.util.Collection", errorMessages instanceof Collection);
-
-    assertTrue("There must be TWO error messages", ((Collection<String>)errorMessages).size() == 2);
+    Collection<MessageData> errorMessages = messages.get(MessageContext.ERROR_TYPE);
+    assertTrue("There must be TWO error messages", errorMessages.size() == 2);
   }
 
   /** Tests that message addition order is preserved on rendering. */
@@ -172,12 +167,12 @@ public abstract class BaseMessageContextTests extends TestCase {
         msgCtx.showErrorMessage(nextMessage);
     }
 
-    Map<String, Collection<String>> renderedMessageMap = msgCtx.getMessages();
-    Collection<String> renderedMessages = renderedMessageMap.get(MessageContext.ERROR_TYPE);
+    Map<String, Collection<MessageData>> renderedMessageMap = msgCtx.getMessages();
+    Collection<MessageData> renderedMessages = renderedMessageMap.get(MessageContext.ERROR_TYPE);
 
     int j = 0;
-    for (Iterator<String> i = renderedMessages.iterator(); i.hasNext(); j++)
-      assertEquals(messages.get(j), i.next());
+    for (Iterator<MessageData> i = renderedMessages.iterator(); i.hasNext(); j++)
+      assertEquals(messages.get(j), i.next().getMessage());
 
     assertTrue("There should have been 200 error messages", j == 200);
   }

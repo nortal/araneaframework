@@ -1,5 +1,5 @@
-/**
- * Copyright 2007 Webmedia Group Ltd.
+/*
+ * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.release.demos;
 
@@ -30,8 +30,6 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoActionPollWidget extends TemplateBaseWidget {
-
-  private static final long serialVersionUID = 1L;
 
   protected void init() throws Exception {
     setViewSelector("release/demos/demoActionPoll");
@@ -52,8 +50,8 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
       String s = "NOTHING";
 
       if (this.rn.nextInt(3) == 1) {
-        s = MessageUtil.localizeAndFormat("poll.taskmsg", new Object[] { String.valueOf(random),
-            new SimpleDateFormat("HH:mm.ss").format(new Date()) }, getEnvironment())
+        s = MessageUtil.localizeAndFormat(getEnvironment(), "poll.taskmsg", String.valueOf(random),
+            new SimpleDateFormat("HH:mm.ss").format(new Date()))
             + "<br/>";
       }
       httpOutput.setContentType("text/xml");

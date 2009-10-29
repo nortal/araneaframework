@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.popups;
 
@@ -22,23 +22,27 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoAdvancedPopupUsageWidget extends TemplateBaseWidget {
-	private PersonEditableListPopupWidget editableList;
-	private PersonEditableListPopupWidget anotherEditableList;
-	private PersonEditableListPopupWidget yetAnotherEditableList;
 
-	protected void init() throws Exception {
-		setViewSelector("demo/advancedPopups");
-		editableList = new PersonEditableListPopupWidget();
+  private PersonEditableListPopupWidget editableList;
 
-		anotherEditableList = new PersonEditableListPopupWidget();
-		anotherEditableList.setUsePopupFlow(false);
+  private PersonEditableListPopupWidget anotherEditableList;
 
-		yetAnotherEditableList = new PersonEditableListPopupWidget();
-		yetAnotherEditableList.setUsePopupFlow(false);
-		yetAnotherEditableList.setUseAction(true);
+  private PersonEditableListPopupWidget yetAnotherEditableList;
 
-		addWidget("editableList", editableList);
-		addWidget("anotherEditableList", anotherEditableList);
-		addWidget("yanotherEditableList", yetAnotherEditableList);
-	}
+  protected void init() throws Exception {
+    setViewSelector("demo/advancedPopups");
+
+    this.editableList = new PersonEditableListPopupWidget();
+
+    this.anotherEditableList = new PersonEditableListPopupWidget();
+    this.anotherEditableList.setUsePopupFlow(false);
+
+    this.yetAnotherEditableList = new PersonEditableListPopupWidget();
+    this.yetAnotherEditableList.setUsePopupFlow(false);
+    this.yetAnotherEditableList.setUseAction(true);
+
+    addWidget("editableList", this.editableList);
+    addWidget("anotherEditableList", this.anotherEditableList);
+    addWidget("yanotherEditableList", this.yetAnotherEditableList);
+  }
 }

@@ -16,10 +16,11 @@
 
 package org.araneaframework.uilib.form;
 
-import org.apache.commons.beanutils.PropertyUtils;
-
+import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.util.BeanMapper;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.backend.util.BeanUtil;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;
@@ -31,12 +32,17 @@ public class BeanFormWidget<T> extends FormWidget {
   private T bean;
   
   public BeanFormWidget(Class<T> beanClass, T bean) {
+    Assert.notNullParam(beanClass, "beanClass");
+    Assert.notNullParam(bean, "bean");
+
     this.beanClass = beanClass;
     this.beanMapper = new BeanMapper<T>(beanClass);
     this.bean = bean;
   }
-  
+
   public BeanFormWidget(Class<T> beanClass) {
+    Assert.notNullParam(beanClass, "beanClass");
+
     this.beanClass = beanClass;
     this.beanMapper = new BeanMapper<T>(beanClass);
     try {
@@ -51,42 +57,108 @@ public class BeanFormWidget<T> extends FormWidget {
     super.init();
     readFromBean();
   }
-  
-  public BeanFormWidget<?> addBeanSubForm(String id) {
-    return addBeanSubForm(id, Object.class);
+
+  /**
+   * Adds a bean-sub-form with given path. Since this class is BeanFormWidget, the path must map to bean properties and
+   * property type is evaluated and used as the type of the bean-sub-form.
+   * <p>
+   * Since Aranea 2.0, the given path may be nested where path elements (separated by dots) are used for bean-sub-form
+   * creation or for adding new sub-forms with the path element as the sub-form ID.
+   * 
+   * @param path The (simple or nested) path of bean-sub-form to add where path must also correspond to bean properties.
+   *          Nested path has dots separating sub-form IDs in the order they will be created (the second sub-form will
+   *          be the sub-form of the first sub-form, etc).
+   * @return If path is empty or simple (not nested) then the current bean form widget is returned. Otherwise, the last
+   *         created bean-sub-form widget is returned.
+   * @see #addSubForm(String)
+   */
+  public BeanFormWidget<?> addBeanSubForm(String path) {
+    BeanFormWidget<?> result = this;
+
+    if (!StringUtils.isEmpty(path)) {
+      StringTokenizer tokens = new StringTokenizer(path, BeanUtil.NESTED_DELIM);
+
+      while (tokens.hasMoreTokens()) {
+        String subFormId = tokens.nextToken();
+        BeanFormWidget<?> subForm = (BeanFormWidget<?>) result.getSubFormByFullName(subFormId);
+        result = subForm != null ? subForm : result.addSimpleBeanSubForm(subFormId);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Adds a bean sub form with the given <code>id</code> and with given <code>dataType</code>. Does not support nested
+   * fields! Also, the <code>id</code> must match a property of the bean this bean-form-widget represents.
+   * 
+   * @param id The ID the sub-form will have.
+   * @param dataType The type the sub-form represents when converted to the target bean.
+   * @return The created sub-form.
+   * @deprecated Use {@link #addSimpleBeanSubForm(String, Class)} instead.
+   */
+  @Deprecated
+  public <E> BeanFormWidget<E> addBeanSubForm(String id, Class<E> dataType) {
+    return addSimpleBeanSubForm(id, dataType);
+  }
+
+  /**
+   * Adds a bean sub form with the given <code>id</code>. Does not support nested fields! Also, the <code>id</code> must
+   * match a property of the bean this bean-form-widget represents. The property type for sub-form will be automatically
+   * resolved using the target bean.
+   * 
+   * @param id The ID the sub-form will have.
+   * @return The created sub-form.
+   * @since 2.0
+   */
+  public BeanFormWidget<?> addSimpleBeanSubForm(String id) {
+    return addSimpleBeanSubForm(id, this.beanMapper.getPropertyType(id));
+  }
+
+  /**
+   * Adds a bean-sub-form with the given <code>id</code> and with given <code>dataType</code>. Does not support nested
+   * fields! Also, the <code>id</code> must match a property of the bean this bean-form-widget represents. The
+   * <code>dataType</code> must be compatible with the property type.
+   * 
+   * @param <E> The type of the class that will be also the type of the <code>BeanFormWidget</code>.
+   * @param id The ID the sub-form will have.
+   * @param dataType The type the sub-form represents when converted to the target bean.
+   * @return The created sub-form.
+   * @since 2.0
+   */
+  public <E> BeanFormWidget<E> addSimpleBeanSubForm(String id, Class<E> dataType) {
+    Assert.notNullParam(dataType, "fieldType");
+    Assert.isTrue(StringUtils.isEmpty(id) || !StringUtils.contains(id, BeanUtil.NESTED_DELIM), "The path ['" + id
+        + "'] may not be a nested path!");
+
+    Class<?> realType = this.beanMapper.getPropertyType(id);
+    Assert.notNull(realType, "The bean property '" + id + "' was not found!");
+    Assert.isTrue(realType.isAssignableFrom(dataType), "The bean property '" + id + "' type [" + realType.getName()
+        + "] cannot hold value of given type [" + dataType.getName() + "]!");
+
+    BeanFormWidget<E> result = null;
+
+    if (!StringUtils.isEmpty(id)) {
+      result = new BeanFormWidget<E>(dataType);
+      addElement(id, result);
+    }
+
+    return result;
   }
 
   @SuppressWarnings("unchecked")
-  public <E> BeanFormWidget<E> addBeanSubForm(String id, Class<E> fieldType) {
-    if (!beanMapper.isReadable(id))
-      throw new AraneaRuntimeException("Could not infer type for bean subform '" + id + "'!");
-    if(!beanMapper.getFieldType(id).isAssignableFrom(fieldType)){
-      throw new AraneaRuntimeException("The field '" + id + "' has different type than the provided " + fieldType);
-    }
-    BeanFormWidget<E> result = null;
-    try {
-      result = new BeanFormWidget<E>(fieldType, (E) PropertyUtils.getNestedProperty(bean, id));
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
-    addElement(id, result);
-    return result;
-  }
-  
-  @SuppressWarnings("unchecked")
   public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
-    Object initialValue = null;
-    try {
-      initialValue = PropertyUtils.getProperty(bean, elementName);
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    } 
-    return addBeanElement(elementName, labelId, control, (D)initialValue, mandatory);
+    D initialValue = (D) BeanUtil.getPropertyValue(this.bean, elementName);
+    return addBeanElement(elementName, labelId, control, initialValue, mandatory);
+  }
+
+  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control) {
+    return addBeanElement(elementName, labelId, control, false);
   }
 
   @SuppressWarnings("unchecked")
   public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
-    return super.addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
+    return addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
   }
 
   @Deprecated

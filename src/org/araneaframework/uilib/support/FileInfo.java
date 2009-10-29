@@ -16,6 +16,14 @@
 
 package org.araneaframework.uilib.support;
 
+import org.araneaframework.core.util.ExceptionUtil;
+
+import java.io.IOException;
+
+import java.io.InputStream;
+
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
@@ -26,7 +34,7 @@ import org.araneaframework.core.Assert;
  * Besides common file attributes (name, original name, size and type) this class also provides a
  * {@link #readFileContent()} method, which allows to read the file content as a <code>byte[]</code>
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class FileInfo implements Serializable {
@@ -44,7 +52,7 @@ public class FileInfo implements Serializable {
    * @return the content MIME type.
    */
   public String getContentType() {
-    return item.getContentType();
+    return this.item.getContentType();
   }
 
   /**
@@ -53,7 +61,7 @@ public class FileInfo implements Serializable {
    * @return the original filename (user side).
    */
   public String getOriginalFilename() {
-    return item.getName();
+    return this.item.getName();
   }
 
   /**
@@ -64,7 +72,7 @@ public class FileInfo implements Serializable {
    * @since 1.2.2
    */
   public String getFileName() {
-    return item.getName() != null ? FilenameUtils.getName(item.getName()) : null;
+    return this.item.getName() != null ? FilenameUtils.getName(this.item.getName()) : null;
   }
 
   /**
@@ -73,7 +81,7 @@ public class FileInfo implements Serializable {
    * @return the file size.
    */
   public long getSize() {
-    return item.getSize();
+    return this.item.getSize();
   }
 
   /**
@@ -82,7 +90,24 @@ public class FileInfo implements Serializable {
    * @return File content.
    */
   public byte[] readFileContent() {
-    return item.get();
+    return this.item.get();
   }
 
+  /**
+   * Provides whether the file has at least name and size greater than zero.
+   * 
+   * @return <code>true</code>, if the file has at least name and size greater than zero.
+   */
+  public boolean isFilePresent() {
+    return !StringUtils.isBlank(getOriginalFilename()) && getSize() > 0;
+  }
+
+  public InputStream getFileStream() {
+    try {
+      return this.item.getInputStream();
+    } catch (IOException e) {
+      ExceptionUtil.uncheckException("Exception while opening file for streaming.", e);
+      return null; // Not reached.
+    }
+  }
 }

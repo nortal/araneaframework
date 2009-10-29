@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.uilib.support.BeanDisplayItem;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,17 +31,17 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.uilib.support.BeanDisplayItem;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class represents the base functionality of select controls. The generic T is the type of select control item.
  * The generic C is the internal value type used with {@link StringArrayRequestControl}.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @version 2.0
  */
 public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<C> implements DisplayItemContainer<T> {
@@ -164,8 +164,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
       T item = itemClass.newInstance();
       PropertyUtils.setProperty(item, this.labelProperty, label);
       PropertyUtils.setProperty(item, this.valueProperty, value);
-      DisplayItemUtil.assertUnique(this.items, item);
-      this.items.add(item);
+      addItem(item);
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
@@ -275,10 +274,12 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   //* INTERNAL METHODS
   //*********************************************************************  	
 
+  @Override
   public ViewModel getViewModel() {
     return new ViewModel();
   }  
 
+  @Override
   protected String[] preprocessRequestParameters(String[] parameterValues) {
     parameterValues = parameterValues == null ? new String[0] : parameterValues;
     Set<String> currentValues = new HashSet<String>(Arrays.asList(parameterValues));
@@ -306,22 +307,22 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
       currentValues.addAll(previousDisabledValues);
     }
 
-    return (String[]) currentValues.toArray();
+    return currentValues.toArray(new String[currentValues.size()]);
   }
 
+  @Override
   protected void validateNotNull() {
-    String data = this.innerData == null ? null : ((String[]) this.innerData)[0];
+    String[] data = this.innerData == null ? null : ((String[]) this.innerData);
 
-    if (isMandatory() && data == null) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
-          getLabel(), getEnvironment())));
+    if (isMandatory() && (data == null || data.length == 0)) {
+      addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
   }
 
   /**
    * Represents a select control view model for the rendering layer.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    * @author Martti Tamm (martt <i>at</i> araneaframework <i>dot</i> org)
    */
   public class ViewModel extends StringArrayRequestControl<C>.ViewModel {
@@ -380,6 +381,22 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
      */
     public List<DisplayItem> getDisabledItems() {
       return this.disabledItems;
+    }
+
+    public DisplayItem getSelectedItem() {
+      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, valueProperty, value);
+    }
+
+    public List<DisplayItem> getSelectedItems() {
+      return DisplayItemUtil.getSelectedItems(this.selectItems, (String[]) innerData);
+    }
+
+    public DisplayItem getSelectItem(String value) {
+      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, valueProperty, value);
+    }
+
+    public boolean isSelected(String value) {
+      return innerData != null && ArrayUtils.contains((String[]) innerData, value);
     }
   }
 }

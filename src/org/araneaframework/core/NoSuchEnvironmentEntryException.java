@@ -17,11 +17,9 @@
 package org.araneaframework.core;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class NoSuchEnvironmentEntryException extends AraneaRuntimeException {
-
-  private static final long serialVersionUID = 1L;
 
   public NoSuchEnvironmentEntryException(Object key) {
     super("Environment entry with key '" + key + "' is missing!");

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import java.util.List;
-import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.PresentationTag;
@@ -29,56 +28,60 @@ import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Layout base tag.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseLayoutTag extends PresentationTag implements RowClassProvider, CellClassProvider {
-  protected List rowClasses;
-  protected List cellClasses;
-  
+
+  protected List<String> rowClasses;
+
+  protected List<String> cellClasses;
+
   protected ResettableIterator rowIter;
+
   protected ResettableIterator cellIter;
-  
+
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
+
     addContextEntry(RowClassProvider.KEY, this);
     addContextEntry(CellClassProvider.KEY, this);
 
-    rowIter = rowClasses != null ? (ResettableIterator)new LoopingIterator(rowClasses) : new NullIterator();
-    cellIter = cellClasses != null ?(ResettableIterator) new LoopingIterator(cellClasses) : new NullIterator();
+    this.rowIter = this.rowClasses != null ? new LoopingIterator(this.rowClasses) : new NullIterator();
+    this.cellIter = this.cellClasses != null ? new LoopingIterator(this.cellClasses) : new NullIterator();
 
     return EVAL_BODY_INCLUDE;
   }
-  
+
   public String getRowClass() {
-    cellIter.reset();
-	return rowIter.hasNext() ? (String)rowIter.next() : null;
+    this.cellIter.reset();
+    return this.rowIter.hasNext() ? (String) this.rowIter.next() : null;
   }
-  
+
   public String getCellClass() {
-    return cellIter.hasNext() ? (String)cellIter.next() : null;
+    return this.cellIter.hasNext() ? (String) this.cellIter.next() : null;
   }
-  
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
+
+  // Tag attributes
+
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default style of rows in this layout. This is multi-valued attribute." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Default style of rows in this layout. This is multi-valued attribute."
    */
-  public void setRowClasses(String rowClasses) throws JspException {
-    this.rowClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("rowClasses", rowClasses, String.class));
+  public void setRowClasses(String rowClasses) {
+    this.rowClasses = JspUtil.parseMultiValuedAttribute(evaluate("rowClasses", rowClasses, String.class));
   }
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default styleclass of cells in this layout. This is multi-valued attribute."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Default CSS class of cells in this layout. This is multi-valued attribute."
    */
-  public void setCellClasses(String cellClasses) throws JspException {
-    this.cellClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
+  public void setCellClasses(String cellClasses) {
+    this.cellClasses = JspUtil.parseMultiValuedAttribute(evaluate("cellClasses", cellClasses, String.class));
   }
 }

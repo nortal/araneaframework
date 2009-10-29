@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.basic;
 
@@ -29,31 +29,33 @@ import org.araneaframework.jsp.util.JspUtil;
  * 
  * @author Oleg Mürk
  * @jsp.tag
- *      name = "element"
- *      body-content = "JSP"
- *      description = "Defines an HTML element."
+ *  name = "element"
+ *  body-content = "JSP"
+ *  description = "Defines an HTML element."
  */
 public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 
-  public final static String KEY = "org.araneaframework.jsp.tag.basic.ElementHtmlTag.KEY";
+  public static final String KEY = ElementHtmlTag.class.getName() + ".KEY";
 
   protected String name = null;
 
-  protected Map attributes = new HashMap();
+  protected Map<String, Object> attributes = new HashMap<String, Object>();
 
-  protected boolean hasContent = false;
+  protected boolean hasContent;
 
   protected boolean renderTag = true;
 
-  protected boolean forceRenderBody = false;
+  protected boolean forceRenderBody;
 
+  @Override
   public void setPageContext(PageContext pageContext) {
-    this.attributes = new HashMap();
+    this.attributes = new HashMap<String, Object>();
     this.hasContent = false;
     this.name = null;
     super.setPageContext(pageContext);
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -62,10 +64,10 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
     }
 
     addContextEntry(KEY, this);
-    addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
+    addContextEntry(ATTRIBUTED_TAG_KEY, this);
 
     if (this.renderTag) {
-      JspUtil.writeOpenStartTag(out, name);
+      JspUtil.writeOpenStartTag(out, this.name);
     }
 
     // Continue
@@ -73,8 +75,9 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
   }
 
   /**
-   * After tag.
+   * After content tag.
    */
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     if (this.renderTag) {
       if (this.hasContent) {
@@ -94,9 +97,9 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
       JspUtil.writeCloseStartTag_SS(out);
     }
   }
-  
+
   public void addAttribute(String name, String value) throws JspException {
-    value = (String) evaluate("value", value, String.class);
+    value = evaluate("value", value, String.class);
     this.attributes.put(name, value);
   }
 
@@ -109,7 +112,7 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
    *    description = "HTML element name."
    */
   public void setName(String name) throws JspException {
-    this.name = (String) evaluateNotNull("name", name, String.class);
+    this.name = evaluateNotNull("name", name, String.class);
   }
 
   /**
@@ -131,5 +134,4 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
   public void setForceRenderBody(boolean forceRenderBody) {
     this.forceRenderBody = forceRenderBody;
   }
-
 }

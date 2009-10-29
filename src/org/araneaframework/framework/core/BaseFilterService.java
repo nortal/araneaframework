@@ -45,8 +45,6 @@ import org.araneaframework.framework.FilterService;
  */
 public class BaseFilterService extends BaseService implements FilterService {
 
-  private static final long serialVersionUID = 1L;
-
   protected Service childService;
 
   public BaseFilterService() {}

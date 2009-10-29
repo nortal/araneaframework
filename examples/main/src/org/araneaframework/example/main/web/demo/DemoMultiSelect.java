@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.demo;
+
+import java.util.List;
 
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
@@ -23,46 +25,49 @@ import org.araneaframework.uilib.form.data.StringListData;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * Demonstrates use of multiselect control and markBaseState() isStateChanged() methods.
+ * Demonstrates use of a multi-select control and the use of markBaseState() and isStateChanged() methods.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class DemoMultiSelect extends TemplateBaseWidget {
-	  private static final long serialVersionUID = 1L;
-  private FormWidget form;
-	
-	protected void init() throws Exception {
-		setViewSelector("demo/demoMultiSelect");
-		
-		MultiSelectControl control = new MultiSelectControl();
-		
-		control.addItem(new DisplayItem("1", "One"));
-		control.addItem(new DisplayItem("2", "Two"));
-		control.addItem(new DisplayItem("3", "Three"));
-		control.addItem(new DisplayItem("4", "Four"));
-		
-		form = new FormWidget();
-		addWidget("form", form);
-		form.addElement("multiselect", "#multi", control, new StringListData(), false);
-		
-		form.markBaseState();
-		
-		StringBuffer sb = new StringBuffer().append("At the creation, multiselect values are : ");
-		sb.append(form.getValueByFullName("multiselect") != null ? form.getValueByFullName("multiselect").toString() : "null");
-		getMessageCtx().showInfoMessage(sb.toString());
-	}
-	
-	  /**
-	   * A test action, invoked when button is pressed. It adds the values of 
-	   * formelements to message context, and they end up at the top of user screen
-	   * at the end of the request.
-	   */
-	  public void handleEventTest() throws Exception {
-        form.convertAndValidate();
-        if (form.isStateChanged())
-        	getMessageCtx().showInfoMessage("State of multiselect control has changed.");
 
-	    getMessageCtx().showInfoMessage("Multiselect values are " + form.getValueByFullName("multiselect"));
-	    form.markBaseState();
-	  }
+  private static final String SELECT = "multiselect";
+
+  private FormWidget form;
+
+  @SuppressWarnings("unchecked")
+  protected void init() throws Exception {
+    setViewSelector("demo/demoMultiSelect");
+    addWidget("form", createForm());
+
+    List<DisplayItem> values = (List<DisplayItem>) this.form.getValueByFullName(SELECT);
+    StringBuffer sb = new StringBuffer("At the creation, multiselect values are : ").append(values);
+    getMessageCtx().showInfoMessage(sb.toString());
+  }
+
+  private FormWidget createForm() {
+    MultiSelectControl<DisplayItem> control = new MultiSelectControl<DisplayItem>(DisplayItem.class, "label", "value");
+    control.addItem("1", "One");
+    control.addItem("2", "Two");
+    control.addItem("3", "Three");
+    control.addItem("4", "Four");
+
+    this.form = new FormWidget();
+    this.form.addElement(SELECT, "#multi", control, new StringListData(), false);
+    this.form.markBaseState();
+    return this.form;
+  }
+
+  /**
+   * A test action, invoked when button is pressed. It adds the values of form elements to message context, and they end
+   * up at the top of user screen at the end of the request.
+   */
+  public void handleEventTest() {
+    this.form.convertAndValidate();
+    if (this.form.isStateChanged()) {
+      getMessageCtx().showInfoMessage("State of multiselect control has changed.");
+    }
+    getMessageCtx().showInfoMessage("Multiselect values are " + this.form.getValueByFullName(SELECT));
+    this.form.markBaseState();
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 
 package org.araneaframework.http.filter;
@@ -36,10 +36,10 @@ import org.araneaframework.http.util.ServletUtil;
 /**
  * A filter which sets all the necessary headers of the response. 
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardHttpResponseFilterService extends BaseFilterService {
-  private static final Log log = LogFactory.getLog(StandardHttpResponseFilterService.class);
+  private static final Log LOG = LogFactory.getLog(StandardHttpResponseFilterService.class);
 
   private String contentType = "text/html; charset=UTF-8";
   private boolean cacheable = false;
@@ -94,7 +94,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
     }
     
     response.setContentType(contentType);
-    log.trace("response.characterEncoding: " + response.getCharacterEncoding());
+    LOG.trace("response.characterEncoding: " + response.getCharacterEncoding());
 
     int idx = contentType.indexOf(';');
     if (idx > 0) {
@@ -112,14 +112,14 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
           } catch (NoSuchMethodException e) {
           }
           if (method != null) {
-            log.debug("Applying Weblogic hack to set the response character encoding...");
+            LOG.debug("Applying Weblogic hack to set the response character encoding...");
             HttpServletResponse delegate = (HttpServletResponse) method.invoke(r, (Class<?>)null);
             if (delegate != null) {
               delegate.setContentType(contentType);
             }
           }
           if (!encoding.equals(response.getCharacterEncoding())) {
-            log.warn("Unable to change the character encoding.");
+            LOG.warn("Unable to change the character encoding.");
           }
         }
       }

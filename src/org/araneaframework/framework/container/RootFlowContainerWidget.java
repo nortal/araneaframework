@@ -22,8 +22,6 @@ import org.araneaframework.framework.RootFlowContext;
 public class RootFlowContainerWidget extends StandardFlowContainerWidget
   implements RootFlowContext {
 
-  private static final long serialVersionUID = 1L;
-
   @Override
   protected void putLocalEnvironmentEntries(Map<Class<?>, Object> nestedEnvironmentEntries) {
     super.putLocalEnvironmentEntries(nestedEnvironmentEntries);

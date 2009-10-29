@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.reader;
 
+import org.araneaframework.core.Assert;
+
 import java.io.Serializable;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
@@ -27,7 +29,7 @@ import org.araneaframework.uilib.form.GenericFormElement;
 /**
  * This class allows one to write Value Objects to forms.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class BeanFormWriter<T> implements Serializable {
@@ -51,7 +53,7 @@ public class BeanFormWriter<T> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   public void writeFormBean(FormWidget form, T vo) {
-    List<String> voFields = this.beanMapper.getFields();
+    List<String> voFields = this.beanMapper.getPropertyNames();
 
     for (String field : voFields) {
       GenericFormElement element = form.getElement(field);
@@ -59,11 +61,11 @@ public class BeanFormWriter<T> implements Serializable {
         if (element instanceof FormElement) {
           Data data = ((FormElement) element).getData();
           if (data != null) {
-            data.setValue(this.beanMapper.getFieldValue(vo, field));
+            data.setValue(this.beanMapper.getProperty(vo, field));
           }
         } else if (element instanceof FormWidget) {
-          BeanFormWriter subVoWriter = getInstance(this.beanMapper.getFieldType(field));
-          Object subVO = this.beanMapper.getFieldValue(vo, field);
+          BeanFormWriter subVoWriter = getInstance(this.beanMapper.getPropertyType(field));
+          Object subVO = this.beanMapper.getProperty(vo, field);
           if (subVO != null) {
             subVoWriter.writeFormBean((FormWidget) element, subVO);
           }
@@ -73,6 +75,7 @@ public class BeanFormWriter<T> implements Serializable {
   }
 
   public static <E> BeanFormWriter<E> getInstance(Class<E> clazz) {
+    Assert.notNullParam(clazz, "clazz");
     return new BeanFormWriter<E>(clazz);
   }
 }

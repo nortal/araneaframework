@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
@@ -23,47 +23,50 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 
-
 /**
- * Form checkbox label, represents label of one item from 
+ * Form checkbox label, represents label of one item from
  * {@link org.araneaframework.uilib.form.control.MultiSelectControl}. It will be rendered with HTML &lt;span&gt; tag.
  * 
- * @author Marko Muts 
+ * @author Marko Muts
  * @author Jevgeni Kabanov
  * 
  * @jsp.tag
- *   name = "checkboxMultiSelectItemLabel"
- *   body-content = "JSP"
- *   description = "Represents localizable label."
+ *  name = "checkboxMultiSelectItemLabel"
+ *  body-content = "JSP"
+ *  description = "Represents label to be localized."
  */
+@SuppressWarnings("unchecked")
 public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
+
   protected String value;
+
   protected String checkboxId;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    // Prepare  
-    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
+    // Prepare
+    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel) controlViewModel);
 
-    if (viewModel.getSelectItemByValue(value) == null) 
-      throw new AraneaJspException("Value '" + value + "' not found in values list.");    
+    if (this.value != null && viewModel.getSelectItem(this.value) == null) {
+      throw new AraneaJspException("Value '" + this.value + "' not found in values list.");
+    }
 
-    writeLabel(out, viewModel.getSelectItemByValue(value).getDisplayString());
-    return EVAL_BODY_INCLUDE;    
+    writeLabel(out, viewModel.getSelectItem(this.value).getLabel());
+    return EVAL_BODY_INCLUDE;
   }
-  
+
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Select item value." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Select item value."
    */
-  public void setValue(String value)  throws JspException {
+  public void setValue(String value) throws JspException {
     this.value = evaluateNotNull("value", value, String.class);
   }
-  
+
   /** @since 1.1 */
   public void writeLabel(Writer out, String label) throws Exception {
     JspUtil.writeOpenStartTag(out, "span");
@@ -78,19 +81,15 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
 
     JspUtil.writeEndTag(out, "span");
   }
-  
+
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "The HTML id of checkbox to which this label belongs."
-   * @since 1.1 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "The HTML id of checkbox to which this label belongs."
+   * @since 1.1
    */
   public void setCheckboxId(String checkboxId) {
     this.checkboxId = evaluate("checkboxId", checkboxId, String.class);
   }
 }
-
-
-
-

@@ -25,14 +25,11 @@ import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardPath;
 
 /**
- * A widget that contains a child service. Calls the service's action only if it gets
- * an event.
+ * A widget that contains a child service. Calls the service's action only if it gets an event.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServiceAdapterWidget extends BaseWidget {
-
-  private static final long serialVersionUID = 1L;
 
   public static final String ACTION_PATH_INPUT_DATA_PARAMETER = "widgetSubServiceActionId";
 
@@ -46,52 +43,54 @@ public class StandardServiceAdapterWidget extends BaseWidget {
    * Set the child service.
    */
   public void setChildService(Service service) {
-    childService = service;
+    this.childService = service;
   }
 
+  @Override
   protected void init() throws Exception {
-    childService._getComponent().init(getScope(), getEnvironment());
+    this.childService._getComponent().init(getScope(), getEnvironment());
   }
 
   /**
    * Returns the path of action from the InputData. Uses the
-   * {@link StandardServiceAdapterWidget#ACTION_PATH_INPUT_DATA_PARAMETER} to
-   * get the path.
+   * {@link StandardServiceAdapterWidget#ACTION_PATH_INPUT_DATA_PARAMETER} to get the path.
    */
   protected Path getActionPath(InputData input) {
-    return new StandardPath((String) input.getGlobalData().get(
-        ACTION_PATH_INPUT_DATA_PARAMETER));
+    return new StandardPath(input.getGlobalData().get(StandardServiceAdapterWidget.ACTION_PATH_INPUT_DATA_PARAMETER));
   }
 
+  @Override
   public void update(InputData input) {
     this.input = input;
-    eventReceived = false;
+    this.eventReceived = false;
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
-    message.send(null, childService);
+    message.send(null, this.childService);
   }
 
+  @Override
   public void event(Path path, InputData input) {
     if (!path.hasNext()) {
-      eventReceived = true;
+      this.eventReceived = true;
     }
   }
 
   /**
-   * Calls child service's action only if an event was received. The action path
-   * is constructed via <code>getActionPath(InputData)</code>. The InputData
-   * is saved in the <code>update(InputData)</code> method. TODO: why is it in
-   * render and not in event() ?
+   * Calls child service's action only if an event was received. The action path is constructed via
+   * <code>getActionPath(InputData)</code>. The InputData is saved in the <code>update(InputData)</code> method. TODO:
+   * why is it in render and not in event() ?
    */
+  @Override
   public void render(OutputData output) throws Exception {
-    if (eventReceived) {
-      this.childService._getService().action(getActionPath(input), input,
-          output);
+    if (this.eventReceived) {
+      this.childService._getService().action(getActionPath(this.input), this.input, output);
     }
   }
 
+  @Override
   protected void destroy() throws Exception {
-    childService._getComponent().destroy();
+    this.childService._getComponent().destroy();
   }
 }

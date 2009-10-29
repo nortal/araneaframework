@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.list;
 
@@ -29,7 +29,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   display-name = "listSelectAllCheckBox"
  *   description = "Represents a check box that can select all check boxes in given list."
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1.3
  */
 public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
@@ -79,12 +79,11 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
 
     JspUtil.writeCloseStartEndTag(out);
 
-    return SKIP_BODY;       
+    return SKIP_BODY;
   }
 
   /**
-   * Creates the onclick event script, including the onclick script that the
-   * user specifies through attribute value.
+   * Creates the onclick event script, including the onclick script that the user specifies through attribute value.
    * 
    * @return The entire script for check box onclick event.
    */
@@ -99,73 +98,66 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
   }
 
   /**
-   * Creates the check box ID. Note that it is very important how the ID looks
-   * like. It means that the ID of the row check box must begin with the ID
-   * value of the select-all check box to make the JavaScript methods work.
+   * Creates the check box ID. Note that it is very important how the ID looks like. It means that the ID of the row
+   * check box must begin with the ID value of the select-all check box to make the JavaScript methods work.
    * 
    * @return The ID that will be used for the generated check box.
-   * @throws JspException This method requires listId and rowRequestId entries
-   *             from the context.
+   * @throws JspException This method requires listId and rowRequestId entries from the context.
    */
   protected String getCheckBoxId() throws JspException {
-    String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);         
+    String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
     return listId + "." + ListRowCheckBoxHtmlTag.SELECTION_SCOPE;
   }
 
   /**
-   * @throws JspException 
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Specifies whether the check box should be rendered as disabled. Default is active state."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Specifies whether the check box should be rendered as disabled. Default is active state."
    */
-  public void setDisabled(String disabled) throws JspException{
+  public void setDisabled(String disabled) throws JspException {
     Boolean tempResult = evaluateNotNull("disabled", disabled, Boolean.class);
     this.disabled = tempResult.booleanValue();
   }
 
   /**
-   * @throws JspException 
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Specifies custom <code>onclick</code> event. Default is none."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Specifies custom <code>onclick</code> event. Default is none."
    */
-  public void setOnclick(String onclick) throws JspException{
+  public void setOnclick(String onclick) throws JspException {
     this.onclick = evaluateNotNull("onclick", onclick, String.class);
   }
 
   /**
-   * @throws JspException 
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Specifies custom <code>acceskey</code> (defined by HTML). Default is none."
    */
-  public void setAccessKey(String accessKey) throws JspException{
+  public void setAccessKey(String accessKey) throws JspException {
     this.accesskey = evaluateNotNull("accessKey", accessKey, String.class);
   }
 
   /**
-   * @throws JspException 
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Specifies the initial value of the check box. Default is unchecked."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Specifies the initial value of the check box. Default is unchecked."
    */
-  public void setChecked(String checked) throws JspException{
+  public void setChecked(String checked) throws JspException {
     Boolean tempResult = evaluateNotNull("checked", checked, Boolean.class);
     this.checked = tempResult.booleanValue();
   }
 
   /**
-   * @throws JspException 
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "HTML tabindex for the check box."
-   */   
-  public void setTabindex(String tabindex) throws JspException{
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "HTML tabindex for the check box."
+   */
+  public void setTabindex(String tabindex) throws JspException {
     this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }
 

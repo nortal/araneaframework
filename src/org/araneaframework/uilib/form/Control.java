@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 /**
  * 
@@ -35,7 +35,7 @@ import org.araneaframework.uilib.form.control.BaseControl;
  * {@link Control} is meant to be used inside {@link FormElement} that provides
  * type safety and additional {@link Constraint}s to request data.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object> {
   
@@ -48,11 +48,11 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
 
   /**
    * This method should be overridden by the control, returning the type of the value of this
-   * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}to
-   * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer the values
+   * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory} to
+   * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter} used to transfer the values
    * from {@link org.araneaframework.uilib.form.Data}to control and back.
    * 
-   * @return The type of the value of this control as specified in the given <code>ValueType</code> object.
+   * @return The type of the value of this control as specified in the given <code>DataType</code> object.
    */
   public abstract DataType getRawValueType();
 
@@ -87,7 +87,7 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
   public boolean isDisabled();
   
   /**
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public interface ViewModel extends Serializable {
     /**

@@ -14,9 +14,7 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class LocalFormElementValidationErrorRenderer implements FormElementValidationErrorRenderer {
-  private static final long serialVersionUID = 1L;
-  public static final LocalFormElementValidationErrorRenderer INSTANCE = new LocalFormElementValidationErrorRenderer();
+public class LocalFormElementValidationErrorRenderer implements FormElementValidationErrorRenderer {  public static final LocalFormElementValidationErrorRenderer INSTANCE = new LocalFormElementValidationErrorRenderer();
 
   @SuppressWarnings("unchecked")
   public void addError(FormElement<?,?> element, String error) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.support;
 
@@ -27,13 +27,11 @@ import org.araneaframework.jsp.util.AutomaticFormElementUtil;
  * that will be used to render the form element. It is mainly used
  * {@link AutomaticFormElementUtil}
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @see AutomaticFormElementUtil
  * @see AutomaticTagFormElementTag
  */
 public class FormElementViewSelector implements Serializable {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * The key that can be used to put or get a selector (this class) from the

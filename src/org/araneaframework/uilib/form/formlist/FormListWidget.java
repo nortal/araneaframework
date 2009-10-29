@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.FormWidget;
 /**
  * Editable rows widget that is used to handle simultaneous editing of multiple forms with same structure.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormListWidget<K, R> extends BaseFormListWidget<K, R> {
 

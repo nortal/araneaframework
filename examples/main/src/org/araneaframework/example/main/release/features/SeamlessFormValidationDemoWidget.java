@@ -1,31 +1,41 @@
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.araneaframework.example.main.release.features;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import org.araneaframework.Component;
-import org.araneaframework.Environment;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.InputData;
-import org.araneaframework.Scope;
-import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.release.features.ExampleData.Attendee;
 import org.araneaframework.example.main.release.features.ExampleData.Room;
-import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
+import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.ListData;
 import org.araneaframework.uilib.form.constraint.BaseFieldConstraint;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.DateData;
-import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.form.data.StringListData;
-import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
@@ -33,175 +43,135 @@ import org.araneaframework.uilib.util.MessageUtil;
  */
 public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
 
-  private static final long serialVersionUID = 1L;
+  private List<Room> roomList;
 
-  private List roomList;
+  private List<Attendee> attendeeList;
 
-  private List attendeeList;
-
+  @Override
   protected void init() throws Exception {
     this.roomList = ExampleData.createRooms();
     this.attendeeList = ExampleData.createAttendees();
-    setViewSelector("release/features/seamlessFormValidation/demo");
-    addWidget("form1", buildFormWidget());
-    FormWidget f2 = buildFormWidget();
 
-    // and here the crucial part for second form -- enabling background
-    // validation
-    f2.setBackgroundValidation(true);
+    setViewSelector("release/features/seamlessFormValidation/demo");
+
+    FormWidget f2 = buildFormWidget();
+    f2.setBackgroundValidation(true); // and here the crucial part for the second form - enabling background validation.
+
+    addWidget("form1", buildFormWidget());
     addWidget("form2", f2);
   }
 
+  /**
+   * This method builds a form widget with select and multi-select controls.
+   * 
+   * @return A form widget that is not already contained by other widget.
+   */
   private FormWidget buildFormWidget() {
+
     final FormWidget form = new FormWidget();
-    final FormElement appointmentDate = form.addElement("futureDate",
-        "seamless.appointmentdate", new DateControl(), new DateData(), true);
-    final FormElement appointmentTime = form.addElement("time",
-        "seamless.appointmenttime", new TimeControl(), new DateData(), true);
-    FormElement rooms = form.addElement("meetingroom", "seamless.room",
-        buildRoomSelect(), new StringData(), true);
+
+    final FormElement<Timestamp, Date> appointmentDate = form.addElement("futureDate", "seamless.appointmentdate",
+        new DateControl(), new DateData(), true);
+
+    final FormElement<Timestamp, Date> appointmentTime = form.addElement("time", "seamless.appointmenttime",
+        new TimeControl(), new DateData(), true);
+
+
+    // Creating and adding the select control:
+
+    FormElement<Room, Room> rooms = form.addElement("meetingroom", "seamless.room", buildRoomSelect(), new Data<Room>(
+        Room.class), true);
+
+    // Let's add a constraint to this select control that validates (when clicked) whether an item can be selected or
+    // not. Preoccupied rooms cannot be selected, and therefore give an error to the user.
+
     rooms.setConstraint(new BaseFieldConstraint() {
 
-      private static final long serialVersionUID = 1L;
-
+      @Override
       protected void validateConstraint() throws Exception {
-        if (!appointmentDate.isValid() || !appointmentTime.isValid()) {
-          return;
-        }
-        String value = (String) getValue();
-        Room appointmentRoom = (Room) SeamlessFormValidationDemoWidget.this.roomList
-            .get(Integer.valueOf(value).intValue());
-
-        if (appointmentRoom.isOccupied()) {
-          addError(MessageUtil.localizeAndFormat("seamless.room.not.available",
-              t(appointmentRoom.getName()), getEnvironment()));
+        if (appointmentDate.isValid() && appointmentTime.isValid()) {
+          Room appointmentRoom = (Room) getValue();
+          if (appointmentRoom.isOccupied()) {
+            addError(MessageUtil.localizeAndFormat(getEnvironment(), "seamless.room.not.available", t(appointmentRoom
+                .getName())));
+          }
         }
       }
     });
 
-    FormElement attendees = form.addElement("attendees", "seamless.attendees",
-        buildAttendeeMultiSelect(), new StringListData(), true);
+
+    // Creating and adding the multi-select control:
+
+    FormElement<List<Attendee>, List<Attendee>> attendees = form.addElement("attendees", "seamless.attendees",
+        buildAttendeeMultiSelect(), new ListData<Attendee>(Attendee.class), true);
+
+    // Let's add a constraint to this select control that validates (when clicked) whether an item can be selected or
+    // not. Preoccupied attendees cannot be selected, and therefore give an error to the user.
+
     attendees.setConstraint(new BaseFieldConstraint() {
 
-      private static final long serialVersionUID = 1L;
-
+      @SuppressWarnings("unchecked")
+      @Override
       protected void validateConstraint() throws Exception {
-        if (!appointmentDate.isValid() || !appointmentTime.isValid()) {
-          return;
-        }
-        List preoccupiedAttendees = new ArrayList();
-        List values = (List) getValue();
+        if (appointmentDate.isValid() && appointmentTime.isValid()) {
+          List<Attendee> preoccupiedAttendees = new ArrayList<Attendee>();
 
-        for (Iterator i = values.iterator(); i.hasNext();) {
-          Attendee attendee = (Attendee) SeamlessFormValidationDemoWidget.this.attendeeList
-              .get(Integer.valueOf((String) i.next()).intValue());
-          if (attendee.isPreoccupied()) {
-            preoccupiedAttendees.add(attendee);
-          }
-        }
-
-        if (!preoccupiedAttendees.isEmpty()) {
-          StringBuffer names = new StringBuffer();
-          for (Iterator i = preoccupiedAttendees.iterator(); i.hasNext();) {
-            Attendee attendee = (Attendee) i.next();
-            names.append(attendee.getName());
-            if (i.hasNext()) {
-              names.append(", ");
+          for (Attendee attendee : (List<Attendee>) getValue()) {
+            if (attendee.isPreoccupied()) {
+              preoccupiedAttendees.add(attendee);
             }
           }
-          addError(MessageUtil.localizeAndFormat(
-              "seamless.attendees.not.available", names.toString(),
-              getEnvironment()));
+
+          if (!preoccupiedAttendees.isEmpty()) {
+            String names = StringUtils.join(preoccupiedAttendees, ", ");
+            addError(MessageUtil.localizeAndFormat(getEnvironment(), "seamless.attendees.not.available", names));
+          }
         }
       }
     });
+
+
+    // Finally, let's add an event callback to our form that would respond to "submit" event where, form would be
+    // converted and validated. Note that it is easier defining the callback this way rather than as a "handleEvent*()"
+    // method because here the event is bound to this specific form (otherwise, we would have to figure out which form
+    // was submitted by creating 2 different methods).
+
     form.addEventListener("submit", new EventListener() {
 
-      private static final long serialVersionUID = 1L;
-
-      public void processEvent(String eventId, InputData input)
-          throws Exception {
+      public void processEvent(String eventId, InputData input) throws Exception {
         form.convertAndValidate();
       }
     });
+
     return form;
   }
 
+  /**
+   * Here's the second
+   */
   public void handleEventReturn() {
     getFlowCtx().cancel();
   }
 
-  private SelectControl buildRoomSelect() {
-    final SelectControl result = new SelectControl();
-    addRooms(result);
-    getL10nCtx().addLocaleChangeListener(
-        new LocaleChangeListenerAdapter(SeamlessFormValidationDemoWidget.this) {
-
-          private static final long serialVersionUID = 1L;
-
-          public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-            result.clearItems();
-            addRooms(result);
-          }
-        });
+  /**
+   * For convenience, the creation of <code>SelectControl</code> is encapsulated into this method.
+   * 
+   * @return The <code>SelectControl</code> with selectable rooms.
+   */
+  private SelectControl<Room> buildRoomSelect() {
+    final SelectControl<Room> result = new SelectControl<Room>("id", "label");
+    result.addItems(this.roomList);
     return result;
   }
 
-  private void addRooms(SelectControl result) {
-    for (int i = 0; i < this.roomList.size(); i++) {
-      Room room = (Room) this.roomList.get(i);
-      result.addItem(new DisplayItem(String.valueOf(i), getL10nCtx().localize(
-          room.getName())
-          + ", " + room.getLocation()));
-    }
-  }
-
-  private MultiSelectControl buildAttendeeMultiSelect() {
-    MultiSelectControl result = new MultiSelectControl();
-    for (int i = 0; i < this.attendeeList.size(); i++) {
-      result.addItem(new DisplayItem(String.valueOf(i),
-          ((Attendee) this.attendeeList.get(i)).getName()));
-    }
+  /**
+   * For convenience, the creation of <code>MultiSelectControl</code> is encapsulated into this method.
+   * 
+   * @return The <code>MultiSelectControl</code> with selectable attendees.
+   */
+  private MultiSelectControl<Attendee> buildAttendeeMultiSelect() {
+    MultiSelectControl<Attendee> result = new MultiSelectControl<Attendee>("id", "name");
+    result.addItems(this.attendeeList);
     return result;
-  }
-
-  private abstract class LocaleChangeListenerAdapter
-    implements LocaleChangeListener {
-
-    private static final long serialVersionUID = 1L;
-
-    private ApplicationComponent wrapped;
-
-    public LocaleChangeListenerAdapter(ApplicationComponent wrapped) {
-      this.wrapped = wrapped;
-    }
-
-    public Component.Interface _getComponent() {
-      return this.wrapped._getComponent();
-    }
-
-    public org.araneaframework.Composite.Interface _getComposite() {
-      return this.wrapped._getComposite();
-    }
-
-    public org.araneaframework.Viewable.Interface _getViewable() {
-      return this.wrapped._getViewable();
-    }
-
-    public Environment getChildEnvironment() {
-      return this.wrapped.getChildEnvironment();
-    }
-
-    public Environment getEnvironment() {
-      return this.wrapped.getEnvironment();
-    }
-
-    public Scope getScope() {
-      return this.wrapped.getScope();
-    }
-
-    public boolean isAlive() {
-      return this.wrapped.isAlive();
-    }
   }
 }

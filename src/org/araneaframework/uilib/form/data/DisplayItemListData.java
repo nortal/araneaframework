@@ -20,7 +20,7 @@ import org.araneaframework.uilib.form.ListData;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DisplayItemListData extends ListData<DisplayItem> {
 

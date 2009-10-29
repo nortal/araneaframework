@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.core;
 
@@ -48,7 +48,7 @@ public class MenuItem implements Serializable {
 
   /* **************************************************************************************************
    * CONSTRUCTORS 
-   * **************************************************************************************************/
+   * ************************************************************************************************ */
   /**
    * Creates a top menu.
    */
@@ -89,7 +89,7 @@ public class MenuItem implements Serializable {
 
   /* **************************************************************************************************
    * PRIVATE METHODS. 
-   * **************************************************************************************************/
+   * ************************************************************************************************ */
   private void checkLabelLegality(String label) throws IllegalArgumentException {
     if  (label == null)
       throw new IllegalArgumentException("Menu label may not be null");
@@ -109,14 +109,34 @@ public class MenuItem implements Serializable {
   
   /* **************************************************************************************************
    * PROTECTED METHODS. 
-   * **************************************************************************************************/
+   * ************************************************************************************************ */
   protected void setSelected(boolean isSelected) {
     selected = isSelected;
   }
 
   /* **************************************************************************************************
    * PUBLIC METHODS. 
-   * **************************************************************************************************/
+   * ************************************************************************************************ */
+  /**
+   * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
+   * @param item item to add.
+   * @return item added to menu
+   * @since 2.0
+   */
+  public MenuItem addMenuItem(String id, Class<? extends Widget> clazz) {
+    return addMenuItem(null, new MenuItem(id, clazz));
+  }
+
+  /**
+   * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
+   * @param item item to add.
+   * @return item added to menu
+   * @since 2.0
+   */
+  public MenuItem addMenuItem(String id) {
+    return addMenuItem(id, (Class<? extends Widget>) null);
+  }
+
   /**
    * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
    * @param item item to add.
@@ -190,7 +210,7 @@ public class MenuItem implements Serializable {
 
   /* **************************************************************************************************
    * GETTERS. 
-   * **************************************************************************************************/
+   * ************************************************************************************************ */
   public String getLabel() {
     return label;
   }

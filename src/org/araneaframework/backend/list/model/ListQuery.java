@@ -31,13 +31,11 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  */
 public class ListQuery implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-
   /** @since 1.1 */
   protected ListStructure listStructure;
 
   /** @since 1.1 */
-  protected Map filterInfo;
+  protected Map<String, Object> filterInfo;
 
   /** @since 1.1 */
   protected OrderInfo orderInfo;
@@ -75,8 +73,8 @@ public class ListQuery implements Serializable {
    * @see #getFilterExpression()
    * @since 1.1
    */
-  public Map getFilterInfo() {
-    return filterInfo;
+  public Map<String, Object> getFilterInfo() {
+    return this.filterInfo;
   }
 
   /**
@@ -84,7 +82,7 @@ public class ListQuery implements Serializable {
    * 
    * @since 1.1
    */
-  public void setFilterInfo(Map filterInfo) {
+  public void setFilterInfo(Map<String, Object> filterInfo) {
     this.filterInfo = filterInfo;
   }
 

@@ -25,7 +25,7 @@ import org.araneaframework.uilib.form.FormElementContext;
  * This converter uses a contained converter to convert individual <code>List</code> items thus converting the entire
  * <code>List</code>.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class ListConverter<C, D> extends BaseConverter<List<C>, List<D>> {

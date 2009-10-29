@@ -25,7 +25,7 @@ import org.araneaframework.uilib.form.BeanFormWidget;
  * generic parameter K corresponds to the type of the key values, and the generic parameter R corresponds to the type of
  * the row values.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BeanFormListWidget<K, R> extends BaseFormListWidget<K, R> {
 

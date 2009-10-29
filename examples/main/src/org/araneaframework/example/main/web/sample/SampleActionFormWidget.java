@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.web.sample;
+
+import org.apache.commons.lang.StringUtils;
+
+import java.math.BigInteger;
 
 import java.io.Writer;
 import java.math.BigDecimal;
@@ -26,7 +30,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.BigDecimalControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.IntegerData;
@@ -36,51 +40,49 @@ import org.araneaframework.uilib.form.data.IntegerData;
  */
 public class SampleActionFormWidget extends TemplateBaseWidget {
 
-  private static final long serialVersionUID = 1L;
-
   private FormWidget form;
-  private FormElement price;
-  private FormElement quantity;
-  private FormElement vat;
-  private FormElement total;
-  private FormElement vatTotal;
-  private FormElement bigTotal;
+  private FormElement<BigDecimal, BigDecimal> price;
+  private FormElement<BigInteger, Integer> quantity;
+  private FormElement<BigDecimal, BigDecimal> vat;
+  private FormElement<BigDecimal, BigDecimal> total;
+  private FormElement<BigDecimal, BigDecimal> vatTotal;
+  private FormElement<BigDecimal, BigDecimal> bigTotal;
 
   protected void init() throws Exception {
     setViewSelector("sample/sampleActionForm");
 
-    form = new FormWidget();
+    this.form = new FormWidget();
 
-    price = form.addElement("price", "#Price", new FloatControl(), new BigDecimalData(), false);
-    price.setDisabled(true);
-    price.setValue(round2(new BigDecimal(Math.random() * 5 + 5)));
+    this.price = this.form.addElement("price", "#Price", new BigDecimalControl(), new BigDecimalData());
+    this.price.setDisabled(true);
+    this.price.setValue(round2(new BigDecimal(Math.random() * 5 + 5)));
 
-    quantity = form.addElement("quantity", "#Quantity", new NumberControl(), new IntegerData(), false);
-    quantity.setValue(new Integer(3));
+    this.quantity = this.form.addElement("quantity", "#Quantity", new NumberControl(), new IntegerData());
+    this.quantity.setValue(3);
 
-    total = form.addElement("total", "#Total", new FloatControl(), new BigDecimalData(), false);
-    total.setDisabled(true);
+    this.total = this.form.addElement("total", "#Total", new BigDecimalControl(), new BigDecimalData());
+    this.total.setDisabled(true);
 
-    vat = form.addElement("vat", "#VAT", new FloatControl(), new BigDecimalData(), false);
-    vat.setValue(new BigDecimal("0.18"));
+    this.vat = this.form.addElement("vat", "#VAT", new BigDecimalControl(), new BigDecimalData());
+    this.vat.setValue(new BigDecimal("0.18"));
 
-    vatTotal = form.addElement("vatTotal", "#not used", new FloatControl(), new BigDecimalData(), false);
-    vatTotal.setDisabled(true);
+    this.vatTotal = this.form.addElement("vatTotal", "#not used", new BigDecimalControl(), new BigDecimalData());
+    this.vatTotal.setDisabled(true);
 
-    bigTotal = form.addElement("bigTotal", "#Total Sum", new FloatControl(), new BigDecimalData(), false);
-    bigTotal.setDisabled(true);
+    this.bigTotal = this.form.addElement("bigTotal", "#Total Sum", new BigDecimalControl(), new BigDecimalData());
+    this.bigTotal.setDisabled(true);
 
     calculate();
-    addWidget("form", form);
+    addWidget("form", this.form);
 
     addActionListener("quantityChange", new StandardActionListener() {
-      private static final long serialVersionUID = 1L;
       public void processAction(String actionId, String actionParam,
           InputData input, OutputData output) throws Exception {
-        // TODO numberFormatException handling
-        quantity.setValue(new Integer(actionParam));
-        calculate();
-        writeFields(output);
+        if (StringUtils.isNumeric(actionParam)) {
+          quantity.setValue(new Integer(actionParam));
+          calculate();
+          writeFields(output);
+        }
       }
     });
 
@@ -88,16 +90,19 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
   }
 
   public void handleActionVatChange(String actionParam) throws Exception {
-    // TODO numberFormatException handling
-    vat.setValue(round2(new BigDecimal(actionParam)));
-    calculate();
-    writeFields(getOutputData());
+    actionParam = StringUtils.replace(actionParam, ",", "."); // Replace commas with period. Otherwise cannot parse.
+    actionParam = StringUtils.replace(actionParam, " ", ""); // Remove all spaces.
+    if (StringUtils.isNumeric(StringUtils.replace(actionParam, ".", ""))) { // Remove period to check if numeric.
+      this.vat.setValue(round2(new BigDecimal(actionParam)));
+      calculate();
+      writeFields(getOutputData());
+    }
   }
 
   protected void calculate() {
-    total.setValue(round2(calculateTotal((BigDecimal) price.getValue(), (Integer) quantity.getValue())));
-    vatTotal.setValue(round2(calculateVatTotal((BigDecimal) total.getValue(), (BigDecimal) vat.getValue())));
-    bigTotal.setValue(round2(calculateBigTotal((BigDecimal) total.getValue(), (BigDecimal) vatTotal.getValue())));
+    this.total.setValue(round2(calculateTotal(this.price.getValue(), this.quantity.getValue())));
+    this.vatTotal.setValue(round2(calculateVatTotal(this.total.getValue(), this.vat.getValue())));
+    this.bigTotal.setValue(round2(calculateBigTotal(this.total.getValue(), this.vatTotal.getValue())));
   }
 
   protected BigDecimal calculateTotal(BigDecimal price, Integer quantity) {
@@ -114,18 +119,18 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
 
   protected void writeFields(OutputData output) throws Exception {
     StringBuffer s = new StringBuffer();
-    s.append(quantity.getValue()).append("|");
-    s.append(vat.getValue()).append("|");
-    s.append(total.getValue()).append("|");
-    s.append(vatTotal.getValue()).append("|");
-    s.append(bigTotal.getValue());
+    s.append(this.quantity.getValue()).append("|");
+    s.append(this.vat.getValue()).append("|");
+    s.append(this.total.getValue()).append("|");
+    s.append(this.vatTotal.getValue()).append("|");
+    s.append(this.bigTotal.getValue());
 
     Writer out = ((HttpOutputData) output).getWriter();
     out.write(s.toString());
   }
 
   public static BigDecimal round2(BigDecimal num) {
-    return new BigDecimal(num.movePointRight(2).toBigInteger()).movePointLeft(2);
+    return new BigDecimal(num.movePointRight(2).intValue()).movePointLeft(2);
   }
 
 }

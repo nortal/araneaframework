@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.memorybased.expression;
 /**
  * General interface for holding a Value.
  */
-public interface Value {
+public interface Value<T> {
 
   /**
    * Returns the name of the <code>Value</code>.
@@ -33,5 +33,5 @@ public interface Value {
    * 
    * @return the <code>Value</code> as an <code>Object</code>.
    */
-  Object getValue();
+  T getValue();
 }

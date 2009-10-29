@@ -254,7 +254,7 @@ package org.araneaframework.core.util;
  * <p>
 
  * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
-**/
+ */
 
 
 public interface Sync {
@@ -266,7 +266,7 @@ public interface Sync {
    *  been acquired, and that no 
    *  corresponding release should be performed. Conversely,
    *  a normal return guarantees that the acquire was successful.
-  **/
+  */
 
   public void acquire() throws InterruptedException;
 
@@ -292,7 +292,7 @@ public interface Sync {
    * access to a synchronization lock, which can impose unbounded
    * delay if there is a lot of contention among threads.
    * @return true if acquired
-  **/
+  */
 
   public boolean attempt(long msecs) throws InterruptedException;
 
@@ -306,32 +306,32 @@ public interface Sync {
    * still throw unchecked exceptions such as Error or NullPointerException
    * when faced with uncontinuable errors. However, these should normally
    * only be caught by higher-level error handlers.
-  **/
+  */
 
   public void release();
 
-  /**  One second, in milliseconds; convenient as a time-out value **/
+  /**  One second, in milliseconds; convenient as a time-out value */
   public static final long ONE_SECOND = 1000;
 
-  /**  One minute, in milliseconds; convenient as a time-out value **/
+  /**  One minute, in milliseconds; convenient as a time-out value */
   public static final long ONE_MINUTE = 60 * ONE_SECOND;
 
-  /**  One hour, in milliseconds; convenient as a time-out value **/
+  /**  One hour, in milliseconds; convenient as a time-out value */
   public static final long ONE_HOUR = 60 * ONE_MINUTE;
 
-  /**  One day, in milliseconds; convenient as a time-out value **/
+  /**  One day, in milliseconds; convenient as a time-out value */
   public static final long ONE_DAY = 24 * ONE_HOUR;
 
-  /**  One week, in milliseconds; convenient as a time-out value **/
+  /**  One week, in milliseconds; convenient as a time-out value */
   public static final long ONE_WEEK = 7 * ONE_DAY;
 
-  /**  One year in milliseconds; convenient as a time-out value  **/
+  /**  One year in milliseconds; convenient as a time-out value  */
   // Not that it matters, but there is some variation across
   // standard sources about value at msec precision.
   // The value used is the same as in java.util.GregorianCalendar
   public static final long ONE_YEAR = (long)(365.2425 * ONE_DAY);
 
-  /**  One century in milliseconds; convenient as a time-out value **/
+  /**  One century in milliseconds; convenient as a time-out value */
   public static final long ONE_CENTURY = 100 * ONE_YEAR;
 
 

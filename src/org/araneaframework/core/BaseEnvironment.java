@@ -22,11 +22,9 @@ import org.araneaframework.Environment;
  * Base {@link org.araneaframework.Environment} with <code>requireEntry</code>
  * implementation.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BaseEnvironment implements Environment {
-
-  private static final long serialVersionUID = 1L;
 
   public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException {
 

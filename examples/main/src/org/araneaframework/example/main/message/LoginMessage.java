@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.message;
 
@@ -27,8 +27,6 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * A message that searches the {@link LoginWidget} to start a new root widget.
  */
 public class LoginMessage extends BroadcastMessage {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * Searches the {@link LoginWidget} to start a new root widget.

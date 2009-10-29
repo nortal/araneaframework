@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
@@ -24,33 +24,29 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
-
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
- * Standard multiselect form element tag.
+ * Standard multi-select form element tag.
  * 
  * @author Oleg Mürk
  * 
- * @jsp.tag
- *   name = "multiSelect"
- *   body-content = "JSP"
- *   description = "Form list input field, represents UiLib "MultiSelectControl"."
+ * @jsp.tag name = "multiSelect" body-content = "JSP" description =
+ *          "Form list input field, represents UiLib "MultiSelectControl"."
  */
 public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long size;
 
   /**
-   * A boolean setting to override default configuration of
-   * {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
+   * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
    * 
    * @since 1.2
    */
   protected Boolean localizeDisplayItems;
 
-  {
-    baseStyleClass = "aranea-multi-select";
+  public FormMultiSelectHtmlTag() {
+    this.baseStyleClass = "aranea-multi-select";
   }
 
   @Override
@@ -61,13 +57,14 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("MultiSelectControl");    
-    
+    assertControlType("MultiSelectControl");
+
     // Prepare
-    String name = this.getFullFieldId();     
-    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel)controlViewModel);
-    
+    String name = this.getFullFieldId();
+    MultiSelectControl<Object>.ViewModel viewModel = ((MultiSelectControl.ViewModel) this.controlViewModel);
+
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");
     JspUtil.writeAttribute(out, "id", name);
@@ -75,38 +72,35 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "multiple", "multiple");
-    JspUtil.writeAttribute(out, "size", size);
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
+    JspUtil.writeAttribute(out, "size", this.size);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
     if (viewModel.isOnChangeEventRegistered()) {
-      this.writeSubmitScriptForUiEvent(out, "onchange", derivedId, "onChanged", "", updateRegionNames);
+      this.writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged", "", this.updateRegionNames);
     }
 
     if (viewModel.isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
-    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, this.attributes);
     writeBackgroundValidationAttribute(out);
-    JspUtil.writeCloseStartTag(out);      
+    JspUtil.writeCloseStartTag(out);
 
-    if (this.localizeDisplayItems == null) {
-      this.localizeDisplayItems = ConfigurationContextUtil
-          .isLocalizeControlData(getEnvironment());
-    }
+    this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
     for (DisplayItem item : viewModel.getSelectItems()) {
       String value = item.getValue();
-      String label = item.getDisplayString();
+      String label = item.getLabel();
 
       if (this.localizeDisplayItems.booleanValue()) {
-        label = JspUtil.getResourceString(pageContext, label);
+        label = JspUtil.getResourceString(this.pageContext, label);
       }
 
-      JspUtil.writeOpenStartTag(out, "option");      
+      JspUtil.writeOpenStartTag(out, "option");
       JspUtil.writeAttribute(out, "value", value != null ? value : "");
 
-      if (viewModel.getValueSet().contains(value)) {
+      if (item.equals(viewModel.getSelectedItem())) {
         JspUtil.writeAttribute(out, "selected", "selected");
       }
 
@@ -114,39 +108,29 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeEscaped(out, label);
       JspUtil.writeEndTag(out, "option");
     }
-    
+
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
-    
+
     super.doEndTag(out);
-    return EVAL_PAGE;  
+    return EVAL_PAGE;
   }
-  
-  //
-  // Attributes
-  //  
-  
+
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Vertical size, number of options displayed." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Vertical size, number of options displayed."
    */
-  public void setSize(String size) throws JspException {
+  public void setSize(String size) {
     this.size = evaluate("size", size, Long.class);
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
-   * 
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = (Boolean) evaluateNotNull(
-        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 
 }
