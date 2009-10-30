@@ -9,7 +9,7 @@
 
 	<resolvers>
 		<chain name="defaultChainResolver">
-			<ibiblio name="ibiblio-araneaframework" root="${ibiblio-aranea-root}" pattern="${ibiblio-aranea-pattern}" m2compatible="false"/>
+			<ibiblio name="ibiblio-araneaframework" root="${ibiblio-aranea-root}" pattern="${ibiblio-aranea-pattern}" m2compatible="true"/>
 			<ibiblio name="ibiblio-maven2" m2compatible="true" />
 		</chain>
 		<filesystem name="repository" checkmodified="true">

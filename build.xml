@@ -52,14 +52,14 @@
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
-		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="demo,build,build-util,jetty,test,runtime"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="runtime,build,build-util,demo,test,jetty"/>
 	</target>
 
 	<property name="ivy.report.dir" value="build/reports/ivy" />
 	<!-- Generates a report of dependencies -->
 	<target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
 		<ivy:resolve file="ivy.xml" />
-		<ivy:report todir="${ivy.report.dir}"/>
+		<ivy:report todir="${ivy.report.dir}" dot="true"/>
 	</target>
 
 	<!-- Internal target for publishing milestones and releases to araneaframework ivy repository -->
