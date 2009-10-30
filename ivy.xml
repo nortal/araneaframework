@@ -54,7 +54,7 @@
 		<dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" transitive="false"/>
 		<dependency conf="runtime" org="xstream" rev="1.2.2" name="xstream"/>
 
-		<!-- "buildtime" -->
+		<!-- "build" -->
 		<!-- These files are required when compiling, otherwise when one wants to use a feature (e.g. joda-time, spring). -->
 		<dependency conf="build" org="javax.annotation" rev="1.0" name="jsr250-api" transitive="false"/>
 		<dependency conf="build" org="javax.servlet" rev="2.5" name="servlet-api" transitive="false"/>
@@ -110,6 +110,7 @@
 		<exclude conf="runtime" artifact="jmock"/>
 		<exclude conf="runtime" artifact="junit"/>
 		<exclude conf="runtime" artifact="xpp3_min"/>
+		<exclude conf="build" artifact="commons-logging"/>
 
 	</dependencies>
 

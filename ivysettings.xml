@@ -8,7 +8,7 @@
 
 	<resolvers>
 		<chain name="defaultChainResolver">
-			<ibiblio name="ibiblio-araneaframework" root="${ibiblio-aranea-root}" pattern="${ibiblio-aranea-pattern}" />
+			<ibiblio name="ibiblio-araneaframework" root="${ibiblio-aranea-root}" m2compatible="true"/>
 			<ibiblio name="ibiblio-maven2" m2compatible="true" />
 		</chain>
 	</resolvers>
