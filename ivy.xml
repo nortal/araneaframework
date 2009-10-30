@@ -43,16 +43,16 @@
 
 		<!-- "runtime" -->
 		<!-- These files are always required. -->
-		<dependency conf="runtime" org="base64" rev="1.0" name="base64" transitive="false"/>
-		<dependency conf="runtime" org="commons-beanutils" rev="1.8.0" name="commons-beanutils" transitive="false"/>
-		<dependency conf="runtime" org="commons-collections" rev="3.2.1" name="commons-collections" transitive="false"/>
-		<dependency conf="runtime" org="commons-fileupload" rev="1.2.1" name="commons-fileupload" transitive="false"/>
-		<dependency conf="runtime" org="commons-io" rev="1.4" name="commons-io" transitive="false"/>
-		<dependency conf="runtime" org="commons-lang" rev="2.4" name="commons-lang" transitive="false"/>
-		<dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" transitive="false"/>
-		<dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" transitive="false"/>
-		<dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" transitive="false"/>
-		<dependency conf="runtime" org="xstream" rev="1.2.2" name="xstream"/>
+		<dependency conf="runtime" org="base64" rev="1.0" name="base64" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-beanutils" rev="1.8.0" name="commons-beanutils" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-collections" rev="3.2.1" name="commons-collections" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-fileupload" rev="1.2.1" name="commons-fileupload" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-io" rev="1.4" name="commons-io" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-lang" rev="2.4" name="commons-lang" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-logging" rev="1.1.1" name="commons-logging" force="true" transitive="false"/>
+		<dependency conf="runtime" org="commons-validator" rev="1.3.1" name="commons-validator" force="true" transitive="false"/>
+		<dependency conf="runtime" org="jakarta-regexp" rev="1.4" name="jakarta-regexp" force="true" transitive="false"/>
+		<dependency conf="runtime" org="xstream" rev="1.2.2" name="xstream" force="true" />
 
 		<!-- "build" -->
 		<!-- These files are required when compiling, otherwise when one wants to use a feature (e.g. joda-time, spring). -->
