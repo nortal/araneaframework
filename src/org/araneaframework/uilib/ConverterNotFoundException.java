@@ -16,12 +16,14 @@
 
 package org.araneaframework.uilib;
 
+import org.araneaframework.uilib.support.DataType;
+
 /**
  * This exception is thrown when the {@link org.araneaframework.uilib.form.converter.BaseConverter} 
  * for the current {@link org.araneaframework.uilib.form.control.BaseControl} and {@link org.araneaframework.uilib.form.Data} 
  * could not be found.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class ConverterNotFoundException extends Exception {
@@ -33,7 +35,7 @@ public class ConverterNotFoundException extends Exception {
    * @param fromType the source type of the {@link org.araneaframework.uilib.form.converter.BaseConverter}.
    * @param toType the target type of the {@link org.araneaframework.uilib.form.converter.BaseConverter}.
    */
-  public <C, D> ConverterNotFoundException(Class<C> fromType, Class<D> toType) {
+  public ConverterNotFoundException(DataType fromType, DataType toType) {
     super("Could not find a Converter from type '" + fromType + "' to type '" + toType + "'.");
   }
 }
