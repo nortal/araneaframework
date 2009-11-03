@@ -37,7 +37,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
    * 
    * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
    * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see SelectControl(Class, String, String)
+   * @see SelectControl#SelectControl(Class, String, String)
    */
   public SelectControl(String itemLabelProperty, String itemValueProperty) {
     super(itemLabelProperty, itemValueProperty);
@@ -51,7 +51,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
    * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
    * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
    * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see SelectControl(String, String)
+   * @see SelectControl#SelectControl(String, String)
    */
   public SelectControl(Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
     super(itemClass, itemLabelProperty, itemValueProperty);

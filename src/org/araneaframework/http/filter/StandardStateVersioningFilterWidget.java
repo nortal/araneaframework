@@ -1,3 +1,18 @@
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.araneaframework.http.filter;
 
@@ -27,17 +42,14 @@ import org.araneaframework.http.util.RelocatableUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Filter that supports Aranea state versioning. It keeps its "childWidgets" in
- * serialized form associated with a state ID. When a request comes in, it
- * deserializes a childWidget with appropriate state ID and delegates actions to
- * it. When a request ends, it serializes and stores the childWidget once again.
+ * Filter that supports Aranea state versioning. It keeps its "childWidgets" in serialized form associated with a state
+ * ID. When a request comes in, it deserializes a childWidget with appropriate state ID and delegates actions to it.
+ * When a request ends, it serializes and stores the childWidget once again.
  * <p>
- * Also note that not every state is requested from the client side when the user
- * navigates using the browser's back/forward buttons. Those pages where update
- * regions exist, exist in a state with an ID that does not begin with "HTTP".
- * Only those are requested by "aranea-rsh.js". Those page where state ID starts
- * with "HTTP" are handled by "rsh.js". However, this widget needs to remember
- * all the states to return to those as the user wishes.
+ * Also note that not every state is requested from the client side when the user navigates using the browser's
+ * back/forward buttons. Those pages where update regions exist, exist in a state with an ID that does not begin with
+ * "HTTP". Only those are requested by "aranea-rsh.js". Those page where state ID starts with "HTTP" are handled by
+ * "rsh.js". However, this widget needs to remember all the states to return to those as the user wishes.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.2
@@ -67,22 +79,19 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   private transient ThreadLocal<Boolean> stateSavedTL = new ThreadLocal<Boolean>();
 
   /**
-   * Map of states that this versioning system keeps track of. When using client
-   * side state storage, this map consists of
-   * <code>Map&lt;String stateId, byte[] stateSHA1Digest&gt;</code>. When using
-   * server-side state storage
+   * Map of states that this versioning system keeps track of. When using client side state storage, this map consists
+   * of <code>Map&lt;String stateId, byte[] stateSHA1Digest&gt;</code>. When using server-side state storage
    * <code>Map&lt;String stateId, byte[] serializedState&gt;</code>
    */
   protected Map<String, byte[]> versionedStates = new LRUMap(DEFAULT_MAX_STATES_STORED);
 
   // Overrides for BaseFilterWidget methods
   /**
-   * Sets the child to <code>childWidget</code> decorated with
-   * {@link RelocatableDecorator}. This is mainly used internally as the
-   * <code>childWidget</code> is serialized and later restored.
+   * Sets the child to <code>childWidget</code> decorated with {@link RelocatableDecorator}. This is mainly used
+   * internally as the <code>childWidget</code> is serialized and later restored.
    * <p>
-   * The difference between this and the parent implementation of this method is
-   * that the <code>childWidget</code> is relocatable here.
+   * The difference between this and the parent implementation of this method is that the <code>childWidget</code> is
+   * relocatable here.
    */
   @Override
   public void setChildWidget(Widget childWidget) {
@@ -90,20 +99,18 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * Enriches the <code>Environment</code> of child-widgets with the current
-   * instance of <code>StateVersioningContext</code>.
+   * Enriches the <code>Environment</code> of child-widgets with the current instance of
+   * <code>StateVersioningContext</code>.
    */
   @Override
   protected Environment getChildWidgetEnvironment() {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(),
-        StateVersioningContext.class, this);
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), StateVersioningContext.class, this);
   }
 
   /**
-   * Sets the maximum number of states that are tracked by this
-   * {@link StandardStateVersioningFilterWidget}. It should be rather small
-   * number when states are stored on server-side and rather large number when
-   * states are stored on client side.
+   * Sets the maximum number of states that are tracked by this {@link StandardStateVersioningFilterWidget}. It should
+   * be rather small number when states are stored on server-side and rather large number when states are stored on
+   * client side.
    * 
    * @param maxVersionedStates number of states to keep track of
    */
@@ -111,11 +118,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (maxVersionedStates < this.versionedStates.size()) {
 
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Changing number of max stored states to "
-            + maxVersionedStates + " failed, because "
+        LOG.warn("Changing number of max stored states to " + maxVersionedStates + " failed, because "
             + this.versionedStates.size() + " states already versioned. "
-            + "Changing the number of max stored states to "
-            + this.versionedStates.size());
+            + "Changing the number of max stored states to " + this.versionedStates.size());
       }
 
       maxVersionedStates = this.versionedStates.size();
@@ -131,16 +136,15 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   protected synchronized void initStateSavedTL() {
-    if (this.stateSavedTL == null) {    
-      this.stateSavedTL = new ThreadLocal<Boolean>();    
+    if (this.stateSavedTL == null) {
+      this.stateSavedTL = new ThreadLocal<Boolean>();
     }
     this.stateSavedTL.set(Boolean.FALSE);
   }
 
   /* Service methods */
   @Override
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("StandardStateVersioningFilterWidget is routing widget action.");
@@ -188,16 +192,14 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       // Execute this IF-block when state has not been stored yet:
       if (Boolean.FALSE.equals(this.stateSavedTL.get())) {
 
-        String regions = output.getInputData().getGlobalData().get(
-            UpdateRegionContext.UPDATE_REGIONS_KEY);
+        String regions = output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
 
         // This first condition is true when the "regions" contains
         // "araneaGlobalClientHistoryNavigationUpdateRegion". This should occur
         // when the browser's back/forward navigation is used (a JavaScript will
         // invoke the request with that update region; see aranea-rsh.js).
 
-        if (regions != null
-            && regions.indexOf(StateVersioningContext.GLOBAL_CLIENT_NAVIGATION_REGION_ID) != -1) {
+        if (regions != null && regions.indexOf(StateVersioningContext.GLOBAL_CLIENT_NAVIGATION_REGION_ID) != -1) {
           saveOrUpdateState(this.lastStateId);
         } else {
           saveState(); // Saves the new state.
@@ -212,10 +214,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * Sets the response headers that disallow caching in general but still allow
-   * for using of browser history navigation facilities (back/forward buttons)
-   * in most browsers (IE, FF, Opera). Safari seems to behaves badly in regard
-   * to the RFC.
+   * Sets the response headers that disallow caching in general but still allow for using of browser history navigation
+   * facilities (back/forward buttons) in most browsers (IE, FF, Opera). Safari seems to behaves badly in regard to the
+   * RFC.
    */
   protected void setResponseCacheHeaders(OutputData output) {
     HttpServletResponse response = ServletUtil.getResponse(output);
@@ -224,18 +225,16 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * Sets the state ID as a header, which is needed when an AJAX request is
-   * coming from the client.
+   * Sets the state ID as a header, which is needed when an AJAX request is coming from the client.
    */
   protected void setResponseStateHeader(OutputData output, String stateId) {
     HttpServletResponse response = ServletUtil.getResponse(output);
-    response.setHeader(StateVersioningContext.STATE_ID_RESPONSE_HEADER, stateId);
+    response.setHeader(STATE_ID_RESPONSE_HEADER, stateId);
   }
 
   /**
    * Chooses the appropriate state and restores it. Calls
-   * {@link StandardStateVersioningFilterWidget#notifyClientNavigationAwareComponents()}
-   * when appropriate.
+   * {@link StandardStateVersioningFilterWidget#notifyClientNavigationAwareComponents()} when appropriate.
    */
   protected void restoreState(InputData input) throws Exception {
     // state already restored (usually the case when update/event/render all get
@@ -256,8 +255,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
     String requestStateId = getStateId(input);
 
-    if (this.lastStateId != null && requestStateId != null
-        && !this.lastStateId.equals(requestStateId)) {
+    if (this.lastStateId != null && requestStateId != null && !this.lastStateId.equals(requestStateId)) {
       notifyClientNavigationAwareComponents();
     }
 
@@ -268,8 +266,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   protected void restoreChild(byte[] serializedState) {
     this.childWidget = (Widget) SerializationUtils.deserialize(serializedState);
-    ((RelocatableWidget) this.childWidget)._getRelocatable()
-        .overrideEnvironment(getChildWidgetEnvironment());
+    ((RelocatableWidget) this.childWidget)._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
   }
 
   /**
@@ -281,8 +278,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     String requestStateId = getStateId(input);
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Received service request for versioned component hierarchy '"
-          + requestStateId + "'.");
+      LOG.debug("Received service request for versioned component hierarchy '" + requestStateId + "'.");
     }
 
     if (requestStateId == null || requestStateId.trim().length() == 0) {
@@ -294,8 +290,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         LOG.warn("Received request for restoration of state '" + requestStateId
             + "' which was not found within versioned states.");
       }
-      throw new StateExpirationException("State '" + requestStateId
-          + "' is expired and cannot be restored.");
+      throw new StateExpirationException("State '" + requestStateId + "' is expired and cannot be restored.");
       // Note: here could be a possibility to introduce ExpiredStateHandler
     }
 
@@ -307,45 +302,38 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * Returns the state id (under key
-   * {@link StateVersioningContext#STATE_ID_REQUEST_KEY} from current request.
+   * Returns the state id (under key {@link StateVersioningContext#STATE_ID_REQUEST_KEY} from current request.
    */
   protected String getStateId(InputData input) {
     return input.getGlobalData().get(STATE_ID_REQUEST_KEY);
   }
 
   /**
-   * Notifies descendants which implement
-   * {@link StateVersioningContext#ClientNavigationAware} when state which was
-   * previously stored and modified by later actions becomes active again.
+   * Notifies descendants which implement {@link org.araneaframework.http.StateVersioningContext.ClientNavigationAware}
+   * when state which was previously stored and modified by later actions becomes active again.
    */
   protected void notifyClientNavigationAwareComponents() {
     ClientNavigationNotifierMessage.INSTANCE.send(null, this.childWidget);
   }
 
   /**
-   * Saves the current state as a new state. The new state will get a new random
-   * ID that will have a prefix "HTTP" if the request is simple browser's HTTP
-   * request.
+   * Saves the current state as a new state. The new state will get a new random ID that will have a prefix "HTTP" if
+   * the request is simple browser's HTTP request.
    * 
    * @return The current state with new random identifier
    */
   public State saveState() {
-    boolean isUR = getOutputData().getInputData().getGlobalData().get(
-        UpdateRegionContext.UPDATE_REGIONS_KEY) != null;
+    boolean isUR = getOutputData().getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY) != null;
 
     String rnd = RandomStringUtils.randomAlphanumeric(30);
 
-    return saveOrUpdateState(isUR ? rnd
-        : StateVersioningContext.HTTP_REQUEST_STATEPREFIX + rnd);
+    return saveOrUpdateState(isUR ? rnd : StateVersioningContext.HTTP_REQUEST_STATEPREFIX + rnd);
   }
 
   /**
-   * Acquires current state and when server-side state versioning is used,
-   * stores that for later use. When this
-   * {@link StandardStateVersioningFilterWidget} is configured to hold state on
-   * client, it will only register state identifier and state checksums,
-   * returned state must be saved by someone else.
+   * Acquires current state and when server-side state versioning is used, stores that for later use. When this
+   * {@link StandardStateVersioningFilterWidget} is configured to hold state on client, it will only register state
+   * identifier and state checksums, returned state must be saved by someone else.
    * 
    * @return current state with supplied identifier
    */
@@ -362,12 +350,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Serializing '" + this.childWidget + "' as state '" + stateId
-          + "'.");
+      LOG.debug("Serializing '" + this.childWidget + "' as state '" + stateId + "'.");
     }
 
-    byte[] serializedChild = RelocatableUtil
-        .serializeRelocatable((RelocatableWidget) this.childWidget);
+    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) this.childWidget);
 
     this.versionedStates.put(stateId, serializedChild);
 
@@ -397,16 +383,14 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * A static class (use <code>ClientNavigationNotifierMessage.INSTANCE</code>)
-   * that is used to notify all widgets in the hirearchy that a browser's
-   * back/forward navigation has occured.
+   * A static class (use <code>ClientNavigationNotifierMessage.INSTANCE</code>) that is used to notify all widgets in
+   * the hierarchy that a browser's back/forward navigation has occurred.
    * 
-   * @see ClientNavigationAware
    * @author Taimo Peelo (taimo@araneaframework.org)
+   * @see org.araneaframework.http.StateVersioningContext.ClientNavigationAware
    * @since 1.2
    */
-  protected static class ClientNavigationNotifierMessage
-    extends BroadcastMessage {
+  protected static class ClientNavigationNotifierMessage extends BroadcastMessage {
 
     public static final ClientNavigationNotifierMessage INSTANCE = new ClientNavigationNotifierMessage();
 

@@ -130,8 +130,11 @@ public class OrderInfo implements Serializable {
     }
 
     /**
+     * Provides a map of fields that will be sorted. The values of key (field) are booleans that indicate whether the
+     * field is sorted ascending or descending.
+     * 
+     * @return A map of fields where key is field name, and value is sorting order (<code>true == ascending</code>).
      * @since 1.2.2
-     * @return
      */
     public Map<String, Boolean> getFieldsMap() {
       return this.fieldsMap;

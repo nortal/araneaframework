@@ -105,7 +105,7 @@ public class NestedFormUtil {
    * 
    * @param form The form widget where the element will be added.
    * @param fullId The full element id (a path that may be separated by dots to indicate sub-forms).
-   * @param The element that must be added.
+   * @param element The element that must be added.
    */
   @SuppressWarnings("unchecked")
   public static void addElement(BeanFormWidget form, String fullId, final GenericFormElement element) {

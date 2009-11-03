@@ -79,7 +79,7 @@ public abstract class StringRequestControl<T> extends StringArrayRequestControl<
    * @param controlValue The value to be converted to <code>String</code> that will be used as the rendered input value.
    *          May be <code>null</code>.
    * @return The value of this control as converted to <code>String</code>. May be <code>null</code>.
-   * @see StringArrayRequestControl#toResponseParameters(E)
+   * @see StringArrayRequestControl#toResponseParameters(Object)
    */
   protected abstract <E extends T> String toResponse(E controlValue);
 }

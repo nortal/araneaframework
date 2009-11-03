@@ -95,7 +95,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * 
    * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
    * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see BaseSelectControl(Class, String, String)
+   * @see BaseSelectControl#BaseSelectControl(Class, String, String)
    */
   public BaseSelectControl(String itemLabelProperty, String itemValueProperty) {
     this(null, itemLabelProperty, itemValueProperty);
@@ -109,7 +109,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
    * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
    * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see BaseSelectControl(String, String)
+   * @see BaseSelectControl#BaseSelectControl(String, String)
    */
   public BaseSelectControl(Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
     Assert.notNullParam(this, itemLabelProperty, "itemLabelProperty");

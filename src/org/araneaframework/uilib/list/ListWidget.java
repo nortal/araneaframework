@@ -596,7 +596,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * to use when one wants to create a check box or radio button column to allow user mark the rows.
    * 
    * @param id list field Id. Is required, and must be distinguished.
-   * @param label list field label. If provided, will be used as the label of the column.
    * @since 2.0
    */
   public void addEmptyField(String id) {

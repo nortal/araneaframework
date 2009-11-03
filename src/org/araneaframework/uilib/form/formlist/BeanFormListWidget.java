@@ -51,7 +51,7 @@ public class BeanFormListWidget<K, R> extends BaseFormListWidget<K, R> {
    * model callback (that will provide the rows data to this form list). The <code>beanClass</code> is used when the
    * list has also add-form for adding new rows to list.
    * 
-   * @param formRowHandler The handler that will respond to form list events.
+   * @param rowHandler The handler that will respond to form list events.
    * @param model The model callback that will provide the rows data to this form list.
    * @param beanClass The class of form and list row data.
    */

@@ -35,13 +35,9 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * This class provides methods to manipulate Bean fields.
- * 
- * Simple (e.g. 'name') as well as nested (e.g. 'location.city') Bean fields are both supported.
- * 
- * To propagate an empty Bean by nested fields, {@link #fillFieldValue(Object, String, Object)} method is recommended
- * instead of {@link #setFieldValue(Object, String, Object)} to create missing Beans automatically.
- * 
+ * This class provides methods to manipulate Bean fields. Simple (e.g. 'name') as well as nested (e.g. 'location.city')
+ * Bean fields are both supported. Empty nested properties are automatically attempted to be initiated.
+ * <p>
  * When accessing field the following approach is used:
  * <ol>
  * <li>If there is public accessor in bean's class or any superclass, then use it.</li>
@@ -51,7 +47,6 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @author Rein Raudjärv (rein@araneaframework.org)
  * @author Nikita Salnikov-Tarnovski (nikem@webmedia.ee)
  * @author Martti Tamm (martti@araneaframework.org)
- * 
  * @see BeanMapper
  */
 public class BeanUtil {

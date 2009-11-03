@@ -19,34 +19,28 @@ package org.araneaframework.core;
 import org.araneaframework.InputData;
 
 /**
- * An <code>EventListener</code> that also allows event parameters. Subclasses
- * should implement {@link #processEvent(Object, String, InputData)} to provide
- * their own event handling.
+ * An <code>EventListener</code> that also allows event parameters. Subclasses should implement
+ * {@link #processEvent(String, String, InputData)} to provide their own event handling.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class StandardEventListener implements EventListener {
 
   /**
-   * This method is marked final. Subclasses should implement
-   * {@link #processEvent(Object, String, InputData)}.
+   * This method is marked final. Subclasses should implement {@link #processEvent(String, String, InputData)}.
    */
-  public final void processEvent(String eventId, InputData input)
-      throws Exception {
-    String eventParameter = input.getGlobalData().get(
-        ApplicationWidget.EVENT_PARAMETER_KEY);
+  public final void processEvent(String eventId, InputData input) throws Exception {
+    String eventParameter = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
     processEvent(eventId, eventParameter, input);
   }
 
   /**
-   * Event handling with a parameter. All implementations should handle each
-   * <code>eventId</code> separately.
+   * Event handling with a parameter. All implementations should handle each <code>eventId</code> separately.
    * 
    * @param eventId The ID of the event.
    * @param eventParam The parameter for the event.
    * @param input The request data of the event.
    * @throws Exception Any runtime exception that may occur.
    */
-  public abstract void processEvent(String eventId, String eventParam,
-      InputData input) throws Exception;
+  public abstract void processEvent(String eventId, String eventParam, InputData input) throws Exception;
 }

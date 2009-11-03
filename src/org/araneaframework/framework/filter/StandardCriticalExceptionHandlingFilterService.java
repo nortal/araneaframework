@@ -43,7 +43,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
   /**
    * Set the factory for creating the exception handling service.
    * 
-   * @param The factory for creating the exception handling service.
+   * @param factory The factory for creating the exception handling service.
    */
   public void setExceptionHandlerFactory(ExceptionHandlerFactory factory) {
     this.factory = factory;

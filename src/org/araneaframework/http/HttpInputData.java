@@ -63,7 +63,7 @@ public interface HttpInputData extends InputData {
    * Sets the character encoding that is used to decode request parameters. Note that this must be called before any
    * parameters are read according to the Servlet specification.
    * 
-   * @param The character encoding that will be used to decode request parameters.
+   * @param encoding The character encoding that will be used to decode request parameters.
    */
   void setCharacterEncoding(String encoding);
 

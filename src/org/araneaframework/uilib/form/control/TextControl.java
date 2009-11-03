@@ -83,10 +83,10 @@ public class TextControl extends StringValueControl implements FilteredInputCont
   /**
    * Makes a text control with specific type, minimum and maximum length constraints, and trimming constraints.
    * 
-   * @param textType specific type.
-   * @param minLength minimum permitted length.
-   * @param maxLength maximum permitted length.
-   * @param trimValue whether the value from request will be trimmed.
+   * @param textType The specific type that input text must validate.
+   * @param minLength The minimum permitted length.
+   * @param maxLength The maximum permitted length.
+   * @param trim Whether the value from request will be trimmed.
    */
   public TextControl(TextType textType, Long minLength, Long maxLength, boolean trim) {
     setTextType(textType);

@@ -86,8 +86,9 @@ public abstract class DisplayItemUtil implements Serializable {
   /**
    * Returns whether <code>value</code> is found in the select items.
    * 
-   * @param displayItems The items that should be checked whether given <code>value</code> is one of them.
-   * @param value the value that is controlled.
+   * @param items The items that should be checked whether given <code>value</code> is one of them.
+   * @param valueProperty The property of an item to retrieve its value (converted to String).
+   * @param value The value that an item is expected to have.
    * @return whether <code>value</code> is found in the select items.
    */
   public static <T> boolean isValueInItems(Collection<T> items, String valueProperty, String value) {
@@ -122,13 +123,13 @@ public abstract class DisplayItemUtil implements Serializable {
   }
 
   /**
-   * Returns display item label by the specified value.
+   * Returns display items for which a value exists in the given <code>values</code> array.
    * 
-   * @param items display items.
-   * @param value display item value.
-   * @return display item label by the specified value.
+   * @param items The display items that represent all selectable items. A subset of these will be returned.
+   * @param values The (display items) values for filtering display items.
+   * @return A subset of display items that were matched.
    */
-  public static <T> List<DisplayItem> getSelectedItems(List<DisplayItem> items, String[] values) {
+  public static List<DisplayItem> getSelectedItems(List<DisplayItem> items, String[] values) {
     List<DisplayItem> results = new LinkedList<DisplayItem>();
     if (CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {

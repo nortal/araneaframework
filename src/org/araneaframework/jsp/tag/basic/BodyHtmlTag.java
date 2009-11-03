@@ -279,7 +279,7 @@ public class BodyHtmlTag extends PresentationTag {
    * Nested tags should get surrounding body tag from <code>PageContext</code> and register their body end scripts with
    * this method.
    * 
-   * @param The script to add after the BODY end-tag.
+   * @param script The script to add after the BODY end-tag.
    */
   public void addAfterBodyEndScript(String script) {
     if (this.afterBodyEndScripts == null) {

@@ -47,7 +47,7 @@ public interface Environment extends Serializable {
   public <T> T getEntry(Class<T> key);
   
   /**
-   * Does the same as {@link #getEntry(Object)}, but throws a {@link NoSuchEnvironmentEntryException} if 
+   * Does the same as {@link #getEntry(Class)}, but throws a {@link NoSuchEnvironmentEntryException} if 
    * entry cannot be found. 
    * 
    * @throws NoSuchEnvironmentEntryException If environment entry could not be found.

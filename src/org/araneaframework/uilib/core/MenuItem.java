@@ -135,10 +135,11 @@ public class MenuItem implements Serializable {
   }
 
   /**
-   * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
+   * Adds a new <code>MenuItem</code> using the given menu item ID and menu item flow class.
    * 
-   * @param item item to add.
-   * @return item added to menu
+   * @param id The ID for the new menu item.
+   * @param clazz The flow class to initiate when flow is about to be initialized.
+   * @return The added menu item.
    * @since 2.0
    */
   public MenuItem addMenuItem(String id, Class<? extends Widget> clazz) {
@@ -151,10 +152,10 @@ public class MenuItem implements Serializable {
   }
 
   /**
-   * Adds a new <code>MenuItem</code> under this <code>MenuItem</code>.
+   * Adds a new <code>MenuItem</code> using the given menu item ID. The menu item cannot be rendered.
    * 
-   * @param item item to add.
-   * @return item added to menu
+   * @param id The ID for the new menu item.
+   * @return The added menu item.
    * @since 2.0
    */
   public MenuItem addMenuItem(String id) {
