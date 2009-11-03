@@ -20,29 +20,32 @@ import java.io.Serializable;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.support.DataType;
 
 /**
- * Provides access to registered {@link Converter}s.
+ * Provides access to registered {@link Converter}s. The {@link DataType}s should provide enough information to make
+ * right conversions.
  * 
  * Since 1.1 this interface extends <code>Serializable</code>.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @see Converter
  * @see ConverterFactory
  * @see FormElement#convert()
  */
+@SuppressWarnings("unchecked")
 public interface ConverterProvider extends Serializable {
 
   /**
-   * This method should return a {@link BaseConverter }corresponding to the two types given.
-   * @param <C>
+   * This method should return a converter to convert an object of type <code>fromType</code> to an object
+   * <code>toType</code>.
    * 
-   * @param fromType from type.
-   * @param toType to type.
+   * @param fromType The type information about the conversion source object.
+   * @param toType The type information about the conversion target object.
    * @return {@link BaseConverter} corresponding to the types given.
    * @throws ConverterNotFoundException if {@link BaseConverter}is not found
    */
-  public <C, D> Converter<C, D> findConverter(Class<C> fromType, Class<D>toType) throws ConverterNotFoundException;
+  public Converter findConverter(DataType fromType, DataType toType) throws ConverterNotFoundException;
 
 }
