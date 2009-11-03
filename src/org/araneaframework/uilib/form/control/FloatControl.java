@@ -39,7 +39,7 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Rein Raudjärv (rein@araneaframework.org)
  */
-public class BigDecimalControl extends BlankStringNullableControl<BigDecimal> implements FilteredInputControl<BigDecimal> {
+public class FloatControl extends BlankStringNullableControl<BigDecimal> implements FilteredInputControl<BigDecimal> {
 
   private InputFilter inputFilter;
 
@@ -52,7 +52,7 @@ public class BigDecimalControl extends BlankStringNullableControl<BigDecimal> im
   /**
    * Default and empty constructor.
    */
-  public BigDecimalControl() {}
+  public FloatControl() {}
 
   /**
    * Makes a <code>BigDecimal</code> control that has both minimum and maximum values and the maximum scale.
@@ -61,7 +61,7 @@ public class BigDecimalControl extends BlankStringNullableControl<BigDecimal> im
    * @param maxValue The maximum permitted value.
    * @param maxScale The maximum permitted scale.
    */
-  public BigDecimalControl(BigDecimal minValue, BigDecimal maxValue, Integer maxScale) {
+  public FloatControl(BigDecimal minValue, BigDecimal maxValue, Integer maxScale) {
     setMinValue(minValue);
     setMaxValue(maxValue);
     setMaxScale(maxScale);
@@ -73,7 +73,7 @@ public class BigDecimalControl extends BlankStringNullableControl<BigDecimal> im
    * @param minValue The minimum permitted value.
    * @param maxValue The maximum permitted value.
    */
-  public BigDecimalControl(BigDecimal minValue, BigDecimal maxValue) {
+  public FloatControl(BigDecimal minValue, BigDecimal maxValue) {
     this(minValue, maxValue, null);
   }
 
@@ -251,10 +251,10 @@ public class BigDecimalControl extends BlankStringNullableControl<BigDecimal> im
      * Takes an outer class snapshot.
      */
     public ViewModel() {
-      this.maxValue = BigDecimalControl.this.getMaxValue();
-      this.minValue = BigDecimalControl.this.getMinValue();
-      this.maxScale = BigDecimalControl.this.getMaxScale();
-      this.inputFilter = BigDecimalControl.this.getInputFilter();
+      this.maxValue = FloatControl.this.getMaxValue();
+      this.minValue = FloatControl.this.getMinValue();
+      this.maxScale = FloatControl.this.getMaxScale();
+      this.inputFilter = FloatControl.this.getInputFilter();
     }
 
     /**

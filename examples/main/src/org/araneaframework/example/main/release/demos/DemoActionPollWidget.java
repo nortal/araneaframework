@@ -31,6 +31,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  */
 public class DemoActionPollWidget extends TemplateBaseWidget {
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/demos/demoActionPoll");
     addActionListener("pollrequest", new TaskPollingListener());
@@ -42,6 +43,7 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
 
     int lastRandom = 0;
 
+    @Override
     public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
 
       int random = this.rn.nextInt(100);

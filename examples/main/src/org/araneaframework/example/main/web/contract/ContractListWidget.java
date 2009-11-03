@@ -39,6 +39,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 
   public ContractListWidget() {}
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("contract/contractList");
     LOG.debug("TemplateContractListWidget init called");
@@ -94,6 +95,7 @@ public class ContractListWidget extends TemplateBaseWidget {
       super(ContractMO.class);
     }
 
+    @Override
     public List<ContractMO> loadData() throws Exception {
       return getContractDAO().getAll(ContractMO.class);
     }

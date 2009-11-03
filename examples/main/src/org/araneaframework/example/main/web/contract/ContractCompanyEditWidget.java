@@ -41,6 +41,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
     this.company = company;
   }
 
+  @Override
   protected void init() throws Exception {
     LOG.debug("TemplateContractCompanyWidget init called");
     setViewSelector("contract/contractCompanyEdit");

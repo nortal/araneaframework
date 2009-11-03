@@ -40,6 +40,7 @@ public class ListData<T> extends Data<List<T>> {
    * 
    * @since 1.2
    */
+  @Override
   public boolean isStateChanged() {
     if (this.markedBaseValue == null || this.value == null) {
       return this.markedBaseValue != null || this.value != null;

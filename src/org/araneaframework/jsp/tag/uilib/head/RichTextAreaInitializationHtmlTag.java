@@ -82,11 +82,9 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 
       StringBuffer buf = new StringBuffer("\t");
       buf.append(entry.getKey());
-      buf.append(" : ");
+      buf.append(" : '");
       buf.append(entry.getValue().toString());
-      if (ite.hasNext()) {
-        buf.append(",\n");
-      }
+      buf.append(ite.hasNext() ? "',\n" : "'");
       out.write(buf.toString());
     }
   }

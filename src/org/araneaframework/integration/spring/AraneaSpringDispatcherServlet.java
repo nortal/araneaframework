@@ -82,6 +82,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   protected BeanFactory beanFactory;
 
+  @Override
   public void init() throws ServletException {
     // Reading init-param's
     String araneaCustomConfXml = DEFAULT_ARANEA_CUSTOM_CONF_XML;
@@ -162,6 +163,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     return getServletConfig().getInitParameter(paramName);
   }
 
+  @Override
   protected ServletServiceAdapterComponent buildRootComponent() {
     // Getting the Aranea root component name
     String araneaRoot = DEFAULT_ARANEA_ROOT;
@@ -175,6 +177,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     return adapter;
   }
 
+  @Override
   protected Map<Class<?>, Object> getEnvironmentEntries() {
     Map<Class<?>, Object> result = new HashMap<Class<?>, Object>();
     result.put(BeanFactory.class, this.beanFactory);

@@ -39,6 +39,7 @@ public class MenuSelectMessage extends BroadcastMessage {
   /**
    * Searches the {@link MenuWidget} to select the given menu item.
    */
+  @Override
   protected void execute(Component component) throws Exception {
     if (component instanceof MenuWidget) {
       MenuWidget w = (MenuWidget) component;

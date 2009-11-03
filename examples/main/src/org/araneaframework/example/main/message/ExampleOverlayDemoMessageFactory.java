@@ -36,6 +36,7 @@ public class ExampleOverlayDemoMessageFactory implements MessageFactory {
 
   private class OverlayBroadcastMessage extends BroadcastMessage {
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof MenuWidget) {
         ((MenuWidget) component).start(new ModalDialogDemoWidget());

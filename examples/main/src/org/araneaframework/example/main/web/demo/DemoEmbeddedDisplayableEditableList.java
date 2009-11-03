@@ -61,6 +61,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
   /**
    * Builds the form with one checkbox, one textbox and a button.
    */
+  @Override
   public void init() throws Exception {
     setViewSelector("demo/demoEmbeddedDisplayableEditableList");
     this.editableRows = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(),
@@ -74,6 +75,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
       return row.getId();
     }
 
+    @Override
     public void saveValidRow(BeanFormRow<Long, DataDTO> editableRow) throws Exception {
       DataDTO rowData = editableRow.getForm().writeToBean();
       rowData.setId(editableRow.getKey());
@@ -81,10 +83,12 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
       editableRow.close();
     }
 
+    @Override
     public void deleteRow(Long key) throws Exception {
       data.remove(key);
     }
 
+    @Override
     public void addValidRow(BeanFormWidget<DataDTO> addForm) throws Exception {
       lastId++;
       DataDTO rowData = addForm.writeToBean();
@@ -92,6 +96,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
       data.put(lastId, rowData);
     }
 
+    @Override
     public void initFormRow(BeanFormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
       editableRow.close();
       addCommonFormFields(editableRow.getForm());
@@ -103,6 +108,7 @@ public class DemoEmbeddedDisplayableEditableList extends TemplateBaseWidget {
       editableRow.getForm().addWidget("embeddedFormList", new DemoDisplayableEditableList());
     }
 
+    @Override
     public void initAddForm(FormWidget addForm) throws Exception {
       addCommonFormFields(addForm);
       FormListUtil.addAddButtonToAddForm("#", editableRows, addForm);

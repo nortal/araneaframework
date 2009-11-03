@@ -36,14 +36,13 @@ public class NotEmptyConstraintTest extends TestCase {
 
   protected FormWidget form;
 
-  protected FormElement textInput;
+  protected FormElement<String, String> textInput;
 
   @Override
   public void setUp() throws Exception {
     this.form = new FormWidget();
 
-    this.textInput = this.form.createElement("#text", new TextControl(),
-        new StringData(), false);
+    this.textInput = this.form.createElement("#text", new TextControl(), new StringData(), false);
 
     this.form.addElement("text", this.textInput);
 
@@ -53,8 +52,7 @@ public class NotEmptyConstraintTest extends TestCase {
   }
 
   protected InputData createRequestWithText(String text) {
-    MockHttpServletRequest request = RequestUtil.markSubmitted(
-        new MockHttpServletRequest());
+    MockHttpServletRequest request = RequestUtil.markSubmitted(new MockHttpServletRequest());
     request.addParameter("text", text);
     return new StandardServletInputData(request);
   }
@@ -65,46 +63,38 @@ public class NotEmptyConstraintTest extends TestCase {
   }
 
   public void testValidFormElement() throws Exception {
-    this.textInput.setConstraint(new NotEmptyConstraint());
+    this.textInput.setConstraint(new NotEmptyConstraint<String, String>());
     processRequestWithText("some text");
-    assertTrue("Textinput value should have been read from request.",
-        this.form.convertAndValidate());
+    assertTrue("Textinput value should have been read from request.", this.form.convertAndValidate());
   }
 
   public void testValidForm() throws Exception {
-    this.form.setConstraint(new NotEmptyConstraint(this.textInput));
+    this.form.setConstraint(new NotEmptyConstraint<String, String>(this.textInput));
     processRequestWithText("some text");
-    assertTrue("Textinput value should have been read from request.",
-        this.form.convertAndValidate());
+    assertTrue("Textinput value should have been read from request.", this.form.convertAndValidate());
   }
 
   public void testInvalidFormElement() throws Exception {
-    this.textInput.setConstraint(new NotEmptyConstraint());
+    this.textInput.setConstraint(new NotEmptyConstraint<String, String>());
     processRequestWithText((String) null);
-    assertFalse("Textinput value should have not been read from request.",
-        this.form.convertAndValidate());
+    assertFalse("Textinput value should have not been read from request.", this.form.convertAndValidate());
   }
 
   /**
-   * TODO: this test fails now, because we are emulating previous broken
-   * behaviour of forms, unfortunately some cases of validation (isRead() of
-   * controls) fails otherwise. Test that constraint correctly detects that
-   * formelement was submitted as empty, even after FormElement.setValue is
-   * called.
+   * TODO: this test fails now, because we are emulating previous broken behaviour of forms, unfortunately some cases of
+   * validation (isRead() of controls) fails otherwise. Test that constraint correctly detects that formelement was
+   * submitted as empty, even after FormElement.setValue is called.
    */
-  public void testFormElementMissingInRequestExplicitSetValue()
-      throws Exception {
-    this.textInput.setConstraint(new NotEmptyConstraint());
+  public void testFormElementMissingInRequestExplicitSetValue() throws Exception {
+    this.textInput.setConstraint(new NotEmptyConstraint<String, String>());
     processRequestWithText((String) null);
     this.textInput.setValue("some text");
-    assertTrue("Textinput value should have been read (it was set explicitly).",
-        this.form.convertAndValidate());
+    assertTrue("Textinput value should have been read (it was set explicitly).", this.form.convertAndValidate());
   }
 
   public void testInvalidForm() throws Exception {
-    this.form.setConstraint(new NotEmptyConstraint(this.textInput));
+    this.form.setConstraint(new NotEmptyConstraint<String, String>(this.textInput));
     processRequestWithText((String) null);
-    assertFalse("Textinput value should have not been read from request.",
-        this.form.convertAndValidate());
+    assertFalse("Textinput value should have not been read from request.", this.form.convertAndValidate());
   }
 }

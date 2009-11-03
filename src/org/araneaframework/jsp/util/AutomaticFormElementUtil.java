@@ -32,7 +32,7 @@ import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.FileUploadControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.SelectControl;
@@ -72,7 +72,7 @@ public class AutomaticFormElementUtil {
     CONTROLS_TO_EDITABLE_TAGS.put(TextareaControl.class, "textarea");
     CONTROLS_TO_EDITABLE_TAGS.put(TextControl.class, "textInput");
     CONTROLS_TO_EDITABLE_TAGS.put(NumberControl.class, "numberInput");
-    CONTROLS_TO_EDITABLE_TAGS.put(BigDecimalControl.class, "floatInput");
+    CONTROLS_TO_EDITABLE_TAGS.put(FloatControl.class, "floatInput");
     CONTROLS_TO_EDITABLE_TAGS.put(DateControl.class, "dateInput");
     CONTROLS_TO_EDITABLE_TAGS.put(DateTimeControl.class, "dateTimeInput");
     CONTROLS_TO_EDITABLE_TAGS.put(TimeControl.class, "timeInput");
@@ -83,7 +83,7 @@ public class AutomaticFormElementUtil {
     CONTROLS_TO_DISPLAY_TAGS.put(TextareaControl.class, "textareaDisplay");
     CONTROLS_TO_DISPLAY_TAGS.put(TextControl.class, "textInputDisplay");
     CONTROLS_TO_DISPLAY_TAGS.put(NumberControl.class, "numberInputDisplay");
-    CONTROLS_TO_DISPLAY_TAGS.put(BigDecimalControl.class, "floatInputDisplay");
+    CONTROLS_TO_DISPLAY_TAGS.put(FloatControl.class, "floatInputDisplay");
     CONTROLS_TO_DISPLAY_TAGS.put(DateControl.class, "dateInputDisplay");
     CONTROLS_TO_DISPLAY_TAGS.put(DateTimeControl.class, "dateTimeInputDisplay");
     CONTROLS_TO_DISPLAY_TAGS.put(TimeControl.class, "timeInputDisplay");

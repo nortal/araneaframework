@@ -24,6 +24,7 @@ import org.araneaframework.http.util.ServletUtil;
 
 public class HelloService extends BaseService {
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     ServletUtil.publishModel(input, "helloName", input.getGlobalData().get("name"));
     ServletUtil.simpleInclude("/WEB-INF/hello.jsp", getEnvironment(), input, output);

@@ -25,6 +25,7 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.jsp.util.JspUtil;
 
 public class HelloWorldService extends BaseService {
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     ((HttpOutputData) output).setContentType("text/html");    
     Writer out = ((HttpOutputData) output).getWriter();

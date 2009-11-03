@@ -62,6 +62,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
   /**
    * Builds the form with one checkbox, one textbox and a button.
    */
+  @Override
   public void init() throws Exception {
     setViewSelector("demo/demoInMemoryEditableList");
     this.formList = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(), DataDTO.class);
@@ -99,6 +100,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       return row.getId();
     }
 
+    @Override
     public void saveValidRow(BeanFormRow<Long, DataDTO> editableRow) throws Exception {
       // Reading data
       DataDTO rowData = editableRow.getForm().writeToBean();
@@ -108,15 +110,18 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       editableRow.getForm().markBaseState();
     }
 
+    @Override
     public void deleteRow(Long key) throws Exception {
       // Deleting data
       inMemoryHelper.delete(key);
     }
 
+    @Override
     public void addValidRow(BeanFormWidget<DataDTO> addForm) throws Exception {
       inMemoryHelper.add(addForm.writeToBean());
     }
 
+    @Override
     public void initFormRow(BeanFormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
       BeanFormWidget<DataDTO> rowForm = editableRow.getForm();
       addCommonFormFields(rowForm);
@@ -135,6 +140,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       editableRow.getForm().markBaseState();
     }
 
+    @Override
     public void initAddForm(FormWidget addForm) throws Exception {
       addCommonFormFields(addForm);
 

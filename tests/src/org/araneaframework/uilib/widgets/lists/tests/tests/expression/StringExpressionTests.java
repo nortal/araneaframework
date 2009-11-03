@@ -40,9 +40,9 @@ public class StringExpressionTests extends TestCase {
   public void setUp() {
 		this.resolver = new MockVariableResolver();
 		
-		this.part1expr = new MockValueExpression("part1");
-		this.part2expr = new MockValueExpression("part2");
-		this.part3expr = new MockValueExpression("part3");
+		this.part1expr = new MockValueExpression<String>("part1");
+		this.part2expr = new MockValueExpression<String>("part2");
+		this.part3expr = new MockValueExpression<String>("part3");
 	}
 
 	@Override

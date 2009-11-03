@@ -28,6 +28,7 @@ public class HelloWidget extends BaseUIWidget {
     this.name = name;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("hello");        
 	}

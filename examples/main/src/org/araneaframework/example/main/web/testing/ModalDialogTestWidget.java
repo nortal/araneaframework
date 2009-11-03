@@ -41,6 +41,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
 
   private List<Class<?>> menuItems = new ArrayList<Class<?>>();
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("testing/modalDialogTest");
 
@@ -100,6 +101,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
       this.wrapped = wrapped;
     }
 
+    @Override
     protected void init() throws Exception {
       setViewSelector("testing/renderChild");
       addWidget("wrapped", this.wrapped);

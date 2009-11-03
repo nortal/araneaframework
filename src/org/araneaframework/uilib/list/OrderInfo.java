@@ -139,6 +139,7 @@ public class OrderInfo implements Serializable {
 
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer("OrderInfo (");
     sb.append(StringUtils.join(this.fields, "; "));

@@ -40,6 +40,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
     this.topWidget = topWidget;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("root");
 
@@ -53,6 +54,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
     this.topWidget = null;
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), SecurityContext.class, this);
   }

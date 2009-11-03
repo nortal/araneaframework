@@ -53,6 +53,7 @@ public class DemoComplexForm extends TemplateBaseWidget {
    */
   private SelectControl<SelectItem> beastSelectionControl;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("demo/demoComplexForm");
     putViewData("formLabel", "demo.complexForm.ajax");

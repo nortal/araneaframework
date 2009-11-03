@@ -45,15 +45,15 @@ public class ExpressionTests extends TestCase {
 		LOG.debug("Testing ValueExpression");
 		// evaluating
 		assertNull("ValueExpression must return null",
-				new ValueExpression(null).evaluate(this.resolver));
+				new ValueExpression<Long>(null).evaluate(this.resolver));
 		assertEquals("ValueExpression must return true", Boolean.TRUE,
-				new ValueExpression(Boolean.TRUE).evaluate(this.resolver));
+				new ValueExpression<Boolean>(Boolean.TRUE).evaluate(this.resolver));
 		assertEquals("ValueExpression must return 0", new Long(0),
-				new ValueExpression(new Long(0)).evaluate(this.resolver));
+				new ValueExpression<Long>(0L).evaluate(this.resolver));
 
 		// name
 		assertEquals("ValueExpression's name must be 'value1'", "value1",
-				new ValueExpression("value1", null).getName());
+				new ValueExpression<String>("value1", null).getName());
 	}
 
 	public void testVariableExpression() {

@@ -66,11 +66,13 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * 
    * @exception Exception Any non-specific exception that may occur.
    */
+  @Override
   protected void init() throws Exception {
     super.init();
     setFinishable(false);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), MenuContext.class, this);
   }
@@ -99,6 +101,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
 
         return new RoutedMessage(getScope().toPath()) {
 
+          @Override
           protected void execute(Component component) throws Exception {
             ((BaseMenuWidget) component).selectMenuItem(suffix);
           }
@@ -112,6 +115,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    */
   protected class ItemSelectionListener extends StandardEventListener {
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       BaseMenuWidget.this.selectMenuItem(eventParam);
     }

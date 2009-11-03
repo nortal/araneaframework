@@ -33,6 +33,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
 
   protected ListWidget<DemoVO> simpleList;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/features/simpleList");
 
@@ -78,6 +79,7 @@ public class SimpleListWidget extends TemplateBaseWidget {
       }
     }
 
+    @Override
     public List<DemoVO> loadData() {
       return this.data;
     }

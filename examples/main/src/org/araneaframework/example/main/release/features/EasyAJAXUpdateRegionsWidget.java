@@ -24,6 +24,7 @@ import org.araneaframework.example.main.web.demo.DemoComplexForm;
  */
 public class EasyAJAXUpdateRegionsWidget extends TemplateBaseWidget {
 
+  @Override
   protected void init() throws Exception {
     addWidget("1", new EasyAjaxDemoWidget("release/features/easyAjax/HttpRequest", "Complex_Form_HTTP"));
     addWidget("2", new EasyAjaxDemoWidget("release/features/easyAjax/XMLHttpRequest", "Complex_Form"));
@@ -41,6 +42,7 @@ public class EasyAJAXUpdateRegionsWidget extends TemplateBaseWidget {
       this.label = label;
     }
 
+    @Override
     protected void init() throws Exception {
       super.init();
       setViewSelector(this.customViewSelector);

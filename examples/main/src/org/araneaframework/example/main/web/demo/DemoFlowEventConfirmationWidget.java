@@ -17,7 +17,6 @@
 package org.araneaframework.example.main.web.demo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.collections.Predicate;
@@ -27,7 +26,7 @@ import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.flowcontext.transitionhandler.CancelConfirmingTransitionHandler;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -79,11 +78,11 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
     this.form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
     this.form.addElement("time", "common.time", new TimeControl(), new DateData(), false);
     this.form.addElement("date", "common.date", new DateControl(), new DateData(), false);
-    this.form.addElement("number", "common.float", new BigDecimalControl(), new BigDecimalData(), false);
+    this.form.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
 
     // Require the number input field to be filled. It could have been achieved already on form element creation by
     // setting mandatory attribute to true.
-    this.form.getElement("number").setConstraint(new NotEmptyConstraint());
+    this.form.getElement("number").setConstraint(new NotEmptyConstraint<Object, Object>());
 
     // Sets initial value of form element:
     this.form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));

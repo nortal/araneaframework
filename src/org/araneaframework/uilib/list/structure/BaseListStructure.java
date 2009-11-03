@@ -209,7 +209,7 @@ public class BaseListStructure implements Serializable {
          * @return A map of list field IDs and Booleans.
          * @since 1.1.5
          */
-        public Map getColumnOrders() {
+        public Map<String, Boolean> getColumnOrders() {
             return this.columnOrders;
         }
 	}

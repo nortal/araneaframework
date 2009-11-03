@@ -101,8 +101,7 @@ public class FormConstraintTest extends TestCase {
 
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
-    testForm.getElement("myDateTime").setConstraint(
-        groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+    testForm.getElement("myDateTime").setConstraint(groupHelper.createGroupedConstraint(new NotEmptyConstraint<Object, Object>(), "active"));
 
     processRequest(new StandardServletInputData(request), testForm);
 
@@ -125,7 +124,7 @@ public class FormConstraintTest extends TestCase {
 
     // Testing primitive constraint
     testForm.getElement("myLongText").setConstraint(
-        new OptionalConstraint(new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
+        new OptionalConstraint<BigInteger, BigInteger>(new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
 
     processRequest(new StandardServletInputData(request), testForm);
 
@@ -139,7 +138,7 @@ public class FormConstraintTest extends TestCase {
 
     // Testing primitive constraint
     testForm.getElement("myLongText").setConstraint(
-        new OptionalConstraint(new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
+        new OptionalConstraint<BigInteger, BigInteger>(new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
 
     processRequest(new StandardServletInputData(request), testForm);
 
@@ -219,7 +218,7 @@ public class FormConstraintTest extends TestCase {
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
     testForm.getElement("myDateTime").setConstraint(
-        groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+        groupHelper.createGroupedConstraint(new NotEmptyConstraint<Object, Object>(), "active"));
 
     MockUiLibUtil.emulateHandleRequest(testForm, "testForm", request);
 
@@ -242,7 +241,7 @@ public class FormConstraintTest extends TestCase {
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
     testForm.getElement("myDateTime").setConstraint(
-        groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+        groupHelper.createGroupedConstraint(new NotEmptyConstraint<Object, Object>(), "active"));
 
     MockUiLibUtil.emulateHandleRequest(testForm, "testForm", request);
     assertFalse("Test form must be invalid after reading from request", testForm.convertAndValidate());

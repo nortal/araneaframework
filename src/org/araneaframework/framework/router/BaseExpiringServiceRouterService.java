@@ -54,6 +54,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     return this.serviceTTLMap == null ? null : Collections.unmodifiableMap(this.serviceTTLMap);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     TimeCapsule capsule = null;
 
@@ -92,6 +93,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     }
   }
 
+  @Override
   protected Environment getChildEnvironment(String serviceId) throws Exception {
     Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
@@ -99,6 +101,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
 
+  @Override
   protected void closeService(Object serviceId) {
     super.closeService(serviceId);
     getTimeCapsules().remove(serviceId);

@@ -59,6 +59,7 @@ public class PopupFlowWidget extends BaseApplicationWidget {
     this.properties = properties;
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
 

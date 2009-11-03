@@ -39,7 +39,8 @@ public class ListTag extends BaseWidgetTag {
 
   public final static String LIST_FULL_ID_KEY = "listFullId";
 
-  protected ListWidget<?>.ViewModel listViewModel;
+  @SuppressWarnings("unchecked")
+  protected ListWidget.ViewModel listViewModel;
 
   protected String varSequence = "listSequence";
 

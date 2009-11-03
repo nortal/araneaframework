@@ -39,6 +39,7 @@ public class StandardFilterChainService extends BaseFilterService {
     this.filterChain = filterChain;
   }
 
+  @Override
   protected void init() throws Exception {
     if (this.filterChain != null) {
       // We move from the back of the list backwards:

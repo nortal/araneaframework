@@ -85,12 +85,12 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
     // Let's add a constraint to this select control that validates (when clicked) whether an item can be selected or
     // not. Preoccupied rooms cannot be selected, and therefore give an error to the user.
 
-    rooms.setConstraint(new BaseFieldConstraint() {
+    rooms.setConstraint(new BaseFieldConstraint<Room, Room>() {
 
       @Override
       protected void validateConstraint() throws Exception {
         if (appointmentDate.isValid() && appointmentTime.isValid()) {
-          Room appointmentRoom = (Room) getValue();
+          Room appointmentRoom = getValue();
           if (appointmentRoom.isOccupied()) {
             addError(MessageUtil.localizeAndFormat(getEnvironment(), "seamless.room.not.available", t(appointmentRoom
                 .getName())));
@@ -108,15 +108,14 @@ public class SeamlessFormValidationDemoWidget extends TemplateBaseWidget {
     // Let's add a constraint to this select control that validates (when clicked) whether an item can be selected or
     // not. Preoccupied attendees cannot be selected, and therefore give an error to the user.
 
-    attendees.setConstraint(new BaseFieldConstraint() {
+    attendees.setConstraint(new BaseFieldConstraint<List<Attendee>, List<Attendee>>() {
 
-      @SuppressWarnings("unchecked")
       @Override
       protected void validateConstraint() throws Exception {
         if (appointmentDate.isValid() && appointmentTime.isValid()) {
           List<Attendee> preoccupiedAttendees = new ArrayList<Attendee>();
 
-          for (Attendee attendee : (List<Attendee>) getValue()) {
+          for (Attendee attendee : getValue()) {
             if (attendee.isPreoccupied()) {
               preoccupiedAttendees.add(attendee);
             }

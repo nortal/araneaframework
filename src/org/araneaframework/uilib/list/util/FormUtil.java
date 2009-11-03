@@ -32,7 +32,7 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AndConstraint;
 import org.araneaframework.uilib.form.constraint.BaseCompositeConstraint;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
@@ -102,7 +102,7 @@ public class FormUtil {
   }
 
   public static Control<BigDecimal> createFloatControl() {
-    return new BigDecimalControl();
+    return new FloatControl();
   }
 
   public static Control<Timestamp> createDateControl() {

@@ -186,13 +186,11 @@ public class SimpleInMemoryEditableList extends TemplateBaseWidget {
     return result;
   }
 
-  private class SexConstraint extends BaseFieldConstraint {
-
-    public SexConstraint() {}
+  private class SexConstraint extends BaseFieldConstraint<String, String> {
 
     @Override
     protected void validateConstraint() throws Exception {
-      String value = (String) getValue();
+      String value = getValue();
       if (!StringUtils.equalsIgnoreCase(value, "m") || StringUtils.equalsIgnoreCase(value, "f")) {
         addError(MessageUtil.localizeAndFormat(getEnvironment(), "sed.sexcon.ermsg", t(getLabel())));
       }

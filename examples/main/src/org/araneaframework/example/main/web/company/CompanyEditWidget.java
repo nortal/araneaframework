@@ -51,6 +51,7 @@ public class CompanyEditWidget extends TemplateBaseWidget {
     this.id = id;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("company/companyAddEdit");
     putViewData("formLabel", this.id != null ? "company.edit.form.label" : "company.add.form.label");

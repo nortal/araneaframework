@@ -51,6 +51,7 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 
   public PostgreListSqlHelper() {}
 
+  @Override
   protected SqlStatement getCountSqlStatement() {
     if (countSqlQuery != null) {
       return new SqlStatement(countSqlQuery, statement.getParams());
@@ -61,6 +62,7 @@ public class PostgreListSqlHelper extends ListSqlHelper {
     return new SqlStatement(temp, this.statement.getParams());
   }
 
+  @Override
   protected SqlStatement getRangeSqlStatement() {
     StringBuffer sb = new StringBuffer(this.statement.getQuery());
 
@@ -82,6 +84,7 @@ public class PostgreListSqlHelper extends ListSqlHelper {
     return rangeStmt;
   }
 
+  @Override
   protected SqlExpression getFieldsSqlExpression() {
     SqlCollectionExpression result = new SqlCollectionExpression();
     for (String fieldName : this.fields.getNames()) {
@@ -97,26 +100,32 @@ public class PostgreListSqlHelper extends ListSqlHelper {
     return result;
   }
 
+  @Override
   protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
     return new PostgreExpressionToSqlExprBuilder();
   }
 
+  @Override
   public void setCountSqlQuery(String countSqlQuery) {
     this.countSqlQuery = countSqlQuery;
   }
 
+  @Override
   public void setSqlQuery(String sqlQuery) {
     this.statement.setQuery(sqlQuery);
   }
 
+  @Override
   public void addNullParam(int valueType) {
     this.statement.addNullParam(valueType);
   }
 
+  @Override
   public void addStatementParam(Object param) {
     this.statement.addParam(param);
   }
 
+  @Override
   public void addStatementParams(List<Object> params) {
     this.statement.addAllParams(params);
   }

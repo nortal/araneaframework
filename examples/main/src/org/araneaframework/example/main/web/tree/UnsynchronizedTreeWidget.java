@@ -42,6 +42,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
   private TreeWidget tree;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("tree/unsynchronizedTree");
     this.tree = new TreeWidget(new UnsynchronizedTreeDataProvider());
@@ -69,11 +70,13 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
     private int counter;
 
+    @Override
     protected void init() throws Exception {
       setViewSelector("tree/unsynchronizedTreeDisplay");
       putViewData("counter", new Integer(counter));
       addActionListener("test", new StandardActionListener() {
 
+        @Override
         public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
           LOG.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           putViewData("counter", new Integer(++counter));
@@ -84,6 +87,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
       addActionListener("sleep", new StandardActionListener() {
 
+        @Override
         public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
           LOG.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
           Thread.sleep(10000);

@@ -31,73 +31,72 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
 
 /**
  * <p>
- * Creates a StandardServletInputData and StandardServletOutputData from the
- * HttpServletRequest and HttpServletResponse respectively and routes the
- * request to the child services using a null Path.
+ * Creates a StandardServletInputData and StandardServletOutputData from the HttpServletRequest and HttpServletResponse
+ * respectively and routes the request to the child services using a null Path.
  * </p>
  * <p>
- * Since <emphasis>1.0.3</emphasis> this adapter makes {@link OutputData} and 
- * {@link InputData} accessible from {@link Component}'s {@link Environment}:
+ * Since <emphasis>1.0.3</emphasis> this adapter makes {@link OutputData} and {@link InputData} accessible from
+ * {@link Component}'s {@link Environment}:
  * 
  * <p>
  * <code>
  *   InputData input = (InputData)getEnvironment().getEntry(InputData.class);<br>
  *   OutputData input = (OutputData)getEnvironment().getEntry(OutputData.class);
  * </code>
- * </p> 
- * 
- * which allows access to request from {@link BaseComponent}'s initialization
- * callback&mdash;<code>init()</code>.
  * </p>
- *
+ * 
+ * which allows access to request from {@link BaseComponent}'s initialization callback&mdash;<code>init()</code>. </p>
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardServletServiceAdapterComponent extends BaseComponent
-implements ServletServiceAdapterComponent {
+public class StandardServletServiceAdapterComponent extends BaseComponent implements ServletServiceAdapterComponent {
 
-	private static final ThreadLocal<InputData> localInput = new ThreadLocal<InputData>();
-	private static final ThreadLocal<OutputData> localOutput = new ThreadLocal<OutputData>();
+  private static final ThreadLocal<InputData> localInput = new ThreadLocal<InputData>();
+
+  private static final ThreadLocal<OutputData> localOutput = new ThreadLocal<OutputData>();
+
   private Service childService;
 
+  @Override
+  protected void init() throws Exception {
+    this.childService._getComponent().init(getScope(), new BaseEnvironment() {
 
-	protected void init() throws Exception {
-		childService._getComponent().init(getScope(), new BaseEnvironment() {
-		  
-		  @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked")
       public <T> T getEntry(Class<T> key) {
-				if (InputData.class.equals(key))
-					return (T) localInput.get();
-				if (OutputData.class.equals(key))
-					return (T) localOutput.get();
-				return getEnvironment().getEntry(key);
-			}  
-		});
-	}
+        if (InputData.class.equals(key)) {
+          return (T) localInput.get();
+        }
+        if (OutputData.class.equals(key)) {
+          return (T) localOutput.get();
+        }
+        return getEnvironment().getEntry(key);
+      }
+    });
+  }
 
-	public void setChildService(Service service) {
-		childService = service;
-	}
+  public void setChildService(Service service) {
+    this.childService = service;
+  }
 
-	protected void destroy() throws Exception {
-		childService._getComponent().destroy();
-	}
+  @Override
+  protected void destroy() throws Exception {
+    this.childService._getComponent().destroy();
+  }
 
-	public void service(HttpServletRequest request, HttpServletResponse response) {
-		HttpInputData input = new StandardServletInputData(request);
-		localInput.set(input);
-		HttpOutputData output = new StandardServletOutputData(request,
-				response);
-		localOutput.set(output);
+  public void service(HttpServletRequest request, HttpServletResponse response) {
+    HttpInputData input = new StandardServletInputData(request);
+    localInput.set(input);
+    HttpOutputData output = new StandardServletOutputData(request, response);
+    localOutput.set(output);
 
-		try {
-			request.setAttribute(InputData.INPUT_DATA_KEY, input);
-			request.setAttribute(OutputData.OUTPUT_DATA_KEY, output);
+    try {
+      request.setAttribute(InputData.INPUT_DATA_KEY, input);
+      request.setAttribute(OutputData.OUTPUT_DATA_KEY, output);
 
-			childService._getService().action(null, input, output);
-		}
-		finally {
-			localInput.set(null);
-			localOutput.set(null);
-		}
-	}
+      this.childService._getService().action(null, input, output);
+    } finally {
+      localInput.set(null);
+      localOutput.set(null);
+    }
+  }
 }

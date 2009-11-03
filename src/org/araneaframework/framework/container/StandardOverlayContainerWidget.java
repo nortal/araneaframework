@@ -44,85 +44,83 @@ import org.araneaframework.http.util.ServletUtil;
 public class StandardOverlayContainerWidget extends BaseApplicationWidget implements OverlayContext {
 
   /**
-   * <p> 
-   * Map containing the default overlay presentation options. 
-   * OPTIONS with default values (most default values are defined in the JavaScript file but they all can be overridden
-   * using <code>OverlayContext</code>):
+   * <p>
+   * Map containing the default overlay presentation options. OPTIONS with default values (most default values are
+   * defined in the JavaScript file but they all can be overridden using <code>OverlayContext</code>):
    * <p>
    * <table style="border-color: #000" border="1" cellpadding="5" cellspacing="0">
-   *   <tr>
-   *     <th>Option</th>
-   *     <th>Default value</th>
-   *     <th>Description</th>
-   *   </tr>
-   *   <tr>
-   *     <td>overlayClose</td>
-   *     <td>false</td>
-   *     <td>Close modal box by clicking on overlay</td>
-   *   </tr>
-   *   <tr>
-   *     <td>width</td>
-   *     <td>800</td>
-   *     <td>Default width in pixels</td>
-   *   </tr>
-   *   <tr>
-   *     <td>height</td>
-   *     <td>90</td>
-   *     <td>Default height in pixels</td>
-   *   </tr>
-   *   <tr>
-   *     <td>maxHeight</td>
-   *     <td>0.9</td>
-   *     <td>
-   *       If content is very long, defines the maximum height of ModalBox. If value <= 1.0 then the value is a
-   *       percentage of dialog height in contrast to browser window client area height. Otherwise it's in pixels.
-   *     </td>
-   *   </tr>
-   *   <tr>
-   *     <td>overlayOpacity</td>
-   *     <td>0.75</td>
-   *     <td>Default overlay opacity</td>
-   *   </tr>
-   *   <tr>
-   *     <td>overlayDuration</td>
-   *     <td>0</td>
-   *     <td>Default overlay fade in/out duration in seconds</td>
-   *   </tr>
-   *   <tr>
-   *     <td>slideDownDuration</td>
-   *     <td>0</td>
-   *     <td>Default ModalBox appear slide down effect in seconds</td>
-   *   </tr>
-   *   <tr>
-   *     <td>slideUpDuration</td>
-   *     <td>0</td>
-   *     <td>Default ModalBox hiding slide up effect in seconds</td>
-   *   </tr>
-   *   <tr>
-   *     <td>resizeDuration</td>
-   *     <td>0</td>
-   *     <td>Default resize duration seconds</td>
-   *   </tr>
-   *   <tr>
-   *     <td>inactiveFade</td>
-   *     <td>true</td>
-   *     <td>Fades MB window on inactive state transitions</td>
-   *   </tr>
-   *   <tr>
-   *     <td>transitions</td>
-   *     <td>false</td>
-   *     <td>Toggles transition effects</td>
-   *   </tr>
-   *   <tr>
-   *     <td>loadingString</td>
-   *     <td>"Please wait. Loading..."</td>
-   *     <td>Default loading string message</td>
-   *   </tr>
-   *   <tr>
-   *     <td>method</td>
-   *     <td>"post"</td>
-   *     <td>Default AJAX request method</td>
-   *   </tr>
+   * <tr>
+   * <th>Option</th>
+   * <th>Default value</th>
+   * <th>Description</th>
+   * </tr>
+   * <tr>
+   * <td>overlayClose</td>
+   * <td>false</td>
+   * <td>Close modal box by clicking on overlay</td>
+   * </tr>
+   * <tr>
+   * <td>width</td>
+   * <td>800</td>
+   * <td>Default width in pixels</td>
+   * </tr>
+   * <tr>
+   * <td>height</td>
+   * <td>90</td>
+   * <td>Default height in pixels</td>
+   * </tr>
+   * <tr>
+   * <td>maxHeight</td>
+   * <td>0.9</td>
+   * <td>
+   * If content is very long, defines the maximum height of ModalBox. If value <= 1.0 then the value is a percentage of
+   * dialog height in contrast to browser window client area height. Otherwise it's in pixels.</td>
+   * </tr>
+   * <tr>
+   * <td>overlayOpacity</td>
+   * <td>0.75</td>
+   * <td>Default overlay opacity</td>
+   * </tr>
+   * <tr>
+   * <td>overlayDuration</td>
+   * <td>0</td>
+   * <td>Default overlay fade in/out duration in seconds</td>
+   * </tr>
+   * <tr>
+   * <td>slideDownDuration</td>
+   * <td>0</td>
+   * <td>Default ModalBox appear slide down effect in seconds</td>
+   * </tr>
+   * <tr>
+   * <td>slideUpDuration</td>
+   * <td>0</td>
+   * <td>Default ModalBox hiding slide up effect in seconds</td>
+   * </tr>
+   * <tr>
+   * <td>resizeDuration</td>
+   * <td>0</td>
+   * <td>Default resize duration seconds</td>
+   * </tr>
+   * <tr>
+   * <td>inactiveFade</td>
+   * <td>true</td>
+   * <td>Fades MB window on inactive state transitions</td>
+   * </tr>
+   * <tr>
+   * <td>transitions</td>
+   * <td>false</td>
+   * <td>Toggles transition effects</td>
+   * </tr>
+   * <tr>
+   * <td>loadingString</td>
+   * <td>"Please wait. Loading..."</td>
+   * <td>Default loading string message</td>
+   * </tr>
+   * <tr>
+   * <td>method</td>
+   * <td>"post"</td>
+   * <td>Default AJAX request method</td>
+   * </tr>
    * </table>
    */
   public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
@@ -150,7 +148,6 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", "0.9");
   }
 
-  
   public StandardOverlayContainerWidget() {
     this.presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
   }
@@ -167,10 +164,12 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     return this.overlay.isNested();
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), OverlayContext.class, this);
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
     Assert.notNull(this.overlay);
@@ -181,6 +180,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     addWidget(MAIN_CHILD_KEY, this.main);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     if (isOverlayActive()) {
       this.overlay._getWidget().update(input);
@@ -189,11 +189,13 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     }
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     assertActiveHierarchy(path, "Cannot deliver event to wrong hierarchy!");
     super.event(path, input);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     assertActiveHierarchy(path, "Cannot deliver action to wrong hierarchy!");
     super.action(path, input, output);
@@ -213,6 +215,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     }
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
       this.overlay._getWidget().render(output);

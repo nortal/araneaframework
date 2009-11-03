@@ -60,6 +60,7 @@ public class ConverterBasedColumnReader extends FilterResultSetColumnReader {
     this.converters.put(columnName, converter);
   }
 
+  @Override
   public <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType) {
 
     // Find converter

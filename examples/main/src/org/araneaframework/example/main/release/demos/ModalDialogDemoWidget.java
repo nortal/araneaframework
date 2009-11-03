@@ -29,7 +29,7 @@ import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.FileUploadControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.BooleanData;
@@ -67,12 +67,12 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
     this.form.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
     this.form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
     this.form.addElement("date", "common.date", new DateControl(), new DateData(), false);
-    this.form.addElement("number", "common.float", new BigDecimalControl(), new BigDecimalData(), false);
+    this.form.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
     this.form.addElement("upload", "common.file", new FileUploadControl(), new FileInfoData(), false);
 
     // Require the number input field to be filled. It could have been achieved
     // already on form element creation by setting mandatory attribute to true.
-    this.form.getElement("number").setConstraint(new NotEmptyConstraint());
+    this.form.getElement("number").setConstraint(new NotEmptyConstraint<Object, Object>());
 
     // Sets initial value of the form element:
     this.form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));

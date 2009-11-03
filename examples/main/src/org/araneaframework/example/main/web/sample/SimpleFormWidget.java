@@ -22,7 +22,7 @@ import org.araneaframework.uilib.event.ProxyOnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
@@ -69,11 +69,11 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     this.simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
     this.simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
     this.simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
-    this.simpleForm.addElement("number", "common.float", new BigDecimalControl(), new BigDecimalData(), false);
+    this.simpleForm.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
 
     // require the number input field to be filled. It could have been achieved already on form element creation by
     // setting mandatory attribute to true
-    this.simpleForm.getElement("number").setConstraint(new NotEmptyConstraint());
+    this.simpleForm.getElement("number").setConstraint(new NotEmptyConstraint<Object, Object>());
 
     // sets initial value of form element
     this.simpleForm.setValueByFullName("dateTime", new Date());

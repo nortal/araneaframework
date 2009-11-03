@@ -51,6 +51,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   private ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
 
+  @Override
   public void setChildService(Service child) {
     this.childService = new RelocatableDecorator(child);
   }
@@ -65,6 +66,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
     this.testXmlSessionPath = testXmlSessionPath;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     this.callRWLock.readLock().acquire();
 

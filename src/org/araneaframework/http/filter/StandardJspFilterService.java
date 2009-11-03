@@ -89,6 +89,7 @@ public class StandardJspFilterService extends BaseFilterService implements JspCo
     return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
 
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(getEnvironment(), JspContext.class, this);
   }

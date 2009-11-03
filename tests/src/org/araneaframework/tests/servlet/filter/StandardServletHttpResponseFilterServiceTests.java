@@ -87,8 +87,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   }
 
   public void testAddCookies() throws Exception {
-    Map map = new HashMap();
-    
+    Map<String, String> map = new HashMap<String, String>();
     map.put("theDaily", "Wtf");
     map.put("Paula", "Brillant");
     
@@ -104,7 +103,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   }
 
   public void testAddHeaders() throws Exception {
-    Map map = new HashMap();
+    Map<String, String> map = new HashMap<String, String>();
     
     map.put("Transfer-Encoding", "chunked");
     map.put("Content-Encoding", "gzip");

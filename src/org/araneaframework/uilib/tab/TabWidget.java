@@ -114,12 +114,14 @@ public class TabWidget extends BaseApplicationWidget implements TabContext {
 	}
 
 	/* ****************** COMPONENT LIFECYCLE METHODS ************************** */
-	public Component.Interface _getComponent() {
+	@Override
+  public Component.Interface _getComponent() {
 		return new ComponentImpl();
 	}
 
 	protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
-		public synchronized void init(Scope scope, Environment env) {
+		@Override
+    public synchronized void init(Scope scope, Environment env) {
 			super.init(scope, env);
 			TabContainerContext tabContainer = getTabContainerContext();
 			Assert.notNull(this, tabContainer, "TabWidget initialization failed due to TabContainerContext missing from Environment. Make sure that TabWidget is child of TabContainerWidget");
@@ -133,7 +135,8 @@ public class TabWidget extends BaseApplicationWidget implements TabContext {
 		}
 	}
 
-	protected void destroy() throws Exception {
+	@Override
+  protected void destroy() throws Exception {
 		TabRegistrationContext tabRegistrationContext = getEnvironment().requireEntry(TabRegistrationContext.class);
 		tabRegistrationContext.unregisterTab(TabWidget.this);
 

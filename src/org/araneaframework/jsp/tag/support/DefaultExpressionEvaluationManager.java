@@ -18,8 +18,6 @@ package org.araneaframework.jsp.tag.support;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.araneaframework.integration.spring.SpringExpressionEvaluationManager;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -36,14 +34,9 @@ import org.araneaframework.uilib.ConfigurationContext;
  */
 public class DefaultExpressionEvaluationManager implements ExpressionEvaluationManager {
 
-  protected static final Log LOG = LogFactory.getLog(DefaultExpressionEvaluationManager.class);
-
   @SuppressWarnings("unchecked")
   public <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject, PageContext pageContext)
       throws JspException {
-    if (LOG.isTraceEnabled()) {
-      LOG.trace("Resolving attribute value '" + attributeValue + "'.");
-    }
     return (T) ExpressionEvaluatorManager.evaluate(attributeName, attributeValue, classObject, pageContext);
   }
 }

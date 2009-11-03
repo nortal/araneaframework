@@ -26,7 +26,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class NumberInRangeConstraint extends BaseFieldConstraint {
+public class NumberInRangeConstraint extends BaseFieldConstraint<BigInteger, BigInteger> {
 
   private BigInteger rangeStart;
 
@@ -43,7 +43,7 @@ public class NumberInRangeConstraint extends BaseFieldConstraint {
    * 
    * @param field The form element that this constraint should be bound to.
    */
-  public NumberInRangeConstraint(FormElement<?, ?> field) {
+  public NumberInRangeConstraint(FormElement<BigInteger, BigInteger> field) {
     super(field);
   }
 

@@ -21,34 +21,34 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 
 /**
- * Helper for testing {@link Constraint}s on a {@link FormWidget} with exactly one
- * {@link FormElement}.
+ * Helper for testing {@link Constraint}s on a {@link FormWidget} with exactly one {@link FormElement}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class ConstraintTestHelper {
+public class ConstraintTestHelper<C, D> {
+
   private FormWidget form;
-  private FormElement element;
-  
-  public ConstraintTestHelper(FormWidget form, FormElement element) {
+
+  private FormElement<C, D> element;
+
+  public ConstraintTestHelper(FormWidget form, FormElement<C, D> element) {
     org.araneaframework.core.Assert.notNullParam(this, form, "form");
     org.araneaframework.core.Assert.notNullParam(this, element, "element");
 
     this.form = form;
     this.element = element;
   }
-  
-  /**
-   * Tests validness of {@link FormWidget} and {@link FormElement}, after 
-   * {@link FormElement} value is set.
-   */
-  public void testConstraintValidness(Constraint constraint, Object value, boolean valid) throws Exception {
-    element.setConstraint(constraint);
-    element.setValue(value);
 
-    junit.framework.Assert.assertEquals(valid, element.validate());
-    form.clearErrors();
-    junit.framework.Assert.assertEquals(valid, form.validate());
-    form.clearErrors(); // allows using more than once per setUp() 
+  /**
+   * Tests validness of {@link FormWidget} and {@link FormElement}, after {@link FormElement} value is set.
+   */
+  public void testConstraintValidness(Constraint constraint, D value, boolean valid) throws Exception {
+    this.element.setConstraint(constraint);
+    this.element.setValue(value);
+
+    junit.framework.Assert.assertEquals(valid, this.element.validate());
+    this.form.clearErrors();
+    junit.framework.Assert.assertEquals(valid, this.form.validate());
+    this.form.clearErrors(); // allows using more than once per setUp()
   }
 }

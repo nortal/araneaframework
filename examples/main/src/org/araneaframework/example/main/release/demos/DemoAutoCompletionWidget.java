@@ -38,6 +38,7 @@ public class DemoAutoCompletionWidget extends TemplateBaseWidget {
 
   private FormWidget form;
 
+  @Override
   public void init() throws Exception {
     setViewSelector("release/demos/demoAutoCompletion");
     addWidget("testform", createForm());

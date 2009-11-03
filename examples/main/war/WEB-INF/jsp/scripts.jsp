@@ -61,15 +61,11 @@
 		<ui:importScripts group="tree"/> - to enable Aranea Trees
 		<ui:importScripts group="rsh"/> - for browser back-forward navigation (also enable StandardStateVersioningFilterWidget in aranea-conf.xml)
 		<ui:importScripts group="prototip"/> - for tooltips 
-		<ui:importScripts group="logger"/> - imports log4javascript (enable it with "araneaPage().setDefaultLogger()")
+		<ui:importScripts group="logger"/> - imports log4javascript (enable it with "Aranea.Logger.setLogger('log4js')")
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
-	<script type="text/javascript">araneaPage().setFirebugLogger();</script>
-
-	<!-- You can also use log4javacript logger:
-		<script type="text/javascript">araneaPage().setDefaultLogger();</script>
-	 -->
+	<script type="text/javascript">Aranea.Logger.setLogger('firebug');</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>

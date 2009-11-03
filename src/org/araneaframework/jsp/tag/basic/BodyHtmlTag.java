@@ -41,15 +41,11 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
  */
 public class BodyHtmlTag extends PresentationTag {
 
-  public static final String ONLOAD = "_ap.onload()";
-
-  public static final String ONUNLOAD = "_ap.onunload()";
-
   public static final String KEY = "org.araneaframework.jsp.tag.basic.BodyHtmlTag";
 
-  protected String onload = BodyHtmlTag.ONLOAD;
+  protected String onload;
 
-  protected String onunload = BodyHtmlTag.ONUNLOAD;
+  protected String onunload;
 
   /**
    * HTML tag attribute.
@@ -146,9 +142,9 @@ public class BodyHtmlTag extends PresentationTag {
     ConfirmationContext ctx = getEnvironment().getEntry(ConfirmationContext.class);
     if (ctx != null) {
       if (ctx.getConfirmationMessage() != null) {
-        out.write("_ap.addClientLoadEvent(function(){ Aranea.UI.flowEventConfirm('");
+        out.write("document.observe('dom:loaded', Aranea.UI.flowEventConfirm.curry('");
         out.write(ctx.getConfirmationMessage());
-        out.write("');});");
+        out.write("'));");
       }
     }
   }
@@ -167,8 +163,10 @@ public class BodyHtmlTag extends PresentationTag {
     Map<String, Long> expiringServiceMap = expiringServiceContext.getServiceTTLMap();
     if (expiringServiceMap != null && !expiringServiceMap.isEmpty()) { // there are some expiring services
       for (Map.Entry<String, Long> entry : expiringServiceMap.entrySet()) {
-        // TODO: keepalives are just invoked a little (4 seconds) more often from client side,
+
+        // TODO: KeepAlives are just invoked a little (4 seconds) more often from client side,
         // than specified in configuration, there could be a better way.
+
         String serviceTTL = Long.toString(entry.getValue() - 4000);
         String topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
         String threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
@@ -176,7 +174,7 @@ public class BodyHtmlTag extends PresentationTag {
         String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
         String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";
 
-        out.write("\n_ap.addKeepAlive(AraneaPage.getDefaultKeepAlive(");
+        out.write("\nAranea.Page.addKeepAlive(Aranea.Page.(");
         out.write(sTop);
         out.write(",");
         out.write(sThread);
@@ -200,14 +198,14 @@ public class BodyHtmlTag extends PresentationTag {
 
     String encodedServletUrl = ServletUtil.getOutputData(this.pageContext.getRequest()).encodeURL(servletUrl);
 
-    out.write("_ap.setServletURL('");
+    out.write("Aranea.Data.servletURL='");
     out.write(servletUrl);
     out.write("');");
 
     if (!servletUrl.equals(encodedServletUrl)) {
       String urlSuffix = encodedServletUrl.substring(servletUrl.length());
       String function = "function(url) { return (url + '" + urlSuffix + "'); }";
-      out.write("Object.extend(_ap, { encodeURL:" + function + " });");
+      out.write("Object.extend(Aranea.Page, { encodeURL:" + function + " });");
     }
   }
 
@@ -220,11 +218,11 @@ public class BodyHtmlTag extends PresentationTag {
   protected void writeLocaleScript(Writer out) throws IOException {
     Locale locale = getLocalizationContext().getLocale();
 
-    out.write("_ap.setLocale(new AraneaLocale('");
+    out.write("Object.extend(Aranea.Data.locale,{lang:'");
     out.write(locale.getLanguage());
-    out.write("','");
+    out.write("',country:'");
     out.write(locale.getCountry());
-    out.write("'));");
+    out.write("');");
   }
 
   /**
@@ -238,7 +236,7 @@ public class BodyHtmlTag extends PresentationTag {
    */
   protected void writeAjaxValidationScript(Writer out) throws IOException {
     boolean validationEnabled = ConfigurationUtil.isBackgroundFormValidationEnabled(getConfiguration());
-    out.write("_ap.setBackgroundValidation(" + validationEnabled + ");");
+    out.write("Aranea.Data.backgroundValidation=" + validationEnabled + ";");
   }
 
   /**

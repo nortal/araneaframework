@@ -24,6 +24,7 @@ package org.araneaframework.core.util;
  */
 public class ReaderPreferenceReadWriteLock extends WriterPreferenceReadWriteLock {
 
+  @Override
   protected boolean allowReader() {
     return this.activeWriter_ == null;
   }

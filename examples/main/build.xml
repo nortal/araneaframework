@@ -13,7 +13,7 @@
 
 	<path id="build.cp">
 		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
-		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar" />
 		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
 		<path path="${rootDir}/dist/aranea.jar"/>
 		<path path="${example.jar}"/>
@@ -58,7 +58,7 @@
 	<target name="build" depends="compile" description="Copies the needed libraries and files, and builds the demo Java code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
 			<fileset dir="${lib.dir}/runtime/" />
-			<fileset dir="${lib.dir}/build/" excludes="j2ee.jar" />
+			<fileset dir="${lib.dir}/build/" excludes="servlet-api.jar" />
 			<fileset dir="${lib.dir}/demo/" />
 			<fileset file="${example.jar}" />
 			<fileset file="../../dist/aranea.jar" />

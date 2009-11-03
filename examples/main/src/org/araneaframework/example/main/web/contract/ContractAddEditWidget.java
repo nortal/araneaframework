@@ -56,6 +56,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     this.id = id;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("contract/contractAddEdit");
     this.company = new ContractCompanyEditWidget();

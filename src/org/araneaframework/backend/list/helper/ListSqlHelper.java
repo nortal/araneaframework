@@ -80,6 +80,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
     super(dataSource, query);
   }
 
+  @Override
   protected void init() {
     super.init();
     getPrefixMapNamingStrategy(); // Add naming strategy

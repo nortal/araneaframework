@@ -24,7 +24,7 @@ import org.araneaframework.core.StandardScope;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockFormElementContext;
 import org.araneaframework.tests.mock.MockUiLibUtil;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
@@ -181,13 +181,13 @@ public class FormControlTest extends TestCase {
   }
 
   /**
-   * Tests that {@link BigDecimalControl} lets only valid decimals through.
+   * Tests that {@link FloatControl} lets only valid decimals through.
    */
   public void testFloatControlSimpleValidation() throws Exception {
     MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myFloatInput", "28.012");
 
-    BigDecimalControl nc = new BigDecimalControl();
+    FloatControl nc = new FloatControl();
     MockFormElementContext<BigDecimal, Object> mockFormElementContext = new MockFormElementContext<BigDecimal, Object>(
         "TheLabel", false, false);
     nc.setFormElementCtx(mockFormElementContext);
@@ -211,13 +211,13 @@ public class FormControlTest extends TestCase {
   }
 
   /**
-   * Tests that {@link BigDecimalControl} uses the min/max value parameters for validation.
+   * Tests that {@link FloatControl} uses the min/max value parameters for validation.
    */
   public void testFloatControlMinMaxValidation() throws Exception {
     MockHttpServletRequest correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myFloatInput", "50.0018");
 
-    BigDecimalControl numberControl = new BigDecimalControl();
+    FloatControl numberControl = new FloatControl();
     MockFormElementContext<BigDecimal, Object> mockFormElementContext = new MockFormElementContext<BigDecimal, Object>(
         "TheLabel", false, false);
     numberControl.setFormElementCtx(mockFormElementContext);

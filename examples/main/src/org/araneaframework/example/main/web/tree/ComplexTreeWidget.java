@@ -32,6 +32,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
   protected TreeWidget tree;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("tree/complexTree");
     this.tree = new TreeWidget();
@@ -45,6 +46,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
   public static class ComplexTreeFirstDisplayWidget extends BaseUIWidget {
 
+    @Override
     protected void init() throws Exception {
       setViewSelector("tree/complexTreeFirstDisplay");
     }
@@ -70,6 +72,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
   public static class ComplexTreeSecondDisplayWidget extends BaseUIWidget {
 
+    @Override
     protected void init() throws Exception {
       setViewSelector("tree/complexTreeSecondDisplay");
     }
@@ -86,6 +89,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
   public static class ComplexTreeThirdDisplayWidget extends BaseUIWidget {
 
+    @Override
     protected void init() throws Exception {
       setViewSelector("tree/complexTreeThirdDisplay");
     }

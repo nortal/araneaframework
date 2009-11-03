@@ -108,6 +108,7 @@ public class ComponentListFooterTag extends PresentationTag {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -115,8 +116,8 @@ public class ComponentListFooterTag extends PresentationTag {
         this.globalUpdateRegions);
 
     // Get list data
-    this.listId = (String) requireContextEntry(/* TODO ListTag.LIST_FULL_ID_KEY */"");
-    ListWidget<?>.ViewModel viewModel = (ListWidget<?>.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    this.listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
+    ListWidget<?>.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 
     // Get seqeunce data
     SequenceHelper.ViewModel sequenceViewModel = viewModel.getSequence();

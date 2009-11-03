@@ -72,6 +72,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     }
   }
 
+  @Override
   public void setChildService(Service childService) {
     super.setChildService(new RelocatableDecorator(childService));
   }
@@ -85,12 +86,14 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     this.timeToLive = timeToLive;
   }
 
+  @Override
   protected void init() throws Exception {
     if (this.initializeChildren) {
       super.init();
     }
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (cloningRequested(input)) {
       // Do nothing. Here used to be redirect, which caused problems. However, redirect is not necessary. It works
@@ -121,6 +124,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     ((HttpOutputData) getOutputData()).sendRedirect(location);
   }
 
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), ThreadCloningContext.class, this);
   }

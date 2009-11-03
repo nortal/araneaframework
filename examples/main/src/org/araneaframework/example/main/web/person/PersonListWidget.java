@@ -55,6 +55,7 @@ public class PersonListWidget extends TemplateBaseWidget {
     this.editMode = editMode;
   }
 
+  @Override
   protected void init() {
     setViewSelector("person/personList");
     initList();
@@ -151,6 +152,7 @@ public class PersonListWidget extends TemplateBaseWidget {
       super(PersonMO.class);
     }
 
+    @Override
     public List<PersonMO> loadData() throws Exception {
       return getPersonDAO().getAll(PersonMO.class);
     }

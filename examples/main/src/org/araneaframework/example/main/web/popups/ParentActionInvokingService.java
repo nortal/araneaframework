@@ -44,6 +44,7 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
     this.widgetId = widgetId;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
     String script = "if (window.opener) { window.opener.setTimeout('araneaPage().action($('" + this.widgetId

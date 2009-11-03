@@ -19,7 +19,6 @@ package org.araneaframework.core;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
@@ -30,54 +29,50 @@ import org.araneaframework.Environment;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardEnvironment extends BaseEnvironment {
-  private Map<Class<?>,Object> entries;
+
+  private Map<Class<?>, Object> entries;
 
   private Environment parentEnv;
 
   /**
-   * Constructs an object with the env parent Environment and with the entries
-   * data.
+   * Constructs an object with the env parent Environment and with the entries data.
    * 
    * @param env the parent environment
    * @param entries a map of the entries in the Environment
    */
-  public StandardEnvironment(Environment env, Map<Class<?>,Object> entries) {
+  public StandardEnvironment(Environment env, Map<Class<?>, Object> entries) {
     Assert.notNullParam(entries, "entries");
     this.entries = entries;
-    parentEnv = env;
+    this.parentEnv = env;
   }
 
   /**
-   * Constructs an object with the env parent Environment and entries data
-   * containing &lt;key, value&gt;.
+   * Constructs an object with the <code>env</code> parent Environment and entries data containing &lt;key, value&gt;.
    * 
    * @param env the parent environment
    * @param key a key of the value in the map of the Environment entries.
-   * @param value a value corresponding to given key in the map of the
-   *            Environment entries.
+   * @param value a value corresponding to given key in the map of the Environment entries.
    */
   public <T> StandardEnvironment(Environment env, Class<T> key, T value) {
     Assert.notNullParam(key, "key");
-    entries = new HashMap<Class<?>,Object>(1);
-    entries.put(key, value);
-    parentEnv = env;
+    this.entries = new HashMap<Class<?>, Object>(1);
+    this.entries.put(key, value);
+    this.parentEnv = env;
   }
 
   /**
-   * Returns the map with the entries in this Environment. An entry is a key
-   * value pair.
+   * Returns the map with the entries in this Environment. An entry is a key value pair.
    * 
    * @return a map with the entries.
    */
-  public Map<Class<?>,Object> getEntryMap() {
-    return entries;
+  public Map<Class<?>, Object> getEntryMap() {
+    return this.entries;
   }
 
   /**
-   * Returns the corresponding value of this Envrionment's entries. If none is
-   * found from the entries then the entry is returned from the parent
-   * environment. If a value to the key does not exist,
-   * AraneaNoSuchEnvironmentEntryException is thrown.
+   * Returns the corresponding value of this Envrionment's entries. If none is found from the entries then the entry is
+   * returned from the parent environment. If a value to the key does not exist, AraneaNoSuchEnvironmentEntryException
+   * is thrown.
    * 
    * @param key the key of the entry
    * @return the Object under the key provided
@@ -85,15 +80,13 @@ public class StandardEnvironment extends BaseEnvironment {
    */
   @SuppressWarnings("unchecked")
   public <T> T getEntry(Class<T> key) {
-    if (entries.containsKey(key)) {
-      return (T) entries.get(key);
+    if (this.entries.containsKey(key)) {
+      return (T) this.entries.get(key);
     }
-    if (parentEnv == null) {
-      return null;
-    }
-    return parentEnv.getEntry(key);
+    return this.parentEnv == null ? null : this.parentEnv.getEntry(key);
   }
 
+  @Override
   public String toString() {
     return toString(0);
   }
@@ -101,14 +94,13 @@ public class StandardEnvironment extends BaseEnvironment {
   private String toString(int pad) {
     String padding = StringUtils.leftPad("", pad, " ");
     StringBuffer result = new StringBuffer();
-    if (entries != null) {
-      for (Entry<Class<?>, Object> entry : entries.entrySet()) {
+    if (this.entries != null) {
+      for (Entry<Class<?>, Object> entry : this.entries.entrySet()) {
         result.append(padding + entry.getKey() + "=" + ObjectUtils.identityToString(entry.getValue()) + "\n");
       }
     }
-    if (parentEnv instanceof StandardEnvironment) {
-      result.append(((StandardEnvironment) parentEnv).toString(pad
-          + 2));
+    if (this.parentEnv instanceof StandardEnvironment) {
+      result.append(((StandardEnvironment) this.parentEnv).toString(pad + 2));
     }
     result.append("\n");
     return result.toString();

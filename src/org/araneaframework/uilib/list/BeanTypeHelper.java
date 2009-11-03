@@ -34,6 +34,7 @@ public class BeanTypeHelper extends TypeHelper {
   }
 
   // Configuration
+  @Override
   public Class<?> getFieldType(String fieldId) {
     Class<?> result = super.getFieldType(fieldId);
     if (result == null) {

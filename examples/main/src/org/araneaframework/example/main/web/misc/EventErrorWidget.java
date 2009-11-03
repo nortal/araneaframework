@@ -28,6 +28,7 @@ public class EventErrorWidget extends TemplateBaseWidget {
 
 	  private static final long serialVersionUID = 1L;
 
+  @Override
   public void init() throws Exception {
     setViewSelector("misc/eventError");
     addEventListener("error", new ProxyEventListener(this));

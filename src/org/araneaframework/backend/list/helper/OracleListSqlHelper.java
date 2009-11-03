@@ -45,6 +45,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
     super();
   }
 
+  @Override
   protected SqlStatement getCountSqlStatement() {
     if (this.countSqlQuery != null) {
       return new SqlStatement(this.countSqlQuery, this.statement.getParams());
@@ -55,6 +56,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
     return new SqlStatement(temp, this.statement.getParams());
   }
 
+  @Override
   protected SqlStatement getRangeSqlStatement() {
     StringBuffer sb = new StringBuffer();
     sb.append("SELECT * FROM (" + "SELECT rownum listRowNum, listItemData.* FROM (");
@@ -82,6 +84,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
    * 
    * @param sqlQuery the SQL query that will be used to retrieve the item range from the list and count the items.
    */
+  @Override
   public void setSqlQuery(String sqlQuery) {
     this.statement.setQuery(sqlQuery);
   }
@@ -91,6 +94,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
    * 
    * @param countSqlQuery the SQL query used to count the items in the database.
    */
+  @Override
   public void setCountSqlQuery(String countSqlQuery) {
     this.countSqlQuery = countSqlQuery;
   }
@@ -100,6 +104,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
    * 
    * @param valueType the type of the NULL value.
    */
+  @Override
   public void addNullParam(int valueType) {
     this.statement.addNullParam(valueType);
   }
@@ -109,6 +114,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
    * 
    * @param param a <code>PreparedStatement</code> parameter.
    */
+  @Override
   public void addStatementParam(Object param) {
     this.statement.addParam(param);
   }
@@ -118,6 +124,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
    * 
    * @param params <code>PreparedStatement</code> parameters.
    */
+  @Override
   public void addStatementParams(List<Object> params) {
     this.statement.addAllParams(params);
   }

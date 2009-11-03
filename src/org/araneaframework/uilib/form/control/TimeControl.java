@@ -52,6 +52,7 @@ public class TimeControl extends TimestampControl {
     this.confOverridden = true;
   }
 
+  @Override
   public void init() throws Exception {
     super.init();
     if (!this.confOverridden) {
@@ -65,6 +66,7 @@ public class TimeControl extends TimestampControl {
    * 
    * @since 1.1
    */
+  @Override
   protected void addWrongTimeFormatError() {
     addErrorWithLabel(UiLibMessages.WRONG_TIME_FORMAT, this.dateTimeInputPattern);
   }

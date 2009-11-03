@@ -34,4 +34,8 @@ public class StandardConfiguration implements ConfigurationContext {
   public void setConfEntries(Map<String, Object> confEntries) {
     this.confEntries = confEntries;
   }
+
+  public void setEntry(String entryName, Object value) {
+    this.confEntries.put(entryName, value);
+  }
 }

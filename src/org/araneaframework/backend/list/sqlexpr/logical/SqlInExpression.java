@@ -51,6 +51,7 @@ public class SqlInExpression extends SqlCollectionExpression {
     this.children = exprList;
   }
 
+  @Override
   public Object[] getValues() {
     List<Object> values = new ArrayList<Object>();
     Object[] childValues = this.expr1.getValues();
@@ -72,6 +73,7 @@ public class SqlInExpression extends SqlCollectionExpression {
   /**
    * Returns a <code>String</code> like this "x IN (y,w,z)".
    */
+  @Override
   public String toSqlString() {
     StringBuffer sb = new StringBuffer();
     if (!this.children.isEmpty()) {

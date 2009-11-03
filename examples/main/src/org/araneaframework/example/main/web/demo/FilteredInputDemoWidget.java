@@ -33,6 +33,7 @@ public class FilteredInputDemoWidget extends TemplateBaseWidget {
   /**
    * Builds the form.
    */
+  @Override
   protected void init() throws Exception {
     setViewSelector("demo/filteredInput");
 

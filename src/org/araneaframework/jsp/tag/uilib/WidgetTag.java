@@ -56,7 +56,7 @@ public class WidgetTag extends BaseWidgetTag {
     // Set variables
     addContextEntry(WIDGET_ID_KEY, this.fullId);
     addContextEntry(WIDGET_KEY, this.widget);
-    addContextEntry(WIDGET_ENV, prepareEnvironment(this.widget.getChildEnvironment()));
+    addContextEntry(WIDGET_ENV, getSimplifiedWidgetEnvironment());
     addContextEntry(WIDGET_VIEW_DATA_KEY, this.viewModel.getData());
     addContextEntry(WIDGET_VIEW_MODEL_KEY, this.viewModel);
 
@@ -64,10 +64,28 @@ public class WidgetTag extends BaseWidgetTag {
     return Tag.EVAL_BODY_INCLUDE;
   }
 
-  private Map<String, Object> prepareEnvironment(Environment env) {
+  @Override
+  protected Environment getEnvironment() {
+    return new StandardEnvironment(super.getEnvironment(), getWidgetEnvironmentAsMap());
+  }
+
+  private Map<Class<?>, Object> getWidgetEnvironmentAsMap() {
+    Map<Class<?>, Object> results = new HashMap<Class<?>, Object>();
+    if (this.widget != null && this.widget.getChildEnvironment() instanceof StandardEnvironment) {
+      StandardEnvironment stdEnv = (StandardEnvironment) this.widget.getChildEnvironment();
+      results = stdEnv.getEntryMap();
+    }
+    return results;
+  }
+
+  /**
+   * It is easier to access the environment in JSP EL when it is provided as map, and the key names are in string.
+   * @return A map of widget's environment entries where key names are the simple class names.
+   */
+  private Map<String, Object> getSimplifiedWidgetEnvironment() {
     Map<String, Object> results = new HashMap<String, Object>();
-    if (env instanceof StandardEnvironment) {
-      StandardEnvironment stdEnv = (StandardEnvironment) env;
+    if (this.widget.getChildEnvironment() instanceof StandardEnvironment) {
+      StandardEnvironment stdEnv = (StandardEnvironment) this.widget.getChildEnvironment();
       for (Map.Entry<Class<?>, Object> entry : stdEnv.getEntryMap().entrySet()) {
         results.put(entry.getKey().getSimpleName(), entry.getValue());
       }

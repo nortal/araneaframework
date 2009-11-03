@@ -24,6 +24,7 @@ public class SqlLikeExpression extends SqlComparableExpression {
     super(expr1, expr2);
   }
 
+  @Override
   protected String getOperator() {
     return "LIKE";
   }

@@ -40,6 +40,7 @@ public class ExamplePersonMountMessageFactory implements MessageFactory {
       this.suffix = suffix;
     }
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof MenuWidget) {
         MenuWidget menu = (MenuWidget) component;

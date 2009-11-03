@@ -32,6 +32,7 @@ public class ClientViewWidget extends TemplateBaseWidget {
     this.client = client;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/demos/clientView");
     BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(ExampleData.Client.class,

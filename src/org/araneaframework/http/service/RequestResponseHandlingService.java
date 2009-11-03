@@ -16,6 +16,10 @@
 
 package org.araneaframework.http.service;
 
+import java.util.Map;
+
+import java.util.HashMap;
+
 import org.araneaframework.http.util.ServletUtil;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +40,11 @@ import org.araneaframework.core.BaseService;
  * @since 2.0
  */
 public class RequestResponseHandlingService extends BaseService {
+
+  /**
+   * The headers that can be set through a setter (e.g. in Spring configuration file). 
+   */
+  protected Map<String, String> defaultheaders = new HashMap<String, String>();
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -64,4 +73,14 @@ public class RequestResponseHandlingService extends BaseService {
    * @param response The outgoing HTTP response.
    */
   protected void afterRequestProcessing(HttpServletRequest request, HttpServletResponse response) {}
+
+  /**
+   * Sets a map of default headers. Useful for not having to extend or access this class, but just setting the default
+   * headers in Spring configuration file.
+   * 
+   * @param defaultheaders A map of header names and values.
+   */
+  public void setDefaultheaders(Map<String, String> defaultheaders) {
+    this.defaultheaders = defaultheaders;
+  }
 }

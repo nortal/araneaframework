@@ -78,6 +78,7 @@ public class StandardCompExprToSqlExprBuilder extends BaseCompExprToSqlExprBuild
 
   static class MultiComparatorTranslator extends CompositeCompExprToSqlExprTranslator {
 
+    @Override
     protected SqlExpression translateParent(ComparatorExpression expr, SqlExpression[] sqlChildren) {
       return new SqlCollectionExpression().setChildren(sqlChildren);
     }

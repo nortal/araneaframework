@@ -29,6 +29,7 @@ import org.araneaframework.http.HttpOutputData;
  */
 public class RedirectingWidget extends TemplateBaseWidget {
 
+  @Override
   public void init() throws Exception {
     setViewSelector("misc/redirect");
   }

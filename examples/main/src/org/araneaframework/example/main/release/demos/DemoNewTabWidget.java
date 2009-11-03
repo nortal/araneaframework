@@ -35,6 +35,7 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  */
 public class DemoNewTabWidget extends TemplateBaseWidget {
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/demos/tab");
     addTabContainer();

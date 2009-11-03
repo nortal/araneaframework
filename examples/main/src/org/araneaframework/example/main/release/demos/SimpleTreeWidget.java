@@ -39,6 +39,7 @@ import org.araneaframework.uilib.tree.TreeWidget;
  */
 public class SimpleTreeWidget extends TemplateBaseWidget {
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/demos/tree/simpleTree");
 
@@ -89,6 +90,7 @@ public class SimpleTreeWidget extends TemplateBaseWidget {
       this.path = name;
     }
 
+    @Override
     protected void init() throws Exception {
       setViewSelector("release/demos/tree/simpleTreeDisplay");
     }

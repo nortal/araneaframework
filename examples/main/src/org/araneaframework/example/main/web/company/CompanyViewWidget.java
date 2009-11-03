@@ -39,6 +39,7 @@ public class CompanyViewWidget extends TemplateBaseWidget {
     this.id = id;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("company/companyView");
     LOG.debug("TemplateCompanyViewWidget init called");

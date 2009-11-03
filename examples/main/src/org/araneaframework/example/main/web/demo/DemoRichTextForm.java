@@ -35,6 +35,7 @@ public class DemoRichTextForm extends TemplateBaseWidget {
 
   private StringData areaContents;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("demo/demoRichTextArea");
 
@@ -55,6 +56,7 @@ public class DemoRichTextForm extends TemplateBaseWidget {
     addWidget("form", this.form);
   }
 
+  @Override
   protected void destroy() throws Exception {
     if (isRunningInOverlay()) {
       getOverlayCtx().getOverlayOptions().remove("height");

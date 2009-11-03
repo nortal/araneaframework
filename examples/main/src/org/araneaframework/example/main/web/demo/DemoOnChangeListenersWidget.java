@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
 import org.araneaframework.uilib.form.control.BaseControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.TimeControl;
@@ -44,6 +44,7 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
 
   private FormWidget simpleForm;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("demo/demoOnChangeListeners");
 
@@ -56,8 +57,8 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
     this.simpleForm.addElement("date2", "common.date", buildControl(DateControl.class), new DateData());
     this.simpleForm.addElement("suggestBox", "demo.suggestive.textinput", buildControl(AutoCompleteTextControl.class),
         new StringData());
-    this.simpleForm.addElement("float1", "common.float", buildControl(BigDecimalControl.class), new BigDecimalData());
-    this.simpleForm.addElement("float2", "common.float", buildControl(BigDecimalControl.class), new BigDecimalData());
+    this.simpleForm.addElement("float1", "common.float", buildControl(FloatControl.class), new BigDecimalData());
+    this.simpleForm.addElement("float2", "common.float", buildControl(FloatControl.class), new BigDecimalData());
 
     AutoCompleteTextControl control = (AutoCompleteTextControl) this.simpleForm.getControlByFullName("suggestBox");
     control.setDataProvider(new DemoAutoCompletionWidget.DemoACDataProvider(

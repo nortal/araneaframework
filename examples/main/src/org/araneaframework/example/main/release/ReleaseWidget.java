@@ -23,6 +23,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  */
 public class ReleaseWidget extends TemplateBaseWidget {
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/release");
   }

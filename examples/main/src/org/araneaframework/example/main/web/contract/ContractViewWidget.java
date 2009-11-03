@@ -43,6 +43,7 @@ public class ContractViewWidget extends TemplateBaseWidget {
     this.id = id;
   }
 
+  @Override
   protected void init() throws Exception {
     LOG.debug("TemplateContractViewWidget init called");
     setViewSelector("contract/contractView");

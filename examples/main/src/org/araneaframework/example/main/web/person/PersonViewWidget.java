@@ -21,7 +21,7 @@ import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DisplayControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 
 /**
  * This widget is for displaying a person. It cancels current call only.
@@ -39,6 +39,7 @@ public class PersonViewWidget extends TemplateBaseWidget {
     this.personId = id;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("person/personView");
     PersonMO person = getPersonDAO().getById(PersonMO.class, this.personId);
@@ -48,7 +49,7 @@ public class PersonViewWidget extends TemplateBaseWidget {
     personForm.addBeanElement("surname", "#Last name", new DisplayControl(), false);
     personForm.addBeanElement("phone", "#Phone no", new DisplayControl(), true);
     personForm.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-    personForm.addBeanElement("salary", "#Salary", new BigDecimalControl(), false);
+    personForm.addBeanElement("salary", "#Salary", new FloatControl(), false);
 
     addWidget("personForm", personForm);
   }

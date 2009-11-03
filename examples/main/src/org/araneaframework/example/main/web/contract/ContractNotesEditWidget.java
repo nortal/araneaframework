@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.StringData;
@@ -59,13 +59,14 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
     return (BigDecimal) this.form.getValueByFullName("total");
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("contract/contractNotesEdit");
     LOG.debug("TemplateContractNotesEditWidget init called");
 
     this.form = new FormWidget();
     this.form.addElement("notes", "#Notes", new TextControl(), new StringData());
-    this.form.addElement("total", "#Total", new BigDecimalControl(), new BigDecimalData());
+    this.form.addElement("total", "#Total", new FloatControl(), new BigDecimalData());
     addWidget("form", this.form);
   }
 }

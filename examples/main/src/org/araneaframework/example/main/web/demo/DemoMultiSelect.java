@@ -35,6 +35,7 @@ public class DemoMultiSelect extends TemplateBaseWidget {
 
   private FormWidget form;
 
+  @Override
   @SuppressWarnings("unchecked")
   protected void init() throws Exception {
     setViewSelector("demo/demoMultiSelect");

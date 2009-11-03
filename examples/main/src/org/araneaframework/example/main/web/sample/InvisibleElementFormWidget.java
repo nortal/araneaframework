@@ -36,6 +36,7 @@ public class InvisibleElementFormWidget extends TemplateBaseWidget {
     this.initialName = initialName;
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("sample/invisibleElementForm");
 

@@ -316,11 +316,13 @@ public abstract class ServletUtil {
       this.bundle = bundle;
     }
 
+    @Override
     protected Object handleGetObject(String key) {
       Object object = this.bundle.getObject(key);
       return object != null ? object.toString() : null;
     }
 
+    @Override
     public Enumeration<String> getKeys() {
       return this.bundle.getKeys();
     }

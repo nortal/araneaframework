@@ -40,6 +40,7 @@ public class PostgreExpressionToSqlExprBuilder extends StandardExpressionToSqlEx
 
   protected class PostgreLikeTranslator extends CompositeExprToSqlExprTranslator {
 
+    @Override
     protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 
       LikeExpression like = (LikeExpression) expr;

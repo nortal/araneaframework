@@ -36,6 +36,7 @@ public class AfterTodayConstraintTest extends TestCase {
 
   public static class FakeDateControl extends DateControl {
 
+    @Override
     public boolean isRead() {
       return true;
     }
@@ -47,14 +48,15 @@ public class AfterTodayConstraintTest extends TestCase {
 
   private FormElement<Timestamp, Date> dateElement;
 
-  private ConstraintTestHelper helper;
+  private ConstraintTestHelper<Timestamp, Date> helper;
 
+  @Override
   public void setUp() throws Exception {
     this.form = new FormWidget();
     this.dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);
     this.form.addElement("date", this.dateElement);
     MockLifeCycle.begin(this.form, new MockEnvironment());
-    this.helper = new ConstraintTestHelper(this.form, this.dateElement);
+    this.helper = new ConstraintTestHelper<Timestamp, Date>(this.form, this.dateElement);
   }
 
   public void testFuture() throws Exception {

@@ -41,6 +41,7 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
     LOG.debug("Person with id of " + person.getId() + " set to this contract");
   }
 
+  @Override
   protected void init() throws Exception {
     LOG.debug("TemplateContractPersonWidget init called");
     setViewSelector("contract/contractPersonEdit");

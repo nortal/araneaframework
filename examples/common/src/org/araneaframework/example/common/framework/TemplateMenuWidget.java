@@ -51,7 +51,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
 
     this.form = new FormWidget();
     this.langSelect = FormUtil.createElement("#", new DefaultSelectControl(), new StringData(), false);
-    this.form.addWidget("langSelect", this.langSelect);
+    this.form.addElement("langSelect", this.langSelect);
     addWidget("form", this.form);
 
     createLangSelect();
@@ -93,8 +93,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     return EnvironmentUtil.getLocalizationContext(getEnvironment());
   }
 
-  // returns the name of currently running flow class,
-  // so that its source could be located and shown to user
+  // returns the name of currently running flow class, so that its source could be located and shown to user
   public String getFlowClassName() {
     String result = null;
 

@@ -117,6 +117,7 @@ public class ListRowRadioButtonHtmlTag extends BaseListRowControlTag {
     return this.checked || rowRequestId.equals(viewModel.getData().get(SELECTION_SCOPE));
   }
 
+  @Override
   protected String getOnclickScript() {
     return this.onClickEventId == null ? this.onclick : this.eventPrecondition;
   }

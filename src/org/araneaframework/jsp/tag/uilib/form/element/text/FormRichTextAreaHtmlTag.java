@@ -32,24 +32,27 @@ import org.araneaframework.jsp.util.JspUtil;
  *   body-content = "JSP"
  *   description = "Form text input field (textarea) wrapped with rich text editor capabilities."
  */
-public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag{
-	public static final String EDITOR_SELECTOR = "richTextEditor";
+public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag {
 
-	protected String getStyleClass() {
-		return EDITOR_SELECTOR;
-	}
+  public static final String EDITOR_SELECTOR = "richTextEditor";
 
-	protected int doStartTag(Writer out) throws Exception {
-		initializeRichEditor(out);
-		
-		return super.doStartTag(out);
-	}
+  @Override
+  protected String getStyleClass() {
+    return EDITOR_SELECTOR;
+  }
 
-	protected void initializeRichEditor(Writer out) throws Exception  {
-		JspUtil.writeOpenStartTag(out, "script");
+  @Override
+  protected int doStartTag(Writer out) throws Exception {
+    initializeRichEditor(out);
+
+    return super.doStartTag(out);
+  }
+
+  protected void initializeRichEditor(Writer out) throws Exception {
+    JspUtil.writeOpenStartTag(out, "script");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag_SS(out);
     out.write("AraneaTinyMCEInit();");
     JspUtil.writeEndTag(out, "script");
-	}
+  }
 }

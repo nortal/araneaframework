@@ -84,6 +84,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * The difference between this and the parent implementation of this method is
    * that the <code>childWidget</code> is relocatable here.
    */
+  @Override
   public void setChildWidget(Widget childWidget) {
     this.childWidget = new RelocatableDecorator(childWidget);
   }
@@ -92,6 +93,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * Enriches the <code>Environment</code> of child-widgets with the current
    * instance of <code>StateVersioningContext</code>.
    */
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(),
         StateVersioningContext.class, this);
@@ -136,6 +138,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /* Service methods */
+  @Override
   protected void action(Path path, InputData input, OutputData output)
       throws Exception {
 
@@ -162,15 +165,18 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /* Widget methods */
+  @Override
   protected void update(InputData input) throws Exception {
     restoreState(input);
     super.update(input);
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     super.event(path, input);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     setResponseCacheHeaders(output);
     try {
@@ -382,6 +388,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     this.versionedStates.clear();
   }
 
+  @Override
   protected void destroy() throws Exception {
     expire();
     if (this.childWidget != null) {
@@ -401,10 +408,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected static class ClientNavigationNotifierMessage
     extends BroadcastMessage {
 
-    private static final long serialVersionUID = 1L;
-
     public static final ClientNavigationNotifierMessage INSTANCE = new ClientNavigationNotifierMessage();
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof ClientNavigationAware) {
         ClientNavigationAware comp = (ClientNavigationAware) component;

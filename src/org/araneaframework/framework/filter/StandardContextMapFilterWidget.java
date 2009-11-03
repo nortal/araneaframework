@@ -35,6 +35,7 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
 
   private Map<String, Object> contexts = new HashMap<String, Object>();
 
+  @Override
   protected void init() throws Exception {
     Map<Class<?>, Object> envValues = new HashMap<Class<?>, Object>();
 

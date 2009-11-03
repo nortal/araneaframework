@@ -49,6 +49,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
   private List<FileInfo> files = new ArrayList<FileInfo>();
 
+  @Override
   public void init() throws Exception {
     setViewSelector("demo/demoFileUpload");
     buildList();
@@ -102,6 +103,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
       super(FileInfo.class);
     }
 
+    @Override
     public List<FileInfo> loadData() throws Exception {
       return DemoFileUpload.this.files;
     }

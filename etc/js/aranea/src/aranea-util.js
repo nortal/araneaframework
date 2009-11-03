@@ -94,7 +94,8 @@ Aranea.Logger = {
 	 * @param type Not null string, accepted types: "dummy", "firebug", "safari", "log4js".
 	 */
 	setLogger: function(type) {
-		Aranea.Data.logger = type ? this[type.toUpperCase() + '_LOGGER'] : null;
+		type = type ? type.toUpperCase()+ '_LOGGER' : null;
+		Aranea.Data.logger = type ? this[type] : null;
 		if (!type || Aranea.Data.logger == null) {
 			throw('The logger type was not recongized: "' + type + '" (expected: "dummy", "firebug", "safari", "log4js", or null)');
 		}

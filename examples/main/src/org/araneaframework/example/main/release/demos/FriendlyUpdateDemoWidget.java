@@ -34,7 +34,7 @@ import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -66,7 +66,7 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
     BeanFormWidget<Invoice> result = new BeanFormWidget<Invoice>(Invoice.class);
     result.addBeanElement("id", "ufriendly.component.invoice.id", new TextControl(new Long(10), new Long(10)), true);
     result.addBeanElement("date", "ufriendly.component.invoice.date", new DateControl(), true);
-    result.addBeanElement("sum", "ufriendly.component.invoice.sum", new BigDecimalControl(), true);
+    result.addBeanElement("sum", "ufriendly.component.invoice.sum", new FloatControl(), true);
     return result;
   }
 
@@ -98,6 +98,7 @@ public class FriendlyUpdateDemoWidget extends TemplateBaseWidget implements Loca
     }
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/demos/friendlyUpdateDemo");
     getL10nCtx().addLocaleChangeListener(this);

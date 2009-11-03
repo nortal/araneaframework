@@ -27,7 +27,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StringLengthInRangeConstraint extends BaseFieldConstraint {
+public class StringLengthInRangeConstraint extends BaseFieldConstraint<String, String> {
 
   private int rangeStart;
 
@@ -45,12 +45,12 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
    * 
    * @param field The form element to be constrained.
    */
-  public StringLengthInRangeConstraint(FormElement<?, ?> field) {
+  public StringLengthInRangeConstraint(FormElement<String, String> field) {
     super(field);
   }
 
   /**
-   * Creates the constraint, and initializes the allowed length range. The minumum length must be less than the maximum
+   * Creates the constraint, and initializes the allowed length range. The minimum length must be less than the maximum
    * length allowed, or the constraint never validates.
    * <p>
    * If the minimum length is less than 1 then it is not checked.
@@ -68,7 +68,7 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
    */
   @Override
   protected void validateConstraint() {
-    int length = StringUtils.length((String) getValue());
+    int length = StringUtils.length(getValue());
     if (length < this.rangeStart || length > this.rangeEnd) {
       addValidationError();
     }

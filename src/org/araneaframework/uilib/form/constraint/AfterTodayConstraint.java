@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import java.sql.Timestamp;
+
 import java.util.Calendar;
 import java.util.Date;
 import org.araneaframework.uilib.support.UiLibMessages;
@@ -26,7 +28,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
-public class AfterTodayConstraint extends BaseFieldConstraint {
+public class AfterTodayConstraint extends BaseFieldConstraint<Timestamp, Date> {
 
   /**
    * Specifies whether the current date is included (allowed) or not.
@@ -62,7 +64,7 @@ public class AfterTodayConstraint extends BaseFieldConstraint {
       today.set(Calendar.MILLISECOND, 999);
     }
 
-    if (today.getTime().compareTo((Date) getValue()) == 1) {
+    if (today.getTime().compareTo(getValue()) == 1) {
       if (!this.allowToday) {
         addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.DATE_BEFORE_TODAY, t(getLabel())));
       } else {

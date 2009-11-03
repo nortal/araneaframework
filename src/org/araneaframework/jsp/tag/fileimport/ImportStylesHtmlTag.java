@@ -22,26 +22,36 @@ import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
- * @jsp.tag
- *   name = "importStyles"
- *   body-content="empty"
- *   description = "Imports CSS files."
+ * 
+ * @jsp.tag name = "importStyles" body-content="empty" description = "Imports CSS files."
  */
 public class ImportStylesHtmlTag extends BaseFileImportTag {
 
   private String media;
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     // if filename specified we include the file
-    if (includeFileName != null) {
-      writeContent(out, includeFileName);
-    } else if (includeGroupName != null) {
-      writeContent(out, includeGroupName + GROUP_CSS_SUFFIX);
+    if (this.includeFileName != null) {
+      writeContent(out, this.includeFileName);
+    } else if (this.includeGroupName != null) {
+      writeContent(out, this.includeGroupName + GROUP_CSS_SUFFIX);
     } else {
       writeContent(out, DEFAULT_GROUP_NAME + GROUP_CSS_SUFFIX);
     }
     return EVAL_BODY_INCLUDE;
+  }
+
+  @Override
+  protected void writeContent(Writer out, String srcFile) throws Exception {
+    srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest());
+    JspUtil.writeOpenStartTag(out, "link");
+    JspUtil.writeAttribute(out, "rel", "stylesheet");
+    JspUtil.writeAttribute(out, "type", "text/css");
+    JspUtil.writeAttribute(out, "href", srcFile, false);
+    JspUtil.writeAttribute(out, "media", this.media);
+    JspUtil.writeCloseStartEndTag(out);
+    out.write("\n");
   }
 
   /**
@@ -52,16 +62,5 @@ public class ImportStylesHtmlTag extends BaseFileImportTag {
    */
   public void setMedia(String media) {
     this.media = evaluate("media", media, String.class);
-  }
-
-  protected void writeContent(Writer out, String srcFile) throws Exception {
-    srcFile = FileImportUtil.getImportString(srcFile, pageContext.getRequest());
-    JspUtil.writeOpenStartTag(out, "link");
-    JspUtil.writeAttribute(out, "rel", "stylesheet");
-    JspUtil.writeAttribute(out, "type", "text/css");
-    JspUtil.writeAttribute(out, "href", srcFile, false);
-    JspUtil.writeAttribute(out, "media", this.media);
-    JspUtil.writeCloseStartEndTag(out);
-    out.write("\n");
   }
 }

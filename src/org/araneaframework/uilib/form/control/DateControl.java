@@ -66,6 +66,7 @@ public class DateControl extends TimestampControl {
     this.defaultSecond = second;
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
     if (!this.confOverridden) {

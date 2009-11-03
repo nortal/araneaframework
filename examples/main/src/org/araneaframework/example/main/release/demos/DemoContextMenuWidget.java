@@ -79,6 +79,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
     }
   }
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("release/demos/contextMenuDemo");
     getL10nCtx().addLocaleChangeListener(this);
@@ -104,6 +105,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
       super(ExampleData.Client.class);
     }
 
+    @Override
     public List<ExampleData.Client> loadData() throws Exception {
       return DemoContextMenuWidget.this.friends;
     }

@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.jsp.AraneaAttributes;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 
 /**
  * Standard number float form element tag.
@@ -40,7 +40,7 @@ public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
 
-    BigDecimalControl.ViewModel viewModel = ((BigDecimalControl.ViewModel)controlViewModel);
+    FloatControl.ViewModel viewModel = ((FloatControl.ViewModel)controlViewModel);
 
     Map<String, String> attributes = new HashMap<String, String>();
     if (viewModel.getInputFilter() != null) {

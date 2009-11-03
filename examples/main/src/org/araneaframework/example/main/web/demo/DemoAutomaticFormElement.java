@@ -38,6 +38,7 @@ public class DemoAutomaticFormElement extends TemplateBaseWidget {
 
   private boolean editable = false;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("demo/demoAutomaticFormElement");
     this.form = new FormWidget();

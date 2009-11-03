@@ -16,15 +16,11 @@
 
 package org.araneaframework.integration.spring;
 
-import org.apache.commons.lang.ObjectUtils;
-
-import org.apache.commons.beanutils.ConstructorUtils;
-
-import org.araneaframework.core.Assert;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.beanutils.ConstructorUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.araneaframework.core.Assert;
 import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.springframework.web.util.ExpressionEvaluationUtils;
@@ -38,17 +34,11 @@ import org.springframework.web.util.ExpressionEvaluationUtils;
  */
 public class SpringExpressionEvaluationManager implements ExpressionEvaluationManager {
 
-  protected static final Log LOG = LogFactory.getLog(SpringExpressionEvaluationManager.class);
-
   @SuppressWarnings("unchecked")
   public <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject, PageContext pageContext)
       throws JspException {
 
     Assert.notNullParam(this, classObject, "classObject");
-
-    if (LOG.isTraceEnabled()) {
-      LOG.trace("Resolving attribute value '" + attributeValue + "'.");
-    }
 
     if (attributeValue == null) {
       return null;

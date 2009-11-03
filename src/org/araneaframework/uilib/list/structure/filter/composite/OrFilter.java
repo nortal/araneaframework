@@ -16,18 +16,15 @@
 
 package org.araneaframework.uilib.list.structure.filter.composite;
 
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.LaxyExpressionIterator;
 import org.araneaframework.uilib.list.structure.filter.MultiFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
-
 public class OrFilter extends MultiFilter {
-	
-	public Expression buildExpression(Map<String, Object> data) {
-		Iterator i = new LaxyExpressionIterator(this.children.iterator(), data);
-		return ExpressionUtil.or(i);
-	}
+
+  public Expression buildExpression(Map<String, Object> data) {
+    return ExpressionUtil.or(new LaxyExpressionIterator(this.children.iterator(), data));
+  }
 }

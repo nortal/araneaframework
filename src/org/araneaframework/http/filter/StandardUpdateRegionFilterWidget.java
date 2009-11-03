@@ -89,10 +89,12 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     this.renderedRegions.add(documentRegionId);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), UpdateRegionContext.class, this);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     String regionsFromRequest = output.getInputData().getGlobalData().get(UpdateRegionContext.UPDATE_REGIONS_KEY);
 
@@ -347,6 +349,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       super(path);
     }
 
+    @Override
     protected void execute(Component component) throws Exception {
       this.component = component;
     }
@@ -365,6 +368,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       this.output = output;
     }
 
+    @Override
     protected void execute(Component component) throws Exception {
       ((Widget) component)._getWidget().render(output);
       ((HttpOutputData) output).getWriter().flush();
@@ -376,6 +380,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
     private Map<String, String> regions = new HashMap<String, String>();
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof UpdateRegionProvider) {
         Map<String, String> newRegions = ((UpdateRegionProvider) component).getRegions(null);

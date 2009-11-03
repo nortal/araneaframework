@@ -24,7 +24,7 @@ import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TimeControl;
@@ -44,6 +44,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
   /**
    * Builds the form.
    */
+  @Override
   protected void init() throws Exception {
     setViewSelector("sample/simpleBeanForm");
 
@@ -67,14 +68,14 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     this.simpleForm.addBeanElement("createdDateTime", "demo.beanForm.createdDateTime", new DateTimeControl());
     this.simpleForm.addBeanElement("createdTime", "demo.beanForm.createdTime", new TimeControl());
     this.simpleForm.addBeanElement("createdDate", "demo.beanForm.createdDate", new DateControl());
-    this.simpleForm.addBeanElement("length", "demo.beanForm.length", new BigDecimalControl());
+    this.simpleForm.addBeanElement("length", "demo.beanForm.length", new FloatControl());
 
     // Primitive field mappings (notice the fields are mandatory, because they cannot accept null values - Aranea would 
     // throw an exception when trying to store null value in a primitive data type):
     this.simpleForm.addBeanElement("siblingsCount", "demo.beanForm.siblingsCount", new NumberControl(), true);
     this.simpleForm.addBeanElement("peopleCount", "demo.beanForm.peopleCount", new NumberControl(), true);
-    this.simpleForm.addBeanElement("weight", "demo.beanForm.weight", new BigDecimalControl(), true);
-    this.simpleForm.addBeanElement("preciseWeight", "demo.beanForm.preciseWeight", new BigDecimalControl(), true);
+    this.simpleForm.addBeanElement("weight", "demo.beanForm.weight", new FloatControl(), true);
+    this.simpleForm.addBeanElement("preciseWeight", "demo.beanForm.preciseWeight", new FloatControl(), true);
 
     // We use a simple option of not defining the button here. Instead, we just use a JSP tag that renders the button
     // and also invokes the event.

@@ -27,10 +27,10 @@ import org.araneaframework.uilib.util.MessageUtil;
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class NotEmptyConstraint extends BaseFieldConstraint {
+public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
 
   /**
-   * Specifies whether to trim a <code>String</code> value before checking its lenght. Default is false.
+   * Specifies whether to trim a <code>String</code> value before checking its length. Default is false.
    */
   protected boolean trim = false;
 
@@ -41,7 +41,7 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
 
   /**
    * Creates a new constraint without binding it to a form field, and specifies whether to trim a <code>String</code>
-   * value when checking its lenght.
+   * value when checking its length.
    * 
    * @param trim <code>true</code>, if the <code>String</code> value should be trimmed before checking its length.
    */
@@ -54,18 +54,18 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
    * 
    * @param field The form element that this constraint should be bound to.
    */
-  public NotEmptyConstraint(FormElement<?, ?> field) {
+  public NotEmptyConstraint(FormElement<C, D> field) {
     super(field);
   }
 
   /**
    * A constructor that binds given constraint to a form field, and specifies whether to trim a <code>String</code>
-   * value when checking its lenght.
+   * value when checking its length.
    * 
    * @param field The form element that this constraint should be bound to.
    * @param trim <code>true</code>, if the <code>String</code> value should be trimmed before checking its length.
    */
-  public NotEmptyConstraint(FormElement<?, ?> field, boolean trim) {
+  public NotEmptyConstraint(FormElement<C, D> field, boolean trim) {
     super(field);
     this.trim = trim;
   }

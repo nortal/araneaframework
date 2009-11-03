@@ -10,7 +10,7 @@ import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.BaseControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.StringData;
@@ -99,7 +99,7 @@ public class AsyncFormModificationTest extends TestCase {
 		String someText = "someText";
 		
 		FormWidget testForm = new FormWidget();
-		testForm.addElement("number", "#Number", new BigDecimalControl(), new BigDecimalData(), true);
+		testForm.addElement("number", "#Number", new FloatControl(), new BigDecimalData(), true);
 		testForm.addElement("text", "#Text", new TextControl(), new StringData(), false);
 		testForm._getComponent().init(null, new MockEnvironment());
 		
@@ -134,7 +134,7 @@ public class AsyncFormModificationTest extends TestCase {
 	@SuppressWarnings("unchecked")
   private String getSimpleValue(FormWidget form, String elementName) throws Exception {
       BaseControl<BigDecimal> baseControl = (BaseControl<BigDecimal>) form.getControlByFullName(elementName);
-      BigDecimalControl.ViewModel viewModel = (BigDecimalControl.ViewModel) baseControl.getViewModel();
+      FloatControl.ViewModel viewModel = (FloatControl.ViewModel) baseControl.getViewModel();
       return viewModel.getSimpleValue();
 	}
 }

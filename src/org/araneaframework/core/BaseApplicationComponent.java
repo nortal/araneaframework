@@ -163,10 +163,12 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
     _removeComponent(key);
   }
 
+  @Override
   protected void propagate(Message message) {
     _propagate(message);
   }
 
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }

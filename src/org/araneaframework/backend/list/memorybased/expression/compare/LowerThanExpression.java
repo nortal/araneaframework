@@ -60,6 +60,7 @@ public class LowerThanExpression extends ComparableExpression {
     this.allowEquals = allowEquals;
   }
 
+  @Override
   protected boolean doEvaluate(Object value1, Object value2) {
     int comp = this.comparator.compare(value1, value2);
     return this.allowEquals ? comp <= 0 : comp < 0;

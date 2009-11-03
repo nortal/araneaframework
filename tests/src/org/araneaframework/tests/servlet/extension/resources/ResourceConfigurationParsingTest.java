@@ -70,13 +70,13 @@ public class ResourceConfigurationParsingTest extends TestCase {
 	}
 		
 	public void testGetContentsUnion() {
-		Map map = struct.getGroupByName("common-js");
+		Map<String, String> map = struct.getGroupByName("common-js");
 		
-		for(Iterator ite = map.entrySet().iterator(); ite.hasNext();) {
-			String file = (String)((Map.Entry)(ite.next())).getKey();
+		for(String file : map.keySet()) {
 			
-			if (availableFilesInGroup.indexOf(file) == -1)
+			if (availableFilesInGroup.indexOf(file) == -1) {
 				fail("Unknown file in a group");
+			}
 		}
 	}
 	

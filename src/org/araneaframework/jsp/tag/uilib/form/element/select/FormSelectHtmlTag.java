@@ -58,12 +58,14 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     this.baseStyleClass = "aranea-select";
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return r;
   }
 
+  @Override
   public int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");
 

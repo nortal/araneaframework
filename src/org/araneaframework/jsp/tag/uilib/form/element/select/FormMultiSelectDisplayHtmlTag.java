@@ -54,6 +54,7 @@ public class FormMultiSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     this.baseStyleClass = "aranea-multi-select-display";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel) controlViewModel);
 

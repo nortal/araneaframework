@@ -54,12 +54,12 @@ public class MockInputData implements InputData {
     }
   }
 
-  public void extend(Class interfaceClass, Object implementation) {
+  public <T> void extend(Class<T> interfaceClass, T implementation) {
     //XXX
     throw new NotImplementedException();    
   }
 
-  public Object narrow(Class interfaceClass) {
+  public <T> T narrow(Class<T> interfaceClass) {
     //XXX
     throw new NotImplementedException();
   }

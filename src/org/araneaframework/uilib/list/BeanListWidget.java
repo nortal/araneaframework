@@ -40,6 +40,7 @@ public class BeanListWidget<T> extends ListWidget<T> {
     this.listStructure = createListStructure();
   }
 
+  @Override
   protected TypeHelper createTypeHelper() {
     // beanType == null when the constructor of the parent class is executed.
     if (this.beanType == null) {

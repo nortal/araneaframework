@@ -31,6 +31,7 @@ public class LoginMessage extends BroadcastMessage {
   /**
    * Searches the {@link LoginWidget} to start a new root widget.
    */
+  @Override
   protected void execute(Component component) throws Exception {
     if (component instanceof LoginWidget) {
       LoginWidget loginWidget = (LoginWidget) component;

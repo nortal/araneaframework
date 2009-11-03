@@ -30,7 +30,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 import org.araneaframework.uilib.form.data.IntegerData;
@@ -48,34 +48,36 @@ public class SampleActionFormWidget extends TemplateBaseWidget {
   private FormElement<BigDecimal, BigDecimal> vatTotal;
   private FormElement<BigDecimal, BigDecimal> bigTotal;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("sample/sampleActionForm");
 
     this.form = new FormWidget();
 
-    this.price = this.form.addElement("price", "#Price", new BigDecimalControl(), new BigDecimalData());
+    this.price = this.form.addElement("price", "#Price", new FloatControl(), new BigDecimalData());
     this.price.setDisabled(true);
     this.price.setValue(round2(new BigDecimal(Math.random() * 5 + 5)));
 
     this.quantity = this.form.addElement("quantity", "#Quantity", new NumberControl(), new IntegerData());
     this.quantity.setValue(3);
 
-    this.total = this.form.addElement("total", "#Total", new BigDecimalControl(), new BigDecimalData());
+    this.total = this.form.addElement("total", "#Total", new FloatControl(), new BigDecimalData());
     this.total.setDisabled(true);
 
-    this.vat = this.form.addElement("vat", "#VAT", new BigDecimalControl(), new BigDecimalData());
+    this.vat = this.form.addElement("vat", "#VAT", new FloatControl(), new BigDecimalData());
     this.vat.setValue(new BigDecimal("0.18"));
 
-    this.vatTotal = this.form.addElement("vatTotal", "#not used", new BigDecimalControl(), new BigDecimalData());
+    this.vatTotal = this.form.addElement("vatTotal", "#not used", new FloatControl(), new BigDecimalData());
     this.vatTotal.setDisabled(true);
 
-    this.bigTotal = this.form.addElement("bigTotal", "#Total Sum", new BigDecimalControl(), new BigDecimalData());
+    this.bigTotal = this.form.addElement("bigTotal", "#Total Sum", new FloatControl(), new BigDecimalData());
     this.bigTotal.setDisabled(true);
 
     calculate();
     addWidget("form", this.form);
 
     addActionListener("quantityChange", new StandardActionListener() {
+      @Override
       public void processAction(String actionId, String actionParam,
           InputData input, OutputData output) throws Exception {
         if (StringUtils.isNumeric(actionParam)) {

@@ -35,6 +35,7 @@ public class LoginWidget extends BaseUIWidget {
    */
   private FormWidget form;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("login");
     setGlobalEventListener(new ProxyEventListener(this));

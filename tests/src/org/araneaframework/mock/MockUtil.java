@@ -53,6 +53,6 @@ public class MockUtil {
   }
   
   public static Environment getEnv() {
-    return new StandardEnvironment(null, new HashMap());
+    return new StandardEnvironment(null, new HashMap<Class<?>, Object>());
   }
 }

@@ -61,6 +61,7 @@ public class LocaleStringComparator implements StringComparator, Serializable {
     return this.collator;
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof LocaleStringComparator == false) {
       return false;
@@ -74,6 +75,7 @@ public class LocaleStringComparator implements StringComparator, Serializable {
     return ignoreCase == rhs.ignoreCase && locale.equals(rhs.locale);
   }
 
+  @Override
   public int hashCode() {
     return new HashCodeBuilder(20070327, 1221).append(ignoreCase).append(locale).toHashCode();
   }

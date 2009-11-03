@@ -47,10 +47,10 @@ public class ComparableExpressionTests extends TestCase {
 	@Override
   public void setUp() {
 		this.resolver = new MockVariableResolver();
-		this.low = new MockValueExpression(new Long(-10));
-		this.low_copy = new MockValueExpression(new Long(-10));
-		this.high = new MockValueExpression(new Long(10));
-		this.nullExpr = new MockValueExpression(null);
+		this.low = new MockValueExpression<Long>(-10L);
+		this.low_copy = new MockValueExpression<Long>(-10L);
+		this.high = new MockValueExpression<Long>(10L);
+		this.nullExpr = new MockValueExpression<Long>(null);
 	}
 
 	@Override

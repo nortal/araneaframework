@@ -32,6 +32,7 @@ public abstract class ValidOnlyIndividualBeanFormRowHandler<K, R> extends ValidO
     initAddForm((BeanFormWidget<R>) addForm);
   }
 
+  @Override
   public final void initFormRow(FormRow<K, R> editableRow, R row) throws Exception {
     initFormRow((BeanFormRow<K, R>) editableRow, row);
   }

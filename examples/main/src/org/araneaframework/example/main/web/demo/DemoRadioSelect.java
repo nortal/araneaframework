@@ -32,6 +32,7 @@ public class DemoRadioSelect extends TemplateBaseWidget {
 
   private DefaultSelectControl control;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("demo/demoRadioSelect");
 

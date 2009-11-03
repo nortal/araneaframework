@@ -30,6 +30,7 @@ public class ComparedEqualsExpression extends ComparableExpression {
     super(expr1, expr2);
   }
 
+  @Override
   protected boolean doEvaluate(Object value1, Object value2) {
     return this.comparator.compare(value1, value2) == 0;
   }

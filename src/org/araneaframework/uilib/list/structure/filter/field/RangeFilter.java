@@ -30,132 +30,132 @@ import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.list.util.FormUtil;
 import org.araneaframework.uilib.util.Event;
 
-
 public abstract class RangeFilter extends BaseRangeFilter {
 
-	private static final long serialVersionUID = 1L;
-	
-	private Comparator comparator;
+  private Comparator<?> comparator;
 
-	public static RangeFilter getInstance(final FilterContext ctx, final String fieldId,
-			final String lowValueId, final String highValueId) {
-		final RangeFilter filter;
-		
-		Class type = ctx.getFieldType(fieldId);
-		if (java.util.Date.class.equals(type)
-				|| java.sql.Date.class.isAssignableFrom(type)) {
-			if (ctx.isStrict()) {
-				filter = new DateStrict();
-			} else {
-				filter = new DateNonStrict();
-			}			
-		} else {
-			if (ctx.isStrict()) {
-				filter = new Strict();
-			} else {
-				filter = new NonStrict();
-			}			
-		}
-		
-		filter.setFieldId(fieldId);
-		filter.setLowValueId(lowValueId);
-		filter.setHighValueId(highValueId);
-		
-		ctx.addInitEvent(new Event() {
-			public void run() {
-				filter.setComparator(ctx.getFieldComparator(fieldId));
-			}			
-		});
-		
-		return filter;
-	}
-	
-	public static void addToForm(FilterContext ctx, String lowId, String highId, FormElement lowElement, FormElement highElement) {
-		ctx.getForm().addElement(lowId, lowElement);
-		ctx.getForm().addElement(highId, highElement);
-		FormUtil.addConstraint(ctx.getForm(),
-				new RangeConstraint(lowElement, highElement, true));
-	}
-	
-	public static void addToForm(FilterContext ctx, String lowId, String highId, Control lowControl, Control highControl) {
-		addToForm(ctx, lowId, highId,
-				FilterFormUtil.createElement(ctx, lowId, lowControl),
-				FilterFormUtil.createElement(ctx, highId, highControl));
-	}
-	
-	public static void addToForm(FilterContext ctx, String lowId, String highId) {
-		addToForm(ctx, lowId, highId,
-				FilterFormUtil.createElement(ctx, lowId),
-				FilterFormUtil.createElement(ctx, highId));
-	}
-	
-	public Comparator getComparator() {
-		return comparator;
-	}
+  public static RangeFilter getInstance(final FilterContext ctx, final String fieldId, final String lowValueId,
+      final String highValueId) {
+    final RangeFilter filter;
 
-	public void setComparator(Comparator comparator) {
-		this.comparator = comparator;
-	}
-	
-	// General
-	
-	static class Strict extends RangeFilter {
-		public Expression buildExpression(Map filterInfo) {
-			if (!isActive(filterInfo)) {
-				return null;
-			}
-			Expression var = buildVariableExpression();
-			return ExpressionUtil.and(
-					ExpressionUtil.gt(var, buildLowValueExpression(filterInfo), getComparator()),
-					ExpressionUtil.lt(var, buildHighValueExpression(filterInfo), getComparator()));
-		}		
-	}
-	
-	static class NonStrict extends RangeFilter {
-		public Expression buildExpression(Map filterInfo) {
-			if (!isActive(filterInfo)) {
-				return null;
-			}
-			Expression var = buildVariableExpression();
-			return ExpressionUtil.and(
-					ExpressionUtil.ge(var, buildLowValueExpression(filterInfo), getComparator()),
-					ExpressionUtil.le(var, buildHighValueExpression(filterInfo), getComparator()));
-		}		
-	}
-	
-	// java.util.Date / java.sql.Date
-	
-	static class RightStrict extends RangeFilter {
-		public Expression buildExpression(Map filterInfo) {
-			if (!isActive(filterInfo)) {
-				return null;
-			}
-			Expression var = buildVariableExpression();
-			// Left non-strict and right strict
-			return ExpressionUtil.and(
-					ExpressionUtil.ge(var, buildLowValueExpression(filterInfo), getComparator()),
-					ExpressionUtil.lt(var, buildHighValueExpression(filterInfo), getComparator()));
-		}
-	}
-	
-	static class DateStrict extends RightStrict {
-		@Override
+    Class<?> type = ctx.getFieldType(fieldId);
+    if (java.util.Date.class.equals(type) || java.sql.Date.class.isAssignableFrom(type)) {
+      if (ctx.isStrict()) {
+        filter = new DateStrict();
+      } else {
+        filter = new DateNonStrict();
+      }
+    } else {
+      if (ctx.isStrict()) {
+        filter = new Strict();
+      } else {
+        filter = new NonStrict();
+      }
+    }
+
+    filter.setFieldId(fieldId);
+    filter.setLowValueId(lowValueId);
+    filter.setHighValueId(highValueId);
+
+    ctx.addInitEvent(new Event() {
+
+      public void run() {
+        filter.setComparator(ctx.getFieldComparator(fieldId));
+      }
+    });
+
+    return filter;
+  }
+
+  public static <C, D> void addToForm(FilterContext ctx, String lowId, String highId, FormElement<C, D> lowElement,
+      FormElement<C, D> highElement) {
+    ctx.getForm().addElement(lowId, lowElement);
+    ctx.getForm().addElement(highId, highElement);
+    FormUtil.addConstraint(ctx.getForm(), new RangeConstraint<C, D>(lowElement, highElement, true));
+  }
+
+  public static <C> void addToForm(FilterContext ctx, String lowId, String highId, Control<C> lowControl,
+      Control<C> highControl) {
+    addToForm(ctx, lowId, highId, FilterFormUtil.createElement(ctx, lowId, lowControl), FilterFormUtil.createElement(
+        ctx, highId, highControl));
+  }
+
+  public static void addToForm(FilterContext ctx, String lowId, String highId) {
+    addToForm(ctx, lowId, highId, FilterFormUtil.createElement(ctx, lowId), FilterFormUtil.createElement(ctx, highId));
+  }
+
+  public Comparator<?> getComparator() {
+    return this.comparator;
+  }
+
+  public void setComparator(Comparator<?> comparator) {
+    this.comparator = comparator;
+  }
+
+  // General
+
+  static class Strict extends RangeFilter {
+
+    @Override
+    public Expression buildExpression(Map<String, Object> filterInfo) {
+      if (!isActive(filterInfo)) {
+        return null;
+      }
+      Expression var = buildVariableExpression();
+      return ExpressionUtil.and(ExpressionUtil.gt(var, buildLowValueExpression(filterInfo), getComparator()),
+          ExpressionUtil.lt(var, buildHighValueExpression(filterInfo), getComparator()));
+    }
+  }
+
+  static class NonStrict extends RangeFilter {
+
+    @Override
+    public Expression buildExpression(Map<String, Object> filterInfo) {
+      if (!isActive(filterInfo)) {
+        return null;
+      }
+      Expression var = buildVariableExpression();
+      return ExpressionUtil.and(ExpressionUtil.ge(var, buildLowValueExpression(filterInfo), getComparator()),
+          ExpressionUtil.le(var, buildHighValueExpression(filterInfo), getComparator()));
+    }
+  }
+
+  // java.util.Date / java.sql.Date
+
+  static class RightStrict extends RangeFilter {
+
+    @Override
+    public Expression buildExpression(Map<String, Object> filterInfo) {
+      if (!isActive(filterInfo)) {
+        return null;
+      }
+      Expression var = buildVariableExpression();
+      // Left non-strict and right strict
+      return ExpressionUtil.and(ExpressionUtil.ge(var, buildLowValueExpression(filterInfo), getComparator()),
+          ExpressionUtil.lt(var, buildHighValueExpression(filterInfo), getComparator()));
+    }
+  }
+
+  static class DateStrict extends RightStrict {
+
+    @Override
     protected Object convertLowValue(Object value) {
-			return nextDay((Date) value);
-		}
-	}
-	
-	static class DateNonStrict extends RightStrict {
-		@Override
+      return nextDay((Date) value);
+    }
+  }
+
+  static class DateNonStrict extends RightStrict {
+
+    @Override
     protected Object convertHighValue(Object value) {
-			return nextDay((Date) value);
-		}
-	}
-	
-	static Date nextDay(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DAY_OF_MONTH, 1);			
-		return cal.getTime();
-	}
+      return nextDay((Date) value);
+    }
+  }
+
+  static Date nextDay(Date date) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(date);
+    cal.add(Calendar.DAY_OF_MONTH, 1);
+    return cal.getTime();
+  }
 }

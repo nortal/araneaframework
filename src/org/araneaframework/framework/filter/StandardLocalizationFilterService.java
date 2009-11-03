@@ -88,6 +88,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
   }
 
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), LocalizationContext.class, this);
   }
@@ -96,6 +97,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     return getResourceBundle(this.currentLocale);
   }
 
+  @Override
   protected void init() throws Exception {
     this.childService._getComponent().init(getScope(), getChildEnvironment());
   }
@@ -178,6 +180,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
       this.listener = listener;
     }
 
+    @Override
     protected void destroy() throws Exception {
       LocalizationContext context = EnvironmentUtil.getLocalizationContext(getEnvironment());
       if (context != null) {

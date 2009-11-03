@@ -45,6 +45,7 @@ public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
     this.baseStyleClass = "aranea-select-display";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
 

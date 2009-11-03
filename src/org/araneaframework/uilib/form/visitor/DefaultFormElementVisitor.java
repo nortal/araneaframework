@@ -25,9 +25,12 @@ import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
  */
 public class DefaultFormElementVisitor extends FormElementVisitor {
 
+  @Override
   public void visit(String id, FormElement<?, ?> element) {}
 
+  @Override
   public void visit(String id, FormWidget element) {}
 
+  @Override
   public void visit(String id, BaseFormListWidget<?, ?> element) {}
 }

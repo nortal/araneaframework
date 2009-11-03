@@ -133,6 +133,28 @@
 		</javac>
 	</target>
 
+	<target name="compile-tags" depends="init" description="Compiles TAGX files.">
+		<mkdir dir="build/tags" />
+
+		<taskdef classname="org.apache.jasper.JspC" name="jasper2" > 
+			<classpath refid="build.util.cp"/>
+		</taskdef>
+
+		<!--Compile Java source files-->
+		<jasper2
+			compiler="1.5"
+			validateXml="false"
+			listerrors="true"
+			failonerror="true"
+			uriroot="etc/META-INF/tags/util"
+			verbose="true"
+			javaencoding="UTF-8"
+			jspfiles="assert.tagx"
+			
+			outputdir="build/tags"
+		/>
+	</target>
+
 	<target name="make-manifest" description="Creates Aranea manifest for JAR files">
 		<mkdir dir="build/tmp/"/>
 		<manifest file="build/tmp/MANIFEST.MF" id="aranea-manifest">

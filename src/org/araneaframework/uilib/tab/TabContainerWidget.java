@@ -68,6 +68,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
    */
   protected transient boolean dying = false;
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     Map<Class<?>, Object> entries = new LinkedHashMap<Class<?>, Object>(2);
     entries.put(TabContainerContext.class, this);
@@ -226,6 +227,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
    ************************************************************************** */
   protected class SelectionEventListener extends StandardEventListener {
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       if (LOG.isTraceEnabled()) {
         LOG.trace(ClassUtils.getShortClassName(TabContainerWidget.class) + " received tab selection event for tab '"
@@ -238,6 +240,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   /*****************************************************************************
    * Overrides for disableWidget()/enableWidget()
    ************************************************************************** */
+  @Override
   public void disableWidget(Object key) {
     if (!this.tabs.containsKey(key)) {
       super.disableWidget(key);
@@ -246,6 +249,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
     this.tabs.get(key).disableTab();
   }
 
+  @Override
   public void enableWidget(Object key) {
     if (!this.tabs.containsKey(key)) {
       super.enableWidget(key);
@@ -255,17 +259,20 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   }
 
   /*  ****************** COMPONENT LIFECYCLE METHODS ************************** */
+  @Override
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
 
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
 
+    @Override
     public synchronized void init(Scope scope, Environment env) {
       super.init(scope, env);
       addEventListener(TAB_SELECT_EVENT_ID, new SelectionEventListener());
     }
 
+    @Override
     public void destroy() {
       TabContainerWidget.this.dying = true;
       super.destroy();

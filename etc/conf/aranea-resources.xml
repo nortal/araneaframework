@@ -53,7 +53,6 @@
 		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
-		<file path="js/aranea/aranea-locale.js" />
 		<file path="js/aranea/aranea.js" />
 		<file path="js/aranea/aranea-ui.js" />
 		<file path="js/aranea/aranea-contextmenu.js" />
@@ -79,7 +78,6 @@
 		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
-		<file path="js/aranea/src/aranea-locale.js" />
 		<file path="js/aranea/src/aranea.js" />
 		<file path="js/aranea/src/aranea-ui.js" />
 		<file path="js/aranea/src/aranea-contextmenu.js" />
@@ -105,7 +103,6 @@
         <file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
-		<file path="js/aranea/aranea-locale.js" />
 		<file path="js/aranea/aranea.js" />
 		<file path="js/aranea/aranea-ui.js" />
 		<file path="js/aranea/aranea-contextmenu.js" />
@@ -124,7 +121,6 @@
         <file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
-		<file path="js/aranea/src/aranea-locale.js" />
 		<file path="js/aranea/src/aranea.js" />
 		<file path="js/aranea/src/aranea-ui.js" />
 		<file path="js/aranea/src/aranea-contextmenu.js" />
@@ -139,7 +135,6 @@
 
 	<files content-type="text/javascript" group="core.js">
 		<file path="js/prototype/prototype.js" />
-		<file path="js/aranea/aranea-locale.js" />
 		<file path="js/aranea/aranea.js" />
 		<file path="js/aranea/aranea-ui.js" />
 		<file path="js/aranea/aranea-keyboard.js" />
@@ -149,7 +144,6 @@
 
 	<files content-type="text/javascript" group="core-devel.js">
 		<file path="js/prototype/prototype.js" />
-		<file path="js/aranea/src/aranea-locale.js" />
 		<file path="js/aranea/src/aranea.js" />
 		<file path="js/aranea/src/aranea-ui.js" />
 		<file path="js/aranea/src/aranea-keyboard.js" />

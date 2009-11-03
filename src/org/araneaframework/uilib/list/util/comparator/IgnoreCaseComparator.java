@@ -41,10 +41,12 @@ public class IgnoreCaseComparator implements StringComparator, Serializable {
     return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
   }
 
+  @Override
   public boolean equals(Object obj) {
     return IgnoreCaseComparator.class.equals(obj.getClass());
   }
 
+  @Override
   public int hashCode() {
     return 703271433;
   }

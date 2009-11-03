@@ -34,6 +34,7 @@ public class ExampleSimpleTreeMessageFactory implements MessageFactory {
 
   private class OpenWidgetMessage extends BroadcastMessage {
 
+    @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof MenuWidget) {
         MenuWidget menu = (MenuWidget) component;

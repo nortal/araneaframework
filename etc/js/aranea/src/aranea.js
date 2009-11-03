@@ -444,7 +444,7 @@ Aranea.Page = {
 			if (Aranea.Data.regionHandlers['reload']) {
 				Aranea.Data.regionHandlers['reload']();
 			} else {
-				Aranea.Logger.logger.error('No handler is registered for "reload" region, unable to force page reload!');
+				Aranea.Logger.error('No handler is registered for "reload" region, unable to force page reload!');
 			}
 		}
 	},
@@ -644,7 +644,7 @@ Aranea.Page.Request = {
 			}
 		}
 		if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
-			Aranea.Logger.debug('GOOD: showLoadingMessage');
+			Aranea.Logger.debug('Showing the loading message.');
 			Aranea.Page.showLoadingMessage();
 		}
 	},
@@ -926,7 +926,7 @@ Aranea.Page.RegionHandler = {
 			} else if (mode == 'replace') {
 				$(id).replace(domContentString);
 			} else {
-				Aranea.Logger.logger.error('Document region mode "' + mode + '" is unknown');
+				Aranea.Logger.error('Document region mode "' + mode + '" is unknown');
 			}
 		}
 	}),

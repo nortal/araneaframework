@@ -96,6 +96,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    * 
    * @return The entire script for check box onclick event.
    */
+  @Override
   protected String getOnclickScript() {
     String tmp = this.onClickEventId == null ? this.onclick : this.eventPrecondition;
 

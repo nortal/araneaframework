@@ -31,37 +31,33 @@ import org.araneaframework.http.util.AtomicResponseHelper;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * This flow container widget also handles any exceptions that may occur during
- * any child widget processing. Any sub-class will have to provide
- * implementation for the
- * <code>renderExceptionHandler(OutputData, Exception)</code> method, that
- * allows custom handling for given exception. To define the page that renders
- * the exception to the user, one can use following solution:
+ * This flow container widget also handles any exceptions that may occur during any child widget processing. Any
+ * sub-class will have to provide implementation for the <code>renderExceptionHandler(OutputData, Exception)</code>
+ * method, that allows custom handling for given exception. To define the page that renders the exception to the user,
+ * one can use following solution:
  * 
- * <pre><code>
+ * <pre>
+ * &lt;code&gt;
  * ServletUtil.include(&quot;/WEB-INF/jsp/error.jsp&quot;, this, output);
- * </code></pre>
+ * &lt;/code&gt;
+ * </pre>
  * 
  * The page would be rendered as any other page inside this container.
  * <p>
- * Also note that this widget declares three events in its <code>init()</code>
- * method to let users handle the situation:
+ * Also note that this widget declares three events in its <code>init()</code> method to let users handle the situation:
  * <ul>
  * <li>retry - retries to process the last event;</li>
  * <li>cancel - cancels the last event;</li>
  * <li>reset - resets the entire flow context of this container widget.</li>
  * </ul>
- * If you wish to use these events, make sure that when you override the
- * <code>init()</code> method, also include the <code>super.init();</code>
- * line to that method.
+ * If you wish to use these events, make sure that when you override the <code>init()</code> method, also include the
+ * <code>super.init();</code> line to that method.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class ExceptionHandlingFlowContainerWidget
-  extends StandardFlowContainerWidget {
+public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowContainerWidget {
 
-  private static final Log LOG = LogFactory
-      .getLog(ExceptionHandlingFlowContainerWidget.class);
+  private static final Log LOG = LogFactory.getLog(ExceptionHandlingFlowContainerWidget.class);
 
   /**
    * The exception that occurs is stored in this variable.
@@ -76,8 +72,7 @@ public abstract class ExceptionHandlingFlowContainerWidget
   }
 
   /**
-   * Initializes the flow container, and specifies the <code>topWidget</code>
-   * as its parent.
+   * Initializes the flow container, and specifies the <code>topWidget</code> as its parent.
    * 
    * @param topWidget a parent widget.
    */
@@ -86,18 +81,18 @@ public abstract class ExceptionHandlingFlowContainerWidget
   }
 
   /**
-   * Initializes the widget and declares three events to let users handle the
-   * situation:
+   * Initializes the widget and declares three events to let users handle the situation:
    * <ul>
    * <li>retry - retries to process the last event;</li>
    * <li>cancel - cancels the last event;</li>
    * <li>reset - resets the entire flow context of this container widget.</li>
    * </ul>
-   * If you wish to use these events, and you override the <code>init()</code>
-   * method, also include the <code>super.init();</code> line to that method.
+   * If you wish to use these events, and you override the <code>init()</code> method, also include the
+   * <code>super.init();</code> line to that method.
    * 
    * @throws Exception Any non-specific exception that may occur.
    */
+  @Override
   protected void init() throws Exception {
     super.init();
     addEventListener("retry", new ProxyEventListener(this));
@@ -135,6 +130,7 @@ public abstract class ExceptionHandlingFlowContainerWidget
   /**
    * A widget specific handling of an exception.
    */
+  @Override
   protected void handleWidgetException(Exception e) throws Exception {
     this.exception = e;
     if (ExceptionUtils.getRootCause(e) != null) {
@@ -142,17 +138,16 @@ public abstract class ExceptionHandlingFlowContainerWidget
     } else {
       LOG.error("Critical exception occured: ", e);
     }
-    UpdateRegionContext updateRegionContext = EnvironmentUtil
-        .getUpdateRegionContext(getEnvironment());
+    UpdateRegionContext updateRegionContext = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
     if (updateRegionContext != null) {
       updateRegionContext.disableOnce();
     }
   }
 
   /**
-   * Overrides the <code>update()</code> functionality to catch and handle
-   * exceptions.
+   * Overrides the <code>update()</code> functionality to catch and handle exceptions.
    */
+  @Override
   protected void update(InputData input) throws Exception {
     if (this.exception == null) {
       super.update(input);
@@ -162,9 +157,9 @@ public abstract class ExceptionHandlingFlowContainerWidget
   }
 
   /**
-   * Overrides the <code>event()</code> functionality to catch and handle
-   * exceptions.
+   * Overrides the <code>event()</code> functionality to catch and handle exceptions.
    */
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (this.exception == null) {
       super.event(path, input);
@@ -174,9 +169,9 @@ public abstract class ExceptionHandlingFlowContainerWidget
   }
 
   /**
-   * Overrides the <code>propagate()</code> functionality to catch and handle
-   * exceptions.
+   * Overrides the <code>propagate()</code> functionality to catch and handle exceptions.
    */
+  @Override
   protected void propagate(Message message) throws Exception {
     try {
       super.propagate(message);
@@ -190,9 +185,9 @@ public abstract class ExceptionHandlingFlowContainerWidget
   }
 
   /**
-   * Overrides the <code>render()</code> functionality to catch and handle
-   * exceptions.
+   * Overrides the <code>render()</code> functionality to catch and handle exceptions.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
     try {
@@ -210,18 +205,18 @@ public abstract class ExceptionHandlingFlowContainerWidget
   }
 
   /**
-   * This method lets sub-classes implement their way to handle and display this
-   * exception. To define the page that renders the exception to the user, one
-   * can use following solution:
+   * This method lets sub-classes implement their way to handle and display this exception. To define the page that
+   * renders the exception to the user, one can use following solution:
    * 
-   * <pre><code>
+   * <pre>
+   * &lt;code&gt;
    * ServletUtil.include(&quot;/WEB-INF/jsp/error.jsp&quot;, this, output);
-   * </code></pre>
+   * &lt;/code&gt;
+   * </pre>
    * 
    * @param output output data.
    * @param e the exception that occur.
    * @throws Exception Any non-specific exception that may occur.
    */
-  protected abstract void renderExceptionHandler(OutputData output, Exception e)
-      throws Exception;
+  protected abstract void renderExceptionHandler(OutputData output, Exception e) throws Exception;
 }

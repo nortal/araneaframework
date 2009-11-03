@@ -21,22 +21,21 @@ import java.io.Writer;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * Defines the update region in the HTML page that can be updated via AJAX requests.
- * Should be used when not updating content inside HTML <code>table</code> rows.
+ * Defines the update region in the HTML page that can be updated via AJAX requests. Should be used when not updating
+ * content inside HTML <code>table</code> rows.
  * 
  * @jsp.tag
- *   name = "updateRegion"
- *   body-content = "JSP"
- *   description = "Defines an update region for asynchronous updating using AJAX request. Use its "id" to select the updated regions
-               using the "updateRegions" attribute of elements capable of sending events. This attribute accepts a comma-separated
-               list of regions to be updated with the request."
+ *  name = "updateRegion"
+ *  body-content = "JSP"
+ *  description = "Defines an update region for asynchronous updating using AJAX request. Use its 'id' to select the updated regions using the 'updateRegions' attribute of elements capable of sending events. This attribute accepts a comma-separated list of regions to be updated with the request."
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
 
   /**
-   * The name of the tag that wraps the update region. Client-side scripts don't
-   * depend on the tag type, they just require the element to have an ID.
+   * The name of the tag that wraps the update region. Client-side scripts don't depend on the tag type, they just
+   * require the element to have an ID.
+   * 
    * @since 1.2.1
    */
   protected String tag = "span";
@@ -44,31 +43,28 @@ public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
   /**
    * @since 1.2.1
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Provides a way to use custom HTML tag (default: SPAN). Does not break client-side scripts. Use with caution!"
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Provides a way to use custom HTML tag (default: SPAN). Does not break client-side scripts. Use with caution!"
    */
   public void setTag(String tag) throws JspException {
     this.tag = evaluateNotNull("tag", tag, String.class);
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
     JspUtil.writeOpenStartTag(out, this.tag);
-    JspUtil.writeAttribute(out, "id",  fullId);
+    JspUtil.writeAttribute(out, "id", this.fullId);
     JspUtil.writeCloseStartTag(out);
-    
-    out.write("<!--BEGIN:" + fullId + "-->");
-    
+    out.write("<!--BEGIN:" + this.fullId + "-->");
     return EVAL_BODY_INCLUDE;
-  }    
-  
+  }
+
+  @Override
   protected int doEndTag(Writer out) throws Exception {
-    out.write("<!--END:" + fullId + "-->");
-    
+    out.write("<!--END:" + this.fullId + "-->");
     JspUtil.writeEndTag(out, this.tag);
-    
     return super.doEndTag(out);
   }
 }

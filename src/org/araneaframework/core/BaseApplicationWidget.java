@@ -19,6 +19,7 @@ package org.araneaframework.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
@@ -93,13 +94,11 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   public class ViewModel implements ApplicationWidget.WidgetViewModel {
 
-    private static final long serialVersionUID = 1L;
-
     private Map<String, Object> viewData;
 
     public ViewModel() {
       if (BaseApplicationWidget.this.viewData == null) {
-        this.viewData = new HashMap<String, Object> ();
+        this.viewData = new HashMap<String, Object>();
       } else {
         this.viewData = new HashMap<String, Object>(BaseApplicationWidget.this.viewData);
       }
@@ -162,10 +161,12 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     return getEnvironment();
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
     _propagate(message);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     if (this.viewDataOnce != null) {
       this.viewDataOnce.clear();
@@ -183,6 +184,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   /**
    * If path hasNextStep() routes to the correct child, otherwise calls the appropriate listener.
    */
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (path != null && path.hasNext()) {
       Object next = path.next();
@@ -207,6 +209,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * CallBack called when <code>update(InputData)</code> is invoked.
+   * 
    * @param input The request data.
    */
   protected void handleUpdate(InputData input) throws Exception {}
@@ -224,7 +227,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       return;
     }
 
-    List<EventListener> listeners = this.eventListeners == null ? null : eventListeners.get(eventId);
+    List<EventListener> listeners = this.eventListeners == null ? null : this.eventListeners.get(eventId);
 
     if (LOG.isTraceEnabled()) {
       LOG.trace("Delivering event '" + eventId + "' to widget '" + getScope() + "', type: '" + getClass().getName()
@@ -256,6 +259,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * If {@link Path#hasNext()} routes to the action to child, otherwise calls the appropriate
    * {@link org.araneaframework.core.ActionListener}.
    */
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
       Object next = path.next();
@@ -279,16 +283,18 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * Calls the appropriate listener
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
-    String actionId = getActionId(input);    
+    String actionId = getActionId(input);
 
     if (actionId == null) {
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
+        LOG
+            .warn("Service '" + getScope() + "' cannot deliver action for a null action id!"
+                + Assert.thisToString(this));
       }
       return;
     }
 
-    List<ActionListener> listeners = this.actionListeners == null ? null : this.actionListeners.get(actionId); 
+    List<ActionListener> listeners = this.actionListeners == null ? null : this.actionListeners.get(actionId);
 
     if (LOG.isTraceEnabled()) {
       LOG.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName()
@@ -311,6 +317,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   /**
    * Renders the component to output, meant for overriding.
    */
+  @Override
   protected void render(OutputData output) throws Exception {}
 
   /**
@@ -328,9 +335,9 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     return input.getGlobalData().get(ApplicationService.ACTION_HANDLER_ID_KEY);
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   /**
    * Returns the Viewable.Interface internal implementation.
@@ -355,9 +362,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * 
    * @return a map of the child-components under this component
    */
-  @SuppressWarnings("unchecked")
-  public Map<Object, Component>  getChildren() {
-    return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
+  public Map<Object, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
   }
 
   /**
@@ -397,6 +403,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * Removes component from the children and calls destroy on it.
+   * 
    * @param key of the child being removed
    */
   public void removeWidget(Object key) {
@@ -417,6 +424,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     _disableComponent(key);
   }
 
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }
@@ -465,7 +473,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Removes the listener from the Widget's eventlisteners.
+   * Removes the listener from the Widget's event listeners.
+   * 
    * @param listener the EventListener to remove
    * @see #addEventListener
    */
@@ -478,6 +487,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * Clears all the EventListeners from this Widget with the specified eventId.
+   * 
    * @param eventId the id of the EventListeners.
    */
   public void clearEventlisteners(String eventId) {
@@ -486,8 +496,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be
-   * available until explicitly removed with {@link #removeViewData(String)}.
+   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available until explicitly
+   * removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -504,7 +514,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available during this
-   * request only. 
+   * request only.
    */
   public void putViewDataOnce(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -521,17 +531,20 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds the ActionListener listener with the specified action id. 
+   * Adds the ActionListener listener with the specified action id.
    */
   public void addActionListener(String actionId, ActionListener listener) {
     Assert.notNullParam(this, actionId, "actionId");
     Assert.notNullParam(this, listener, "listener");
+
     List<ActionListener> list = getActionListeners().get(actionId);
+
     if (list == null) {
-      list = new ArrayList<ActionListener>(1);
+      list = new ArrayList<ActionListener>();
+      getActionListeners().put(actionId, list);
     }
+
     list.add(listener);
-    getActionListeners().put(actionId, list);
   }
 
   /**
@@ -546,6 +559,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * Clears all the ActionListeners with the specified actionId.
+   * 
    * @param actionId the actionId
    */
   public void clearActionListeners(String actionId) {

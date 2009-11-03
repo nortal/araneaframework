@@ -76,14 +76,17 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
     return this.cancellingService;
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), FlowContext.class, this);
   }
 
+  @Override
   protected void init() throws Exception {
     addWidget("widget", this.widget);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     this.widget._getWidget().render(output);
   }

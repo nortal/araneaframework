@@ -177,6 +177,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     pushGlobalEnvEntry(entryId, envEntry);
     BaseWidget scopedWidget = new BaseWidget() {
 
+      @Override
       protected void destroy() throws Exception {
         popGlobalEnvEntry(entryId);
       }
@@ -188,6 +189,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     return !this.callStack.isEmpty();
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
     refreshGlobalEnvironment();
@@ -198,6 +200,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
   }
 
+  @Override
   protected void destroy() throws Exception {
     if (!this.callStack.isEmpty()) {
       this.callStack.removeFirst();
@@ -215,6 +218,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /**
    * Invokes render on the top frame on the stack of callframes.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
     // Don't render empty call stack:
     if (!getCallStack().isEmpty()) {
@@ -231,6 +235,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     nestedEnvironmentEntries.put(FlowContext.class, this);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
     return new StandardEnvironment(getEnvironment(), this.nestedEnvironmentEntries);
   }
@@ -238,7 +243,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /**
    * Returns a new CallFrame constructed of the callable, configurator and handler.
    */
-  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler<Object> handler, CallFrame previous) {
+  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler<Object> handler,
+      CallFrame previous) {
     return new CallFrame(callable, configurator, handler, previous);
   }
 
@@ -500,6 +506,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       return this.name;
     }
 
+    @Override
     public String toString() {
       return this.widget.getClass().getName();
     }

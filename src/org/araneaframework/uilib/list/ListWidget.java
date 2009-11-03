@@ -984,6 +984,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * 
    * @throws Exception
    */
+  @Override
   protected void destroy() throws Exception {
     if (this.dataProvider != null) {
       this.dataProvider.destroy();
@@ -1020,6 +1021,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextPage();
     }
@@ -1032,6 +1034,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToPreviousPage();
     }
@@ -1044,6 +1047,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextBlock();
     }
@@ -1056,6 +1060,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToPreviousBlock();
     }
@@ -1068,6 +1073,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToFirstPage();
     }
@@ -1080,6 +1086,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToLastPage();
     }
@@ -1092,6 +1099,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       int page;
       try {
@@ -1110,6 +1118,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
       ListWidget.this.sequenceHelper.showFullPages();
@@ -1123,6 +1132,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
       ListWidget.this.sequenceHelper.showDefaultPages();
@@ -1148,6 +1158,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected class OrderEventHandler extends StandardEventListener {
 
+    @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       // single column ordering
       if (eventParam.length() > 0) {

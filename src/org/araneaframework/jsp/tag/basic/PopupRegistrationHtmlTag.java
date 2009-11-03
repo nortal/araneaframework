@@ -37,6 +37,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class PopupRegistrationHtmlTag extends BaseTag {
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     PopupWindowContext popupWindowContext = getEnvironment().requireEntry(PopupWindowContext.class);
     Map<String, PopupServiceInfo> popups = popupWindowContext.getPopups();

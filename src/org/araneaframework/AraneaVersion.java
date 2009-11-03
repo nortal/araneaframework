@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework;
 
-
 /**
- * Allows to acquire information about running Aranea version. 
- * It depends on jar file manifest having this information.
+ * Allows to acquire information about running Aranea version. It depends on jar file manifest having this information.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class AraneaVersion {
+
   public static String getTitle() {
     Package p = AraneaVersion.class.getPackage();
-    if (p == null) return null;
-    return p.getImplementationTitle();
+    return p == null ? null : p.getImplementationTitle();
   }
-  
+
   public static String getVersion() {
     Package p = AraneaVersion.class.getPackage();
-    if (p == null) return null;
-    return p.getImplementationVersion();
+    return p == null ? null : p.getImplementationVersion();
   }
-  
+
   public static void main(String[] args) {
     System.out.println(getTitle() + " " + getVersion());
   }

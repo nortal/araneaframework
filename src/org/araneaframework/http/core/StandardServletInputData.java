@@ -16,6 +16,8 @@
 
 package org.araneaframework.http.core;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -89,13 +91,13 @@ public class StandardServletInputData implements HttpInputData {
     while (params.hasMoreElements()) {
       String key = params.nextElement();
 
-      if (key.lastIndexOf(".") == -1) {
+      if (!StringUtils.contains(key, ".")) {
         // global data - no prefix data
         this.globalData.put(key, this.req.getParameter(key));
       } else {
         // scoped data
-        String prefix = key.substring(0, key.lastIndexOf("."));
-        String subKey = key.substring(key.lastIndexOf(".") + 1);
+        String prefix = StringUtils.substringBeforeLast(key, ".");
+        String subKey = StringUtils.substringAfterLast(key, ".");
 
         Map<String, String> map = this.scopedData.get(prefix);
 

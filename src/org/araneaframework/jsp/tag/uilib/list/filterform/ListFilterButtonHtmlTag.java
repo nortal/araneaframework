@@ -98,6 +98,7 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
    *    required = "false"
    *    description ="Possible values are 'button', 'input' &mdash; filter button is rendered with corresponding HTML tags, or 'empty' in which case JSP author must provide suitable content for this tag by themselves (with an image, for example). Default rendering mode is 'button'."
    */
+  @Override
   public void setRenderMode(String renderMode) throws JspException {
     String tmpMode = evaluate("renderMode", renderMode, String.class);
 

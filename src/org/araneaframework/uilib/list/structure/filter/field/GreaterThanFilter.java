@@ -26,77 +26,71 @@ import org.araneaframework.uilib.list.util.ExpressionUtil;
 import org.araneaframework.uilib.list.util.FilterFormUtil;
 import org.araneaframework.uilib.util.Event;
 
-
 public abstract class GreaterThanFilter extends BaseFieldFilter {
 
-	private static final long serialVersionUID = 1L;
-	
-	private Comparator comparator;
-	
-	public static GreaterThanFilter getInstance(final FilterContext ctx, final String fieldId, final String valueId) {
-		final GreaterThanFilter filter;
-		if (ctx.isStrict()) {
-			filter = new Strict();
-		} else {
-			filter = new NonStrict();
-		}
-		filter.setFieldId(fieldId);
-		filter.setValueId(valueId);
-		ctx.addInitEvent(new Event() {
-			public void run() {
-				filter.setComparator(ctx.getFieldComparator(fieldId));
-			}			
-		});
-		return filter;
-	}
-	
-	public static GreaterThanFilter getConstantInstance(FilterContext ctx, String fieldId, String valueId, Object value) {		
-		GreaterThanFilter filter = getInstance(ctx, fieldId, valueId);
-		filter.setValue(value);
-		return filter;
-	}
+  private Comparator<?> comparator;
 
-	public static void addToForm(FilterContext ctx, String id, FormElement element) {
-		ctx.getForm().addElement(id, element);
-	}
-	
-	public static void addToForm(FilterContext ctx, String id, Control control)  {
-		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control));
-	}
-	
-	public static void addToForm(FilterContext ctx, String id) {
-		addToForm(ctx, id, FilterFormUtil.createElement(ctx, id));
-	}
-	
-	public Comparator getComparator() {
-		return comparator;
-	}
+  public static GreaterThanFilter getInstance(final FilterContext ctx, final String fieldId, final String valueId) {
+    final GreaterThanFilter filter;
+    if (ctx.isStrict()) {
+      filter = new Strict();
+    } else {
+      filter = new NonStrict();
+    }
+    filter.setFieldId(fieldId);
+    filter.setValueId(valueId);
+    ctx.addInitEvent(new Event() {
 
-	public void setComparator(Comparator comparator) {
-		this.comparator = comparator;
-	}	
-	
-	static class Strict extends GreaterThanFilter {
-		public Expression buildExpression(Map filterInfo) {
-			if (!isActive(filterInfo)) {
-				return null;
-			}
-			return ExpressionUtil.gt(
-					buildVariableExpression(),
-					buildValueExpression(filterInfo),
-					getComparator());
-		}
-	}
-	
-	static class NonStrict extends GreaterThanFilter {
-		public Expression buildExpression(Map filterInfo) {
-			if (!isActive(filterInfo)) {
-				return null;
-			}
-			return ExpressionUtil.ge(
-					buildVariableExpression(),
-					buildValueExpression(filterInfo),
-					getComparator());
-		}
-	}	
+      public void run() {
+        filter.setComparator(ctx.getFieldComparator(fieldId));
+      }
+    });
+    return filter;
+  }
+
+  public static GreaterThanFilter getConstantInstance(FilterContext ctx, String fieldId, String valueId, Object value) {
+    GreaterThanFilter filter = getInstance(ctx, fieldId, valueId);
+    filter.setValue(value);
+    return filter;
+  }
+
+  public static void addToForm(FilterContext ctx, String id, FormElement<?, ?> element) {
+    ctx.getForm().addElement(id, element);
+  }
+
+  public static void addToForm(FilterContext ctx, String id, Control<?> control) {
+    addToForm(ctx, id, FilterFormUtil.createElement(ctx, id, control));
+  }
+
+  public static void addToForm(FilterContext ctx, String id) {
+    addToForm(ctx, id, FilterFormUtil.createElement(ctx, id));
+  }
+
+  public Comparator<?> getComparator() {
+    return this.comparator;
+  }
+
+  public void setComparator(Comparator<?> comparator) {
+    this.comparator = comparator;
+  }
+
+  static class Strict extends GreaterThanFilter {
+
+    public Expression buildExpression(Map<String, Object> filterInfo) {
+      if (!isActive(filterInfo)) {
+        return null;
+      }
+      return ExpressionUtil.gt(buildVariableExpression(), buildValueExpression(filterInfo), getComparator());
+    }
+  }
+
+  static class NonStrict extends GreaterThanFilter {
+
+    public Expression buildExpression(Map<String, Object> filterInfo) {
+      if (!isActive(filterInfo)) {
+        return null;
+      }
+      return ExpressionUtil.ge(buildVariableExpression(), buildValueExpression(filterInfo), getComparator());
+    }
+  }
 }

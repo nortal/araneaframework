@@ -61,11 +61,13 @@ public class FileUploadControl extends BaseControl<FileInfo> {
 
   protected List<String> ajaxMessages = new LinkedList<String>();
 
+  @Override
   protected void init() throws Exception {
     super.init();
     addActionListener(LISTENER_NAME, new FileUploadActionListener());
   }
 
+  @Override
   public boolean isRead() {
     return this.innerData != null;
   }
@@ -79,6 +81,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     this.permittedMimeFileTypes = permittedMimeFileTypes;
   }
 
+  @Override
   public void setRawValue(FileInfo value) {
     super.setRawValue(value);
     this.innerData = value;
@@ -88,6 +91,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     return new DataType(FileInfo.class);
   }
 
+  @Override
   protected void addError(String error) {
     if (this.ajaxRequest) {
       this.ajaxMessages.add(error);
@@ -150,6 +154,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     return fileUpload;
   }
 
+  @Override
   public void convert() {
     this.value = (FileInfo) this.innerData;
 
@@ -159,6 +164,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     }
   }
 
+  @Override
   public void validate() {
     boolean fieldFilled = false;
     FileInfo info = (FileInfo) this.innerData;

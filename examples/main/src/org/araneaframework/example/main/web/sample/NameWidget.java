@@ -36,6 +36,7 @@ public class NameWidget extends TemplateBaseWidget {
     this.returnGoo = doGoo;
   }
 
+  @Override
   protected void init() throws Exception {
     if (this.returnGoo) {
       getFlowCtx().finish("Goo");

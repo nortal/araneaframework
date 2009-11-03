@@ -37,7 +37,7 @@ import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
@@ -62,6 +62,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   private boolean useAction = false;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("person/popupeditableList");
 
@@ -87,6 +88,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       super(PersonMO.class);
     }
 
+    @Override
     public List<PersonMO> loadData() throws Exception {
       if (this.data == null) {
         this.data = getPersonDAO().getAll(PersonMO.class);
@@ -101,14 +103,17 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       return rowData.getId();
     }
 
+    @Override
     public void saveValidRow(FormRow<Long, PersonMO> editableRow) throws Exception {}
 
+    @Override
     public void deleteRow(Long key) throws Exception {
       contractDAO.removeByPersonId(key);
       getPersonDAO().remove(PersonMO.class, key);
       list.getDataProvider().refreshData();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void addValidRow(FormWidget addForm) throws Exception {
       PersonMO rowData = (((BeanFormWidget<PersonMO>) addForm).writeToBean());
@@ -117,6 +122,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       formList.resetAddForm();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void initFormRow(FormRow<Long, PersonMO> editableRow, PersonMO rowData) throws Exception {
       BeanFormWidget<PersonMO> rowForm = (BeanFormWidget<PersonMO>) editableRow.getForm();
@@ -128,6 +134,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       rowForm.readFromBean(rowData);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void initAddForm(FormWidget addForm) throws Exception {
       addCommonFormFields((BeanFormWidget<PersonMO>) addForm);
@@ -139,7 +146,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       form.addBeanElement("surname", "#Last name", new TextControl(), true);
       form.addBeanElement("phone", "#Phone no", new TextControl(), false);
       form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-      form.addBeanElement("salary", "#Salary", new BigDecimalControl(), false);
+      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
     }
   }
 
@@ -230,6 +237,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   private class TestActionListener extends StandardActionListener {
 
+    @Override
     public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
       StringBuffer s = new StringBuffer(
           "alert('this is a message from action that came back to haunt you, return value being: ");

@@ -16,19 +16,26 @@
 
 package org.araneaframework.uilib.util;
 
+import static org.araneaframework.uilib.ConfigurationContext.ASYNC_ACTION_LISTENERS;
 import static org.araneaframework.uilib.ConfigurationContext.CUSTOM_DATE_FORMAT;
 import static org.araneaframework.uilib.ConfigurationContext.CUSTOM_TIME_FORMAT;
 import static org.araneaframework.uilib.ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT;
 import static org.araneaframework.uilib.ConfigurationContext.DEFAULT_TIME_OUTPUT_FORMAT;
-import org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder;
 
-import org.araneaframework.uilib.form.converter.ConverterProvider;
+import org.apache.commons.lang.StringUtils;
 
+import java.util.LinkedList;
+
+import org.araneaframework.Scope;
+
+import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
 import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormElementValidationErrorRenderer;
+import org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder;
+import org.araneaframework.uilib.form.converter.ConverterProvider;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -113,6 +120,33 @@ public abstract class ConfigurationUtil {
     String key = input ? CUSTOM_TIME_FORMAT : DEFAULT_TIME_OUTPUT_FORMAT;
     String format = (String) getConfiguration(env).getEntry(key);
     return format == null ? defaultValue : format;
+  }
+
+  public static void addAsyncrhonousListnereName(Environment env, Scope widgetScope, String actionId) {
+    if (widgetScope != null && !StringUtils.isEmpty(actionId)) {
+      getAsyncrhonousListneresNames(env).add(widgetScope + "." + actionId);
+    }
+  }
+
+  public static void removeAsyncrhonousListnereName(Environment env, Scope widgetScope, String actionId) {
+    getAsyncrhonousListneresNames(env).remove(widgetScope + "." + actionId);
+  }
+
+  public static boolean containsAsyncrhonousListnereName(Environment env, String widgetScope, String actionId) {
+    return !StringUtils.isEmpty(widgetScope) && !StringUtils.isEmpty(actionId)
+        && getAsyncrhonousListneresNames(env).contains(widgetScope + "." + actionId);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static List<String> getAsyncrhonousListneresNames(Environment env) {
+    ConfigurationContext conf = getConfiguration(env);
+    List<String> names = (List<String>) conf.getEntry(ASYNC_ACTION_LISTENERS);
+
+    if (names == null) {
+      names = new LinkedList<String>();
+      conf.setEntry(ASYNC_ACTION_LISTENERS, names);
+    }
+    return names;
   }
 
   private static ConfigurationContext getConfiguration(Environment env) {

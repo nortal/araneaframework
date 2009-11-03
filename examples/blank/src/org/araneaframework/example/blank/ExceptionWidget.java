@@ -20,7 +20,8 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 public class ExceptionWidget extends BaseUIWidget {
-	protected void init() throws Exception {
+	@Override
+  protected void init() throws Exception {
 		throw new AraneaRuntimeException("Be not afraid! This exception was generated to let exception handler/renderer demonstrate its abilities.");
 	}
 }

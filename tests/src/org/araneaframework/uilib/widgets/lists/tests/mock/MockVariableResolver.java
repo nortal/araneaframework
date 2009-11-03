@@ -23,14 +23,14 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 
 public class MockVariableResolver implements VariableResolver {
-	protected Map variables = new HashMap();
+	protected Map<String, Object> variables = new HashMap<String, Object>();
 
-	public MockVariableResolver(Map variables) {
+	public MockVariableResolver(Map<String, Object> variables) {
 		this.variables = variables;
 	}
 
 	public MockVariableResolver(String name, Object value) {
-		this.variables = new HashMap();
+		this.variables = new HashMap<String, Object>();
 		this.variables.put(name, value);
 	}
 

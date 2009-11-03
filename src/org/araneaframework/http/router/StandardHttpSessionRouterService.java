@@ -19,6 +19,8 @@ package org.araneaframework.http.router;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
@@ -28,6 +30,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Relocatable.RelocatableService;
+import org.araneaframework.core.ApplicationService;
+import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.ServiceFactory;
@@ -35,6 +39,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ReadWriteLock;
 import org.araneaframework.core.util.ReaderPreferenceReadWriteLock;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Associates this service with the HttpSession. If a session does not exist, it is created. Also handles the
@@ -79,10 +84,27 @@ public class StandardHttpSessionRouterService extends BaseService {
   private Map<String, Object> attributes = Collections.synchronizedMap(new HashMap<String, Object>());
 
   /**
+   * A list of asynchronous actions by [target.name].
+   */
+  private List<String> asynchronousActions = new LinkedList<String>();
+
+  /**
    * Sets the factory which is used to build the service if one does not exist in the session.
    */
   public void setSessionServiceFactory(ServiceFactory factory) {
     this.serviceFactory = factory;
+  }
+
+  public void addAsynchronousAction(String parentScope, String actionId) {
+    Assert.notNullParam(this, parentScope, "parentScope");
+    Assert.notNullParam(this, actionId, "actionId");
+    this.asynchronousActions.add(parentScope + "." + actionId);
+  }
+
+  public void removeAsynchronousAction(String parentScope, String actionId) {
+    Assert.notNullParam(this, parentScope, "parentScope");
+    Assert.notNullParam(this, actionId, "actionId");
+    this.asynchronousActions.remove(parentScope + "." + actionId);
   }
 
   /**
@@ -95,11 +117,7 @@ public class StandardHttpSessionRouterService extends BaseService {
     boolean destroySession = input.getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY) != null;
     if (destroySession) {
       sess.invalidate();
-      return;
-    }
-
-    // Requests are synchronized by default (if "sync" parameter is missing)
-    if (!"false".equals(input.getGlobalData().get(SYNC_PARAMETER_KEY))) {
+    } else if (isAsynchronous(input)) {
       // "Synchronized" requests use an additional dummy object for synchronization, so that only one "synchronized"
       // request is processed at a time.
       synchronized (getOrCreateSessionSyncObject()) {
@@ -108,6 +126,14 @@ public class StandardHttpSessionRouterService extends BaseService {
     } else {
       doAction(path, input, output, sess);
     }
+  }
+
+  private boolean isAsynchronous(InputData input) {
+    Map<String, String> data = input.getGlobalData();
+    String action = data.get(ApplicationService.ACTION_HANDLER_ID_KEY);
+    String target = data.get(ApplicationService.ACTION_PATH_KEY);
+    String sync = data.get(SYNC_PARAMETER_KEY);
+    return ConfigurationUtil.containsAsyncrhonousListnereName(getEnvironment(), target, action) || !"false".equals(sync);
   }
 
   /**

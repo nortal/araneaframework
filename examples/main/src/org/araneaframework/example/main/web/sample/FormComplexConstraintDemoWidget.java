@@ -64,7 +64,7 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
     clientNameConstraint.addConstraint(notEmpty(lastName));
 
     // Second searching scenario
-    NotEmptyConstraint clientPersonalIdConstraint = notEmpty(personalId);
+    NotEmptyConstraint<String, String> clientPersonalIdConstraint = notEmpty(personalId);
 
     // Third searching scenario
     AndConstraint clientAddressConstraint = new AndConstraint();
@@ -104,8 +104,8 @@ public class FormComplexConstraintDemoWidget extends TemplateBaseWidget {
    * @param formElement The form element that must fulfill the not empty condition.
    * @return The not-empty-constraint for given form element.
    */
-  private NotEmptyConstraint notEmpty(FormElement<String, String> formElement) {
-    return new NotEmptyConstraint(formElement);
+  private NotEmptyConstraint<String, String> notEmpty(FormElement<String, String> formElement) {
+    return new NotEmptyConstraint<String, String>(formElement);
   }
 
   /**

@@ -39,6 +39,7 @@ import org.springframework.beans.factory.BeanFactory;
  */
 public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSelectorAware {
 
+  @Override
   protected BeanFactory getBeanFactory() {
     return getEnvironment().getEntry(BeanFactory.class);
   }
@@ -47,6 +48,7 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
     return getEnvironment().getEntry(SecurityContext.class);
   }
 
+  @Override
   protected PopupWindowContext getPopupCtx() {
     return getEnvironment().requireEntry(PopupWindowContext.class);
   }
@@ -93,6 +95,7 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
     return this.viewSelector;
   }
 
+  @Override
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
@@ -107,6 +110,7 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
    */
   protected class ComponentImpl extends BaseUIWidget.ComponentImpl {
 
+    @Override
     public void init(Scope scope, Environment env) {
       SpringInjectionUtil.injectBeans(env, TemplateBaseWidget.this);
       super.init(scope, env);

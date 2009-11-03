@@ -157,6 +157,7 @@ public class FormTest extends TestCase {
   /**
    * Testing reading from valid request.
    */
+  @SuppressWarnings("unchecked")
   public void testFormValidRequestReading() throws Exception {
 
     FormWidget testForm = makeUsualForm();
@@ -318,7 +319,7 @@ public class FormTest extends TestCase {
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
     testForm.getElement("myDateTime").setConstraint(
-        groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+        groupHelper.createGroupedConstraint(new NotEmptyConstraint<Object, Object>(), "active"));
 
     testForm._getWidget().update(new StandardServletInputData(notMandatoryMissingRequest));
 
@@ -354,7 +355,7 @@ public class FormTest extends TestCase {
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
     GroupedConstraint groupedConstraint = (GroupedConstraint) groupHelper.createGroupedConstraint(
-        new NotEmptyConstraint(), "active");
+        new NotEmptyConstraint<Object, Object>(), "active");
     testForm.getElement("myDateTime").setConstraint(groupedConstraint);
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
@@ -391,7 +392,7 @@ public class FormTest extends TestCase {
     // create helper
     ConstraintGroupHelper groupHelper = new ConstraintGroupHelper();
     testForm.getElement("myDateTime").setConstraint(
-        groupHelper.createGroupedConstraint(new NotEmptyConstraint(), "active"));
+        groupHelper.createGroupedConstraint(new NotEmptyConstraint<Object, Object>(), "active"));
 
     StandardServletInputData input = new StandardServletInputData(notMandatoryMissingRequest);
     testForm._getWidget().update(input);

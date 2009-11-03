@@ -35,7 +35,7 @@ public class StringLengthInRangeConstraintTest extends TestCase {
 
   private FormElement<String, String> stringElement;
 
-  private ConstraintTestHelper helper;
+  private ConstraintTestHelper<String, String> helper;
 
   @Override
   public void setUp() throws Exception {
@@ -43,7 +43,7 @@ public class StringLengthInRangeConstraintTest extends TestCase {
     this.stringElement = this.form.createElement("#text", new TextControl(), new StringData(), false);
     this.form.addElement("string", this.stringElement);
     MockLifeCycle.begin(this.form, new MockEnvironment());
-    this.helper = new ConstraintTestHelper(this.form, this.stringElement);
+    this.helper = new ConstraintTestHelper<String, String>(this.form, this.stringElement);
   }
 
   // test that null value validates if minLength == 0 and invalidates otherwise

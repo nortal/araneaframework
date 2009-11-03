@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.uilib.list.structure.filter.atomic;
 
 import java.util.Map;
@@ -21,16 +22,14 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 public class Value implements ExpressionBuilder {
-	private static final long serialVersionUID = 1L;
-	
-	private String valueId;
-	
-	public Value(String valueId) {
-		this.valueId = valueId;
-	}
 
-	public Expression buildExpression(Map filterInfo) {		
-		return ExpressionUtil.value(this.valueId,
-				filterInfo.get(this.valueId));				
-	}		
+  private String valueId;
+
+  public Value(String valueId) {
+    this.valueId = valueId;
+  }
+
+  public Expression buildExpression(Map<String, Object> filterInfo) {
+    return ExpressionUtil.value(this.valueId, filterInfo.get(this.valueId));
+  }
 }

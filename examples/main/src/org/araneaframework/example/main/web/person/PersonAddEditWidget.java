@@ -20,7 +20,7 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 
 /**
@@ -56,6 +56,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
     this.editMode = true;
   }
 
+  @Override
   protected void init() throws Exception {
     // Sets the view selector that will be used for rendering this widget.
     setViewSelector("person/personAddEdit");
@@ -81,7 +82,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
     form.addBeanElement("surname", "#Last name", new TextControl(), false);
     form.addBeanElement("phone", "#Phone no", new TextControl(), true);
     form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-    form.addBeanElement("salary", "#Salary", new BigDecimalControl(), false);
+    form.addBeanElement("salary", "#Salary", new FloatControl(), false);
     return form;
   }
 

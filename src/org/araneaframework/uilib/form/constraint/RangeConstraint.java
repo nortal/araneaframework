@@ -71,6 +71,7 @@ public final class RangeConstraint<C, D> extends BaseConstraint {
    * Makes sure that either any of the form elements has a <code>null</code> value, or the low field value is less then
    * high field value.
    */
+  @Override
   @SuppressWarnings("unchecked")
   protected void validateConstraint() {
     D valueLo = fieldLo.getData().getValue();

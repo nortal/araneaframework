@@ -50,6 +50,7 @@ public class DemoCheckboxList extends TemplateBaseWidget {
     }
   }
 
+  @Override
   public void init() throws Exception {
     setViewSelector("demo/demoCheckboxList");
 
@@ -77,11 +78,13 @@ public class DemoCheckboxList extends TemplateBaseWidget {
       return row.getId();
     }
 
+    @Override
     public void saveValidRow(FormRow<Long, DataDTO> editableRow) {
       DataDTO rowData = editableRow.getRow();
       rowData.setBooleanField((Boolean) editableRow.getForm().getValueByFullName("booleanField"));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void initFormRow(FormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
       BeanFormWidget<DataDTO> form = (BeanFormWidget<DataDTO>) editableRow.getForm();
@@ -96,6 +99,7 @@ public class DemoCheckboxList extends TemplateBaseWidget {
       super(DataDTO.class);
     }
 
+    @Override
     public List<DataDTO> loadData() throws Exception {
       return new LinkedList<DataDTO>(DemoCheckboxList.this.data.values());
     }

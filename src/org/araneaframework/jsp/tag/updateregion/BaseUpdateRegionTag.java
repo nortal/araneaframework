@@ -33,49 +33,48 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BaseUpdateRegionTag extends BaseTag {
+
   protected String id;
+
   protected String globalId;
-  
+
   protected String fullId;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    if (id == null && globalId == null)
+    if (this.id == null && this.globalId == null) {
       throw new AraneaJspException("'id' or 'globalId' is required!");
+    }
 
     String contextWidgetId = getContextWidgetFullId();
 
-    fullId = globalId;
-    
-    if (fullId == null)
-    	fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
+    this.fullId = this.globalId;
 
-    String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
+    if (this.fullId == null) {
+      this.fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + this.id) : this.id;
+    }
+
+    String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(this.pageContext, ServletUtil.UIWIDGET_KEY))
+        .getScope().toString();
     UpdateRegionContext updateRegionContext = getEnvironment().requireEntry(UpdateRegionContext.class);
-    updateRegionContext.addDocumentRegion(fullId, uiWidgetId);
+    updateRegionContext.addDocumentRegion(this.fullId, uiWidgetId);
 
     return EVAL_BODY_INCLUDE;
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Local id of the update region." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Local id of the update region."
    */
-  public void setId(String id){
+  public void setId(String id) {
     this.id = evaluate("id", id, String.class);
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Global id of the update region." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Global id of the update region."
    */
-  public void setGlobalId(String globalId){
+  public void setGlobalId(String globalId) {
     this.globalId = evaluate("globalId", globalId, String.class);
-  }  
+  }
 }

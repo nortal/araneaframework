@@ -285,7 +285,7 @@ Function.prototype.safeBind = function() {
   }
 }
 
-if (Object.isFunction(araneaPage)) {
+if (Aranea && Aranea.Page) {
   // See task 548
   var clearTips = function() {
     //Tips.tips.all(function(tip){ Tips.remove(tip.element); });

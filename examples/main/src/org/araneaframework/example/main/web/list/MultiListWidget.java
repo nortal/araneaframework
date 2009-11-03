@@ -27,6 +27,7 @@ import org.araneaframework.example.main.web.person.PersonListWidget;
  */
 public class MultiListWidget extends TemplateBaseWidget {
 
+  @Override
   protected void init() throws Exception {
     addWidget("personListWdgt", new PersonListWidget(true));
     addWidget("companyListWdgt", new CompanyListWidget());

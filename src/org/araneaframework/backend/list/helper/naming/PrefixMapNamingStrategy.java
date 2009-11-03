@@ -68,6 +68,7 @@ public class PrefixMapNamingStrategy extends StandardNamingStrategy {
     return this;
   }
 
+  @Override
   protected String resolvePrefix(String fieldNamePrefix) {
     if (this.customPrefixes.containsKey(fieldNamePrefix)) {
       return this.customPrefixes.get(fieldNamePrefix);

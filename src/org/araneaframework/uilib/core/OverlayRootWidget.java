@@ -123,6 +123,7 @@ public class OverlayRootWidget extends BaseUIWidget {
     this.errorPage = errorPage;
   }
 
+  @Override
   protected void init() throws Exception {
     Assert.notNull(child);
     addWidget("c", new OverlayFlowContainer(child));
@@ -148,6 +149,7 @@ public class OverlayRootWidget extends BaseUIWidget {
         super(topWidget);
     }
 
+    @Override
     protected void renderExceptionHandler(OutputData output, Exception e)
         throws Exception {
 

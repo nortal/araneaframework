@@ -53,6 +53,7 @@ public class WindowClosingService extends BaseService {
     return this.closableComponentEnv != null ? this.closableComponentEnv : super.getEnvironment();
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
 

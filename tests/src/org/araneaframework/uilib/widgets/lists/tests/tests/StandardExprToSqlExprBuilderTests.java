@@ -35,12 +35,14 @@ public class StandardExprToSqlExprBuilderTests extends TestCase {
 
   private String testValue = "test_value";
 
+  @Override
   public void setUp() {
     this.builder = new StandardExpressionToSqlExprBuilder();
     this.builder.setMapper(new MockVariableResolver());
     this.builder.setConverter(new MockValueConverter());
   }
 
+  @Override
   public void tearDown() {
     this.builder = null;
   }
@@ -52,7 +54,7 @@ public class StandardExprToSqlExprBuilderTests extends TestCase {
     SqlExpression tmp = null;
 
     try {
-      expr = new ValueExpression(this.testValue);
+      expr = new ValueExpression<String>(this.testValue);
     } catch (Exception e) {
       fail("Constructing ValueExpression failed");
     }

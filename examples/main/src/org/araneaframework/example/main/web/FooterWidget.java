@@ -31,11 +31,13 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  */
 public class FooterWidget extends BaseUIWidget {
 
+  @Override
   protected void init() throws Exception {
     putViewData("aranea-version", AraneaVersion.getVersion());
     setViewSelector("mainlayout/footer");
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     TemplateMenuWidget menuWidget = (TemplateMenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
     putJavaSourceLinkData(menuWidget);

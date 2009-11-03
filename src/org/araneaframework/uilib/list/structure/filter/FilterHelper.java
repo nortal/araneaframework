@@ -109,16 +109,6 @@ public class FilterHelper extends BaseFilterHelper {
     return this;
   }
 
-  // /**
-  // * Sets the current locale.
-  // *
-  // * @param locale new locale.
-  // */
-  // public FilterHelper setLocale(Locale locale) {
-  // super._setLocale(locale);
-  // return this;
-  // }
-
   /**
    * Sets the current strictness behaviour.
    * 
@@ -668,23 +658,23 @@ public class FilterHelper extends BaseFilterHelper {
     return this;
   }
 
-  public FilterHelper range(String fieldId, Control<?> lowControl, Control<?> highControl) {
+  public <C> FilterHelper range(String fieldId, Control<C> lowControl, Control<C> highControl) {
     return range(fieldId, getLowValueId(fieldId), getHighValueId(fieldId), lowControl, highControl);
   }
 
-  public FilterHelper range(String fieldId, String lowValueId, String highValueId, Control<?> lowControl,
-      Control<?> highControl) {
+  public <C> FilterHelper range(String fieldId, String lowValueId, String highValueId, Control<C> lowControl,
+      Control<C> highControl) {
     _range(fieldId, lowValueId, highValueId);
     RangeFilter.addToForm(this, lowValueId, highValueId, lowControl, highControl);
     return this;
   }
 
-  public FilterHelper range(String fieldId, FormElement<?, ?> lowElement, FormElement<?, ?> highElement) {
+  public <C, D> FilterHelper range(String fieldId, FormElement<C, D> lowElement, FormElement<C, D> highElement) {
     return range(fieldId, getLowValueId(fieldId), getHighValueId(fieldId), lowElement, highElement);
   }
 
-  public FilterHelper range(String fieldId, String lowValueId, String highValueId, FormElement<?, ?> lowElement,
-      FormElement<?, ?> highElement) {
+  public <C, D> FilterHelper range(String fieldId, String lowValueId, String highValueId, FormElement<C, D> lowElement,
+      FormElement<C, D> highElement) {
     _range(fieldId, lowValueId, highValueId);
     RangeFilter.addToForm(this, lowValueId, highValueId, lowElement, highElement);
     return this;

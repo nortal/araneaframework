@@ -26,7 +26,7 @@ import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
@@ -52,6 +52,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
   // it comes from.
   private BeanFormListWidget<Long, PersonMO> formList;
 
+  @Override
   protected void init() throws Exception {
     setViewSelector("person/editableList");
 
@@ -86,10 +87,12 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
     private MemoryBasedListDataProvider<PersonMO> dataProvider = new DataProvider();
 
+    @Override
     protected ListDataProvider<PersonMO> buildListDataProvider() throws Exception {
       return this.dataProvider;
     }
 
+    @Override
     protected FormRowHandler<Long, PersonMO> buildFormRowHandler() throws Exception {
 
       // Implementation of FormRowHandler that also calls dataprovider's data refresh methods when list editing events
@@ -103,6 +106,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
         super(PersonMO.class);
       }
 
+      @Override
       public List<PersonMO> loadData() throws Exception {
         return getPersonDAO().getAll(PersonMO.class);
       }
@@ -111,10 +115,12 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
   public static class Backend extends PersonEditableListWidget {
 
+    @Override
     protected ListDataProvider<PersonMO> buildListDataProvider() throws Exception {
       return new DataProvider();
     }
 
+    @Override
     protected FormRowHandler<Long, PersonMO> buildFormRowHandler() throws Exception {
       return new PersonEditableRowHandler();
     }
@@ -125,6 +131,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
         super(false);
       }
 
+      @Override
       protected ListItemsData<PersonMO> getItemRange(ListQuery query) throws Exception {
         return ((PersonListDAO) getBeanFactory().getBean("personListDAO")).getItems(query);
       }
@@ -149,6 +156,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
     /**
      * Implementation of method that should save EDITED rows which data passes validation.
      */
+    @Override
     public void saveValidRow(BeanFormRow<Long, PersonMO> editableRow) throws Exception {
 
       /*
@@ -167,6 +175,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       list.getDataProvider().refreshData();
     }
 
+    @Override
     public void deleteRow(Long key) throws Exception {
       contractDAO.removeByPersonId(key);
       getPersonDAO().remove(PersonMO.class, key);
@@ -175,6 +184,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
     // Implementation of method that should save ADDED rows which data passes
     // validation.
+    @Override
     public void addValidRow(BeanFormWidget<PersonMO> addForm) throws Exception {
       PersonMO rowData = addForm.writeToBean();
       getPersonDAO().add(rowData);
@@ -185,6 +195,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
     }
 
     // Called to initialize each row in editable list.
+    @Override
     public void initFormRow(BeanFormRow<Long, PersonMO> editableRow, PersonMO rowData) throws Exception {
 
       // Set initial status of list rows to closed - they cannot be edited before opened.
@@ -209,6 +220,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
     }
 
     // Called to initialize a blank row meant for adding new records.
+    @Override
     public void initAddForm(BeanFormWidget<PersonMO> addForm) throws Exception {
       addCommonFormFields(addForm);
 
@@ -222,7 +234,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       form.addBeanElement("surname", "#Last name", new TextControl(), true);
       form.addBeanElement("phone", "#Phone no", new TextControl(), false);
       form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-      form.addBeanElement("salary", "#Salary", new BigDecimalControl(), false);
+      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
     }
   }
 

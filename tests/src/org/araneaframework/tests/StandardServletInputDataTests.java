@@ -117,7 +117,7 @@ public class StandardServletInputDataTests extends TestCase {
   }
   
   public void testExtendNarrow() {
-    Map map = new HashMap();
+    Map<Object, Object> map = new HashMap<Object, Object>();
     input.extend(Map.class, map);
     assertEquals(map, input.narrow(Map.class));
   }

@@ -49,6 +49,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
     setHasElementContextSpan(false);
   }
 
+  @Override
   public int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");
 

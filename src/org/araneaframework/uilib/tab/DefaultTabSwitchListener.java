@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.uilib.tab;
 
 import org.apache.commons.collections.Closure;
 import org.araneaframework.uilib.tab.TabContainerContext.TabSwitchListener;
 
 /**
- * A default implementation of {@link TabSwitchListener} that always allows tab
- * switches.
+ * A default implementation of {@link TabSwitchListener} that always allows tab switches.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.2
  */
 public class DefaultTabSwitchListener implements TabSwitchListener {
 
-  public boolean onSwitch(TabWidget selectedTab, TabWidget newTab,
-      Closure switchClosure) {
+  public boolean onSwitch(TabWidget selectedTab, TabWidget newTab, Closure switchClosure) {
     return true;
   }
 }

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.tag.presentation;  
+package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -27,66 +28,63 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Oleg Mürk
  */
 public class BaseSimpleButtonTag extends PresentationTag {
+
   protected String id;
-  protected String labelId;   
+
+  protected String labelId;
+
   protected String contextWidgetId;
+
   protected String localizedLabel;
+
   protected String onClickPrecondition;
+
   protected String tabindex;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    if (labelId != null)
-      localizedLabel = JspUtil.getResourceString(pageContext, labelId);
+    if (!StringUtils.isEmpty(this.labelId)) {
+      this.localizedLabel = JspUtil.getResourceString(this.pageContext, this.labelId);
+    }
 
-    contextWidgetId = getContextWidgetFullId();
+    this.contextWidgetId = getContextWidgetFullId();
 
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Button id, allows to access button from JavaScript." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Button id, allows to access button from JavaScript."
    */
-  public void setId(String id){
+  public void setId(String id) {
     this.id = evaluate("id", id, String.class);
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Id of button label." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Id of button label."
    */
-  public void setLabelId(String labelId){
+  public void setLabelId(String labelId) {
     this.labelId = evaluate("labelId", labelId, String.class);
   }
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Precondition for deciding whether go to server side or not." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Precondition for deciding whether go to server side or not."
    */
-  public void setOnClickPrecondition(String onClickPrecondition){
+  public void setOnClickPrecondition(String onClickPrecondition) {
     this.onClickPrecondition = evaluate("onClickPrecondition", onClickPrecondition, String.class);
   }
-  
+
   /**
    * @since 1.0.11
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "HTML tabindex for the element."
-   */	
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "HTML tabindex for the element."
+   */
   public void setTabindex(String tabindex) throws JspException {
     this.tabindex = evaluateNotNull("tabindex", tabindex, String.class);
   }

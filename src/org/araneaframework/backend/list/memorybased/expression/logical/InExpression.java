@@ -52,6 +52,7 @@ public class InExpression extends MultiExpression {
   }
 
   // [expr1, exprs[0], exprs[1], ..., exprs[n]]
+  @Override
   public Expression[] getChildren() {
     if (!this.children.isEmpty()) {
       List<Expression> result = new ArrayList<Expression>(this.children);

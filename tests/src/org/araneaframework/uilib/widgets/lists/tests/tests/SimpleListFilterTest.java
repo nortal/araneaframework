@@ -47,6 +47,7 @@ public class SimpleListFilterTest extends TestCase {
 
     FilterContext ctx = new MockFilterContext() {
 
+      @Override
       public Comparator<?> getFieldComparator(String fieldId) {
         // Boolean is not comparable
         if ("licenseToKill".equals(fieldId)) {

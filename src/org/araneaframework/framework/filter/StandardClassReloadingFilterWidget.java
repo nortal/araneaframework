@@ -66,6 +66,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     this.childClassName = childClass;
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
 
@@ -84,6 +85,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     return deepCopy(newClassLoader(), child);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
     try {
@@ -97,6 +99,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
     _getComposite().attach("c", this.child);
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     this.child._getWidget().render(output);
   }
@@ -126,6 +129,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
       this.cl = cl;
     }
 
+    @Override
     protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
       String name = desc.getName();
       return cl.loadClass(name);
@@ -138,6 +142,7 @@ public class StandardClassReloadingFilterWidget extends BaseApplicationWidget {
       super(urls, parent);
     }
 
+    @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
       if (hasLoadedClass(this, name)) {
         return super.loadClass(name);

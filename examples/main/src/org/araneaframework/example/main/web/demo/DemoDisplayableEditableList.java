@@ -61,6 +61,7 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
   /**
    * Builds the form with one checkbox, one textbox and a button.
    */
+  @Override
   public void init() throws Exception {
     setViewSelector("demo/demoDisplayableEditableList");
     this.formListWidget = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(),
@@ -79,6 +80,7 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
       return row.getId();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void initFormRow(FormRow<Long, DataDTO> editableRow, DataDTO row) throws Exception {
       BeanFormWidget<DataDTO> rowForm = (BeanFormWidget<DataDTO>) editableRow.getForm();
@@ -91,11 +93,13 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
       rowForm.readFromBean(row);
     }
 
+    @Override
     public void initAddForm(FormWidget addForm) throws Exception {
       addCommonFormFields(addForm);
       FormListUtil.addAddButtonToAddForm("#", formListWidget, addForm);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void saveValidRow(FormRow<Long, DataDTO> editableRow) throws Exception {
       DataDTO rowData = ((BeanFormWidget<DataDTO>) editableRow.getForm()).writeToBean();
@@ -105,10 +109,12 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
       editableRow.close();
     }
 
+    @Override
     public void deleteRow(Long key) throws Exception {
       editableRows.remove(key);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void addValidRow(FormWidget addForm) throws Exception {
       DataDTO rowData = ((BeanFormWidget<DataDTO>) addForm).writeToBean();

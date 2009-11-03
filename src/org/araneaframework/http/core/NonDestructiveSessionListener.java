@@ -27,8 +27,9 @@ import javax.servlet.http.HttpSessionEvent;
  */
 public class NonDestructiveSessionListener extends StandardSessionListener {
 
+  @Override
   public void sessionDestroyed(HttpSessionEvent sessEvent) {
-    if (containsSessionService(sessEvent) && LOG.isDebugEnabled()) {
+    if (LOG.isDebugEnabled() && containsSessionService(sessEvent)) {
       LOG.debug("Not destroying the Aranea components in the session session.");
       LOG.debug("Session " + sessEvent.getSession().getId() + " destroyed");
     }

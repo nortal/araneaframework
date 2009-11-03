@@ -79,6 +79,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     this(shouldConfirm, confirmationMessage, false);
   }
 
+  @Override
   public void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
     boolean test = this.allCancellings ? transitionType != FlowContext.TRANSITION_START
         && transitionType != FlowContext.TRANSITION_FINISH : transitionType == FlowContext.TRANSITION_CANCEL;

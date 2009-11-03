@@ -43,6 +43,7 @@ public class ApplyReturnValueService extends BaseService implements ClientSideRe
     this.widgetId = widgetId;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
     String script = "Aranea.Popups.applyReturnValue('" + this.value + "', '" + this.widgetId + "');"

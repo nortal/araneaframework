@@ -23,7 +23,6 @@ import org.araneaframework.mock.MockUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
  */
 public class MockBaseServiceRouterService extends BaseServiceRouterService {
 
@@ -37,7 +36,7 @@ public class MockBaseServiceRouterService extends BaseServiceRouterService {
     return "serviceId";
   }
 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+  protected Environment getChildEnvironment(@SuppressWarnings("unused") Object serviceId) throws Exception {
     return MockUtil.getEnv();
   }
 }

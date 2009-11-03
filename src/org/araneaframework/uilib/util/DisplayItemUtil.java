@@ -184,7 +184,7 @@ public abstract class DisplayItemUtil implements Serializable {
   public static <T> void assertUnique(List<T> items) {
     if (CollectionUtils.isNotEmpty(items)) {
       Set<T> uniqueItems = new HashSet<T>(items);
-      Assert.isTrue(uniqueItems.size() < items.size(), "The *SelectControl items must have unique values.");
+      Assert.isTrue(uniqueItems.size() == items.size(), "The *SelectControl items must have unique values.");
     }
   }
 

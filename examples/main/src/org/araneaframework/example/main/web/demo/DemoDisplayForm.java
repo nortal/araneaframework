@@ -35,6 +35,7 @@ public class DemoDisplayForm extends TemplateBaseWidget {
   /**
    * Builds the form with one checkbox, one textbox and a button.
    */
+  @Override
   public void init() throws Exception {
     setViewSelector("demo/demoDisplayForm");
 

@@ -24,6 +24,7 @@ import org.araneaframework.http.util.ServletUtil;
 
 public class NameService extends BaseService {
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     ServletUtil.simpleInclude("/WEB-INF/name.jsp", getEnvironment(), input, output);
   }

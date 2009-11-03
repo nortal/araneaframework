@@ -33,6 +33,7 @@ public class LoginWidget extends TemplateBaseWidget {
   // Widget we will create and attach to this widget.
   private FormWidget form;
 
+  @Override
   protected void init() {
     // Sets the view selector that will be used for rendering this widget. The path to real JSP file is determined by:
     // StandardJspFilterService field jspPath (configured in aranea-conf.xml) + viewselector + ".jsp"

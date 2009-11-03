@@ -36,29 +36,25 @@ import org.araneaframework.Viewable;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A full featured Service with support for composite, eventlisteners,
- * viewmodel.
+ * A full featured Service with support for composite, eventlisteners, viewmodel.
  */
-public abstract class BaseApplicationService extends BaseService
-  implements ApplicationService {
+public abstract class BaseApplicationService extends BaseService implements ApplicationService {
 
   private static final Log LOG = LogFactory.getLog(BaseApplicationService.class);
 
-  //*******************************************************************
+  // *******************************************************************
   // FIELDS
-  //*******************************************************************
+  // *******************************************************************
 
   private Map<String, List<ActionListener>> actionListeners;
 
   private Map<String, Object> viewData;
 
-  //*******************************************************************
+  // *******************************************************************
   // PROTECTED CLASSES
-  //*******************************************************************
+  // *******************************************************************
 
   protected class ViewableImpl implements Viewable.Interface {
-
-    private static final long serialVersionUID = 1L;
 
     public Object getViewModel() {
       try {
@@ -70,8 +66,6 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   protected class CompositeImpl implements Composite.Interface {
-
-    private static final long serialVersionUID = 1L;
 
     public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
@@ -87,8 +81,6 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   public class ViewModel implements ApplicationService.ServiceViewModel {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * @since 1.1
@@ -109,9 +101,9 @@ public abstract class BaseApplicationService extends BaseService
     }
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PRIVATE METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   @SuppressWarnings("unchecked")
   private synchronized Map<String, List<ActionListener>> getActionListeners() {
@@ -129,9 +121,9 @@ public abstract class BaseApplicationService extends BaseService
     return this.viewData;
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   public Composite.Interface _getComposite() {
     return new CompositeImpl();
@@ -142,7 +134,7 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Adds the ActionListener listener with the specified action id. 
+   * Adds the ActionListener listener with the specified action id.
    */
   public void addActionListener(String actionId, ActionListener listener) {
     Assert.notNullParam(this, actionId, "actionId");
@@ -180,9 +172,8 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This
-   * data will be available until explicitly removed with
-   * {@link #removeViewData(String)}.
+   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available until explicitly
+   * removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -206,18 +197,16 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Adds a service with the specified key. Allready initilized services cannot
-   * be added. Duplicate keys not allowed. The child is initialized with the
-   * Environment env.
+   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
+   * The child is initialized with the Environment env.
    */
   public void addService(Object key, Service child, Environment env) {
     _addComponent(key, child, env);
   }
 
   /**
-   * Adds a service with the specified key. Allready initilized services cannot
-   * be added. Duplicate keys not allowed. The child is initialized with the
-   * Environment from <code>getChildServiceEnvironment()</code>.
+   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
+   * The child is initialized with the Environment from <code>getChildServiceEnvironment()</code>.
    */
   public void addService(Object key, Service child) {
     try {
@@ -235,28 +224,25 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo.
-   * The child will get the Environment specified by newEnv.
+   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment
+   * specified by newEnv.
    * 
    * @param parent is the current parent of the child to be relocated.
    * @param newEnv the new Environment of the child.
    * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this
-   *            StandardService.
+   * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateService(Composite parent, Environment newEnv,
-      Object keyFrom, Object keyTo) {
+  public void relocateService(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
   /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo.
-   * The child will get the Environment of this StandardService.
+   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment of
+   * this StandardService.
    * 
    * @param parent is the current parent of the child to be relocated.
    * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this
-   *            StandardService.
+   * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
   public void relocateService(Composite parent, Object keyFrom, Object keyTo) {
     try {
@@ -267,21 +253,21 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Enables the service with the specified key. Only a disabled service can be
-   * enabled.
+   * Enables the service with the specified key. Only a disabled service can be enabled.
    */
   public void enableService(Object key) {
     _enableComponent(key);
   }
 
   /**
-   * Disables the service with the specified key. Only a enabled service can be
-   * disabled. A disabled service does not get any actions routed to them.
+   * Disables the service with the specified key. Only a enabled service can be disabled. A disabled service does not
+   * get any actions routed to them.
    */
   public void disableService(Object key) {
     _disableComponent(key);
   }
 
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }
@@ -294,9 +280,9 @@ public abstract class BaseApplicationService extends BaseService
     }
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PROTECTED METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   /**
    * Returns the view model. Usually overridden.
@@ -313,34 +299,32 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Returns the id of the action based on the input. Uses the
-   * ACTION_HANDLER_ID_KEY key to extract it from InputData's global data.
+   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key to extract it from InputData's
+   * global data.
    */
   protected String getActionId(InputData input) {
     Assert.notNull(this, input, "Cannot extract action id from a null input!");
     return input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
     _propagate(message);
   }
 
   /**
-   * If path hasNextStep() routes to the correct child, otherwise calls the
-   * appropriate listener.
+   * If path hasNextStep() routes to the correct child, otherwise calls the appropriate listener.
    */
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
       Object next = path.next();
-      Assert.notNull(this, next,
-          "Cannot deliver action to child under null key!");
+      Assert.notNull(this, next, "Cannot deliver action to child under null key!");
 
       Service service = (Service) getChildren().get(next);
       if (service == null) {
-        LOG.warn("Service '" + getScope()
-            + "' could not deliver action as child '" + next
-            + "' was not found!" + Assert.thisToString(this));
+        LOG.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
+            + Assert.thisToString(this));
         return;
       }
 

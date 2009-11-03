@@ -23,7 +23,8 @@ public class RootWidget extends BaseUIWidget {
 
 	public RootWidget() {}
 
-	protected void init() throws Exception {
+	@Override
+  protected void init() throws Exception {
 		menuWidget = new MenuWidget();
 		addWidget("menu", menuWidget);
 		setViewSelector("root");

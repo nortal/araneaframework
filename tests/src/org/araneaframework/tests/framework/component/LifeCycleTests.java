@@ -69,6 +69,7 @@ public class LifeCycleTests extends TestCase {
 
       private static final long serialVersionUID = 1L;
 
+      @Override
       protected void execute(Component component) throws Exception {
         return;
       }

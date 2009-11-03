@@ -27,6 +27,7 @@ public class AjaxRequestErrorWidget extends TemplateBaseWidget {
 
   private boolean renderError = false;
 
+  @Override
   public void init() throws Exception {
     setViewSelector("misc/ajaxError");
     addEventListener("error", new ProxyEventListener(this));
@@ -48,6 +49,7 @@ public class AjaxRequestErrorWidget extends TemplateBaseWidget {
     getMessageCtx().showInfoMessage("Still ok.");
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     if (renderError) {
       renderError = false;

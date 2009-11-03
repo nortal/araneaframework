@@ -44,10 +44,12 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
   private Service continuation;
 
+  @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), ContinuationManagerContext.class, this);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
 
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
@@ -98,6 +100,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
   public void runOnce(Service continuation) {
     BaseFilterService service = new BaseFilterService(continuation) {
 
+      @Override
       protected void action(Path path, InputData input, OutputData output) throws Exception {
         this.childService._getService().action(path, input, output);
         EnvironmentUtil.getContinuationContext(getEnvironment()).finish();

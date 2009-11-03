@@ -63,11 +63,13 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
 
   protected Map<String, Collection<MessageData>> messages;
 
+  @Override
   protected void update(InputData input) throws Exception {
     clearMessages();
     super.update(input);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(getEnvironment(), MessageContext.class, this);
   }

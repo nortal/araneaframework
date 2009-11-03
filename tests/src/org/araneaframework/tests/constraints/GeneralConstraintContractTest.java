@@ -16,6 +16,8 @@
 
 package org.araneaframework.tests.constraints;
 
+import java.math.BigDecimal;
+
 import junit.framework.TestCase;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.araneaframework.mock.MockLifeCycle;
@@ -24,107 +26,116 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.BaseFieldConstraint;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
-import org.araneaframework.uilib.form.control.BigDecimalControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
 
 /**
  * Tests general {@link org.araneaframework.uilib.form.Constraint} behaviour.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class GeneralConstraintContractTest extends TestCase {
+
   private FormWidget form;
 
   @Override
   public void setUp() throws Exception {
-    form = new FormWidget();
-    MockLifeCycle.begin(form, new MockEnvironment());
+    this.form = new FormWidget();
+    MockLifeCycle.begin(this.form, new MockEnvironment());
   }
 
   /** Test that field constraints cannot be set on various other widgets. */
   public void testInvalidFieldConstraintSetting() throws Exception {
     try {
-      form.setConstraint(new NotEmptyConstraint());
-      form.validate();
+      this.form.setConstraint(new NotEmptyConstraint<Object, Object>());
+      this.form.validate();
 
       fail("Exception should have occured, because field constraint NotEmptyConstraint is not applicable to FormWidget");
     } catch (BaseFieldConstraint.FieldConstraintException e) {
-      // ok
+      // OK
     }
   }
-  
+
   /** Test that setting field constraint to null works and does not throw exception */
   public void testFieldNullConstraint() throws Exception {
-    FormElement el = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
-    el.setConstraint(new NotEmptyConstraint());
+    FormElement<BigDecimal, BigDecimal> el = this.form.createElement("#number", new FloatControl(), new BigDecimalData());
+    el.setConstraint(new NotEmptyConstraint<BigDecimal, BigDecimal>());
     el.setConstraint(null);
-    form.addElement("number", el);
-
-    assertTrue("Form is supposed to valid because constraint is not set.", form.validate());
+    this.form.addElement("number", el);
+    assertTrue("Form is supposed to valid because constraint is not set.", this.form.validate());
   }
-  
+
   /** Test that setting {@link FormWidget} constraint to null works and does not throw exception */
+  @SuppressWarnings("unchecked")
   public void testFormNullConstraint() throws Exception {
-    form.addElement("number","#number", new BigDecimalControl(), new BigDecimalData(), false);
-    form.getElement("number").setConstraint(new NotEmptyConstraint());
-    form.getElement("number").setConstraint(null);
+    this.form.addElement("number", "#number", new FloatControl(), new BigDecimalData(), false);
+    this.form.getElement("number").setConstraint(new NotEmptyConstraint());
+    this.form.getElement("number").setConstraint(null);
 
-    form.setConstraint(new NotEmptyConstraint((FormElement)form.getElement("number")));
-    form.setConstraint(null);
+    this.form.setConstraint(new NotEmptyConstraint((FormElement) this.form.getElement("number")));
+    this.form.setConstraint(null);
 
-    assertTrue("Form is supposed to valid because constraint is not set.", form.validate());
+    assertTrue("Form is supposed to valid because constraint is not set.", this.form.validate());
   }
-  
-  /** Test environment propagation. */
-  public void testEnvironmentPropagation() throws Exception {
-    // test propagation when both formwidget and formelement are inited when constraint is set
-    // and constraint is set on a formelement
-	form.addElement("number","#number", new BigDecimalControl(), new BigDecimalData(), false);
-	NotEmptyConstraint constraint = new NotEmptyConstraint();
-	form.getElement("number").setConstraint(constraint);
-	assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
 
-    // test propagation when both formwidget and formelement are inited when constraint is set
-    // and constraint is set on a formwidget
-	form.getElement("number").setConstraint(null);
-	constraint = new NotEmptyConstraint((FormElement)form.getElement("number"));
-	form.setConstraint(constraint);
-	assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
-	
-    // test propagation when constraint is set on a formelement that is not yet
-	// inited and is added to formwidget after setting the constraint
-    form.removeElement("number");
-    FormElement element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
+  /** Test environment propagation. */
+  @SuppressWarnings("unchecked")
+  public void testEnvironmentPropagation() throws Exception {
+    // test propagation when both form widget and form element are initiated when constraint is set
+    // and constraint is set on a form element
+    this.form.addElement("number", "#number", new FloatControl(), new BigDecimalData(), false);
+    NotEmptyConstraint constraint = new NotEmptyConstraint();
+    this.form.getElement("number").setConstraint(constraint);
+    assertTrue(EqualsBuilder.reflectionEquals(this.form.getElement("number").getConstraintEnvironment(), constraint
+        .getEnvironment()));
+
+    // test propagation when both form widget and form element are initiated when constraint is set
+    // and constraint is set on a form widget
+    this.form.getElement("number").setConstraint(null);
+    constraint = new NotEmptyConstraint((FormElement) this.form.getElement("number"));
+    this.form.setConstraint(constraint);
+    assertTrue(EqualsBuilder.reflectionEquals(this.form.getElement("number").getConstraintEnvironment(), constraint
+        .getEnvironment()));
+
+    // test propagation when constraint is set on a form element that is not yet
+    // initiated and is added to form widget after setting the constraint
+    this.form.removeElement("number");
+    FormElement element = this.form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint();
     element.setConstraint(constraint);
-    form.addElement("number", element);
-    assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
-    
-    // test propagation when constraint is set on a formwidget while element is not yet inited
-	// and is added to formwidget after setting the constraint
-    form.removeElement("number");
-    element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
+    this.form.addElement("number", element);
+    assertTrue(EqualsBuilder.reflectionEquals(this.form.getElement("number").getConstraintEnvironment(), constraint
+        .getEnvironment()));
+
+    // test propagation when constraint is set on a form widget while element is not yet initiated
+    // and is added to form widget after setting the constraint
+    this.form.removeElement("number");
+    element = this.form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint(element);
-    form.setConstraint(constraint);
-    form.addElement("number", element);
-    assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
-    
-    // test propagation when constraint is set on uninited formwidget while element is not yet inited
-	// and is added to formwidget after setting the constraint
-    form = new FormWidget();
-    element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
+    this.form.setConstraint(constraint);
+    this.form.addElement("number", element);
+    assertTrue(EqualsBuilder.reflectionEquals(this.form.getElement("number").getConstraintEnvironment(), constraint
+        .getEnvironment()));
+
+    // test propagation when constraint is set on uninitiated form widget while element is not yet initiated
+    // and is added to form widget after setting the constraint
+    this.form = new FormWidget();
+    element = this.form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint(element);
-    form.setConstraint(constraint);
-    form.addElement("number", element);
-    MockLifeCycle.begin(form, new MockEnvironment());
-    assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
-    
-    // test propagation when constraint is set on uninited formelement belonging to uninited formwidget
-    form = new FormWidget();
-    element = form.createElement("#number", new BigDecimalControl(), new BigDecimalData(), false);
+    this.form.setConstraint(constraint);
+    this.form.addElement("number", element);
+    MockLifeCycle.begin(this.form, new MockEnvironment());
+    assertTrue(EqualsBuilder.reflectionEquals(this.form.getElement("number").getConstraintEnvironment(), constraint
+        .getEnvironment()));
+
+    // test propagation when constraint is set on uninitiated form element belonging to uninitiated form widget
+    this.form = new FormWidget();
+    element = this.form.createElement("#number", new FloatControl(), new BigDecimalData(), false);
     constraint = new NotEmptyConstraint();
     element.setConstraint(constraint);
-    form.addElement("number", element);
-    MockLifeCycle.begin(form, new MockEnvironment());
-    assertTrue(EqualsBuilder.reflectionEquals(form.getElement("number").getConstraintEnvironment(), constraint.getEnvironment()));
+    this.form.addElement("number", element);
+    MockLifeCycle.begin(this.form, new MockEnvironment());
+    assertTrue(EqualsBuilder.reflectionEquals(this.form.getElement("number").getConstraintEnvironment(), constraint
+        .getEnvironment()));
   }
 }
