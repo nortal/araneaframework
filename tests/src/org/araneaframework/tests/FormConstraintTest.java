@@ -124,7 +124,8 @@ public class FormConstraintTest extends TestCase {
 
     // Testing primitive constraint
     testForm.getElement("myLongText").setConstraint(
-        new OptionalConstraint<BigInteger, BigInteger>(new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
+        new OptionalConstraint<String, Long>(
+            new NumberInRangeConstraint<String, Long>(BigInteger.valueOf(20000), null)));
 
     processRequest(new StandardServletInputData(request), testForm);
 
@@ -138,7 +139,8 @@ public class FormConstraintTest extends TestCase {
 
     // Testing primitive constraint
     testForm.getElement("myLongText").setConstraint(
-        new OptionalConstraint<BigInteger, BigInteger>(new NumberInRangeConstraint(BigInteger.valueOf(20000), null)));
+        new OptionalConstraint<String, Long>(
+            new NumberInRangeConstraint<String, Long>(BigInteger.valueOf(20000), null)));
 
     processRequest(new StandardServletInputData(request), testForm);
 

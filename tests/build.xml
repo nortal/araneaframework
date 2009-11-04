@@ -11,7 +11,7 @@
 	
 	<!--Set the classpath-->
 	<path id="classpath">
-		<fileset dir="../lib" includes="**/*.jar" excludes="../lib/build-util/*.jar"/>
+		<fileset dir="../lib" includes="**/*.jar" excludes="/build-util/*.jar"/>
 		<fileset dir="../dist" includes="**/*.jar"/>
 	</path>
 	
@@ -51,10 +51,7 @@
 	<!-- test the system -->
 	<target name="run-tests" depends="build" description="Run the junit tests">
 		<mkdir dir="${tests.reports.dir}" />
-		<junit printsummary="yes"
-				fork="yes"
-				haltonfailure="false"
-		>
+		<junit printsummary="yes" fork="yes" haltonfailure="false">
 			<sysproperty key="user.dir" value="${basedir}"/>
 			<classpath location="${src.build.dir}"/>
 			<classpath location="${tests.build.dir}"/>
