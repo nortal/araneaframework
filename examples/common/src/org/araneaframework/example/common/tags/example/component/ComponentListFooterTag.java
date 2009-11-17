@@ -46,35 +46,39 @@ import org.araneaframework.uilib.util.MessageUtil;
  */
 public class ComponentListFooterTag extends PresentationTag {
 
-  public final static String PREVIOUS_PAGE_EVENT_ID = "previousPage";
+  public final static String EVENT_PREVIOUS_PAGE = "previousPage";
 
-  public final static String NEXT_PAGE_EVENT_ID = "nextPage";
+  public final static String EVENT_NEXT_PAGE = "nextPage";
 
-  public final static String PREVIOUS_BLOCK_EVENT_ID = "previousBlock";
+  public final static String EVENT_PREVIOUS_BLOCK = "previousBlock";
 
-  public final static String NEXT_BLOCK_EVENT_ID = "nextBlock";
+  public final static String EVENT_NEXT_BLOCK = "nextBlock";
 
-  public final static String FIRST_PAGE_EVENT_ID = "firstPage";
+  public final static String EVENT_FIRST_PAGE = "firstPage";
 
-  public final static String LAST_PAGE_EVENT_ID = "lastPage";
+  public final static String EVENT_LAST_PAGE = "lastPage";
 
-  public final static String JUMP_TO_PAGE_EVENT_ID = "jumpToPage";
+  public final static String EVENT_JUMP_TO_PAGE = "jumpToPage";
 
-  public final static String PREVIOUS_PAGE_LABEL_ID = "list.sequence.previous_page";
+  public final static String EVENT_SHOW_SLICED = "showSlice";
 
-  public final static String NEXT_PAGE_LABEL_ID = "list.sequence.next_page";
+  public final static String EVENT_SHOW_ALL = "showAll";
 
-  public final static String LEFT_CELL_STYLE = "left";
+  public final static String STYLE_LEFT_CELL = "left";
 
-  public final static String RIGHT_CELL_STYLE = "right";
+  public final static String STYLE_RIGHT_CELL = "right";
 
-  public final static String SEQUENCE_CELL_STYLE = "sequence";
+  public final static String STYLE_SEQUENCE_CELL = "sequence";
 
-  public final static String SHOW_SLICE_EVENT_ID = "showSlice";
+  public final static String LABEL_PREVIOUS_PAGE = "list.sequence.previous_page";
 
-  public final static String SHOW_ALL_EVENT_ID = "showAll";
+  public final static String LABEL_NEXT_PAGE = "list.sequence.next_page";
 
-  public final static String DEFAULT_NO_DATA_STRING_ID = "list.info.noData";
+  public final static String LABEL_NO_DATA = "list.noData";
+
+  public final static String LABEL_SHOWING = "list.showing";
+
+  public final static String LABEL_TOTAL = "list.total";
 
   protected String listId;
 
@@ -90,11 +94,11 @@ public class ComponentListFooterTag extends PresentationTag {
 
   protected String lastClass = "last";
 
-  protected String showAll = "demo.showAll";
+  protected String showAll = "list.showAll";
 
-  protected String showPartial = "demo.showPartial";
+  protected String showPartial = "list.showPartial";
 
-  protected String noDataStringId = ComponentListFooterTag.DEFAULT_NO_DATA_STRING_ID;
+  protected String noDataStringId = ComponentListFooterTag.LABEL_NO_DATA;
 
   // update regions
   private String updateRegions;
@@ -146,11 +150,11 @@ public class ComponentListFooterTag extends PresentationTag {
       JspUtil.writeAttribute(out, "class", this.numberStyleClass);
       JspUtil.writeCloseStartTag(out);
 
-      writeOpenEventLink(out, FIRST_PAGE_EVENT_ID, null, firstPage != currentPage, this.firstClass);
+      writeOpenEventLink(out, EVENT_FIRST_PAGE, null, firstPage != currentPage, this.firstClass);
       out.write("&nbsp;");
       JspUtil.writeEndTag_SS(out, "a");
 
-      writeOpenEventLink(out, PREVIOUS_PAGE_EVENT_ID, null, firstPage < currentPage,
+      writeOpenEventLink(out, EVENT_PREVIOUS_PAGE, null, firstPage < currentPage,
           this.prevClass);
       out.write("&nbsp;");
       JspUtil.writeEndTag_SS(out, "a");
@@ -162,16 +166,16 @@ public class ComponentListFooterTag extends PresentationTag {
         String styleClass = page == currentPage ? "active" : null;
 
         // "Jump to page" link:
-        writeOpenEventLink(out, JUMP_TO_PAGE_EVENT_ID, page.toString(), enabled, styleClass);
+        writeOpenEventLink(out, EVENT_JUMP_TO_PAGE, page.toString(), enabled, styleClass);
         JspUtil.writeEscaped(out, Long.toString(page - firstPage + 1));
         JspUtil.writeEndTag_SS(out, "a");
       }
 
-      writeOpenEventLink(out, NEXT_PAGE_EVENT_ID, null, currentPage < lastPage, this.nextClass);
+      writeOpenEventLink(out, EVENT_NEXT_PAGE, null, currentPage < lastPage, this.nextClass);
       out.write("&nbsp;");
       JspUtil.writeEndTag_SS(out, "a");
 
-      writeOpenEventLink(out, LAST_PAGE_EVENT_ID, null, lastPage != currentPage, this.lastClass);
+      writeOpenEventLink(out, EVENT_LAST_PAGE, null, lastPage != currentPage, this.lastClass);
       out.write("&nbsp;");
       JspUtil.writeEndTag_SS(out, "a");
 
@@ -190,10 +194,6 @@ public class ComponentListFooterTag extends PresentationTag {
 
     return Tag.EVAL_BODY_INCLUDE;
   }
-
-  /* ***********************************************************************************
-   * Tag attributes *********************************************************************************
-   */
 
   /**
    * @jsp.attribute
@@ -231,13 +231,10 @@ public class ComponentListFooterTag extends PresentationTag {
     JspUtil.writeAttribute(out, "class", this.infoStyleClass);
     JspUtil.writeCloseStartTag(out);
 
-    out.write(MessageUtil.localize("common.Showing", getEnvironment()) + " [");
-    out.write(Long.toString(firstShown));
-    out.write("-");
-    out.write(Long.toString(lastShown));
-    out.write("]. " + MessageUtil.localize("common.Total", getEnvironment()) + " ");
-    JspUtil.writeEscaped(out, Long.toString(totalItemCount));
-    out.write(". ");
+    out.write(MessageUtil.localizeAndFormat(getEnvironment(), LABEL_SHOWING, firstShown, lastShown));
+    out.write(' ');
+    out.write(MessageUtil.localizeAndFormat(getEnvironment(), LABEL_TOTAL, totalItemCount));
+    out.write(' ');
 
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeAttribute(out, "class", "aranea-link-button");
@@ -288,7 +285,7 @@ public class ComponentListFooterTag extends PresentationTag {
 
   protected UiEvent getShowSliceEvent() {
     UiUpdateEvent result = new UiUpdateEvent();
-    result.setId(ComponentListFooterTag.SHOW_SLICE_EVENT_ID);
+    result.setId(EVENT_SHOW_SLICED);
     result.setUpdateRegionNames(this.updateRegionNames);
     result.setTarget(this.listId);
     return result;
@@ -297,7 +294,7 @@ public class ComponentListFooterTag extends PresentationTag {
   protected UiEvent getShowAllEvent() {
     UiUpdateEvent result = new UiUpdateEvent();
     result.setUpdateRegionNames(this.updateRegionNames);
-    result.setId(ComponentListFooterTag.SHOW_ALL_EVENT_ID);
+    result.setId(EVENT_SHOW_ALL);
     result.setTarget(this.listId);
     return result;
   }

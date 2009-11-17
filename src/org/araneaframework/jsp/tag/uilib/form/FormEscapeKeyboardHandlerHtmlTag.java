@@ -19,36 +19,37 @@ package org.araneaframework.jsp.tag.uilib.form;
 import javax.servlet.jsp.JspException;
 
 /**
- * {@link org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag FormKeyboardHandlerHtmlTag} with key="escape" by default.
- *  
+ * {@link org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag FormKeyboardHandlerHtmlTag} with
+ * key="escape" by default.
+ * 
  * @see org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  * 
  * @jsp.tag
- *   name = "formEscapeKeyboardHandler"
- *   body-content = "empty"
- *   description = "Equivalent of formKeyboardHandler, but key="escape" and event="onclick" by default."
+ *  name = "formEscapeKeyboardHandler"
+ *  body-content = "empty"
+ *  description = "Equivalent of formKeyboardHandler, but key="escape" and event="onclick" by default."
  */
 public final class FormEscapeKeyboardHandlerHtmlTag extends FormKeyboardHandlerHtmlTag {
 
-	public FormEscapeKeyboardHandlerHtmlTag() {
-		defaultKey = "escape";
-		defaultEvent = "onclick";
-	}
+  public FormEscapeKeyboardHandlerHtmlTag() {
+    this.keyCode = 27;
+    this.event = "onclick";
+  }
 
-	/**
-	 * Throw an exception on attempt to set key. This tag supports "escape" only!
-	 */
-	@Override
-  public void setKey(String key) throws JspException {
-		throw new JspException("You may not set key for the escape handler tag!");
-	}
+  /**
+   * Throw an exception on attempt to set key. This tag supports 27 ("escape") only!
+   */
+  @Override
+  public void setKeyCode(String key) throws JspException {
+    throw new JspException("You may not set key for the escape handler tag!");
+  }
 
-	/**
-	 * @see #setKey
-	 */
-	@Override
-  public void setKeyCode(String keyCode) throws JspException {
-		throw new JspException("You may not set keyCode for the escape handler tag!");
-	}
+  /**
+   * Throw an exception on attempt to set key. This tag supports "escape" (27) only!
+   */
+  @Override
+  public void setKeyMetaCond(String keyCode) throws JspException {
+    throw new JspException("You may not set keyCode for the escape handler tag!");
+  }
 }

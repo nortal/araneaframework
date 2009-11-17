@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,10 +23,12 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.UpdateRegionProvider;
 import org.araneaframework.http.filter.StandardUpdateRegionFilterWidget;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.JsonObject;
 
 /**
@@ -83,8 +84,9 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
 
     if (messageContext != null) {
       UpdateRegionProvider messageRegion = messageContext;
+      LocalizationContext locCtx = this.baseFormElement.getEnvironment().getEntry(LocalizationContext.class);
       // TODO: general mechanism for writing out UpdateRegions from actions
-      String messageRegionContent = messageRegion.getRegions(null).get(MessageContext.MESSAGE_REGION_KEY).toString();
+      String messageRegionContent = messageRegion.getRegions(locCtx).get(MessageContext.MESSAGE_REGION_KEY).toString();
       writeRegion(out, MessageContext.MESSAGE_REGION_KEY, messageRegionContent);
     }
   }

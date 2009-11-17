@@ -30,7 +30,7 @@ import org.araneaframework.jsp.UiUpdateEvent;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class JspWidgetCallUtil {
-  public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.event(this);";
+  public static final String SIMPLE_SUBMIT_FUNCTION = "return Aranea.Page.event(this);";
 
   /**
    * Write out form submit script for specified attribute of HTML element. Aranea custom HTML 

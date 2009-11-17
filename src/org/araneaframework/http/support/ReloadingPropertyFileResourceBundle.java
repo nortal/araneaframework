@@ -29,8 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.util.ClassLoaderUtil;
 
 /**
- * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- * @since {since}
+ * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
  */
 public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBundle {
 

@@ -45,7 +45,6 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
 
     // Get first row & continue if needed
     if (this.rowIterator.hasNext()) {
-      this.currentRow = this.rowIterator.next();
       doForEachRow(out);
       return EVAL_BODY_INCLUDE;
     } else {
@@ -60,6 +59,7 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
    * @param out The output steam to write to the rendering result.
    */
   protected void doForEachRow(Writer out) throws Exception {
+    this.currentRow = this.rowIterator.next();
     addContextEntry(ROW_KEY, this.currentRow);
     addContextEntry(ROW_REQUEST_ID_KEY, Integer.toString(this.rowIterator.previousIndex()));
   }
@@ -68,7 +68,6 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
   protected int afterBody(Writer out) throws Exception {
     // Get next row & continue if needed
     if (this.rowIterator.hasNext()) {
-      this.currentRow = this.rowIterator.next();
       doForEachRow(out);
       return EVAL_BODY_AGAIN;
     } else {

@@ -16,18 +16,24 @@
 
 package org.araneaframework.example.common.framework.resource;
 
+import org.araneaframework.http.support.IdentityResourceBundle;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 import org.araneaframework.http.support.FallbackResourceBundle;
 import org.araneaframework.http.support.StringResourceBundle;
 
+/**
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ */
 public class TemplateResourceBundle_en extends FallbackResourceBundle {
 
-	public TemplateResourceBundle_en() throws Exception {
-		setLocale(Locale.ENGLISH);
+  public TemplateResourceBundle_en() throws Exception {
+    setLocale(Locale.ENGLISH);
 
-		addResourceBundle(new StringResourceBundle());
-		addResourceBundle(ResourceBundle.getBundle("resource/template", getLocale()));
-		addResourceBundle(ResourceBundle.getBundle("resource/uilib", getLocale()));
-	}
+    addResourceBundle(new StringResourceBundle());
+    addResourceBundle(ResourceBundle.getBundle("resource/template", getLocale()));
+    addResourceBundle(ResourceBundle.getBundle("resource/uilib", getLocale()));
+    addResourceBundle(new IdentityResourceBundle());
+  }
 }

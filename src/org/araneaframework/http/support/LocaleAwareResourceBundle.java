@@ -20,19 +20,21 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
 /**
+ * A base class for resource bundles that need to be locale-dependant.
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class LocaleAwareResourceBundle extends ResourceBundle implements Serializable {
+
   private Locale locale;
-  
+
   public void setLocale(Locale locale) {
     this.locale = locale;
   }
-  
+
   @Override
   public Locale getLocale() {
     return this.locale;
-  }  
+  }
 }

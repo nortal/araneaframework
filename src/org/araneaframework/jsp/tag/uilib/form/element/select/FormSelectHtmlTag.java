@@ -95,7 +95,6 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     JspUtil.writeAttributes(out, this.attributes);
-    writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartTag(out);
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
@@ -113,7 +112,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
         JspUtil.writeOpenStartTag(out, "option");
         JspUtil.writeAttribute(out, "value", value != null ? value : "");
 
-        if (viewModel.isSelected(viewModel.getSimpleValue())) {
+        if (viewModel.isSelected(value)) {
           JspUtil.writeAttribute(out, "selected", "selected");
         }
 

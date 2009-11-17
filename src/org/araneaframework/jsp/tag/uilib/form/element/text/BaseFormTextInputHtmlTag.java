@@ -108,8 +108,6 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "size", this.size);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
     
-    writeBackgroundValidationAttribute(out);
-
     for (Map.Entry<String, String> attribute : customAttributes.entrySet()) {
       JspUtil.writeAttribute(out, "" + attribute.getKey(), attribute.getValue());
     }

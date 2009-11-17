@@ -36,7 +36,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
 /**
  * XML parsing utilities for processing web application deployment
  * descriptor and tag library descriptor files.  FIXME - make these

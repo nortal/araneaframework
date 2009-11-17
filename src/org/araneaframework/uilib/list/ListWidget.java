@@ -11,13 +11,14 @@
 
 package org.araneaframework.uilib.list;
 
+import java.util.TreeMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -109,7 +110,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected List<T> itemRange;
 
-  protected Map<String, T> requestIdToRow = new HashMap<String, T>();
+  protected Map<String, T> requestIdToRow = new TreeMap<String, T>();
 
   protected List<T> selectedItems = new LinkedList<T>();
 
@@ -121,7 +122,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
-  private Map<String, EventListener> listEventListeners;
+  private Map<String, EventListener> listEventListeners = new HashMap<String, EventListener>();
 
   /**
    * This an initial value for whether the list should show full pages. It is set by {@link #showDefaultPages()} and
@@ -187,6 +188,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
+
     String listPath = getScope().toPath().toString();
 
     // 1. Selected check boxes.
@@ -1188,12 +1190,14 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @since 1.1
    */
   protected void makeRequestIdToRowMapping() {
-    if (this.dataProvider == null) {
-      return;
-    }
-    this.requestIdToRow.clear();
-    for (ListIterator<T> i = this.itemRange.listIterator(); i.hasNext();) {
-      this.requestIdToRow.put(Integer.toString(i.previousIndex()), i.next());
+    if (this.itemRange != null) {
+      this.requestIdToRow.clear();
+
+      int index = 0;
+
+      for (T row : this.itemRange) {
+        this.requestIdToRow.put(Integer.toString(index++), row);
+      }
     }
   }
 
@@ -1306,6 +1310,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
       this.listStructure = ListWidget.this.listStructure.getViewModel();
       this.orderInfo = ListWidget.this.getOrderInfo().getViewModel();
       this.filterForm = (FormWidget.ViewModel) ListWidget.this.form._getViewable().getViewModel();
+      makeRequestIdToRowMapping();
     }
 
     /**

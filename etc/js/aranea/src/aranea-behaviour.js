@@ -22,10 +22,9 @@
  * @since 1.2.1
  */
 var Aranea = Aranea ? Aranea : {};
-
 Aranea.Behaviour = {
 
-	ATTR_BG_VALIDATE: 'arn-bgValidate',
+	ATTR_BG_VALIDATE: 'aranea-bg-validate',
 
 	ATTR_FILTER: 'arn-charFilter',
 
@@ -51,40 +50,44 @@ Aranea.Behaviour = {
 
 	ARANEA_FILE_UPLOAD: 'input.aranea-file-upload',
 
+	ARANEA_BG_VALIDATE: '.aranea-bg-validate',
+
 	setFormElementContext: function(element) {
 		element = $(element);
-		if (!element.getStorage().get(this.ATTACHED_FE_CONTEXT)) {
+		if (!element.getStorage().get(Aranea.Behaviour.ATTACHED_FE_CONTEXT)) {
 			var span = element.up('span');
 			if (span && element.name) {
-				Event.observe(span, 'keydown', function(ev) {
-					return Aranea.KB.handleKeypress(ev, element.name);
+				Event.observe(span, 'keydown', function(event) {
+					return Aranea.Keyboard.handleKeypress(event);
 				});
-				element.getStorage().set(this.ATTACHED_FE_CONTEXT, true);
+				element.getStorage().set(Aranea.Behaviour.ATTACHED_FE_CONTEXT, true);
 			}
 		}
 	},
 
 	formElementValidationActionCall: function(event) {
 		// element serialization here is crucial, otherwise multi-valued controls only submit the most recent value:
-		Aranea.Page.action(this.ACTION_BG_VALIDATE, event.target.id, $(event.target).serialize(true),
+		Aranea.Page.action(Aranea.Behaviour.ACTION_BG_VALIDATE, event.element().id, null, event.element().serialize(),
 				function(transport) { Aranea.Page.processResponse(transport.responseText); });
 	},
 
 	/** @since 1.1 */
 	setFormElementValidation: function(element) {
 		element = $(element);
-		if (element.getStorage().get(this.ATTACHED_VALIDATE) || element.readAttribute(this.ATTR_BG_VALIDATE) == 'false') {
-			return;
-		}
-		if(element.readAttribute(this.ATTR_BG_VALIDATE) == 'true' || Aranea.Data.backgroundValidation) {
-			Event.observe(element, 'change', Aranea.Behaviour.formElementValidationActionCall);
-			element.getStorage().set(this.ATTACHED_VALIDATE, true);
+		var b = Aranea.Behaviour;
+		var storage = element.getStorage();
+
+		if (Aranea.Data.backgroundValidation && element.readAttribute(b.ATTR_BG_VALIDATE) != 'false'
+			|| element.hasClassName(b.ATTR_BG_VALIDATE) && !storage.get(b.ATTACHED_VALIDATE)) {
+
+			element.observe('change', Aranea.Behaviour.formElementValidationActionCall);
+			storage.set(b.ATTACHED_VALIDATE, true);
 		}
 	},
 
 	setCloningUrl: function(element) {
 		element = $(element);
-		if (String.blank(element.readAttribute('href')) || element.getStorage().get(this.ATTACHED_URL)) {
+		if (String.blank(element.readAttribute('href')) || element.getStorage().get(Aranea.Behaviour.ATTACHED_URL)) {
 			return;
 		}
 
@@ -106,24 +109,24 @@ Aranea.Behaviour = {
 			params.araWidgetEventPath = eventTarget;
 		}
 		element.href = Aranea.Page.getSubmitURL(params);
-		$(element).getStorage().set(this.ATTACHED_URL, true);
+		$(element).getStorage().set(Aranea.Behaviour.ATTACHED_URL, true);
 	},
 
 	applyCharacterFilter: function(element) {
-		var filter = element.readAttribute(this.ATTR_FILTER);
-		if (filter && !element.getStorage().get(this.ATTACHED_FILTER)) {
+		var filter = element.readAttribute(Aranea.Behaviour.ATTR_FILTER);
+		if (filter && !element.getStorage().get(Aranea.Behaviour.ATTACHED_FILTER)) {
 			Event.observe(element, 'keydown', Aranea.Keyboard.getKeyboardInputFilterFunction(filter));
-			element.getStorage().set(this.ATTACHED_FILTER, true);
+			element.getStorage().set(Aranea.Behaviour.ATTACHED_FILTER, true);
 		}
 	},
 
 	/** TODO: this is not really used in current behaviour rules (only by tooltip tag) */
 	setToolTip: function(element){
 		element = $(element);
-		if (Tip && !element.getStorage().get(this.ATTACHED_TOOLTIP)) {
-			var toolTip = element.readAttribute(this.ATTR_TOOLTIP);
+		if (Tip && !element.getStorage().get(Aranea.Behaviour.ATTACHED_TOOLTIP)) {
+			var toolTip = element.readAttribute(Aranea.Behaviour.ATTR_TOOLTIP);
 			if (toolTip) {
-				element.getStorage().set(this.ATTACHED_FILTER, true);
+				element.getStorage().set(Aranea.Behaviour.ATTACHED_FILTER, true);
 				return new Tip(element, toolTip);
 			}
 		}
@@ -131,23 +134,25 @@ Aranea.Behaviour = {
 
 	apply: function() {
 		Aranea.Logger.debug('Applying behaviour rules to form elements...');
-		$$(this.ARANEA_LINK).each(function(el) {
-			this.setCloningUrl(el);
+		$$(Aranea.Behaviour.ARANEA_LINK).each(function(el) {
+			Aranea.Behaviour.setCloningUrl(el);
 		});
 
-		$$(this.ARANEA_INPUT).each(function(el) {
-			this.applyCharacterFilter(el);
-			this.setFormElementContext(el);
-			this.setFormElementValidation(el);
+		$$(Aranea.Behaviour.ARANEA_BG_VALIDATE).each(function(el) {
+			Aranea.Behaviour.setFormElementValidation(el);
 		});
 
-		$$(this.ARANA_INPUT_OTHER).each(function(el) {
-			this.setFormElementContext(el);
-			this.setFormElementValidation(el);
+		$$(Aranea.Behaviour.ARANEA_INPUT).each(function(el) {
+			Aranea.Behaviour.applyCharacterFilter(el);
+			Aranea.Behaviour.setFormElementContext(el);
 		});
 
-		$$(this.ARANEA_FILE_UPLOAD).each(function(el) {
-			this.setFormElementContext(el);
+		$$(Aranea.Behaviour.ARANA_INPUT_OTHER).each(function(el) {
+			Aranea.Behaviour.setFormElementContext(el);
+		});
+
+		$$(Aranea.Behaviour.ARANEA_FILE_UPLOAD).each(function(el) {
+			Aranea.Behaviour.setFormElementContext(el);
 		});
 	},
 
@@ -158,11 +163,13 @@ Aranea.Behaviour = {
 	 * @since 1.2.1
 	 */
 	getAutoCompleteURL: function(name) {
-		return Aranea.Page.getSubmitURL(
-			Aranea.Attribute.getTopServiceId(),
-			Aranea.Attribute.getThreadServiceId(),
-			Aranea.Attribute.getTransactionServiceId(),
-			{ araServiceActionPath: name, araServiceActionHandler: 'autocomplete' });
+		return Aranea.Page.getSubmitURL({
+			araTopServiceId: Aranea.Page.Attribute.getTopServiceId(),
+			araThreadServiceId: Aranea.Page.Attribute.getThreadServiceId(),
+			araTransactonId: Aranea.Page.Attribute.getTransactionId(),
+			araServiceActionPath: name,
+			araServiceActionHandler: 'autocomplete'
+		});
 	},
 
 	/**
@@ -183,7 +190,15 @@ Aranea.Behaviour = {
 				}
 			});
 		}
-		var url = Aranea.Behaviour.getAutoCompleteURL(name);
-		Ajax.Autocompleter(name, 'ACdiv.' + name, url, options);
+
+		var init = function() {
+			window.setTimeout(function() {
+				var url = Aranea.Behaviour.getAutoCompleteURL(name);
+				new Ajax.Autocompleter(name, 'ACdiv.' + name, url, options);
+			});
+		};
+
+		document.observe('aranea:loaded', init);
 	}
 };
+document.observe('aranea:loaded', Aranea.Behaviour.apply.bind(Aranea.Behaviour));

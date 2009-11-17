@@ -46,7 +46,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
-      out.write("_ap.addSystemLoadEvent(Aranea.Popups.processPopups.bind(Aranea.Popups));\n");
+      out.write("document.observe('dom:loaded', Aranea.Popups.processPopups;\n");
       addPopups(out, popups);
       JspUtil.writeEndTag(out, "script");
     }

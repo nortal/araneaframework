@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.springframework.util.Assert;
+
 import java.util.LinkedList;
 import java.util.List;
 import org.araneaframework.uilib.support.DataType;
@@ -57,6 +59,34 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
     super(itemClass, itemLabelProperty, itemValueProperty);
   }
 
+  /**
+   * Creates a new instance of MultiSelectControl, and also defines item class and label and value property names. Note
+   * that usually the class parameter is not needed. It is needed only when the select values are defined one-by-one
+   * (then class is used to create new instances). The property names are required.
+   * 
+   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
+   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
+   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
+   * @see SelectControl#SelectControl(String, String)
+   */
+  public MultiSelectControl(List<T> items, String itemLabelProperty, String itemValueProperty) {
+    super(items, itemLabelProperty, itemValueProperty);
+  }
+
+  /**
+   * Creates a new instance of MultiSelectControl, and also defines item class and label and value property names. Note
+   * that usually the class parameter is not needed. It is needed only when the select values are defined one-by-one
+   * (then class is used to create new instances). The property names are required.
+   * 
+   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
+   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
+   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
+   * @see SelectControl#SelectControl(String, String)
+   */
+  public MultiSelectControl(List<T> items, Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
+    super(items, itemClass, itemLabelProperty, itemValueProperty);
+  }
+
   @Override
   protected List<T> fromRequestParameters(String[] parameterValues) {
     List<T> items = new LinkedList<T>();
@@ -76,6 +106,9 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
   }
 
   public DataType getRawValueType() {
+    this.itemClass = DisplayItemUtil.resolveClass(this.itemClass, this.items);
+    Assert.notNull(this.itemClass != null,
+        "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(List.class, this.itemClass);
   }
 }

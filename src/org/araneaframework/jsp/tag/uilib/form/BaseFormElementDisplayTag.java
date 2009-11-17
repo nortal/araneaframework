@@ -36,7 +36,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement<?, ?>.ViewModel formElementViewModel;
+  protected FormElement.ViewModel formElementViewModel;
 
   protected Control.ViewModel controlViewModel;
 

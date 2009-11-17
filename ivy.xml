@@ -84,6 +84,7 @@
 
 		<!-- "demo" -->
 		<!-- These files are needed to run Aranea demo applications. -->
+		<dependency conf="demo" org="antlr" rev="2.7.7" name="antlr" transitive="false"/>
 		<dependency conf="demo" org="asm" rev="3.2" name="asm" transitive="false"/>
 		<dependency conf="demo" org="cglib" rev="2.2" name="cglib" transitive="false"/>
 		<dependency conf="demo" org="commons-el" rev="1.0" name="commons-el" transitive="false"/>

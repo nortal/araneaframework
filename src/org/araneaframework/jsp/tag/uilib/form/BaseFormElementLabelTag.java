@@ -38,7 +38,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement<?, ?>.ViewModel formElementViewModel;
+  protected FormElement.ViewModel formElementViewModel;
 
   protected Control.ViewModel controlViewModel;
 

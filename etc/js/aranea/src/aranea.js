@@ -15,9 +15,10 @@
  */
 
 /**
- *	Exactly one Aranea.Page object is present on each page served by Aranea and
- *	contains common functionality for setting page related variables, events and
- *	functions.
+ * Exactly one Aranea.Page object is present on each page served by Aranea and contains common functionality for setting
+ * page related variables, events and functions.
+ * <p>
+ * Aranea object which provides namespace for objects created/needed by different modules.
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @author Alar Kvell (alar@araneaframework.org)
@@ -25,15 +26,11 @@
  */
 var Aranea = Aranea ? Aranea : {};
 
-/**
- * Aranea object which provides namespace for objects created/needed by
- * different modules.
- *
- * @since 2.0
- */
+/* THIS IS OVERRIDE! */
 
 /**
  * Dummy implementation of logger. If you want to actually use logging then also include aranea-util.js.
+ * @since 2.0
  */
 Aranea.Logger = {
 	trace: Prototype.emptyFunction,
@@ -47,8 +44,7 @@ Aranea.Logger = {
 
 Aranea.Data = {
 
-	// URL of aranea dispatcher servlet serving current page.
-	// This is by default set by Aranea JSP ui:body tag.
+	// URL of aranea dispatcher servlet serving current page. This is by default set by Aranea JSP ui:body tag.
 	servletUrl: null,
 
 	// Enables/disables the effect of "focusedFormElementName" and "focusableElements":
@@ -102,6 +98,8 @@ Aranea.Data = {
 	 * @since 1.2
 	 */
 	reloadOnNoDocumentRegions: true,
+
+	systemFormId: 'aranea-overlay-form aranea-form'
 };
 
 Aranea.Page = {
@@ -112,11 +110,12 @@ Aranea.Page = {
 	 */
 	onLoad: function() {
 		Aranea.Page.findSystemForm();
-//		Aranea.Behaviour.apply()
 		Aranea.Page.initRSHURL();
 		Aranea.Page.addAutoFocusObserver();
 		if (Aranea.Page.ajaxUploadInit) Aranea.Page.ajaxUploadInit();
 		Aranea.Data.loaded = true;
+		Aranea.Logger.debug("Aranea scripts are now initialized!");
+		document.fire('aranea:loaded', null, false);
 	},
 
 	onUpdate: function() {},
@@ -127,8 +126,8 @@ Aranea.Page = {
 
 	addAutoFocusObserver: function() {
 		// Monitor the currently focused element for Ajax page update (since 1.2)
-		if (Aranea.Data.autofocus) {
-			Aranea.Logger.debug('Enabling focus observer for elements "' + Aranea.Data.focusedFormElementName + '".');
+		if (Aranea.Data.autofocus && Aranea.Data.focusableElements) {
+			Aranea.Logger.debug('Enabling focus observer for elements "' + Aranea.Data.focusableElements + '".');
 			$$(Aranea.Data.focusableElements).each(function (element) {
 				element.observe("focus", function(event) {
 					Aranea.Data.focusedFormElementName = event.element().name;
@@ -145,40 +144,56 @@ Aranea.Page = {
 	},
 
 	/**
-	 * Another submit function, takes all params that are possible to
-	 * use with Aranea JSP currently.
+	 * Another submit function, takes all parameters that are possible to use with Aranea JSP currently.
+	 * 
 	 * @param eventId event identifier sent to the server
 	 * @param eventTarget event target identifier (widget id)
 	 * @param eventParam event parameter
 	 * @param eventPrecondition closure, submit is only performed when its evaluation returns true
 	 * @param eventUpdateRegions identifiers for regions that should be regenerated on server-side
 	// TODO: get rid of duplicated logic from: submit() and findSubmitter()
-	 * Chooses appropriate submitting method and submittable form given the HTML element
-	 * that initiated the submit request. Applies the appropriate paramater values
-	 * and submits the systemForm which owns the element. */
-	event: function(element) {
-		if (Aranea.Data.submitted || !Aranea.Data.loaded) {
-			return false;
-		}
-
-		var data = Aranea.Page.Attribute.getEventData('TYPE', arguments); // TODO
-
-		if (data.preconditionFailed) {
-			Aranea.Page.Logger.debug('Event cancelled because event precondition returned false.');
-			return false;
-		}
-
+	 * Chooses appropriate submitting method and form to submit using the given HTML element (that initiated the submit
+	 * request). Applies the appropriate parameter values and submits the systemForm which contains the element.
+	 */
+	event: function() {
+		var result = false;
 		try {
-			Aranea.Data.loaded = false;
-			if (Aranea.Data.systemForm) {
-				Event.fire('aranea:beforeEvent', Aranea.Data.systemForm);
+			if (Aranea.Data.submitted || !Aranea.Data.loaded) {
+				return result;
 			}
-			return this.findSubmitter(data).event();
+
+			var data = Aranea.Page.Attribute.getEventData(null, arguments);
+
+			if (data.preconditionFailed) {
+				Aranea.Page.Logger.debug('Event cancelled because event precondition returned false.');
+			} else {
+				result = this.findSubmitter(data).event(data) || result;
+			}
+		} catch (e) {
+			Aranea.Logger.error('An error occurred during Aranea.Page.event().', e);
 		} finally {
-			Aranea.Data.loaded = true;
-			if (Aranea.Data.systemForm) {
-				Event.fire('aranea:afterEvent', Aranea.Data.systemForm);
+			return result;
+		}
+	},
+
+	submit: function() {
+		var result = false;
+		try {
+			if (Aranea.Data.submitted || !Aranea.Data.loaded) {
+				return result;
 			}
+
+			var data = Aranea.Page.Attribute.getEventData(null, arguments);
+
+			if (data.preconditionFailed) {
+				Aranea.Page.Logger.debug('Submit-event cancelled because event precondition returned false.');
+			} else {
+				result = this.findSubmitter('submit').event(data) || result;
+			}
+		} catch (e) {
+			Aranea.Logger.error('An error occurred during Aranea.Page.submit().', e);
+		} finally {
+			return result;
 		}
 	},
 
@@ -187,13 +202,15 @@ Aranea.Page = {
 	 * It is called by event() to determine the appropriate form submitter.
 	 */
 	findSubmitter: function(data) {
-		if (data.eventUpdateRgns.length > 0) {
-			return new DefaultAraneaAJAXSubmitter(systemForm);
-		} else if (data.form.hasClassName('aranea-overlay')) {
-			return new DefaultAraneaOverlaySubmitter(systemForm);
-		} else {
-			return new DefaultAraneaSubmitter(systemForm);
+		var type = Object.isString(data) ? data : data.type;
+		if (type == 'submit') {
+			return new DefaultAraneaSubmitter();
+		} else if (type == 'ajax') {
+			return new DefaultAraneaAJAXSubmitter();
+		} else if (type == 'overlay') {
+			return new DefaultAraneaOverlaySubmitter();
 		}
+		throw('Unknown event type ("' + type + '"). Could not find appropriate submitter!');
 	},
 
 	/**
@@ -203,25 +220,35 @@ Aranea.Page = {
 	 * @param araTransactionId transaction id expected by the server
 	 * @param extraParams more parameters, i.e "p1=v1&p2=v2"
 	 */
-	getSubmitURL: function(extraParams, form /*
-			topServiceId, threadServiceId, transactionId, extraParams*/) {
+	getSubmitURL: function() {
 		var params = {};
-		if (Object.isElement(arguments[0])) {
-			params = getFormAttributes(form);
+
+		if (arguments.length > 0) {
+			var last = arguments.length - 1;
+			if (Object.isElement(arguments[0])) {
+				params = Aranea.Page.getFormAttributes(form);
+			}
+
+			if (arguments[0] && (last > 0 || !Object.isElement(arguments[0]))) {
+				if (Object.isString(arguments[last])) {
+					params = arguments[last].parseQuery();
+				} else {
+					params = $H(arguments[last]);
+				}
+			}
 		}
-
-		if (Object.isString(extraParams)) extraParams = extraParams.parseQuery();
-
-		Object.extend(params, extraParams);
 
 		var url = [];
-		if (Aranea.Page.absoluteUrls) {
+		if (Aranea.Data.absoluteUrls) {
 			url.push(this.encodeURL(Aranea.Data.servletURL));
-			url.push(url[0].indexOf('?') >= 0 ? '&' : '?');
-		} else {
-			url.push('?');
+			url.push(url[0].indexOf('?') >= 0 ? '&' : '');
 		}
-		url.push(String.toQueryParams(params));
+
+		if (params.size() > 0) {
+			url.push(url[0].indexOf('?') < 0 ? '?' : '');
+			url.push(params.toQueryString());
+		}
+
 		return url.join('');
 	},
 
@@ -281,9 +308,9 @@ Aranea.Page = {
 	 * @param extraParams More parameters to the request, e.g. "p1=v1&p2=v2" or {p1: 'v1', p2: 'v2'}.
 	 * @param element form or sub-element of form tag that triggers the action request.
 	 */
-	action: function(actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams, element) {
-		if (String.blank(actionId)) throw ('action: parameter "actionId" is required!');
-		if (String.blank(actionTarget)) throw ('action: parameter "actionTarget" is required!');
+	action: function(actionId, actionTarget, actionParam, extraParams, actionCallback, options, sync, element) {
+		if (actionId == null || actionId.blank()) throw ('Aranea.Page.action: parameter "actionId" is required!');
+		if (actionTarget == null || actionTarget.blank()) throw ('Aranea.Page.action: parameter "actionTarget" is required!');
 
 		element = Aranea.Page.findSystemForm(element);
 		options = Object.extend({
@@ -298,8 +325,7 @@ Aranea.Page = {
 
 
 	/**
-	 * Adds keep-alive function f that is executed periodically after time
-	 * milliseconds has passed
+	 * Adds keep-alive function f that is executed periodically after time milliseconds has passed
 	 */
 	addKeepAlive: function(f, time) {
 		Aranea.Data.keepAliveTimers.push(window.setInterval(f, time));
@@ -370,23 +396,21 @@ Aranea.Page = {
 		var tag = element != null && element.tagName ? element.tagName.toLowerCase() : null;
 
 		if (!element || !tag) {
-			var forms = $$('form.aranea-overlay');
-			if (forms.length == 0) {
-				forms = $$('form.aranea-form');
-			}
-			if (forms.length > 0) {
-				result = forms.first();
-			}
-			forms = null;
-		} else if (tag == 'form' && (element.hasClassName('aranea-overlay') || element.hasClassName('aranea-form'))) {
+			$w(Aranea.Data.systemFormId).find(function(id) { return result = $(id) });
+		} else if (tag == 'form' && Aranea.Data.systemFormId.indexOf(element.id) >= 0) {
 			result = $(element);
 		} else {
-			result = $(element).up('form.aranea-overlay, form.aranea-form');
+			result = element;
+			while (result && tag != 'form' && (result.id == '' || Aranea.Data.systemFormId.indexOf(result.id) < 0)) {
+				result = result.up();
+				tag = result != null && result.tagName ? result.tagName.toLowerCase() : null;
+			}
 		}
 
 		if (result == null) {
-			throw('findSystemForm: Could not find Aranea system form. Make sure the form has class "aranea-overlay" '
-					+ 'or "aranea-form" (and that the parameter element is inside a form).')
+			throw('findSystemForm: Could not find Aranea system form that has one of those IDs: "'
+					+ Aranea.Data.systemFormId + '". Make sure that the form exists, and, if element was given, '
+					+ 'element is inside a form.')
 		} else if (changeData != false) {
 			Aranea.Data.systemForm = result;
 		}
@@ -395,8 +419,7 @@ Aranea.Page = {
 	},
 
 	/**
-	 * RSH initialization for state versioning. Has effect only when
-	 * "aranea-rsh.js" is also included in the page.
+	 * RSH initialization for state versioning. Has effect only when "aranea-rsh.js" is also included in the page.
 	 */
 	initRSHURL: function() {
 		Aranea.Logger.debug("Executing Aranea.Page.initRSHURL()");
@@ -407,10 +430,9 @@ Aranea.Page = {
 
 			var stateId = Aranea.Data.systemForm.araClientStateId.value;
 
-			// If we generate hashes to HTTP requests, URL changes cause the browser
-			// to never use local history data, as the hash added later is not
-			// accessible from its memory cache. Thus we just keep the URL intact
-			// for these cases, so that browsers own history mechanisms can take over.
+			// If we generate hashes to HTTP requests, URL changes cause the browser never uses local history data, as
+			// the hash added later is not accessible from its memory cache. Thus we just keep the URL intact for these
+			// cases, so that browsers own history mechanisms can take over.
 			if (stateId.startsWith('HTTP')) {
 				window.location.hash = stateId;
 				window.dhtmlHistory.add(stateId, null);
@@ -426,12 +448,14 @@ Aranea.Page = {
 	 */
 	processResponse: function(responseText) {
 		var counter = $H();
+		var hasRegions = false;
 
-		new Aranea.util.AjaxResponse(responseText).each(function(key, content, length) {
+		new Aranea.Util.AjaxResponse(responseText).each(function(key, content, length) {
 			counter[key] = counter[key] ? counter[key]++ : 1;
-			if (Aranea.Data.regionHandlers[key]) {
+			if (Aranea.Data.regionHandlers.get(key)) {
 				Aranea.Logger.debug('Region type: "' + key + '" (' + length + ' characters)');
-				Aranea.Data.regionHandlers[key](content);
+				Aranea.Data.regionHandlers.get(key).process(content);
+				hasRegions = true;
 			} else {
 				throw('Region type: "' + key + '" is unknown!');
 			}
@@ -441,8 +465,8 @@ Aranea.Page = {
 
 		if (Aranea.Data.reloadOnNoDocumentRegions && !hasRegions) {
 			Aranea.Logger.debug('No document regions were received, forcing a reload of the page');
-			if (Aranea.Data.regionHandlers['reload']) {
-				Aranea.Data.regionHandlers['reload']();
+			if (Aranea.Data.regionHandlers.get('reload')) {
+				Aranea.Data.regionHandlers.get('reload').process();
 			} else {
 				Aranea.Logger.error('No handler is registered for "reload" region, unable to force page reload!');
 			}
@@ -460,8 +484,8 @@ Aranea.Page = {
 	},
 
 	/**
-	 * Create or show loading message at the top corner of the document. Called
-	 * before initiating an update-regions Ajax.Request.
+	 * Create or show loading message at the top corner of the document. Called before initiating an update-regions
+	 * Ajax.Request.
 	 *
 	 * @since 1.1
 	 */
@@ -479,8 +503,7 @@ Aranea.Page = {
 	},
 
 	/**
-	 * Hide loading message. Called after the completion of update-regions
-	 * Ajax.Request.
+	 * Hide loading message. Called after the completion of update-regions Ajax.Request.
 	 *
 	 * @since 1.1
 	 */
@@ -493,8 +516,7 @@ Aranea.Page = {
 	},
 
 	/**
-	 * Build loading message. Called when an existing message element is not
-	 * found.
+	 * Build loading message. Called when an existing message element is not found.
 	 *
 	 * @since 1.1
 	 */
@@ -503,12 +525,10 @@ Aranea.Page = {
 	},
 
 	/**
-	 * Perform positioning of loading message (if needed in addition to CSS).
-	 * Called before making the message element visible. This implementation
-	 * provides workaround for IE 6, which doesn't support
-	 * <code>position: fixed</code> CSS attribute; the element is manually
-	 * positioned at the top of the document. If you don't need this, overwrite
-	 * this with an empty function:
+	 * Perform positioning of loading message (if needed in addition to CSS). Called before making the message element
+	 * visible. This implementation provides workaround for IE 6, which doesn't support <code>position: fixed</code> CSS
+	 * attribute; the element is manually positioned at the top of the document. If you don't need this, overwrite this
+	 * with an empty function:
 	 * <code>Object.extend(Aranea.Page(), { positionLoadingMessage: Prototype.emptyFunction });</code>
 	 *
 	 * @since 1.1
@@ -517,7 +537,7 @@ Aranea.Page = {
 		if (this.loadingMessagePositionHack || element.offsetTop) {
 			this.loadingMessagePositionHack = true;
 			$(element).setStyle({
-					position:	'absolute',
+					position: 'absolute',
 					top: document.documentElement.scrollTop + 'px'
 			});
 		}
@@ -539,10 +559,10 @@ Aranea.Page.Request = {
 			return false;
 		}
 
-		var widgetId = Aranea.Attribute.getTarget(element);
-		var eventId = Aranea.Attribute.getEventId(element);
-		var eventParam = Aranea.Attribute.getEventParam(element);
-		var eventUpdateRgns = Aranea.Attribute.getEventUpdateRegions(element);
+		var widgetId = Aranea.Page.Attribute.getTarget(element);
+		var eventId = Aranea.Page.Attribute.getEventId(element);
+		var eventParam = Aranea.Page.Attribute.getEventParam(element);
+		var eventUpdateRgns = Aranea.Page.Attribute.getEventUpdateRegions(element);
 
 		var data = {
 				type: String.interpret(type),
@@ -637,16 +657,20 @@ Aranea.Page.Request = {
 	 * This method includes default behaviour.
 	 */
 	beforeSubmit: function(data) {
-		if (data.type != DefaultAraneaSubmitter.prototype.TYPE) {
+		Aranea.Page.Attribute.writeToForm(data); // Write event data to form so that it would be sent to server-side.
+		if (data.type != 'submit') {
 			// copy the content of rich editors to corresponding HTML textinputs/textareas
 			if (window.tinyMCE) {
 				window.tinyMCE.triggerSave();
 			}
 		}
-		if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
+		if (data.type == 'ajax') {
 			Aranea.Logger.debug('Showing the loading message.');
 			Aranea.Page.showLoadingMessage();
 		}
+		document.fire('aranea:submit', data, false);
+		Aranea.Data.loaded = false;
+		Aranea.Data.submitted = true;
 	},
 
 	/**
@@ -654,9 +678,12 @@ Aranea.Page.Request = {
 	* This method includes default behaviour.
 	*/
 	afterSubmit: function(data) {
-		if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
+		if (data.type == 'ajax') {
 			Aranea.Page.hideLoadingMessage();
 		}
+		Aranea.Data.submitted = false;
+		Aranea.Data.loaded = true;
+		document.fire('aranea:loaded', data, false);
 	}
 };
 
@@ -669,29 +696,28 @@ Aranea.Page.Request = {
  */
 var DefaultAraneaSubmitter = Class.create({
 
-	TYPE: 'SUBMIT',
+	TYPE: 'submit',
 
-	initialize: function(form) {
-		this.systemForm = form;
+	event_plain: function(args) {
+		return this.event(Aranea.Page.Attribute.getEventData(this.TYPE, args));
 	},
 
-	event: function(element) {
-		return Aranea.Page.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_4.bind(this));
-	},
+	event: function(eventData) {
+		var result = false;
+		if (eventData.isSubmitAllowed()) {
+			Event.fire(Aranea.Data.systemForm, 'aranea:beforeEvent', eventData);
+			eventData.beforeRequest();
 
-	event_4: function(systemForm, eventId, widgetId, eventParam) {
-		var callback = Aranea.Page.SubmitCallback.prepare(
-				this.TYPE, systemForm, widgetId, eventId, eventParam);
+			result = this.event_core(eventData);
 
-		if (callback.isSubmitAllowed()) {
-			callback.beforeSubmit();
-			Aranea.Data.submitted = true;
-			systemForm.submit();
-			callback.afterSubmit();
+			eventData.afterRequest();
+			Event.fire(Aranea.Data.systemForm, 'aranea:afterEvent', eventData);
 		}
+		return Object.isUndefined(result) ? false : result;
+	},
 
-		callback = null;
-		return false;
+	event_core: function(data) {
+		data.form.submit();
 	}
 });
 
@@ -702,76 +728,50 @@ var DefaultAraneaSubmitter = Class.create({
  */
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
-	TYPE: 'OVERLAY',
+	TYPE: 'overlay',
 
-	event: function(element) {
-		return Aranea.Page.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_7.bind(this));
-	},
-
-	event_7: function(systemForm, eventId, widgetId, eventParam) {
-		var callback = Aranea.Page.SubmitCallback.prepare(
-				this.TYPE, systemForm, widgetId, eventId, eventParam);
-
-		if (callback.isSubmitAllowed()) {
-			callback.beforeSubmit();
-
-			Aranea.ModalBox.update({ params: systemForm.serialize(true) });
-
-			callback.afterSubmit();
-		}
-
-		callback = null;
-		return false;
+	event_core: function(data) {
+		Aranea.ModalBox.update({ params: data.form.serialize(true) });
 	}
 });
 
 var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
-	TYPE: 'AJAX',
+	TYPE: 'ajax',
 
-	event: function(element) {
-		return Aranea.Page.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_5.bind(this));
-	},
+	event: function(eventData) {
+		if (eventData.isSubmitAllowed(eventData)) {
+			eventData.beforeRequest();
 
-	event_5: function(systemForm, eventId, widgetId, eventParam, updateRegions) {
-		this.callback = Aranea.Page.SubmitCallback.prepare(
-						this.TYPE, systemForm, widgetId, eventId, eventParam);
-
-		if (this.callback.isSubmitAllowed()) {
-			this.callback.beforeSubmit();
+			this.data = eventData;
 
 			var ajaxRequestId = Aranea.Page.getRandomRequestId().toString();
-			var neededAraClientStateId = systemForm.araClientStateId ? systemForm.araClientStateId.value : null;
+			var neededAraClientStateId = eventData.form.araClientStateId ? eventData.form.araClientStateId.value : null;
 			var neededAraTransactionId = 'override';
 
-			if (updateRegions == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
+			if (eventData.eventUpdateRgns == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
 				neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
 				window.dhtmlHistoryListenerRequestedState = null;
 				neededAraTransactionId = 'inconsistent';
 			}
 
-			$(systemForm.id).request({
+			$(eventData.form.id).request({
 				parameters: this.getAjaxParameters(neededAraTransactionId, ajaxRequestId,
-						updateRegions, neededAraClientStateId),
+						eventData.eventUpdateRgns, neededAraClientStateId),
 				onSuccess: this.onAjaxSuccess.curry(ajaxRequestId).bind(this),
 				onComplete: this.onAjaxComplete.bind(this),
 				onFailure: this.onAjaxFailure.bind(this),
 				onException: this.onAjaxException.bind(this)
 			});
 		}
-
 		return false;
 	},
 
 	afterRequest: function() {
-		if (this.callback) {
-			this.callback.afterSubmit();
-			this.callback = null;
-		}
+		this.data.afterRequest();
 	},
 
-	getAjaxParameters: function(neededAraTransactionId, ajaxRequestId,
-			updateRegions, neededAraClientStateId) {
+	getAjaxParameters: function(neededAraTransactionId, ajaxRequestId, updateRegions, neededAraClientStateId) {
 		return {
 				araTransactionId: neededAraTransactionId,
 				ajaxRequestId: ajaxRequestId,
@@ -787,19 +787,14 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 		// when document region is updated, this must be repeated in onComplete.
 		DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
 
-		var logmsg = '';
-
 		if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + '\n') {
-			logmsg += 'Partial rendering: received successful response (';
-			logmsg += transport.responseText.length + ' characters): ';
-			logmsg += transport.status + ' ' + transport.statusText;
+			var logmsg = ['Partial rendering: received successful response (', transport.responseText.length,
+				' characters): ', transport.status, ' ', transport.statusText].join('');
 			Aranea.Logger.debug(logmsg);
 			Aranea.Page.processResponse(transport.responseText);
-			Aranea.Page.init();
 		} else {
-			logmsg += 'Partial rendering: received erroneous response (';
-			logmsg += transport.responseText.length + ' characters): ';
-			logmsg += transport.status + ' ' + transport.statusText;
+			var logmsg = ['Partial rendering: received erroneous response (', transport.responseText.length,
+				' characters): ', transport.status, transport.statusText].join('');
 			Aranea.Logger.debug(logmsg);
 			// Doesn't work quite well for javascript and CSS, but fine for plain HTML
 			document.write(transport.responseText);
@@ -812,8 +807,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 		// because prototype's Element.update|replace delay execution of scripts,
 		// immediate execution of onload() is not guaranteed to be correct
 		var f = function() {
-//			_ap.addSystemLoadEvent(function() { DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport); });
-			Aranea.Page.onload();
+			this.afterRequest();
 
 			if (Aranea.ModalBox) {
 				Aranea.ModalBox.afterUpdateRegionResponseProcessing(Aranea.Data.systemForm);
@@ -823,15 +817,16 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 			if (Aranea.Data.autofocus && Aranea.Data.focusedFormElementName) {
 				var formElem = $$('[name="' + Aranea.Data.focusedFormElementName + '"]').first();
 				Aranea.Data.focusedFormElementName = null;
+
 				if (formElem) {
 					try {
 						formElem.focus();
-					} catch (e) {}
-					formElem = null;
+					} catch (e) {
+					} finally {
+						formElem = null;
+					}
 				}
 			}
-
-			this.afterRequest();
 		}.bind(this);
 
 		// force the delay here
@@ -853,7 +848,6 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 		Aranea.Page.handleRequestException(request, exception);
 		this.afterRequest();
 	}
-
 });
 
 Object.extend(DefaultAraneaAJAXSubmitter, {
@@ -896,22 +890,25 @@ Aranea.Page.RegionHandler = {
 	 *
 	 * @since 1.1
 	 */
-	TransactionId: Class.create({
-		initialize: function(content) {
+	TransactionId: {
+
+		process: function(content) {
 			var systemForm = Aranea.Data.systemForm;
-			if (Aranea.Data.systemForm.araTransactionId)
+			if (Aranea.Data.systemForm.araTransactionId) {
 				systemForm.araTransactionId.value = content;
+			}
 		}
-	}),
+	},
 
 	/**
 	 * The Region handler that updates DOM element content.
 	 *
 	 * @since 1.1
 	 */
-	Document: Class.create({
-		initialize: function(content) {
-			var text = new Text(content);
+	Document: {
+
+		process: function(content) {
+			var text = new Aranea.Util.AjaxResponse(content);
 			var length = text.readLine();
 			var properties = text.readCharacters(length).evalJSON();
 
@@ -929,32 +926,37 @@ Aranea.Page.RegionHandler = {
 				Aranea.Logger.error('Document region mode "' + mode + '" is unknown');
 			}
 		}
-	}),
+	},
 
 	/**
 	 * Region handler that updates the messages area.
 	 *
 	 * @since 1.1
 	 */
-	Message: Class.create({
-		// Public fields
+	Message: {
+
 		/**
+		 * The selector that is used for resolving elements where to add messages.
 		 * @since 1.1
 		 */
 		regionClass: '.aranea-messages',
+
 		/**
+		 * The attribute that the target element must have to identify the type of messages the target contains. 
 		 * @since 1.1
 		 */
 		regionTypeAttribute: 'arn-msgs-type',
+
 		/**
 		 * @since 1.1
 		 */
 		messageSeparator: '<br/>',
 
-		initialize: function(content) {
+		process: function(content) {
 			var messagesByType = content.evalJSON();
 			this.updateRegions(messagesByType);
 		},
+
 		updateRegions: function(messagesByType) {
 			$$(this.regionClass).each((function(region) {
 				var messages = null;
@@ -978,6 +980,7 @@ Aranea.Page.RegionHandler = {
 				this.hideMessageRegion(region);
 			}).bind(this));
 		},
+
 		showMessageRegion: function(region, messages) {
 			this.findContentElement(region).update(this.buildRegionContent(messages));
 			this.findDisplayElement(region).show();
@@ -996,26 +999,26 @@ Aranea.Page.RegionHandler = {
 		buildRegionContent: function(messages) {
 			return messages.invoke('escapeHTML').join(this.messageSeparator);
 		}
-	}),
+	},
 
 	/**
 	 * Region handler that opens popup windows.
 	 *
 	 * @since 1.1
 	 */
-	Popup: Class.create({
+	Popup: {
+
 		process: function(content) {
-			var popups = content.evalJSON();
-			this.openPopups(popups);
-			popups = null;
-//			_ap.addSystemLoadEvent(Aranea.Popups.processPopups);
+			this.openPopups(content.evalJSON());
+			document.observe('aranea:loaded', Aranea.Popups.processPopups);
 		},
+
 		openPopups: function(popups) {
 			popups.each(function(popup) {
 				Aranea.Popups.addPopup(popup.popupId, popup.windowProperties, popup.url);
 			});
 		}
-	}),
+	},
 
 	/**
 	 * Region handler that forces a reload of the page by submitting the system
@@ -1023,14 +1026,16 @@ Aranea.Page.RegionHandler = {
 	 *
 	 * @since 1.1
 	 */
-	Reload: Class.create({
-		initialize: function(content) {
+	Reload: {
+
+		process: function(content) {
 			if (Aranea.Data.systemForm.araTransactionId) {
 				Aranea.Data.systemForm.araTransactionId.value = 'inconsistent';
 			}
+
 			// if current systemform is overlayed, reload only overlay
 			if (Aranea.Data.systemForm.araOverlay) {
-				return new DefaultAraneaOverlaySubmitter(Aranea.Data.systemForm).event(new Element('div'));
+				return new DefaultAraneaOverlaySubmitter().event_plain();
 			}
 
 			/* Actually we should enter the domain of hackery.
@@ -1045,12 +1050,13 @@ Aranea.Page.RegionHandler = {
 			 *    set transactionId to non-null inconsistent value, but may not affect the system form.
 			 * Which is not satisfied by current implementation here.
 			 */
-			return new DefaultAraneaSubmitter().event_4(Aranea.Data.systemForm);
+			return new DefaultAraneaSubmitter().event_plain();
 		}
-	}),
+	},
 
-	FormBackgroundValidation: Class.create({
-		initialize: function(content) {
+	FormBackgroundValidation: {
+
+		process: function(content) {
 			if (content == null) throw ('FormBackgroundValidation: content parameter is required!');
 			var result = content.evalJSON();
 			var formelement = $(result.formElementId);
@@ -1094,7 +1100,7 @@ Aranea.Page.RegionHandler = {
 
 			return result;
 		}
-	})
+	}
 };
 
 Aranea.Page.Attribute = {
@@ -1106,7 +1112,8 @@ Aranea.Page.Attribute = {
 	// eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions,systemForm
 	getEventData: function(type, args) {
 		var data = null;
-		if (Object.isArray(args) && args.length > 1 && Object.isString(args[0])) {
+		args = $A(args);
+		if (args.length > 1 && Object.isString(args[0])) {
 			if (!Object.isString(args[0])) {
 				throw('Resolvin event params: expected the first argument to be string (eventId).');
 			}
@@ -1119,9 +1126,10 @@ Aranea.Page.Attribute = {
 				eventUpdateRgns: String.interpret(this.getArrayVal(args,4)),
 				form: this.getArrayVal(args,5)
 			};
-		} else {
+		} else if (args.length == 1 && !Object.isString(args[0])) {
+			args = args[0];
 			data = {
-				type: String.interpret(args),
+				type: String.interpret(type),
 				form: Aranea.Page.findSystemForm(args),
 				widgetId: this.getEventTarget(args),
 				eventId: this.getEventId(args),
@@ -1129,11 +1137,23 @@ Aranea.Page.Attribute = {
 				eventUpdateRgns: this.getEventUpdateRegions(args),
 				eventCondition: this.getEventPreCondition(args)
 			};
+		} else if (args == null || args.length == 0) {
+			data = {
+				type: String.interpret(type),
+				form: Aranea.Data.systemForm
+			};
 		}
+
 		if (data == null) {
 			throw('Creating event data: Could not create event data set based on given input.')
 		}
+
+		data.isSubmitAllowed = Aranea.Page.Request.isSubmitAllowed.methodize();
+		data.beforeRequest = Aranea.Page.Request.beforeSubmit.methodize();
+		data.afterRequest = Aranea.Page.Request.afterSubmit.methodize();
+
 		this.evaluateEventData(data);
+		return data;
 	},
 
 	evaluateEventData: function(data) {
@@ -1144,21 +1164,45 @@ Aranea.Page.Attribute = {
 			} else if (Object.isString(data.eventCondition) && data.eventCondition.length > 0) {
 				cancel = new Function(data.eventCondition).call() == false;
 			}
-			if (cancel == false) {
-				data.preconditionFailed = true;
-				return;
+			data.preconditionFailed = !cancel;
+		}
+
+		if (!data.preconditionFailed) {
+			if (!data.form) {
+				data.form = Aranea.Page.findSystemForm();
 			}
+			if (Object.isFunction(data.eventParam)) {
+				data.eventParam = data.eventParam();
+			}
+			if (Object.isFunction(data.eventUpdateRgns)) {
+				data.eventUpdateRgns = data.eventUpdateRgns();
+			}
+			this.evaluateRequestType(data);
+			this.evaluateCustom(data);
 		}
-		if (!data.form) {
-			data.form = Aranea.Page.findSystemForm();
+	},
+
+	evaluateRequestType: function(data) {
+		var type = 'submit';
+		if (data.form.className == 'aranea-overlay-form') {
+			type = 'overlay';
+		} else if (data.eventUpdateRgns) {
+			type = 'ajax';
 		}
-		if (Object.isFunction(data.eventParam)) {
-			data.eventParam = data.eventParam();
+		data.type = type;
+	},
+
+	/**
+	 * For those who want to additionally modify the data.
+	 */
+	evaluateCustom: function(data) {},
+
+	writeToForm: function(data) {
+		if (data.form) {
+			data.form.araWidgetEventPath.value = data.widgetId;
+			data.form.araWidgetEventHandler.value = data.eventId;
+			data.form.araWidgetEventParameter.value = data.eventParam;
 		}
-		if (Object.isFunction(data.eventUpdateRgns)) {
-			data.eventUpdateRgns = data.eventUpdateRgns();
-		}
-		data.preconditionFailed = false;
 	},
 
 	readAttribute: function(attribute, element) {
@@ -1169,32 +1213,32 @@ Aranea.Page.Attribute = {
 	 * Returns the ID of a component who should receive events generated by DOM element.
 	 * @since 1.1
 	 */
-	getEventTarget: function(attribute, element) {
-		return this.readAttribute.curry('arn-trgtwdgt', element);
+	getEventTarget: function(element) {
+		return this.readAttribute('arn-trgtwdgt', element);
 	},
 
 	/**
 	 * Returns event id that should be sent to server when event(element) is called.
 	 * @since 1.1
 	 */
-	getEventId: function(attribute, element) {
-		return this.readAttribute.curry('arn-evntId', element);
+	getEventId: function(element) {
+		return this.readAttribute('arn-evntId', element);
 	},
 
 	/**
 	 * Returns event parameter that should be sent to server when event(element) is called.
 	 * @since 1.1
 	 */
-	getEventParam: function(attribute, element) {
-		return this.readAttribute.curry('arn-evntPar', element);
+	getEventParam: function(element) {
+		return this.readAttribute('arn-evntPar', element);
 	},
 
 	/**
 	 * Returns update regions that should be sent to server when event(element) is called.
 	 * @since 1.1
 	 */
-	getEventUpdateRegions: function(attribute, element) {
-		return this.readAttribute.curry('arn-updrgns', element);
+	getEventUpdateRegions: function(element) {
+		return this.readAttribute('arn-updrgns', element);
 	},
 
 	/**
@@ -1202,8 +1246,8 @@ Aranea.Page.Attribute = {
 	 * needs to decide whether server-side event invocation is needed.
 	 * @since 1.1
 	 */
-	getEventPreCondition: function(attribute, element) {
-		return this.readAttribute.curry('arn-evntCond', element);
+	getEventPreCondition: function(element) {
+		return this.readAttribute('arn-evntCond', element);
 	},
 
 	getFormAttribute: function(form, attr) {
@@ -1212,19 +1256,19 @@ Aranea.Page.Attribute = {
 	},
 
 	getTopServiceId: function(form) {
-		return getFormAttribute(form, 'araTopServiceId');
+		return this.getFormAttribute(form, 'araTopServiceId');
 	},
 
 	getThreadServiceId: function(form) {
-		return getFormAttribute(form, 'araThreadServiceId');
+		return this.getFormAttribute(form, 'araThreadServiceId');
 	},
 
 	getTransactionId: function(form) {
-		return getFormAttribute(form, 'araTransactionId');
+		return this.getFormAttribute(form, 'araTransactionId');
 	},
 
 	getClientStateId: function(form) {
-		return getFormAttribute(form, 'araClientStateId');
+		return this.getFormAttribute(form, 'araClientStateId');
 	}
 };
 
@@ -1238,9 +1282,9 @@ Aranea.Page.Attribute = {
  *
  * @since 1.1
  */
-Aranea.Data.regionHandlers.set('transactionId', Aranea.Page.RegionHandler.Document);
+Aranea.Data.regionHandlers.set('transactionId', Aranea.Page.RegionHandler.TransactionId);
+Aranea.Data.regionHandlers.set('document', Aranea.Page.RegionHandler.Document);
 Aranea.Data.regionHandlers.set('messages', Aranea.Page.RegionHandler.Message);
 Aranea.Data.regionHandlers.set('popups', Aranea.Page.RegionHandler.Popup);
 Aranea.Data.regionHandlers.set('reload', Aranea.Page.RegionHandler.Reload);
-Aranea.Data.regionHandlers.set('aranea-formvalidation', Aranea.Page.FormBackgroundValidationRegionHandler);
-
+Aranea.Data.regionHandlers.set('aranea-formvalidation', Aranea.Page.FormBackgroundValidation);

@@ -120,7 +120,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
       }
     }
 
-    throw new MissingResourceException("No resource bundle for the " + "specified base name can be found", getClass()
+    throw new MissingResourceException("No resource bundle for the specified base name can be found", getClass()
         .getName(), "");
   }
 
@@ -128,12 +128,12 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     return getResourceBundle().getString(key);
   }
 
-  public String getMessage(String code, Object[] args) {
+  public String getMessage(String code, Object... args) {
     String message = localize(code);
     return MessageFormat.format(message, args);
   }
 
-  public String getMessage(String code, Object[] args, String defaultMessage) {
+  public String getMessage(String code, String defaultMessage, Object... args) {
     String message = null;
     try {
       message = localize(code);

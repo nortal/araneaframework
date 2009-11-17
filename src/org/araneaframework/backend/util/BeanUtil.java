@@ -28,8 +28,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -50,8 +48,6 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @see BeanMapper
  */
 public class BeanUtil {
-
-  private static final Log LOG = LogFactory.getLog(BeanUtil.class);
 
   /**
    * The prefix of getter method name.
@@ -274,9 +270,6 @@ public class BeanUtil {
     Object result = null;
 
     if (hasReadablePropertyMethod(bean, property)) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Returning property '" + property + "' value using the bean getter..");
-      }
 
       try {
         result = PropertyUtils.getSimpleProperty(bean, property);
@@ -286,9 +279,6 @@ public class BeanUtil {
       }
 
     } else if (hasReadablePropertyField(bean, property)) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Returning property '" + property + "' value using the class-level field.");
-      }
       result = getFieldValue(bean, property);
     }
     return result;
@@ -296,9 +286,6 @@ public class BeanUtil {
 
   private static void setSimplePropertyValue(Object bean, String property, Object value) {
     if (hasWriteablePropertyMethod(bean.getClass(), property)) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Setting property '" + property + "' value via setter.");
-      }
 
       try {
         PropertyUtils.setSimpleProperty(bean, property, value);
@@ -306,11 +293,8 @@ public class BeanUtil {
         ExceptionUtil.uncheckException("Exception while setting the value of [" + getTargetDesc(bean, property)
             + "] to [" + getValueDesc(value) + "] using a setter method.", e);
       }
-    } else {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Setting property '" + property + "' value directly to the class-level field.");
-      }
 
+    } else {
       setFieldValue(bean, property, value);
     }
   }

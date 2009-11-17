@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.formlist;
 
+import org.araneaframework.uilib.form.FormWidget;
+
 import org.araneaframework.uilib.form.reader.ListFormReader;
 
 import org.araneaframework.uilib.form.BeanFormWidget;
@@ -72,5 +74,11 @@ public class BeanFormListWidget<K, R> extends BaseFormListWidget<K, R> {
   @Override
   protected BeanFormWidget<R> buildAddForm() {
     return new BeanFormWidget<R>(this.beanClass);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  protected BeanFormRow<K, R> createNewEditableRow(K key, R row, String rowFormId, FormWidget rowForm) {
+    return new BeanFormRow<K, R>(this, key, row, rowFormId, (BeanFormWidget<R>) rowForm, this.defaultOpen);
   }
 }

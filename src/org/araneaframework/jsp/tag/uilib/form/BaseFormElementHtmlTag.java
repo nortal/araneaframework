@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -35,7 +37,6 @@ import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.util.ConfigurationUtil;
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Base form element tag.
@@ -177,20 +178,19 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
   }
 
   /**
-   * Writes out an attribute that correctly configures background validation for formelement rendered with this tag.
-   * Note that when application wide validation settings are the same as for that formelement, no attribute is written
-   * out.
-   * 
-   * IMPL: writes out arn-bgValidate='booleanvalue' when necessary.
+   * Adds CSS class if this element has background validation enabled. Note that when application wide validation
+   * settings are the same as for that all form/elements, no class will be added.
    * 
    * @since 1.1
    */
-  protected void writeBackgroundValidationAttribute(Writer out) throws Exception {
-    if (this.backgroundValidation != ConfigurationUtil.isBackgroundFormValidationEnabled(UilibEnvironmentUtil
-        .getConfiguration(getEnvironment()))) {
-      JspUtil.writeAttribute(out, AraneaAttributes.BACKGROUND_VALIDATION_ATTRIBUTE, String
-          .valueOf(this.backgroundValidation));
+  @Override
+  protected String getStyleClass() {
+    StringBuffer cssClass = new StringBuffer(StringUtils.defaultIfEmpty(super.getStyleClass(), ""));
+    boolean globalBgValidation = ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
+    if (this.backgroundValidation != globalBgValidation) {
+      cssClass.append(' ').append(AraneaAttributes.BACKGROUND_VALIDATION_CLASS);
     }
+    return cssClass.toString();
   }
 
   protected void writeEventAttributes(Writer out, String jsEvent, String araneaEvent, String condition) throws Exception {
@@ -282,7 +282,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    */
   protected void assertControlType(String type) throws JspException {
     if (!this.controlViewModel.getControlType().equals(type)) {
-      throw new AraneaJspException("Control of type '" + type + "' expected in form element '" + this.derivedId
+      throw new AraneaJspException("Control of type(s) '" + type + "' expected in form element '" + this.derivedId
           + "' instead of '" + this.controlViewModel.getControlType() + "'");
     }
   }
@@ -324,8 +324,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
     // that way it is too difficult to determine exactly which element was the target for the event.
 
     // All events are sent to a handler called "uiHandleKeypress(event, formElementId)"
-    // We use the "keydown" event, not keypress, because this allows to
-    // catch F2 in IE.
+    // We use the "keydown" event, not keypress, because this allows to catch F2 in IE.
     // Actual onkeydown event is attached to span with behavioural javascript --
     // that also takes care of adding hidden element into DOM that indicates this
     // form element is present in request.

@@ -37,6 +37,7 @@ public class DefaultExpressionEvaluationManager implements ExpressionEvaluationM
   @SuppressWarnings("unchecked")
   public <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject, PageContext pageContext)
       throws JspException {
-    return (T) ExpressionEvaluatorManager.evaluate(attributeName, attributeValue, classObject, pageContext);
+    return attributeValue == null ? null : (T) ExpressionEvaluatorManager.evaluate(attributeName, attributeValue,
+        classObject, pageContext);
   }
 }

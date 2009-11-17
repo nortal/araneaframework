@@ -16,19 +16,17 @@
 
 package org.araneaframework.uilib.form;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -233,7 +231,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
       FormContext fctx = UilibEnvironmentUtil.getFormContext(getEnvironment());
       if (fctx != null)
         return fctx.isBackgroundValidation();
-      return ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment().getEntry(ConfigurationContext.class));
+      return ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
     }
     return this.backgroundValidation.booleanValue();
   }

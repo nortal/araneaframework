@@ -67,7 +67,7 @@ public class DisplayControl extends BaseControl<Object> {
      * Takes an outer class snapshot.
      */
     public ViewModel() {
-      this.value = DisplayControl.this.innerData;
+      this.value = DisplayControl.this.value;
     }
 
     /**

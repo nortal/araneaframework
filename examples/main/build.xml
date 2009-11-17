@@ -100,8 +100,8 @@
 
 	<target name="run-app" description="Runs app in the Jetty server.">
 		<delete dir="${jetty.tmp.dir}"/>
-		<jetty tempdirectory="${jetty.tmp.dir}">
-			<webapp warfile="war" contextPath="/mainExample" />
+		<jetty tempdirectory="${jetty.tmp.dir}" >
+			<webapp warfile="war" contextPath="/mainExample"/>
 			<connectors>
 				<selectChannelConnector port="2000"/>
 			</connectors>

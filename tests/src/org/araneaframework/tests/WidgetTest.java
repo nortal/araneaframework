@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
-import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.control.DefaultSelectControl;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
@@ -35,7 +35,6 @@ import org.araneaframework.uilib.form.data.BooleanData;
 import org.araneaframework.uilib.form.data.DateData;
 import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.support.DisplayItem;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
@@ -62,11 +61,11 @@ public class WidgetTest extends TestCase {
     hierarchyTest.addElement("myTextarea", "my text area", new TextareaControl(), new StringData(), true);
 
     // Filling in select control (which is under a composite element)
-    SelectControl<DisplayItem> mySelect = new SelectControl<DisplayItem>("label", "value");
-    mySelect.addItem(new DisplayItem("1", "one"));
-    mySelect.addItem(new DisplayItem("2", "two"));
-    mySelect.addItem(new DisplayItem("3", "three"));
-    mySelect.addItem(new DisplayItem("4", "four"));
+    DefaultSelectControl mySelect = new DefaultSelectControl();
+    mySelect.addItem("1", "one");
+    mySelect.addItem("2", "two");
+    mySelect.addItem("3", "three");
+    mySelect.addItem("4", "four");
     hierarchyTest.addElement("mySelect", "my drop down", mySelect, new LongData(), true);
 
     testForm._getComponent().init(new StandardScope("testForm", null), new MockEnvironment());

@@ -47,7 +47,7 @@ window.dhtmlHistory.create({
 	fromJSON: String.evalJSON
 });
 
-document.observe('dom:loaded', function() {
+document.observe('aranea:loaded', function() {
 	window.dhtmlHistory.initialize();
-	window.dhtmlHistory.addListener(AraneaPage.RSHListener);
+	window.dhtmlHistory.addListener(Aranea.RSHListener);
 });

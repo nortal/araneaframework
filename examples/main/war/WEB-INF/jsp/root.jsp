@@ -1,4 +1,6 @@
 <jsp:root
+	xmlns:uis="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
@@ -6,9 +8,8 @@
 	version="2.1">
 	<!-- This is a master page of Aranea framework template application. -->
 	<ui:widgetContext>
-		<![CDATA[
-			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  		]]>
+<![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+]]>
 		<html xmlns="http://www.w3.org/1999/xhtml">
 
 		<head>
@@ -17,10 +18,10 @@
 			<jsp:include page="scripts.jsp"/>
 		</head>
 
-		<ui:body>
+		<uis:body>
 			<div id="cont1">
 				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion" tag="div">
-					<ui:systemForm method="post">
+					<ui:systemForm method="post" id="aranea-form">
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>
 						<ui:registerOverlay/>
@@ -63,7 +64,7 @@
 					</ui:updateRegion>
 				</ui:updateRegion>
 			</div>
-		</ui:body>
+		</uis:body>
 	</html>
 	</ui:widgetContext>
 </jsp:root>

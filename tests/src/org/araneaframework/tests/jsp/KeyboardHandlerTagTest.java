@@ -17,7 +17,6 @@
 package org.araneaframework.tests.jsp;
 
 import junit.framework.TestCase;
-import org.araneaframework.jsp.tag.basic.BaseKeyboardHandlerTag;
 
 /**
  * @author Konstantin Tretyakov
@@ -29,23 +28,6 @@ public class KeyboardHandlerTagTest extends TestCase {
 	}
 	
 	public void testKeyToKeyCode(){
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("") == 0);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("a") == 65);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("B") == 66);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("rEtUrn") == 13);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("esCAPE") == 27);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("backSpace") == 8);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("tab") == 9);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("shift") == 16);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("control") == 17);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("sPace") == 32);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode(" ") == 32);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("1") == 49);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("5") == 53);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("somethingelse") == 0);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("f1") == 112);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("f10") == 121);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("F12") == 123);
-		assertTrue(BaseKeyboardHandlerTag.keyToKeyCode("F13") == 0);
+	  fail("Remove this test");
 	}
 }

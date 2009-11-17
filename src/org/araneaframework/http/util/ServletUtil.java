@@ -277,6 +277,11 @@ public abstract class ServletUtil {
     return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
   }
 
+  /** @since 2.0 */
+  public static Environment getEnvironment(InputData input) {
+    return getEnvironment(getRequest(input));
+  }
+
   /** @since 1.1 */
   public static javax.servlet.jsp.jstl.fmt.LocalizationContext buildLocalizationContext(Environment env) {
     LocalizationContext localizationContext = EnvironmentUtil.getLocalizationContext(env);

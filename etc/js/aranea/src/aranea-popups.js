@@ -77,11 +77,14 @@ Aranea.Popups = {
 
   /* @since 1.1 **/
   processPopups: function() {
-    for (var popupId in this.popups) {
-      this.openPopup(popupId, this.popupProperties[popupId]);
+    for (var popupId in Aranea.Popups.popups) {
+      Aranea.Popups.openPopup(popupId, Aranea.Popups.popupProperties[popupId]);
     }
-    this.popups = {};
-    this.popupProperties = {};
+
+    Object.extend(Aranea.Popups, {
+      popups: {},
+      popupProperties: {}
+    });
   },
 
   /* @since 1.1 **/

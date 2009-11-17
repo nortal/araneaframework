@@ -191,9 +191,9 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
     }
 
     String rowFormId = "rowForm" + this.rowFormCounter++;
+    K newRowKey = this.formRowHandler.getRowKey(newRow);
 
-    FormRow<K, R> newEditableRow = new FormRow<K, R>(this, this.formRowHandler.getRowKey(newRow), newRow, rowFormId,
-        rowForm, this.defaultOpen);
+    FormRow<K, R> newEditableRow = createNewEditableRow(newRowKey, newRow, rowFormId, rowForm);
 
     addWidget(rowFormId, rowForm);
 
@@ -204,6 +204,20 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
     }
 
     this.formRows.put(this.formRowHandler.getRowKey(newRow), newEditableRow);
+  }
+
+  /**
+   * Creates the editable row object. Can be customized by child-classes.
+   * 
+   * @param key The key that uniquely identifies the row.
+   * @param row The row data object.
+   * @param rowFormId The row form ID.
+   * @param rowForm The row form.
+   * @return The form row object.
+   * @since 2.0
+   */
+  protected FormRow<K, R> createNewEditableRow(K key, R row, String rowFormId, FormWidget rowForm) {
+    return new FormRow<K, R>(this, key, row, rowFormId, rowForm, this.defaultOpen);
   }
 
   /**

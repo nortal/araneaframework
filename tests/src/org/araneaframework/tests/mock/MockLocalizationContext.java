@@ -46,12 +46,12 @@ public class MockLocalizationContext implements LocalizationContext {
     return key;
   }
   
-  public String getMessage(String code, Object[] args) {
+  public String getMessage(String code, Object... args) {
     //XXX
     throw new NotImplementedException();
   }
   
-  public String getMessage(String code, Object[] args, String defaultMessage) {
+  public String getMessage(String code, String defaultMessage, Object... args) {
     //XXX
     throw new NotImplementedException();
   }

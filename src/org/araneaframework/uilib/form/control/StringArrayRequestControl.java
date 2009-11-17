@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.control;
 
 import org.apache.commons.lang.ArrayUtils;
-
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
@@ -186,7 +185,7 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
      * @return the first of control values.
      */
     public String getSimpleValue() {
-      return this.values != null ? this.values[0] : null;
+      return !ArrayUtils.isEmpty(this.values) ? this.values[0] : null;
     }
 
     /**

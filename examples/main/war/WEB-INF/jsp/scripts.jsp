@@ -24,7 +24,7 @@
 	<!-- ui:importScripts group="logger"/ -->
 
 	<!-- Imports all Aranea scripts (default group="all"). -->
-	<ui:importScripts group="all"/>
+	<ui:importScripts group="all-devel"/>
 
 	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->
 	<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
@@ -65,7 +65,10 @@
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
-	<script type="text/javascript">Aranea.Logger.setLogger('firebug');</script>
+	<script type="text/javascript">
+		Aranea.Data.absoluteUrls = true;
+		Aranea.Logger.setLogger('firebug');
+	</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>

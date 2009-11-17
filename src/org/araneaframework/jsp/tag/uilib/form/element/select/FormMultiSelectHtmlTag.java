@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -31,8 +33,10 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
  * 
  * @author Oleg Mürk
  * 
- * @jsp.tag name = "multiSelect" body-content = "JSP" description =
- *          "Form list input field, represents UiLib "MultiSelectControl"."
+ * @jsp.tag
+ *  name = "multiSelect"
+ *  body-content = "JSP"
+ *  description = "Form list input field, represents UiLib "MultiSelectControl"."
  */
 public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
@@ -41,7 +45,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   /**
    * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
    * 
-   * @since 1.2
+   * @since 2.0
    */
   protected Boolean localizeDisplayItems;
 
@@ -84,21 +88,20 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     JspUtil.writeAttributes(out, this.attributes);
-    writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartTag(out);
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
     for (DisplayItem item : viewModel.getSelectItems()) {
-      String value = item.getValue();
+      String value = StringUtils.defaultString(item.getValue());
       String label = item.getLabel();
 
-      if (this.localizeDisplayItems.booleanValue()) {
+      if (label != null && this.localizeDisplayItems.booleanValue()) {
         label = JspUtil.getResourceString(this.pageContext, label);
       }
 
       JspUtil.writeOpenStartTag(out, "option");
-      JspUtil.writeAttribute(out, "value", value != null ? value : "");
+      JspUtil.writeAttribute(out, "value", value);
 
       if (item.equals(viewModel.getSelectedItem())) {
         JspUtil.writeAttribute(out, "selected", "selected");
@@ -117,16 +120,20 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Vertical size, number of options displayed."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Vertical size, number of options displayed."
    */
   public void setSize(String size) {
     this.size = evaluate("size", size, Long.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {

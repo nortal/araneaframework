@@ -19,7 +19,19 @@ package org.araneaframework.http.support;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
+/**
+ * The resolver that can resolve strings starting with the hash (#) symbol. If so, the string following the symbol will
+ * be returned. Otherwise returns <code>null</code>. Since Aranea 2.0, the symbol can be overridden.
+ */
 public class StringResourceBundle extends ResourceBundle {
+
+  protected char symbol = '#';
+
+  public StringResourceBundle() {}
+
+  public StringResourceBundle(char overrideSymbol) {
+    this.symbol = overrideSymbol;
+  }
 
   @Override
   public Enumeration<String> getKeys() {
@@ -28,6 +40,6 @@ public class StringResourceBundle extends ResourceBundle {
 
   @Override
   protected Object handleGetObject(String key) {
-    return key.length() > 0 && key.charAt(0) == '#' ? key.substring(1) : null;
+    return key.length() > 0 && key.charAt(0) == this.symbol ? key.substring(1) : null;
   }
 }

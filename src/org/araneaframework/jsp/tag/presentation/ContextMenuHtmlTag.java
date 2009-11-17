@@ -59,7 +59,7 @@ public class ContextMenuHtmlTag extends WidgetTag {
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag(out);
 
-    out.write("araneaContextMenuHolder.addMenu('");
+    out.write("Aranea.Data.contextMenuHolder.addMenu('");
     out.write(NameUtil.getLongestPrefix(widget.getScope().toString()));
     out.write("',");
 

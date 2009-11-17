@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- ########## ARANEA CONFIGURATION ########## -->
+
+  <bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent"
+    singleton="false">
+    <property name="childService" ref="araneaApplicationFilters"/>
+  </bean>
+
+  <bean id="araneaApplicationFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainService">
+    <property name="childService" ref="araneaTopServiceRouter"/>
+    <property name="filterChain">
+      <list>
+        <ref bean="araneaCriticalErrorHandler"/>
+        <ref bean="araneaStatisticFilter"/>
+        <ref bean="araneaRequestEncodingFilter"/>
+        <ref bean="araneaFileUploadFilter"/>
+        <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
+          <property name="beanId" value="araneaCustomApplicationFilters"/>
+        </bean>
+        <ref bean="araneaFileImportFilter"/>
+        <ref bean="araneaMountingFilter"/>
+      </list>
+    </property>
+  </bean>
+
+ <bean class="org.araneaframework.framework.router.StandardTopServiceRouterService" id="araneaTopServiceRouter"
+    singleton="false">
+    <property name="defaultServiceId" value="application"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="application" value-ref="araneaSessionRouter"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.http.router.StandardHttpSessionRouterService" id="araneaSessionRouter"
+        singleton="false">
+    <property name="sessionServiceFactory" ref="araneaSessionServiceFactory"/>
+  </bean>
+
+  <bean class="org.araneaframework.integration.spring.SpringServiceFactory" id="araneaSessionServiceFactory"
+        singleton="false">
+    <property name="beanId">
+      <idref bean="araneaSessionFilters"/>
+    </property>
+  </bean>
+
+  <!-- Session scope -->
+
+  <bean id="araneaSessionFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainService">
+    <property name="childService" ref="araneaThreadServiceRouter"/>
+    <property name="filterChain">
+      <list>
+        <ref bean="araneaLocalizationFilter"/>
+        <ref bean="araneaJspConfigFilter"/>
+        <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
+          <property name="beanId" value="araneaCustomSessionFilters"/>
+        </bean>
+      </list>
+    </property>
+  </bean>  
+  
+
+  <bean class="org.araneaframework.framework.router.StandardThreadServiceRouterService"
+    id="araneaThreadServiceRouter" singleton="false">
+    <property name="defaultServiceId" value="mainThread"/>
+    <property name="serviceMap">
+      <map>
+        <entry key="mainThread" value-ref="araneaThreadFilters"/>
+      </map>
+    </property>
+  </bean>
+
+  <!-- Thread scope -->
+
+  <bean id="araneaThreadFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainService">
+    <property name="childService" ref="araneaWidgetAdapter"/>
+    <property name="filterChain">
+      <list>
+        <ref bean="araneaThreadCloningFilter"/>
+        <ref bean="araneaMountPointFilter"/>
+        <ref bean="araneaResponseHeaderFilter"/>
+        <ref bean="araneaSystemFormFilter"/>
+        <ref bean="araneaContinuationFilter"/>
+        <bean class="org.araneaframework.integration.spring.SpringOptionalFilterService" singleton="false">
+          <property name="beanId" value="araneaCustomThreadFilters"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.framework.container.StandardWidgetAdapterService"
+      id="araneaWidgetAdapter"
+    singleton="false">
+    <property name="childWidget" ref="araneaWidgetFilters"/>
+  </bean>
+
+   <!-- Framework widgets -->
+
+  <bean id="araneaWidgetFilters" singleton="false"
+    class="org.araneaframework.framework.filter.StandardFilterChainWidget">
+    <property name="childWidget" ref="araneaOverlayContainer"/>
+    <property name="filterChain">
+      <list>
+        <ref bean="araneaStateVersioningFilter"/>
+        <ref bean="araneaRedirectingFilter"/>
+        <ref bean="araneaTransactionFilter"/>
+        <ref bean="araneaUpdateRegionFilter"/>
+        <ref bean="araneaConfirmationFilter"/>
+        <ref bean="araneaRenderStatusResettingFilter"/>
+        <ref bean="araneaMessagingFilter"/>
+        <ref bean="araneaEnvContextFilter"/>
+        <ref bean="araneaPopupFilter"/>
+        <bean class="org.araneaframework.integration.spring.SpringOptionalFilterWidget" singleton="false">
+          <property name="beanId" value="araneaCustomWidgetFilters"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+
+  <!-- Default state versioning widget is NOOP, override with org.araneaframework.http.filter.StandardStateVersioningFilterWidget -->
+  <bean class="org.araneaframework.framework.core.NopFilterWidget" id="araneaStateVersioningFilter" singleton="false"/>
+
+  <bean class="org.araneaframework.http.filter.StandardPopupFilterWidget" id="araneaPopupFilter" singleton="false">
+    <property name="threadServiceFactory">
+      <bean class="org.araneaframework.integration.spring.SpringServiceFactory" singleton="false">
+        <property name="beanId">
+          <idref bean="araneaThreadFilters"/>
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+   <bean class="org.araneaframework.framework.container.StandardOverlayContainerWidget" id="araneaOverlayContainer" singleton="false">
+     <property name="main" ref="araneaRootFlowContainer"/>
+     <property name="overlay" ref="araneaOverlayRootContainer"/>
+   </bean>
+
+   <bean class="org.araneaframework.framework.container.RootFlowContainerWidget" id="araneaRootFlowContainer" singleton="false">
+     <property name="top" ref="araneaApplicationStart"/>
+   </bean>
+
+   <bean class="org.araneaframework.framework.container.StandardFlowContainerWidget" id="araneaOverlayRootContainer" singleton="false"/>
+
+   <!-- ########## ARANEA FILTERS ########## -->
+
+  <bean 
+    class="org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService"
+    id="araneaCriticalErrorHandler" singleton="false">
+    <property name="exceptionHandlerFactory">
+      <bean class="org.araneaframework.http.service.SimpleCriticalErrorHandlerService$Factory"
+            singleton="false"/>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardRequestEncodingFilterService"
+    id="araneaRequestEncodingFilter" singleton="false">
+    <property name="requestEncoding" value="${l10n.encoding}"/>
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardHttpResponseFilterService"
+    id="araneaResponseHeaderFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardFileImportFilterService"
+    id="araneaFileImportFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardSystemFormFilterService"
+    id="araneaSystemFormFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardStatisticFilterService"
+        id="araneaStatisticFilter" singleton="false">
+    <property name="message" value="Total request time: "/>
+  </bean>
+
+    <bean class="org.araneaframework.framework.filter.StandardSerializingAuditFilterService"
+      id="araneaSerializingAudit" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardLocalizationFilterService"
+    id="araneaLocalizationFilter" singleton="false">
+    <property name="resourceBundleName" value="${l10n.resourceBundle}"/>
+    <property name="languageName" value="${l10n.defaultLocale}"/>
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardJspFilterService"
+    id="araneaJspConfigFilter" singleton="false">
+    <property name="submitCharset" value="${l10n.encoding}"/>
+    <property name="jspPath" value="${jsp.path}"/>
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardMountingFilterService" 
+    id="araneaMountingFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardMountPointFilterService" 
+    id="araneaMountPointFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardFileUploadFilterService" 
+    id="araneaFileUploadFilter" singleton="false">
+  </bean>
+
+ <bean class="org.araneaframework.framework.filter.StandardContinuationFilterService" 
+   id="araneaContinuationFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardTransactionFilterWidget" 
+    id="araneaTransactionFilter" singleton="false">
+  </bean>
+
+   <bean class="org.araneaframework.http.filter.StandardRedirectingFilterWidget" 
+    id="araneaRedirectingFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardMessagingFilterWidget" 
+    id="araneaMessagingFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardContextMapFilterWidget" 
+    id="araneaEnvContextFilter" singleton="false">
+    <property name="contexts">
+      <map>
+        <entry key="org.araneaframework.uilib.ConfigurationContext.class" value-ref="araneaConfiguration"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget" singleton="false"
+    id="araneaScrollingFilter"/>
+
+  <bean class="org.araneaframework.http.filter.StandardThreadCloningFilterService"
+    id="araneaThreadCloningFilter"
+    singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget"
+    id="araneaUpdateRegionFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.filter.StandardRenderStatusResettingFilterWidget"
+    id="araneaRenderStatusResettingFilter" singleton="false">
+  </bean>
+
+  <bean class="org.araneaframework.framework.StandardConfirmationFilterWidget"
+    id="araneaConfirmationFilter" singleton="false">
+  </bean>
+
+  <bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" singleton="false"/>
+
+</beans>

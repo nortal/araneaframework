@@ -144,11 +144,9 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     out.write(';');
 
     if (!disabled && this.events) {
-      out.write("if($('");
+      out.write("var t=$('");
       out.write(name);
-      out.write("').size==$F('");
-      out.write(name);
-      out.write("').length)");
+      out.write("');if(t.size==$F(t).length)");
       out.write(JspWidgetCallUtil.getSubmitScriptForEvent());
     }
 
@@ -193,9 +191,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       boolean disabled, String accessKey) throws Exception {
     TimeControl.ViewModel viewModel = ((TimeControl.ViewModel) this.controlViewModel);
 
-    if (StringUtils.isBlank(id)) {
-      id = name;
-    }
+    id = StringUtils.isBlank(id) ? name : id;
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "input");
@@ -207,8 +203,6 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-    writeBackgroundValidationAttribute(out);
-
     if (!disabled && this.events && viewModel.isOnChangeEventRegistered()) {
       JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
       UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, name, null, this.updateRegionNames);
@@ -217,28 +211,25 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       out.write(event.getEventAttributes().toString());
     }
 
-    // validation won't occur with Event.observe registered in aranea-behaviour when date selected from calendar
-    if (!viewModel.isOnChangeEventRegistered() && !disabled && this.backgroundValidation) {
-      JspUtil.writeAttribute(out, "onchange", "formElementValidationActionCall(this)");
+    StringBuffer onBlur = new StringBuffer();
+
+    if (this.showTimeSelect) {
+      onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name, name + ".select1", name + ".select2"));
+      onBlur.append(';');
     }
 
-    StringBuffer onBlur = new StringBuffer();
-    if (this.showTimeSelect) {
-      onBlur.append(fillXJSCallConstructor("Aranea.UI.fillTimeSelect", name, name + ".select1", name + ".select2")
-          + ";");
-    }
     if (!disabled && this.events && viewModel.isOnChangeEventRegistered()) {
       onBlur.append(JspWidgetCallUtil.getSubmitScriptForEvent());
     }
+
     JspUtil.writeAttribute(out, "onblur", onBlur.toString());
 
     if (!StringUtils.isBlank(accessKey)) {
       JspUtil.writeAttribute(out, "accesskey", accessKey);
     }
-    if (disabled) {
-      if (viewModel.isDisabled()) {
-        JspUtil.writeAttribute(out, this.disabledRenderMode, this.disabledRenderMode);
-      }
+
+    if (disabled && viewModel.isDisabled()) {
+      JspUtil.writeAttribute(out, this.disabledRenderMode, this.disabledRenderMode);
     }
 
     JspUtil.writeAttributes(out, this.attributes);

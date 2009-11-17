@@ -17,13 +17,10 @@
 package org.araneaframework.uilib.support;
 
 import java.util.Collection;
-
 import org.apache.commons.lang.ObjectUtils;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.araneaframework.core.util.ExceptionUtil;
-
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 
@@ -104,8 +101,8 @@ public class BeanDisplayItem<T> extends DisplayItem {
 
     if (!StringUtils.isBlank(groupProperty) && !StringUtils.isBlank(childProperty)) {
       try {
-        boolean group = (Boolean) PropertyUtils.getProperty(target, groupProperty);
-        Collection<DisplayItem> childOptions = (Collection<DisplayItem>) PropertyUtils.getProperty(target, childProperty);
+        boolean group = (Boolean) BeanUtil.getPropertyValue(target, groupProperty);
+        Collection<DisplayItem> childOptions = (Collection<DisplayItem>) BeanUtil.getPropertyValue(target, childProperty);
         setGroupAndOptions(group, childOptions);
       } catch (Exception e) {
         ExceptionUtil.uncheckException(e);
@@ -137,8 +134,8 @@ public class BeanDisplayItem<T> extends DisplayItem {
 
     if (!StringUtils.isBlank(groupProperty) && !StringUtils.isBlank(childProperty)) {
       try {
-        boolean group = (Boolean) PropertyUtils.getProperty(target, groupProperty);
-        Collection<DisplayItem> childOptions = (Collection<DisplayItem>) PropertyUtils.getProperty(target, childProperty);
+        boolean group = (Boolean) BeanUtil.getPropertyValue(target, groupProperty);
+        Collection<DisplayItem> childOptions = (Collection<DisplayItem>) BeanUtil.getPropertyValue(target, childProperty);
         setGroupAndOptions(group, childOptions);
       } catch (Exception e) {
         ExceptionUtil.uncheckException(e);
@@ -157,14 +154,8 @@ public class BeanDisplayItem<T> extends DisplayItem {
    */
   protected static <T> String resolveProperty(T bean, String property) {
     try {
-      String label = ObjectUtils.toString(PropertyUtils.getProperty(bean, property));
-
-      if (StringUtils.isBlank(label)) {
-        label = null;
-      }
-
-      return label;
-
+      String label = ObjectUtils.toString(BeanUtil.getPropertyValue(bean, property));
+      return StringUtils.isBlank(label) ? null : label;
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
       return null;

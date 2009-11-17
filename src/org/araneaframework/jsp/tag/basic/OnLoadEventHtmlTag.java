@@ -36,13 +36,11 @@ public class OnLoadEventHtmlTag extends BaseTag{
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    JspUtil.writeStartTag(out, "script");
-    out.write("_ap.addClientLoadEvent(");
-    out.write("function() {");
-    JspUtil.writeEscapedAttribute(out, event);
-    out.write("} );\n");
+    JspUtil.writeStartTag_SS(out, "script");
+    out.write("document.observe('aranea:loaded',function(){");
+    JspUtil.writeEscapedAttribute(out, this.event);
+    out.write("});");
     JspUtil.writeEndTag(out, "script");
-
     return SKIP_BODY;
   }
 

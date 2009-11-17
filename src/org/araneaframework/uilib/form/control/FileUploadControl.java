@@ -260,9 +260,5 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     public List<String> getPermittedMimeFileTypes() {
       return this.permittedMimeFileTypes;
     }
-    @Override
-    public String getControlType() {
-      return super.getControlType();
-    }
   }
 }

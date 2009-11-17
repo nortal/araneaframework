@@ -25,7 +25,6 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
-import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Standard select form element tag.
@@ -45,7 +44,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    * 
    * @since 1.2
    */
-  protected Boolean localizeDisplayItems;
+  protected String localizeDisplayItems;
 
   protected String type = "horizontal";
 
@@ -153,7 +152,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, String.class);
   }
 
   protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label, String id, String checkboxId, String value)
@@ -161,16 +160,9 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     registerSubtag(label);
     label.setId(id);
     label.setCheckboxId(checkboxId);
-    label.setValue(evaluateLabel(value));
+    label.setLocalizeDisplayItems(this.localizeDisplayItems);
+    label.setValue(value);
     executeStartSubtag(label);
     executeEndTagAndUnregister(label);
-  }
-
-  protected String evaluateLabel(String value) {
-    this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
-    if (this.localizeDisplayItems.booleanValue()) {
-      value = JspUtil.getResourceString(this.pageContext, value);
-    }
-    return value;
   }
 }

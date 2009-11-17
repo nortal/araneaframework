@@ -16,6 +16,10 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.util.List;
+
+import org.springframework.util.Assert;
+
 import org.araneaframework.uilib.support.DataType;
 
 import org.araneaframework.uilib.form.FormElement;
@@ -44,6 +48,19 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
   }
 
   /**
+   * Creates a new instance of SelectControl, and also defines item label and value property names. Note that when
+   * select items are defined one-by-one as value-label pairs then the class parameter is also needed to create new
+   * instances of items. The property names are required.
+   * 
+   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
+   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
+   * @see SelectControl#SelectControl(Class, String, String)
+   */
+  public SelectControl(List<T> items, String itemLabelProperty, String itemValueProperty) {
+    super(items, itemLabelProperty, itemValueProperty);
+  }
+
+  /**
    * Creates a new instance of SelectControl, and also defines item class and label and value property names. Note that
    * usually the class parameter is not needed. It is needed only when the select values are defined one-by-one (then
    * class is used to create new instances). The property names are required.
@@ -55,6 +72,20 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
    */
   public SelectControl(Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
     super(itemClass, itemLabelProperty, itemValueProperty);
+  }
+
+  /**
+   * Creates a new instance of SelectControl, and also defines item class and label and value property names. Note that
+   * usually the class parameter is not needed. It is needed only when the select values are defined one-by-one (then
+   * class is used to create new instances). The property names are required.
+   * 
+   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
+   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
+   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
+   * @see SelectControl#SelectControl(String, String)
+   */
+  public SelectControl(List<T> items, Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
+    super(items, itemClass, itemLabelProperty, itemValueProperty);
   }
 
   /**
@@ -72,7 +103,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
   @Override
   protected T fromRequestParameters(String[] parameterValues) {
     String value = parameterValues != null && parameterValues.length > 0 ? parameterValues[0] : null;
-    return value != null ? DisplayItemUtil.getBean(this, value) : null;
+    return DisplayItemUtil.getBean(this, value);
   }
 
   @Override
@@ -81,7 +112,10 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
   }
 
   public DataType getRawValueType() {
-    return new DataType(String.class);
+    this.itemClass = DisplayItemUtil.resolveClass(this.itemClass, this.items);
+    Assert.notNull(this.itemClass != null,
+        "Cannot resolve data type because select item class nor select items provided!");
+    return new DataType(this.itemClass);
   }
 
 }

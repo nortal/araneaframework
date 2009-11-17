@@ -26,7 +26,7 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.StringTokenizer;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
@@ -444,8 +444,8 @@ public class JspUtil {
   }
 
   public static String getFormActionURL(javax.servlet.jsp.JspContext jspContext) {
-    PageContext pageContext = getPageContext(jspContext);
-    HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-    return response.encodeURL(getServletURL(jspContext));
+    ServletRequest request = getPageContext(jspContext).getRequest();
+    String servletUrl = ServletUtil.getInputData(request).getContainerURL();
+    return ServletUtil.getOutputData(request).encodeURL(servletUrl);
   }
 }

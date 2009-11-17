@@ -35,7 +35,7 @@ Object.extend(Aranea.Page, {
 		};
 	},
 	ajaxUploadInit: function() {
-		var form = this.findSystemForm();
+		var form = Aranea.Data.systemForm;
 		var opts = Object.clone(this.AjaxUploadOptions);
 		$$('input[type=file].ajax-upload,form#overlaySystemForm input[type=file]').each(function(element) {
 			new AjaxUpload(element, Object.extend(opts, {

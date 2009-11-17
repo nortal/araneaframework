@@ -97,11 +97,7 @@ public class DisplayItem implements Serializable {
    * @param disabled Whether this item is disabled
    */
   public DisplayItem(String value, String label, boolean group, Collection<DisplayItem> childOptions, boolean disabled) {
-    if (StringUtils.isBlank(value)) {
-      value = null;
-    }
-    this.label = label;
-    this.value = value;
+    this(value, label, disabled);
     setGroupAndOptions(group, childOptions);
   }
 
@@ -191,5 +187,10 @@ public class DisplayItem implements Serializable {
   @Override
   public int hashCode() {
     return 227 * this.value.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return this.label + "=" + this.value;
   }
 }

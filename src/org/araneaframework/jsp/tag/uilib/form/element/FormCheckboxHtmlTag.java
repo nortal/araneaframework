@@ -83,7 +83,6 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
     }
 
     JspUtil.writeAttributes(out, this.attributes);
-    writeBackgroundValidationAttribute(out);
     JspUtil.writeCloseStartEndTag_SS(out);
 
     super.doEndTag(out);

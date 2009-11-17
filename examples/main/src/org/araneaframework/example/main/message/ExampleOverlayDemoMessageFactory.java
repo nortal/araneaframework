@@ -16,13 +16,15 @@
 
 package org.araneaframework.example.main.message;
 
+import org.araneaframework.example.main.web.MenuWidget;
+
+import org.araneaframework.example.main.web.release.DemoModalDialogWidget;
+
 import org.araneaframework.Component;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BroadcastMessage;
-import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
-import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 /**
@@ -39,7 +41,7 @@ public class ExampleOverlayDemoMessageFactory implements MessageFactory {
     @Override
     protected void execute(Component component) throws Exception {
       if (component instanceof MenuWidget) {
-        ((MenuWidget) component).start(new ModalDialogDemoWidget());
+        ((MenuWidget) component).start(new DemoModalDialogWidget());
       }
     }
   }

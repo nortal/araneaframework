@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.converter;
 
 import java.io.Serializable;
-
 import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
@@ -35,10 +34,6 @@ public abstract class BaseConverter<C, D> implements Serializable, Converter<C, 
 
   private FormElementContext<C, D> feCtx;
 
-  // *********************************************************************
-  // * PUBLIC METHODS
-  // *********************************************************************
-
   /**
    * This method converts the data from one type to another. If the data is <code>null</code> then <code>null</code> is
    * returned. Otherwise {@link #convertNotNull(Object)}method is used for actual conversion.
@@ -47,14 +42,9 @@ public abstract class BaseConverter<C, D> implements Serializable, Converter<C, 
    * @return Converted data.
    */
   public D convert(C data) {
-    Assert.notNull(this, getFormElementCtx(),
-        "Form element context must be assigned to the converter before it can function! "
-            + "Make sure that the converter is associated with a form element!");
-
-    if (data == null)
-      return null;
-
-    return convertNotNull(data);
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the converter before it can "
+        + "function! Make sure that the converter is associated with a form element!");
+    return data == null ? null : convertNotNull(data);
   }
 
   /**
@@ -66,14 +56,9 @@ public abstract class BaseConverter<C, D> implements Serializable, Converter<C, 
    * @return Converted data.
    */
   public C reverseConvert(D data) {
-    Assert.notNull(this, getFormElementCtx(),
-        "Form element context must be assigned to the converter before it can function! "
-            + "Make sure that the converter is associated with a form element!");
-
-    if (data == null)
-      return null;
-
-    return reverseConvertNotNull(data);
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the converter before it can "
+        + "function! Make sure that the converter is associated with a form element!");
+    return data == null ? null : reverseConvertNotNull(data);
   }
 
   public void setFormElementCtx(FormElementContext<C, D> feCtx) {
@@ -89,19 +74,19 @@ public abstract class BaseConverter<C, D> implements Serializable, Converter<C, 
   // *********************************************************************
 
   protected void addError(String error) {
-    feCtx.addError(error);
+    this.feCtx.addError(error);
   }
 
   protected void addErrors(Set<String> errors) {
-    feCtx.addErrors(errors);
+    this.feCtx.addErrors(errors);
   }
 
   protected Environment getEnvironment() {
-    return feCtx.getEnvironment();
+    return this.feCtx.getEnvironment();
   }
 
   protected String getLabel() {
-    return feCtx.getLabel();
+    return this.feCtx.getLabel();
   }
 
   // *********************************************************************

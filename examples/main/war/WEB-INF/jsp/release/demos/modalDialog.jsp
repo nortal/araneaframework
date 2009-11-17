@@ -2,37 +2,34 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard"
+	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.0">
 
 	<!-- Component starts here -->
 	<ui:widgetContext>
-
-
 		<ui:form id="form">
 
 			<tui:componentHeader>
-				<tui:componentName><fmt:message key="modal.demo.title"/></tui:componentName>
+				<tui:componentName><fmt:message key="modalDialog.title"/></tui:componentName>
 			</tui:componentHeader>
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
 				<c:if test="${!widget.nested}">
-					<p>
-						<fmt:message key="modal.demo.intro"/>
-				</p>
-			</c:if>
+					<p><fmt:message key="modalDialog.intro"/></p>
+				</c:if>
 
-			<p>
-					<fmt:message key="modal.demo.howto"/>
-			</p>
+				<p><fmt:message key="modalDialog.howto"/></p>
 
 				<tui:componentForm rowClasses="cols4" cellClasses="name, inpt">
 
 					<!-- As we can insert rows now, we do just that. -->
 					<ui:row>
+
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
+
 						<ui:cell>
 							<ui:label id="checkbox1" />
 						</ui:cell>
@@ -104,24 +101,27 @@
 
 				<!-- pure design tag -->
 				<tui:componentActions>
-					<ui:eventButton eventId="nextFlow" labelId="modal.demo.startnext"/>
+					<ui:eventButton eventId="nextFlow" labelId="modalDialog.startNext"/>
+
 					<c:if test="${not widget.overlay}">
-						<ui:eventButton eventId="nextFlowOverlay" labelId="modal.demo.startnextoverlay"/>
+						<ui:eventButton eventId="nextFlowOverlay" labelId="modalDialog.startNext.overlay"/>
 					</c:if>
-					<ui:formElement id="button">
-						<ui:button/>
-					</ui:formElement>
+
+					<ui:button id="button"/>
+
 					<c:if test="${widget.nested}">
-						<ui:eventButton eventId="return" labelId="modal.demo.previous"/>
+						<ui:eventButton eventId="return" labelId="modalDialog.previous"/>
+
 						<c:if test="${widget.overlay}">
-							<ui:eventButton eventId="close" labelId="modal.demo.closeOverlay"/>
+							<ui:eventButton eventId="close" labelId="modalDialog.closeOverlay"/>
 							<ui:formEscapeKeyboardHandler handler="function(){Aranea.ModalBox.closeWithAjax.defer('close','${widgetId}');}"/>
 						</c:if>
 					</c:if>
+
 				</tui:componentActions>
 			</tui:component>
 
 		</ui:form>
-
 	</ui:widgetContext>
+
 </jsp:root>

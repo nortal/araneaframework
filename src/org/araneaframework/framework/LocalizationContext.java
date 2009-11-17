@@ -63,13 +63,13 @@ public interface LocalizationContext extends Serializable {
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
    * If the localized message cannot be resolved uses <code>defaultMessage</code> instead.
    */
-  public String getMessage(String code, Object[] args, String defaultMessage);
+  public String getMessage(String code, String defaultMessage, Object... args);
   
   /**
    * Localizes the code and uses it to format the message with the passed arguments. 
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
    */
-  public String getMessage(String code, Object[] args);
+  public String getMessage(String code, Object... args);
 
   /** @since 1.1 */
   public void addLocaleChangeListener(LocaleChangeListener listener);

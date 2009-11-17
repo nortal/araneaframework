@@ -58,10 +58,12 @@ public abstract class DisplayItemUtil implements Serializable {
    * @return whether <code>value</code> is found in the select items.
    */
   public static <T> T getBean(DisplayItemContainer<T> displayItemContainer, String value) {
-    for (T item : displayItemContainer.getAllItems()) {
-      String currentValue = getBeanValue(item, displayItemContainer.getItemValueProperty());
-      if (StringUtils.equals(value, currentValue)) {
-        return item;
+    if (!StringUtils.isBlank(value)) {
+      for (T item : displayItemContainer.getAllItems()) {
+        String currentValue = getBeanValue(item, displayItemContainer.getItemValueProperty());
+        if (StringUtils.equals(value, currentValue)) {
+          return item;
+        }
       }
     }
     return null;
@@ -110,11 +112,25 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param value display item value.
    * @return display item label by the specified value.
    */
-  public static <T> DisplayItem getSelectedItemByValue(List<DisplayItem> items, String valueProperty, T value) {
-    if (CollectionUtils.isNotEmpty(items)) {
-      for (DisplayItem item : items) {
+  public static <B> B getSelectedItemByValue(List<B> items, String valueProperty, Object value) {
+    if (value != null && CollectionUtils.isNotEmpty(items)) {
+      value = ObjectUtils.toString(value);
+
+      for (B item : items) {
         String currentValue = getBeanValue(item, valueProperty);
-        if (ObjectUtils.equals(item.getValue(), currentValue)) {
+        if (ObjectUtils.equals(value, currentValue)) {
+          return item;
+        }
+      }
+    }
+    return null;
+  }
+
+  public static DisplayItem getSelectedItemByValue(List<DisplayItem> items, String value) {
+    if (value != null && CollectionUtils.isNotEmpty(items)) {
+      value = ObjectUtils.toString(value);
+      for (DisplayItem item : items) {
+        if (ObjectUtils.equals(value, item.getValue())) {
           return item;
         }
       }
@@ -198,4 +214,17 @@ public abstract class DisplayItemUtil implements Serializable {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  public static <T> Class<T> resolveClass(Class<T> itemClass, List<T> items) {
+    Class<T> result = itemClass;
+    if (result == null && items != null && !items.isEmpty()) {
+      for (T item : items) {
+        if (item != null) {
+          result = (Class<T>) item.getClass();
+          break;
+        }
+      }
+    }
+    return result;
+  }
 }

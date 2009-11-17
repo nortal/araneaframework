@@ -46,14 +46,11 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 
     this.event.setUpdateRegionNames(JspUpdateRegionUtil.getUpdateRegionNames(this.pageContext, this.updateRegions,
         this.globalUpdateRegions));
+
     String handler = createHandlerToCallEvent(this.pageContext, this.event);
 
     // Write out.
-    if (this.intKeyCode != null) {
-      BaseKeyboardHandlerTag.writeRegisterKeypressHandlerScript(out, this.scope, this.intKeyCode, handler);
-    } else if (this.keyCombo != null) {
-      writeRegisterKeycomboHandlerScript(out, this.scope, this.keyCombo, handler);
-    }
+    writeKeypressHandlerScript(out, this.scope, handler);
 
     return SKIP_BODY;
   }
@@ -65,17 +62,14 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 
     // submit_6 : function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
     StringBuffer result = new StringBuffer("function (event, elementId) { ");
-    result.append("_ap.event_6(");
-    result.append("_ap.getSystemForm(),");
+    result.append("Aranea.Page.event(");
 
     append(result, event.getId(), true);
     append(result, event.getTarget(), true);
     append(result, event.getParam(), true);
     append(result, event.getEventPrecondition(), true);
     append(result, JspUpdateRegionUtil.formatUpdateRegionsJS(event.getUpdateRegionNames()), false);
-
     result.append(")}");
-
     return result.toString();
   }
 
@@ -156,6 +150,10 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
    * Sets the precondition, default value is <code>null</code>
    * 
    * @see org.araneaframework.jsp.tag.uilib.form.element.BaseFormButtonTag#setOnClickPrecondition
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Sets an optional precondition (function name or JS boolean expression) that will be evaluate before event."
    */
   public void setPrecondition(String precondition) {
     this.event.setEventPrecondition(evaluate("precondition", precondition, String.class));

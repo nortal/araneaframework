@@ -58,12 +58,12 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 	}
 	
 	@Override
-  public String getMessage(String code, Object[] args, String defaultMessage) {
+  public String getMessage(String code, String defaultMessage, Object... args) {
 		return getMessageSource().getMessage(code, args, defaultMessage, getLocale());
 	}
 	
 	@Override
-  public String getMessage(String code, Object[] args) {
+  public String getMessage(String code, Object... args) {
 		return getMessageSource().getMessage(code, args, getLocale());
 	}
 	
@@ -80,6 +80,6 @@ public class SpringLocalizationFilterService extends StandardLocalizationFilterS
 	
 	@Override
   public String localize(String key) {
-		return getMessage(key, null);
+		return getMessage(key);
 	}
 }

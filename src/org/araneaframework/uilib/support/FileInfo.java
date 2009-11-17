@@ -97,17 +97,34 @@ public class FileInfo implements Serializable {
    * Provides whether the file has at least name and size greater than zero.
    * 
    * @return <code>true</code>, if the file has at least name and size greater than zero.
+   * @since 2.0
    */
   public boolean isFilePresent() {
     return !StringUtils.isBlank(getOriginalFilename()) && getSize() > 0;
   }
 
+  /**
+   * Provides the stream of the input file. If file is not present, a <code>null</code> will be returned.
+   * 
+   * @return The stream of the input file, or <code>null</code>.
+   * @since 2.0
+   */
   public InputStream getFileStream() {
     try {
-      return this.item.getInputStream();
+      return isFilePresent() ? this.item.getInputStream() : null;
     } catch (IOException e) {
       ExceptionUtil.uncheckException("Exception while opening file for streaming.", e);
       return null; // Not reached.
     }
+  }
+
+  /**
+   * Provides the current file item object.
+   * 
+   * @return The current file item object
+   * @since 2.0
+   */
+  public FileItem getFileItem() {
+    return this.item;
   }
 }

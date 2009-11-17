@@ -98,7 +98,20 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * @see BaseSelectControl#BaseSelectControl(Class, String, String)
    */
   public BaseSelectControl(String itemLabelProperty, String itemValueProperty) {
-    this(null, itemLabelProperty, itemValueProperty);
+    this(null, null, itemLabelProperty, itemValueProperty);
+  }
+
+  /**
+   * Creates a new instance of *SelectControl, and also defines item label and value property names. Note that when
+   * select items are defined one-by-one as value-label pairs then the class parameter is also needed to create new
+   * instances of items. The property names are required.
+   * 
+   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
+   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
+   * @see BaseSelectControl#BaseSelectControl(Class, String, String)
+   */
+  public BaseSelectControl(List<T> items, String itemLabelProperty, String itemValueProperty) {
+    this(items, null, itemLabelProperty, itemValueProperty);
   }
 
   /**
@@ -112,17 +125,29 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * @see BaseSelectControl#BaseSelectControl(String, String)
    */
   public BaseSelectControl(Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
+    this(null, itemClass, itemLabelProperty, itemValueProperty);
+  }
+
+  /**
+   * Creates a new instance of *SelectControl, and also defines item class and label and value property names. Note that
+   * usually the class parameter is not needed. It is needed only when the select values are defined one-by-one (then
+   * class is used to create new instances). The property names are required.
+   * 
+   * @param items Predefined select items. May be <code>null</code>.
+   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
+   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
+   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
+   * @see BaseSelectControl#BaseSelectControl(String, String)
+   */
+  public BaseSelectControl(List<T> items, Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
     Assert.notNullParam(this, itemLabelProperty, "itemLabelProperty");
     Assert.notNullParam(this, itemValueProperty, "itemValueProperty");
 
-    this.itemClass = itemClass;
+    this.items = items == null ? this.items : items;
+    this.itemClass = DisplayItemUtil.resolveClass(itemClass, items);
     this.labelProperty = itemLabelProperty;
     this.valueProperty = itemValueProperty;
   }
-
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************  
 
   /**
    * Adds a new item to select choices.
@@ -384,7 +409,8 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     }
 
     public DisplayItem getSelectedItem() {
-      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, valueProperty, value);
+      return DisplayItemUtil.getSelectedItemByValue(this.selectItems,
+          DisplayItemUtil.getBeanValue(value, valueProperty));
     }
 
     public List<DisplayItem> getSelectedItems() {
@@ -392,11 +418,11 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     }
 
     public DisplayItem getSelectItem(String value) {
-      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, valueProperty, value);
+      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, value);
     }
 
     public boolean isSelected(String value) {
-      return innerData != null && ArrayUtils.contains((String[]) innerData, value);
+      return innerData != null && value != null && ArrayUtils.contains((String[]) innerData, value);
     }
   }
 }

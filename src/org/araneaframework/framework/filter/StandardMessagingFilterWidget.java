@@ -153,7 +153,9 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   }
 
   public Map<String, Collection<String>> getResolvedMessages(LocalizationContext locCtx) {
+    Assert.notNullParam(locCtx, "locCtx");
     Map<String, Collection<String>> result = new HashMap<String, Collection<String>>();
+
     for (Map.Entry<String, Collection<MessageData>> msgs : getMessages().entrySet()) {
       if (CollectionUtils.isNotEmpty(msgs.getValue())) {
         List<String> results = new LinkedList<String>();
@@ -288,6 +290,7 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
     }
 
     public String getResolvedMessage(LocalizationContext locCtx) {
+      Assert.notNullParam(locCtx, "locCtx");
       return locCtx.getMessage(this.message, this.parameters);
     }
   }

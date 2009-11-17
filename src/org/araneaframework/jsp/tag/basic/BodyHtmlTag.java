@@ -174,7 +174,7 @@ public class BodyHtmlTag extends PresentationTag {
         String sTop = topServiceId == null ? "null" : "'" + topServiceId.toString() + "'";
         String sThread = threadServiceId == null ? "null" : "'" + threadServiceId.toString() + "'";
 
-        out.write("\nAranea.Page.addKeepAlive(Aranea.Page.(");
+        out.write("\nAranea.Page.addKeepAlive(Aranea.Page.getDefaultKeepAlive(");
         out.write(sTop);
         out.write(",");
         out.write(sThread);
@@ -200,12 +200,13 @@ public class BodyHtmlTag extends PresentationTag {
 
     out.write("Aranea.Data.servletURL='");
     out.write(servletUrl);
-    out.write("');");
+    out.write("';");
 
     if (!servletUrl.equals(encodedServletUrl)) {
       String urlSuffix = encodedServletUrl.substring(servletUrl.length());
-      String function = "function(url) { return (url + '" + urlSuffix + "'); }";
-      out.write("Object.extend(Aranea.Page, { encodeURL:" + function + " });");
+      out.write("Object.extend(Aranea.Page,{encodeURL:function(url){return(url+'");
+      out.write(urlSuffix);
+      out.write("')}});");
     }
   }
 
@@ -217,7 +218,6 @@ public class BodyHtmlTag extends PresentationTag {
    */
   protected void writeLocaleScript(Writer out) throws IOException {
     Locale locale = getLocalizationContext().getLocale();
-
     out.write("Object.extend(Aranea.Data.locale,{lang:'");
     out.write(locale.getLanguage());
     out.write("',country:'");
@@ -235,7 +235,7 @@ public class BodyHtmlTag extends PresentationTag {
    * @since 1.1
    */
   protected void writeAjaxValidationScript(Writer out) throws IOException {
-    boolean validationEnabled = ConfigurationUtil.isBackgroundFormValidationEnabled(getConfiguration());
+    boolean validationEnabled = ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
     out.write("Aranea.Data.backgroundValidation=" + validationEnabled + ";");
   }
 
@@ -257,7 +257,7 @@ public class BodyHtmlTag extends PresentationTag {
 
   /**
    * Called before closing the script tag immediately following the HTML &lt;body&gt; start, use for additional
-   * client-side page (AraneaPage) initialization.
+   * client-side page (Aranea.Page) initialization.
    * 
    * @param out The writer of the rendered page.
    * @throws Exception Any exception that may occur.
@@ -266,7 +266,7 @@ public class BodyHtmlTag extends PresentationTag {
 
   /**
    * Called before closing the script tag immediately following the HTML &lt;body&gt; start, use for additional
-   * client-side page (AraneaPage) initialization.
+   * client-side page (Aranea.Page) initialization.
    * 
    * @param out The writer of the rendered page.
    * @throws Exception Any exception that may occur.

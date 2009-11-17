@@ -110,9 +110,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    */
   public void setConverter(Converter<C, D> converter) {
     this.converter = converter;
-
-    if (converter != null)
+    if (converter != null) {
       converter.setFormElementCtx(this);
+    }
   }
 
   /**
@@ -368,11 +368,13 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   protected void init() throws Exception {
     super.init();
 
-    if (getConverter() == null && getData() != null && getControl() != null)
+    if (getConverter() == null && getData() != null && getControl() != null) {
       setConverter(findConverter());
+    }
 
-    if (getControl() != null)
+    if (getControl() != null) {
       getControl()._getComponent().init(getScope(), getEnvironment());
+    }
 
     runInitEvents();
     setBackgroundValidationListener(getDefaultBackgroundValidationListener());
@@ -406,8 +408,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
 
       // The data should be set only if control is valid
       if (isValid()) {
-        // We assume that the convertor is present, if control and data are
-        // here
+        // We assume that the convertor is present, if control and data are here
         newDataValue = getConverter().convert(getControl().getRawValue());
       }
     }

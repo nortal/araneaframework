@@ -34,12 +34,4 @@
 		<url-pattern>/main/*</url-pattern>
 	</servlet-mapping>
 
-	<jsp-config>
-		<jsp-property-group>
-			<display-name>Ignore EL</display-name>
-			<url-pattern>*.jsp</url-pattern>
-			<el-ignored>false</el-ignored>
-		</jsp-property-group>
-	</jsp-config>
-
 </web-app>

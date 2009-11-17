@@ -16,6 +16,8 @@
 
 package org.araneaframework.framework;
 
+import java.io.Serializable;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -186,7 +188,7 @@ public interface MessageContext extends UpdateRegionProvider {
    */
   public Map<String, Collection<String>> getResolvedMessages(LocalizationContext locCtx);
 
-  public interface MessageData {
+  public interface MessageData extends Serializable {
 
     String getResolvedMessage(LocalizationContext locCtx);
 

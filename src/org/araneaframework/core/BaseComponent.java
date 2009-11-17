@@ -16,8 +16,9 @@
 
 package org.araneaframework.core;
 
-import java.util.Collections;
 import java.util.Iterator;
+
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -80,7 +81,7 @@ public class BaseComponent implements Component {
   //*******************************************************************
 
   /**
-   * Init callback. Gets called when the component is initilized.
+   * Init callback. Gets called when the component is initialized.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
@@ -119,9 +120,8 @@ public class BaseComponent implements Component {
   /**
    * Handles any given exception.
    * 
-   * @param e The exception that occured.
-   * @throws Exception Any runtime exception that may occur during error
-   *             handling.
+   * @param e The exception that occurred.
+   * @throws Exception Any runtime exception that may occur during error handling.
    */
   protected void handleException(Exception e) throws Exception {
     throw e;
@@ -136,8 +136,8 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Gets whether the component has been initialized. "Initialized" means that
-   * the <code>init()</code> method has been called.
+   * Gets whether the component has been initialized. "Initialized" means that the <code>init()</code> method has been
+   * called.
    * 
    * @return <code>true</code>, if the component has been initialized.
    */
@@ -458,14 +458,14 @@ public class BaseComponent implements Component {
       return;
     }
 
-    Iterator<Object> ite = (new LinkedHashMap<Object, Component>(_getChildren())).keySet().iterator();
-    while (ite.hasNext()) {
-      Object key = ite.next();
-      Component component = _getChildren().get(key);
+    Map<Object, Component> children = _getChildren();
 
-      // message has not destroyed previously existing child
-      if (component != null) {
-        message.send(key, component);
+    synchronized (children) {
+      for (Map.Entry<Object, Component> entry : children.entrySet()) {
+        // message has not destroyed by previously existing child
+        if (entry.getValue() != null) {
+          message.send(entry.getKey(), entry.getValue());
+        }
       }
     }
   }
@@ -530,24 +530,26 @@ public class BaseComponent implements Component {
       try {
         _waitNoCall();
 
-        synchronized (this) {
-          if (BaseComponent.this.children != null) {
-            for (Object key : _getChildren().keySet()) {
-              _removeComponent(key);
-            }
+        _getChildren();
+        synchronized (children) {
+          for (Iterator<Map.Entry<Object, Component>> i = children.entrySet().iterator(); i.hasNext();) {
+            i.next().getValue()._getComponent().destroy();
+            i.remove();
           }
-
-          if (BaseComponent.this.disabledChildren != null) {
-            for (Object key : _getDisabledChildren().keySet()) {
-              Component comp = _getDisabledChildren().get(key);
-              if (comp != null) {
-                comp._getComponent().destroy();
-              }
-            }
-          }
-
-          BaseComponent.this.destroy();
         }
+
+        _getDisabledChildren();
+        synchronized (disabledChildren) {
+          for (Iterator<Map.Entry<Object, Component>> i = disabledChildren.entrySet().iterator(); i.hasNext();) {
+            Component component = i.next().getValue();
+            if (component != null) {
+              component._getComponent().destroy();
+              i.remove();
+            }
+          }
+        }
+
+        BaseComponent.this.destroy();
 
         BaseComponent.this.state = DEAD;
       } catch (Exception e) {

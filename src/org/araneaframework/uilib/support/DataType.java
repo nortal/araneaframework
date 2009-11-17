@@ -16,12 +16,10 @@
 
 package org.araneaframework.uilib.support;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-
-import java.util.Collection;
-
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
  * TODO Document.
@@ -31,6 +29,11 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class DataType implements Serializable, Cloneable {
+
+  /**
+   * Represents the {@link String} type.
+   */
+  public static final DataType STRING_TYPE = new DataType(String.class);
 
   private Class<?> type;
 

@@ -16,6 +16,8 @@
 
 package org.araneaframework.core;
 
+import org.araneaframework.core.util.ComponentUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -545,6 +547,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     }
 
     list.add(listener);
+    ComponentUtil.registerActionListener(getEnvironment(), getScope(), actionId, listener);
   }
 
   /**
@@ -552,8 +555,13 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    */
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
-    for (List<ActionListener> listeners : getActionListeners().values()) {
-      listeners.remove(listener);
+    for (Map.Entry<String, List<ActionListener>> entry : getActionListeners().entrySet()) {
+      if (entry.getValue().contains(listener)) {
+        boolean existed = entry.getValue().remove(listener);
+        if (existed) {
+          ComponentUtil.unregisterActionListener(getEnvironment(), getScope(), entry.getKey(), listener);
+        }
+      }
     }
   }
 

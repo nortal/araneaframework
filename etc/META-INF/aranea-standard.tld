@@ -5,7 +5,7 @@
 
 	<display-name>Aranea UI</display-name>
 
-	<tlib-version>2.0</tlib-version>
+	<tlib-version>1.0</tlib-version>
 
 	<short-name>ui</short-name>
 
@@ -321,14 +321,14 @@
 		<tag-class>org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>Local id of the update region.</description>
+			<description>Local ID of the update region.</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Global id of the update region.</description>
+			<description>Global ID of the update region.</description>
 			<name>globalId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -695,7 +695,6 @@
 			<name>validateOnEvent</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
@@ -729,6 +728,13 @@
 		<attribute>
 			<description>CSS class for the tag.</description>
 			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+			<name>localizeDisplayItems</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -1371,7 +1377,7 @@
 		<body-content>empty</body-content>
 
 		<attribute>
-			<description>HTML element id to which tooltip should be attached.</description>
+			<description>HTML element ID to which tooltip should be attached.</description>
 			<name>element</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1426,13 +1432,7 @@
 		<body-content>empty</body-content>
 
 		<attribute>
-			<description>See keyboardHandler tag.</description>
-			<name>scope</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute><description/>
+			<description/>
 			<name>widgetId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1465,6 +1465,21 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
+			<description>Sets an optional precondition (function name or JS boolean expression) that will be evaluate before event.</description>
+			<name>precondition</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+
+		<attribute>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<name>event</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
 			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
 			<name>keyCode</name>
 			<required>false</required>
@@ -1472,15 +1487,15 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCombo</name>
+			<description>A meta case-insensitive representation of key(s) press. The order of meta keys is not important. E.g. A, Ctrl+A, Shift+A, Alt+A, Ctrl+Shift+A. 'keyCode' and/or 'keyMetaCond' must be specified.</description>
+			<name>keyMetaCond</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
-			<name>key</name>
+			<description>By default, the scope of this keyboard handler is defined by the form inside which it is located. You may append a suffix to that scope by using this attribute. E.g. if you set subscope='someElement', then the active scope of the keyboard handler will be 'someForm.someElement', not 'someForm' as would be by default. The handler will therefore be active only for the element 'someElement'.</description>
+			<name>scope</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -1617,21 +1632,6 @@
 		<name>keyboardHandler</name>
 		<tag-class>org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag</tag-class>
 		<body-content>empty</body-content>
-
-		<attribute>
-			<name>scope</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
-			<name>handler</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
 		<attribute>
 			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
 			<name>keyCode</name>
@@ -1640,15 +1640,21 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCombo</name>
+			<description>A meta case-insensitive representation of key(s) press. The order of meta keys is not important. E.g. A, Ctrl+A, Shift+A, Alt+A, Ctrl+Shift+A. 'keyCode' and/or 'keyMetaCond' must be specified.</description>
+			<name>keyMetaCond</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
-			<name>key</name>
+			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
+			<name>handler</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<name>scope</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -1777,7 +1783,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>The HTML id this radio button.</description>
+			<description>The HTML ID this radio button.</description>
 			<name>htmlId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1873,6 +1879,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+			<name>localizeText</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -1880,57 +1893,36 @@
 		<tag-class>org.araneaframework.jsp.tag.uilib.form.FormEnterKeyboardHandlerHtmlTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCode</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); } Either handler or elementId/event pair should be specified, not both.</description>
-			<name>handler</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<name>subscope</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
 			<name>elementId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<name>event</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
 			<name>fullElementId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<name>event</name>
-			<required>false</required>
+			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
+			<name>handler</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCombo</name>
+			<description>By default, the scope of this keyboard handler is defined by the form inside which it is located. You may append a suffix to that scope by using this attribute. E.g. if you set subscope='someElement', then the active scope of the keyboard handler will be 'someForm.someElement', not 'someForm' as would be by default. The handler will therefore be active only for the element 'someElement'.</description>
+			<name>subscope</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -1942,57 +1934,36 @@
 		<tag-class>org.araneaframework.jsp.tag.uilib.form.FormEscapeKeyboardHandlerHtmlTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCode</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); } Either handler or elementId/event pair should be specified, not both.</description>
-			<name>handler</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<name>subscope</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
 			<name>elementId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<name>event</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
 			<name>fullElementId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<name>event</name>
-			<required>false</required>
+			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
+			<name>handler</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCombo</name>
+			<description>By default, the scope of this keyboard handler is defined by the form inside which it is located. You may append a suffix to that scope by using this attribute. E.g. if you set subscope='someElement', then the active scope of the keyboard handler will be 'someForm.someElement', not 'someForm' as would be by default. The handler will therefore be active only for the element 'someElement'.</description>
+			<name>subscope</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -2241,7 +2212,6 @@
 		<name>checkboxMultiSelectItemLabel</name>
 		<tag-class>org.araneaframework.jsp.tag.uilib.form.element.select.FormCheckboxMultiSelectItemLabelHtmlTag</tag-class>
 		<body-content>JSP</body-content>
-
 		<attribute>
 			<description>Select item value.</description>
 			<name>value</name>
@@ -2250,7 +2220,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>The HTML id of checkbox to which this label belongs.</description>
+			<description>The HTML ID of checkbox to which this label belongs.</description>
 			<name>checkboxId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2274,7 +2244,6 @@
 			<name>showColon</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
@@ -2287,6 +2256,13 @@
 		<attribute>
 			<description>CSS class for the tag.</description>
 			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+			<name>localizeDisplayItems</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -2766,6 +2742,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+			<name>localizeDisplayItems</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -2823,14 +2806,14 @@
 		<body-content>JSP</body-content>
 
 		<attribute>
-			<description>Local id of the update region.</description>
+			<description>Local ID of the update region.</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Global id of the update region.</description>
+			<description>Global ID of the update region.</description>
 			<name>globalId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2872,7 +2855,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>The HTML id radio button to which this label belongs.</description>
+			<description>The HTML ID radio button to which this label belongs.</description>
 			<name>radioId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2963,7 +2946,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>HTML id of this row.</description>
+			<description>HTML ID of this row.</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3680,6 +3663,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+			<name>localizeDisplayItems</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -4169,7 +4159,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Sets the HTML id of this checkbox button.</description>
+			<description>Sets the HTML ID of this checkbox button.</description>
 			<name>htmlId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4193,7 +4183,6 @@
 			<name>validateOnEvent</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
@@ -4231,6 +4220,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+			<name>localizeDisplayItems</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -4238,38 +4234,31 @@
 		<tag-class>org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description>A javascript handler function that takes two parameters - the event object and the element id for which the event was fired. Example: function(event, elementId) { alert(elementId); } Either handler or elementId/event pair should be specified, not both.</description>
-			<name>handler</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<name>subscope</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-
-			<type>java.lang.String</type>
-		</attribute>
-		<attribute>
-			<description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
 			<name>elementId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Set the (relative) id of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full id using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
+			<name>event</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Set the (relative) ID of the element, whose javascript event should be invoked. The ID is relative with respect to the surrounding form. Instead of this attribute, you may set element's full ID using the fullElementId attribute, but you can't set both attributes at once.</description>
 			<name>fullElementId</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<name>event</name>
-			<required>false</required>
+			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
+			<name>handler</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
@@ -4280,15 +4269,15 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Keycode to which the event must be triggered. 13 means enter. Either keyCode or key must be specified, but not both.</description>
-			<name>keyCombo</name>
+			<description>A meta case-insensitive representation of key(s) press. The order of meta keys is not important. E.g. A, Ctrl+A, Shift+A, Alt+A, Ctrl+Shift+A. 'keyCode' and/or 'keyMetaCond' must be specified.</description>
+			<name>keyMetaCond</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>Key, to which the event must be triggered. Key is specified as a certain 'alias'. The alias may be an ASCII character or a digit (this will denote the corresponding key on a US keyboard), a space (' '), or one of the following: 'return', 'escape', 'backspace', 'tab', 'shift', 'control', 'space', 'f1', 'f2', ..., 'f12'.</description>
-			<name>key</name>
+			<description>By default, the scope of this keyboard handler is defined by the form inside which it is located. You may append a suffix to that scope by using this attribute. E.g. if you set subscope='someElement', then the active scope of the keyboard handler will be 'someForm.someElement', not 'someForm' as would be by default. The handler will therefore be active only for the element 'someElement'.</description>
+			<name>subscope</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
@@ -4315,7 +4304,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
-			<description>HTML id of this row.</description>
+			<description>HTML ID of this row.</description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

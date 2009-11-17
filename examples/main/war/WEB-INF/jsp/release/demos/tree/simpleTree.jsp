@@ -10,24 +10,18 @@
 
 		<!-- Label -->
 		<tui:componentHeader>
-			<tui:componentName><fmt:message key="servletcontext.tree.title"/></tui:componentName>
-        </tui:componentHeader>
+			<tui:componentName><fmt:message key="tree.title"/></tui:componentName>
+		</tui:componentHeader>
 
 		<tui:component>
-			<p>	
-				<fmt:message key="servletcontext.tree.intro"/>
-			</p>
-			
-			<p>
-				<fmt:message key="servletcontext.tree.more"/>
-			</p>
+			<p><fmt:message key="tree.intro"/></p>
+			<p><fmt:message key="tree.more"/></p>
 
-			<p><fmt:message key="servletcontext.treew.events"/></p>
+			<p><fmt:message key="tree.events"/></p>
 			<ui:tree id="tree1"/>
 
-			<p><fmt:message key="servletcontext.treew.actions"/></p>
+			<p><fmt:message key="tree.actions"/></p>
 			<ui:tree id="tree2"/>
-
 		</tui:component>
 
 	</ui:widgetContext>

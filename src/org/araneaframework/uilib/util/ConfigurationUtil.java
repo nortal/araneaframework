@@ -16,19 +16,11 @@
 
 package org.araneaframework.uilib.util;
 
-import static org.araneaframework.uilib.ConfigurationContext.ASYNC_ACTION_LISTENERS;
 import static org.araneaframework.uilib.ConfigurationContext.CUSTOM_DATE_FORMAT;
 import static org.araneaframework.uilib.ConfigurationContext.CUSTOM_TIME_FORMAT;
 import static org.araneaframework.uilib.ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT;
 import static org.araneaframework.uilib.ConfigurationContext.DEFAULT_TIME_OUTPUT_FORMAT;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.util.LinkedList;
-
-import org.araneaframework.Scope;
-
-import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
 import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
@@ -45,8 +37,8 @@ public abstract class ConfigurationUtil {
 
   private ConfigurationUtil() {}
 
-  public static boolean isBackgroundFormValidationEnabled(ConfigurationContext cctx) {
-    Boolean b = (Boolean) cctx.getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
+  public static boolean isBackgroundFormValidationEnabled(Environment env) {
+    Boolean b = (Boolean) getConfiguration(env).getEntry(ConfigurationContext.BACKGROUND_FORM_VALIDATION);
     return b == null ? false : b.booleanValue();
   }
 
@@ -64,11 +56,18 @@ public abstract class ConfigurationUtil {
   public static boolean isLocalizeControlData(Environment env, Boolean overrideValue) {
     if (overrideValue != null) {
       return overrideValue.booleanValue();
-    } else {
-      ConfigurationContext conf = UilibEnvironmentUtil.getConfiguration(env);
-      Boolean setting = (Boolean) conf.getEntry(ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA);
-      return setting == null ? false : setting.booleanValue();
     }
+
+    ConfigurationContext conf = UilibEnvironmentUtil.getConfiguration(env);
+    Object setting = conf.getEntry(ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA);
+
+    if (setting instanceof String) {
+      return Boolean.parseBoolean((String) setting);
+    } else if (setting instanceof Boolean) {
+      return (Boolean) setting;
+    }
+
+    return false;
   }
 
   /**
@@ -120,33 +119,6 @@ public abstract class ConfigurationUtil {
     String key = input ? CUSTOM_TIME_FORMAT : DEFAULT_TIME_OUTPUT_FORMAT;
     String format = (String) getConfiguration(env).getEntry(key);
     return format == null ? defaultValue : format;
-  }
-
-  public static void addAsyncrhonousListnereName(Environment env, Scope widgetScope, String actionId) {
-    if (widgetScope != null && !StringUtils.isEmpty(actionId)) {
-      getAsyncrhonousListneresNames(env).add(widgetScope + "." + actionId);
-    }
-  }
-
-  public static void removeAsyncrhonousListnereName(Environment env, Scope widgetScope, String actionId) {
-    getAsyncrhonousListneresNames(env).remove(widgetScope + "." + actionId);
-  }
-
-  public static boolean containsAsyncrhonousListnereName(Environment env, String widgetScope, String actionId) {
-    return !StringUtils.isEmpty(widgetScope) && !StringUtils.isEmpty(actionId)
-        && getAsyncrhonousListneresNames(env).contains(widgetScope + "." + actionId);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static List<String> getAsyncrhonousListneresNames(Environment env) {
-    ConfigurationContext conf = getConfiguration(env);
-    List<String> names = (List<String>) conf.getEntry(ASYNC_ACTION_LISTENERS);
-
-    if (names == null) {
-      names = new LinkedList<String>();
-      conf.setEntry(ASYNC_ACTION_LISTENERS, names);
-    }
-    return names;
   }
 
   private static ConfigurationContext getConfiguration(Environment env) {

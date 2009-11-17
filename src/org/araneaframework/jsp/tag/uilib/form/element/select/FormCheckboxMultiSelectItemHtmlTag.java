@@ -16,29 +16,27 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.exception.AraneaJspException;
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
-
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
- * Form multiselect rendering tag, represents one item from {@link org.araneaframework.uilib.form.control.MultiSelectControl}. 
- * Default <code>styleClass</code> is &quot;aranea-multi-checkbox&quot;. 
- * It will be rendered with HTML &lt;input type=&quot;checkbox&quot;&gt; tag.
+ * Form multiselect rendering tag, represents one item from
+ * {@link org.araneaframework.uilib.form.control.MultiSelectControl}. Default <code>styleClass</code> is
+ * &quot;aranea-multi-checkbox&quot;. It will be rendered with HTML &lt;input type=&quot;checkbox&quot;&gt; tag.
  * 
  * @author Oleg Mürk
  * @author Jevgeni Kabanov
- * <br>
  * @jsp.tag
- *   name = "checkboxMultiSelectItem"
- *   body-content = "JSP"
- *   description = "Form checkbox, represents one item from UiLib 'MultiSelectControl' rendered with checkboxes." 
+ *  name = "checkboxMultiSelectItem"
+ *  body-content = "JSP"
+ *  description = "Form checkbox, represents one item from UiLib 'MultiSelectControl' rendered with checkboxes."
  */
 @SuppressWarnings("unchecked")
 public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
@@ -47,11 +45,18 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
   /**
    * The custom specified ID for the tag. The value should be used when setting the ID of the rendered HTML tag.
+   * 
    * @since 1.1
    */
   protected String htmlId;
 
-  
+  /**
+   * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
+   * 
+   * @since 2.0
+   */
+  protected Boolean localizeDisplayItems;
+
   public FormCheckboxMultiSelectItemHtmlTag() {
     this.baseStyleClass = "aranea-multi-checkbox";
   }
@@ -70,14 +75,16 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
     // Prepare
     String name = getFullFieldId();
-    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel) controlViewModel);
+    MultiSelectControl.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
 
-    if (viewModel.getSelectedItem() == null) {
-      throw new AraneaJspException("Value '" + value + "' not found in values list.");
+    this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
+
+    if (this.localizeDisplayItems.booleanValue()) {
+      this.value = JspUtil.getResourceString(this.pageContext, this.value);
     }
 
     JspUtil.writeOpenStartTag(out, "input");
-    JspUtil.writeAttribute(out, "id", htmlId);
+    JspUtil.writeAttribute(out, "id", this.htmlId);
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
@@ -85,7 +92,7 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", this.value);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-    if (viewModel.isDisabled() || viewModel.getSelectedItem().isDisabled()) {
+    if (viewModel.isDisabled() || viewModel.getSelectedItem() != null && viewModel.getSelectedItem().isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
@@ -98,8 +105,6 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
     if (this.events && viewModel.isOnChangeEventRegistered()) {
       this.writeSubmitScriptForUiEvent(out, "onclick", this.derivedId, "onChanged", "", this.updateRegionNames);
     }
-
-    writeBackgroundValidationAttribute(out);
 
     JspUtil.writeCloseStartEndTag_SS(out);
 
@@ -127,5 +132,16 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
    */
   public void setHtmlId(String htmlId) {
     this.htmlId = evaluate("htmlId", htmlId, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
+   * @since 2.0
+   */
+  public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 }

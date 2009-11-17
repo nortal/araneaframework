@@ -62,6 +62,10 @@ public class ConverterKey <C, D> implements Serializable {
     return this.toType;
   }
 
+  public ConverterKey<D, C> reverse() {
+    return new ConverterKey<D, C>(toType, fromType);
+  }
+
   /**
    * Implements the {@link Object#equals(java.lang.Object)} method, using both types.
    */
@@ -81,5 +85,14 @@ public class ConverterKey <C, D> implements Serializable {
   @Override
   public int hashCode() {
     return 5 * this.fromType.hashCode() + 7 * this.toType.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append(this.fromType == null ? "null" : this.fromType.getSimpleName());
+    sb.append("->");
+    sb.append(this.toType == null ? "null" : this.toType.getSimpleName());
+    return sb.toString();
   }
 }

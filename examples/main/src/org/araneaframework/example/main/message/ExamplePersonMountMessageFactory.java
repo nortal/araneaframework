@@ -16,14 +16,16 @@
 
 package org.araneaframework.example.main.message;
 
+import org.araneaframework.example.main.web.MenuWidget;
+
+import org.araneaframework.example.main.web.management.person.PersonAddEditWidget;
+
 import org.araneaframework.Component;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.SeriesMessage;
-import org.araneaframework.example.main.web.menu.MenuWidget;
-import org.araneaframework.example.main.web.person.PersonAddEditWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExamplePersonMountMessageFactory implements MessageFactory {

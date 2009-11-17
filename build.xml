@@ -10,6 +10,10 @@
 
 	<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 
+	<property name="ivy.report.dir" value="build/reports/ivy" />
+
+	<!-- CLASSPATHS-->
+
 	<path id="build.cp">
 		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
 		<fileset dir="${lib.dir}/build/" includes="*.jar"/>
@@ -33,29 +37,29 @@
 		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
 	</path>
 
-	<!-- Clean up build system results -->
-	<target name="clean-all" depends="clean" description="Clean up build system results">
-		<ant dir="examples/common" target="clean" inheritall="false"/>
-		<ant dir="examples/main" target="clean" inheritall="false"/>
-		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
-		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
-		<ant dir="examples/widgetHelloName" target="clean" inheritall="false"/>
-		<ant dir="examples/blank" target="clean" inheritall="false"/>
-		<ant dir="tests" target="clean" inheritall="false"/>
-	</target>
+	<!-- ======================================== -->
+	<!-- DEPENDENCIES AND PUBLISHING DISTRIBUTION -->
+	<!-- ======================================== -->
 
-	<!-- Clean up build system results -->
-	<target name="clean" description="Clean up build and dist directories">
-		<delete dir="build" failonerror="false"/>
-		<delete dir="${dist.dir}" failonerror="false"/>
-		<delete dir="etc/js/aranea" includes="*.js" failonerror="false"/>
+	<target name="init-ivy" description="Initializes ivy path and settings">
+		<condition property="ivy.settings.file" value="ivysettings_unix.xml" else="ivysettings.xml">
+			<os family="unix"/>
+		</condition>
+
+		<path id="ivy.lib.path">
+			<fileset dir="lib/ivy/" includes="*.jar"/>
+		</path>
+
+		<taskdef resource="org/apache/ivy/ant/antlib.xml"
+			uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+
+		<ivy:settings file="${ivy.settings.file}" />
 	</target>
 
 	<target name="fetch-libs" depends="init-ivy" description="Download all necessary libraries">
 		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" conf="runtime,build,build-util,demo,test,jetty"/>
 	</target>
 
-	<property name="ivy.report.dir" value="build/reports/ivy" />
 	<!-- Generates a report of dependencies -->
 	<target name="ivy-report" depends="init-ivy" description="Generates a report of dependencies">
 		<ivy:resolve file="ivy.xml" />
@@ -84,23 +88,32 @@
 		<delete dir="publishtmp"/>
 	</target>
 
-	<target name="init" description="Initializes the build system">
-		<mkdir dir="build" />
+	<!-- ============================ -->
+	<!-- PROJECT DIRECTORIES CLEAN-UP -->
+	<!-- ============================ -->
+
+	<target name="clean-all" depends="clean" description="Clean up build system results">
+		<ant dir="examples/common" target="clean" inheritall="false"/>
+		<ant dir="examples/main" target="clean" inheritall="false"/>
+		<ant dir="examples/serviceHelloWorld" target="clean" inheritall="false"/>
+		<ant dir="examples/serviceHelloName" target="clean" inheritall="false"/>
+		<ant dir="examples/widgetHelloName" target="clean" inheritall="false"/>
+		<ant dir="examples/blank" target="clean" inheritall="false"/>
+		<ant dir="tests" target="clean" inheritall="false"/>
 	</target>
 
-	<target name="init-ivy" description="Initializes ivy path and settings">
-		<condition property="ivy.settings.file" value="ivysettings_unix.xml" else="ivysettings.xml">
-			<os family="unix"/>
-		</condition>
+	<target name="clean" description="Clean up build and dist directories">
+		<delete dir="build" failonerror="false"/>
+		<delete dir="${dist.dir}" failonerror="false"/>
+		<delete dir="etc/js/aranea" includes="*.js" failonerror="false"/>
+	</target>
 
-		<path id="ivy.lib.path">
-			<fileset dir="lib/ivy/" includes="*.jar"/>
-		</path>
+	<!-- ============= -->
+	<!-- PROJECT TASKS -->
+	<!-- ============= -->
 
-		<taskdef resource="org/apache/ivy/ant/antlib.xml"
-			uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
-
-		<ivy:settings file="${ivy.settings.file}" />
+	<target name="init" description="Initializes the build system">
+		<mkdir dir="build" />
 	</target>
 
 	<target name="build" depends="jar" description="Builds the Aranea source code and JARs." />
@@ -204,7 +217,7 @@
 		</exec>
 	</target>
 
-	<target name="jar" depends="js,compile,make-manifest" description="Builds Aranea JAR file">
+	<target name="jar" depends="transform-tld,js,compile,make-manifest" description="Builds Aranea JAR file">
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${dist.dir}/modules" />
 		<mkdir dir="${dist.dir}/integration" />
@@ -308,47 +321,6 @@
 		</jar>
 	</target>
 
-	<target name="javadoc" description="Generates JavaDoc from Aranaea source code">
-		<mkdir dir="${dist.dir}/doc/javadoc/" />
-		<javadoc
-				source="1.5"
-				encoding="UTF-8"
-				docencoding="UTF-8"
-				packagenames="org.araneaframework.*" 
-				sourcepath="src"
-				destdir="${dist.dir}/doc/javadoc/">
-
-			<classpath refid="runtime.cp"/>
-			<classpath refid="build.cp"/>
-			<classpath refid="build.util.cp"/>
-			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
-			<link href="http://static.springframework.org/spring/docs/1.2.6/api/"/>
-			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
-			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
-		</javadoc>
-	</target>
-
-	<target name="javadoc-zip" description="Generates JavaDoc from Aranaea source code and zips it">
-		<mkdir dir="${dist.dir}/doc/javadoc/" />
-		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="${dist.dir}/doc/javadoc/"/>
-
-		<zip destfile="${dist.dir}/doc/javadoc.zip">
-			<zipfileset dir="${dist.dir}/doc/javadoc" prefix="javadoc"/>
-		</zip>
-	</target>
-
-	<!-- Build internal documentation -->
-	<target name="doc" depends="init, javadoc" description="Build internal documentation">
-		<ant target="build" dir="doc/reference" />
-		<ant target="build" dir="doc/tutorial" />
-		<ant target="build" dir="doc/intro" />
-	</target>
-
-	<!-- test the system -->
-	<target name="run-tests" depends="init, build" description="Run the junit tests">
-		<ant target="run-tests" dir="tests"/>
-	</target>
-
 	<target name="dist" description="Builds downloadable distribution.">
 		<mkdir dir="build/tmp/dist"/>
 
@@ -416,6 +388,66 @@
 		</zip>
 	</target>
 
+	<target name="transform-tld" description="Creates 'aranea-standard_rt.tld' based on 'aranea-standard.tld'.">
+
+		<!-- Secondary TLD, attributes defined to be /rtexprvalue/s, so that JSP > 2 EL evaluator evaluates them -->
+
+		<property name="tagUri" value="http://araneaframework.org/tag-library/standard"/>
+		<property name="destdir" value="etc/META-INF"/>
+		<property name="filename" value="${destdir}/aranea-standard"/>
+
+		<xslt style="etc/build/rt_tld-transform.xsl" in="${filename}.tld" out="${filename}_rt.tld"/>
+		<replace file="${filename}_rt.tld" token="${tagUri}" value="${tagUri}_rt"/>
+	</target>
+
+	<!-- ========================= -->
+	<!-- DOCUMENTATION COMPILATION -->
+	<!-- ========================= -->
+
+	<target name="javadoc" description="Generates JavaDoc from Aranaea source code">
+		<mkdir dir="${dist.dir}/doc/javadoc/" />
+		<javadoc
+				source="1.5"
+				encoding="UTF-8"
+				docencoding="UTF-8"
+				packagenames="org.araneaframework.*" 
+				sourcepath="src"
+				destdir="${dist.dir}/doc/javadoc/">
+
+			<classpath refid="runtime.cp"/>
+			<classpath refid="build.cp"/>
+			<classpath refid="build.util.cp"/>
+			<link href="http://java.sun.com/j2se/1.4.2/docs/api/"/>
+			<link href="http://static.springframework.org/spring/docs/1.2.6/api/"/>
+			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
+			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
+		</javadoc>
+	</target>
+
+	<target name="javadoc-zip" description="Generates JavaDoc from Aranaea source code and zips it">
+		<mkdir dir="${dist.dir}/doc/javadoc/" />
+		<javadoc packagenames="org.araneaframework.*" sourcepath="src" destdir="${dist.dir}/doc/javadoc/"/>
+
+		<zip destfile="${dist.dir}/doc/javadoc.zip">
+			<zipfileset dir="${dist.dir}/doc/javadoc" prefix="javadoc"/>
+		</zip>
+	</target>
+
+	<!-- Build internal documentation -->
+	<target name="doc" depends="init, javadoc" description="Build internal documentation">
+		<ant target="build" dir="doc/reference" />
+		<ant target="build" dir="doc/tutorial" />
+		<ant target="build" dir="doc/intro" />
+	</target>
+
+	<!-- ============== -->
+	<!-- CODE COVERAGES -->
+	<!-- ============== -->
+
+	<target name="run-tests" depends="init, build" description="Run the junit tests">
+		<ant target="run-tests" dir="tests"/>
+	</target>
+
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
 		<taskdef resource="checkstyletask.properties" classpathref="build.util.cp"/>
 		<checkstyle config="checkstyle_checks.xml">
@@ -424,7 +456,9 @@
 		</checkstyle>
 	</target>
 
+	<!-- ===================================================================== -->
 	<!-- ======================== CHANGELOGIC TARGETS ======================== -->
+	<!-- ===================================================================== -->
 
 	<property name="changelogic-build.xml" value="changelogic-build.xml"/>
 

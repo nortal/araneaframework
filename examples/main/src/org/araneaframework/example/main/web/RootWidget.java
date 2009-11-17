@@ -20,7 +20,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.example.main.SecurityContext;
-import org.araneaframework.example.main.web.menu.MenuWidget;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**

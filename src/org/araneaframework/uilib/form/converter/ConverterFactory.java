@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.converter;
 
+import org.araneaframework.uilib.support.DisplayItem;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -45,14 +47,16 @@ public class ConverterFactory implements ConverterProvider {
 
   protected ConverterFactory() {
     // String to a number:
+    addConverter(String.class, Character.class, new StringToCharacterConverter());
     addConverter(String.class, Integer.class, new StringToNumberConverter<Integer>(Integer.class));
     addConverter(String.class, Long.class, new StringToNumberConverter<Long>(Long.class));
-    addConverter(String.class, BigInteger.class, new StringToNumberConverter<BigInteger>(BigInteger.class));
     addConverter(String.class, Float.class, new StringToNumberConverter<Float>(Float.class));
     addConverter(String.class, Double.class, new StringToNumberConverter<Double>(Double.class));
+    addConverter(String.class, BigInteger.class, new StringToNumberConverter<BigInteger>(BigInteger.class));
     addConverter(String.class, BigDecimal.class, new StringToNumberConverter<BigDecimal>(BigDecimal.class));
-
     addConverter(String.class, Boolean.class, new StringToBooleanConverter());
+    addConverter(String.class, DisplayItem.class, new StringToDisplayItemConverter());
+
     addConverter(Boolean.class, Long.class, new BooleanToLongConverter());
     addConverter(Boolean.class, String.class, new BooleanToYNConverter());
 
@@ -60,6 +64,11 @@ public class ConverterFactory implements ConverterProvider {
     addConverter(BigDecimal.class, Double.class, new BigDecimalToDoubleConverter());
     addConverter(BigInteger.class, Long.class, new BigIntegerToLongConverter());
     addConverter(BigInteger.class, Integer.class, new BigIntegerToIntegerConverter());
+
+    addConverter(BigDecimal.class, float.class, new BigDecimalToFloatConverter());
+    addConverter(BigDecimal.class, double.class, new BigDecimalToDoubleConverter());
+    addConverter(BigInteger.class, long.class, new BigIntegerToLongConverter());
+    addConverter(BigInteger.class, int.class, new BigIntegerToIntegerConverter());
 
     addConverter(Timestamp.class, Date.class, new TimestampToDateConverter());
   }
@@ -83,23 +92,39 @@ public class ConverterFactory implements ConverterProvider {
     }
 
     ConverterKey<?, ?> key = new ConverterKey(fromType.getType(), toType.getType());
-    ConverterKey<?, ?> keyReverse = new ConverterKey(toType.getType(), fromType.getType());
+    ConverterKey<?, ?> keyReverse = key.reverse();
+    ConverterKey<?, ?> keyComposite1 = new ConverterKey(fromType.getType(), DataType.STRING_TYPE.getType());
+    ConverterKey<?, ?> keyComposite2 = new ConverterKey(DataType.STRING_TYPE.getType(), toType.getType());
+    
 
-    if (fromType.equals(toType) || fromType.getType().equals(Object.class) || toType.equals(Object.class)) {
+    if (fromType.equals(toType) || fromType.getType().equals(Object.class) || toType.getType().equals(Object.class)) {
       return new IdenticalConverter();
 
     } else if (this.converters.containsKey(key)) {
-      return addWrappers(fromType, toType, this.converters.get(key));
+      return prepare(fromType, toType, this.converters.get(key));
 
     } else if (this.converters.containsKey(keyReverse)) {
-      return addWrappers(fromType, toType, this.converters.get(keyReverse));
+      return prepare(fromType, toType, this.converters.get(keyReverse));
+
+    } else if (this.converters.containsKey(keyComposite1) && this.converters.containsKey(keyComposite2)) {
+      Converter c1 = this.converters.get(keyComposite1);
+      Converter c2 = this.converters.get(keyComposite2);
+      return prepare(fromType, toType, new CompositeConverter(c1, c2));
 
     } else {
-      throw new ConverterNotFoundException(fromType, toType);
+      try {
+        Converter c1 = findConverter(fromType, DataType.STRING_TYPE);
+        Converter c2 = findConverter(DataType.STRING_TYPE, toType);
+        return prepare(fromType, toType, new CompositeConverter(c1, c2));
+      } catch (ConverterNotFoundException e) {
+        // Do nothing. The right exception is thrown right below.
+      }
     }
+
+    throw new ConverterNotFoundException(fromType, toType);
   }
 
-  private Converter<?, ?> addWrappers(DataType fromType, DataType toType, Converter<?, ?> converter) {
+  private Converter<?, ?> prepare(DataType fromType, DataType toType, Converter<?, ?> converter) {
     return fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
   }
 

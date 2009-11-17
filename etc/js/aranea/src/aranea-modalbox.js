@@ -85,8 +85,8 @@ Aranea.ModalBox = {
 	 * @param params The data from the OverlayContext.
 	 */
 	show: function(params) {
-		this.Options = params;
-		this.update(this.Options);
+		Aranea.Modalbox.Options = params;
+		Aranea.Modalbox.update(Aranea.Modalbox.Options);
 	},
 
 	/**

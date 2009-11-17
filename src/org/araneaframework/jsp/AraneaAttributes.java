@@ -54,4 +54,6 @@ public abstract class AraneaAttributes {
    * (Default is set with {@link ConfigurationContext} entry {@link ConfigurationContext#BACKGROUND_FORM_VALIDATION}.
    * @since 1.1 */
   public static final String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
+
+  public static final String BACKGROUND_VALIDATION_CLASS = "aranea-bg-validate";
 }

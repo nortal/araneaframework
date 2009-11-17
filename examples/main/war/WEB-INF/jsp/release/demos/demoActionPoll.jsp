@@ -26,8 +26,8 @@
 		};
 
 		var pollingAction = function() {
-			// Params:   action(element, actionId, actionTarget, actionParam, actionCallback[, options, sync, extraParams])
-			araneaPage().action(null, "pollrequest", '<c:out value="${widgetId}" />', null, pollingUpdater);
+			// Params:  action(actionId, actionTarget, actionParam, actionCallback[, options, sync, extraParams])
+			Aranea.Page.action("pollrequest", '${widgetId}', null, null, pollingUpdater);
 		};
 
 		var intervalActionId = setInterval(pollingAction, 3000);

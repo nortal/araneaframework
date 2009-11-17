@@ -44,23 +44,32 @@ Aranea.Logger = {
 	SAFARI_LOGGER: window.console && window.console.log ? {
 		trace: function(s) { window.console.log(s); },
 		debug: function(s) { window.console.log(s); },
-		info:	function(s) { window.console.log(s); },
-		warn:	function(s) { window.console.log(s); },
+		info: function(s) { window.console.log(s); },
+		warn: function(s) { window.console.log(s); },
 		error: function(s) { window.console.log(s); },
 		fatal: function(s) { window.console.log(s); }
-	} : this.DUMMY_LOGGER,
+	} : Aranea.Logger.DUMMY_LOGGER,
 
 	FIREBUG_LOGGER: window.console && window.console.debug ? {
 		trace: function(s) { window.console.debug(s); },
 		debug: function(s) { window.console.debug(s); },
-		info:	function(s) { window.console.info(s); },
-		warn:	function(s) { window.console.warn(s); },
+		info: function(s) { window.console.info(s); },
+		warn: function(s) { window.console.warn(s); },
 		error: function(s) { window.console.error(s); },
 		fatal: function(s) { window.console.error(s); }
-	} : this.DUMMY_LOGGER,
+	} : Aranea.Logger.DUMMY_LOGGER,
 
 	LOG4JS_LOGGER: window.log4javascript && window.log4javascript.getDefaultLogger ?
-			window.log4javascript.getDefaultLogger() : this.DUMMY_LOGGER,
+			window.log4javascript.getDefaultLogger() : Aranea.Logger.DUMMY_LOGGER,
+
+	init: function() {
+		var log = Aranea.Logger;
+		log.SAFARI_LOGGER = log.SAFARI_LOGGER == null ? log.DUMMY_LOGGER : log.SAFARI_LOGGER;
+		log.FIREBUG_LOGGER = log.FIREBUG_LOGGER == null ? log.DUMMY_LOGGER : log.FIREBUG_LOGGER;
+		log.LOG4JS_LOGGER = log.LOG4JS_LOGGER == null ? log.DUMMY_LOGGER : log.LOG4JS_LOGGER;
+		log.initiated
+		log = null;
+	},
 
 	trace: function(message, exception) {
 		Aranea.Data.logger.trace(message, exception);
@@ -94,6 +103,7 @@ Aranea.Logger = {
 	 * @param type Not null string, accepted types: "dummy", "firebug", "safari", "log4js".
 	 */
 	setLogger: function(type) {
+		Aranea.Logger.init();
 		type = type ? type.toUpperCase()+ '_LOGGER' : null;
 		Aranea.Data.logger = type ? this[type] : null;
 		if (!type || Aranea.Data.logger == null) {
@@ -104,9 +114,20 @@ Aranea.Logger = {
 
 Aranea.Util = {
 
+	setWindowCoordinates: function(x, y) {
+		document.observe('aranea:loaded', function() {
+			var form = Aranea.Data.systemForm;
+			if (form.windowScrollX && form.windowScrollX) {
+				Aranea.UI.scrollToCoordinates(x, y);
+			}
+			form = null;
+			document.observe('aranea:submit', Aranea.UI.saveScrollCoordinates);
+			document.stopObserving('aranea:loaded', this);
+		});
+	},
+
 	/**
-	 * A wrapper around String that lets to read text by lines and by chunks of
-	 * characters.
+	 * A wrapper around String that lets to read text by lines and by chunks of characters.
 	 *
 	 * @since 1.1
 	 */
@@ -134,7 +155,7 @@ Aranea.Util = {
 		},
 
 		readCharacters: function(numberOfCharacters) {
-			if (Object.isString(numberOfCharacters)) numberOfCharacters = parseInt(characters);
+			if (Object.isString(numberOfCharacters)) numberOfCharacters = parseInt(numberOfCharacters);
 			var content = this.text.substr(this.pos, numberOfCharacters);
 			this.pos = this.pos + numberOfCharacters;
 			return content;
@@ -167,5 +188,3 @@ Aranea.Util = {
 		}
 	})
 };
-
-Aranea.Logger.setLogger('firebug');

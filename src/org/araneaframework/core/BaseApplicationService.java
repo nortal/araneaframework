@@ -33,10 +33,11 @@ import org.araneaframework.Path;
 import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
+import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A full featured Service with support for composite, eventlisteners, viewmodel.
+ * A full featured Service with support for composite, EventListeners, ViewModel.
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
 
@@ -77,6 +78,21 @@ public abstract class BaseApplicationService extends BaseService implements Appl
 
     public Component detach(Object key) {
       return _getChildren().remove(key);
+    }
+  }
+
+  /**
+   * Extends the base functionality with registering asynchronous actions.
+   * 
+   * @author Martti Tamm (martti@araneaframework.org)
+   * @since 2.0
+   */
+  protected class ComponentImpl extends BaseComponent.ComponentImpl {
+
+    @Override
+    public synchronized void init(Scope scope, Environment env) {
+      super.init(scope, env);
+      ComponentUtil.registerActionListeners(getEnvironment(), getScope(), getActionListeners());
     }
   }
 
@@ -133,6 +149,10 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     return new ViewableImpl();
   }
 
+  @Override
+  public Component.Interface _getComponent() {
+    return new ComponentImpl();
+  }
   /**
    * Adds the ActionListener listener with the specified action id.
    */
@@ -143,12 +163,13 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     List<ActionListener> list = getActionListeners().get(actionId);
 
     if (list == null) {
-      list = new ArrayList<ActionListener>(1);
+      list = new ArrayList<ActionListener>();
     }
 
     list.add(listener);
 
     getActionListeners().put(actionId, list);
+    ComponentUtil.registerActionListener(getEnvironment(), getScope(), actionId, listener);
   }
 
   /**
@@ -156,19 +177,25 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    */
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
-    for (List<ActionListener> listeners : getActionListeners().values()) {
-      listeners.remove(listener);
+    for (Map.Entry<String, List<ActionListener>> entry : getActionListeners().entrySet()) {
+      if (entry.getValue().contains(listener)) {
+        boolean existed = entry.getValue().remove(listener);
+        if (existed) {
+          ComponentUtil.unregisterActionListener(getEnvironment(), getScope(), entry.getKey(), listener);
+        }
+      }
     }
   }
 
   /**
    * Clears all the ActionListeners with the specified actionId.
    * 
-   * @param actionId the id of the ActionListeners.
+   * @param actionId The ID of the ActionListeners.
    */
-  public void clearActionlisteners(Object actionId) {
+  public void clearActionlisteners(String actionId) {
     Assert.notNullParam(this, actionId, "actionId");
-    getActionListeners().remove(actionId);
+    List<ActionListener> listeners = getActionListeners().remove(actionId);
+    ComponentUtil.unregisterActionListeners(getEnvironment(), getScope(), actionId, listeners);
   }
 
   /**
@@ -323,8 +350,10 @@ public abstract class BaseApplicationService extends BaseService implements Appl
 
       Service service = (Service) getChildren().get(next);
       if (service == null) {
-        LOG.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
-            + Assert.thisToString(this));
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
+              + Assert.thisToString(this));
+        }
         return;
       }
 
@@ -341,13 +370,18 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     String actionId = getActionId(input);
 
     if (actionId == null) {
-      LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action ID!"
+                + Assert.thisToString(this));
+      }
       return;
     }
 
     List<ActionListener> listeners = this.actionListeners != null ? null : this.actionListeners.get(actionId);
 
-    LOG.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");
+    }
 
     if (listeners != null && !listeners.isEmpty()) {
       for (ActionListener listener : listeners) {

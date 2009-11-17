@@ -1,8 +1,8 @@
-// script.aculo.us controls.js v1.8.2, Tue Nov 18 18:30:58 +0100 2008
+// script.aculo.us controls.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2008 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2008 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
-//           (c) 2005-2008 Jon Tirsen (http://www.tirsen.com)
+// Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+//           (c) 2005-2009 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
+//           (c) 2005-2009 Jon Tirsen (http://www.tirsen.com)
 // Contributors:
 //  Richard Livsey
 //  Rahul Bhargava
@@ -46,7 +46,6 @@ Autocompleter.Base = Class.create({
     this.element     = element;
     this.update      = $(update);
     this.hasFocus    = false;
-    this.hasUpdateFocus = false;
     this.changed     = false;
     this.active      = false;
     this.index       = 0;
@@ -66,7 +65,7 @@ Autocompleter.Base = Class.create({
       function(element, update){
         if(!update.style.position || update.style.position=='absolute') {
           update.style.position = 'absolute';
-          update.clonePosition(element, {
+          Position.clone(element, update, {
             setHeight: false,
             offsetTop: element.offsetHeight
           });
@@ -90,11 +89,7 @@ Autocompleter.Base = Class.create({
 
     Event.observe(this.element, 'blur', this.onBlur.bindAsEventListener(this));
     Event.observe(this.element, 'keydown', this.onKeyPress.bindAsEventListener(this));
-
-    Event.observe(this.update, 'focus', function() { this.hasUpdateFocus = true; }.bind(this));
-    Event.observe(this.update, 'blur', function() { this.hasUpdateFocus = false; }.bind(this));
-
-},
+  },
 
   show: function() {
     if(Element.getStyle(this.update, 'display')=='none') this.options.onShow(this.element, this.update);
@@ -193,17 +188,10 @@ Autocompleter.Base = Class.create({
   },
 
   onBlur: function(event) {
-    var f = function() {
-        if (this.hasUpdateFocus) {
-            return;
-        }
-        // needed to make click events working
-        setTimeout(this.hide.bind(this), 250);
-        this.hasFocus = false;
-        this.active = false;
-        setTimeout(this.hide.bind(this), 250);
-    }.bind(this);
-    setTimeout(f);
+    // needed to make click events working
+    setTimeout(this.hide.bind(this), 250);
+    this.hasFocus = false;
+    this.active = false;
   },
 
   render: function() {
@@ -278,8 +266,7 @@ Autocompleter.Base = Class.create({
 
   updateChoices: function(choices) {
     if(!this.changed && this.hasFocus) {
-      //this.update.innerHTML = choices;
-      $(this.update).update("").insert(choices);
+      this.update.innerHTML = choices;
       Element.cleanWhitespace(this.update);
       Element.cleanWhitespace(this.update.down());
 

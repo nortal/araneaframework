@@ -146,19 +146,23 @@ public class BeanFormWidget<T> extends FormWidget {
     return result;
   }
 
-  @SuppressWarnings("unchecked")
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
-    D initialValue = (D) BeanUtil.getPropertyValue(this.bean, elementName);
-    return addBeanElement(elementName, labelId, control, initialValue, mandatory);
-  }
-
   public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control) {
     return addBeanElement(elementName, labelId, control, false);
   }
 
   @SuppressWarnings("unchecked")
+  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
+    Data<D> data = new Data(BeanUtil.getPropertyType(this.beanClass, elementName));
+    return addElement(elementName, labelId, control, data, mandatory);
+  }
+
+  @SuppressWarnings("unchecked")
   public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
-    return addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
+    if (initialValue == null) {
+      return addBeanElement(elementName, labelId, control, mandatory);
+    } else {
+      return addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
+    }
   }
 
   @Deprecated

@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.converter.BaseConverter;
 public interface Converter<C,D> extends Serializable, FormElementAware<C,D> {
 
   public void setFormElementCtx(FormElementContext<C,D> feCtx);
-  
+
   /**
    * This method converts the data from one type to another.
    *  

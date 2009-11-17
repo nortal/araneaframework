@@ -30,4 +30,17 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
       ExceptionUtil.uncheckException(e);
     }
   }
+
+  @Override
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  protected class ViewModel extends SelectControl<DisplayItem>.ViewModel {
+
+    @Override
+    public String getControlType() {
+      return SelectControl.class.getSimpleName();
+    }
+  }
 }
