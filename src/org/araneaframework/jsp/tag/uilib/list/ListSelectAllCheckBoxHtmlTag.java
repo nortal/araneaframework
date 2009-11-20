@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
@@ -106,7 +108,7 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
    */
   protected String getCheckBoxId() throws JspException {
     String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
-    return listId + "." + ListRowCheckBoxHtmlTag.SELECTION_SCOPE;
+    return listId + Path.SEPARATOR + ListRowCheckBoxHtmlTag.SELECTION_SCOPE;
   }
 
   /**

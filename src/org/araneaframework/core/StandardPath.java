@@ -40,7 +40,7 @@ public class StandardPath implements Path {
   public StandardPath(String fullPath) {
     Assert.notNull(fullPath, "Path cannot be null!");
 
-    StringTokenizer tokenizer = new StringTokenizer(fullPath, ".");
+    StringTokenizer tokenizer = new StringTokenizer(fullPath, SEPARATOR);
     while (tokenizer.hasMoreElements()) {
       this.path.add(tokenizer.nextToken());
     }
@@ -72,6 +72,6 @@ public class StandardPath implements Path {
    */
   @Override
   public String toString() {
-    return StringUtils.join(this.path, ".");
+    return StringUtils.join(this.path, SEPARATOR);
   }
 }

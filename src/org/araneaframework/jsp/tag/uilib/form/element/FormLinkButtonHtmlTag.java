@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
+import org.araneaframework.Path;
+
 import java.io.IOException;
 import java.io.Writer;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -32,7 +34,7 @@ import org.araneaframework.uilib.event.OnClickEventListener;
  * @jsp.tag
  *   name = "linkButton"
  *   body-content = "JSP"
- *   description = "HTML link, represents UiLib "ButtonControl"."
+ *   description = "HTML link, represents UiLib 'ButtonControl'."
  */
 public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
   {
@@ -75,7 +77,8 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
 
   protected boolean writeEventAttribute(Writer out) throws IOException {
     if (viewModel.isOnClickEventRegistered()) {
-      UiUpdateEvent event = new UiUpdateEvent(OnClickEventListener.ON_CLICK_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
+      UiUpdateEvent event = new UiUpdateEvent(OnClickEventListener.ON_CLICK_EVENT, formFullId + Path.SEPARATOR
+          + derivedId, null, updateRegionNames);
       event.setEventPrecondition(onClickPrecondition);
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");

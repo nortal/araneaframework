@@ -101,13 +101,13 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
   public void registerAsynchronousAction(String parentScope, String actionId) {
     Assert.notNullParam(this, parentScope, "parentScope");
     Assert.notNullParam(this, actionId, "actionId");
-    this.asynchronousActions.add(parentScope + "." + actionId);
+    this.asynchronousActions.add(parentScope + Path.SEPARATOR + actionId);
   }
 
   public void unregisterAsynchronousAction(String parentScope, String actionId) {
     Assert.notNullParam(this, parentScope, "parentScope");
     Assert.notNullParam(this, actionId, "actionId");
-    this.asynchronousActions.remove(parentScope + "." + actionId);
+    this.asynchronousActions.remove(parentScope + Path.SEPARATOR + actionId);
   }
 
   /**
@@ -139,7 +139,8 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
 
     boolean result = isAsynchronous(actionId, targetPath) || !"false".equals(sync);
     if (LOG.isInfoEnabled()) {
-      LOG.info("The action '" + targetPath + "." + actionId + "' is to be processed asynchronously!");
+      LOG.info("The action '" + targetPath + Path.SEPARATOR + actionId
+          + "' is to be processed asynchronously!");
     }
 
     return result;

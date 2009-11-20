@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import java.util.ListIterator;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
@@ -31,8 +33,7 @@ import org.araneaframework.uilib.form.formlist.FormRow;
  * @jsp.tag
  *   name = "formListRows"
  *   body-content = "JSP"
- *   description = "Iterating tag that gives access to each row and row form on the UiLib editable list current page.
- *                  The editable row is accessible as "formRow" variable."
+ *   description = "Iterating tag that gives access to each row and row form on the UiLib editable list current page. The editable row is accessible as "formRow" variable."
  */
 @SuppressWarnings("unchecked")
 public class FormListRowsTag<R> extends BaseListRowsTag {
@@ -84,7 +85,7 @@ public class FormListRowsTag<R> extends BaseListRowsTag {
     addContextEntry(this.var, this.currentRow);
 
     registerSubtag(this.rowForm);
-    this.rowForm.setId(this.editableListId + "." + currentEditableRow.getRowFormId());
+    this.rowForm.setId(this.editableListId + Path.SEPARATOR + currentEditableRow.getRowFormId());
     executeStartSubtag(this.rowForm);
   }
 

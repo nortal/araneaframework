@@ -34,7 +34,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
  * @jsp.tag
  *  name = "radioSelect"
  *  body-content = "JSP"
- *  description = "Form radio-select buttons field, represents UiLib "SelectControl"."
+ *  description = "Form radio-select buttons field, represents UiLib 'SelectControl'."
  */
 @SuppressWarnings("unchecked")
 public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {

@@ -11,8 +11,6 @@
 
 package org.araneaframework.uilib.list;
 
-import java.util.TreeMap;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,18 +19,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
-import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
-import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -175,6 +173,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   // *********************************************************************
   // * LIST ROW CHECK BOXES AND RADIO BUTTONS
   // *********************************************************************
+
   /**
    * Reads information about selected check boxes and radio buttons, and stores this information. It is possible to make
    * all selected check boxes (from previous pages as well) stored (see {@link #setSelectFromMultiplePages(boolean)} for
@@ -189,12 +188,13 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected void update(InputData input) throws Exception {
     super.update(input);
 
-    String listPath = getScope().toPath().toString();
+    HttpInputData input2 = (HttpInputData) input;
+
+    input2.pushPathPrefix(LIST_CHECK_SCOPE);
 
     // 1. Selected check boxes.
     // Path is used to read only those value-names that start with given prefix:
-    Path path = new StandardPath(listPath + "." + LIST_CHECK_SCOPE);
-    Map<String, String> listData = input.getScopedData(path);
+    Map<String, String> listData = input2.getScopedData(getScope().toPath());
     List<Integer> rowKeys = new LinkedList<Integer>();
 
     // Now we read index numbers of selected rows:
@@ -244,7 +244,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
       String rowKey = listData.get(LIST_RADIO_SCOPE);
 
       if (rowKey != null) {
-        rowKey = rowKey.substring(listPath.length() + LIST_RADIO_SCOPE.length() + 2);
+        rowKey = rowKey.substring(LIST_RADIO_SCOPE.length() + 2);
         T rowItem = getRowFromRequestId(rowKey);
         // In case of radio buttons, we discard the previous value,
         // because only one row can be selected:

@@ -26,8 +26,10 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 /**
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
- * @jsp.tag name = "textareaDisplay" body-content = "JSP" description =
- *          "Form textarea display field, represents UiLib "TextareaControl"."
+ * @jsp.tag
+ *  name = "textareaDisplay"
+ *  body-content = "JSP"
+ *  description = "Form textarea display field, represents UiLib 'TextareaControl'."
  */
 public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
 

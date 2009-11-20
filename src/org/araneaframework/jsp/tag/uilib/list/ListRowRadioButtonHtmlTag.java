@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
@@ -88,7 +90,7 @@ public class ListRowRadioButtonHtmlTag extends BaseListRowControlTag {
   protected String getRadioButtonValue() throws JspException {
     String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
-    return listId + "." + SELECTION_SCOPE + "." + rowRequestId;
+    return listId + Path.SEPARATOR + SELECTION_SCOPE + Path.SEPARATOR + rowRequestId;
   }
 
   /**
@@ -99,7 +101,7 @@ public class ListRowRadioButtonHtmlTag extends BaseListRowControlTag {
    * @throws JspException
    */
   protected String getRadioButtonName() throws JspException {
-    return requireContextEntry(ListTag.LIST_FULL_ID_KEY) + "." + SELECTION_SCOPE;
+    return requireContextEntry(ListTag.LIST_FULL_ID_KEY) + Path.SEPARATOR + SELECTION_SCOPE;
   }
 
   /**

@@ -252,7 +252,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
       String widgetId = entry.getKey();
       Set<String> regionIds = entry.getValue();
-      if (widgetId.startsWith(sourceWidgetId + ".")) {
+      if (widgetId.startsWith(sourceWidgetId + Path.SEPARATOR)) {
         sourceRegionIds.addAll(regionIds);
         i.remove();
       } else {

@@ -91,7 +91,7 @@ public class MockOutputData implements OutputData {
     StringBuffer result = new StringBuffer();
     Iterator<Object> ite = this.pathPrefix.iterator();
     while (ite.hasNext()) {
-      result.append(ite.next() + ".");
+      result.append(ite.next() + Path.SEPARATOR);
     }
     if (result.length() > 0) {
       result = new StringBuffer(result.substring(0, result.length() - 1));

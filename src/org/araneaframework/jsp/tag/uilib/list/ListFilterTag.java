@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
@@ -44,7 +46,7 @@ public class ListFilterTag extends BaseTag {
 
     // Include form tag
     this.formTag = registerSubtag(new FormTag());
-    this.formTag.setId(listId + "." + ListWidget.FILTER_FORM_NAME);
+    this.formTag.setId(listId + Path.SEPARATOR + ListWidget.FILTER_FORM_NAME);
     executeStartSubtag(registerSubtag(this.formTag));
 
     // Continue

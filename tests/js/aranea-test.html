@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript" src="app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Tests for "aranea.js"</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var testURL = 'http://www.demo.org/demo';
+		var testURLShort = '/demo';
+
+		function setUp() {
+			Aranea.Data.servletURL = testURL;
+			Aranea.Data.absoluteURLs = true;
+		}
+
+		function testNamespaces() {
+			assertNotNull('Aranea namespace must exist!', Aranea);
+			assertNotNull('Aranea.Logger namespace must exist!', Aranea.Logger);
+			assertNotNull('Aranea.Data namespace must exist!', Aranea.Data);
+			assertNotNull('Aranea.Page namespace must exist!', Aranea.Page);
+			assertNotNull('Aranea.Page.Request namespace must exist!', Aranea.Page.Request);
+		}
+
+		function testData() { // Tests default settings:
+			assertNotUndefined('Aranea.Data.servletURL must not be undefined!', Aranea.Data.servletURL);
+			assertTrue('Aranea.Data.autofocus must be true!', Aranea.Data.autofocus);
+			assertNull('Aranea.Data.focusedFormElementName must be null!', Aranea.Data.focusedFormElementName);
+			assertNotNull('Aranea.Data.focusableElements must not be null!', Aranea.Data.focusableElements);
+			assertFalse('Aranea.Data.loaded must be false!', Aranea.Data.loaded);
+			assertNotNull('Aranea.Data.locale must not be null!', Aranea.Data.focusableElements);
+			assertEquals('Aranea.Data.locale.lang must be empty string!', Aranea.Data.locale.lang, '');
+			assertEquals('Aranea.Data.locale.country must be empty string!', Aranea.Data.locale.country, '');
+			assertFalse('Aranea.Data.submitted must be false!', Aranea.Data.submitted);
+			assertNull('Aranea.Data.systemForm must be null!', Aranea.Data.systemForm);
+			assert('Aranea.Data.keepAliveTimers must be array!', Object.isArray(Aranea.Data.keepAliveTimers));
+			assertFalse('Aranea.Data.loadingMessagePositionHack must be false!', Aranea.Data.loadingMessagePositionHack);
+			assert('Aranea.Data.regionHandlers must be hash map!', Object.isHash(Aranea.Data.regionHandlers));
+			assert('Aranea.Data.loadingMessageContent must be a string!', Object.isString(Aranea.Data.loadingMessageContent));
+			assert('Aranea.Data.loadingMessageId must be a string!', Object.isString(Aranea.Data.loadingMessageId));
+			assertTrue('Aranea.Data.reloadOnNoDocumentRegions must be a string!', Aranea.Data.reloadOnNoDocumentRegions);
+			assert('Aranea.Data.systemFormId must be a string!', Object.isString(Aranea.Data.systemFormId));
+		}
+
+		function testLogger() {
+			assert('Aranea.Logger.trace must be a function!', Object.isFunction(Aranea.Logger.trace));
+			assert('Aranea.Logger.debug must be a function!', Object.isFunction(Aranea.Logger.debug));
+			assert('Aranea.Logger.info must be a function!', Object.isFunction(Aranea.Logger.info));
+			assert('Aranea.Logger.warn must be a function!', Object.isFunction(Aranea.Logger.warn));
+			assert('Aranea.Logger.error must be a function!', Object.isFunction(Aranea.Logger.error));
+			assert('Aranea.Logger.fatal must be a function!', Object.isFunction(Aranea.Logger.fatal));
+			assert('Aranea.Logger.setLogger must be a function!', Object.isFunction(Aranea.Logger.setLogger));
+		}
+
+		function testOnLoad() {
+			window.testOnLoadExecuted = false;
+
+			document.stopObserving('aranea:loaded');
+			document.observe('aranea:loaded', function() {
+				testOnLoadExecuted = true;
+			}.bind(this));
+
+			assertNull(Aranea.Data.systemForm);
+			assertFalse(Aranea.Data.loaded);
+			assertNotNull(document.observe);
+
+			Aranea.Page.onLoad();
+
+			assertNotNull(Aranea.Data.systemForm);
+			assertTrue(Aranea.Data.loaded);
+			assertTrue(window.testOnLoadExecuted);
+		}
+
+		function testFormEncoding() {
+			var encoding = 'UTF-16';
+			Aranea.Page.setSystemFormEncoding(encoding);
+			assertNotNull(Aranea.Data.systemForm);
+			assertEquals(Aranea.Data.systemForm.readAttribute('encoding'), encoding);
+			assertEquals(Aranea.Data.systemForm.readAttribute('enctype'), encoding);
+		}
+
+		function testAction() {
+			var f = function() { return 'dummy' };
+			var params = { test: 'me', fail: false };
+			var options = { test: true };
+			var sync = false; // async
+			var element = null
+
+			assertNotUndefined('Class must be provided by prototype.js!', Class);
+
+			window.Ajax.Request = Class.create({
+				initialize: function(url, options) {
+					assertEquals(testURL + '?' + $H({
+						araTransactionId: 'override',
+						araServiceActionPath: 'testTarget',
+						araServiceActionHandler: 'testActionId',
+						araServiceActionParameter: 'testParam',
+						araSync: false,
+						test: 'me',
+						fail: false
+					}).toQueryString(), url);
+
+					assertNotNull(options);
+					assertTrue(options.test);
+					assertEquals('post', options.method);
+					assertEquals(f, options.onComplete);
+					assert(Object.isFunction(options.onException));
+				}
+			});
+
+			assertNotUndefined('Aranea.Page.action must exist!', Aranea.Page.action);
+
+			Aranea.Page.action('testActionId', 'testTarget', 'testParam', params, f, options, sync, element);
+		}
+
+		function testSubmitters() {
+			var test = function(data) {
+				var result = false;
+				try {
+					result = Aranea.Page.findSubmitter(data);
+				} catch (e) {}
+				return result != null ? result.TYPE : null;
+			};
+
+			var types = $A([
+					Aranea.Page.Submitter.TYPE_PLAIN,
+					Aranea.Page.Submitter.TYPE_AJAX,
+					Aranea.Page.Submitter.TYPE_OVERLAY,
+					'',
+					null
+			]);
+
+			assertEquals('There must be five types for submitter-testing: [' + types.join('|') + ']', 5, types.size());
+
+			types.each(function(type) {
+				var target = type ? type : null;
+				if (type) {
+					assertEquals(target, test(type));
+					assertEquals(target, test({ type: type }));
+				} else {
+					assertUndefined(test(type));
+					assertUndefined(test({ type: type }));
+				}
+			});
+		}
+
+		function testSubmitURL() {
+			assert('Aranea.Page.encodeURL must be a function', Object.isFunction(Aranea.Page.encodeURL));
+			assertEquals('By default Aranea.Page.encodeURL should return the input string',
+					Aranea.Data.servletURL, Aranea.Page.encodeURL(Aranea.Data.servletURL));
+
+			var paramsLong = '?' + $H({
+				araTransactionId: 'testTransactionId',
+				araTopServiceId: 'testTopServiceId',
+				araThreadServiceId: 'testThreadServiceId',
+				araClientStateId: 'testClientStateId',
+				test: 'me',
+				fail: false
+			}).toQueryString();
+
+			var paramsShort = '?' + $H({ test: 'me', fail: false }).toQueryString();
+
+			Aranea.Data.absoluteURLs = false;
+			assertSubmitURL(true, testURLShort + paramsLong);
+			assertSubmitURL(false, testURLShort + paramsShort);
+
+			Aranea.Data.absoluteURLs = true;
+			assertSubmitURL(true, testURL + paramsLong);
+			assertSubmitURL(false, testURL + paramsShort);
+		}
+
+		function testActionSubmitUrl() {
+			var params = { test: 'me', fail: false };
+			var sync = false; // async
+			var element = null
+
+			var expected = testURL + '?' + $H({
+				araTransactionId: 'override',
+				araServiceActionPath: 'testTarget',
+				araServiceActionHandler: 'testActionId',
+				araServiceActionParameter: 'testParam',
+				araSync: false
+			}).update(params).toQueryString();
+
+			assertEquals(expected, Aranea.Page.getActionSubmitURL('testActionId', 'testTarget', 'testParam', sync, params,
+					element));
+		}
+
+		function assertSubmitURL(withForm, url) {
+			assertNotNull('assertSubmitURLs: Data form is required!', Aranea.Data.systemForm);
+			assert('assertSubmitURLs: Aranea.Page.getSubmitURL must be a function!', Object.isFunction(Aranea.Page.getSubmitURL));
+
+			var form = withForm ? Aranea.Data.systemForm : null;
+
+			var gotURL = Aranea.Page.getSubmitURL(form, 'test=me&fail=false');
+			assertEquals(url, gotURL);
+
+			gotURL = Aranea.Page.getSubmitURL(form, { test: 'me', fail: false });
+			assertEquals(url, gotURL);
+
+			if (!withForm) {
+				assertEquals(url, Aranea.Page.getSubmitURL('test=me&fail=false'));
+				assertEquals(url, Aranea.Page.getSubmitURL({ test: 'me', fail: false }));
+			}
+		}
+
+		function testFormParameters() {
+
+			var item = Aranea.Page.getFormParameters('aranea-form');
+			assertNull(item.get('araTransactionId'));
+			assertNull(item.get('araTopServiceId'));
+			assertNull(item.get('araThreadServiceId'));
+			assertNull(item.get('araClientStateId'));
+
+			item = Aranea.Page.getFormParameters('aranea-overlay-form');
+			assertEquals(item.get('araTransactionId'), 'testTransactionId');
+			assertEquals(item.get('araTopServiceId'), 'testTopServiceId');
+			assertEquals(item.get('araThreadServiceId'), 'testThreadServiceId');
+			assertEquals(item.get('araClientStateId'), 'testClientStateId');
+		}
+
+		function testKeepAlive() {
+			var test = function() {
+				alert('Failed!');
+				fail('The function shouldn\'t have been called!');
+			};
+
+			assertNotUndefined('Aranea.Data.keepAliveTimers must be defined!', Aranea.Data.keepAliveTimers);
+			assertEquals('Expected that no keepAliveTimer was defined!', 0, Aranea.Data.keepAliveTimers.length);
+
+			Aranea.Page.addKeepAlive(test, 60000);
+			assertNotNull(Aranea.Data.keepAliveTimers);
+			assertEquals(1, Aranea.Data.keepAliveTimers.length);
+
+			Aranea.Page.clearKeepAlives();
+			assertNotNull(Aranea.Data.keepAliveTimers);
+			assertEquals(0, Aranea.Data.keepAliveTimers.length);
+
+			// This global var will be checked later:
+			window.testKeepAlivePassed = false;
+
+			// A mock request object:
+			window.Ajax.Request = Class.create({
+				initialize: function(url, options) {
+
+					var targetURL = testURL + '?' + $H({
+						araTopServiceId: 'testTopServiceId',
+						araThreadServiceId: 'testThreadServiceId',
+						araTransactionId: 'override',
+						keepAliveKey: 'testKeepAliveKey',
+						sync: false
+					}).toQueryString();
+
+					assertEquals(targetURL, url);
+					assertNotNull(options);
+
+					assertEquals(1, Object.keys(options).length);
+					assertEquals('post', options.method);
+
+					window.testKeepAlivePassed = true;
+				}
+			});
+
+			assert('Aranea.Page.getDefaultKeepAlive must be function', Object.isFunction(Aranea.Page.getDefaultKeepAlive))
+			test = Aranea.Page.getDefaultKeepAlive('testTopServiceId', 'testThreadServiceId', 'testKeepAliveKey');
+
+			test();
+			assertTrue('The keep-alive function was not executed!', window.testKeepAlivePassed);
+		}
+
+		function testWidgetMarker() {
+			Aranea.Page.findWidgetMarker('widgetMarkerChild');
+		}
+
+		function testRandomRequestId() {
+			var ids = $H();
+			for (var i = 0; i < 5000; i++) {
+				var id = Aranea.Page.getRandomRequestId();
+				var count = ids.get(id);
+				assertTrue('No ID may be generated more than twice. At step '+i+', count='+count, !count || count < 3);
+				ids.set(id, count ? count + 1 : 1);
+			}
+		}
+
+		function testFileImportUrl() {
+			assertEquals(testURL + '/fileimporter/file123', Aranea.Page.getFileImportString('file123'));
+
+			Aranea.Data.servletURL = 'https://demo456.com/root';
+			assertEquals('https://demo456.com/root/fileimporter/file456', Aranea.Page.getFileImportString('file456'));
+
+			try {
+				Aranea.Page.getFileImportString('')
+				fail('Aranea.Page.getFileImportString() should throw an exception for empty string!');
+			} catch(e) {}
+
+			try {
+				Aranea.Page.getFileImportString(null)
+				fail('Aranea.Page.getFileImportString() should throw an exception for null parameter!');
+			} catch(e) {}
+		}
+
+		function testFindSystemForm() {
+			var currentForm = Aranea.Data.systemForm;
+			var foundForm = Aranea.Page.findSystemForm(null, null);
+
+			// These calls should return the default form:
+			assertEquals(currentForm, Aranea.Page.findSystemForm(null, null));
+			assertEquals(currentForm, Aranea.Page.findSystemForm(null));
+			assertEquals(currentForm, Aranea.Page.findSystemForm());
+
+			try {
+				Aranea.Page.findSystemForm('testNotInForm', false);
+				fail('Aranea.Page.findSystemForm must throw an exception when form was not found!');
+			} catch(e) {}
+
+			// The child is inside a different form; the systemForm shouldn't be overwritten:
+			foundForm = Aranea.Page.findSystemForm('formChild1', false);
+			assertNotEquals(Aranea.Data.systemForm, foundForm);
+
+			// The child is inside the default form:
+			var foundForm2 = Aranea.Page.findSystemForm('formChild2', false);
+			assertNotEquals(foundForm, foundForm2);
+			assertEquals(Aranea.Data.systemForm, foundForm2);
+
+			foundForm = Aranea.Page.findSystemForm();
+			assertEquals(foundForm, foundForm2);
+			assertEquals(Aranea.Data.systemForm, foundForm);
+		}
+
+		function testRequestExceptionHandler() {
+			var msg = 'Test exception!';
+			try {
+				Aranea.Page.handleRequestException(null, new Error(msg));
+				fail('Aranea.Page.handleRequestException() should throw an exception, and not continue!');
+			} catch (e) {
+				assertNotUndefined(e);
+				assertEquals(msg, e.message);
+			}
+		}
+
+		function testLoadingMessage() {
+			assert(Object.isFunction(Aranea.Page.showLoadingMessage));
+			assert(Object.isFunction(Aranea.Page.hideLoadingMessage));
+			assert(Object.isFunction(Aranea.Page.buildLoadingMessage));
+			assert(Object.isFunction(Aranea.Page.positionLoadingMessage));
+
+			Aranea.Page.showLoadingMessage();
+			assertNotNull('The element with loading message was not found!', $(Aranea.Data.loadingMessageId));
+
+			for (var i = 0; i < 10000; i++) {} // Delay
+
+			Aranea.Page.hideLoadingMessage();
+			var target = $(Aranea.Data.loadingMessageId);
+			assertTrue('The element with loading message must be invisible!', !target || !target.visible());
+		}
+
+		function testNotTestedFunctions() {
+			assert(Object.isFunction(Aranea.Page.addAutoFocusObserver));
+			assert(Object.isFunction(Aranea.Page.event));
+			assert(Object.isFunction(Aranea.Page.ajax));
+			assert(Object.isFunction(Aranea.Page.overlayAjax));
+			assert(Object.isFunction(Aranea.Page.submit));
+			assert(Object.isFunction(Aranea.Page.invokeEvent));
+			assert(Object.isFunction(Aranea.Page.initRSHURL));
+		}
+
+		function testOnUpdate() {
+			window.testOnUpdateExecuted = false;
+			window.testOnUpdateMemo = {};
+
+			document.observe('aranea:updated', function(obj) {
+				//assertEquals(testOnUpdateMemo, obj);
+				window.testOnUpdateExecuted = true;
+			});
+
+			var overlayForm = $('aranea-overlay-form').remove();
+			var currentForm = Aranea.Data.systemForm;
+
+			assertEquals('In the beginning, the current form should be #aranea-overlay-form!', overlayForm, currentForm);
+
+			Aranea.Page.onUpdate(window.testOnUpdateMemo);
+			assertTrue('The aranea:updated event was not called!', window.testOnUpdateExecuted);
+
+			currentForm = Aranea.Data.systemForm;
+			assertNotEquals('After onUpdate, the system form should be #aranea-form!', overlayForm, currentForm);
+
+			// Let's put it back: 
+			$('testNotInForm').insert(overlayForm);
+
+			currentForm = Aranea.Page.findSystemForm();
+			assertEquals('After #aranea-overlay-form was put back, it should be identified as system form!',
+					overlayForm, currentForm);
+		}
+
+		function testOnUnload() {
+			window.testOnUnloadExecuted = false;
+			window.testOnUnloadMemo = {};
+
+			document.observe('aranea:unloaded', function(obj) {
+				//assertEquals(testOnUnloadMemo, obj);
+				window.testOnUnloadExecuted = true;
+			});
+
+			Aranea.Page.onUnload(window.testOnUnloadMemo);
+			assertTrue('The aranea:unloaded event was not called!', window.testOnUnloadExecuted);
+
+			assertUndefined('After onUnload, Aranea namespace should be gone!', Aranea);
+		}
+	</script>
+
+	<p>This page contains JsUnit-tests for <b>aranea-util.js</b>.</p>
+
+	<hr/>
+
+	<form id="aranea-form" action="http://www.demo.org/demo">
+		<p>1) For <span id="formChild1">testing</span>!</p>
+		<p class="widgetMarker">Hello, <span class="green">Green <span id="widgetMarkerChild">World</span></span>!</p>
+	</form>
+
+
+	<div id="testNotInForm">
+		<form id="aranea-overlay-form" action="http://www.demo.org/demo">
+			<input type="hidden" name="araTransactionId" value="testTransactionId"/>"
+			<input type="hidden" name="araTopServiceId" value="testTopServiceId"/>
+			<input type="hidden" name="araThreadServiceId" value="testThreadServiceId"/>
+			<input type="hidden" name="araClientStateId" value="testClientStateId"/>
+			<p>2) For <span id="formChild2">testing</span>!</p>
+		</form>
+	</div>
+
+</body>
+</html>

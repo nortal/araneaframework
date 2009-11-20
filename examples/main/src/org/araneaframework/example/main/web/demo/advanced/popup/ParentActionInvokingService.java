@@ -48,7 +48,7 @@ public class ParentActionInvokingService extends BaseService implements ClientSi
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
     String script = "if (window.opener) { window.opener.setTimeout('araneaPage().action($('" + this.widgetId
-        + "'), 'testAction', '" + StringUtils.substringBeforeLast(this.widgetId, ".") + "' , '" + this.value
+        + "'), 'testAction', '" + StringUtils.substringBeforeLast(this.widgetId, Path.SEPARATOR) + "' , '" + this.value
         + "', window['tehcallback']);', 0); } window.close();";
 
     String responseStr = "<html><head><script type=\"text/javascript\">" + script

@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form;
 
+import org.araneaframework.Path;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -149,7 +151,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
     if (this.hasElementContextSpan) {
       writeFormElementContextClose(out);
       writeFormElementValidityMarkers(out, this.formElementViewModel.isValid(), FORMELEMENT_SPAN_PREFIX
-          + this.formFullId + "." + derivedId);
+          + this.formFullId + Path.SEPARATOR + derivedId);
       writeFormElementValidationErrorMessages(out);
     }
     return super.doEndTag(out);
@@ -274,7 +276,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    * Computes field name.
    */
   protected String getFullFieldId() {
-    return this.formFullId + "." + this.derivedId;
+    return this.formFullId + Path.SEPARATOR + this.derivedId;
   }
 
   /**
@@ -313,7 +315,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
   public static void writeFormElementContextOpen(Writer out, String fullFormId, String elementId, boolean isPresent,
       PageContext pageContext, String idPrefix) throws Exception {
     // Enclose the element in a <span id=someuniqueid>
-    String spanId = idPrefix + fullFormId + "." + elementId;
+    String spanId = idPrefix + fullFormId + Path.SEPARATOR + elementId;
 
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "id", spanId);
@@ -384,7 +386,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
    */
   protected void writeSubmitScriptForUiEvent(Writer out, String attributeName, String id, String eventId,
       String precondition, List<String> updateRegions) throws IOException {
-    UiUpdateEvent event = new UiUpdateEvent(eventId, this.formFullId + "." + id, null, updateRegions);
+    UiUpdateEvent event = new UiUpdateEvent(eventId, this.formFullId + Path.SEPARATOR + id, null, updateRegions);
     event.setEventPrecondition(precondition);
     JspUtil.writeEventAttributes(out, event);
     JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);

@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
+import org.araneaframework.Path;
+
 import java.io.IOException;
 import java.io.Writer;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -28,7 +30,7 @@ import org.araneaframework.uilib.event.OnClickEventListener;
  * either &lt;input type=&quot;button&quot;&gt; or just &lt;button&gt; depending on <code>renderMode</code> attribute.
  * 
  * @author Oleg Mürk
- * @jsp.tag name = "button" body-content = "JSP" description = "Form button, represents UiLib "ButtonControl"."
+ * @jsp.tag name = "button" body-content = "JSP" description = "Form button, represents UiLib 'ButtonControl'."
  */
 public class FormButtonHtmlTag extends BaseFormButtonTag {
 
@@ -79,7 +81,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     if (this.viewModel.isOnClickEventRegistered()) {
       UiUpdateEvent event = new UiUpdateEvent();
       event.setId(OnClickEventListener.ON_CLICK_EVENT);
-      event.setTarget(this.formFullId + "." + this.derivedId);
+      event.setTarget(this.formFullId + Path.SEPARATOR + this.derivedId);
       event.setUpdateRegionNames(this.updateRegionNames);
       event.setEventPrecondition(this.onClickPrecondition);
 

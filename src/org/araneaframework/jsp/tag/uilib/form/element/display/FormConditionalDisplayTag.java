@@ -34,7 +34,7 @@ import org.araneaframework.uilib.form.control.DisplayControl;
  * @jsp.tag
  *   name = "conditionalDisplay"
  *   body-content = "JSP"
- *   description = "Depending whether element Boolean value is TRUE or FALSE display one or other content, represents UiLib "DisplayControl"."
+ *   description = "Depending whether element Boolean value is TRUE or FALSE display one or other content, represents UiLib 'DisplayControl'."
  */
 public class FormConditionalDisplayTag extends BaseFormElementDisplayTag {
   public final static String CONDITION_KEY = "org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionalDisplayTag.CONDITION";    

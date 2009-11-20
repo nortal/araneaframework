@@ -23,6 +23,7 @@
  */
 
 var Aranea = Aranea ? Aranea : {};
+
 /** 
  * RSH event listener, RSH notifies this about the location changes (URL in browser window). 
  * @param newLocation the hash part of the new location URL 
@@ -33,8 +34,8 @@ Aranea.RSHListener = function(newLocation, historyData) {
 
 	if (newLocation && !newLocation.startsWith("HTTP")) {
 		window.dhtmlHistoryListenerRequestedState = newLocation;
-		// event(eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions, systemForm)
-		Aranea.Page.event(null, null, null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
+		// event(requestType, eventId, widgetId, [eventParam], [eventCondition], [eventUpdateRgns], [form]
+		Aranea.Page.event(null, '', '', null, null, 'araneaGlobalClientHistoryNavigationUpdateRegion');
 	}
 
 	window.dhtmlHistory.firstLoad = false;
@@ -44,7 +45,7 @@ Aranea.RSHListener = function(newLocation, historyData) {
 // Initializes history object, overriding default JSON stringifier and default JSON parser.
 window.dhtmlHistory.create({
 	toJSON:  Object.toJSON,
-	fromJSON: String.evalJSON
+	fromJSON: function(s) { return s.evalJSON() }
 });
 
 document.observe('aranea:loaded', function() {

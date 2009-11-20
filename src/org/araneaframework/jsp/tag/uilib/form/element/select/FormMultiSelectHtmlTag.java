@@ -36,7 +36,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
  * @jsp.tag
  *  name = "multiSelect"
  *  body-content = "JSP"
- *  description = "Form list input field, represents UiLib "MultiSelectControl"."
+ *  description = "Form list input field, represents UiLib 'MultiSelectControl'."
  */
 public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 

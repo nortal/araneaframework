@@ -17,6 +17,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form;
 
+import org.araneaframework.Path;
+
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
@@ -161,7 +163,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       String formId = (String)JspUtil.requireContextEntry(pageContext, FormTag.FORM_FULL_ID_KEY);
       // XXX: even if formElementContext JS should be invoked when writing label, formelement should not be marked as present
       BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext, LABEL_SPAN_PREFIX);
-      fullFormElementId = formId + "." + formElementId;
+      fullFormElementId = formId + Path.SEPARATOR + formElementId;
     }
 
     if (mandatory) {

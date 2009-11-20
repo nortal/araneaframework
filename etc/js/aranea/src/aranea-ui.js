@@ -29,14 +29,13 @@ Aranea.UI = {
 	INVALID_FE_CLASS: "aranea-invalid-formelement",
 
 	calendarSetup: function(inputFieldId, dateFormat, alignment) {
-		var CALENDAR_BUTTON_ID_SUFFIX = "_cbutton"; // comes from BaseFormDateTimeInputHtmlTag
 		var align = alignment == null ? "Br" : alignment;
-		if (Calendar) {
+		if (window.Calendar) {
 			Calendar.setup({
 				inputField	: inputFieldId,
 				ifFormat	: dateFormat,
 				showsTime	: false,
-				button		: inputFieldId + CALENDAR_BUTTON_ID_SUFFIX,
+				button		: inputFieldId + '_cbutton',
 				singleClick	: true,
 				step		: 1,
 				firstDay	: 1,
@@ -76,8 +75,13 @@ Aranea.UI = {
 	 * Used for timeInput hour and minute selects.
 	 * @since 1.1
 	 */
-	addOptions: function(selectName, count, selectedIndex) {
-		var select = document.getElementsByName(selectName).item(0);
+	addOptions: function(selectId, count, selectedIndex) {
+		var select = $(selectId);
+
+		if (!select) {
+			throw('No select with name "' + selectName + '" was found!');
+		}
+
 		select.insert(new Element('option', { 'value': '' }));
 
 		for (var i = 0; i < count; i++) {
@@ -129,6 +133,9 @@ Aranea.UI = {
 	 * @since 1.1
 	 */
 	scrollToCoordinates: function(x, y) {
+		if (!Object.isNumber(x) || !Object.isNumber(y)) {
+			throw ('Cannot scroll to ['+x+','+y+'] because one of given coordinates is not a number!');
+		}
 		window.scrollTo(x, y);
 	},
 
@@ -140,7 +147,7 @@ Aranea.UI = {
 	 */
 	markFEContentStatus: function(valid, element) {
 		element = $(element);
-		if (element == null) { 	
+		if (element == null) {
 			return;
 		}
 

@@ -25,7 +25,7 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormSimpleElementDisplayHtmlTa
  * @jsp.tag
  *   name = "floatInputDisplay"
  *   body-content = "JSP"
- *   description = "Form float display field, represents UiLib "FloatControl"."
+ *   description = "Form float display field, represents UiLib 'FloatControl'."
  */
 public class FormFloatInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtmlTag {
   {

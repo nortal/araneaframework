@@ -49,7 +49,9 @@ public class FooterWidget extends BaseUIWidget {
     String flowClassName = menuWidget.getFlowClassName();
 
     if (flowClassName != null) {
-      String path = StringUtils.replaceEach(flowClassName, new String[] { ".class", "." }, new String[] { "", "/" });
+      String[] replaceFrom = { ".class", "." };
+      String[] replaceTo = { "", "/" };
+      String path = StringUtils.replaceEach(flowClassName, replaceFrom, replaceTo);
 
       while (StringUtils.contains(path, '$')) {
         path = StringUtils.substringBefore(path, "$");

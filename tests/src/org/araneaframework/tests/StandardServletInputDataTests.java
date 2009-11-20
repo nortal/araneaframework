@@ -19,6 +19,7 @@ package org.araneaframework.tests;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.araneaframework.Path;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.util.ServletUtil;
@@ -73,11 +74,11 @@ public class StandardServletInputDataTests extends TestCase {
   
   public void testNonValidPath() {
     request = new MockHttpServletRequest();
-    request.addParameter("a...foo","b");
-    request.addParameter(".","c");
-    request.addParameter(".","c");
+    request.addParameter("a" + Path.SEPARATOR + Path.SEPARATOR + Path.SEPARATOR + "foo", "b");
+    request.addParameter(Path.SEPARATOR, "c");
+    request.addParameter(Path.SEPARATOR, "c");
     input = new StandardServletInputData(request);
-    assertEquals(null, input.getScopedData(new StandardPath("")).get("."));
+    assertEquals(null, input.getScopedData(new StandardPath("")).get(Path.SEPARATOR));
   }
   
   public void testChangeGlobalData() {

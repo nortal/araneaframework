@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
@@ -125,7 +127,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   protected String getCheckBoxId() throws JspException {
     String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
-    return listId + "." + SELECTION_SCOPE + "." + rowRequestId;
+    return listId + Path.SEPARATOR + SELECTION_SCOPE + Path.SEPARATOR + rowRequestId;
   }
 
   /**

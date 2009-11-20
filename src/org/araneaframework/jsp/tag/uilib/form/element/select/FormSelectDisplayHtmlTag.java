@@ -29,7 +29,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
  * @jsp.tag
  *  name = "selectDisplay"
  *  body-content = "JSP"
- *  description = "Form select display field, represents UiLib "SelectControl"."
+ *  description = "Form select display field, represents UiLib 'SelectControl'."
  */
 @SuppressWarnings("unchecked")
 public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {

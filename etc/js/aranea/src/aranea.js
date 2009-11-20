@@ -29,7 +29,7 @@ var Aranea = Aranea ? Aranea : {};
 /* THIS IS OVERRIDE! */
 
 /**
- * Dummy implementation of logger. If you want to actually use logging then also include aranea-util.js.
+ * Dummy implementation of logger. If you want to actually use logging then also include aranea-util.js after this file.
  * @since 2.0
  */
 Aranea.Logger = {
@@ -45,7 +45,10 @@ Aranea.Logger = {
 Aranea.Data = {
 
 	// URL of aranea dispatcher servlet serving current page. This is by default set by Aranea JSP ui:body tag.
-	servletUrl: null,
+	servletURL: null,
+
+	// Whether get*SubmitURL() method returns an absolute URL or just the part starting from the context.
+	absoluteURLs: true,
 
 	// Enables/disables the effect of "focusedFormElementName" and "focusableElements":
 	autofocus: true,
@@ -82,7 +85,7 @@ Aranea.Data = {
 	/* Private fields */
 	loadingMessagePositionHack: false,
 
-	regionHandlers: new Hash(),
+	regionHandlers: $H(),
 
 	/**
 	 * @since 1.1
@@ -112,17 +115,23 @@ Aranea.Page = {
 		Aranea.Page.findSystemForm();
 		Aranea.Page.initRSHURL();
 		Aranea.Page.addAutoFocusObserver();
-		if (Aranea.Page.ajaxUploadInit) Aranea.Page.ajaxUploadInit();
 		Aranea.Data.loaded = true;
 		Aranea.Logger.debug("Aranea scripts are now initialized!");
-		document.fire('aranea:loaded', null, false);
+		document.fire('aranea:loaded');
 	},
 
-	onUpdate: function() {},
+	onUpdate: function(data) {
+		Aranea.Page.findSystemForm();
+		if (Aranea.Page.ajaxUploadInit) Aranea.Page.ajaxUploadInit();
+		Aranea.Logger.debug("Aranea scripts were updated!");
+		document.fire('aranea:updated');
+	},
 
-	onSubmit: function() {},
-
-	onUnload: function() {},
+	onUnload: function(data) {
+		document.fire('aranea:unloaded');
+		Aranea.Logger.debug("Unloaded Aranea scripts!");
+		window.Aranea = undefined;
+	},
 
 	addAutoFocusObserver: function() {
 		// Monitor the currently focused element for Ajax page update (since 1.2)
@@ -138,163 +147,12 @@ Aranea.Page = {
 
 	setSystemFormEncoding: function(encoding) {
 		if (Aranea.Data.systemForm) {
-			Element.writeAttribute(Aranea.Data.systemForm, 'enctype', encoding);
-			Element.writeAttribute(Aranea.Data.systemForm, 'encoding', encoding);
+			Aranea.Data.systemForm.writeAttribute({ 'enctype': encoding, 'encoding': encoding });
 		}
 	},
 
-	/**
-	 * Another submit function, takes all parameters that are possible to use with Aranea JSP currently.
-	 * 
-	 * @param eventId event identifier sent to the server
-	 * @param eventTarget event target identifier (widget id)
-	 * @param eventParam event parameter
-	 * @param eventPrecondition closure, submit is only performed when its evaluation returns true
-	 * @param eventUpdateRegions identifiers for regions that should be regenerated on server-side
-	// TODO: get rid of duplicated logic from: submit() and findSubmitter()
-	 * Chooses appropriate submitting method and form to submit using the given HTML element (that initiated the submit
-	 * request). Applies the appropriate parameter values and submits the systemForm which contains the element.
-	 */
-	event: function() {
-		var result = false;
-		try {
-			if (Aranea.Data.submitted || !Aranea.Data.loaded) {
-				return result;
-			}
-
-			var data = Aranea.Page.Attribute.getEventData(null, arguments);
-
-			if (data.preconditionFailed) {
-				Aranea.Page.Logger.debug('Event cancelled because event precondition returned false.');
-			} else {
-				result = this.findSubmitter(data).event(data) || result;
-			}
-		} catch (e) {
-			Aranea.Logger.error('An error occurred during Aranea.Page.event().', e);
-		} finally {
-			return result;
-		}
-	},
-
-	submit: function() {
-		var result = false;
-		try {
-			if (Aranea.Data.submitted || !Aranea.Data.loaded) {
-				return result;
-			}
-
-			var data = Aranea.Page.Attribute.getEventData(null, arguments);
-
-			if (data.preconditionFailed) {
-				Aranea.Page.Logger.debug('Submit-event cancelled because event precondition returned false.');
-			} else {
-				result = this.findSubmitter('submit').event(data) || result;
-			}
-		} catch (e) {
-			Aranea.Logger.error('An error occurred during Aranea.Page.submit().', e);
-		} finally {
-			return result;
-		}
-	},
-
-	/**
-	 * This function can be overwritten to support additional submit methods.
-	 * It is called by event() to determine the appropriate form submitter.
-	 */
-	findSubmitter: function(data) {
-		var type = Object.isString(data) ? data : data.type;
-		if (type == 'submit') {
-			return new DefaultAraneaSubmitter();
-		} else if (type == 'ajax') {
-			return new DefaultAraneaAJAXSubmitter();
-		} else if (type == 'overlay') {
-			return new DefaultAraneaOverlaySubmitter();
-		}
-		throw('Unknown event type ("' + type + '"). Could not find appropriate submitter!');
-	},
-
-	/**
-	 * Returns URL that can be used to invoke full HTTP request with some predefined request parameters.
-	 * @param topServiceId server-side top service identifier
-	 * @param threadServiceId server-side thread service identifier
-	 * @param araTransactionId transaction id expected by the server
-	 * @param extraParams more parameters, i.e "p1=v1&p2=v2"
-	 */
-	getSubmitURL: function() {
-		var params = {};
-
-		if (arguments.length > 0) {
-			var last = arguments.length - 1;
-			if (Object.isElement(arguments[0])) {
-				params = Aranea.Page.getFormAttributes(form);
-			}
-
-			if (arguments[0] && (last > 0 || !Object.isElement(arguments[0]))) {
-				if (Object.isString(arguments[last])) {
-					params = arguments[last].parseQuery();
-				} else {
-					params = $H(arguments[last]);
-				}
-			}
-		}
-
-		var url = [];
-		if (Aranea.Data.absoluteUrls) {
-			url.push(this.encodeURL(Aranea.Data.servletURL));
-			url.push(url[0].indexOf('?') >= 0 ? '&' : '');
-		}
-
-		if (params.size() > 0) {
-			url.push(url[0].indexOf('?') < 0 ? '?' : '');
-			url.push(params.toQueryString());
-		}
-
-		return url.join('');
-	},
-
-	getFormAttributes: function(form) {
-		return {
-			araTransactionId: Aranea.Page.Attribute.getTransactionId(form),
-			araTopServiceId: Aranea.Page.Attribute.getTopServiceId(form),
-			araThreadServiceId: Aranea.Page.Attribute.getThreadServiceId(form),
-			araClientStateId: Aranea.Page.Attribute.getClientStateId(form)
-		};
-	},
-
-	/**
-	 * Returns URL that can be used to make server-side action-invoking
-	 * XMLHttpRequest with some predefined request parameters.
-	 * @param systemForm form containing information about top service and thread service identifiers
-	 * @param actionId action identifier sent to the server
-	 * @param actionTarget action target identifier (widget id)
-	 * @param actionParam action parameter
-	 * @param sync whether this action is synchronized on server-side or not (default is synchronized)
-	 * @param extraParams more parameters, i.e "p1=v1&p2=v2"
-	 */
-	getActionSubmitURL: function(actionId, actionTarget, actionParam, sync, extraParams, systemForm) {
-		if (systemForm == null) {
-			systemForm = Aranea.Data.systemForm;
-		}
-
-		var params = {
-			araTransactionId: 'override',
-			araServiceActionPath: actionTarget,
-			araServiceActionHandler: actionId,
-			araServiceActionParameter: actionParam
-		};
-
-		if (sync == false) {
-			params.araSync = false;
-		}
-
-		if (Object.isString(extraParams)) {
-			extraParams = extraParams.parseQuery();
-		}
-		if (extraParams != null) {
-			Object.extend(params, extraParams);
-		}
-
-		return this.getSubmitURL(params);
+	encodeURL: function(url) {
+		return url;
 	},
 
 	/**
@@ -323,6 +181,194 @@ Aranea.Page = {
 		return new Ajax.Request(url, options);
 	},
 
+	/**
+	 * Sends an event to the server-side. The event type (plain submit or AJAX) is determined automatically using the
+	 * given parameters or given element that has event data.
+	 * <p>
+	 * The expected parameters are:
+	 * 1) event(formElement) where formElement has event data.
+	 * 2) event(requestType, eventId, widgetId, [eventParam], [eventCondition], [eventUpdateRgns], [form]) where
+	 *    parameters in brackets are optional.
+	 * 
+	 * @param formElement The form-element that contains event data.
+	 * @param requestType The request type that affects how it's done ('submit', 'ajax', 'overlay').
+	 * @param eventId The event identifier sent to the server
+	 * @param widgetId The event target identifier (path to widget)
+	 * @param eventParam An optional event parameter.
+	 * @param eventCondition An optional boolean expression or closure that, when false, suppresses request.
+	 * @param eventUpdateRgns Optional identifiers for regions that should be returned from server.
+	 * @param form An optional form that will be submitted with the data. Defaults to the current systemForm.
+	 * @return Always false.
+	 */
+	event: function() {
+		return invokeEvent(null, arguments);
+	},
+
+	/**
+	 * Sends an AJAX event to the server-side.
+	 * <p>
+	 * The expected parameters are:
+	 * 1) event(formElement, eventUpdateRgns) where formElement has event data.
+	 * 2) event(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form]) where parameters in
+	 *    brackets are optional.
+	 * 
+	 * @param formElement The form-element that contains event data.
+	 * @param requestType The request type that affects how it's done ('submit', 'ajax', 'overlay').
+	 * @param eventId The event identifier sent to the server
+	 * @param widgetId The event target identifier (path to widget)
+	 * @param eventParam An optional event parameter.
+	 * @param eventCondition An optional boolean expression or closure that, when false, suppresses request.
+	 * @param eventUpdateRgns Optional identifiers for regions that should be returned from server.
+	 * @param form An optional form that will be submitted with the data. Defaults to the current systemForm.
+	 * @return Always false.
+	 */
+	ajax: function() {
+		return invokeEvent(Aranea.Page.Submitter.TYPE_AJAX, arguments);
+	},
+
+	overlayAjax: function() {
+		return invokeEvent(Aranea.Page.Submitter.TYPE_OVERLAY, arguments);
+	},
+
+	submit: function() {
+		return invokeEvent(Aranea.Page.Submitter.TYPE_PLAIN, arguments);
+	},
+
+	invokeEvent: function(type, args) {
+		try {
+			if (Aranea.Data.submitted || !Aranea.Data.loaded) {
+				var data = Aranea.Page.Parameter.getEventData(type, args);
+
+				if (data.preconditionFailed) {
+					Aranea.Page.Logger.debug('Request cancelled because event precondition returned false.');
+				} else {
+					result = this.findSubmitter(data).event(data) || result;
+				}
+			}
+		} catch (e) {
+			Aranea.Logger.error('An error occurred during request.', e);
+		}
+		return false;
+	},
+
+	/**
+	 * This function can be overwritten to support additional submit methods.
+	 * It is called by event() to determine the appropriate form submitter.
+	 */
+	findSubmitter: function(data) {
+		var type = Object.isString(data) ? data : data.type;
+		if (type == Aranea.Page.Submitter.TYPE_PLAIN) {
+			return new Aranea.Page.Submitter.Plain();
+		} else if (type == Aranea.Page.Submitter.TYPE_AJAX) {
+			return new Aranea.Page.Submitter.AJAX();
+		} else if (type == Aranea.Page.Submitter.TYPE_OVERLAY) {
+			return new Aranea.Page.Submitter.Overlay();
+		}
+		throw('Unknown event type ("' + type + '"). Could not find appropriate submitter!');
+	},
+
+	/**
+	 * Returns URL that can be used to invoke full HTTP request with some predefined request parameters.
+	 * 
+	 * getSubmitURL()
+	 * getSubmitURL(formElement)
+	 * getSubmitURL([formElement], 'param1=value1&param2=value2&param3=value3' })
+	 * getSubmitURL([formElement], { param1: value1, param2: value2, param3: value3 })
+	 * getSubmitURL([formElement], valuesHash)
+	 * 
+	 * @param form An optional form to read form-specific parameters and append them to the request.
+	 * @param params Optional parameters to append to the request. May be a string ('a=b&c=d&e=f') or object
+	 *        ({ a: 'b', c: 'd', e: 'f' })
+	 * @return The encoded URL string with all provided parameters.
+	 */
+	getSubmitURL: function() {
+		var params = $H();
+
+		if (arguments.length >= 1) {
+			var index = 0;
+
+			if (Object.isElement(arguments[0])) {
+				params = Aranea.Page.getFormParameters(arguments[0]);
+				index++;
+			} else if (arguments.length > 1) {
+				index++;
+			}
+
+			if (arguments.length >= index + 1 && arguments[index]) {
+				var param = arguments[index];
+				params.update(Object.isString(param) ? param.parseQuery() : $H(param));
+			}
+		}
+
+		if (!Aranea.Data.servletURL) {
+			throw('Aranea.Data.servletURL must not be empty!');
+		}
+
+		var urlStr = Aranea.Data.servletURL;
+		if (!Aranea.Data.absoluteURLs) {
+			urlStr = urlStr.gsub(/.*:\/\/.*?(?=\/)/, ''); // Returns URL starting with "/[context]..."
+		}
+
+		var url = $A(Aranea.Page.encodeURL(urlStr));
+
+		if (params.size() > 0) {
+			var separator = (url.length == 0) || (url.first().indexOf('?') < 0) ? '?' : '&';
+			url.push(separator);
+			url.push(params.toQueryString());
+		}
+
+		return url.join('');
+	},
+
+	/**
+	 * Returns URL that can be used to make server-side action-invoking
+	 * XMLHttpRequest with some predefined request parameters.
+	 * @param systemForm form containing information about top service and thread service identifiers
+	 * @param actionId action identifier sent to the server
+	 * @param actionTarget action target identifier (widget id)
+	 * @param actionParam action parameter
+	 * @param sync whether this action is synchronized on server-side or not (default is synchronized)
+	 * @param extraParams more parameters, i.e "p1=v1&p2=v2"
+	 */
+	getActionSubmitURL: function(actionId, actionTarget, actionParam, sync, extraParams, systemForm) {
+		if (systemForm == null) {
+			systemForm = Aranea.Data.systemForm;
+		} else if (!systemForm.match('form')) {
+			systemForm = Aranea.Page.findSystemForm(systemForm, false);
+		}
+
+		var params = {
+			araTransactionId: 'override',
+			araServiceActionPath: actionTarget,
+			araServiceActionHandler: actionId,
+			araServiceActionParameter: actionParam
+		};
+
+		if (sync == false) {
+			params.araSync = false;
+		}
+
+		if (Object.isString(extraParams)) {
+			extraParams = extraParams.parseQuery();
+		}
+		if (extraParams != null) {
+			Object.extend(params, extraParams);
+		}
+
+		return this.getSubmitURL(params);
+	},
+
+	getFormParameters: function(form) {
+		if (form == null) {
+			throw('The "form" parameter must not be null!');
+		}
+		return $H({
+			araTransactionId: Aranea.Page.Parameter.getTransactionId(form),
+			araTopServiceId: Aranea.Page.Parameter.getTopServiceId(form),
+			araThreadServiceId: Aranea.Page.Parameter.getThreadServiceId(form),
+			araClientStateId: Aranea.Page.Parameter.getClientStateId(form)
+		});
+	},
 
 	/**
 	 * Adds keep-alive function f that is executed periodically after time milliseconds has passed
@@ -335,9 +381,9 @@ Aranea.Page = {
 	 * Clears/removes all registered keep-alive functions.
 	 */
 	clearKeepAlives: function() {
- 		Aranea.Data.keepAliveTimers.forEach(function(timer) {
- 			window.clearInterval(timer);
- 		});
+		Aranea.Data.keepAliveTimers.each(function(timer) {
+			window.clearInterval(timer);
+		}).clear();
 	},
 
 	/**
@@ -349,11 +395,12 @@ Aranea.Page = {
 				araTopServiceId: topServiceId,
 				araThreadServiceId: threadServiceId,
 				araTransactionId: 'override',
-				keepAliveKey: true
+				keepAliveKey: keepAliveKey,
+				sync: false
 			};
 			var url = Aranea.Page.getSubmitURL(params);
 			Aranea.Logger.debug('Sending async service keepalive request to URL "' + url +'".');
-			var keepAlive = new Ajax.Request(url, { method: 'post' }); // TODO Why the request is stored?
+			new Ajax.Request(url, { method: 'post' });
 		};
 	},
 
@@ -361,9 +408,7 @@ Aranea.Page = {
 	 * Searches for widget marker around the given element. If found, returns the marker DOM element, else returns null.
 	 */
 	findWidgetMarker: function(element) {
-		$(element).ancestors().detect(function(ancestor) {
-			return ancestor.hasClassName('widgetMarker');
-		});
+		$(element).up('.widgetMarker');
 	},
 
 	/**
@@ -372,14 +417,30 @@ Aranea.Page = {
 	 * (identifying requests).
 	 */
 	getRandomRequestId: function() {
-		return Math.round(100000 * Math.random());
+		return Math.round(100000 * Math.random()).toString();
 	},
 
 	/**
+	 * Provides the URL for fetching import file with given name. The name must not be null, and may contain slashes.
 	 * @since 1.1
 	 */
-	getFileImportString: function(filename) {
-		return Aranea.Data.servletURL + '/fileimporter/' + filename;
+	getFileImportString: function(fileName) {
+		if (!fileName) {
+			throw('The fileName parameter must not be empty!');
+		} else if (!Aranea.Data.servletURL) {
+			throw('Aranea.Data.servletURL must not be empty!');
+		}
+
+		var str = $A([ Aranea.Data.servletURL ]);
+		if (!Aranea.Data.servletURL.endsWith('/')) {
+			str.push('/');
+		}
+		str.push('fileimporter');
+		if (!fileName.startsWith('/')) {
+			str.push('/');
+		}
+		str.push(fileName);
+		return str.join('');
 	},
 
 	/**
@@ -393,18 +454,19 @@ Aranea.Page = {
 		element = $(element);
 		var result = null;
 
-		var tag = element != null && element.tagName ? element.tagName.toLowerCase() : null;
-
-		if (!element || !tag) {
+		if (!Object.isElement(element)) {
 			$w(Aranea.Data.systemFormId).find(function(id) { return result = $(id) });
-		} else if (tag == 'form' && Aranea.Data.systemFormId.indexOf(element.id) >= 0) {
-			result = $(element);
+		} else if (element.match('form') && Aranea.Data.systemFormId.indexOf(element.id) >= 0) {
+			result = element;
 		} else {
 			result = element;
-			while (result && tag != 'form' && (result.id == '' || Aranea.Data.systemFormId.indexOf(result.id) < 0)) {
+			var targetIds = Aranea.Data.systemFormId;
+			var validId = !String.interpret(result.id).empty() && targetIds.indexOf(result.id) >= 0;
+			while (result.tagName && (!validId || !result.match('form'))) {
 				result = result.up();
-				tag = result != null && result.tagName ? result.tagName.toLowerCase() : null;
+				validId = result.tagName && !result.id.empty() && targetIds.indexOf(result.id) >= 0;
 			}
+			result = result.tagName != null ? result : null;
 		}
 
 		if (result == null) {
@@ -441,39 +503,6 @@ Aranea.Page = {
 	},
 
 	/**
-	 * Process response of an update-regions AJAX request. Should be called only on successful response. Invokes
-	 * registered region handlers.
-	 * @param responseText The AJAX response text.
-	 * @since 1.1
-	 */
-	processResponse: function(responseText) {
-		var counter = $H();
-		var hasRegions = false;
-
-		new Aranea.Util.AjaxResponse(responseText).each(function(key, content, length) {
-			counter[key] = counter[key] ? counter[key]++ : 1;
-			if (Aranea.Data.regionHandlers.get(key)) {
-				Aranea.Logger.debug('Region type: "' + key + '" (' + length + ' characters)');
-				Aranea.Data.regionHandlers.get(key).process(content);
-				hasRegions = true;
-			} else {
-				throw('Region type: "' + key + '" is unknown!');
-			}
-		});
-
-		Aranea.Data.receivedRegionCounters = counter;
-
-		if (Aranea.Data.reloadOnNoDocumentRegions && !hasRegions) {
-			Aranea.Logger.debug('No document regions were received, forcing a reload of the page');
-			if (Aranea.Data.regionHandlers.get('reload')) {
-				Aranea.Data.regionHandlers.get('reload').process();
-			} else {
-				Aranea.Logger.error('No handler is registered for "reload" region, unable to force page reload!');
-			}
-		}
-	},
-
-	/**
 	 * Exception handler that is invoked on Ajax.Request errors.
 	 *
 	 * @since 1.1
@@ -490,14 +519,13 @@ Aranea.Page = {
 	 * @since 1.1
 	 */
 	showLoadingMessage: function() {
-		var element = $(this.loadingMessageId);
+		var element = $(Aranea.Data.loadingMessageId);
 		if (!element) {
-			element = this.buildLoadingMessage();
+			element = $(Aranea.Page.buildLoadingMessage());
 			if (!element) return;
-			document.body.appendChild(element);
-			element = $(element);
+			$(document.body).insert(element.hide());
 		}
-		this.positionLoadingMessage(element);
+		Aranea.Page.positionLoadingMessage(element);
 		element.show();
 		element = null;
 	},
@@ -508,10 +536,8 @@ Aranea.Page = {
 	 * @since 1.1
 	 */
 	hideLoadingMessage: function() {
-		var element = $(this.loadingMessageId);
-		if (element) {
-			element.hide();
-		}
+		var element = $(Aranea.Data.loadingMessageId);
+		if (element) element.hide();
 		element = null;
 	},
 
@@ -521,7 +547,7 @@ Aranea.Page = {
 	 * @since 1.1
 	 */
 	buildLoadingMessage: function() {
-		return new Element('div', { id: this.loadingMessageId }).update(this.loadingMessageContent);
+		return new Element('div', { id: Aranea.Data.loadingMessageId }).update(Aranea.Data.loadingMessageContent);
 	},
 
 	/**
@@ -550,156 +576,82 @@ Aranea.Page = {
  * @since 1.2.2
  */
 Aranea.Page.Request = {
-	/**
-	 * The only method that element-submitters should call. It takes the type of request, the form
-	 * containing the element to be submitted, and the function that does the submit work.
-	 */
-	doRequest: function(type, form, element, eventFn) {
-		if (!element) {
-			return false;
-		}
-
-		var widgetId = Aranea.Page.Attribute.getTarget(element);
-		var eventId = Aranea.Page.Attribute.getEventId(element);
-		var eventParam = Aranea.Page.Attribute.getEventParam(element);
-		var eventUpdateRgns = Aranea.Page.Attribute.getEventUpdateRegions(element);
-
-		var data = {
-				type: String.interpret(type),
-				form: form,
-				widgetId: String.interpret(widgetId),
-				eventId: String.interpret(eventId),
-				eventParam: String.interpret(eventParam),
-				eventUpdateRgns: String.interpret(eventUpdateRgns)
-		};
-
-		this.processEventData(data);
-
-		var result;
-		if (eventFn) {
-			result = eventFn(data.form, data.eventId, data.widgetId, data.eventParam, data.eventUpdateRgns);
-		}
-
-		return this.getRequestResult(type, element, result);
-	},
-
-	/**
-	* A callback to optionally modify data that is passed to submitters.
-	*/
-	processEventData: function(data) {},
-
-	/**
-	 * This method is called to return the result of element-submit. Here is a nice place to implement
-	 * custom features depending on the element or request type. Feel free to override.
-	 */
-	 getRequestResult: function(type, element, result) {
-		// If element is checkbox or radio then we return the oppposite value. When a request is
-		// successful and false is returned, it would block checkbox or radio to be selected. Therefore,
-		// we need to flip the value.
-		var type = element.type == null ? null : element.type.toLowerCase();
-		return type == 'checkbox' || type == 'radio' ? !result : result;
-	},
-
-	/**
-	 * The method that is called by submitters to store submit data in the form.
-	 */
-	prepare: function(type, form, widgetId, eventId, eventParam) {
-		var data = {
-			type: String.interpret(type),
-			form: form,
-			widgetId: String.interpret(widgetId),
-			eventId: String.interpret(eventId),
-			eventParam: String.interpret(eventParam)
-		};
-		return this.processData(data);
-	},
-
-	/**
-	 * Processes the submit data. It calls following methods of this object:
-	 * 1. processSubmitData - to optionally modify the submit data;
-	 * 2. storeSubmitData - to store the submit data in the form (if submit is allowed).
-	 * 3. Adds isSubmitAllowed, beforeSubmit, afterSubmit callbacks to data.
-	 */
-	processData: function(data) {
-		this.processSubmitData(data);
-		this.storeSubmitData(data);
-		data.isSubmitAllowed = this.isSubmitAllowed.curry(data);
-		data.beforeSubmit = this.beforeSubmit.curry(data);
-		data.afterSubmit = this.afterSubmit.curry(data);
-		return data;
-	},
-
-	/**
-	 * A callback to optionally modify submit data.
-	 */
-	processSubmitData: function(data) {},
-
-	/**
-	 * A callback to store submit data in the form.
-	 */
-	storeSubmitData: function(data) {
-		if (data.form) {
-			data.form.araWidgetEventPath.value = data.widgetId;
-			data.form.araWidgetEventHandler.value = data.eventId;
-			data.form.araWidgetEventParameter.value = data.eventParam;
-		}
-	},
 
 	/**
 	 * A callback that is checked to enable or disable submit.
 	 */
-	isSubmitAllowed: function(data) {
+	isAllowed: function(data) {
 		return true;
 	},
 
 	/**
-	 * A callback that is called before each submit (no matter whether it is AJAX or not).
-	 * This method includes default behaviour.
+	 * A callback that is called before each submit (no matter whether it is AJAX or not). This method includes default
+	 * behaviour.
 	 */
-	beforeSubmit: function(data) {
-		Aranea.Page.Attribute.writeToForm(data); // Write event data to form so that it would be sent to server-side.
-		if (data.type != 'submit') {
-			// copy the content of rich editors to corresponding HTML textinputs/textareas
-			if (window.tinyMCE) {
-				window.tinyMCE.triggerSave();
-			}
-		}
-		if (data.type == 'ajax') {
-			Aranea.Logger.debug('Showing the loading message.');
-			Aranea.Page.showLoadingMessage();
-		}
-		document.fire('aranea:submit', data, false);
+	before: function(data) {
 		Aranea.Data.loaded = false;
 		Aranea.Data.submitted = true;
+
+		document.fire('aranea:beforeEvent', data, false);
+
+		Aranea.Page.Request.customBefore(data);
+		Aranea.Page.Parameter.writeToForm(data); // Write event data to form so that it would be sent to server-side.
 	},
 
 	/**
-	* A callback that is called after each submit (no matter whether it is AJAX or not).
-	* This method includes default behaviour.
+	* A callback that is called after each submit (no matter whether it is AJAX or not). This method includes default
+	* behaviour.
 	*/
-	afterSubmit: function(data) {
-		if (data.type == 'ajax') {
-			Aranea.Page.hideLoadingMessage();
-		}
+	after: function(data) {
 		Aranea.Data.submitted = false;
 		Aranea.Data.loaded = true;
-		document.fire('aranea:loaded', data, false);
+
+		document.fire('aranea:afterEvent', data, false);
+
+		Aranea.Page.Request.customAfter(data);
+		Aranea.Page.onUpdate(data);
+	},
+
+	customBefore: function(data) {
+		if (data.type == Aranea.Page.Submitter.TYPE_AJAX) {
+			Aranea.Logger.debug('Showing the loading message.');
+			Aranea.Page.showLoadingMessage();
+		}
+
+		if (data.type != Aranea.Page.Submitter.TYPE_PLAIN) {
+			// Copy the content of rich editors to corresponding HTML text-inputs/text-areas.
+			if (window.tinyMCE) {
+				window.tinyMCE.triggerSave();
+			}
+		} else {
+			Aranea.Page.unload(data);
+		}
+	},
+
+	customAfter: function(data) {
+		if (data.type == Aranea.Page.Submitter.TYPE_AJAX) {
+			Aranea.Page.hideLoadingMessage();
+		}
 	}
 };
 
-// Here are three submitter classes for the standard HTTP submit, AJAX update
-// region submit, and AJAX overlay submit.
+// Here are three submitter classes for the standard HTTP submit, AJAX update region submit, and AJAX overlay submit.
+Aranea.Page.Submitter = {
+	TYPE_PLAIN: 'submit',
+	TYPE_AJAX: 'ajax',
+	TYPE_OVERLAY: 'overlay'
+};
 
 /**
- * The standard HTTP submitter. Whether it's POST or GET depends on the
- * "method" attribute of the "form" element. (The default is GET submit.)
+ * The standard HTTP submitter. Whether it's POST or GET depends on the "method" attribute of the "form" element. (The
+ * default is GET submit.)
  */
-var DefaultAraneaSubmitter = Class.create({
+Aranea.Page.Submitter.Plain = Class.create({
 
-	TYPE: 'submit',
+	TYPE: Aranea.Page.Submitter.TYPE_PLAIN,
 
 	event_plain: function(args) {
-		return this.event(Aranea.Page.Attribute.getEventData(this.TYPE, args));
+		return this.event(Aranea.Page.Parameter.getEventData(this.TYPE, args));
 	},
 
 	event: function(eventData) {
@@ -719,25 +671,24 @@ var DefaultAraneaSubmitter = Class.create({
 	event_core: function(data) {
 		data.form.submit();
 	}
-});
+})
 
 /**
- * This class extends the default submitter, and overrides event() to initiate
- * an AJAX request and to process result specifically for the overlay mode.
- * It expects that aranea-modalbox.js is successfully loaded.
+ * This class extends the default submitter, and overrides event() to initiate an AJAX request and to process result
+ * specifically for the overlay mode. It expects that aranea-modalbox.js is successfully loaded.
  */
-var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
+Aranea.Page.Submitter.Overlay = Class.create(Aranea.Page.Submitter.Plain, {
 
-	TYPE: 'overlay',
+	TYPE: Aranea.Page.Submitter.TYPE_OVERLAY,
 
 	event_core: function(data) {
 		Aranea.ModalBox.update({ params: data.form.serialize(true) });
 	}
-});
+}),
 
-var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
+Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 
-	TYPE: 'ajax',
+	TYPE: Aranea.Page.Submitter.TYPE_AJAX,
 
 	event: function(eventData) {
 		if (eventData.isSubmitAllowed(eventData)) {
@@ -745,7 +696,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
 			this.data = eventData;
 
-			var ajaxRequestId = Aranea.Page.getRandomRequestId().toString();
+			var ajaxRequestId = Aranea.Page.getRandomRequestId();
 			var neededAraClientStateId = eventData.form.araClientStateId ? eventData.form.araClientStateId.value : null;
 			var neededAraTransactionId = 'override';
 
@@ -785,7 +736,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 		// something already needs current stateId presence, e.g. the reloading region
 		// handler. As it's likely that whole system form will be replaced completely
 		// when document region is updated, this must be repeated in onComplete.
-		DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
+		Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
 
 		if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + '\n') {
 			var logmsg = ['Partial rendering: received successful response (', transport.responseText.length,
@@ -830,7 +781,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 		}.bind(this);
 
 		// force the delay here
-		setTimeout(f, DefaultAraneaAJAXSubmitter.contentUpdateWaitDelay);
+		setTimeout(f, Aranea.Page.Submitter.AJAX.contentUpdateWaitDelay);
 	},
 
 	onAjaxFailure: function(transport) {
@@ -850,11 +801,10 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 	}
 });
 
-Object.extend(DefaultAraneaAJAXSubmitter, {
+Object.extend(Aranea.Page.Submitter.AJAX, {
 
 	/**
-	 * The delay after which Ajax.Request onComplete expects all the DOM updates
-	 * to have taken place, in milliseconds.
+	 * The delay after which Ajax.Request onComplete expects all the DOM updates to have taken place, in milliseconds.
 	 * @since 1.1
 	 */
 	contentUpdateWaitDelay: 30,
@@ -879,8 +829,42 @@ Object.extend(DefaultAraneaAJAXSubmitter, {
 				window.dhtmlHistory.add(stateVersion, true);
 			}
 		}
-	}
+	},
 
+	/**
+	 * Process response of an update-regions AJAX request. Should be called only on successful response. Invokes
+	 * registered region handlers.
+	 * @param responseText The AJAX response text.
+	 * @since 1.1
+	 */
+	processResponse: function(responseText) {
+		var counter = $H();
+		var hasRegions = false;
+		var log = Aranea.Logger;
+		var handlers = Aranea.Data.regionHandlers;
+
+		new Aranea.Util.AjaxResponse(responseText).each(function(key, content, length) {
+			counter[key] = counter[key] ? counter[key]++ : 1;
+			if (handlers.get(key)) {
+				log.debug('Region type: "' + key + '" (' + length + ' characters)');
+				handlers.get(key).process(content);
+				hasRegions = true;
+			} else {
+				throw('Region type: "' + key + '" is unknown!');
+			}
+		});
+
+		Aranea.Data.receivedRegionCounters = counter;
+
+		if (Aranea.Data.reloadOnNoDocumentRegions && !hasRegions) {
+			log.debug('No document regions were received, forcing a reload of the page');
+			if (handlers.get('reload')) {
+				handlers.get('reload').process();
+			} else {
+				log.error('No handler is registered for "reload" region, unable to force page reload!');
+			}
+		}
+	}
 });
 
 Aranea.Page.RegionHandler = {
@@ -1035,7 +1019,7 @@ Aranea.Page.RegionHandler = {
 
 			// if current systemform is overlayed, reload only overlay
 			if (Aranea.Data.systemForm.araOverlay) {
-				return new DefaultAraneaOverlaySubmitter().event_plain();
+				return new Aranea.Page.Submitter.Overlay().event_plain();
 			}
 
 			/* Actually we should enter the domain of hackery.
@@ -1050,7 +1034,7 @@ Aranea.Page.RegionHandler = {
 			 *    set transactionId to non-null inconsistent value, but may not affect the system form.
 			 * Which is not satisfied by current implementation here.
 			 */
-			return new DefaultAraneaSubmitter().event_plain();
+			return new Aranea.Page.Submitter.Plain().event_plain();
 		}
 	},
 
@@ -1062,6 +1046,7 @@ Aranea.Page.RegionHandler = {
 			var formelement = $(result.formElementId);
 			var inputSpan = this.getParentSpan(formelement);
 			var labelSpan = this.getLabelSpan(formelement);
+
 			Aranea.UI.markFEContentStatus(result.valid, inputSpan);
 			Aranea.UI.markFEContentStatus(result.valid, labelSpan);
 
@@ -1089,6 +1074,10 @@ Aranea.Page.RegionHandler = {
 		},
 
 		getParentElement: function(el, tagName, className) {
+			if (!el) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "element" must not be null!')
+			if (!tagName) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "tagName" must not be null!')
+			if (!className) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "className" must not be null!')
+
 			var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
 			var y = function(element) { return x(element) && Element.hasClassName(element, className); };
 			var filter = className ? y : x;
@@ -1103,7 +1092,7 @@ Aranea.Page.RegionHandler = {
 	}
 };
 
-Aranea.Page.Attribute = {
+Aranea.Page.Parameter = {
 
 	getArrayVal: function(arr, index) {
 		return arr != null && arr.length > index ? arr[index] : null;
@@ -1114,9 +1103,6 @@ Aranea.Page.Attribute = {
 		var data = null;
 		args = $A(args);
 		if (args.length > 1 && Object.isString(args[0])) {
-			if (!Object.isString(args[0])) {
-				throw('Resolvin event params: expected the first argument to be string (eventId).');
-			}
 			data = {
 				type: String.interpret(type),
 				eventId: String.interpret(this.getArrayVal(args,0)),
@@ -1126,7 +1112,7 @@ Aranea.Page.Attribute = {
 				eventUpdateRgns: String.interpret(this.getArrayVal(args,4)),
 				form: this.getArrayVal(args,5)
 			};
-		} else if (args.length == 1 && !Object.isString(args[0])) {
+		} else if (args.length >= 1 && !Object.isString(args[0])) {
 			args = args[0];
 			data = {
 				type: String.interpret(type),
@@ -1134,7 +1120,7 @@ Aranea.Page.Attribute = {
 				widgetId: this.getEventTarget(args),
 				eventId: this.getEventId(args),
 				eventParam: this.getEventParam(args),
-				eventUpdateRgns: this.getEventUpdateRegions(args),
+				eventUpdateRgns: Object.isString(args.last()) ? args.last() : this.getEventUpdateRegions(args),
 				eventCondition: this.getEventPreCondition(args)
 			};
 		} else if (args == null || args.length == 0) {
@@ -1183,11 +1169,11 @@ Aranea.Page.Attribute = {
 	},
 
 	evaluateRequestType: function(data) {
-		var type = 'submit';
+		var type = Aranea.Page.Submitter.TYPE_PLAIN;
 		if (data.form.className == 'aranea-overlay-form') {
-			type = 'overlay';
+			type = Aranea.Page.Submitter.TYPE_OVERLAY;
 		} else if (data.eventUpdateRgns) {
-			type = 'ajax';
+			type = Aranea.Page.Submitter.TYPE_AJAX;
 		}
 		data.type = type;
 	},
@@ -1206,7 +1192,8 @@ Aranea.Page.Attribute = {
 	},
 
 	readAttribute: function(attribute, element) {
-		return String.interpret(element.readAttribute(attribute));
+		element = $(element);
+		return Object.isElement(element) && attribute ? String.interpret(element.readAttribute(attribute)) : null;
 	},
 
 	/**
@@ -1250,25 +1237,29 @@ Aranea.Page.Attribute = {
 		return this.readAttribute('arn-evntCond', element);
 	},
 
-	getFormAttribute: function(form, attr) {
-		if (!form) form = Aranea.Data.systemForm;
-		return $F(Aranea.Data.systemForm[attr]);
+	getFormParameter: function(form, attr) {
+		form = $(form);
+		if (!Object.isElement(form) || !form.match('form')) {
+			throw('The "form" parameter must be an HTML form!');
+		}
+		var input = form.getInputs('hidden', attr);
+		return input.length > 0 ? $F(input[0]) : null;
 	},
 
 	getTopServiceId: function(form) {
-		return this.getFormAttribute(form, 'araTopServiceId');
+		return this.getFormParameter(form, 'araTopServiceId');
 	},
 
 	getThreadServiceId: function(form) {
-		return this.getFormAttribute(form, 'araThreadServiceId');
+		return this.getFormParameter(form, 'araThreadServiceId');
 	},
 
 	getTransactionId: function(form) {
-		return this.getFormAttribute(form, 'araTransactionId');
+		return this.getFormParameter(form, 'araTransactionId');
 	},
 
 	getClientStateId: function(form) {
-		return this.getFormAttribute(form, 'araClientStateId');
+		return this.getFormParameter(form, 'araClientStateId');
 	}
 };
 

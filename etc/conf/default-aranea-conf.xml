@@ -174,7 +174,9 @@
 		class="org.araneaframework.http.filter.StandardHttpResponseFilterService"/>
 
 	<bean id="araneaFileImportFilter" scope="prototype"
-		class="org.araneaframework.http.filter.StandardFileImportFilterService"/>
+		class="org.araneaframework.http.filter.StandardFileImportFilterService">
+		<property name="cacheHoldingTime" value="86400000"/>
+	</bean>
 
 	<bean id="araneaSystemFormFilter" scope="prototype"
 		class="org.araneaframework.framework.filter.StandardSystemFormFilterService"/>

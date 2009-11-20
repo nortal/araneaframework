@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript" src="app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
+	<script type="text/javascript" src="../../etc/js/rsh/rsh.compressed.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-rsh.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Tests for "aranea-util.js"</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function testNamespaces() {
+			assertNotNull('Aranea namespace must exist!', Aranea);
+			assertNotNull('Aranea.RSHListener namespace must exist!', Aranea.RSHListener);
+		}
+
+		function testRSHInit() {
+			assertNotUndefined('window.dhtmlHistory must be provided!', window.dhtmlHistory);
+
+			document.fire('aranea:loaded');
+
+			// Some checks to verify that window.dhtmlHistory was initialized:
+			assert(Object.isString(window.dhtmlHistory.originalTitle));
+			assertEquals(document.title, window.dhtmlHistory.originalTitle);
+			assertTrue(window.dhtmlHistory.firstLoad);
+			assertEquals('The listener was not as expected!', window.dhtmlHistory.listener, Aranea.RSHListener);
+
+			assertEquals('toJSON must be Object.toJSON', Object.toJSON, window.historyStorage.toJSON);
+		}
+
+		function testRSHDetect() {
+			window.testRSHDetectReached = false;
+
+			Aranea.Page = {
+				event: function() {
+					window.testRSHDetectReached = true;
+				}
+			};
+			Aranea.Logger = { debug: Prototype.emptyFunction };
+
+			var page = 'HTTP://WWW.DEMO.ORG/DEMO/PATH/TESTPAGE.HTML';
+			Aranea.RSHListener(page, null);
+
+			assertFalse('Aranea.Page.event was not supposed to be invoked!', window.testRSHDetectReached);
+			assertNotEquals(page, window.dhtmlHistoryListenerRequestedState);
+			assertFalse('firstLoad must be false!', window.dhtmlHistory.firstLoad);
+			assertFalse('ignoreLocationChange must be false!', window.dhtmlHistory.ignoreLocationChange);
+
+			page = 'http://www.demo.org/demo/path/testpage.html';
+			Aranea.RSHListener(page, null);
+
+			assertTrue('Aranea.Page.event was supposed to be invoked!', window.testRSHDetectReached);
+			assertEquals(page, window.dhtmlHistoryListenerRequestedState);
+			assertFalse('firstLoad must be false!', window.dhtmlHistory.firstLoad);
+			assertFalse('ignoreLocationChange must be false!', window.dhtmlHistory.ignoreLocationChange);
+		}
+	</script>
+
+	<p>This page contains JsUnit-tests for <b>aranea-rsh.js</b>.</p>
+
+</body>
+</html>

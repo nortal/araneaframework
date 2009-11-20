@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @jsp.tag
  *  name = "checkbox"
  *  body-content = "JSP"
- *  description = "Form checkbox input field, represents UiLib "CheckboxControl"."
+ *  description = "Form checkbox input field, represents UiLib 'CheckboxControl'."
  */
 public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 

@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form;
 
+import org.araneaframework.Path;
+
 import java.util.StringTokenizer;
 
 import org.araneaframework.backend.util.BeanUtil;
@@ -118,7 +120,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public void addElementBefore(String id, GenericFormElement element, String beforeId) {
     Assert.notEmptyParam(beforeId, "beforeId");
-    Assert.isTrue(id.indexOf(".") == -1, "addElementBefore() does not accept nested 'id' parameter.");
+    Assert.isTrue(id.indexOf(Path.SEPARATOR) == -1,
+        "addElementBefore() does not accept nested 'id' parameter.");
 
     // form is now the actual form to add element into:
     FormWidget form = NestedFormUtil.getDeepestForm(beforeId, this);
@@ -128,8 +131,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
   private void addFlatElement(String id, GenericFormElement element, String existingId, boolean before) {
     Assert.notEmptyParam(id, "id");
     Assert.notNullParam(element, "element");
-    Assert.isTrue(existingId.indexOf(".") == -1, "addFlatElement() method does not accept nested 'exstingId': '"
-        + existingId + "'!");
+    Assert.isTrue(existingId.indexOf(Path.SEPARATOR) == -1,
+        "addFlatElement() method does not accept nested 'exstingId': '" + existingId + "'!");
 
     if (!getElements().containsKey(existingId)) {
       throw new AraneaRuntimeException("The element '" + existingId + "' does not exist!");

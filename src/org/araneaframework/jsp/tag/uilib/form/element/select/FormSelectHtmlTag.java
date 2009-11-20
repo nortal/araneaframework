@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
@@ -37,7 +39,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
  * @jsp.tag
  *  name = "select"
  *  body-content = "JSP"
- *  description = "Form drop-down list input field, represents UiLib "SelectControl"."
+ *  description = "Form drop-down list input field, represents UiLib 'SelectControl'."
  */
 @SuppressWarnings("unchecked")
 public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
@@ -87,7 +89,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     if (this.events && viewModel.isOnChangeEventRegistered()) {
-      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, this.formFullId + "."
+      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, this.formFullId + Path.SEPARATOR
           + this.derivedId, null, this.updateRegionNames);
       event.setEventPrecondition(this.onChangePrecondition);
       JspUtil.writeEventAttributes(out, event);

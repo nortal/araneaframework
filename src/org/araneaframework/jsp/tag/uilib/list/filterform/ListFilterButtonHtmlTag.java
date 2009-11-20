@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list.filterform;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -72,7 +74,7 @@ public class ListFilterButtonHtmlTag extends FormLinkButtonHtmlTag {
   protected void registerEnterKeyboardHandler() throws JspException {
     FormEnterKeyboardHandlerHtmlTag tag = new FormEnterKeyboardHandlerHtmlTag();
     registerSubtag(tag);
-    tag.setFullElementId((String) requireContextEntry(FormTag.FORM_FULL_ID_KEY) + "." + this.id);
+    tag.setFullElementId((String) requireContextEntry(FormTag.FORM_FULL_ID_KEY) + Path.SEPARATOR + this.id);
     executeStartSubtag(tag);
     executeEndTagAndUnregister(tag);
   }

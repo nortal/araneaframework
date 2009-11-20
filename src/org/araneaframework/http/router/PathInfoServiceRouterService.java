@@ -29,67 +29,71 @@ import org.araneaframework.http.PathInfoServiceContext;
 
 /**
  * TODO: document it
+ * 
  * @author "Jevgeni Kabanov" <ekabanov@webmedia.ee>
  */
 public class PathInfoServiceRouterService extends BaseServiceRouterService {
-	
+
   private String pathInfo;
-  
-	@Override
+
+  @Override
   protected Object getServiceIdFromInput(InputData input) throws Exception {
-		return getPathInfo(input)[0];
-	}
-  
-	@Override
+    return getPathInfo(input)[0];
+  }
+
+  @Override
   protected String getServiceKey() throws Exception {
-		return "pathInfoServiceId";
-	}
+    return "pathInfoServiceId";
+  }
 
-	@Override
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    pathInfo = getPathInfo(input)[1];
+    this.pathInfo = getPathInfo(input)[1];
     super.action(path, input, output);
-	}
-	
-	private static String[] getPathInfo(InputData input) {
-		String serviceId  = null;
-		String pathInfo = "";
-		
-		String path = ((HttpInputData) input).getPath();
-		if (path != null) {
-			// lose the first slashes
-			while (path.indexOf("/") == 0 && path.length() > 0)
-				path = path.substring(1);
-			
-			int index = path.indexOf("/");
-			// we have a second slash
-			if (index != -1) {
-				// not interested in the first slash
-				pathInfo = path.substring(index+1);
-				serviceId = path.substring(0, index);
-			}
-			else {
-				serviceId = path;
-			}
-		}
-		serviceId = serviceId != null && serviceId.length() == 0 ? null : serviceId;
-		
-		return new String[]{serviceId, pathInfo};
-	}
+  }
 
-	@Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
-		Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();    
-		entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
-		return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
-	}
-  
-	private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements PathInfoServiceContext {
-		protected ServiceRouterContextImpl(String serviceId) {
-			super(serviceId);
-		}
-    public String getPathInfo() {
-      return pathInfo;
+  private static String[] getPathInfo(InputData input) {
+    String serviceId = null;
+    String pathInfo = "";
+
+    String path = ((HttpInputData) input).getPath();
+    if (path != null) {
+      // lose the first slashes
+      while (path.indexOf("/") == 0 && path.length() > 0) {
+        path = path.substring(1);
+      }
+
+      int index = path.indexOf("/");
+      // we have a second slash
+      if (index != -1) {
+        // not interested in the first slash
+        pathInfo = path.substring(index + 1);
+        serviceId = path.substring(0, index);
+      } else {
+        serviceId = path;
+      }
     }
-	}
+    serviceId = serviceId != null && serviceId.length() == 0 ? null : serviceId;
+
+    return new String[] { serviceId, pathInfo };
+  }
+
+  @Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
+    entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+  }
+
+  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements
+      PathInfoServiceContext {
+
+    protected ServiceRouterContextImpl(String serviceId) {
+      super(serviceId);
+    }
+
+    public String getPathInfo() {
+      return PathInfoServiceRouterService.this.pathInfo;
+    }
+  }
 }

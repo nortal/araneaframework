@@ -16,6 +16,9 @@
 
 package org.araneaframework.http.util;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,13 +30,14 @@ import java.util.StringTokenizer;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class URLUtil {
+
   /**
    * Removes all leading and trailing slashes.
    */
   public static String normalizeURI(String uri) {
-    if (uri == null) 
+    if (uri == null)
       return null;
-    
+
     // lose the first slashes
     while (uri.indexOf("/") == 0 && uri.length() > 0)
       uri = uri.substring(1);
@@ -56,10 +60,10 @@ public abstract class URLUtil {
 
     return result.toArray(new String[result.size()]);
   }
-  
+
   public static String parametrizeURI(String uri, Map<String, String> parameters) {
     StringBuffer sb = new StringBuffer(uri);
-    
+
     if (parameters != null && parameters.size() > 0) {
       sb.append('?');
       for (Iterator<Map.Entry<String, String>> i = parameters.entrySet().iterator(); i.hasNext();) {
@@ -73,5 +77,21 @@ public abstract class URLUtil {
     }
 
     return sb.toString();
+  }
+
+  public static final InputStream getFileStream(URL fileURL, String fileName) {
+    InputStream result = null;
+
+    try {
+      result = new FileInputStream(fileName);
+    } catch (Exception e) {
+      try {
+        result = result != null ? null : fileURL.openStream();
+      } catch (Exception e2) {
+        // not being able to load results in Exception, which is OK.
+      }
+    }
+
+    return result;
   }
 }

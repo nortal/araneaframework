@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.control.NumberControl;
  * @jsp.tag
  *   name = "numberInput"
  *   body-content = "JSP"
- *   description = "Form number input field, represents UiLib "NumberControl"."
+ *   description = "Form number input field, represents UiLib 'NumberControl'."
  */
 public class FormNumberInputHtmlTag extends BaseFormTextInputHtmlTag {
   {

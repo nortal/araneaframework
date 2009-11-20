@@ -25,7 +25,7 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormSimpleElementDisplayHtmlTa
  * @jsp.tag
  *   name = "numberInputDisplay"
  *   body-content = "JSP"
- *   description = "Form number display field, represents UiLib "NumberControl"."
+ *   description = "Form number display field, represents UiLib 'NumberControl'."
  */
 public class FormNumberInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtmlTag {
 	{

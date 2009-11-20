@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.control.FloatControl;
  * @jsp.tag
  *   name = "floatInput"
  *   body-content = "JSP"
- *   description = "Form floating-point number input field, represents UiLib "FloatControl"."
+ *   description = "Form floating-point number input field, represents UiLib 'FloatControl'."
  */
 public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
   {

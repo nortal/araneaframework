@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.updateregion;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.UpdateRegionContext;
@@ -53,7 +55,7 @@ public class BaseUpdateRegionTag extends BaseTag {
     this.fullId = this.globalId;
 
     if (this.fullId == null) {
-      this.fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + this.id) : this.id;
+      this.fullId = contextWidgetId.length() > 0 ? (contextWidgetId + Path.SEPARATOR + this.id) : this.id;
     }
 
     String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(this.pageContext, ServletUtil.UIWIDGET_KEY))

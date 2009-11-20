@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.tab;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
 import org.araneaframework.jsp.tag.include.WidgetIncludeTag;
 import org.araneaframework.uilib.tab.TabContainerWidget;
@@ -38,7 +40,8 @@ public class TabBodyTag extends WidgetIncludeTag {
     TabContainerWidget tabContainerWidget = (TabContainerWidget) requireContextEntry(TabContainerHtmlTag.TAB_CONTAINER_WIDGET);
     String containerId = tabContainerWidget.getScope().getId().toString();
     String selectedTabId = tabContainerWidget.getSelectedTab().getScope().getId().toString();
-    String tabContentWidgetId = containerId + "." + selectedTabId + "." + TabWidget.CONTENT_WIDGET_KEY;
+    String tabContentWidgetId = containerId + Path.SEPARATOR + selectedTabId + Path.SEPARATOR
+        + TabWidget.CONTENT_WIDGET_KEY;
 
     setId(tabContentWidgetId);
     super.doStartTag(out);

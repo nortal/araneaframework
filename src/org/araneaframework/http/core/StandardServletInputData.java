@@ -16,7 +16,7 @@
 
 package org.araneaframework.http.core;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.StringTokenizer;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.iterators.EnumerationIterator;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
@@ -43,6 +44,8 @@ import org.araneaframework.http.HttpInputData;
  */
 public class StandardServletInputData implements HttpInputData {
 
+  protected static final String PATH_SEPARATOR = "/";
+
   private HttpServletRequest req;
 
   private Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
@@ -53,7 +56,7 @@ public class StandardServletInputData implements HttpInputData {
 
   private boolean dataInited;
 
-  private StringBuffer path;
+  private String path;
 
   private LinkedList<String> pathPrefixes = new LinkedList<String>();
 
@@ -77,7 +80,7 @@ public class StandardServletInputData implements HttpInputData {
     this.req = request;
     this.dataInited = false;
 
-    this.path = new StringBuffer(this.req.getPathInfo() == null ? "" : this.req.getPathInfo());
+    this.path = StringUtils.defaultString(this.req.getPathInfo());
     this.pathPrefixes = new LinkedList<String>();
   }
 
@@ -91,13 +94,13 @@ public class StandardServletInputData implements HttpInputData {
     while (params.hasMoreElements()) {
       String key = params.nextElement();
 
-      if (!StringUtils.contains(key, ".")) {
+      if (!StringUtils.contains(key, Path.SEPARATOR)) {
         // global data - no prefix data
         this.globalData.put(key, this.req.getParameter(key));
       } else {
         // scoped data
-        String prefix = StringUtils.substringBeforeLast(key, ".");
-        String subKey = StringUtils.substringAfterLast(key, ".");
+        String prefix = StringUtils.substringBeforeLast(key, Path.SEPARATOR);
+        String subKey = StringUtils.substringAfterLast(key, Path.SEPARATOR);
 
         Map<String, String> map = this.scopedData.get(prefix);
 
@@ -220,15 +223,28 @@ public class StandardServletInputData implements HttpInputData {
     return this.path.toString();
   }
 
-  public void popPathPrefix() {
-    this.path.insert(0, this.pathPrefixes.removeLast());
+  public String getSimplePath() {
+    return trim(this.path.toString());
+  }
+
+  public String popPathPrefix() {
+    String path = null;
+
+    if (!this.pathPrefixes.isEmpty()) {
+      path = this.pathPrefixes.removeLast();
+      this.path = new StringBuffer(path).append(PATH_SEPARATOR).append(this.path).toString();
+    }
+
+    return path;
   }
 
   public void pushPathPrefix(String pathPrefix) {
     Assert.notEmptyParam(pathPrefix, "pathPrefix");
 
-    this.pathPrefixes.addLast(pathPrefix);
-    this.path.delete(0, pathPrefix.length() - 1);
+    if (startsWith(this.path, pathPrefix)) {
+      this.pathPrefixes.addLast(pathPrefix);
+      this.path = StringUtils.substringAfter(this.path, pathPrefix);
+    }
   }
 
   public void setCharacterEncoding(String encoding) {
@@ -241,4 +257,32 @@ public class StandardServletInputData implements HttpInputData {
     }
   }
 
+  /**
+   * Checks whether the path (<code>src</code>) starts with the given <code>pathItem</code>. Similar to
+   * {@link String#startsWith(String)}, but does not care whether the path starts with a forward-slash ("/").
+   * 
+   * @param src The path.
+   * @param pathItem The path item that the path must begin with. Must not contain a forward-slash!
+   * @return Whether the path starts with the given <code>pathItem</code>
+   * @since 2.0
+   */
+  protected static boolean startsWith(String src, String pathItem) {
+    Assert.isTrue(pathItem.indexOf(PATH_SEPARATOR) < 0, "The path item must not contain a forward-slash!");
+    StringTokenizer pathItems = new StringTokenizer(trim(src), PATH_SEPARATOR);
+    return StringUtils.equals(pathItem, pathItems.hasMoreTokens() ? pathItems.nextToken() : null);
+  }
+
+  /**
+   * Removes forward-slashes from the beginning of the input string.
+   * 
+   * @param path The string from which forward-slashes should be removed from the beginning.
+   * @return The input string without forward-slashes in the beginning.
+   * @since 2.0
+   */
+  protected static String trim(String path) {
+    while (StringUtils.startsWith(path, PATH_SEPARATOR)) {
+      path = StringUtils.substringAfter(path, PATH_SEPARATOR);
+    }
+    return path;
+  }
 }

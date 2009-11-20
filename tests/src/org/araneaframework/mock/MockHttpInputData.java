@@ -68,7 +68,7 @@ public class MockHttpInputData extends MockInputData implements HttpInputData {
     throw new NotImplementedException();
   }
 
-  public void popPathPrefix() {
+  public String popPathPrefix() {
     // TODO Auto-generated method stub
     throw new NotImplementedException();
   }
@@ -79,6 +79,11 @@ public class MockHttpInputData extends MockInputData implements HttpInputData {
   }
 
   public void setCharacterEncoding(String encoding) {
+    // TODO Auto-generated method stub
+    throw new NotImplementedException();
+  }
+
+  public String getSimplePath() {
     // TODO Auto-generated method stub
     throw new NotImplementedException();
   }

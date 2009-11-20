@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.control.TextControl;
  * @jsp.tag
  *   name = "passwordInput"
  *   body-content = "JSP"
- *   description = "Form password input field, represents UiLib "TextControl"."
+ *   description = "Form password input field, represents UiLib 'TextControl'."
  */
 public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
   @Override

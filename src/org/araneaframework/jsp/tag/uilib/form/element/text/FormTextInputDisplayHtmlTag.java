@@ -25,7 +25,7 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormSimpleElementDisplayHtmlTa
  * @jsp.tag
  *   name = "textInputDisplay"
  *   body-content = "JSP"
- *   description = "Form text display field, represents UiLib "TextControl"."
+ *   description = "Form text display field, represents UiLib 'TextControl'."
  */
 public class FormTextInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtmlTag {
 	{

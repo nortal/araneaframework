@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
+import org.araneaframework.Path;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
@@ -35,7 +37,7 @@ import org.araneaframework.uilib.form.control.TimeControl;
  * @jsp.tag
  *  name = "timeInput"
  *  body-content = "JSP"
- *  description = "Form time input field (custom control), represents UiLib "TimeControl"."
+ *  description = "Form time input field (custom control), represents UiLib 'TimeControl'."
  */
 public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
@@ -123,12 +125,12 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
     if (isHour) {
       selectField = "select1";
-      precondition = getHourSelectOnChangePrecondition(name + ".time");
-      selectScript = getTimeSelectScript(name + "." + selectField, value, 24);
+      precondition = getHourSelectOnChangePrecondition(name + Path.SEPARATOR + "time");
+      selectScript = getTimeSelectScript(name + Path.SEPARATOR + selectField, value, 24);
     } else {
       selectField = "select2";
-      precondition = getMinuteSelectOnChangePrecondition(name + ".time");
-      selectScript = getTimeSelectScript(name + "." + selectField, value, 60);
+      precondition = getMinuteSelectOnChangePrecondition(name + Path.SEPARATOR + "time");
+      selectScript = getTimeSelectScript(name + Path.SEPARATOR + selectField, value, 60);
     }
 
     out.write("<select id=\"");

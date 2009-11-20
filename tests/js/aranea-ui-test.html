@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript" src="app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
+	<script type="text/javascript" src="../../etc/js/rsh/rsh.compressed.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-ui.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Tests for "aranea-ui.js"</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function testNamespaces() {
+			assertNotUndefined('Aranea namespace must exist!', Aranea);
+			assertNotUndefined('Aranea.UI namespace must exist!', Aranea.UI);
+		}
+
+		function testProps() {
+			assert('Aranea.UI.INVALID_FE_CLASS must be a non-empty string!', Object.isString(Aranea.UI.INVALID_FE_CLASS));
+		}
+
+		function testCalendar() {
+			Aranea.UI.calendarSetup($('dateInput'));
+		}
+
+		function testTimeFilling() {
+			Aranea.UI.addOptions('hourSelect', 24, new Date().getHours());
+			Aranea.UI.addOptions('minuteSelect', 60, new Date().getMinutes());
+			Aranea.UI.fillTimeText('timeInput', 'hourSelect', 'minuteSelect');
+
+			var hour = new Date().getHours(), minute = new Date().getMinutes();
+			assertEquals($F('hourSelect') + ':' + $F('minuteSelect'), $F('timeInput'));
+
+			$('hourSelect').value = '';
+			$('minuteSelect').value = '';
+			Aranea.UI.fillTimeSelect('timeInput', 'hourSelect', 'minuteSelect');
+			assertEquals($F('timeInput'), $F('hourSelect') + ':' + $F('minuteSelect'));
+		}
+
+		function testInputChanges() {
+			assertTrue('Hour select must be changed!', Aranea.UI.isChanged('hourSelect'));
+			assertTrue('Minute select must be changed!', Aranea.UI.isChanged('minuteSelect'));
+
+			Aranea.UI.saveValue('hourSelect');
+			Aranea.UI.saveValue('minuteSelect');
+
+			assertFalse('Hour select must not be changed!', Aranea.UI.isChanged('hourSelect'));
+			assertFalse('Minute select must not be changed!', Aranea.UI.isChanged('minuteSelect'));
+		}
+
+		function testScrolling() {
+			Aranea.Data = { systemForm: $('aranea-form') };
+
+			assertEquals('X must be empty!', $F('windowScrollX'), '');
+			assertEquals('Y must be empty!', $F('windowScrollY'), '');
+
+			Aranea.UI.saveScrollCoordinates();
+
+			assertNotEquals('X must not be empty!', $F('windowScrollX'), '');
+			assertNotEquals('Y must not be empty!', $F('windowScrollY'), '');
+
+			Aranea.UI.scrollToCoordinates(parseInt($F('windowScrollX')), parseInt($F('windowScrollY')));
+			Aranea.UI.scrollToCoordinates(10, 100);
+
+			try {
+				Aranea.UI.scrollToCoordinates(null, 100);
+				fail('scrollToCoordinates must throw an exception for an empty param!');
+			} catch(e) {}
+
+			try {
+				Aranea.UI.scrollToCoordinates(10, 10);
+				fail('scrollToCoordinates must throw an exception for an empty param!');
+			} catch(e) {}
+
+			try {
+				Aranea.UI.scrollToCoordinates(null, null);
+				fail('scrollToCoordinates must throw an exception for empty params!');
+			} catch(e) {}
+		}
+
+	</script>
+
+	<p>This page contains JsUnit-tests for <b>aranea-ui.js</b>.</p>
+
+	<form action="http://www.demo.org/demo" id="aranea-form">
+		<div>
+			<input type="hidden" id="windowScrollX" name="windowScrollX"/>"
+			<input type="hidden" id="windowScrollY" name="windowScrollY"/>
+			<!-- Visible inputs: -->
+			<input type="text" id="dateInput" name="dateInput" maxlength="10"/>
+			<input type="text" id="timeInput" name="timeInput" maxlength="5"/>
+			<select id="hourSelect" name="hourSelect"></select>
+			<select id="minuteSelect" name="minuteSelect"></select>
+		</div>
+	</form>
+</body>
+</html>

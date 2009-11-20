@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag;
 
+import org.araneaframework.Path;
+
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
@@ -50,7 +52,7 @@ public class AraneaJspFunctions {
     String fullId = globalId;
 
     if (fullId == null) {
-      fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
+      fullId = contextWidgetId.length() > 0 ? (contextWidgetId + Path.SEPARATOR + id) : id;
     }
 
     try {

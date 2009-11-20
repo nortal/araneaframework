@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.control.DateControl;
  * @jsp.tag
  *   name = "dateInput"
  *   body-content = "JSP"
- *   description = "Form date input field (custom control), represents UiLib "DateControl"."
+ *   description = "Form date input field (custom control), represents UiLib 'DateControl'."
  */
 public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 

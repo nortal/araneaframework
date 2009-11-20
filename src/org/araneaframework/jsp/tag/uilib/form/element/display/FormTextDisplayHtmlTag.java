@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.control.DisplayControl;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag name = "textDisplay" body-content = "empty" description =
- *          "Display element value as string, represents UiLib "DisplayControl"."
+ *          "Display element value as string, represents UiLib 'DisplayControl'."
  */
 public class FormTextDisplayHtmlTag extends BaseFormElementDisplayTag {
 

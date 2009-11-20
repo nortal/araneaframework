@@ -131,12 +131,30 @@ public interface HttpInputData extends InputData {
   String getPath();
 
   /**
-   * Consumes the path prefix allowing children to be mapped to a relative path.
+   * Returns the path on the server starting from the dispatcher servlet that has been submitted as the part of the
+   * request target URL. Unlike {@link #getPath()}, removes all forward-slashes from the beginning of the path.
+   * 
+   * @return The path without forward-slashes in the beginning.
+   * @since 2.0
+   */
+  String getSimplePath();
+
+  /**
+   * Consumes the path prefix (may be nested) allowing children to be mapped to a relative path. The children won't now
+   * that a path element was consumed, and to them, the path is like they expect.
+   * <p>
+   * This is useful for components that listen for requests that match a certain path under the root context. For
+   * example, a component that received request for "/a/b" may use <code>pushPathPrefix("a")</code> so that components
+   * listening for "/b" could processed as well.
+   * 
+   * @param pathPrefix The path prefix to consume. Must not contain a forward-slash!
    */
   void pushPathPrefix(String pathPrefix);
 
   /**
    * Restores the previously consumed path prefix.
+   * 
+   * @return The restored path element.
    */
-  void popPathPrefix();
+  String popPathPrefix();
 }

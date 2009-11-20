@@ -16,6 +16,8 @@
 
 package org.araneaframework.tests.mock;
 
+import org.araneaframework.Path;
+
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +35,9 @@ public class MockUiLibUtil {
     String eventPath = "";
     String eventListenerId = eventId;
 
-    if (StringUtils.contains(eventId, ".")) {
-      eventPath = StringUtils.substringBeforeLast(eventId, ".");
-      eventListenerId = StringUtils.substringAfterLast(eventId, ".");
+    if (StringUtils.contains(eventId, Path.SEPARATOR)) {
+      eventPath = StringUtils.substringBeforeLast(eventId, Path.SEPARATOR);
+      eventListenerId = StringUtils.substringAfterLast(eventId, Path.SEPARATOR);
     }
 
     request.addParameter(ApplicationWidget.EVENT_PARAMETER_KEY, eventParameter);

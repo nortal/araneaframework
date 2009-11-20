@@ -35,6 +35,13 @@ import java.io.Serializable;
 public interface Path extends Cloneable, Serializable {
 
   /**
+   * The constant representing the path items separator.
+   * 
+   * @since 2.0
+   */
+  String SEPARATOR = ".";
+
+  /**
    * Returns next step in the path without changing the current position.
    * 
    * @return the next step in the path
