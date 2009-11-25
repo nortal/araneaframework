@@ -25,8 +25,6 @@ import org.araneaframework.example.main.TemplateBaseWidget;
  */
 public class InitErrorWidget extends TemplateBaseWidget {
 
-	  private static final long serialVersionUID = 1L;
-
   @Override
   public void init() throws Exception {
     setViewSelector("misc/initError");

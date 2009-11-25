@@ -23,7 +23,7 @@ import org.apache.commons.beanutils.BeanPropertyValueEqualsPredicate;
 import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.web.menu.MenuWidget;
+import org.araneaframework.example.main.web.MenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.tab.TabContainerWidget;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;

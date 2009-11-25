@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+var Aranea = Aranea ? Aranea : {};
+
 /**
  * This namespace is used to consolidate all Aranea behaviour related logic that applies to page elements.
  *
@@ -21,7 +23,6 @@
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.1
  */
-var Aranea = Aranea ? Aranea : {};
 Aranea.Behaviour = {
 
 	ATTR_BG_VALIDATE: 'aranea-bg-validate',
@@ -180,9 +181,7 @@ Aranea.Behaviour = {
 	 * @since 1.2.1
 	 */
 	doAutoCompleteInputSetup: function(name, eventType, updateRegions, options) {
-		if (!options) {
-			options = {};
-		}
+		options = options || {};
 		if (eventType && !options.afterUpdateElement) {
 			options = Object.extend(options, {
 				afterUpdateElement: function(el, selectedEl) {
@@ -201,4 +200,5 @@ Aranea.Behaviour = {
 		document.observe('aranea:loaded', init);
 	}
 };
-document.observe('aranea:loaded', Aranea.Behaviour.apply.bind(Aranea.Behaviour));
+document.observe('aranea:loaded', Aranea.Behaviour.apply);
+document.observe('aranea:updated', Aranea.Behaviour.apply);

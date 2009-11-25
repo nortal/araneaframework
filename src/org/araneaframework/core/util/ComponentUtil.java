@@ -106,8 +106,6 @@ public abstract class ComponentUtil {
   // failing lazily
   private static class LateBindingChildEnvironment implements Environment {
 
-    private static final long serialVersionUID = 1L;
-
     private ApplicationComponent component;
 
     public LateBindingChildEnvironment(ApplicationComponent component) {

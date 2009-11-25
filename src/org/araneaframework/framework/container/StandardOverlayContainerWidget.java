@@ -125,17 +125,17 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    */
   public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
 
-  private static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
+  public static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
-  private static final String MAIN_CHILD_KEY = "m";
+  protected static final String MAIN_CHILD_KEY = "m";
 
-  private static final String OVERLAY_CHILD_KEY = "o";
+  protected static final String OVERLAY_CHILD_KEY = "o";
 
   protected Map<String, String> presentationOptions = new LinkedHashMap<String, String>();
 
-  private Widget main;
+  protected Widget main;
 
-  private FlowContextWidget overlay;
+  protected FlowContextWidget overlay;
 
   static {
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
@@ -191,13 +191,13 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   @Override
   protected void event(Path path, InputData input) throws Exception {
-    assertActiveHierarchy(path, "Cannot deliver event to wrong hierarchy!");
+    assertActiveHierarchy(path);
     super.event(path, input);
   }
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    assertActiveHierarchy(path, "Cannot deliver action to wrong hierarchy!");
+    assertActiveHierarchy(path);
     super.action(path, input, output);
   }
 
@@ -205,13 +205,12 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    * Asserts that the current widget is in the active hierarchy. If not, the execution will fail with an exception.
    * 
    * @param path Path of the widget (from the request).
-   * @param message A description message to include with the exception.
    * @since 1.1.2
    */
-  protected void assertActiveHierarchy(Path path, String message) {
+  protected void assertActiveHierarchy(Path path) {
     if (path != null && path.hasNext()) {
       String key = isOverlayActive() ? MAIN_CHILD_KEY : OVERLAY_CHILD_KEY;
-      Assert.isTrue(!key.equals(path.getNext()), message);
+      Assert.isTrue(!key.equals(path.getNext()), "Cannot deliver action to wrong hierarchy!");
     }
   }
 
@@ -277,5 +276,4 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   public void cancel() {
     this.overlay.cancel();
   }
-
 }

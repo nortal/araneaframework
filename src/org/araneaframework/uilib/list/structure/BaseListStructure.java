@@ -26,8 +26,6 @@ import org.araneaframework.uilib.list.structure.order.MultiFieldOrder;
 
 public class BaseListStructure implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Map of {@link ListField}s where the column Ids are the keys and columns
 	 * are the values.
@@ -149,8 +147,6 @@ public class BaseListStructure implements Serializable {
 	 * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
 	 */
 	public class ViewModel implements Serializable {
-
-		private static final long serialVersionUID = 1L;
 
 		protected Map<String, ListField.ViewModel> columns = new HashMap<String, ListField.ViewModel>();
 		protected List<ListField.ViewModel> columnList = new ArrayList<ListField.ViewModel>();

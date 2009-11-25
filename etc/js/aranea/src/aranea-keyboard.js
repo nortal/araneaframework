@@ -36,12 +36,12 @@
  
 // Parts of code from http://www.openjs.com/scripts/events/keyboard_shortcuts/
 // shortcut library (version 1.00.A by Binny V A) distributed under BSD license.
- 
- // ------------------------------- Keyboard Events ---------------------------------- //
- 
- 
+
+// ------------------------------- Keyboard Events ---------------------------------- //
+
+var Aranea = window.Aranea || {};
+
 /** @since 1.1 */
-Aranea = Aranea?Aranea:{};
 Aranea.Keyboard = {
 
 	//NOTE by TP: this actually is only correct for one keyboard layout only...

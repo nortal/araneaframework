@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-/**
+var Aranea = window.Aranea || {};
+
+/** 
  * Initialization scripts for using Really Simple History (http://code.google.com/p/reallysimplehistory/)
  * functionality in Aranea. Purpose of this is to allow client-side navigation events to proceed normally,
  * supported by server-side state versioning.
- * 
- * @author Taimo Peelo (taimo@araneaframework.org)
- */
-
-var Aranea = Aranea ? Aranea : {};
-
-/** 
- * RSH event listener, RSH notifies this about the location changes (URL in browser window). 
+ * <p>
+ * RSH event listener, RSH notifies this about the location changes (URL in browser window).
+ *  
  * @param newLocation the hash part of the new location URL 
  * @param historyData RSH managed history data for that hash
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 Aranea.RSHListener = function(newLocation, historyData) {
 	Aranea.Logger.debug('Detected navigation event ' + newLocation + " history: " + historyData);

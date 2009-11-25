@@ -51,7 +51,6 @@ import org.springframework.web.context.WebApplicationContext;
  * @author <a href="mailto:rein@webmedia.ee">Rein Raudjärv</a>
  */
 public class SpringLocalizationFilterService extends StandardLocalizationFilterService implements SpringLocalizationContext {
-	private static final long serialVersionUID = 1L;
 	
 	public MessageSource getMessageSource() {
 		return getEnvironment().getEntry(WebApplicationContext.class);

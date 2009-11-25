@@ -79,19 +79,110 @@
 			} catch(e) {}
 		}
 
+		function testContentStatus() {
+			assert(!$('dateInput').hasClassName(Aranea.UI.INVALID_FE_CLASS));
+			Aranea.UI.markFEContentStatus(false, 'dateInput');
+			assert($('dateInput').hasClassName(Aranea.UI.INVALID_FE_CLASS));
+			Aranea.UI.markFEContentStatus(true, 'dateInput');
+			assert(!$('dateInput').hasClassName(Aranea.UI.INVALID_FE_CLASS));
+
+			Aranea.UI.appendLocalFEValidationMessages('timeInputMsg', '<span id="appendTest1">Test 1</span>');
+
+			var results = $$('#timeInputMsg > span#appendTest1');
+			assertTrue('The message element was not added!', results.length == 1);
+			results.first().remove();
+		}
+
+		function testConfirm() {
+			Aranea.Page = {
+				event: function() {
+					assertTrue('No parameters must be provided to Aranea.Page.event!', arguments.length == 0);
+					window.testConfirmEventInvoked = true;
+				}
+			};
+
+			Aranea.UI.confirmFlowEvent('Press "OK" to continue correctly with the test!');
+			assertEquals('true', $F('araConfirmationContextConfirmationResult'));
+			assertTrue('1) Aranea.Page.event was not called!', window.testConfirmEventInvoked);
+
+			window.testConfirmEventInvoked = false;
+
+			Aranea.UI.confirmFlowEvent('Press "Cancel" (or escape) to continue correctly with the test!');
+			assertEquals('false', $F('araConfirmationContextConfirmationResult'));
+			assertTrue('1) Aranea.Page.event was not called!', window.testConfirmEventInvoked);
+		}
+
+		function testListCheckboxes() {
+			Aranea.Data = { systemForm: $('aranea-form') };
+
+			setChecked(1, 'test.selectItem1');
+			setChecked(2, 'test.selectItem2');
+			setChecked(3, 'test.selectItem3');
+			setChecked(4, 'test.selectItem4');
+			setChecked(5, 'test.selectItem5');
+
+			assertTrue('6) The Select-All must be checked!', $('test').checked);
+
+			$('test').checked = false;
+			Aranea.UI.toggleListCheckBoxes($('test'));
+			assertTrue('7) Table checkboxes must not be checked!', $$('input[id^=test.selectItem]:not(:checked)').length == 5);
+
+			$('test').checked = true;
+			Aranea.UI.toggleListCheckBoxes($('test'));
+			assertTrue('8) Table checkboxes must be checked!', $$('input[id^=test.selectItem]:checked').length == 5);
+
+			$('test.selectItem4').checked = false;
+			Aranea.UI.updateListSelectAll($('test.selectItem4'));
+			assertTrue('9) The Select-All must not be checked!', !$('test').checked);
+		}
+
+		function setChecked(index, element) {
+			assertTrue(index + ') The Select-All must not be checked!', !$('test').checked);
+			$(element).checked = true;
+			Aranea.UI.updateListSelectAll($(element));
+		}
 	</script>
 
 	<p>This page contains JsUnit-tests for <b>aranea-ui.js</b>.</p>
 
 	<form action="http://www.demo.org/demo" id="aranea-form">
 		<div>
-			<input type="hidden" id="windowScrollX" name="windowScrollX"/>"
+			<input type="hidden" id="windowScrollX" name="windowScrollX"/>
 			<input type="hidden" id="windowScrollY" name="windowScrollY"/>
+			<input type="hidden" id="araConfirmationContextConfirmationResult" name="araConfirmationContextConfirmationResult"/>
 			<!-- Visible inputs: -->
 			<input type="text" id="dateInput" name="dateInput" maxlength="10"/>
 			<input type="text" id="timeInput" name="timeInput" maxlength="5"/>
 			<select id="hourSelect" name="hourSelect"></select>
 			<select id="minuteSelect" name="minuteSelect"></select>
+			<span id="timeInputMsg"><!-- ERROR MESSAGES HERE! --></span>
+
+			<table>
+				<tr>
+					<td><input type="checkbox" id="test" onclick="Aranea.UI.toggleListCheckBoxes(this)"/></td>
+					<td>Select All</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="test.selectItem1" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td>Item 1</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="test.selectItem2" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td>Item 2</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="test.selectItem3" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td>Item 3</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="test.selectItem4" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td>Item 4</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" id="test.selectItem5" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td>Item 5</td>
+				</tr>
+			</table>
 		</div>
 	</form>
 </body>

@@ -18,13 +18,26 @@
 		}
 
 		function testLoggers() {
-			assertNotUndefined('DUMMY_LOGGER must exist!', Aranea.Logger.DUMMY_LOGGER);
-			assertNotUndefined('SAFARI_LOGGER must exist!', Aranea.Logger.SAFARI_LOGGER);
-			assertNotUndefined('FIREBUG_LOGGER must exist!', Aranea.Logger.FIREBUG_LOGGER);
-			assertNotUndefined('LOG4JS_LOGGER must exist!', Aranea.Logger.LOG4JS_LOGGER);
+			validateLogger('Aranea.Logger', Aranea.Logger);
+			validateLogger('Aranea.Logger.DUMMY_LOGGER', Aranea.Logger.DUMMY_LOGGER);
+			validateLogger('Aranea.Logger.SAFARI_LOGGER', Aranea.Logger.SAFARI_LOGGER);
+			validateLogger('Aranea.Logger.FIREBUG_LOGGER', Aranea.Logger.FIREBUG_LOGGER);
+			validateLogger('Aranea.Logger.LOG4JS_LOGGER', Aranea.Logger.LOG4JS_LOGGER);
+		}
+
+		function validateLogger(name, logger) {
+			assertNotUndefined(name + ' must not be undefined!', logger);
+			assertNotNull(name + ' must not be null!', logger);
+			assert(name + '.trace must be a function!', Object.isFunction(logger.trace));
+			assert(name + '.debug must be a function!', Object.isFunction(logger.debug));
+			assert(name + '.info must be a function!', Object.isFunction(logger.info));
+			assert(name + '.warn must be a function!', Object.isFunction(logger.warn));
+			assert(name + '.error must be a function!', Object.isFunction(logger.error));
+			assert(name + '.fatal must be a function!', Object.isFunction(logger.fatal));
 		}
 
 		function testLoggerChange() {
+			assert('Aranea.Logger.setLogger must be a function!', Object.isFunction(Aranea.Logger.setLogger));
 			Aranea.Logger.setLogger('dummy');
 			assertEquals('DUMMY_LOGGER expected!', Aranea.Data.logger, Aranea.Logger.DUMMY_LOGGER);
 			Aranea.Logger.setLogger('SaFaRi');

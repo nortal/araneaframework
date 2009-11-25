@@ -293,12 +293,12 @@
 			assertEquals('https://demo456.com/root/fileimporter/file456', Aranea.Page.getFileImportString('file456'));
 
 			try {
-				Aranea.Page.getFileImportString('')
+				Aranea.Page.getFileImportString('');
 				fail('Aranea.Page.getFileImportString() should throw an exception for empty string!');
 			} catch(e) {}
 
 			try {
-				Aranea.Page.getFileImportString(null)
+				Aranea.Page.getFileImportString(null);
 				fail('Aranea.Page.getFileImportString() should throw an exception for null parameter!');
 			} catch(e) {}
 		}

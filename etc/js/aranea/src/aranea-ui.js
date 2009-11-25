@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+var Aranea = Aranea ? Aranea : {};
+
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @since 1.1
  */
-
-/** @since 1.1 */
-var Aranea = Aranea ? Aranea : {};
 Aranea.UI = {
 
 	/**
@@ -193,11 +193,10 @@ Aranea.UI = {
 	 * @since 1.1.3
 	 */
 	toggleListCheckBoxes: function(chkSelectAll) {
-		var arrFormElems = Aranea.Data.systemForm.getElements().each(function (element) {
-			if (element.readAttribute('type') == 'checkbox' && elem.id != null && elem.id.startsWith(chkSelectAll.id)) {
-				element.checked = chkSelectAll.checked;
-			}
-		});
+		if (chkSelectAll) {
+			var selector = 'input[type=checkbox][id!="' + chkSelectAll.id + '"][id^="' + chkSelectAll.id + '"]';
+			Aranea.Data.systemForm.select(selector).invoke('writeAttribute', 'checked', chkSelectAll.checked);
+		}
 	},
 
 	/**
@@ -207,21 +206,12 @@ Aranea.UI = {
 	 * @since 1.1.3
 	 */
 	updateListSelectAll: function(chkSelect) {
-		var pos = chkSelect.id.lastIndexOf('.');
-		if (pos > -1) {
-			var prefix = chkSelect.id.substr(0, pos);
-			var allSelected = chkSelect.checked;
-			if (allSelected) {
-				Aranea.Data.systemForm.getElements().each(function(element) {
-					var id = String.interpret(element.id);
-					if (element.type == 'checkbox' && id.startsWith(prefix) && id != prefix && !element.checked) {
-						allSelected = false;
-						throw $break;
-					}
-				});
-			}
-			if ($(prefix)) {
-				$(prefix).checked = allSelected;
+		var prefix = chkSelect ? chkSelect.id.match(/.*(?=\.)/)[0] : null;
+		if (prefix) {
+			var selector = 'input[type=checkbox][id^="' + prefix + '"][id!="' + prefix + '"]:not(:checked)';
+			var allSelected = Aranea.Data.systemForm.down(selector) == null;
+			if ($(prefix)) { // The "Select-All" check-box.
+				$(prefix).writeAttribute('checked', allSelected);
 			}
 		}
 	}

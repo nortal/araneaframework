@@ -254,8 +254,6 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
 
   protected class WriterLock extends Signaller implements Sync {
 
-    private static final long serialVersionUID = 1L;
-
     public void acquire() throws InterruptedException {
       if (Thread.interrupted()) {
         throw new InterruptedException();

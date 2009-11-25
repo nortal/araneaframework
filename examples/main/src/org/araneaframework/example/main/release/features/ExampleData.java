@@ -153,8 +153,6 @@ public class ExampleData {
 
   public static class Client implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private Long id;
 
     private String sex;

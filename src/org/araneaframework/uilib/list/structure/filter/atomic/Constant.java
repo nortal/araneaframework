@@ -21,7 +21,6 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 public class Constant implements ExpressionBuilder {
-	private static final long serialVersionUID = 1L;
 	
 	private String valueId;
 	private Object value;

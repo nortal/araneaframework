@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-/**
- * Utility functions.
- * @author Taimo Peelo (taimo@araneaframework.org)
- * @author Alar Kvell (alar@araneaframework.org)
- */
-
-var Aranea = Aranea ? Aranea : {};
-Aranea.Data = Aranea.Data ? Aranea.Data : {};
+var Aranea = window.Aranea || {};
+Aranea.Data = Aranea.Data || {};
 
 /**
  * Aranea Logging support.
  * Logger implementations (others may add loggers here with the same namespace). New loggers should follow name
  * pattern "[LOGGER_NAME]_LOGGER", where LOGGER_NAME is used by setLogger(name) to find the logger implementation.
  *
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 Aranea.Logger = {
@@ -102,10 +98,14 @@ Aranea.Logger.FIREBUG_LOGGER = window.console && window.console.debug ? {
 Aranea.Logger.LOG4JS_LOGGER = window.log4javascript && window.log4javascript.getDefaultLogger ?
 	window.log4javascript.getDefaultLogger() : Aranea.Logger.DUMMY_LOGGER;
 
+Aranea.Logger.setLogger('dummy');
+
 /**
- * Aranea.Util namespace was created in version 2.0. However, "aranea-util.js" existed before. Some functions were
- * removed, others were consolidated here.
+ * Utility functions. Aranea.Util namespace was created in version 2.0. However, "aranea-util.js" existed before. Some
+ * functions were removed, others were consolidated here.
  * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Alar Kvell (alar@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */

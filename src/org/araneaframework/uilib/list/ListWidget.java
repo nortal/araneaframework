@@ -1020,8 +1020,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   protected class NextPageEventHandler extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextPage();
@@ -1032,8 +1030,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles page preceeding.
    */
   protected class PreviousPageEventHandler extends StandardEventListener {
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
@@ -1046,8 +1042,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   protected class NextBlockEventHandler extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextBlock();
@@ -1058,8 +1052,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles block preceeding.
    */
   protected class PreviousBlockEventHandler extends StandardEventListener {
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
@@ -1072,8 +1064,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   protected class FirstPageEventHandler extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToFirstPage();
@@ -1085,8 +1075,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   protected class LastPageEventHandler extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToLastPage();
@@ -1097,8 +1085,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles going to any page by number.
    */
   protected class JumpToPageEventHandler extends StandardEventListener {
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
@@ -1117,8 +1103,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   protected class ShowAllEventHandler extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
@@ -1130,8 +1114,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles showing only current records.
    */
   protected class ShowSliceEventHandler extends StandardEventListener {
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
@@ -1254,8 +1236,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected class FilterEventHandler implements OnClickEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     public void onClick() throws Exception {
       filter();
       resetSelectedRows();
@@ -1263,8 +1243,6 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   protected class FilterClearEventHandler implements OnClickEventListener {
-
-    private static final long serialVersionUID = 1L;
 
     public void onClick() throws Exception {
       clearFilter();

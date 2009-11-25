@@ -448,6 +448,10 @@
 		<ant target="run-tests" dir="tests"/>
 	</target>
 
+	<target name="run-js-tests" description="Run the JsUnit tests. Needs GUI and access to browsers (incl. IE).">
+		<ant target="run-js-tests" dir="tests"/>
+	</target>
+
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
 		<taskdef resource="checkstyletask.properties" classpathref="build.util.cp"/>
 		<checkstyle config="checkstyle_checks.xml">

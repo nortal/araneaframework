@@ -58,8 +58,6 @@ public class RelocatableDecorator extends BaseService
 
   protected class RelocatableComponentImpl implements Relocatable.Interface {
 
-    private static final long serialVersionUID = 1L;
-
     public void overrideEnvironment(Environment newEnv) {
       _startCall();
       _setEnvironment(newEnv);
@@ -106,8 +104,6 @@ public class RelocatableDecorator extends BaseService
   @Override
   protected void init() throws Exception {
     child._getComponent().init(getScope(), new BaseEnvironment() {
-
-      private static final long serialVersionUID = 1L;
 
       public <T> T getEntry(Class<T> key) {
         if (getEnvironment() == null)

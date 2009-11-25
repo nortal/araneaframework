@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+var Aranea = window.Aranea || {};
+
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1

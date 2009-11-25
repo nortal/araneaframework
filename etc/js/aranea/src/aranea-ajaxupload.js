@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+var Aranea = window.Aranea || {};
+
 /**
  * AJAX file upload functionality.
  * 

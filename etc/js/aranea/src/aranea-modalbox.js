@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+var Aranea = window.Aranea || {};
+
 /**
  * Aranea integration scripts with ModalBox (http://okonet.ru/projects/modalbox/) to provide the overlay mode effects.
  * However, one can re-implement some methods (update(), afterUpdateRegionResponseProcessing(), close(),
@@ -27,7 +29,6 @@
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1
  */
-Aranea = Aranea ? Aranea : {};
 Aranea.ModalBox = {
 
 	MODALBOX_CLOSE_MSG: '<!-- araOverlaySpecialResponse -->',

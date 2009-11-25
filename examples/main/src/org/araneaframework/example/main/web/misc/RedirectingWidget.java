@@ -42,8 +42,6 @@ public class RedirectingWidget extends TemplateBaseWidget {
     String url = getMountCtx().mount(getInputData(), "/mount/test",
         new MountContext.MessageFactory() {
 
-          private static final long serialVersionUID = 1L;
-
           public Message buildMessage(String url, String suffix,
               InputData input, OutputData output) {
             return new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form");

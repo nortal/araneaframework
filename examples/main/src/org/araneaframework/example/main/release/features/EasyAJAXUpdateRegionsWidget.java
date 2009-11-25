@@ -16,8 +16,9 @@
 
 package org.araneaframework.example.main.release.features;
 
+import org.araneaframework.example.main.web.demo.advanced.DemoComplexForm;
+
 import org.araneaframework.example.main.TemplateBaseWidget;
-import org.araneaframework.example.main.web.demo.DemoComplexForm;
 
 /**
  * @author Taimo Peelo

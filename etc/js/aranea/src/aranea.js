@@ -24,7 +24,7 @@
  * @author Alar Kvell (alar@araneaframework.org)
  * @author Martti Tamm (alar@araneaframework.org)
  */
-var Aranea = Aranea ? Aranea : {};
+var Aranea = window.Aranea || {};
 
 /* THIS IS OVERRIDE! */
 

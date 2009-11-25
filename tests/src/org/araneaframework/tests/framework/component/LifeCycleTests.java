@@ -67,8 +67,6 @@ public class LifeCycleTests extends TestCase {
     w._getComponent().destroy();
     w._getComponent().propagate(new BroadcastMessage() {
 
-      private static final long serialVersionUID = 1L;
-
       @Override
       protected void execute(Component component) throws Exception {
         return;

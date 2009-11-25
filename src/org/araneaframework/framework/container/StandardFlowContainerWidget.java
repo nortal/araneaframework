@@ -353,7 +353,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     if (this.finishable && this.callStack.isEmpty()) {
       FlowContext parentFlowContainer = EnvironmentUtil.getFlowContext(getEnvironment());
-
       if (parentFlowContainer != null) {
         parentFlowContainer.finish(returnValue);
       }
@@ -534,8 +533,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /** @since 1.1 */
   protected class ResetClosure implements Closure, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     protected EnvironmentAwareCallback callback;
 
     public ResetClosure(EnvironmentAwareCallback callback) {
@@ -550,8 +547,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /** @since 1.1 */
   protected class FinishClosure implements Closure, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     protected Object result;
 
     public FinishClosure(Object result) {
@@ -565,8 +560,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
   /** @since 1.1 */
   protected class ReplaceClosure implements Closure, Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     protected Widget flow;
 

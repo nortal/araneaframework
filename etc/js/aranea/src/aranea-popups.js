@@ -14,117 +14,83 @@
  * limitations under the License.
  */
 
+var Aranea = window.Aranea || {};
+
 /**
- * Functionality for popups. Requires "aranea.js" to be executed beforehand.
+ * Functionality for pop-ups. Depends on "aranea.js" which should be loaded beforehand.
  * @since 1.1
  */
-Aranea.Popups = {
+Aranea.Popup = {
 
-  //popup maps
-  popups: {},
+	//popup maps <popupId, popupProperties>
+	popups: $H(),
 
-  //popup properties, used for all types of popups
-  popupProperties: {},
+	//opened windows
+	openedPopupWindows: $H(),
 
-  //opened windows
-  openedPopupWindows: {},
+	/* @since 1.1 **/
+	addPopup: function(popupId, url, windowProperties) {
+		Aranea.Popup.popups.set(popupId, {
+			windowProperties: windowProperties,
+			url: url
+		});
+	},
 
-  /* @since 1.1 **/
-  addPopup: function(popupId, windowProperties, url) {
-    this.popups[popupId] = popupId;
-    this.popupProperties[popupId] = {};
-    this.popupProperties[popupId].windowProperties = windowProperties;
-    this.popupProperties[popupId].url = url;
-  },
+	/* @since 1.1 **/
+	openPopup: function(popupId, url, windowProperties) {
+		var w = window.open(url, popupId, windowProperties);
+		if (w) {
+			Aranea.Popup.openedPopupWindows.set(popupId, w);
+			w.focus();
+		}
+	},
 
-  /* @since 1.1 **/
-  submitThreadCloseRequest: function(win) {
-    if (win && win.document) {
-      var systemForm = null;
-      for (var i = 0; i < win.document.forms.length; i++) {
-        if (win.document.forms[i].readAttribute('arn-systemForm')) {
-          systemForm = win.document.forms[i];
-        }
-      }
-      if (systemForm) {
-        systemForm.appendChild(new Element("input",
-                { "name": "popupClose", "type": "hidden", "value": "true" }));
-        win._ap.event_6(systemForm);
-      }
-    }
-  },
+	/* @since 1.1 **/
+	processPopups: function() {
+		Aranea.Popup.popups.each(function(popup) {
+			var props = Aranea.Popup.popups.unset(popup.key);
+			Aranea.Popup.openPopup(popup.key, props.url, props.windowProperties);
+		});
+	},
 
-  /* @since 1.1 **/
-  closeOpenedPopupWindows: function() {
-    for (var popupId in this.openedPopupWindows) {
-      var w = this.openedPopupWindows[popupId];
-      if (w) {
-        this.submitThreadCloseRequest(w);
-        w.close();
-      }
-    }
-  },
+	/* @since 1.1 **/
+	submitThreadCloseRequest: function(win) {
+		if (win && win.document) {
+			var systemForm = $A(win.document.forms).detect(function(form){ return $(form).hasClassName('aranea-form') });
+			if (systemForm) {
+				systemForm.insert(new Element("input", { "name": "popupClose", "type": "hidden", "value": "true" }));
+				win.Aranea.Page.event();
+			}
+		}
+	},
 
-  /* @since 1.1 **/
-  openPopup: function(popupId) {
-    var w = window.open(this.popupProperties[popupId].url, popupId,
-        this.popupProperties[popupId].windowProperties);
-    if (w) {
-      this.openedPopupWindows[popupId] = w;
-      w.focus();
-    }
-  },
+	/* @since 1.1 **/
+	closeOpenedPopupWindows: function() {
+		Aranea.Popup.openedPopupWindows.each(function(item) {
+			if (item.value) {
+				Aranea.Popup.submitThreadCloseRequest(item.value);
+				item.value.close();
+			}
+			Aranea.Popup.openedPopupWindows.unset(item.key);
+		});
+	},
 
-  /* @since 1.1 **/
-  processPopups: function() {
-    for (var popupId in Aranea.Popups.popups) {
-      Aranea.Popups.openPopup(popupId, Aranea.Popups.popupProperties[popupId]);
-    }
+	/* @since 1.1 **/
+	applyReturnValue: function(value, elementId) {
+		if (window.opener) {
+			window.opener.document.getElementById(elementId).value = value;
+		}
+	},
 
-    Object.extend(Aranea.Popups, {
-      popups: {},
-      popupProperties: {}
-    });
-  },
+	/* @since 1.1 **/
+	reloadParentWindow: function(url) {
+		if (window.opener) {
+			window.opener.document.location.href = url;
+		}
+	},
 
-  /* @since 1.1 **/
-  applyReturnValue: function(value, elementId) {
-    if (window.opener) {
-    	window.opener.document.getElementById(elementId).value = value;
-    }
-  },
-
-  /* @since 1.1 **/
-  reloadParentWindow: function(url) {
-    if (window.opener) {
-      window.opener.document.location.href = url;
-    }
-  },
-
-  /* @since 1.1 **/
-  delayedCloseWindow: function(delay) {
-    setTimeout('window.close()', delay);
-  }
+	/* @since 1.1 **/
+	delayedCloseWindow: function(delay) {
+		window.setTimeout('window.close()', delay);
+	}
 };
-
-/** @deprecated 
-    @useless */
-function onWindowUnload() {
-  Aranea.Popups.closeOpenedPopupWindows();
-}
-
-/**
- * All of the following code is deprecated and dates back to 1.0.
- * Will be removed in 2.0.
- * @deprecated
- * @since 1.0
- */
-var addPopup = Aranea.Popups.addPopup;
-var submitThreadCloseRequest = Aranea.Popups.submitThreadCloseRequest;
-var closeOpenedPopupWindows = Aranea.Popups.closeOpenedPopupWindows;
-var openPopup = Aranea.Popups.openPopup;
-var processPopups = Aranea.Popups.processPopups;
-var applyReturnValue = Aranea.Popups.applyReturnValue;
-var reloadParentWindow = Aranea.Popups.reloadParentWindow;
-var closeWindow = Aranea.Popups.delayedCloseWindow;
-

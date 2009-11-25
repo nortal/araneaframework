@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="Aranea tests">
 
-<project basedir="." default="build" name="Aranea tests"> 
 	<property name="src.build.dir" value="../build/classes"/>
-	<property name="tests.build.dir" value="build/classes"/>
-	<property name="tests.reports.dir" value="build/reports"/>
 	<property name="src.instrumented.build.dir" value="build/instrumented"/>
 	<property name="src.dir" value="../src"/>
-	<property name="tests.src.dir" value="src"/>
 	<property name="build.coverage.dir" value="build/coverage"/>
 	
-	<!--Set the classpath-->
+	<property name="test.build.dir" value="build/classes"/>
+	<property name="test.reports.dir" value="build/reports"/>
+	<property name="test.src.dir" value="src"/>
+
+	<property name="test.js.browsers" value="C:/Program Files (x86)/Internet Explorer/iexplore.exe"/>
+	<property name="test.js.port" value="" description="If not specified, the default port is 8080."/>
+	<property name="test.js.resourceBase" value="js"/>
+	<property name="test.js.logsDir" value="${test.reports.dir}"/>
+
 	<path id="classpath">
 		<fileset dir="../lib" includes="**/*.jar" excludes="/build-util/*.jar"/>
 		<fileset dir="../dist" includes="**/*.jar"/>
 	</path>
-	
-	<!-- Clean up build system results -->
+
+	<!-- FILES PREPARATION AND BUIDING ARTIFACTS -->
+
 	<target name="clean" description="Clean up build system results">
 		<delete dir="build" failonerror="false"/>
 		<delete dir="dist" failonerror="false"/>
 	</target>
-	
-	<!-- Build the code -->
-	<target name="build" depends="compile" description="Build the code">
-	</target>
-	
+
+	<target name="build" depends="compile" description="Build the code"/>
+
 	<target name="compile">
 		<mkdir dir="build/classes" />
-		
-		<!--Compile Java source files-->
+
 		<javac destdir="build/classes"
 			debug="on"
 			debuglevel="lines,vars,source"
@@ -39,38 +42,59 @@
 			<classpath refid="classpath"/>
 			<include name="**/*.java" />
 		</javac>
-		
+
 		<mkdir dir="dist"/>
 		<jar destfile="dist/aranea-tests.jar">
 			<fileset dir="build/classes">
-			  <include name="org/araneaframework/**/*"/>	
+				<include name="org/araneaframework/**/*"/>
 			</fileset>
 		</jar>
 	</target>
 
-	<target name="standalone_test" description="Runs JsUnit tests on the local machine as configured by the url and browserfilenames properties">
-		<junit showoutput="true" haltonerror="true" haltonfailure="true">
-			<classpath refid="classpath"/>
-			<sysproperty key="browserFileNames" value="C:/Program Files (x86)/Mozilla Firefox/firefox.exe"/>
+	<!-- RUNNING TESTS -->
+
+	<!-- 1. Running JsUnit tests: -->
+	<!-- JS tests should be run when the platform has GUI and provides access to the defined browsers! -->
+	<target name="run-js-tests" description="Runs JsUnit tests on the local machine as configured by the properties.">
+		<path id="curdir" location="${basedir}"/>
+
+		<pathconvert property="runnerFile" refid="curdir" dirsep="/">
+			<mapper from="*" to="*/js/testRunner.html" type="glob"/>
+		</pathconvert>
+
+		<pathconvert property="testPage" refid="curdir" dirsep="%5C">
+			<mapper from="*" to="*%5Cjs%5Caranea-all-test.html" type="glob"/>
+		</pathconvert>
+
+		<property name="url" value="file:///${runnerFile}?testPage=${testPage}&amp;autoRun=true&amp;submitresults=true"/>
+		<echo message="${url}"/>
+
+		<mkdir dir="${test.reports.dir}" />
+		<junit showoutput="true" printsummary="on" haltonerror="true" haltonfailure="true">
+			<classpath>
+				<fileset dir="../lib/test" includes="*.jar"/>
+			</classpath>
+			<sysproperty key="browserFileNames" value="${test.js.browsers}"/>
 			<sysproperty key="url" value="${url}"/>
-			<sysproperty key="port" value="${port}"/>
-			<sysproperty key="resourceBase" value="${resourceBase}"/>
-			<sysproperty key="logsDirectory" value="${logsDirectory}"/>
-			<test name="net.jsunit.StandaloneTest"/>
+			<sysproperty key="port" value=""/>
+			<sysproperty key="resourceBase" path="${test.js.resourceBase}"/>
+			<sysproperty key="logsDirectory" path="${test.js.logsDir}"/>
+			<test name="net.jsunit.StandaloneTest" todir="${test.reports.dir}"/>
+			<formatter type="xml"/>
 		</junit>
 	</target>
 
-	<!-- test the system -->
+	<!-- 2. Running JUnit tests: -->
 	<target name="run-tests" depends="build" description="Run the junit tests">
-		<mkdir dir="${tests.reports.dir}" />
-		<junit printsummary="yes" fork="yes" haltonfailure="false">
+		<mkdir dir="${test.reports.dir}" />
+		<junit printsummary="on" fork="yes" haltonfailure="false">
 			<sysproperty key="user.dir" value="${basedir}"/>
 			<classpath location="${src.build.dir}"/>
-			<classpath location="${tests.build.dir}"/>
+			<classpath location="${test.build.dir}"/>
 			<classpath refid="classpath"/>
 			<formatter type="xml" />
-			<batchtest todir="${tests.reports.dir}">
-				<fileset dir="${tests.build.dir}">
+			<batchtest todir="${test.reports.dir}">
+				<fileset dir="${test.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
 					<!-- exclude abstract tests -->
@@ -79,55 +103,50 @@
 			</batchtest>
 		</junit>
 	</target>
-  
-  <target name="run-perf-tests" depends="build"
-          description="Runs performance tests">
-    <junit haltonfailure="yes" fork="yes">
-      <test name="org.araneaframework.perftests.TimedSmokeTests"/>
-      <formatter type="plain" usefile="false"/>
-  		<classpath location="${src.build.dir}"/>
-  		<classpath location="${tests.build.dir}"/>
-      <classpath refid="classpath"/>
-    </junit>
-  </target>
 
-	<target name="coverage" depends="cover-tests" description="Generate coverage information"> 
+	<target name="run-perf-tests" depends="build" description="Runs performance tests">
+		<junit haltonfailure="yes" fork="yes">
+			<test name="org.araneaframework.perftests.TimedSmokeTests"/>
+			<formatter type="plain" usefile="false"/>
+			<classpath location="${src.build.dir}"/>
+			<classpath location="${test.build.dir}"/>
+			<classpath refid="classpath"/>
+		</junit>
+	</target>
+
+	<target name="coverage" depends="cover-tests" description="Generate coverage information">
 		<mkdir dir="${build.coverage.dir}"/>
 		<mkdir dir="${build.coverage.dir}/srcCopy"/>
 		<copy todir="${build.coverage.dir}/srcCopy">
 			<fileset dir="${src.dir}"/>
-			<fileset dir="${tests.src.dir}"/>
+			<fileset dir="${test.src.dir}"/>
 		</copy>
 
 		<cobertura-report srcdir="${build.coverage.dir}/srcCopy" destdir="${build.coverage.dir}"/>
 	</target>
-	
-	<target name="coverage2" depends="cover-tests-fail-integration"> 
+
+	<target name="coverage2" depends="cover-tests-fail-integration">
 		<mkdir dir="${build.coverage.dir}"/>
 		<mkdir dir="${build.coverage.dir}/srcCopy"/>
 		<copy todir="${build.coverage.dir}/srcCopy">
 			<fileset dir="${src.dir}"/>
-			<fileset dir="${tests.src.dir}"/>
+			<fileset dir="${test.src.dir}"/>
 		</copy>
 
 		<cobertura-report srcdir="${build.coverage.dir}/srcCopy" destdir="${build.coverage.dir}"/>
 	</target>
-	
+
 	<!-- test the system -->
 	<target name="cover-tests" depends="instrument">
-		<mkdir dir="${tests.reports.dir}" />
-		<junit printsummary="yes"
-				fork="yes"
-				haltonfailure="false"
-			  showoutput="yes"
-		>
+		<mkdir dir="${test.reports.dir}" />
+		<junit printsummary="yes" fork="yes" haltonfailure="false" showoutput="yes">
 			<classpath location="${src.instrumented.build.dir}"/>
-			<classpath location="${tests.build.dir}"/>
+			<classpath location="${test.build.dir}"/>
 			<classpath refid="classpath"/>
-			
+
 			<formatter type="xml" />
-			<batchtest todir="${tests.reports.dir}">
-				<fileset dir="${tests.build.dir}">
+			<batchtest todir="${test.reports.dir}">
+				<fileset dir="${test.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
 					<!-- exclude abstract tests -->
@@ -136,21 +155,17 @@
 			</batchtest>
 		</junit>
 	</target>
-	
+
 	<!-- test the system without integration tests -->
 	<target name="cover-tests-fail-integration" depends="instrument">
-		<mkdir dir="${tests.reports.dir}" />
-		<junit printsummary="yes"
-				fork="yes"
-				haltonfailure="false"
-			  showoutput="yes"
-		>
+		<mkdir dir="${test.reports.dir}" />
+		<junit printsummary="yes" fork="yes" haltonfailure="false" showoutput="yes">
 			<classpath location="${src.instrumented.build.dir}"/>
-			<classpath location="${tests.build.dir}"/>
+			<classpath location="${test.build.dir}"/>
 			<classpath refid="classpath"/>
 			<formatter type="xml" />
-			<batchtest todir="${tests.reports.dir}">
-				<fileset dir="${tests.build.dir}">
+			<batchtest todir="${test.reports.dir}">
+				<fileset dir="${test.build.dir}">
 					<include name="**/*Test.class"/>
 					<include name="**/*Tests.class"/>
 					<!-- exclude abstract tests -->
@@ -167,4 +182,5 @@
 			</fileset>
 		</cobertura-instrument>
 	</target>
+
 </project>

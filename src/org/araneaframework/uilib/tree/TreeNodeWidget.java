@@ -151,8 +151,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   private class ToggleEventListener extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       toggleCollapsed();
@@ -160,8 +158,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   private class ToggleActionListener extends StandardActionListener {
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {

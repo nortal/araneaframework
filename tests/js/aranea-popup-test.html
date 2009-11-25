@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript" src="app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-popups.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Tests for "aranea-popups.js"</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function testNamespaces() {
+			assertNotUndefined('Aranea namespace must exist!', Aranea);
+			assertNotUndefined('Aranea.Popup namespace must exist!', Aranea.Popup);
+		}
+
+		function testProps() {
+			assert('Aranea.Popup.popups must be array!', Object.isHash(Aranea.Popup.popups));
+			assertEquals('Aranea.Popup.popups must be empty!', 0, Aranea.Popup.popups.size());
+			assert('Aranea.Popup.openedPopupWindows must be array!', Object.isHash(Aranea.Popup.openedPopupWindows));
+			assertEquals('Aranea.Popup.openedPopupWindows must be empty!', 0, Aranea.Popup.openedPopupWindows.size());
+		}
+
+		function testPopupOpening() {
+			var id = 'testId';
+			var url = 'http://www.demo.org/demo/popup?id=1';
+			var props = { resizable: 'no', height: 500, width: 400, fullScreen: true };
+
+			Aranea.Popup.addPopup(id, url, props);
+
+			assertEquals('Aranea.Popup.popups must be of size 1!', 1, Aranea.Popup.popups.size());
+			assertNotNull('The popup must have been added!', Aranea.Popup.popups.get(id));
+			assertEquals('The popup URL is not what was specified!', url, Aranea.Popup.popups.get(id).url);
+			assertEquals('The popup props are not what was specified!', props, Aranea.Popup.popups.get(id).windowProperties);
+
+			var f = Aranea.Popup.openPopup;
+			assert('Aranea.Popup.openPopup is not a function!', Object.isFunction(f));
+
+			Aranea.Popup.openPopup = function(popupId, popupUrl, popupProps) {
+				window.testPopupOpeningProcessed = true;
+				assertEquals('The popup to open has incorrect ID!', id, popupId);
+				assertEquals('The popup to open has incorrect URL!', url, popupUrl);
+				assertEquals('The popup to open has incorrect PROPS!', props, popupProps);
+			};
+
+			Aranea.Popup.processPopups();;
+
+			assertTrue('The popup was not opened!', window.testPopupOpeningProcessed);
+			assertEquals('Aranea.Popup.popups must be empty!', 0, Aranea.Popup.popups.size());
+
+			Aranea.Popup.openPopup = f;
+		}
+
+		function testNotTestedProps() {
+			assert('Aranea.Popup.submitThreadCloseRequest must be a function!', Object.isFunction(Aranea.Popup.submitThreadCloseRequest));
+			assert('Aranea.Popup.closeOpenedPopupWindows must be a function!', Object.isFunction(Aranea.Popup.closeOpenedPopupWindows));
+			assert('Aranea.Popup.applyReturnValue must be a function!', Object.isFunction(Aranea.Popup.applyReturnValue));
+			assert('Aranea.Popup.reloadParentWindow must be a function!', Object.isFunction(Aranea.Popup.reloadParentWindow));
+			assert('Aranea.Popup.delayedCloseWindow must be a function!', Object.isFunction(Aranea.Popup.delayedCloseWindow));
+		}
+	</script>
+
+	<p>This page contains JsUnit-tests for <b>aranea-popups.js</b>.</p>
+
+</body>
+</html>

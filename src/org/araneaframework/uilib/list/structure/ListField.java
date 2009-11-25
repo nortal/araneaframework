@@ -24,8 +24,6 @@ import java.io.Serializable;
  */
 public class ListField implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * ListColumn Id.
 	 */
@@ -101,8 +99,6 @@ public class ListField implements Serializable {
 	 * View Model.
 	 */
 	public class ViewModel implements Serializable {
-
-		private static final long serialVersionUID = 1L;
 
 		private String id;
 		private String label;

@@ -136,8 +136,8 @@ public class CompositeConstraintTest extends TestCase {
   /** test that setting composite constraint directly on form element works */
   public void testCompositeSettingOnFormElementAndConstraintClearance() throws Exception {
     OrConstraint constraint = new OrConstraint();
-    constraint.addConstraint(new NumberInRangeConstraint(new BigInteger("100"), new BigInteger("200")));
-    constraint.addConstraint(new NumberInRangeConstraint(new BigInteger("800"), new BigInteger("900")));
+    constraint.addConstraint(new NumberInRangeConstraint<Object, BigInteger>(new BigInteger("100"), new BigInteger("200")));
+    constraint.addConstraint(new NumberInRangeConstraint<Object, BigInteger>(new BigInteger("800"), new BigInteger("900")));
     this.numberInput.setConstraint(constraint);
 
     processRequest(createRequestWithNumber("400"));
