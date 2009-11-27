@@ -16,8 +16,9 @@
 
 package org.araneaframework.example.main.business.data;
 
-import javax.sql.DataSource;
-import org.araneaframework.backend.list.helper.HSqlListSqlHelper;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.araneaframework.backend.list.helper.JPAListSqlHelper;
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
@@ -28,14 +29,11 @@ import org.araneaframework.example.main.business.model.PersonMO;
  */
 public class PersonListDAO {
 
-  protected DataSource dataSource;
-
-  public void setDataSource(DataSource dataSource) {
-    this.dataSource = dataSource;
-  }
+  @PersistenceContext
+  private EntityManager entityManager;
 
   public ListItemsData<PersonMO> getItems(ListQuery request) {
-    ListSqlHelper helper = new HSqlListSqlHelper(this.dataSource, request);
+    ListSqlHelper helper = new JPAListSqlHelper(this.entityManager, request);
 
     // version A
 

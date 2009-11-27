@@ -17,73 +17,66 @@
 package org.araneaframework.example.main.business.model;
 
 import java.math.BigDecimal;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * @author Rein Raudjärv <rein@webmedia.ee>
- * 
- * @hibernate.class table="contract" lazy="false"
  */
+@Entity(name = "contract")
 public class ContractMO implements GeneralMO {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @ManyToOne(optional = false)
   private CompanyMO company;
 
+  @ManyToOne(optional = false)
   private PersonMO person;
 
   private String notes;
 
   private BigDecimal total;
 
-  /**
-   * @hibernate.id column="id" generator-class="increment"
-   */
   public Long getId() {
-    return id;
+    return this.id;
   }
 
   public void setId(Long id) {
     this.id = id;
   }
 
-  /**
-   * @hibernate.many-to-one column="COMPANY_ID" not-null="true"
-   */
   public CompanyMO getCompany() {
-    return company;
+    return this.company;
   }
 
   public void setCompany(CompanyMO company) {
     this.company = company;
   }
 
-  /**
-   * @hibernate.many-to-one column="PERSON_ID" not-null="true"
-   */
   public PersonMO getPerson() {
-    return person;
+    return this.person;
   }
 
   public void setPerson(PersonMO person) {
     this.person = person;
   }
 
-  /**
-   * @hibernate.property column="NOTES"
-   */
   public String getNotes() {
-    return notes;
+    return this.notes;
   }
 
   public void setNotes(String notes) {
     this.notes = notes;
   }
 
-  /**
-   * @hibernate.property column="TOTAL"
-   */
   public BigDecimal getTotal() {
-    return total;
+    return this.total;
   }
 
   public void setTotal(BigDecimal total) {

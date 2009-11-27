@@ -58,6 +58,7 @@
 		<!-- These files are required when compiling, otherwise when one wants to use a feature (e.g. joda-time, spring). -->
 		<dependency conf="build" org="javax.annotation" rev="1.0" name="jsr250-api" transitive="false"/>
 		<dependency conf="build" org="javax.servlet" rev="2.5" name="servlet-api" transitive="false"/>
+		<dependency conf="build" org="javax.persistence" rev="1.0" name="persistence-api" transitive="false"/>
 		<dependency conf="build" org="joda-time" rev="1.6" name="joda-time" transitive="false"/>
 		<dependency conf="build" org="org.mortbay.jetty" rev="9.1.1.B60.25.p2" name="jsp-2.1-glassfish" transitive="false"/>
 		<dependency conf="build" org="org.mortbay.jetty" rev="9.1.1.B60.25.p2" name="jsp-api-2.1-glassfish" transitive="false"/>
@@ -88,14 +89,21 @@
 		<dependency conf="demo" org="antlr" rev="2.7.7" name="antlr" transitive="false"/>
 		<dependency conf="demo" org="asm" rev="3.2" name="asm" transitive="false"/>
 		<dependency conf="demo" org="cglib" rev="2.2" name="cglib" transitive="false"/>
+		<dependency conf="demo" org="com.uwyn" rev="1.0" name="jhighlight" transitive="false"/>
 		<dependency conf="demo" org="commons-el" rev="1.0" name="commons-el" transitive="false"/>
 		<dependency conf="demo" org="dom4j" rev="1.6.1" name="dom4j" transitive="false"/>
+		<dependency conf="demo" org="javassist" rev="3.8.0.GA" name="javassist" transitive="false"/>
 		<dependency conf="demo" org="javax.el" rev="1.0" name="el-api" transitive="false"/>
 		<dependency conf="demo" org="javax.transaction" rev="1.1" name="jta" transitive="false"/>
 		<dependency conf="demo" org="log4j" rev="1.2.9" name="log4j" transitive="false"/>
-		<dependency conf="demo" org="org.hibernate" rev="3.2.7.ga" name="hibernate" transitive="false"/>
+		<dependency conf="demo" org="org.hibernate" rev="3.4.0.GA" name="hibernate-annotations" transitive="false"/>
+		<dependency conf="demo" org="org.hibernate" rev="3.3.0.ga" name="hibernate-commons-annotations" transitive="false"/>
+		<dependency conf="demo" org="org.hibernate" rev="3.3.2.GA" name="hibernate-core" transitive="false"/>
+		<dependency conf="demo" org="org.hibernate" rev="3.4.0.GA" name="hibernate-entitymanager" transitive="false"/>
+		<dependency conf="demo" org="org.hibernate" rev="1.0.2.GA" name="ejb3-persistence" transitive="false"/>
 		<dependency conf="demo" org="org.hsqldb" rev="1.8.0.10" name="hsqldb" transitive="false"/>
-		<dependency conf="demo" org="com.uwyn" rev="1.0" name="jhighlight" transitive="false"/>
+		<dependency conf="demo" org="org.slf4j" rev="1.4.2" name="slf4j-api" transitive="false"/>
+		<dependency conf="demo" org="org.slf4j" rev="1.4.2" name="slf4j-nop" transitive="false"/>
 
 		<!-- "jetty" -->
 		<!-- These files create a Jetty server that can run the demo application. -->

@@ -474,6 +474,7 @@ public abstract class BaseListSqlHelper {
    */
   public void setSimpleSqlQuery(String fromSql, String customWhereSql, Object[] customWhereArgs,
       String customOrderbySql, Object[] customOrderbyArgs) {
+
     Assert.notNull(fromSql, "The FROM SQL String must be specified");
 
     Assert.isTrue(customWhereSql == null && customWhereArgs != null,

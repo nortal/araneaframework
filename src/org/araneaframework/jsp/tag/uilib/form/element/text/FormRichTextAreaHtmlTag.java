@@ -17,20 +17,18 @@
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
 import java.io.Writer;
-import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * Standard text input form element tag with rich text editor capabilities.
- * The tag uses a special style class denoted by EDITOR_SELECTOR which makes
- * it possible for the RTE library to locate the area and wrap it. 
+ * Standard text input form element tag with rich text editor capabilities. The tag uses a special style class denoted
+ * by EDITOR_SELECTOR which makes it possible for the RTE library to locate the area and wrap it.
  * 
  * @author Toomas Römer
  * @author Taimo Peelo (taimo@araneaframework.org)
  * 
  * @jsp.tag
- *   name = "richTextarea"
- *   body-content = "JSP"
- *   description = "Form text input field (textarea) wrapped with rich text editor capabilities."
+ *  name = "richTextarea"
+ *  body-content = "JSP"
+ *  description = "Form text input field (textarea) wrapped with rich text editor capabilities."
  */
 public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag {
 
@@ -44,15 +42,10 @@ public class FormRichTextAreaHtmlTag extends FormTextareaHtmlTag {
   @Override
   protected int doStartTag(Writer out) throws Exception {
     initializeRichEditor(out);
-
     return super.doStartTag(out);
   }
 
   protected void initializeRichEditor(Writer out) throws Exception {
-    JspUtil.writeOpenStartTag(out, "script");
-    JspUtil.writeAttribute(out, "type", "text/javascript");
-    JspUtil.writeCloseStartTag_SS(out);
-    out.write("AraneaTinyMCEInit();");
-    JspUtil.writeEndTag(out, "script");
+    out.write("<script type=\"text/javascript\">Aranea.TinyMCEInit();</script>");
   }
 }

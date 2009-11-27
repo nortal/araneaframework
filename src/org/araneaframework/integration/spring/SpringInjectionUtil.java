@@ -92,7 +92,12 @@ public final class SpringInjectionUtil {
 
   private static void injectFieldsForClass(Environment env, Object object, BeanFactory factory,
       Class<? extends Object> objectClass) {
+
     for (Field field : objectClass.getDeclaredFields()) {
+      if (hasValue(object, field)) {
+          break;
+      }
+
       if (field.isAnnotationPresent(Resource.class) || field.isAnnotationPresent(Autowired.class)) {
         String beanName = field.getName();
 
@@ -103,13 +108,23 @@ public final class SpringInjectionUtil {
         Object proxy = createProxy(beanName, factory, field.getType(), env);
 
         try {
-          field.setAccessible(true);
           field.set(object, proxy);
         } catch (Exception e) {
           ExceptionUtil.uncheckException(e);
         }
       }
     }
+  }
+
+  private static boolean hasValue(Object object, Field field) {
+    boolean hasValue = false;
+    try {
+      field.setAccessible(true);
+      hasValue = field.get(object) != null;
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+    return hasValue;
   }
 
   private static void injectMethods(Environment env, Object object, BeanFactory bf) {

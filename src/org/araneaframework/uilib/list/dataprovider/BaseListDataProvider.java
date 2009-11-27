@@ -44,12 +44,12 @@ public abstract class BaseListDataProvider<T> implements ListDataProvider<T> {
 
 	public final void setFilterInfo(Map<String, Object> filterInfo) {
 		this.filterInfo = filterInfo;
-		setFilterExpression(ListUtil.toExpression(listStructure.getListFilter(), filterInfo));
+		setFilterExpression(ListUtil.toExpression(this.listStructure.getListFilter(), filterInfo));
 	}
 
 	public final void setOrderInfo(OrderInfo orderInfo) {
 		this.orderInfo = orderInfo;
-		setOrderExpression(ListUtil.toComparatorExpression(listStructure.getListOrder(), orderInfo));
+		setOrderExpression(ListUtil.toComparatorExpression(this.listStructure.getListOrder(), orderInfo));
 	}
 
 }

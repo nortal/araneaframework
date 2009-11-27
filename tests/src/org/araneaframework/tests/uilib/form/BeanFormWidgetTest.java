@@ -23,7 +23,7 @@ import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.list.util.FormUtil;
+import org.araneaframework.uilib.form.data.StringData;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -93,10 +93,9 @@ public class BeanFormWidgetTest extends TestCase {
   protected BeanFormWidget<FlatBean> makeFlatBeanForm(FlatBean bean) throws Exception {
     BeanFormWidget<FlatBean> result = new BeanFormWidget<FlatBean>(FlatBean.class, bean);
     result.addBeanElement("a", "#dummyLabel1", new NumberControl(), true);
-    result.addBeanElement("s", "#dummyLabel2", new TextControl(), false);
-    result.addElement("b", FormUtil.createElement("b", FormUtil.createControl(String.class), FormUtil
-        .createData(String.class), false));
-    result.addElement("button", FormUtil.createElement("button", new ButtonControl(), null, false));
+    result.addBeanElement("s", "#dummyLabel2", new TextControl());
+    result.addElement("b", "b", new TextControl(), new StringData());
+    result.addElement("button", "button", new ButtonControl());
     return result;
   }
 

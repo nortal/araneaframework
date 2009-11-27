@@ -284,6 +284,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
    * (per instance).
    * 
    * @author Martti Tamm (martti@araneaframework.org)
+   * @see TabSwitchListener
    * @since 1.2.2
    */
   public class TabSwitchClosure implements Closure, Serializable {

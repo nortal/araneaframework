@@ -51,7 +51,7 @@ public interface IGeneralDAO<T extends GeneralMO> {
    * 
    * @param object object.
    */
-  public abstract void edit(T object);
+  public abstract T edit(T object);
 
   /**
    * Removes an object with specified class and Id.

@@ -49,6 +49,11 @@ public class BaseFormButtonTag extends BaseFormElementHtmlTag {
 
   protected String renderMode = RENDER_BUTTON;
 
+  
+  public BaseFormButtonTag() {
+    setHasElementContextSpan(false);
+  }
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);

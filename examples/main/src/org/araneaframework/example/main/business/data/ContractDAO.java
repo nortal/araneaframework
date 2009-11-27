@@ -16,8 +16,9 @@
 
 package org.araneaframework.example.main.business.data;
 
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.araneaframework.example.main.business.model.ContractMO;
 
 /**
@@ -27,27 +28,24 @@ import org.araneaframework.example.main.business.model.ContractMO;
  */
 public class ContractDAO extends GeneralDAO<ContractMO> implements IContractDAO {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
   public void removeByPersonId(Long personId) {
     List<ContractMO> l = getAll(ContractMO.class);
-    List<ContractMO> toDelete = new ArrayList<ContractMO>();
-
     for (ContractMO contract : l) {
       if (contract.getPerson().getId().equals(personId)) {
-        toDelete.add(contract);
+        this.entityManager.remove(contract);
       }
     }
-
-    getHibernateTemplate().deleteAll(toDelete);
   }
 
   public void removeByCompanyId(Long companyId) {
     List<ContractMO> l = getAll(ContractMO.class);
-    List<ContractMO> toDelete = new ArrayList<ContractMO>();
     for (ContractMO contract : l) {
       if (contract.getCompany().getId().equals(companyId)) {
-        toDelete.add(contract);
+        this.entityManager.remove(contract);
       }
     }
-    getHibernateTemplate().deleteAll(toDelete);
   }
 }

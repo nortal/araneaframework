@@ -1,6 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<!-- ==================================================================== -->
 	<!--                  DATABASE SETUP AND CONFIGURATION                    -->
@@ -26,70 +29,28 @@
 		<property name="password" value=""/>
 	</bean>
 
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="mappingLocations" value="/WEB-INF/mappings/*.hbm.xml"/>
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
-				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.cache.use_second_level_cache">false</prop>
-			</props>
-		</property>
 	</bean>
 
-	<!-- Transactions -->
+	<!-- JPA CONFIGURATION: -->
 
-	<bean id="autoProxyCreator"
-		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
-		<property name="interceptorNames">
-			<list>
-				<value>transactionInterceptor</value>
-			</list>
-		</property>
-		<property name="beanNames">
-			<list>
-				<value>*DAO</value>
-			</list>
-		</property>
-		<property name="proxyTargetClass" value="true"/>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean id="transactionAdvisor" class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
-		<constructor-arg ref="transactionInterceptor" />
-	</bean>
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
-	<bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="get*">PROPAGATION_SUPPORTS ,readOnly</prop>
-				<prop key="find*">PROPAGATION_SUPPORTS ,readOnly</prop>
-				<prop key="add*">PROPAGATION_REQUIRED</prop>
-				<prop key="edit*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+	<tx:annotation-driven />
 
 	<!-- ==================================================================== -->
 	<!--                    DATABASE LAYER SERVICES SETUP                     -->
 	<!-- ==================================================================== -->
 	
-	<bean id="generalDAO" class="org.araneaframework.example.main.business.data.GeneralDAO">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
+	<bean id="generalDAO" class="org.araneaframework.example.main.business.data.GeneralDAO"/>
 
-	<bean id="contractDAO" class="org.araneaframework.example.main.business.data.ContractDAO">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
+	<bean id="contractDAO" class="org.araneaframework.example.main.business.data.ContractDAO"/>
 
-	<bean id="personListDAO" class="org.araneaframework.example.main.business.data.PersonListDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+	<bean id="personListDAO" class="org.araneaframework.example.main.business.data.PersonListDAO"/>
 
 </beans>

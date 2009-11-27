@@ -20,13 +20,14 @@ import java.io.Serializable;
 import org.araneaframework.framework.ManagedServiceContext;
 
 /**
- * A top level service that is not synchronized and is dependent only on the request. This context
- * corresponds to a service router that uses <code>HttpServletRequest.getPathInfo()</code> for 
- * routing the request to corresponding service.
+ * A top level service that is not synchronized and is dependent only on the request. This context corresponds to a
+ * service router that uses <code>HttpServletRequest.getPathInfo()</code> for routing the request to corresponding
+ * service.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface PathInfoServiceContext extends ManagedServiceContext, Serializable {
+
   /** @since 1.1 */
   String getPathInfo();
 }

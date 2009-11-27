@@ -172,8 +172,7 @@ public class SqlStatement implements Serializable, Cloneable {
       if (parameter instanceof NullValue) {
         pstmt.setNull(i, ((NullValue) parameter).getType());
       } else {
-        // converting java.util.Date into java.sql.Date (java.sql.Timestamp is
-        // not changed)
+        // converting java.util.Date into java.sql.Date (java.sql.Timestamp is not changed)
         if (parameter != null && parameter.getClass().equals(java.util.Date.class)) {
           parameter = new java.sql.Date(((java.util.Date) parameter).getTime());
         }

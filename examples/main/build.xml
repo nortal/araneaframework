@@ -65,6 +65,7 @@
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
+			<fileset dir="." includes="META-INF\**\*" />
 			<fileset dir=".." includes="log4j.xml,commons-logging.properties" />
 		</copy>
 
@@ -98,7 +99,7 @@
 	======================================================================
 	-->
 
-	<target name="run-app" description="Runs app in the Jetty server.">
+	<target name="run-app" depends="build" description="Runs app in the Jetty server.">
 		<delete dir="${jetty.tmp.dir}"/>
 		<jetty tempdirectory="${jetty.tmp.dir}" >
 			<webapp warfile="war" contextPath="/mainExample"/>

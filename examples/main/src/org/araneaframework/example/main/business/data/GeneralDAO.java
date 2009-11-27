@@ -17,8 +17,9 @@
 package org.araneaframework.example.main.business.data;
 
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.araneaframework.example.main.business.model.GeneralMO;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * This is general data access object. It can retrieve all objects by class, one object by Id and class, add or edit an
@@ -26,28 +27,30 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class GeneralDAO<T extends GeneralMO> extends HibernateDaoSupport implements IGeneralDAO<T> {
+public class GeneralDAO<T extends GeneralMO> implements IGeneralDAO<T> {
 
-  @SuppressWarnings("unchecked")
+  @PersistenceContext
+  private EntityManager entityManager;
+
   public T getById(Class<T> clazz, Long id) {
-    return (T) getHibernateTemplate().get(clazz, id);
+    return this.entityManager.find(clazz, id);
   }
 
   @SuppressWarnings("unchecked")
   public List<T> getAll(Class<T> clazz) {
-    return getHibernateTemplate().find("from " + clazz.getName());
+    return this.entityManager.createQuery("from " + clazz.getName()).getResultList();
   }
 
   public Long add(T object) {
-    getHibernateTemplate().save(object);
+    this.entityManager.persist(object);
     return object.getId();
   }
 
-  public void edit(T object) {
-    getHibernateTemplate().update(object);
+  public T edit(T object) {
+    return this.entityManager.merge(object);
   }
 
   public void remove(Class<T> clazz, Long id) {
-    getHibernateTemplate().delete(getById(clazz, id));
+    this.entityManager.remove(getById(clazz, id));
   }
 }

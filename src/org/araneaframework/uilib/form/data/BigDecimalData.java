@@ -27,4 +27,10 @@ public class BigDecimalData extends Data<BigDecimal> {
   public BigDecimalData() {
     super(BigDecimal.class);
   }
+
+  @Override
+  public boolean isStateChanged() {
+    // Compare to is not sensitive on whether the value ends with ".0" or ".0000". 
+    return this.markedBaseValue.compareTo(this.value) == 0;
+  }
 }

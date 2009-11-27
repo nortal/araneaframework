@@ -122,9 +122,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   }
 
   public void selectMenuItem(String menuItemPath) throws Exception {
-    selectionPath = null;
-    final Widget newFlow = menu.selectMenuItem(menuItemPath);
-    selectionPath = menuItemPath;
+    this.selectionPath = null;
+    final Widget newFlow = this.menu.selectMenuItem(menuItemPath);
+    this.selectionPath = menuItemPath;
 
     reset(new EnvironmentAwareCallback() {
 

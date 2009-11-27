@@ -16,9 +16,8 @@
 
 package org.araneaframework.core;
 
-import java.util.Iterator;
-
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -30,6 +29,7 @@ import org.araneaframework.Message;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Scope;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * The base class for all Aranea components. Base entities do not make a Composite pattern and only provide some very
@@ -496,6 +496,8 @@ public class BaseComponent implements Component {
       BaseComponent.this._setScope(scope);
       BaseComponent.this._setEnvironment(env);
       BaseComponent.this.state = ALIVE;
+
+      EnvironmentUtil.injectEnvironmentEntries(env, BaseComponent.this);
 
       try {
         BaseComponent.this.init();

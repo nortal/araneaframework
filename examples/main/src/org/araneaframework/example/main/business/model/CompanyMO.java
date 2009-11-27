@@ -16,46 +16,45 @@
 
 package org.araneaframework.example.main.business.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @author Rein Raudjärv <rein@webmedia.ee>
- * 
- * @hibernate.class table="company" lazy="false"
  */
+@Entity(name = "company")
 public class CompanyMO implements GeneralMO {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   private String name;
 
+  @Column(nullable = true)
   private String address;
 
-  /**
-   * @hibernate.id column="id" generator-class="increment"
-   */
   public Long getId() {
-    return id;
+    return this.id;
   }
 
   public void setId(Long id) {
     this.id = id;
   }
 
-  /**
-   * @hibernate.property not-null="true"
-   */
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public void setName(String name) {
     this.name = name;
   }
 
-  /**
-   * @hibernate.property not-null="false"
-   */
   public String getAddress() {
-    return address;
+    return this.address;
   }
 
   public void setAddress(String address) {
