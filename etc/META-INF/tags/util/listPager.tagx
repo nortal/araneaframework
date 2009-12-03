@@ -1,0 +1,76 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Wrapper of a list data rows."
+		body-content="empty" />
+
+	<div class="pager clear">
+
+		<!-- The message with numbers: -->
+		<p>
+			<fmt:message key="list.total">
+				<fmt:param value="${list.sequence.totalItemCount}" />
+			</fmt:message>
+			<span>|</span>
+			<fmt:message key="list.showing">
+				<fmt:param value="${list.sequence.pageFirstItem}" />
+				<fmt:param value="${list.sequence.pageLastItem}" />
+			</fmt:message>
+			<span>|</span>
+			<ui:eventLinkButton labelId="list.all" eventId="showAll" eventTarget="${listFullId}"/>
+		</p>
+
+		<ul>
+
+			<!--
+			The first 2 links ("back" and "first page") are disabled when the current
+			page is the first page.
+			-->
+			<c:choose>
+				<c:when test="${list.sequence.currentPage eq 0}">
+					<li class="first"><span><fmt:message key="list.first"/></span></li>
+					<li class="back"><span><fmt:message key="list.previous"/></span></li>
+				</c:when>
+				<c:otherwise>
+					<li class="first"><ui:eventLinkButton labelId="list.first" eventId="firstPage" eventTarget="${listFullId}"/></li>
+					<li class="back"><ui:eventLinkButton labelId="list.previous" eventId="previousPage" eventTarget="${listFullId}"/></li>
+				</c:otherwise>
+			</c:choose>
+
+			<!--
+			Lets write the page numbers depending on whether the current page number
+			is that page or not:
+			-->
+			<c:forEach begin="${list.sequence.firstPage}" end="${list.sequence.lastPage}" var="pageNo">
+				<c:choose>
+					<c:when test="${list.sequence.currentPage eq pageNo}">
+						<li class="active"><strong>${pageNo+1}</strong></li>
+					</c:when>
+					<c:otherwise>
+						<li><ui:eventLinkButton eventId="jumpToPage" eventParam="${pageNo}"
+							eventTarget="${listFullId}">${pageNo+1}</ui:eventLinkButton></li>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+
+			<!--
+			The last 2 links ("last" and "next") are disabled when the current
+			page is the last page.
+			-->
+			<c:choose>
+				<c:when test="${list.sequence.currentPage eq list.sequence.lastPage}">
+					<li class="next"><span><fmt:message key="list.next" /></span></li>
+					<li class="last"><span><fmt:message key="list.last" /></span></li>
+				</c:when>
+				<c:otherwise>
+					<li class="next"><ui:eventLinkButton labelId="list.next" eventId="nextPage" eventTarget="${listFullId}" /></li>
+					<li class="last"><ui:eventLinkButton labelId="list.last" eventId="lastPage" eventTarget="${listFullId}" /></li>
+				</c:otherwise>
+			</c:choose>
+		</ul>
+	</div>
+
+</jsp:root>

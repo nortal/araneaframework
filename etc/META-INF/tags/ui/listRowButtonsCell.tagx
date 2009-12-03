@@ -1,0 +1,8 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag
+		description="Represents a cell for list row buttons." />
+
+	<td class="action-ico"><jsp:doBody /></td>
+
+</jsp:root>

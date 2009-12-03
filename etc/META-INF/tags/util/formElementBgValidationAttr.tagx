@@ -1,0 +1,23 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag import="org.araneaframework.Widget"/>
+
+	<jsp:directive.tag body-content="empty"
+		description="Writes the background-validation attribute, when required by configuration."
+		import="org.araneaframework.uilib.util.*,org.araneaframework.uilib.form.FormElement"
+	/>
+
+	<jsp:scriptlet>
+		Widget w = (Widget) getJspContext().getAttribute("widget", PageContext.REQUEST_SCOPE);
+		boolean globalBgValid = ConfigurationUtil.isBackgroundFormValidationEnabled(w.getEnvironment());
+		getJspContext().setAttribute("globalBackgroundValidation", new Boolean(globalBgValid));
+	</jsp:scriptlet>
+
+	<c:if test="${form.elements[formElementId].backgroundValidation ne globalBackgroundValidation}">
+		<ui:attribute name="arn-bgValidate" value="${formElement.backgroundValidation}"/>
+	</c:if>
+
+</jsp:root>

@@ -1,0 +1,35 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:wm="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes the value of a text input as an event link." body-content="empty"/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="The ID for the link." />
+	<jsp:directive.attribute name="name" description="The name for the link." />
+	<jsp:directive.attribute name="styleClass" description="The optional style class for the link." />
+	<jsp:directive.attribute name="tooltipId" description="The label ID of the tooltip (optional)." />
+
+	<jsp:directive.attribute name="eventId" description="Event ID." />
+	<jsp:directive.attribute name="eventParam" description="Event parameter." />
+	<jsp:directive.attribute name="eventTarget" description="Widget where event should be routed, default is contextwidget." />
+	<jsp:directive.attribute name="onClickPrecondition" description="The boolean precondition for the event." />
+	<jsp:directive.attribute name="updateRegions" description="Update regions for the event." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Global update regions for the event." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<util:formElement id="${id}" controlType="TextControl" markRendered="false">
+		<ui:eventLinkButton id="${id}" name="${name}"
+			styleClass="${styleClass}" tooltipId="${tooltipId}" eventId="${eventId}"
+			eventParam="${eventParam}" eventTarget="${eventTarget}"
+			onClickPrecondition="${onClickPrecondition}"
+			updateRegions="${updateRegions}"
+			globalUpdateRegions="${globalUpdateRegions}">
+			${formElementValue}</ui:eventLinkButton>
+	</util:formElement>
+
+</jsp:root>

@@ -1,0 +1,10 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag import="java.util.HashMap"/>
+	<jsp:directive.tag import="java.util.Map"/>
+
+	<jsp:directive.tag description="A tag that represents HTML element body content."/>
+
+	<jsp:doBody/>
+
+</jsp:root>

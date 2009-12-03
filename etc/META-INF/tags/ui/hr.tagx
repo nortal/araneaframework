@@ -1,0 +1,9 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	version="2.1">
+
+	<jsp:directive.tag description="Renders an horizontal line"
+		body-content="empty"/>
+
+	<div class="hr"><hr /></div>
+
+</jsp:root>

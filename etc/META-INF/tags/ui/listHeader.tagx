@@ -1,0 +1,73 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes headers of list columns."/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="lastEmptyColumn" type="java.lang.Boolean"
+		description="Whether to show last empty column (default: false)."/>
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<thead>
+		<tr>
+
+			<c:forEach var="col" items="${list.listStructure.columnList}">
+				<c:set var="orderable" value="false"/>
+				<c:set var="ascending" value="false"/>
+
+				<c:if test="${list.listStructure.columnOrders[col.id]}">
+					<c:set var="orderable" value="true" />
+					<c:set var="ascending" value="${list.orderInfo.fieldsMap[col.id]}"/>
+				</c:if>
+
+				<c:set var="columnId" value="${col.id}" scope="request"/>
+
+				<c:choose>
+					<c:when test="${orderable}">
+						<c:choose>
+							<c:when test="${empty ascending}">
+								<c:set var="class" value="sort"/>
+							</c:when>
+							<c:otherwise>
+								<c:set var="class" value="sort ${ascending ? 'ascending' : 'descending'}"/>
+							</c:otherwise>
+						</c:choose>
+						<jsp:doBody/>
+						<ui:element name="th">
+							<util:elementClassAttr baseClass="${class}" styleClass="${styleClass}"/>
+							<ui:elementContent>
+								<ui:eventLinkButton eventId="order" eventParam="${col.id}"
+									eventTarget="${listFullId}" labelId="${col.label}"
+									tooltipId="list.sort"/>
+							</ui:elementContent>
+						</ui:element>
+					</c:when>
+					<c:otherwise>
+						<!--jsp:doBody/-->
+						<ui:element name="th">
+							<util:elementClassAttr styleClass="${styleClass}"/>
+							<ui:elementContent>
+								<fmt:message key="${col.label}"/>
+							</ui:elementContent>
+						</ui:element>
+					</c:otherwise>
+				</c:choose>
+
+				<c:remove var="styleClass" scope="request"/>
+				<c:remove var="columnId" scope="request"/>
+			</c:forEach>
+
+			<c:if test="${(not empty lastEmptyColumn) and lastEmptyColumn}">
+				<th></th>
+			</c:if>
+
+		</tr>
+	</thead>
+
+</jsp:root>

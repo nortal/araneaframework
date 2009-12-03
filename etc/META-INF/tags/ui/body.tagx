@@ -1,0 +1,44 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes the BODY tag and renders its content." />
+
+	<jsp:directive.attribute name="id" description="An optional ID for the body."/>
+
+	${ui:setBodyAttributes(pageContext)}
+
+	<ui:element name="body">
+		<ui:attribute name="id" value="${id}"/>
+		<ui:attribute name="onload" value="Aranea.Page.onLoad()"/>
+		<ui:attribute name="onunload" value="Aranea.Page.onUnload()"/>
+		<util:elementClassAttr styleClass="${styleClass}"/>
+
+		<ui:elementContent>
+			<c:set var="js" value="Aranea.Data.servletURL='${servletURL}';"/>
+			<c:set var="js" value="${js}Aranea.Page.encodeURL=function(url){return url+'${fn:substring(encodedURL,fn:length(servletURL),fn:length(encodedURL))}'};"/>
+			<c:set var="js" value="${js}Aranea.Data.locale={lang:'${locale.language}',country:'${locale.country}'};"/>
+
+			<c:if test="${not empty expiringServiceCtx and not empty expiringServiceContext.serviceTTLMap}">
+				<c:forEach var="item" items="${expiringServiceContext.serviceTTLMap}">
+					<c:set var="js" value="${js}Aranea.Page.addKeepAlive(Aranea.Page.getDefaultKeepAlive(${topServiceId},${threadId},'${item.key}'),${item.value-4000});"/>
+				</c:forEach>
+			</c:if>
+
+			<c:if test="${bgvalidation}">
+				<c:set var="js" value="${js}Aranea.Data.backgroundValidation=${bgvalidation};"/>
+			</c:if>
+
+			<c:if test="${not empty confirmationMsg}">
+				<c:set var="js" value="${js}document.observe('aranea:loaded',Aranea.UI.confirmFlowEvent.curry('${confirmationMsg}'));"/>
+			</c:if>
+
+			<script type="text/javascript">${js}</script>
+			<jsp:doBody/>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

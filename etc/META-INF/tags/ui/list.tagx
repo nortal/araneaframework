@@ -1,0 +1,48 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag
+		description="Generates the Aranea list with HTML code that formats it." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" required="true" description="The ID of the list widget." />
+	<jsp:directive.attribute name="editable" type="java.lang.Boolean" description="If 'true' then form will be also included." />
+	<jsp:directive.attribute name="scrollable" type="java.lang.Boolean" description="A Boolean indicating whether scrollbars are added to the list content. Default: false." />
+	<jsp:directive.attribute name="hiddenTitle" description="If specified, the list will be rendered hidden with the given title to click to see the list." />
+	<jsp:directive.attribute name="doPager" type="java.lang.Boolean" description="If 'false' then does not generate the list pager. Default is 'true'." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<c:if test="${empty doPager}">
+		<c:set var="doPager" value="true"/>
+	</c:if>
+
+	<c:if test="${not empty hiddenTitle}">
+		<h2 class="toggle clear"><a href="#"><fmt:message key="${hiddenTitle}" /></a></h2>
+	</c:if>
+
+	<c:choose>
+		<c:when test="${editable}">
+			<ui:list id="${id}">
+				<ui:formList>
+					<util:listContent hidden="${not empty hiddenTitle}" scrollable="${scrollable}" doPager="${doPager}">
+						<jsp:doBody/>
+					</util:listContent>
+				</ui:formList>
+			</ui:list>
+		</c:when>
+		<c:otherwise>
+			<ui:list id="${id}">
+				<util:listContent hidden="${not empty hiddenTitle}" scrollable="${scrollable}" doPager="${doPager}">
+					<jsp:doBody/>
+				</util:listContent>
+			</ui:list>
+		</c:otherwise>
+	</c:choose>
+
+</jsp:root>

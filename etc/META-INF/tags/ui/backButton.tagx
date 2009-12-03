@@ -1,0 +1,9 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Writes the back link." />
+
+	<span class="back clear"><ui:eventLinkButton eventId="back" labelId="global.back"/></span>
+
+</jsp:root>

@@ -1,0 +1,51 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="Handles list table rendering." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="doPager" type="java.lang.Boolean"
+		description="If 'false' then does not generate the list pager. Default is 'true'." />
+
+	<jsp:directive.attribute name="scrollable" type="java.lang.Boolean"
+		description="A Boolean indicating whether scrollbars are added to the list content. Default: false." />
+
+	<jsp:directive.attribute name="hidden" type="java.lang.Boolean"
+		description="If 'true' then this table will be rendered hidden (the user has to click on the title)." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<c:if test="${empty doPager}">
+		<c:set var="doPager" value="true"/>
+	</c:if>
+
+	<c:if test="${empty scrollable}">
+		<c:set var="scrollable" value="false"/>
+	</c:if>
+
+	<c:if test="${empty hidden}">
+		<c:set var="hidden" value="false"/>
+	</c:if>
+
+	<ui:element name="div" forceRenderBody="true" renderTag="${hidden}">
+		<ui:attribute name="class" value="toggle-wrap"/>
+		<ui:elementContent>
+			<ui:element name="div" forceRenderBody="true" renderTag="${scrollable}">
+				<util:elementClassAttr baseClass="scroll"/>
+				<ui:elementContent>
+					<table class="data">
+						<jsp:doBody/>
+					</table>
+				</ui:elementContent>
+			</ui:element>
+			<c:if test="${doPager and list.sequence.firstPage ne list.sequence.lastPage}">
+				<util:listPager />
+			</c:if>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

@@ -1,0 +1,12 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" version="2.1">
+
+	<jsp:directive.tag body-content="empty"
+		description="Formats the given date and outputs it." />
+
+	<jsp:directive.attribute name="value" type="java.util.Date"
+		required="true" description="The date value to format." />
+
+	<fmt:formatDate value="${value}" pattern="dd.MM.yyyy" />
+
+</jsp:root>

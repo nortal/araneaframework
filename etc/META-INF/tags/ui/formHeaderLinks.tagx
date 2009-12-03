@@ -1,0 +1,8 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag
+		description="Generates the HTML code that formats the links in form header." />
+
+	<ul><jsp:doBody /></ul>
+
+</jsp:root>

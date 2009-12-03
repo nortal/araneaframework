@@ -1,0 +1,19 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	version="2.1">
+
+	<jsp:directive.tag import="org.araneaframework.jsp.util.JspWidgetUtil"/>
+	<jsp:directive.tag import="org.araneaframework.jsp.tag.uilib.form.FormElementTag"/>
+	<jsp:directive.tag import="org.araneaframework.jsp.tag.uilib.form.FormTag"/>
+	<jsp:directive.tag import="org.araneaframework.uilib.form.FormElement"/>
+	<jsp:directive.tag import="org.araneaframework.uilib.form.FormWidget"/>
+	<jsp:directive.tag import="org.araneaframework.Widget"/>
+
+	<jsp:directive.tag body-content="empty" description="Writes the code to set form element not-valid status visually, and renders error messages."/>
+
+	<c:if test="${not formElement.valid}">
+		<script type="text/javascript">Aranea.UI.markFEContentStatus(false, '${formElementFullId}');</script>
+		${ui:renderFormElementErrorMessages(pageContext)}
+	</c:if>
+
+</jsp:root>

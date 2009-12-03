@@ -1,0 +1,55 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Generates a text input." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="Overrides the ID of the input." />
+	<jsp:directive.attribute name="size" description="Horizontal size, in characters." />
+	<jsp:directive.attribute name="styleClass" description="Appended CSS class for the tag." />
+	<jsp:directive.attribute name="readonly" type="java.lang.Boolean" description="A Boolean specifying whether the disabled input is rendered read-only or disabled." />
+	<jsp:directive.attribute name="tabindex" description="HTML tabindex for the element." />
+	<jsp:directive.attribute name="title" description="A tooltip message for this input." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<util:formElement id="${id}" controlType="FileUploadControl" label="false">
+		<c:if test="${empty readonly}">
+			<c:set var="readonly" value="false" />
+		</c:if>
+
+		<c:if test="${not empty title}">
+			<fmt:message var="title" key="${title}"/>
+		</c:if>
+
+		<c:if test="${not empty control.permittedMimeFileTypes}">
+			<c:forEach var="mime" items="${control.permittedMimeFileTypes}">
+				<c:set var="mimes" value="${mimes}${empty mimes ? '' : ','}${mime}"/>
+			</c:forEach>
+		</c:if>
+
+		<ui:element name="input">
+			<ui:attribute name="type" value="file"/>
+			<ui:attribute name="id" value="${formElementFullId}"/>
+			<ui:attribute name="name" value="${formElementFullId}"/>
+
+			<util:elementClassAttr baseClass="aranea-file-upload" styleClass="${styleClass}"/>
+
+			<ui:attribute name="accept" value="${mimes}"/>
+			<ui:attribute name="size" value="${size}"/>
+			<ui:attribute name="tabindex" value="${tabindex}"/>
+			<ui:attribute name="title" value="${title}"/>
+
+			<util:formElementDisabledAttr readonly="${readonly}"/>
+		</ui:element>
+
+		<script type="text/javascript">_ap.setSystemFormEncoding('multipart/form-data');</script>
+
+	</util:formElement>
+
+</jsp:root>

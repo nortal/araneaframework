@@ -1,0 +1,9 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag description="Writes a container to hold multiple forms (up to 2 in a row). See also 'formsCol' tag!" />
+
+	<div class="form-cols clear">
+		<jsp:doBody />
+	</div>
+
+</jsp:root>

@@ -1,0 +1,26 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Wrapper of a list data rows." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="noButtons" type="java.lang.Boolean"
+		description="If 'true' then does not generate default list buttons." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<tbody class="filter">
+		<ui:listFilter>
+			<ui:row>
+				<jsp:doBody />
+				<c:if test="${empty noButtons or not noButtons}">
+					<td class="action"><ui:eventButton eventId="filter" labelId="list.search" /></td>
+				</c:if>
+			</ui:row>
+		</ui:listFilter>
+	</tbody>
+
+</jsp:root>

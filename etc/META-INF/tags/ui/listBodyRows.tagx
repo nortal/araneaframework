@@ -1,0 +1,30 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Wrapper of a list data rows." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="editable" type="java.lang.Boolean"
+		description="Specifies whether the list rows must be editable. Default is 'false'." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<tbody>
+		<c:choose>
+			<c:when test="${not empty editable and editable}">
+				<ui:formListRows>
+					<jsp:doBody />
+				</ui:formListRows>
+			</c:when>
+			<c:otherwise>
+				<ui:listRows>
+					<jsp:doBody />
+				</ui:listRows>
+			</c:otherwise>
+		</c:choose>
+	</tbody>
+
+</jsp:root>

@@ -1,0 +1,33 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="A simple HTML button." body-content="empty"/>
+
+	<jsp:directive.attribute name="id" description="The ID for the button." />
+	<jsp:directive.attribute name="name" description="The name for the button." />
+	<jsp:directive.attribute name="labelId" description="The ID for the label of the button." />
+	<jsp:directive.attribute name="styleClass" description="The optional style class for the button." />
+	<jsp:directive.attribute name="onclick" description="The value for the onclick attribute." />
+	<jsp:directive.attribute name="tabindex" description="The tabindex for the button." />
+	<jsp:directive.attribute name="disabled" type="java.lang.Boolean" description="A boolean, whether this button is disabled." />
+
+	<fmt:message key="${labelId}" var="labelId"/>
+
+	<ui:element name="input">
+		<ui:attribute name="type" value="button"/>
+		<ui:attribute name="id" value="${id}"/>
+		<ui:attribute name="name" value="${name}"/>
+		<util:elementClassAttr baseClass="button aranea-button" styleClass="${styleClass}"/>
+		<ui:attribute name="value" value="${labelId}"/>
+		<ui:attribute name="onclick" value="${onclick}"/>
+		<ui:attribute name="tabindex" value="${tabindex}"/>
+		<c:if test="${disabled}">
+			<ui:attribute name="disabled" value="disabled"/>
+		</c:if>
+	</ui:element>
+
+</jsp:root>
