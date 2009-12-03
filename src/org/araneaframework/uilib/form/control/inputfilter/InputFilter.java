@@ -17,37 +17,70 @@
 package org.araneaframework.uilib.form.control.inputfilter;
 
 import java.io.Serializable;
+import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
- * @author Taimo Peelo (taimo@araneaframework.org)
+ * The object that stores information about which characters the response must not contain. If it contains prohibited
+ * characters, validation will fail, and an error message will be shown. Since the input filter is one per text control,
+ * each control can have a different error message as specified through {@link #setInvalidInputCustomMessage(String)}.
  * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
+ * @see TextControl#setInputFilter(InputFilter)
  * @since 1.0.11
  */
 public class InputFilter implements Serializable {
-	/** Custom HTML attribute for defining filter applied to input field. */
-	public static final String CHARACTER_FILTER_ATTRIBUTE = "arn-charFilter";
-	
-	private String characterFilter;
-	private String invalidInputCustomMessage;
 
-	public String getCharacterFilter() {
-		return characterFilter;
-	}
+  /**
+   * Custom HTML attribute for defining filter applied to input field.
+   */
+  public static final String CHARACTER_FILTER_ATTRIBUTE = "arn-charFilter";
 
-	public void setCharacterFilter(String characterFilter) {
-		this.characterFilter = characterFilter;
-	}
+  private String characterFilter;
 
-	public String getInvalidInputCustomMessage() {
-		return invalidInputCustomMessage;
-	}
+  private String invalidInputCustomMessage;
 
-	public void setInvalidInputCustomMessage(String invalidInputMessage) {
-		this.invalidInputCustomMessage = invalidInputMessage;
-	}
-	
-	public String getInvalidInputMessage() {
-		return invalidInputCustomMessage == null ? UiLibMessages.INPUT_FILTER_NOT_MATCHED : invalidInputCustomMessage;
-	}
+  public InputFilter() {}
+
+  /**
+   * Creates <code>InputFilter</code> and also sets the string of characters to filter out.
+   * 
+   * @param characterFilter A string of characters that the response must not contain.
+   */
+  public InputFilter(String characterFilter) {
+    this.characterFilter = characterFilter;
+  }
+
+  /**
+   * Creates <code>InputFilter</code> and also sets the string of characters to filter out and the error message to
+   * show when the response contains prohibited characters.
+   * 
+   * @param characterFilter A string of characters that the response must not contain.
+   * @param invalidInputCustomMessage The error message to show.
+   */
+  public InputFilter(String characterFilter, String invalidInputCustomMessage) {
+    this.characterFilter = characterFilter;
+    this.invalidInputCustomMessage = invalidInputCustomMessage;
+  }
+
+  public String getCharacterFilter() {
+    return this.characterFilter;
+  }
+
+  public void setCharacterFilter(String characterFilter) {
+    this.characterFilter = characterFilter;
+  }
+
+  public String getInvalidInputCustomMessage() {
+    return this.invalidInputCustomMessage;
+  }
+
+  public void setInvalidInputCustomMessage(String invalidInputCustomMessage) {
+    this.invalidInputCustomMessage = invalidInputCustomMessage;
+  }
+
+  public String getInvalidInputMessage() {
+    return this.invalidInputCustomMessage == null ? UiLibMessages.INPUT_FILTER_NOT_MATCHED
+        : this.invalidInputCustomMessage;
+  }
 }

@@ -50,7 +50,7 @@ public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    serviceAdapter = buildRootComponent();
+    this.serviceAdapter = buildRootComponent();
     buildAlternateRootComponents();
 
     Environment env = new StandardEnvironment(null, getServletEnvironmentMap());

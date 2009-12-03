@@ -16,6 +16,10 @@
 
 package org.araneaframework.integration.spring;
 
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.commons.logging.Log;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 
 import java.io.IOException;
@@ -47,6 +51,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * configuration files.
  */
 public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
+
+  private static final Log LOG = LogFactory.getLog(AraneaSpringDispatcherServlet.class);
 
   private static boolean isSpringWebPresent = true;
 
@@ -112,6 +118,10 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     XmlBeanDefinitionReader confReader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) this.beanFactory);
     confReader.loadBeanDefinitions(new ClassPathResource(ARANEA_DEFAULT_CONF_XML));
 
+    if (LOG.isInfoEnabled()) {
+      LOG.info("Loaded default Aranea bean definitions from " + ARANEA_DEFAULT_CONF_XML + ".");
+    }
+
     // Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
     cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
@@ -134,6 +144,10 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     try {
       if (getServletContext().getResource(araneaCustomConfXml) != null) {
         confReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), araneaCustomConfXml));
+
+        if (LOG.isInfoEnabled()) {
+          LOG.info("Updated default Aranea bean definitions with beans from " + araneaCustomConfXml + ".");
+        }
       }
     } catch (MalformedURLException e) {
       throw new AraneaRuntimeException(e);

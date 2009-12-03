@@ -409,8 +409,8 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     }
 
     public DisplayItem getSelectedItem() {
-      return DisplayItemUtil.getSelectedItemByValue(this.selectItems,
-          DisplayItemUtil.getBeanValue(value, valueProperty));
+      String value = super.getSimpleValue();
+      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, value);
     }
 
     public List<DisplayItem> getSelectedItems() {
@@ -423,6 +423,12 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
 
     public boolean isSelected(String value) {
       return innerData != null && value != null && ArrayUtils.contains((String[]) innerData, value);
+    }
+
+    @Override
+    public String getSimpleValue() {
+      DisplayItem selectedItem = getSelectedItem();
+      return selectedItem != null ? selectedItem.getValue() : null;
     }
   }
 }

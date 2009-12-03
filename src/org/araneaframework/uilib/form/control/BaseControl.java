@@ -124,11 +124,8 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   @Override
   protected void init() throws Exception {
     super.init();
-
-    Assert.notNull(this, getFormElementCtx(),
-        "Form element context must be assigned to the control before it can be initialized! "
-            + "Make sure that the control is associated with a form element!");
-
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the control before it can be "
+        + "initialized! Make sure that the control is associated with a form element!");
   }
 
   @Override
@@ -140,15 +137,16 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
-
-    if (!isDisabled())
+    if (!isDisabled()) {
       readFromRequest((HttpInputData) input);
+    }
   }
 
   @Override
   protected void handleEvent(InputData input) throws Exception {
-    if (!isDisabled())
+    if (!isDisabled()) {
       super.handleEvent(input);
+    }
   }
 
   /**

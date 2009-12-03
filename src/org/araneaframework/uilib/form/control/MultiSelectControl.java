@@ -16,12 +16,10 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.springframework.util.Assert;
-
-import java.util.LinkedList;
 import java.util.List;
 import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.util.DisplayItemUtil;
+import org.springframework.util.Assert;
 
 
 /**
@@ -89,20 +87,12 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
 
   @Override
   protected List<T> fromRequestParameters(String[] parameterValues) {
-    List<T> items = new LinkedList<T>();
-    for (String value : parameterValues) {
-      items.add(DisplayItemUtil.getBean(this, value));
-    }
-    return items;
+    return DisplayItemUtil.getSelectedItems(this.items, this.valueProperty, parameterValues);
   }
 
   @Override
   protected String[] toResponseParameters(List<T> controlValues) {
-    List<String> values = new LinkedList<String>();
-    for (T value : controlValues) {
-      values.add(DisplayItemUtil.getBeanValue(value, this.valueProperty));
-    }
-    return (String[]) values.toArray();
+    return DisplayItemUtil.getItemsValues(controlValues, this.valueProperty);
   }
 
   public DataType getRawValueType() {

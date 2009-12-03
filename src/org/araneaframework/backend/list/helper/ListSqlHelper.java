@@ -54,9 +54,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
   /**
    * Creates <code>ListSqlHelper</code> without initializing any fields.
    */
-  public ListSqlHelper() {
-    super();
-  }
+  public ListSqlHelper() {}
 
   /**
    * Creates <code>ListSqlHelper</code> and provides it with the <code>DataSource</code>.
@@ -265,85 +263,84 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
 
   // Mappings
   /**
-   * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
+   * Maps a bean <b>property</b> to a database <b>column name</b> (which has given <b>column alias</b>) so that the
+   * query would include the condition where the column name "matches" (as the condition associated with the property)
+   * the property value. The column name may also be given as an SQL (query) expression, in which case column alias is
+   * mandatory (otherwise query would be incomplete, which results in an exception).
    * <p>
-   * A given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
+   * The given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
    * 
-   * @param fieldName field name.
-   * @param columnName database column name.
-   * @param columnAlias database column alias.
+   * @param property The bean property name that corresponds to the column.
+   * @param columnName The database column name to query from the database. May be an SQL query expression.
+   * @param columnAlias The database column alias. May be null when column name is not an SQL query expression!
    * @see #addMapping(String, String, String)
    * @see #addMapping(String, String)
    * @see #addDatabaseFieldMapping(String, String)
    * @see #addResultSetMapping(String, String)
    */
-  public void addDatabaseFieldMapping(String fieldName, String columnName, String columnAlias) {
-    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName, columnAlias);
+  public void addDatabaseFieldMapping(String property, String columnName, String columnAlias) {
+    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(property, columnName, columnAlias);
   }
 
   /**
-   * Adds a <b>field name</b> to database <b>column name</b> mapping.
+   * Maps a bean <b>property</b> to a database <b>column name</b> so that the
+   * query would include the condition where the column name "matches" (as the condition associated with the property)
+   * the property value. The corresponding <b>column alias</b> is generated automatically.
    * <p>
-   * A given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
-   * </p>
-   * <p>
-   * The corresponding <b>column alias</b> is generated automatically.
+   * The given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
    * 
-   * @param fieldName field name.
-   * @param columnName database column name.
+   * @param property The bean property name that corresponds to the column.
+   * @param columnName The database column name to query from the database. May not be an SQL query expression!
    * @see #addMapping(String, String, String)
    * @see #addMapping(String, String)
    * @see #addDatabaseFieldMapping(String, String, String)
    * @see #addResultSetMapping(String, String)
    */
-  public void addDatabaseFieldMapping(String fieldName, String columnName) {
-    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(fieldName, columnName);
+  public void addDatabaseFieldMapping(String property, String columnName) {
+    getMappingNamingStrategyAndFields().addDatabaseFieldMapping(property, columnName);
   }
 
   /**
-   * Adds a <b>field name</b> to database <b>column alias</b> mapping.
+   * Maps a bean <b>property</b> to a database <b>column alias</b> mapping in the result-set.
    * <p>
    * A given field is not listed in the <code>SELECT</code> but is read from the {@link ResultSet}.
-   * </p>
    * 
-   * @param fieldName field name.
-   * @param columnAlias database column name in the result set.
+   * @param property The bean property name that corresponds to the result-set column.
+   * @param columnName The database column alias to fetch from the result-set.!
    * @see #addMapping(String, String, String)
    * @see #addMapping(String, String)
    * @see #addDatabaseFieldMapping(String, String, String)
    * @see #addDatabaseFieldMapping(String, String)
    */
-  public void addResultSetMapping(String fieldName, String columnAlias) {
-    getMappingNamingStrategyAndFields().addResultSetMapping(fieldName, columnAlias);
+  public void addResultSetMapping(String property, String columnAlias) {
+    getMappingNamingStrategyAndFields().addResultSetMapping(property, columnAlias);
   }
 
   /**
-   * Adds a <b>field name</b> to database <b>column name</b> and <b>column alias</b> mapping.
+   * Maps a bean <b>property</b> to database <b>column name</b> and <b>column alias</b> mapping.
    * <p>
    * A given field is listed in the <code>SELECT</code> and is read from the {@link ResultSet}.
    * 
-   * @param fieldName field name.
-   * @param columnName database column name.
-   * @param columnAlias database column alias.
+   * @param property The bean property name that corresponds to a column/alias.
+   * @param columnName The database column name.
+   * @param columnAlias The database column alias.
    * @see #addMapping(String, String)
    * @see #addDatabaseFieldMapping(String, String, String)
    * @see #addDatabaseFieldMapping(String, String)
    * @see #addResultSetMapping(String, String)
    */
-  public void addMapping(String fieldName, String columnName, String columnAlias) {
-    getMappingNamingStrategyAndFields().addMapping(fieldName, columnName, columnAlias);
+  public void addMapping(String property, String columnName, String columnAlias) {
+    getMappingNamingStrategyAndFields().addMapping(property, columnName, columnAlias);
   }
 
   /**
-   * Adds a <b>field name</b> to database <b>column name</b>.
+   * Maps a bean <b>property</b> to a database <b>column name</b>. The corresponding <b>column alias</b> is generated
+   * automatically.
    * <p>
    * A given field is listed in the <code>SELECT</code> and is read from the {@link ResultSet}.
-   * </p>
-   * <p>
-   * The corresponding <b>column alias</b> is generated automatically.
    * 
-   * @param fieldName field name.
-   * @param columnName database column name.
+   * @param property The bean property name that corresponds to a column.
+   * @param columnName The database column name.
    * @see #addMapping(String, String, String)
    * @see #addDatabaseFieldMapping(String, String, String)
    * @see #addDatabaseFieldMapping(String, String)

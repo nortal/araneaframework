@@ -11,6 +11,12 @@
 
 package org.araneaframework.uilib.list;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.araneaframework.Path;
+
+import org.araneaframework.core.StandardPath;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +36,6 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.util.ExceptionUtil;
-import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
@@ -188,13 +193,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected void update(InputData input) throws Exception {
     super.update(input);
 
-    HttpInputData input2 = (HttpInputData) input;
-
-    input2.pushPathPrefix(LIST_CHECK_SCOPE);
-
     // 1. Selected check boxes.
     // Path is used to read only those value-names that start with given prefix:
-    Map<String, String> listData = input2.getScopedData(getScope().toPath());
+    Path checksPath = new StandardPath(getScope().toPath().toString() + Path.SEPARATOR + LIST_CHECK_SCOPE);
+    Map<String, String> listData = input.getScopedData(checksPath);
     List<Integer> rowKeys = new LinkedList<Integer>();
 
     // Now we read index numbers of selected rows:
@@ -244,8 +246,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
       String rowKey = listData.get(LIST_RADIO_SCOPE);
 
       if (rowKey != null) {
-        rowKey = rowKey.substring(LIST_RADIO_SCOPE.length() + 2);
+        rowKey = StringUtils.substringAfterLast(rowKey, LIST_RADIO_SCOPE + ".");
         T rowItem = getRowFromRequestId(rowKey);
+
         // In case of radio buttons, we discard the previous value,
         // because only one row can be selected:
         if (!this.selectedItems.contains(rowItem)) {

@@ -16,6 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import org.araneaframework.core.Assert;
+
+import org.araneaframework.uilib.support.DisplayItem;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
@@ -42,10 +46,20 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    assertControlType("SelectControl");
-    SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
-    writeLabel(out, viewModel.getSelectedItem().getLabel());
+    writeLabel(out, getSelectItemLabel());
     return EVAL_BODY_INCLUDE;
+  }
+
+  protected String getSelectItemLabel() throws Exception {
+    assertControlType("SelectControl");
+
+    SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
+    DisplayItem item = viewModel.getSelectItem(this.value);
+
+    Assert.notNull(item, "The SelectControl item with value '" + this.value + "' was not found!");
+
+    String label = JspUtil.getResourceStringOrNull(this.pageContext, item.getLabel());
+    return label != null ? label : item.getLabel();
   }
 
   /**

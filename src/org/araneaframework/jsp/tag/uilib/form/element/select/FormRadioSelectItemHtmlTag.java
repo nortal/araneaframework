@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import org.araneaframework.uilib.util.DisplayItemUtil;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -43,7 +45,8 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
   protected String htmlId;
 
-  
+  protected boolean disabled;
+
   public FormRadioSelectItemHtmlTag() {
     this.baseStyleClass = "aranea-radio";
   }
@@ -64,7 +67,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
 
     // Write input tag
-    if (!viewModel.getSelectItems().contains(value)) {
+    if (this.value != null && !DisplayItemUtil.isValueInItems(viewModel.getSelectItems(), this.value)) {
       throw new AraneaJspException("Value '" + this.value + "' not found in values list.");
     }
 
@@ -77,7 +80,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", this.value);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-    if (viewModel.isDisabled() || viewModel.getSelectedItem().isDisabled()) {
+    if (this.disabled || viewModel.isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
@@ -120,6 +123,17 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
    */
   public void setHtmlId(String htmlId) {
     this.htmlId = evaluate("htmlId", htmlId, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "Sets whether the radio item is disabled or not. By default, it's enabled."
+   * @since 2.0
+   */
+  public void setDisabled(String disabled) {
+    this.disabled = evaluate("disabled", disabled, Boolean.class);
   }
 
   /**

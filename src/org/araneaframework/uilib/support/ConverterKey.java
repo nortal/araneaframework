@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.support;
 
+import org.apache.commons.lang.ClassUtils;
+
 import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
@@ -39,9 +41,10 @@ public class ConverterKey <C, D> implements Serializable {
    * @param fromType the type from which the conversion goes.
    * @param toType the type to which the conversion goes.
    */
+  @SuppressWarnings("unchecked")
   public ConverterKey(Class<C> fromType, Class<D> toType) {
-    this.fromType = fromType;
-    this.toType = toType;
+    this.fromType = ClassUtils.primitiveToWrapper(fromType);
+    this.toType = ClassUtils.primitiveToWrapper(toType);
   }
 
   /**

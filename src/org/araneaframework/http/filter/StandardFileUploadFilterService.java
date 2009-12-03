@@ -30,7 +30,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
@@ -312,16 +311,8 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
           parameters.put(item.getFieldName(), parameterValues);
         }
 
-        String encoding = requestEncoding;
-
-        if (item instanceof DiskFileItem) {
-          DiskFileItem diskItem = (DiskFileItem) item;
-          if (diskItem.getCharSet() != null) {
-            encoding = item.getString(encoding);
-          }
-        }
-
-        parameterValues.add(encoding);
+        String value = requestEncoding != null ? item.getString(requestEncoding) : item.getString();
+        parameterValues.add(value);
       }
     }
 

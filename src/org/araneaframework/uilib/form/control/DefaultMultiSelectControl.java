@@ -6,17 +6,17 @@ import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 /**
- * Concrete type ({@link DisplayItem}) implementation for {@link SelectControl}. This means that unlike SelectControl
+ * Concrete type ({@link DisplayItem}) implementation for {@link MultiSelectControl}. This means that unlike MultiSelectControl
  * that stores its data in the type specified, this sub implementation stores data only in {@link DisplayItem}s. This
  * implementation is additionally needed as <code>DisplayItem</code>s don't have all getters and setters that are
- * required when adding new items through <code>SelectControl</code>.
+ * required when adding new items through <code>MultiSelectControl</code>.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
-public class DefaultSelectControl extends SelectControl<DisplayItem> {
+public class DefaultMultiSelectControl extends MultiSelectControl<DisplayItem> {
 
-  public DefaultSelectControl() {
+  public DefaultMultiSelectControl() {
     super(DisplayItem.class, "label", "value");
   }
 
@@ -37,11 +37,11 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
     return new ViewModel();
   }
 
-  protected class ViewModel extends SelectControl<DisplayItem>.ViewModel {
+  protected class ViewModel extends MultiSelectControl<DisplayItem>.ViewModel {
 
     @Override
     public String getControlType() {
-      return SelectControl.class.getSimpleName();
+      return MultiSelectControl.class.getSimpleName();
     }
   }
 }

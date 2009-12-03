@@ -77,9 +77,9 @@ public class WindowClosingService extends BaseService {
     String script;
 
     if (serviceInfo != null) {
-      script = "Aranea.Popups.reloadParentWindow('" + serviceInfo.toURL() + "');Aranea.Popups.delayedCloseWindow(50);";
+      script = "Aranea.Popup.reloadParentWindow('" + serviceInfo.toURL() + "');Aranea.Popup.delayedCloseWindow(50);";
     } else {
-      script = "Aranea.Popups.delayedCloseWindow(50);";
+      script = "Aranea.Popup.delayedCloseWindow(50);";
     }
 
     String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);

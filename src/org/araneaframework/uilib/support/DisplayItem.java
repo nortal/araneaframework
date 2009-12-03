@@ -67,6 +67,13 @@ public class DisplayItem implements Serializable {
   /**
    * Creates a new instance of {@link DisplayItem}.
    * 
+   * @since 2.0
+   */
+  public DisplayItem() {}
+
+  /**
+   * Creates a new instance of {@link DisplayItem}.
+   * 
    * @param value The value of the item.
    * @param label The label (or other string to show) of the item.
    */
@@ -117,21 +124,41 @@ public class DisplayItem implements Serializable {
   }
 
   /**
-   * Provides the value of this item.
+   * Provides the label of this item.
    * 
-   * @return The value of this item.
+   * @return The label of this item.
+   * @since 2.0
    */
   public String getLabel() {
     return this.label;
   }
 
   /**
-   * Provides the label of this item.
+   * Sets the label of this item.
    * 
-   * @return The label of this item.
+   * @param label The label for this item.
+   * @since 2.0
+   */
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  /**
+   * Provides the value of this item.
+   * 
+   * @return The value of this item.
    */
   public String getValue() {
     return this.value;
+  }
+
+  /**
+   * Sets the value of this item.
+   * 
+   * @param value The value for this item.
+   */
+  public void setValue(String value) {
+    this.value = value;
   }
 
   /**

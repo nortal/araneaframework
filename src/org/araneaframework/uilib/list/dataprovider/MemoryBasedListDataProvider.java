@@ -235,7 +235,9 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * @param beanFilter Bean filter.
    */
   protected void filter(BeanFilter beanFilter, List<T> all, List<T> filtered) {
-    LOG.debug("Filtering list itmes");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Filtering list items");
+    }
     filtered.clear();
     if (beanFilter == null) {
       filtered.addAll(all);
@@ -252,7 +254,9 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * Orders the items.
    */
   protected void order(Comparator<? super T> comparator, List<T> ordered) {
-    LOG.debug("Ordering list itmes");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Ordering list items");
+    }
     if (comparator != null) {
       Collections.sort(ordered, comparator);
     }

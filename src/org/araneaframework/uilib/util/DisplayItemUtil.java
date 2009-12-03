@@ -46,9 +46,20 @@ public abstract class DisplayItemUtil implements Serializable {
    * 
    * @param value the value that is controlled.
    * @return whether <code>value</code> is found in the select items.
+   * @since 2.0
    */
   public static boolean isValueInItems(DisplayItemContainer<?> displayItemContainer, String value) {
     return isValueInItems(displayItemContainer.getAllItems(), displayItemContainer.getItemValueProperty(), value);
+  }
+
+  public static boolean isValueInItems(List<DisplayItem> displayItems, String value) {
+    boolean contains = false;
+    if (displayItems != null) {
+      for (DisplayItem item : displayItems) {
+        contains = contains || StringUtils.equals(item.getValue(), value);
+      }
+    }
+    return contains;
   }
 
   /**
@@ -177,6 +188,38 @@ public abstract class DisplayItemUtil implements Serializable {
     return -1;
   }
 
+  /**
+   * Returns a subset of <code>items</code> that have values in the <code>values</code> array. Instead of iterating over
+   * <code>values</code>, this method iterates over <code>items</code>. This way the order of subset items will be in
+   * the same order as in the <code>items</code> list.
+   * @param <T> The type of list items.
+   * @param items The allowed items. A subset of this list will be returned.
+   * @param valueProperty The bean property name of the item to retrieve its value.
+   * @param values The values (e.g. from request) that define which items are allowed in the result list.
+   * @return A subset of <code>items</code>.
+   * @since 2.0
+   */
+  public static <T> List<T> getSelectedItems(List<T> items, String valueProperty, String[] values) {
+    List<T> results = new LinkedList<T>();
+    for (T item : items) {
+      if (ArrayUtils.contains(values, DisplayItemUtil.getBeanValue(item, valueProperty))) {
+        results.add(item);
+        if (results.size() == values.length) {
+          break;
+        }
+      }
+    }
+    return results;
+  }
+
+  public static <T> String[] getItemsValues(List<T> items, String valueProperty) {
+    String[] result = new String[items.size()];
+    int i = 0;
+    for (T item : items) {
+      result[i++] = getBeanValue(item, valueProperty);
+    }
+    return result;
+  }
   /**
    * Checks whether the <code>item</code> (that is not yet added to <code>items</code>) would not have an other item
    * with the same value already in the <code>items</code> list.

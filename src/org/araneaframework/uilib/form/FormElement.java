@@ -333,8 +333,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   protected void handleAction(InputData input, OutputData output) throws Exception {
     update(input);
     super.handleAction(input, output);
-    if (control != null && !getActionId(input).equals(SEAMLESS_VALIDATION_ACTION_ID))
-      control._getService().action(null, input, output);
+    if (this.control != null && !getActionId(input).equals(SEAMLESS_VALIDATION_ACTION_ID)) {
+      this.control._getService().action(null, input, output);
+    }
   }
 
   @Override
@@ -358,9 +359,10 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     if (isAlive()) {
       event.run();
     } else if (!isInitialized()) {
-      if (initEvents == null)
-        initEvents = new ArrayList<Event>();
-      initEvents.add(event);
+      if (this.initEvents == null) {
+        this.initEvents = new ArrayList<Event>();
+      }
+      this.initEvents.add(event);
     }
   }
 

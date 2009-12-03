@@ -97,7 +97,10 @@ public abstract class BaseServiceRouterService extends BaseService {
         + "not be read from request and default value is not defined too.");
 
     if (_getChildren().containsKey(currentServiceId)) {
-      LOG.debug("Routing action to service '" + currentServiceId + "' under router '" + getClass().getName() + "'");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Routing action to service '" + currentServiceId + "' under router '" + getClass().getName() + "'");
+      }
+
       ((Service) _getChildren().get(currentServiceId))._getService().action(path, input, output);
     } else {
       throw new NoSuchServiceException("Service '" + currentServiceId + "' was not found under router '"

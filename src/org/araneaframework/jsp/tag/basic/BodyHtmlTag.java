@@ -142,7 +142,7 @@ public class BodyHtmlTag extends PresentationTag {
     ConfirmationContext ctx = getEnvironment().getEntry(ConfirmationContext.class);
     if (ctx != null) {
       if (ctx.getConfirmationMessage() != null) {
-        out.write("document.observe('dom:loaded', Aranea.UI.flowEventConfirm.curry('");
+        out.write("document.observe('dom:loaded', Aranea.UI.confirmFlowEvent.curry('");
         out.write(ctx.getConfirmationMessage());
         out.write("'));");
       }

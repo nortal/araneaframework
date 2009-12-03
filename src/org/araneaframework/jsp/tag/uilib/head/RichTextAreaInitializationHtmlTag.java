@@ -48,7 +48,7 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
     JspUtil.writeAttribute(out, "language", "javascript");
     JspUtil.writeAttribute(out, "type", "text/javascript");
     JspUtil.writeCloseStartTag(out);
-    out.write("var AraneaTinyMCEInit = function() { tinyMCE.init({\n");
+    out.write("Aranea.TinyMCEInit=function(){tinyMCE.init({\n");
 
     setDefaultSettings();
 
@@ -69,7 +69,7 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
   @Override
   protected int doEndTag(Writer out) throws Exception {
     writeAttributes(out);
-    out.write("}); };\n");
+    out.write("})};\n");
     JspUtil.writeEndTag(out, "script");
     return EVAL_PAGE;
   }

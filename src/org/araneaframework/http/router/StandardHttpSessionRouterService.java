@@ -137,8 +137,9 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
     String targetPath = data.get(ApplicationService.ACTION_PATH_KEY);
     String sync = data.get(SYNC_PARAMETER_KEY);
 
-    boolean result = isAsynchronous(actionId, targetPath) || !"false".equals(sync);
-    if (LOG.isInfoEnabled()) {
+    boolean result = isAsynchronous(actionId, targetPath) || !StringUtils.isBlank(sync) && !"false".equals(sync);
+
+    if (result && LOG.isInfoEnabled()) {
       LOG.info("The action '" + targetPath + Path.SEPARATOR + actionId
           + "' is to be processed asynchronously!");
     }

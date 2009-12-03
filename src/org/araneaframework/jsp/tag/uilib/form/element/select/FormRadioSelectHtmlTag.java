@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import java.util.List;
+
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -61,22 +63,34 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 
     SelectControl<Object>.ViewModel viewModel = (SelectControl.ViewModel) controlViewModel;
+    renderItems(out, viewModel.getSelectItems(), viewModel.getScope().toString());
+
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
+
+  protected void renderItems(Writer out, List<DisplayItem> items, String scopePrefix) throws Exception {
     FormRadioSelectItemLabelHtmlTag label = new FormRadioSelectItemLabelHtmlTag();
 
-    for (DisplayItem displayItem : viewModel.getSelectItems()) {
+    for (DisplayItem displayItem : items) {
+      if (displayItem.isGroup()) {
+        renderItems(out, displayItem.getChildOptions(), scopePrefix);
+        continue;
+      }
+
       // Set the same HTML id for label ("for") and radio-button ("id") so that clicking on label affects radio-button
       // selection:
-      String radioId = viewModel.getScope().toString() + displayItem.getValue();
-
-      FormRadioSelectItemHtmlTag item = registerSubtag(new FormRadioSelectItemHtmlTag());
-      item.setHtmlId(radioId);
+      String radioId = scopePrefix + displayItem.getValue();
 
       if (this.labelBefore) {
         writeLabel(label, this.derivedId, radioId, displayItem.getValue());
       }
 
+      FormRadioSelectItemHtmlTag item = registerSubtag(new FormRadioSelectItemHtmlTag());
+      item.setHtmlId(radioId);
       item.setId(this.derivedId);
       item.setValue(displayItem.getValue());
+      item.setDisabled(Boolean.toString(displayItem.isDisabled()));
       item.setEvents(Boolean.toString(this.events));
       item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
       item.setStyleClass(getStyleClass());
@@ -97,8 +111,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
         item.setTabindex(this.tabindex);
       }
 
-      executeStartSubtag(item);
-      executeEndTagAndUnregister(item);
+      executeSubtag(item);
+      unregisterSubtag(item);
 
       if (!this.labelBefore) {
         writeLabel(label, this.derivedId, radioId, displayItem.getValue());
@@ -110,14 +124,8 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
         JspUtil.writeStartEndTag(out, "br");
       }
     }
-
-    super.doEndTag(out);
-    return EVAL_PAGE;
   }
 
-  /*
-   * Tag attributes
-   */
   /**
    * @jsp.attribute
    *    type = "java.lang.String"

@@ -17,6 +17,7 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
+
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.expression.PostgreExpressionToSqlExprBuilder;
@@ -33,10 +34,6 @@ import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
  */
 public class PostgreListSqlHelper extends ListSqlHelper {
 
-  protected SqlStatement statement = new SqlStatement();
-
-  protected String countSqlQuery;
-
   public PostgreListSqlHelper(DataSource dataSource, ListQuery query) {
     super(dataSource, query);
   }
@@ -52,36 +49,33 @@ public class PostgreListSqlHelper extends ListSqlHelper {
   public PostgreListSqlHelper() {}
 
   @Override
-  protected SqlStatement getCountSqlStatement() {
-    if (countSqlQuery != null) {
-      return new SqlStatement(countSqlQuery, statement.getParams());
+  protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
+    StringBuffer query = new StringBuffer(super.createItemRangeQuery(fromSql, customWhereSql, customOrderbySql));
+
+    if (this.itemRangeCount != null) {
+      query.append(" LIMIT ?");
     }
 
-    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(statement.getQuery()).append(") t").toString();
+    if (this.itemRangeStart != null) {
+      query.append(" OFFSET ?");
+    }
 
-    return new SqlStatement(temp, this.statement.getParams());
+    return query.toString();
   }
 
   @Override
-  protected SqlStatement getRangeSqlStatement() {
-    StringBuffer sb = new StringBuffer(this.statement.getQuery());
+  protected List<Object> getItemRangeQueryParams(Object[] customWhereArgs, Object[] customOrderbyArgs) {
+    List<Object> params = super.getItemRangeQueryParams(customWhereArgs, customOrderbyArgs);
 
     if (this.itemRangeCount != null) {
-      sb.append(" LIMIT ?");
+      params.add(this.itemRangeCount);
     }
 
-    sb.append(" OFFSET ?");
-
-    // Create a SQL statement to hold the query and its parameters:
-    SqlStatement rangeStmt = new SqlStatement(sb.toString());
-    rangeStmt.addAllParams(this.statement.getParams());
-
-    if (this.itemRangeCount != null) {
-      rangeStmt.addParam(this.itemRangeCount);
+    if (this.itemRangeStart != null) {
+      params.add(this.itemRangeStart);
     }
 
-    rangeStmt.addParam(this.itemRangeStart);
-    return rangeStmt;
+    return params;
   }
 
   @Override
@@ -103,30 +97,5 @@ public class PostgreListSqlHelper extends ListSqlHelper {
   @Override
   protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
     return new PostgreExpressionToSqlExprBuilder();
-  }
-
-  @Override
-  public void setCountSqlQuery(String countSqlQuery) {
-    this.countSqlQuery = countSqlQuery;
-  }
-
-  @Override
-  public void setSqlQuery(String sqlQuery) {
-    this.statement.setQuery(sqlQuery);
-  }
-
-  @Override
-  public void addNullParam(int valueType) {
-    this.statement.addNullParam(valueType);
-  }
-
-  @Override
-  public void addStatementParam(Object param) {
-    this.statement.addParam(param);
-  }
-
-  @Override
-  public void addStatementParams(List<Object> params) {
-    this.statement.addAllParams(params);
   }
 }

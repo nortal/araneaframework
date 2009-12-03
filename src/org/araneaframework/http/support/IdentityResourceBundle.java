@@ -45,6 +45,6 @@ public class IdentityResourceBundle extends ResourceBundle {
     if (LOG.isWarnEnabled()) {
       LOG.warn("Message for key '" + key + "'could not be resolved! Returning the key as the value.");
     }
-    return key;
+    return "???" + key + "???";
   }
 }

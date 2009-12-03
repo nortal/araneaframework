@@ -16,6 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Writer;
@@ -103,7 +105,8 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeOpenStartTag(out, "option");
       JspUtil.writeAttribute(out, "value", value);
 
-      if (item.equals(viewModel.getSelectedItem())) {
+      List<DisplayItem> selectedItems = viewModel.getSelectedItems();
+      if (selectedItems.contains(item)) {
         JspUtil.writeAttribute(out, "selected", "selected");
       }
 

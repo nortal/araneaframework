@@ -41,7 +41,7 @@ public class OverlayRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag_SS(out);
-      out.write("document.observe(Aranea.ModalBox.show.curry(" + getOverlayOptions(overlayCtx) + "));");
+      out.write("document.observe('aranea:loaded', Aranea.ModalBox.show.curry(" + getOverlayOptions(overlayCtx) + "));");
       JspUtil.writeEndTag(out, "script");
     }
 

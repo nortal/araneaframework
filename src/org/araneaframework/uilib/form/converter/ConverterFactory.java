@@ -111,7 +111,7 @@ public class ConverterFactory implements ConverterProvider {
       Converter c2 = this.converters.get(keyComposite2);
       return prepare(fromType, toType, new CompositeConverter(c1, c2));
 
-    } else {
+    } else if (!DataType.STRING_TYPE.equals(fromType) && !DataType.STRING_TYPE.equals(toType)) {
       try {
         Converter c1 = findConverter(fromType, DataType.STRING_TYPE);
         Converter c2 = findConverter(DataType.STRING_TYPE, toType);
@@ -125,6 +125,10 @@ public class ConverterFactory implements ConverterProvider {
   }
 
   private Converter<?, ?> prepare(DataType fromType, DataType toType, Converter<?, ?> converter) {
+    if (fromType.isList() ^ toType.isList()) {
+      throw new RuntimeException("Error while looking for converter from " + fromType + " to " + toType.isList()
+          + ". Cannot convert to/from list as the other type is not list!");
+    }
     return fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
   }
 

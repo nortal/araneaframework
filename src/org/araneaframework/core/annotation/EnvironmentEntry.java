@@ -52,5 +52,5 @@ public @interface EnvironmentEntry {
    * 
    * @return A <code>Boolean</code> indicating whether the field is required.
    */
-  boolean required();
+  boolean required() default false;
 }

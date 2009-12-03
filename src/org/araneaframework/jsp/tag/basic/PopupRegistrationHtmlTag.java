@@ -46,7 +46,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
       JspUtil.writeCloseStartTag(out);
-      out.write("document.observe('dom:loaded', Aranea.Popups.processPopups;\n");
+      out.write("document.observe('dom:loaded', Aranea.Popup.processPopups;\n");
       addPopups(out, popups);
       JspUtil.writeEndTag(out, "script");
     }
@@ -63,7 +63,7 @@ public class PopupRegistrationHtmlTag extends BaseTag {
   }
 
   protected void addPopup(Writer out, Map.Entry<String, PopupServiceInfo> popup) throws Exception {
-    out.write("Aranea.Popups.addPopup('");
+    out.write("Aranea.Popup.addPopup('");
     out.write(popup.getKey());
     out.write("', '");
     out.write(ObjectUtils.toString(popup.getValue().getPopupProperties()));

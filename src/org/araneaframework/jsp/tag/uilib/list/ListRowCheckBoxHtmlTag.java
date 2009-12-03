@@ -109,9 +109,9 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
     }
 
     try {
-      result.append("return Aranea.UI.updateListSelectAlls($('");
+      result.append("return Aranea.UI.updateListSelectAll('");
       result.append(getCheckBoxId());
-      result.append("'));");
+      result.append("');");
     } catch (JspException e) {}
 
     return result.toString();

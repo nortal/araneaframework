@@ -108,7 +108,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
         String label = item.getLabel();
 
         if (this.localizeDisplayItems) {
-          label = JspUtil.getResourceString(pageContext, label);
+          label = JspUtil.getResourceString(this.pageContext, label);
         }
 
         JspUtil.writeOpenStartTag(out, "option");

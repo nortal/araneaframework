@@ -235,8 +235,8 @@ public abstract class ComponentUtil {
     Assert.notNullParam(ComponentUtil.class, actionListener, "actionListener");
 
     if (env != null) {
-      AsynchronousRequestRegistry registry = env.requireEntry(AsynchronousRequestRegistry.class);
-      if (actionListener instanceof AsynchronousActionListener) {
+      AsynchronousRequestRegistry registry = env.getEntry(AsynchronousRequestRegistry.class);
+      if (registry != null && actionListener instanceof AsynchronousActionListener) {
         if (register) {
           registry.registerAsynchronousAction(componentScope.toString(), actionId);
         } else {

@@ -25,6 +25,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.sql.DataSource;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
@@ -68,6 +72,10 @@ public abstract class BaseListSqlHelper {
 
   protected static final Long DEFAULT_RANGE_START = 0L;
 
+  protected SqlStatement rangeStatement;
+
+  protected SqlStatement countStatement;
+
   protected Fields fields;
 
   protected NamingStrategy namingStrategy;
@@ -92,7 +100,7 @@ public abstract class BaseListSqlHelper {
   private boolean orderSqlExprInited = false;
 
   // ITEM RANGE
-  protected Long itemRangeStart;
+  protected Long itemRangeStart = DEFAULT_RANGE_START;
 
   protected Long itemRangeCount;
 
@@ -176,20 +184,19 @@ public abstract class BaseListSqlHelper {
   }
 
   /**
-   * Sets the (0-based) starting index of the item range.
+   * Sets the (0-based) starting index of the item range. When <code>itemRangeStart</code> is <code>null</code> then
+   * it's same as setting <code>0</code>.
    */
   public void setItemRangeStart(Long itemRangeStart) {
-    if (itemRangeStart == null) {
-      itemRangeStart = DEFAULT_RANGE_START;
-    }
-    this.itemRangeStart = itemRangeStart;
+    this.itemRangeStart = (Long) ObjectUtils.defaultIfNull(itemRangeStart, DEFAULT_RANGE_START);
   }
 
   /**
-   * Sets the count of items in the range.
+   * Sets the count of items in the range. Count may be <code>null</code>, in which case the number of returned items
+   * is not limited.
    */
   public void setItemRangeCount(Long itemRangeCount) {
-    this.itemRangeCount = itemRangeCount;
+    this.itemRangeCount = itemRangeCount == null || itemRangeCount == Long.MAX_VALUE ? null : itemRangeCount;
   }
 
   // *********************************************************************
@@ -259,10 +266,7 @@ public abstract class BaseListSqlHelper {
    * @return the order <code>SqlExpression</code>, which can be used in "ORDER BY" clause.
    */
   protected SqlExpression getOrderSqlExpression() {
-    if (this.orderSqlExprInited) {
-      return this.orderSqlExpr;
-    }
-    if (this.orderExpr != null) {
+    if (!this.orderSqlExprInited && this.orderExpr != null) {
       StandardCompExprToSqlExprBuilder builder = createOrderSqlExpressionBuilder();
       builder.setMapper(createExpressionBuilderResolver());
       this.orderSqlExpr = SqlExpressionUtil.toSql(this.orderExpr, builder);
@@ -277,10 +281,7 @@ public abstract class BaseListSqlHelper {
    * @return the filter <code>SqlExpression</code>, which can be used in "WHERE" clause.
    */
   protected SqlExpression getFilterSqlExpression() {
-    if (this.filterSqlExprInited) {
-      return this.filterSqlExpr;
-    }
-    if (this.filterExpr != null) {
+    if (!this.filterSqlExprInited && this.filterExpr != null) {
       StandardExpressionToSqlExprBuilder builder = createFilterSqlExpressionBuilder();
       builder.setMapper(createExpressionBuilderResolver());
       builder.setConverter(this.valueConverter);
@@ -407,7 +408,7 @@ public abstract class BaseListSqlHelper {
    * <p>
    * To use additional custom filter (and order) conditions, use {@link #setSimpleSqlQuery(String, String, Object[])} or
    * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])} method. To use more complex query, use
-   * {@link #setSqlQuery(String)} method.
+   * {@link #setSqlQuery(String, Object...)} method.
    * </p>
    * <p>
    * The constructed SQL query format is following (LQ = <code>ListQuery</code>):<br/>
@@ -431,7 +432,7 @@ public abstract class BaseListSqlHelper {
    * <p>
    * In simpler cases, use {@link #setSimpleSqlQuery(String)} method. To use also custom order by conditions, use
    * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])} method. To use more complex query, use
-   * {@link #setSqlQuery(String)} method.
+   * {@link #setSqlQuery(String, Object...)} method.
    * </p>
    * <p>
    * The constructed SQL query format is following (LQ = <code>ListQuery</code>):<br/>
@@ -457,7 +458,7 @@ public abstract class BaseListSqlHelper {
    * </p>
    * <p>
    * In simpler cases, use {@link #setSimpleSqlQuery(String)} or {@link #setSimpleSqlQuery(String, String, Object[])}
-   * method. To use more complex query, use {@link #setSqlQuery(String)} method.
+   * method. To use more complex query, use {@link #setSqlQuery(String, Object...)} method.
    * </p>
    * <p>
    * The constructed SQL query format is following (LQ = <code>ListQuery</code>):<br/>
@@ -477,13 +478,32 @@ public abstract class BaseListSqlHelper {
 
     Assert.notNull(fromSql, "The FROM SQL String must be specified");
 
-    Assert.isTrue(customWhereSql == null && customWhereArgs != null,
+    Assert.isTrue(customWhereSql == null ^ customWhereArgs != null,
         "WHERE SQL String and args must be both specified or null");
 
-    Assert.isTrue(customOrderbySql == null && customOrderbyArgs != null,
+    Assert.isTrue(customOrderbySql == null ^ customOrderbyArgs != null,
         "ORDER BY SQL String and args must be both specified or null");
 
-    // SQL String
+    // Set SQL query string and parameters for both items select query and items count query:
+    setSqlQuery(createItemRangeQuery(fromSql, customWhereSql, customOrderbySql), getItemRangeQueryParams(
+        customWhereArgs, customOrderbyArgs));
+
+    setCountSqlQuery(createCountQuery(fromSql, customWhereSql), getCountQueryParams(customWhereArgs));
+  }
+
+  /**
+   * Creates and returns the query string to use for querying item range from the database that match the given where
+   * clause. The parameters are validated, so no need to do that anymore in the implemented method.
+   * <p>
+   * This method was created in Aranea 2.0 to split up the logic of
+   * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])}
+   * 
+   * @param fromSql The part of query that follows the " FROM " in the query. Never empty nor null.
+   * @param customWhereSql The part of query that follows the " WHERE " in the query. Null when customWhereArgs is null.
+   * @return The complete query string to use for querying the number of all matching rows.
+   * @since 2.0
+   */
+  protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
     StringBuffer sb = new StringBuffer("SELECT ");
     sb.append(getDatabaseFields());
 
@@ -507,17 +527,93 @@ public abstract class BaseListSqlHelper {
       sb.append(getDatabaseOrderWith(", ", ""));
     }
 
-    setSqlQuery(sb.toString());
+    return sb.toString();
+  }
 
-    // SQL arguments
+  /**
+   * The implementation of this method is supposed to set all parameters that the range query statement needs to execute
+   * properly. The method is given additional parameters that were provided to <code>ListSqlHelper</code> to also add
+   * these to the query.
+   * <p>
+   * This method was created in Aranea 2.0 to split up the logic of
+   * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])}
+   * 
+   * @param customWhereArgs Custom parameters to the where clause. May be null.
+   * @param customOrderbyArgs Custom parameters to the order-by clause. May be null.
+   * @return A <code>null</code> or a list of parameters to the item range query.
+   * @see #addStatementParams(List)
+   * @see #getDatabaseFilterParams()
+   * @see #getDatabaseOrderParams()
+   * @since 2.0
+   */
+  protected List<Object> getItemRangeQueryParams(Object[] customWhereArgs, Object[] customOrderbyArgs) {
+    List<Object> params = new ArrayList<Object>();
+
     if (customWhereArgs != null) {
-      addStatementParams(Arrays.asList(customWhereArgs));
+      params.addAll(Arrays.asList(customWhereArgs));
     }
-    addStatementParams(getDatabaseFilterParams());
+
+    params.addAll(getDatabaseFilterParams());
+
     if (customOrderbyArgs != null) {
-      addStatementParams(Arrays.asList(customOrderbyArgs));
+      params.addAll(Arrays.asList(customOrderbyArgs));
     }
-    addStatementParams(getDatabaseOrderParams());
+
+    params.addAll(getDatabaseOrderParams());
+    return params;
+  }
+
+  /**
+   * Creates and returns the query string to use for querying the count of all items in the database that match the
+   * given where clause. The parameters are validated, so no need to do that anymore in the implemented method.
+   * <p>
+   * This method was created in Aranea 2.0 to split up the logic of
+   * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])}
+   * 
+   * @param fromSql The part of query that follows the " FROM " in the query. Never empty nor null.
+   * @param customWhereSql The part of query that follows the " WHERE " in the query. Null when customWhereArgs is null.
+   * @return The complete query string to use for querying the number of all matching rows.
+   * @since 2.0
+   */
+  protected String createCountQuery(String fromSql, String customWhereSql) {
+    StringBuffer sb = new StringBuffer("SELECT COUNT(*) FROM ");
+    sb.append(fromSql);
+
+    if (customWhereSql == null) {
+      sb.append(getDatabaseFilterWith(" WHERE ", ""));
+    } else {
+      sb.append(" WHERE (");
+      sb.append(customWhereSql);
+      sb.append(")");
+      sb.append(getDatabaseFilterWith(" AND ", ""));
+    }
+
+    return sb.toString();
+  }
+
+  /**
+   * The implementation of this method is supposed to set all parameters that the range query statement needs to execute
+   * properly. The method is given additional parameters that were provided to <code>ListSqlHelper</code> to also add
+   * these to the query.
+   * <p>
+   * This method was created in Aranea 2.0 to split up the logic of
+   * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])}
+   * 
+   * @param customWhereArgs Custom parameters to the where clause. May be null.
+   * @param customOrderbyArgs Custom parameters to the order-by clause. May be null.
+   * @return A <code>null</code> or a list of parameters to the total count query.
+   * @see #addStatementParams(List)
+   * @see #getDatabaseFilterParams()
+   * @see #getDatabaseOrderParams()
+   * @since 2.0
+   */
+  protected List<Object> getCountQueryParams(Object[] customWhereArgs) {
+    List<Object> params = new ArrayList<Object>();
+    if (customWhereArgs != null) {
+      params.addAll(Arrays.asList(customWhereArgs));
+    }
+    params.addAll(getDatabaseFilterParams());
+    return params;
   }
 
   /**
@@ -532,59 +628,144 @@ public abstract class BaseListSqlHelper {
    * </p>
    * 
    * @param sqlQuery the SQL query that will be used to retrieve the item range from the list and count the items.
+   * @param params Optional parameters to the items range query.
    */
-  public abstract void setSqlQuery(String sqlQuery);
+  public final void setSqlQuery(String sqlQuery, Object... params) {
+    this.rangeStatement = new SqlStatement(sqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+  }
+
+  /**
+   * Sets the SQL query that will be used to retrieve the item range from the list and count the items. SQL query must
+   * start with SELECT. All query arguments must be added additionally.
+   * <p>
+   * <code>ListQuery</code> filter and order conditions are not added automatically. To add them, use
+   * <code>getDatabaseFilter*</code> and <code>getDatabaseOrder*</code> methods.
+   * </p>
+   * <p>
+   * For simpler cases, use one of the <code>setSimpleSqlQuery</code> methods instead.
+   * </p>
+   * 
+   * @param sqlQuery the SQL query that will be used to retrieve the item range from the list and count the items.
+   * @param params Optional parameters to the items range query.
+   */
+  public final void setSqlQuery(String sqlQuery, List<Object> params) {
+    this.rangeStatement = new SqlStatement(sqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+  }
 
   /**
    * Sets the SQL query used to count the items in the database. SQL query must start with SELECT.
    * <p>
    * By default, total items count and items range queries are constructed automatically based on the original query.
-   * This method should only be used, if it can considerably boost the perfomacne of count query.
+   * This method should only be used, if it can considerably boost the performance of count query.
    * </p>
    * 
    * @param countSqlQuery the SQL query used to count the items in the database.
+   * @param params Optional parameters to the count query.
    */
-  public abstract void setCountSqlQuery(String countSqlQuery);
+  public final void setCountSqlQuery(String countSqlQuery, Object... params) {
+    this.countStatement = new SqlStatement(countSqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+  }
 
   /**
-   * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter for later setting.
+   * Sets the SQL query used to count the items in the database. SQL query must start with SELECT.
+   * <p>
+   * By default, total items count and items range queries are constructed automatically based on the original query.
+   * This method should only be used, if it can considerably boost the performance of count query.
+   * </p>
+   * 
+   * @param countSqlQuery the SQL query used to count the items in the database.
+   * @param params Optional parameters to the count query.
+   */
+  public final void setCountSqlQuery(String countSqlQuery, List<Object> params) {
+    this.countStatement = new SqlStatement(countSqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+  }
+
+  /**
+   * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter to the items range query for later setting.
    * <p>
    * This method should not be used with one of the <code>setSimpleSqlQuery</code> methods.
-   * </p>
    * 
    * @param valueType the type of the NULL value.
    */
-  public abstract void addNullParam(int valueType);
+  public void addStatementNullParam(int valueType) {
+    this.rangeStatement.addNullParam(valueType);
+  }
 
   /**
-   * Adds a <code>PreparedStatement</code> parameter for later setting.
+   * Adds a <code>PreparedStatement</code> parameter to the items range query for later setting.
    * <p>
    * This method should not be used with one of the <code>setSimpleSqlQuery</code> methods.
-   * </p>
    * 
    * @param param a <code>PreparedStatement</code> parameter.
    */
-  public abstract void addStatementParam(Object param);
+  public void addStatementParam(Object param) {
+    this.rangeStatement.addParam(param);
+  }
 
   /**
-   * Adds <code>PreparedStatement</code> parameters for later setting.
+   * Adds <code>PreparedStatement</code> parameters to the items range query for later setting.
    * <p>
    * This method should not be used with one of the <code>setSimpleSqlQuery</code> methods.
-   * </p>
    * 
    * @param params <code>PreparedStatement</code> parameters.
    */
-  public abstract void addStatementParams(List<Object> params);
+  public void addStatementParams(List<Object> params) {
+    this.rangeStatement.addAllParams(params);
+  }
+
+  /**
+   * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter to the count query for later setting.
+   * <p>
+   * This method should not be used with one of the <code>setSimpleSqlQuery</code> methods.
+   * 
+   * @param valueType the type of the NULL value.
+   * @since 2.0
+   */
+  public void addCountStatementNullParam(int valueType) {
+    this.countStatement.addNullParam(valueType);
+  }
+
+  /**
+   * Adds a <code>PreparedStatement</code> parameter to the count query for later setting.
+   * <p>
+   * This method should not be used with one of the <code>setSimpleSqlQuery</code> methods.
+   * 
+   * @param param a <code>PreparedStatement</code> parameter.
+   * @since 2.0
+   */
+  public void addCountStatementParam(Object param) {
+    this.countStatement.addParam(param);
+  }
+
+  /**
+   * Adds <code>PreparedStatement</code> parameters to the count query for later setting.
+   * <p>
+   * This method should not be used with one of the <code>setSimpleSqlQuery</code> methods.
+   * 
+   * @param params <code>PreparedStatement</code> parameters.
+   * @since 2.0
+   */
+  public void addCountStatementParams(List<Object> params) {
+    this.countStatement.addAllParams(params);
+  }
 
   /**
    * Returns the total count SQL query String and parameters.
+   * 
+   * @since 2.0
    */
-  protected abstract SqlStatement getCountSqlStatement();
+  protected final SqlStatement getCountSqlStatement() {
+    return this.countStatement;
+  }
 
   /**
-   * Returns the itme range SQL query String and parameters.
+   * Returns the item range SQL query String and parameters.
+   * 
+   * @since 2.0
    */
-  protected abstract SqlStatement getRangeSqlStatement();
+  protected final SqlStatement getRangeSqlStatement() {
+    return this.rangeStatement;
+  }
 
   // *********************************************************************
   // * EXECUTING SQL AND RETURNING RESULTS
@@ -595,6 +776,11 @@ public abstract class BaseListSqlHelper {
    */
   public void setDataSource(DataSource ds) {
     this.ds = ds;
+  }
+
+  protected void prepareQueries() {
+    Assert.notNull(this.rangeStatement, "The item range query is missing! Please specify it through setSqlQuery() first!");
+    Assert.notNull(this.countStatement, "The total count query is missing! Please specify it through setCountSqlQuery() first!");
   }
 
   /**
@@ -611,6 +797,7 @@ public abstract class BaseListSqlHelper {
     if (this.ds == null) {
       throw new RuntimeException("Please pass a DataSource to the ListSqlHelper!");
     }
+    prepareQueries();
     Connection con = null;
     try {
       con = this.ds.getConnection();
@@ -681,6 +868,17 @@ public abstract class BaseListSqlHelper {
    */
   public <T> List<T> executeItemRangeSql(Class<T> itemClass) {
     return execute(getItemRangeSqlCallback(createBeanResultReader(itemClass)));
+  }
+
+  /**
+   * Provides whether the query should return all rows that where matched, or only those that,by result-set row number,
+   * are in a certain rage.
+   * 
+   * @return <code>true</code> when the query should return all rows.
+   * @since 2.0
+   */
+  protected final boolean isShowAll() {
+    return this.itemRangeStart == 0L && this.itemRangeCount == null;
   }
 
   // *********************************************************************
@@ -978,9 +1176,9 @@ public abstract class BaseListSqlHelper {
   private static String getSqlStringWith(SqlExpression expr, String prefix, String suffix) {
     StringBuffer sb = new StringBuffer();
     if (expr != null) {
-      sb.append(prefix);
+      sb.append(StringUtils.defaultString(prefix));
       sb.append(expr.toSqlString());
-      sb.append(suffix);
+      sb.append(StringUtils.defaultString(suffix));
     }
     return sb.toString();
   }
@@ -992,9 +1190,9 @@ public abstract class BaseListSqlHelper {
   /**
    * Returns query failed Exception that contains query String and parameters.
    */
-  protected static RuntimeException createQueryFailedException(String QueryString, List<Object> queryParams,
+  protected static RuntimeException createQueryFailedException(String queryString, List<Object> queryParams,
       SQLException nestedException) {
-    String str = new StringBuffer("Executing list query [").append(QueryString).append("] with params: ").append(
+    String str = new StringBuffer("Executing list query [").append(queryString).append("] with params: ").append(
         queryParams).append(" failed").toString();
     return new AraneaRuntimeException(str, nestedException);
   }

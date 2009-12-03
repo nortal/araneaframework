@@ -140,19 +140,8 @@ public class BeanUtil {
    */
   public static Class<?> getPropertyType(Class<?> beanClass, String property) {
     assertData(beanClass, property);
-
-    Class<?> result = null;
-    Method method = getMethodByProperty(beanClass, property);
-
-    if (method != null) {
-      result = getPropertyMethodType(method);
-    }
-
-    if (result == null) {
-      result = getFieldType(beanClass, property);
-    }
-
-    return result;
+    beanClass = getLastBeanClass(beanClass, property);
+    return getSimplePropertyType(beanClass, getLastProperty(property));
   }
 
   /**
@@ -299,6 +288,14 @@ public class BeanUtil {
     }
   }
 
+  private static Class<?> getSimplePropertyType(Class<?> beanClass, String property) {
+    Class<?> result = getPropertyTypeByMethod(beanClass, property);
+    if (result == null) {
+      result = getFieldType(beanClass, property);
+    }
+    return result;
+  }
+
   // If the property is nested, processes sub-properties until the the property is a simple property.
   private static Object getLastBean(Object bean, String property) {
     while(StringUtils.contains(property, NESTED_DELIM)) {
@@ -307,6 +304,18 @@ public class BeanUtil {
       property = StringUtils.substringAfter(property, NESTED_DELIM);
     }
     return bean;
+  }
+
+  // If the property is nested, processes sub-properties until the the property is a simple property.
+  private static Class<?> getLastBeanClass(Class<?> beanClass, String property) {
+    while(StringUtils.contains(property, NESTED_DELIM)) {
+      String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
+      Class<?> tmpClass = getSimplePropertyType(beanClass, simpleProperty);
+      Assert.notNull(tmpClass, "Unable to resolve property '" + simpleProperty + "' of '" + beanClass.getName() + "'!");
+      beanClass = tmpClass;
+      property = StringUtils.substringAfter(property, NESTED_DELIM);
+    }
+    return beanClass;
   }
 
   // Provides the last property, if the property is nested. Otherwise returns the original.
@@ -355,6 +364,16 @@ public class BeanUtil {
       return method.getReturnType();
     }
     return method.getParameterTypes().length == 1 ? method.getParameterTypes()[0] : null;
+  }
+
+  private static Class<?> getPropertyTypeByMethod(Class<?> beanClass, String property) {
+    Method method = getMethodByProperty(beanClass, property);
+    Class<?> result = null;
+
+    if (method != null) {
+      result = getPropertyMethodType(method);
+    }
+    return result;
   }
 
   private static Method getPropertyGetter(Class<?> clazz, String property) {

@@ -49,7 +49,7 @@ public class DataType implements Serializable, Cloneable {
   }
 
   public boolean isList() {
-    return this.collectionType != null && this.collectionType.isInstance(List.class);
+    return this.collectionType != null && this.collectionType == List.class;
   }
 
   public boolean isSerializable() {
