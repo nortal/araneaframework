@@ -62,10 +62,10 @@ public class WidgetTest extends TestCase {
 
     // Filling in select control (which is under a composite element)
     DefaultSelectControl mySelect = new DefaultSelectControl();
-    mySelect.addItem("1", "one");
-    mySelect.addItem("2", "two");
-    mySelect.addItem("3", "three");
-    mySelect.addItem("4", "four");
+    mySelect.addItem("one", "1");
+    mySelect.addItem("two", "2");
+    mySelect.addItem("three", "3");
+    mySelect.addItem("four", "4");
     hierarchyTest.addElement("mySelect", "my drop down", mySelect, new LongData(), true);
 
     testForm._getComponent().init(new StandardScope("testForm", null), new MockEnvironment());

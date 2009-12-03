@@ -16,6 +16,8 @@
 
 package org.araneaframework.tests;
 
+import org.araneaframework.core.StandardScope;
+
 import junit.framework.TestCase;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.tests.mock.MockEnvironment;
@@ -42,7 +44,7 @@ public class FormElementTest extends TestCase {
 		FormElement<String, Long> sfe = new FormElement<String, Long>();
 		sfe.setLabel("textbox");
 
-		sfe._getComponent().init(null, new MockEnvironment());
+		sfe._getComponent().init(new StandardScope("testScope", null), new MockEnvironment());
 
 		TextControl tb = new TextControl();
 		sfe.setMandatory(true);

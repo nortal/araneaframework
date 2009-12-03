@@ -50,6 +50,7 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TextareaControl;
 import org.araneaframework.uilib.form.converter.IdenticalConverter;
+import org.araneaframework.uilib.form.converter.StringToDisplayItemConverter;
 import org.araneaframework.uilib.form.converter.StringToNumberConverter;
 import org.araneaframework.uilib.form.converter.TimestampToDateConverter;
 import org.araneaframework.uilib.form.data.BooleanData;
@@ -111,13 +112,13 @@ public class FormTest extends TestCase {
     testConverter(testForm, "myCheckBox", IdenticalConverter.class);
     testConverter(testForm, "myLongText", StringToNumberConverter.class);
     testConverter(testForm, "myDateTime", TimestampToDateConverter.class);
-    testConverter(testForm, "hierarchyTest.mySelect", IdenticalConverter.class);
+    testConverter(testForm, "hierarchyTest.mySelect", StringToDisplayItemConverter.class);
     testConverter(testForm, "hierarchyTest.myTextarea", IdenticalConverter.class);
   }
 
   private void testConverter(FormWidget form, String element, Class<?> targetConverter) {
     Converter<?, ?> converter = ((FormElement<?, ?>) form.getElementByFullName(element)).getConverter();
-    assertTrue(converter != null && targetConverter.isInstance(converter));
+    assertTrue(converter != null && converter.getClass() == targetConverter);
   }
 
   /**
@@ -193,9 +194,9 @@ public class FormTest extends TestCase {
     // Checking that reading from request works
 
     assertEquals(testForm.getValueByFullName("myCheckBox"), Boolean.FALSE);
-    assertEquals(testForm.getValueByFullName("myLongText"), new Long(108));
+    assertEquals(testForm.getValueByFullName("myLongText"), 108L);
     assertEquals(testForm.getValueByFullName("myDateTime"), reqDate);
-    assertEquals(testForm.getValueByFullName("hierarchyTest.mySelect"), new DisplayItem("2", ""));
+    assertEquals(testForm.getValueByFullName("hierarchyTest.mySelect"), "2");
     assertEquals(testForm.getValueByFullName("hierarchyTest.myTextarea"), "blah");
 
     StringArrayRequestControl.ViewModel vm1 = ((CheckboxControl) testForm.getControlByFullName("myCheckBox")).getViewModel();
@@ -208,7 +209,7 @@ public class FormTest extends TestCase {
     assertEquals(getValue(testForm, "myCheckBox"), Boolean.FALSE);
     assertEquals(getValue(testForm, "myLongText"), 108L);
     assertEquals(getValue(testForm, "myDateTime"), reqDate);
-    assertEquals(getValue(testForm, "hierarchyTest.mySelect"), new DisplayItem("2", ""));
+    assertEquals(getValue(testForm, "hierarchyTest.mySelect"), "2");
     assertEquals(getValue(testForm, "hierarchyTest.myTextarea"), "blah");
   }
 

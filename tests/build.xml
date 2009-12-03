@@ -70,7 +70,7 @@
 		<echo message="${url}"/>
 
 		<mkdir dir="${test.reports.dir}" />
-		<junit showoutput="true" printsummary="on" haltonerror="true" haltonfailure="true">
+		<junit showoutput="true" printsummary="on" fork="yes">
 			<classpath>
 				<fileset dir="../lib/test" includes="*.jar"/>
 			</classpath>
@@ -87,7 +87,7 @@
 	<!-- 2. Running JUnit tests: -->
 	<target name="run-tests" depends="build" description="Run the junit tests">
 		<mkdir dir="${test.reports.dir}" />
-		<junit printsummary="on" fork="yes" haltonfailure="false">
+		<junit printsummary="on" fork="yes">
 			<sysproperty key="user.dir" value="${basedir}"/>
 			<classpath location="${src.build.dir}"/>
 			<classpath location="${test.build.dir}"/>
