@@ -60,4 +60,14 @@ public class MockBeanFactory implements BeanFactory {
   public String getBeanId() {
     return beanId;
   }
+
+  public boolean isPrototype(String arg0) throws NoSuchBeanDefinitionException {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  public boolean isTypeMatch(String arg0, Class arg1) throws NoSuchBeanDefinitionException {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+var Aranea = Aranea ? Aranea : {};
+
 /**
  * Functionality for popups. Requires "aranea.js" to be executed beforehand.
  * @since 1.1

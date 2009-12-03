@@ -45,9 +45,6 @@ public class DefaultExpressionEvaluationManager
 
   public Object evaluate(String attributeName, String attributeValue,
       Class classObject, PageContext pageContext) throws JspException {
-    if (log.isDebugEnabled()) {
-      log.debug("Resolving attribute value '" + attributeValue + "'.");
-    }
     return ExpressionEvaluatorManager.evaluate(attributeName, attributeValue,
         classObject, pageContext);
   }
