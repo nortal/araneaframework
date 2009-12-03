@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="build" name="aranea-blank"> 
-	<property environment="env" />
 
-	<!--Set the classpath-->
-	<path id="classpath">
-		<fileset dir="../lib" includes="**/*.jar" />
-		<fileset dir="../../lib" includes="**/*.jar" />
-		<fileset dir="../.." includes="dist/aranea.jar"/>
+	<property environment="env"/>
+
+	<property name="rootDir" value="../.."/>
+
+	<property name="lib.dir" value="${rootDir}/lib"/>
+
+	<property name="example.jar" value="../common/dist/aranea-examples-common.jar"/>
+
+	<property name="jetty.tmp.dir" value="tmp.jetty"/>
+
+	<path id="build.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar" />
+		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
+		<path path="${rootDir}/dist/aranea.jar"/>
+		<path path="${example.jar}"/>
 	</path>
-	
-	<!--Set the Jetty classpath-->
-	<path id="classpath.jetty">
-		<fileset dir="../lib/jetty" includes="*.jar" />
-		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
-		<fileset dir="${env.ANT_HOME}/lib/" includes="ant-launcher.jar" />
-		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
+
+	<path id="jetty.cp">
+		<path refid="build.cp"/>
+		<fileset dir="${lib.dir}/jetty" includes="**/*.jar"/>
 	</path>
-	
+
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
-        <delete dir="war/WEB-INF/classes" failonerror="false"/>
-        <delete dir="war/WEB-INF/lib" failonerror="false"/>	
-		<delete dir="dist" failonerror="false"/>	
+		<delete dir="war/WEB-INF/classes" failonerror="false"/>
+		<delete dir="war/WEB-INF/lib" failonerror="false"/>
+		<delete dir="dist" failonerror="false"/>
 	</target>
-	
+
 	<!-- Initialize the build system -->
 	<target name="init">
-		<mkdir dir="war/WEB-INF/classes" />
-		<mkdir dir="war/WEB-INF/lib" />		
+		<mkdir dir="war/WEB-INF/classes"/>
+		<mkdir dir="war/WEB-INF/lib" />
 	</target>
 
 	<!-- Create WAR -->
@@ -44,20 +51,11 @@
 	<!-- Build the code -->
 	<target name="build" depends="compile" description="Build the code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
-			<fileset dir="../../lib/">
-				<include name="**/*.jar" />
-				<exclude name="j2ee.jar" />
-				<exclude name="**/xdoclet*jar" />
-				<exclude name="**/xjavadoc*jar" />
-				<exclude name="**/spring-mock*jar" />
-				<exclude name="**/junit*jar" />
-				<exclude name="**/jhbasic*jar" />
-				<exclude name="**/javancss*jar" />
-				<exclude name="**/cobertura.jar" />
-				<exclude name="**/ccl.jar" />
-				<exclude name="**/asm*.jar" />
-			</fileset>
-			<fileset file="../../dist/aranea.jar"/>
+			<fileset dir="${lib.dir}/runtime/" />
+			<fileset dir="${lib.dir}/build/" excludes="servlet-api.jar" />
+			<fileset dir="${lib.dir}/demo/" />
+			<fileset file="${example.jar}" />
+			<fileset file="../../dist/aranea.jar" />
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
@@ -78,7 +76,6 @@
 			classpathref="classpath"
 		/>
 	</target>	
-		
 
 	<!-- Starts standalone server -->
 	<target name="run-app-only" description="Run in standalone container">
@@ -94,4 +91,5 @@
 	</target>
 	
 	<target name="run-app" depends="build, run-app-only" description="Build and run in standalone container"/>
+
 </project>

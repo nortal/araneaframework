@@ -797,12 +797,45 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @param ascending whether ordering should be ascending.
    */
   public void setInitialOrder(String fieldId, boolean ascending) {
+    setOrderInfo(new OrderInfo(new OrderInfoField(fieldId, ascending)));
+  }
+
+  /**
+   * Sets the initial order of the list using two columns.
+   * 
+   * @param fieldId The name of the column to order by.
+   * @param ascending Whether ordering should be ascending.
+   * @param fieldId2 The name of the column to order by.
+   * @param ascending2 Whether ordering should be ascending.
+   * @since 2.0
+   */
+  public void setInitialOrder(String fieldId, boolean ascending, String fieldId2, boolean ascending2) {
     OrderInfo orderInfo = new OrderInfo();
-    OrderInfoField orderInfoField = new OrderInfoField(fieldId, ascending);
-    orderInfo.addField(orderInfoField);
+    orderInfo.addField(new OrderInfoField(fieldId, ascending));
+    orderInfo.addField(new OrderInfoField(fieldId2, ascending2));
     setOrderInfo(orderInfo);
   }
 
+  /**
+   * Sets the initial order of the list using three columns.
+   * 
+   * @param fieldId The name of the column to order by.
+   * @param ascending Whether ordering should be ascending.
+   * @param fieldId2 The name of the second column to order by.
+   * @param ascending2 Whether the second column ordering should be ascending.
+   * @param fieldId3 The name of the third column to order by.
+   * @param ascending3 Whether the third column ordering should be ascending.
+   * @since 2.0
+   */
+  public void setInitialOrder(String fieldId, boolean ascending, String fieldId2, boolean ascending2, String fieldId3,
+      boolean ascending3) {
+    OrderInfo orderInfo = new OrderInfo();
+    orderInfo.addField(new OrderInfoField(fieldId, ascending));
+    orderInfo.addField(new OrderInfoField(fieldId2, ascending2));
+    orderInfo.addField(new OrderInfoField(fieldId3, ascending3));
+    setOrderInfo(orderInfo);
+  }
+  
   /**
    * Sets the order information to list data provider and list widget.
    * 

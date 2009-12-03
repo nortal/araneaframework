@@ -1,83 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project basedir="." default="build" name="Aranea-Examples-Common">
-	<description>
-		ANT buildfile for the common resources of Aranea Examples project.
-	</description>
-	
+
+	<description>ANT buildfile for the common resources of Aranea Examples project.</description>
+
 	<dirname property="module.basedir" file="${ant.file.Aranea-Examples-Common}"/>
-	
+
 	<!-- Project title is used in the echo statements -->
 	<property name="project.title" value="Aranea Examples common library" />
+
 	<!-- Project name is here for consistency only. Not used anywhere for now -->
 	<property name="project.name" value="Aranea Examples" />
+
 	<!-- System environment must contain variables JAVA_HOME and WL_HOME -->
 	<property environment="env" />
-	
+
 	<property name="build.dir" value="${module.basedir}/build" />
 	<property name="build.tmp.dir" value="${build.dir}/tmp" />
-	
+
 	<property name="build.classes.dir" value="${build.dir}/classes" />
 	<property name="build.jar.filename" value="aranea-examples-common.jar" />
 
 	<property name="src.dir" value="src" />
 	<property name="web.dir" value="web" />
-	
-	<!-- HSQLDB -->
-	<property name="db.file" value="templateapp" />
-	<property name="db.alias" value="templateapp" />
-	<property name="db.url"	value="jdbc:hsqldb:hsql://localhost/${db.alias}" />
-	
-	<!-- Hibernate -->
-	<property name="hibernate.mapping.dir.name" value="mapping" />	
-	
+
+	<property name="rootDir" value="../.."/>
+	<property name="lib.dir" value="${rootDir}/lib"/>
+
 	<!-- Default java classpath to build project -->
-	<path id="classpath">
-		<fileset dir="../../lib">
-			<include name="**/*.jar" />
-		</fileset>
-		<fileset dir="../lib">
-			<include name="**/xerces*.jar" />
-			<include name="**/xml-apis*.jar" />
-		</fileset>
-		<fileset dir="../..">
-			<include name="dist/**/*.jar" />
-		</fileset>
+	<path id="build.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar" />
+		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
+		<path path="${rootDir}/dist/aranea.jar"/>
 	</path>
 
-	<!-- Initializes defaults -->
-	<target name="init">
-	</target>
+	<target name="init"></target>
 
-	<!-- Compile Java -->
 	<target name="compile" depends="init" description="Compile Java">
 		<mkdir dir="${build.classes.dir}" />
-
-		<!--Compile Java source files-->
-		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" encoding="utf-8"
-			target="1.5"
-			source="1.5">
+		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" encoding="utf-8" target="1.5" source="1.5">
 			<classpath refid="classpath" />
 			<include name="**/*.java" />
 		</javac>
 	</target>
-	  
-	<!-- Build project -->
+
 	<target name="build" depends="init, compile" description="Build project">
-		
 		<mkdir dir="dist"/>
-		
-		<!--
-			Build the aranea-examples-common.jar
-		-->
+
 		<jar jarfile="dist/${build.jar.filename}" compress="true">
 			<fileset dir="${web.dir}"/>
 			<fileset dir="${module.basedir}" includes="**/*.tld"/>
 			<fileset dir="${build.classes.dir}" includes="**/*.class"/>
 		</jar>
 	</target>
-	
-	<!-- Clean project -->
+
 	<target name="clean" description="Clean project">
 		<delete dir="build" failonerror="false" />
 		<delete dir="dist" failonerror="false" />
