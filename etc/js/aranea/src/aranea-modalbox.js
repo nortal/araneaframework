@@ -33,12 +33,17 @@ Aranea.ModalBox = {
 
 	MODALBOX_CLOSE_MSG: '<!-- araOverlaySpecialResponse -->',
 
+	isOverlaySystemForm: function() {
+		var form = Aranea.Data.systemForm;
+		return form != null && $(form).match('form#aranea-overlay-form');
+	},
+
 	/**
 	 * Returns the URL for submitting to in overlay mode.
 	 * @since 1.2.1
 	 */
 	getRequestURL: function() {
-		if (Aranea.Data.systemForm.hasClassName('aranea-overlay')) {
+		if (Aranea.ModalBox.isOverlaySystemForm()) {
 			return Aranea.Data.systemForm.readAttribute('action');
 		} else {
 			return Aranea.Page.getSubmitURL({ araTransactionId: 'override', araOverlay: true });
@@ -86,8 +91,8 @@ Aranea.ModalBox = {
 	 * @param params The data from the OverlayContext.
 	 */
 	show: function(params) {
-		Aranea.Modalbox.Options = params;
-		Aranea.Modalbox.update(Aranea.Modalbox.Options);
+		Aranea.ModalBox.Options = params;
+		Aranea.ModalBox.update(Aranea.ModalBox.Options);
 	},
 
 	/**
@@ -98,7 +103,7 @@ Aranea.ModalBox = {
 	 * @since 1.2.1
 	 */
 	update: function(params) {
-		this.doRequest(Object.extend(this.Options, params), function(content) {
+		Aranea.ModalBox.doRequest(Object.extend(this.Options, params), function(content) {
 			Modalbox.show(content, Object.extend(Aranea.ModalBox.Options, params));
 			if (Prototype.Browser.IE) {
 				// Modalbox does not render well in IE without this line (Prototype bug?):
@@ -125,14 +130,15 @@ Aranea.ModalBox = {
 	 * @param transport The AJAX request transport.
 	 */
 	afterLoad: function(transport) {
-		AraneaPage.findSystemForm();
+		Aranea.Page.findSystemForm();
 		var f = function() {
-			DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(transport);
+			Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
 			if (this.isCloseOverlay(transport.responseText)) {
 				this.close();
 				this.reloadPage();
 			} else {
-				Aranea.Page.onLoad();
+				//The parameter is memo for identification of what was updated:
+				Aranea.Page.onUpdate({ type: 'overlay', transport: transport });
 			}
 		};
 		f.bind(Aranea.ModalBox).defer();
@@ -144,7 +150,7 @@ Aranea.ModalBox = {
 	 * visual implementation.
 	 */
 	afterUpdateRegionResponseProcessing: function() {
-		if (Modalbox && Aranea.Data.systemForm.hasClassName('aranea-overlay')) {
+		if (window.Modalbox && Aranea.ModalBox.isOverlaySystemForm()) {
 			Modalbox.resizeToContent(this.Options);
 		}
 	},
@@ -153,7 +159,7 @@ Aranea.ModalBox = {
 	 * Closes the overlay mode (only visually, client-side).
 	 */
 	close: function() {
-		if (Modalbox) Modalbox.hide();
+		if (window.Modalbox) Modalbox.hide();
 	},
 
 	/**
@@ -167,9 +173,9 @@ Aranea.ModalBox = {
 			Aranea.Data.systemForm.araTransactionId.value = 'inconsistent';
 		}
 		if (window.modalTransport) {
-			DefaultAraneaAJAXSubmitter.ResponseHeaderProcessor(window.modalTransport);
+			Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(window.modalTransport);
 		}
-		return new DefaultAraneaSubmitter().event_4(systemForm);
+		return Aranea.Page.submit();
 	},
 
 	/**
@@ -184,7 +190,7 @@ Aranea.ModalBox = {
 	 * @since 1.2.1
 	 */
 	closeWithAjax: function(eventId, eventTarget, eventParam) {
-		if (!Aranea.Data.systemForm.hasClassName('aranea-overlay')) {
+		if (!Aranea.ModalBox.isOverlaySystemForm()) {
 			throw("No overlay system form found. You're probably not in overlay mode (yet).");
 		} else if (!Aranea.Data.loaded) {
 			return;

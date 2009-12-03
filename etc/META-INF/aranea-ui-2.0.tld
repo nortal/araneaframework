@@ -10,6 +10,10 @@
 	<uri>http://araneaframework.org/tag-library/2.0/ui</uri>
 
 	<tag-file>
+		<name>attribute</name>
+		<path>/META-INF/tags/ui/attribute.tagx</path>
+	</tag-file>
+	<tag-file>
 		<name>basicButton</name>
 		<path>/META-INF/tags/ui/basicButton.tagx</path>
 	</tag-file>
@@ -48,6 +52,14 @@
 	<tag-file>
 		<name>dateRangeInput</name>
 		<path>/META-INF/tags/ui/dateRangeInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>element</name>
+		<path>/META-INF/tags/ui/element.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>elementContent</name>
+		<path>/META-INF/tags/ui/elementContent.tagx</path>
 	</tag-file>
 	<tag-file>
 		<name>eventButton</name>
@@ -174,6 +186,78 @@
 		<name>getUpdateRegionEnd</name>
 		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
 		<function-signature>java.lang.String getUpdateRegionEnd(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>evalCSSClass</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String evalCSSClass(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>addMapEntry</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Map addMapEntry(java.util.Map, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>pushPreviousAttributes</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Map pushPreviousAttributes(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>popPreviousAttributes</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Map popPreviousAttributes(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>setBodyAttributes</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>void setBodyAttributes(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getAcceptCharset</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getAcceptCharset(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getFormAction</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getFormAction(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>isOverlay</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>boolean isOverlay(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getHiddenFormFields</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Set getHiddenFormFields(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getFormBackgroundValidation</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>boolean getFormBackgroundValidation(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>markFormElementRendered</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>void markFormElementRendered(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>renderFormElementErrorMessages</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String renderFormElementErrorMessages(javax.servlet.jsp.JspContext)</function-signature>
 	</function>
 
 </taglib>

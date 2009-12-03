@@ -23,7 +23,7 @@ var Aranea = window.Aranea || {};
  */
 Object.extend(Aranea.Page, {
 	getAjaxUploadURL: function(element) {
-		return _ap.encodeURL(_ap.getServletURL());
+		return Aranea.Page.encodeURL(Aranea.Data.servletURL);
 	},
 	getAjaxUploadFormData: function(systemForm, element) {
 		return {
@@ -42,8 +42,8 @@ Object.extend(Aranea.Page, {
 		$$('input[type=file].ajax-upload,form#overlaySystemForm input[type=file]').each(function(element) {
 			new AjaxUpload(element, Object.extend(opts, {
 				name: element ? element.name : '',
-				action: AraneaPage.getAjaxUploadURL(element),
-				data: AraneaPage.getAjaxUploadFormData(form, element)
+				action: Aranea.Page.getAjaxUploadURL(element),
+				data: Aranea.Page.getAjaxUploadFormData(form, element)
 			}));
 			element.removeClassName('ajax-upload');
 		});
@@ -57,7 +57,7 @@ Object.extend(Aranea.Page, {
 		onChange: function(file, extension, options) {},
 		onSubmit: function(file, extension, options) {},
 		onComplete: function(file, responseText, failMsg, options) {
-			_ap.debug('File upload completed. File="' + file + '"; response="' + responseText + '".');
+			Aranea.Logger.debug('File upload completed. File="' + file + '"; response="' + responseText + '".');
 			if (responseText == 'OK') {
 				// Hides the file input and shows a link instead with the file name. Once the link
 				// is clicked, the link will be removed and the file input will be shown again.

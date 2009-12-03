@@ -69,7 +69,7 @@ Aranea.Behaviour = {
 	formElementValidationActionCall: function(event) {
 		// element serialization here is crucial, otherwise multi-valued controls only submit the most recent value:
 		Aranea.Page.action(Aranea.Behaviour.ACTION_BG_VALIDATE, event.element().id, null, event.element().serialize(),
-				function(transport) { Aranea.Page.processResponse(transport.responseText); });
+				function(transport) { Aranea.Page.Submitter.AJAX.processResponse(transport.responseText); });
 	},
 
 	/** @since 1.1 */
@@ -92,9 +92,9 @@ Aranea.Behaviour = {
 			return;
 		}
 
-		var eventId = Aranea.Page.Attribute.getEventId(element);
-		var eventParam = Aranea.Page.Attribute.getEventParam(element);
-		var eventTarget = Aranea.Page.Attribute.getEventTarget(element);
+		var eventId = Aranea.Page.Parameter.getEventId(element);
+		var eventParam = Aranea.Page.Parameter.getEventParam(element);
+		var eventTarget = Aranea.Page.Parameter.getEventTarget(element);
 
 		var params = {
 			araPleaseClone: true,
@@ -116,7 +116,7 @@ Aranea.Behaviour = {
 	applyCharacterFilter: function(element) {
 		var filter = element.readAttribute(Aranea.Behaviour.ATTR_FILTER);
 		if (filter && !element.getStorage().get(Aranea.Behaviour.ATTACHED_FILTER)) {
-			Event.observe(element, 'keydown', Aranea.Keyboard.getKeyboardInputFilterFunction(filter));
+			Event.observe(element, 'keypress', Aranea.Keyboard.getKeyboardInputFilterFunction(filter));
 			element.getStorage().set(Aranea.Behaviour.ATTACHED_FILTER, true);
 		}
 	},
@@ -165,9 +165,9 @@ Aranea.Behaviour = {
 	 */
 	getAutoCompleteURL: function(name) {
 		return Aranea.Page.getSubmitURL({
-			araTopServiceId: Aranea.Page.Attribute.getTopServiceId(),
-			araThreadServiceId: Aranea.Page.Attribute.getThreadServiceId(),
-			araTransactonId: Aranea.Page.Attribute.getTransactionId(),
+			araTopServiceId: Aranea.Page.Parameter.getTopServiceId(Aranea.Data.systemForm),
+			araThreadServiceId: Aranea.Page.Parameter.getThreadServiceId(Aranea.Data.systemForm),
+			araTransactonId: Aranea.Page.Parameter.getTransactionId(Aranea.Data.systemForm),
 			araServiceActionPath: name,
 			araServiceActionHandler: 'autocomplete'
 		});
@@ -190,14 +190,22 @@ Aranea.Behaviour = {
 			});
 		}
 
-		var init = function() {
+		var init = function(event) {
+			if (!$(name) || $(name).getStorage().get('autocompleteSetupDone')) {
+				Event.stopObserving(this, 'aranea:loaded', this);
+				Event.stopObserving(this, 'aranea:updated', this);
+				return;
+			}
+
 			window.setTimeout(function() {
 				var url = Aranea.Behaviour.getAutoCompleteURL(name);
 				new Ajax.Autocompleter(name, 'ACdiv.' + name, url, options);
+				$(name).getStorage().set('autocompleteSetupDone', true);
 			});
 		};
 
 		document.observe('aranea:loaded', init);
+		document.observe('aranea:updated', init);
 	}
 };
 document.observe('aranea:loaded', Aranea.Behaviour.apply);

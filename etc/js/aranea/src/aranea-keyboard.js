@@ -214,7 +214,6 @@ Aranea.Keyboard = {
 		Aranea.Logger.debug([event.type,' detected! [event.charCode=',event.charCode,', event.keyCode=',event.keyCode,
 			', ctrlKey=',event.ctrlKey,', altKey=',event.altKey,', kev.metaKey=',event.metaKey,']'].join(''));
 
-		var keyCode = event.charCode ? event.charCode : event.keyCode;
 
 		var result = true;
 		result = result && (filter.shift == null || filter.shift == event.shiftKey);
@@ -223,18 +222,38 @@ Aranea.Keyboard = {
 		result = result && (filter.meta == null || filter.meta == event.metaKey);
 
 		if (filter.keyCode) {
-			result = result && filter.keyCode == keyCode;
+			result = result && filter.keyCode == event.keyCode;
 		} else if (filter.key)  {
+			var charCode = event.charCode ? event.charCode : null;
 			if (Aranea.Keyboard.SPECIAL_KEYS[filter.key]) {
 				result = result && event.keyCode == Aranea.Keyboard.SPECIAL_KEYS[filter.key];
 			} else {
-				result = result && filter.key == String.fromCharCode(keyCode);
+				result = result && filter.key == String.fromCharCode(charCode);
 			}
 		}
 
 		Aranea.Logger.debug('Was the keypress the one expected ("' + filter + '"): ' + result);
 
 		return result;
+	},
+
+	/**
+	 * Returns the function that stops received keyboard event propagation if the input was not allowed by filter.
+	 * @since 1.0.11
+	 */
+	getKeyboardInputFilterFunction: function(filter) {
+		return function(event) {
+			Aranea.Logger.debug([event.type,' detected! [event.charCode=',event.charCode,', event.keyCode=',event.keyCode,
+				', ctrlKey=',event.ctrlKey,', altKey=',event.altKey,', kev.metaKey=',event.metaKey,']'].join(''));
+
+			var char = String.fromCharCode(event.charCode ? event.charCode : event.keyCode);
+
+			if (char) {
+				if (filter.indexOf(char) >= 0) {
+					event.stop();
+				}
+			}
+		};
 	},
 
 	/** 

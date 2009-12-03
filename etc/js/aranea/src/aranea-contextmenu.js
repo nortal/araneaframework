@@ -32,8 +32,8 @@ Aranea.ContextMenu = Class.create({
 
 	buildMenu: function(widgetId) {
 		var node = new Element('div', {'class': 'aranea-contextmenu-class'});
-		menu = this.contextMenuHolder.getMenus()[widgetId];
-		return node.update(this.buildMenu(menu));
+		var menu = this.contextMenuHolder.getMenus()[widgetId];
+		return node.update(Aranea.ContextMenu.HTMLBuilder.buildMenu(menu));
 	},
 	
 	acquireWidgetId: function(triggeredElement) {
@@ -57,16 +57,13 @@ Aranea.ContextMenu = Class.create({
 		var r = this.buildMenu(widgetId);
 		r.setStyle({ left: event.pointerX() + 'px', top: event.pointerY() + 'px' });
 
-		var div = this.createMenuDIV();
-		div.appendChild(r);
-		div.show();
-
+		Aranea.ContextMenu.HTMLBuilder.createMenuDIV().insert(r).show();
 		event.stop();
 	},
 
 	hide: function(event) {
 		// if event occurred in context menu itself, menu should be cleared by its own handlers
-		var menu = $(this.MENU_DIV_ID);
+		var menu = $(Aranea.ContextMenu.HTMLBuilder.MENU_DIV_ID);
 
 		if (menu) {
 			if (event && event.element().descendantOf(menu)) {
@@ -98,15 +95,15 @@ Object.extend(Aranea.ContextMenu, {
 
 		COMBO_TEMPLATE: new Template('<li class="sub"><a href="javascript:;">#{label}</a><ul>#{subresult}</ul></li>'),
 
-		EVENT_TEMPLATE: new Template('Aranea.Page.event(\'#{id}\', \'#{target}\', #{param}, null, #{updateRegions}); araneaContextMenu.hide();'),
+		EVENT_TEMPLATE: new Template("Aranea.Page.event('#{id}', '#{target}', #{param}, null, #{updateRegions}); Aranea.Data.contextMenu.hide();"),
 
-		ACTION_TEMPLATE: new Template('Aranea.Page.action(\'#{id}\', \'#{target}\', #{param}, #{actionCallback}, function() {}, null); araneaContextMenu.hide();'),
+		ACTION_TEMPLATE: new Template("Aranea.Page.action('#{id}', '#{target}', #{param}, null, #{actionCallback}); Aranea.Data.contextMenu.hide();"),
 
 		createMenuDIV: function() {
 			var node = $(this.MENU_DIV_ID);
 			if (!node) {
 				node = new Element('div', {'id': this.MENU_DIV_ID });
-				$(document.body).append(node.hide());
+				$(document.body).insert(node.hide());
 			}
 			return node;
 		},
@@ -117,7 +114,7 @@ Object.extend(Aranea.ContextMenu, {
 				if (menu.submenu && menu.submenu.length > 0) {
 					menu.subresult = '';
 					$A(menu.submenu).each(function(entry) {
-						menu.subresult = menu.subresult + this.buildMenu(entry);
+						menu.subresult = menu.subresult + Aranea.ContextMenu.HTMLBuilder.buildMenu(entry);
 					});
 					return this.COMBO_TEMPLATE.evaluate(menu);
 				} else {
@@ -132,7 +129,7 @@ Object.extend(Aranea.ContextMenu, {
 
 			var content = '';
 			$A(menu.submenu).each(function(entry) {
-				content = content + this.buildMenu(entry);
+				content = content + Aranea.ContextMenu.HTMLBuilder.buildMenu(entry);
 			});
 			return this.MENU_TEMPLATE.evaluate({ result : content });
 		}
@@ -175,5 +172,5 @@ Object.extend(Aranea.ContextMenu, {
 Aranea.Data.contextMenuHolder = new Aranea.ContextMenu.Holder();
 Aranea.Data.contextMenu = new Aranea.ContextMenu(Aranea.Data.contextMenuHolder);
 
-Event.observe(document, 'contextmenu', Aranea.Data.contextMenu.show.bindAsEventListener(Aranea.Data.contextMenu));
-Event.observe(document, 'mousedown', Aranea.Data.contextMenu.hide.bindAsEventListener(Aranea.Data.contextMenu));
+document.observe('contextmenu', Aranea.Data.contextMenu.show.bindAsEventListener(Aranea.Data.contextMenu));
+document.observe('mousedown', Aranea.Data.contextMenu.hide.bindAsEventListener(Aranea.Data.contextMenu));

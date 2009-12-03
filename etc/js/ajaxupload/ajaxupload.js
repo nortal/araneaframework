@@ -217,7 +217,7 @@ var AjaxUpload = Class.create({
 				doc.body.innerHTML = '';
 			}
 
-			_ap.debug('File upload iframe onload - content: "'
+			Aranea.Logger.debug('File upload iframe onload - content: "'
 					+ (content ? content.substring(0, 80) : content)
 					+ (content && content.length > 80 ? '...' : '')
 					+ '" (length: ' + content.length + ')');

@@ -178,43 +178,22 @@
 	</target>
 
 	<target name="js" description="Compresses aranea*.js JavaScript files">
-		<condition property="suffix" value=".exe" else="">
-			<os family="windows"/>
-		</condition>
-		<chmod file="${basedir}/etc/js/cruncher/js${suffix}" perm="u+rx"/>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea.js aranea.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-ajaxupload.js aranea-ajaxupload.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-behaviour.js aranea-behaviour.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-contextmenu.js aranea-contextmenu.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-keyboard.js aranea-keyboard.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-modalbox.js aranea-modalbox.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-popups.js aranea-popups.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-rsh.js aranea-rsh.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-tree.js aranea-tree.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-ui.js aranea-ui.js"/>
-		</exec>
-		<exec executable="${basedir}/etc/js/cruncher/js${suffix}" dir="etc/js/aranea/">
-			<arg line="src/aranea-util.js aranea-util.js"/>
-		</exec>
+		<property name="jsmin.loc" location="etc/jsutil/JSMin.jar"/>
+
+		<java jar="${jsmin.loc}" dir="etc/js/aranea/" fork="true">
+			<arg line="${basedir}/etc/js/aranea"/> <!-- The target dir where minified files will be placed. -->
+			<arg line="src/aranea.js"/>
+			<arg line="src/aranea-ajaxupload.js"/>
+			<arg line="src/aranea-behaviour.js"/>
+			<arg line="src/aranea-contextmenu.js"/>
+			<arg line="src/aranea-keyboard.js"/>
+			<arg line="src/aranea-modalbox.js"/>
+			<arg line="src/aranea-popups.js"/>
+			<arg line="src/aranea-rsh.js"/>
+			<arg line="src/aranea-tree.js"/>
+			<arg line="src/aranea-ui.js"/>
+			<arg line="src/aranea-util.js"/>
+		</java>
 	</target>
 
 	<target name="jar" depends="transform-tld,js,compile,make-manifest" description="Builds Aranea JAR file">

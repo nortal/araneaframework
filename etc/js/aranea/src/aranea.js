@@ -26,8 +26,6 @@
  */
 var Aranea = window.Aranea || {};
 
-/* THIS IS OVERRIDE! */
-
 /**
  * Dummy implementation of logger. If you want to actually use logging then also include aranea-util.js after this file.
  * @since 2.0
@@ -201,7 +199,7 @@ Aranea.Page = {
 	 * @return Always false.
 	 */
 	event: function() {
-		return invokeEvent(null, arguments);
+		return Aranea.Page.invokeEvent(null, arguments);
 	},
 
 	/**
@@ -223,26 +221,26 @@ Aranea.Page = {
 	 * @return Always false.
 	 */
 	ajax: function() {
-		return invokeEvent(Aranea.Page.Submitter.TYPE_AJAX, arguments);
+		return Aranea.Page.invokeEvent(Aranea.Page.Submitter.TYPE_AJAX, arguments);
 	},
 
 	overlayAjax: function() {
-		return invokeEvent(Aranea.Page.Submitter.TYPE_OVERLAY, arguments);
+		return Aranea.Page.invokeEvent(Aranea.Page.Submitter.TYPE_OVERLAY, arguments);
 	},
 
 	submit: function() {
-		return invokeEvent(Aranea.Page.Submitter.TYPE_PLAIN, arguments);
+		return Aranea.Page.invokeEvent(Aranea.Page.Submitter.TYPE_PLAIN, arguments);
 	},
 
 	invokeEvent: function(type, args) {
 		try {
-			if (Aranea.Data.submitted || !Aranea.Data.loaded) {
+			if (!Aranea.Data.submitted && Aranea.Data.loaded) {
 				var data = Aranea.Page.Parameter.getEventData(type, args);
 
 				if (data.preconditionFailed) {
-					Aranea.Page.Logger.debug('Request cancelled because event precondition returned false.');
+					Aranea.Logger.debug('Request cancelled because event precondition returned false.');
 				} else {
-					result = this.findSubmitter(data).event(data) || result;
+					this.findSubmitter(data).event(data);
 				}
 			}
 		} catch (e) {
@@ -408,7 +406,7 @@ Aranea.Page = {
 	 * Searches for widget marker around the given element. If found, returns the marker DOM element, else returns null.
 	 */
 	findWidgetMarker: function(element) {
-		$(element).up('.widgetMarker');
+		return $(element).up('.widgetMarker');
 	},
 
 	/**
@@ -618,13 +616,9 @@ Aranea.Page.Request = {
 			Aranea.Page.showLoadingMessage();
 		}
 
-		if (data.type != Aranea.Page.Submitter.TYPE_PLAIN) {
-			// Copy the content of rich editors to corresponding HTML text-inputs/text-areas.
-			if (window.tinyMCE) {
-				window.tinyMCE.triggerSave();
-			}
-		} else {
-			Aranea.Page.unload(data);
+		// Copy the content of rich editors to corresponding HTML text-inputs/text-areas.
+		if (window.tinyMCE) {
+			window.tinyMCE.triggerSave();
 		}
 	},
 
@@ -742,7 +736,7 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 			var logmsg = ['Partial rendering: received successful response (', transport.responseText.length,
 				' characters): ', transport.status, ' ', transport.statusText].join('');
 			Aranea.Logger.debug(logmsg);
-			Aranea.Page.processResponse(transport.responseText);
+			Aranea.Page.Submitter.AJAX.processResponse(transport.responseText);
 		} else {
 			var logmsg = ['Partial rendering: received erroneous response (', transport.responseText.length,
 				' characters): ', transport.status, transport.statusText].join('');
@@ -843,7 +837,7 @@ Object.extend(Aranea.Page.Submitter.AJAX, {
 		var log = Aranea.Logger;
 		var handlers = Aranea.Data.regionHandlers;
 
-		new Aranea.Util.AjaxResponse(responseText).each(function(key, content, length) {
+		new Aranea.Util.AjaxResponse(responseText, true).each(function(key, content, length) {
 			counter[key] = counter[key] ? counter[key]++ : 1;
 			if (handlers.get(key)) {
 				log.debug('Region type: "' + key + '" (' + length + ' characters)');
@@ -893,7 +887,7 @@ Aranea.Page.RegionHandler = {
 
 		process: function(content) {
 			var text = new Aranea.Util.AjaxResponse(content);
-			var length = text.readLine();
+			var length = parseInt(text.readLine());
 			var properties = text.readCharacters(length).evalJSON();
 
 			var id = properties.id;
@@ -994,12 +988,12 @@ Aranea.Page.RegionHandler = {
 
 		process: function(content) {
 			this.openPopups(content.evalJSON());
-			document.observe('aranea:loaded', Aranea.Popups.processPopups);
+			document.observe('aranea:loaded', Aranea.Popup.processPopups);
 		},
 
 		openPopups: function(popups) {
 			popups.each(function(popup) {
-				Aranea.Popups.addPopup(popup.popupId, popup.windowProperties, popup.url);
+				Aranea.Popup.addPopup(popup.popupId, popup.windowProperties, popup.url);
 			});
 		}
 	},
@@ -1107,21 +1101,21 @@ Aranea.Page.Parameter = {
 				type: String.interpret(type),
 				eventId: String.interpret(this.getArrayVal(args,0)),
 				widgetId: String.interpret(this.getArrayVal(args,1)),
-				eventParam: String.interpret(this.getArrayVal(args,2)),
-				eventCondition: String.interpret(this.getArrayVal(args,3)),
-				eventUpdateRgns: String.interpret(this.getArrayVal(args,4)),
+				eventParam: this.getArrayVal(args,2),
+				eventCondition: this.getArrayVal(args,3),
+				eventUpdateRgns: this.getArrayVal(args,4),
 				form: this.getArrayVal(args,5)
 			};
 		} else if (args.length >= 1 && !Object.isString(args[0])) {
-			args = args[0];
+			var elem = args[0];
 			data = {
 				type: String.interpret(type),
-				form: Aranea.Page.findSystemForm(args),
-				widgetId: this.getEventTarget(args),
-				eventId: this.getEventId(args),
-				eventParam: this.getEventParam(args),
-				eventUpdateRgns: Object.isString(args.last()) ? args.last() : this.getEventUpdateRegions(args),
-				eventCondition: this.getEventPreCondition(args)
+				form: Aranea.Page.findSystemForm(elem),
+				widgetId: this.getEventTarget(elem),
+				eventId: this.getEventId(elem),
+				eventParam: this.getEventParam(elem),
+				eventUpdateRgns: Object.isString(args.last()) ? args.last() : this.getEventUpdateRegions(elem),
+				eventCondition: this.getEventPreCondition(elem)
 			};
 		} else if (args == null || args.length == 0) {
 			data = {
@@ -1134,9 +1128,9 @@ Aranea.Page.Parameter = {
 			throw('Creating event data: Could not create event data set based on given input.')
 		}
 
-		data.isSubmitAllowed = Aranea.Page.Request.isSubmitAllowed.methodize();
-		data.beforeRequest = Aranea.Page.Request.beforeSubmit.methodize();
-		data.afterRequest = Aranea.Page.Request.afterSubmit.methodize();
+		data.isSubmitAllowed = Aranea.Page.Request.isAllowed.methodize();
+		data.beforeRequest = Aranea.Page.Request.before.methodize();
+		data.afterRequest = Aranea.Page.Request.after.methodize();
 
 		this.evaluateEventData(data);
 		return data;
@@ -1150,7 +1144,7 @@ Aranea.Page.Parameter = {
 			} else if (Object.isString(data.eventCondition) && data.eventCondition.length > 0) {
 				cancel = new Function(data.eventCondition).call() == false;
 			}
-			data.preconditionFailed = !cancel;
+			data.preconditionFailed = cancel;
 		}
 
 		if (!data.preconditionFailed) {
@@ -1170,7 +1164,7 @@ Aranea.Page.Parameter = {
 
 	evaluateRequestType: function(data) {
 		var type = Aranea.Page.Submitter.TYPE_PLAIN;
-		if (data.form.className == 'aranea-overlay-form') {
+		if (data.form.id == 'aranea-overlay-form') {
 			type = Aranea.Page.Submitter.TYPE_OVERLAY;
 		} else if (data.eventUpdateRgns) {
 			type = Aranea.Page.Submitter.TYPE_AJAX;

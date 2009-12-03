@@ -129,10 +129,12 @@ Aranea.Util = {
 	 */
 	AjaxResponse: Class.create({
 
-		initialize: function(text) {
+		initialize: function(text, readResponseId) {
 			this.pos = 0;
 			this.text = text;
-			this.responseId = this.readLine();
+			if (readResponseId) {
+				this.responseId = this.readLine();
+			}
 		},
 
 		readLine: function() {
