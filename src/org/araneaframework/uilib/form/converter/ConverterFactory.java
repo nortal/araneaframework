@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,60 +12,81 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+**/
 
 package org.araneaframework.uilib.form.converter;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
-import org.araneaframework.uilib.support.DataType;
-import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * This class is a Factory pattern implementation, that provides methods to make
  * {@link org.araneaframework.uilib.form.FormElement}s and {@link org.araneaframework.uilib.form.converter.BaseConverter}s.
  * 
- * @author Jevgeni Kabanov (ekabanov@araneaframework.org) 
+ * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org) 
  */
-@SuppressWarnings("unchecked")
 public class ConverterFactory implements ConverterProvider {
+
+  private static final long serialVersionUID = 1L;
 
   /** @since 1.1 */
   public static final ConverterProvider DEFAULT_CONVERTER_FACTORY = new ConverterFactory();
 
-  protected final Map<ConverterKey<Class<?>, Class<?>>, Converter<?, ?>> converters = new HashMap<ConverterKey<Class<?>, Class<?>>, Converter<?, ?>>();
+  protected final Map converters = new HashMap();
 
   protected ConverterFactory() {
-    // String to a number:
-    addConverter(String.class, Integer.class, new StringToNumberConverter<Integer>(Integer.class));
-    addConverter(String.class, Long.class, new StringToNumberConverter<Long>(Long.class));
-    addConverter(String.class, BigInteger.class, new StringToNumberConverter<BigInteger>(BigInteger.class));
-    addConverter(String.class, Float.class, new StringToNumberConverter<Float>(Float.class));
-    addConverter(String.class, Double.class, new StringToNumberConverter<Double>(Double.class));
-    addConverter(String.class, BigDecimal.class, new StringToNumberConverter<BigDecimal>(BigDecimal.class));
+    // String -> Type
+    converters.put(new ConverterKey("String", "Boolean"),
+    new StringToBooleanConverter());
+    converters.put(new ConverterKey("String", "Long"),
+    new StringToLongConverter());
+    converters.put(new ConverterKey("String", "Integer"),
+    new StringToIntegerConverter());
+    converters.put(new ConverterKey("String", "BigDecimal"),
+    new StringToBigDecimalConverter());
+    converters.put(new ConverterKey("BigDecimal", "Float"),
+    new BigDecimalToFloatConverter());
+    converters.put(new ConverterKey("BigDecimal", "Double"),
+    new BigDecimalToDoubleConverter());
+    converters.put(new ConverterKey("BigInteger", "Long"),
+    new BigIntegerToLongConverter());
+    converters.put(new ConverterKey("BigInteger", "Integer"),
+    new BigIntegerToIntegerConverter());
 
-    addConverter(String.class, Boolean.class, new StringToBooleanConverter());
-    addConverter(Boolean.class, Long.class, new BooleanToLongConverter());
-    addConverter(Boolean.class, String.class, new BooleanToYNConverter());
+    // List<String> -> List<Type>
+    converters.put(new ConverterKey("List<String>", "List"),
+    new ListConverter(new IdenticalConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Boolean>"),
+    new ListConverter(new StringToBooleanConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Boolean>"),
+    new ListConverter(new StringToBooleanConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Long>"),
+    new ListConverter(new StringToLongConverter()));
+    converters.put(new ConverterKey("List<String>", "List<Integer>"),
+    new ListConverter(new StringToIntegerConverter()));
+    converters.put(new ConverterKey("List<String>", "List<BigDecimal>"),
+    new ListConverter(new StringToBigDecimalConverter()));
 
-    addConverter(BigDecimal.class, Float.class, new BigDecimalToFloatConverter());
-    addConverter(BigDecimal.class, Double.class, new BigDecimalToDoubleConverter());
-    addConverter(BigInteger.class, Long.class, new BigIntegerToLongConverter());
-    addConverter(BigInteger.class, Integer.class, new BigIntegerToIntegerConverter());
+    // Boolean -> Type
+    converters.put(new ConverterKey("Boolean", "String"), new ReverseConverter(
+    new StringToBooleanConverter()));
+    converters.put(new ConverterKey("Boolean", "Long"),
+    new BooleanToLongConverter());
+    converters.put(new ConverterKey("Boolean", "YN"),
+    new BooleanToYNConverter());
 
-    addConverter(Timestamp.class, Date.class, new TimestampToDateConverter());
-  }
+    // Date -> Type
+    converters.put(new ConverterKey("Timestamp", "Date"),
+    new TimestampToDateConverter());
 
-  private <S, D> void addConverter(Class<?> source, Class<?> dest, Converter<?, ?> converter) {
-    this.converters.put(new ConverterKey(source, dest), converter);
+    // Long -> Type
+    converters.put(new ConverterKey("Long", "Boolean"), new ReverseConverter(
+    new BooleanToLongConverter()));
   }
 
   /**
@@ -77,40 +98,36 @@ public class ConverterFactory implements ConverterProvider {
    * @return {@link BaseConverter}corresponding to the types given.
    * @throws ConverterNotFoundException if {@link BaseConverter}is not found
    */
-  public Converter findConverter(DataType fromType, DataType toType) throws ConverterNotFoundException {
-    if (fromType == null || toType == null) {
+  public Converter findConverter(String fromType, String toType, Environment env)
+      throws ConverterNotFoundException {
+    if (fromType == null || toType == null)
       throw new ConverterNotFoundException(fromType, toType);
-    }
-
-    ConverterKey<?, ?> key = new ConverterKey(fromType.getType(), toType.getType());
-    ConverterKey<?, ?> keyReverse = new ConverterKey(toType.getType(), fromType.getType());
-
-    if (fromType.equals(toType) || fromType.getType().equals(Object.class) || toType.equals(Object.class)) {
+    if (fromType.equals(toType)) {
       return new IdenticalConverter();
-
-    } else if (this.converters.containsKey(key)) {
-      return addWrappers(fromType, toType, this.converters.get(key));
-
-    } else if (this.converters.containsKey(keyReverse)) {
-      return addWrappers(fromType, toType, this.converters.get(keyReverse));
-
+    } else if ("Object".equals(fromType) || "Object".equals(toType)) {
+      return new IdenticalConverter();
     } else {
-      throw new ConverterNotFoundException(fromType, toType);
+      Converter result = ((Converter) converters.get(new ConverterKey(fromType,
+      toType)));
+      if (result == null)
+    throw new ConverterNotFoundException(fromType, toType);
+      return result.newConverter();
     }
-  }
-
-  private Converter<?, ?> addWrappers(DataType fromType, DataType toType, Converter<?, ?> converter) {
-    return fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
   }
 
   /**
-   * Returns an instance of a <code>ConverterFactory</code>. This method is here to simplify the configuration of the
-   * <code>ConverterFactory</code> in future.
+   * Returns an instance of a <code>ConverterFactory</code>. This method is here
+   * to simplify the configuration of the <code>ConverterFactory</code> in
+   * future.
    * 
    * @return an instance of a <code>ConverterFactory</code>.
    */
-  public static ConverterProvider getInstance(ConfigurationContext conf) {
-    ConverterProvider provider = ConfigurationUtil.getCustomConverterProvider(conf);
-    return provider == null ? DEFAULT_CONVERTER_FACTORY : provider;
+  public static ConverterProvider getInstance(ConfigurationContext configuration) {
+    ConverterProvider confConverterProvider = (ConverterProvider) configuration
+    .getEntry(ConfigurationContext.CUSTOM_CONVERTER_PROVIDER);
+    if (confConverterProvider == null) {
+      confConverterProvider = DEFAULT_CONVERTER_FACTORY;
+    }
+    return confConverterProvider;
   }
 }

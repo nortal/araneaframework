@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib;
 
-import org.araneaframework.uilib.support.DataType;
 
 /**
  * This exception is thrown when the {@link org.araneaframework.uilib.form.converter.BaseConverter} 
@@ -35,7 +34,7 @@ public class ConverterNotFoundException extends Exception {
    * @param fromType the source type of the {@link org.araneaframework.uilib.form.converter.BaseConverter}.
    * @param toType the target type of the {@link org.araneaframework.uilib.form.converter.BaseConverter}.
    */
-  public ConverterNotFoundException(DataType fromType, DataType toType) {
+  public ConverterNotFoundException(String fromType, String toType) {
     super("Could not find a Converter from type '" + fromType + "' to type '" + toType + "'.");
   }
 }
