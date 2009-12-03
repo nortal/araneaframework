@@ -50,24 +50,16 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   private FormWidget buildForm() {
     this.form = new FormWidget();
 
-    this.form.addElement("textbox1", form.createElement("common.Textbox",
-        new TextControl(), new StringData(), false));
-    this.form.addElement("checkbox1", "Checkbox", new CheckboxControl(),
-        new BooleanData(), false);
-    this.form.addElement("dateTime", "common.datetime", new DateTimeControl(),
-        new DateData(), false);
-    this.form.addElement("date", "common.date", new DateControl(),
-        new DateData(), false);
-    this.form.addElement("number", "common.float", new FloatControl(),
-        new BigDecimalData(), false);
-    this.form.addElement("upload", "common.file", new FileUploadControl(),
-        new FileInfoData(), false);
-
+    this.form.addElement("textbox1", form.createElement("common.Textbox", new TextControl(), new StringData(), false));
+    this.form.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
+    this.form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
+    this.form.addElement("date", "common.date", new DateControl(), new DateData(), false);
+    this.form.addElement("number", "common.float", new FloatControl(), new BigDecimalData(), false);
+    this.form.addElement("upload", "common.file", new FileUploadControl(), new FileInfoData(), false);
 
     // Require the number input field to be filled. It could have been achieved
     // already on formelement creation by setting mandatory attribute to true.
     this.form.getElement("number").setConstraint(new NotEmptyConstraint());
-
 
     // Sets initial value of the form element:
     this.form.setValueByFullName("dateTime", DateUtils.truncate(new Date(),
@@ -90,12 +82,14 @@ public class ModalDialogDemoWidget extends TemplateBaseWidget {
   }
 
   public void handleEventTestSimpleForm() throws Exception {
-    this.form.convertAndValidate();
+    if (this.form.convertAndValidate()) {
+      getMessageCtx().showInfoMessage("DATE: " + this.form.getValueByFullName("date"));
+      getMessageCtx().showInfoMessage("DATE-TIME: " + this.form.getValueByFullName("dateTime"));
+    }
   }
 
   public void handleEventNextFlowOverlay() throws Exception {
-    getOverlayCtx().start(
-        new OverlayRootWidget(new ModalDialogDemoWidget(true)));
+    getOverlayCtx().start(new OverlayRootWidget(new ModalDialogDemoWidget(true)));
   }
 
   public void handleEventNextFlow() throws Exception {
