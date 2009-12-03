@@ -16,8 +16,6 @@
 
 package org.araneaframework.example.main.web.management.company;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
 
@@ -27,8 +25,6 @@ import org.araneaframework.example.main.business.model.CompanyMO;
  * @author Rein Raudjärv <reinra@ut.ee>*
  */
 public class CompanyViewWidget extends TemplateBaseWidget {
-
-  private static final Log LOG = LogFactory.getLog(CompanyViewWidget.class);
 
   private Long id = null;
 
@@ -41,9 +37,8 @@ public class CompanyViewWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("company/companyView");
-    LOG.debug("TemplateCompanyViewWidget init called");
-    putViewData("company", getCompanyDAO().getById(CompanyMO.class, id));
+    setViewSelector("management/company/companyView");
+    putViewData("company", getGeneralDAO().getById(CompanyMO.class, id));
   }
 
   public void handleEventReturn() throws Exception {

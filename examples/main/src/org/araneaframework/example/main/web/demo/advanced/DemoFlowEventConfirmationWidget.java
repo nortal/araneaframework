@@ -58,9 +58,8 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
   }
 
   private void registerCancelConfirmationHandler() {
-    getFlowCtx().setTransitionHandler(
-        new CancelConfirmingTransitionHandler(new UnsavedFlowDataPredicate(), "Form contains unsaved data. Continue?",
-            true));
+    getFlowCtx().setTransitionHandler(new CancelConfirmingTransitionHandler(
+        new UnsavedFlowDataPredicate(), "Form contains unsaved data. Continue?", true));
   }
 
   /**
@@ -68,13 +67,13 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
    */
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/flowEventConfirm");
+    setViewSelector("demo/advanced/flowEventConfirm");
 
     registerCancelConfirmationHandler();
 
     this.form = new FormWidget();
     this.form.addElement("textbox1", "common.Textbox", new TextControl(), new StringData(), false);
-    this.form.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
+    this.form.addElement("checkbox1", "common.Checkbox", new CheckboxControl(), new BooleanData(), false);
     this.form.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
     this.form.addElement("time", "common.time", new TimeControl(), new DateData(), false);
     this.form.addElement("date", "common.date", new DateControl(), new DateData(), false);
@@ -86,13 +85,14 @@ public class DemoFlowEventConfirmationWidget extends TemplateBaseWidget {
 
     // Sets initial value of form element:
     this.form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));
+    this.form.setValueByFullName("checkbox1", false);
 
     // Now we construct a button, that is also Control. Reason why we cannot just add it to form is obvious, we want to
     // add a specific listener to button before.
     ButtonControl button = new ButtonControl(new ProxyOnClickEventListener(this, "testSimpleForm"));
 
     // add the button to form. As the button does not hold any value, Data will be null.
-    this.form.addElement("button", "common.Submit", button);
+    this.form.addElement("button", "button.submit", button);
 
     this.form.markBaseState();
 

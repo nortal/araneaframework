@@ -24,35 +24,27 @@ import org.araneaframework.uilib.form.data.LongData;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * Simple form component. A form with one checkbox, one textbox and a button.
- * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class DemoDisplayForm extends TemplateBaseWidget {
 
-  private FormWidget displayForm;
+  private FormWidget displayForm = new FormWidget();
 
   /**
    * Builds the form with one checkbox, one textbox and a button.
    */
   @Override
   public void init() throws Exception {
-    setViewSelector("demo/demoDisplayForm");
+    setViewSelector("demo/formlist/displayForm");
 
-    this.displayForm = new FormWidget();
+    this.displayForm.addElement("condDisplay", "displayForm.condition", new DisplayControl(), new BooleanData());
+    this.displayForm.addElement("textDisplay", "displayForm.text", new DisplayControl(), new StringData());
+    this.displayForm.addElement("valueDisplay", "displayForm.value", new DisplayControl(), new LongData());
 
-    this.displayForm.addElement("condDisplay", "#Condition", new DisplayControl(), new BooleanData());
-    this.displayForm.addElement("textDisplay", "#Text", new DisplayControl(), new StringData());
-    this.displayForm.addElement("valueDisplay", "#Value", new DisplayControl(), new LongData());
-
-    this.displayForm.setValueByFullName("condDisplay", Boolean.TRUE);
+    this.displayForm.setValueByFullName("condDisplay", true);
     this.displayForm.setValueByFullName("textDisplay", "Test string");
     this.displayForm.setValueByFullName("valueDisplay", 11L);
 
     addWidget("displayForm", this.displayForm);
-  }
-
-  public void handleEventReturn() throws Exception {
-    getFlowCtx().cancel();
   }
 }

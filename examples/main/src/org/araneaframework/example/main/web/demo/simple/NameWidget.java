@@ -42,7 +42,7 @@ public class NameWidget extends TemplateBaseWidget {
       getFlowCtx().finish("Goo");
     }
 
-    setViewSelector("sample/nameForm");
+    setViewSelector("demo/simple/nameForm");
 
     this.form = new FormWidget();
     this.form.addElement("name", "#Enter your name", new TextControl(), new StringData(), true);

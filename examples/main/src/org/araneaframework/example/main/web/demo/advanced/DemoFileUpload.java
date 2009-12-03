@@ -43,6 +43,9 @@ import org.araneaframework.uilib.support.FileInfo;
  */
 public class DemoFileUpload extends TemplateBaseWidget {
 
+  private static final String FILE_INPUT = "file";
+  private static final String FILE_LIST = "uploadList";
+
   private FormWidget form;
 
   private ListWidget<FileInfo> uploadList;
@@ -51,45 +54,43 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
   @Override
   public void init() throws Exception {
-    setViewSelector("demo/demoFileUpload");
+    setViewSelector("demo/advanced/fileUpload");
     buildList();
-    this.form = buildForm();
-    addWidget("uploadForm", this.form);
+    addWidget("uploadForm", this.form = buildForm());
   }
 
   private void buildList() throws Exception {
     this.uploadList = new ListWidget<FileInfo>();
     this.uploadList.setDataProvider(new FileListDataProvider());
-    this.uploadList.addField("originalFilename", "#Original filename");
-    this.uploadList.addField("size", "#File size");
-    this.uploadList.addField("contentType", "#Content Type");
+    this.uploadList.addField("originalFilename", "fileUpload.originalName");
+    this.uploadList.addField("size", "fileUpload.size");
+    this.uploadList.addField("contentType", "fileUpload.contentType");
     this.uploadList.addEmptyField("dummy");
   }
 
   private FormWidget buildForm() throws Exception {
     final FormWidget result = new FormWidget();
 
-    result.addElement("encodingTest", "#encodingTest", new TextControl(), new StringData(), false);
+    result.addElement("encodingTest", "fileUpload.encodingTest", new TextControl(), new StringData(), false);
 
     DefaultSelectControl selectControl = new DefaultSelectControl();
-    selectControl.addItem(null, "- choose -");
-    selectControl.addItem("1", "one");
-    selectControl.addItem("2", "two");
+    selectControl.addItem("select.choose", null);
+    selectControl.addItem("select.one", "1");
+    selectControl.addItem("select.two", "2");
 
-    FormElement<DisplayItem, String> selectElement = result.addElement("select", "#Select", selectControl,
+    FormElement<DisplayItem, String> selectElement = result.addElement("select", "fileUpload.select", selectControl,
         new StringData(), true);
     selectElement.setValue("1");
     selectElement.setDisabled(true);
 
-    result.addElement("file", "#File", new FileUploadControl(), new FileInfoData(), false);
-    result.addElement("upload", "#Upload file", new ButtonControl(new FileUploadButtonListener()));
+    result.addElement(FILE_INPUT, "fileUpload.file", new FileUploadControl(), new FileInfoData(), false);
+    result.addElement("upload", "fileUpload.upload", new ButtonControl(new FileUploadButtonListener()));
     return result;
   }
 
   public void handleEventSelectFile(String param) throws Exception {
     FileInfo selectedFile = this.uploadList.getRowFromRequestId(param);
-    getMessageCtx().showInfoMessage("Popup window with download content should have opened. If it did not, please "
-            + "relax your popup blocker settings.");
+    getMessageCtx().showInfoMessage("common.popupBlockMsg");
     getPopupCtx().open(new FileDownloaderService(selectedFile), new PopupWindowProperties(), null);
   }
 
@@ -112,14 +113,17 @@ public class DemoFileUpload extends TemplateBaseWidget {
   private class FileUploadButtonListener implements OnClickEventListener {
 
     public void onClick() throws Exception {
-      form.getElementByFullName("file").convertAndValidate();
-      FileInfo fileInfo = (FileInfo) form.getValueByFullName("file");
+      // We only convert the the upload control:
+      form.getElementByFullName(FILE_INPUT).convertAndValidate();
+
+      FileInfo fileInfo = (FileInfo) form.getValueByFullName(FILE_INPUT);
       if (fileInfo != null && fileInfo.isFilePresent()) {
         if (!files.isEmpty()) {
-          DemoFileUpload.this.addWidget("uploadList", uploadList);
+          DemoFileUpload.this.addWidget(FILE_LIST, uploadList);
         }
+
         files.add(fileInfo);
-        form.setValueByFullName("file", null);
+        form.setValueByFullName(FILE_INPUT, null);
 
         // refresh the list data
         uploadList.getDataProvider().refreshData();

@@ -16,6 +16,8 @@
 
 package org.araneaframework.example.main.web.management.company;
 
+import org.araneaframework.framework.context.DefaultHandler;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -53,7 +55,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("company/companyList");
+    setViewSelector("management/company/companyList");
     initList();
   }
 
@@ -72,9 +74,9 @@ public class CompanyListWidget extends TemplateBaseWidget {
     this.list.addEmptyField("radio", null);
 
     // addField(...) returns FieldFilterHelper, like() sets LIKE filter on the column
-    this.list.addField("name", "#Name", true).like();
-    this.list.addField("address", "#Address", true).like();
-    this.list.addField("dummy", null, false);
+    this.list.addField("name", "companies.name", true).like();
+    this.list.addField("address", "companies.address", true).like();
+    this.list.addEmptyField("dummy");
   }
 
   private void refreshList() throws Exception {
@@ -85,7 +87,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     getFlowCtx().start(new CompanyEditWidget(), new FlowContext.Handler<Long>() {
 
       public void onFinish(Long returnValue) throws Exception {
-        LOG.debug("Company added with ID of " + returnValue + " sucessfully");
+        LOG.debug("Company added with ID=" + returnValue + " sucessfully");
         refreshList();  // trick to refresh the list data when we suspect it has changed
       }
 
@@ -96,19 +98,19 @@ public class CompanyListWidget extends TemplateBaseWidget {
   public void handleEventRemove(String eventParameter) throws Exception {
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
     this.contractDAO.removeByCompanyId(id);
-    getCompanyDAO().remove(CompanyMO.class, id);
+    getGeneralDAO().remove(CompanyMO.class, id);
     refreshList();
-    LOG.debug("Company with ID of " + id + " removed sucessfully");
+    LOG.debug("Company with ID=" + id + " removed sucessfully");
   }
 
   public void handleEventSelect(String eventParameter) {
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
-    LOG.debug("Company selected with ID of " + id);
+    LOG.debug("Company selected with ID=" + id);
     if (this.editMode) {
       getFlowCtx().start(new CompanyEditWidget(id), new FlowContext.Handler<Long>() {
 
         public void onFinish(Long returnValue) throws Exception {
-          LOG.debug("Company added with ID of " + returnValue + " sucessfully");
+          LOG.debug("Company added with ID=" + returnValue + " sucessfully");
           refreshList();
         }
 
@@ -121,15 +123,14 @@ public class CompanyListWidget extends TemplateBaseWidget {
 
   public void handleEventEdit(String eventParameter) throws Exception {
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
-    LOG.debug("Company selected with ID of " + id);
-    getFlowCtx().start(new CompanyEditWidget(id), new FlowContext.Handler<Long>() {
+    LOG.debug("Company selected with ID=" + id);
+    getFlowCtx().start(new CompanyEditWidget(id), new DefaultHandler<Long>() {
 
+      @Override
       public void onFinish(Long returnValue) throws Exception {
-        LOG.debug("Company added with ID of " + returnValue + " sucessfully");
+        LOG.debug("Company added with ID=" + returnValue + " sucessfully");
         refreshList();
       }
-
-      public void onCancel() throws Exception {}
     });
   }
 
@@ -140,7 +141,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
   public void handleEventCollect() {
     CompanyMO company = this.list.getSelectedRow();
     if (company != null) {
-      getMessageCtx().showInfoMessage("Following company was selected: " + company.getName());
+      getMessageCtx().showInfoMessage("companies.selected", company.getName());
     }
   }
 
@@ -158,7 +159,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
       // Here, database query is performed and all rows from COMPANY table retrieved.
       // But you could also get the data from parsing some XML file, /dev/random etc.
       // All that matters is that returned List really contains CompanyMO objects.
-      return getCompanyDAO().getAll(CompanyMO.class);
+      return getGeneralDAO().getAll(CompanyMO.class);
     }
   }
 }

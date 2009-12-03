@@ -54,7 +54,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("person/editableList");
+    setViewSelector("management/person/editableList");
 
     // PersonMO class is already familiar from form examples. FormRowHandler class that will handle the different row
     // operations.
@@ -64,14 +64,13 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
     // Filtering by fields other than ID is enabled.
     this.list.setOrderableByDefault(true);
-    this.list.addField("id", "#Id", false);
-
-    this.list.addField("name", "#First name").like();
-    this.list.addField("surname", "#Last name").like();
-    this.list.addField("phone", "#Phone no").like();
-    this.list.addField("birthdate", "#Birthdate").range();
-    this.list.addField("salary", "#Salary").range();
-    this.list.addField("dummy", null, false);
+    this.list.addField("id", "common.id", false);
+    this.list.addField("name", "common.firstname").like();
+    this.list.addField("surname", "common.lastname").like();
+    this.list.addField("phone", "persons.address").like();
+    this.list.addField("birthdate", "persons.birthdate").range();
+    this.list.addField("salary", "persons.salary").range();
+    this.list.addEmptyField("dummy");
 
     /*
      * Set the provider through which list acquires its data. Exactly the same as for ordinary lists.
@@ -108,7 +107,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
       @Override
       public List<PersonMO> loadData() throws Exception {
-        return getPersonDAO().getAll(PersonMO.class);
+        return getGeneralDAO().getAll(PersonMO.class);
       }
     }
   }
@@ -168,7 +167,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       rowData.setId(editableRow.getKey());
 
       // Save modified object.
-      getPersonDAO().edit(rowData);
+      getGeneralDAO().edit(rowData);
 
       // Set the row closed (for further editing, it must be opened again).
       editableRow.close();
@@ -178,7 +177,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
     @Override
     public void deleteRow(Long key) throws Exception {
       contractDAO.removeByPersonId(key);
-      getPersonDAO().remove(PersonMO.class, key);
+      getGeneralDAO().remove(PersonMO.class, key);
       list.getDataProvider().refreshData();
     }
 
@@ -187,7 +186,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
     @Override
     public void addValidRow(BeanFormWidget<PersonMO> addForm) throws Exception {
       PersonMO rowData = addForm.writeToBean();
-      getPersonDAO().add(rowData);
+      getGeneralDAO().add(rowData);
       list.getDataProvider().refreshData();
 
       // this callback must be made here!
@@ -230,11 +229,11 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
 
     // Adds PersonMO bean fields to given BeanFormWidget.
     private void addCommonFormFields(BeanFormWidget<PersonMO> form) throws Exception {
-      form.addBeanElement("name", "#First name", new TextControl(), true);
-      form.addBeanElement("surname", "#Last name", new TextControl(), true);
-      form.addBeanElement("phone", "#Phone no", new TextControl(), false);
-      form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
+      form.addBeanElement("name", "common.firstname", new TextControl(), true);
+      form.addBeanElement("surname", "common.lastname", new TextControl(), true);
+      form.addBeanElement("phone", "persons.address", new TextControl(), false);
+      form.addBeanElement("birthdate", "persons.birthdate", new DateControl(), false);
+      form.addBeanElement("salary", "persons.salary", new FloatControl(), false);
     }
   }
 

@@ -5,7 +5,7 @@
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-	version="2.0">
+	version="2.1">
 
 	<!--
 		We show here the short-cut way to include the JavaScripts and styles.

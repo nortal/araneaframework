@@ -20,17 +20,19 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.araneaframework.example.main.business.model.ContractMO;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Quick'n'dirty fix for the ever annoying problem with broken contracts when persons or companies are deleted.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class ContractDAO extends GeneralDAO<ContractMO> implements IContractDAO {
+public class ContractDAO extends GeneralDAO implements IContractDAO {
 
   @PersistenceContext
   private EntityManager entityManager;
 
+  @Transactional
   public void removeByPersonId(Long personId) {
     List<ContractMO> l = getAll(ContractMO.class);
     for (ContractMO contract : l) {
@@ -40,6 +42,7 @@ public class ContractDAO extends GeneralDAO<ContractMO> implements IContractDAO 
     }
   }
 
+  @Transactional
   public void removeByCompanyId(Long companyId) {
     List<ContractMO> l = getAll(ContractMO.class);
     for (ContractMO contract : l) {

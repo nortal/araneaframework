@@ -31,7 +31,7 @@ public class DemoAdvancedPopupUsageWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/advancedPopups");
+    setViewSelector("demo/advanced/popups/main");
 
     this.editableList = new PersonEditableListPopupWidget();
 

@@ -22,7 +22,7 @@ import org.araneaframework.uilib.form.control.DefaultSelectControl;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * Demonstrates use of SelectControl rendered with radiobuttons.
+ * Demonstrates use of SelectControl rendered with radio-buttons.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -34,24 +34,24 @@ public class DemoRadioSelect extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/demoRadioSelect");
+    setViewSelector("demo/simple/radioSelect");
 
     this.control = new DefaultSelectControl();
-    this.control.addItem("1", "First");
-    this.control.addItem("2", "Second");
-    this.control.addItem("3", "Third");
-    this.control.addItem("4", "Fourth");
-    this.control.addItem("5", "Fifth");
+    this.control.addItem("select.one", "1");
+    this.control.addItem("select.two", "2");
+    this.control.addItem("select.three", "3");
+    this.control.addItem("select.four", "4");
+    this.control.addItem("select.five", "5");
 
     this.form = new FormWidget();
-    this.form.addElement("select", "#Boring number", this.control, new StringData(), false);
+    this.form.addElement("select", "radioselect.label", this.control, new StringData());
     addWidget("form", this.form);
   }
 
   public void handleEventTest() throws Exception {
     if (this.form.convertAndValidate()) {
       String value = (String) this.form.getValueByFullName("select");
-      getMessageCtx().showInfoMessage(value != null ? value : "null");
+      getMessageCtx().showInfoMessage("radioselect.values.msg", value != null ? value : "null");
     }
   }
 }

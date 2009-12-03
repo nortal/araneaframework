@@ -90,7 +90,7 @@ public class DemoSimpleEditableList extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/features/simpleEditableList/simpleInmemoryEditableList");
+    setViewSelector("release/simpleInmemoryEditableList");
 
     // PersonMO class is already familiar from form examples. FormRowHandler class that will handle different row
     // operations.

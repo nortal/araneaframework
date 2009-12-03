@@ -16,8 +16,6 @@
 
 package org.araneaframework.example.main.web.demo.advanced;
 
-import org.araneaframework.example.main.web.MenuWidget;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +24,13 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.ClassUtils;
 import org.araneaframework.Widget;
 import org.araneaframework.example.main.TemplateBaseWidget;
+import org.araneaframework.example.main.web.MenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
 import org.araneaframework.uilib.core.OverlayRootWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DefaultSelectControl;
 import org.araneaframework.uilib.form.data.StringData;
-import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
@@ -44,16 +42,15 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("testing/modalDialogTest");
+    setViewSelector("test/modalDialog/main");
 
     MenuWidget menuWidget = (MenuWidget) UilibEnvironmentUtil.getMenuContext(getEnvironment());
-
     new MenuItemCollector().visit(menuWidget.getMenu(), this.menuItems);
 
     this.form = new FormWidget();
 
     DefaultSelectControl select = new DefaultSelectControl();
-    select.addItem(new DisplayItem(null, "select.choose"));
+    select.addItem(t("select.choose"), null);
     select.addOnChangeEventListener(new OnChangeEventListener() {
 
       public void onChange() throws Exception {
@@ -70,8 +67,8 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
 
     DisplayItemUtil.addItemsFromBeanCollection(select, this.menuItems, new DSTransformer(), new ValueTransformer());
 
-    form.addElement("classSelect", "#Select your poison", select, new StringData(), false);
-    addWidget("form", form);
+    this.form.addElement("classSelect", "modalDialogTest.desc", select, new StringData(), false);
+    addWidget("form", this.form);
   }
 
   public void handleEventReturn() {
@@ -104,7 +101,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
 
     @Override
     protected void init() throws Exception {
-      setViewSelector("testing/renderChild");
+      setViewSelector("test/modalDialog/renderChild");
       addWidget("wrapped", this.wrapped);
     }
 

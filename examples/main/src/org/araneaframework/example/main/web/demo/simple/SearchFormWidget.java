@@ -42,7 +42,7 @@ public class SearchFormWidget extends TemplateBaseWidget {
    */
   @Override
   protected void init() throws Exception {
-    setViewSelector("sample/searchForm");
+    setViewSelector("demo/simple/searchForm");
 
     // Adding form controls
     this.searchForm = new FormWidget();

@@ -53,7 +53,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
     this.roomList = ExampleData.createRooms();
     this.attendeeList = ExampleData.createAttendees();
 
-    setViewSelector("release/features/seamlessFormValidation/demo");
+    setViewSelector("release/seamlessFormValidation");
 
     FormWidget f2 = buildFormWidget();
     f2.setBackgroundValidation(true); // and here the crucial part for the second form - enabling background validation.
@@ -93,7 +93,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
         if (appointmentDate.isValid() && appointmentTime.isValid()) {
           Room appointmentRoom = getValue();
           if (appointmentRoom.isOccupied()) {
-            addError(MessageUtil.localizeAndFormat(getEnvironment(), "seamless.room.not.available", t(appointmentRoom
+            addError("#"+MessageUtil.localizeAndFormat(getEnvironment(), "seamless.room.not.available", t(appointmentRoom
                 .getName())));
           }
         }
@@ -124,7 +124,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
 
           if (!preoccupiedAttendees.isEmpty()) {
             String names = StringUtils.join(preoccupiedAttendees, ", ");
-            addError(MessageUtil.localizeAndFormat(getEnvironment(), "seamless.attendees.not.available", names));
+            addError("#"+MessageUtil.localizeAndFormat(getEnvironment(), "seamless.attendees.not.available", names));
           }
         }
       }

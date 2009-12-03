@@ -50,7 +50,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
    */
   @Override
   protected void init() throws Exception {
-    setViewSelector("sample/simpleForm");
+    setViewSelector("demo/simple/simpleForm");
 
     // creation of new form
     this.simpleForm = new FormWidget();
@@ -88,7 +88,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     // add a specific listener to button before.
     ButtonControl button = new ButtonControl(new ProxyOnClickEventListener(this, "testSimpleForm"));
     // Add the button to form. As the button does not hold any value, Data will be null.
-    this.simpleForm.addElement("button", "#Button", button);
+    this.simpleForm.addElement("button", "common.Button", button);
 
     // The usual, add the created widget to main widget.
     addWidget("simpleForm", this.simpleForm);

@@ -81,7 +81,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/contextMenuDemo");
+    setViewSelector("release/contextMenu/clientList");
     getL10nCtx().addLocaleChangeListener(this);
     createList();
     attachContextMenu();

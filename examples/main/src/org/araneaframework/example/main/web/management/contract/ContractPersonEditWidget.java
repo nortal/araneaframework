@@ -45,7 +45,7 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
   @Override
   protected void init() throws Exception {
     LOG.debug("TemplateContractPersonWidget init called");
-    setViewSelector("contract/contractPersonEdit");
+    setViewSelector("management/contract/contractPersonEdit");
   }
 
   public void handleEventChoosePerson() throws Exception {
@@ -54,7 +54,7 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
     getFlowCtx().start(newFlow, new FlowContext.Handler<Long>() {
 
       public void onFinish(Long id) throws Exception {
-        setPerson(getPersonDAO().getById(PersonMO.class, id));
+        setPerson(getGeneralDAO().getById(PersonMO.class, id));
       }
 
       public void onCancel() throws Exception {}

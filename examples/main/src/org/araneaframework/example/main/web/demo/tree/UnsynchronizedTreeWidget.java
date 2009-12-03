@@ -15,19 +15,19 @@
  */
 
 package org.araneaframework.example.main.web.demo.tree;
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.core.AsynchronousActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
 import org.araneaframework.uilib.tree.TreeNodeWidget;
 import org.araneaframework.uilib.tree.TreeWidget;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * Tree, that uses unsynchronized actions. Each node has five child nodes and
@@ -44,7 +44,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("tree/unsynchronizedTree");
+    setViewSelector("demo/tree/unsynchronized/tree");
     this.tree = new TreeWidget(new UnsynchronizedTreeDataProvider());
     this.tree.setUseActions(true);
     this.tree.setUseSynchronizedActions(false);
@@ -72,27 +72,26 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
     @Override
     protected void init() throws Exception {
-      setViewSelector("tree/unsynchronizedTreeDisplay");
-      putViewData("counter", new Integer(counter));
-      addActionListener("test", new StandardActionListener() {
+      setViewSelector("demo/tree/unsynchronized/treeNode");
+      putViewData("counter", new Integer(this.counter));
+      addActionListener("test", new AsynchronousActionListener() {
 
-        @Override
-        public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          LOG.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
+        public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+          LOG.debug("Received action with id='" + actionId + "'");
           putViewData("counter", new Integer(++counter));
-//TODO          getTreeNodeCtx().renderNode(output); // Boilerplate code
+          getTreeNodeCtx().renderNode(output); // Boilerplate code to render the changes
         }
 
       });
 
-      addActionListener("sleep", new StandardActionListener() {
+      addActionListener("sleep", new AsynchronousActionListener() {
 
-        @Override
-        public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-          LOG.debug("Received action with id='" + actionId + "' and param='" + actionParam + "'");
+        public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+          LOG.debug("Received action with id='" + actionId + "'");
           Thread.sleep(10000);
-//TODO          getTreeNodeCtx().renderNode(output); // Boilerplate code
+          getTreeNodeCtx().renderNode(output); // Boilerplate code to render the changes
         }
+
       });
     }
 

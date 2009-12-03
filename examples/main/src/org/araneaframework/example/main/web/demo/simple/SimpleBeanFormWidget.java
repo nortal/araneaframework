@@ -46,7 +46,7 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
    */
   @Override
   protected void init() throws Exception {
-    setViewSelector("sample/simpleBeanForm");
+    setViewSelector("demo/simple/simpleBeanForm");
 
     // Creation of new bean form bound to the instance of FormDataModel class:
     simpleForm = new BeanFormWidget<FormDataModel>(FormDataModel.class, getDefaultValues());

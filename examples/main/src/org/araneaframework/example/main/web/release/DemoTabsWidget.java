@@ -38,7 +38,7 @@ public class DemoTabsWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/tab");
+    setViewSelector("release/tab");
     addTabContainer();
   }
 

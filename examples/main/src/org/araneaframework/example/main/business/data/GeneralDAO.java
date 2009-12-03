@@ -20,6 +20,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.araneaframework.example.main.business.model.GeneralMO;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This is general data access object. It can retrieve all objects by class, one object by Id and class, add or edit an
@@ -27,30 +29,35 @@ import org.araneaframework.example.main.business.model.GeneralMO;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class GeneralDAO<T extends GeneralMO> implements IGeneralDAO<T> {
+public class GeneralDAO implements IGeneralDAO {
 
   @PersistenceContext
   private EntityManager entityManager;
 
-  public T getById(Class<T> clazz, Long id) {
+  @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+  public <T extends GeneralMO> T getById(Class<T> clazz, Long id) {
     return this.entityManager.find(clazz, id);
   }
 
   @SuppressWarnings("unchecked")
-  public List<T> getAll(Class<T> clazz) {
+  @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+  public <T extends GeneralMO> List<T> getAll(Class<T> clazz) {
     return this.entityManager.createQuery("from " + clazz.getName()).getResultList();
   }
 
-  public Long add(T object) {
+  @Transactional
+  public <T extends GeneralMO> Long add(T object) {
     this.entityManager.persist(object);
     return object.getId();
   }
 
-  public T edit(T object) {
+  @Transactional
+  public <T extends GeneralMO> T edit(T object) {
     return this.entityManager.merge(object);
   }
 
-  public void remove(Class<T> clazz, Long id) {
+  @Transactional
+  public <T extends GeneralMO> void remove(Class<T> clazz, Long id) {
     this.entityManager.remove(getById(clazz, id));
   }
 }

@@ -35,11 +35,12 @@ public class ClientViewWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/clientView");
-    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(ExampleData.Client.class, this.client);
-    form.addBeanElement("sex", "sed.Sex", new TextControl(), true);
-    form.addBeanElement("forename", "sed.Forename", new TextControl(), true);
-    form.addBeanElement("surname", "sed.Surname", new TextControl(), true);
+    setViewSelector("release/contextMenu/clientView");
+    BeanFormWidget<ExampleData.Client> form = new BeanFormWidget<ExampleData.Client>(ExampleData.Client.class,
+        this.client);
+    form.addBeanElement("sex", "common.sex", new TextControl(), true);
+    form.addBeanElement("forename", "common.firstname", new TextControl(), true);
+    form.addBeanElement("surname", "common.lastname", new TextControl(), true);
     form.addBeanElement("country", "common.Country", new TextControl(), true);
     addWidget("form", form);
   }

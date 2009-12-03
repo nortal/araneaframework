@@ -55,8 +55,8 @@ public class DemoComplexForm extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/demoComplexForm");
-    putViewData("formLabel", "complexForm.ajax");
+    setViewSelector("demo/advanced/complexForm");
+    putViewData("formLabel", "complexForm.title");
 
     // Note that the constructor takes the value property and the label property of the target class:
     this.beastSelectionControl = new SelectControl<SelectItem>(SelectItem.class, "label", "value");

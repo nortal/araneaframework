@@ -27,9 +27,9 @@ public class DemoEasyAJAXUpdateRegionsWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/features/easyAjax/easyAjaxUpdateRegions");
-    addWidget("1", new EasyAjaxDemoWidget("release/features/easyAjax/plainForm", "easyajax.form.plain"));
-    addWidget("2", new EasyAjaxDemoWidget("release/features/easyAjax/ajaxForm", "easyajax.form.ajax"));
+    setViewSelector("release/easyAjax/easyAjaxUpdateRegions");
+    addWidget("1", new EasyAjaxDemoWidget("release/easyAjax/plainForm", "easyajax.form.plain"));
+    addWidget("2", new EasyAjaxDemoWidget("release/easyAjax/ajaxForm", "easyajax.form.ajax"));
   }
 
   private static class EasyAjaxDemoWidget extends DemoComplexForm {

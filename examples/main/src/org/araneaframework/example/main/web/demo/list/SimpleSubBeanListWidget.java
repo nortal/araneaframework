@@ -31,7 +31,7 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("list/subBeanList");
+    setViewSelector("demo/list/subBeanList");
     initList();
   }
 
@@ -40,11 +40,11 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
     addWidget("list", this.list);
     this.list.setDataProvider(new DataProvider());
     this.list.setOrderableByDefault(true);
-    this.list.addField("id", "#Id", false);
-    this.list.addField("name.firstname", "#First name").like();
-    this.list.addField("name.lastname", "#Last name").like();
-    this.list.addField("address.country", "#Country").like();
-    this.list.addField("address.city", "#City").like();
+    this.list.addField("id", "common.id", false);
+    this.list.addField("name.firstname", "common.firstname").like();
+    this.list.addField("name.lastname", "common.lastname").like();
+    this.list.addField("address.country", "common.Country").like();
+    this.list.addField("address.city", "common.city").like();
     this.list.addEmptyField("dummy", null);
   }
 

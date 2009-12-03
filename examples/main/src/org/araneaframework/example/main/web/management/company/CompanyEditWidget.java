@@ -53,11 +53,11 @@ public class CompanyEditWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("company/companyAddEdit");
+    setViewSelector("management/company/companyAddEdit");
     putViewData("formLabel", this.id != null ? "company.edit.form.label" : "company.add.form.label");
     LOG.debug("CompanyEditWidget init called");
 
-    CompanyMO company = this.id != null ? getCompanyDAO().getById(CompanyMO.class, this.id) : new CompanyMO();
+    CompanyMO company = this.id != null ? getGeneralDAO().getById(CompanyMO.class, this.id) : new CompanyMO();
 
     this.form = new BeanFormWidget<CompanyMO>(CompanyMO.class, company);
     this.form.addBeanElement("name", "#Name", new TextControl(), true);
@@ -70,9 +70,9 @@ public class CompanyEditWidget extends TemplateBaseWidget {
       CompanyMO company = this.form.writeToBean();
 
       if (this.id != null) {
-        getCompanyDAO().edit(company);
+        getGeneralDAO().edit(company);
       } else {
-        this.id = getCompanyDAO().add(company);
+        this.id = getGeneralDAO().add(company);
       }
       LOG.debug("Company saved, id = " + this.id);
       getFlowCtx().finish(this.id);

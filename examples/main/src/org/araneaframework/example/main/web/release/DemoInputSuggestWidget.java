@@ -43,7 +43,7 @@ public class DemoInputSuggestWidget extends TemplateBaseWidget {
 
   @Override
   public void init() throws Exception {
-    setViewSelector("release/demos/demoAutoCompletion");
+    setViewSelector("release/demoAutoCompletion");
     addWidget("testform", createForm());
   }
 
@@ -62,7 +62,7 @@ public class DemoInputSuggestWidget extends TemplateBaseWidget {
 
       public void onChange() throws Exception {
         form.convertAndValidate();
-        getMessageCtx().showInfoMessage(t("release.ac.onchangetext") + " " + form.getValueByFullName("acinput"));
+        getMessageCtx().showInfoMessage("release.ac.onchangetext", form.getValueByFullName("acinput"));
       }
     });
 
@@ -72,7 +72,7 @@ public class DemoInputSuggestWidget extends TemplateBaseWidget {
 
   public void handleEventTest() throws Exception {
     if (this.form.convertAndValidate()) {
-      getMessageCtx().showInfoMessage(t("release.ac.submitvalid") + " " + this.form.getValueByFullName("acinput"));
+      getMessageCtx().showInfoMessage("release.ac.submitvalid", this.form.getValueByFullName("acinput"));
     }
   }
 

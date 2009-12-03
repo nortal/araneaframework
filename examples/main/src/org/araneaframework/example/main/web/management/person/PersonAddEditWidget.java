@@ -59,7 +59,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
   @Override
   protected void init() throws Exception {
     // Sets the view selector that will be used for rendering this widget.
-    setViewSelector("person/personAddEdit");
+    setViewSelector("management/person/personAddEdit");
     // This view data is used in JSP to set component header (different for editing and adding).
     putViewData("label", this.editMode ? "person.edit.form.label" : "person.add.form.label");
     this.form = buildPersonEditForm();
@@ -68,7 +68,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 
   private BeanFormWidget<PersonMO> buildPersonEditForm() throws Exception {
     // Get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID):
-    PersonMO person = this.editMode ? getPersonDAO().getById(PersonMO.class, this.personId) : new PersonMO();
+    PersonMO person = this.editMode ? getGeneralDAO().getById(PersonMO.class, this.personId) : new PersonMO();
 
     // Create the form, specifying the class of data that is binded to this form:
     BeanFormWidget<PersonMO> form = new BeanFormWidget<PersonMO>(PersonMO.class, person);
@@ -95,10 +95,10 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
 
       if (this.editMode) {
         // Updates person object in database:
-        getPersonDAO().edit(person);
+        getGeneralDAO().edit(person);
       } else {
         // Saves new person object to database:
-        this.personId = getPersonDAO().add(person);
+        this.personId = getGeneralDAO().add(person);
       }
 
       /*

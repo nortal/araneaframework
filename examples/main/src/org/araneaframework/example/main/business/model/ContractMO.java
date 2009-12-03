@@ -30,7 +30,7 @@ import javax.persistence.ManyToOne;
 public class ContractMO implements GeneralMO {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(optional = false)

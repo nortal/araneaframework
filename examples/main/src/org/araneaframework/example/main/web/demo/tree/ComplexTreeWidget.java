@@ -34,7 +34,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("tree/complexTree");
+    setViewSelector("demo/tree/complex/tree");
     this.tree = new TreeWidget();
     this.tree.setRemoveChildrenOnCollapse(false);
     addWidget("tree", this.tree);
@@ -48,7 +48,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
     @Override
     protected void init() throws Exception {
-      setViewSelector("tree/complexTreeFirstDisplay");
+      setViewSelector("demo/tree/complex/treeNode1");
     }
 
     public void handleEventDelete() {
@@ -74,7 +74,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
     @Override
     protected void init() throws Exception {
-      setViewSelector("tree/complexTreeSecondDisplay");
+      setViewSelector("demo/tree/complex/treeNode2");
     }
 
     public void handleEventInvertCollapsed() {
@@ -91,7 +91,7 @@ public class ComplexTreeWidget extends TemplateBaseWidget {
 
     @Override
     protected void init() throws Exception {
-      setViewSelector("tree/complexTreeThirdDisplay");
+      setViewSelector("demo/tree/complex/treeNode3");
     }
 
     public int getLevel() {

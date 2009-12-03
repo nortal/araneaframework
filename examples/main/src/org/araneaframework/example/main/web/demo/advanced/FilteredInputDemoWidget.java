@@ -35,7 +35,7 @@ public class FilteredInputDemoWidget extends TemplateBaseWidget {
    */
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/filteredInput");
+    setViewSelector("demo/advanced/filteredInput");
 
     // creation of new form
     this.form = new FormWidget();
@@ -54,10 +54,10 @@ public class FilteredInputDemoWidget extends TemplateBaseWidget {
       }
     });
 
-    this.form.addElement("filter", "demo.filteredinput.filterchars", filter, new StringData());
-    this.form.addElement("filtered", "demo.filteredinput.input", filtered, new StringData());
+    this.form.addElement("filter", "filteredInput.chars", filter, new StringData());
+    this.form.addElement("filtered", "filteredInput.input", filtered, new StringData());
 
     // the usual, add the created widget to main widget.
-    addWidget("form", form);
+    addWidget("form", this.form);
   }
 }

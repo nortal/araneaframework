@@ -35,7 +35,7 @@ public class DemoSimpleListWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/features/simpleList");
+    setViewSelector("release/simpleList");
 
     this.simpleList = new BeanListWidget<DemoVO>(DemoVO.class);
 

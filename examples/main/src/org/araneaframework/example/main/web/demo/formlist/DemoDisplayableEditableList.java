@@ -63,7 +63,7 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
    */
   @Override
   public void init() throws Exception {
-    setViewSelector("demo/demoDisplayableEditableList");
+    setViewSelector("demo/formlist/displayableEditableList");
     this.formListWidget = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(),
         new MapFormListModel<DataDTO>(this.editableRows), DataDTO.class);
     addWidget("editableList", this.formListWidget);

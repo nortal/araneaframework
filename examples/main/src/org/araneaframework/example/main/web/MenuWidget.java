@@ -29,7 +29,7 @@ import org.araneaframework.example.main.web.demo.advanced.DemoOnChangeListenersW
 import org.araneaframework.example.main.web.demo.advanced.DemoRichTextForm;
 import org.araneaframework.example.main.web.demo.advanced.FilteredInputDemoWidget;
 import org.araneaframework.example.main.web.demo.advanced.ModalDialogTestWidget;
-import org.araneaframework.example.main.web.demo.advanced.SampleActionFormWidget;
+import org.araneaframework.example.main.web.demo.advanced.ActionFormWidget;
 import org.araneaframework.example.main.web.demo.advanced.popup.DemoAdvancedPopupUsageWidget;
 import org.araneaframework.example.main.web.demo.formlist.DemoCheckboxList;
 import org.araneaframework.example.main.web.demo.formlist.DemoDisplayForm;
@@ -153,13 +153,13 @@ public class MenuWidget extends TemplateMenuWidget {
     result.addMenuItem("Demos.Simple.RadioSelect", DemoRadioSelect.class);
     result.addMenuItem("Demos.Simple.demo_automaticForm_title", DemoAutomaticFormElement.class);
     result.addMenuItem("Demos.Advanced.File_Upload", DemoFileUpload.class);
-    result.addMenuItem("Demos.Advanced.Complex_Form", DemoComplexForm.class);
+    result.addMenuItem("Demos.Advanced.Complex_Form_AJAX", DemoComplexForm.class);
     result.addMenuItem("Demos.Advanced.Rich_Text_Editor", DemoRichTextForm.class);
     result.addMenuItem("Demos.Advanced.Advanced_Popup", DemoAdvancedPopupUsageWidget.class);
     result.addMenuItem("Demos.Advanced.Flow_Navigation_Confirmation", DemoFlowEventConfirmationWidget.class);
     result.addMenuItem("Demos.Advanced.demo_filteredinput", FilteredInputDemoWidget.class);
     result.addMenuItem("Demos.Advanced.OnChangeListeners", DemoOnChangeListenersWidget.class);
-    result.addMenuItem("Demos.Advanced.Form_with_Actions", SampleActionFormWidget.class);
+    result.addMenuItem("Demos.Advanced.Form_with_Actions", ActionFormWidget.class);
     result.addMenuItem("Demos.Advanced.ModalDialogTesting", ModalDialogTestWidget.class);
     result.addMenuItem("Demos.Form_Lists.Display_Form", DemoDisplayForm.class);
     result.addMenuItem("Demos.Form_Lists.Editable_List", DemoFormList.class);

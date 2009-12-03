@@ -41,7 +41,7 @@ public class DemoSimpleTreeWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/tree/simpleTree");
+    setViewSelector("release/simpleTree/tree");
 
     TreeWidget tree1 = new TreeWidget(new SimpleTreeDataProvider());
     tree1.setRemoveChildrenOnCollapse(false);
@@ -92,7 +92,7 @@ public class DemoSimpleTreeWidget extends TemplateBaseWidget {
 
     @Override
     protected void init() throws Exception {
-      setViewSelector("release/demos/tree/simpleTreeDisplay");
+      setViewSelector("release/simpleTree/treeNode");
     }
 
     public String getPath() {

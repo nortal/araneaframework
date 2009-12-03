@@ -16,6 +16,10 @@
 
 package org.araneaframework.example.main.business.data;
 
+import org.springframework.transaction.annotation.Propagation;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.araneaframework.backend.list.helper.JPAListSqlHelper;
@@ -32,6 +36,7 @@ public class PersonListDAO {
   @PersistenceContext
   private EntityManager entityManager;
 
+  @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
   public ListItemsData<PersonMO> getItems(ListQuery request) {
     ListSqlHelper helper = new JPAListSqlHelper(this.entityManager, request);
 

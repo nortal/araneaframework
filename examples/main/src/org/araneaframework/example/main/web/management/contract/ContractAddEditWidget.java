@@ -58,7 +58,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("contract/contractAddEdit");
+    setViewSelector("management/contract/contractAddEdit");
     this.company = new ContractCompanyEditWidget();
     this.person = new ContractPersonEditWidget();
     this.notes = new ContractNotesEditWidget();
@@ -70,7 +70,7 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
     wizard.addPage(this.notes);
 
     if (this.id != null) {
-      ContractMO contract = getContractDAO().getById(ContractMO.class, this.id);
+      ContractMO contract = getGeneralDAO().getById(ContractMO.class, this.id);
       this.company.setCompany(contract.getCompany());
       this.person.setPerson(contract.getPerson());
       this.notes.setNotes(contract.getNotes());
@@ -83,15 +83,15 @@ public class ContractAddEditWidget extends TemplateBaseWidget {
 
       public void onSubmit() throws Exception {
         if (validate()) {
-          ContractMO contract = id != null ? getContractDAO().getById(ContractMO.class, id) : new ContractMO();
+          ContractMO contract = id != null ? getGeneralDAO().getById(ContractMO.class, id) : new ContractMO();
           contract.setCompany(company.getCompany());
           contract.setPerson(person.getPerson());
           contract.setNotes(notes.getNotes());
           contract.setTotal(notes.getTotal());
           if (id != null) {
-            getContractDAO().edit(contract);
+            getGeneralDAO().edit(contract);
           } else {
-            id = getContractDAO().add(contract);
+            id = getGeneralDAO().add(contract);
           }
           LOG.debug("Contract saved, id = " + id);
           getFlowCtx().finish(id);

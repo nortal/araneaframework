@@ -107,7 +107,7 @@ public class DemoCooperativeFormWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/friendlyUpdateDemo");
+    setViewSelector("release/friendlyUpdateDemo");
     this.companyForm = buildCompanyForm();
     this.invoiceForm = buildInvoiceForm();
     addWidget("companyForm", this.companyForm);

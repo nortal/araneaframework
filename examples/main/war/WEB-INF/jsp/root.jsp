@@ -21,7 +21,7 @@
 		<uis:body>
 			<div id="cont1">
 				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion" tag="div">
-					<ui:systemForm method="post" id="aranea-form">
+					<uis:systemForm id="aranea-form" method="post">
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>
 						<ui:registerOverlay/>
@@ -58,7 +58,7 @@
 
 							<div class="clear1"><ui:nbsp/></div>
 						</div>
-					</ui:systemForm>
+					</uis:systemForm>
 					<ui:updateRegion globalId="demo-footer" tag="div">
 						<ui:widgetInclude id="menu.footer"/>
 					</ui:updateRegion>

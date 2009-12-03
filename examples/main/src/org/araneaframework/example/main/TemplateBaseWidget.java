@@ -16,17 +16,11 @@
 
 package org.araneaframework.example.main;
 
-import org.araneaframework.example.main.business.model.ContractMO;
-
-import org.araneaframework.example.main.business.model.PersonMO;
-
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.Scope;
 import org.araneaframework.example.common.framework.ViewSelectorAware;
 import org.araneaframework.example.main.business.data.IGeneralDAO;
-import org.araneaframework.example.main.business.model.CompanyMO;
-import org.araneaframework.example.main.business.model.GeneralMO;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.integration.spring.SpringInjectionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
@@ -59,36 +53,8 @@ public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSel
    * @param modelClass
    * @return
    */
-  @SuppressWarnings("unchecked")
-  private <T extends GeneralMO> IGeneralDAO<T> getGeneralDAO(Class<T> modelClass) {
-    return (IGeneralDAO<T>) getBeanFactory().getBean("generalDAO");
-  }
-
-  /**
-   * Provides the company DAO to use {@link CompanyMO} persistence.
-   * 
-   * @return The company DAO.
-   */
-  public IGeneralDAO<CompanyMO> getCompanyDAO() {
-    return getGeneralDAO(CompanyMO.class);
-  }
-
-  /**
-   * Provides the company DAO to use {@link CompanyMO} persistence.
-   * 
-   * @return The company DAO.
-   */
-  public IGeneralDAO<PersonMO> getPersonDAO() {
-    return getGeneralDAO(PersonMO.class);
-  }
-
-  /**
-   * Provides the contract DAO to use {@link ContractMO} persistence.
-   * 
-   * @return The contract DAO.
-   */
-  public IGeneralDAO<ContractMO> getContractDAO() {
-    return getGeneralDAO(ContractMO.class);
+  public IGeneralDAO getGeneralDAO() {
+    return (IGeneralDAO) getBeanFactory().getBean("generalDAO");
   }
 
   public String getViewSelector() {

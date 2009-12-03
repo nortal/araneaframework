@@ -38,12 +38,12 @@ public class InvisibleElementFormWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("sample/invisibleElementForm");
+    setViewSelector("demo/simple/invisibleElementForm");
 
     // Creating form and adding form controls
     this.form = new FormWidget();
-    this.form.addElement("firstName", "#First name", new TextControl(), new StringData(), this.initialName, true);
-    this.form.addElement("lastName", "#Last name", new TextControl(), new StringData(), true);
+    this.form.addElement("firstName", "common.firstname", new TextControl(), new StringData(), this.initialName, true);
+    this.form.addElement("lastName", "common.lastname", new TextControl(), new StringData(), true);
     this.form.addElement("showTitle", "#", createCheckbox(), new BooleanData(), false);
     this.form.addElement("title", "#Title", new TextControl(), new StringData(), false);
     addWidget("form", this.form); // Adds the form as sub-widget that can be accessed from JSP.

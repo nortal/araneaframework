@@ -44,8 +44,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    LOG.debug("TemplateContractCompanyWidget init called");
-    setViewSelector("contract/contractCompanyEdit");
+    setViewSelector("management/contract/contractCompanyEdit");
     addEventListener("chooseCompany", new ProxyEventListener(this));
   }
 
@@ -53,7 +52,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
     getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler<Long>() {
 
       public void onFinish(Long id) throws Exception {
-        setCompany(getCompanyDAO().getById(CompanyMO.class, id));
+        setCompany(getGeneralDAO().getById(CompanyMO.class, id));
         LOG.debug("Company with id of " + id + " set to this contract");
       }
 

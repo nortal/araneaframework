@@ -61,7 +61,7 @@ public class ContractNotesEditWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("contract/contractNotesEdit");
+    setViewSelector("management/contract/contractNotesEdit");
     LOG.debug("TemplateContractNotesEditWidget init called");
 
     this.form = new FormWidget();

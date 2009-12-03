@@ -33,7 +33,7 @@ public class MultiListWidget extends TemplateBaseWidget {
   protected void init() throws Exception {
     addWidget("personListWdgt", new PersonListWidget(true));
     addWidget("companyListWdgt", new CompanyListWidget());
-    setViewSelector("list/multiList");
+    setViewSelector("demo/list/multiList");
   }
 
   // note how we define no events in this widget - all events that our included components receive are defined by

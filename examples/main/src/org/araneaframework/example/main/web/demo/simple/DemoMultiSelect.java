@@ -17,10 +17,9 @@
 package org.araneaframework.example.main.web.demo.simple;
 
 import java.util.List;
-
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.control.MultiSelectControl;
+import org.araneaframework.uilib.form.control.DefaultMultiSelectControl;
 import org.araneaframework.uilib.form.data.StringListData;
 import org.araneaframework.uilib.support.DisplayItem;
 
@@ -38,23 +37,22 @@ public class DemoMultiSelect extends TemplateBaseWidget {
   @Override
   @SuppressWarnings("unchecked")
   protected void init() throws Exception {
-    setViewSelector("demo/demoMultiSelect");
+    setViewSelector("demo/simple/multiSelect");
     addWidget("form", createForm());
 
     List<DisplayItem> values = (List<DisplayItem>) this.form.getValueByFullName(SELECT);
-    StringBuffer sb = new StringBuffer("At the creation, multiselect values are : ").append(values);
-    getMessageCtx().showInfoMessage(sb.toString());
+    getMessageCtx().showInfoMessage("multiselect.init.msg", values);
   }
 
   private FormWidget createForm() {
-    MultiSelectControl<DisplayItem> control = new MultiSelectControl<DisplayItem>(DisplayItem.class, "label", "value");
-    control.addItem("1", "One");
-    control.addItem("2", "Two");
-    control.addItem("3", "Three");
-    control.addItem("4", "Four");
+    DefaultMultiSelectControl control = new DefaultMultiSelectControl();
+    control.addItem("select.one", "1");
+    control.addItem("select.two", "2");
+    control.addItem("select.three", "3");
+    control.addItem("select.four", "4");
 
     this.form = new FormWidget();
-    this.form.addElement(SELECT, "#multi", control, new StringListData(), false);
+    this.form.addElement(SELECT, "multiselect.label", control, new StringListData());
     this.form.markBaseState();
     return this.form;
   }
@@ -66,9 +64,9 @@ public class DemoMultiSelect extends TemplateBaseWidget {
   public void handleEventTest() {
     this.form.convertAndValidate();
     if (this.form.isStateChanged()) {
-      getMessageCtx().showInfoMessage("State of multiselect control has changed.");
+      getMessageCtx().showInfoMessage("multiselect.change.msg");
     }
-    getMessageCtx().showInfoMessage("Multiselect values are " + this.form.getValueByFullName(SELECT));
+    getMessageCtx().showInfoMessage("multiselect.values.msg", this.form.getValueByFullName(SELECT));
     this.form.markBaseState();
   }
 }

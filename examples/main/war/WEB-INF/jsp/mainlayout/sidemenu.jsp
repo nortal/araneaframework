@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:root 
-	xmlns:jsp="http://java.sun.com/JSP/Page" 
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.1">
-	
+
 	<jsp:directive.page import="org.araneaframework.http.HttpInputData"/>
 	<jsp:directive.page import="org.araneaframework.http.util.ServletUtil"/>
 	<jsp:directive.page import="org.araneaframework.InputData"/>
@@ -49,7 +48,7 @@
 													eventParam="${topMenuItem.value.label}.${item.value.label}.${subitem.value.label}"
 													labelId="${subitem.value.label}"
 													globalUpdateRegions="demo-messages,sidemenu,demo-content,demo-footer"/>
-	
+
 											</c:if></li>
 										</c:forEach>
 									</ul>

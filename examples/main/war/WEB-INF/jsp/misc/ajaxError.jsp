@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:root 
+<jsp:root
 	xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"  version="2.0">
-	
-	When the Error button is clicked, failing ajax request is made. 
-	
+	xmlns:ui="http://araneaframework.org/tag-library/standard"
+	xmlns:tui="http://araneaframework.org/tag-library/template"
+	version="2.1">
+
+	When the Error button is clicked, a failing ajax request is made.
+
 	<ui:updateRegion id="ajaxErrorDemo">
 		<ui:newLine/>
 		<ui:eventButton labelId="#First" eventId="first" updateRegions="ajaxErrorDemo"/>

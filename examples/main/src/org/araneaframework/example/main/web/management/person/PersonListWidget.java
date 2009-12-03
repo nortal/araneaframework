@@ -57,7 +57,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() {
-    setViewSelector("person/personList");
+    setViewSelector("management/person/personList");
     initList();
   }
 
@@ -65,13 +65,13 @@ public class PersonListWidget extends TemplateBaseWidget {
     this.list = new BeanListWidget<PersonMO>(PersonMO.class);
     this.list.setSelectFromMultiplePages(true);
     this.list.setDataProvider(new TemplatePersonListDataProvider());
-    this.list.addEmptyField("check", "#Choose");
+    this.list.addEmptyField("check", "common.choose");
     this.list.setOrderableByDefault(true);
-    this.list.addField("name", "#First name").like();
-    this.list.addField("surname", "#Last name").setIgnoreCase(false).like();
-    this.list.addField("phone", "#Phone no").like();
-    this.list.addField("birthdate", "#Birthdate").range();
-    this.list.addField("salary", "#Salary").range();
+    this.list.addField("name", "common.firstname").like();
+    this.list.addField("surname", "common.lastname").setIgnoreCase(false).like();
+    this.list.addField("phone", "persons.address").like();
+    this.list.addField("birthdate", "persons.birthdate").range();
+    this.list.addField("salary", "persons.salary").range();
     this.list.setInitialOrder("name", true);
 
     // The dummy column without label (in list rows, some listRowLinkButton's will be written there).
@@ -89,7 +89,7 @@ public class PersonListWidget extends TemplateBaseWidget {
     getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler<Long>() {
 
       public void onFinish(Long returnValue) throws Exception {
-        LOG.debug("Person added with Id of " + returnValue + " sucessfully");
+        LOG.debug("Person added with ID=" + returnValue + " sucessfully");
         refreshList();
       }
 
@@ -104,9 +104,9 @@ public class PersonListWidget extends TemplateBaseWidget {
     }
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
     this.contractDAO.removeByPersonId(id);
-    getPersonDAO().remove(PersonMO.class, id);
+    getGeneralDAO().remove(PersonMO.class, id);
     refreshList();
-    LOG.debug("Person with Id of " + id + " removed sucessfully");
+    LOG.debug("Person with ID=" + id + " removed sucessfully");
   }
 
   public void handleEventSelect(String eventParameter) {
@@ -139,7 +139,7 @@ public class PersonListWidget extends TemplateBaseWidget {
   public void handleEventCollect() {
     List<PersonMO> persons = this.list.getSelectedRows();
     this.list.resetSelectedRows();
-    getMessageCtx().showInfoMessage("Following persons were selected: " + StringUtils.join(persons, ", "));
+    getMessageCtx().showInfoMessage("persons.selected", StringUtils.join(persons, ", "));
   }
 
   public void setSelectOnly(boolean selectOnly) {
@@ -154,7 +154,7 @@ public class PersonListWidget extends TemplateBaseWidget {
 
     @Override
     public List<PersonMO> loadData() throws Exception {
-      return getPersonDAO().getAll(PersonMO.class);
+      return getGeneralDAO().getAll(PersonMO.class);
     }
   }
 

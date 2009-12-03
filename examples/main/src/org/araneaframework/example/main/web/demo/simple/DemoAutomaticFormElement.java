@@ -40,7 +40,7 @@ public class DemoAutomaticFormElement extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/demoAutomaticFormElement");
+    setViewSelector("demo/simple/automaticFormElement");
     this.form = new FormWidget();
     this.first = this.form.addElement("first", "#First", new TextControl(), new StringData(), "InitialFirst");
     changeFormTags();

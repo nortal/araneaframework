@@ -41,7 +41,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("contract/contractList");
+    setViewSelector("management/contract/contractList");
     LOG.debug("TemplateContractListWidget init called");
     initList();
   }
@@ -75,7 +75,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 
   public void handleEventRemove(String eventParameter) throws Exception {
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
-    getContractDAO().remove(ContractMO.class, id);
+    getGeneralDAO().remove(ContractMO.class, id);
     refreshList();
     LOG.debug("Contract with Id of " + id + " removed sucessfully");
   }
@@ -97,7 +97,7 @@ public class ContractListWidget extends TemplateBaseWidget {
 
     @Override
     public List<ContractMO> loadData() throws Exception {
-      return getContractDAO().getAll(ContractMO.class);
+      return getGeneralDAO().getAll(ContractMO.class);
     }
   }
 }

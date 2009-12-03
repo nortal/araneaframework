@@ -33,7 +33,7 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/demoActionPoll");
+    setViewSelector("release/demoActionPoll");
     addActionListener("pollrequest", new TaskPollingListener());
   }
 

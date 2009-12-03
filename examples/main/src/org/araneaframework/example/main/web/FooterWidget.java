@@ -53,9 +53,7 @@ public class FooterWidget extends BaseUIWidget {
       String[] replaceTo = { "", "/" };
       String path = StringUtils.replaceEach(flowClassName, replaceFrom, replaceTo);
 
-      while (StringUtils.contains(path, '$')) {
-        path = StringUtils.substringBefore(path, "$");
-      }
+      path = StringUtils.substringBefore(path, "$");
 
       StringBuffer reqUrl = new StringBuffer(((HttpInputData) getInputData()).getContextURL());
       reqUrl.append("/src/");

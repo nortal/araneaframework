@@ -57,7 +57,7 @@ public class DemoModalDialogWidget extends TemplateBaseWidget {
    */
   @Override
   protected void init() throws Exception {
-    setViewSelector("release/demos/modalDialog");
+    setViewSelector("release/modalDialog");
     addWidget("form", buildForm());
   }
 

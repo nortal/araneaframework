@@ -4,7 +4,7 @@
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
-	version="2.0">
+	version="2.1">
 	<ui:widgetContext>
 
 		<h1><fmt:message key="aranea.welcome" /></h1>

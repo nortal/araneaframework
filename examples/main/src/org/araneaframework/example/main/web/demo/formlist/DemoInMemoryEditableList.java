@@ -52,11 +52,10 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
   
   public DemoInMemoryEditableList() {
-    // Just making the initial data.
-    // In reality it should have been read from the database.
-    this.data.add(new DataDTO(1L, Boolean.TRUE, 10L, "12313"));
-    this.data.add(new DataDTO(2L, Boolean.FALSE, 123L, "werwer"));
-    this.data.add(new DataDTO(3L, Boolean.TRUE, 10L, "adfhadfh"));
+    // Just making the initial data. In reality it should have been read from the database.
+    this.data.add(new DataDTO(1L, true, 10L, "12313"));
+    this.data.add(new DataDTO(2L, false, 123L, "werwer"));
+    this.data.add(new DataDTO(3L, true, 10L, "adfhadfh"));
   }
 
   /**
@@ -64,7 +63,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
    */
   @Override
   public void init() throws Exception {
-    setViewSelector("demo/demoInMemoryEditableList");
+    setViewSelector("demo/formlist/inMemoryEditableList");
     this.formList = new BeanFormListWidget<Long, DataDTO>(new DemoEditableRowHandler(), DataDTO.class);
     this.inMemoryHelper = new InMemoryFormListHelper<Long, DataDTO>(this.formList, this.data);
     addWidget("editableList", this.formList);
@@ -78,7 +77,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
   public void handleEventClose(String parameter) throws Exception {
     if (FormListUtil.convertAndValidateRowForms(this.formList.getFormRows())
-        && !FormListUtil.isRowFormsStateChanged(this.formList.getFormRows()) || "true".equals(parameter)) {
+        && !FormListUtil.isRowFormsStateChanged(this.formList.getFormRows()) || Boolean.parseBoolean(parameter)) {
       getFlowCtx().cancel();
     } else {
       putViewDataOnce("askCloseConfirmation", "true");

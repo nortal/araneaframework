@@ -65,19 +65,19 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("person/popupeditableList");
+    setViewSelector("demo/advanced/popups/personEditableListPopup");
 
     this.list = new EditableBeanListWidget<Long, PersonMO>(new PersonEditableRowHandler(), PersonMO.class);
     this.formList = this.list.getFormList();
     addWidget("list", this.list);
     this.list.setOrderableByDefault(true);
-    this.list.addField("id", "#Id", false);
-    this.list.addField("name", "#First name").like();
-    this.list.addField("surname", "#Last name").like();
-    this.list.addField("phone", "#Phone no").like();
-    this.list.addField("birthdate", "#Birthdate").range();
-    this.list.addField("salary", "#Salary").range();
-    this.list.addField("dummy", null, false);
+    this.list.addField("id", "common.id", false);
+    this.list.addField("name", "common.firstname").like();
+    this.list.addField("surname", "common.lastname").like();
+    this.list.addField("phone", "common.phone").like();
+    this.list.addField("birthdate", "common.birthdate").range();
+    this.list.addField("salary", "common.salary").range();
+    this.list.addEmptyField("dummy");
     this.list.setDataProvider(this.dataProvider);
   }
 
@@ -92,7 +92,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     @Override
     public List<PersonMO> loadData() throws Exception {
       if (this.data == null) {
-        this.data = getPersonDAO().getAll(PersonMO.class);
+        this.data = getGeneralDAO().getAll(PersonMO.class);
       }
       return this.data;
     }
@@ -110,7 +110,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     @Override
     public void deleteRow(Long key) throws Exception {
       contractDAO.removeByPersonId(key);
-      getPersonDAO().remove(PersonMO.class, key);
+      getGeneralDAO().remove(PersonMO.class, key);
       list.getDataProvider().refreshData();
     }
 
@@ -118,7 +118,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     @SuppressWarnings("unchecked")
     public void addValidRow(FormWidget addForm) throws Exception {
       PersonMO rowData = (((BeanFormWidget<PersonMO>) addForm).writeToBean());
-      getPersonDAO().add(rowData);
+      getGeneralDAO().add(rowData);
       list.getDataProvider().refreshData();
       formList.resetAddForm();
     }
@@ -143,11 +143,11 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     private void addCommonFormFields(BeanFormWidget<PersonMO> form) throws Exception {
-      form.addBeanElement("name", "#First name", new TextControl(), true);
-      form.addBeanElement("surname", "#Last name", new TextControl(), true);
-      form.addBeanElement("phone", "#Phone no", new TextControl(), false);
-      form.addBeanElement("birthdate", "#Birthdate", new DateControl(), false);
-      form.addBeanElement("salary", "#Salary", new FloatControl(), false);
+      form.addBeanElement("name", "common.firstname", new TextControl(), true);
+      form.addBeanElement("surname", "common.lastname", new TextControl(), true);
+      form.addBeanElement("phone", "common.phone", new TextControl(), false);
+      form.addBeanElement("birthdate", "common.birthdate", new DateControl(), false);
+      form.addBeanElement("salary", "common.salary", new FloatControl(), false);
     }
   }
 

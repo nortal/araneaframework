@@ -48,9 +48,9 @@ public class ContractViewWidget extends TemplateBaseWidget {
   @Override
   protected void init() throws Exception {
     LOG.debug("TemplateContractViewWidget init called");
-    setViewSelector("contract/contractView");
+    setViewSelector("management/contract/contractView");
 
-    this.contract = getContractDAO().getById(ContractMO.class, this.id);
+    this.contract = getGeneralDAO().getById(ContractMO.class, this.id);
     putViewData("contract", this.contract);
   }
 

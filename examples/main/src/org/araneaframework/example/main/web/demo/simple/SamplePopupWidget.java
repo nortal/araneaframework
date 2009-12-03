@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.main.web.demo.simple;
 
-
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
@@ -44,7 +43,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
   @Override
   protected void init() throws Exception {
     putViewData("title", "#" + Integer.toString(this.count) + ". Popup Example");
-    setViewSelector("sample/samplePopup");
+    setViewSelector("demo/simple/samplePopup");
   }
 
   public void handleEventCreateThread() throws Exception {
