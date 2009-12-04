@@ -523,8 +523,9 @@ var AraneaPage = Class.create({
    * @param extraParams more parameters, i.e "p1=v1&p2=v2"
    */
   action: function(element, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
-    return this.action_6(this.getSystemForm(), actionId, actionTarget,
-        actionParam, actionCallback, options, sync, extraParams);
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_ACTION, this.systemForm,
+        actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams,
+        this.action_6.bind(this));
   },
 
   /**
@@ -539,13 +540,25 @@ var AraneaPage = Class.create({
    * @param extraParams more parameters, i.e "p1=v1&p2=v2"
    */
   action_6: function(systemForm, actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams) {
-    options = Object.extend({
-      method: 'post',
-      onComplete: actionCallback,
-      onException: this.handleRequestException
-    }, options);
-    var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync, extraParams);
-    return new Ajax.Request(url, options);
+    var callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_ACTION, systemForm,
+        actionId, actionTarget, actionParam, actionCallback, options, sync, extraParams);
+
+    if (callback.isRequestAllowed()) {
+      callback.beforeRequest();
+
+      options = Object.extend({
+        method: 'post',
+        onComplete: function(transport) {
+          callback.afterRequest();
+          actionCallback(transport);
+          callback = null;
+        },
+        onException: this.handleRequestException
+      }, options);
+
+      var url = this.getActionSubmitURL(systemForm, actionId, actionTarget, actionParam, sync, extraParams);
+      return new Ajax.Request(url, options);
+    }
   },
 
   debug: function(message) {
@@ -610,6 +623,11 @@ var AraneaPage = Class.create({
 // =========================================================================================================================================
 
 Object.extend(AraneaPage, {
+
+  TYPE_REQ_SUBMIT: 'SUBMIT',
+  TYPE_REQ_AJAX: 'AJAX',
+  TYPE_REQ_OVERLAY: 'OVERLAY',
+  TYPE_REQ_ACTION: 'ACTION',
 
   /**
    * Returns a default keepalive function -- to make periodical requests to
@@ -695,7 +713,7 @@ Object.extend(AraneaPage, {
    */
   deinit: function() {
     _ap.debug("Executing AraneaPage.deinit()");
-    _ap = null;
+    $$('input.ajax-upload-target').invoke('remove');
   },
 
   /**
@@ -890,8 +908,38 @@ Object.extend(AraneaPage, {
           top: document.documentElement.scrollTop + 'px'
       });
     }
-  }
+  },
 
+  /**
+   * The default request callback used by AraneaPage.downloadFile, which receives URL or 'error' to
+   * do something with it. By default, the URL is used to load that file, and nothing is done with
+   * 'error'. This can be customized, of course.
+   * @param transport The Prototype AJAX request object to read server response.
+   * @since 1.2.3
+   */
+  fileDownloadActionCallback: function(transport) {
+    var url = transport.responseText;
+    araneaPage().debug('Got file download URL "' + url + '".');
+    return  url != 'error' ? url : null;
+  },
+
+  /**
+   * This method handles file downloading with AJAX (action) request. This expects that there is an
+   * FileDownloadActionListener registered on the server side, and the given data is sent to invoke
+   * that listener. The callback method used is AraneaPage.fileDownloadActionCallback, however, it
+   * can be redefined.
+   * @since 1.2.3
+   */
+  downloadFile: function(actionId, actionTarget, actionParam, options) {
+    options = Object.extend({ asynchronous: false }, options);
+    var callback = this.fileDownloadActionCallback;
+    callback = callback.wrap(function(proceed, options, transport) {
+      options.resultURL = proceed(transport);
+    });
+    callback = callback.curry(options);
+    araneaPage().action(null, actionId, actionTarget, actionParam, callback, options);
+    return options.resultURL;
+  }
 });
 
 /**
@@ -899,50 +947,82 @@ Object.extend(AraneaPage, {
  * This callback should be used to add some custom features to submit data or submit response.
  * @since 1.2.2
  */
-AraneaPage.SubmitCallback = {
+AraneaPage.RequestCallback = {
+
   /**
-   * The only method that element-submitters should call. It takes the type of request, the form
-   * containing the element to be submitted, and the function that does the submit work.
+   * A central method that creates event/action data object.
    */
-  doRequest: function(type, form, element, eventFn) {
-    if (!element) {
-      return false;
-    }
+  getData: function(args) {
+    var element = Object.isElement(args[2]) ? args[2] : null;
+    var id = element ? _ap.getEventId(element) : args[2];
+    var targetId = element ? _ap.getEventTarget(element) : args[3];
+    var param = element ? _ap.getEventParam(element) : args[4];
+    var eventUpdateRgns = element ? _ap.getEventUpdateRegions(element) : args[5];
 
-    var widgetId = _ap.getEventTarget(element);
-    var eventId = _ap.getEventId(element);
-    var eventParam = _ap.getEventParam(element);
-    var eventUpdateRgns = _ap.getEventUpdateRegions(element);
-
-    var data = {
-        type: String.interpret(type),
-        form: form,
-        widgetId: String.interpret(widgetId),
-        eventId: String.interpret(eventId),
-        eventParam: String.interpret(eventParam),
-        eventUpdateRgns: String.interpret(eventUpdateRgns)
+    data = {
+      type: args[0],
+      form: args[1],
+      id: id,
+      targetId: targetId,
+      param: param
     };
 
-    this.processEventData(data);
-
-    var result;
-    if (eventFn) {
-      result = eventFn(data.form, data.eventId, data.widgetId, data.eventParam, data.eventUpdateRgns);
+    if (data.type == AraneaPage.TYPE_REQ_ACTION) {
+      Object.extend(data, {
+        actionCallback: args[5],
+        actionOptions: args[6],
+        actionSync: args[7],
+        actionExtraParams: args[8]
+      });
+    } else {
+      Object.extend(data, {
+        element: element,
+        eventUpdateRgns: eventUpdateRgns
+      });
     }
 
-    return this.getRequestResult(type, element, result);
+    return data;
   },
 
   /**
-  * A callback to optionally modify data that is passed to submitters.
-  */
-  processEventData: function(data) {},
+   * The only method that element-submitters should call. It takes the type of request, the form
+   * containing the element to be submitted, and the function that does the submit work.
+   * The valid method signature is either
+   * (type, form, element, eventHandler)
+   * or
+   * (type, form, eventId, targetId, eventParam, eventHandler)
+   * or
+   * (type, form, actionId, targetId, actionParam, actionCallback, actionOptions, sync, extraParams).
+   */
+  doRequest: function(type, form, element) {
+    var eventFn = arguments[arguments.length - 1];
+    var data = this.getData(arguments);
+    var result;
+
+    this.processRequestHandlerData(data);
+
+    if (Object.isFunction(eventFn)) {
+      if (type == AraneaPage.TYPE_REQ_ACTION) {
+        result = eventFn(data.form, data.id, data.targetId, data.param, data.actionCallback,
+            data.actionOptions, data.actionSync, data.actionExtraParams);
+      } else {
+        result = eventFn(data.form, data.id, data.targetId, data.param, data.eventUpdateRgns);
+      }
+    }
+
+    return this.getRequestHandlerResult(type, element, result);
+  },
+
+  /**
+   * A callback to optionally modify data that is passed to request handlers.
+   */
+   processRequestHandlerData: function(data) {},
 
   /**
    * This method is called to return the result of element-submit. Here is a nice place to implement
    * custom features depending on the element or request type. Feel free to override.
    */
-   getRequestResult: function(type, element, result) {
+  getRequestHandlerResult: function(type, element, result) {
     // If element is checkbox or radio then we return the oppposite value. When a request is
     // successful and false is returned, it would block checkbox or radio to be selected. Therefore,
     // we need to flip the value.
@@ -953,78 +1033,72 @@ AraneaPage.SubmitCallback = {
   /**
    * The method that is called by submitters to store submit data in the form.
    */
-  prepare: function(type, form, widgetId, eventId, eventParam) {
-    var data = {
-      type: String.interpret(type),
-      form: form,
-      widgetId: String.interpret(widgetId),
-      eventId: String.interpret(eventId),
-      eventParam: String.interpret(eventParam)
-    };
-    return this.processData(data);
+  prepare: function(type, form, id, targetId, param) {
+    return this.prepareData(this.getData(arguments));
   },
 
   /**
-   * Processes the submit data. It calls following methods of this object:
-   * 1. processSubmitData - to optionally modify the submit data; 
-   * 2. storeSubmitData - to store the submit data in the form (if submit is allowed).
-   * 3. Adds isSubmitAllowed, beforeSubmit, afterSubmit callbacks to data.
+   * Processes the request data. It calls following methods of this object:
+   * 1. processRequestData - to optionally modify the submit data; 
+   * 2. storeRequestData - to store the submit data in the form (if submit is allowed).
+   * 3. Adds isRequestAllowed, beforeRequest, afterRequest callbacks to data.
    */
-  processData: function(data) {
-    this.processSubmitData(data);
-    this.storeSubmitData(data);
-    data.isSubmitAllowed = this.isSubmitAllowed.curry(data);
-    data.beforeSubmit = this.beforeSubmit.curry(data);
-    data.afterSubmit = this.afterSubmit.curry(data);
+  prepareData: function(data) {
+    this.processRequestData(data);
+    this.storeRequestData(data);
+    data.isRequestAllowed = this.isRequestAllowed.curry(data);
+    data.beforeRequest = this.beforeRequest.curry(data);
+    data.afterRequest = this.afterRequest.curry(data);
     return data;
   },
 
   /**
-   * A callback to optionally modify submit data.
+   * A callback to optionally modify request data.
    */
-  processSubmitData: function(data) {},
+  processRequestData: function(data) {},
 
   /**
-   * A callback to store submit data in the form.
+   * A callback to store request data in the form.
    */
-  storeSubmitData: function(data) {
-    if (data.form) {
-      data.form.araWidgetEventPath.value = data.widgetId;
-      data.form.araWidgetEventHandler.value = data.eventId;
-      data.form.araWidgetEventParameter.value = data.eventParam;
+  storeRequestData: function(data) {
+    if (data.type != AraneaPage.TYPE_REQ_ACTION && data.form) {
+      data.form.araWidgetEventPath.value = data.targetId;
+      data.form.araWidgetEventHandler.value = data.id;
+      data.form.araWidgetEventParameter.value = data.param;
     }
   },
 
   /**
-   * A callback that is checked to enable or disable submit.
+   * A callback that is checked to enable or disable request. Feel free to override.
    */
-  isSubmitAllowed: function(data) {
-    return true;
+  isRequestAllowed: function(data) {
+    return !_ap.isSubmitted();
   },
 
   /**
-   * A callback that is called before each submit (no matter whether it is AJAX or not).
-   * This method includes default behaviour.
+   * A callback that is called always before each request (no matter whether it is AJAX or not).
+   * This method includes default behaviour. Feel free to override.
    */
-  beforeSubmit: function(data) {
-    if (data.type != DefaultAraneaSubmitter.prototype.TYPE) {
+  beforeRequest: function(data) {
+    _ap.setSubmitted();
+    if (data.type != AraneaPage.TYPE_REQ_SUBMIT) {
       // copy the content of rich editors to corresponding HTML textinputs/textareas
       if (window.tinyMCE) {
         window.tinyMCE.triggerSave();
       }
     }
-    if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
-      _ap.debug('GOOD: showLoadingMessage');
+    if (data.type == AraneaPage.TYPE_REQ_AJAX) {
       AraneaPage.showLoadingMessage();
     }
   },
 
   /**
-  * A callback that is called after each submit (no matter whether it is AJAX or not).
-  * This method includes default behaviour.
-  */
-  afterSubmit: function(data) {
-    if (data.type == DefaultAraneaAJAXSubmitter.prototype.TYPE) {
+   * A callback that is called after each request (no matter whether it is AJAX or not).
+   * This method includes default behaviour. Feel free to override.
+   */
+  afterRequest: function(data) {
+    _ap.submitted = false;
+    if (data.type == AraneaPage.TYPE_REQ_AJAX) {
       AraneaPage.hideLoadingMessage();
     }
   }
@@ -1039,25 +1113,23 @@ AraneaPage.SubmitCallback = {
  */
 var DefaultAraneaSubmitter = Class.create({
 
-  TYPE: 'SUBMIT',
-
   initialize: function(form) {
     this.systemForm = form;
   },
 
   event: function(element) {
-    return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_4.bind(this));
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_SUBMIT, this.systemForm, element,
+        this.event_4.bind(this));
   },
 
   event_4: function(systemForm, eventId, widgetId, eventParam) {
-    var callback = AraneaPage.SubmitCallback.prepare(
-        this.TYPE, systemForm, widgetId, eventId, eventParam);
+    var callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_SUBMIT, systemForm,
+        eventId, widgetId, eventParam);
 
-    if (callback.isSubmitAllowed()) {
-      callback.beforeSubmit();
-      _ap.setSubmitted();
+    if (callback.isRequestAllowed()) {
+      callback.beforeRequest();
       systemForm.submit();
-      callback.afterSubmit();
+      callback.afterRequest();
     }
 
     callback = null;
@@ -1072,22 +1144,19 @@ var DefaultAraneaSubmitter = Class.create({
  */
 var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
-  TYPE: 'OVERLAY',
-
   event: function(element) {
-    return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_7.bind(this));
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_OVERLAY, this.systemForm,
+        element, this.event_7.bind(this));
   },
 
   event_7: function(systemForm, eventId, widgetId, eventParam) {
-    var callback = AraneaPage.SubmitCallback.prepare(
-        this.TYPE, systemForm, widgetId, eventId, eventParam);
+    var callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_OVERLAY, systemForm,
+        eventId, widgetId, eventParam);
 
-    if (callback.isSubmitAllowed()) {
-      callback.beforeSubmit();
-
+    if (callback.isRequestAllowed()) {
+      callback.beforeRequest();
       Aranea.ModalBox.update({ params: systemForm.serialize(true) });
-
-      callback.afterSubmit();
+      callback.afterRequest();
     }
 
     callback = null;
@@ -1097,18 +1166,17 @@ var DefaultAraneaOverlaySubmitter = Class.create(DefaultAraneaSubmitter, {
 
 var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
-  TYPE: 'AJAX',
-
   event: function(element) {
-    return AraneaPage.SubmitCallback.doRequest(this.TYPE, this.systemForm, element, this.event_5.bind(this));
+    return AraneaPage.RequestCallback.doRequest(AraneaPage.TYPE_REQ_AJAX, this.systemForm, element,
+        this.event_5.bind(this));
   },
 
   event_5: function(systemForm, eventId, widgetId, eventParam, updateRegions) {
-    this.callback = AraneaPage.SubmitCallback.prepare(
-            this.TYPE, systemForm, widgetId, eventId, eventParam);
+    this.callback = AraneaPage.RequestCallback.prepare(AraneaPage.TYPE_REQ_AJAX, systemForm,
+        eventId, widgetId, eventParam);
 
-    if (this.callback.isSubmitAllowed()) {
-      this.callback.beforeSubmit();
+    if (this.callback.isRequestAllowed()) {
+      this.callback.beforeRequest();
 
       var ajaxRequestId = AraneaPage.getRandomRequestId().toString();
       var neededAraClientStateId = systemForm.araClientStateId ? systemForm.araClientStateId.value : null;
@@ -1135,7 +1203,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
 
   afterRequest: function() {
     if (this.callback) {
-      this.callback.afterSubmit();
+      this.callback.afterRequest();
       this.callback = null;
     }
   },
@@ -1165,6 +1233,7 @@ var DefaultAraneaAJAXSubmitter = Class.create(DefaultAraneaSubmitter, {
       logmsg += transport.status + ' ' + transport.statusText;
       _ap.debug(logmsg);
       AraneaPage.processResponse(transport.responseText);
+      AraneaPage.deinit();
       AraneaPage.init();
     } else {
       logmsg += 'Partial rendering: received erroneous response (';

@@ -35,7 +35,7 @@ public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     baseStyleClass = "aranea-date";
   }
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("DateControl");    
+    assertControlTypes("DateControl", "JodaDateControl");
 
     // Prepare
     String name = this.getFullFieldId();       
@@ -61,7 +61,3 @@ public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     return EVAL_PAGE;
   }
 }
-
-
-
-

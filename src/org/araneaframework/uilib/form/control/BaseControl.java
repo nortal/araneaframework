@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
 
@@ -29,28 +29,29 @@ import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 
-
 /**
  * This class is a control generalization that provides methods common to all HTML form controls.
  * The methods include XML output and error handling.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  */
-public abstract class BaseControl extends BaseApplicationWidget implements java.io.Serializable, Control {
-  //*******************************************************************
+public abstract class BaseControl extends BaseApplicationWidget implements Control {
+
+  // *******************************************************************
   // FIELDS
-  //*******************************************************************
-  
+  // *******************************************************************
+
   protected Object value;
+
   protected Object innerData;
+
   protected boolean isReadFromRequest = false;
 
   private FormElementContext feCtx;
-  
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************
+
+  // *********************************************************************
+  // * PUBLIC METHODS
+  // *********************************************************************
 
   /**
    * Returns the value of the control (value read from the request). Type of value depends on the
@@ -59,91 +60,100 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * @return Returns the value of the control (value read from the request).
    */
   public Object getRawValue() {
-    return value;
+    return this.value;
   }
 
   /**
-   * Sets the raw control value (as it was read from request/written to response).
-   * It is usually set by {@link org.araneaframework.uilib.form.Converter} when
-   * value of {@link FormElement} that owns this {@link BaseControl} changes.
+   * Sets the raw control value (as it was read from request/written to response). It is usually set
+   * by {@link org.araneaframework.uilib.form.Converter} when value of {@link FormElement} that owns
+   * this {@link BaseControl} changes.
    * 
-   * @param value control value.
+   * @param value The value for this control in (any data type is allowed).
    * @see #getRawValue()
    */
-  public void setRawValue(Object value) {   
-    BaseControl.this.value = value;
+  public void setRawValue(Object value) {
+    this.value = value;
   }
 
   /**
-   * Returns {@link ViewModel}.
-   * @return {@link ViewModel}.
-   * @throws Exception 
+   * Returns the <code>ViewModel</code> of this control. Each control has its own
+   * <code>ViewModel</code> implementation.
+   * 
+   * @return The <code>ViewModel</code> of this control.
    */
   public Object getViewModel() throws Exception {
     return new ViewModel();
   }
-  
+
   public void setFormElementCtx(FormElementContext formElementContext) {
     this.feCtx = formElementContext;
   }
-  
+
+  /**
+   * Returns the form element that this component depends on.
+   */
   public FormElementContext getFormElementCtx() {
-    return feCtx;
+    return this.feCtx;
   }
-  
+
   /**
    * By default the control is considered read if it has a not null data read from request.
+   * 
+   * @return <code>true</code>, if the value of this parameter in the request is not
+   *         <code>null</code>.
    */
   public boolean isRead() {
-    return isReadFromRequest;
+    return this.isReadFromRequest;
   }
-  
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************  
-  
+
+  // *********************************************************************
+  // * OVERRIDABLE METHODS
+  // *********************************************************************
+
+  /**
+   * Invokes both {@link #convert()} and {@link #validate()} or this control;
+   */
   public void convertAndValidate() {
     convert();
     validate();
   }
-  
-  public void convert() {
-  }
-  
-  public void validate() {
-  }
-  
+
+  public void convert() {}
+
+  public void validate() {}
+
   protected void readFromRequest(HttpInputData request) {}
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  
-  
+
+  // *********************************************************************
+  // * INTERNAL METHODS
+  // *********************************************************************
+
   protected void init() throws Exception {
     super.init();
-    
-    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the control before it can be initialized! " +
-        "Make sure that the control is associated with a form element!");
-    
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the "
+        + "control before it can be initialized! Make sure that the control is associated with a "
+        + "form element!");
   }
-  
+
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!isDisabled())
+    if (!isDisabled()) {
       super.action(path, input, output);
+    }
   }
 
   protected void update(InputData input) throws Exception {
     super.update(input);
-    
-    if (!isDisabled())
+    if (!isDisabled()) {
       readFromRequest((HttpInputData) input);
+    }
   }
-  
+
   protected void handleEvent(InputData input) throws Exception {
-    if (!isDisabled())
+    if (!isDisabled()) {
       super.handleEvent(input);
+    }
   }
-  
+
   /**
    * Returns control label.
    * 
@@ -161,13 +171,14 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   protected boolean isMandatory() {
     return feCtx.isMandatory();
   }
-  
+
   protected void addError(String error) {
     feCtx.addError(error);
   }
-  
+
   /**
    * Returns whether the control is disabled.
+   * 
    * @return whether the control is disabled
    * 
    * @since 1.1 this method is public and part of {@link Control} interface
@@ -175,25 +186,26 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
   public boolean isDisabled() {
     return feCtx.isDisabled();
   }
-  
+
   protected boolean isValid() {
     return feCtx.isValid();
   }
 
   public Widget.Interface _getWidget() {
-	  return new WidgetImpl();
+    return new WidgetImpl();
   }
 
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
+
     public void update(InputData input) {
-    	isReadFromRequest = false;
-		super.update(input);
-	}
+      isReadFromRequest = false;
+      super.update(input);
+    }
   }
 
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************    
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
 
   /**
    * Represents a general control view model.
@@ -201,13 +213,17 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public class ViewModel implements Control.ViewModel {
+
     protected String controlType;
+
     protected boolean mandatory;
+
     protected boolean disabled;
+
     protected String label;
 
     /**
-     * Takes an outer class snapshot.     
+     * Takes an outer class snapshot.
      */
     public ViewModel() {
       String className = BaseControl.this.getClass().getName();
@@ -230,6 +246,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
 
     /**
      * Returns control type.
+     * 
      * @return control type.
      */
     public String getControlType() {
@@ -238,6 +255,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
 
     /**
      * Returns whether the control is mandatory.
+     * 
      * @return whether the control is mandatory.
      */
     public boolean isMandatory() {
@@ -246,6 +264,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
 
     /**
      * Returns control label.
+     * 
      * @return control label.
      */
     public String getLabel() {
@@ -254,6 +273,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements java.
 
     /**
      * Returns whether the control is disabled.
+     * 
      * @return whether the control is disabled.
      */
     public boolean isDisabled() {

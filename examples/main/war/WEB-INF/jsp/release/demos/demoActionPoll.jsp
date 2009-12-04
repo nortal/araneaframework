@@ -10,17 +10,18 @@
 	<script type="text/javascript">
 		window.hasExecuted = false;
 
-		var pollingUpdater = function(request, response) {
+		var pollingUpdater = function(request) {
 
 			// If the region does not exist, quit:
-			if (window.hasExecuted &amp;&amp; $$('div.msg-error').first().empty()) {
-				clearInterval(intervalActionId);
+			if (window.hasExecuted &amp;&amp; $$('div.msg-error:first').first().empty()) {
+				clearInterval(window.intervalActionId);
 				window.hasExecuted = null;
+				return;
 			}
 
 			var text = request.responseText;
 			if (text != 'NOTHING') {
-				$$('div.msg-error').first().insert(text).show();
+				$$('div.msg-error:first').first().insert(text).show();
 				window.hasExecuted = true;
 			}
 		};
@@ -30,7 +31,7 @@
 			araneaPage().action(null, "pollrequest", '<c:out value="${widgetId}" />', null, pollingUpdater);
 		};
 
-		var intervalActionId = setInterval(pollingAction, 3000);
+		window.intervalActionId = setInterval(pollingAction, 3000);
 	</script>
   </ui:widgetContext>
 </jsp:root>

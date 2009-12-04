@@ -16,6 +16,8 @@
 
 package org.araneaframework.example.main.web.menu;
 
+import org.araneaframework.example.main.web.testing.ComponentsTreeWidget;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -196,6 +198,7 @@ public class MenuWidget extends TemplateMenuWidget {
     subMenu.addMenuItem(new MenuItem("Simple_Tree", SimpleTreeWidget.class));
     subMenu.addMenuItem(new MenuItem("Complex_Tree", ComplexTreeWidget.class));
     subMenu.addMenuItem(new MenuItem("Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class));
+    subMenu.addMenuItem(new MenuItem("ComponentsTree", ComponentsTreeWidget.class));
 
     // The Misc menu:
     MenuItem errorMenu = result.addMenuItem(new MenuItem("Misc"));

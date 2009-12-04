@@ -153,8 +153,7 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
 		if (labelWidgetFullId.startsWith(contextWidgetFullId)) {
 			WidgetIncludeTag includeTag = new WidgetIncludeTag();
 			registerSubtag(includeTag);
-			String labelWidgetRelativeId = labelWidgetFullId.substring(contextWidgetFullId.length());
-			includeTag.setId(labelWidgetRelativeId);
+			includeTag.setId(labelWidgetFullId.substring(contextWidgetFullId.length()));
 			executeSubtag(includeTag);
 			unregisterSubtag(includeTag);
 		} else {

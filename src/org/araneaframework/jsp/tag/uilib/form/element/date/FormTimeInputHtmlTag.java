@@ -30,7 +30,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     baseStyleClass = "aranea-time";
   }
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("TimeControl");
+    assertControlTypes("TimeControl", "JodaTimeControl");
 
     // Prepare    
     String name = this.getFullFieldId();

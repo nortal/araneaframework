@@ -18,17 +18,17 @@ package org.araneaframework.example.main.web.sample;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.control.CheckboxControl;
-import org.araneaframework.uilib.form.control.DateControl;
-import org.araneaframework.uilib.form.control.DateTimeControl;
 import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.control.JodaDateControl;
+import org.araneaframework.uilib.form.control.JodaDateTimeControl;
+import org.araneaframework.uilib.form.control.JodaTimeControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
-import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.BooleanData;
+import org.joda.time.DateTime;
 
 /**
  * Simple bean form component. A form with one checkbox, one textbox,
@@ -75,11 +75,11 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     simpleForm.addBeanElement("searchString", "demo.beanForm.searchString",
         new TextControl(), false);
     simpleForm.addBeanElement("createdDateTime",
-        "demo.beanForm.createdDateTime", new DateTimeControl(), false);
+        "demo.beanForm.createdDateTime", new JodaDateTimeControl(), false);
     simpleForm.addBeanElement("createdTime", "demo.beanForm.createdTime",
-        new TimeControl(), false);
+        new JodaTimeControl(), false);
     simpleForm.addBeanElement("createdDate", "demo.beanForm.createdDate",
-        new DateControl(), false);
+        new JodaDateControl(), false);
     simpleForm.addBeanElement("length", "demo.beanForm.length",
         new FloatControl(), false);
 
@@ -127,9 +127,9 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
     FormDataModel formData = new FormDataModel();
     formData.setCaseSensitive(true);
     formData.setSearchString("Where am I?");
-    formData.setCreatedDateTime(new Date());
-    formData.setCreatedDate(new Date());
-    formData.setCreatedTime(new Date());
+    formData.setCreatedDateTime(new DateTime());
+    formData.setCreatedDate(new DateTime());
+    formData.setCreatedTime(new DateTime());
     formData.setLength(new BigDecimal("12345.6789"));
     formData.setSiblingsCount(5);
     formData.setPeopleCount(66500000000L);
@@ -151,11 +151,11 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
 
     private String searchString;
 
-    private Date createdDateTime;
+    private DateTime createdDateTime;
 
-    private Date createdDate;
+    private DateTime createdDate;
 
-    private Date createdTime;
+    private DateTime createdTime;
 
     private BigDecimal length;
 
@@ -183,27 +183,27 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
       this.searchString = searchString;
     }
 
-    public Date getCreatedDateTime() {
+    public DateTime getCreatedDateTime() {
       return this.createdDateTime;
     }
 
-    public void setCreatedDateTime(Date createdDateTime) {
+    public void setCreatedDateTime(DateTime createdDateTime) {
       this.createdDateTime = createdDateTime;
     }
 
-    public Date getCreatedDate() {
+    public DateTime getCreatedDate() {
       return this.createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(DateTime createdDate) {
       this.createdDate = createdDate;
     }
 
-    public Date getCreatedTime() {
+    public DateTime getCreatedTime() {
       return this.createdTime;
     }
 
-    public void setCreatedTime(Date createdTime) {
+    public void setCreatedTime(DateTime createdTime) {
       this.createdTime = createdTime;
     }
 

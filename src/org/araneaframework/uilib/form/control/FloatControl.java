@@ -40,7 +40,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
  */
-public class FloatControl extends EmptyStringNullableControl implements FilteredInputControl {
+public class FloatControl extends StringValueControl implements FilteredInputControl {
 	private InputFilter inputFilter;
 	private BigDecimal minValue;
 	private BigDecimal maxValue;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
-
-/**
- * 
  */
+
 package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
@@ -26,17 +23,17 @@ import org.araneaframework.Widget;
 import org.araneaframework.uilib.form.control.BaseControl;
 
 /**
- * {@link Control} is the widget that does the actual parsing and reading of the request 
- * parameters. It corresponds to the controls found in HTML forms, like textbox, 
- * textarea, selectbox, button &hellip;
+ * {@link Control} is the widget that does the actual parsing and reading of the request parameters.
+ * It corresponds to the controls found in HTML forms, like textbox, textarea, selectbox, button
+ * &hellip;
  * 
- * {@link Control} is meant to be used inside {@link FormElement} that provides
- * type safety and additional {@link Constraint}s to request data.
+ * {@link Control} is meant to be used inside {@link FormElement} that provides type safety and
+ * additional {@link Constraint}s to request data.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public interface Control extends Widget, Viewable, FormElementAware {
-  
+
   /**
    * Returns whether the control data was present in the HTTP request.
    * 
@@ -46,9 +43,9 @@ public interface Control extends Widget, Viewable, FormElementAware {
 
   /**
    * This method should be overriden by the control, returning the type of the value of this
-   * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}to
-   * determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer the values
-   * from {@link org.araneaframework.uilib.form.Data}to control and back.
+   * control. It is later used in {@link org.araneaframework.uilib.form.converter.ConverterFactory}
+   * to determine the {@link org.araneaframework.uilib.form.converter.BaseConverter}used to transfer
+   * the values from {@link org.araneaframework.uilib.form.Data}to control and back.
    * 
    * @return the type of the value of this control
    */
@@ -63,8 +60,9 @@ public interface Control extends Widget, Viewable, FormElementAware {
   public Object getRawValue();
 
   /**
-   * Sets the control value. It is usually set by {@link org.araneaframework.uilib.form.Converter} when
-   * value of {@link FormElement} (this is stored in {@link Data}) that owns this {@link BaseControl} changes.
+   * Sets the control value. It is usually set by {@link org.araneaframework.uilib.form.Converter}
+   * when value of {@link FormElement} (this is stored in {@link Data}) that owns this
+   * {@link BaseControl} changes.
    * 
    * @param value control value.
    * @see #getRawValue()
@@ -72,32 +70,41 @@ public interface Control extends Widget, Viewable, FormElementAware {
   public void setRawValue(Object value);
 
   /**
-   * Converts the data submitted by the user.
+   * Converts the data submitted by the user into an internally used data type, which depends on a
+   * control implementation.
    */
   public void convert();
-  
+
   /**
-   * Validates the data submitted by the user.
+   * Validates the data submitted by the user and which was converted beforehand. All errors are
+   * stored in the {@link FormElementContext}.
    */
   public void validate();
-  
-  /** @since 1.1 */
+
+  /**
+   * Returns whether this control is disabled, which depends on the {@link FormElementContext}.
+   * 
+   * @return <code>true</code>, if this control is disabled.
+   * @since 1.1
+   */
   public boolean isDisabled();
-  
+
   /**
    * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
    */
   public interface ViewModel extends Serializable {
+
     /**
      * Returns control type.
+     * 
      * @return control type.
      */
     public String getControlType();
-    
+
     public boolean isMandatory();
-    
+
     public String getLabel();
-    
+
     public boolean isDisabled();
 
     /** @since 1.1 */
