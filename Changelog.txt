@@ -1,14 +1,28 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-15.01.2008   | Aranea 4.1.1.9
+2009.12.04   | Aranea 2.0 RC1
 
 Features and Improvements
-	Environment is now parametrized on classes of its entries
+	Environment is now parameterized on classes of its entries
 	BeanMapper/BeanUtil has changed the way they access bean's fields:
 		1. If there is public accessor in bean's class or any superclass, then use it.
 		2. If there is field with any access modifier in bean's class, then use it.
 	BeanFormWidget now operates on underlying bean instance	
-	Started parametrizing ListWidget and ListDataProvider
+	Started parameterizing ListWidget and ListDataProvider
+
+  Generics are Go                                                               | See #21
+  Server-side definitions of which actions are allowed to be invoked asynchron. | See #419
+  BaseTag.getEnvironment()                                                      | See #396
+  Document HttpInputData pushPathPrefix/popPathPrefix                           | See #539
+  BaseFormButtonTag doesn't need to call writeFormElementValidityMarkers        | See #848
+  Make MenuItem.MENU_PATH_SEPARATOR modifiable (defaults to '.')                | See #520
+  ListWidget.setInitialOrder by more than 1 column                              | See #852
+
+Bugfixes
+  2 bugs in FileInfoData and FileUploadControl                                  | See #841
+  Cloned Thread & 'response already committed'                                  | See #419
+  BaseFormButtonTag doesn't need to call writeFormElementValidityMarkers        | See #848
+  BigDecimalData should use compareTo instead of equals method                  | See #834
 
 ---------------------------------------------------------------------------------------------
 2009.07.08    | Aranea 1.2.3

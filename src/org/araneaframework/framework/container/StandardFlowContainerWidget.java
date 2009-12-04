@@ -195,7 +195,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     refreshGlobalEnvironment();
 
     if (this.top != null) {
-      start(this.top, null, null);
+      start(this.top);
       this.top = null;
     }
   }
