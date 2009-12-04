@@ -23,9 +23,7 @@ import org.joda.time.DateTime;
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.2.3
  */
-public class JodaDateData extends Data {
-
-  private static final long serialVersionUID = 1L;
+public class JodaDateData extends Data<DateTime> {
 
   public JodaDateData() {
     super(DateTime.class);

@@ -2,7 +2,8 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard"
+	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.1">
 
 	<!-- Component starts here -->
@@ -15,7 +16,7 @@
 
 			<tui:component>
 				<!-- Body -->
-				<tui:componentForm>					
+				<tui:componentForm>
 					<ui:formElement id="showTitle">
 						<ui:row>
 							<ui:cell styleClass="name">
@@ -23,21 +24,21 @@
 							</ui:cell>
 							<ui:cell styleClass="inpt">
 								<ui:checkbox/>
-							</ui:cell>			
+							</ui:cell>
 							<ui:cell styleClass="name">
-								<c:if test="${formElementValue}">				
+								<c:if test="${formElementValue}">
 									<ui:label id="title"/>
 								</c:if>
 							</ui:cell>
 							<ui:cell styleClass="inpt">
-								<c:if test="${formElementValue}">				
+								<c:if test="${formElementValue}">
 									<ui:textInput id="title"/>
-								</c:if>																	
-							</ui:cell>															
+								</c:if>
+							</ui:cell>
 						</ui:row>
 					</ui:formElement>
 
-					<ui:formElement id="firstName">					
+					<ui:formElement id="firstName">
 						<ui:row>
 							<ui:cell styleClass="name">
 								<ui:label />
@@ -57,7 +58,7 @@
 							<ui:cell styleClass="inpt">
 								<ui:textInput />
 							</ui:cell>
-							<ui:cell colspan="2"/>			
+							<ui:cell colspan="2"/>
 						</ui:row>
 					</ui:formElement>
 				</tui:componentForm>

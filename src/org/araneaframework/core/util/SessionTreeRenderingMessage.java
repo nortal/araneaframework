@@ -17,7 +17,6 @@
 package org.araneaframework.core.util;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.lang.ClassUtils;
@@ -47,7 +46,7 @@ public class SessionTreeRenderingMessage implements Message {
 
   protected int level = 0;
 
-  protected List components = new LinkedList();
+  protected List<ComponentItem> components = new LinkedList<ComponentItem>();
 
   protected ComponentItem activeComponent;
 
@@ -89,7 +88,7 @@ public class SessionTreeRenderingMessage implements Message {
    * @return An instance of <code>SessionTreeRenderingMessage</code> so that its
    *         <code>get*()</a> methods could be invoke to retrieve results in different formats.
    */
-  public static SessionTreeRenderingMessage execute(Environment env, ItemDecorator decorator, Class initialEnvEntry) {
+  public static SessionTreeRenderingMessage execute(Environment env, ItemDecorator decorator, Class<?> initialEnvEntry) {
     Assert.notNullParam(env, "env");
 
     Component c = (Component) env.requireEntry(initialEnvEntry);
@@ -155,7 +154,7 @@ public class SessionTreeRenderingMessage implements Message {
    * 
    * @return A list of {@link ComponentItem}s.
    */
-  public List getComponents() {
+  public List<ComponentItem> getComponents() {
     return this.components;
   }
 
@@ -167,7 +166,7 @@ public class SessionTreeRenderingMessage implements Message {
   public StringBuffer getResult() {
     StringBuffer result = new StringBuffer();
     if (!this.components.isEmpty()) {
-      compose(this.decorator, result, (ComponentItem) this.components.get(0), 0);
+      compose(this.decorator, result, this.components.get(0), 0);
     }
     return result;
   }
@@ -184,8 +183,8 @@ public class SessionTreeRenderingMessage implements Message {
   protected void compose(ItemDecorator decorator, StringBuffer sb, ComponentItem item, int level) {
     decorator.add(sb, item, level);
     if (item.hasChildren()) {
-      for (Iterator i = item.getChildren().iterator(); i.hasNext();) {
-        compose(decorator, sb, (ComponentItem) i.next(), level + 1);
+      for (ComponentItem component: item.getChildren()) {
+        compose(decorator, sb, component, level + 1);
       }
     }
   }
@@ -235,7 +234,7 @@ public class SessionTreeRenderingMessage implements Message {
 
     private Component component;
 
-    private List children = new LinkedList();
+    private List<ComponentItem> children = new LinkedList<ComponentItem>();
 
     /**
      * The only way to create and provide data to this component item.
@@ -272,7 +271,7 @@ public class SessionTreeRenderingMessage implements Message {
      * 
      * @return The child components of this component.
      */
-    public List getChildren() {
+    public List<ComponentItem> getChildren() {
       return this.children;
     }
 
@@ -285,6 +284,7 @@ public class SessionTreeRenderingMessage implements Message {
       return !this.children.isEmpty();
     }
 
+    @Override
     public String toString() {
       StringBuffer sb = new StringBuffer("[")
         .append(this.id)

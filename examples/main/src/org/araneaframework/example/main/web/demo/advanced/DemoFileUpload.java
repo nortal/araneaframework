@@ -16,11 +16,13 @@
 
 package org.araneaframework.example.main.web.demo.advanced;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.service.FileDownloaderService;
 import org.araneaframework.http.support.PopupWindowProperties;
+import org.araneaframework.http.widget.FileDownloaderWidget.FileDownloadStreamCallback;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -91,7 +93,8 @@ public class DemoFileUpload extends TemplateBaseWidget {
   public void handleEventSelectFile(String param) throws Exception {
     FileInfo selectedFile = this.uploadList.getRowFromRequestId(param);
     getMessageCtx().showInfoMessage("common.popupBlockMsg");
-    getPopupCtx().open(new FileDownloaderService(selectedFile), new PopupWindowProperties(), null);
+    DownloadFileProvider provider = new DownloadFileProvider(selectedFile);
+    getPopupCtx().open(new FileDownloaderService(provider), new PopupWindowProperties(), null);
   }
 
   public void handleEventValidate() throws Exception {
@@ -118,7 +121,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
       FileInfo fileInfo = (FileInfo) form.getValueByFullName(FILE_INPUT);
       if (fileInfo != null && fileInfo.isFilePresent()) {
-        if (!files.isEmpty()) {
+        if (files.isEmpty()) { // It means: is file is first? 
           DemoFileUpload.this.addWidget(FILE_LIST, uploadList);
         }
 
@@ -131,4 +134,32 @@ public class DemoFileUpload extends TemplateBaseWidget {
     }
   }
 
+  private class DownloadFileProvider extends FileDownloadStreamCallback {
+
+    private FileInfo file;
+
+    public DownloadFileProvider(FileInfo file) {
+      this.file = file;
+    }
+
+    @Override
+    public InputStream getStreamToDownload() {
+      return this.file.getFileStream();
+    }
+
+    @Override
+    public String getContentType() {
+      return this.file.getContentType();
+    }
+
+    @Override
+    public int getLength() {
+      return (int) this.file.getSize();
+    }
+
+    @Override
+    public String getFileName() {
+      return this.file.getFileName();
+    }
+  }
 }

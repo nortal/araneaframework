@@ -95,13 +95,17 @@ public class SimpleBeanFormWidget extends TemplateBaseWidget {
       FormDataModel data = this.simpleForm.writeToBean();
 
       // We can display the result simply like that:
-      getMessageCtx().showInfoMessage("Checkbox value is: " + data.isCaseSensitive());
-      getMessageCtx().showInfoMessage("Textbox value is: " + data.getSearchString());
-      getMessageCtx().showInfoMessage("DateTime value is: " + data.getCreatedDateTime());
-      getMessageCtx().showInfoMessage("Time value is: " + data.getCreatedTime());
-      getMessageCtx().showInfoMessage("Date value is: " + data.getCreatedDate());
-      getMessageCtx().showInfoMessage("Number value is: " + data.getLength());
+      showMsg("common.Checkbox", data.isCaseSensitive());
+      showMsg("common.Textbox", data.getSearchString());
+      showMsg("common.datetime", data.getCreatedDateTime());
+      showMsg("common.time", data.getCreatedTime());
+      showMsg("common.date", data.getCreatedDate());
+      showMsg("common.float", data.getLength());
     }
+  }
+
+  private void showMsg(String label, Object value) {
+    getMessageCtx().showInfoMessage("simpleForm.msg", t(label), value);
   }
 
   private FormDataModel getDefaultValues() {

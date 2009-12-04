@@ -55,7 +55,7 @@ public abstract class ValidationUtil {
 
     for (int i = 0; tokenizer.hasMoreTokens(); i++) {
       if (useJoda) {
-        result = JodaDateUtil.parseJoda(tokenizer.nextToken(), dateTimeString);
+        result = JodaDateUtil.parseJodaJdk(tokenizer.nextToken(), dateTimeString);
       } else {
         result = parseJDK(tokenizer.nextToken(), dateTimeString);
       }

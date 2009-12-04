@@ -83,7 +83,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
       String radioId = scopePrefix + displayItem.getValue();
 
       if (this.labelBefore) {
-        writeLabel(label, this.derivedId, radioId, displayItem.getValue());
+        writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
       }
 
       FormRadioSelectItemHtmlTag item = registerSubtag(new FormRadioSelectItemHtmlTag());
@@ -115,7 +115,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
       unregisterSubtag(item);
 
       if (!this.labelBefore) {
-        writeLabel(label, this.derivedId, radioId, displayItem.getValue());
+        writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
       }
 
       if ("horizontal".equals(this.type)) {
@@ -157,12 +157,13 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
     this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 
-  protected void writeLabel(FormRadioSelectItemLabelHtmlTag label, String id, String radioId, String value)
+  protected void writeLabel(FormRadioSelectItemLabelHtmlTag label, String id, String radioId, String labelId)
       throws JspException {
     registerSubtag(label);
     label.setId(id);
     label.setRadioId(radioId);
-    label.setValue(evaluateLabel(value));
+    label.setValue(evaluateLabel(labelId));
+    label.setLocalizeLabel(Boolean.toString(false));
     executeStartSubtag(label);
     executeEndTagAndUnregister(label);
   }

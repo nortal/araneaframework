@@ -46,7 +46,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
   private static final Log LOG = LogFactory.getLog(BaseExpiringServiceRouterService.class);
 
-  private Map<Object, TimeCapsule> timeCapsules;
+  private Map<String, TimeCapsule> timeCapsules;
 
   private Map<String, Long> serviceTTLMap;
 
@@ -102,15 +102,15 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   }
 
   @Override
-  protected void closeService(Object serviceId) {
+  protected void closeService(String serviceId) {
     super.closeService(serviceId);
     getTimeCapsules().remove(serviceId);
   }
 
   protected void killExpiredServices(long now) {
     synchronized (getTimeCapsules()) {
-      for (Iterator<Map.Entry<Object, TimeCapsule>> i = getTimeCapsules().entrySet().iterator(); i.hasNext();) {
-        Map.Entry<Object, TimeCapsule> entry = i.next();
+      for (Iterator<Map.Entry<String, TimeCapsule>> i = getTimeCapsules().entrySet().iterator(); i.hasNext();) {
+        Map.Entry<String, TimeCapsule> entry = i.next();
 
         if (entry.getValue().isExpired(now)) {
           super.closeService(entry.getKey());
@@ -135,9 +135,9 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     return input.getGlobalData().get(getKeepAliveKey()) != null;
   }
 
-  private synchronized Map<Object, TimeCapsule> getTimeCapsules() {
+  private synchronized Map<String, TimeCapsule> getTimeCapsules() {
     if (this.timeCapsules == null) {
-      this.timeCapsules = Collections.synchronizedMap(new HashMap<Object, TimeCapsule>());
+      this.timeCapsules = Collections.synchronizedMap(new HashMap<String, TimeCapsule>());
     }
     return timeCapsules;
   }

@@ -57,6 +57,8 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
 
   private Service childService;
 
+  private boolean useFullURL = true;
+
   @Override
   protected void init() throws Exception {
     this.childService._getComponent().init(getScope(), new BaseEnvironment() {
@@ -85,6 +87,7 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
 
   public void service(HttpServletRequest request, HttpServletResponse response) {
     HttpInputData input = new StandardServletInputData(request);
+    input.setUseFullURL(this.useFullURL);
     localInput.set(input);
     HttpOutputData output = new StandardServletOutputData(request, response);
     localOutput.set(output);
@@ -98,5 +101,17 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
       localInput.set(null);
       localOutput.set(null);
     }
+  }
+
+  /**
+   * Allows to specify whether the URL returned by {@link HttpInputData#getContainerURL()} is a full URL or not. In the
+   * latter case the URL starts with a slash and context path.
+   * 
+   * @param useFullURL A Boolean indicating whether the path should be absolute or relative to the host.
+   * @see HttpInputData#setUseFullURL(boolean)
+   * @since 1.2.3
+   */
+  public void setUseFullURL(boolean useFullURL) {
+    this.useFullURL = useFullURL;
   }
 }

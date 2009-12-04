@@ -18,7 +18,6 @@ package org.araneaframework.http.widget;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
@@ -33,11 +32,9 @@ import org.araneaframework.uilib.support.FileInfo;
  */
 public class FileDownloaderWidget extends DownloaderWidget {
 
-  protected OutputStream fileStream;
-
   protected String fileName;
 
-  protected boolean contentDispositionInline = true;
+  protected boolean contentDispositionInline;
 
   public FileDownloaderWidget(FileInfo file) {
     this(file.getFileStream(), file.getContentType(), file.getFileName());
@@ -57,6 +54,10 @@ public class FileDownloaderWidget extends DownloaderWidget {
     setFileName(fileName);
   }
 
+  public FileDownloaderWidget(FileDownloadStreamCallback callback) {
+    super(callback);
+  }
+
   /** @since 1.1 */
   public FileDownloaderWidget(byte[] fileContent, Map<String, String> headers) {
     super(fileContent, headers);
@@ -66,13 +67,19 @@ public class FileDownloaderWidget extends DownloaderWidget {
     this.fileName = normalizeFileName(fileName);
   }
 
+  protected String getFileName() {
+    FileDownloadStreamCallback c = getCallback();
+    return c != null && c.getFileName() != null ? c.getFileName() : this.fileName;
+  }
+
   /**
    * Returns value of currently used content-disposition response header.
    * 
    * @return false if content-disposition header is set to "attachment"
    */
-  public boolean isContentDispositionInline() {
-    return this.contentDispositionInline;
+  protected boolean isContentDispositionInline() {
+    FileDownloadStreamCallback c = getCallback();
+    return c != null && c.isContentDispositionInline() != null ? c.isContentDispositionInline() : this.contentDispositionInline;
   }
 
   /**
@@ -93,9 +100,32 @@ public class FileDownloaderWidget extends DownloaderWidget {
   @Override
   protected void afterFile(HttpServletResponse response, long length) {
     StringBuffer disposition = new StringBuffer();
-    disposition.append(this.contentDispositionInline ? "inline" : "attachment");
-    disposition.append("; filename=").append(this.fileName).append("; size=").append(this.length).append(";");
+    disposition.append(isContentDispositionInline() ? "inline" : "attachment");
+    disposition.append("; filename=").append(getFileName()).append("; size=").append(length).append(";");
     response.addHeader("Content-Disposition", disposition.toString());
     super.afterFile(response, length);
+  }
+
+  protected FileDownloadStreamCallback getCallback() {
+    return (FileDownloadStreamCallback) this.dataStreamCallback;
+  }
+
+  /**
+   * If a file download stream is given to e.g. popup context, the stream must be serializable. Since streams are not
+   * serializable, this callback request the stream only when needed to output it. Therefore, it escapes the
+   * serialization step.
+   * <p>
+   * This class extends {@link DownloadStreamCallback} to get more data about the file to download.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @since 2.0
+   */
+  public static abstract class FileDownloadStreamCallback extends DownloadStreamCallback {
+
+    public abstract String getFileName();
+
+    public Boolean isContentDispositionInline() {
+      return false;
+    }
   }
 }

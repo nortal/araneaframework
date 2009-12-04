@@ -316,7 +316,7 @@ public class JSMin {
       String srcFileName = fileNames[i++];
       OutputStream out = System.out;
 
-      System.out.println("Opening files " + srcFileName + " and " + targetDir + srcFileName);
+      System.out.println("Processing file " + srcFileName + "...");
 
       if (targetDir != null) {
         out = new FileOutputStream(targetDir + getSimpleFileName(srcFileName));
@@ -331,6 +331,7 @@ public class JSMin {
       if (arg != null) {
         processFiles(arg);
       }
+      System.out.println("Completed processing all input files successfully!");
     } catch (Exception e) {
       e.printStackTrace();
     }

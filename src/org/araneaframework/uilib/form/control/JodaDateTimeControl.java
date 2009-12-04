@@ -16,37 +16,37 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.support.UiLibMessages;
+
+import org.araneaframework.uilib.event.OnChangeEventListener;
+
+import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.support.DataType;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
- * This class represents a control that has both date and time. This control is meant to be used
- * with Joda Time API. The expexted date data type is {@link DateTime}.
+ * This class represents a control that has both date and time. This control is meant to be used with Joda Time API. The
+ * expected date data type is {@link DateTime}.
  * 
- * The functionality basically extends {@link DateTimeControl} for compatibility without adding any
- * special features.
+ * The functionality basically extends {@link DateTimeControl} for compatibility without adding any special features.
  * 
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.2.3
  */
-public class JodaDateTimeControl extends DateTimeControl {
+public class JodaDateTimeControl extends BaseControl<DateTime> {
 
-  private static final long serialVersionUID = 1L;
-
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
+  /**
+   * The event adapter that helps to register and invoke events.
+   * 
+   * @since 1.0.3
+   */
+  protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
 
   protected JodaDateControl dateControl;
 
   protected JodaTimeControl timeControl;
-
-  // *******************************************************************
-  // CONSTRUCTORS
-  // *******************************************************************
 
   /**
    * Creates both {@link TimeControl}and {@link DateControl}with default parameters.
@@ -57,8 +57,7 @@ public class JodaDateTimeControl extends DateTimeControl {
   }
 
   /**
-   * Creates {@link JodaDateTimeControl} consisting of specified {@link DateControl} and
-   * {@link TimeControl}.
+   * Creates {@link JodaDateTimeControl} consisting of specified {@link DateControl} and {@link TimeControl}.
    * 
    * @since 1.0.3
    */
@@ -85,14 +84,34 @@ public class JodaDateTimeControl extends DateTimeControl {
   // *******************************************************************
 
   /**
+   * Adds a {@link OnChangeEventListener}, which is called when the control value is changing.
+   * 
+   * @param onChangeEventListener {@link OnChangeEventListener}, which is called when the control value is changing.
+   * @since 1.0.3
+   */
+  public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
+    this.eventHelper.addOnChangeEventListener(onChangeEventListener);
+  }
+
+  /**
+   * Removes all registered <code>onChange</code> event listeners.
+   * 
+   * @since 1.0.3
+   */
+  public void clearOnChangeEventListeners() {
+    this.eventHelper.clearOnChangeEventListeners();
+  }
+
+  /**
    * Returns the value class name ({@link DateTime}).
    * 
    * @return The value class name ({@link DateTime}).
    */
-  public String getRawValueType() {
-    return "DateTime";
+  public DataType getRawValueType() {
+    return new DataType(DateTime.class);
   }
 
+  @Override
   public boolean isRead() {
     // if date isn't present, control can't have valid value - see comment in addTimeToDate() method
     return this.dateControl.isRead();
@@ -103,8 +122,7 @@ public class JodaDateTimeControl extends DateTimeControl {
   // *******************************************************************
 
   /**
-   * Adds two dates assuming the first being date part and other the time. (dd.MM.yyyy and HH:mm:ss
-   * accordingly).
+   * Adds two dates assuming the first being date part and other the time. (dd.MM.yyyy and HH:mm:ss accordingly).
    * 
    * @param date the date to add to.
    * @param time the time to be added.
@@ -135,6 +153,7 @@ public class JodaDateTimeControl extends DateTimeControl {
   // * INTERNAL METHODS
   // *********************************************************************
 
+  @Override
   protected void init() throws Exception {
     super.init();
 
@@ -144,31 +163,41 @@ public class JodaDateTimeControl extends DateTimeControl {
     addWidget("time", this.timeControl);
   }
 
+  @Override
   public void convert() {
     this.dateControl.convert();
     this.timeControl.convert();
 
     // Reading control data
     if (getFormElementCtx().isValid() && isRead()) {
-      this.value = addTimeToDate((DateTime) this.dateControl.getRawValue(),
-          (DateTime) this.timeControl.getRawValue());
+      this.value = addTimeToDate(this.dateControl.getRawValue(), this.timeControl.getRawValue());
     } else {
       this.value = null;
     }
   }
 
-  public Object getViewModel() throws Exception {
+  @Override
+  public void validate() {
+    if (isMandatory() && !isRead()) {
+      addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
+    }
+  }
+
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  public void setRawValue(Object value) {
+  @Override
+  public void setRawValue(DateTime value) {
     // mark composite control dirty
     super.setRawValue(null);
     this.dateControl.setRawValue(value);
     this.timeControl.setRawValue(value);
   }
 
-  public void setFormElementCtx(FormElementContext formElementContext) {
+  @Override
+  public void setFormElementCtx(FormElementContext<DateTime, Object> formElementContext) {
     super.setFormElementCtx(formElementContext);
     this.dateControl.setFormElementCtx(formElementContext);
     this.timeControl.setFormElementCtx(formElementContext);
@@ -179,15 +208,24 @@ public class JodaDateTimeControl extends DateTimeControl {
   // *********************************************************************
 
   /**
-   * Extends the {@link DateTimeControl.ViewModel} for {@link JodaDateControl} and
-   * {@link JodaTimeControl} integration.
+   * Extends the {@link DateTimeControl.ViewModel} for {@link JodaDateControl} and {@link JodaTimeControl} integration.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 1.2.3
    */
-  public class ViewModel extends DateTimeControl.ViewModel {
+  public class ViewModel extends BaseControl<DateTime>.ViewModel {
 
-    public ViewModel() throws Exception {
+    private String time;
+
+    private String date;
+
+    private DateControl.ViewModel dateViewModel;
+
+    private TimeControl.ViewModel timeViewModel;
+
+    private boolean hasOnChangeEventListeners;
+
+    public ViewModel() {
       this.dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
       this.date = dateControl.innerData == null ? null : ((String[]) dateControl.innerData)[0];
 
@@ -195,24 +233,52 @@ public class JodaDateTimeControl extends DateTimeControl {
       this.time = timeControl.innerData == null ? null : ((String[]) timeControl.innerData)[0];
 
       this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();
-      parseTime();
     }
 
-    protected DateTime getDateTime() {
-      DateTimeFormatter fmt = DateTimeFormat.forPattern(TimeControl.DEFAULT_FORMAT);
-      try {
-        return fmt.parseDateTime(this.timeViewModel.getSimpleValue());
-      } catch (Exception e) {}
-      return null;
+    /**
+     * Returns time as <code>String</code>.
+     * 
+     * @return time as <code>String</code>.
+     */
+    public String getTime() {
+      return this.time;
     }
 
-    protected void parseTime() throws Exception {
-      DateTime time = getDateTime();
-      if (time != null) {
-        this.hour = new Integer(time.getHourOfDay());
-        this.minute = new Integer(time.getMinuteOfHour());
-        this.second = new Integer(time.getSecondOfMinute());
-      }
+    /**
+     * Returns date as <code>String</code>.
+     * 
+     * @return date as <code>String</code>.
+     */
+    public String getDate() {
+      return this.date;
+    }
+
+    /**
+     * Provides whether this date-time control has any bound "onChange" event listeners.
+     * 
+     * @return A <code>Boolean</code> indicating whether this control has any bound "onChange" event listeners.
+     * @since 1.0.3
+     */
+    public boolean isOnChangeEventRegistered() {
+      return this.hasOnChangeEventListeners;
+    }
+
+    /**
+     * Provides the view model of date control.
+     * 
+     * @return The view model of date control.
+     */
+    public DateControl.ViewModel getDateViewModel() {
+      return this.dateViewModel;
+    }
+
+    /**
+     * Provides the view model of time control.
+     * 
+     * @return The view model of time control.
+     */
+    public TimeControl.ViewModel getTimeViewModel() {
+      return this.timeViewModel;
     }
   }
 }

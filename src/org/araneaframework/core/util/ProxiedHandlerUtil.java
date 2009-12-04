@@ -41,11 +41,16 @@ public abstract class ProxiedHandlerUtil {
 
   private static final Log LOG = LogFactory.getLog(ProxiedHandlerUtil.class);
 
-  private static final Class<?>[] EMTPY_CLASS_ARRAY = new Class[0];
+  @SuppressWarnings("unchecked")
+  private static final Class[] EMTPY_CLASS_ARRAY = new Class[0];
 
   public static final String EVENT_HANDLER_PREFIX = "handleEvent";
 
   public static final String ACTION_HANDLER_PREFIX = "handleAction";
+
+  public static final String PARAMETER_SEPARTOR_RESOLVER = "getParameterSeparator";
+
+  public static final String DEFAULT_PARAMETER_SEPARTOR = ";";
 
   /*
    * The general rule for constructing handler names: handlerPrefix + handlerId = handlerPrefixHandlerId.
@@ -140,15 +145,15 @@ public abstract class ProxiedHandlerUtil {
 
     } else if (hasHandler(eventTarget, handlerName, String[].class)) {
       log(handlerName, "String[]", className);
-      MethodUtils.invokeExactMethod(eventTarget, handlerName, splitParam(param));
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, splitParam(eventTarget, param));
 
     } else if (hasHandler(eventTarget, handlerName, List.class)) {
       log(handlerName, "List<String>", className);
-      MethodUtils.invokeExactMethod(eventTarget, handlerName, parseParamList(param));
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, parseParamList(eventTarget, param));
 
     } else if (hasHandler(eventTarget, handlerName, Map.class)) {
       log(handlerName, "Map<String, String>", className);
-      MethodUtils.invokeExactMethod(eventTarget, handlerName, parseParamMap(param));
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, parseParamMap(eventTarget, param));
 
     } else if (LOG.isWarnEnabled()) {
       logHandlerNotFound(handlerPrefix, handlerId, eventTarget);
@@ -163,21 +168,37 @@ public abstract class ProxiedHandlerUtil {
   }
 
   // This method is null-safe.
-  public static String[] splitParam(String param) {
-    return StringUtils.split(param, ';');
+  public static String[] splitParam(Widget target, String param) {
+    return StringUtils.split(param, getParameterSeparator(target, param));
   }
 
   // Parses the parameter to make a list out of it. The list items are the same as array items from #splitParam(String).
-  public static List<String> parseParamList(String param) {
-    return new ArrayList<String>(Arrays.asList(splitParam(param)));
+  public static List<String> parseParamList(Widget target, String param) {
+    return new ArrayList<String>(Arrays.asList(splitParam(target, param)));
+  }
+
+  private static String getParameterSeparator(Widget target, String param) {
+    String result = DEFAULT_PARAMETER_SEPARTOR;
+
+    if (param != null) {
+      try {
+        MethodUtils.invokeExactMethod(target.getClass(), PARAMETER_SEPARTOR_RESOLVER, param);
+      } catch (NoSuchMethodException e) {
+        LOG.debug("The action/event target does not have the '" + PARAMETER_SEPARTOR_RESOLVER + "' method.");
+      } catch (Exception e) {
+        LOG.warn("Unexpected exception while resolving parameter separator.", e);
+      }
+    }
+
+    return result;
   }
 
   // Parses the parameter to make a map out of it. Map rows are parsed as in #splitParam(String). For each row, the row
   // is splitted at first "=" symbol (the first part is key, the other is value), while empty Strings are replaced with
   // nulls.
-  public static Map<String, String> parseParamMap(String param) {
+  public static Map<String, String> parseParamMap(Widget target, String param) {
     Map<String, String> handlerParam = new HashMap<String, String>();
-    for (String entry : splitParam(param)) {
+    for (String entry : splitParam(target, param)) {
       if (!StringUtils.isEmpty(entry)) {
         String key = StringUtils.defaultIfEmpty(StringUtils.substringBefore(entry, "="), null);
         String value = StringUtils.defaultIfEmpty(StringUtils.substringAfter(entry, "="), null);

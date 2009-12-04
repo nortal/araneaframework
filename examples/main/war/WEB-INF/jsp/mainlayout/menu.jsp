@@ -57,7 +57,7 @@
 
 					<div class="item">
 						<ui:form id="form">
-							<!--ui:select id="langSelect" /-->
+							<ui:select id="langSelect"/>
 						</ui:form>
 					</div>
 				</div>

@@ -49,10 +49,10 @@ public class ContractListWidget extends TemplateBaseWidget {
   protected void initList() throws Exception {
     this.list = new ListWidget<ContractMO>();
     this.list.setDataProvider(new TemplateContractListDataProvider());
-    this.list.addField("id", "#Id");
-    this.list.addField("company", "#Company");
-    this.list.addField("person", "#Person");
-    this.list.addField("notes", "#Notes");
+    this.list.addField("id", "common.id");
+    this.list.addField("company", "contract.company");
+    this.list.addField("person", "contract.person");
+    this.list.addField("notes", "contract.notes");
     this.list.addField("dummy", null, false);
     addWidget("contractList", this.list);
   }

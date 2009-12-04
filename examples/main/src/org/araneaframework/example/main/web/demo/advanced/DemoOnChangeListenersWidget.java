@@ -46,7 +46,7 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/advanced/demoOnChangeListeners");
+    setViewSelector("demo/advanced/onChangeListeners");
 
     this.simpleForm = new FormWidget();
     this.simpleForm.addElement("dateTime1", "common.datetime", buildControl(DateTimeControl.class), new DateData());

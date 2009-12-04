@@ -51,10 +51,7 @@ public class JodaDateControl extends JodaBaseControl {
     this.defaultSecond = second;
   }
 
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
-
+  @Override
   protected DateTime modifyValue(DateTime date) {
     MutableDateTime mutable = date.toMutableDateTime();
     mutable.setHourOfDay(this.defaultHour);

@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * This is login widget. After receiving "successful" login event, it replaces itself on the call stack with real
  * application.
  * 
- * @author Rein Raudjärv <reinra@ut.ee>
+ * @author Rein Raudjärv (reinra@ut.ee)
  */
 public class LoginWidget extends TemplateBaseWidget {
 

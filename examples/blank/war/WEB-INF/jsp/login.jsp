@@ -16,7 +16,7 @@
 
                     <ui:body>
 	                    <ui:systemForm method="POST">
-							<ui:onLoadEvent event="Form.focusFirstElement(araneaPage().getSystemForm());"/>
+							<ui:onLoadEvent event="Form.focusFirstElement(Aranea.Data.systemForm);"/>
 
 		                                        <ui:messages styleClass="msg-error"/>
 

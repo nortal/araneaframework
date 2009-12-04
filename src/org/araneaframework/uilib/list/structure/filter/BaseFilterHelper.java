@@ -74,14 +74,15 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
    * @param list list.
    */
   public BaseFilterHelper(ListWidget<?> list) {
-    this(list, true);
-  }
-
-  private BaseFilterHelper(ListWidget<?> list, boolean createCopy) {
     Validate.notNull(list);
     this.list = list;
   }
 
+  /**
+   * Initializes the filter helper.
+   * 
+   * @param env The environment the filter helper should to use.
+   */
   public void init(Environment env) throws Exception {}
 
   public void destroy() throws Exception {}

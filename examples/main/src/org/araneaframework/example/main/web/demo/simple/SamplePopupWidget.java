@@ -47,14 +47,12 @@ public class SamplePopupWidget extends TemplateBaseWidget {
   }
 
   public void handleEventCreateThread() throws Exception {
-    getMessageCtx().showInfoMessage(
-        "Popup window should have opened. If it did not, please relax your popup blocker settings.");
+    getMessageCtx().showInfoMessage("common.popupBlockMsg2");
     getPopupCtx().open(new LoginAndMenuSelectMessage("Demos.Simple.Simple_Form"), new PopupWindowProperties(), null);
   }
 
   public void handleEventOpenUrl() throws Exception {
-    getMessageCtx().showInfoMessage(
-        "Popup window should have opened. If it did not, please relax your popup blocker settings.");
+    getMessageCtx().showInfoMessage("common.popupBlockMsg2");
     getPopupCtx().open("http://www.slashdot.org", new PopupWindowProperties());
   }
 
@@ -69,8 +67,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
   }
 
   public void handleEventOpenNewCustomFlow() throws Exception {
-    getMessageCtx().showInfoMessage(
-        "Popup window should have opened. If it did not, please relax your popup blocker settings.");
+    getMessageCtx().showInfoMessage("common.popupBlockMsg2");
 
     PopupWindowProperties p = new PopupWindowProperties();
     p.setHeight("600");
@@ -86,7 +83,7 @@ public class SamplePopupWidget extends TemplateBaseWidget {
     p.setWidth("1000");
     p.setScrollbars("yes");
     PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(true), p, new PopupMessageFactory());
-    getFlowCtx().start(pfw, null, new SampleHandler());
+    getFlowCtx().start(pfw, new SampleHandler());
   }
 
   public void handleEventEndFlow() {

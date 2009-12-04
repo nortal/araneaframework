@@ -87,4 +87,6 @@ public class MockHttpInputData extends MockInputData implements HttpInputData {
     // TODO Auto-generated method stub
     throw new NotImplementedException();
   }
+
+  public void setUseFullURL(boolean useFullURL) {}
 }

@@ -14,6 +14,9 @@
 			</tui:componentHeader>
 
 			<tui:component>
+
+				<p><fmt:message key="persons.desc"/></p>
+
 				<tui:componentList width="1000px">
 
 					<!-- List columns headers: -->

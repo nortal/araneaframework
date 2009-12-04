@@ -17,7 +17,11 @@
 			<ui:formList>
 
 				<tui:componentHeader>
-					<tui:componentName><fmt:message key="persons.editable.title"/></tui:componentName>
+					<tui:componentName>
+						<fmt:message key="persons.editable.title"/>
+						<!-- We use the widget read-only property to resolve whether it uses memory- or DB-based data fetching: -->
+						(<fmt:message key="${widget.memoryBased ? 'persons.memorybased' : 'persons.DBbased'}"/>)
+					</tui:componentName>
 				</tui:componentHeader>
 
 				<tui:component>

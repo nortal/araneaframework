@@ -17,7 +17,6 @@
 package org.araneaframework.http.filter;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
@@ -27,52 +26,54 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.URLUtil;
 
 /**
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardMountingFilterService extends BaseFilterService implements MountContext {
-  private Map<String, MessageFactory> mounts = new HashMap<String, MessageFactory>();    
-  
+
+  private Map<String, MessageFactory> mounts = new HashMap<String, MessageFactory>();
+
   public String mount(InputData input, String pathPrefix, MessageFactory messageFactory) {
     Assert.notNullParam(input, "input");
     Assert.notEmptyParam(pathPrefix, "pathPrefix");
     Assert.notNullParam(messageFactory, "messageFactory");
-    
+
     pathPrefix = URLUtil.normalizeURI(pathPrefix);
-    mounts.put(pathPrefix, messageFactory);
+    this.mounts.put(pathPrefix, messageFactory);
 
     return getMountURL(input, pathPrefix);
   }
-  
+
   public void unmount(String pathPrefix) {
     Assert.notEmptyParam(pathPrefix, "pathPrefix");
-    
-    mounts.remove(URLUtil.normalizeURI(pathPrefix));
+
+    this.mounts.remove(URLUtil.normalizeURI(pathPrefix));
   }
-  
+
   public String getMountURL(InputData input, String pathPrefix) {
     Assert.notNullParam(input, "input");
     Assert.notEmptyParam(pathPrefix, "pathPrefix");
-    
+
     HttpInputData req = (HttpInputData) input;
-    
+
     StringBuffer url = new StringBuffer();
     url.append(req.getContainerURL());
     url.append(MountContext.MOUNT_PATH);
-    url.append(URLUtil.normalizeURI(pathPrefix));    
-    return url.toString();    
+    url.append(URLUtil.normalizeURI(pathPrefix));
+    return ((HttpOutputData) input.getOutputData()).encodeURL(url.toString());
   }
-  
+
   @Override
   protected Environment getChildEnvironment() {
     return new StandardEnvironment(super.getChildEnvironment(), MountContext.class, this);
   }
 
   /**
-   * This setter allows to configure the default mounts using dependency injection. 
-   * It expects as keys the mounting path prefixes and as values {@link org.araneaframework.framework.MountContext.MessageFactory}.
+   * This setter allows to configure the default mounts using dependency injection. It expects as keys the mounting path
+   * prefixes and as values {@link org.araneaframework.framework.MountContext.MessageFactory}.
    */
   public void setMounts(Map<String, MessageFactory> mounts) {
     this.mounts = mounts;
@@ -80,34 +81,29 @@ public class StandardMountingFilterService extends BaseFilterService implements 
 
   public Message getMountedMessage(InputData input) {
     Assert.notNullParam(input, "input");
-    
+
     HttpInputData req = (HttpInputData) input;
-    
+
     String pathInfo = req.getPath();
     String maxPrefix = "";
-    
+
     if (pathInfo != null) {
-      for (Iterator<String> i = mounts.keySet().iterator(); i.hasNext();) {
-        String mountPrefix = i.next();      
-                      
-        if (pathInfo.startsWith(MountContext.MOUNT_PATH + mountPrefix) && (mountPrefix.length() > maxPrefix.length())) 
+      for (String mountPrefix : this.mounts.keySet()) {
+        if (pathInfo.startsWith(MountContext.MOUNT_PATH + mountPrefix) && (mountPrefix.length() > maxPrefix.length())) {
           maxPrefix = mountPrefix;
+        }
       }
-      
+
       if (maxPrefix.length() > 0) {
-        MessageFactory mountFactory = mounts.get(maxPrefix);
-        
+        MessageFactory mountFactory = this.mounts.get(maxPrefix);
+
         int fullPrefixLength = MountContext.MOUNT_PATH.length() + maxPrefix.length();
         String suffix = fullPrefixLength < pathInfo.length() ? pathInfo.substring(fullPrefixLength + 1) : null;
-        
-        return mountFactory.buildMessage(
-              req.getRequestURL().toString(), 
-              suffix, 
-              input, 
-              input.getOutputData());
+
+        return mountFactory.buildMessage(req.getRequestURL().toString(), suffix, input, input.getOutputData());
       }
     }
-    
+
     return null;
   }
 }

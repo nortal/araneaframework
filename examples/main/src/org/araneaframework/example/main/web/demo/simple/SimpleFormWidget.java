@@ -65,7 +65,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     this.simpleForm.addElement("textbox1", el);
 
     // and here we add form elements to form without the extra step taken previously.
-    this.simpleForm.addElement("checkbox1", "Checkbox", new CheckboxControl(), new BooleanData(), false);
+    this.simpleForm.addElement("checkbox1", "common.Checkbox", new CheckboxControl(), new BooleanData(), false);
     this.simpleForm.addElement("dateTime", "common.datetime", new DateTimeControl(), new DateData(), false);
     this.simpleForm.addElement("time", "common.time", new TimeControl(), new DateData(), false);
     this.simpleForm.addElement("date", "common.date", new DateControl(), new DateData(), false);
@@ -99,22 +99,20 @@ public class SimpleFormWidget extends TemplateBaseWidget {
    * A test action, invoked when button is pressed. It adds the values of formelements to message context, and they end
    * up at the top of user screen at the end of the request.
    */
-  @SuppressWarnings("unchecked")
   public void handleEventTestSimpleForm() throws Exception {
     // if form is not invalid, do not try to show form element values (error messages are added automatically to the
     // message context though, user will not be without feedback).
     if (this.simpleForm.convertAndValidate()) {
-
-      // long way to check form element value ...
-      getMessageCtx().showInfoMessage(
-          "Checkbox value is: " + ((FormElement) this.simpleForm.getElement("checkbox1")).getData().getValue());
-
-      // and a shorter ones
-      getMessageCtx().showInfoMessage("Textbox value is: " + this.simpleForm.getValueByFullName("textbox1"));
-      getMessageCtx().showInfoMessage("DateTime value is: " + this.simpleForm.getValueByFullName("dateTime"));
-      getMessageCtx().showInfoMessage("Time value is: " + this.simpleForm.getValueByFullName("time"));
-      getMessageCtx().showInfoMessage("Date value is: " + this.simpleForm.getValueByFullName("date"));
-      getMessageCtx().showInfoMessage("Number value is: " + this.simpleForm.getValueByFullName("number"));
+      showMsg(this.simpleForm.getElementByFullName("checkbox1"));
+      showMsg(this.simpleForm.getElementByFullName("textbox1"));
+      showMsg(this.simpleForm.getElementByFullName("dateTime"));
+      showMsg(this.simpleForm.getElementByFullName("time"));
+      showMsg(this.simpleForm.getElementByFullName("date"));
+      showMsg(this.simpleForm.getElementByFullName("number"));
     }
+  }
+
+  private void showMsg(FormElement<?, Object> element) {
+    getMessageCtx().showInfoMessage("simpleForm.msg", t(element.getLabel()), element.getValue());
   }
 }

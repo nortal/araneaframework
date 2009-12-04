@@ -141,7 +141,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
    *        JSP page, and make the autocomplete use that data array by reference. Therefore, one can
    *        provide the variable name that points to an array."
    */
-  public void setLocalDataVar(String localDataVar) throws JspException {
-    this.localDataVar = (String) evaluate("localDataVar", localDataVar, String.class);
+  public void setLocalDataVar(String localDataVar) {
+    this.localDataVar = evaluate("localDataVar", localDataVar, String.class);
   }
 }

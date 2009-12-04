@@ -16,10 +16,8 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.joda.time.DateTime;
-
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
+import org.joda.time.DateTime;
 
 /**
  * The DateControl for storing the date data in {@link DateTime} object from the  Joda Time API.
@@ -38,15 +36,8 @@ public class JodaTimeControl extends JodaBaseControl {
     super(dateTimeFormat, defaultOutputFormat);
   }
 
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
-
+  @Override
   protected void addWrongTimeFormatError() {
-    addError(
-        MessageUtil.localizeAndFormat(UiLibMessages.WRONG_TIME_FORMAT,
-        MessageUtil.localize(getLabel(), getEnvironment()),
-        this.dateTimeInputPattern,
-        getEnvironment()));
+    addErrorWithLabel(UiLibMessages.WRONG_TIME_FORMAT, this.dateTimeInputPattern);
   }
 }

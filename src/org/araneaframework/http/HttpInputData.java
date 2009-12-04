@@ -157,4 +157,13 @@ public interface HttpInputData extends InputData {
    * @return The restored path element.
    */
   String popPathPrefix();
+
+  /**
+   * Provides a way to specify whether the URL returned by {@link #getContainerURL()} starts with the protocol server
+   * and server information or just starts with the slash to represent the URL starting with context path.
+   * 
+   * @param useFullURL A Boolean indicating whether the path should be absolute or relative to the host.
+   * @since 1.2.3
+   */
+  void setUseFullURL(boolean useFullURL);
 }

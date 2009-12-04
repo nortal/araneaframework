@@ -16,6 +16,8 @@
 
 package org.araneaframework.http.widget;
 
+import java.io.Serializable;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
@@ -42,6 +44,8 @@ public class DownloaderWidget extends BaseApplicationWidget {
   protected String contentType;
 
   protected Map<String, String> headers;
+
+  protected DownloadStreamCallback dataStreamCallback;
 
   public DownloaderWidget(byte[] data, String contentType) {
     this(new ByteArrayInputStream(data), data.length, contentType);
@@ -71,17 +75,30 @@ public class DownloaderWidget extends BaseApplicationWidget {
     this.headers = headers;
   }
 
-  public InputStream getData() {
-    return this.dataStream;
+  /** @since 2.0 */
+  public DownloaderWidget(DownloadStreamCallback callback) {
+    Assert.notNullParam(callback, "callback");
+    this.dataStreamCallback = callback;
   }
 
-  public String getContentType() {
-    return this.contentType;
+  protected InputStream getDataStream() {
+    DownloadStreamCallback c = this.dataStreamCallback;
+    return c != null && c.getStreamToDownload() != null ? c.getStreamToDownload() : this.dataStream;
   }
-  
-  /** @since 1.1 */
-  public Map<String, String> getHeaders() {
-    return this.headers;
+
+  protected String getContentType() {
+    DownloadStreamCallback c = this.dataStreamCallback;
+    return c != null && c.getContentType() != null ? c.getContentType() : this.contentType;
+  }
+
+  protected int getLength() {
+    DownloadStreamCallback c = this.dataStreamCallback;
+    return c != null && c.getLength() >= 0 ? c.getLength() : this.length;
+  }
+
+  protected Map<String, String> getHeaders() {
+    DownloadStreamCallback c = this.dataStreamCallback;
+    return c != null && c.getHeaders() != null ? c.getHeaders() : this.headers;
   }
 
   @Override
@@ -89,27 +106,69 @@ public class DownloaderWidget extends BaseApplicationWidget {
     HttpServletResponse response = ServletUtil.getResponse(output);
     beforeFile(response);
 
-    long length = IOUtils.copyLarge(this.dataStream, response.getOutputStream());
-    IOUtils.closeQuietly(this.dataStream);
+    long length = IOUtils.copyLarge(getDataStream(), response.getOutputStream());
+    IOUtils.closeQuietly(getDataStream());
 
     afterFile(response, length);
   }
 
   protected void beforeFile(HttpServletResponse response) {
     response.setContentType(getContentType());
-    if (this.headers != null) {
-      for (Map.Entry<String, String> header : this.headers.entrySet()) {
+    if (getHeaders() != null) {
+      for (Map.Entry<String, String> header : getHeaders().entrySet()) {
         response.setHeader(header.getKey(), header.getValue());
       }
     }
-    if (this.length >= 0) {
-      response.setContentLength(this.length);
+    if (getLength() >= 0) {
+      response.setContentLength(getLength());
     }
   }
 
   protected void afterFile(HttpServletResponse response, long length) {
-    if (this.length < 0 && length >= 0 && length < Integer.MAX_VALUE) {
+    if (getLength() < 0 && length >= 0 && length < Integer.MAX_VALUE) {
       response.setContentLength((int) length);
+    }
+    this.dataStream = null; // ByteArrayOutputStream is not serializable!
+    this.dataStreamCallback = null; // Should not be used anymore!
+  }
+
+  /**
+   * If a file download stream is given to e.g. popup context, the stream must be serializable. Since streams are not
+   * serializable, this callback request the stream only when needed to output it. Therefore, it escapes the
+   * serialization step.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @since 2.0
+   */
+  public abstract static class DownloadStreamCallback implements Serializable {
+
+    public abstract InputStream getStreamToDownload();
+
+    /**
+     * Override this when the callback can give the content type of the stream.
+     * 
+     * @return The content type of the stream.
+     */
+    public String getContentType() {
+      return null;
+    }
+
+    /**
+     * Override this when the callback can give the length of the stream.
+     * 
+     * @return The length of the stream.
+     */
+    public int getLength() {
+      return -1;
+    }
+
+    /**
+     * Override this when the callback can give the HTTP header with the stream.
+     * 
+     * @return The HTTP headers to send with the stream.
+     */
+    public Map<String, String> getHeaders() {
+      return null;
     }
   }
 }

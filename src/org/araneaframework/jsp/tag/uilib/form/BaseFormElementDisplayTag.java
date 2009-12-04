@@ -114,13 +114,29 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
   public void setGlobalUpdateRegions(String globalUpdateRegions) {}
 
+  protected boolean isType(String type) {
+    return this.controlViewModel.getControlType().equals(type);
+  }
+
   /**
    * Asserts that associated control is of given type. If the condition does not hold, throws exception.
    */
   protected void assertControlType(String type) throws JspException {
     if (!this.controlViewModel.getControlType().equals(type)) {
       throw new AraneaJspException("Control of type '" + type + "' expected in form element '" + this.id
-          + "' instead of '" + controlViewModel.getControlType() + "'");
+          + "' instead of '" + this.controlViewModel.getControlType() + "'");
+    }
+  }
+
+  /**
+   * Asserts that associated control is one of given types. If the condition does not hold, throws exception.
+   * 
+   * @since 2.0
+   */
+  protected void assertControlTypes(String type1, String type2) throws JspException {
+    if (!isType(type1) && !isType(type2)) {
+      throw new AraneaJspException("Control of type '" + type1 + "' or '" + type2 + "' expected in form element '"
+          + this.derivedId + "' instead of '" + this.controlViewModel.getControlType() + "'");
     }
   }
 }

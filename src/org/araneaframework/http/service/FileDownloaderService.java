@@ -16,6 +16,8 @@
 
 package org.araneaframework.http.service;
 
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.Map;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.ManagedServiceContext;
@@ -58,11 +60,20 @@ public class FileDownloaderService extends FileDownloaderWidget {
     super(fileContent, headers);
   }
 
-  protected void close() {
+  /**
+   * @since 2.0
+   */
+  public FileDownloaderService(FileDownloadStreamCallback callback) {
+    super(callback);
+  }
+
+  @Override
+  protected void afterFile(HttpServletResponse response, long length) {
+    super.afterFile(response, length);
+
     // Ensure that allow to download only once...
     Environment env = getEnvironment();
     ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(env);
     mngCtx.close(mngCtx.getCurrentId());
   }
-
 }

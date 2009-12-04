@@ -105,15 +105,18 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
 
     } else if (hasHandler(this.eventTarget, methodName, this.modelType, String.class)) {
       log(methodName, modelClassName + ", String[]", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean, splitParam(param) });
+      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean,
+          splitParam(this.eventTarget, param) });
 
     } else if (hasHandler(this.eventTarget, methodName, this.modelType, List.class)) {
       log(methodName, modelClassName + ", List<String>", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean, parseParamList(param) });
+      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean,
+          parseParamList(this.eventTarget, param) });
 
     } else if (hasHandler(this.eventTarget, methodName, this.modelType, Map.class)) {
       log(methodName, modelClassName + ", List<String>", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean, parseParamMap(param) });
+      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean,
+          parseParamMap(this.eventTarget, param) });
 
     } else if (LOG.isWarnEnabled()) {
       logHandlerNotFound(EVENT_HANDLER_PREFIX, eventId, this.eventTarget);

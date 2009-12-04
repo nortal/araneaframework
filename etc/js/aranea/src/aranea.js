@@ -116,6 +116,7 @@ Aranea.Page = {
 		Aranea.Data.loaded = true;
 		Aranea.Logger.debug("Aranea scripts are now initialized!");
 		document.fire('aranea:loaded');
+		document.stopObserving('aranea:loaded');
 	},
 
 	onUpdate: function(data) {
@@ -143,9 +144,14 @@ Aranea.Page = {
 		}
 	},
 
-	setSystemFormEncoding: function(encoding) {
-		if (Aranea.Data.systemForm) {
+	// Users must provide only form encoding!
+	setSystemFormEncoding: function(encoding, that, event) {
+		if (Aranea.Data.loaded) {
 			Aranea.Data.systemForm.writeAttribute({ 'enctype': encoding, 'encoding': encoding });
+			Aranea.Logger.debug('SystemForm encoding was set to "' + encoding + '".')
+		} else {
+			var type = Aranea.Data.submitted ? 'aranea:updated' : 'aranea:loaded';
+			document.observe(type, Aranea.Page.setSystemFormEncoding.curry(encoding));
 		}
 	},
 
@@ -989,11 +995,12 @@ Aranea.Page.RegionHandler = {
 		process: function(content) {
 			this.openPopups(content.evalJSON());
 			document.observe('aranea:loaded', Aranea.Popup.processPopups);
+			document.observe('aranea:updated', Aranea.Popup.processPopups);
 		},
 
 		openPopups: function(popups) {
 			popups.each(function(popup) {
-				Aranea.Popup.addPopup(popup.popupId, popup.windowProperties, popup.url);
+				Aranea.Popup.addPopup(popup.popupId, popup.url, popup.windowProperties);
 			});
 		}
 	},

@@ -78,6 +78,8 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
     this.list.setDataProvider(buildListDataProvider());
   }
 
+  public abstract boolean isMemoryBased();
+
   protected abstract ListDataProvider<PersonMO> buildListDataProvider() throws Exception;
 
   protected abstract FormRowHandler<Long, PersonMO> buildFormRowHandler() throws Exception;
@@ -110,6 +112,11 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
         return getGeneralDAO().getAll(PersonMO.class);
       }
     }
+
+    @Override
+    public boolean isMemoryBased() {
+      return true;
+    }
   }
 
   public static class Backend extends PersonEditableListWidget {
@@ -134,6 +141,11 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       protected ListItemsData<PersonMO> getItemRange(ListQuery query) throws Exception {
         return ((PersonListDAO) getBeanFactory().getBean("personListDAO")).getItems(query);
       }
+    }
+
+    @Override
+    public boolean isMemoryBased() {
+      return false;
     }
   }
 

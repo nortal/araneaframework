@@ -21,8 +21,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.BroadcastMessage;
-import org.araneaframework.example.main.release.demos.ModalDialogDemoWidget;
-import org.araneaframework.example.main.web.menu.MenuWidget;
+import org.araneaframework.example.main.web.MenuWidget;
+import org.araneaframework.example.main.web.release.DemoModalDialogWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 /**

@@ -14,10 +14,10 @@
 
 			<tui:component>
 
+				<p><fmt:message key="companies.desc"/></p>
+
 				<!-- Body -->
 				<tui:componentList>
-
-					<p><fmt:message key="companies.desc"/></p>
 
 					<!-- Title -->
 					<tui:componentListHeader/>
@@ -28,11 +28,11 @@
 							<ui:cell/>
 	
 							<ui:cell>
-								<ui:textInput id="name"/>
+								<ui:textInput id="name" styleClass="w250"/>
 							</ui:cell>
 	
 							<ui:cell>
-								<ui:textInput id="address"/>
+								<ui:textInput id="address" styleClass="w250"/>
 							</ui:cell>
 	
 							<ui:cell>
@@ -49,7 +49,7 @@
 									field values that have getters are accessible as ${row.field}. -->
 						<ui:row>
 
-							<ui:cell>
+							<ui:cell width="30px">
 								<ui:listRowRadioButton/>
 							</ui:cell>
 

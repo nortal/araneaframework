@@ -2,7 +2,8 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
-	xmlns:ui="http://araneaframework.org/tag-library/standard" xmlns:tui="http://araneaframework.org/tag-library/template"
+	xmlns:ui="http://araneaframework.org/tag-library/standard"
+	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.1">
 
 	<!-- Component starts here -->
@@ -17,12 +18,12 @@
 			     nothing particularly interesting, just set up the HTML DIV element
 			     containing the component header -->
 			<tui:componentHeader>
-				<tui:componentName>Tutorial first form</tui:componentName>
+				<tui:componentName><fmt:message key="simpleForm.title"/></tui:componentName>
 			</tui:componentHeader>
 
 			<!-- Another custom template tag, purely design-focused (look ComponentTag for source)-->
 			<tui:component>
-			
+
 				<!-- Custom tag, but more interesting that previous tags. It derives from
                      LayoutHtmlTag tag and allows putting row tags inside of it. 
                      Attribute rowClasses defines the styleClass attribute for rows inserted under 
@@ -36,7 +37,7 @@
 						<!-- ... we can insert cells too! As we defined componentForm rowClass 
 							to be cols4  we should insert 4 cells here... -->
 						<ui:cell>
-							<!-- label is formelement centric tag. As we are inside the form 
+							<!-- label is form-element centric tag. As we are inside the form 
 							already, we provide it with form element id and corresponding 
 							form element label will be shown -->
 							<ui:label id="checkbox1" />
@@ -68,12 +69,12 @@
 					<ui:row>
 						<ui:formElement id="dateTime">
 							<ui:cell>
-							    <!-- "dateTime" label -->
+								<!-- "dateTime" label -->
 								<ui:label />
 							</ui:cell>
 
 							<ui:cell>
-          						<!-- "dateTime" input field -->
+								<!-- "dateTime" input field -->
 								<ui:dateTimeInput/>
 							</ui:cell>
 						</ui:formElement>
@@ -134,19 +135,10 @@
 					</ui:row>
 
 				</tui:componentForm>
-				
-<!--				<ui:keyboardHandler keyCombo="ctrl+f12" handler="function() { alert('yay for all! global handler works');}"/>-->
-<!--				<ui:keyboardHandler keyCombo="alt+j" handler="function() { alert('yay for all! global handler works');}"/>-->
-<!--				<ui:keyboardHandler scope="${formFullId}.number" keyCombo="alt+k" handler="function() { alert('xxx : form handler works!'); }"/>-->
-<!--				-->
-<!--				<ui:keyboardHandler scope="${formFullId}" keyCombo="ctrl+p" handler="function() { alert('== another : form handler works!'); }"/>-->
-<!--				<ui:keyboardHandler scope="${formFullId}" keyCombo="z" handler="function() { alert('z i8ndeded'); }"/>-->
 
 				<!-- pure design tag -->
 				<tui:componentActions>
-					<ui:formElement id="button">
-						<ui:button/>
-					</ui:formElement>
+					<ui:button id="button"/>
 				</tui:componentActions>
 			</tui:component>
 

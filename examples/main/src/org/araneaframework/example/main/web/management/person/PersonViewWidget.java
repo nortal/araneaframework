@@ -47,9 +47,9 @@ public class PersonViewWidget extends TemplateBaseWidget {
 
     personForm.addBeanElement("name", "common.firstname", new DisplayControl(), true);
     personForm.addBeanElement("surname", "common.lastname", new DisplayControl());
-    personForm.addBeanElement("phone", "common.address", new DisplayControl(), true);
-    personForm.addBeanElement("birthdate", "common.birthdate", new DateControl());
-    personForm.addBeanElement("salary", "common.salary", new FloatControl());
+    personForm.addBeanElement("phone", "persons.address", new DisplayControl(), true);
+    personForm.addBeanElement("birthdate", "persons.birthdate", new DateControl());
+    personForm.addBeanElement("salary", "persons.salary", new FloatControl());
 
     addWidget("personForm", personForm);
   }

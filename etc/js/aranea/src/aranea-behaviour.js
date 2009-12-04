@@ -117,23 +117,23 @@ Aranea.Behaviour = {
 		var filter = element.readAttribute(Aranea.Behaviour.ATTR_FILTER);
 		if (filter && !element.getStorage().get(Aranea.Behaviour.ATTACHED_FILTER)) {
 			element.observe('keypress', Aranea.Keyboard.getKeyboardInputFilterFunction(filter));
-			element.observe("paste", Aranea.Behaviour.onCharacterFilterPaste); //quirksmode (does not work in Opera)
+			element.observe('paste', Aranea.Behaviour.onCharacterFilterPaste); //quirksmode (does not work in Opera)
 			Aranea.Behaviour.monitorCharacterFilterInput(element);
 			element.getStorage().set(Aranea.Behaviour.ATTACHED_FILTER, true);
 		}
 	},
 
-	function onCharacterFilterPaste(event) {
+	onCharacterFilterPaste: function(event) {
 		Aranea.Behaviour.characterFilterInputMonitor.curry(event.element()).defer();
 	},
 
-	function monitorCharacterFilterInput(input) {
+	monitorCharacterFilterInput: function(input) {
 		input = $(input);
 		if (!input) return;
 		window.setInterval(Aranea.Behaviour.characterFilterInputMonitor.curry(input), 1000);
 	},
 
-	function characterFilterInputMonitor(input) {
+	characterFilterInputMonitor: function(input) {
 		if (!(input = $(input))) return;
 		var filter = input.readAttribute('arn-charFilter')
 		var value = $F(input);

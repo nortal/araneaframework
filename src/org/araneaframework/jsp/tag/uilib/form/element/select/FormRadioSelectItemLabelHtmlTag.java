@@ -16,15 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.core.Assert;
-
-import org.araneaframework.uilib.support.DisplayItem;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Standard form element label tag.
@@ -35,13 +32,15 @@ import org.araneaframework.uilib.form.control.SelectControl;
  *  body-content = "JSP"
  *  description = "Represents label to be localized."
  */
-@SuppressWarnings("unchecked")
 public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
 
   protected String value;
 
   /** @since 1.1 */
   protected String radioId;
+
+  /** @since 2.0 */
+  protected Boolean localizeLabel = false;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -52,14 +51,11 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
 
   protected String getSelectItemLabel() throws Exception {
     assertControlType("SelectControl");
-
-    SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
-    DisplayItem item = viewModel.getSelectItem(this.value);
-
-    Assert.notNull(item, "The SelectControl item with value '" + this.value + "' was not found!");
-
-    String label = JspUtil.getResourceStringOrNull(this.pageContext, item.getLabel());
-    return label != null ? label : item.getLabel();
+    String label = this.value;
+    if (ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeLabel)) {
+      label = JspUtil.getResourceStringOrNull(this.pageContext, label);
+    }
+    return StringUtils.defaultString(label);
   }
 
   /**
@@ -81,6 +77,17 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
    */
   public void setRadioId(String radioId) {
     this.radioId = evaluate("radioId", radioId, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "The HTML id radio button to which this label belongs."
+   * @since 2.0
+   */
+  public void setLocalizeLabel(String localizeLabel) {
+    this.localizeLabel = evaluate("localizeLabel", localizeLabel, Boolean.class);
   }
 
   /**

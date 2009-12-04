@@ -75,13 +75,6 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   private boolean disabled = false;
 
-  
-  public StandardUpdateRegionFilterWidget() {
-    LOG.info("====================================================================");
-    LOG.info("INITIATING StandardUpdateRegionFilterWidget=========================");
-    LOG.info("====================================================================");
-  }
-
   public void setCharacterEncoding(String encoding) {
     this.characterEncoding = encoding;
   }

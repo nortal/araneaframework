@@ -73,7 +73,7 @@
 			source="1.5"
 			srcdir="src"
 			includes="**/*.java"
-			classpathref="classpath"
+			classpathref="build.cp"
 		/>
 	</target>	
 
@@ -84,8 +84,8 @@
 			<arg value="../jetty.xml"/>
 			<classpath>
 				<pathelement location="war/WEB-INF/classes" />
-				<path refid="classpath" />
-				<path refid="classpath.jetty" />
+				<path refid="build.cp" />
+				<path refid="jetty.cp" />
 			</classpath>
 		</java>
 	</target>

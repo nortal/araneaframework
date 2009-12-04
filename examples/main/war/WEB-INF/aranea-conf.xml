@@ -15,7 +15,7 @@
 		</property>
 	</bean>
 
-	<bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent" singleton="false">
+	<bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent" scope="prototype">
 		<property name="childService" ref="araneaApplicationFilters" />
 		<property name="useFullURL" value="true" />
 	</bean>

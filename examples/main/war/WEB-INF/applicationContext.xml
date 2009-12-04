@@ -22,7 +22,10 @@
 		</property>
 	</bean>
 
-	<!-- JPA CONFIGURATION: -->
+	<!-- ==================================================================== -->
+	<!--                          JPA CONFIGURATION                           -->
+	<!-- ==================================================================== -->
+
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"/>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

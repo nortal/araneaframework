@@ -144,9 +144,12 @@ public abstract class BaseServiceRouterService extends BaseService {
    */
   protected abstract String getServiceKey() throws Exception;
 
-  protected void closeService(Object serviceId) {
-    ((Service) _getChildren().get(serviceId))._getComponent().destroy();
-    _getChildren().remove(serviceId);
+  protected void closeService(String serviceId) {
+    Service targetService = (Service) _getChildren().get(serviceId);
+    if (targetService != null) { //Make sure it exists!
+      targetService._getComponent().destroy();
+      _getChildren().remove(serviceId);
+    }
   }
 
   protected class ServiceRouterContextImpl implements ManagedServiceContext {

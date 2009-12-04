@@ -37,7 +37,7 @@ public class DemoRichTextForm extends TemplateBaseWidget {
 
   @Override
   protected void init() throws Exception {
-    setViewSelector("demo/advanced/demoRichTextArea");
+    setViewSelector("demo/advanced/richTextArea");
 
     this.form = new FormWidget();
     this.areaContents = new StringData();

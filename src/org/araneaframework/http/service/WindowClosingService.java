@@ -16,9 +16,9 @@
 
 package org.araneaframework.http.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -33,6 +33,8 @@ import org.araneaframework.http.filter.StandardPopupFilterWidget.StandardPopupSe
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.util.JspStringUtil;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Service that returns response that closes browser window that made the request; and if possible, reloads the opener
@@ -42,7 +44,13 @@ import org.araneaframework.http.util.ServletUtil;
  */
 public class WindowClosingService extends BaseService {
 
-  private Environment closableComponentEnv;
+  protected Environment closableComponentEnv;
+
+  protected String[] scriptsImportFileNames = { "js/prototype/prototype.js", "js/aranea/src/aranea-popups.js" };
+
+  protected String reloadParentScript = "Aranea.Popup.reloadParentWindow(''{0}'');";
+
+  protected String delayedCloseScript = "Aranea.Popup.delayedCloseWindow(50);";
 
   public WindowClosingService(Environment closableComponentEnv) {
     this.closableComponentEnv = closableComponentEnv;
@@ -74,32 +82,67 @@ public class WindowClosingService extends BaseService {
       serviceInfo.setTransactionOverride(false);
     }
 
-    String script;
 
-    if (serviceInfo != null) {
-      script = "Aranea.Popup.reloadParentWindow('" + serviceInfo.toURL() + "');Aranea.Popup.delayedCloseWindow(50);";
-    } else {
-      script = "Aranea.Popup.delayedCloseWindow(50);";
+    // Composing the BODY.onLoad script:
+    StringBuffer script = new StringBuffer();
+    if (serviceInfo != null && !StringUtils.isBlank(this.reloadParentScript)) {
+      script.append(MessageUtil.format(this.reloadParentScript, serviceInfo.toURL()));
+    }
+    script.append(StringUtils.defaultIfEmpty(this.delayedCloseScript, ""));
+
+
+    // Composing the full HTML response:
+    StringBuffer content = new StringBuffer("<html><head><title>Closing your window...</title>");
+
+    for (String scriptSrc : this.scriptsImportFileNames) {
+      if (!StringUtils.isBlank(scriptSrc)) {
+        content.append("<script type=\"text/javascript\" src=\"");
+        content.append(FileImportUtil.getImportString(scriptSrc, input));
+        content.append("\"></script>");
+      }
     }
 
-    String scriptSrc = FileImportUtil.getImportString("js/aranea/aranea-popups.js", input);
+    content.append("</head><body onload=\"");
+    content.append(JspStringUtil.escapeHtmlEntities(script.toString()));
+    content.append("\"></body></html>");
 
-    String responseStr = "<html><head><script type=\"text/javascript\" src=\"" + scriptSrc + "\"></script></head>"
-        + "<body onload=\"" + script + "\"></body></html>";
 
-    byte[] rsp = responseStr.getBytes();
-
-    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-    byteOutputStream.write(rsp);
-
+    // Writing to HTTP:
     response.setContentType("text/html");
-    response.setContentLength(byteOutputStream.size());
-
-    OutputStream out = response.getOutputStream();
-    byteOutputStream.writeTo(out);
-    out.flush();
+    response.setContentLength(content.length());
+    IOUtils.write(content, response.getOutputStream());
 
     ManagedServiceContext mngCtx = EnvironmentUtil.requireManagedService(getEnvironment());
     mngCtx.close(mngCtx.getCurrentId());
+  }
+
+  /**
+   * The script that closes the popup, with delay (recommended). It is called right after {@link #reloadParentScript}.
+   * 
+   * @param delayedCloseScript The script that closes the popup, with delay (recommended). May be <code>null</code>.
+   * @since 2.0
+   */
+  public void setDelayedCloseScript(String delayedCloseScript) {
+    this.delayedCloseScript = delayedCloseScript;
+  }
+
+  /**
+   * The script that reloads popup parent page. It is called right before {@link #delayedCloseScript}.
+   * 
+   * @param reloadParentScript The script that reloads popup parent page. May be <code>null</code>.
+   * @since 2.0
+   */
+  public void setReloadParentScript(String reloadParentScript) {
+    this.reloadParentScript = reloadParentScript;
+  }
+
+  /**
+   * Sets the scripts that the file importer will load. These scripts should be necessary to close the popup.
+   * 
+   * @param scriptsImportFileNames The paths to javascript files that file-importer recognizes.
+   * @since 2.0
+   */
+  public void setScriptsImportFileNames(String[] scriptsImportFileNames) {
+    this.scriptsImportFileNames = scriptsImportFileNames;
   }
 }

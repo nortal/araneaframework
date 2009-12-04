@@ -10,12 +10,12 @@
 		<ui:list id="contractList">
 
 			<tui:componentHeader>
-				<tui:componentName><fmt:message key="companies.title"/></tui:componentName>
+				<tui:componentName><fmt:message key="contracts.title"/></tui:componentName>
 			</tui:componentHeader>
 
 			<tui:component>
 
-				<p><fmt:message key="companies.desc"/></p>
+				<p><fmt:message key="contracts.desc"/></p>
 
 				<!-- Body -->
 				<tui:componentList>

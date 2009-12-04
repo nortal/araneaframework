@@ -60,7 +60,7 @@
 			source="1.5"
 			srcdir="src"
 			includes="**/*.java"
-			classpathref="classpath"
+			classpathref="build.cp"
 		/>
 	</target>
 

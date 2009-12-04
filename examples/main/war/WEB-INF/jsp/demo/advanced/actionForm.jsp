@@ -54,7 +54,7 @@
 								<ui:numberInput style="text-align: right" />
 								<script type="text/javascript">
 									Event.observe(formId + '.quantity', 'change', function(event) {
-										araneaPage().action(Event.element(event), 'quantityChange', widgetId, Event.element(event).value, callback);
+										Aranea.Page.action('quantityChange', widgetId, Event.element(event).value, null, callback);
 									});
 								</script>
 							</ui:formElement>
@@ -82,7 +82,7 @@
 								<ui:floatInput style="text-align: right" />
 								<script type="text/javascript">
 									Event.observe(formId + '.vat', 'change', function(event) {
-										araneaPage().action_6(araneaPage().getSystemForm(), 'vatChange', widgetId, $F(formId + '.vat'), callback);
+										Aranea.Page.action('vatChange', widgetId, $F(formId + '.vat'), null, callback);
 									});
 								</script>
 							</ui:formElement>

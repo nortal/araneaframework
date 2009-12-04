@@ -39,7 +39,7 @@
 	<target name="compile" depends="init" description="Compile Java">
 		<mkdir dir="${build.classes.dir}" />
 		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" encoding="utf-8" target="1.5" source="1.5">
-			<classpath refid="classpath" />
+			<classpath refid="build.cp" />
 			<include name="**/*.java" />
 		</javac>
 	</target>
