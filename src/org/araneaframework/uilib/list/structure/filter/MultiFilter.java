@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure.filter;
 
@@ -22,33 +22,34 @@ import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.uilib.list.structure.ListFilter;
 
-
-
 public abstract class MultiFilter implements ListFilter {
-	
-	protected List children = new ArrayList();
-	
-	public void init(Environment env) {
-		for (Iterator i = children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
-			filter.init(env);
-		}
-	}
-	public void destroy() {
-		clearFilters();
-	}
-	public MultiFilter addFilter(ListFilter filter) {
-		this.children.add(filter);
-		return this;
-	}
-	public List getFilters() {
-		return this.children;
-	}
-	public void clearFilters() {
-		for (Iterator i = children.iterator(); i.hasNext();) {
-			ListFilter filter = (ListFilter) i.next();
-			filter.destroy();
-			i.remove();
-		}
-	}
+
+  protected List<ListFilter> children = new ArrayList<ListFilter>();
+
+  public void init(Environment env) {
+    for (ListFilter filter : this.children) {
+      filter.init(env);
+    }
+  }
+
+  public void destroy() {
+    clearFilters();
+  }
+
+  public MultiFilter addFilter(ListFilter filter) {
+    this.children.add(filter);
+    return this;
+  }
+
+  public List<ListFilter> getFilters() {
+    return this.children;
+  }
+
+  public void clearFilters() {
+    for (Iterator<ListFilter> i = this.children.iterator(); i.hasNext();) {
+      ListFilter filter = i.next();
+      filter.destroy();
+      i.remove();
+    }
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.like;
 
@@ -28,7 +28,7 @@ import org.araneaframework.core.util.ExceptionUtil;
 /**
  * Helper class for emulating database <code>LIKE</code> expression in Java.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * 
  * @see SqlLikeUtil
  */
@@ -96,10 +96,10 @@ public class RegexpLikeUtil {
 
 	private static String convertMask(String mask, LikeConfiguration config) {
 		// Escape all metachars except custom wildcards
-		List tmp = new ArrayList(Arrays.asList(RE_META_CHARS));
+		List<String> tmp = new ArrayList<String>(Arrays.asList(RE_META_CHARS));
 		tmp.removeAll(Arrays.asList(config.getAnyStringWildcards()));
 		tmp.removeAll(Arrays.asList(config.getAnyCharWildcards()));
-		String[] metaChars = (String[]) tmp.toArray(new String[tmp.size()]);
+		String[] metaChars = tmp.toArray(new String[tmp.size()]);
 		for (int i = 0; i < metaChars.length; i++) {
 			mask = StringUtils.replace(mask, metaChars[i], RE_ESCAPE_CHAR + metaChars[i]);
 		}

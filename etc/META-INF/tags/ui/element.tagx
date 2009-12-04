@@ -1,0 +1,39 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="A simple HTML element tag." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="name" description="The name for the element." />
+	<jsp:directive.attribute name="forceEndTag" type="java.lang.Boolean" description="When element content is empty, the element start tag may end with '/&gt;'. Some elements, must not use this format. Set true to disable the short format." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<c:set var="attributes" value="${ui:pushPreviousAttributes(pageContext)}" target="java.util.Map" scope="request"/>
+
+	<jsp:doBody var="content"/>
+
+	<c:out value="&lt;${name}" escapeXml="false"/>
+	<c:forEach var="attr" items="${attributes}">
+		<c:out value=' ${attr.key}="' escapeXml="false"/>
+		<c:out value='${attr.value}'/>
+		<c:out value='"' escapeXml="false"/>
+	</c:forEach>
+
+	<c:choose>
+		<c:when test="${forceEndTag or not empty content}">
+			<c:out value="&gt;${content}&lt;/${name}&gt;" escapeXml="false"/>
+		</c:when>
+		<c:otherwise>
+			<c:out value="/&gt;" escapeXml="false"/>
+		</c:otherwise>
+	</c:choose>
+
+	<c:set var="attributes" value="${ui:popPreviousAttributes(pageContext)}" target="java.util.Map" scope="request"/>
+
+</jsp:root>

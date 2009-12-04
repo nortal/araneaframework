@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.example.common.framework.resource;
+
+import org.araneaframework.http.support.IdentityResourceBundle;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -26,11 +28,12 @@ import org.araneaframework.http.support.StringResourceBundle;
  */
 public class TemplateResourceBundle_et extends FallbackResourceBundle {
 
-	public TemplateResourceBundle_et() throws Exception {
-		setLocale(new Locale("et", ""));
+  public TemplateResourceBundle_et() throws Exception {
+    setLocale(new Locale("et", ""));
 
-		addResourceBundle(new StringResourceBundle());
-		addResourceBundle(ResourceBundle.getBundle("resource/template", getLocale()));
-		addResourceBundle(ResourceBundle.getBundle("resource/uilib", getLocale()));
-	}
+    addResourceBundle(new StringResourceBundle());
+    addResourceBundle(ResourceBundle.getBundle("resource/template", getLocale()));
+    addResourceBundle(ResourceBundle.getBundle("resource/uilib", getLocale()));
+    addResourceBundle(new IdentityResourceBundle());
+  }
 }

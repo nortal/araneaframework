@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock.servlet;
 
@@ -31,6 +31,7 @@ public class MockServlet extends BaseAraneaDispatcherServlet {
   private ServletServiceAdapterComponent builtComponent;
   private BeanFactory factory;
   
+  @Override
   protected ServletServiceAdapterComponent buildRootComponent() {
     ClassPathResource resource = new ClassPathResource(beansFile);
     factory = new XmlBeanFactory(resource);  

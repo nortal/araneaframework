@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.reader;
 
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.AraneaRuntimeException;
@@ -31,7 +30,7 @@ import org.araneaframework.uilib.form.formlist.BaseFormListWidget;
  * This class allows one to read <code>Value Object</code> s from
  * {@link org.araneaframework.uilib.form.FormWidget}s.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class BeanFormReader {
@@ -57,8 +56,8 @@ public class BeanFormReader {
 	 * @return Value Object of the specified class with values read from the form
 	 *         where possible.
 	 */
-  public Object getBean(Class voClass) {
-    Object result = null;
+  public <T> T getBean(Class<T> voClass) {
+    T result = null;
     try {
       result = voClass.newInstance();
       readFormBean(result);
@@ -78,30 +77,30 @@ public class BeanFormReader {
 	 * @param vo
 	 *          Value Object to write to.
 	 */
-  public void readFormBean(Object vo) {
-	  BeanMapper beanMapper = new BeanMapper(vo.getClass());
-    for (Iterator i = compositeFormElement.getElements().entrySet().iterator(); i.hasNext();) {
-    	Map.Entry entry = (Map.Entry) i.next();
+  @SuppressWarnings("unchecked")
+  public <T> void readFormBean(T vo) {
+	  BeanMapper<T> beanMapper = new BeanMapper<T>((Class<T>) vo.getClass());
+    for (Map.Entry<String, GenericFormElement> entry : compositeFormElement.getElements().entrySet()) {
     	
-      GenericFormElement element = (GenericFormElement) entry.getValue();
-      String elementId = (String) entry.getKey();
+      GenericFormElement element = entry.getValue();
+      String elementId = entry.getKey();
       
       if (element instanceof FormElement) {
         if (beanMapper.isWritable(elementId)) {
-          Data data = ((FormElement) element).getData();
+          Data<?> data = ((FormElement<?,?>) element).getData();
           if (data != null) {
-            beanMapper.setFieldValue(vo, elementId, data.getValue());
+            beanMapper.setProperty(vo, elementId, data.getValue());
           }
         }
       }
       else if (element instanceof FormWidget) {
         if (beanMapper.isWritable(elementId)) {
           BeanFormReader subVoReader = new BeanFormReader((FormWidget) element);
-          Object subBean = beanMapper.getFieldValue(vo, elementId);
+          Object subBean = beanMapper.getProperty(vo, elementId);
           
           if (subBean == null) {
-        	  subBean = subVoReader.getBean(beanMapper.getFieldType(elementId));
-        	  beanMapper.setFieldValue(vo, elementId, subBean);
+        	  subBean = subVoReader.getBean(beanMapper.getPropertyType(elementId));
+        	  beanMapper.setProperty(vo, elementId, subBean);
           } else {
         	  subVoReader.readFormBean(subBean);
           }
@@ -110,7 +109,7 @@ public class BeanFormReader {
       else if (element instanceof BaseFormListWidget) {
         if (beanMapper.isWritable(elementId)) {
           ListFormReader subVoReader = new ListFormReader((BaseFormListWidget) element);
-          beanMapper.setFieldValue(vo, elementId, subVoReader.getList());
+          beanMapper.setProperty(vo, elementId, subVoReader.getList());
         }
       }
     }

@@ -1,0 +1,22 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.1">
+
+	<jsp:directive.tag description="Wrapper for button controls in forms." />
+
+	<jsp:directive.attribute name="overlay" type="java.lang.Boolean"
+		description="Whether this button container is in overlay or not. Default: false."/>
+
+	<c:if test="${empty overlay}">
+		<c:set var="overlay" value="false"/>
+	</c:if>
+
+	<c:choose>
+		<c:when test="${overlay}">
+			<p class="action"><jsp:doBody/></p>
+		</c:when>
+		<c:otherwise>
+			<div class="action clear"><jsp:doBody/></div>
+		</c:otherwise>
+	</c:choose>
+
+</jsp:root>

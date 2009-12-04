@@ -1,0 +1,27 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:wm="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Generates a link. Must be used inside an 'hX' tag." body-content="empty"/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="labelId" description="The ID for the label of the link." />
+	<jsp:directive.attribute name="purpose" required="true" description="One of 'add', 'delete'..." />
+
+	<jsp:directive.attribute name="eventId" description="Event ID." />
+	<jsp:directive.attribute name="eventParam" description="Event parameter." />
+	<jsp:directive.attribute name="eventTarget" description="Widget where event should be routed, default is contextwidget." />
+	<jsp:directive.attribute name="onClickPrecondition" description="The boolean precondition for the event." />
+	<jsp:directive.attribute name="updateRegions" description="Update regions for the event." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Global update regions for the event." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<p class="${purpose} clear"><ui:eventLinkButton labelId="${labelId}" eventId="${eventId}"
+		eventParam="${eventParam}" eventTarget="${eventTarget}" onClickPrecondition="${onClickPrecondition}"
+		updateRegions="${updateRegions}" globalUpdateRegions="${globalUpdateRegions}"/></p>
+
+</jsp:root>

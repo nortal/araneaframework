@@ -34,7 +34,7 @@ public interface ApplicationService extends ApplicationComponent, Service, Compo
     /**
      * Can be used to custom data from the view.
      */
-    public Map getData();
+    public Map<String, Object> getData();
   }
 
   //*******************************************************************

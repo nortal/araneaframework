@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,41 +12,39 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
-import org.araneaframework.uilib.ConfigurationContext;
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
  * Standard select form element tag.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
- *   name = "checkboxMultiSelect"
- *   body-content = "JSP"
- *   description = "Form multiselect checkbox field, represents UiLib 'MultiSelectControl'."
+ *  name = "checkboxMultiSelect"
+ *  body-content = "JSP"
+ *  description = "Form multiselect checkbox field, represents UiLib 'MultiSelectControl'."
  */
+@SuppressWarnings("unchecked")
 public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
   /**
-   * A boolean setting to override default configuration of
-   * {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
+   * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
    * 
    * @since 1.2
    */
-  protected Boolean localizeDisplayItems;
+  protected String localizeDisplayItems;
 
   protected String type = "horizontal";
 
@@ -56,72 +54,69 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     setHasElementContextSpan(false);
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   public int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");
 
-    if (!"horizontal".equals(type) && !"vertical".equals(type)) {
-      throw new AraneaJspException(
-          "Attribute 'type' can be only either 'horizontal' or 'vertical'!");
+    if (!"horizontal".equals(this.type) && !"vertical".equals(this.type)) {
+      throw new AraneaJspException("Attribute 'type' can be only either 'horizontal' or 'vertical'!");
     }
 
     // Prepare
-    MultiSelectControl.ViewModel viewModel = (MultiSelectControl.ViewModel) controlViewModel;
+    MultiSelectControl<Object>.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
 
-    for (Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem displayItem = (DisplayItem) i.next();
-
-      // set the corresponding HTML id for label and checkbox so that clicking
-      // on label sets the checkbox value too
-      String checkboxId = viewModel.getScope().toString()
-          + displayItem.getValue();
+    for (DisplayItem displayItem : viewModel.getSelectItems()) {
+      // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
+      String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
 
       registerSubtag(item);
       item.setHtmlId(checkboxId);
 
-      if (labelBefore) {
-        writeLabel(label, derivedId, checkboxId, displayItem.getValue());
+      if (this.labelBefore) {
+        writeLabel(label, this.derivedId, checkboxId, displayItem.getValue());
       }
 
-      item.setId(derivedId);
+      item.setId(this.derivedId);
       item.setValue(displayItem.getValue());
-      item.setEvents(events ? "true" : "false");
-      item.setValidateOnEvent(validateOnEvent ? "true" : "false");
+      item.setEvents(Boolean.toString(this.events));
+      item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
       item.setStyleClass(getStyleClass());
 
-      if (updateRegions != null) {
-        item.setUpdateRegions(updateRegions);
+      if (this.updateRegions != null) {
+        item.setUpdateRegions(this.updateRegions);
       }
 
-      if (globalUpdateRegions != null) {
-        item.setGlobalUpdateRegions(globalUpdateRegions);
+      if (this.globalUpdateRegions != null) {
+        item.setGlobalUpdateRegions(this.globalUpdateRegions);
       }
 
       if (getStyle() != null) {
         item.setStyle(getStyle());
       }
 
-      if (tabindex != null) {
-        item.setTabindex(tabindex);
+      if (this.tabindex != null) {
+        item.setTabindex(this.tabindex);
       }
 
       executeStartSubtag(item);
       executeEndTagAndUnregister(item);
 
-      if (!labelBefore) {
-        writeLabel(label, derivedId, checkboxId, displayItem.getValue());
+      if (!this.labelBefore) {
+        writeLabel(label, this.derivedId, checkboxId, displayItem.getValue());
       }
 
-      if ("horizontal".equals(type)) {
+      if ("horizontal".equals(this.type)) {
         out.write("&nbsp;");
-      } else if ("vertical".equals(type)) {
+      } else if ("vertical".equals(this.type)) {
         JspUtil.writeStartEndTag(out, "br");
       }
     }
@@ -135,51 +130,39 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
    *    required = "false"
    *    description = "The way the checkboxes will be rendered - can be either 'vertical' or 'horizontal'. By default 'horizontal'."
    */
-  public void setType(String type) throws JspException {
-    this.type = (String) evaluate("type", type, String.class);
-  }
-
-  /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description ="Boolean that controls whether label is before or after each checkbox. False by default."
-   */
-  public void setLabelBefore(String labelBefore) throws JspException {
-    this.labelBefore = ((Boolean) evaluateNotNull("labelBefore", labelBefore,
-        Boolean.class)).booleanValue();
+  public void setType(String type) {
+    this.type = evaluate("type", type, String.class);
   }
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
-   * 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Boolean that controls whether label is before or after each checkbox. False by default."
+   */
+  public void setLabelBefore(String labelBefore) throws JspException {
+    this.labelBefore = evaluateNotNull("labelBefore", labelBefore, Boolean.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = (Boolean) evaluateNotNull(
-        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, String.class);
   }
 
-  protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label,
-      String id, String checkboxId, String value) throws JspException {
+  protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label, String id, String checkboxId, String value)
+      throws JspException {
     registerSubtag(label);
     label.setId(id);
     label.setCheckboxId(checkboxId);
-    label.setValue(evaluateLabel(value));
+    label.setLocalizeDisplayItems(this.localizeDisplayItems);
+    label.setValue(value);
     executeStartSubtag(label);
     executeEndTagAndUnregister(label);
-  }
-
-  protected String evaluateLabel(String value) {
-    if (this.localizeDisplayItems == null) {
-      this.localizeDisplayItems = ConfigurationContextUtil
-          .isLocalizeControlData(getEnvironment());
-    }
-
-    if (this.localizeDisplayItems.booleanValue()) {
-      value = JspUtil.getResourceString(pageContext, value);
-    }
-
-    return value;
   }
 }

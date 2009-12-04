@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.updateregion;
 
@@ -20,26 +20,22 @@ import java.io.Writer;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * Defines the update region in the HTML page that can be updated via AJAX
- * requests. Should be used when updating content inside HTML <code>table</code>
- * row, due to browser peculiarities these cases are handled differently.
+ * Defines the update region in the HTML page that can be updated via AJAX requests. Should be used when updating
+ * content inside HTML <code>table</code> row, due to browser peculiarities these cases are handled differently.
  * <p>
  * This tag is basically a table row because it wraps the content inside
  * &lt;tr&gt;-tag.
  * <p>
  * For example:
- * 
- * <pre>
- * &lt;code&gt;
+ * <code><pre>
  * &lt;ui:updateRegionRow id=&quot;x&quot;&gt;
  *   &lt;ui:cell&gt;...&lt;/ui:cell&gt;
  *   &lt;ui:cell&gt;...&lt;/ui:cell&gt;
  *   &lt;ui:cell&gt;...&lt;/ui:cell&gt;
  * &lt;/ui:updateRegionRow id=&quot;x&quot;&gt;
- * &lt;/code&gt;
- * </pre>
+ * </pre></code>
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.1
  * 
  * @jsp.tag
@@ -49,6 +45,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class UpdateRegionRowHtmlTag extends BaseUpdateRegionTag {
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     JspUtil.writeOpenStartTag(out, "tr");
@@ -58,6 +55,7 @@ public class UpdateRegionRowHtmlTag extends BaseUpdateRegionTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     out.write("<!--END:" + fullId + "-->");
     JspUtil.writeEndTag(out, "tr");

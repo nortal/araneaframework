@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,36 +12,35 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.reader;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.GenericFormElement;
 
-
 /**
  * This class allows one to write <code>Map</code>s to forms.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class MapFormWriter implements Serializable {  
+public class MapFormWriter implements Serializable {
+
   /**
    * Writes the Value Object values to form where possible.
    * 
    * @param form {@link FormWidget}to write to.
    * @param map <code>Map</code> to read from.
    */
-  public void writeForm(FormWidget form, Map map) {
+  @SuppressWarnings("unchecked")
+  public void writeForm(FormWidget form, Map<?, ?> map) {
 
-    for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
+    for (Map.Entry entry : map.entrySet()) {
       String key = (String) entry.getKey();
       GenericFormElement element = form.getElement(key);
 
@@ -51,8 +50,7 @@ public class MapFormWriter implements Serializable {
           if (data != null) {
             data.setValue(entry.getValue());
           }
-        }
-        else if (element instanceof FormWidget) {
+        } else if (element instanceof FormWidget) {
           MapFormWriter subMapWriter = new MapFormWriter();
 
           Map subMap = (Map) entry.getValue();

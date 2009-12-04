@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.menu;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Component;
 import org.araneaframework.Widget;
 import org.araneaframework.http.util.JsonArray;
@@ -35,7 +35,7 @@ import org.araneaframework.http.util.JsonObject;
  */
 public class ContextMenuItem implements Serializable {
 	/** Submenu of this <code>MenuItem</code>. */
-	private Map subMenu;
+	private Map<String, ContextMenuItem> subMenu;
 	
 	/** Name for this menu item. */ 
 	private String label;
@@ -69,7 +69,7 @@ public class ContextMenuItem implements Serializable {
 	 */
 	public ContextMenuItem addMenuItem(ContextMenuItem item) {
 		if (subMenu == null)
-			subMenu = new LinkedMap();
+			subMenu = new LinkedHashMap<String, ContextMenuItem>();
 		subMenu.put(item.getLabel(), item);
 		return item;
 	}
@@ -84,7 +84,7 @@ public class ContextMenuItem implements Serializable {
 	/**
 	 * Returns submenu of this {@link ContextMenuItem} as <code>Map&lt;String, ContextMenuItem&gt;</code>.
 	 */
-	public Map getSubMenu() {
+	public Map<String, ContextMenuItem> getSubMenu() {
 		return subMenu;
 	}
 	
@@ -108,10 +108,10 @@ public class ContextMenuItem implements Serializable {
 		return jsonObject;
 	}
 
-	protected JsonArray menuMapToJsonArray(Map map) {
+	protected JsonArray menuMapToJsonArray(Map<String, ContextMenuItem> map) {
 		JsonArray result = new JsonArray();
-		for (Iterator i = map.values().iterator(); i.hasNext(); ) {
-			ContextMenuItem item = (ContextMenuItem) i.next();
+		for (Iterator<ContextMenuItem> i = map.values().iterator(); i.hasNext(); ) {
+			ContextMenuItem item = i.next();
 			result.append(item.toJSON().toString());
 		}
 

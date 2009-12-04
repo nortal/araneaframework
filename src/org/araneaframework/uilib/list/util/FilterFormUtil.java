@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
+
 package org.araneaframework.uilib.list.util;
 
 import java.text.MessageFormat;
@@ -28,66 +29,63 @@ import org.araneaframework.uilib.util.Event;
 /**
  * List filters form utils.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class FilterFormUtil {
-	
-	public static final String TEMPORARY_LABEL = "";
-	public static final String DO_NOT_LOCALIZE_PREFIX = "#"; 
-	
-	public static FormElement createElement(FilterContext ctx, String id) {
-		Class type = ctx.getFieldType(id);
-		FormElement result = FormUtil.createElement(TEMPORARY_LABEL,
-				FormUtil.createControl(type),
-				FormUtil.createData(type), false);
-		setLabel(ctx, result, id);
-		return result ;
-	}
-	
-	public static FormElement createElement(FilterContext ctx, String id,
-			Control control) {
-		FormElement result = FormUtil.createElement(TEMPORARY_LABEL, control,
-				FormUtil.createData(ctx.getFieldType(id)), false);
-		setLabel(ctx, result, id);
-		return result;
-	}
-	
-	public static FormElement createElement(FilterContext ctx, String id,
-			Control control, Data data) {
-		FormElement result = FormUtil.createElement(TEMPORARY_LABEL, control, data, false); 
-		setLabel(ctx, result, id);
-		return result;
-	}
-	
-	public static String getLabelForLowField(LocalizationContext loc, String fieldLabelId) {
-		return DO_NOT_LOCALIZE_PREFIX +
-			format(localize(loc, UiLibMessages.LOW_OF), localize(loc, fieldLabelId));
-	}
-	
-	public static String getLabelForHighField(LocalizationContext loc, String fieldLabelId) {
-		return DO_NOT_LOCALIZE_PREFIX +
-			format(localize(loc, UiLibMessages.HIGH_OF), localize(loc, fieldLabelId));
-	}
-	
-	private static String format(String pattern, String arg) {
-		return MessageFormat.format(pattern, new Object[] {arg});
-	}
-	
-	private static String localize(LocalizationContext loc, String key) {
-		try {
-			return loc.localize(key);
-		}
-		catch (MissingResourceException e) {
-			return key;
-		}
-	}
-	
-	public static void setLabel(final FilterContext ctx,
-			final FormElement formElement, final String fieldId) {
-		ctx.addInitEvent(new Event() {
-			public void run() {
-				formElement.setLabel(ctx.getFieldLabel(fieldId));
-			}
-		});
-	}
+
+  public static final String TEMPORARY_LABEL = "";
+
+  public static final String DO_NOT_LOCALIZE_PREFIX = "#";
+
+  @SuppressWarnings("unchecked")
+  public static <C, D> FormElement<C, D> createElement(FilterContext ctx, String id) {
+    Class<?> type = ctx.getFieldType(id);
+    FormElement<C, D> result = (FormElement<C, D>) FormUtil.createElement(TEMPORARY_LABEL,
+        FormUtil.createControl(type), FormUtil.createData(type), false);
+    setLabel(ctx, result, id);
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <C, D> FormElement<C, D> createElement(FilterContext ctx, String id, Control<C> control) {
+    FormElement<C, D> result = (FormElement<C, D>) FormUtil.createElement(TEMPORARY_LABEL, control, FormUtil.createData(ctx
+        .getFieldType(id)), false);
+    setLabel(ctx, result, id);
+    return result;
+  }
+
+  public static <C, D> FormElement<C, D> createElement(FilterContext ctx, String id, Control<C> control, Data<D> data) {
+    FormElement<C, D> result = FormUtil.createElement(TEMPORARY_LABEL, control, data, false);
+    setLabel(ctx, result, id);
+    return result;
+  }
+
+  public static String getLabelForLowField(LocalizationContext loc, String fieldLabelId) {
+    return DO_NOT_LOCALIZE_PREFIX + format(localize(loc, UiLibMessages.LOW_OF), localize(loc, fieldLabelId));
+  }
+
+  public static String getLabelForHighField(LocalizationContext loc, String fieldLabelId) {
+    return DO_NOT_LOCALIZE_PREFIX + format(localize(loc, UiLibMessages.HIGH_OF), localize(loc, fieldLabelId));
+  }
+
+  private static String format(String pattern, String arg) {
+    return MessageFormat.format(pattern, new Object[] { arg });
+  }
+
+  private static String localize(LocalizationContext loc, String key) {
+    try {
+      return loc.localize(key);
+    } catch (MissingResourceException e) {
+      return key;
+    }
+  }
+
+  public static void setLabel(final FilterContext ctx, final FormElement<?, ?> formElement, final String fieldId) {
+    ctx.addInitEvent(new Event() {
+
+      public void run() {
+        formElement.setLabel(ctx.getFieldLabel(fieldId));
+      }
+    });
+  }
 }

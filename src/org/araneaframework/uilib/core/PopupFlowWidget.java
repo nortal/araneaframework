@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.core;
 
@@ -21,29 +21,30 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.support.PopupWindowProperties;
-import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * A (pseudo)widget that allows opening flows in popup windows by starting flows almost the usual way.
  * 
- * <pre>
  * <code>
+ * <pre>
  *   ((FlowContext)getEnvironment.getEntry(FlowContext.class)).
- *   	start(
- *   		new PopupFlowWidget(
- *   			new NiceWidget(),  // flow to start  
- *   			new PopupWindowProperties(), // exactly what it says
- *          	// Factory that constructs the initial {@link org.araneaframework.Message} sent to created session thread.
- *   			new ApplicationAndSituationSpecificMessageFactory()
- *   		), 
- *   		null, null);
- * </code>
+ *       start(
+ *         new PopupFlowWidget(
+ *           new NiceWidget(),  // flow to start  
+ *           new PopupWindowProperties(), // exactly what it says
+ *           // Factory that constructs the initial {@link org.araneaframework.Message} sent to created session thread.
+ *           new ApplicationAndSituationSpecificMessageFactory()
+ *         )
+ *     );
  * </pre>
+ * </code>
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWidget extends BaseApplicationWidget {
+
   protected Message msg;
+
   protected PopupWindowProperties properties;
 
   /**
@@ -52,33 +53,34 @@ public class PopupFlowWidget extends BaseApplicationWidget {
    * @param widget flow to start
    * @param properties properties for newly opened popup window
    * @param messageFactory {@link org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory} that builds message
-   *                       that is sent to the freshly created session-thread for opening requested flow.
+   *          that is sent to the freshly created session-thread for opening requested flow.
    */
   public PopupFlowWidget(Widget widget, PopupWindowProperties properties, MessageFactory messageFactory) {
     this.msg = messageFactory.buildMessage(new PopupFlowWrapperWidget(widget));
     this.properties = properties;
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
 
-    PopupWindowContext popupCtx = EnvironmentUtil.getPopupWindowContext(getEnvironment());
-    popupCtx.open(msg, properties, this);
-    msg = null;
+    PopupWindowContext popupCtx = getEnvironment().requireEntry(PopupWindowContext.class);
+    popupCtx.open(this.msg, this.properties, this);
+    this.msg = null;
   }
 
   /**
    * @author Taimo Peelo (taimo@araneaframework.org)
    */
   public interface MessageFactory {
-    /** 
-     * Constructs a {@link org.araneaframework.Message} which
-     * starts <code>rootFlow</code> when it is sent to a freshly created session-thread
-     * component graph.
-     *  
+
+    /**
+     * Constructs a {@link org.araneaframework.Message} which starts <code>rootFlow</code> when it is sent to a freshly
+     * created session-thread component graph.
+     * 
      * @param rootFlow flow to start in a freshly created session thread
-     * @return {@link org.araneaframework.Message} that starts  
-     * 			<code>rootFlow</code> when it is sent to a freshly created session-thread
+     * @return {@link org.araneaframework.Message} that starts <code>rootFlow</code> when it is sent to a freshly
+     *         created session-thread
      */
     public Message buildMessage(Widget rootFlow);
   }

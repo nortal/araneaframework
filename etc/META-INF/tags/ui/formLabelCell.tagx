@@ -1,0 +1,51 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Generates the label cell for form element." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="labelId" description="The label to be shown inside the cell." />
+	<jsp:directive.attribute name="id" description="The form element ID to find the label of the form element." />
+	<jsp:directive.attribute name="textOnly" description="Whether the label should not use any HTML tags. Default false." />
+	<jsp:directive.attribute name="styleClass" description="The HTML 'class' attribute value." />
+	<jsp:directive.attribute name="showMandatory"
+		description="Whether to show asterisk if this element is required (default: true)." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<c:if test="${empty showMandatory}">
+		<c:set var="showMandatory" value="true" />
+	</c:if>
+
+	<ui:element name="th">
+		<ui:attribute name="class" value="${styleClass}"/>
+		<ui:elementContent>
+			<c:choose>
+				<c:when test="${textOnly}">
+					<c:if test="${not empty labelId}">
+						<fmt:message key="${labelId}"/>
+					</c:if>
+				</c:when>
+				<c:otherwise>
+					<util:formElement id="${id}" label="true" markRendered="false">
+						<c:if test="${(empty labelId) and (not empty formElement)}">
+							<c:set var="labelId" value="${formElement.label}" />
+						</c:if>
+
+						<c:if test="${showMandatory and formElement.mandatory}">
+							<span class="req">*</span>
+							<c:out value=" "/>
+						</c:if>
+						<label for="${formElementFullId}"><fmt:message key="${labelId}"/>:</label>
+					</util:formElement>
+				</c:otherwise>
+			</c:choose>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

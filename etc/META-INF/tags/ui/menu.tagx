@@ -1,0 +1,43 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:wm="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes the menu." body-content="empty" />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="rootMenuItem"
+		type="org.araneaframework.uilib.core.MenuItem" required="true"
+		description="The root menu item." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<c:if test="${empty parentPath}">
+		<c:set var="parentPath" value="${rootItem.label}" />
+	</c:if>
+
+	<ul id="nav">
+	<c:forEach var="item" items="${rootMenuItem.subMenu}">
+		<c:set var="item" value="${item.value}"/>
+		<c:choose>
+			<c:when test="${item.selected}">
+				<li class="active">
+				<ui:eventLinkButton eventId="menuSelect" eventParam="${item.label}">
+					<span><fmt:message key="${item.label}" /></span>
+				</ui:eventLinkButton>
+				</li>
+			</c:when>
+			<c:otherwise>
+				<li>
+				<ui:eventLinkButton eventId="menuSelect" eventParam="${item.label}">
+					<span><fmt:message key="${item.label}" /></span>
+				</ui:eventLinkButton>
+				</li>
+			</c:otherwise>
+		</c:choose>
+	</c:forEach>
+	</ul>
+
+</jsp:root>

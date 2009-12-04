@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.formlist.adapter;
 
@@ -24,50 +24,52 @@ import org.araneaframework.uilib.form.formlist.FormRowHandler;
 import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
 
 /**
- * Decorator that uses the {@link InMemoryFormListHelper} to
- * assign temporary keys to new objects.
+ * Decorator that uses the {@link InMemoryFormListHelper} to assign temporary keys to new objects.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class InMemoryFormRowHandlerDecorator implements FormRowHandler {
-	protected FormRowHandler rowHandler;
-	protected InMemoryFormListHelper inMemoryRowHelper;
-	
-	public InMemoryFormRowHandlerDecorator(
-			FormRowHandler rowHandler, 
-			InMemoryFormListHelper editableMemoryBasedHelper) {
-		this.rowHandler = rowHandler;
-		this.inMemoryRowHelper = editableMemoryBasedHelper;
-	}
+public class InMemoryFormRowHandlerDecorator<K, R> implements FormRowHandler<K, R> {
 
-  public Object getRowKey(Object row) {
-		Object result = rowHandler.getRowKey(row);
-		if (result != null) return result;
-		
-		return inMemoryRowHelper.getTempKey(row);
-	}
+  protected FormRowHandler<K, R> rowHandler;
 
-	public void saveRows(Map rowForms) throws Exception {
-		rowHandler.saveRows(rowForms);
-	}
+  protected InMemoryFormListHelper<K, R> inMemoryRowHelper;
 
-	public void deleteRows(Set keys) throws Exception {
-		rowHandler.deleteRows(keys);
-	}
+  public InMemoryFormRowHandlerDecorator(FormRowHandler<K, R> rowHandler,
+      InMemoryFormListHelper<K, R> editableMemoryBasedHelper) {
+    this.rowHandler = rowHandler;
+    this.inMemoryRowHelper = editableMemoryBasedHelper;
+  }
 
-	public void initFormRow(FormRow editableRow, Object row) throws Exception {
-		rowHandler.initFormRow(editableRow, row);
-	}
+  public K getRowKey(R row) {
+    K result = this.rowHandler.getRowKey(row);
+    if (result != null) {
+      return result;
+    }
 
-	public void initAddForm(FormWidget addForm) throws Exception {
-		rowHandler.initAddForm(addForm);
-	}
+    return this.inMemoryRowHelper.getKey(row);
+  }
 
-	public void addRow(FormWidget rowForm) throws Exception {
-		rowHandler.addRow(rowForm);
-	}
+  public void saveRows(Map<K, FormRow<K, R>> rowForms) throws Exception {
+    this.rowHandler.saveRows(rowForms);
+  }
 
-	public void openOrCloseRow(FormRow editableRow) throws Exception {
-		rowHandler.openOrCloseRow(editableRow);
-	}
+  public void deleteRows(Set<K> keys) throws Exception {
+    this.rowHandler.deleteRows(keys);
+  }
+
+  public void initFormRow(FormRow<K, R> editableRow, R row) throws Exception {
+    this.rowHandler.initFormRow(editableRow, row);
+  }
+
+  public void initAddForm(FormWidget addForm) throws Exception {
+    this.rowHandler.initAddForm(addForm);
+  }
+
+  public void addRow(FormWidget rowForm) throws Exception {
+    this.rowHandler.addRow(rowForm);
+  }
+
+  public void openOrCloseRow(FormRow<K, R> editableRow) throws Exception {
+    this.rowHandler.openOrCloseRow(editableRow);
+  }
 }

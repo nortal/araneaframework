@@ -1,0 +1,62 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Generates a text input." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="Overrides the ID of the input." />
+	<jsp:directive.attribute name="styleClass" description="Appended CSS class for the tag." />
+	<jsp:directive.attribute name="readonly" type="java.lang.Boolean" description="A Boolean specifying whether the disabled input is rendered read-only or disabled." />
+	<jsp:directive.attribute name="tabindex" description="HTML tabindex for the element." />
+
+	<jsp:directive.attribute name="events" type="java.lang.Boolean" description="Whether the element will send the events that are registered by server-side (by default 'true')." />
+	<jsp:directive.attribute name="onChangePrecondition" description="Precondition for deciding whether go to server side or not." />
+	<jsp:directive.attribute name="updateRegions" description="Enumerates the regions of markup to be updated in this widget scope. Please see ui:updateRegion for details." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Enumerates the regions of markup to be updated globally. Please see ui:updateRegion for details." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<util:formElement id="${id}" controlType="CheckboxControl" label="false">
+		<c:if test="${empty onChangePrecondition}">
+			<c:set var="onChangePrecondition" value="return Aranea.UI.isChanged('${formElementFullId}');" />
+		</c:if>
+
+		<ui:element name="input">
+			<ui:attribute name="type" value="checkbox"/>
+			<ui:attribute name="id" value="${formElementFullId}"/>
+			<ui:attribute name="name" value="${formElementFullId}"/>
+
+			<util:elementClassAttr baseClass="aranea-checkbox" styleClass="${styleClass}"/>
+			<util:formElementDisabledAttr readonly="${readonly}"/>
+
+			<c:if test="${control.simpleValue eq 'true'}">
+				<ui:attribute name="checked" value="checked"/>
+			</c:if>
+
+			<ui:attribute name="tabindex" value="${tabindex}"/>
+
+			<util:formElementBgValidationAttr/>
+			<util:formElementDisabledAttr readonly="${readonly}"/>
+
+			<c:if test="${events and formElement.onChangeEventRegistered}">
+				<ui:elementEventAttrs attr="onclick" eventId="onChanged"
+					eventCondition="${onChangePrecondition}"
+					updateRegions="${updateRegions}"
+					globalUpdateRegions="${globalUpdateRegions}" />
+			</c:if>
+		</ui:element>
+		<c:out value=" "/>
+		<ui:element name="label">
+			<ui:attribute name="for" value="${formElementFullId}"/>
+			<ui:elementContent>
+				<fmt:message key="${formElement.label}"/>
+			</ui:elementContent>
+		</ui:element>
+	</util:formElement>
+
+</jsp:root>

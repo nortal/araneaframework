@@ -1,0 +1,10 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag
+		description="A wrapper for modal mode popup content." />
+
+	<div class="modalpopup-content">
+		<jsp:doBody />
+	</div>
+
+</jsp:root>

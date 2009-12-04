@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.mock;
 
@@ -23,14 +23,14 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 
 public class MockVariableResolver implements VariableResolver {
-	protected Map variables = new HashMap();
+	protected Map<String, Object> variables = new HashMap<String, Object>();
 
-	public MockVariableResolver(Map variables) {
+	public MockVariableResolver(Map<String, Object> variables) {
 		this.variables = variables;
 	}
 
 	public MockVariableResolver(String name, Object value) {
-		this.variables = new HashMap();
+		this.variables = new HashMap<String, Object>();
 		this.variables.put(name, value);
 	}
 

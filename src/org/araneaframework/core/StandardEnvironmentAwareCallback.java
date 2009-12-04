@@ -26,7 +26,5 @@ import org.araneaframework.EnvironmentAwareCallback;
 public class StandardEnvironmentAwareCallback
   implements EnvironmentAwareCallback {
 
-  private static final long serialVersionUID = 1L;
-
   public void call(Environment env) throws Exception {}
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
-
+ */
 
 package org.araneaframework.uilib.core;
 
@@ -41,33 +40,33 @@ import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.URLUtil;
 
 /**
- * Wrapper around the flow that is started from new session-thread. It pretends
- * to be {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies
- * method calls to current <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} 
- * and/or to {@link org.araneaframework.framework.FlowContext} from which wrapped flow was started.
+ * Wrapper around the flow that is started from new session-thread. It pretends to be
+ * {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies method calls to current
+ * <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} and/or to
+ * {@link org.araneaframework.framework.FlowContext} from which wrapped flow was started.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class PopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContextWidget {
-
-  private static final long serialVersionUID = 1L;
 
   protected Widget child;
 
   public PopupFlowWrapperWidget(Widget child) {
     this.child = child;
   }
-  
+
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(getEnvironment(), FlowContext.class, this);
   }
 
+  @Override
   protected void init() throws Exception {
     super.init();
-    addWidget("child", child);
+    addWidget("child", this.child);
   }
 
-  public void start(Widget flow, Handler handler) {
+  public void start(Widget flow, Handler<?> handler) {
     start(flow, null, handler);
   }
 
@@ -75,10 +74,10 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     start(flow, null, null);
   }
 
-  public void start(Widget flow, Configurator configurator, Handler handler) {
+  public void start(Widget flow, Configurator configurator, Handler<?> handler) {
     getLocalFlowContext().start(flow, configurator, handler);
   }
-  
+
   public void replace(Widget flow) {
     replace(flow, null);
   }
@@ -93,18 +92,19 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     getOpenerFlowContext().finish(result);
 
     try {
-      // close the session-thread of popupflow
-      Object currentThreadId = threadCtx.getCurrentId();
-      getOpenerPopupContext().close(currentThreadId.toString());
-      
-      Object servingThreadId = getInputData().getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
+      // close the session-thread of popup-flow
+      String currentThreadId = threadCtx.getCurrentId();
+      getOpenerPopupContext().close(currentThreadId);
 
-      // if request for closing popup came from the popup window itself
+      String servingThreadId = getInputData().getGlobalData().get(ThreadContext.THREAD_SERVICE_KEY);
+
+      // If request for closing popup came from the popup window itself.
       if (currentThreadId.equals(servingThreadId)) {
         String rndThreadId = RandomStringUtils.randomAlphanumeric(12);
-        //popup window is closed with redirect to a page that closes current window and reloads parent.
+
+        // Popup window is closed with redirect to a page that closes current window and reloads parent.
         threadCtx.addService(rndThreadId, new WindowClosingService(getEnvironment()));
-        ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(getRequestURL(), (String) EnvironmentUtil.requireTopServiceId(getEnvironment()), rndThreadId));
+        ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(rndThreadId));
       }
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
@@ -112,7 +112,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public void cancel() {
-    // XXX: may not just call openerflowcontext if more than one flow has been started from here 
+    // XXX: may not just call openerflowcontext if more than one flow has been started from here
     getOpenerFlowContext().cancel();
   }
 
@@ -126,38 +126,31 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     // XXX: and now what?
   }
 
-  /**
-   * @deprecated
-   */
-  public FlowReference getCurrentReference() {
-    return getLocalFlowContext().getCurrentReference();
+  public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, Class<T> entryId, T envEntry) {
+    getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId, envEntry);
   }
 
-  public void addNestedEnvironmentEntry(ApplicationWidget scope, Object entryId, Object envEntry) {
-    getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId,
-        envEntry);
-  }
-
+  @Override
   protected void render(OutputData output) throws Exception {
-    child._getWidget().render(output);
+    this.child._getWidget().render(output);
   }
-  
+
   private FlowContext getLocalFlowContext() {
     return EnvironmentUtil.getFlowContext(getEnvironment());
   }
-  
+
   protected String getRequestURL() {
-    return ((HttpInputData) getInputData()).getContainerURL(); 
+    return ((HttpInputData) getInputData()).getContainerURL();
   }
-  
-  protected String getResponseURL(String url, String topServiceId, String threadServiceId) {
-    Map m = new HashMap();
-    m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
+
+  protected String getResponseURL(String threadServiceId) {
+    Map<String, String> m = new HashMap<String, String>();
+    m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    return ((HttpOutputData)getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(getRequestURL(), m));
   }
-  
+
   private FlowContext getOpenerFlowContext() {
     ApplicationWidget appWidget = (ApplicationWidget) getPopupContext().getOpener();
     if (appWidget != null) {
@@ -166,7 +159,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
       return null;
     }
   }
-  
+
   protected PopupWindowContext getPopupContext() {
     return EnvironmentUtil.getPopupWindowContext(getEnvironment());
   }

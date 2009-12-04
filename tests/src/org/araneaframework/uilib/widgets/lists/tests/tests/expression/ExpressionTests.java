@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
@@ -27,35 +27,37 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
 
 public class ExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(ExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(ExpressionTests.class);
 
 	private VariableResolver resolver;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 	}
 
 	public void testValueExpression() {
-		log.debug("Testing ValueExpression");
+		LOG.debug("Testing ValueExpression");
 		// evaluating
 		assertNull("ValueExpression must return null",
-				new ValueExpression(null).evaluate(this.resolver));
+				new ValueExpression<Long>(null).evaluate(this.resolver));
 		assertEquals("ValueExpression must return true", Boolean.TRUE,
-				new ValueExpression(Boolean.TRUE).evaluate(this.resolver));
+				new ValueExpression<Boolean>(Boolean.TRUE).evaluate(this.resolver));
 		assertEquals("ValueExpression must return 0", new Long(0),
-				new ValueExpression(new Long(0)).evaluate(this.resolver));
+				new ValueExpression<Long>(0L).evaluate(this.resolver));
 
 		// name
 		assertEquals("ValueExpression's name must be 'value1'", "value1",
-				new ValueExpression("value1", null).getName());
+				new ValueExpression<String>("value1", null).getName());
 	}
 
 	public void testVariableExpression() {
-		log.debug("Testing VariableExpression");
+		LOG.debug("Testing VariableExpression");
 		// name
 		try {
 			new VariableExpression(null).getName();
@@ -72,7 +74,7 @@ public class ExpressionTests extends TestCase {
 	}
 	
 	public void testProcedureExpression() {
-		log.debug("Testing ProcedureExpression");
+		LOG.debug("Testing ProcedureExpression");
 		// name
 		try {
 			new ProcedureExpression(null).getName();

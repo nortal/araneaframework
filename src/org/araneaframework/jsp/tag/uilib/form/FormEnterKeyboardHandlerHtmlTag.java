@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,41 +12,44 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form;
 
 import javax.servlet.jsp.JspException;
 
-
 /**
- * {@link org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag FormKeyboardHandlerHtmlTag} with key="enter" by default.
- *
+ * {@link org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag FormKeyboardHandlerHtmlTag} with key="enter"
+ * by default.
+ * 
  * @see org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag
  * @author Konstantin Tretyakov (kt@webmedia.ee)
  * 
  * @jsp.tag
- *   name = "formEnterKeyboardHandler"
- *   body-content = "empty"
- *   description = "Equivalent of formKeyboardHandler, but key="enter" and event="onclick" by default."
+ *  name = "formEnterKeyboardHandler"
+ *  body-content = "empty"
+ *  description = "Equivalent of formKeyboardHandler, but key='enter' and event='onclick' by default."
  */
 public final class FormEnterKeyboardHandlerHtmlTag extends FormKeyboardHandlerHtmlTag {
-	public FormEnterKeyboardHandlerHtmlTag() {
-		defaultKey = "enter";
-		defaultEvent = "onclick";
-	}
 
-	/**
-	 * Throw an exception on attempt to set key. This tag supports "enter" only!
-	 */
-	public void setKey(String key) throws JspException {
-		throw new JspException("You may not set key for the enter handler tag!");
-	}
+  public FormEnterKeyboardHandlerHtmlTag() {
+    this.keyCode = 13;
+    this.event = "onclick";
+  }
 
-	/**
-	 * @see #setKey
-	 */
-	public void setKeyCode(String keyCode) throws JspException {
-		throw new JspException("You may not set keyCode for the enter handler tag!");
-	}
+  /**
+   * Throw an exception on attempt to set key. This tag supports 13 ("enter") only!
+   */
+  @Override
+  public void setKeyCode(String key) throws JspException {
+    throw new JspException("You may not set key for the enter handler tag!");
+  }
+
+  /**
+   * Throw an exception on attempt to set key meta condition. This tag supports "enter" (13) only!
+   */
+  @Override
+  public void setKeyMetaCond(String keyCode) throws JspException {
+    throw new JspException("You may not set keyCode for the enter handler tag!");
+  }
 }

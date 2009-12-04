@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.presentation;
 
@@ -21,7 +21,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "eventLinkButton"
@@ -32,6 +32,7 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
   {
      baseStyleClass = "aranea-link-button";
   }
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -56,6 +57,7 @@ public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
     return EVAL_BODY_INCLUDE;    
   }    
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     if (localizedLabel != null)
       JspUtil.writeEscaped(out, localizedLabel);

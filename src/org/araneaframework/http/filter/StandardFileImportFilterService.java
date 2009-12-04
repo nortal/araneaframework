@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,29 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
+
 package org.araneaframework.http.filter;
 
-import org.araneaframework.core.util.ExceptionUtil;
-
-import org.apache.commons.lang.StringUtils;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
+import org.araneaframework.core.Assert;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.extension.ExternalResource;
@@ -43,203 +42,131 @@ import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.http.util.URLUtil;
 
 /**
- * A service that takes care of reading files from resources and writing them to output stream. The
- * files can be provided individually or by group, as specified in aranea-resources.xml. The service
- * listens for certain requests that contain {@value #FILE_IMPORTER_NAME} in the request path. The
- * remaining path is used for file/group lookup.
- * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StandardFileImportFilterService  extends BaseFilterService {
+public class StandardFileImportFilterService extends BaseFilterService {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(StandardFileImportFilterService.class);
+  private static final Log LOG = LogFactory.getLog(StandardFileImportFilterService.class);
 
   private static boolean isInitialized = false;
 
   private static ExternalResource resources;
 
-  private static long cacheHoldingTime = 3600000;
+  public static final String OVERRIDE_PREFIX = "override";
 
-  public static final String CACHE_TIME_PARAM = "fileImporterCacheInMillis";
-
-  public static final String IMPORTER_FILE_NAME = "FileImporterFileName";
-
-  public static final String IMPORTER_GROUP_NAME = "FileImporterGroupName";
-
-  public static final String OVERRIDE_PREFIX1 = "/WEB-INF/override/";
-  
-  public static final String OVERRIDE_PREFIX2 = "/override/";
-
-  public static final String OVERRIDE_PREFIX3 = "/";
-  
   public static final String FILE_IMPORTER_NAME = "fileimporter";
 
-  synchronized static void initialize(ServletContext context) {
+  protected long cacheHoldingTime = 3600000;
+
+  private synchronized void initialize() {
+    if (!isInitialized) {
+      initialize(getEnvironment().requireEntry(ServletConfig.class).getServletContext());
+    }
+  }
+
+  private synchronized static void initialize(ServletContext context) {
     if (!isInitialized) {
       resources = new ExternalResourceInitializer().getResources(context);
-
-      String cacheTime = context.getInitParameter(CACHE_TIME_PARAM);
-      if (StringUtils.isNumeric(cacheTime) && cacheTime.length() > 0) {
-        cacheHoldingTime = Long.parseLong(cacheTime);
-      }
-
       isInitialized = true;
     }
   }
+  
+  public void setCacheHoldingTime(Long cacheHoldingTime) {
+    Assert.notNullParam(this, cacheHoldingTime, "cacheHoldingTime");
+    this.cacheHoldingTime = cacheHoldingTime;
+  }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
+    initialize();
 
-    if (!isInitialized) {
-      ServletConfig config = getEnvironment().getEntry(ServletConfig.class);
-      initialize(config.getServletContext());
-    }
+    HttpInputData input2 = (HttpInputData) input;
+    String uri = URLUtil.normalizeURI(input2.getPath());
 
-    String uri = URLUtil.normalizeURI(((HttpInputData) input).getPath());
-
-    if (uri == null || URLUtil.splitURI(uri).length == 0
-        || !URLUtil.splitURI(uri)[0].equals(FILE_IMPORTER_NAME)) {
-      this.childService._getService().action(path, input, output);
+    if (uri == null || !uri.startsWith(FILE_IMPORTER_NAME)) {
+      this.childService._getService().action(path, input2, output);
       return;
     }
 
-    String fileName = (String) input.getGlobalData().get(IMPORTER_FILE_NAME);
-    String groupName = (String) input.getGlobalData().get(IMPORTER_GROUP_NAME);
+    input2.pushPathPrefix(FILE_IMPORTER_NAME);
 
-    if (fileName == null) {
-      fileName = uri.substring(FILE_IMPORTER_NAME.length() + 1);
-      if (resources.getGroupByName(fileName) != null) {
-        groupName = fileName;
-        fileName = null;
-      }
-    } else if (groupName == null) {
-      groupName = fileName;
-    }
+    String target = input2.getSimplePath();
+
+    boolean isGroup = target != null && resources.getGroupByName(target) != null;
 
     HttpServletResponse response = ServletUtil.getResponse(output);
-    List filesToLoad = new ArrayList();
+    List<String> filesToLoad = new ArrayList<String>();
 
     try {
-      if (fileName != null) {
-        if (resources.isAllowedFile(fileName)) {
-          setHeaders(response, resources.getContentType(fileName));
-          filesToLoad.add(fileName);
-          loadFiles(filesToLoad, response.getOutputStream());
-        }
-      } else if (groupName != null) {
-        Map group = resources.getGroupByName(groupName);
+      if (target != null) {
+        if (!isGroup && resources.isAllowedFile(target)) {
+          setHeaders(response, resources.getContentType(target));
+          filesToLoad.add(target);
 
-        if (group != null && group.size() > 0) {
-          Map.Entry entry = (Map.Entry) (group.entrySet().iterator().next());
-          setHeaders(response, (String) entry.getValue());
-          filesToLoad.addAll(group.keySet());
-          loadFiles(filesToLoad, response.getOutputStream());
-        } else {
-          log.warn("Unexistent group specified for file importing, " + groupName);
-          throw new FileNotFoundException();
+        } else if (isGroup) {
+          Map<String, String> group = resources.getGroupByName(target);
+
+          if (group != null && !group.isEmpty()) {
+            Map.Entry<String, String> entry = group.entrySet().iterator().next();
+            setHeaders(response, entry.getValue());
+            filesToLoad.addAll(group.keySet());
+          } else {
+            LOG.warn("Unexistent group specified for file importing, " + target);
+            throw new FileNotFoundException();
+          }
         }
+
+        loadFiles(filesToLoad, response.getOutputStream());
       }
     } catch (FileNotFoundException e) {
-      String notFoundName = fileName == null ? groupName : fileName;
-      response.sendError(HttpServletResponse.SC_NOT_FOUND, "Imported file or group '"
-          + notFoundName + "' not found.");
+      response.sendError(HttpServletResponse.SC_NOT_FOUND, "Imported file or group '" + target + "' not found.");
     }
   }
 
-  protected void setHeaders(HttpServletResponse response, String contentType) {
+  private void setHeaders(HttpServletResponse response, String contentType) {
     response.setHeader("Cache-Control", "max-age=" + (cacheHoldingTime / 1000));
     response.setDateHeader("Expires", System.currentTimeMillis() + cacheHoldingTime);
     response.setContentType(contentType);
   }
 
-  protected void loadFiles(List files, OutputStream out) throws Exception {
-    for (Iterator iter = files.iterator(); iter.hasNext();) {
-      String fileName = (String) iter.next();
-      URL fileURL = getFileURL(fileName);
-      InputStream fileInputStream = getInputStream(fileURL, fileName);
+  private void loadFiles(List<String> files, OutputStream out) throws Exception {
+    ServletContext context = getEnvironment().requireEntry(ServletContext.class);
 
-      try {
-        if (fileInputStream != null) {
-          int length = 0;
-          byte[] bytes = new byte[1024];
+    for (String fileName : files) {
+      // first we try load an override
+      URL fileURL = resolveFileURL(context, fileName);
+      InputStream fileInputStream = URLUtil.getFileStream(fileURL, fileName);
 
-          do {
-            length = fileInputStream.read(bytes);
-            if (length >= 0) {
-              out.write(bytes, 0, length);
-            }
-          } while (length != -1);
+      if (fileInputStream == null) {
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Unable to locate resource '" + fileName + "'");
         }
-
-      } finally {
-        if (fileInputStream != null) {
-          fileInputStream.close();
-        }
-      }
-    }
-  }
-
-  protected URL getFileURL(String fileName) {
-    ServletContext context = (ServletContext) getEnvironment().getEntry(ServletContext.class);
-    ClassLoader loader = getClass().getClassLoader();
-    URL fileURL = null;
-
-    // first we try load an override
-    try {
-      fileURL = context.getResource(OVERRIDE_PREFIX1 + fileName);
-      if (fileURL == null) {
-        fileURL = context.getResource(OVERRIDE_PREFIX2 + fileName);
-        if (fileURL == null) {
-          fileURL = context.getResource(OVERRIDE_PREFIX3 + fileName);
-        }
-      }
-    } catch (Exception e) {
-      ExceptionUtil.uncheckException(e);
-    }
-
-    if (fileURL == null) { // fallback to the original
-      fileURL = loader.getResource(fileName);
-    } else if (log.isDebugEnabled()) {
-      log.debug("Serving override of file '" + fileName + "'" + " from context path resource '"
-          + fileURL.getFile() + "'.");
-    }
-    return fileURL;
-  }
-
-  protected InputStream getInputStream(URL fileURL, String fileName) {
-    InputStream result = null;
-
-    // fallback to the filesystem
-    if (fileURL == null) {
-      try {
-        result = new FileInputStream(fileName);
-      } catch (FileNotFoundException e) {
-        // not being able to load results in FileNotFoundException, see below
-      } catch (SecurityException e) {
-        // not being able to load results in FileNotFoundException, see below
-      }
-    }
-
-    try {
-      if (result == null && fileURL != null) {
-        result = fileURL.openStream();
-
-      } else if (fileURL == null && result == null) {
-        if (log.isWarnEnabled()) {
-          log.warn("Unable to locate resource '" + fileName + "'");
-        }
-
         throw new FileNotFoundException("Unable to locate resource '" + fileName + "'");
       }
-    } catch (Exception e) {
-      if (log.isWarnEnabled()) {
-        log.warn("The resource URL points to a file that is inaccessible. Skipping the file.", e);
+
+      try {
+        IOUtils.copy(fileInputStream, out);
+      } finally {
+        IOUtils.closeQuietly(fileInputStream);
       }
-      result = null;
+    }
+  }
+
+  protected URL resolveFileURL(ServletContext context, String fileName) throws MalformedURLException {
+    // first we try load an override
+    URL fileURL = context.getResource("/" + OVERRIDE_PREFIX + "/" + fileName);
+    if (fileURL == null) {
+      fileURL = context.getResource("/" + fileName);
     }
 
-    return result;
+    if (fileURL == null) { // fall-back to the original
+      fileURL = getClass().getClassLoader().getResource(fileName);
+    } else if (LOG.isDebugEnabled()) {
+      LOG.debug("Serving override of file '" + fileName + "'" + " from context path resource '" + fileURL.getFile()
+          + "'.");
+    }
+
+    return fileURL;
   }
 }

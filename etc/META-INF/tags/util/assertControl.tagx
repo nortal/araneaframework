@@ -1,0 +1,15 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="Checks whether the control type is the expected type." body-content="empty"/>
+
+	<jsp:directive.attribute name="type" description="The type of the expected control." />
+
+	<c:set var="controlType" value="${control.controlType}" target="request"/>
+
+	<util:assert test="${type eq controlType}"
+		msg="Control of type '${type}' expected in form element '${formElementId}' instead of '${controlType}'."/>
+
+</jsp:root>

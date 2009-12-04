@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 
 package org.araneaframework.jsp.tag.uilib.form;
+
+import org.araneaframework.Path;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -52,6 +54,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   protected String forElementId;
   protected String accessKeyId;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -66,7 +69,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
 
   /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   /**
    * @jsp.attribute
@@ -75,7 +78,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   description = "Label id." 
    */
   public void setLabelId(String labelId) throws JspException {
-    this.labelId = (String)evaluateNotNull("labelId", labelId, String.class); 
+    this.labelId = evaluateNotNull("labelId", labelId, String.class); 
   }
 
   /**
@@ -85,7 +88,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   description = "Whether the label should display the asterisk, <code>false<code> by default." 
    */
   public void setShowMandatory(String mandatory) throws JspException {
-    this.mandatory = ((Boolean)(evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
+    this.mandatory = ((evaluateNotNull("mandatory", mandatory, Boolean.class))).booleanValue();
   }
 
   /**
@@ -95,7 +98,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   description = "Whether a colon (&quot;:&quot;) is shown after the label." 
    */
   public void setShowColon(String showColon) throws JspException {
-    this.showColon = ((Boolean)(evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
+    this.showColon = ((evaluateNotNull("showColumn", showColon, Boolean.class))).booleanValue();
   }  
 
   /**
@@ -104,8 +107,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    *   required = "false"
    *   description = "ID of the form element for which the label is created" 
    */
-  public void setFor(String elementName) throws JspException {
-    this.forElementId = (String)evaluate("for", elementName, String.class); 
+  public void setFor(String elementName){
+    this.forElementId = evaluate("for", elementName, String.class); 
   }
 
   /**
@@ -115,17 +118,18 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * When this resource exists and contains a single character, this character is used as an 
    * access key for the label. Otherwise no access key is used.
    */
-  public void setAccessKeyId(String accessKeyId) throws JspException {
-    this.accessKeyId = (String)evaluate("accessKeyId", accessKeyId, String.class);
+  public void setAccessKeyId(String accessKeyId){
+    this.accessKeyId = evaluate("accessKeyId", accessKeyId, String.class);
   }
 
   /* ***********************************************************************************
    * STATIC label writing functions
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   /**
    * @deprecated Use {@link #writeLabel(Writer,String,boolean,String,String,PageContext,boolean,String,String)} instead
    */
+  @Deprecated
   public static void writeLabel(
       Writer out, 
       String label, 
@@ -159,7 +163,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
       String formId = (String)JspUtil.requireContextEntry(pageContext, FormTag.FORM_FULL_ID_KEY);
       // XXX: even if formElementContext JS should be invoked when writing label, formelement should not be marked as present
       BaseFormElementHtmlTag.writeFormElementContextOpen(out, formId, formElementId, false, pageContext, LABEL_SPAN_PREFIX);
-      fullFormElementId = formId + "." + formElementId;
+      fullFormElementId = formId + Path.SEPARATOR + formElementId;
     }
 
     if (mandatory) {
@@ -198,7 +202,7 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
     
     if (fullFormElementId != null) {
       FormWidget formWidget = (FormWidget) JspUtil.requireContextEntry(pageContext, FormTag.FORM_KEY);
-      FormElement f = (FormElement) JspWidgetUtil.traverseToSubWidget(formWidget, formElementId);
+      FormElement<?,?> f = (FormElement<?,?>) JspWidgetUtil.traverseToSubWidget(formWidget, formElementId);
       BaseFormElementHtmlTag.writeFormElementValidityMarkers(out, f.isValid(), LABEL_SPAN_PREFIX + fullFormElementId);
     }
   }

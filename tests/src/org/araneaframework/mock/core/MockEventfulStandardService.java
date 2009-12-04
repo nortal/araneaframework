@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock.core;
 
@@ -24,31 +24,37 @@ import org.araneaframework.core.BaseApplicationService;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
  */
 public class MockEventfulStandardService extends BaseApplicationService {
+
   private boolean actionCalled = false;
+
   private boolean destroyCalled = false;
-  
+
   private transient Path path;
+
   private transient InputData input;
+
   private transient OutputData output;
 
+  @Override
   protected String getActionId(InputData input) {
-    return (String) input.getScopedData(getScope().toPath()).get(ACTION_HANDLER_ID_KEY);
+    return input.getScopedData(getScope().toPath()).get(ACTION_HANDLER_ID_KEY);
   }
 
+  @Override
   public void action(Path path, InputData input, OutputData output) throws Exception {
     actionCalled = true;
     this.path = path;
     this.input = input;
     this.output = output;
   }
-  
+
+  @Override
   public void destroy() {
     destroyCalled = true;
   }
-  
+
   public Environment getTheEnvironment() {
     return getEnvironment();
   }
@@ -64,7 +70,7 @@ public class MockEventfulStandardService extends BaseApplicationService {
   public Path getPath() {
     return path;
   }
-  
+
   public boolean getActionCalled() {
     return actionCalled;
   }

@@ -1,0 +1,30 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes a table cell and renders the content inside." />
+
+	<jsp:directive.attribute name="id" description="An optional ID for the HTML element."/>
+	<jsp:directive.attribute name="styleClass" description="An optional style class for the HTML element."/>
+	<jsp:directive.attribute name="colspan" description="Specifies the number of columns a cell should span."/>
+	<jsp:directive.attribute name="rowspan" description="Sets the number of rows a cell should span."/>
+	<jsp:directive.attribute name="header" type="java.lang.Boolean" description="A Boolean, indicating whether this cell is 'th' element (true) or not (false)."/>
+	<jsp:directive.attribute name="value" description="An optional value to be shown. Can also be provided in the body of the tag."/>
+
+	<c:if test="${empty header}">
+		<c:set var="header" value="false"/>
+	</c:if>
+
+	<ui:element name="td">
+		<ui:attribute name="id" value="${id}"/>
+		<ui:attribute name="class" value="${styleClass}"/>
+		<ui:attribute name="colspan" value="${colspan}"/>
+		<ui:attribute name="rowspan" value="${rowspan}"/>
+		<ui:elementContent>
+			<c:out value="${value}"/>
+			<jsp:doBody/>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

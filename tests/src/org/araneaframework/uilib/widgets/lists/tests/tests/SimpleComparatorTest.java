@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests;
 
@@ -109,40 +109,40 @@ public class SimpleComparatorTest extends TestCase {
 	}
 
 	public void testReverseComparatorEqualsTrue_1() {
-		ReverseComparator first = new ReverseComparator(BooleanComparator.FALSE_FIRST);
-		ReverseComparator second = new ReverseComparator(BooleanComparator.FALSE_FIRST);
+		ReverseComparator<Boolean> first = new ReverseComparator<Boolean>(BooleanComparator.FALSE_FIRST);
+		ReverseComparator<Boolean> second = new ReverseComparator<Boolean>(BooleanComparator.FALSE_FIRST);
 		
 		assertTrue(first.equals(second));
 		assertTrue(first.hashCode() == second.hashCode());
 	}
 	
 	public void testReverseComparatorEqualsTrue_2() {
-		ReverseComparator first = new ReverseComparator(localeStringComparator_false_Locale_en());
-		ReverseComparator second = new ReverseComparator(localeStringComparator_false_Locale_en());
+		ReverseComparator<String> first = new ReverseComparator<String>(localeStringComparator_false_Locale_en());
+		ReverseComparator<String> second = new ReverseComparator<String>(localeStringComparator_false_Locale_en());
 
 		assertTrue(first.equals(second));
 		assertTrue(first.hashCode() == second.hashCode());
 	}
 	
 	public void testReverseComparatorEqualsTrue_3() {
-		ReverseComparator first = new ReverseComparator(nullComparator_BooleanComparator_FALSE_FIRST_true());
-		ReverseComparator second = new ReverseComparator(nullComparator_BooleanComparator_FALSE_FIRST_true());
+		ReverseComparator<Object> first = new ReverseComparator<Object>(nullComparator_BooleanComparator_FALSE_FIRST_true());
+		ReverseComparator<Object> second = new ReverseComparator<Object>(nullComparator_BooleanComparator_FALSE_FIRST_true());
 
 		assertTrue(first.equals(second));
 		assertTrue(first.hashCode() == second.hashCode());
 	}
 	
 	public void testReverseComparatorEqualsFalse_1() {
-		ReverseComparator first = new ReverseComparator(BooleanComparator.FALSE_FIRST);
-		ReverseComparator second = new ReverseComparator(BooleanComparator.TRUE_FIRST);
+		ReverseComparator<Boolean> first = new ReverseComparator<Boolean>(BooleanComparator.FALSE_FIRST);
+		ReverseComparator<Boolean> second = new ReverseComparator<Boolean>(BooleanComparator.TRUE_FIRST);
 
 		assertFalse(first.equals(second));
 		assertFalse(first.hashCode() == second.hashCode());	// not necessary, but nice
 	}
 	
 	public void testReverseComparatorEqualsFalse_2() {
-		ReverseComparator first = new ReverseComparator(nullComparator_BooleanComparator_FALSE_FIRST_true());
-		ReverseComparator second = new ReverseComparator(nullComparator_BooleanComparator_TRUE_FIRST_true());
+		ReverseComparator<Object> first = new ReverseComparator<Object>(nullComparator_BooleanComparator_FALSE_FIRST_true());
+		ReverseComparator<Object> second = new ReverseComparator<Object>(nullComparator_BooleanComparator_TRUE_FIRST_true());
 
 		assertFalse(first.equals(second));
 		assertFalse(first.hashCode() == second.hashCode());	// not necessary, but nice
@@ -169,17 +169,17 @@ public class SimpleComparatorTest extends TestCase {
 	}
 	
 	public void testComparableComparatorEqualsTrue_1() {
-		ComparableComparator first = ComparableComparator.INSTANCE;
-		ComparableComparator second = ComparableComparator.INSTANCE;
+		ComparableComparator<?> first = ComparableComparator.INSTANCE;
+		ComparableComparator<?> second = ComparableComparator.INSTANCE;
 
 		assertTrue(first.equals(second));
 		assertTrue(first.hashCode() == second.hashCode());
 	}
 	
 	public void testComparableComparatorEqualsTrue_2() throws IOException, ClassNotFoundException {
-		ComparableComparator first = ComparableComparator.INSTANCE;
-		ComparableComparator second =
-			(ComparableComparator) new ObjectInputStream(
+		ComparableComparator<?> first = ComparableComparator.INSTANCE;
+		ComparableComparator<?> second =
+			(ComparableComparator<?>) new ObjectInputStream(
 					new ByteArrayInputStream(SerializationUtils.serialize(first))).readObject();
 		
 		assertTrue(first != second);

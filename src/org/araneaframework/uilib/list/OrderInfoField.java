@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,117 +12,116 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list;
+
+import org.araneaframework.core.Assert;
 
 import java.io.Serializable;
 
 /**
- * This class represents information about the ordering of one list column
- * supplied by user during UI interaction.
+ * This class represents information about the ordering of one list column supplied by user during UI interaction.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class OrderInfoField implements Serializable {
 
-	protected String id;
+  protected String id;
 
-	protected boolean ascending;
+  protected boolean ascending;
 
-	/**
-	 * Creates the class initializing its parameters.
-	 * 
-	 * @param id
-	 *            order field id.
-	 * @param ascending
-	 *            whether ordering is ascending.
-	 */
-	public OrderInfoField(String id, boolean ascending) {
-		this.id = id;
-		this.ascending = ascending;
-	}
+  /**
+   * Creates the class initializing its parameters.
+   * 
+   * @param id order field id.
+   * @param ascending whether ordering is ascending.
+   */
+  public OrderInfoField(String id, boolean ascending) {
+    Assert.notNullParam(id, "id");
+    this.id = id;
+    this.ascending = ascending;
+  }
 
-	/**
-	 * Returns whether ordering is ascending.
-	 * 
-	 * @return whether ordering is ascending.
-	 */
-	public boolean isAscending() {
-		return this.ascending;
-	}
+  /**
+   * Returns whether ordering is ascending.
+   * 
+   * @return whether ordering is ascending.
+   */
+  public boolean isAscending() {
+    return this.ascending;
+  }
 
-	/**
-	 * Sets whether ordering is ascending.
-	 * 
-	 * @param ascending
-	 *            whether ordering is ascending.
-	 */
-	public void setAscending(boolean ascending) {
-		this.ascending = ascending;
-	}
+  /**
+   * Sets whether ordering is ascending.
+   * 
+   * @param ascending whether ordering is ascending.
+   */
+  public void setAscending(boolean ascending) {
+    this.ascending = ascending;
+  }
 
-	/**
-	 * @return Returns the id.
-	 */
-	public String getId() {
-		return this.id;
-	}
+  /**
+   * @return Returns the id.
+   */
+  public String getId() {
+    return this.id;
+  }
 
-	/**
-	 * Returns view model.
-	 * 
-	 * @return view model.
-	 */
-	public ViewModel getViewModel() {
-		return new ViewModel();
-	}
+  /**
+   * Returns view model.
+   * 
+   * @return view model.
+   */
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
 
-	/**
-	 * View model.
-	 * 
-	 * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-	 */
-	public class ViewModel {
-		private String id;
+  /**
+   * View model.
+   * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+   */
+  public class ViewModel {
 
-		private boolean ascending;
+    private String id;
 
-		/**
-		 * Takes a snapshot of outer class state.
-		 */
-		public ViewModel() {
-			this.id = OrderInfoField.this.id;
-			this.ascending = OrderInfoField.this.ascending;
-		}
+    private boolean ascending;
 
-		/**
-		 * Returns whether ordering is ascending.
-		 * 
-		 * @return whether ordering is ascending.
-		 */
-		public boolean isAscending() {
-			return this.ascending;
-		}
+    /**
+     * Takes a snapshot of outer class state.
+     */
+    public ViewModel() {
+      this.id = OrderInfoField.this.id;
+      this.ascending = OrderInfoField.this.ascending;
+    }
 
-		/**
-		 * @return Returns the id.
-		 */
-		public String getId() {
-			return this.id;
-		}
-	}
-	
-	public String toString() {
-		StringBuffer sb = new StringBuffer("OrderInfoField (");
-		sb.append("Id: ");
-		sb.append(getId());
-		sb.append("; ");
-		sb.append("Ascending: ");
-		sb.append(isAscending());
-		sb.append(")");
-		return sb.toString();	
-	}
+    /**
+     * Returns whether ordering is ascending.
+     * 
+     * @return whether ordering is ascending.
+     */
+    public boolean isAscending() {
+      return this.ascending;
+    }
+
+    /**
+     * @return Returns the id.
+     */
+    public String getId() {
+      return this.id;
+    }
+  }
+
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer("OrderInfoField (Id: ");
+    sb.append(getId());
+    sb.append("; Ascending: ");
+    sb.append(isAscending());
+    sb.append(")");
+    return sb.toString();
+  }
 
 }

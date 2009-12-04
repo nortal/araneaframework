@@ -29,30 +29,32 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
 public class StandardExprToSqlExprBuilderTests extends TestCase {
 
-  private static final Log log = LogFactory.getLog(StandardExprToSqlExprBuilderTests.class);
+  private static final Log LOG = LogFactory.getLog(StandardExprToSqlExprBuilderTests.class);
 
   private StandardExpressionToSqlExprBuilder builder;
 
   private String testValue = "test_value";
 
+  @Override
   public void setUp() {
     this.builder = new StandardExpressionToSqlExprBuilder();
     this.builder.setMapper(new MockVariableResolver());
     this.builder.setConverter(new MockValueConverter());
   }
 
+  @Override
   public void tearDown() {
     this.builder = null;
   }
 
   public void testValueTranslator() {
-    log.debug("Testing ValueTranslator");
+    LOG.debug("Testing ValueTranslator");
 
     Expression expr = null;
     SqlExpression tmp = null;
 
     try {
-      expr = new ValueExpression(this.testValue);
+      expr = new ValueExpression<String>(this.testValue);
     } catch (Exception e) {
       fail("Constructing ValueExpression failed");
     }

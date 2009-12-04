@@ -29,6 +29,4 @@ package org.araneaframework.framework.core;
  * </code>
  */
 public class NopFilterService extends BaseFilterService {
-
-  private static final long serialVersionUID = 1L;
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
+
+import java.io.Serializable;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,67 +30,66 @@ import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
- * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} 
- * operates on the form elements or forms providing means to constrain their content.
+ * Base class for constraints. A {@link org.araneaframework.uilib.form.Constraint} operates on the form elements or
+ * forms providing means to constrain their content.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class BaseConstraint implements java.io.Serializable, Constraint {
+public abstract class BaseConstraint implements Serializable, Constraint {
 
   private Environment environment;
 
-  private Set errors;
+  private Set<String> errors;
 
   /**
    * Holds the custom error message for this constraint.
    */
   protected String customErrorMessage;
 
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************
-  
+  // *********************************************************************
+  // * PUBLIC METHODS
+  // *********************************************************************
+
   public boolean validate() throws Exception {
     clearErrors();
-    
     validateConstraint();
 
-    //Putting custom message only
-    if (errors != null && !errors.isEmpty() && customErrorMessage != null) {
-    	clearErrors();
-    	addError(customErrorMessage);
+    // Putting custom message only
+    if (!CollectionUtils.isEmpty(this.errors) && this.customErrorMessage != null) {
+      clearErrors();
+      addError(this.customErrorMessage);
     }
-    
+
     return isValid();
   }
 
   /**
-   * Returns whether the constraint is satisfied/valid. Constraint is valid
-   * when no validation errors were produced.
+   * Returns whether the constraint is satisfied/valid. Constraint is valid when no validation errors were produced.
    */
   public boolean isValid() {
-    //XXX: should it throw NotValidatedYetException if called before validation
-    return errors == null || errors.size() == 0;
+    // XXX: should it throw NotValidatedYetException if called before validation
+    return CollectionUtils.isEmpty(this.errors);
   }
 
-  public Set getErrors() {
-    if (errors == null)
-      errors = new HashSet();
-    return errors;
+  public Set<String> getErrors() {
+    if (this.errors == null)
+      this.errors = new HashSet<String>();
+    return this.errors;
   }
 
   public void clearErrors() {
-    errors = null;
+    this.errors = null;
   }
 
   public void setCustomErrorMessage(String customErrorMessage) {
     this.customErrorMessage = customErrorMessage;
   }
-  
+
   public void setEnvironment(Environment environment) {
     // allow setting of constraint environment only once
-    if (this.environment == null)
+    if (this.environment == null) {
       this.environment = environment;
+    }
   }
 
   /**
@@ -95,13 +98,12 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
    * @return the <code>Environment</code> of the constraint.
    */
   public Environment getEnvironment() {
-    return environment;
+    return this.environment;
   }
-  
-  
-//*********************************************************************
-  //* PROTECTED METHODS
-  //*********************************************************************
+
+  // *********************************************************************
+  // * PROTECTED METHODS
+  // *********************************************************************
 
   /**
    * Adds the given error message to the errors list to be displayed later.
@@ -111,30 +113,27 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
   protected void addError(String error) {
     getErrors().add(error);
   }
-  
+
   /**
    * Adds the given error messages to the errors list to be displayed later.
    * 
    * @param errorList A list of error messages (<code>String</code>s).
    */
-  protected void addErrors(Collection errorList) {
+  protected void addErrors(Collection<String> errorList) {
     getErrors().addAll(errorList);
   }
 
   /**
-   * Finds the <code>ConfigurationContext</code> from the
-   * <code>Environment</code>.
+   * Finds the <code>ConfigurationContext</code> from the <code>Environment</code>.
    * 
-   * @return the <code>ConfigurationContext</code> from the
-   *         <code>Environment</code>.
+   * @return the <code>ConfigurationContext</code> from the <code>Environment</code>.
    */
   protected ConfigurationContext getConfiguration() {
     return UilibEnvironmentUtil.getConfiguration(getEnvironment());
   }
 
   /**
-   * Translates the given message key according to the
-   * <code>LocalizationContext</code>.
+   * Translates the given message key according to the <code>LocalizationContext</code>.
    * 
    * @param key The key to find the correct message.
    * @return The localized message from the <code>LocalizationContext</code>.
@@ -143,13 +142,13 @@ public abstract class BaseConstraint implements java.io.Serializable, Constraint
     return EnvironmentUtil.getLocalizationContext(getEnvironment()).localize(key);
   }
 
-  //*********************************************************************
-  //* ABSTRACT IMPLEMENTATION METHODS
-  //*********************************************************************
+  // *********************************************************************
+  // * ABSTRACT IMPLEMENTATION METHODS
+  // *********************************************************************
 
   /**
-   * This method should validate the constraint conditions adding error messages
-   * and add messages about unsatisfied conditions.
+   * This method should validate the constraint conditions adding error messages and add messages about unsatisfied
+   * conditions.
    * 
    * @throws Exception Any runtime exception that may occur.
    */

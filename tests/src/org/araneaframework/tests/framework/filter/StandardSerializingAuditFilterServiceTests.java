@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.framework.filter;
 
@@ -47,6 +47,7 @@ public class StandardSerializingAuditFilterServiceTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
   
+  @Override
   public void setUp() throws Exception {
     service = new StandardSerializingAuditFilterService();
     child = new MockEventfulBaseService();
@@ -54,8 +55,8 @@ public class StandardSerializingAuditFilterServiceTests extends TestCase {
     
     httpSession = new MockHttpSession();
     
-    Map map = new HashMap();
-    map.put(HttpSession.class, httpSession);
+    Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
+    map.put(HttpSession.class, this.httpSession);
     
     MockLifeCycle.begin(service, new StandardEnvironment(null, map));
     

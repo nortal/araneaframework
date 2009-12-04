@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.common.tags.wizard;
 
@@ -31,6 +31,7 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "Includes navigation info."
  */
 public class WizardHeaderTag extends BaseTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
 	  WizardContext wizard = (WizardContext) getContextWidget();
 	  

@@ -1,0 +1,12 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Writes the value of a text input."/>
+
+	<jsp:directive.attribute name="id" description="The text input id value (may be null)."/>
+
+	<util:formElementDisplay id="${id}" controlType="TextControl"/>
+
+</jsp:root>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form;
 
@@ -38,7 +38,7 @@ public interface Constraint extends Serializable {
    * Returns the validation errors produced while validating this {@link Constraint}.
    * @return validation errors.
    */
-  public Set getErrors();
+  public Set<String> getErrors();
 
   /**
    * Clears the the errors produced while validating this {@link Constraint}.

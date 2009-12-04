@@ -1,0 +1,23 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag import="java.util.HashMap"/>
+	<jsp:directive.tag import="java.util.Map"/>
+
+	<jsp:directive.tag description="A simple HTML attribute tag." body-content="empty"/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="name" description="The name for the element." />
+	<jsp:directive.attribute name="value" description="The name for the element." />
+	<jsp:directive.attribute name="forceAttribute" description="When attribtute value is empty, attribute won't be rendered. Set this attribute to true so that the attribute would be rendered no matter what the value is." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<c:if test="${forceAttribute or not empty value}">
+		<c:set var="attributes" value="${ui:addMapEntry(attributes, name, value)}" scope="request"/>
+	</c:if>
+
+</jsp:root>

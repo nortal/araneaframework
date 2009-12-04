@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project basedir="." default="build" name="Aranea QuickStart1 Example"> 
-	<property environment="env" />
 
-	<!--Set the classpath-->
-	<path id="classpath">
-    <fileset dir="../../lib" includes="**/*.jar" excludes="cobertura//**/*"/>
-	<fileset dir="../lib" includes="**/*.jar"/>
-    <fileset dir="../.." includes="dist/aranea.jar"/>
-    <fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar"/>
+	<property environment="env"/>
+
+	<property name="rootDir" value="../.."/>
+
+	<property name="lib.dir" value="${rootDir}/lib"/>
+
+	<property name="example.jar" value="../common/dist/aranea-examples-common.jar"/>
+
+	<path id="build.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar" />
+		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
+		<path path="${rootDir}/dist/aranea.jar"/>
+		<path path="${example.jar}"/>
 	</path>
-	
-	<!--Set the Jetty classpath-->
-	<path id="classpath.jetty">
-		<fileset dir="../lib/jetty" includes="*.jar" />
-		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
-    	<fileset dir="${env.ANT_HOME}/lib/" includes="ant-launcher.jar" />
-		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
+
+	<path id="jetty.cp">
+		<path refid="build.cp"/>
+		<fileset dir="${lib.dir}/jetty" includes="**/*.jar"/>
 	</path>
-	
+
 	<!-- Clean up build system results -->
 	<target name="clean" description="Clean up build system results">
 		<delete dir="war/WEB-INF/classes" failonerror="false"/>
@@ -55,11 +59,11 @@
 			debug="on"
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
-			target="1.3"
-			source="1.3"			
+			target="1.5"
+			source="1.5"			
 			srcdir="src"
 			includes="**/*.java"
-			classpathref="classpath"
+			classpathref="build.cp"
 		/>
 	</target>	
 		
@@ -70,8 +74,8 @@
 			<arg value="../jetty.xml"/>
 			<classpath>
 				<pathelement location="war/WEB-INF/classes" />
-				<path refid="classpath" />
-				<path refid="classpath.jetty" />
+				<path refid="build.cp" />
+				<path refid="jetty.cp" />
 			</classpath>
 		</java>
 	</target>

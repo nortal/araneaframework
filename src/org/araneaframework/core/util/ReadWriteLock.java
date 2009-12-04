@@ -70,13 +70,13 @@ package org.araneaframework.core.util;
  * @see Sync
  * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
 
-**/
+ */
 
 public interface ReadWriteLock {
-  /** get the readLock **/
+  /** get the readLock */
   Sync readLock();
 
-  /** get the writeLock **/
+  /** get the writeLock */
   Sync writeLock();
 }
 

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+	version="2.1">
+
+	<description>A set of utility tags that integrate with Aranea server-side functionality for &gt; JSP 2.0.</description>
+	<display-name>Aranea UTIL</display-name>
+	<tlib-version>2.0</tlib-version>
+	<short-name>util</short-name>
+	<uri>http://araneaframework.org/tag-library/2.0/util</uri>
+
+	<tag-file>
+		<name>assert</name>
+		<path>/META-INF/tags/util/assert.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>assertControl</name>
+		<path>/META-INF/tags/util/assertControl.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>elementClassAttr</name>
+		<path>/META-INF/tags/util/elementClassAttr.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>elementEventAttrs</name>
+		<path>/META-INF/tags/util/elementEventAttrs.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElement</name>
+		<path>/META-INF/tags/util/formElement.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElementBgValidation</name>
+		<path>/META-INF/tags/util/formElementBgValidation.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElementBgValidationAttr</name>
+		<path>/META-INF/tags/util/formElementBgValidationAttr.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElementCharFilterAttr</name>
+		<path>/META-INF/tags/util/formElementCharFilterAttr.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElementDisabledAttr</name>
+		<path>/META-INF/tags/util/formElementDisabledAttr.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElementDisplay</name>
+		<path>/META-INF/tags/util/formElementDisplay.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formElementErrors</name>
+		<path>/META-INF/tags/util/formElementErrors.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listContent</name>
+		<path>/META-INF/tags/util/listContent.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listPager</name>
+		<path>/META-INF/tags/util/listPager.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>markFormElementRendered</name>
+		<path>/META-INF/tags/util/markFormElementRendered.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>multiSelectItem.</name>
+		<path>/META-INF/tags/util/multiSelectItem.tagx</path>
+	</tag-file>
+
+	<function>
+		<name>registerUpdateRegion</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String registerUpdateRegion(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>getUpdateRegionBegin</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getUpdateRegionBegin(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>getUpdateRegionEnd</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getUpdateRegionEnd(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+</taglib>

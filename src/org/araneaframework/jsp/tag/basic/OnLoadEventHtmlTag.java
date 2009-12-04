@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.basic;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -34,15 +33,14 @@ import org.araneaframework.jsp.util.JspUtil;
 public class OnLoadEventHtmlTag extends BaseTag{
   protected String event = "return true;";
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    JspUtil.writeStartTag(out, "script");
-    out.write("_ap.addClientLoadEvent(");
-    out.write("function() {");
-    JspUtil.writeEscapedAttribute(out, event);
-    out.write("} );\n");
+    JspUtil.writeStartTag_SS(out, "script");
+    out.write("document.observe('aranea:loaded',function(){");
+    JspUtil.writeEscapedAttribute(out, this.event);
+    out.write("});");
     JspUtil.writeEndTag(out, "script");
-
     return SKIP_BODY;
   }
 
@@ -52,7 +50,7 @@ public class OnLoadEventHtmlTag extends BaseTag{
    *   required = "true"
    *   description = "Event to register."
    */
-  public void setEvent(String event) throws JspException{
-    this.event = (String) evaluate("event", event, String.class);
+  public void setEvent(String event){
+    this.event = evaluate("event", event, String.class);
   }
 }

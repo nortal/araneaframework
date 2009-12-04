@@ -26,11 +26,9 @@ import java.util.List;
  *
  * @see ListQuery
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class ListItemsData<T> implements Serializable {
-
-  private static final long serialVersionUID = 1L;
 
   /** @since 1.1 */
   @SuppressWarnings("unchecked")

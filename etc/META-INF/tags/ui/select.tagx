@@ -1,0 +1,85 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="Generates a select input." body-content="empty"
+		import="org.araneaframework.jsp.util.JspUpdateRegionUtil,java.util.List"/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="Overrides the ID of the input."/>
+	<jsp:directive.attribute name="styleClass" description="Appended CSS class for the tag."/>
+	<jsp:directive.attribute name="readonly" type="java.lang.Boolean" description="A Boolean specifying whether the disabled input is rendered read-only or disabled." />
+	<jsp:directive.attribute name="tabindex" description="HTML tabindex for the element."/>
+	<jsp:directive.attribute name="title" description="A tooltip message for this input." />
+	<jsp:directive.attribute name="size" description="Specifies the number of visible options in a drop-down list." />
+
+	<jsp:directive.attribute name="events" type="java.lang.Boolean" description="Whether the element will send the events that are registered by server-side (by default 'true')." />
+	<jsp:directive.attribute name="onChangePrecondition" description="Precondition for deciding whether go to server side or not." />
+	<jsp:directive.attribute name="updateRegions" description="Enumerates the regions of markup to be updated in this widget scope. Please see ui:updateRegion for details." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Enumerates the regions of markup to be updated globally. Please see ui:updateRegion for details." />
+
+
+    <!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<util:formElement id="${id}" controlType="SelectControl" label="false">
+		<c:if test="${empty readonly}">
+			<c:set var="readonly" value="false" />
+		</c:if>
+
+		<c:if test="${empty onChangePrecondition}">
+			<c:set var="onChangePrecondition" value="return Aranea.UI.isChanged('${formElementFullId}');" />
+		</c:if>
+
+		<c:if test="${not empty title}">
+			<fmt:message var="title" key="${title}"/>
+		</c:if>
+
+		<c:if test="${not empty events}">
+			<fmt:message var="events" key="${events}"/>
+		</c:if>
+
+
+		<ui:element name="select">
+			<ui:attribute name="id" value="${formElementFullId}"/>
+			<ui:attribute name="name" value="${formElementFullId}"/>
+			<ui:attribute name="class" value="${formElementFullId}"/>
+
+			<util:elementClassAttr baseClass="aranea-select" styleClass="${styleClass}"/>
+
+			<ui:attribute name="size" value="${size}"/>
+			<ui:attribute name="tabindex" value="${tabindex}"/>
+			<ui:attribute name="title" value="${title}"/>
+
+			<util:formElementBgValidationAttr/>
+			<util:formElementDisabledAttr readonly="${readonly}"/>
+
+			<c:if test="${events and formElement.onChangeEventRegistered}">
+				<ui:elementEventAttrs attr="onchange" eventId="onChanged"
+					eventCondition="${onChangePrecondition}"
+					updateRegions="${updateRegions}"
+					globalUpdateRegions="${globalUpdateRegions}" />
+			</c:if>
+
+			<ui:elementContent>
+				<c:if test="${not empty control.selectItems}">
+					<c:forEach items="${control.selectItems}" var="item">
+						<ui:element name="option">
+							<ui:attribute name="value" value="${item.value}" omitEmpty="false"/>
+							<c:if test="${control.simpleValue eq item.value}">
+								<ui:attribute name="selected" value="selected"/>
+							</c:if>
+							<ui:elementContent>
+								<fmt:message key="${item.displayString}"/>
+							</ui:elementContent>
+						</ui:element>
+					</c:forEach>
+				</c:if>
+			</ui:elementContent>
+		</ui:element>
+	</util:formElement>
+
+</jsp:root>

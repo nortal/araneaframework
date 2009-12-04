@@ -1,0 +1,35 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty"
+		description="Writes an info message that should immediately follow a form input." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="labelId" required="true"
+		description="The label ID of the info text." />
+
+	<jsp:directive.attribute name="img" type="java.lang.Boolean"
+		description="Whether to output an image or just text (default: false)." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<fmt:message key="${labelId}" var="labelId"/>
+	<fmt:message key="global.help" var="alt"/>
+
+	<c:if test="${empty img}">
+		<c:set var="img" value="false"/>
+	</c:if>
+
+	<c:choose>
+		<c:when test="${img}">
+			<img src="gfx/ico_info.gif" class="help" alt="${alt}" title="${labelId}"/>
+		</c:when>
+		<c:otherwise>
+			<span class="info">${labelId}</span>
+		</c:otherwise>
+	</c:choose>
+
+</jsp:root>

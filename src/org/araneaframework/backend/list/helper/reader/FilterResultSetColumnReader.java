@@ -21,7 +21,7 @@ import java.sql.ResultSet;
 /**
  * Filter implementation of {@link ResultSetColumnReader}.
  * 
- * @author Rein Raudjärv
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * @since 1.1
  */
 public class FilterResultSetColumnReader implements ResultSetColumnReader {
@@ -32,8 +32,7 @@ public class FilterResultSetColumnReader implements ResultSetColumnReader {
     this.child = child;
   }
 
-  public Object readFromResultSet(String columnName, ResultSet resultSet,
-      Class javaType) {
+  public <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType) {
     return child.readFromResultSet(columnName, resultSet, javaType);
   }
 }

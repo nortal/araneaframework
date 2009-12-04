@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
-package org.araneaframework.jsp.tag.uilib.list;				
+package org.araneaframework.jsp.tag.uilib.list;
 
 import java.io.Writer;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -27,58 +27,63 @@ import org.araneaframework.uilib.list.ListWidget;
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "list"
- *   body-content = "JSP"
- *   description = "Makes available following page scope variables: 
-           <ul>
-             <li><i>list</i></li> - UiLib list view model.
-             <li><i>listId</i></li> - UiLib list id.
-           </ul> "
+ *  name = "list"
+ *  body-content = "JSP"
+ *  description = "Makes available following page scope variables:<ul><li><i>list</i> - UiLib list view model.</li><li><i>listId</i> - UiLib list id.</li></ul>"
  */
 public class ListTag extends BaseWidgetTag {
-	public final static String LIST_ID_KEY = "listId";
-	public final static String LIST_VIEW_MODEL_KEY = "list";  
-	public final static String LIST_FULL_ID_KEY = "listFullId";
-	
-	protected ListWidget.ViewModel listViewModel;
-	protected String varSequence = "listSequence";
-	
-	public int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
-		
-		try {
-			listViewModel = (ListWidget.ViewModel)viewModel;
-		} catch (ClassCastException e) {
-			throw new AraneaJspException("Could not acquire list view model. <ui:list> should have id specified or should be in context of real ListWidget.", e);
-		}
 
-		// Set variables		
-		addContextEntry(LIST_ID_KEY, id);
-		addContextEntry(LIST_FULL_ID_KEY, fullId);
-		addContextEntry(LIST_VIEW_MODEL_KEY, listViewModel);
+  public final static String LIST_ID_KEY = "listId";
 
-		addContextEntry(varSequence, listViewModel.getSequence());
+  public final static String LIST_VIEW_MODEL_KEY = "list";
 
-		return EVAL_BODY_INCLUDE;		
-	}
-	
-	public int doEndTag(Writer out) throws Exception {
-		addContextEntry(varSequence, null);
-		return EVAL_PAGE;		
-	}
-	
-	public void doFinally() {
-		super.doFinally();
-		listViewModel = null;
-	}
+  public final static String LIST_FULL_ID_KEY = "listFullId";
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Name of variable that represents list sequence info (by default "listSequence")." 
-	 */
-	public void setVarSequence(String varSequence) {
-		this.varSequence = varSequence;
-	}
+  @SuppressWarnings("unchecked")
+  protected ListWidget.ViewModel listViewModel;
+
+  protected String varSequence = "listSequence";
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public int doStartTag(Writer out) throws Exception {
+    super.doStartTag(out);
+
+    try {
+      this.listViewModel = (ListWidget.ViewModel) this.viewModel;
+    } catch (ClassCastException e) {
+      throw new AraneaJspException(
+          "Could not acquire list view model. <ui:list> should have id specified or should be in context of "
+              + "real ListWidget.", e);
+    }
+
+    // Set variables
+    addContextEntry(LIST_ID_KEY, this.id);
+    addContextEntry(LIST_FULL_ID_KEY, this.fullId);
+    addContextEntry(LIST_VIEW_MODEL_KEY, this.listViewModel);
+    addContextEntry(this.varSequence, this.listViewModel.getSequence());
+    return EVAL_BODY_INCLUDE;
+  }
+
+  @Override
+  public int doEndTag(Writer out) throws Exception {
+    addContextEntry(this.varSequence, null);
+    return EVAL_PAGE;
+  }
+
+  @Override
+  public void doFinally() {
+    super.doFinally();
+    this.listViewModel = null;
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Name of variable that represents list sequence info (by default "listSequence")."
+   */
+  public void setVarSequence(String varSequence) {
+    this.varSequence = varSequence;
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,46 +12,52 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.business.data;
 
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.araneaframework.example.main.business.model.GeneralMO;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * This is general data access object. It can retrieve all objects by class, one
- * object by Id and class, add or edit an object or remove an object by it's Id
- * and class.
+ * This is general data access object. It can retrieve all objects by class, one object by Id and class, add or edit an
+ * object or remove an object by it's Id and class.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class GeneralDAO extends HibernateDaoSupport implements IGeneralDAO {
+public class GeneralDAO implements IGeneralDAO {
 
-	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#getById(java.lang.Class, java.lang.Long) */
-	public GeneralMO getById(Class clazz, Long id) {
-		return (GeneralMO) getHibernateTemplate().get(clazz, id);
-	}
+  @PersistenceContext
+  private EntityManager entityManager;
 
-	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#getAll(java.lang.Class) */
-	public List getAll(Class clazz) {
-		return getHibernateTemplate().find("from " + clazz.getName());
-	}
+  @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+  public <T extends GeneralMO> T getById(Class<T> clazz, Long id) {
+    return this.entityManager.find(clazz, id);
+  }
 
-	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#add(org.araneaframework.example.main.business.model.GeneralMO) */
-	public Long add(GeneralMO object) {
-		getHibernateTemplate().save(object);
-		return object.getId();
-	}
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+  public <T extends GeneralMO> List<T> getAll(Class<T> clazz) {
+    return this.entityManager.createQuery("from " + clazz.getName()).getResultList();
+  }
 
-	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#edit(org.araneaframework.example.main.business.model.GeneralMO) */
-	public void edit(GeneralMO object) {
-		getHibernateTemplate().update(object);
-	}
+  @Transactional
+  public <T extends GeneralMO> Long add(T object) {
+    this.entityManager.persist(object);
+    return object.getId();
+  }
 
-	/* implements @see org.araneaframework.example.main.business.data.IGeneralDAO#remove(java.lang.Class, java.lang.Long) */
-	public void remove(Class clazz, Long id) {
-		getHibernateTemplate().delete(getById(clazz, id));
-	}
+  @Transactional
+  public <T extends GeneralMO> T edit(T object) {
+    return this.entityManager.merge(object);
+  }
+
+  @Transactional
+  public <T extends GeneralMO> void remove(Class<T> clazz, Long id) {
+    this.entityManager.remove(getById(clazz, id));
+  }
 }

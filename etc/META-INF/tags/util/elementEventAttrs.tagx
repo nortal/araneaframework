@@ -1,0 +1,74 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag import="org.araneaframework.jsp.util.JspUpdateRegionUtil"/>
+
+	<jsp:directive.tag description="Includes attributes. Must be used inside an element." import="org.araneaframework.jsp.util.JspWidgetUtil" />
+
+	<jsp:directive.attribute name="attr" required="true" description="The name of the attribute of the HTML element." />
+	<jsp:directive.attribute name="eventId" description="The ID of the event handler." />
+	<jsp:directive.attribute name="eventTarget" description="The path of the widget with event handler." />
+	<jsp:directive.attribute name="eventParam" description="An opional param for the event handler." />
+	<jsp:directive.attribute name="eventCondition" description="An optional JavaScript code (returning a Boolean) executed before request." />
+	<jsp:directive.attribute name="updateRegions" description="Optional local region names for the event." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Optional global region names for the event." />
+
+	<c:if test="${empty eventTarget}">
+		<c:set var="eventTarget" value="${empty widgetId ? 'null': widgetId}"/>
+	</c:if>
+
+	<!-- Evaluate update regions and transform them into one comma-separated string -->
+	<c:if test="${(not empty updateRegions) or (not empty globalUpdateRegions)}">
+		<jsp:scriptlet>
+			String ur = (String) jspContext.getAttribute("updateRegions");
+			String gur = (String) jspContext.getAttribute("globalUpdateRegions");
+			jspContext.setAttribute("allUpdateRegions",
+				JspUpdateRegionUtil.getUpdateRegionNames((PageContext) jspContext, ur, gur));
+		</jsp:scriptlet>
+
+		<c:set var="updateRegions" value=""/>
+
+		<c:forEach var="item" items="${allUpdateRegions}" varStatus="status">
+			<c:set var="updateRegions" value="${updateRegions}${item}"/>
+			<c:if test="${not status.last}">
+				<c:set var="updateRegions" value="${updateRegions},"/>
+			</c:if>
+		</c:forEach>
+	</c:if>
+
+	<c:if test="${not empty eventId}">
+		<!--
+		<ui:attribute name="arn-evntId" value="${eventId}"/>
+		<ui:attribute name="arn-trgtwdgt" value="${eventTarget}"/>
+		<ui:attribute name="arn-evntPar" value="${eventParam}"/>
+		<ui:attribute name="arn-updrgns" value="${updateRegions}"/>
+		<ui:attribute name="arn-evntCond" value="${eventCondition}"/>
+		<ui:attribute name="${attr}" value="return _ap.event(this);"/>
+		-->
+		<c:if test="${not empty eventId}"><c:set var="eventId" value="'${eventId}'"/></c:if>
+		<c:if test="${not empty eventTarget}"><c:set var="eventTarget" value="'${eventTarget}'"/></c:if>
+		<c:if test="${not empty eventParam}"><c:set var="eventParam" value="'${eventParam}'"/></c:if>
+		<c:if test="${not empty eventCondition}"><c:set var="eventCondition" value="'${eventCondition}'"/></c:if>
+		<c:if test="${not empty updateRegions}"><c:set var="updateRegions" value="'${updateRegions}'"/></c:if>
+
+		<c:set var="params" value="${updateRegions}"/>
+		<c:if test="${not empty params or not empty eventCondition}">
+			<c:set var="params" value="${empty eventCondition ? 'null' : eventCondition}${not empty params ? ',':''}${params}"/>
+		</c:if>
+		<c:if test="${not empty params or not empty eventParam}">
+			<c:set var="params" value="${empty eventParam ? 'null' : eventParam}${not empty params ? ',':''}${params}"/>
+		</c:if>
+		<c:if test="${not empty params or not empty eventTarget}">
+			<c:set var="params" value="${empty eventTarget ? 'null' : eventTarget}${not empty params ? ',':''}${params}"/>
+		</c:if>
+		<c:if test="${not empty params or not empty eventId}">
+			<c:set var="params" value="${empty eventId ? 'null' : eventId}${not empty params ? ',':''}${params}"/>
+		</c:if>
+
+		<ui:attribute name="${attr}" value="return ev(${params});"/>
+	</c:if>
+
+</jsp:root>

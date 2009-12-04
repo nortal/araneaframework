@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,54 +12,50 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * A <code>Constraint</code> that constrains the input length of a
- * {@link FormElement}.
+ * A <code>Constraint</code> that constrains the input length of a {@link FormElement}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StringLengthInRangeConstraint extends BaseFieldConstraint {
-
-  private static final long serialVersionUID = 1L;
+public class StringLengthInRangeConstraint extends BaseFieldConstraint<String, String> {
 
   private int rangeStart;
 
   private int rangeEnd;
 
   /**
-   * Initializes this constraint without binding it with a field. Use
-   * {@link #setRangeStart(int)} and {@link #setRangeEnd(int)} to specify valid
-   * length criteria, or this constraint will always invalidate the data.
+   * Initializes this constraint without binding it with a field. Use {@link #setRangeStart(int)} and
+   * {@link #setRangeEnd(int)} to specify valid length criteria, or this constraint will always invalidate the data.
    */
   public StringLengthInRangeConstraint() {}
 
   /**
-   * Creates a <code>String</code> length constraint for given form element.
-   * Use {@link #setRangeStart(int)} and {@link #setRangeEnd(int)} to specify
-   * valid length criteria, or this constraint will always invalidate the data.
+   * Creates a <code>String</code> length constraint for given form element. Use {@link #setRangeStart(int)} and
+   * {@link #setRangeEnd(int)} to specify valid length criteria, or this constraint will always invalidate the data.
    * 
    * @param field The form element to be constrained.
    */
-  public StringLengthInRangeConstraint(FormElement field) {
+  public StringLengthInRangeConstraint(FormElement<String, String> field) {
     super(field);
   }
 
   /**
-   * Creates the constraint, and initializes the allowed length range. The
-   * minumum length must be less than the maximum length allowed, or the
-   * constraint never validates.
+   * Creates the constraint, and initializes the allowed length range. The minimum length must be less than the maximum
+   * length allowed, or the constraint never validates.
    * <p>
    * If the minimum length is less than 1 then it is not checked.
    * 
-   * @param rangeStart The minumum allowed length of the value.
+   * @param rangeStart The minimum allowed length of the value.
    * @param rangeEnd The maximum allowed length of the value.
    */
   public StringLengthInRangeConstraint(int rangeStart, int rangeEnd) {
@@ -70,33 +66,22 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
   /**
    * Checks that the length of the field value is in constrained boundaries.
    */
+  @Override
   protected void validateConstraint() {
-    String value = (String) getValue();
-
-    if (value == null) {
-      if (rangeStart > 0) {
-        addValidationError();
-      }
-    } else if (value.length() < rangeStart || value.length() > rangeEnd) {
+    int length = StringUtils.length(getValue());
+    if (length < this.rangeStart || length > this.rangeEnd) {
       addValidationError();
     }
   }
 
   private void addValidationError() {
-	addError(
-      MessageUtil.localizeAndFormat(
-        UiLibMessages.STRING_NOT_IN_RANGE, 
-        new Object[] {
-          t(getLabel()),
-          Integer.toString(rangeStart),
-          Integer.toString(rangeEnd)
-        },
-        getEnvironment()));
+    addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.STRING_NOT_IN_RANGE, t(getLabel()),
+        Integer.toString(this.rangeStart), Integer.toString(this.rangeEnd)));
   }
 
   /**
-   * Specifies the new maximum length for the value. It must be greater than the
-   * minumum length allowed, or the constraint never validates.
+   * Specifies the new maximum length for the value. It must be greater than the minumum length allowed, or the
+   * constraint never validates.
    * 
    * @param rangeEnd The new maximum length for the value.
    */
@@ -105,12 +90,12 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint {
   }
 
   /**
-   * Specifies the new minumum length for the value. It must be less than the
-   * maximum length allowed, or the constraint never validates.
+   * Specifies the new minimum length for the value. It must be less than the maximum length allowed, or the constraint
+   * never validates.
    * <p>
    * If this value is less than 1 then the minimum length is not checked.
    * 
-   * @param rangeStart The new minumum length for the value.
+   * @param rangeStart The new minimum length for the value.
    */
   public void setRangeStart(int rangeStart) {
     this.rangeStart = rangeStart;

@@ -1,0 +1,49 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	version="2.1">
+
+	<jsp:directive.tag description="A simple HTML link (A tag)."  />
+
+	<jsp:directive.attribute name="id" description="The ID for the link." />
+	<jsp:directive.attribute name="name" description="The name for the link." />
+	<jsp:directive.attribute name="labelId" description="The optional ID for the label of the link." />
+	<jsp:directive.attribute name="styleClass" description="The optional style class for the link." />
+	<jsp:directive.attribute name="href" description="The optional href attribute." />
+	<jsp:directive.attribute name="onclick" description="The value for the onclick attribute." />
+	<jsp:directive.attribute name="target" description="The target for the link." />
+	<jsp:directive.attribute name="tooltipId" description="The label ID of the tooltip (optional)." />
+
+	<c:if test="${empty href}">
+		<c:set var="href" value="#"/>
+	</c:if>
+
+	<c:if test="${empty target}">
+		<c:set var="target" value="_blank"/>
+	</c:if>
+
+	<ui:element name="a">
+		<ui:attribute name="id" value="${id}" />
+		<ui:attribute name="name" value="${name}"/>
+		<ui:attribute name="href" value="${href}"/>
+		<util:elementClassAttr baseClass="aranea-link-button" styleClass="${styleClass}"/>
+		<ui:attribute name="onclick" value="${onclick}"/>
+		<ui:attribute name="target" value="${target}"/>
+
+		<c:if test="${not empty tooltipId}">
+			<fmt:message key="${tooltipId}" var="tooltipId"/>
+			<ui:attribute name="class" value="tooltip"/>
+			<ui:attribute name="title" value="${tooltipId}"/>
+		</c:if>
+
+		<ui:elementContent>
+			<c:if test="${not empty labelId}">
+				<fmt:message key="${labelId}"/>
+			</c:if>
+			<jsp:doBody/>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

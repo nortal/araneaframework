@@ -24,9 +24,8 @@ public class SqlAndExpression extends SqlMultiExpression {
 
   public String toSqlString() {
     StringBuffer sb = new StringBuffer();
-    for (Iterator i = this.children.iterator(); i.hasNext();) {
-      SqlExpression expr = (SqlExpression) i.next();
-      sb.append(expr.toSqlString());
+    for (Iterator<SqlExpression> i = this.children.iterator(); i.hasNext();) {
+      sb.append(i.next().toSqlString());
       if (i.hasNext()) {
         sb.append(" AND ");
       }

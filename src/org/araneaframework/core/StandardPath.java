@@ -17,76 +17,61 @@
 package org.araneaframework.core;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Path;
 
 /**
- * Default implementation of {@link org.araneaframework.Path}, uses simple string 
- * identifiers like "a" or "b" and combines them using dots forming full 
- * pathes like "a.b.c".
+ * Default implementation of {@link org.araneaframework.Path}, uses simple string identifiers like "a" or "b" and
+ * combines them using dots forming full pathes like "a.b.c".
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardPath implements Path {
 
-  private static final long serialVersionUID = 1L;
-
-  private LinkedList path = new LinkedList();
+  private LinkedList<String> path = new LinkedList<String>();
 
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.
+   * 
    * @param fullPath
    */
   public StandardPath(String fullPath) {
     Assert.notNull(fullPath, "Path cannot be null!");
-    StringTokenizer tokenizer = new StringTokenizer(fullPath, ".");
+
+    StringTokenizer tokenizer = new StringTokenizer(fullPath, SEPARATOR);
     while (tokenizer.hasMoreElements()) {
-      path.add(tokenizer.nextElement());
+      this.path.add(tokenizer.nextToken());
     }
   }
 
-  /**
-   * @see org.araneaframework.Path#getNext()
-   */
-  public Object getNext() {
-    return path.getFirst();
+  public String getNext() {
+    return this.path.getFirst();
   }
 
-  /**
-   * @see org.araneaframework.Path#next()
-   */
-  public Object next() {
-    return path.removeFirst();
+  public String next() {
+    return this.path.removeFirst();
   }
 
-  /**
-   * @see org.araneaframework.Path#hasNext()
-   */
   public boolean hasNext() {
-    return path.size() > 0;
+    return !this.path.isEmpty();
   }
 
   /**
    * @since 1.1
    */
-  public StandardPath(Collection fullPath) {
-    path.addAll(fullPath);
+  public StandardPath(Collection<String> fullPath) {
+    this.path.addAll(fullPath);
   }
 
   /**
    * Returns this {@link org.araneaframework.Path} as a dot-separated String.
+   * 
    * @return this {@link org.araneaframework.Path} as a dot-separated String
    */
+  @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
-    for (Iterator i = path.iterator(); i.hasNext();) {
-      result.append((String) i.next());
-      if (i.hasNext()) {
-        result.append('.');
-      }
-    }
-    return result.toString();
+    return StringUtils.join(this.path, SEPARATOR);
   }
 }

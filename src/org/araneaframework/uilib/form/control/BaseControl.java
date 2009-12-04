@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.Serializable;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -28,91 +29,77 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * This class is a control generalization that provides methods common to all HTML form controls.
- * The methods include XML output and error handling.
+ * This class is a control generalization that provides methods common to all HTML form controls. The methods include
+ * XML output and error handling.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class BaseControl extends BaseApplicationWidget implements Control {
+public abstract class BaseControl<T> extends BaseApplicationWidget implements Serializable, Control<T> {
 
   // *******************************************************************
   // FIELDS
   // *******************************************************************
 
-  protected Object value;
+  protected T value;
 
   protected Object innerData;
 
   protected boolean isReadFromRequest = false;
 
-  private FormElementContext feCtx;
+  private FormElementContext<T, Object> feCtx;
 
   // *********************************************************************
   // * PUBLIC METHODS
   // *********************************************************************
 
   /**
-   * Returns the value of the control (value read from the request). Type of value depends on the
-   * type of control.
+   * Returns the value of the control (value read from the request). Type of value depends on the type of control.
    * 
    * @return Returns the value of the control (value read from the request).
    */
-  public Object getRawValue() {
+  public T getRawValue() {
     return this.value;
   }
 
   /**
-   * Sets the raw control value (as it was read from request/written to response). It is usually set
-   * by {@link org.araneaframework.uilib.form.Converter} when value of {@link FormElement} that owns
-   * this {@link BaseControl} changes.
+   * Sets the raw control value (as it was read from request/written to response). It is usually set by
+   * {@link org.araneaframework.uilib.form.Converter} when value of {@link FormElement} that owns this
+   * {@link BaseControl} changes.
    * 
-   * @param value The value for this control in (any data type is allowed).
+   * @param value control value.
    * @see #getRawValue()
    */
-  public void setRawValue(Object value) {
-    this.value = value;
+  public void setRawValue(T value) {
+    BaseControl.this.value = value;
   }
 
-  /**
-   * Returns the <code>ViewModel</code> of this control. Each control has its own
-   * <code>ViewModel</code> implementation.
-   * 
-   * @return The <code>ViewModel</code> of this control.
-   */
-  public Object getViewModel() throws Exception {
+  @Override
+  public BaseControl<T>.ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  public void setFormElementCtx(FormElementContext formElementContext) {
+  public void setFormElementCtx(FormElementContext<T, Object> formElementContext) {
     this.feCtx = formElementContext;
   }
 
-  /**
-   * Returns the form element that this component depends on.
-   */
-  public FormElementContext getFormElementCtx() {
+  public FormElementContext<T, Object> getFormElementCtx() {
     return this.feCtx;
   }
 
   /**
    * By default the control is considered read if it has a not null data read from request.
-   * 
-   * @return <code>true</code>, if the value of this parameter in the request is not
-   *         <code>null</code>.
    */
   public boolean isRead() {
-    return this.isReadFromRequest;
+    return isReadFromRequest;
   }
 
   // *********************************************************************
   // * OVERRIDABLE METHODS
   // *********************************************************************
 
-  /**
-   * Invokes both {@link #convert()} and {@link #validate()} or this control;
-   */
   public void convertAndValidate() {
     convert();
     validate();
@@ -122,25 +109,32 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
 
   public void validate() {}
 
+  /**
+   * Sub controls should implement this method to store the value of this control. The <code>request</code> is provided
+   * to read the appropriate value.
+   * 
+   * @param request The HTTP request containing request data.
+   */
   protected void readFromRequest(HttpInputData request) {}
 
   // *********************************************************************
   // * INTERNAL METHODS
   // *********************************************************************
 
+  @Override
   protected void init() throws Exception {
     super.init();
-    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the "
-        + "control before it can be initialized! Make sure that the control is associated with a "
-        + "form element!");
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the control before it can be "
+        + "initialized! Make sure that the control is associated with a form element!");
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!isDisabled()) {
+    if (!isDisabled())
       super.action(path, input, output);
-    }
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
     if (!isDisabled()) {
@@ -148,6 +142,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
     }
   }
 
+  @Override
   protected void handleEvent(InputData input) throws Exception {
     if (!isDisabled()) {
       super.handleEvent(input);
@@ -160,7 +155,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
    * @return control label.
    */
   protected String getLabel() {
-    return feCtx.getLabel();
+    return this.feCtx.getLabel();
   }
 
   /**
@@ -169,11 +164,24 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
    * @return whether the control is mandatory, that is must be inserted by user.
    */
   protected boolean isMandatory() {
-    return feCtx.isMandatory();
+    return this.feCtx.isMandatory();
   }
 
   protected void addError(String error) {
-    feCtx.addError(error);
+    this.feCtx.addError(error);
+  }
+
+  protected void addErrorWithLabel(String errorMsg) {
+    addErrorWithLabel(errorMsg, null);
+  }
+
+  protected void addErrorWithLabel(String errorMsg, Object lastParam) {
+    addErrorWithLabel(errorMsg, lastParam, null);
+  }
+
+  protected void addErrorWithLabel(String errorMsg, Object lastParam1, Object lastParam2) {
+    addError(MessageUtil.localizeAndFormat(getEnvironment(), errorMsg, MessageUtil.localize(getLabel(),
+        getEnvironment()), lastParam1, lastParam2));
   }
 
   /**
@@ -184,19 +192,21 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
    * @since 1.1 this method is public and part of {@link Control} interface
    */
   public boolean isDisabled() {
-    return feCtx.isDisabled();
+    return this.feCtx.isDisabled();
   }
 
   protected boolean isValid() {
-    return feCtx.isValid();
+    return this.feCtx.isValid();
   }
 
+  @Override
   public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
 
   protected class WidgetImpl extends BaseWidget.WidgetImpl {
 
+    @Override
     public void update(InputData input) {
       isReadFromRequest = false;
       super.update(input);
@@ -210,7 +220,7 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
   /**
    * Represents a general control view model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel implements Control.ViewModel {
 
@@ -226,14 +236,14 @@ public abstract class BaseControl extends BaseApplicationWidget implements Contr
      * Takes an outer class snapshot.
      */
     public ViewModel() {
-      String className = BaseControl.this.getClass().getName();
-      // Recognizes Controls that are defined as (anonymous) nested classes.
-      // Prior to 1.5 getDeclaringClass() does not exist, so just look for '$'.
-      if (className.indexOf('$') != -1)
-        className = BaseControl.this.getClass().getSuperclass().getName();
-      className = className.substring(className.lastIndexOf(".") + 1);
-      this.controlType = className;
+      Class<?> clazz = BaseControl.this.getClass();
 
+      // Recognizes Controls that are defined as (anonymous) nested classes:
+      if (clazz.getDeclaringClass() != null) {
+        clazz = clazz.getDeclaringClass();
+      }
+
+      this.controlType = clazz.getSimpleName();
       this.mandatory = BaseControl.this.isMandatory();
       this.disabled = BaseControl.this.isDisabled();
       this.label = BaseControl.this.getLabel();

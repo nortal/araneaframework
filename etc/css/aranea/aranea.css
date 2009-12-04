@@ -1,8 +1,8 @@
 #aranea-loading-message {
 	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
+	top: 0px;
+	right: 0px;
+	color: #ffffff;
 	background-color: #e01601;
 	border: 1px solid black;
 	padding: 10px;

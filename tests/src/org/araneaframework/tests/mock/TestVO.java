@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,50 +12,54 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.mock;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.util.BeanMapper;
-
 
 /**
  * This VO is used by tests only ({@link org.araneaframework.uilib.tests.ListTest},
  * {@link org.araneaframework.uilib.tests.FormTest},{@link org.araneaframework.uilib.tests.VoProcessingTest}.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class TestVO implements Serializable, Cloneable {
 
-  private static final Log log = LogFactory.getLog(TestVO.class);
+  private static final Log LOG = LogFactory.getLog(TestVO.class);
 
   /**
    * Private VoMapper, used for <code>toString</code> and <code>equals</code> methods.
    */
-  private BeanMapper beanMapper;
+  private BeanMapper<TestVO> beanMapper;
+
   private Long id;
+
   private String stringValue;
+
   private Boolean booleanValue;
+
   private Long longValue;
+
   private TestVO subTestVO;
 
   public TestVO() {
-    beanMapper = new BeanMapper(getClass());
+    this.beanMapper = new BeanMapper<TestVO>(TestVO.class);
   }
-  
+
   /**
    * Returns id.
    * 
    * @return the id.
    */
   public Long getId() {
-    return id;
+    return this.id;
   }
 
   public void setId(Long id) {
@@ -66,7 +70,7 @@ public class TestVO implements Serializable, Cloneable {
    * <code>Boolean</code> value.
    */
   public Boolean getBooleanValue() {
-    return booleanValue;
+    return this.booleanValue;
   }
 
   public void setBooleanValue(Boolean booleanValue) {
@@ -77,7 +81,7 @@ public class TestVO implements Serializable, Cloneable {
    * <code>Long</code> value.
    */
   public Long getLongValue() {
-    return longValue;
+    return this.longValue;
   }
 
   public void setLongValue(Long longValue) {
@@ -88,7 +92,7 @@ public class TestVO implements Serializable, Cloneable {
    * <code>String</code> value.
    */
   public String getStringValue() {
-    return stringValue;
+    return this.stringValue;
   }
 
   public void setStringValue(String stringValue) {
@@ -99,30 +103,30 @@ public class TestVO implements Serializable, Cloneable {
    * Included <code>TestVO</code> for hierarchy tests.
    */
   public TestVO getSubTestVO() {
-    return subTestVO;
+    return this.subTestVO;
   }
 
   public void setSubTestVO(TestVO subTestVO) {
     this.subTestVO = subTestVO;
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************
-  
+  // *******************************************************************
+
   /**
-   * Overrides default <code>toString</code> method. <P/>
+   * Overrides default <code>toString</code> method.
+   * <P/>
    * 
    * @return <code>java.lang.String</code> representation of this value object.
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
-    List voFields = beanMapper.getFields();
-    for (Iterator i = voFields.iterator(); i.hasNext();) {
-      String field = (String) i.next();
+    for (String field : this.beanMapper.getPropertyNames()) {
       result.append(field);
       result.append("=");
-      result.append("" + beanMapper.getFieldValue(this, field));
+      result.append("" + this.beanMapper.getProperty(this, field));
       result.append("; ");
     }
     return result.toString();
@@ -134,17 +138,17 @@ public class TestVO implements Serializable, Cloneable {
    * @param otherVo Value Object to compare to.
    * @return <code>boolean</code>- if Value Object are equal.
    */
+  @Override
   public boolean equals(Object otherVo) {
-    //In case other VO is null, or of other class.
-    if (otherVo == null || (!this.getClass().equals(otherVo.getClass()))) { return false; }
+    // In case other VO is null, or of other class.
+    if (otherVo == null || (!this.getClass().equals(otherVo.getClass()))) {
+      return false;
+    }
 
-    //Otherwise compare all fields
+    // Otherwise compare all fields
     boolean result = true;
-    List voFields = beanMapper.getFields();
-    for (Iterator i = voFields.iterator(); i.hasNext() && result;) {
-      String field = (String) i.next();
-      result = valuesEqual(beanMapper.getFieldValue(this, field), beanMapper.getFieldValue(otherVo,
-          field));
+    for (String field : this.beanMapper.getPropertyNames()) {
+      result = valuesEqual(this.beanMapper.getProperty(this, field), this.beanMapper.getProperty(otherVo, field));
     }
     return result;
   }
@@ -152,40 +156,40 @@ public class TestVO implements Serializable, Cloneable {
   /**
    * Implements hash using Value Object fields.
    */
+  @Override
   public int hashCode() {
     int result = 17;
-    List voFields = beanMapper.getFields();
-    for (Iterator i = voFields.iterator(); i.hasNext();) {
-      String field = (String) i.next();
-      result = 37 * result + beanMapper.getFieldValue(this, field).hashCode();
+    for (String field : this.beanMapper.getPropertyNames()) {
+      result = 37 * result + this.beanMapper.getProperty(this, field).hashCode();
     }
     return result;
   }
 
   /**
-   * Overrides default <code>clone()</code> operation. <P/>
+   * Overrides default <code>clone()</code> operation.
+   * <P/>
    * 
    * @return clone of this object.
    */
+  @Override
   public Object clone() {
     try {
       return super.clone();
-    }
-    catch (CloneNotSupportedException e) {
-      log.warn("TestVO threw CloneNotSupportedException, check that everything is defined Cloneable");
+    } catch (CloneNotSupportedException e) {
+      LOG.warn("TestVO threw CloneNotSupportedException, check that everything is defined Cloneable");
       return null;
     }
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PRIVATE HELPER METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   /**
    * Checks for object equality.
    */
   private boolean valuesEqual(Object value1, Object value2) {
-    return (value1 == null ? value2 == null : value1.equals(value2));
+    return ObjectUtils.equals(value1, value2);
   }
 
 }

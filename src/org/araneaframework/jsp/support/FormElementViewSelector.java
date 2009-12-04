@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.support;
 
@@ -27,13 +27,11 @@ import org.araneaframework.jsp.util.AutomaticFormElementUtil;
  * that will be used to render the form element. It is mainly used
  * {@link AutomaticFormElementUtil}
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @see AutomaticFormElementUtil
  * @see AutomaticTagFormElementTag
  */
 public class FormElementViewSelector implements Serializable {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * The key that can be used to put or get a selector (this class) from the
@@ -59,7 +57,7 @@ public class FormElementViewSelector implements Serializable {
    * <code>String</code> (the name of the attribute) and value is any object
    * (the value for the attribute).
    */
-  protected Map attributes;
+  protected Map<String, Object> attributes;
 
   /**
    * The URI of the tag library where the <code>tag</code> is located.
@@ -75,11 +73,11 @@ public class FormElementViewSelector implements Serializable {
    * <code>String</code> (the name of the attribute) and value is any object
    * (the value for the attribute).
    * <p>
-   * The attribute names must qualifify to appropriate setter of class
+   * The attribute names must qualify to appropriate setter of class
    * {@link AutomaticTagFormElementTag} as:
    * <pre><code>set[attributeName]([AttributeValueType] attributeValue)</code></pre>
    * <p>
-   * <b>This constructor excpects that the URI of the tag library is the same as
+   * <b>This constructor expects that the URI of the tag library is the same as
    * for Aranea tag library!</b>
    * 
    * @param tagName The name of the tag (not a tag class name!) to use.
@@ -87,10 +85,8 @@ public class FormElementViewSelector implements Serializable {
    * @see AutomaticFormElementUtil
    * @see AutomaticTagFormElementTag
    */
-  public FormElementViewSelector(String tagName, Map attributes) {
-    this.uri = DEFAULT_URI;
-    this.tag = tagName;
-    this.attributes = attributes == null ? Collections.EMPTY_MAP : attributes;
+  public FormElementViewSelector(String tagName, Map<String, Object> attributes) {
+    this(DEFAULT_URI, tagName, attributes);
   }
 
   /**
@@ -114,10 +110,14 @@ public class FormElementViewSelector implements Serializable {
    * @see AutomaticFormElementUtil
    * @see AutomaticTagFormElementTag
    */
-  public FormElementViewSelector(String uri, String tag, Map attributes) {
+  public FormElementViewSelector(String uri, String tag, Map<String, Object> attributes) {
     this.uri = uri;
     this.tag = tag;
-    this.attributes = attributes == null ? Collections.EMPTY_MAP : attributes;
+    if(attributes == null) {
+      this.attributes =Collections.emptyMap();
+    } else {
+      this.attributes = attributes;
+    }
   }
 
   /**
@@ -132,7 +132,7 @@ public class FormElementViewSelector implements Serializable {
    * @return the attributes of the tag.
    * @see AutomaticTagFormElementTag
    */
-  public Map getAttributes() {
+  public Map<String, Object> getAttributes() {
     return attributes;
   }
 

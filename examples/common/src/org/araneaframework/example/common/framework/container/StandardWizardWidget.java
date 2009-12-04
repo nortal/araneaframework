@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.common.framework.container;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -31,11 +30,10 @@ import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
- * This widget may contain other widgets (called pages) as children. It routes
- * init() and event() to all of its children and render() to only current active
- * child.
+ * This widget may contain other widgets (called pages) as children. It routes <code>init()</code> and
+ * <code>event()</code> to all of its children and render() to only current active child.
  * <p>
- * It recieves following events:
+ * It receives following events:
  * <ol>
  * <li>eventId: "goto", eventParam: pageIndex.</li>
  * <li>eventId: "submit".</li>
@@ -46,14 +44,12 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  */
 public class StandardWizardWidget extends BaseUIWidget implements WizardContext {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(StandardWizardWidget.class);
+  private static final Log LOG = LogFactory.getLog(StandardWizardWidget.class);
 
   public static final String CURRENT_PAGE_KEY = "currentPage";
 
   // List of Widget objects
-  private List pages = new ArrayList();
+  private List<Widget> pages = new ArrayList<Widget>();
 
   // Active page index in the list
   private int currentPageIndex = 0;
@@ -71,81 +67,72 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
       _getChildren().put(CURRENT_PAGE_KEY, getPage(currentPageIndex));
     }
     makeListenersHandleGoto(getCurrentPage());
-    log.debug("Current page index set to " + currentPageIndex);
+    LOG.debug("Current page index set to " + currentPageIndex);
   }
 
   // goto page
+
+  private void assertTrue(boolean condition, String msg) {
+    if (!condition) {
+      throw new AraneaRuntimeException(msg);
+    }
+  }
+
   public void gotoNext() {
-    if (countPages() == 0) {
-      throw new AraneaRuntimeException("No pages found");
-    }
-    if (getCurrentPageIndex() == countPages() - 1) {
-      throw new AraneaRuntimeException("There are no more pages");
-    }
+    assertTrue(countPages() > 0, "No pages found");
+    assertTrue(getCurrentPageIndex() != countPages() - 1, "There are no more pages");
     setCurrentPageIndex(getCurrentPageIndex() + 1);
   }
 
   public void gotoPrevious() {
-    if (countPages() == 0) {
-      throw new AraneaRuntimeException("No pages found");
-    }
-    if (getCurrentPageIndex() == 0) {
-      throw new AraneaRuntimeException("There are no more pages");
-    }
+    assertTrue(countPages() > 0, "No pages found");
+    assertTrue(getCurrentPageIndex() == 0, "There are no more pages");
     setCurrentPageIndex(getCurrentPageIndex() - 1);
   }
 
   public void gotoFirst() {
-    if (countPages() == 0) {
-      throw new AraneaRuntimeException("No pages found");
-    }
+    assertTrue(countPages() > 0, "No pages found");
     setCurrentPageIndex(0);
   }
 
   public void gotoLast() {
-    if (countPages() == 0) {
-      throw new AraneaRuntimeException("No pages found");
-    }
+    assertTrue(countPages() > 0, "No pages found");
     setCurrentPageIndex(countPages() - 1);
   }
 
   public void gotoPage(Widget page) {
-    if (!containsPage(page)) {
-      throw new AraneaRuntimeException("Page not found");
-    }
+    assertTrue(containsPage(page), "Page not found");
     setCurrentPageIndex(getIndexOfPage(page));
   }
 
   public void gotoPage(int index) {
-    if (!containsIndex(index)) {
-      throw new AraneaRuntimeException(
-          "Page index out of bounds, page index = " + index
-              + ", total pages = " + countPages());
-    }
+    assertTrue(containsIndex(index), "Page index out of bounds, page index = " + index + ", total pages = "
+        + countPages());
     setCurrentPageIndex(index);
   }
 
   // add/remove pages
+
   public void addPage(int index, Widget page) throws Exception {
-    pages.add(index, page);
+    this.pages.add(index, page);
     initPage(page);
-    log.debug("Page added, index = " + index);
+    LOG.debug("Page added, index = " + index);
   }
 
   public void addPage(Widget page) throws Exception {
-    pages.add(page);
+    this.pages.add(page);
     initPage(page);
-    log.debug("Page added, index = " + (countPages() - 1));
+    LOG.debug("Page added, index = " + (countPages() - 1));
   }
 
   public void removePage(Widget page) throws Exception {
     int index = getIndexOfPage(page);
     destroyPage(page);
-    pages.remove(page);
+    this.pages.remove(page);
     if (getCurrentPageIndex() >= countPages()) {
       setCurrentPageIndex(countPages() > 0 ? countPages() - 1 : 0);
     }
-    log.debug("Page removed, page index = " + index);
+    LOG.debug("Page removed, page index = " + index);
   }
 
   public void removePage(int index) throws Exception {
@@ -153,48 +140,46 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   }
 
   public void clearPages() throws Exception {
-    for (Iterator i = pages.iterator(); i.hasNext();) {
-      destroyPage((Widget) i.next());
+    for (Widget page : this.pages) {
+      destroyPage(page);
     }
-    pages.clear();
-    currentPageIndex = 0;
-    log.debug("All pages removed");
+    this.pages.clear();
+    this.currentPageIndex = 0;
+    LOG.debug("All pages removed");
   }
 
   private void initPage(Widget page) throws Exception {
-    log.debug("Initializing page...");
-    page._getComponent().init(new StandardScope(CURRENT_PAGE_KEY, getScope()),
-        getChildEnvironment());
+    LOG.debug("Initializing page...");
+    page._getComponent().init(new StandardScope(CURRENT_PAGE_KEY, getScope()), getChildEnvironment());
     if (getIndexOfPage(page) == getCurrentPageIndex()) {
       _getChildren().put(CURRENT_PAGE_KEY, page);
     }
   }
 
   private void destroyPage(Widget page) throws Exception {
-    log.debug("Destroying page...");
-    if (getIndexOfPage(page) == getCurrentPageIndex()
-        && _getChildren().containsKey(CURRENT_PAGE_KEY)) {
+    LOG.debug("Destroying page...");
+    if (getIndexOfPage(page) == getCurrentPageIndex() && _getChildren().containsKey(CURRENT_PAGE_KEY)) {
       _getChildren().remove(CURRENT_PAGE_KEY);
     }
   }
 
   // getters
+
   public Widget getPage(int index) {
     try {
-      return (Widget) pages.get(index);
+      return this.pages.get(index);
     } catch (IndexOutOfBoundsException e) {
-      throw new AraneaRuntimeException(
-          "Page index out of bounds, page index = " + index
-              + ", total pages = " + countPages());
+      throw new AraneaRuntimeException("Page index out of bounds, page index = " + index + ", total pages = "
+          + countPages());
     }
   }
 
   public Widget[] getAllPages() {
-    return (Widget[]) pages.toArray(new Widget[pages.size()]);
+    return this.pages.toArray(new Widget[this.pages.size()]);
   }
 
   public int getIndexOfPage(Widget page) {
-    int index = pages.indexOf(page);
+    int index = this.pages.indexOf(page);
     if (index == -1) {
       throw new AraneaRuntimeException("Page not found");
     }
@@ -202,7 +187,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   }
 
   public int countPages() {
-    return pages.size();
+    return this.pages.size();
   }
 
   public Widget getCurrentPage() {
@@ -210,19 +195,22 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   }
 
   // contains
+
   public boolean containsPage(Widget page) {
-    return pages.contains(page);
+    return this.pages.contains(page);
   }
 
   public boolean containsIndex(int index) {
     return countPages() > 0 && index >= 0 && index < countPages();
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
-    log.debug("StandardWizardWidget render called");
+    LOG.debug("StandardWizardWidget render called");
     getCurrentPage()._getWidget().render(output);
   }
 
+  @Override
   protected void destroy() throws Exception {
     clearPages();
   }
@@ -230,6 +218,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   /*
    * Submit & cancel
    */
+
   public void submit() {
     makeListenersHandleSubmit();
   }
@@ -241,24 +230,25 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   /*
    * Event listeners
    */
-  private Collection eventListeners = new LinkedList();
 
-  public void addEventListener(WizardContext.EventListener listener) {
-    eventListeners.add(listener);
+  private Collection<WizardContext.EventListener> eventListeners = new LinkedList<WizardContext.EventListener>();
+
+  public void addEventListener(EventListener listener) {
+    this.eventListeners.add(listener);
   }
 
-  public void removeEventListener(WizardContext.EventListener listener) {
-    eventListeners.remove(listener);
+  public void removeEventListener(EventListener listener) {
+    this.eventListeners.remove(listener);
   }
 
   public void clearEventListeners() {
-    eventListeners.clear();
+    this.eventListeners.clear();
   }
 
   private void makeListenersHandleGoto(Widget page) {
     try {
-      for (Iterator i = eventListeners.iterator(); i.hasNext();) {
-        ((WizardContext.EventListener) i.next()).onGoto(page);
+      for (EventListener eventListener : this.eventListeners) {
+        eventListener.onGoto(page);
       }
     } catch (Exception e) {
       throw new AraneaRuntimeException(e);
@@ -267,8 +257,8 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 
   private void makeListenersHandleSubmit() {
     try {
-      for (Iterator i = eventListeners.iterator(); i.hasNext();) {
-        ((WizardContext.EventListener) i.next()).onSubmit();
+      for (EventListener eventListener : this.eventListeners) {
+        eventListener.onSubmit();
       }
     } catch (Exception e) {
       throw new AraneaRuntimeException(e);
@@ -277,8 +267,8 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
 
   private void makeListenersHandleCancel() {
     try {
-      for (Iterator i = eventListeners.iterator(); i.hasNext();) {
-        ((WizardContext.EventListener) i.next()).onCancel();
+      for (EventListener eventListener : this.eventListeners) {
+        eventListener.onCancel();
       }
     } catch (Exception e) {
       throw new AraneaRuntimeException(e);
@@ -286,17 +276,23 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   }
 
   /*
-   * Methods for HandleEventProxyEventListener 
+   * Methods for HandleEventProxyEventListener
    */
-  public void handleEventGoto(String eventParameter) throws Exception {
+
+  /**
+   * The handler for <em>goto</em> event. The parameter is passed from the client side.
+   * 
+   * @param The page number passed from the client-side.
+   */
+  public void handleEventGoto(String eventParameter) {
     gotoPage(Integer.parseInt(eventParameter));
   }
 
-  public void handleEventSubmit() throws Exception {
+  public void handleEventSubmit() {
     submit();
   }
 
-  public void handleEventCancel() throws Exception {
+  public void handleEventCancel() {
     cancel();
   }
 }

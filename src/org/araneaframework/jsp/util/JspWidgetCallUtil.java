@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.util;
 
@@ -27,10 +27,10 @@ import org.araneaframework.jsp.UiUpdateEvent;
  * Standard util for producing calls to UiLib widgets in various
  * container frameworks. 
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class JspWidgetCallUtil {
-  public static final String SIMPLE_SUBMIT_FUNCTION = "return _ap.event(this);";
+  public static final String SIMPLE_SUBMIT_FUNCTION = "return Aranea.Page.event(this);";
 
   /**
    * Write out form submit script for specified attribute of HTML element. Aranea custom HTML 
@@ -80,7 +80,11 @@ public abstract class JspWidgetCallUtil {
     String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
     String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";
     String eventPrecondition = event.getEventPrecondition() != null ? "'" + event.getEventPrecondition() + "'" : "null";
-    List updateRegionNames = event.getUpdateRegionNames() != null ? event.getUpdateRegionNames() : Collections.EMPTY_LIST;
+    List<String> updateRegionNames;
+    if (event.getUpdateRegionNames() != null)
+      updateRegionNames = event.getUpdateRegionNames();
+    else
+      updateRegionNames = Collections.emptyList();
     
     sb.append(eventId).append(",");
     sb.append(eventTarget).append(",");

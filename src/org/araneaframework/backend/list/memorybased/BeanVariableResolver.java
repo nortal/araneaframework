@@ -20,25 +20,23 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.backend.util.BeanMapper;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein RaudjĆ¤rv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
-public class BeanVariableResolver implements VariableResolver {
+public class BeanVariableResolver<B> implements VariableResolver {
 
-  private static final long serialVersionUID = 1L;
+  private BeanMapper<B> mapper;
 
-  private BeanMapper mapper;
+  private B bean;
 
-  private Object bean;
-
-  public BeanVariableResolver(Class clazz) {
-    this.mapper = new BeanMapper(clazz);
+  public BeanVariableResolver(Class<B> clazz) {
+    this.mapper = new BeanMapper<B>(clazz);
   }
 
-  public void setBean(Object bean) {
+  public void setBean(B bean) {
     this.bean = bean;
   }
 
   public Object resolve(Variable variable) {
-    return this.mapper.getFieldValue(this.bean, variable.getName());
+    return this.mapper.getProperty(this.bean, variable.getName());
   }
 }

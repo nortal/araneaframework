@@ -16,7 +16,6 @@
 
 package org.araneaframework.backend.list.helper.naming;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,19 +28,18 @@ import java.util.List;
  */
 public class OrNamingStrategy implements NamingStrategy {
 
-  private final List children = new LinkedList();
+  private final List<NamingStrategy> children = new LinkedList<NamingStrategy>();
 
   public void add(NamingStrategy namingStrategy) {
-    children.add(namingStrategy);
+    this.children.add(namingStrategy);
   }
 
   public void addFirst(NamingStrategy namingStrategy) {
-    children.add(0, namingStrategy);
+    this.children.add(0, namingStrategy);
   }
 
   public String fieldToColumnAlias(String fieldName) {
-    for (Iterator it = children.iterator(); it.hasNext();) {
-      NamingStrategy ns = (NamingStrategy) it.next();
+    for (NamingStrategy ns : this.children) {
       String result = ns.fieldToColumnAlias(fieldName);
       if (result != null) {
         return result;
@@ -51,8 +49,7 @@ public class OrNamingStrategy implements NamingStrategy {
   }
 
   public String fieldToColumnName(String fieldName) {
-    for (Iterator it = children.iterator(); it.hasNext();) {
-      NamingStrategy ns = (NamingStrategy) it.next();
+    for (NamingStrategy ns : this.children) {
       String result = ns.fieldToColumnName(fieldName);
       if (result != null) {
         return result;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests;
 
@@ -41,13 +41,14 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockFilterContext;
 
 public class SimpleListFilterTest extends TestCase {
 
-  private static final Log log = LogFactory.getLog(SimpleListFilterTest.class);
+  private static final Log LOG = LogFactory.getLog(SimpleListFilterTest.class);
 
   public void testListFilterBuilder() throws ExpressionEvaluationException {
 
     FilterContext ctx = new MockFilterContext() {
 
-      public Comparator getFieldComparator(String fieldId) {
+      @Override
+      public Comparator<?> getFieldComparator(String fieldId) {
         // Boolean is not comparable
         if ("licenseToKill".equals(fieldId)) {
           return null;
@@ -57,16 +58,15 @@ public class SimpleListFilterTest extends TestCase {
     };
 
     // build filter
-    ListFilter filter = new AndFilter().addFilter(
-        EqualFilter.getInstance(ctx, "name", "name")).addFilter(
+    ListFilter filter = new AndFilter().addFilter(EqualFilter.getInstance(ctx, "name", "name")).addFilter(
         GreaterThanFilter.getInstance(ctx, "name", "name")).addFilter(
         EqualFilter.getInstance(ctx, "licenseToKill", "licenseToKill"));
 
     // build expression
-    Map data = new HashMap();
+    Map<String, Object> data = new HashMap<String, Object>();
     data.put("name", "James Bond");
-    data.put("age", new Long(25));
-    data.put("licenseToKill", Boolean.TRUE);
+    data.put("age", 25L);
+    data.put("licenseToKill", true);
 
     Expression expr = filter.buildExpression(data);
     assertNotNull(expr);
@@ -74,14 +74,12 @@ public class SimpleListFilterTest extends TestCase {
     // evaluate expression in memory
     Object value = expr.evaluate(new VariableResolver() {
 
-      private static final long serialVersionUID = 1L;
-
       public Object resolve(Variable variable) {
         if (variable.getName().equals("name")) {
           return "James Bond";
         }
         if (variable.getName().equals("age")) {
-          return new Long(30);
+          return 30L;
         }
         if (variable.getName().equals("licenseToKill")) {
           return Boolean.TRUE;
@@ -95,8 +93,6 @@ public class SimpleListFilterTest extends TestCase {
     // evaluate expression in memory
     value = expr.evaluate(new VariableResolver() {
 
-      private static final long serialVersionUID = 1L;
-
       public Object resolve(Variable variable) {
         if (variable.getName().equals("name")) {
           return "Bond, James";
@@ -107,11 +103,9 @@ public class SimpleListFilterTest extends TestCase {
 
     assertEquals(value, Boolean.FALSE);
 
-    // build sql expression
+    // build SQL expression
     StandardExpressionToSqlExprBuilder builder = new StandardExpressionToSqlExprBuilder();
     builder.setMapper(new VariableResolver() {
-
-      private static final long serialVersionUID = 1L;
 
       public Object resolve(Variable variable) {
         if ("name".equals(variable.getName())) {
@@ -129,14 +123,12 @@ public class SimpleListFilterTest extends TestCase {
 
     builder.setConverter(new ValueConverter() {
 
-      private static final long serialVersionUID = 1L;
-
-      public Object convert(Value value) {
+      @SuppressWarnings("unchecked")
+      public <S, D> D convert(Value<S> value) {
         if ("licenseToKill".equals(value.getName())) {
-          return new BooleanToStringConverter("Y", "N").convert(value
-              .getValue());
+          return (D) BooleanToStringConverter.YN_UPPER_CONVERTER.convert((Boolean) value.getValue());
         }
-        return value.getValue();
+        return (D) value.getValue();
       }
     });
 
@@ -144,8 +136,8 @@ public class SimpleListFilterTest extends TestCase {
     String sqlString = sqlExpr.toSqlString();
     Object[] values = sqlExpr.getValues();
 
-    log.info("SQL string: " + sqlString);
-    log.info("SQL values: " + Arrays.asList(values));
+    LOG.info("SQL string: " + sqlString);
+    LOG.info("SQL values: " + Arrays.asList(values));
   }
 
 }

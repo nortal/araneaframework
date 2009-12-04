@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -25,18 +25,15 @@ import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * Given two form elements, it checks that their values are one after another.
- * It assumes that the values of both form elements are of the same type and
- * {@link Comparable} (so most data types should be supported, inlcuding
+ * Given two form elements, it checks that their values are one after another. It assumes that the values of both form
+ * elements are of the same type and {@link Comparable} (so most data types should be supported, inlcuding
  * {@link java.lang.String} and {@link java.util.Date}).
  * <p>
  * TODO: Add locale support for string ranges.
  * 
  * @author <a href="mailto:kt@webmedia.ee">Konstantin Tretyakov</a>
  */
-public final class RangeConstraint extends BaseConstraint {
-
-  private static final long serialVersionUID = 1L;
+public final class RangeConstraint<C, D> extends BaseConstraint {
 
   /**
    * Specifies whether the values may be equal or not.
@@ -44,45 +41,41 @@ public final class RangeConstraint extends BaseConstraint {
   protected boolean allowEquals;
 
   /**
-   * Specifies the form field that must have higher value. The value may also be
-   * <code>null</code>.
+   * Specifies the form field that must have higher value. The value may also be <code>null</code>.
    */
-  protected FormElement fieldLo;
+  protected FormElement<C, D> fieldLo;
 
   /**
-   * Specifies the form field that must have higher value. The value may also be
-   * <code>null</code>.
+   * Specifies the form field that must have higher value. The value may also be <code>null</code>.
    */
-  protected FormElement fieldHi;
+  protected FormElement<C, D> fieldHi;
 
   /**
-   * Creates a new range constraint that checks that form field values are in
-   * the right order: the <code>fieldLo</code> is less than
-   * <code>fieldHi</code>. It is possible to specify through
-   * <code>allowEquals</code> whether the values may be equal or not.
+   * Creates a new range constraint that checks that form field values are in the right order: the <code>fieldLo</code>
+   * is less than <code>fieldHi</code>. It is possible to specify through <code>allowEquals</code> whether the values
+   * may be equal or not.
    * 
-   * @param fieldLo The value of this field is checked to be less than the value
-   *            of fieldHi (or <code>null</code>)
-   * @param fieldHi The value of this field is checked to be greater than the
-   *            value of fieldLo (or <code>null</code>)
-   * @param allowEquals If this is <code>true</code>, the constraint will be
-   *            considered satisfied when values of <code>fieldLo</code> and
-   *            <code>fieldHi</code> are equal. Otherwise the constraint won't
-   *            be satisfied in this case.
+   * @param fieldLo The value of this field is checked to be less than the value of fieldHi (or <code>null</code>)
+   * @param fieldHi The value of this field is checked to be greater than the value of fieldLo (or <code>null</code>)
+   * @param allowEquals If this is <code>true</code>, the constraint will be considered satisfied when values of
+   *          <code>fieldLo</code> and <code>fieldHi</code> are equal. Otherwise the constraint won't be satisfied in
+   *          this case.
    */
-  public RangeConstraint(FormElement fieldLo, FormElement fieldHi, boolean allowEquals) {
+  public RangeConstraint(FormElement<C, D> fieldLo, FormElement<C, D> fieldHi, boolean allowEquals) {
     this.allowEquals = allowEquals;
     this.fieldHi = fieldHi;
     this.fieldLo = fieldLo;
   }
 
   /**
-   * Makes sure that either any of the form elements has a <code>null</code>
-   * value, or the low field value is less then high field value.
+   * Makes sure that either any of the form elements has a <code>null</code> value, or the low field value is less then
+   * high field value.
    */
+  @Override
+  @SuppressWarnings("unchecked")
   protected void validateConstraint() {
-    Object valueLo = fieldLo.getData().getValue();
-    Object valueHi = fieldHi.getData().getValue();
+    D valueLo = fieldLo.getData().getValue();
+    D valueHi = fieldHi.getData().getValue();
 
     // If any of the values is null, we stay quiet no matter what.
     if (valueLo == null || valueHi == null) {
@@ -96,8 +89,7 @@ public final class RangeConstraint extends BaseConstraint {
     } else if (valueLo.getClass().isAssignableFrom(valueHi.getClass())) {
       loExtendsHi = false;
     } else {
-      throw new AraneaRuntimeException(
-          "RangeConstraint can be used only with fields of compatible types.");
+      throw new AraneaRuntimeException("RangeConstraint can be used only with fields of compatible types.");
     }
 
     // Will be -1, 0, or 1 depending on whether sLo is <, = or > than sHi.
@@ -105,7 +97,7 @@ public final class RangeConstraint extends BaseConstraint {
 
     // Strings are handled separately because we have to compare them in given locale.
     if (valueLo instanceof String && valueHi instanceof String) {
-      Collator collator = Collator.getInstance(); // TODO: Must be locale-specific
+      Collator collator = Collator.getInstance();
       comparison = collator.compare((String) valueLo, (String) valueHi);
 
     } else if (valueLo instanceof Comparable && valueHi instanceof Comparable) {
@@ -116,15 +108,13 @@ public final class RangeConstraint extends BaseConstraint {
       }
 
     } else { // Objects are not comparable
-      throw new AraneaRuntimeException(
-          "RangeConstraint expects fields of java.lang.Comparable type");
+      throw new AraneaRuntimeException("RangeConstraint expects fields of java.lang.Comparable type");
     }
 
     if (comparison > 0 || (!allowEquals && comparison == 0)) {
-      addError(MessageUtil.localizeAndFormat(UiLibMessages.RANGE_CHECK_FAILED,
-          t(fieldLo.getLabel(), fieldLo.getEnvironment()),
-          t(fieldHi.getLabel(), fieldHi.getEnvironment()),
-          getEnvironment()));
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.RANGE_CHECK_FAILED,
+          t(this.fieldLo.getLabel(), this.fieldLo.getEnvironment()),
+          t(this.fieldHi.getLabel(), this.fieldHi.getEnvironment())));
     }
   }
 

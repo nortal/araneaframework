@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.tree;
 
@@ -96,7 +96,7 @@ public interface TreeNodeContext extends Serializable {
    * @param nodes
    *          list of {@link TreeNodeWidget}s to be added.
    */
-  void addAllNodes(List nodes);
+  void addAllNodes(List<TreeNodeWidget> nodes);
 
   /**
    * Removes all child nodes of this tree node.
@@ -122,7 +122,7 @@ public interface TreeNodeContext extends Serializable {
    * 
    * @return list of {@link TreeNodeWidget}s.
    */
-  List getNodes();
+  List<TreeNodeWidget> getNodes();
 
   /**
    * Returns if this tree node has any child nodes.

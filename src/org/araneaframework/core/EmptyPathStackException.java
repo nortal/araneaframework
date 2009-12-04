@@ -23,8 +23,6 @@ package org.araneaframework.core;
  */
 public class EmptyPathStackException extends AraneaRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   public EmptyPathStackException() {
     super();
   }

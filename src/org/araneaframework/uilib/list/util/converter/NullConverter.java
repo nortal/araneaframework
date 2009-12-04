@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,44 +12,37 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.converter;
 
 import org.araneaframework.uilib.list.util.Converter;
 
 /**
- * Converter that leaves <code>null</code> values unaltered and uses a another
- * not-null <code>converter</code> for all other cases.
+ * Converter that leaves <code>null</code> values unaltered and uses a another not-null <code>converter</code> for all
+ * other cases.
  */
-public class NullConverter implements Converter {
+public class NullConverter<S, D> implements Converter<S, D> {
 
-	protected Converter notNullConverter;
+  protected Converter<S, D> notNullConverter;
 
-	public NullConverter(Converter notNullConverter) {
-		this.notNullConverter = notNullConverter;
-	}
+  public NullConverter(Converter<S, D> notNullConverter) {
+    this.notNullConverter = notNullConverter;
+  }
 
-	public Object convert(Object data) throws ConversionException {
-		if (data == null) {
-			return null;
-		}
-		return this.notNullConverter.convert(data);
-	}
+  public D convert(S data) throws ConversionException {
+    return data == null ? null : this.notNullConverter.convert(data);
+  }
 
-	public Object reverseConvert(Object data) throws ConversionException {
-		if (data == null) {
-			return null;
-		}
-		return this.notNullConverter.reverseConvert(data);
-	}
+  public S reverseConvert(D data) throws ConversionException {
+    return data == null ? null : this.notNullConverter.reverseConvert(data);
+  }
 
-	public Class getSourceType() {
-		return this.notNullConverter.getSourceType();
-	}
+  public Class<S> getSourceType() {
+    return this.notNullConverter.getSourceType();
+  }
 
-	public Class getDestinationType() {
-		return this.notNullConverter.getDestinationType();
-	}
-
+  public Class<D> getDestinationType() {
+    return this.notNullConverter.getDestinationType();
+  }
 }

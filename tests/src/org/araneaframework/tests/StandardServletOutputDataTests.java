@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests;
 
@@ -36,6 +36,7 @@ public class StandardServletOutputDataTests extends TestCase {
   private MockHttpServletResponse resp;
   
   
+  @Override
   public void setUp() {
     req = new MockHttpServletRequest();
     StandardServletInputData inputData = new StandardServletInputData(req);
@@ -54,7 +55,7 @@ public class StandardServletOutputDataTests extends TestCase {
   }
   
   public void testExtendNarrow() {
-    Map map = new HashMap();
+    Map<Object, Object> map = new HashMap<Object, Object>();
     out.extend(Map.class, map);
     assertEquals(map, out.narrow(Map.class));
   }

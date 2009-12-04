@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.list;
 
@@ -21,19 +21,17 @@ import org.araneaframework.core.Assert;
 /**
  * ListWidget that is aware of field types according to the Bean type.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * @see ListWidget
  */
 public class BeanListWidget<T> extends ListWidget<T> {
-
-  private static final long serialVersionUID = 1L;
 
   protected final Class<T> beanType;
 
   /**
    * Constructs a {@link BeanListWidget} for specified Bean type.
    * 
-   * @param beanType list element type.
+   * @param beanType The list row data object type.
    */
   public BeanListWidget(Class<T> beanType) {
     Assert.notNullParam(this, beanType, "beanType");
@@ -42,6 +40,7 @@ public class BeanListWidget<T> extends ListWidget<T> {
     this.listStructure = createListStructure();
   }
 
+  @Override
   protected TypeHelper createTypeHelper() {
     // beanType == null when the constructor of the parent class is executed.
     if (this.beanType == null) {

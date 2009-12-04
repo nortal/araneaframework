@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006-2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.blank;
 
@@ -27,7 +27,8 @@ public class MenuWidget extends BaseMenuWidget {
 		super(null);
 	}
 
-	protected MenuItem buildMenu() throws Exception {
+	@Override
+  protected MenuItem buildMenu() throws Exception {
 		MenuItem result = new MenuItem();
 		result.addMenuItem(new MenuItem("#Blank1", BlankWidget.class));
 		result.addMenuItem(new MenuItem("#Blank2", BlankWidget.class));
@@ -36,7 +37,8 @@ public class MenuWidget extends BaseMenuWidget {
 		return result;
 	}
 
-	protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
+	@Override
+  protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
 	    if (ExceptionUtils.getRootCause(e) != null) {
 	        putViewDataOnce("rootStackTrace", 
 	            ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));

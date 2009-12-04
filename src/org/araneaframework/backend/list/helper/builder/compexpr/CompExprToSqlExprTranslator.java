@@ -21,24 +21,20 @@ import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 
 /**
- * General interface for translating an <code>ComparatorExpression</code> into
- * <code>SqlExpression</code>. It is generally used to translate only a
- * specific type of <code>ComparatorExpression</code>. Use (@see
- * org.araneaframework.uilib.widgets.lists.refactor.backend.builder.CompExprToSqlExprBuilder)
- * to translate the whole hierarchy.
+ * General interface for translating an <code>ComparatorExpression</code> into <code>SqlExpression</code>. It is
+ * generally used to translate only a specific type of <code>ComparatorExpression</code>. Use (@see
+ * org.araneaframework.uilib.widgets.lists.refactor.backend.builder.CompExprToSqlExprBuilder) to translate the whole
+ * hierarchy.
  */
 public interface CompExprToSqlExprTranslator {
 
   /**
-   * Translates an <code>ComparatorExpression</code> into
-   * <code>SqlExpression</code>.
+   * Translates an <code>ComparatorExpression</code> into <code>SqlExpression</code>.
    * 
    * @param expr an <code>ComparatorExpression</code>.
-   * @param builder <code>CompExprToSqlExprBuilder</code> that is used to
-   *            translate the children of the <code>ComparatorExpression</code>.
-   * @return the <code>SqlExpression</code> that represents the former
-   *         <code>ComparatorExpression</code>.
+   * @param builder <code>CompExprToSqlExprBuilder</code> that is used to translate the children of the
+   *          <code>ComparatorExpression</code>.
+   * @return the <code>SqlExpression</code> that represents the former <code>ComparatorExpression</code>.
    */
-  SqlExpression translate(ComparatorExpression expr,
-      CompExprToSqlExprBuilder builder);
+  SqlExpression translate(ComparatorExpression expr, CompExprToSqlExprBuilder builder);
 }

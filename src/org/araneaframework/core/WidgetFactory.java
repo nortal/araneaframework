@@ -26,7 +26,7 @@ import org.araneaframework.Widget;
  * @see org.araneaframework.uilib.tab.TabContainerContext
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface WidgetFactory extends Serializable {
 

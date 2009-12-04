@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,71 +12,71 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.uilib.support.DataType;
 
 /**
- * This class represents a read only control, that is technically it is not a 
- * true control, but just a label displaying the text to the user.
+ * This class represents a read only control, that is technically it is not a true control, but just a label displaying
+ * the text to the user.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class DisplayControl extends BaseControl {
+public class DisplayControl extends BaseControl<Object> {
+
   /**
-   * Returns <code>false</code>.
+   * {@inheritDoc}
+   * <p>
+   * Due to the purpose of <code>DisplayControl</code>, this methods always returns <code>false</code>.
+   * 
    * @return <code>false</code>.
    */
+  @Override
   public boolean isRead() {
     return false;
   }
 
-  public String getRawValueType() {
-    return "Object";
+  public DataType getRawValueType() {
+    return new DataType(Object.class);
   }
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
- 
+
   /**
-   * Returns {@link ViewModel}.
-   * @return {@link ViewModel}.
+   * Returns the {@link ViewModel} of this <code>DisplayControl</code> for rendering the control.
+   * 
+   * @return The {@link ViewModel} of this <code>DisplayControl</code>.
    */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************    
-  
   /**
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * The view model implementation of <code>DisplayControl</code>. The view model provides the data for tags to render
+   * the control.
    * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<Object>.ViewModel {
 
     private Object value;
-    
+
     /**
-     * Takes an outer class snapshot.     
-     */    
+     * Takes an outer class snapshot.
+     */
     public ViewModel() {
-      //XXX: hack emulating process()
-      innerData = DisplayControl.this.getRawValue();
-      this.value = innerData;
-    }       
-    
+      this.value = DisplayControl.this.value;
+    }
+
     /**
-     * Returns value.
-     * @return value.
+     * Returns the value of <code>DisplayControl</code>.
+     * 
+     * @return The value of <code>DisplayControl</code>.
      */
     public Object getValue() {
-      return value;
+      return this.value;
     }
-    
-  }  
+  }
 }

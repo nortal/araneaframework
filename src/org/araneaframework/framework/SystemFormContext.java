@@ -18,9 +18,9 @@ public interface SystemFormContext extends Serializable {
   void addField(String key, String value);
 
   /**
-   * Get all system form fields. Both keys and values of the map are Strings. If
-   * no fields are present, returns an empty map.
+   * Get all system form fields. Both keys and values of the map are Strings. If no fields are present, returns an empty
+   * map.
    */
-  Map getFields();
+  Map<String, String> getFields();
 
 }

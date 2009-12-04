@@ -30,8 +30,6 @@ import org.araneaframework.core.Assert;
  */
 public class LazyComparatorExpression implements ComparatorExpression {
 
-  private static final long serialVersionUID = 1L;
-
   private final ComparatorExpressionFactory factory;
 
   private ComparatorExpression expression;
@@ -42,22 +40,20 @@ public class LazyComparatorExpression implements ComparatorExpression {
   }
 
   public ComparatorExpressionFactory getFactory() {
-    return factory;
+    return this.factory;
   }
 
   public ComparatorExpression getComparatorExpression() {
-    if (expression == null) {
-      expression = factory.createComparatorExpression();
-      if (expression == null) {
-        throw new AssertionError(
-            "ComparatorExpressionFactory must not create a null object");
+    if (this.expression == null) {
+      this.expression = this.factory.createComparatorExpression();
+      if (this.expression == null) {
+        throw new AssertionError("ComparatorExpressionFactory must not create a null object");
       }
     }
-    return expression;
+    return this.expression;
   }
 
-  public int compare(VariableResolver resolver1, VariableResolver resolver2)
-      throws ExpressionEvaluationException {
+  public int compare(VariableResolver resolver1, VariableResolver resolver2) throws ExpressionEvaluationException {
     return getComparatorExpression().compare(resolver1, resolver2);
   }
 }

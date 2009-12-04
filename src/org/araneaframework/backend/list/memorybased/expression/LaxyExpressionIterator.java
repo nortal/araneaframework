@@ -23,18 +23,18 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.core.Assert;
 
 /**
- * Iterator that iterates over {@link Expression}s using an iterator over
- * {@link ExpressionBuilder} objects and <code>data</code>.
+ * Iterator that iterates over {@link Expression}s using an iterator over {@link ExpressionBuilder} objects and
+ * <code>data</code>.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
-public class LaxyExpressionIterator implements Iterator {
+public class LaxyExpressionIterator implements Iterator<Expression> {
 
-  private Iterator builderIterator;
+  private Iterator<? extends ExpressionBuilder> builderIterator;
 
-  private Map data;
+  private Map<String, Object> data;
 
-  public LaxyExpressionIterator(Iterator builderIterator, Map data) {
+  public LaxyExpressionIterator(Iterator<? extends ExpressionBuilder> builderIterator, Map<String, Object> data) {
     Assert.notNullParam(this, builderIterator, "builderIterator");
     Assert.notNullParam(this, data, "data");
     this.builderIterator = builderIterator;
@@ -42,12 +42,12 @@ public class LaxyExpressionIterator implements Iterator {
   }
 
   public boolean hasNext() {
-    return builderIterator.hasNext();
+    return this.builderIterator.hasNext();
   }
 
-  public Object next() {
-    ExpressionBuilder builder = (ExpressionBuilder) builderIterator.next();
-    return builder.buildExpression(data);
+  public Expression next() {
+    ExpressionBuilder builder = this.builderIterator.next();
+    return builder.buildExpression(this.data);
   }
 
   public void remove() {

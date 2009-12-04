@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.updateregion;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.ServletUtil;
@@ -31,51 +32,51 @@ import org.araneaframework.jsp.util.JspUtil;
  * @see org.araneaframework.jsp.tag.updateregion.UpdateRegionHtmlTag
  * @see org.araneaframework.jsp.tag.updateregion.UpdateRegionRowsHtmlTag
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BaseUpdateRegionTag extends BaseTag {
+
   protected String id;
+
   protected String globalId;
-  
+
   protected String fullId;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    if (id == null && globalId == null)
+    if (this.id == null && this.globalId == null) {
       throw new AraneaJspException("'id' or 'globalId' is required!");
+    }
 
     String contextWidgetId = getContextWidgetFullId();
 
-    fullId = globalId;
-    
-    if (fullId == null)
-    	fullId = contextWidgetId.length() > 0 ? (contextWidgetId + "." + id) : id;
+    this.fullId = this.globalId;
 
-    String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(pageContext, ServletUtil.UIWIDGET_KEY)).getScope().toString();
+    if (this.fullId == null) {
+      this.fullId = contextWidgetId.length() > 0 ? (contextWidgetId + Path.SEPARATOR + this.id) : this.id;
+    }
+
+    String uiWidgetId = ((ApplicationWidget) JspUtil.requireContextEntry(this.pageContext, ServletUtil.UIWIDGET_KEY))
+        .getScope().toString();
     UpdateRegionContext updateRegionContext = getEnvironment().requireEntry(UpdateRegionContext.class);
-    updateRegionContext.addDocumentRegion(fullId, uiWidgetId);
+    updateRegionContext.addDocumentRegion(this.fullId, uiWidgetId);
 
     return EVAL_BODY_INCLUDE;
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Local id of the update region." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Local id of the update region."
    */
-  public void setId(String id) throws JspException {
-    this.id = (String) evaluate("id", id, String.class);
+  public void setId(String id) {
+    this.id = evaluate("id", id, String.class);
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Global id of the update region." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Global id of the update region."
    */
-  public void setGlobalId(String globalId) throws JspException {
-    this.globalId = (String) evaluate("globalId", globalId, String.class);
-  }  
+  public void setGlobalId(String globalId) {
+    this.globalId = evaluate("globalId", globalId, String.class);
+  }
 }

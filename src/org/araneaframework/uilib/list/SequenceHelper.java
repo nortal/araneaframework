@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list;
 
 import java.io.Serializable;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * This class incapsulates all the information and behavior connected with the moving through the list pages. That is
@@ -79,7 +79,7 @@ public class SequenceHelper implements Serializable {
   public SequenceHelper(ConfigurationContext configuration) {
     this.configuration = configuration;
 
-    Long confDefaultItemsOnPage = ConfigurationContextUtil.getDefaultListItemsOnPage(configuration);
+    Long confDefaultItemsOnPage = ConfigurationUtil.getDefaultListItemsOnPage(configuration);
 
     if (confDefaultItemsOnPage != null)
       defaultItemsOnPage = confDefaultItemsOnPage.longValue();

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.servlet.filter;
 
@@ -43,6 +43,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   private MockHttpServletRequest req;
   private MockHttpServletResponse res;
 
+  @Override
   public void setUp() throws Exception {
     req = new MockHttpServletRequest();
     res = new MockHttpServletResponse();
@@ -86,8 +87,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   }
 
   public void testAddCookies() throws Exception {
-    Map map = new HashMap();
-    
+    Map<String, String> map = new HashMap<String, String>();
     map.put("theDaily", "Wtf");
     map.put("Paula", "Brillant");
     
@@ -103,7 +103,7 @@ public class StandardServletHttpResponseFilterServiceTests extends TestCase {
   }
 
   public void testAddHeaders() throws Exception {
-    Map map = new HashMap();
+    Map<String, String> map = new HashMap<String, String>();
     
     map.put("Transfer-Encoding", "chunked");
     map.put("Content-Encoding", "gzip");

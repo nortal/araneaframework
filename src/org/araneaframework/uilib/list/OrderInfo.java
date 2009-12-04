@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,40 +12,64 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 
 /**
- * This class represents the ordering information supplied by user in a series
- * of UI interactions.
+ * This class represents the ordering information supplied by user in a series of UI interactions.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class OrderInfo implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-
-  protected List fields = new ArrayList();
+  protected List<OrderInfoField> fields = new ArrayList<OrderInfoField>();
 
   /**
-   * Returns the ordering fields.
-   * 
-   * @return the ordering fields.
+   * Default constructor. You must provide order info through getters and setters.
    */
-  public List getFields() {
+  public OrderInfo() {}
+
+  /**
+   * Initiates a new order info using the given initial order info.
+   * 
+   * @param fieldId The field ID as defined in the list.
+   * @param ascending Whether the order of the field identified by <code>fieldId</code> should be ascending or
+   *          descending.
+   * @since 2.0
+   */
+  public OrderInfo(String fieldId, boolean ascending) {
+    this(new OrderInfoField(fieldId, ascending));
+  }
+
+  /**
+   * Initiates a new order info using the given initial order info.
+   * 
+   * @param orderInfoPerField The object that contains information about the field that must be ordered and its order.
+   * @since 2.0
+   */
+  public OrderInfo(OrderInfoField orderInfoPerField) {
+    this.fields.add(orderInfoPerField);
+  }
+
+  /**
+   * Returns a list of data objects storing the order of the associated fields.
+   * 
+   * @return A list of data objects about fields that are ordered and their order.
+   */
+  public List<OrderInfoField> getFields() {
     return this.fields;
   }
 
   /**
-   * Clears ordering fields.
+   * Removes all information about the list order.
    */
   public void clearFields() {
     this.fields.clear();
@@ -72,28 +96,25 @@ public class OrderInfo implements Serializable {
   /**
    * View model.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   public class ViewModel implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private List fields = new ArrayList();
+    private List<OrderInfoField.ViewModel> fields = new ArrayList<OrderInfoField.ViewModel>();
 
     /**
-     * Contains values <String,Boolean> when the list field ID of type String
-     * has been ordered ascending (true) or descending (false).
+     * Contains values <String,Boolean> when the list field ID of type String has been ordered ascending (true) or
+     * descending (false).
      * 
      * @since 1.2.2
      */
-    private Map fieldsMap = new HashMap();
+    private Map<String, Boolean> fieldsMap = new HashMap<String, Boolean>();
 
     /**
      * Takes a snapshot of outer class state.
      */
     public ViewModel() {
-      for (Iterator i = OrderInfo.this.fields.iterator(); i.hasNext();) {
-        OrderInfoField field = (OrderInfoField) i.next();
+      for (OrderInfoField field : OrderInfo.this.fields) {
         this.fields.add(field.getViewModel());
         this.fieldsMap.put(field.getId(), new Boolean(field.isAscending()));
       }
@@ -104,29 +125,27 @@ public class OrderInfo implements Serializable {
      * 
      * @return the ordering fields.
      */
-    public List getFields() {
+    public List<OrderInfoField.ViewModel> getFields() {
       return this.fields;
     }
 
     /**
+     * Provides a map of fields that will be sorted. The values of key (field) are booleans that indicate whether the
+     * field is sorted ascending or descending.
+     * 
+     * @return A map of fields where key is field name, and value is sorting order (<code>true == ascending</code>).
      * @since 1.2.2
-     * @return
      */
-    public Map getFieldsMap() {
+    public Map<String, Boolean> getFieldsMap() {
       return this.fieldsMap;
     }
 
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer("OrderInfo (");
-    for (Iterator i = this.fields.iterator(); i.hasNext();) {
-      OrderInfoField field = (OrderInfoField) i.next();
-      sb.append(field.toString());
-      if (i.hasNext()) {
-        sb.append("; ");
-      }
-    }
+    sb.append(StringUtils.join(this.fields, "; "));
     sb.append(")");
     return sb.toString();
   }

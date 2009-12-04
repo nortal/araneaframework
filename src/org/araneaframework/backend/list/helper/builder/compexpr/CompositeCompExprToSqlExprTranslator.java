@@ -21,14 +21,11 @@ import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.CompositeComparatorExpression;
 
-public abstract class CompositeCompExprToSqlExprTranslator
-  implements CompExprToSqlExprTranslator {
+public abstract class CompositeCompExprToSqlExprTranslator implements CompExprToSqlExprTranslator {
 
-  public final SqlExpression translate(ComparatorExpression expr,
-      CompExprToSqlExprBuilder builder) {
+  public final SqlExpression translate(ComparatorExpression expr, CompExprToSqlExprBuilder builder) {
 
-    ComparatorExpression[] children =
-      ((CompositeComparatorExpression) expr).getChildren();
+    ComparatorExpression[] children = ((CompositeComparatorExpression) expr).getChildren();
     SqlExpression[] sqlChildren = new SqlExpression[children.length];
 
     for (int i = 0; i < children.length; i++) {
@@ -38,7 +35,6 @@ public abstract class CompositeCompExprToSqlExprTranslator
     return translateParent(expr, sqlChildren);
   }
 
-  protected abstract SqlExpression translateParent(ComparatorExpression expr,
-      SqlExpression[] sqlChildren);
+  protected abstract SqlExpression translateParent(ComparatorExpression expr, SqlExpression[] sqlChildren);
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure.order;
 
@@ -22,50 +22,48 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.compexpr.VariableComparatorExpression;
 import org.araneaframework.uilib.list.OrderInfo;
 
-
 /**
  * @author Rein Raudjärv
  */
 public class SimpleFieldOrder implements FieldOrder {
 
-	private static final long serialVersionUID = 1L;
+  private String fieldId;
 
-	private String fieldId;
-	private Comparator comparator;
-	
-	public SimpleFieldOrder(String fieldId, Comparator comparator) {
-		setFieldId(fieldId);
-		setComparator(comparator);
-	}
-	
-	public SimpleFieldOrder(String fieldId) {
-		this(fieldId, null);
-	}	
-	
-	public String getFieldId() {
-		return this.fieldId;
-	}
-	
-	public void setFieldId(String id) {
-		this.fieldId = id;
-	}
-	
-	public Comparator getComparator() {
-		return comparator;
-	}
+  private Comparator<?> comparator;
 
-	public void setComparator(Comparator comparator) {
-		this.comparator = comparator;
-	}
+  public SimpleFieldOrder(String fieldId, Comparator<?> comparator) {
+    setFieldId(fieldId);
+    setComparator(comparator);
+  }
 
-	public void init(Environment env)  {}	
-	
-	public void destroy() {}
+  public SimpleFieldOrder(String fieldId) {
+    this(fieldId, null);
+  }
 
-	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
-		if (this.fieldId == null) {
-			throw new RuntimeException("Column Id must be provided"); 
-		}
-		return new VariableComparatorExpression(getFieldId(), getComparator());
-	}
+  public String getFieldId() {
+    return this.fieldId;
+  }
+
+  public void setFieldId(String id) {
+    this.fieldId = id;
+  }
+
+  public Comparator<?> getComparator() {
+    return this.comparator;
+  }
+
+  public void setComparator(Comparator<?> comparator) {
+    this.comparator = comparator;
+  }
+
+  public void init(Environment env) {}
+
+  public void destroy() {}
+
+  public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
+    if (this.fieldId == null) {
+      throw new RuntimeException("Column Id must be provided");
+    }
+    return new VariableComparatorExpression(getFieldId(), getComparator());
+  }
 }

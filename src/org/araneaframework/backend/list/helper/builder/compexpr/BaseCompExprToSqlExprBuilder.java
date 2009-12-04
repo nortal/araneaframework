@@ -25,30 +25,27 @@ import org.araneaframework.backend.list.helper.builder.CompExprToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class BaseCompExprToSqlExprBuilder implements CompExprToSqlExprBuilder {
 
-  private static final Log log = LogFactory.getLog(BaseCompExprToSqlExprBuilder.class);
+  private static final Log LOG = LogFactory.getLog(BaseCompExprToSqlExprBuilder.class);
 
-  private Map translators = new HashMap();
+  private Map<Class<?>, CompExprToSqlExprTranslator> translators = new HashMap<Class<?>, CompExprToSqlExprTranslator>();
 
-  protected void addTranslator(Class expressionClass,
-      CompExprToSqlExprTranslator translator) {
+  protected void addTranslator(Class<?> expressionClass, CompExprToSqlExprTranslator translator) {
     this.translators.put(expressionClass, translator);
   }
 
   public SqlExpression buildSqlExpression(ComparatorExpression expression) {
-    if (log.isDebugEnabled()) {
-      log.debug("ComparatorExpression class: "
-          + expression.getClass().getName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("ComparatorExpression class: " + expression.getClass().getName());
     }
-    CompExprToSqlExprTranslator translator =
-      (CompExprToSqlExprTranslator) this.translators.get(expression.getClass());
+
+    CompExprToSqlExprTranslator translator = this.translators.get(expression.getClass());
 
     if (translator == null) {
-      throw new RuntimeException("ComparatorExpression of class "
-          + expression.getClass() + " not supported");
+      throw new RuntimeException("ComparatorExpression of class " + expression.getClass() + " not supported");
     }
 
     return translator.translate(expression, this);

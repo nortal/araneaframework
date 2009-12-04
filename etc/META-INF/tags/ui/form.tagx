@@ -1,0 +1,19 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Generates the Aranea system form with HTML code that formats the form inside." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" required="true"
+		description="The ID of the form (required)." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<ui:form id="${id}">
+		<table class="form"><jsp:doBody /></table>
+	</ui:form>
+
+</jsp:root>

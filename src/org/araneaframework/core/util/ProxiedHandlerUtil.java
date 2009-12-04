@@ -16,7 +16,12 @@
 
 package org.araneaframework.core.util;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,16 +31,17 @@ import org.araneaframework.core.ProxyActionListener;
 import org.araneaframework.core.ProxyEventListener;
 
 /**
- * Utility class for accessing methods that will be invocation targets of
- * {@link ProxyEventListener} and {@link ProxyActionListener}.
+ * Utility class for accessing methods that will be invocation targets of {@link ProxyEventListener} and
+ * {@link ProxyActionListener}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.0.12
  */
 public abstract class ProxiedHandlerUtil {
 
-  private static final Log log = LogFactory.getLog(ProxiedHandlerUtil.class);
+  private static final Log LOG = LogFactory.getLog(ProxiedHandlerUtil.class);
 
+  @SuppressWarnings("unchecked")
   private static final Class[] EMTPY_CLASS_ARRAY = new Class[0];
 
   public static final String EVENT_HANDLER_PREFIX = "handleEvent";
@@ -46,234 +52,168 @@ public abstract class ProxiedHandlerUtil {
 
   public static final String DEFAULT_PARAMETER_SEPARTOR = ";";
 
-  /**
-   * Provides a method of <code>eventTarget</code> that can handle the event.
-   * If there is no such method ("handleEvent[EventId]()") then
-   * <code>null</code> will be returned.
-   * 
-   * @param eventId The event that was called. It is used to lookup the right
-   *            method.
-   * @param eventTarget The widget that is expected to handle this event by
-   *            providing a corresponding event handler.
-   * @return An existing method ("handleEvent[EventId]()") that handles the
-   *         event, or <code>null</code> if such is not found.
+  /*
+   * The general rule for constructing handler names: handlerPrefix + handlerId = handlerPrefixHandlerId.
    */
-  public static Method getEventHandler(String eventId, Object eventTarget) {
-    return getEventHandler(eventId, eventTarget, EMTPY_CLASS_ARRAY);
+  public static String getHandlerName(String handlerPrefix, String handlerId) {
+    return handlerPrefix + StringUtils.capitalize(handlerId);
   }
 
   /**
-   * Provides a method of <code>eventTarget</code> that can handle the event.
-   * If there is no such method ("handleEvent[EventId]([eventParams])") then
-   * <code>null</code> will be returned.
+   * Provides whether the <code>target</code> has the given handler method that takes no parameters.
    * 
-   * @param eventId The event that was called. It is used to lookup the right
-   *            method.
-   * @param eventTarget The widget that is expected to handle this event by
-   *            providing a corresponding event handler.
-   * @param params An array of classes corresponding to parameter types of the
-   *            method in right order.
-   * @return An existing method ("handleEvent[EventId]([eventParams])") that
-   *         handles the event, or <code>null</code> if such is not found.
+   * @param target The widget that is expected to have a handler.
+   * @param methodName The name of the method that the target should have.
+   * @return <code>true</code> when the target has the method with given name and the method takes no parameters.
    */
-  public static Method getEventHandler(String eventId, Object eventTarget, Class[] params) {
-    return getHandler(EVENT_HANDLER_PREFIX, eventId, eventTarget, params);
+  public static boolean hasEmptyHandler(Object target, String methodName) {
+    return hasHandler(target, methodName, EMTPY_CLASS_ARRAY);
   }
 
   /**
-   * Provides a method of <code>actionTarget</code> that can handle the
-   * action. If there is no such method ("handleAction[ActionId]()") then
-   * <code>null</code> will be returned.
+   * Provides whether the <code>target</code> has the given handler method that takes given parameters.
    * 
-   * @param actionId The action that was called. It is used to lookup the right
-   *            method.
-   * @param actionTarget The widget that is expected to handle this action by
-   *            providing a corresponding action handler.
-   * @return An existing method ("handleAction[ActionId]()") that handles the
-   *         action, or <code>null</code> if such is not found.
+   * @param target The widget that is expected to have a handler.
+   * @param methodName The name of the method that the target should have.
+   * @param params The classes the parameters should have in the given order.
+   * @return <code>true</code> when the target has the method with given name and the method takes no parameters.
    */
-  public static Method getActionHandler(String actionId, Object actionTarget) {
-    return getActionHandler(actionId, actionTarget, EMTPY_CLASS_ARRAY);
+  public static boolean hasHandler(Object target, String methodName, Class<?>... params) {
+    return MethodUtils.getAccessibleMethod(target.getClass(), methodName, params) != null;
   }
 
   /**
-   * Provides a method of <code>actionTarget</code> that can handle the event.
-   * If there is no such method ("actionTarget[ActionId]([actionParams])") then
-   * <code>null</code> will be returned.
+   * Invokes the method of <code>eventTarget</code> that can handle the event <code>eventId</code>. The method that will
+   * be invoked, will also be logged at DEBUG level. In case when no event handler is found, it will log it at WARN
+   * level.
+   * <p>
+   * This method tries to invoke even handlers in the given order (the method quits after a method has been found and
+   * invoked):
+   * <ol>
+   * <li>eventTarget.handleEvent[EventId]()</li>
+   * <li>eventTarget.handleEvent[EventId](String) (<code>eventParam</code>)</li>
+   * <li>eventTarget.handleEvent[EventId](String[]) (<code>eventParam</code> split into an array at every ';' symbol)</li>
+   * <li>eventTarget.handleEvent[EventId](List<String>) (<code>eventParam</code> split into a list at every ';' symbol)</li>
+   * <li>eventTarget.handleEvent[EventId](Map<String, String>) (<code>eventParam</code> split into entries at every ';'
+   * symbol and into key and value at the first '=' symbol in every entry)</li>
+   * </ol>
    * 
-   * @param actionId The action that was called. It is used to lookup the right
-   *            method.
-   * @param actionTarget The widget that is expected to handle this action by
-   *            providing a corresponding action handler.
-   * @param params An array of classes corresponding to parameter types of the
-   *            method in right order.
-   * @return An existing method ("handleAction[ActionId]([actionParams])") that
-   *         handles the action, or <code>null</code> if such is not found.
+   * @param eventId The event that should be called. It is used to look up the right method.
+   * @param eventParam An optional parameter to be provided to the handler.
+   * @param eventTarget The widget that is expected to handle this event by providing a corresponding event handler.
+   * @throws Exception Any unexpected exception that may occur (e.g. while invoking the method).
    */
-  public static Method getActionHandler(String actionId, Object actionTarget, Class[] params) {
-    return getHandler(ACTION_HANDLER_PREFIX, actionId, actionTarget, params);
+  public static void invokeEventHandler(String eventId, String eventParam, Widget eventTarget) throws Exception {
+    invokeHandler(EVENT_HANDLER_PREFIX, eventId, eventParam, eventTarget);
   }
 
-  private static Method getHandler(String handlerPrefix, String eventId,
-      Object eventTarget, Class[] params) {
+  /**
+   * Invokes the method of <code>actionTarget</code> that can handle the action <code>actionId</code>. The method, that
+   * will be invoked, will also be logged at DEBUG level. In case when no action handler is found, it will log it at
+   * WARN level.
+   * <p>
+   * The following algorithm explains its work:
+   * <ol>
+   * <li>look for a method: actionTarget.handleAction[ActionId](); if found, invoke it, and quit this method.</li>
+   * <li>look for a method: actionTarget.handleAction[ActionId](String); if found, invoke it with
+   * <code>actionParam</code>, and quit this method.</li>
+   * <li>look for a method: actionTarget.handleAction[ActionId](String[]); if found, split <code>actionParam</code> into
+   * array at every ';' symbol, invoke it with created array as its parameter, and quit this method.</li>
+   * </ol>
+   * 
+   * @param actionId The action that should be called. It is used to look up the right method.
+   * @param actionParam An optional parameter to be provided to the handler.
+   * @param actionTarget The widget that is expected to handle this action by providing a corresponding action handler.
+   * @throws Exception Any unexpected exception that may occur (e.g. while invoking the method).
+   */
+  public static void invokeActionHandler(String actionId, String actionParam, Widget actionTarget) throws Exception {
+    invokeHandler(ACTION_HANDLER_PREFIX, actionId, actionParam, actionTarget);
+  }
 
-    String eventHandlerName = handlerPrefix + eventId.substring(0, 1).toUpperCase() + eventId.substring(1);
-    Method result = null;
+  private static void invokeHandler(String handlerPrefix, String handlerId, String param, Widget eventTarget) throws Exception {
+    String handlerName = getHandlerName(handlerPrefix, handlerId);
+    String className = eventTarget.getClass().getName();
 
-    try {
-      result = eventTarget.getClass().getDeclaredMethod(eventHandlerName, params);
-    } catch (NoSuchMethodException e) {
-      try {
-        result = eventTarget.getClass().getMethod(eventHandlerName, params);
-      } catch (NoSuchMethodException nsme) {
-        /* OK */
-      }
+    // First, let's try to find a handle method with an empty argument:
+    if (hasEmptyHandler(eventTarget, handlerName)) {
+      log(handlerName, "", className);
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, null);
+
+    } else if (hasHandler(eventTarget, handlerName, String.class)) {
+      log(handlerName, "String", className);
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, param);
+
+    } else if (hasHandler(eventTarget, handlerName, String[].class)) {
+      log(handlerName, "String[]", className);
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, splitParam(eventTarget, param));
+
+    } else if (hasHandler(eventTarget, handlerName, List.class)) {
+      log(handlerName, "List<String>", className);
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, parseParamList(eventTarget, param));
+
+    } else if (hasHandler(eventTarget, handlerName, Map.class)) {
+      log(handlerName, "Map<String, String>", className);
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, parseParamMap(eventTarget, param));
+
+    } else if (LOG.isWarnEnabled()) {
+      logHandlerNotFound(handlerPrefix, handlerId, eventTarget);
     }
+  }
 
-    if (result != null && !result.isAccessible()) {
-      result.setAccessible(true);
+  // Logs the calling of a handler method.
+  public static void log(String handlerName, String param, String className) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Calling method '" + handlerName + "(" + param + ")' of class '" + className + "'.");
+    }
+  }
+
+  // This method is null-safe.
+  public static String[] splitParam(Widget target, String param) {
+    return StringUtils.split(param, getParameterSeparator(target, param));
+  }
+
+  // Parses the parameter to make a list out of it. The list items are the same as array items from #splitParam(String).
+  public static List<String> parseParamList(Widget target, String param) {
+    return new ArrayList<String>(Arrays.asList(splitParam(target, param)));
+  }
+
+  private static String getParameterSeparator(Widget target, String param) {
+    String result = DEFAULT_PARAMETER_SEPARTOR;
+
+    if (param != null) {
+      try {
+        MethodUtils.invokeExactMethod(target.getClass(), PARAMETER_SEPARTOR_RESOLVER, param);
+      } catch (NoSuchMethodException e) {
+        LOG.debug("The action/event target does not have the '" + PARAMETER_SEPARTOR_RESOLVER + "' method.");
+      } catch (Exception e) {
+        LOG.warn("Unexpected exception while resolving parameter separator.", e);
+      }
     }
 
     return result;
   }
 
-  /**
-   * Invokes the method of <code>eventTarget</code> that can handle the event
-   * <code>eventId</code>. The method that will be invoked, will also be
-   * logged at DEBUG level. In case when no event handler is found, it will log
-   * it at WARN level.
-   * <p>
-   * The following algorithm explains its work:
-   * <ol>
-   * <li>look for a method: eventTarget.handleEvent[EventId](); if found,
-   * invoke it, and quit this method.</li>
-   * <li>look for a method: eventTarget.handleEvent[EventId](String); if found,
-   * invoke it with <code>eventParam</code>, and quit this method.</li>
-   * <li>look for a method: eventTarget.handleEvent[EventId](String[]); if
-   * found, split <code>eventParam</code> into array at every ';' symbol,
-   * invoke it with created array as its parameter, and quit this method.</li>
-   * </ol>
-   * 
-   * @param eventId The event that should be called. It is used to look up the
-   *            right method.
-   * @param eventParam An optional parameter to be provided to the handler.
-   * @param eventTarget The widget that is expected to handle this event by
-   *            providing a corresponding event handler.
-   * @throws Exception Any unexpected exception that may occur (e.g. while
-   *             invoking the method).
-   */
-  public static void invokeEventHandler(String eventId, String eventParam, Widget eventTarget)
-      throws Exception {
-    invoke(true, eventId, eventParam, eventTarget);
-  }
-
-  /**
-   * Invokes the method of <code>actionTarget</code> that can handle the
-   * action <code>actionId</code>. The method, that will be invoked, will
-   * also be logged at DEBUG level. In case when no action handler is found, it
-   * will log it at WARN level.
-   * <p>
-   * The following algorithm explains its work:
-   * <ol>
-   * <li>look for a method: actionTarget.handleAction[ActionId](); if found,
-   * invoke it, and quit this method.</li>
-   * <li>look for a method: actionTarget.handleAction[ActionId](String); if
-   * found, invoke it with <code>actionParam</code>, and quit this method.</li>
-   * <li>look for a method: actionTarget.handleAction[ActionId](String[]); if
-   * found, split <code>actionParam</code> into array at every ';' symbol,
-   * invoke it with created array as its parameter, and quit this method.</li>
-   * </ol>
-   * 
-   * @param actionId The action that should be called. It is used to look up the
-   *            right method.
-   * @param actionParam An optional parameter to be provided to the handler.
-   * @param actionTarget The widget that is expected to handle this action by
-   *            providing a corresponding action handler.
-   * @throws Exception Any unexpected exception that may occur (e.g. while
-   *             invoking the method).
-   */
-  public static void invokeActionHandler(String actionId, String actionParam, Widget actionTarget)
-      throws Exception {
-    invoke(false, actionId, actionParam, actionTarget);
-  }
-
-  private static void invoke(boolean event, String id, String param, Widget target) throws Exception {
-    // lets try to find a handle method with an empty argument
-    if (invoke(event, target, id, param, null)) {
-      return;
-    }
-
-    // lets try to find a method with a String type argument
-    if (invoke(event, target, id, param, String.class)) {
-      return;
-    }
-
-    // lets try to find a method with a String[] type argument
-    if (invoke(event, target, id, param, String[].class)) {
-      return;
-    }
-
-    if (log.isWarnEnabled()) {
-      StringBuffer msg = new StringBuffer("Proxy");
-      msg.append(event ? "Event" : "Action");
-      msg.append("Listener");
-      if (target != null) {
-        msg.append(" '" + target.getScope() + "'");
+  // Parses the parameter to make a map out of it. Map rows are parsed as in #splitParam(String). For each row, the row
+  // is splitted at first "=" symbol (the first part is key, the other is value), while empty Strings are replaced with
+  // nulls.
+  public static Map<String, String> parseParamMap(Widget target, String param) {
+    Map<String, String> handlerParam = new HashMap<String, String>();
+    for (String entry : splitParam(target, param)) {
+      if (!StringUtils.isEmpty(entry)) {
+        String key = StringUtils.defaultIfEmpty(StringUtils.substringBefore(entry, "="), null);
+        String value = StringUtils.defaultIfEmpty(StringUtils.substringAfter(entry, "="), null);
+        handlerParam.put(key, value);
       }
-      msg.append(" cannot deliver ");
-      msg.append(event ? "event" : "action");
-      msg.append(" as no listeners were registered for the id '");
-      msg.append(id);
-      msg.append("'!");
-      msg.append(Assert.thisToString(target));
-      log.warn(msg);
     }
+    return handlerParam;
   }
 
-  private static boolean invoke(boolean event, Widget target, String id, String param, Class paramType) throws Exception {
-    Class[] paramTypes = paramType == null ? EMTPY_CLASS_ARRAY : new Class[] { paramType };
-    Method handler = event ? getEventHandler(id, target, paramTypes) : getActionHandler(id, target, paramTypes);
-
-    if (handler == null) {
-      return false;
-    }
-
-    if (log.isDebugEnabled()) {
-      log.debug("Calling method '" + handler.getName() + "(" + paramType + ")' of class '"
-          + target.getClass().getName() + "'.");
-    }
-
-    Object[] params = new Object[0];
-    if (String.class == paramType) {
-      params = new Object[] { param };
-    } else if (String[].class == paramType) {
-      params = new Object[] { StringUtils.split(param, getParameterSeparator(target, param)) };
-    }
-
-    handler.invoke(target, params);
-    return true;
-  }
-
-  private static String getParameterSeparator(Widget target, String param) {
-    String result = null;
-
-    try {
-      Method resolver = target.getClass().getDeclaredMethod(PARAMETER_SEPARTOR_RESOLVER,
-          new Class[] { String.class });
-
-      if (String.class.equals(resolver.getReturnType())) {
-        if (!resolver.isAccessible()) {
-          resolver.setAccessible(true);
-        }
-        result = (String) resolver.invoke(target, new Object[] { param });
-      }
-
-    } catch (NoSuchMethodException e) {
-      log.debug("The action/event target does not have the '" + PARAMETER_SEPARTOR_RESOLVER + "' method.");
-    } catch (Exception e) {
-      log.warn("Unexpected exception while resolving parameter separator.", e);
-    }
-
-    return result != null ? result : DEFAULT_PARAMETER_SEPARTOR;
+  public static void logHandlerNotFound(String prefix, String handlerId, Widget target) {
+    String type = prefix.equals(EVENT_HANDLER_PREFIX) ? "event" : "action";
+    StringBuffer msg = new StringBuffer("Widget '").append(target.getScope());
+    msg.append("' cannot deliver ").append(type).append(" as no ").append(type);
+    msg.append(" listeners were registered for the ").append(type).append("Id '").append(handlerId).append("'!");
+    msg.append(Assert.thisToString(target));
+    LOG.warn(msg.toString());
   }
 }

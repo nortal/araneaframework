@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -27,28 +26,25 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.core.Assert;
 
 /**
- * Provides the IN expression for filtering data in memory-based lists. It
- * verifies that the value of the field is one of provided ones (case-sensitive
- * equal).
+ * Provides the IN expression for filtering data in memory-based lists. It verifies that the value of the field is one
+ * of provided ones (case-sensitive equal).
  * 
  * @author Allar Tammik
  * @since 1.1.4
  */
 public class InExpression extends MultiExpression {
 
-  private static final long serialVersionUID = 1L;
-
   /**
    * The field value expression.
    */
   protected Expression expr1;
 
-  public InExpression(Expression expr1, List exprs) {
+  public InExpression(Expression expr1, List<Expression> exprs) {
     Assert.notNull(expr1, "Operands must be provided.");
     Assert.notNull(exprs, "Operands must be provided.");
 
-    for (Iterator it = exprs.iterator(); it.hasNext();) {
-      Assert.notNullParam(this, it.next(), "expr");
+    for (Expression expression : exprs) {
+      Assert.notNullParam(this, expression, "expr");
     }
 
     this.expr1 = expr1;
@@ -56,36 +52,32 @@ public class InExpression extends MultiExpression {
   }
 
   // [expr1, exprs[0], exprs[1], ..., exprs[n]]
+  @Override
   public Expression[] getChildren() {
-    if (!children.isEmpty()) {
-      List result = new ArrayList(children);
-      result.add(0, expr1);
-      return (Expression[]) result.toArray(new Expression[result.size()]);
+    if (!this.children.isEmpty()) {
+      List<Expression> result = new ArrayList<Expression>(this.children);
+      result.add(0, this.expr1);
+      return result.toArray(new Expression[result.size()]);
     }
-    return new Expression[] { expr1 };
+    return new Expression[] { this.expr1 };
   }
 
   /**
-   * Evaluates by verifying that the field value is one of the values in the
-   * array.
+   * Evaluates by verifying that the field value is one of the values in the array.
    */
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-
-    if (this.children.size() == 0) {
-      return Boolean.TRUE;
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
+    if (this.children.isEmpty()) {
+      return true;
     }
 
     Object fieldValue = this.expr1.evaluate(resolver);
 
-    for (Iterator i = this.children.iterator(); i.hasNext();) {
-      Expression expr = (Expression) i.next();
-      Object userSelectedValue = expr.evaluate(resolver);
+    for (Expression expression : this.children) {
+      Object userSelectedValue = expression.evaluate(resolver);
       if (new EqualsBuilder().append(fieldValue, userSelectedValue).isEquals()) {
-        return Boolean.TRUE;
+        return true;
       }
     }
-
-    return Boolean.FALSE;
+    return false;
   }
 }

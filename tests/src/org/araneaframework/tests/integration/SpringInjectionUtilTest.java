@@ -60,7 +60,8 @@ public class SpringInjectionUtilTest extends TestCase {
 	}
 	
 	private class MockBeanFactory extends org.araneaframework.tests.framework.bean.MockBeanFactory{
-		  public boolean containsBean(String arg0) {
+		  @Override
+      public boolean containsBean(String arg0) {
 			    return true;
 		  }
 	}

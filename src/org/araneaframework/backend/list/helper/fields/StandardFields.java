@@ -16,6 +16,8 @@
 
 package org.araneaframework.backend.list.helper.fields;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +32,7 @@ import org.araneaframework.uilib.util.NameUtil;
 /**
  * List of fields standard implementation.
  * <p>
- * All the fields are presented both in the <code>SELECT</code> and in the
- * {@link ResultSet}.
+ * All the fields are presented both in the <code>SELECT</code> and in the {@link ResultSet}.
  * </p>
  * <p>
  * Fields can be added/removed either:
@@ -42,8 +43,8 @@ import org.araneaframework.uilib.util.NameUtil;
  * <li>using a Bean Class (all fields are listed using reflection)</li>
  * </ul>
  * <p>
- * For each add/remove call a <b>prefix</b >can be set. Prefix should refer to
- * a composite field in a Bean (containing another Bean).
+ * For each add/remove call a <b>prefix</b >can be set. Prefix should refer to a composite field in a Bean (containing
+ * another Bean).
  * </p>
  * <p>
  * Example use:
@@ -51,12 +52,12 @@ import org.araneaframework.uilib.util.NameUtil;
  * <pre>
  * ListSqlHelper helper = ...
  * StandardFields sf = helper.getStandardFields();
- * sf.addField(&quot;name&quot;);				// add &quot;name&quot;
- * sf.addField(&quot;birthdate&quot;);				// add &quot;birthdate&quot;
- * sf.addField(&quot;address&quot;, &quot;town&quot;);			// add &quot;address.town&quot;
- * sf.addField(&quot;address&quot;, &quot;zip&quot;);			// add &quot;address.zip&quot;
- * sf.addField(&quot;org&quot;, Organization.class);		// add all fields of Organization.class as sub-fields
- * Modifier.addListFields(sf.subFields(&quot;modifier&quot;));	// let Mofifier.class add it's common fields
+ * sf.addField(&quot;name&quot;); // add &quot;name&quot;
+ * sf.addField(&quot;birthdate&quot;); // add &quot;birthdate&quot;
+ * sf.addField(&quot;address&quot;, &quot;town&quot;); // add &quot;address.town&quot;
+ * sf.addField(&quot;address&quot;, &quot;zip&quot;); // add &quot;address.zip&quot;
+ * sf.addField(&quot;org&quot;, Organization.class); // add all fields of Organization.class as sub-fields
+ * Modifier.addListFields(sf.subFields(&quot;modifier&quot;)); // let Mofifier.class add it's common fields
  * </pre>
  * 
  * @see Fields
@@ -74,13 +75,12 @@ public class StandardFields implements Fields {
    * Create an instance of {@link StandardFields} using an empty set of fields.
    */
   public StandardFields() {
-    fields = new ArrayList<String>();
+    this.fields = new ArrayList<String>();
   }
 
   /**
-   * Create an instance of {@link StandardFields} extending the set of fields of
-   * another {@link StandardFields} instance and using the
-   * <code>globalPrefix</code> to all the fields added.
+   * Create an instance of {@link StandardFields} extending the set of fields of another {@link StandardFields} instance
+   * and using the <code>globalPrefix</code> to all the fields added.
    */
   public StandardFields(StandardFields parent, String globalPrefix) {
     this.fields = parent.fields;
@@ -88,40 +88,35 @@ public class StandardFields implements Fields {
   }
 
   /**
-   * Create an instance of {@link StandardFields} using the specified set of
-   * fields..
+   * Create an instance of {@link StandardFields} using the specified set of fields..
    */
   public StandardFields(Collection<String> fields) {
     this.fields = fields;
   }
 
   /**
-   * Create an instance of {@link StandardFields} using the set of fields
-   * defined by the {@link ListStructure}.
+   * Create an instance of {@link StandardFields} using the set of fields defined by the {@link ListStructure}.
    */
   public StandardFields(ListStructure structure) {
-    this();
     addFields(structure);
   }
 
   /**
-   * Create an instance of {@link StandardFields} extending the set of fields of
-   * another {@link StandardFields} instance and using the
-   * <code>globalPrefix</code> to all the fields added.
+   * Create an instance of {@link StandardFields} extending the set of fields of another {@link StandardFields} instance
+   * and using the <code>globalPrefix</code> to all the fields added.
    */
   public StandardFields subFields(String globalPrefix) {
     Assert.notNullParam(globalPrefix, "globalPrefix");
-    return new StandardFields(this, NameUtil.getFullName(this.globalPrefix,
-        globalPrefix));
+    return new StandardFields(this, NameUtil.getFullName(this.globalPrefix, globalPrefix));
   }
 
   public StandardFields addField(String prefix, String field) {
-    fields.add(addPrefix(prefix, field));
+    this.fields.add(addPrefix(prefix, field));
     return this;
   }
 
   public StandardFields removeField(String prefix, String field) {
-    fields.remove(addPrefix(prefix, field));
+    this.fields.remove(addPrefix(prefix, field));
     return this;
   }
 
@@ -173,40 +168,37 @@ public class StandardFields implements Fields {
     return removeFields(null, fields);
   }
 
-  public StandardFields addFields(Class beanClass) {
+  public StandardFields addFields(Class<?> beanClass) {
     return addFields(null, beanClass);
   }
 
-  public StandardFields removeFields(Class beanClass) {
+  public StandardFields removeFields(Class<?> beanClass) {
     return removeFields(null, beanClass);
   }
 
-  public StandardFields addFields(String prefix, Class beanClass) {
-    return addFields(prefix, BeanUtil.getFields(beanClass));
+  public StandardFields addFields(String prefix, Class<?> beanClass) {
+    return addFields(prefix, BeanUtil.getProperties(beanClass));
   }
 
-  public StandardFields removeFields(String prefix, Class beanClass) {
-    return removeFields(prefix, BeanUtil.getFields(beanClass));
+  public StandardFields removeFields(String prefix, Class<?> beanClass) {
+    return removeFields(prefix, BeanUtil.getProperties(beanClass));
   }
 
   public Collection<String> getNames() {
-    return fields;
+    return this.fields;
   }
 
   public Collection<String> getResultSetNames() {
-    return fields;
+    return this.fields;
   }
-
-  // ---
 
   private String addPrefix(String prefix, String field) {
     String result = NameUtil.getFullName(prefix, field);
-    return globalPrefix == null ? result : NameUtil.getFullName(globalPrefix,
-        result);
+    return this.globalPrefix == null ? result : NameUtil.getFullName(this.globalPrefix, result);
   }
 
   private Collection<String> addPrefix(String prefix, Collection<String> fields) {
-    if (prefix == null || prefix.length() == 0) {
+    if (StringUtils.isEmpty(prefix)) {
       return fields;
     }
     List<String> result = new ArrayList<String>(fields.size());

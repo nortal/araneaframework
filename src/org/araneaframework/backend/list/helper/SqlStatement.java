@@ -24,11 +24,9 @@ import java.util.List;
 import org.araneaframework.core.Assert;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class SqlStatement implements Serializable, Cloneable {
-
-  private static final long serialVersionUID = 1L;
 
   protected String query;
 
@@ -52,8 +50,7 @@ public class SqlStatement implements Serializable, Cloneable {
   }
 
   public void setParams(List<Object> params) {
-    Assert.notNull(params,
-        "Parameters list can not be NULL, use an empty list instead");
+    Assert.notNull(params, "Parameters list can not be NULL, use an empty list instead");
     this.parameters = params;
   }
 
@@ -145,8 +142,7 @@ public class SqlStatement implements Serializable, Cloneable {
   }
 
   /**
-   * Constructs a new <code>SqlStatement</code> with the same
-   * <code>Query</code> and <code>Parameters</code>.
+   * Constructs a new <code>SqlStatement</code> with the same <code>Query</code> and <code>Parameters</code>.
    * 
    * @see java.lang.Object#clone()
    */
@@ -157,8 +153,7 @@ public class SqlStatement implements Serializable, Cloneable {
       clone = (SqlStatement) super.clone();
       clone.query = this.query;
       clone.parameters = this.parameters;
-    } catch (CloneNotSupportedException e) {
-    }
+    } catch (CloneNotSupportedException e) {}
     return clone;
   }
 
@@ -166,23 +161,19 @@ public class SqlStatement implements Serializable, Cloneable {
   // * PREPARED STATEMENT PROPAGATION
   // *********************************************************************
   /**
-   * Helper method that sets the parameters to the
-   * <code>PreparedStatement</code>.
+   * Helper method that sets the parameters to the <code>PreparedStatement</code>.
    * 
    * @param pstmt <code>PreparedStatement</code> which parameters will be set.
    * @throws SQLException
    */
-  protected void propagateStatementWithParams(PreparedStatement pstmt)
-      throws SQLException {
+  protected void propagateStatementWithParams(PreparedStatement pstmt) throws SQLException {
     for (int i = 1; i <= this.parameters.size(); i++) {
       Object parameter = this.parameters.get(i - 1);
       if (parameter instanceof NullValue) {
         pstmt.setNull(i, ((NullValue) parameter).getType());
       } else {
-        // converting java.util.Date into java.sql.Date (java.sql.Timestamp is
-        // not changed)
-        if (parameter != null
-            && parameter.getClass().equals(java.util.Date.class)) {
+        // converting java.util.Date into java.sql.Date (java.sql.Timestamp is not changed)
+        if (parameter != null && parameter.getClass().equals(java.util.Date.class)) {
           parameter = new java.sql.Date(((java.util.Date) parameter).getTime());
         }
         pstmt.setObject(i, parameter);

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,74 +12,71 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
 
-
 /**
- * This converter uses a contained converter to convert individual <code>List</code>
- * items thus converting the entire <code>List</code>.
+ * This converter uses a contained converter to convert individual <code>List</code> items thus converting the entire
+ * <code>List</code>.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class ListConverter extends BaseConverter {
+public class ListConverter<C, D> extends BaseConverter<List<C>, List<D>> {
 
-  protected Converter listItemConverter;
+  protected Converter<C, D> listItemConverter;
 
   /**
-	 * Creates the converter initializing the contained converter.
-	 * 
-	 * @param listItemConverter the contained converter.
-	 */
-  public ListConverter(Converter listItemConverter) {
+   * Creates the converter initializing the contained converter.
+   * 
+   * @param listItemConverter the contained converter.
+   */
+  public ListConverter(Converter<C, D> listItemConverter) {
     this.listItemConverter = listItemConverter;
   }
 
   /**
-	 *  Converts the <code>List</code> using contained converter.
-	 */
-  public Object convertNotNull(Object data) {
-    List result = new ArrayList();
-
-    for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
-      result.add(listItemConverter.convert(i.next()));
+   * Converts the <code>List</code> using contained converter.
+   */
+  @Override
+  public List<D> convertNotNull(List<C> data) {
+    List<D> result = new ArrayList<D>();
+    for (C item : data) {
+      result.add(this.listItemConverter.convert(item));
     }
-
     return result;
   }
 
   /**
-	 *  Converts the <code>List</code> back using contained converter.
-	 */
-  public Object reverseConvertNotNull(Object data) {
-    List result = new ArrayList();
-
-    for (Iterator i = ((Collection) data).iterator(); i.hasNext();) {
-      result.add(listItemConverter.reverseConvert(i.next()));
-	  }
+   * Converts the <code>List</code> back using contained converter.
+   */
+  @Override
+  public List<C> reverseConvertNotNull(List<D> data) {
+    List<C> result = new ArrayList<C>();
+    for (D item : data) {
+      result.add(this.listItemConverter.reverseConvert(item));
+    }
     return result;
   }
 
-  public void setFormElementCtx(FormElementContext feCtx) {
+  @Override
+  public void setFormElementCtx(FormElementContext<List<C>, List<D>> feCtx) {
     super.setFormElementCtx(feCtx);
-    
-    listItemConverter.setFormElementCtx(feCtx);
+//TODO    this.listItemConverter.setFormElementCtx(feCtx);
   }
 
   /**
-	 *  Returns a <code>new ListConverter(listItemConverter)</code>.
-	 */
-  public Converter newConverter() {
-    return new ListConverter(listItemConverter.newConverter());
+   * Returns a <code>new ListConverter(listItemConverter)</code>.
+   */
+  @Override
+  public Converter<List<C>, List<D>> newConverter() {
+    return new ListConverter<C, D>(this.listItemConverter.newConverter());
   }
 
 }

@@ -16,22 +16,36 @@
 
 package org.araneaframework.uilib.form.formlist.model;
 
-import java.util.ArrayList;
+import org.araneaframework.core.Assert;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.araneaframework.uilib.form.formlist.FormListModel;
+import org.araneaframework.uilib.form.formlist.FormListWidget;
 
-public class MapFormListModel implements FormListModel {
+/**
+ * A <code>FormListModel</code> implementation that accepts list rows data as {@link Map} (the values of the map are
+ * retrieved and returned in {@link #getRows()}). This object can be provided to {@link FormListWidget} to provide the
+ * model data to the list as the list rows.
+ * 
+ * @author Martti Tamm (martti@araneaframework.org)
+ */
+public class MapFormListModel<R> implements FormListModel<R> {
 
-  private static final long serialVersionUID = 1L;
+  private Map<?, R> map;
 
-  private Map map;
-
-  public MapFormListModel(Map map) {
+  /**
+   * Constructs a new <code>FormListModel</code> using the given <code>map</code>. Note that the parameter is required.
+   * 
+   * @param map The values of this map will be used as the rows of the {@link FormListWidget}.
+   */
+  public MapFormListModel(Map<?, R> map) {
+    Assert.notNullParam(map, "map");
     this.map = map;
   }
 
-  public List getRows() {
-    return new ArrayList(map.values());
+  public List<R> getRows() {
+    return new LinkedList<R>(this.map.values());
   }
 }

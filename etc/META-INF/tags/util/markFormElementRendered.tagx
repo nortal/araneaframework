@@ -1,0 +1,10 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty"
+		description="Marks a field rendered. This tag must be used inside a form element context."/>
+
+	${ui:markFormElementRendered(pageContext)}
+
+</jsp:root>

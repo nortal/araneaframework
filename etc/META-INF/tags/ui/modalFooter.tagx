@@ -1,0 +1,8 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag
+		description="A wrapper for modal mode popup footer content." />
+
+	<div class="modalpopup-footer"><p class="action"><jsp:doBody /></p></div>
+
+</jsp:root>

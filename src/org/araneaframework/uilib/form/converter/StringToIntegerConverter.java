@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -20,29 +20,26 @@ import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
-
 /**
  * Converts <code>String</code> to <code>Integer</code> and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class StringToIntegerConverter extends BaseConverter {
+public class StringToIntegerConverter extends BaseConverter<String, Integer> {
 
   /**
    * Converts <code>String</code> to <code>Integer</code>.
    */
-  public Object convertNotNull(Object data) {
-    Object result = null;
+  @Override
+  public Integer convertNotNull(String data) {
+    Integer result = null;
     try {
-      result = new Integer((String) data);
-    }
-    catch (NumberFormatException e) {
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.NOT_A_NUMBER, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          getEnvironment()));      
+      result = new Integer(data);
+    } catch (NumberFormatException e) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(),
+          UiLibMessages.NOT_A_NUMBER,
+          MessageUtil.localize(getLabel(), getEnvironment())));
     }
     return result;
   }
@@ -50,14 +47,16 @@ public class StringToIntegerConverter extends BaseConverter {
   /**
    * Converts <code>Integer</code> to <code>String</code>.
    */
-  public Object reverseConvertNotNull(Object data) {
+  @Override
+  public String reverseConvertNotNull(Integer data) {
     return data.toString();
   }
 
   /**
    * Returns <code>new StringToIntegerConverter()</code>
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<String, Integer> newConverter() {
     return new StringToIntegerConverter();
   }
 }

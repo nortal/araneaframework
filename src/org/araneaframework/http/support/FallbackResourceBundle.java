@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.support;
 
@@ -26,73 +26,80 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * ResourceBundle that which {@link FallbackResourceBundle#handleGetObject(String)} searches
- * for <code>key</code> from all added <code>ResourceBundles</code>.
+ * ResourceBundle that which {@link FallbackResourceBundle#handleGetObject(String)} searches for <code>key</code> from
+ * all added <code>ResourceBundles</code>.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FallbackResourceBundle extends ResourceBundle implements Serializable {
+
   protected Locale locale;
-  protected List resourceBundles = new ArrayList();
-  
+
+  protected List<ResourceBundle> resourceBundles = new ArrayList<ResourceBundle>();
+
   /**
    * Adds a <code>ResourceBundle</code> from which resources are searched.
+   * 
    * @param resourceBundle
    */
   public void addResourceBundle(ResourceBundle resourceBundle) {
-    resourceBundles.add(resourceBundle);
-    
-    if (resourceBundle instanceof LocaleAwareResourceBundle) 
-      ((LocaleAwareResourceBundle) resourceBundle).setLocale(locale);
+    this.resourceBundles.add(resourceBundle);
+
+    if (resourceBundle instanceof LocaleAwareResourceBundle) {
+      ((LocaleAwareResourceBundle) resourceBundle).setLocale(this.locale);
+    }
   }
-  
+
   public void clearResourceBundles() {
-    resourceBundles.clear();
+    this.resourceBundles.clear();
   }
-  
-  public Enumeration getKeys() {
+
+  @Override
+  public Enumeration<String> getKeys() {
     return null;
   }
 
-  /** 
-   * Returns the resource under the <code>key</code>. Resource is searched
-   * among all <code>ResourceBundles</code> this {@link FallbackResourceBundle}
-   * knows about, in same order as <code>ResourceBundles</code> were added.
+  /**
+   * Returns the resource under the <code>key</code>. Resource is searched among all <code>ResourceBundles</code> this
+   * {@link FallbackResourceBundle} knows about, in same order as <code>ResourceBundles</code> were added.
    * 
    * @return the resource under the <code>key</code>
    */
+  @Override
   protected Object handleGetObject(String key) {
-    if (locale == null)
+    if (this.locale == null) {
       setLocale(getLocale());
-    
-    Object result = null;
-    
-    for (Iterator i = resourceBundles.iterator(); i.hasNext() && result == null; ) {      
-      try {
-        ResourceBundle currentBundle = (ResourceBundle) i.next(); 
-        result = currentBundle.getObject(key);
-      }
-      catch (MissingResourceException e) {
-        //Totally normal result
-      }      
     }
-    
+
+    Object result = null;
+
+    for (Iterator<ResourceBundle> i = this.resourceBundles.iterator(); i.hasNext() && result == null;) {
+      try {
+        ResourceBundle currentBundle = i.next();
+        result = currentBundle.getObject(key);
+      } catch (MissingResourceException e) {
+        // Totally normal result
+      }
+    }
+
     return result;
   }
 
   public void setLocale(Locale locale) {
     this.locale = locale;
-    
-    for (Iterator i = resourceBundles.iterator(); i.hasNext(); ) {      
-      ResourceBundle currentBundle = (ResourceBundle) i.next();
-      if (currentBundle instanceof LocaleAwareResourceBundle) 
+
+    for (ResourceBundle currentBundle : this.resourceBundles) {
+      if (currentBundle instanceof LocaleAwareResourceBundle) {
         ((LocaleAwareResourceBundle) currentBundle).setLocale(locale);
-    }      
+      }
+    }
   }
-  
+
+  @Override
   public Locale getLocale() {
-    if (locale != null)
-        return locale;
+    if (this.locale != null) {
+      return this.locale;
+    }
     return super.getLocale();
   }
 

@@ -25,8 +25,6 @@ import org.araneaframework.Message;
  */
 public class SeriesMessage implements Message {
 
-  private static final long serialVersionUID = 1L;
-
   private Message[] series;
 
   /**

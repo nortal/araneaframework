@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.basic;
 
@@ -27,26 +27,27 @@ import org.araneaframework.jsp.util.JspUtil;
  * @since 1.1
  * 
  * @jsp.tag
- *   name = "registerOverlay"
- *   body-content = "empty"
- *   description = "TODO"
+ *  name = "registerOverlay"
+ *  body-content = "empty"
+ *  description = "Writes script to render overlay client-side, when needed."
  */
 public class OverlayRegistrationHtmlTag extends BaseTag {
+
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     OverlayContext overlayCtx = getEnvironment().requireEntry(OverlayContext.class);
 
     if (overlayCtx.isOverlayActive()) {
       JspUtil.writeOpenStartTag(out, "script");
       JspUtil.writeAttribute(out, "type", "text/javascript");
-      JspUtil.writeCloseStartTag(out);
-      out.write("Aranea.ModalBox.Options = " + getOverlayOptions(overlayCtx) + ";");
-      out.write("_ap.addClientLoadEvent(function() { Aranea.ModalBox.show(Aranea.ModalBox.Options);});\n");
+      JspUtil.writeCloseStartTag_SS(out);
+      out.write("document.observe('aranea:loaded', Aranea.ModalBox.show.curry(" + getOverlayOptions(overlayCtx) + "));");
       JspUtil.writeEndTag(out, "script");
     }
 
     return super.doEndTag(out);
   }
-  
+
   protected JsonObject getOverlayOptions(OverlayContext overlayContext) {
     return new JsonObject(overlayContext.getOverlayOptions());
   }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.integration.spring;
 
@@ -22,21 +22,24 @@ import org.araneaframework.core.ServiceFactory;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
- * A simple factory to be used in the xml configuration files for creating services with
- * factories. By setting a bean id via <code>setBeanId(String)</code> it is possible to 
- * construct a bean with factory found in Environment under key <code>beanFactoryClass</code>.
+ * A simple factory to be used in the XML configuration files for creating services with factories. By setting a bean id
+ * via <code>setBeanId(String)</code> it is possible to construct a bean with factory found in Environment under key
+ * <code>beanFactoryClass</code>.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class SpringServiceFactory implements ServiceFactory {
-  protected Class beanFactoryClass = BeanFactory.class;
+
+  protected Class<? extends BeanFactory> beanFactoryClass = BeanFactory.class;
+
   protected String beanId;
 
   /**
    * Set the class under which BeanFactory resides in the Environment.
+   * 
    * @param beanFactoryClass the class under which BeanFactory resides in the Environment.
    */
-  public void setBeanFactoryClass(Class beanFactoryClass) {
+  public void setBeanFactoryClass(Class<? extends BeanFactory> beanFactoryClass) {
     this.beanFactoryClass = beanFactoryClass;
   }
 
@@ -46,9 +49,9 @@ public class SpringServiceFactory implements ServiceFactory {
   public void setBeanId(String beanId) {
     this.beanId = beanId;
   }
-	
+
   public Service buildService(Environment env) {
-    BeanFactory factory = (BeanFactory) env.requireEntry(beanFactoryClass);
-    return (Service) factory.getBean(beanId); 
+    BeanFactory factory = env.requireEntry(this.beanFactoryClass);
+    return (Service) factory.getBean(this.beanId);
   }
 }

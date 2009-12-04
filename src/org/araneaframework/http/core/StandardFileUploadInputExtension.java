@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.core;
 
@@ -24,33 +24,35 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.http.FileUploadInputExtension;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardFileUploadInputExtension implements FileUploadInputExtension {
-  private static final long serialVersionUID = 1L;
-  private Exception uploadException;
-  private Map fileItems = new HashMap();
 
-  public StandardFileUploadInputExtension(Map fileItems, Exception uploadException) {
-    Assert.isTrue(fileItems != null || uploadException != null, "FileItems should be present or uploadException non-null.");
+  private Exception uploadException;
+
+  private Map<String, ? extends FileItem> fileItems = new HashMap<String, FileItem>();
+
+  public StandardFileUploadInputExtension(Map<String, ? extends FileItem> fileItems, Exception uploadException) {
+    Assert.isTrue(fileItems != null || uploadException != null,
+        "FileItems should be present or uploadException non-null.");
 
     this.fileItems = fileItems;
     this.uploadException = uploadException;
   }
 
   public FileItem getUploadedFile(String fieldName) {
-    return (FileItem) fileItems.get(fieldName);
+    return this.fileItems.get(fieldName);
   }
 
-  public Map getUploadedFiles() {
-    return Collections.unmodifiableMap(fileItems);
+  public Map<String, FileItem> getUploadedFiles() {
+    return Collections.unmodifiableMap(this.fileItems);
   }
-  
+
   public boolean uploadSucceeded() {
-    return uploadException == null;
+    return this.uploadException == null;
   }
-  
+
   public Exception getUploadException() {
-    return uploadException;
+    return this.uploadException;
   }
 }

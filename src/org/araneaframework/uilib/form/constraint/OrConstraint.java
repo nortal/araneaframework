@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
 import java.util.Collection;
-import java.util.Iterator;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -29,11 +28,9 @@ import org.araneaframework.uilib.form.Constraint;
  * Unless some custom error message has been set, it makes often sense to
  * process all subconstraints.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class OrConstraint extends BaseCompositeConstraint {
-
-  private static final long serialVersionUID = 1L;
 
   private boolean lazy = false;
 
@@ -60,18 +57,18 @@ public class OrConstraint extends BaseCompositeConstraint {
    * @param constraints A collection of {@link Constraint}s.
    * @since 1.0.9
    */
-  public OrConstraint(Collection constraints) {
+  public OrConstraint(Collection<Constraint> constraints) {
     super(constraints);
   }
 
   /**
-   * Checks that at least one contained constraits is satisfied.
+   * Checks that at least one contained constraints is satisfied.
    */
+  @Override
   public void validateConstraint() throws Exception {
     boolean valid = false;
 
-    for (Iterator i = constraints.iterator(); i.hasNext();) {
-      Constraint constraint = (Constraint) i.next();
+    for (Constraint constraint : constraints) {
       valid = valid || constraint.validate();
       addErrors(constraint.getErrors());
       constraint.clearErrors();

@@ -1,0 +1,12 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	version="2.1">
+
+	<jsp:directive.tag description="Adds an ENTER key listener to given element." />
+
+	<jsp:directive.attribute name="elementId" required="true" description="The HTML id of the element that will be clicked when ENTER is pressed."/>
+
+	<script type="text/javascript">Aranea.KB.registerKeypressHandler('',13,function(){return $('${elementId}').onclick();});</script>
+
+</jsp:root>

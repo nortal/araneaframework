@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -28,14 +28,14 @@ import org.araneaframework.uilib.form.Constraint;
  * This class is a generalization of a constraint that may contain other
  * constraints.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BaseCompositeConstraint extends BaseConstraint {
 
   /**
    * List of {@link Constraint}s that this constraint should handle.
    */
-  protected List constraints = new ArrayList();
+  protected List<Constraint> constraints = new ArrayList<Constraint>();
 
   /**
    * An empty constructor that expects other constraints to be added later. Use
@@ -64,7 +64,7 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
    * @param constraints a collection of {@link Constraint}s.
    * @since 1.0.9
    */
-  public BaseCompositeConstraint(Collection constraints) {
+  public BaseCompositeConstraint(Collection<Constraint> constraints) {
     addConstraints(constraints);
   }
 
@@ -86,7 +86,7 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
    * @return this composite constraint
    * @since 1.0.9
    */
-  public BaseCompositeConstraint addConstraints(Collection constraints) {
+  public BaseCompositeConstraint addConstraints(Collection<Constraint> constraints) {
     Assert.notNullParam(constraints, "constraints");
     this.constraints.addAll(constraints);
     return this;
@@ -99,10 +99,11 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
     constraints.clear();
   }
 
+  @Override
   public void setEnvironment(Environment environment) {
 	super.setEnvironment(environment);
-	for (Iterator i = constraints.iterator(); i.hasNext();) {
-      Constraint c = (Constraint) i.next();
+	for (Iterator<Constraint> i = constraints.iterator(); i.hasNext();) {
+      Constraint c = i.next();
       c.setEnvironment(environment);
 	}
   }

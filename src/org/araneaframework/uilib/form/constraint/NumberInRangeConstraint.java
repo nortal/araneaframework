@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -24,98 +24,67 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * This constraint checks that the number value would be inside a given range.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class NumberInRangeConstraint extends BaseFieldConstraint {
-
-  private static final long serialVersionUID = 1L;
+public class NumberInRangeConstraint<C, T extends Number> extends BaseFieldConstraint<C, T> {
 
   private BigInteger rangeStart;
 
   private BigInteger rangeEnd;
 
   /**
-   * A constructor that expects constraint settings to be specified after
-   * initialization.
+   * A constructor that expects constraint settings to be specified after initialization.
    */
   public NumberInRangeConstraint() {}
 
   /**
-   * A constructor that binds given constraint to a form field. The ranges
-   * should be provided using {@link #setRangeStart(BigInteger)} and
-   * {@link #setRangeEnd(BigInteger)}.
+   * A constructor that binds given constraint to a form field. The ranges should be provided using
+   * {@link #setRangeStart(BigInteger)} and {@link #setRangeEnd(BigInteger)}.
    * 
    * @param field The form element that this constraint should be bound to.
    */
-  public NumberInRangeConstraint(FormElement field) {
+  public NumberInRangeConstraint(FormElement<C, T> field) {
     super(field);
   }
 
   /**
-   * A constructor that initializes the range limits. The latter ones also
-   * accept <code>null</code> values.
+   * A constructor that initializes the range limits. The latter ones also accept <code>null</code> values.
    * <p>
-   * Of course, the start value should be less than end value, or the validation
-   * would fail.
+   * Of course, the start value should be less than end value, or the validation would fail.
    * 
    * @param start The start value of the range.
    * @param end The end value of the range.
    */
   public NumberInRangeConstraint(BigInteger start, BigInteger end) {
-    rangeStart = start;
-    rangeEnd = end;
+    this.rangeStart = start;
+    this.rangeEnd = end;
   }
 
   /**
    * Checks that the number value would be inside a given range.
    */
+  @Override
   protected void validateConstraint() {
     if (getValue() == null) {
-      addError(
-            MessageUtil.localizeAndFormat(
-              UiLibMessages.NUMBER_NOT_BETWEEN, 
-              new Object[] {
-                  t(getLabel()),
-                  rangeStart.toString(),
-                  rangeEnd.toString()
-              },
-              getEnvironment()));     
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()),
+          this.rangeStart.toString(), this.rangeEnd.toString()));
       return;
     }
-    
-    BigInteger value = new BigInteger(getValue().toString());
 
-    if (rangeStart != null && rangeEnd != null && ((value.compareTo(rangeStart) == -1) || value.compareTo(rangeEnd) == 1)) {      
-        addError(
-                MessageUtil.localizeAndFormat(
-                  UiLibMessages.NUMBER_NOT_BETWEEN, 
-                  new Object[] {
-                      t(getLabel()),
-                      rangeStart.toString(),
-                      rangeEnd.toString()
-                  },
-                  getEnvironment()));
-    }      
-    else if (rangeStart != null && value.compareTo(rangeStart) == -1) {
-      addError(
-          MessageUtil.localizeAndFormat(
-            UiLibMessages.NUMBER_NOT_GREATER, 
-            new Object[] {
-                t(getLabel()),
-                rangeStart.toString(),
-            },
-            getEnvironment()));       
-    }    
-    else if (rangeEnd != null && value.compareTo(rangeEnd) == 1) {      
-      addError(
-          MessageUtil.localizeAndFormat(
-            UiLibMessages.NUMBER_NOT_LESS, 
-            new Object[] {
-                t(getLabel()),
-                rangeEnd.toString()
-            },
-            getEnvironment()));
-    }      
+    BigInteger value = new BigInteger(getValue().toString());
+    boolean lessThan = this.rangeStart != null ? value.compareTo(this.rangeStart) == -1 : false;
+    boolean greaterThan = this.rangeEnd != null ? value.compareTo(this.rangeEnd) == 1 : false;
+
+    if (lessThan && greaterThan) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()),
+          this.rangeStart.toString(), this.rangeEnd.toString()));
+    } else if (lessThan) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_GREATER, t(getLabel()),
+          this.rangeStart.toString()));
+    } else if (greaterThan) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_LESS, t(getLabel()),
+          this.rangeEnd.toString()));
+    }
   }
 
   /**

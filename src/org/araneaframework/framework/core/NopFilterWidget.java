@@ -28,6 +28,4 @@ package org.araneaframework.framework.core;
  * </code>
  */
 public class NopFilterWidget extends BaseFilterWidget {
-
-  private static final long serialVersionUID = 1L;
 }

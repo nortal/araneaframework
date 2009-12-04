@@ -1,23 +1,28 @@
-/**
- * Copyright 2006-2007 Webmedia Group Ltd. Licensed under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+/*
+ * Copyright 2006 Webmedia Group Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.araneaframework.uilib.tab;
 
 import java.io.Serializable;
-import org.apache.commons.collections.Closure;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.Closure;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -34,30 +39,23 @@ import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.WidgetFactory;
 
 /**
- * This class represents a UI widget that contains tabs ({@link TabWidget})s.
- * Only one tab can be selected (active) at a time, such tab is specified with
- * {@link #selectTab(String)}. When on creation the selected tab is not
- * specified, the first tab is marked as selected. Tabs are added with
- * {@link #addTab(String, String, Widget)}, removed with
- * {@link #removeTab(String)} and disabled (user cannot select them) with
- * {@link #disableTab(String)}. By default tabs preserve the addition order and
- * are also presented in that order. When this {@link TabContainerWidget} has a
- * {@link Comparator} set, it will sort and present the tabs in an order
- * specified by that {@link Comparator}.
+ * This class represents a UI widget that contains tabs ({@link TabWidget})s. Only one tab can be selected (active) at a
+ * time, such tab is specified with {@link #selectTab(String)}. When on creation the selected tab is not specified, the
+ * first tab is marked as selected. Tabs are added with {@link #addTab(String, String, Widget)}, removed with
+ * {@link #removeTab(String)} and disabled (user cannot select them) with {@link #disableTab(String)}. By default tabs
+ * preserve the addition order and are also presented in that order. When this {@link TabContainerWidget} has a
+ * {@link Comparator} set, it will sort and present the tabs in an order specified by that {@link Comparator}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class TabContainerWidget extends BaseApplicationWidget
-  implements TabContainerContext, TabRegistrationContext {
+public class TabContainerWidget extends BaseApplicationWidget implements TabContainerContext, TabRegistrationContext {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(TabContainerWidget.class);
+  private static final Log LOG = LogFactory.getLog(TabContainerWidget.class);
 
   public static final String TAB_SELECT_EVENT_ID = "activateTab";
 
-  protected Map tabs;
+  protected Map<String, TabWidget> tabs;
 
   protected TabWidget selected;
 
@@ -66,13 +64,13 @@ public class TabContainerWidget extends BaseApplicationWidget
   protected TabSwitchListener tabSwitchListener = new DefaultTabSwitchListener();
 
   /**
-   * This is just to make sure that we do not initialize ANY tabs after
-   * destroying process has already begun.
+   * This is just to make sure that we do not initialize ANY tabs after destroying process has already begun.
    */
   protected transient boolean dying = false;
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
-    Map entries = new LinkedMap(2);
+    Map<Class<?>, Object> entries = new LinkedHashMap<Class<?>, Object>(2);
     entries.put(TabContainerContext.class, this);
     entries.put(TabRegistrationContext.class, this);
     return new StandardEnvironment(super.getChildWidgetEnvironment(), entries);
@@ -80,8 +78,8 @@ public class TabContainerWidget extends BaseApplicationWidget
 
   protected void selectFirst() {
     if (!this.tabs.isEmpty()) {
-      Map.Entry first = (Map.Entry) this.tabs.entrySet().iterator().next();
-      selectTab(first.getKey().toString());
+      Map.Entry<String, TabWidget> first = this.tabs.entrySet().iterator().next();
+      selectTab(first.getKey());
     }
   }
 
@@ -89,19 +87,18 @@ public class TabContainerWidget extends BaseApplicationWidget
   // TabContainerContext IMPL
   // ===========================================================================
   public TabContainerWidget() {
-    this.tabs = new LinkedMap();
+    this.tabs = new LinkedHashMap<String, TabWidget>();
   }
 
-  public TabContainerWidget(Comparator comparator) {
-    this.tabs = new TreeMap(comparator);
+  public TabContainerWidget(Comparator<String> comparator) {
+    this.tabs = new TreeMap<String, TabWidget>(comparator);
   }
 
   public void addTab(String id, String labelId, Widget contentWidget) {
     addWidget(id, new TabWidget(labelId, contentWidget));
   }
 
-  public void addTab(String id, String labelId,
-      WidgetFactory contentWidgetFactory) {
+  public void addTab(String id, String labelId, WidgetFactory contentWidgetFactory) {
     addWidget(id, new TabWidget(labelId, contentWidgetFactory));
   }
 
@@ -109,8 +106,7 @@ public class TabContainerWidget extends BaseApplicationWidget
     addWidget(id, new TabWidget(labelWidget, contentWidget));
   }
 
-  public void addTab(String id, Widget labelWidget,
-      WidgetFactory contentWidgetFactory) {
+  public void addTab(String id, Widget labelWidget, WidgetFactory contentWidgetFactory) {
     addWidget(id, new TabWidget(labelWidget, contentWidgetFactory));
   }
 
@@ -131,11 +127,10 @@ public class TabContainerWidget extends BaseApplicationWidget
   }
 
   public boolean selectTab(String id) {
-    TabWidget target = StringUtils.isEmpty(id) ? null : (TabWidget) this.tabs.get(id);
+    TabWidget target = StringUtils.isEmpty(id) ? null : this.tabs.get(id);
     Closure switchClosure = new TabSwitchClosure(target);
 
-    if (target != null
-        && this.tabSwitchListener.onSwitch(this.selected, target, switchClosure)) {
+    if (target != null && this.tabSwitchListener.onSwitch(this.selected, target, switchClosure)) {
       switchClosure.execute(target);
     }
 
@@ -144,26 +139,22 @@ public class TabContainerWidget extends BaseApplicationWidget
 
   public boolean isTabSelected(String id) {
     Assert.notNullParam(this, id, "id");
-    if (this.selected == null) {
-      return false;
-    }
-    return id.equals(this.selected.getScope().getId());
+    return this.selected == null ? id.equals(this.selected.getScope().getId()) : false;
   }
 
   public TabContext getSelectedTab() {
     return this.selected;
   }
 
-  public Map getTabs() {
+  public Map<String, TabWidget> getTabs() {
     return Collections.unmodifiableMap(this.tabs);
   }
 
   /**
-   * Provides the current default ID of a tab that will be automatically
-   * selected once added. A <code>null</code> value means that no default ID is
-   * used.
+   * Provides the current default ID of a tab that will be automatically selected once added. A <code>null</code> value
+   * means that no default ID is used.
    * 
-   * @return The ID of the tab that will be auomatically selected.
+   * @return The ID of the tab that will be automatically selected.
    * @since 1.2.1
    */
   public String getDefaultSelectedTabId() {
@@ -171,9 +162,8 @@ public class TabContainerWidget extends BaseApplicationWidget
   }
 
   /**
-   * Sets a default ID of a tab that will be automatically selected once added.
-   * A <code>null</code> value means that no default ID is used. Should be
-   * called before tabs are added.
+   * Sets a default ID of a tab that will be automatically selected once added. A <code>null</code> value means that no
+   * default ID is used. Should be called before tabs are added.
    * 
    * @param defaultSelectedTabId
    * @see #selectTab(String)
@@ -194,13 +184,13 @@ public class TabContainerWidget extends BaseApplicationWidget
 
   /*****************************************************************************
    * TabRegistrationContext IMPL
-   ****************************************************************************/
+   ************************************************************************** */
   /**
    * @see org.araneaframework.uilib.tab.TabRegistrationContext#registerTab(org.araneaframework.uilib.tab.TabWidget)
    */
   public TabWidget registerTab(TabWidget tabWidget) {
     String id = tabWidget.getScope().getId().toString();
-    TabWidget result = (TabWidget) this.tabs.put(id, tabWidget);
+    TabWidget result = this.tabs.put(id, tabWidget);
 
     if (!this.dying) {
       if (this.tabs.size() == 1) {
@@ -218,7 +208,7 @@ public class TabContainerWidget extends BaseApplicationWidget
    */
   public TabWidget unregisterTab(TabWidget tabWidget) {
     String id = tabWidget.getScope().getId().toString();
-    TabWidget result = (TabWidget) this.tabs.remove(id);
+    TabWidget result = this.tabs.remove(id);
     if (result == this.selected) {
       this.selected = null;
       if (!this.dying) {
@@ -234,16 +224,14 @@ public class TabContainerWidget extends BaseApplicationWidget
 
   /*****************************************************************************
    * Tab selection listener.
-   ****************************************************************************/
+   ************************************************************************** */
   protected class SelectionEventListener extends StandardEventListener {
 
-    private static final long serialVersionUID = 1L;
-
-    public void processEvent(String eventId, String eventParam, InputData input)
-        throws Exception {
-      if (log.isTraceEnabled()) {
-        log.trace(ClassUtils.getShortClassName(TabContainerWidget.class)
-            + " received tab selection event for tab '" + eventParam + "'.");
+    @Override
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace(ClassUtils.getShortClassName(TabContainerWidget.class) + " received tab selection event for tab '"
+            + eventParam + "'.");
       }
       selectTab(eventParam);
     }
@@ -251,39 +239,40 @@ public class TabContainerWidget extends BaseApplicationWidget
 
   /*****************************************************************************
    * Overrides for disableWidget()/enableWidget()
-   ****************************************************************************/
+   ************************************************************************** */
+  @Override
   public void disableWidget(Object key) {
     if (!this.tabs.containsKey(key)) {
       super.disableWidget(key);
       return;
     }
-    TabWidget tabWidget = (TabWidget) this.tabs.get(key);
-    tabWidget.disableTab();
+    this.tabs.get(key).disableTab();
   }
 
+  @Override
   public void enableWidget(Object key) {
     if (!this.tabs.containsKey(key)) {
       super.enableWidget(key);
       return;
     }
-    TabWidget tabWidget = (TabWidget) this.tabs.get(key);
-    tabWidget.enableTab();
+    this.tabs.get(key).enableTab();
   }
 
-  /* ****************** COMPONENT LIFECYCLE METHODS ************************** */
+  /*  ****************** COMPONENT LIFECYCLE METHODS ************************** */
+  @Override
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
 
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
 
-    private static final long serialVersionUID = 1L;
-
+    @Override
     public synchronized void init(Scope scope, Environment env) {
       super.init(scope, env);
       addEventListener(TAB_SELECT_EVENT_ID, new SelectionEventListener());
     }
 
+    @Override
     public void destroy() {
       TabContainerWidget.this.dying = true;
       super.destroy();
@@ -291,17 +280,17 @@ public class TabContainerWidget extends BaseApplicationWidget
   }
 
   /**
-   * This closure handles tab switching of this instance of
-   * {@link TabContainerWidget}. It can be executed only once (per instance).
+   * This closure handles tab switching of this instance of {@link TabContainerWidget}. It can be executed only once
+   * (per instance).
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
+   * @see TabSwitchListener
    * @since 1.2.2
    */
   public class TabSwitchClosure implements Closure, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private TabWidget newSelectedTab;
+
     private boolean executed;
 
     public TabSwitchClosure(TabWidget newSelectedTab) {
@@ -311,12 +300,12 @@ public class TabContainerWidget extends BaseApplicationWidget
 
     public void execute(Object obj) {
       if (!this.executed) {
-        if (selected != null) {
-          selected.deleselectTab();
+        if (TabContainerWidget.this.selected != null) {
+          TabContainerWidget.this.selected.deleselectTab();
         }
 
-        selected = this.newSelectedTab;
-        selected.enableTab();
+        TabContainerWidget.this.selected = this.newSelectedTab;
+        TabContainerWidget.this.selected.enableTab();
 
         this.executed = true;
       }

@@ -16,8 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
@@ -25,58 +24,46 @@ import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * This class is a generalization of controls that have a single <code>String[]</code> request
- * parameter.
+ * This class is a generalization of controls that have a single <code>String[]</code> request parameter.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class StringArrayRequestControl extends BaseControl {
+public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
 
   protected StandardControlEventListenerAdapter eventHelper = new StandardControlEventListenerAdapter();
 
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************
-
   /**
-   * Registers a new <code>onChangeEventListener</code> to this control.
-   * 
-   * @param onChangeEventListener An {@link OnChangeEventListener}, which is called when the control
-   *          value is changing.
+   * @param onChangeEventListener {@link OnChangeEventListener} which is called when the control value is changing.
    * @see StandardControlEventListenerAdapter#addOnChangeEventListener(OnChangeEventListener)
    */
   public void addOnChangeEventListener(OnChangeEventListener onChangeEventListener) {
     this.eventHelper.addOnChangeEventListener(onChangeEventListener);
   }
 
-  /**
-   * Removes all <code>onChangeEventListener</code>s that are registered to this control.
-   * 
-   * @see StandardControlEventListenerAdapter#clearOnChangeEventListeners()
-   */
   public void clearOnChangeEventListeners() {
     this.eventHelper.clearOnChangeEventListeners();
   }
 
-  public void setRawValue(Object value) {
+  @Override
+  public void setRawValue(T value) {
     super.setRawValue(value);
     this.innerData = getRawValue() != null ? toResponseParameters(getRawValue()) : null;
   }
 
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************
-
+  @Override
   protected void init() throws Exception {
     super.init();
     setGlobalEventListener(this.eventHelper);
   }
 
   /**
-   * This implementation of method {@link #readFromRequest(HttpInputData)}uses the
-   * methods {@link #preprocessRequestParameters(String[])}and
-   * {@link #fromRequestParameters(String[])}to read the control from request.
+   * This implementation of method {@link #readFromRequest(HttpInputData)}uses the methods
+   * {@link #preprocessRequestParameters(String[])}and {@link #fromRequestParameters(String[])}to read the control from
+   * request.
+   * 
+   * @param request The request data containing the parameters.
    */
+  @Override
   protected void readFromRequest(HttpInputData request) {
     String parameterValues[] = request.getParameterValues(getScope().toString());
     this.innerData = preprocessRequestParameters(parameterValues);
@@ -84,9 +71,10 @@ public abstract class StringArrayRequestControl extends BaseControl {
   }
 
   /**
-   * Breaks the procedure into two parts: conversion and validation. The conversion is done using
-   * method {@link #fromRequestParameters(String[])}and validation using method {@link #validate()}.
+   * Breaks the procedure into two parts: conversion and validation. The conversion is done using method
+   * {@link #fromRequestParameters(String[])}and validation using method {@link #validate()}.
    */
+  @Override
   public void convert() {
     this.value = this.innerData != null ? fromRequestParameters((String[]) this.innerData) : null;
   }
@@ -95,14 +83,15 @@ public abstract class StringArrayRequestControl extends BaseControl {
    * Checks that the mandatory is satisfied, and if the value is not <code>null</code> calls the
    * {@link #validateNotNull()}method.
    */
+  @Override
   public void validate() {
     if (isMandatory() && !isRead()) {
-      String[] values = (String[]) this.innerData;
-      boolean hasValue = values != null && values.length > 0 && !StringUtils.isBlank(values[0]);
+      String[] data = (String[]) this.innerData;
+      boolean hasValue = (data != null && data.length > 0 && data[0].trim().length() != 0);
 
       if (!isDisabled() || (isDisabled() && !hasValue)) {
-        addError(MessageUtil.localizeAndFormat(UiLibMessages.MANDATORY_FIELD,
-            MessageUtil.localize(getLabel(), getEnvironment()), getEnvironment()));
+        addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
+            getLabel(), getEnvironment())));
       }
     }
 
@@ -111,69 +100,63 @@ public abstract class StringArrayRequestControl extends BaseControl {
     }
   }
 
-  /**
-   * Returns the <code>ViewModel</code> for rendering phase by providing the data through the
-   * <code>ViewModel</code>.
-   * 
-   * @return The {@link ViewModel} of this control.
-   */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
-  //*********************************************************************
-  //* OVERRIDABLE METHODS
-  //*********************************************************************
+  // *********************************************************************
+  // * OVERRIDABLE METHODS
+  // *********************************************************************
 
   /**
-   * Empty method for overriding. Should contain custom validating logic. This method is called
-   * only if the control value is not null.
+   * Empty method for overriding. Should contain custom validating logic. This method is called only if the control
+   * value is not null.
    */
   protected void validateNotNull() {
-    //Empty method for overriding
+    // Empty method for overriding
   }
 
-  //*********************************************************************
-  //* ABSTRACT METHODS
-  //*********************************************************************
+  // *********************************************************************
+  // * ABSTRACT METHODS
+  // *********************************************************************
 
   /**
-   * This method should preprocess the <code>parameterValues</code> and return the processed
-   * variant. It may be used to <i>normalize </i> the request making the further parsing of it
-   * easier.
+   * This method should preprocess the <code>parameterValues</code> and return the processed variant. It may be used to
+   * <i>normalize </i> the request making the further parsing of it easier.
    * 
-   * @param parameterValues The <code>String[]</code> values from request.
-   * @return The preprocessed values from request.
+   * @param parameterValues <code>String[]</code>- the values from request.
+   * @return the preprocessed values from request.
    */
   protected abstract String[] preprocessRequestParameters(String[] parameterValues);
 
   /**
-   * This method should parse the request parameters (preprocessed with
-   * {@link #preprocessRequestParameters(String[])}) an produce the control value.
+   * This method should parse the request parameters (preprocessed with {@link #preprocessRequestParameters(String[])})
+   * and produce the control value.
    * 
    * @param parameterValues the request parameters.
    * @return control value.
    */
-  protected abstract Object fromRequestParameters(String[] parameterValues);
+  protected abstract T fromRequestParameters(String[] parameterValues);
 
   /**
    * This method should return the <code>String[]</code> representation of the control value.
    * 
-   * @param controlValue The control value.
-   * @return The <code>String[]</code> representation of the control value.
+   * @param controlValue the control value.
+   * @return the <code>String[]</code> representation of the control value.
    */
-  protected abstract String[] toResponseParameters(Object controlValue);	 	  
+  protected abstract String[] toResponseParameters(T controlValue);
 
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************  
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
 
   /**
    * Represents a view model of a control with a single array request parameter.
    * 
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<T>.ViewModel {
 
     private String[] values;
 
@@ -183,8 +166,8 @@ public abstract class StringArrayRequestControl extends BaseControl {
      * Takes an outer class snapshot.
      */
     public ViewModel() {
-      this.values = (String[]) innerData;
-      this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();
+      this.values = (String[]) StringArrayRequestControl.this.innerData;
+      this.hasOnChangeEventListeners = StringArrayRequestControl.this.eventHelper.hasOnChangeEventListeners();
     }
 
     /**
@@ -197,12 +180,12 @@ public abstract class StringArrayRequestControl extends BaseControl {
     }
 
     /**
-     * Returns the first value from control values.
+     * Returns the first of control values.
      * 
-     * @return the first value from control values.
+     * @return the first of control values.
      */
     public String getSimpleValue() {
-      return this.values != null ? this.values[0] : null;
+      return !ArrayUtils.isEmpty(this.values) ? this.values[0] : null;
     }
 
     /**
@@ -214,5 +197,14 @@ public abstract class StringArrayRequestControl extends BaseControl {
       return this.hasOnChangeEventListeners;
     }
 
+    /**
+     * Provides whether the given value is a the value of the control.
+     * 
+     * @param value The value to check.
+     * @return <code>true</code> when the given value is the value of this control.
+     */
+    public boolean containsValue(String value) {
+      return ArrayUtils.contains(this.values, value);
+    }
   }
 }

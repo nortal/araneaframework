@@ -16,6 +16,17 @@
 
 package org.araneaframework.core.util;
 
+import java.util.List;
+
+import java.util.Map;
+
+import org.araneaframework.Scope;
+
+import org.araneaframework.core.ActionListener;
+
+import org.araneaframework.core.AsynchronousActionListener;
+import org.araneaframework.framework.AsynchronousRequestRegistry;
+
 import org.apache.commons.lang.math.RandomUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
@@ -45,7 +56,7 @@ import org.araneaframework.core.StandardScope;
  * In the example above, it uses the lifecycle listener to remove an
  * <code>Environment</code> entry that was added before.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ComponentUtil {
 
@@ -95,8 +106,6 @@ public abstract class ComponentUtil {
   // failing lazily
   private static class LateBindingChildEnvironment implements Environment {
 
-    private static final long serialVersionUID = 1L;
-
     private ApplicationComponent component;
 
     public LateBindingChildEnvironment(ApplicationComponent component) {
@@ -119,6 +128,121 @@ public abstract class ComponentUtil {
             + " does not yet have access to environment.");
       }
       return result;
+    }
+  }
+
+  /**
+   * Registers asynchronous <code>actionListener</code> (which does not have to be {@link AsynchronousActionListener}).
+   * All parameters are required, except environment. If environment is <code>null</code> then no changes will be made.
+   * 
+   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param componentScope The scope of the calling component.
+   * @param actionId The action listener ID.
+   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @since 2.0
+   */
+  public static void registerActionListener(Environment env, Scope componentScope, String actionId,
+      ActionListener actionListener) {
+    handleActionListener(true, env, componentScope, actionId, actionListener);
+  }
+
+  /**
+   * Registers asynchronous action listeners that are provided among in (any kind of) <code>actionListeners</code>. All
+   * parameters are required, except environment and <code>actionListeners</code>. If environment is <code>null</code>
+   * then no changes will be made.
+   * 
+   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param componentScope The scope of the calling component.
+   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @since 2.0
+   */
+  public static void registerActionListeners(Environment env, Scope componentScope,
+      Map<String, List<ActionListener>> actionListeners) {
+    handleActionListeners(true, env, componentScope, actionListeners);
+  }
+
+  /**
+   * Unregisters asynchronous <code>actionListener</code> (which does not have to be {@link AsynchronousActionListener}
+   * ). All parameters are required, except environment. If environment is <code>null</code> then no changes will be
+   * made.
+   * 
+   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param componentScope The scope of the calling component.
+   * @param actionId The action listener ID.
+   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @since 2.0
+   */
+  public static void unregisterActionListener(Environment env, Scope componentScope, String actionId,
+      ActionListener actionListener) {
+    handleActionListener(false, env, componentScope, actionId, actionListener);
+  }
+
+  /**
+   * Unregisters asynchronous action listeners that are provided among in (any kind of) <code>actionListeners</code>.
+   * All parameters are required, except environment and <code>actionListeners</code>. If environment is
+   * <code>null</code> then no changes will be made.
+   * 
+   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param componentScope The scope of the calling component.
+   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @since 2.0
+   */
+  public static void unregisterActionListeners(Environment env, Scope componentScope,
+      Map<String, List<ActionListener>> actionListeners) {
+    handleActionListeners(false, env, componentScope, actionListeners);
+  }
+
+  /**
+   * Unregisters asynchronous action listeners that are provided among in (any kind of) <code>actionListeners</code>.
+   * All parameters are required, except environment and <code>actionListeners</code>. If environment is
+   * <code>null</code> then no changes will be made.
+   * 
+   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param componentScope The scope of the calling component.
+   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @since 2.0
+   */
+  public static void unregisterActionListeners(Environment env, Scope componentScope, String actionId,
+      List<ActionListener> actionListeners) {
+    if (env != null && actionListeners != null && !actionListeners.isEmpty()) {
+      for (ActionListener listener : actionListeners) {
+        unregisterActionListener(env, componentScope, actionId, listener);
+      }
+    }
+  }
+
+  private static void handleActionListeners(boolean register, Environment env, Scope componentScope,
+      Map<String, List<ActionListener>> actionListeners) {
+    if (env != null && actionListeners != null && !actionListeners.isEmpty()) {
+      for (Map.Entry<String, List<ActionListener>> entry : actionListeners.entrySet()) {
+        for (ActionListener listener : entry.getValue()) {
+          if (listener != null) {
+            if (register) {
+              registerActionListener(env, componentScope, entry.getKey(), listener);
+            } else {
+              unregisterActionListener(env, componentScope, entry.getKey(), listener);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private static void handleActionListener(boolean register, Environment env, Scope componentScope, String actionId,
+      ActionListener actionListener) {
+    Assert.notNullParam(ComponentUtil.class, componentScope, "componentScope");
+    Assert.notNullParam(ComponentUtil.class, actionId, "actionId");
+    Assert.notNullParam(ComponentUtil.class, actionListener, "actionListener");
+
+    if (env != null) {
+      AsynchronousRequestRegistry registry = env.getEntry(AsynchronousRequestRegistry.class);
+      if (registry != null && actionListener instanceof AsynchronousActionListener) {
+        if (register) {
+          registry.registerAsynchronousAction(componentScope.toString(), actionId);
+        } else {
+          registry.unregisterAsynchronousAction(componentScope.toString(), actionId);
+        }
+      }
     }
   }
 }

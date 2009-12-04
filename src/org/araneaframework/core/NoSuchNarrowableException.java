@@ -17,16 +17,13 @@
 package org.araneaframework.core;
 
 /**
- * Thrown to indicate that such a Narrowable does not exist in the extensions of
- * the object.
+ * Thrown to indicate that such a Narrowable does not exist in the extensions of the object.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class NoSuchNarrowableException extends AraneaRuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
-  public NoSuchNarrowableException(Class target) {
+  public NoSuchNarrowableException(Class<?> target) {
     super("Target " + target.getName() + " does not exist!");
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock.core;
 
@@ -25,9 +25,7 @@ import org.araneaframework.core.BaseWidget;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  *
  */
-public class MockEventfulBaseWidget extends BaseWidget {
-  private static final long serialVersionUID = 1L;
-  private boolean updateCalled = false;
+public class MockEventfulBaseWidget extends BaseWidget {  private boolean updateCalled = false;
   private boolean eventCalled = false;
   private boolean renderCalled = false;
   private boolean actionCalled = false;
@@ -35,32 +33,39 @@ public class MockEventfulBaseWidget extends BaseWidget {
   private boolean disableCalled = false;
   private boolean enableCalled = false;
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     actionCalled = true;
   }
     
+  @Override
   protected void update(InputData input) throws Exception {
     updateCalled = true;
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     eventCalled = true;
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     renderCalled = true;
   }
   
+  @Override
   protected void disable() throws Exception {
     super.disable();
     disableCalled = true;
   }
 
+  @Override
   protected void enable() throws Exception {
     super.enable();
     enableCalled = true;
   }
 
+  @Override
   public void destroy() throws Exception {
     destroyCalled = true;
   }

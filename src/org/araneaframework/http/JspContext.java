@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http;
 
 import java.io.Serializable;
 import java.util.Map;
+import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface JspContext extends Serializable {
 
@@ -37,7 +38,7 @@ public interface JspContext extends Serializable {
   public String getFormAction();
 
   /** @since 1.1 */
-  public Map getTagMapping(String uri);
+  public Map<String, TagInfo> getTagMapping(String uri);
 
   /** @since 1.1 */
   public ConfigurationContext getConfiguration();

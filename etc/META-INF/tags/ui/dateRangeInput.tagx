@@ -1,0 +1,16 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Generates date range inputs." />
+
+	<jsp:directive.attribute name="prefixId" required="true" description="The prefix of the date input controls. The '_start' and '_end' will be appended to access real controls." />
+
+	<ui:dateInput id="${prefixId}_start"/>
+	<c:out value=" "/>
+	<ui:entity code="ndash"/>
+	<c:out value=" "/>
+	<ui:dateInput id="${prefixId}_end"/>
+
+</jsp:root>

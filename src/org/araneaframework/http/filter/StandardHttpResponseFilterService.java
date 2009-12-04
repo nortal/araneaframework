@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 
 package org.araneaframework.http.filter;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.ServletResponse;
 import javax.servlet.ServletResponseWrapper;
@@ -37,17 +36,17 @@ import org.araneaframework.http.util.ServletUtil;
 /**
  * A filter which sets all the necessary headers of the response. 
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardHttpResponseFilterService extends BaseFilterService {
-  private static final Log log = LogFactory.getLog(StandardHttpResponseFilterService.class);
+  private static final Log LOG = LogFactory.getLog(StandardHttpResponseFilterService.class);
 
   private String contentType = "text/html; charset=UTF-8";
   private boolean cacheable = false;
   private long cacheHoldingTime = 3600000;
   
-  private Map cookies = new HashMap();
-  private Map headers = new HashMap();
+  private Map<String, String> cookies = new HashMap<String, String>();
+  private Map<String, String> headers = new HashMap<String, String>();
   
   /**
    * Sets if the response is cacheable or not. By default it is not cacheable.
@@ -67,7 +66,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
    * Constructs cookies from the key, value pair in the map of the cookies and sets them.
    * @param cookies
    */
-  public void setCookies(Map cookies) {
+  public void setCookies(Map<String, String> cookies) {
     this.cookies = cookies;
   }
   
@@ -75,7 +74,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
    * Sets the headers of the response from the map headers. The key of the map is the name of
    * the header and the value is the corresponding value.
    */
-  public void setHeaders(Map headers) {
+  public void setHeaders(Map<String, String> headers) {
     this.headers = headers;
   }
   
@@ -86,6 +85,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
     this.cacheHoldingTime = cacheHoldingTime;
   }
   
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpServletResponse response = ServletUtil.getResponse(output);
     
@@ -94,7 +94,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
     }
     
     response.setContentType(contentType);
-    log.trace("response.characterEncoding: " + response.getCharacterEncoding());
+    LOG.trace("response.characterEncoding: " + response.getCharacterEncoding());
 
     int idx = contentType.indexOf(';');
     if (idx > 0) {
@@ -108,18 +108,18 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
           // detecting Weblogic...
           Method method = null;
           try {
-            method = r.getClass().getMethod("getDelegate", null);
+            method = r.getClass().getMethod("getDelegate", (Class<?>)null);
           } catch (NoSuchMethodException e) {
           }
           if (method != null) {
-            log.debug("Applying Weblogic hack to set the response character encoding...");
-            HttpServletResponse delegate = (HttpServletResponse) method.invoke(r, null);
+            LOG.debug("Applying Weblogic hack to set the response character encoding...");
+            HttpServletResponse delegate = (HttpServletResponse) method.invoke(r, (Class<?>)null);
             if (delegate != null) {
               delegate.setContentType(contentType);
             }
           }
           if (!encoding.equals(response.getCharacterEncoding())) {
-            log.warn("Unable to change the character encoding.");
+            LOG.warn("Unable to change the character encoding.");
           }
         }
       }
@@ -135,14 +135,12 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
       response.setDateHeader ("Expires", System.currentTimeMillis () + cacheHoldingTime);
     }
     
-    for (Iterator i = headers.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();      
-      response.setHeader((String) entry.getKey(), (String) entry.getValue());    
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      response.setHeader(entry.getKey(), entry.getValue());    
     }
     
-    for (Iterator i = cookies.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();      
-      response.addCookie(new Cookie((String) entry.getKey(), (String) entry.getValue()));    
+    for (Map.Entry<String, String> entry : cookies.entrySet()) {
+      response.addCookie(new Cookie(entry.getKey(), entry.getValue()));    
     }
     
     childService._getService().action(path, input, output);

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.comparator;
 
@@ -20,31 +20,34 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * Not-null comparator that compares <code>String</code> values case
- * insensitive. This comparator is not <code>Locale</code>-specific.
+ * Not-null comparator that compares <code>String</code> values case insensitive. This comparator is not
+ * <code>Locale</code>-specific.
  */
 public class IgnoreCaseComparator implements StringComparator, Serializable {
-	public static final IgnoreCaseComparator INSTANCE = new IgnoreCaseComparator();
-	
-	private IgnoreCaseComparator() {}
 
-	public boolean getIgnoreCase() {
-		return true;
-	}
+  public static final IgnoreCaseComparator INSTANCE = new IgnoreCaseComparator();
 
-	public Locale getLocale() {
-		throw new RuntimeException("Locales not supported");
-	}
+  private IgnoreCaseComparator() {}
 
-	public int compare(String o1, String o2) {
-		return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
-	}
-	
-	public boolean equals(Object obj) {
-		return IgnoreCaseComparator.class.equals(obj.getClass());
-	}
+  public boolean getIgnoreCase() {
+    return true;
+  }
 
-	public int hashCode() {
-		return 703271433;
-	}
+  public Locale getLocale() {
+    throw new RuntimeException("Locales not supported");
+  }
+
+  public int compare(String o1, String o2) {
+    return String.CASE_INSENSITIVE_ORDER.compare(o1, o2);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return IgnoreCaseComparator.class.equals(obj.getClass());
+  }
+
+  @Override
+  public int hashCode() {
+    return 703271433;
+  }
 }

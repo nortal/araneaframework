@@ -17,8 +17,8 @@
 package org.araneaframework.framework.filter;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.StandardEnvironment;
@@ -27,36 +27,34 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 /**
  * Filter widget that enriches children's environment with specified context entries.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardContextMapFilterWidget extends BaseFilterWidget {
 
-  private static final long serialVersionUID = 1L;
+  private static final Log LOG = LogFactory.getLog(StandardContextMapFilterWidget.class);
 
-  private static final Log log = LogFactory.getLog(StandardContextMapFilterWidget.class);
+  private Map<String, Object> contexts = new HashMap<String, Object>();
 
-  private Map contexts = new HashMap();
-
+  @Override
   protected void init() throws Exception {
-    Map entries = new HashMap();
-    
-    if (contexts != null) {
-      for (Iterator i = contexts.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-        String key = (String) entry.getKey();
+    Map<Class<?>, Object> envValues = new HashMap<Class<?>, Object>();
+
+    if (this.contexts != null) {
+      for (Map.Entry<String, Object> entry : this.contexts.entrySet()) {
+        String key = entry.getKey();
         if (key.endsWith(".class")) {
-          String className = key.substring(0, key.lastIndexOf('.'));
-          Class contextKey = Class.forName(className);
-          entries.put(contextKey, entry.getValue());
-        } else
-          entries.put(key, entry.getValue());
+          String className = StringUtils.substringBeforeLast(key, ".");
+          envValues.put(Class.forName(className), entry.getValue());
+        } else {
+//          envValues.put(key, entry.getValue()); TODO throw exception?
+        }
       }
     }
 
-    childWidget._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), entries));
+    this.childWidget._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), envValues));
 
-    if (log.isDebugEnabled()) {
-      log.debug("Following contexts added to environment: " + entries);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Following contexts added to environment: " + envValues);
     }
   }
 
@@ -65,7 +63,7 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
    * 
    * @param contexts Map &lt;contextKey, contextValue&gt;
    */
-  public void setContexts(Map contexts) {
+  public void setContexts(Map<String, Object> contexts) {
     this.contexts = contexts;
   }
 }

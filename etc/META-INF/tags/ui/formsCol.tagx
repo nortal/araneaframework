@@ -1,0 +1,12 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag description="Writes a container to hold one form among multiple forms (up to 2 in a row). To be used inside'forms' tag!" />
+
+	<jsp:directive.attribute name="number" type="java.lang.Long" required="true"
+		description="The number of the column in a row. Valid numbers are '1' and '2'."/>
+
+	<div class="col${number}">
+		<jsp:doBody />
+	</div>
+
+</jsp:root>

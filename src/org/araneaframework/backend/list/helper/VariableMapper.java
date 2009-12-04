@@ -22,16 +22,13 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.core.Assert;
 
 /**
- * VariableResolver that has a map of Variable names and their resolvable
- * values.
+ * VariableResolver that has a map of Variable names and their resolvable values.
  */
 public class VariableMapper implements VariableResolver {
 
-  private static final long serialVersionUID = 1L;
+  private Map<String, Object> map;
 
-  private Map map;
-
-  public VariableMapper(Map map) {
+  public VariableMapper(Map<String, Object> map) {
     Assert.notNull(map, "Mapping must be provided");
     this.map = map;
   }

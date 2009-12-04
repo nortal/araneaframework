@@ -13,21 +13,19 @@
 
 package org.araneaframework.core.util;
 
-/** 
- * A ReadWriteLock that prefers waiting readers over
- * waiting writers when there is contention. The range of applicability
- * of this class is very limited. In the majority of situations,
- * writer preference locks provide more reasonable semantics.
+/**
+ * A ReadWriteLock that prefers waiting readers over waiting writers when there is contention. The range of
+ * applicability of this class is very limited. In the majority of situations, writer preference locks provide more
+ * reasonable semantics.
  * 
- * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
- **/
-
+ * <p>
+ * [<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this
+ * package. </a>]
+ */
 public class ReaderPreferenceReadWriteLock extends WriterPreferenceReadWriteLock {
 
-  private static final long serialVersionUID = 1L;
-
+  @Override
   protected boolean allowReader() {
-    return activeWriter_ == null;
+    return this.activeWriter_ == null;
   }
 }
-

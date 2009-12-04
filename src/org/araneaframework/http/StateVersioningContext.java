@@ -65,7 +65,6 @@ public interface StateVersioningContext extends Serializable {
   }
 
   public static class StateExpirationException extends NestableRuntimeException {
-    private static final long serialVersionUID = 1L;
 
     public StateExpirationException() {
       super();

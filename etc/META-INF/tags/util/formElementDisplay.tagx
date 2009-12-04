@@ -1,0 +1,15 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty" description="Basic code for ui:*Display functionality."/>
+
+	<jsp:directive.attribute name="id" required="true" description="The form element id value (may be null)."/>
+	<jsp:directive.attribute name="controlType" required="true" description="The expected form element control type."/>
+
+	<util:formElement id="${id}" controlType="${controlType}" markRendered="false">
+		<c:out value="${control.simpleValue}"/>
+	</util:formElement>
+
+</jsp:root>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.extension;
 
@@ -47,7 +47,8 @@ public class ExternalResourceConfigurationHandler extends DefaultHandler {
 		result = resource;
 	}
 
-	public void startElement(String uri, String localName, String qName, Attributes attributes) {
+	@Override
+  public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (TAG_FILES.equalsIgnoreCase(qName)) {
 			fileGroup = new FileGroup();
 			boolean contentTypeSet = false;
@@ -73,7 +74,8 @@ public class ExternalResourceConfigurationHandler extends DefaultHandler {
 		}
 	} 
 
-	public void endElement(String uri, String localName, String qName) {
+	@Override
+  public void endElement(String uri, String localName, String qName) {
 		if (TAG_FILES.equalsIgnoreCase(qName)) {
 			result.addGroup(fileGroup);	
 		}

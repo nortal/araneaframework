@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.dataprovider;
 
@@ -33,351 +33,332 @@ import org.araneaframework.backend.list.memorybased.ExpressionEvaluationExceptio
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.util.ExceptionUtil;
 
-
 /**
- * This class provides a memory based implementation of the list. It takes care
- * of the filtering, ordering and returning data to the web components.
- * Implementations should override method <code>loadData</code> loading the
- * initial data for the list.
+ * This class provides a memory based implementation of the list. It takes care of the filtering, ordering and returning
+ * data to the web components. Implementations should override method <code>loadData</code> loading the initial data for
+ * the list.
  * <p>
- * Note, that all operations on items are made on the list of "processed", that
- * is ordered and filtered items.
+ * Note, that all operations on items are made on the list of "processed", that is ordered and filtered items.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvider<T> {
-	private static final Log log = LogFactory.getLog(MemoryBasedListDataProvider.class);
-	private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
-	
-	// *******************************************************************
-	// FIELDS
-	// *******************************************************************
 
-	protected Class<T> beanClass;
+  private static final Log LOG = LogFactory.getLog(MemoryBasedListDataProvider.class);
 
-	protected List<T> allData = new ArrayList<T>();
+  private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
 
-	protected List<T> processedData = new ArrayList<T>();
+  // *******************************************************************
+  // FIELDS
+  // *******************************************************************
 
-	protected BeanFilter currentFilter = null;
+  protected Class<T> beanClass;
 
-	protected boolean doFilter = true;
+  protected List<T> allData = new ArrayList<T>();
 
-	protected Comparator<T> currentOrder = null;
+  protected List<T> processedData = new ArrayList<T>();
 
-	protected boolean doOrder = true;
+  protected BeanFilter currentFilter = null;
 
-	// *********************************************************************
-	// * CONSTRUCTORS
-	// *********************************************************************
+  protected boolean doFilter = true;
 
-	/**
-	 * Creates the class initializing its parameters.
-	 * 
-	 * @param beanClass
-	 *            Value Object class.
-	 */
-	protected MemoryBasedListDataProvider(Class<T> beanClass) {
-		this.beanClass = beanClass;
-	}
+  protected Comparator<T> currentOrder = null;
 
-	// *********************************************************************
-	// * PUBLIC METHODS
-	// *********************************************************************
+  protected boolean doOrder = true;
 
-	/**
-	 * Loads the data using the <code>loadData</code> method, initializes the
-	 * filtering and ordering and returns the number of items loaded.
-	 */
-	public void init() throws Exception {
-		this.allData = loadData();
-		this.processedData.addAll(this.allData);
-	}
+  // *********************************************************************
+  // * CONSTRUCTORS
+  // *********************************************************************
 
-	/**
-	 * Empty.
-	 */
-	public void destroy() {
-	}
+  /**
+   * Creates the class initializing its parameters.
+   * 
+   * @param beanClass Value Object class.
+   */
+  protected MemoryBasedListDataProvider(Class<T> beanClass) {
+    this.beanClass = beanClass;
+  }
 
-	/**
-	 * Returns the number of items in the processed list.
-	 * 
-	 * @return the number of items in the processed list.
-	 */
-	public Long getItemCount() throws Exception {
-		process(this.currentFilter, this.currentOrder, this.allData,
-				this.processedData);
-		return new Long(this.processedData.size());
-	}
+  // *********************************************************************
+  // * PUBLIC METHODS
+  // *********************************************************************
 
-	/**
-	 * Returns <code>List</code> of all processed items.
-	 * 
-	 * @return <code>List</code> of all processed items.
-	 */
-	public ListItemsData<T> getAllItems() throws Exception {
-		ListItemsData<T> result = new ListItemsData<T>();
+  /**
+   * Loads the data using the <code>loadData</code> method, initializes the filtering and ordering and returns the
+   * number of items loaded.
+   */
+  public void init() throws Exception {
+    this.allData = loadData();
+    this.processedData.addAll(this.allData);
+  }
 
-		process(this.currentFilter, this.currentOrder, this.allData,
-				this.processedData);
-		result.setItemRange(this.processedData);
-		result.setTotalCount(getItemCount());
+  /**
+   * Empty.
+   */
+  public void destroy() {}
 
-		return result;
-	}
+  /**
+   * Returns the number of items in the processed list.
+   * 
+   * @return the number of items in the processed list.
+   */
+  public Long getItemCount() throws Exception {
+    process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
+    return new Long(this.processedData.size());
+  }
 
-	/**
-	 * Returns a range of processed items, starting with <code>start</code>
-	 * (indexing starts at 0) and <code>count</code> items after it.
-	 * 
-	 * @param start
-	 *            the start of item range.
-	 * @param count
-	 *            the count of items in the range.
-	 */
-	public ListItemsData<T> getItemRange(Long start, Long count) throws Exception {
-		ListItemsData<T> result = new ListItemsData<T>();
+  /**
+   * Returns <code>List</code> of all processed items.
+   * 
+   * @return <code>List</code> of all processed items.
+   */
+  public ListItemsData<T> getAllItems() throws Exception {
+    ListItemsData<T> result = new ListItemsData<T>();
 
-		process(this.currentFilter, this.currentOrder, this.allData,
-				this.processedData);
-		result.setItemRange(getSubList(this.processedData, start.intValue(),
-				count == null ? -1 : start.intValue() + count.intValue() - 1));
-		result.setTotalCount(getItemCount());
-		return result;
-	}
+    process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
+    result.setItemRange(this.processedData);
+    result.setTotalCount(getItemCount());
 
-	/**
-	 * Returns a processed item by index.
-	 * 
-	 * @param index
-	 *            0-based index of processed item
-	 * @return processed item.
-	 */
-	public T getItem(Long index) throws Exception {
-		process(this.currentFilter, this.currentOrder, this.allData,
-				this.processedData);
-		return this.processedData.get(index.intValue());
-	}
+    return result;
+  }
 
-	/**
-	 * Sets the list order expression. 
-	 */
-	public void setOrderExpression(ComparatorExpression orderExpr) {
-		this.doOrder = true;
-		if (orderExpr != null) {
-			this.currentOrder = new BeanOrder(orderExpr);
-		} else {
-			this.currentOrder = null;
-		}
-		notifyDataChangeListeners();
-	}
+  /**
+   * Returns a range of processed items, starting with <code>start</code> (indexing starts at 0) and <code>count</code>
+   * items after it.
+   * 
+   * @param start the start of item range.
+   * @param count the count of items in the range.
+   */
+  public ListItemsData<T> getItemRange(Long start, Long count) throws Exception {
+    ListItemsData<T> result = new ListItemsData<T>();
 
-	/**
-	 * Sets the list filter expression. 
-	 */
-	public void setFilterExpression(Expression filterExpr) {
-		this.doFilter = true;
+    process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
+    result.setItemRange(getSubList(this.processedData, start.intValue(), count == null ? -1 : start.intValue()
+        + count.intValue() - 1));
+    result.setTotalCount(getItemCount());
+    return result;
+  }
 
-		if (filterExpr != null) {
-			this.currentFilter = new BeanFilter(filterExpr);
-		} else {
-			this.currentFilter = null;
-		}
-		notifyDataChangeListeners();
-	}
+  /**
+   * Returns a processed item by index.
+   * 
+   * @param index 0-based index of processed item
+   * @return processed item.
+   */
+  public T getItem(Long index) throws Exception {
+    process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
+    return this.processedData.get(index.intValue());
+  }
 
-	/**
-	 * Refreshes the data, including reordering and refiltering.
-	 */
-	public void refreshData() {
-		log.debug("Loading all data");
-		try {
-			this.allData = loadData();
-		} catch (Exception e) {
-			ExceptionUtil.uncheckException(e);
-		}
-		this.doFilter = true;
-		this.doOrder = true;
-		
-		notifyDataChangeListeners();
-	}
-	
-	/** @since 1.1 */
-	protected void notifyDataChangeListeners() {
-		for (DataUpdateListener listener : dataUpdateListeners) {
-			listener.onDataUpdate();
-		}
-	}
-	
-	public void addDataUpdateListener(DataUpdateListener listener) {
-		dataUpdateListeners.add(listener);
-	}
+  /**
+   * Sets the list order expression.
+   */
+  public void setOrderExpression(ComparatorExpression orderExpr) {
+    this.doOrder = true;
+    if (orderExpr != null) {
+      this.currentOrder = new BeanOrder(orderExpr);
+    } else {
+      this.currentOrder = null;
+    }
+    notifyDataChangeListeners();
+  }
 
-	public void removeDataUpdateListener(DataUpdateListener listener) {
-		dataUpdateListeners.remove(listener);
-	}
+  /**
+   * Sets the list filter expression.
+   */
+  public void setFilterExpression(Expression filterExpr) {
+    this.doFilter = true;
 
-	// *********************************************************************
-	// * OVERRIDABLE METHODS
-	// *********************************************************************
+    if (filterExpr != null) {
+      this.currentFilter = new BeanFilter(filterExpr);
+    } else {
+      this.currentFilter = null;
+    }
+    notifyDataChangeListeners();
+  }
 
-	/**
-	 * Processes the list items, filtering and ordering them, if there is need.
-	 */
-	protected void process(BeanFilter beanFilter, Comparator<? super T> beanOrder,
-			List<T> all, List<T> processed) {
-		if (this.doFilter) {
-			filter(beanFilter, all, processed);
+  /**
+   * Refreshes the data, including reordering and refiltering.
+   */
+  public void refreshData() {
+    LOG.debug("Loading all data");
+    try {
+      this.allData = loadData();
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+    this.doFilter = true;
+    this.doOrder = true;
 
-			this.doFilter = false;
-			this.doOrder = true;
-		}
-		if (this.doOrder) {
-			order(beanOrder, processed);
-			this.doOrder = false;
-		}
-	}
+    notifyDataChangeListeners();
+  }
 
-	/**
-	 * Filters the items.
-	 * 
-	 * @param beanFilter
-	 *            Bean filter.
-	 */
-	protected void filter(BeanFilter beanFilter, List<T> all, List<T> filtered) {
-		log.debug("Filtering list itmes");		
-		filtered.clear();
-		if (beanFilter == null) {
-			filtered.addAll(all);
-			return;
-		}
-		for (T element : all) {
-			if (beanFilter.suits(element)) {
-				filtered.add(element);
-			}
-		}
-	}
+  /** @since 1.1 */
+  protected void notifyDataChangeListeners() {
+    for (DataUpdateListener listener : this.dataUpdateListeners) {
+      listener.onDataUpdate();
+    }
+  }
 
-	/**
-	 * Orders the items.
-	 */
-	protected void order(Comparator<? super T> comparator, List<T> ordered) {
-		log.debug("Ordering list itmes");
-		if (comparator != null) {
-			Collections.sort(ordered, comparator);
-		}
-	}
+  public void addDataUpdateListener(DataUpdateListener listener) {
+    this.dataUpdateListeners.add(listener);
+  }
 
-	/**
-	 * Gets sublist from the list.
-	 * 
-	 * @param records
-	 *            list where the sublist will be originated from.
-	 * @param start
-	 *            first index of the element to be included to the sublist. List
-	 *            is 0-based.
-	 * @param end
-	 *            last index of the element to be included to the sublist.
-	 * 
-	 * @return sublist of the given list.
-	 */
-	public static <E> List<E> getSubList(List<E> records, int start, int end) {
-		int len = end - start + 1;
+  public void removeDataUpdateListener(DataUpdateListener listener) {
+    this.dataUpdateListeners.remove(listener);
+  }
 
-		List<E> subRecords = null;
-		if (start < 0) {
-			start = 0;
-		}
+  // *********************************************************************
+  // * OVERRIDABLE METHODS
+  // *********************************************************************
 
-		end = start + len;
-		if (end < 0) {
-			subRecords = records;
-		} else if (start >= records.size()) {
-			subRecords = new ArrayList<E>();
-		} else {
-			if (end > records.size()) {
-				end = records.size();
-			}
+  /**
+   * Processes the list items, filtering and ordering them, if there is need.
+   */
+  protected void process(BeanFilter beanFilter, Comparator<? super T> beanOrder, List<T> all, List<T> processed) {
+    if (this.doFilter) {
+      filter(beanFilter, all, processed);
 
-			List<E> subList = records.subList(start, end);
-			ArrayList<E> tmpRecords = new ArrayList<E>();
-			for (int i = 0; i < subList.size(); i++) {
-				tmpRecords.add(subList.get(i));
-			}
-			subRecords = tmpRecords;
-		}
+      this.doFilter = false;
+      this.doOrder = true;
+    }
+    if (this.doOrder) {
+      order(beanOrder, processed);
+      this.doOrder = false;
+    }
+  }
 
-		return new ArrayList<E>(subRecords);
-	}
+  /**
+   * Filters the items.
+   * 
+   * @param beanFilter Bean filter.
+   */
+  protected void filter(BeanFilter beanFilter, List<T> all, List<T> filtered) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Filtering list items");
+    }
+    filtered.clear();
+    if (beanFilter == null) {
+      filtered.addAll(all);
+      return;
+    }
+    for (T element : all) {
+      if (beanFilter.suits(element)) {
+        filtered.add(element);
+      }
+    }
+  }
 
-	// *********************************************************************
-	// * INNER CLASSES
-	// *********************************************************************
+  /**
+   * Orders the items.
+   */
+  protected void order(Comparator<? super T> comparator, List<T> ordered) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Ordering list items");
+    }
+    if (comparator != null) {
+      Collections.sort(ordered, comparator);
+    }
+  }
 
-	class BeanOrder implements Comparator<T>, Serializable {
-		
-		private static final long serialVersionUID = 1L;
+  /**
+   * Gets sublist from the list.
+   * 
+   * @param records list where the sublist will be originated from.
+   * @param start first index of the element to be included to the sublist. List is 0-based.
+   * @param end last index of the element to be included to the sublist.
+   * 
+   * @return sublist of the given list.
+   */
+  public static <E> List<E> getSubList(List<E> records, int start, int end) {
+    int len = end - start + 1;
 
-		private ComparatorExpression orderExpr;
-		private BeanVariableResolver resolver1;
-		private BeanVariableResolver resolver2;
+    List<E> subRecords = null;
+    if (start < 0) {
+      start = 0;
+    }
 
-		public BeanOrder(ComparatorExpression orderExpr) {
-			this.orderExpr = orderExpr;
-			this.resolver1 = new BeanVariableResolver(
-					MemoryBasedListDataProvider.this.beanClass);
-			this.resolver2 = new BeanVariableResolver(
-					MemoryBasedListDataProvider.this.beanClass);
-		}
+    end = start + len;
+    if (end < 0) {
+      subRecords = records;
+    } else if (start >= records.size()) {
+      subRecords = new ArrayList<E>();
+    } else {
+      if (end > records.size()) {
+        end = records.size();
+      }
 
-		public int compare(T o1, T o2) {
-			this.resolver1.setBean(o1);
-			this.resolver2.setBean(o2);
-			try {
-				return this.orderExpr.compare(this.resolver1, this.resolver2);
-			} catch (ExpressionEvaluationException e) {
-				throw new NestableRuntimeException(e);
-			}
-		}
-	}
+      List<E> subList = records.subList(start, end);
+      ArrayList<E> tmpRecords = new ArrayList<E>();
+      for (int i = 0; i < subList.size(); i++) {
+        tmpRecords.add(subList.get(i));
+      }
+      subRecords = tmpRecords;
+    }
 
-	class BeanFilter implements Serializable {
+    return new ArrayList<E>(subRecords);
+  }
 
-		private static final long serialVersionUID = 1L;
+  // *********************************************************************
+  // * INNER CLASSES
+  // *********************************************************************
 
-		private Expression filterExpr;
+  class BeanOrder implements Comparator<T>, Serializable {
 
-		private BeanVariableResolver resolver;
+    private ComparatorExpression orderExpr;
 
-		public BeanFilter(Expression filterExpr) {
-			this.filterExpr = filterExpr;
-			this.resolver = new BeanVariableResolver(
-					MemoryBasedListDataProvider.this.beanClass);
-		}
+    private BeanVariableResolver<T> resolver1;
 
-		public boolean suits(Object bean) {
-			this.resolver.setBean(bean);
-			try {
-				return ((Boolean) this.filterExpr.evaluate(this.resolver))
-						.booleanValue();
-			} catch (ExpressionEvaluationException e) {
-				throw new NestableRuntimeException(e);
-			}
-		}
-	}
+    private BeanVariableResolver<T> resolver2;
 
-	// *********************************************************************
-	// * ABSTRACT METHODS
-	// *********************************************************************
+    public BeanOrder(ComparatorExpression orderExpr) {
+      this.orderExpr = orderExpr;
+      this.resolver1 = new BeanVariableResolver<T>(MemoryBasedListDataProvider.this.beanClass);
+      this.resolver2 = new BeanVariableResolver<T>(MemoryBasedListDataProvider.this.beanClass);
+    }
 
-	/**
-	 * A callback method, which should load the data and return it as a list of
-	 * Beans. It should use for that the <code>params</code> which are
-	 * passed to it from web component.
-	 * 
-	 * @return <code>List</code> of Value Objects.
-	 */
-	public abstract List<T> loadData() throws Exception;
+    public int compare(T o1, T o2) {
+      this.resolver1.setBean(o1);
+      this.resolver2.setBean(o2);
+      try {
+        return this.orderExpr.compare(this.resolver1, this.resolver2);
+      } catch (ExpressionEvaluationException e) {
+        throw new NestableRuntimeException(e);
+      }
+    }
+  }
+
+  class BeanFilter implements Serializable {
+
+    private Expression filterExpr;
+
+    private BeanVariableResolver<T> resolver;
+
+    public BeanFilter(Expression filterExpr) {
+      this.filterExpr = filterExpr;
+      this.resolver = new BeanVariableResolver<T>(MemoryBasedListDataProvider.this.beanClass);
+    }
+
+    public boolean suits(T bean) {
+      this.resolver.setBean(bean);
+      try {
+        return ((Boolean) this.filterExpr.evaluate(this.resolver)).booleanValue();
+      } catch (ExpressionEvaluationException e) {
+        throw new NestableRuntimeException(e);
+      }
+    }
+  }
+
+  // *********************************************************************
+  // * ABSTRACT METHODS
+  // *********************************************************************
+
+  /**
+   * A callback method, which should load the data and return it as a list of Beans. It should use for that the
+   * <code>params</code> which are passed to it from web component.
+   * 
+   * @return <code>List</code> of Value Objects.
+   */
+  public abstract List<T> loadData() throws Exception;
 }

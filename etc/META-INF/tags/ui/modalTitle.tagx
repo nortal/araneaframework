@@ -1,0 +1,25 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:wm="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty"
+		description="A wrapper for a modal mode popup content." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="labelId" required="true"
+		description="The label ID of the modal popup title." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<div class="modalpopup-header clear">
+		<h1><fmt:message key="${labelId}"/><jsp:doBody/></h1>
+		<p class="close"><ui:eventLinkButton id="overlayCloseLink" labelId="global.close" eventId="close"/></p>
+		<!-- The script is needed to get the value later when closing the overlay with the ESCAPE key. See _scripts.js:59. -->
+		<script type="text/javascript">window.widgetId = '${widgetId}';</script>
+	</div>
+
+</jsp:root>
+

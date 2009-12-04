@@ -1,0 +1,20 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:wm="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Generates a link. Must be used inside an 'hX' tag."/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="labelId" required="true" description="The label ID of the title." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<div class="sub-heading clear">
+		<h2><fmt:message key="${labelId}"/></h2>
+		<jsp:doBody/>
+	</div>
+
+</jsp:root>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework.router;
 
@@ -21,26 +21,33 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.TopServiceContext;
 
 /**
- * A top router service. Enriches the environment with an object
- * of this class under the key StandardTopServiceRouterService.class.
+ * A top router service. Enriches the environment with an object of this class under the key
+ * StandardTopServiceRouterService.class.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardTopServiceRouterService extends BaseExpiringServiceRouterService {
-  protected Object getServiceKey() throws Exception {
+
+  @Override
+  protected String getServiceKey() throws Exception {
     return TopServiceContext.TOP_SERVICE_KEY;
   }
 
-  public Object getKeepAliveKey() { 
+  @Override
+  public String getKeepAliveKey() {
     return TopServiceContext.KEEPALIVE_KEY;
   }
 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class, new ServiceRouterContextImpl(serviceId));
+  @Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
+    return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class,
+        new ServiceRouterContextImpl(serviceId));
   }
-    
-  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements TopServiceContext {
-    protected ServiceRouterContextImpl(Object serviceId) {
+
+  private class ServiceRouterContextImpl extends BaseExpiringServiceRouterService.ServiceRouterContextImpl implements
+      TopServiceContext {
+
+    protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
   }

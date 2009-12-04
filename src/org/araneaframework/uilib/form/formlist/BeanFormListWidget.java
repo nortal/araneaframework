@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,63 +12,73 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.form.formlist;
 
-import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.FormWidget;
 
+import org.araneaframework.uilib.form.reader.ListFormReader;
+
+import org.araneaframework.uilib.form.BeanFormWidget;
+
 /**
- * Editable rows widget that is used to handle simultenous editing of multiple
- * forms with same structure.
+ * Editable rows list widget that is used to handle simultaneous editing of multiple forms with same structure. The
+ * generic parameter K corresponds to the type of the key values, and the generic parameter R corresponds to the type of
+ * the row values.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class BeanFormListWidget extends BaseFormListWidget {
-
-  private static final long serialVersionUID = 1L;
-
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
-
-  protected Class beanClass;
-
-  // *******************************************************************
-  // CONSTRUCTORS
-  // *******************************************************************
+public class BeanFormListWidget<K, R> extends BaseFormListWidget<K, R> {
 
   /**
-   * @param rowHandler row handler.
-   * @param beanClass Class of beans in form
+   * The class of the list row data.
    */
-  public BeanFormListWidget(FormRowHandler rowHandler, Class beanClass) {
-    super(rowHandler);
+  protected Class<R> beanClass;
+
+  /**
+   * Constructs a form list widget using the given row handler that will respond to form list events. The
+   * <code>beanClass</code> is used when the list has also add-form for adding new rows to list.
+   * 
+   * @param formRowHandler The handler that will respond to form list events.
+   * @param beanClass The class of form and list row data.
+   */
+  public BeanFormListWidget(FormRowHandler<K, R> formRowHandler, Class<R> beanClass) {
+    super(formRowHandler);
     this.beanClass = beanClass;
   }
 
   /**
-   * @param rowHandler row handler.
-   * @param beanClass Class of beans in form
+   * Constructs a form list widget using the given row handler (that will respond to form list events) and the given
+   * model callback (that will provide the rows data to this form list). The <code>beanClass</code> is used when the
+   * list has also add-form for adding new rows to list.
+   * 
+   * @param rowHandler The handler that will respond to form list events.
+   * @param model The model callback that will provide the rows data to this form list.
+   * @param beanClass The class of form and list row data.
    */
-  public BeanFormListWidget(FormRowHandler rowHandler, FormListModel model,
-      Class beanClass) {
+  public BeanFormListWidget(FormRowHandler<K, R> rowHandler, FormListModel<R> model, Class<R> beanClass) {
     super(rowHandler, model);
     this.beanClass = beanClass;
   }
 
-  // *******************************************************************
-  // PUBLIC METHODS
-  // *******************************************************************
-  public Class getBeanClass() {
+  /**
+   * Provides the bean class of list forms and list row data. This is usually used by {@link ListFormReader}.
+   * 
+   * @return The class of the list row data as specified to the constructor of this class.
+   */
+  public Class<R> getBeanClass() {
     return this.beanClass;
   }
 
-  // *******************************************************************
-  // PROTECTED METHODS
-  // *******************************************************************
-  protected FormWidget buildAddForm() {
-    return new BeanFormWidget(beanClass);
+  @Override
+  protected BeanFormWidget<R> buildAddForm() {
+    return new BeanFormWidget<R>(this.beanClass);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  protected BeanFormRow<K, R> createNewEditableRow(K key, R row, String rowFormId, FormWidget rowForm) {
+    return new BeanFormRow<K, R>(this, key, row, rowFormId, (BeanFormWidget<R>) rowForm, this.defaultOpen);
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
@@ -30,7 +30,7 @@ import org.araneaframework.uilib.form.control.NumberControl;
  * @jsp.tag
  *   name = "numberInput"
  *   body-content = "JSP"
- *   description = "Form number input field, represents UiLib "NumberControl"."
+ *   description = "Form number input field, represents UiLib 'NumberControl'."
  */
 public class FormNumberInputHtmlTag extends BaseFormTextInputHtmlTag {
   {
@@ -38,12 +38,13 @@ public class FormNumberInputHtmlTag extends BaseFormTextInputHtmlTag {
     baseStyleClass = "aranea-number";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("NumberControl");
 
     NumberControl.ViewModel viewModel = ((NumberControl.ViewModel)controlViewModel);
 
-    Map attributes = new HashMap();
+    Map<String, String> attributes = new HashMap<String, String>();
     if (viewModel.getInputFilter() != null) {
       attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
     }

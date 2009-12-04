@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript" src="app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-tree.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Tests for "aranea-tree.js"</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function testNamespaces() {
+			assertNotUndefined('Aranea namespace must exist!', Aranea);
+			assertNotUndefined('Aranea.Tree namespace must exist!', Aranea.Tree);
+		}
+
+		function testAction() {
+			var id = 'testId';
+			var target = 'testTargetId';
+			var param = { test: true };
+			var onComplete = function() { return true };
+			var options = { param1: true, param2: false, param3: null };
+
+			Aranea.Page = {
+				action: function() {
+					window.testActionActionCalled = true;
+					assertEquals('The arguments length was less than expexted!', 8, arguments.length);
+					assertEquals('Action ID not as expected!', id, arguments[0]);
+					assertEquals('Action target not as expected!', 'test-item2.' + target, arguments[1]);
+					assertEquals('Action param not as expected!', param, arguments[2]);
+					assertNull('Extra parameters must be null!', arguments[3]);
+					assert('Action callback was not a function!', Object.isFunction(arguments[4]));
+					assertEquals('Action request options not as expected!', options, arguments[5]);
+					assertFalse('Action sync not as expected!', arguments[6]);
+					assertEquals('Action element not as expected!', 'test-tree', arguments[7] ? arguments[7].id : null);
+				}
+			};
+
+			Aranea.Tree.action('testElement', id, target, param, onComplete, options);
+			assertTrue('Aranea.Page.action was not called!', window.testActionActionCalled);
+		}
+
+		function testNotTestedFunctions() {
+			assert('Aranea.Tree.toggleNode must be a function!', Object.isFunction(Aranea.Tree.toggleNode));
+			assert('Aranea.Tree.displayAction must be a function!', Object.isFunction(Aranea.Tree.displayAction));
+		}
+
+	</script>
+
+	<p>This page contains JsUnit-tests for <b>aranea-tree.js</b>.</p>
+
+	<ul id="test-tree" class="aranea-tree async">
+		<li id="test-item1" class="aranea-tree-node">Tree Item 1</li>
+		<li id="test-item2" class="aranea-tree-node">Tree Item <span id="testElement">2</span></li>
+		<li id="test-item3" class="aranea-tree-node">Tree Item 3</li>
+		<li id="test-item4" class="aranea-tree-node">Tree Item 4</li>
+	</ul>
+
+</body>
+</html>

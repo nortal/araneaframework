@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.exception;
 
@@ -22,11 +22,9 @@ package org.araneaframework.jsp.exception;
  * {@link org.araneaframework.uilib.form.FormElement} id, and cannot deduce it
  * from pagecontext either.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class MissingFormElementIdAraneaJspException extends AraneaJspException {
-
-  private static final long serialVersionUID = 1L;
 
   public MissingFormElementIdAraneaJspException(Object object) {
     super("You must set the 'id' either directly or using 'ui:formElement' "

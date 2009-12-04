@@ -30,7 +30,7 @@ import org.araneaframework.Viewable;
  * available.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ApplicationComponent extends Component, Composite, Viewable {
 
@@ -50,6 +50,6 @@ public interface ApplicationComponent extends Component, Composite, Viewable {
     /**
      * Return component's child components.
      */
-    public Map getChildren();
+    public Map<Object, Component> getChildren();
   }
 }

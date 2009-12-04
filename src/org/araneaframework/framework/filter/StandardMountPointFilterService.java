@@ -25,27 +25,26 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.filter.StandardMountingFilterService;
 
 /**
- * This service serves as the entry point for mounted URLs. If the current
- * request is sent to one of such URLs it will send the mounting message
- * produced by the mounting
- * {@link org.araneaframework.framework.MountContext.MessageFactory}.
+ * This service serves as the entry point for mounted URLs. If the current request is sent to one of such URLs it will
+ * send the mounting message produced by the mounting {@link org.araneaframework.framework.MountContext.MessageFactory}.
  * <p>
  * This service doesn't require any configuration.
  * 
  * @see MountContext
  * @see StandardMountingFilterService
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardMountPointFilterService extends BaseFilterService {
-  private static final long serialVersionUID = 1L;
 
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
     MountContext mountCtx = getEnvironment().requireEntry(MountContext.class);
     Message mountMsg = mountCtx.getMountedMessage(input);
+
     if (mountMsg != null) {
-      mountMsg.send(null, childService);
+      mountMsg.send(null, this.childService);
     }
+
     super.action(path, input, output);
   }
 }

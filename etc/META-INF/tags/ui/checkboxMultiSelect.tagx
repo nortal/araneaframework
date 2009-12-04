@@ -1,0 +1,63 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="Generates a multi-select checkbox input."/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="Overrides the ID of the input." />
+	<jsp:directive.attribute name="styleClass" description="Appended CSS class for the tag." />
+	<jsp:directive.attribute name="readonly" type="java.lang.Boolean" description="A Boolean specifying whether the disabled input is rendered read-only or disabled." />
+	<jsp:directive.attribute name="tabindex" description="HTML tabindex for the element." />
+	<jsp:directive.attribute name="table" type="java.lang.Boolean" description="A Boolean indicating whether a table should be wrapped around checkboxes. If true then body is also evaluated for custom content (inputs)." />
+
+	<jsp:directive.attribute name="events" type="java.lang.Boolean" description="Whether the element will send the events that are registered by server-side (by default 'true')." />
+	<jsp:directive.attribute name="onChangePrecondition" description="Precondition for deciding whether go to server side or not." />
+	<jsp:directive.attribute name="updateRegions" description="Enumerates the regions of markup to be updated in this widget scope. Please see ui:updateRegion for details." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Enumerates the regions of markup to be updated globally. Please see ui:updateRegion for details." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<util:formElement id="${id}" controlType="MultiSelectControl" label="false">
+		<c:if test="${empty table}">
+			<fmt:message var="table" key="false"/>
+		</c:if>
+
+		<c:choose>
+			<c:when test="${table}">
+				<table class="wrap">
+					<c:forEach items="${control.selectItems}" var="item" varStatus="status">
+						<tr>
+							<th>
+								<util:multiSelectItem type="checkbox" displayItem="${item}"
+									styleClass="${styleClass}" tabindex="${tabindex}" readonly="${readonly}"
+									events="${events}" onChangePrecondition="${onChangePrecondition}"
+									updateRegions="${updateRegions}" globalUpdateRegions="${globalUpdateRegions}"/>
+							</th>
+							<td>
+								<c:set var="checkboxValue" value="${item.value}" scope="request"/>
+								<jsp:doBody/>
+								<c:remove var="checkboxValue" scope="request"/>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</c:when>
+			<c:otherwise>
+				<c:forEach items="${control.selectItems}" var="item" varStatus="status">
+					<util:multiSelectItem type="checkbox" displayItem="${item}"
+						styleClass="${styleClass}" tabindex="${tabindex}" readonly="${readonly}"
+						events="${events}" onChangePrecondition="${onChangePrecondition}"
+						updateRegions="${updateRegions}" globalUpdateRegions="${globalUpdateRegions}"/>
+					<c:if test="${not status.last}">
+						<br/>
+					</c:if>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
+	</util:formElement>
+</jsp:root>

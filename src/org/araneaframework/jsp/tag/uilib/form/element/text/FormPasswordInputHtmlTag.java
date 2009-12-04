@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
@@ -30,9 +30,10 @@ import org.araneaframework.uilib.form.control.TextControl;
  * @jsp.tag
  *   name = "passwordInput"
  *   body-content = "JSP"
- *   description = "Form password input field, represents UiLib "TextControl"."
+ *   description = "Form password input field, represents UiLib 'TextControl'."
  */
 public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("TextControl");
@@ -40,8 +41,8 @@ public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
     TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
 
     // Write
-    Map attributes = new HashMap();
-    attributes.put("maxLength", viewModel.getMaxLength());
+    Map<String, String> attributes = new HashMap<String, String>();
+    attributes.put("maxLength", String.valueOf(viewModel.getMaxLength()));
     writeTextInput(out, "password", false, attributes);
 
     // Continue

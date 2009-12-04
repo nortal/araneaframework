@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.presentation;     
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -33,6 +32,7 @@ import org.araneaframework.jsp.util.JspUtil;
 public class LinkHtmlTag extends BaseLinkTag {
   private String disabledStyleClass;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -52,6 +52,7 @@ public class LinkHtmlTag extends BaseLinkTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {  
     JspUtil.writeEndTag_SS(out, "a");
 
@@ -65,7 +66,7 @@ public class LinkHtmlTag extends BaseLinkTag {
 
   /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   /**
    * @jsp.attribute
@@ -73,7 +74,7 @@ public class LinkHtmlTag extends BaseLinkTag {
    *   required = "false"
    *   description = "CSS class for disabled link" 
    */
-  public void setDisabledStyleClass(String disabledStyleClass) throws JspException {
-    this.disabledStyleClass = (String)this.evaluate("disabledStyleClass", disabledStyleClass, String.class);
+  public void setDisabledStyleClass(String disabledStyleClass){
+    this.disabledStyleClass = this.evaluate("disabledStyleClass", disabledStyleClass, String.class);
   }
 }

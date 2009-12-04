@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
-package org.araneaframework.jsp.tag.basic;				
+package org.araneaframework.jsp.tag.basic;
+
+import org.apache.commons.lang.ObjectUtils;
 
 import java.io.Writer;
 import java.util.Enumeration;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.Tag;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
-
 
 /**
  * Debug tag
@@ -31,75 +33,71 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "debug"
- *   body-content = "JSP"
- *   description = "Outputs all attributes from the specified scope on screen. <br/>        
-        Possible scopes are: 
-        <ul>
-          <li><i>application</i></li>
-          <li><i>session</i></li>
-          <li><i>request</i></li>
-          <li><i>page</i></li>
-        </ul>  
-        The default scope is <i>page</i>."
+ *  name = "debug"
+ *  body-content = "JSP"
+ *  description = "Outputs all attributes from the specified scope on screen. <br/>Possible scopes are:<ul><li><i>application</i></li><li><i>session</i></li><li><i>request</i></li><li><i>page</i></li></ul>The default scope is <i>page</i>."
  */
 
 public class DebugHtmlTag extends BaseTag {
-	public final static String APPLICATION_SCOPE = "application";
-	public final static String SESSION_SCOPE = "session";
-	public final static String REQUEST_SCOPE = "request";
-	public final static String PAGE_SCOPE = "page";
 
-	protected int scope = PageContext.PAGE_SCOPE;
+  public final static String APPLICATION_SCOPE = "application";
 
-	protected int doEndTag(Writer out) throws Exception {			
-		// Output
-		JspUtil.writeOpenStartTag(out, "table");
-		JspUtil.writeAttribute(out, "border", "1");
-		JspUtil.writeCloseStartTag(out);
+  public final static String SESSION_SCOPE = "session";
 
-		for(Enumeration i = pageContext.getAttributeNamesInScope(scope); i.hasMoreElements();) {
-			String key = (String)i.nextElement();
-			JspUtil.writeStartTag(out, "tr");
-			JspUtil.writeStartTag(out, "td");
-			JspUtil.writeEscaped(out, key);
-			JspUtil.writeEndTag(out, "td");
-			JspUtil.writeStartTag(out, "td");
-			Object o = pageContext.getAttribute(key, scope);
-			JspUtil.writeEscaped(out, o != null ? o.toString() : "<i>null</i>");
-			JspUtil.writeEndTag(out, "td");
-			JspUtil.writeEndTag(out, "tr");
-		}
+  public final static String REQUEST_SCOPE = "request";
 
-		JspUtil.writeEndTag(out, "table");    
+  public final static String PAGE_SCOPE = "page";
 
-		// Continue
-		super.doEndTag(out);
-		return EVAL_PAGE;      
-	}
-	
-	/* ***********************************************************************************
-	 * Tag attributes
-	 * ***********************************************************************************/
+  protected int scope = PageContext.PAGE_SCOPE;
 
-	/**
-	 *	@jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Attribute scope."
-	 */
-	public void setScope(String scope) throws JspException {
-		String scopeString = (String)evaluateNotNull("scope", scope, String.class);
+  @Override
+  protected int doEndTag(Writer out) throws Exception {
+    // Output
+    JspUtil.writeOpenStartTag(out, "table");
+    JspUtil.writeAttribute(out, "border", "1");
+    JspUtil.writeCloseStartTag(out);
 
-		if (APPLICATION_SCOPE.equals(scopeString))
-			this.scope = PageContext.APPLICATION_SCOPE;
-		else if (SESSION_SCOPE.equals(scopeString))
-			this.scope = PageContext.SESSION_SCOPE;
-		else if (REQUEST_SCOPE.equals(scopeString))
-			this.scope = PageContext.REQUEST_SCOPE;
-		else if (PAGE_SCOPE.equals(scopeString))
-			this.scope = PageContext.PAGE_SCOPE;
-		else
-			throw new AraneaJspException("Wrong debug scope value '" + this.scope + "'");
-	}
+    for (Enumeration<String> i = this.pageContext.getAttributeNamesInScope(this.scope); i.hasMoreElements();) {
+      String key = i.nextElement();
+      JspUtil.writeStartTag(out, "tr");
+      JspUtil.writeStartTag(out, "td");
+      JspUtil.writeEscaped(out, key);
+      JspUtil.writeEndTag(out, "td");
+      JspUtil.writeStartTag(out, "td");
+      String debug = ObjectUtils.toString(this.pageContext.getAttribute(key, this.scope), "<i>null</i>");
+      JspUtil.writeEscaped(out, debug);
+      JspUtil.writeEndTag(out, "td");
+      JspUtil.writeEndTag(out, "tr");
+    }
+
+    JspUtil.writeEndTag(out, "table");
+
+    // Continue
+    super.doEndTag(out);
+    return Tag.EVAL_PAGE;
+  }
+
+  // Tag attributes
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Attribute scope."
+   */
+  public void setScope(String scope) throws JspException {
+    String scopeString = evaluateNotNull("scope", scope, String.class);
+
+    if (APPLICATION_SCOPE.equals(scopeString)) {
+      this.scope = PageContext.APPLICATION_SCOPE;
+    } else if (SESSION_SCOPE.equals(scopeString)) {
+      this.scope = PageContext.SESSION_SCOPE;
+    } else if (REQUEST_SCOPE.equals(scopeString)) {
+      this.scope = PageContext.REQUEST_SCOPE;
+    } else if (PAGE_SCOPE.equals(scopeString)) {
+      this.scope = PageContext.PAGE_SCOPE;
+    } else {
+      throw new AraneaJspException("Wrong debug scope value '" + this.scope + "'");
+    }
+  }
 }

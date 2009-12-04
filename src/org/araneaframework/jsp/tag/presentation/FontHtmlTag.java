@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -36,6 +35,7 @@ public class FontHtmlTag extends BaseTag {
   protected String size = null;
   protected String color = null;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -49,6 +49,7 @@ public class FontHtmlTag extends BaseTag {
     return EVAL_BODY_INCLUDE;    
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {   
     JspUtil.writeEndTag(out, "font");
 
@@ -60,7 +61,7 @@ public class FontHtmlTag extends BaseTag {
 
   /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   /**
    * @jsp.attribute
@@ -68,8 +69,8 @@ public class FontHtmlTag extends BaseTag {
    *   required = "false"
    *   description = "Font face." 
    */
-  public void setFace(String face) throws JspException {
-    this.face = (String)evaluate("face", face, String.class);
+  public void setFace(String face){
+    this.face = evaluate("face", face, String.class);
   }
 
   /**
@@ -78,8 +79,8 @@ public class FontHtmlTag extends BaseTag {
    *   required = "false"
    *   description = "Font size." 
    */
-  public void setSize(String size) throws JspException {
-    this.size = (String)evaluate("size", size, String.class);
+  public void setSize(String size){
+    this.size = evaluate("size", size, String.class);
   }
 
   /**
@@ -88,7 +89,7 @@ public class FontHtmlTag extends BaseTag {
    *   required = "false"
    *   description = "Font color (any HTML valid color)." 
    */
-  public void setColor(String color) throws JspException {
-    this.color = (String)evaluate("color", color, String.class);
+  public void setColor(String color){
+    this.color = evaluate("color", color, String.class);
   }
 }

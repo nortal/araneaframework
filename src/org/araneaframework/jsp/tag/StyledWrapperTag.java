@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag;
 
@@ -34,14 +34,15 @@ public abstract class StyledWrapperTag extends BaseTagWrapperTag  {
 	/**
 	 * Callback: configure row tag
 	 */
-	protected void configureTag(ContainedTagInterface tag) throws JspException {
+	@Override
+  protected void configureTag(ContainedTagInterface tag) throws JspException {
 		StyledTagInterface styledTag = (StyledTagInterface)tag; 
 		styledTag.setStyleClass(styleClass);
 	}
 
 	/* ***********************************************************************************
 	 * Tag attributes
-	 * ***********************************************************************************/
+	 * ********************************************************************************* */
 
 	/**
 	 * @jsp.attribute
@@ -49,7 +50,7 @@ public abstract class StyledWrapperTag extends BaseTagWrapperTag  {
 	 *   required = "false"
 	 *   description = "Cell css class, defines the way the cell will be rendered." 
 	 */
-	public void setStyleClass(String styleClass) throws JspException {
-		this.styleClass = (String)evaluate("styleClass", styleClass, String.class);
+	public void setStyleClass(String styleClass){
+		this.styleClass = evaluate("styleClass", styleClass, String.class);
 	}
 }

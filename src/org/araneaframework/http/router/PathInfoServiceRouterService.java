@@ -36,14 +36,17 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 
   private String pathInfo;
 
+  @Override
   protected Object getServiceIdFromInput(InputData input) throws Exception {
     return getPathInfo(input)[0];
   }
 
-  protected Object getServiceKey() throws Exception {
+  @Override
+  protected String getServiceKey() throws Exception {
     return "pathInfoServiceId";
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     this.pathInfo = getPathInfo(input)[1];
     super.action(path, input, output);
@@ -62,7 +65,8 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 
       int index = path.indexOf("/");
       // we have a second slash
-      if (index != -1) { // not interested in the first slash
+      if (index != -1) {
+        // not interested in the first slash
         pathInfo = path.substring(index + 1);
         serviceId = path.substring(0, index);
       } else {
@@ -74,21 +78,22 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
     return new String[] { serviceId, pathInfo };
   }
 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
-    Map entries = new HashMap();
+  @Override
+  protected Environment getChildEnvironment(String serviceId) throws Exception {
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
     return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
   }
 
-  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl
-      implements PathInfoServiceContext {
+  private class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl implements
+      PathInfoServiceContext {
 
-    protected ServiceRouterContextImpl(Object serviceId) {
+    protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
 
     public String getPathInfo() {
-      return pathInfo;
+      return PathInfoServiceRouterService.this.pathInfo;
     }
   }
 }

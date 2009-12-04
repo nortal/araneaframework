@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests;
 
@@ -34,27 +34,30 @@ import org.araneaframework.uilib.form.reader.BeanFormWriter;
 import org.araneaframework.uilib.form.reader.MapFormReader;
 import org.araneaframework.uilib.form.reader.MapFormWriter;
 
-
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormRWTest extends TestCase {
 
-  private static final Log log = LogFactory.getLog(FormRWTest.class);
+  private static final Log LOG = LogFactory.getLog(FormRWTest.class);
+
+  private static final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
+
+  private static final Long TEN = 10L;
+
+  private static final Boolean TRUE = true;
 
   private FormWidget makeVoForm() throws Exception {
-
-    //Creating form :-)
+    // Creating form :-)
     FormWidget voForm = new FormWidget();
     voForm._getComponent().init(null, new MockEnvironment());
-    
-    //Adding elements to form
+
+    // Adding elements to form
     voForm.addElement("booleanValue", "vo checkbox", new CheckboxControl(), new BooleanData(), true);
     voForm.addElement("stringValue", "vo text", new TextControl(), new StringData(), true);
     voForm.addElement("longValue", "vo long", new TextControl(), new LongData(), true);
 
-    //Adding a composite element
+    // Adding a composite element
     FormWidget subTestVO = voForm.addSubForm("subTestVO");
     subTestVO.addElement("booleanValue", "vo checkbox", new CheckboxControl(), new BooleanData(), true);
     subTestVO.addElement("stringValue", "vo text", new TextControl(), new StringData(), true);
@@ -67,208 +70,161 @@ public class FormRWTest extends TestCase {
    * Tests basic Value Object reading.
    */
   public void testFormBasicVoReading() throws Exception {
-
     FormWidget voForm = makeVoForm();
     TestVO test = new TestVO();
 
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
-    voForm.setValueByFullName("booleanValue", Boolean.TRUE);
+    voForm.setValueByFullName("booleanValue", TRUE);
     voForm.setValueByFullName("stringValue", LIFE_IS_BEAUTIFUL);
     voForm.setValueByFullName("longValue", TEN);
 
-    BeanFormReader voReader = new BeanFormReader(voForm);
+    new BeanFormReader(voForm).readFormBean(test);
 
-    voReader.readFormBean(test);
+    LOG.debug("Value Object after reading from form" + test);
 
-    log.debug("Value Object after reading from form" + test);
-
-    assertTrue("Boolean value read properly", test.getBooleanValue().equals(Boolean.TRUE));
-    assertTrue("String value read properly", test.getStringValue().equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value read properly", test.getLongValue().equals(TEN));
+    assertEquals("Boolean value read properly", test.getBooleanValue(), TRUE);
+    assertEquals("String value read properly", test.getStringValue(), LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value read properly", test.getLongValue(), TEN);
   }
 
   /**
    * Tests hierarchical Value Object reading.
    */
   public void testFormHierarchicalVoReading() throws Exception {
-
     FormWidget voForm = makeVoForm();
     TestVO test = new TestVO();
 
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);   
-
-    voForm.setValueByFullName("subTestVO.booleanValue", Boolean.TRUE);
+    voForm.setValueByFullName("subTestVO.booleanValue", TRUE);
     voForm.setValueByFullName("subTestVO.stringValue", LIFE_IS_BEAUTIFUL);
     voForm.setValueByFullName("subTestVO.longValue", TEN);
 
-    BeanFormReader voReader = new BeanFormReader(voForm);
+    new BeanFormReader(voForm).readFormBean(test);
 
-    voReader.readFormBean(test);
+    LOG.debug("Value Object after reading from form");
 
-    log.debug("Value Object after reading from form");
-
-    assertTrue("Boolean value read properly", test.getSubTestVO().getBooleanValue().equals(Boolean.TRUE));
-    assertTrue("String value read properly", test.getSubTestVO().getStringValue().equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value read properly", test.getSubTestVO().getLongValue().equals(TEN));
+    assertEquals("Boolean value read properly", test.getSubTestVO().getBooleanValue(), TRUE);
+    assertEquals("String value read properly", test.getSubTestVO().getStringValue(), LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value read properly", test.getSubTestVO().getLongValue(), TEN);
   }
 
   /**
    * Tests basic Value Object writing.
    */
   public void testFormBasicVoWriting() throws Exception {
-
     FormWidget voForm = makeVoForm();
     TestVO test = new TestVO();
 
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
-    test.setBooleanValue(Boolean.TRUE);
+    test.setBooleanValue(TRUE);
     test.setStringValue(LIFE_IS_BEAUTIFUL);
     test.setLongValue(TEN);
 
-    BeanFormWriter voWriter = new BeanFormWriter(test.getClass());
+    new BeanFormWriter<TestVO>(TestVO.class).writeFormBean(voForm, test);
 
-    voWriter.writeFormBean(voForm, test);
-
-    assertTrue("Boolean value written properly", voForm.getValueByFullName("booleanValue").equals(Boolean.TRUE));
-    assertTrue("String value written properly", voForm.getValueByFullName("stringValue").equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value written properly", voForm.getValueByFullName("longValue").equals(TEN));
+    assertEquals("Boolean value written properly", voForm.getValueByFullName("booleanValue"), TRUE);
+    assertEquals("String value written properly", voForm.getValueByFullName("stringValue"), LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value written properly", voForm.getValueByFullName("longValue"), TEN);
   }
 
   /**
    * Tests hierarchical Value Object writing.
    */
   public void testFormHierarchicalVoWriting() throws Exception {
-
     FormWidget voForm = makeVoForm();
+
     TestVO test = new TestVO();
-
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
     test.setSubTestVO(new TestVO());
-
-    test.getSubTestVO().setBooleanValue(Boolean.TRUE);
+    test.getSubTestVO().setBooleanValue(TRUE);
     test.getSubTestVO().setStringValue(LIFE_IS_BEAUTIFUL);
     test.getSubTestVO().setLongValue(TEN);
 
-    BeanFormWriter voWriter = new BeanFormWriter(test.getClass());
+    new BeanFormWriter<TestVO>(TestVO.class).writeFormBean(voForm, test);
 
-    voWriter.writeFormBean(voForm, test);
+    assertEquals("Boolean value written properly", voForm.getValueByFullName("subTestVO.booleanValue"), TRUE);
+    assertEquals("String value written properly", voForm.getValueByFullName("subTestVO.stringValue"), LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value written properly", voForm.getValueByFullName("subTestVO.longValue"), TEN);
+  }
 
-    assertTrue("Boolean value written properly", voForm.getValueByFullName("subTestVO.booleanValue").equals(Boolean.TRUE));
-    assertTrue("String value written properly", voForm.getValueByFullName("subTestVO.stringValue").equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value written properly", voForm.getValueByFullName("subTestVO.longValue").equals(TEN));  }
-  
   /**
    * Tests basic Map reading.
    */
   public void testFormBasicMapReading() throws Exception {
-
-    FormWidget mapForm = makeVoForm();    
-
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
-    mapForm.setValueByFullName("booleanValue", Boolean.TRUE);
+    FormWidget mapForm = makeVoForm();
+    mapForm.setValueByFullName("booleanValue", TRUE);
     mapForm.setValueByFullName("stringValue", LIFE_IS_BEAUTIFUL);
     mapForm.setValueByFullName("longValue", TEN);
 
-    MapFormReader mapReader = new MapFormReader(mapForm);
+    Map<String, Object> readMap = new MapFormReader(mapForm).getMap();
 
-    Map readMap = mapReader.getMap();
+    LOG.debug("Map read from form: " + readMap);
 
-    log.debug("Map read from form: " + readMap);
-
-    assertTrue("Boolean value read properly", readMap.get("booleanValue").equals(Boolean.TRUE));
+    assertTrue("Boolean value read properly", readMap.get("booleanValue").equals(TRUE));
     assertTrue("String value read properly", readMap.get("stringValue").equals(LIFE_IS_BEAUTIFUL));
     assertTrue("Long value read properly", readMap.get("longValue").equals(TEN));
-  }  
-  
+  }
+
   /**
    * Tests hierarchical Map reading.
    */
+  @SuppressWarnings("unchecked")
   public void testFormHierarchicalMapReading() throws Exception {
-
-    FormWidget mapForm = makeVoForm();    
-
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
-    mapForm.setValueByFullName("subTestVO.booleanValue", Boolean.TRUE);
+    FormWidget mapForm = makeVoForm();
+    mapForm.setValueByFullName("booleanValue", Boolean.FALSE);
+    mapForm.setValueByFullName("subTestVO.booleanValue", TRUE);
     mapForm.setValueByFullName("subTestVO.stringValue", LIFE_IS_BEAUTIFUL);
     mapForm.setValueByFullName("subTestVO.longValue", TEN);
-    
-    MapFormReader mapReader = new MapFormReader(mapForm);
 
-    Map readMap = mapReader.getMap();
+    Map<String, Object> readMap = new MapFormReader(mapForm).getMap();
 
-    log.debug("Map read from form: " + readMap);
-    
-    Map subTestVoMap = (Map) readMap.get("subTestVO");
+    LOG.debug("Map read from form: " + readMap);
+
+    Map<String, Object> subTestVoMap = (Map<String, Object>) readMap.get("subTestVO");
     assertEquals(Boolean.FALSE, readMap.get("booleanValue"));
     assertNull("String value read properly", readMap.get("stringValue"));
     assertNull("Long value read properly", readMap.get("longValue"));
-    
-    assertTrue("Boolean value read properly", subTestVoMap.get("booleanValue").equals(Boolean.TRUE));
-    assertTrue("String value read properly", subTestVoMap.get("stringValue").equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value read properly", subTestVoMap.get("longValue").equals(TEN));
-  }    
-  
+
+    assertEquals("Boolean value read properly", subTestVoMap.get("booleanValue"), TRUE);
+    assertEquals("String value read properly", subTestVoMap.get("stringValue"), LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value read properly", subTestVoMap.get("longValue"), TEN);
+  }
+
   /**
    * Tests basic Map writing.
    */
   public void testFormBasicMapWriting() throws Exception {
 
     FormWidget mapForm = makeVoForm();
-    Map testMap = new HashMap();
+    Map<String, Object> testMap = new HashMap<String, Object>();
 
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
-    testMap.put("booleanValue", Boolean.TRUE);
+    testMap.put("booleanValue", TRUE);
     testMap.put("stringValue", LIFE_IS_BEAUTIFUL);
     testMap.put("longValue", TEN);
 
-    MapFormWriter mapWriter = new MapFormWriter();
+    new MapFormWriter().writeForm(mapForm, testMap);
 
-    mapWriter.writeForm(mapForm, testMap);
+    assertEquals("Boolean value written properly", mapForm.getValueByFullName("booleanValue"), TRUE);
+    assertEquals("String value written properly", mapForm.getValueByFullName("stringValue"), LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value written properly", mapForm.getValueByFullName("longValue"), TEN);
+  }
 
-    assertTrue("Boolean value written properly", mapForm.getValueByFullName("booleanValue").equals(Boolean.TRUE));
-    assertTrue("String value written properly", mapForm.getValueByFullName("stringValue").equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value written properly", mapForm.getValueByFullName("longValue").equals(TEN));
-  }  
-  
   /**
    * Tests hierarchical Map writing.
    */
   public void testFormHierarchicalMapWriting() throws Exception {
 
     FormWidget mapForm = makeVoForm();
-    Map testMap = new HashMap();
+    Map<String, Object> testMap = new HashMap<String, Object>();
 
-    final String LIFE_IS_BEAUTIFUL = "Life is beautiful";
-    final Long TEN = new Long(10);
-
-    testMap.put("booleanValue", Boolean.TRUE);
+    testMap.put("booleanValue", TRUE);
     testMap.put("stringValue", LIFE_IS_BEAUTIFUL);
     testMap.put("longValue", TEN);
-    
-    
-    Map topTestMap = new HashMap();
-    topTestMap.put("subTestVO", testMap);    
 
-    MapFormWriter mapWriter = new MapFormWriter();
+    Map<String, Object> topTestMap = new HashMap<String, Object>();
+    topTestMap.put("subTestVO", testMap);
 
-    mapWriter.writeForm(mapForm, topTestMap);
+    new MapFormWriter().writeForm(mapForm, topTestMap);
 
-    assertTrue("Boolean value written properly", mapForm.getValueByFullName("subTestVO.booleanValue").equals(Boolean.TRUE));
-    assertTrue("String value written properly", mapForm.getValueByFullName("subTestVO.stringValue").equals(LIFE_IS_BEAUTIFUL));
-    assertTrue("Long value written properly", mapForm.getValueByFullName("subTestVO.longValue").equals(TEN));
-  }    
-    
+    assertEquals("Boolean value written properly", mapForm.getValueByFullName("subTestVO.booleanValue"), TRUE);
+    assertEquals("String value written properly", mapForm.getValueByFullName("subTestVO.stringValue"),
+        LIFE_IS_BEAUTIFUL);
+    assertEquals("Long value written properly", mapForm.getValueByFullName("subTestVO.longValue"), TEN);
+  }
 }

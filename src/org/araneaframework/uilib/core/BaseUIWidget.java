@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.core;
 
@@ -37,32 +37,27 @@ import org.araneaframework.uilib.ConfigurationContext;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
- * This widget represents the usual custom application widget that is rendered
- * using JSP tags. It assumes to be connected with a JSP page and allows setting
- * its view selector.
+ * This widget represents the usual custom application widget that is rendered using JSP tags. It assumes to be
+ * connected with a JSP page and allows setting its view selector.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BaseUIWidget extends BaseApplicationWidget {
-
-  private static final long serialVersionUID = 1L;
 
   protected String viewSelector;
 
   /**
-   * Sets the view selector for this widget, should be path to <code>jsp</code>
-   * file without <code>jsp</code> extension.
+   * Sets the view selector for this widget, should be path to <code>JSP</code> file without <code>JSP</code> extension.
    * 
-   * @param viewSelector path to <code>jsp</code> file, without file extension
+   * @param viewSelector path to <code>JSP</code> file, without file extension
    */
   protected void setViewSelector(String viewSelector) {
     this.viewSelector = viewSelector;
   }
 
   /**
-   * Provides the <code>ConfigurationContext</code> from the
-   * <code>Environment</code>. It can be used to access configuration
-   * settings.
+   * Provides the <code>ConfigurationContext</code> from the <code>Environment</code>. It can be used to access
+   * configuration settings.
    * 
    * @return The <code>ConfigurationContext</code>.
    */
@@ -71,8 +66,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>FlowContext</code> from the <code>Environment</code>.
-   * It can be used to start, replace, or finish flows.
+   * Provides the <code>FlowContext</code> from the <code>Environment</code>. It can be used to start, replace, or
+   * finish flows.
    * 
    * @return The <code>FlowContext</code>.
    */
@@ -81,9 +76,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>MessageContext</code> from the
-   * <code>Environment</code>. It can be used to display or hide messages
-   * from the user.
+   * Provides the <code>MessageContext</code> from the <code>Environment</code>. It can be used to display or hide
+   * messages from the user.
    * 
    * @return The <code>MessageContext</code>.
    */
@@ -92,9 +86,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>LocalizationContext</code> from the
-   * <code>Environment</code>. It can be used to handle localization changes,
-   * and translate (i.e. resolve) messages.
+   * Provides the <code>LocalizationContext</code> from the <code>Environment</code>. It can be used to handle
+   * localization changes, and translate (i.e. resolve) messages.
    * 
    * @return The <code>LocalizationContext</code>.
    */
@@ -103,8 +96,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>MountContext</code> from the <code>Environment</code>.
-   * It can be used to provide fixed URLs that can be accessed by GET requests.
+   * Provides the <code>MountContext</code> from the <code>Environment</code>. It can be used to provide fixed URLs that
+   * can be accessed by GET requests.
    * 
    * @return The <code>MountContext</code>.
    */
@@ -113,8 +106,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>BeanFactory</code> from the <code>Environment</code>.
-   * It can be used to access Spring framework configuration.
+   * Provides the <code>BeanFactory</code> from the <code>Environment</code>. It can be used to access Spring framework
+   * configuration.
    * 
    * @return The <code>BeanFactory</code>.
    */
@@ -123,9 +116,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>OverlayContext</code> from the
-   * <code>Environment</code>. It can be used to start and handle flow in
-   * <i>overlay</i> mode.
+   * Provides the <code>OverlayContext</code> from the <code>Environment</code>. It can be used to start and handle flow
+   * in <i>overlay</i> mode.
    * 
    * @return The <code>OverlayContext</code>.
    */
@@ -134,10 +126,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>ConfirmationContext</code> from the
-   * <code>Environment</code>. It can be used to present the user a question
-   * in a message box, and activate the code in the closure, if the user chooses
-   * yes.
+   * Provides the <code>ConfirmationContext</code> from the <code>Environment</code>. It can be used to present the user
+   * a question in a message box, and activate the code in the closure, if the user chooses yes.
    * 
    * @return The <code>ConfirmationContext</code>.
    * @since 1.1.3
@@ -147,8 +137,8 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Provides the <code>PopupWindowContext</code> from the
-   * <code>Environment</code>. It can be used to open and manage popups.
+   * Provides the <code>PopupWindowContext</code> from the <code>Environment</code>. It can be used to open and manage
+   * popups.
    * 
    * @return The <code>PopupWindowContext</code>.
    * @since 1.1.3
@@ -158,10 +148,9 @@ public class BaseUIWidget extends BaseApplicationWidget {
   }
 
   /**
-   * Specifies wether this widget is running in <i>overlay</i> mode.
+   * Specifies whether this widget is running in <i>overlay</i> mode.
    * 
-   * @return <code>true</code>, if this widget is running in <i>overlay</i>
-   *         mode.
+   * @return <code>true</code>, if this widget is running in <i>overlay</i> mode.
    * @since 1.1
    */
   protected boolean isRunningInOverlay() {
@@ -173,24 +162,24 @@ public class BaseUIWidget extends BaseApplicationWidget {
    * {@link org.araneaframework.framework.LocalizationContext}.
    * 
    * @param key The key to translate.
-   * @return The found message found translated into language corresponding to
-   *         current <code>Locale</code>.
+   * @return The found message found translated into language corresponding to current <code>Locale</code>.
    */
   protected String t(String key) {
     return getL10nCtx().localize(key);
   }
 
   /**
-   * Renders widget to <code>output</code> using the defined
-   * <code>viewSelector</code>.
+   * Renders widget to <code>output</code> using the defined <code>viewSelector</code>.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
-    if (viewSelector == null)
-      throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!"); 
-    
+    if (this.viewSelector == null) {
+      throw new RuntimeException("Widget '" + getClass().getName() + "' does not have a view selector!");
+    }
+
     JspContext jspCtx = getEnvironment().requireEntry(JspContext.class);
-    
-    String jsp = resolveJspName(jspCtx, viewSelector);
+
+    String jsp = resolveJspName(jspCtx, this.viewSelector);
     ServletUtil.include(jsp, this, output);
   }
 
@@ -198,14 +187,14 @@ public class BaseUIWidget extends BaseApplicationWidget {
     return jspCtx.getJspPath() + "/" + viewSelector + jspCtx.getJspExtension();
   }
 
+  @Override
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
 
   protected class ComponentImpl extends BaseApplicationWidget.ComponentImpl {
 
-    private static final long serialVersionUID = 1L;
-
+    @Override
     public synchronized void init(Scope scope, Environment env) {
       setGlobalEventListener(new ProxyEventListener(BaseUIWidget.this));
       super.init(scope, env);

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.util;
 
@@ -29,148 +29,157 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.http.HttpOutputData;
 
 /**
- * A helper class for providing rollback and commit functionality on an OutputData.
- * If something has been written to the OutputData, <code>commit()</code> will flush
- * it, forcing any buffered output to be written out. <code>rollback()</code> will
- * discard the contents of the buffer.
+ * A helper class for providing roll-back and commit functionality on an OutputData. If something has been written to the
+ * OutputData, <code>commit()</code> will flush it, forcing any buffered output to be written out.
+ * <code>rollback()</code> will discard the contents of the buffer.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * TODO: rewrite as HttpOutputData wrapper
  */
 public class AtomicResponseHelper {
-  //*******************************************************************
-  // FIELDS
-  //*******************************************************************
-  private ResponseWrapper atomicWrapper;
-  
-  public AtomicResponseHelper(OutputData outputData) {    
+
+  private AtomicResponseWrapper atomicWrapper;
+
+  public AtomicResponseHelper(OutputData outputData) {
     Assert.isInstanceOfParam(HttpOutputData.class, outputData, "outputData");
-    
-    atomicWrapper = new ResponseWrapper(ServletUtil.getResponse(outputData));
-    ServletUtil.setResponse(outputData, atomicWrapper);
+
+    this.atomicWrapper = new AtomicResponseWrapper(ServletUtil.getResponse(outputData));
+    ServletUtil.setResponse(outputData, this.atomicWrapper);
   }
-  
-  
-  //*******************************************************************
-  // PRIVATE CLASSES
-  //*******************************************************************
+
   /**
-   * Wraps a HttpServletResponse to make it possible of resetting and commiting it.
+   * Wraps a HttpServletResponse to make it possible of resetting and committing it.
    */
-  private static class ResponseWrapper extends HttpServletResponseWrapper {
+  @SuppressWarnings("deprecation")
+  private static class AtomicResponseWrapper extends HttpServletResponseWrapper {
+
     private ServletOutputStream out;
+
     private PrintWriter writerOut;
 
-    public ResponseWrapper(HttpServletResponse arg0) {
-      super(arg0);
-  
+    public AtomicResponseWrapper(HttpServletResponse response) {
+      super(response);
       resetStream();
     }
-    
 
     private void resetStream() {
-      out = new AraneaServletOutputStream();
-    }    
-    
+      this.out = new AraneaServletOutputStream();
+    }
+
+    @Override
     public ServletOutputStream getOutputStream() throws IOException {
-      if (out == null)
+      if (this.out == null) {
         return getResponse().getOutputStream();
-      
-      return out;
-    }
-    
-    public PrintWriter getWriter() throws IOException {
-      if (out == null)
-        return getResponse().getWriter();
-      
-      if (writerOut == null) {
-        if (getResponse().getCharacterEncoding() != null) { 
-          writerOut = new PrintWriter(new OutputStreamWriter(out, getResponse().getCharacterEncoding()));
-        }
-        else {
-          writerOut = new PrintWriter(new OutputStreamWriter(out));
-        } 
       }
-      
-      return writerOut;
+      return this.out;
     }
-    
+
+    @Override
+    public PrintWriter getWriter() throws IOException {
+      if (this.out == null) {
+        return getResponse().getWriter();
+      }
+
+      if (this.writerOut == null) {
+        if (getResponse().getCharacterEncoding() != null) {
+          this.writerOut = new PrintWriter(new OutputStreamWriter(this.out, getResponse().getCharacterEncoding()));
+        } else {
+          this.writerOut = new PrintWriter(new OutputStreamWriter(this.out));
+        }
+      }
+
+      return this.writerOut;
+    }
+
     /**
-     * If the output has not been commited yet, commits it.
-     * @throws AraneaRuntimeException if output has been commited already. 
+     * If the output has not been committed yet, commits it.
+     * 
+     * @throws AraneaRuntimeException if output has been committed already.
      */
     public void commit() throws IOException {
-      if (out == null)
+      if (this.out == null) {
         throw new IllegalStateException("Cannot commit buffer - response is already committed");
-      
-      if (writerOut != null)
-        writerOut.flush();
-      out.flush();
-      
-      byte[] data = ((AraneaServletOutputStream) out).getData();
-      
+      }
+
+      if (this.writerOut != null) {
+        this.writerOut.flush();
+      }
+      this.out.flush();
+
+      byte[] data = ((AraneaServletOutputStream) this.out).getData();
+
       getResponse().getOutputStream().write(data);
       getResponse().getOutputStream().flush();
-      
-      out = null;
+
+      this.out = null;
     }
-    
+
     /**
-     * If the output has not been commited yet, clears the content of the underlying
-     * buffer in the response without clearing headers or status code.
+     * If the output has not been committed yet, clears the content of the underlying buffer in the response without
+     * clearing headers or status code.
      */
     public void rollback() {
-      if (out == null)
+      if (this.out == null) {
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
-      
+      }
+      getResponse().reset();
       resetStream();
-      writerOut = null;
-    }    
-    
+      this.writerOut = null;
+    }
+
     public byte[] getData() throws Exception {
-  	  return ((AraneaServletOutputStream) out).getData();
+      return ((AraneaServletOutputStream) this.out).getData();
     }
   }
-  
+
   private static class AraneaServletOutputStream extends ServletOutputStream {
+
     private ByteArrayOutputStream out;
-    
+
     private AraneaServletOutputStream() {
-      out = new ByteArrayOutputStream(20480);
+      this.out = new ByteArrayOutputStream(20480);
     }
-    
-    public void write(int b) throws IOException {
-      out.write(b);
+
+    @Override
+    public void write(int b) {
+      this.out.write(b);
     }
+
+    @Override
     public void write(byte[] b) throws IOException {
-      out.write(b);
+      this.out.write(b);
     }
-    public void write(byte[] b, int offset, int len) throws IOException{
-       out.write(b, offset, len);
+
+    @Override
+    public void write(byte[] b, int offset, int len) {
+      this.out.write(b, offset, len);
     }
-    public void flush() throws IOException{
-      out.flush();
+
+    @Override
+    public void flush() throws IOException {
+      this.out.flush();
     }
-        
+
     public byte[] getData() {
-      return out.toByteArray();
+      return this.out.toByteArray();
     }
   }
-  //*******************************************************************
+
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************  
-  
+  // *******************************************************************
+
   public void commit() throws Exception {
-    atomicWrapper.commit();
+    this.atomicWrapper.commit();
   }
-  
+
   public void rollback() throws Exception {
-    atomicWrapper.rollback();
+    this.atomicWrapper.rollback();
   }
-  
+
   public byte[] getData() throws Exception {
-	return atomicWrapper.getData();
+    return this.atomicWrapper.getData();
   }
 }

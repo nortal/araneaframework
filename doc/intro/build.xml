@@ -1,151 +1,145 @@
 <project name="Intro" default="build" basedir=".">
-    <!-- Allow this to be overriden by others importing this project. -->
-    <dirname property="imported.basedir" file="${ant.file.Intro}"/>
 
-    <!-- Set build directories for all formats. -->
-    <property name="build.dir"             value="../../dist/doc/intro"/>
+	<!-- Allow this to be overriden by others importing this project. -->
+	<dirname property="imported.basedir" file="${ant.file.Intro}" />
 
-    <!-- Support files for build process. -->
-    <property name="support.dir"           value="${imported.basedir}/../support"/>
-	
-		<!-- Support files for build process. -->
-		<property name="style.dir"           value="${imported.basedir}/../support"/>
-	
+	<!-- Set build directories for all formats. -->
+	<property name="build.dir" value="../../dist/doc/intro" />
 
-    <!-- Base name for documentation artifacts. -->
-    <property name="docname"               value="aranea-intro"/>
+	<!-- Support files for build process. -->
+	<property name="support.dir" value="${imported.basedir}/../support" />
 
-    <!-- Set DocBook stylesheets. -->
-    <property name="db.style.fopdf"        value="fopdf.xsl"/>
-    <property name="db.style.html"         value="html_chunk.xsl"/>
-    <property name="db.style.htmlsingle"   value="html.xsl"/>
+	<!-- Support files for build process. -->
+	<property name="style.dir" value="${imported.basedir}/../support" />
 
-    <!-- Classpath for the build tools. -->
-    <path id="lib.classpath">
-        <fileset dir="${support.dir}/lib">
-            <include name="**/*.jar"/>
-        </fileset>
-    </path>
+	<!-- Base name for documentation artifacts. -->
+	<property name="docname" value="aranea-intro" />
 
+	<!-- Set DocBook stylesheets. -->
+	<property name="db.style.fopdf" value="fopdf.xsl" />
+	<property name="db.style.html" value="html_chunk.xsl" />
+	<property name="db.style.htmlsingle" value="html.xsl" />
 
-    <!-- ################################################################## -->
+	<!-- Classpath for the build tools. -->
+	<path id="lib.classpath">
+		<fileset dir="${support.dir}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
 
-    <target name="clean">
+	<!-- ################################################################## -->
 
-        <!-- Delete build directory. -->
-        <delete dir="${build.dir}" failonerror="false"/>
+	<target name="clean">
+		<!-- Delete build directory. -->
+		<delete dir="${build.dir}" failonerror="false" />
+	</target>
 
-    </target>
-
-    <target name="build">
-        <!-- Compile the documentation for a single age in all formats. -->
-    	<antcall target="copy-shared"/>
-        <antcall target="pdf"/>
-        <antcall target="html-single"/>
-    	  <antcall target="html"/>
-    </target>
+	<target name="build">
+		<!-- Compile the documentation for a single age in all formats. -->
+		<antcall target="copy-shared" />
+		<antcall target="pdf" />
+		<antcall target="html-single" />
+		<antcall target="html" />
+	</target>
 
 
-    <target name="pdf-prepare" depends="copy-shared">
+	<target name="pdf-prepare" depends="copy-shared">
 
-        <!-- Create the XSL/FO temporary file. -->
-        <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}" maxmemory="128m" >
-        	  <sysproperty key="java.awt.headless" value="true"/>       	
-            <classpath refid="lib.classpath"/>
-            <arg value="-o"/>
-            <arg value="${build.dir}/pdf/docbook_fop.tmp"/>
-            <arg value="${basedir}/src/master.xml"/>
-            <arg value="${basedir}/styles/${db.style.fopdf}"/>
-        </java>
+		<!-- Create the XSL/FO temporary file. -->
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}" maxmemory="128m">
+			<sysproperty key="java.awt.headless" value="true" />
+			<classpath refid="lib.classpath" />
+			<arg value="-o" />
+			<arg value="${build.dir}/pdf/docbook_fop.tmp" />
+			<arg value="${basedir}/src/master.xml" />
+			<arg value="${basedir}/styles/${db.style.fopdf}" />
+		</java>
 
-        <available property="custom.fop.userconfig.present" file="userconfig.xml" filepath="${basedir}/fop"/>
-    </target>
+		<available property="custom.fop.userconfig.present" file="userconfig.xml" filepath="${basedir}/fop" />
+	</target>
 
-    <target name="pdf-customized" depends="pdf-prepare" if="custom.fop.userconfig.present">
+	<target name="pdf-customized" depends="pdf-prepare" if="custom.fop.userconfig.present">
 
-        <copy todir="${build.dir}/pdf">
-            <fileset dir="${basedir}/fop">
-                <include name="*"/>
-            </fileset>
-        </copy>
+		<copy todir="${build.dir}/pdf">
+			<fileset dir="${basedir}/fop">
+				<include name="*" />
+			</fileset>
+		</copy>
 
-        <!-- Create a PDF from the XSL/FO, using customized fop userconfig.xml -->
-        <java classname="org.apache.fop.apps.Fop" fork="true" dir="${basedir}" maxmemory="128m" >
-            <classpath refid="lib.classpath"/>
-            <arg value="-c"/>
-            <arg value="${basedir}/fop/userconfig.xml"/>
-            <arg value="${build.dir}/pdf/docbook_fop.tmp"/>
-            <arg value="${build.dir}/pdf/${docname}.pdf"/>
-        </java>
-    </target>
+		<!-- Create a PDF from the XSL/FO, using customized fop userconfig.xml -->
+		<java classname="org.apache.fop.apps.Fop" fork="true" dir="${basedir}" maxmemory="128m">
+			<classpath refid="lib.classpath" />
+			<arg value="-c" />
+			<arg value="${basedir}/fop/userconfig.xml" />
+			<arg value="${build.dir}/pdf/docbook_fop.tmp" />
+			<arg value="${build.dir}/pdf/${docname}.pdf" />
+		</java>
+	</target>
 
-    <target name="pdf-normal" depends="pdf-prepare" unless="custom.fop.userconfig.present">
-        <!-- Create a PDF from the XSL/FO. -->
-        <java classname="org.apache.fop.apps.Fop" fork="true" dir="${basedir}">
-            <classpath refid="lib.classpath"/>
-            <arg value="${build.dir}/pdf/docbook_fop.tmp"/>
-            <arg value="${build.dir}/pdf/${docname}.pdf"/>
-        </java>
-    </target>
+	<target name="pdf-normal" depends="pdf-prepare" unless="custom.fop.userconfig.present">
+		<!-- Create a PDF from the XSL/FO. -->
+		<java classname="org.apache.fop.apps.Fop" fork="true" dir="${basedir}">
+			<classpath refid="lib.classpath" />
+			<arg value="${build.dir}/pdf/docbook_fop.tmp" />
+			<arg value="${build.dir}/pdf/${docname}.pdf" />
+		</java>
+	</target>
 
-    <target name="pdf" depends="pdf-normal,pdf-customized"
-            description="Generates the PDF documentation only for a age (set ">
-        <!-- House keeping,delete temporary files. -->
-        <delete>
-            <fileset dir="${build.dir}/pdf" excludes="**/*.pdf"/>
-        </delete>
-    </target>
+	<target name="pdf" depends="pdf-normal,pdf-customized" description="Generates the PDF documentation only for a age (set ">
+		<!-- House keeping,delete temporary files. -->
+		<delete>
+			<fileset dir="${build.dir}/pdf" excludes="**/*.pdf" />
+		</delete>
+	</target>
 
-    <target name="html-single" depends="copy-shared"
-        description="Generates the single-page HTML documentation only for a age (set ">
-    	<property name="single.html.build.dir" value="${build.dir}/html_single/"/>
+	<target name="html-single" depends="copy-shared" description="Generates the single-page HTML documentation only for a age (set ">
+		<property name="single.html.build.dir" value="${build.dir}/html_single/" />
 
-        <mkdir dir="${single.html.build.dir}"/>
+		<mkdir dir="${single.html.build.dir}" />
 
-        <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}">
-            <classpath refid="lib.classpath"/>
-        		<sysproperty key="java.awt.headless" value="true"/>        	
-            <arg value="-o"/>
-            <arg value="${single.html.build.dir}/index.html"/>
-            <arg value="${basedir}/src/master.xml"/>
-            <arg value="${basedir}/styles/${db.style.htmlsingle}"/>
-        </java>
-    </target>
-	
-  <target name="html"
-          description="Generates the HTML documentation only for a age (set ">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${basedir}">
+			<classpath refid="lib.classpath" />
+			<sysproperty key="java.awt.headless" value="true" />
+			<arg value="-o" />
+			<arg value="${single.html.build.dir}/index.html" />
+			<arg value="${basedir}/src/master.xml" />
+			<arg value="${basedir}/styles/${db.style.htmlsingle}" />
+		</java>
+	</target>
 
-      <mkdir dir="${build.dir}/html/"/>
-			
-  		<copy todir="${build.dir}/html/">
-  			<fileset dir="." includes="conf/**/*"/>
-  		</copy>
-  		
-      <java classname="com.icl.saxon.StyleSheet" fork="true" dir="${build.dir}/html">
-          <classpath refid="lib.classpath"/>
-      		<sysproperty key="java.awt.headless" value="true"/>      	
-          <arg value="${basedir}/src/master.xml"/>
-          <arg value="${basedir}/styles/${db.style.html}"/>
-      </java>
-  	
-  		<delete dir="${build.dir}/html/conf"/>
-  </target>
+	<target name="html" description="Generates the HTML documentation only for a age (set ">
 
-    <target name="copy-shared">
+		<mkdir dir="${build.dir}/html/" />
 
-        <!-- Copy images and CSS for HTML documentation, age specific. -->
-        <copy todir="${build.dir}/images">
-            <fileset dir="${basedir}/images">
-                <include name="**/*.png"/>
-                <include name="**/*.gif"/>
-            </fileset>
-        </copy>
-        <copy todir="${build.dir}/css">
-            <fileset dir="${basedir}/styles">
-                <include name="**/*.css"/>
-            </fileset>
-        </copy>
+		<copy todir="${build.dir}/html/">
+			<fileset dir="." includes="conf/**/*" />
+		</copy>
 
-    </target>
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${build.dir}/html">
+			<classpath refid="lib.classpath" />
+			<sysproperty key="java.awt.headless" value="true" />
+			<arg value="${basedir}/src/master.xml" />
+			<arg value="${basedir}/styles/${db.style.html}" />
+		</java>
+
+		<delete dir="${build.dir}/html/conf" />
+	</target>
+
+	<target name="copy-shared">
+
+		<!-- Copy images and CSS for HTML documentation, age specific. -->
+		<copy todir="${build.dir}/images">
+			<fileset dir="${basedir}/images">
+				<include name="**/*.png" />
+				<include name="**/*.gif" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/css">
+			<fileset dir="${basedir}/styles">
+				<include name="**/*.css" />
+			</fileset>
+		</copy>
+
+	</target>
 
 </project>

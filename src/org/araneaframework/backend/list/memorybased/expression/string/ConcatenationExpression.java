@@ -16,7 +16,6 @@
 
 package org.araneaframework.backend.list.memorybased.expression.string;
 
-import java.util.Iterator;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
@@ -24,25 +23,18 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.core.Assert;
 
 /**
- * Concatenating composite expression, evaluates all subexpressions and
- * concatenates results into a String.
+ * Concatenating composite expression, evaluates all subexpressions and concatenates results into a String.
  */
 public class ConcatenationExpression extends MultiExpression {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * @return subexpressions evaluation results in a concatenated String.
    * @see Expression#evaluate(VariableResolver)
    */
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-
+  public Object evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
     Assert.notEmpty(this.children, "At least one children must be provided");
-
     StringBuffer buffer = new StringBuffer();
-    for (Iterator i = this.children.iterator(); i.hasNext();) {
-      Expression child = (Expression) i.next();
+    for (Expression child : this.children) {
       buffer.append(child.evaluate(resolver));
     }
     return buffer.toString();

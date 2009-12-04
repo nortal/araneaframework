@@ -29,20 +29,15 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.framework.util.TransactionHelper;
 
 /**
- * Filters <code>update(InputData)</code>,
- * <code>event(Path, InputData)</code> and <code>render(OutputData)</code>
- * based on the transaction ID. If the transaction ID is consistent, the
- * mentionend actions get called on the child service, otherwise they do not.
+ * Filters <code>update(InputData)</code>, <code>event(Path, InputData)</code> and <code>render(OutputData)</code> based
+ * on the transaction ID. If the transaction ID is consistent, the mentioned actions get called on the child service,
+ * otherwise they do not.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public class StandardTransactionFilterWidget extends BaseFilterWidget
-  implements TransactionContext {
+public class StandardTransactionFilterWidget extends BaseFilterWidget implements TransactionContext {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(
-      StandardTransactionFilterWidget.class);
+  private static final Log LOG = LogFactory.getLog(StandardTransactionFilterWidget.class);
 
   private TransactionHelper transHelper;
 
@@ -56,76 +51,77 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget
     return transHelper.getCurrentTransactionId();
   }
 
+  @Override
   protected void init() throws Exception {
-    transHelper = new TransactionHelper();
+    this.transHelper = new TransactionHelper();
     super.init();
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() {
-    return new StandardEnvironment(super.getChildWidgetEnvironment(),
-        TransactionContext.class, this);
+    return new StandardEnvironment(super.getChildWidgetEnvironment(), TransactionContext.class, this);
   }
 
+  @Override
   protected void destroy() throws Exception {
     super.destroy();
   }
 
   // Template
+  @Override
   protected void update(InputData input) throws Exception {
-    consistent = isConsistent(input);
+    this.consistent = isConsistent(input);
     if (isConsistent()) {
-      childWidget._getWidget().update(input);
+      this.childWidget._getWidget().update(input);
     } else {
-      log.debug("Transaction id '" + getTransactionId(input)
-          + "' not consistent for routing update().");
+      LOG.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing update().");
     }
   }
 
+  @Override
   protected void event(Path path, InputData input) throws Exception {
     if (isConsistent()) {
-      childWidget._getWidget().event(path, input);
+      this.childWidget._getWidget().event(path, input);
     } else {
-      log.debug("Transaction id '" + getTransactionId(input)
-          + "' not consistent for routing event().");
+      LOG.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing event().");
     }
   }
 
   /**
-   * Generates a new transaction ID and pushes it as an attribute to the output.
-   * The children can access it via
+   * Generates a new transaction ID and pushes it as an attribute to the output. The children can access it via
    * {@link TransactionContext#TRANSACTION_ID_KEY} from their OutputData.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
-    // CONFIRM: when transactionid was overriden in request, new transaction id
+    // CONFIRM: when transactionId was overridden in request, new transaction id
     // should not be generated
-    if (transHelper.getCurrentTransactionId() == null
-        || !transHelper.isOverride(getTransactionId(getInputData()))) {
-      transHelper.resetTransactionId();
+    if (this.transHelper.getCurrentTransactionId() == null
+        || !this.transHelper.isOverride(getTransactionId(getInputData()))) {
+      this.transHelper.resetTransactionId();
     }
 
     SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
 
-    log.debug("New transaction id '" + getTransactionId() + "'.");
+    LOG.debug("New transaction id '" + getTransactionId() + "'.");
 
-    childWidget._getWidget().render(output);
+    this.childWidget._getWidget().render(output);
   }
 
   /**
-   * Returns <code>true</code>, if the transaction ID is consistent. Current
-   * implementation uses an instance of {@link TransactionHelper} for
-   * determining the consistency. Can be overridden.
+   * Returns <code>true</code>, if the transaction ID is consistent. Current implementation uses an instance of
+   * {@link TransactionHelper} for determining the consistency. Can be overridden.
    * 
    * @param input the request data.
    * @return <code>true</code>, if current request is consistent.
    */
   protected boolean isConsistent(InputData input) throws Exception {
-    return transHelper.isConsistent(getTransactionId(input));
+    return this.transHelper.isConsistent(getTransactionId(input));
   }
 
   /**
-   * Extracts the transaction ID from the input's global data with the key
-   * {@link TransactionContext#TRANSACTION_ID_KEY}.
+   * Extracts the transaction ID from the input's global data with the key {@link TransactionContext#TRANSACTION_ID_KEY}
+   * .
    * 
    * @param input the request data.
    * @return the transaction ID from the request.
@@ -135,6 +131,6 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget
   }
 
   public Long getNextTransactionId() {
-    return transHelper.getNextTransactionId();
+    return this.transHelper.getNextTransactionId();
   }
 }

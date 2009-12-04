@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.tree;
 
@@ -29,51 +29,46 @@ import org.araneaframework.uilib.tree.TreeWidget;
 
 /**
  * Tree widget tag. Uses {@link StandardTreeRenderer} for rendering the tree in HTML.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.0.7
- *  
+ * 
  * @jsp.tag
- *   name = "tree"
- *   body-content = "JSP"
- *   description = "Tree widget tag. Provides a renderer with HTML unordered
-           list <code>&lt;ul&gt;</code> and list item <code>&lt;li&gt;</code>
-           tags."
+ *  name = "tree"
+ *  body-content = "JSP"
+ *  description = "Tree widget tag. Provides a renderer with HTML unordered list <code>&lt;ul&gt;</code> and list item <code>&lt;li&gt;</code> tags."
  */
 public class TreeTag extends BaseWidgetTag {
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     OutputData output = getOutputData();
-    
-    ((TreeWidget) widget).setRenderer(buildTreeRenderer((TreeContext) widget));
+
+    ((TreeWidget) this.widget).setRenderer(buildTreeRenderer((TreeContext) this.widget));
 
     try {
-      hideGlobalContextEntries(pageContext);
+      hideGlobalContextEntries(this.pageContext);
       out.flush();
-      widget._getWidget().render(output);
-    }
-    finally {
-      restoreGlobalContextEntries(pageContext);
+      this.widget._getWidget().render(output);
+    } finally {
+      restoreGlobalContextEntries(this.pageContext);
     }
 
     return EVAL_PAGE;
   }
 
   /**
-   * Builds a {@link TreeRenderer} that is used to render current
-   * {@link TreeWidget}. Usually overridden.
+   * Builds a {@link TreeRenderer} that is used to render current {@link TreeWidget}. Usually overridden.
    */
   protected TreeRenderer buildTreeRenderer(TreeContext treeWidget) {
-    if (treeWidget.getRenderer() != null)
-      return treeWidget.getRenderer();
-    return new StandardTreeRenderer(treeWidget);
+    return treeWidget.getRenderer() != null ? treeWidget.getRenderer() : new StandardTreeRenderer(treeWidget);
   }
 
   /**
-   * Standard implementation of tree widget renderer that uses HTML unordered
-   * list <code>&lt;ul&gt;</code> and list item <code>&lt;li&gt;</code>
-   * tags.
+   * Standard implementation of tree widget renderer that uses HTML unordered list <code>&lt;ul&gt;</code> and list item
+   * <code>&lt;li&gt;</code> tags.
    */
   public static class StandardTreeRenderer implements TreeRenderer {
 
@@ -84,7 +79,7 @@ public class TreeTag extends BaseWidgetTag {
     }
 
     protected TreeContext getTree() {
-      return tree;
+      return this.tree;
     }
 
     public void renderTreeStart(Writer out, TreeNodeContext node) throws Exception {
@@ -104,6 +99,7 @@ public class TreeTag extends BaseWidgetTag {
     public void renderToggleLink(Writer out, TreeNodeContext node) throws Exception {
       JspUtil.writeOpenStartTag(out, "a");
       JspUtil.writeAttribute(out, "href", "#");
+
       if (getTree().useActions()) {
         JspUtil.writeAttribute(out, "onclick", "return new AraneaTree().toggleNode(this);");
       } else {
@@ -111,6 +107,7 @@ public class TreeTag extends BaseWidgetTag {
         JspUtil.writeEventAttributes(out, event);
         JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
       }
+
       JspUtil.writeCloseStartTag_SS(out);
       out.write(node.isCollapsed() ? "+" : "-");
       JspUtil.writeEndTag_SS(out, "a");
@@ -135,8 +132,7 @@ public class TreeTag extends BaseWidgetTag {
       JspUtil.writeEndTag(out, "li");
     }
 
-    public void renderDisplayPrefix(Writer out, TreeNodeContext node, boolean current) throws Exception {
-    }
+    public void renderDisplayPrefix(Writer out, TreeNodeContext node, boolean current) throws Exception {}
 
   }
 

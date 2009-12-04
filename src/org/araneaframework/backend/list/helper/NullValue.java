@@ -23,12 +23,10 @@ import java.io.Serializable;
  * <code>PreparedStatement.setNull</code>. It is used to pass the information
  * about corresponding SQL type.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
 public class NullValue implements Serializable {
-
-  private static final long serialVersionUID = 1L;
 
   private int type;
 

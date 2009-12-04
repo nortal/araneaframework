@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,42 +12,52 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework;
 
 import java.io.Serializable;
 
 /**
- * Implements <code>Iterator</code> pattern, providing one-time access to the 
- * specific steps that form a path in a hierarchical structure. 
- * <br><br>
- * Path can be used to show the path to a specific component in a composite
- * (hierarchy of components) and then events can be routed exactly to certain
- * components.
- * <br><br>
- * Path is also used in {@link org.araneaframework.InputData} to specify which data is meant for
- * which component. 
+ * Implements <code>Iterator</code> pattern, providing one-time access to the specific steps that form a path in a
+ * hierarchical structure.
+ * <p>
+ * Path can be used to show the path to a specific component in a composite (hierarchy of components) and then events
+ * can be routed exactly to certain components.
+ * <p>
+ * Path is also used in {@link org.araneaframework.InputData} to specify which data is meant for which component.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
+ * @since 2.0
  */
 public interface Path extends Cloneable, Serializable {
-  
+
   /**
-   * Returns next step in the path without changing the current position.  
+   * The constant representing the path items separator.
+   * 
+   * @since 2.0
+   */
+  String SEPARATOR = ".";
+
+  /**
+   * Returns next step in the path without changing the current position.
+   * 
    * @return the next step in the path
    */
-  public Object getNext();
-  
+  public String getNext();
+
   /**
    * Returns the next step in path.
+   * 
    * @return the next step in the path
    */
-  public Object next();
-  
+  public String next();
+
   /**
-   * Returns true if this path has more elements. 
+   * Returns true if this path has more elements.
+   * 
    * @return true if path has more elements
    */
   public boolean hasNext();

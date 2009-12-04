@@ -1,0 +1,27 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Generates H2 header with given label." />
+
+	<jsp:directive.attribute name="labelId"
+		description="The label ID of the title." />
+
+	<jsp:directive.attribute name="type2" type="java.lang.Boolean"
+		description="A Boolean, when true, renders with CSS class 'type2'." />
+
+	<ui:element name="h2">
+		<c:if test="${type2}">
+			<ui:attribute name="class" value="type2"/>
+		</c:if>
+		<ui:elementContent>
+			<c:if test="${not empty labelId}">
+				<fmt:message key="${labelId}"/>
+			</c:if>
+			<jsp:doBody/>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

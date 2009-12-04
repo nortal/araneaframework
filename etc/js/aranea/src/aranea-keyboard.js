@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 /**
  * Aranea keyboard event handlers.
@@ -29,363 +29,337 @@
  * them one by one.
  *
  * So this file contains
- *   - top-level handler routines. (uiHandleKeypress, and someday will perhaps contain handlers
- *                                                    for other events)
- *   - subhandler registration routines. (uiRegisterKeypressHandler)
- *   - helper structure for holding registered handlers (UiHandlerRegistry)
+ *  - top-level handler routines. (uiHandleKeypress, and someday will perhaps contain handlers for other events)
+ *  - subhandler registration routines. (uiRegisterKeypressHandler)
+ *  - helper structure for holding registered handlers (UiHandlerRegistry)
  */
  
 // Parts of code from http://www.openjs.com/scripts/events/keyboard_shortcuts/
 // shortcut library (version 1.00.A by Binny V A) distributed under BSD license.
- 
- // ------------------------------- Keyboard Events ---------------------------------- //
- 
- 
+
+// ------------------------------- Keyboard Events ---------------------------------- //
+
+var Aranea = window.Aranea || {};
+
 /** @since 1.1 */
-Aranea.KB = {};
+Aranea.Keyboard = {
 
-//NOTE by TP: this actually is only correct for one keyboard layout only...
-/** @since 1.1 */
-Aranea.KB.special_keys = {
-  'esc':27,
-  'escape':27,
-  'tab':9,
-  'space':32,
-  'return':13,
-  'enter':13,
-  'backspace':8,
+	//NOTE by TP: this actually is only correct for one keyboard layout only...
+	/** @since 1.1 */
+	SPECIAL_KEYS: {
+		'esc':27,
+		'escape':27,
+		'tab':9,
+		'space':32,
+		'return':13,
+		'enter':13,
+		'backspace':8,
+		'scrolllock':145,
+		'scroll_lock':145,
+		'scroll':145,
+		'capslock':20,
+		'caps_lock':20,
+		'caps':20,
+		'numlock':144,
+		'num_lock':144,
+		'num':144,
+		'pause':19,
+		'break':19,
+		'insert':45,
+		'home':36,
+		'delete':46,
+		'end':35,
+		'pageup':33,
+		'page_up':33,
+		'pu':33,
+		'pagedown':34,
+		'page_down':34,
+		'pd':34,
+		'left':37,
+		'up':38,
+		'right':39,
+		'down':40,
+		'f1':112,
+		'f2':113,
+		'f3':114,
+		'f4':115,
+		'f5':116,
+		'f6':117,
+		'f7':118,
+		'f8':119,
+		'f9':120,
+		'f10':121,
+		'f11':122,
+		'f12':123
+	},
 
-  'scrolllock':145,
-  'scroll_lock':145,
-  'scroll':145,
-  'capslock':20,
-  'caps_lock':20,
-  'caps':20,
-  'numlock':144,
-  'num_lock':144,
-  'num':144,
+	parseFilterCode: function(elementPrefix, keyCode, metaStr) {
+		var result = Aranea.Keyboard.parseFilterStr(metaStr);
+		result.keyCode = keyCode;
+		result.prefix = elementPrefix;
+		return result;
+	},
 
-  'pause':19,
-  'break':19,
+	parseFilterStr: function(filterStr) {
+		var result = {};
+		var filters = filterStr ? filterStr.split('+') : [];
+		$A(filters).each(function(filter) {
+			filter = filter.toLowerCase();
+			if (Aranea.Keyboard.isMetaStr(filter)) {
+				result[filter] = true;
+			} else {
+				result.key = filter;
+			}
+		});
+		result.toString = function() {
+			var str = [];
+			Object.keys(this).each(function(prop) {
+				var value = this[prop];
+				if (value && !Object.isFunction(value)) {
+					if (value == true || value == false) {
+						str.push(prop);
+					} else if (prop == 'key') {
+						str.push(value);
+					} else {
+						str.push(['[', value, ']'].join(''));
+					}
+				}
+			}.bind(this));
+			return str.join('+');
+		};
+		return result;
+	},
 
-  'insert':45,
-  'home':36,
-  'delete':46,
-  'end':35,
+	isMetaStr: function(filterStr) {
+		filterStr = filterStr ? filterStr.toLowerCase() : null;
+		return filterStr == 'alt' || filterStr == 'ctrl' || filterStr == 'shift' || filterStr == 'meta';
+	},
 
-  'pageup':33,
-  'page_up':33,
-  'pu':33,
+	/**
+	 * The main function used to register a handler for the "keypress" event.
+	 * Parameters:
+	 *     elementPrefix - the handler will be triggered when this matches the prefix of the 
+	 *                     ID of the target form element. E.g. when elementPrefix is 'someForm.someSubelement'
+	 *                     the handler will be triggered for form elements 'someForm.someSubelement.someElement', etc.
+	 *     keyCode       - the keyCode (as number) to trigger on (may be omitted, if metaCondStr is provided).
+	 *     metaCondStr   - a case-insensitive string representing the keypress to react to, e.g. "ctrl+shift+a", "alt+enter".
+	 *                     May be omitted, if keyCode is provided (both can be specified together, too).
+	 *     handler       - function(event, formElementId) to receive the notification.
+	 *                     function's return value determines whether it allows other handlers to be invoked.
+	 *                     when it is false, the called handler is the last one to be invoked.
+	 * @since 1.1
+	 */
+	registerKeypressHandler: function(elementPrefix, keyCode, metaCondStr, handler) {
+		if (arguments.length == 3) {
+			handler = arguments[2];
+			if (Object.isNumber(arguments[1])) {
+				metaCondStr = null;
+			} else if (Object.isString(arguments[1])) {
+				metaCondStr = arguments[1];
+				keyCode = null;
+			}
+		}
 
-  'pagedown':34,
-  'page_down':34,
-  'pd':34,
+		if (keyCode == null && metaCondStr == null) {
+			throw('Aranea.Keyboard.registerKeypressHandler: At least "keyCode" or "metaCondStr" parameter must be provided!');
+		} else if (handler == null) {
+			Aranea.Logger.warn('Aranea.Keyboard.registerKeypressHandler: No event handler was registered for element-prefix "'
+				+ elementPrefix + '" (keyCode=' + keyCode + ',metaCond="' + metaCondStr + '") because event handler was not provided!');
+		}
 
-  'left':37,
-  'up':38,
-  'right':39,
-  'down':40,
+		elementPrefix = elementPrefix ? elementPrefix : '';
 
-  'f1':112,
-  'f2':113,
-  'f3':114,
-  'f4':115,
-  'f5':116,
-  'f6':117,
-  'f7':118,
-  'f8':119,
-  'f9':120,
-  'f10':121,
-  'f11':122,
-  'f12':123
-};
+		Aranea.Logger.debug('Registering handler for ' + keyCode + '/"' + metaCondStr + '" (prefix: "' + elementPrefix + '")');
 
-//Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
-//NOTE by TP: this actually is only correct for one keyboard layout only...
-/** @since 1.1 */
-Aranea.KB.shift_nums = {
-  "`":"~",
-  "1":"!",
-  "2":"@",
-  "3":"#",
-  "4":"$",
-  "5":"%",
-  "6":"^",
-  "7":"&",
-  "8":"*",
-  "9":"(",
-  "0":")",
-  "-":"_",
-  "=":"+",
-  ";":":",
-  "'":"\"",
-  ",":"<",
-  ".":">",
-  "/":"?",
-  "\\":"|"
-}
+		var filter = Aranea.Keyboard.parseFilterCode(elementPrefix, keyCode, metaCondStr);
+		Aranea.Keyboard.HANDLER_REGISTRY.addHandler(filter, handler);
+
+		// The global "keydown" event listener:
+		if (!Aranea.Keyboard.handlerRegistered) {
+			document.observe("keydown", Aranea.Keyboard.handleKeypress);
+			Aranea.Keyboard.handlerRegistered = true;
+		}
+	},
+
+	 /**
+	  * This function will receive all keypress events from all form elements
+	  *
+	  * Parameters:
+	  *     event  - the event object
+	  *     formElementId - full (unique) id of the element that received the event.
+	  * @since 1.1
+	  */
+	handleKeypress: function (event) {
+		if (event) {
+			try {
+				var result = Aranea.Keyboard.HANDLER_REGISTRY.invokeHandlers(event);
+
+				if (result == false) { // The result may also be null (which means true) here!
+					event.stop();
+				}
+			} catch (e) {
+				// Keyboard handler errors may be thrown after AJAX region updates.
+				Aranea.Logger.warn("Keyboard handler error (non-critical): " + e);
+			}
+		} else {
+			throw('The "event" object as parameter is required!')
+		}
+	},
+
+	/** 
+	 * Returns whether the event matches the filter conditions.
+	 * @since 1.0.11
+	 */
+	isMatch: function(event, filter) {
+		Aranea.Logger.debug([event.type,' detected! [event.charCode=',event.charCode,', event.keyCode=',event.keyCode,
+			', ctrlKey=',event.ctrlKey,', altKey=',event.altKey,', kev.metaKey=',event.metaKey,']'].join(''));
+
+
+		var result = true;
+		result = result && (filter.shift == null || filter.shift == event.shiftKey);
+		result = result && (filter.alt == null || filter.alt == event.altKey);
+		result = result && (filter.ctrl == null || filter.ctrl == event.ctrlKey);
+		result = result && (filter.meta == null || filter.meta == event.metaKey);
+
+		if (filter.keyCode) {
+			result = result && filter.keyCode == event.keyCode;
+		} else if (filter.key)  {
+			var charCode = event.charCode ? event.charCode : null;
+			if (Aranea.Keyboard.SPECIAL_KEYS[filter.key]) {
+				result = result && event.keyCode == Aranea.Keyboard.SPECIAL_KEYS[filter.key];
+			} else {
+				result = result && filter.key == String.fromCharCode(charCode);
+			}
+		}
+
+		Aranea.Logger.debug('Was the keypress the one expected ("' + filter + '"): ' + result);
+
+		return result;
+	},
+
+	/**
+	 * Returns the function that stops received keyboard event propagation if the input was not allowed by filter.
+	 * @since 1.0.11
+	 */
+	getKeyboardInputFilterFunction: function(filter) {
+		return function(event) {
+			Aranea.Logger.debug([event.type,' detected! [event.charCode=',event.charCode,', event.keyCode=',event.keyCode,
+				', ctrlKey=',event.ctrlKey,', altKey=',event.altKey,', kev.metaKey=',event.metaKey,']'].join(''));
+
+			var char = String.fromCharCode(event.charCode ? event.charCode : event.keyCode);
+
+			if (char) {
+				if (filter.indexOf(char) >= 0) {
+					event.stop();
+				}
+			}
+		};
+	},
+
+	/** 
+	 * A map: keyCode -> list of (filter, handler) to store handlers and invoke them.
+	 */
+	UiHandlerRegistryImpl: Class.create({
+		initialize: function() {
+			this.handlers = $H(); // This maps from keyCode to array of pairs (filter, handler)
+			this.elementPrefixes = {};
+		},
  
- /**
-  * This function will receive all keypress events from all form elements
-  *
-  * Parameters:
-  *     event  - the event object
-  *     formElementId - full (unique) id of the element that received the event.
-  */
-/** @since 1.1 */
-Aranea.KB.handleKeypress = function (event, formElementId) {
-  if (!event) {
-    return;
-  }
+		/** 
+		 * Adds a new handler to the registry
+		 */
+		addHandler: function(filter, handler) {
+			var traditionalHandler = {
+				filter: filter,
+				handler: handler
+			};
 
-  var keyCode = event.keyCode ? event.keyCode : event.which;
+			// If not number, register handler by element prefix only
+			// NB! that means handler itself must determine whether it should be invoked or not for any event that activates it!
+			// Otherwise use old-fashioned by-keycode registered handler.
+			var key = Object.isNumber(filter.keyCode) ? filter.keyCode : filter.prefix;
+			if (this.handlers.get(key)) {
+				this.handlers.get(key).push(traditionalHandler);
+			} else {
+				this.handlers.set(key, [ traditionalHandler ]);
+			}
+		},
 
-  var result = true;
-  try {
-    result = uiKeypressHandlerRegistry.invokeHandlers(formElementId, keyCode, event);
-  } catch (e) {
-    // Keyboard handler errors may be thrown after AJAX region updates.
-    _ap.getLogger().warn("Keyboard handler error (non-critical): " + e);
-  }
+		/**
+		 * Invokes all handlers registered for given key-code and with matching element prefix.
+		 * if a handler returns false, the remaining handlers are not invoked
+		 */
+		invokeHandlers: function(event) {
+			var keyCode = event.keyCode ? event.keyCode : event.which;
+			var keyHandlers = this.handlers.get(keyCode);
+			var elHandlers = this.getElementHandlers(event.element());
+			var elementName = event.element().name;
 
-  if (result == false) { // The result may be null here, too.
-    Event.stop(event);
-  }
+			if (elHandlers) {
+				Aranea.Logger.debug('Invoking element handlers, count=' + elHandlers.length);
 
-  return result;
-}
+				for (var i = elHandlers.length - 1; i >= 0; i--) {
+					if (Aranea.Keyboard.isMatch(event, elHandlers[i].filter)) {
+						var handlerFn = elHandlers[i].handler;
+						var prefix    = elHandlers[i].prefix;
 
-var uiHandleKeypress = Aranea.KB.handleKeypress;
+						if (handlerFn) {
+							Aranea.Logger.debug('Invoking element handler: ' + i + '/' + elHandlers.length);
 
- /**
-  * Registers a handler for the keypress event.
-  * Parameters:
-  *     elementPrefix - the handler will be triggered when this matches the prefix of the 
-  *                     id of the target form element. E.g. when elementPrefix is 'someForm.someSubelement'
-  *                     the handler will be triggered for form elements 'someForm.someSubelement.someElement', etc.
-  *     keyCode       - the keyCode to trigger on.
-  *     handler       - function(event, formElementId) to receive the notification.
-  *                     function's return value determines whether it allows other handlers to be invoked.
-  *                     when it is false, the called handler is the last one to be invoked.
-  */
-/** @since 1.1 */
-Aranea.KB.registerKeypressHandler = function(elementPrefix, keyCode, handler) {
-  // if elementPrefix is '', we register a global keypress handler.
+							var cont = handlerFn(event, elementName);
+							if (cont == false) {
+								Aranea.Logger.debug('Handler returned false. Returning to the closest exit.');
+								return false;
+							}
+						} else {
+							Aranea.Logger.warn('Aranea.Keyboard.UiHandlerRegistryImpl: '
+								+ 'Skipping event handler function, because it is null! (event: ' + event.type
+								+  ', elementPrefix: ' + elHandlers[i].filter.prefix + ')');
+						}
+					}
+				}
+			}
 
-  _ap.debug('Registering handler for "' + keyCode + '" ("' + elementPrefix + '")');
+			if (keyHandlers){
+				Aranea.Logger.debug("Invoking keyCode handlers, count=" + keyHandlers.length);
+				for (var i = keyHandlers.length - 1; i >= 0; i--) {
+					var handlerFn     = keyHandlers[i].handler;
+					var elementPrefix = keyHandlers[i].elementPrefix;
+					if (!elementPrefix || elementName.startsWith(elementPrefix)) {
+						Aranea.Logger.debug("Invoking key handler: " + handlerFn);
+						var cont = handlerFn(event, elementName);
+						if (cont == false) {
+							return false;
+						}
+					}
+				}
+			}
 
-  if (elementPrefix != '') {
-    uiKeypressHandlerRegistry.addHandler(elementPrefix, keyCode, handler);
+			return true;
+		},
 
-  } else {
-    Event.observe(document, "keydown", function(event) {
-        var eventKey = event.keyCode ? event.keyCode: event.which;
-        if (!Object.isNumber(keyCode) || eventKey == keyCode) {
-          handler(event, '');
-        }
-      }
-    );
-  }
-};
+		// Note that by the default behaviour the event handlers with the longest matching element name are returned.
+		// Those event listeners that match less (or not at all), are not returned.
+		getElementHandlers: function(element) {
+			var elementName = element ? element.name : '';
+			var elPrefix = elementName;
+			var elHandlers = null;
 
-var uiRegisterKeypressHandler = Aranea.KB.registerKeypressHandler;
+			while (elPrefix) {
+				if (this.handlers.get(elPrefix)) {
+					elHandlers = this.handlers.get(elPrefix);
+					break;
+				}
+				var i = elPrefix.lastIndexOf('.');
+				elPrefix = i >= 0 ? elPrefix.substring(0, i) : null;
+			} 
 
- /** 
-  * A map: keyCode -> list of (elementPrefix, handler) to store handlers and invoke them.
-  */
-Aranea.KB.UiHandlerRegistry = function() {
-  this.handlers = {}; // This maps from keyCode to array of pairs (elementPrefix, handler)
-  this.elementPrefixes = {};
-}
- 
- /** 
-  * Adds a new handler to the registry
-  */
-Aranea.KB.UiHandlerRegistry.prototype.addHandler = function(elementPrefix, keyCode, handler) {
-  var traditionalHandler = {
-    elementPrefix: elementPrefix,
-    handler: handler
-  };
-
-  // If not number, register handler by element prefix only
-  // NB! that means handler itself must determine whether it should be invoked or not
-  // for any event that activates it!
-  if (!Object.isNumber(keyCode)) {
-    if (this.handlers[elementPrefix]) {
-   	  this.handlers[elementPrefix].push(traditionalHandler);
-    } else {
-      this.handlers[elementPrefix] = new Array(traditionalHandler);
-    }
-  } else { // old-fashioned by-keycode registered handler
-    if (this.handlers[keyCode]) { 
-      this.handlers[keyCode].push(traditionalHandler);
-    } else {
-      this.handlers[keyCode] = new Array(traditionalHandler);
-    }
-  }
-};
-
-  /**
-   * Invokes all handlers registered for given keycode and with matching elementprefix.
-   * if a handler returns false, the remaining handlers are not invoked
-   */
-  Aranea.KB.UiHandlerRegistry.prototype.invokeHandlers = function(elementName, keyCode, event) {
-    var keyHandlers = this.handlers[keyCode];
-    var elHandlers = null;
-   
-    var elPrefix = elementName;
-    while (1) {
-      if (this.handlers[elPrefix]) {
-        elHandlers = this.handlers[elPrefix];
-        break;
-      }
-      var i = elPrefix.lastIndexOf('.');
-      if (i < 0) break;
-
-      elPrefix = elPrefix.substring(0, i);
-    }
-
-    if (elHandlers) {
-      var executed = false;
-      _ap.debug("Invoking element handlers, count=" + elHandlers.length);
-      for (var i = elHandlers.length - 1; i >= 0; i--){
-        var handlerFunction = elHandlers[i].handler;
-        var elementPrefix   = elHandlers[i].elementPrefix;
-        _ap.debug("Invoking element handler: " + i);
-        executed = handlerFunction(event, elementName) || executed;
-      }
-  }
-
-  if (keyHandlers){
-    _ap.debug("Invoking key handlers, count=" + keyHandlers.length);
-    for (var i = keyHandlers.length - 1; i >= 0; i--){
-      var handlerFunction = keyHandlers[i].handler;
-      var elementPrefix   = keyHandlers[i].elementPrefix;
-      if (elementPrefix == elementName.substring(0, elementPrefix.length)) {
-        _ap.debug("Invoking key handler: " + handlerFunction.toString());
-        handlerFunction(event, elementName);
-      }
-    }
-  }
+			return elHandlers;
+		}
+	})
 };
 
 /**
  * This variable will hold the handlers for the Keypress event.
  */
-var uiKeypressHandlerRegistry = new Aranea.KB.UiHandlerRegistry();
-
-var aranea_keyboardinputfilter_last_keydown_keycode = null;
-
-/** 
- * Returns the function that stops received keyboard event 
- * propagation if the input was not allowed by filter. 
- * @since 1.0.11
- */
-Aranea.KB.getKeyboardInputFilterFunction = function(filter) {
-  var f = function(kev) {
-    _ap.debug(kev.type + " detected!" + "event.charCode="+kev.charCode+", event.keyCode="+kev.keyCode+".");
-    _ap.debug("ctrlKey="+kev.ctrlKey + " altKey="+kev.altKey + " kev.metaKey=" + kev.metaKey);
-    if (kev.type == "keydown") {
-      aranea_keyboardinputfilter_last_keydown_keycode = kev.keycode;
-      return true;
-    }
-
-    if (kev.ctrlKey)  {
-      return; // Does this mess with AltGr on some browsers?
-    }
-
-    var charcode = kev.charCode;
-    _ap.debug("Handling keypress. Last keydown code=" + aranea_keyboardinputfilter_last_keydown_keycode + ". event.charCode="+charcode+", event.keyCode="+kev.keyCode+". Active filter="+filter);
-
-    // if charcode is present, we assume it to be correct (at the time of writing this
-    // only gecko based browsers seem to set the charcode properly).
-    if (charcode) {
-      var ch = String.fromCharCode(charcode);
-      if (filter.indexOf(ch) == -1) {
-        Event.stop(kev);
-      }
-      return;
-    } else if (Prototype.Browser.Gecko) {
-      /* when charcode was not set in gecko, we are dealing with 
-         some special key that should be just let through */
-      return true;
-    }
-
-    var lastkeycode = aranea_keyboardinputfilter_last_keydown_keycode;
-    var keycode = kev.keyCode;
-
-    var ch = String.fromCharCode(keycode);
-    araneaPage().debug("No charcode. Falling back to keycode which will be assumed to be the charcode. Detected char '"+ch+"'");
-    if (filter.indexOf(ch) == -1) {
-      if (keycode != 8 && keycode != 13) {
-        Event.stop(kev);
-      }
-      return;
-    }
-  }
-
-  return f;
-};
-
-var getKeyboardInputFilterFunction = Aranea.KB.getKeyboardInputFilterFunction;
-
-Aranea.KB.KeyComboHandler = function(shortcut, callback) {
-    var f2 = function(event, element) {
-      var e = event;
-
-      //Find Which key is pressed
-      var code = event.keyCode ? event.keyCode : event.which;
-      var character = String.fromCharCode(code).toLowerCase();
-
-      var keys = shortcut.toLowerCase().split("+");
-      //Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
-      var kp = 0;
-
-      //Special Keys - and their codes
-
-      for(var i=0; k=keys[i],i<keys.length; i++) {
-        //Modifiers
-        if (k == 'ctrl' || k == 'control') {
-          if(e.ctrlKey) { kp++; }
-          } else if(k ==  'shift') {
-            if(e.shiftKey) { kp++; }
-          } else if(k == 'alt') {
-            if(e.altKey)  { 
-              kp++ ;
-            }
-          } else if(k.length > 1) { //If it is a special key
-            if(Aranea.KB.special_keys[k] == code) { kp++; }
-          } else { //The special keys did not match
-            if(character == k) {
-              kp++;
-            } else {
-              if (Aranea.KB.shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
-                character = Aranea.KB.shift_nums[character];
-                if (character == k) {
-                  kp++;
-                }
-              }
-            }
-          }
-      }
-
-      if (kp == keys.length) {
-        _ap.debug("Executing keyboard handler for keycombo '" + shortcut + "'.");
-        callback(e);
-
-        //if(!opt['propagate']) { //Stop the event
-          //Event.stop(e);
-        return true;
-        //}
-      }
-
-      return false;
-    };
-
-  return f2;
-};
-
-Aranea.KB.registerKeyComboHandler = function(elementPrefix, keyCombo, handler) {
-  var extraHandler = new Aranea.KB.KeyComboHandler(keyCombo, handler);
-  Aranea.KB.registerKeypressHandler(elementPrefix, keyCombo, extraHandler);
-};
+Aranea.Keyboard.HANDLER_REGISTRY = new Aranea.Keyboard.UiHandlerRegistryImpl();

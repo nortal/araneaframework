@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.framework.bean;
 
@@ -37,6 +37,7 @@ public class MockBeanFactory implements BeanFactory {
     return bean;
   }
 
+  @SuppressWarnings("unchecked")
   public Object getBean(String arg0, Class arg1) throws BeansException {
     return null;
   }
@@ -49,6 +50,7 @@ public class MockBeanFactory implements BeanFactory {
     return false;
   }
 
+  @SuppressWarnings("unchecked")
   public Class getType(String arg0) throws NoSuchBeanDefinitionException {
     return null;
   }
@@ -61,13 +63,16 @@ public class MockBeanFactory implements BeanFactory {
     return beanId;
   }
 
+  public Object getBean(String arg0, Object[] arg1) throws BeansException {
+    return null;
+  }
+
   public boolean isPrototype(String arg0) throws NoSuchBeanDefinitionException {
-    // TODO Auto-generated method stub
     return false;
   }
 
+  @SuppressWarnings("unchecked")
   public boolean isTypeMatch(String arg0, Class arg1) throws NoSuchBeanDefinitionException {
-    // TODO Auto-generated method stub
     return false;
   }
 }

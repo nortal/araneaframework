@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure.order;
 
@@ -29,70 +29,61 @@ import org.araneaframework.uilib.list.OrderInfo;
 import org.araneaframework.uilib.list.OrderInfoField;
 import org.araneaframework.uilib.list.structure.ListOrder;
 
-
 public class MultiFieldOrder implements ListOrder {
 
-	private static final long serialVersionUID = 1L;
+  private static final Log LOG = LogFactory.getLog(MultiFieldOrder.class);
 
-	private static final Log log = LogFactory.getLog(MultiFieldOrder.class);
-	
-	protected Map orders = new HashMap();
+  protected Map<String, FieldOrder> orders = new HashMap<String, FieldOrder>();
 
-	public void addFieldOrder(FieldOrder order) {
-		this.orders.put(order.getFieldId(), order);
-	}
+  public void addFieldOrder(FieldOrder order) {
+    this.orders.put(order.getFieldId(), order);
+  }
 
-	public FieldOrder getFieldOrder(String field) {
-		return (FieldOrder) this.orders.get(field);
-	}
+  public FieldOrder getFieldOrder(String field) {
+    return this.orders.get(field);
+  }
 
-	public boolean isFiedOrdered(String field) {
-		return getFieldOrder(field) != null;
-	}
+  public boolean isFiedOrdered(String field) {
+    return getFieldOrder(field) != null;
+  }
 
-	public void clearFieldOrders() {
-		for (Iterator i = orders.values().iterator(); i.hasNext();) {
-			ListOrder order = (ListOrder) i.next();
-			order.destroy();
-			i.remove();
-		}
-	}
+  public void clearFieldOrders() {
+    for (Iterator<FieldOrder> i = this.orders.values().iterator(); i.hasNext();) {
+      i.next().destroy();
+      i.remove();
+    }
+  }
 
-	public void init(Environment env) {
-		for (Iterator i = orders.values().iterator(); i.hasNext();) {
-			ListOrder order = (ListOrder) i.next();
-			order.init(env);
-		}
-	}
+  public void init(Environment env) {
+    for (ListOrder order : this.orders.values()) {
+      order.init(env);
+    }
+  }
 
-	public void destroy() {
-		clearFieldOrders();
-	}
+  public void destroy() {
+    clearFieldOrders();
+  }
 
-	public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
-		log.debug("Building ComparatorExpression, orderInfo = " + orderInfo.toString());
-		if (orderInfo.getFields().size() == 0) {
-			log.debug("No filterInfoFields specified, returning null");
-			return null;
-		}
-		
-		MultiComparatorExpression multiExpr = new MultiComparatorExpression();
+  public ComparatorExpression buildComparatorExpression(OrderInfo orderInfo) {
+    LOG.debug("Building ComparatorExpression, orderInfo = " + orderInfo.toString());
+    if (orderInfo.getFields().isEmpty()) {
+      LOG.debug("No filterInfoFields specified, returning null");
+      return null;
+    }
 
-		Iterator i = orderInfo.getFields().iterator();
-		while (i.hasNext()) {
-			OrderInfoField orderInfoField = (OrderInfoField) i.next();
-			FieldOrder columnOrder = (FieldOrder) this.orders
-					.get(orderInfoField.getId());
-			if (columnOrder != null) {
-				ComparatorExpression temp = columnOrder
-						.buildComparatorExpression(orderInfo);
-				if (!orderInfoField.isAscending()) {
-					temp = new ReverseComparatorExpression(temp);
-				}
-				multiExpr.add(temp);
-			}
-		}
+    MultiComparatorExpression multiExpr = new MultiComparatorExpression();
 
-		return multiExpr;
-	}
+    for (OrderInfoField orderInfoField : orderInfo.getFields()) {
+      FieldOrder columnOrder = this.orders.get(orderInfoField.getId());
+      if (columnOrder != null) {
+        ComparatorExpression temp = columnOrder.buildComparatorExpression(orderInfo);
+        if (!orderInfoField.isAscending()) {
+          temp = new ReverseComparatorExpression(temp);
+        }
+        multiExpr.add(temp);
+      }
+    }
+
+    return multiExpr;
+  }
 }

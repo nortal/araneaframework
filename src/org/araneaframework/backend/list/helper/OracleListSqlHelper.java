@@ -17,17 +17,16 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
+
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.model.ListQuery;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * Overrides <code>ListSqlHelper</code> methods so that the queries would be Oracle-compatible.
+ * 
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public class OracleListSqlHelper extends ListSqlHelper {
-
-  protected SqlStatement statement = new SqlStatement();
-
-  protected String countSqlQuery = null;
 
   public OracleListSqlHelper(DataSource dataSource, ListQuery query) {
     super(dataSource, query);
@@ -45,86 +44,57 @@ public class OracleListSqlHelper extends ListSqlHelper {
     super();
   }
 
-  protected SqlStatement getCountSqlStatement() {
-    if (this.countSqlQuery != null) {
-      return new SqlStatement(this.countSqlQuery, this.statement.getParams());
-    }
-
-    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
-        this.statement.getQuery()).append(")").toString();
-
-    return new SqlStatement(temp, this.statement.getParams());
-  }
-
-  protected SqlStatement getRangeSqlStatement() {
+  @Override
+  protected String createCountQuery(String fromSql, String customWhereSql) {
     StringBuffer sb = new StringBuffer();
-    sb.append("SELECT * FROM ("
-        + "SELECT rownum listRowNum, listItemData.* FROM (");
-    sb.append(this.statement.getQuery());
-    sb.append(") listItemData" + ") WHERE listRowNum >= ?");
+    sb.append("SELECT * FROM (SELECT rownum listRowNum, listItemData.* FROM (");
+    sb.append(super.createCountQuery(fromSql, customWhereSql));
+    sb.append(") listItemData) WHERE listRowNum >= ?");
 
     if (this.itemRangeCount != null) {
       sb.append(" AND listRowNum <= ?");
     }
 
-    SqlStatement temp = new SqlStatement(sb.toString());
-    temp.addAllParams(this.statement.getParams());
-    temp.addParam(new Long(this.itemRangeStart.longValue() + 1));
+    return sb.toString();
+  }
+
+  @Override
+  protected List<Object> getCountQueryParams(Object[] customWhereArgs) {
+    List<Object> params = super.getCountQueryParams(customWhereArgs);
+
+    params.add(this.itemRangeStart.longValue() + 1);
 
     if (this.itemRangeCount != null) {
-      temp.addParam(new Long(this.itemRangeStart.longValue()
-          + this.itemRangeCount.longValue()));
+      params.add(this.itemRangeStart.longValue() + this.itemRangeCount.longValue());
     }
 
-    return temp;
+    return params;
   }
 
-  /**
-   * Sets the SQL query that will be used to retrieve the item range from the
-   * list and count the items. The SQL query must start with SELECT expression
-   * including the word "SELECT".
-   * 
-   * @param sqlQuery the SQL query that will be used to retrieve the item range
-   *            from the list and count the items.
-   */
-  public void setSqlQuery(String sqlQuery) {
-    this.statement.setQuery(sqlQuery);
+  @Override
+  protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
+    StringBuffer sb = new StringBuffer();
+    sb.append("SELECT * FROM (SELECT rownum listRowNum, listItemData.* FROM (");
+    sb.append(super.createItemRangeQuery(fromSql, customWhereSql, customOrderbySql));
+    sb.append(") listItemData) WHERE listRowNum >= ?");
+
+    if (this.itemRangeCount != null) {
+      sb.append(" AND listRowNum <= ?");
+    }
+
+    return super.createItemRangeQuery(fromSql, customWhereSql, customOrderbySql);
   }
 
-  /**
-   * Sets the SQL query used to count the items in the database.
-   * 
-   * @param countSqlQuery the SQL query used to count the items in the database.
-   */
-  public void setCountSqlQuery(String countSqlQuery) {
-    this.countSqlQuery = countSqlQuery;
-  }
+  @Override
+  protected List<Object> getItemRangeQueryParams(Object[] customWhereArgs, Object[] customOrderbyArgs) {
+    List<Object> params = super.getItemRangeQueryParams(customWhereArgs, customOrderbyArgs);
 
-  /**
-   * Adds a <code>NULL</code> <code>PreparedStatement</code> parameter for
-   * later setting.
-   * 
-   * @param valueType the type of the NULL value.
-   */
-  public void addNullParam(int valueType) {
-    this.statement.addNullParam(valueType);
-  }
+    params.add(this.itemRangeStart.longValue() + 1);
 
-  /**
-   * Adds a <code>PreparedStatement</code> parameter for later setting.
-   * 
-   * @param param a <code>PreparedStatement</code> parameter.
-   */
-  public void addStatementParam(Object param) {
-    this.statement.addParam(param);
-  }
+    if (this.itemRangeCount != null) {
+      params.add(this.itemRangeStart.longValue() + this.itemRangeCount.longValue());
+    }
 
-  /**
-   * Adds <code>PreparedStatement</code> parameters for later setting.
-   * 
-   * @param params <code>PreparedStatement</code> parameters.
-   */
-  public void addStatementParams(List params) {
-    this.statement.addAllParams(params);
+    return params;
   }
 }

@@ -30,19 +30,22 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 
 /**
- * Creates a StandardServletInputData and StandardServletOutputData from the HttpServletRequest and
- * <code>HttpServletResponse</code> respectively and routes the request to the child services using a <code>null</code>
- * <code>Path</code>.
+ * <p>
+ * Creates a StandardServletInputData and StandardServletOutputData from the HttpServletRequest and HttpServletResponse
+ * respectively and routes the request to the child services using a null Path.
+ * </p>
  * <p>
  * Since <emphasis>1.0.3</emphasis> this adapter makes {@link OutputData} and {@link InputData} accessible from
  * {@link Component}'s {@link Environment}:
+ * 
  * <p>
  * <code>
  *   InputData input = (InputData)getEnvironment().getEntry(InputData.class);<br>
  *   OutputData input = (OutputData)getEnvironment().getEntry(OutputData.class);
  * </code>
- * <p>
- * which allows access to request from {@link BaseComponent}'s initialization callback &mdash; <code>init()</code>.
+ * </p>
+ * 
+ * which allows access to request from {@link BaseComponent}'s initialization callback&mdash;<code>init()</code>. </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
@@ -56,22 +59,28 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
 
   private boolean useFullURL = true;
 
+  @Override
   protected void init() throws Exception {
     this.childService._getComponent().init(getScope(), new BaseEnvironment() {
 
-        @SuppressWarnings("unchecked")
-        public <T> T getEntry(Class<T> key) {
-          if (InputData.class.equals(key)) {
-            return (T) localInput.get();
-          }
-          if (OutputData.class.equals(key)) {
-            return (T) localOutput.get();
-          }
-          return getEnvironment().getEntry(key);
+      @SuppressWarnings("unchecked")
+      public <T> T getEntry(Class<T> key) {
+        if (InputData.class.equals(key)) {
+          return (T) localInput.get();
         }
+        if (OutputData.class.equals(key)) {
+          return (T) localOutput.get();
+        }
+        return getEnvironment().getEntry(key);
+      }
     });
   }
 
+  public void setChildService(Service service) {
+    this.childService = service;
+  }
+
+  @Override
   protected void destroy() throws Exception {
     this.childService._getComponent().destroy();
   }
@@ -80,22 +89,18 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
     HttpInputData input = new StandardServletInputData(request);
     input.setUseFullURL(this.useFullURL);
     localInput.set(input);
-
     HttpOutputData output = new StandardServletOutputData(request, response);
     localOutput.set(output);
 
     try {
       request.setAttribute(InputData.INPUT_DATA_KEY, input);
       request.setAttribute(OutputData.OUTPUT_DATA_KEY, output);
+
       this.childService._getService().action(null, input, output);
     } finally {
       localInput.set(null);
       localOutput.set(null);
     }
-  }
-
-  public void setChildService(Service service) {
-    this.childService = service;
   }
 
   /**

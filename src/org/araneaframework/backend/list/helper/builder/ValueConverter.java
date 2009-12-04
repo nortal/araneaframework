@@ -34,5 +34,5 @@ public interface ValueConverter extends Serializable {
    * @param value the <code>Value</code>.
    * @return the converted value.
    */
-  Object convert(Value value);
+  <S, D> D convert(Value<S> value);
 }

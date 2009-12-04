@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock;
 
@@ -29,42 +29,42 @@ import org.araneaframework.Path;
  *
  */
 public class MockInputData implements InputData {
-  private Map data;
+  private Map<String, String> data;
   
-  public MockInputData(Map data) {
+  public MockInputData(Map<String, String> data) {
     this();
     this.data = data;
   }
   
   public MockInputData() {
-    data = new HashMap();
+    data = new HashMap<String, String>();
   }
 
-  public Map getScopedData(Path path) {
+  public Map<String, String> getScopedData(Path path) {
     /*System.out.println("getScopedData");
     System.out.println("path is "+path);
     System.out.println(data);*/
     if (data.get(path.toString()) == null) {
       //System.out.println("Returning null");
-      return Collections.unmodifiableMap(new HashMap());
+      return Collections.unmodifiableMap(new HashMap<String, String>());
     } 
     else {
       //System.out.println("Returning "+data.get(path));
-      return Collections.unmodifiableMap((Map)data.get(path.toString()));
+      return Collections.unmodifiableMap(data);
     }
   }
 
-  public void extend(Class interfaceClass, Object implementation) {
+  public <T> void extend(Class<T> interfaceClass, T implementation) {
     //XXX
     throw new NotImplementedException();    
   }
 
-  public Object narrow(Class interfaceClass) {
+  public <T> T narrow(Class<T> interfaceClass) {
     //XXX
     throw new NotImplementedException();
   }
 
-  public Map getGlobalData() {
+  public Map<String, String> getGlobalData() {
     return data;
   }
 

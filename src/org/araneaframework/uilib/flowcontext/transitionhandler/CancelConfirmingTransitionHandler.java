@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.flowcontext.transitionhandler;
 
@@ -26,20 +26,16 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;
 
 /**
- * {@link org.araneaframework.framework.FlowContext.TransitionHandler} with some
- * special confirmation handling for
- * {@link org.araneaframework.framework.FlowContext#TRANSITION_CANCEL} events.
- * It attaches event listener to active flow when its cancellation request is
- * received and asks user to confirm the action whenever the predicate
+ * {@link org.araneaframework.framework.FlowContext.TransitionHandler} with some special confirmation handling for
+ * {@link org.araneaframework.framework.FlowContext#TRANSITION_CANCEL} events. It attaches event listener to active flow
+ * when its cancellation request is received and asks user to confirm the action whenever the predicate
  * <code>shouldConfirm</code> evaluates to <code>true</code>.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.1
  */
 public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidget.StandardTransitionHandler {
-
-  private static final long serialVersionUID = 1L;
 
   private Predicate shouldConfirm;
 
@@ -48,28 +44,23 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   private boolean allCancellings;
 
   /**
-   * Initializes a new transition handler that displays given
-   * <code>confirmationMessage</code> if predicate <code>shouldConfirm</code>
-   * returns <code>true</code>. By default, this transition handler responds to
-   * {@link FlowContext#TRANSITION_CANCEL}. If <code>allCancellings</code> is
-   * set to <code>true</code> then this transition handler also responds to
-   * every other transition type, except {@link FlowContext#TRANSITION_START}
-   * and {@link FlowContext#TRANSITION_FINISH}.
+   * Initializes a new transition handler that displays given <code>confirmationMessage</code> if predicate
+   * <code>shouldConfirm</code> returns <code>true</code>. By default, this transition handler responds to
+   * {@link FlowContext#TRANSITION_CANCEL}. If <code>allCancellings</code> is set to <code>true</code> then this
+   * transition handler also responds to every other transition type, except {@link FlowContext#TRANSITION_START} and
+   * {@link FlowContext#TRANSITION_FINISH}.
    * 
-   * @param shouldConfirm The predicate that is used to check whether
-   *          confirmation should be shown.
-   * @param confirmationMessage The message to show if the predicate returns
-   *          <code>true</code>.
-   * @param allCancellings If <code>true</code> then transition type may be
-   *          eiter {@link FlowContext#TRANSITION_CANCEL},
-   *          {@link FlowContext#TRANSITION_REPLACE}, or
-   *          {@link FlowContext#TRANSITION_RESET}. Otherwise, only
+   * @param shouldConfirm The predicate that is used to check whether confirmation should be shown.
+   * @param confirmationMessage The message to show if the predicate returns <code>true</code>.
+   * @param allCancellings If <code>true</code> then transition type may be eiter {@link FlowContext#TRANSITION_CANCEL},
+   *          {@link FlowContext#TRANSITION_REPLACE}, or {@link FlowContext#TRANSITION_RESET}. Otherwise, only
    *          {@link FlowContext#TRANSITION_CANCEL} is monitored.
    * @since 1.2.2
    */
   public CancelConfirmingTransitionHandler(Predicate shouldConfirm, String confirmationMessage, boolean allCancellings) {
     Assert.notNullParam(this, shouldConfirm, "shouldConfirm");
-    Assert.isInstanceOf(Serializable.class, shouldConfirm, "shouldConfirm Predicate must implement java.io.Serializable");
+    Assert.isInstanceOf(Serializable.class, shouldConfirm,
+        "shouldConfirm Predicate must implement java.io.Serializable");
     Assert.notNullParam(this, confirmationMessage, "confirmationMessage");
     this.shouldConfirm = shouldConfirm;
     this.confirmationMessage = confirmationMessage;
@@ -77,25 +68,21 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   /**
-   * Initializes a new transition handler that displays given
-   * <code>confirmationMessage</code> if predicate <code>shouldConfirm</code>
-   * returns <code>true</code>. By default, this transition handler responds to
-   * transitions of type {@link FlowContext#TRANSITION_CANCEL}.
+   * Initializes a new transition handler that displays given <code>confirmationMessage</code> if predicate
+   * <code>shouldConfirm</code> returns <code>true</code>. By default, this transition handler responds to transitions
+   * of type {@link FlowContext#TRANSITION_CANCEL}.
    * 
-   * @param shouldConfirm The predicate that is used to check whether
-   *          confirmation should be shown.
-   * @param confirmationMessage The message to show if the predicate returns
-   *          <code>true</code>.
+   * @param shouldConfirm The predicate that is used to check whether confirmation should be shown.
+   * @param confirmationMessage The message to show if the predicate returns <code>true</code>.
    */
   public CancelConfirmingTransitionHandler(Predicate shouldConfirm, String confirmationMessage) {
     this(shouldConfirm, confirmationMessage, false);
   }
 
-  public  void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
-    boolean test = this.allCancellings ?
-        transitionType != FlowContext.TRANSITION_START
-        && transitionType != FlowContext.TRANSITION_FINISH
-        : transitionType == FlowContext.TRANSITION_CANCEL;
+  @Override
+  public void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
+    boolean test = this.allCancellings ? transitionType != FlowContext.TRANSITION_START
+        && transitionType != FlowContext.TRANSITION_FINISH : transitionType == FlowContext.TRANSITION_CANCEL;
 
     if (test && this.shouldConfirm.evaluate(null)) {
       ConfirmationContext ctx = requireConfirmationContext(activeFlow);
@@ -107,12 +94,10 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   protected ConfirmationContext requireConfirmationContext(Widget activeFlow) {
-    return (ConfirmationContext) activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
+    return activeFlow.getEnvironment().requireEntry(ConfirmationContext.class);
   }
 
   private final class ParameterizedTransition implements Closure, Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     private final Closure transition;
 
@@ -120,8 +105,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
 
     private int transitionType;
 
-    private ParameterizedTransition(int transitionType, Widget activeFlow,
-        Closure transition) {
+    private ParameterizedTransition(int transitionType, Widget activeFlow, Closure transition) {
       this.transitionType = transitionType;
       this.transition = transition;
       this.activeFlow = activeFlow;

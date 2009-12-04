@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.example.common.tags.example.component;
 
@@ -34,6 +34,7 @@ public class ComponentNameTag extends PresentationTag {
     styleClass = ComponentNameTag.DEFAULT_HEADER_NAME_STYLE;
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -49,6 +50,7 @@ public class ComponentNameTag extends PresentationTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "div");
     return super.doEndTag(out);

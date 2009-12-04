@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -21,30 +21,33 @@ import org.araneaframework.uilib.form.Converter;
 
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class BigIntegerToIntegerConverter extends BaseConverter {
+public class BigIntegerToIntegerConverter extends BaseConverter<BigInteger, Integer> {
 
   /**
    * Returns a <code>new BigIntegerToIntegerConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<BigInteger, Integer> newConverter() {
     return new BigIntegerToIntegerConverter();
   }
 
   /**
    * Converts <code>BigInteger</code> to <code>Integer</code>.
    */
-  protected Object convertNotNull(Object data) {
-    return new Integer(((BigInteger) data).intValue());
+  @Override
+  protected Integer convertNotNull(BigInteger data) {
+    return new Integer(data.intValue());
   }
 
   /**
    * Converts <code>Integer</code> to <code>BigInteger</code>.
    */
-  protected Object reverseConvertNotNull(Object data) {
-    return new BigInteger(((Integer) data).toString());
+  @Override
+  protected BigInteger reverseConvertNotNull(Integer data) {
+    return new BigInteger(data.toString());
   }
 
 }

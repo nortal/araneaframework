@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock;
 
@@ -23,7 +23,6 @@ import org.araneaframework.core.StandardEnvironment;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
  */
 public class MockLifeCycle {
   public static Component begin(Component comp, Environment env) {
@@ -32,7 +31,7 @@ public class MockLifeCycle {
   }
   
   public static Component begin(Component comp) {
-    comp._getComponent().init(comp.getScope(), new StandardEnvironment(null, new HashMap()));
+    comp._getComponent().init(comp.getScope(), new StandardEnvironment(null, new HashMap<Class<?>, Object>()));
     return comp;
   }
   

@@ -21,41 +21,34 @@ import org.araneaframework.OutputData;
 
 /**
  * A base solution for action listeners. All action listeners should implement
- * {@link #processAction(Object, String, InputData, OutputData)} to provide
- * their custom solution.
+ * {@link #processAction(String, String, InputData, OutputData)} to provide their custom solution.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.0.4
  */
 public abstract class StandardActionListener implements ActionListener {
 
-  private static final long serialVersionUID = 1L;
-
   /**
    * This method is marked final. Subclasses should implement
-   * {@link #processAction(Object, String, InputData, OutputData)}.
+   * {@link #processAction(String, String, InputData, OutputData)}.
    */
-  public final void processAction(String actionId, InputData input,
-      OutputData output) throws Exception {
-
-    String actionParam = (String) input.getGlobalData().get(
-        ApplicationService.ACTION_PARAMETER_KEY);
-
+  public final void processAction(String actionId, InputData input, OutputData output) throws Exception {
+    String actionParam = input.getGlobalData().get(ApplicationService.ACTION_PARAMETER_KEY);
     processAction(actionId, actionParam, input, output);
   }
 
   /**
-   * Action processing method that includes an action parameter. Implementation
-   * should be able to handle different <code>actionId</code>s.
+   * Action processing method that includes an action parameter. Implementation should be able to handle different
+   * <code>actionId</code>s.
    * 
    * @param actionId The ID of the incoming action.
    * @param actionParam The parameter for the action (from request under name
-   *            {@link ApplicationService#ACTION_PARAMETER_KEY})
+   *          {@link ApplicationService#ACTION_PARAMETER_KEY})
    * @param input The request data.
    * @param output The response data.
    * @throws Exception Any runtime exception that might occur.
    */
-  public abstract void processAction(String actionId, String actionParam,
-      InputData input, OutputData output) throws Exception;
+  public abstract void processAction(String actionId, String actionParam, InputData input, OutputData output)
+      throws Exception;
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,47 +12,50 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import java.io.Writer;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
- *   name = "textareaDisplay"
- *   body-content = "JSP"
- *   description = "Form textarea display field, represents UiLib "TextareaControl"."
+ *  name = "textareaDisplay"
+ *  body-content = "JSP"
+ *  description = "Form textarea display field, represents UiLib 'TextareaControl'."
  */
 public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
+
   /** @since 1.0.6 */
-  protected boolean escapeSingleSpaces = true;	
-	
-  {
-    baseStyleClass = "aranea-textarea-display";
+  protected boolean escapeSingleSpaces = true;
+
+  public FormTextareaDisplayHtmlTag() {
+    this.baseStyleClass = "aranea-textarea-display";
   }
 
+  @Override
+  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
-    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) controlViewModel);
+    StringArrayRequestControl<?>.ViewModel viewModel = ((StringArrayRequestControl.ViewModel) this.controlViewModel);
 
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartTag(out);
 
     if (viewModel.getSimpleValue() != null) {
       String text = StringEscapeUtils.escapeHtml(viewModel.getSimpleValue());
       text = StringUtils.replace(text, "\n", "<br/>\n");
       text = StringUtils.replace(text, "  ", " &nbsp;");
-      if (escapeSingleSpaces) {
+      if (this.escapeSingleSpaces) {
         text = StringUtils.replace(text, " ", "&nbsp;");
       }
       out.write(text);
@@ -61,16 +64,16 @@ public class FormTextareaDisplayHtmlTag extends BaseFormElementDisplayTag {
     JspUtil.writeEndTag(out, "span");
     return super.doEndTag(out);
   }
-  
-  /** 
-   * @since 1.0.6 
+
+  /**
+   * @since 1.0.6
    * 
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether even single spaces (blanks) should be replace with &amp;nbsp; entities in output." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether all spaces (blanks) should be replace with &amp;nbsp; entities in output. Usually, two spaces are replaced to ' &amp;nbsp;'."
    */
   public void setEscapeSingleSpaces(String escapeSingleSpaces) throws Exception {
-    this.escapeSingleSpaces = ((Boolean)evaluate("escapeSingleSpaces", escapeSingleSpaces, Boolean.class)).booleanValue();
+    this.escapeSingleSpaces = evaluate("escapeSingleSpaces", escapeSingleSpaces, Boolean.class);
   }
 }

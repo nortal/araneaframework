@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.entity;
 
@@ -40,6 +40,7 @@ public class EntityHtmlTag extends BaseTag {
 	  this.code = code;
   }
   
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     
@@ -55,7 +56,7 @@ public class EntityHtmlTag extends BaseTag {
 
    /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   /**
    * @jsp.attribute
@@ -64,7 +65,7 @@ public class EntityHtmlTag extends BaseTag {
    *   description = "HTML entity code, e.g. <i>nbsp</i> or <i>#012</i>." 
    */
   public void setCode(String code) throws JspException {
-    this.code = (String)evaluateNotNull("code", code, String.class);  
+    this.code = evaluateNotNull("code", code, String.class);  
   }
   
   /**
@@ -73,7 +74,7 @@ public class EntityHtmlTag extends BaseTag {
    *   required = "false"
    *   description = "Number of times to repeat the entity." 
    */
-  public void setCount(String count) throws JspException {
-    this.count = ((Long)evaluate("count", count, Long.class)).longValue();  
+  public void setCount(String count){
+    this.count = (evaluate("count", count, Long.class)).longValue();  
   }
 }

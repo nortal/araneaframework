@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.structure;
 
@@ -23,8 +23,6 @@ import java.io.Serializable;
  * Base implementation of the {@link ListField}.
  */
 public class ListField implements Serializable {
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ListColumn Id.
@@ -101,8 +99,6 @@ public class ListField implements Serializable {
 	 * View Model.
 	 */
 	public class ViewModel implements Serializable {
-
-		private static final long serialVersionUID = 1L;
 
 		private String id;
 		private String label;

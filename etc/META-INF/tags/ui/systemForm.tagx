@@ -1,0 +1,54 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+
+	<jsp:directive.tag description="Writes the Aranea system form." />
+
+	<jsp:directive.attribute name="id" description="An optional ID for the system form. (Better leave it unspecified.)"/>
+	<jsp:directive.attribute name="method" description="Form submit method (get, post etc). Defaults to 'post'."/>
+	<jsp:directive.attribute name="enctype" description="Form submit encoding type (application/x-www-form-urlencoded, multipart/form-data, text/plain)."/>
+	<jsp:directive.attribute name="styleClass" description="Appended CSS class for the tag."/>
+
+	<c:if test="${empty id}">
+		<c:set var="id" value="${ui:isOverlay(pageContext) ? 'aranea-overlay-form' : 'aranea-form'}"/>
+	</c:if>
+
+	<c:if test="${empty method}">
+		<c:set var="method" value="post"/>
+	</c:if>
+
+	<c:if test="${empty header}">
+		<c:set var="header" value="false"/>
+	</c:if>
+
+	<ui:element name="form">
+		<ui:attribute name="id" value="${id}"/>
+		<ui:attribute name="name" value="${id}"/>
+		<ui:attribute name="method" value="${method}"/>
+		<ui:attribute name="enctype" value="${enctype}"/>
+		<ui:attribute name="accept-charset" value="${ui:getAcceptCharset(pageContext)}"/>
+		<ui:attribute name="action" value="${ui:getFormAction(pageContext)}"/>
+		<ui:attribute name="onsubmit" value="return false;"/>
+		<util:elementClassAttr styleClass="${styleClass}"/>
+
+		<ui:elementContent>
+			<c:forEach var="item" items="${ui:getHiddenFormFields(pageContext)}">
+				<input type="hidden" name="${item.key}" value="${item.value}"/>
+			</c:forEach>
+
+			<input type="hidden" name="araWidgetEventHandler" value=""/>
+			<input type="hidden" name="araWidgetEventPath" value=""/>
+			<input type="hidden" name="araWidgetEventParameter" value=""/>
+
+			<c:if test="${ui:isOverlay(pageContext)}">
+				<input type="hidden" name="araOverlay" value=""/>
+			</c:if>
+
+			<jsp:doBody/>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

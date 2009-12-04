@@ -44,6 +44,8 @@ public class BooleanColumnReader extends FilterResultSetColumnReader {
     this.nullValue = nullValue;
   }
 
+  @Override
+  @SuppressWarnings("unchecked")
   public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) {
     if (Boolean.class.equals(javaType)) {
       Object value = super.readFromResultSet(columnName, resultSet, Object.class);

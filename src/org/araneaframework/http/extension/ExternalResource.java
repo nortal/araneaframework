@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.extension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * A data structure for holding information about external resources. Different
@@ -32,29 +31,29 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class ExternalResource {
-	private Map groupsByName = new HashMap();
-	private Map allowedFiles = new HashMap();
+	private Map<String, Map<String, String>> groupsByName = new HashMap<String, Map<String, String>>();
+	private Map<String, String> allowedFiles = new HashMap<String, String>();
 	
 	public void addGroup(FileGroup fileGroup) {
 		if (fileGroup == null)
 			return;
 
 		// add files to the allowed list with the content type
-		for (Iterator iter = fileGroup.getFiles().iterator(); iter.hasNext();) {
-			allowedFiles.put(iter.next(), fileGroup.getContentType());
+		for (String element : fileGroup.getFiles()) {
+			allowedFiles.put(element, fileGroup.getContentType());
 		}
 		
 		// adding files by group names
 		if (fileGroup.getName() == null)
 			return;
 		
-		Map group = (Map)groupsByName.get(fileGroup.getName());
+		Map<String, String> group = groupsByName.get(fileGroup.getName());
 		if (group == null) { // no group by this name, lets create one
-			group = new LinkedMap();
+			group = new LinkedHashMap<String, String>();
 			groupsByName.put(fileGroup.getName(), group);
 		}
-		for (Iterator iter = fileGroup.getFiles().iterator(); iter.hasNext();) {
-			group.put(iter.next(), fileGroup.getContentType());
+		for (String file : fileGroup.getFiles()) {
+			group.put(file, fileGroup.getContentType());
 		}
 	}
 	
@@ -62,7 +61,7 @@ public class ExternalResource {
 	 * Returns a Set of available group names.
 	 * @return a Set of available group names.
 	 */
-	public Set getGroupNames() {
+	public Set<String> getGroupNames() {
 		return groupsByName.keySet();
 	}
 	
@@ -71,8 +70,8 @@ public class ExternalResource {
 	 * @param name the name of the group.
 	 * @return Map of filenames paired with respective content types.
 	 */
-	public Map getGroupByName(String name) {
-		return (Map)groupsByName.get(name);
+	public Map<String, String> getGroupByName(String name) {
+		return groupsByName.get(name);
 	}
 
 	/**
@@ -90,16 +89,16 @@ public class ExternalResource {
 	 * @return the content-type of the file.
 	 */
 	public String getContentType(String fileName) {
-		return (String)allowedFiles.get(fileName);
+		return allowedFiles.get(fileName);
 	}
 	
 	static class FileGroup {
 		private String name;
 		private String contentType;
-		private List files;
+		private List<String> files;
 		
 		public FileGroup() {
-			files = new ArrayList();
+			files = new ArrayList<String>();
 		}
 		
 		public FileGroup(String name) {
@@ -115,7 +114,7 @@ public class ExternalResource {
 			this.contentType = contentType;
 		}
 
-		public List getFiles() {
+		public List<String> getFiles() {
 			return files;
 		}
 		

@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="araneaApplicationStart" class="org.araneaframework.example.main.web.RootWidget" singleton="false" />
+	<bean id="araneaApplicationStart" class="org.araneaframework.example.main.web.RootWidget" scope="prototype" />
 
-	<bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent" singleton="false">
-		<property name="childService" ref="araneaApplicationFilters" />
-		<property name="useFullURL" value="false" />
-	</bean>
-
-	<bean class="org.araneaframework.http.filter.StandardMountingFilterService" id="araneaMountFilter" singleton="false">
+	<bean id="araneaMountFilter" scope="prototype" class="org.araneaframework.http.filter.StandardMountingFilterService">
 		<property name="mounts">
 			<map>
 				<entry key="person">
-					<bean class="org.araneaframework.example.main.message.ExamplePersonMountMessageFactory" singleton="false" />
+					<bean class="org.araneaframework.example.main.message.ExamplePersonMountMessageFactory" scope="prototype" />
 				</entry>
 			</map>
 		</property>
 	</bean>
 
+	<bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent" scope="prototype">
+		<property name="childService" ref="araneaApplicationFilters" />
+		<property name="useFullURL" value="true" />
+	</bean>
+
 	<!-- Set the limits for file uploads. -->
-	<bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" singleton="false">
+	<bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" scope="prototype">
 		<property name="maximumSize" value="1048576" />
 		<property name="maximumRequestSize" value="5242880" />
 		<property name="maximumCachedSize" value="1048576" />
 	</bean>
 
-	<bean id="araneaCustomSessionFilters" singleton="false" class="org.araneaframework.framework.filter.StandardFilterChainService">
+	<bean id="araneaCustomSessionFilters" scope="prototype" class="org.araneaframework.framework.filter.StandardFilterChainService">
 		<property name="filterChain">
 			<list>
 				<ref bean="araneaSerializingAudit" />
@@ -34,7 +35,7 @@
 		</property>
 	</bean>
 
-	<bean id="araneaCustomWidgetFilters" singleton="false" class="org.araneaframework.framework.filter.StandardFilterChainWidget">
+	<bean id="araneaCustomWidgetFilters" scope="prototype" class="org.araneaframework.framework.filter.StandardFilterChainWidget">
 		<property name="filterChain">
 			<list>
 				<ref bean="araneaScrollingFilter" />
@@ -46,7 +47,7 @@
 
 	<bean id="overlayDemoMessageFactory" class="org.araneaframework.example.main.message.ExampleOverlayDemoMessageFactory" />
 
-	<bean class="org.araneaframework.http.filter.StandardMountingFilterService" id="araneaMountingFilter" singleton="false">
+	<bean id="araneaMountingFilter" scope="prototype" class="org.araneaframework.http.filter.StandardMountingFilterService">
 		<property name="mounts">
 			<map>
 				<entry key="simpleTree" value-ref="simpleTreeMessageFactory" />
@@ -55,10 +56,19 @@
 		</property>
 	</bean>
 
+	<!-- CUSTOM ARANEA CONFIGURATION SETTINGS -->
+	<bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" scope="prototype">
+		<property name="confEntries">
+			<map>
+				<entry key="uilib.widgets.forms.control.data.localize" value="true"/>
+			</map>
+		</property>
+	</bean>
+
 	<!-- Configuration for supporting the usage of state versioning filter -->
 
-	<bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" singleton="false">
+	<!--bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" scope="prototype">
 		<property name="maxVersionedStates" value="20" />
-	</bean>
+	</bean-->
 
 </beans>

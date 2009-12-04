@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.constraints;
+
+import java.sql.Timestamp;
 
 import java.util.Date;
 import junit.framework.TestCase;
@@ -34,8 +36,7 @@ public class AfterTodayConstraintTest extends TestCase {
 
   public static class FakeDateControl extends DateControl {
 
-    private static final long serialVersionUID = 1L;
-
+    @Override
     public boolean isRead() {
       return true;
     }
@@ -45,63 +46,40 @@ public class AfterTodayConstraintTest extends TestCase {
 
   private FormWidget form;
 
-  private FormElement dateElement;
+  private FormElement<Timestamp, Date> dateElement;
 
-  private ConstraintTestHelper helper;
+  private ConstraintTestHelper<Timestamp, Date> helper;
 
+  @Override
   public void setUp() throws Exception {
-    form = new FormWidget();
-    dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);
-    form.addElement("date", dateElement);
-    MockLifeCycle.begin(form, new MockEnvironment());
-    
-    helper = new ConstraintTestHelper(form, dateElement);
+    this.form = new FormWidget();
+    this.dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);
+    this.form.addElement("date", this.dateElement);
+    MockLifeCycle.begin(this.form, new MockEnvironment());
+    this.helper = new ConstraintTestHelper<Timestamp, Date>(this.form, this.dateElement);
   }
-  
+
   public void testFuture() throws Exception {
-    helper.testConstraintValidness(
-        new AfterTodayConstraint(false), 
-        new Date(System.currentTimeMillis() + 20*AfterTodayConstraintTest.DAY), 
-        true);
-
-    helper.testConstraintValidness(
-            new AfterTodayConstraint(true), 
-            new Date(System.currentTimeMillis() + 20*AfterTodayConstraintTest.DAY), 
-            true);
+    Date now = new Date(System.currentTimeMillis() + 20 * DAY);
+    this.helper.testConstraintValidness(new AfterTodayConstraint(false), now, true);
+    this.helper.testConstraintValidness(new AfterTodayConstraint(true), now, true);
   }
-  
-  public void testPast() throws Exception {
-    helper.testConstraintValidness(
-        new AfterTodayConstraint(false), 
-        new Date(System.currentTimeMillis() - 20*AfterTodayConstraintTest.DAY), 
-        false);
 
-    helper.testConstraintValidness(
-            new AfterTodayConstraint(true), 
-            new Date(System.currentTimeMillis() - 20*AfterTodayConstraintTest.DAY), 
-            false);
+  public void testPast() throws Exception {
+    Date now = new Date(System.currentTimeMillis() - 20 * DAY);
+    this.helper.testConstraintValidness(new AfterTodayConstraint(false), now, false);
+    this.helper.testConstraintValidness(new AfterTodayConstraint(true), now, false);
   }
 
   // test that constraint works correctly with today's date
   public void testPresent() throws Exception {
     Date now = new Date();
-    // disallow today
-    helper.testConstraintValidness(
-        new AfterTodayConstraint(false), 
-        now, 
-        false);
-    // allow today
-    helper.testConstraintValidness(
-        new AfterTodayConstraint(true), 
-        now, 
-        true);
+    this.helper.testConstraintValidness(new AfterTodayConstraint(false), now, false); // disallow today
+    this.helper.testConstraintValidness(new AfterTodayConstraint(true), now, true);   // allow today
   }
-  
+
   // in case of date being null, after today constraint should validate
   public void testNull() throws Exception {
-    helper.testConstraintValidness(
-        new AfterTodayConstraint(false), 
-        null, 
-        true);
+    this.helper.testConstraintValidness(new AfterTodayConstraint(false), null, true);
   }
 }

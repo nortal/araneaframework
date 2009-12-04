@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.widget;
 
-import java.util.Iterator;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
-import org.araneaframework.Path;
+import org.apache.commons.io.FilenameUtils;
 import org.araneaframework.core.Assert;
-import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.support.FileInfo;
 
 /**
@@ -34,97 +32,100 @@ import org.araneaframework.uilib.support.FileInfo;
  */
 public class FileDownloaderWidget extends DownloaderWidget {
 
-  private static final long serialVersionUID = 1L;
-
-  protected FileInfo file;
-  
   protected String fileName;
-  
-  protected Boolean contentDispositionInline;
-  
+
+  protected boolean contentDispositionInline;
+
   public FileDownloaderWidget(FileInfo file) {
-    super(file.readFileContent(), file.getContentType());
-    Assert.notNullParam(file, "file");
-    this.fileName = normalizeFileName(file.getOriginalFilename());
+    this(file.getFileStream(), file.getContentType(), file.getFileName());
   }
-  
+
   public FileDownloaderWidget(byte[] fileContent, String contentType, String fileName) {
-    super(fileContent, contentType);
+    this(new ByteArrayInputStream(fileContent), fileContent.length, contentType, fileName);
+  }
+
+  public FileDownloaderWidget(InputStream fileContent, String contentType, String fileName) {
+    this(fileContent, -1, contentType, fileName);
+  }
+
+  public FileDownloaderWidget(InputStream fileContent, int length, String contentType, String fileName) {
+    super(fileContent, length, contentType);
     Assert.notEmptyParam(fileName, "fileName");
-    this.fileName = normalizeFileName(fileName);
+    setFileName(fileName);
+  }
+
+  public FileDownloaderWidget(FileDownloadStreamCallback callback) {
+    super(callback);
   }
 
   /** @since 1.1 */
-  public FileDownloaderWidget(byte[] fileContent, Map headers) {
+  public FileDownloaderWidget(byte[] fileContent, Map<String, String> headers) {
     super(fileContent, headers);
   }
-  
+
+  public void setFileName(String fileName) {
+    this.fileName = normalizeFileName(fileName);
+  }
+
+  protected String getFileName() {
+    FileDownloadStreamCallback c = getCallback();
+    return c != null && c.getFileName() != null ? c.getFileName() : this.fileName;
+  }
+
   /**
    * Returns value of currently used content-disposition response header.
+   * 
    * @return false if content-disposition header is set to "attachment"
    */
-  public Boolean isContentDispositionInline() {
-    return contentDispositionInline;
+  protected boolean isContentDispositionInline() {
+    FileDownloadStreamCallback c = getCallback();
+    return c != null && c.isContentDispositionInline() != null ? c.isContentDispositionInline() : this.contentDispositionInline;
   }
 
   /**
    * Sets content-disposition header to "inline" (true) or "attachment" (false).
    */
-  public void setContentDispositionInline(Boolean contentDispositionInline) {
+  public void setContentDispositionInline(boolean contentDispositionInline) {
     this.contentDispositionInline = contentDispositionInline;
   }
-  
+
   /** Used internally to extract only file name from supplied filename (no file path). */
   protected String normalizeFileName(String fileName) {
-    return FileDownloaderWidget.staticNormalizeFileName(fileName);
+    // as IE (6) provides full names for uploaded files, we use some heuristics
+    // to ensure filename does not include the full path. By no means bulletproof
+    // as it does some harm to filenames containing slashes/backslashes.
+    return FilenameUtils.getName(fileName);
   }
 
-  // as IE (6) provides full names for uploaded files, we use some heuristics
-  // to ensure filename does not include the full path. By no means bulletproof
-  // as it does some harm to filenames containing slashes/backslashes.
-  public static String staticNormalizeFileName(String fileName) {
-    fileName = fileName.trim();
-    // shouldn't happen, but anyway...
-    if (fileName.endsWith("\\"))
-      fileName = fileName.substring(0, fileName.length()-1);
-    if (fileName.endsWith("/"))
-      fileName = fileName.substring(0, fileName.length()-1);
-    
-    if (fileName.lastIndexOf('\\') != -1) {
-      fileName = fileName.substring(fileName.lastIndexOf('\\') + 1);
-    }
-    // IE on MAC?
-    if (fileName.lastIndexOf('/') != -1) {
-      fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
-    }
-    return fileName;
+  @Override
+  protected void afterFile(HttpServletResponse response, long length) {
+    StringBuffer disposition = new StringBuffer();
+    disposition.append(isContentDispositionInline() ? "inline" : "attachment");
+    disposition.append("; filename=").append(getFileName()).append("; size=").append(length).append(";");
+    response.addHeader("Content-Disposition", disposition.toString());
+    super.afterFile(response, length);
   }
 
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    HttpServletResponse response = ServletUtil.getResponse(output);
-
-    response.setContentType(getContentType());
-
-    if (headers != null) {
-      for (Iterator i = headers.entrySet().iterator(); i.hasNext();) {
-        Map.Entry entry = (Map.Entry) i.next();
-        response.setHeader((String) entry.getKey(), (String) entry.getValue());
-      }
-    } else if (this.contentDispositionInline != null) {
-      StringBuffer result = new StringBuffer(this.contentDispositionInline.booleanValue() ? "inline" : "attachment");
-      result.append("; filename=");
-      result.append(this.fileName);
-      result.append("; size=");
-      result.append(getData().length);
-      result.append(";");
-      response.setHeader("Content-Disposition", result.toString());
-    }
-
-    response.setContentLength(getData().length);
-    response.getOutputStream().write(getData());
-    close();
+  protected FileDownloadStreamCallback getCallback() {
+    return (FileDownloadStreamCallback) this.dataStreamCallback;
   }
 
-  protected void close() {}
+  /**
+   * If a file download stream is given to e.g. popup context, the stream must be serializable. Since streams are not
+   * serializable, this callback request the stream only when needed to output it. Therefore, it escapes the
+   * serialization step.
+   * <p>
+   * This class extends {@link DownloadStreamCallback} to get more data about the file to download.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @since 2.0
+   */
+  public static abstract class FileDownloadStreamCallback extends DownloadStreamCallback {
 
+    public abstract String getFileName();
+
+    public Boolean isContentDispositionInline() {
+      return false;
+    }
+  }
 }

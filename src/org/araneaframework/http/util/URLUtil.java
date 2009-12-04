@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.http.util;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,16 +27,17 @@ import java.util.StringTokenizer;
 
 /**
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class URLUtil {
+
   /**
    * Removes all leading and trailing slashes.
    */
   public static String normalizeURI(String uri) {
-    if (uri == null) 
+    if (uri == null)
       return null;
-    
+
     // lose the first slashes
     while (uri.indexOf("/") == 0 && uri.length() > 0)
       uri = uri.substring(1);
@@ -46,7 +50,7 @@ public abstract class URLUtil {
   }
 
   public static String[] splitURI(String uri) {
-    List result = new ArrayList();
+    List<String> result = new ArrayList<String>();
     uri = normalizeURI(uri);
 
     StringTokenizer tokenizer = new StringTokenizer(uri, "/");
@@ -54,17 +58,17 @@ public abstract class URLUtil {
       result.add(tokenizer.nextToken());
     }
 
-    return (String[]) result.toArray(new String[result.size()]);
+    return result.toArray(new String[result.size()]);
   }
-  
-  public static String parametrizeURI(String uri, Map parameters) {
+
+  public static String parametrizeURI(String uri, Map<String, String> parameters) {
     StringBuffer sb = new StringBuffer(uri);
-    
+
     if (parameters != null && parameters.size() > 0) {
       sb.append('?');
-      for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
-        Map.Entry pair = (Map.Entry) i.next();
-        sb.append((String)pair.getKey());
+      for (Iterator<Map.Entry<String, String>> i = parameters.entrySet().iterator(); i.hasNext();) {
+        Map.Entry<String, String> pair = i.next();
+        sb.append(pair.getKey());
         sb.append('=');
         sb.append(pair.getValue());
         if (i.hasNext())
@@ -73,5 +77,21 @@ public abstract class URLUtil {
     }
 
     return sb.toString();
+  }
+
+  public static final InputStream getFileStream(URL fileURL, String fileName) {
+    InputStream result = null;
+
+    try {
+      result = new FileInputStream(fileName);
+    } catch (Exception e) {
+      try {
+        result = result != null ? null : fileURL.openStream();
+      } catch (Exception e2) {
+        // not being able to load results in Exception, which is OK.
+      }
+    }
+
+    return result;
   }
 }

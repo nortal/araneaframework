@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.sqlexpr;
 
@@ -29,10 +29,10 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockSqlStringExpressio
 
 
 public class SqlMultiExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(SqlMultiExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(SqlMultiExpressionTests.class);
 
 	public void testSqlAndExpression() {
-		log.debug("Testing SqlAndExpression");
+		LOG.debug("Testing SqlAndExpression");
 		// constructing
 		try {
 			new SqlAndExpression();
@@ -71,7 +71,7 @@ public class SqlMultiExpressionTests extends TestCase {
 	}
 
 	public void testSqlOrExpression() {
-		log.debug("Testing SqlOrExpression");
+		LOG.debug("Testing SqlOrExpression");
 		// constructing
 		try {
 			new SqlOrExpression();
@@ -109,7 +109,7 @@ public class SqlMultiExpressionTests extends TestCase {
 	}
 
 	public void testSqlConcatenationExpression() {
-		log.debug("Testing SqlConcatenationExpression");
+		LOG.debug("Testing SqlConcatenationExpression");
 		// constructing
 		try {
 			new SqlConcatenationExpression();
@@ -151,7 +151,7 @@ public class SqlMultiExpressionTests extends TestCase {
 	}
 
 	public void testSqlCollectionExpression() {
-		log.debug("Testing SqlCollectionExpression");
+		LOG.debug("Testing SqlCollectionExpression");
 		// constructing
 		try {
 			new SqlCollectionExpression();
@@ -192,7 +192,7 @@ public class SqlMultiExpressionTests extends TestCase {
 	}
 
 	public void testSqlProcedureExpression() {
-		log.debug("Testing SqlProcedureExpression");
+		LOG.debug("Testing SqlProcedureExpression");
 		// constructing
 		try {
 			new SqlProcedureExpression(null);

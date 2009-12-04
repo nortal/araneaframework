@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework;
 
@@ -33,7 +33,7 @@ import org.araneaframework.http.HttpInputData;
  * @see HttpInputData
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface InputData extends Extendable, Narrowable {
   
@@ -47,14 +47,14 @@ public interface InputData extends Extendable, Narrowable {
    * @param scope the Path prefix
    * @return a map with the data
    */
-  public Map getScopedData(Path scope);
+  public Map<String, String> getScopedData(Path scope);
   
   /**
    * Returns the global data of this object. Global data is not the same
    * as scoped data with empty path.
    * @return the map with the global data
    */
-  public Map getGlobalData();
+  public Map<String, String> getGlobalData();
   
   /**
    * Returns the current OutputData.

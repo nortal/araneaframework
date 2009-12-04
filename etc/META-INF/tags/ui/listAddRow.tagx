@@ -1,0 +1,15 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Wrapper of a row for adding a new list row." />
+
+	<tbody class="form">
+		<tr>
+			<ui:formListAddForm>
+				<jsp:doBody />
+			</ui:formListAddForm>
+		</tr>
+	</tbody>
+
+</jsp:root>

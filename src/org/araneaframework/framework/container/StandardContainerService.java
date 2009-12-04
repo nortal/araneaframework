@@ -33,13 +33,11 @@ import org.araneaframework.framework.core.BaseFilterService;
  */
 public class StandardContainerService extends BaseFilterService {
 
-  private static final long serialVersionUID = 1L;
-
   //*******************************************************************
   // CONSTANTS
   //*******************************************************************
 
-  private static final Log log = LogFactory.getLog(StandardContainerService.class);
+  private static final Log LOG = LogFactory.getLog(StandardContainerService.class);
 
   /**
    * The key of the action path parameter in the request.
@@ -51,7 +49,7 @@ public class StandardContainerService extends BaseFilterService {
    * to get the path.
    */
   protected Path getActionPath(InputData input) {
-    return new StandardPath((String) input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
+    return new StandardPath(input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER));
   }
 
   /**
@@ -62,10 +60,11 @@ public class StandardContainerService extends BaseFilterService {
     return input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER) != null;
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
       Path actionPath = getActionPath(input);
-      log.debug("Routing action to service '" + actionPath.toString() + "'");
+      LOG.debug("Routing action to service '" + actionPath.toString() + "'");
       super.action(actionPath, input, output);
     }
   }

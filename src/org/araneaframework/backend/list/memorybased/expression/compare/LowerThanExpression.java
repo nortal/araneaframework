@@ -19,26 +19,24 @@ package org.araneaframework.backend.list.memorybased.expression.compare;
 import java.util.Comparator;
 import org.araneaframework.backend.list.memorybased.Expression;
 
+@SuppressWarnings("unchecked")
 public class LowerThanExpression extends ComparableExpression {
-
-  private static final long serialVersionUID = 1L;
 
   private boolean allowEquals = false;
 
   /**
-   * Greates a new <code>LowerThanExpression</code>.
+   * Creates a new <code>LowerThanExpression</code>.
    * 
    * @param expr1 The expression that should be lower than the other.
    * @param expr2 The expression that should be greater than the other.
    * @param comparator The comparator that is used to compare.
    */
-  public LowerThanExpression(Expression expr1, Expression expr2,
-      Comparator comparator) {
+  public LowerThanExpression(Expression expr1, Expression expr2, Comparator comparator) {
     super(expr1, expr2, comparator);
   }
 
   /**
-   * Greates a new <code>LowerThanExpression</code> using a default comparator.
+   * Creates a new <code>LowerThanExpression</code> using a default comparator.
    * 
    * @param expr1 The expression that should be lower than the other.
    * @param expr2 The expression that should be greater than the other.
@@ -46,11 +44,10 @@ public class LowerThanExpression extends ComparableExpression {
   public LowerThanExpression(Expression expr1, Expression expr2) {
     super(expr1, expr2);
   }
-  
+
   /**
-   * Greates a new <code>LowerThanExpression</code> that can also be
-   * lower-than-or-equal expression. The latter is determined by the boolean
-   * parameter <code>allowEquals</code>.
+   * Creates a new <code>LowerThanExpression</code> that can also be lower-than-or-equal expression. The latter is
+   * determined by the boolean parameter <code>allowEquals</code>.
    * 
    * @param expr1 The expression that should be lower than the other.
    * @param expr2 The expression that should be greater than the other.
@@ -58,12 +55,12 @@ public class LowerThanExpression extends ComparableExpression {
    * @param allowEquals Whether expressions can also be equal. By default: equality not allowed.
    * @since 1.2
    */
-  public LowerThanExpression(Expression expr1, Expression expr2,
-      Comparator comparator, boolean allowEquals) {
+  public LowerThanExpression(Expression expr1, Expression expr2, Comparator comparator, boolean allowEquals) {
     super(expr1, expr2, comparator);
     this.allowEquals = allowEquals;
   }
 
+  @Override
   protected boolean doEvaluate(Object value1, Object value2) {
     int comp = this.comparator.compare(value1, value2);
     return this.allowEquals ? comp <= 0 : comp < 0;

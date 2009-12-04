@@ -41,6 +41,7 @@ public class SqlGreaterThanExpression extends SqlComparableExpression {
     this.allowEquals = allowEquals;
   }
 
+  @Override
   protected String getOperator() {
     return this.allowEquals ? ">=" : ">";
   }

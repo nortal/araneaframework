@@ -32,24 +32,21 @@ import org.araneaframework.backend.list.sqlexpr.string.SqlUpperExpression;
  * @author Roman Tekhov
  * @since 1.1.3
  */
-public class PostgreExpressionToSqlExprBuilder
-  extends StandardExpressionToSqlExprBuilder {
+public class PostgreExpressionToSqlExprBuilder extends StandardExpressionToSqlExprBuilder {
 
   public PostgreExpressionToSqlExprBuilder() {
     addTranslator(LikeExpression.class, new PostgreLikeTranslator());
   }
 
-  protected class PostgreLikeTranslator
-    extends CompositeExprToSqlExprTranslator {
+  protected class PostgreLikeTranslator extends CompositeExprToSqlExprTranslator {
 
-    protected SqlExpression translateParent(Expression expr,
-        SqlExpression[] sqlChildren) {
+    @Override
+    protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
 
       LikeExpression like = (LikeExpression) expr;
       SqlExpression var = sqlChildren[0];
       String value = (String) convertValue(like.getMask());
-      SqlExpression mask = new SqlValueExpression(SqlLikeUtil.convertMask(
-          value, like.getConfiguration(), ESCAPE_CHAR));
+      SqlExpression mask = new SqlValueExpression(SqlLikeUtil.convertMask(value, like.getConfiguration(), ESCAPE_CHAR));
 
       if (like.getIgnoreCase()) {
         var = new SqlUpperExpression(var);

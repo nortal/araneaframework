@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework;
 
@@ -30,7 +30,7 @@ import java.util.Map;
  * implementation.
  *  
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Composite extends Serializable {
   
@@ -48,7 +48,7 @@ public interface Composite extends Serializable {
      * Returns an unmodifiable map of all the child components.
      * @return a map of child components
      */
-    public Map getChildren();
+    public Map<Object, Component> getChildren();
     
     /**
      * Attaches a component as a child of this component. No initialization of the

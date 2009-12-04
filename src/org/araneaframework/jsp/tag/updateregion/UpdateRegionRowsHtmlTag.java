@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.updateregion;
 
@@ -24,7 +24,7 @@ import org.araneaframework.jsp.util.JspUtil;
  * Should be used when updating content inside HTML <code>table</code> rows, due to
  * browser peculiarities these cases are handled differently.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "updateRegionRows" 
@@ -33,6 +33,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class UpdateRegionRowsHtmlTag extends BaseUpdateRegionTag {
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -45,6 +46,7 @@ public class UpdateRegionRowsHtmlTag extends BaseUpdateRegionTag {
     return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     out.write("<!--END:" + fullId + "-->");
 

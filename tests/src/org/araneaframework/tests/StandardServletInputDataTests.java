@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests;
 
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.araneaframework.Path;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.util.ServletUtil;
@@ -32,6 +33,7 @@ public class StandardServletInputDataTests extends TestCase {
   private MockHttpServletRequest request;
   private StandardServletInputData input;
   
+  @Override
   public void setUp() {
     request = new MockHttpServletRequest();
     request.addParameter("foo","bar");
@@ -72,11 +74,11 @@ public class StandardServletInputDataTests extends TestCase {
   
   public void testNonValidPath() {
     request = new MockHttpServletRequest();
-    request.addParameter("a...foo","b");
-    request.addParameter(".","c");
-    request.addParameter(".","c");
+    request.addParameter("a" + Path.SEPARATOR + Path.SEPARATOR + Path.SEPARATOR + "foo", "b");
+    request.addParameter(Path.SEPARATOR, "c");
+    request.addParameter(Path.SEPARATOR, "c");
     input = new StandardServletInputData(request);
-    assertEquals(null, input.getScopedData(new StandardPath("")).get("."));
+    assertEquals(null, input.getScopedData(new StandardPath("")).get(Path.SEPARATOR));
   }
   
   public void testChangeGlobalData() {
@@ -116,7 +118,7 @@ public class StandardServletInputDataTests extends TestCase {
   }
   
   public void testExtendNarrow() {
-    Map map = new HashMap();
+    Map<Object, Object> map = new HashMap<Object, Object>();
     input.extend(Map.class, map);
     assertEquals(map, input.narrow(Map.class));
   }

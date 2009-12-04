@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form;
 
@@ -45,13 +45,13 @@ public interface FormElementValidationErrorRenderer extends Serializable {
    * @param element element which produced the validation error
    * @param error detailed error message
    */
-  void addError(FormElement element, String error);
+  void addError(FormElement<?,?> element, String error);
 
   /**
    * Called by {@link org.araneaframework.uilib.form.FormElement#clearErrors()} to clear validation errors.
    * @param element element which errors should be cleared
    */
-  void clearErrors(FormElement element);
+  void clearErrors(FormElement<?,?> element);
 
   /**
    * Returns client side script capable of rendering errors in desired format. This should
@@ -61,5 +61,5 @@ public interface FormElementValidationErrorRenderer extends Serializable {
    * When the errors are rendered with some other mechanism, returns <code>null</code> or empty String.
    *  
    * @return script capable of rendering errors in desired format */
-  String getClientRenderText(FormElement element);
+  String getClientRenderText(FormElement<?,?> element);
 }

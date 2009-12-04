@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.presentation;
 
@@ -23,79 +23,82 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
- * @jsp.tag
- *   name = "eventButton"
- *   body-content = "JSP"
- *   description = "Represents an HTML form button."
+ * @jsp.tag name = "eventButton" body-content = "JSP" description = "Represents an HTML form button."
  */
 public class EventButtonHtmlTag extends BaseEventButtonTag {
+
   public static final String RENDER_BUTTON = "button";
+
   public static final String RENDER_INPUT = "input";
 
   {
-     baseStyleClass = "aranea-button";
+    this.baseStyleClass = "aranea-button";
   }
 
-  protected String renderMode = EventButtonHtmlTag.RENDER_BUTTON;  
+  protected String renderMode = EventButtonHtmlTag.RENDER_BUTTON;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);                
+    super.doStartTag(out);
     // Write button tag
-    JspUtil.writeOpenStartTag(out, renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON) ? EventButtonHtmlTag.RENDER_BUTTON : EventButtonHtmlTag.RENDER_INPUT);
-    if (renderMode.equals(EventButtonHtmlTag.RENDER_INPUT))
-      JspUtil.writeAttribute(out, "type", "button");    
-    JspUtil.writeAttribute(out, "id", id);
+    JspUtil.writeOpenStartTag(out, this.renderMode.equals(RENDER_BUTTON) ? RENDER_BUTTON : RENDER_INPUT);
+    if (this.renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {
+      JspUtil.writeAttribute(out, "type", "button");
+    }
+    JspUtil.writeAttribute(out, "id", this.id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeEventAttributes(out, event);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    JspUtil.writeEventAttributes(out, this.event);
 
-    if (isDisabled())
+    if (isDisabled()) {
       out.write(" disabled=\"disabled\" ");
+    }
 
-    if (event.getId() != null) {
+    if (this.event.getId() != null) {
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }
-    if (labelId != null && renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {
-      JspUtil.writeAttribute(out, "value", localizedLabel);      
+    if (this.labelId != null && this.renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {
+      JspUtil.writeAttribute(out, "value", this.localizedLabel);
     }
-    if (renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON))
-      JspUtil.writeCloseStartTag_SS(out);      
-    if (renderMode.equals(EventButtonHtmlTag.RENDER_INPUT))
+    if (this.renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON)) {
+      JspUtil.writeCloseStartTag_SS(out);
+    }
+    if (this.renderMode.equals(EventButtonHtmlTag.RENDER_INPUT)) {
       JspUtil.writeCloseStartEndTag(out);
+    }
 
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
-    if (renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON)) {
-      if (localizedLabel != null)
-        JspUtil.writeEscaped(out, localizedLabel);
+    if (this.renderMode.equals(EventButtonHtmlTag.RENDER_BUTTON)) {
+      if (this.localizedLabel != null) {
+        JspUtil.writeEscaped(out, this.localizedLabel);
+      }
 
-      JspUtil.writeEndTag(out, "button");       
+      JspUtil.writeEndTag(out, "button");
     }
 
     super.doEndTag(out);
-    return EVAL_PAGE;      
-  }  
+    return EVAL_PAGE;
+  }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = 
-   *     "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button."
    */
   public void setRenderMode(String renderMode) throws JspException {
-    String tmpMode = (String) evaluate("renderMode", renderMode, String.class);
+    String tmpMode = evaluate("renderMode", renderMode, String.class);
 
     if (!(RENDER_BUTTON.equals(tmpMode) || RENDER_INPUT.endsWith(tmpMode))) {
-      throw new AraneaJspException("<ui:eventButton> 'renderMode' attribute "
-          + "must be '" + RENDER_BUTTON + "' or '" + RENDER_INPUT + "'");
+      throw new AraneaJspException("<ui:eventButton> 'renderMode' attribute " + "must be '" + RENDER_BUTTON + "' or '"
+          + RENDER_INPUT + "'");
     }
 
     this.renderMode = tmpMode;
-  }  
+  }
 }

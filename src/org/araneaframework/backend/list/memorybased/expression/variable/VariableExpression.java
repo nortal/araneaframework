@@ -23,8 +23,6 @@ import org.araneaframework.core.Assert;
 
 public class VariableExpression implements Expression, Variable {
 
-  private static final long serialVersionUID = 1L;
-
   private String name;
 
   public VariableExpression(String name) {

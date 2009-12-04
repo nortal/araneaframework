@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,53 +12,52 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.main.business.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * @author Rein Raudjärv <rein@webmedia.ee>
- * 
- * @hibernate.class table="company" lazy="false"
  */
+@Entity(name = "company")
 public class CompanyMO implements GeneralMO {
 
-	  private static final long serialVersionUID = 1L;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-	private String name;
-	private String address;
 
-	/**
-	 * @hibernate.id column="id" generator-class="increment"
-	 */
-	public Long getId() {
-		return id;
-	}
+  private String name;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  @Column(nullable = true)
+  private String address;
 
-	/**
-	 * @hibernate.property not-null="true"
-	 */
-	public String getName() {
-		return name;
-	}
+  public Long getId() {
+    return this.id;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	/**
-	 * @hibernate.property not-null="false"
-	 */
-	public String getAddress() {
-		return address;
-	}
+  public String getName() {
+    return this.name;
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAddress() {
+    return this.address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
 }

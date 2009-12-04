@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- ==================================================================== -->
+	<!--                  DATABASE SETUP AND CONFIGURATION                    -->
+	<!-- ==================================================================== -->
+
+	<bean id="databaseHsql" class="org.hsqldb.Server" init-method="start" destroy-method="stop">
+		<property name="properties">
+			<bean class="org.hsqldb.persist.HsqlProperties">
+				<constructor-arg>
+					<props>
+						<prop key="server.database.0">data/templateapp</prop>
+						<prop key="server.dbname.0">templateapp</prop>
+					</props>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- ==================================================================== -->
+	<!--                          JPA CONFIGURATION                           -->
+	<!-- ==================================================================== -->
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"/>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+
+	<tx:annotation-driven />
+
+	<!-- ==================================================================== -->
+	<!--                    DATABASE LAYER SERVICES SETUP                     -->
+	<!-- ==================================================================== -->
+	
+	<bean id="generalDAO" class="org.araneaframework.example.main.business.data.GeneralDAO"/>
+
+	<bean id="contractDAO" class="org.araneaframework.example.main.business.data.ContractDAO"/>
+
+	<bean id="personListDAO" class="org.araneaframework.example.main.business.data.PersonListDAO"/>
+
+</beans>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.core;
 
@@ -40,7 +40,7 @@ public class StandardServletOutputData implements HttpOutputData {
   private HttpServletRequest req;
   private HttpServletResponse res;
   
-  private Map extensions = new HashMap();
+  private Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
   
   /**
    * Constructs a StandardServletOutputData with the request and response. 
@@ -55,17 +55,18 @@ public class StandardServletOutputData implements HttpOutputData {
     extend(HttpServletResponse.class, res);
   }
 
-  public void extend(Class interfaceClass, Object implementation) {
+  public <T> void extend(Class<T> interfaceClass, T implementation) {
     if (HttpServletResponse.class.equals(interfaceClass))
       setResponse((HttpServletResponse) implementation);
     
     extensions.put(interfaceClass, implementation);
   }
 
-  public Object narrow(Class interfaceClass) {
+  @SuppressWarnings("unchecked")
+  public <T> T narrow(Class<T> interfaceClass) {
     if (!extensions.containsKey(interfaceClass))
       throw new NoSuchNarrowableException(interfaceClass);
-    return extensions.get(interfaceClass);
+    return (T) extensions.get(interfaceClass);
   }
 
   public OutputStream getOutputStream() throws IOException {

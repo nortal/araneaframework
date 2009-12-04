@@ -19,26 +19,24 @@ package org.araneaframework.backend.list.memorybased.expression.compare;
 import java.util.Comparator;
 import org.araneaframework.backend.list.memorybased.Expression;
 
+@SuppressWarnings("unchecked")
 public class GreaterThanExpression extends ComparableExpression {
-
-  private static final long serialVersionUID = 1L;
 
   private boolean allowEquals = false;
 
   /**
-   * Greates a new <code>GreaterThanExpression</code>.
+   * Creates a new <code>GreaterThanExpression</code>.
    * 
    * @param expr1 The expression that should be greater than the other.
    * @param expr2 The expression that should be lower than the other.
    * @param comparator The comparator that is used to compare.
    */
-  public GreaterThanExpression(Expression expr1, Expression expr2,
-      Comparator comparator) {
+  public GreaterThanExpression(Expression expr1, Expression expr2, Comparator comparator) {
     super(expr1, expr2, comparator);
   }
 
   /**
-   * Greates a new <code>GreaterThanExpression</code> using a default comparator.
+   * Creates a new <code>GreaterThanExpression</code> using a default comparator.
    * 
    * @param expr1 The expression that should be greater than the other.
    * @param expr2 The expression that should be lower than the other.
@@ -49,9 +47,8 @@ public class GreaterThanExpression extends ComparableExpression {
   }
 
   /**
-   * Greates a new <code>GreaterThanExpression</code> that can also be
-   * greater-than-or-equal expression. The latter is determined by the boolean
-   * parameter <code>allowEquals</code>.
+   * Creates a new <code>GreaterThanExpression</code> that can also be greater-than-or-equal expression. The latter is
+   * determined by the boolean parameter <code>allowEquals</code>.
    * 
    * @param expr1 The expression that should be greater than the other.
    * @param expr2 The expression that should be lower than the other.
@@ -59,12 +56,12 @@ public class GreaterThanExpression extends ComparableExpression {
    * @param allowEquals Whether expressions can also be equal. By default: equality not allowed.
    * @since 1.2
    */
-  public GreaterThanExpression(Expression expr1, Expression expr2,
-      Comparator comparator, boolean allowEquals) {
+  public GreaterThanExpression(Expression expr1, Expression expr2, Comparator comparator, boolean allowEquals) {
     super(expr1, expr2, comparator);
     this.allowEquals = allowEquals;
   }
 
+  @Override
   protected boolean doEvaluate(Object value1, Object value2) {
     int comp = this.comparator.compare(value1, value2);
     return this.allowEquals ? comp >= 0 : comp > 0;
@@ -79,5 +76,4 @@ public class GreaterThanExpression extends ComparableExpression {
   public boolean getAllowsEqual() {
     return this.allowEquals;
   }
-
 }

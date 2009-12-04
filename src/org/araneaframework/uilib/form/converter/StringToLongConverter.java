@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -20,29 +20,26 @@ import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
-
 /**
  * Converts <code>String</code> to <code>Long</code> and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class StringToLongConverter extends BaseConverter {
+public class StringToLongConverter extends BaseConverter<String, Long> {
 
   /**
    * Converts <code>String</code> to <code>Long</code>.
    */
-  public Object convertNotNull(Object data) {
-    Object result = null;
+  @Override
+  public Long convertNotNull(String data) {
+    Long result = null;
     try {
-      result = new Long((String) data);
-    }
-    catch (NumberFormatException e) {
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.NOT_A_NUMBER, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          getEnvironment()));        
+      result = new Long(data);
+    } catch (NumberFormatException e) {
+      addError(MessageUtil.localizeAndFormat(getEnvironment(),
+          UiLibMessages.NOT_A_NUMBER,
+          MessageUtil.localize(getLabel(), getEnvironment())));
     }
     return result;
   }
@@ -50,14 +47,16 @@ public class StringToLongConverter extends BaseConverter {
   /**
    * Converts <code>Long</code> to <code>String</code>.
    */
-  public Object reverseConvertNotNull(Object data) {
+  @Override
+  public String reverseConvertNotNull(Long data) {
     return data.toString();
   }
-  
+
   /**
    * Returns <code>new StringToLongConverter()</code>.
    */
-  public Converter newConverter() {
+  @Override
+  public Converter<String, Long> newConverter() {
     return new StringToLongConverter();
   }
 

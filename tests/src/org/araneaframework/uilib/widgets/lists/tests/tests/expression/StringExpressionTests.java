@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
@@ -28,7 +28,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
 
 public class StringExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(StringExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(StringExpressionTests.class);
 
 	private VariableResolver resolver;
 
@@ -36,15 +36,17 @@ public class StringExpressionTests extends TestCase {
 	private Expression part2expr;
 	private Expression part3expr;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 		
-		this.part1expr = new MockValueExpression("part1");
-		this.part2expr = new MockValueExpression("part2");
-		this.part3expr = new MockValueExpression("part3");
+		this.part1expr = new MockValueExpression<String>("part1");
+		this.part2expr = new MockValueExpression<String>("part2");
+		this.part3expr = new MockValueExpression<String>("part3");
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 		this.part1expr = null;
 		this.part2expr = null;
@@ -53,7 +55,7 @@ public class StringExpressionTests extends TestCase {
 
 	public void testConcatenationExpression()
 			throws ExpressionEvaluationException {
-		log.debug("Testing ConcatenationExpression");
+		LOG.debug("Testing ConcatenationExpression");
 		try {
 			new ConcatenationExpression().evaluate(this.resolver);
 			fail("ConcatenationExpression must throw an exception");

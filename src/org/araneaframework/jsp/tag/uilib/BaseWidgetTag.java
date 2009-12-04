@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib;
 
@@ -25,41 +25,47 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
 public class BaseWidgetTag extends BaseTag {
 
   protected String id;
+
   protected String fullId;
+
   protected ApplicationWidget widget;
+
   protected ApplicationWidget.WidgetViewModel viewModel;
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "UiLib widget id." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "UiLib widget id."
    */
   public void setId(String id) throws JspException {
-    this.id = (String) evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 
+  @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    if (id == null) {
-      widget = getContextWidget();
+    if (this.id == null) {
+      this.widget = getContextWidget();
     } else {
-      widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), id);
+      this.widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), this.id);
     }
-    fullId = widget.getScope().toString();
-    viewModel = (ApplicationWidget.WidgetViewModel) widget._getViewable().getViewModel();
+
+    this.fullId = this.widget.getScope().toString();
+    this.viewModel = (ApplicationWidget.WidgetViewModel) this.widget._getViewable().getViewModel();
 
     // Continue
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
 
+  @Override
   public void doFinally() {
     super.doFinally();
     // to prevent memory leaks in containers where tags might live very long
-    id = fullId = null;
-    widget = null;
-    viewModel = null;
+    this.id = this.fullId = null;
+    this.widget = null;
+    this.viewModel = null;
   }
 
 }

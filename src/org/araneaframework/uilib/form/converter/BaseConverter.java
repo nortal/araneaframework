@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
+import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
@@ -23,121 +24,103 @@ import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
 
 /**
- * This class is the base class for form converters. The converters' task is to convert the value
- * of form {@link org.araneaframework.uilib.form.Control} to the value of {@link org.araneaframework.uilib.form.FormElement} 
+ * This class is the base class for form converters. The converters' task is to convert the value of form
+ * {@link org.araneaframework.uilib.form.Control} to the value of {@link org.araneaframework.uilib.form.FormElement}
  * {@link org.araneaframework.uilib.form.Data} and back.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class BaseConverter implements java.io.Serializable, Converter {
+public abstract class BaseConverter<C, D> implements Serializable, Converter<C, D> {
 
-  private FormElementContext feCtx;
-  
-  //*********************************************************************
-  //* PUBLIC METHODS
-  //*********************************************************************
+  private FormElementContext<C, D> feCtx;
 
   /**
-   * This method converts the data from one type to another. If the data is <code>null</code>
-   * then <code>null</code> is returned. Otherwise {@link #convertNotNull(Object)}method is used
-   * for actual conversion.
+   * This method converts the data from one type to another. If the data is <code>null</code> then <code>null</code> is
+   * returned. Otherwise {@link #convertNotNull(Object)}method is used for actual conversion.
    * 
    * @param data Data to convert.
    * @return Converted data.
    */
-  public Object convert(Object data) {
-    Assert.notNull(this, getFormElementCtx(), 
-        "Form element context must be assigned to the converter before it can function! " +
-        "Make sure that the converter is associated with a form element!");
-    
-    if (data == null)
-      return null;
-
-    return convertNotNull(data);
+  public D convert(C data) {
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the converter before it can "
+        + "function! Make sure that the converter is associated with a form element!");
+    return data == null ? null : convertNotNull(data);
   }
 
   /**
-   * This method converts the data from one type to another (though the types are exchanged in
-   * comparison with {@link #convert(Object)}). If the data is <code>null</code> then <code>null</code>
-   * is returned. Otherwise {@link #reverseConvertNotNull(Object)}method is used for actual
-   * conversion.
+   * This method converts the data from one type to another (though the types are exchanged in comparison with
+   * {@link #convert(Object)}). If the data is <code>null</code> then <code>null</code> is returned. Otherwise
+   * {@link #reverseConvertNotNull(Object)}method is used for actual conversion.
    * 
    * @param data Data to convert.
    * @return Converted data.
    */
-  public Object reverseConvert(Object data) {
-    Assert.notNull(this, getFormElementCtx(), 
-        "Form element context must be assigned to the converter before it can function! " +
-        "Make sure that the converter is associated with a form element!");
-    
-    if (data == null)
-      return null;
-    
-    return reverseConvertNotNull(data);
+  public C reverseConvert(D data) {
+    Assert.notNull(this, getFormElementCtx(), "Form element context must be assigned to the converter before it can "
+        + "function! Make sure that the converter is associated with a form element!");
+    return data == null ? null : reverseConvertNotNull(data);
   }
-  
-  public void setFormElementCtx(FormElementContext feCtx) {
+
+  public void setFormElementCtx(FormElementContext<C, D> feCtx) {
     this.feCtx = feCtx;
   }
-  
-  public FormElementContext getFormElementCtx() {
+
+  public FormElementContext<C, D> getFormElementCtx() {
     return this.feCtx;
   }
 
-  //*********************************************************************
-  //* PROTECTED METHODS
-  //*********************************************************************
+  // *********************************************************************
+  // * PROTECTED METHODS
+  // *********************************************************************
 
   protected void addError(String error) {
-    feCtx.addError(error);
+    this.feCtx.addError(error);
   }
-  
-  protected void addErrors(Set errors) {
-    feCtx.addErrors(errors);
+
+  protected void addErrors(Set<String> errors) {
+    this.feCtx.addErrors(errors);
   }
-  
+
   protected Environment getEnvironment() {
-    return feCtx.getEnvironment();
+    return this.feCtx.getEnvironment();
   }
-  
+
   protected String getLabel() {
-    return feCtx.getLabel();
+    return this.feCtx.getLabel();
   }
-  
-  //*********************************************************************
-  //* ABSTRACT INTERFACE METHODS
-  //*********************************************************************
+
+  // *********************************************************************
+  // * ABSTRACT INTERFACE METHODS
+  // *********************************************************************
 
   /**
-   * This method should return a new converter, of the same type that the class that overrides it,
-   * however freshly initialized.
-   * 
-   * @return a new converter, of the same type that the class that overrides it, however freshly
+   * This method should return a new converter, of the same type that the class that overrides it, however freshly
    * initialized.
+   * 
+   * @return a new converter, of the same type that the class that overrides it, however freshly initialized.
    */
-  public abstract Converter newConverter();
+  public abstract Converter<C, D> newConverter();
 
-  //*********************************************************************
-  //* ABSTRACT IMPLEMENTATION METHODS
-  //*********************************************************************
+  // *********************************************************************
+  // * ABSTRACT IMPLEMENTATION METHODS
+  // *********************************************************************
 
   /**
-   * This method should convert the data from one type to another. It may assume that the <code>data</code>
-   * is never <code>null</code>.
+   * This method should convert the data from one type to another. It may assume that the <code>data</code> is never
+   * <code>null</code>.
    * 
    * @param data Data to convert.
    * @return Converted data.
    */
-  protected abstract Object convertNotNull(Object data);
+  protected abstract D convertNotNull(C data);
 
   /**
-   * This method should convert the data from one type to another. It may assume that the <code>data</code>
-   * is never <code>null</code>. The types of data are reversed in comparison to
-   * {@link #convertNotNull(Object)}.
+   * This method should convert the data from one type to another. It may assume that the <code>data</code> is never
+   * <code>null</code>. The types of data are reversed in comparison to {@link #convertNotNull(Object)}.
    * 
    * @param data Data to convert.
    * @return Converted data.
    */
-  protected abstract Object reverseConvertNotNull(Object data);
+  protected abstract C reverseConvertNotNull(D data);
 
 }

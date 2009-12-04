@@ -1,0 +1,59 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag description="A simple HTML button." body-content="empty"/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="The ID for the button." />
+	<jsp:directive.attribute name="name" description="The name for the button." />
+	<jsp:directive.attribute name="labelId" description="The ID for the label of the button." />
+	<jsp:directive.attribute name="styleClass" description="The optional style class for the button." />
+	<jsp:directive.attribute name="tabindex" description="The tabindex for the button." />
+	<jsp:directive.attribute name="disabled" type="java.lang.Boolean" description="A boolean, whether this button is disabled." />
+
+	<jsp:directive.attribute name="eventId" description="Event ID." />
+	<jsp:directive.attribute name="eventParam" description="Event parameter." />
+	<jsp:directive.attribute name="eventTarget" description="Widget where event should be routed, default is contextwidget." />
+	<jsp:directive.attribute name="onClickPrecondition" description="The boolean precondition for the event." />
+	<jsp:directive.attribute name="updateRegions" description="Update regions for the event." />
+	<jsp:directive.attribute name="globalUpdateRegions" description="Global update regions for the event." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<fmt:message key="${labelId}" var="labelId"/>
+
+	<ui:element name="input">
+		<ui:attribute name="type" value="button"/>
+		<ui:attribute name="id" value="${id}" />
+		<ui:attribute name="name" value="${name}" />
+		<util:elementClassAttr baseClass="button aranea-button" styleClass="${styleClass}"/>
+		<ui:attribute name="value" value="${labelId}"/>
+		<ui:attribute name="tabindex" value="${tabindex}"/>
+
+		<c:choose>
+			<c:when test="${disabled}">
+				<ui:attribute name="disabled" value="disabled"/>
+			</c:when>
+			<c:when test="${not empty eventId}">
+				<c:if test="${empty eventTarget}">
+					<c:set var="eventTarget" value="${widgetId}"/>
+				</c:if>
+				<ui:elementEventAttrs attr="onclick"
+					eventId="${eventId}"
+					eventParam="${eventParam}"
+					eventTarget="${eventTarget}"
+					eventCondition="${onClickPrecondition}"
+					updateRegions="${updateRegions}"
+					globalUpdateRegions="${globalUpdateRegions}"/>
+			</c:when>
+		</c:choose>
+	</ui:element>
+
+	<c:out value=" "/>
+
+</jsp:root>

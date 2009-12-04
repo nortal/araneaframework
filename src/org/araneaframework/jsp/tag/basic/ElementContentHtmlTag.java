@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.basic;
 
@@ -31,6 +31,7 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "Defines an HTML element content, meaning the body of the HTML element where text and other tags go."
  */
 public class ElementContentHtmlTag extends BaseTag {
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 

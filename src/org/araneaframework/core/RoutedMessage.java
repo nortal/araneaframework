@@ -25,13 +25,11 @@ import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * {@link Message} that is sent to exactly one {@link Component} in hierarchy.
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class RoutedMessage implements Message {
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Log log = LogFactory.getLog(RoutedMessage.class);
+  private static final Log LOG = LogFactory.getLog(RoutedMessage.class);
 
   private Path path;
 
@@ -69,7 +67,7 @@ public abstract class RoutedMessage implements Message {
       if (path.hasNext()) {
         component._getComponent().propagate(this);
       } else {
-        log.debug("Delivering message routed to '" + destination + "'");
+        LOG.debug("Delivering message routed to '" + destination + "'");
         try {
           execute(component);
         } catch (Exception e) {

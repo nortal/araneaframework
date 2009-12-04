@@ -23,14 +23,11 @@ import org.araneaframework.Service;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * Non-composite service component providing the extra action(Path, InputData,
- * OutputData) to BaseComponent.
+ * Non-composite service component providing the extra action(Path, InputData, OutputData) to BaseComponent.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class BaseService extends BaseComponent implements Service {
-
-  private static final long serialVersionUID = 1L;
 
   protected transient InputData currentInputData;
 
@@ -42,30 +39,25 @@ public class BaseService extends BaseComponent implements Service {
 
   protected class ServiceImpl implements Service.Interface {
 
-    private static final long serialVersionUID = 1L;
-
-    public void action(Path path, InputData input, OutputData output){
+    public void action(Path path, InputData input, OutputData output) {
       Assert.notNullParam(this, input, "input");
       Assert.notNullParam(this, output, "output");
-      
+
       _startCall();
-      
+
       currentInputData = input;
       currentOutputData = output;
       try {
         if (isAlive()) {
           BaseService.this.action(path, input, output);
         }
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         try {
           handleServiceException(e);
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
           ExceptionUtil.uncheckException(e2);
         }
-      }
-      finally {
+      } finally {
         currentInputData = null;
         currentOutputData = null;
         _endCall();
@@ -75,18 +67,16 @@ public class BaseService extends BaseComponent implements Service {
   }
 
   /**
-   * Services provide their services through the <code>action(...)</code>
-   * method. An implementation of a non-composite service like
-   * <code>BaseService</code> uses the action method to hook in the middle of
-   * the action routing and provide filtering, logging etc.
+   * Services provide their services through the <code>action(...)</code> method. An implementation of a non-composite
+   * service like <code>BaseService</code> uses the action method to hook in the middle of the action routing and
+   * provide filtering, logging etc.
    * 
    * @param path The path of the component to whom the action is targeted.
    * @param input The request data.
    * @param output The response data.
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {}    
+  protected void action(Path path, InputData input, OutputData output) throws Exception {}
 
   /**
    * A method for <code>Service</code>-specific exception handling.

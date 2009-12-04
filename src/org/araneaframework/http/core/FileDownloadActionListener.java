@@ -22,7 +22,6 @@ import org.araneaframework.OutputData;
 import org.araneaframework.Service;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardActionListener;
-import org.araneaframework.http.PopupServiceInfo;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.filter.StandardPopupFilterWidget;
 import org.araneaframework.http.service.FileDownloaderService;
@@ -72,6 +71,7 @@ public class FileDownloadActionListener extends StandardActionListener {
     this.popupCtx = (StandardPopupFilterWidget) popupCtx;
   }
 
+  @Override
   public void processAction(String actionId, String actionParam, InputData input, OutputData output)
       throws Exception {
 
@@ -88,7 +88,7 @@ public class FileDownloadActionListener extends StandardActionListener {
       // If this is called then the popup will be removed later.
       // This is important because we don't want to open previously opened popups.
       this.popupCtx.renderPopup(this.lastPopupId);
-      url = ((PopupServiceInfo) this.popupCtx.getPopups().get(this.lastPopupId)).toURL();
+      url = this.popupCtx.getPopups().get(this.lastPopupId).toURL();
 
     } finally {
       // We return the URL of the popup to the client.

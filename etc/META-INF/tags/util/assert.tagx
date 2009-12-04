@@ -1,0 +1,17 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1">
+
+	<jsp:directive.tag import="org.araneaframework.core.Assert"/>
+
+	<jsp:directive.tag description="Asserts that a condition is true." body-content="empty"/>
+
+	<jsp:directive.attribute name="test" required="true" type="java.lang.Boolean" description="The test to check."/>
+	<jsp:directive.attribute name="msg" description="An optional error message."/>
+
+	<jsp:scriptlet>
+		Boolean test = (Boolean) getJspContext().getAttribute("test");
+		String msg = (String) getJspContext().getAttribute("msg");
+		if (msg == null) msg = "Assertion failed.";
+		Assert.isTrue(test.booleanValue(), msg);
+	</jsp:scriptlet>
+
+</jsp:root>

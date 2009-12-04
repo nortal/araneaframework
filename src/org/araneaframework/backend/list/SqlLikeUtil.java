@@ -27,8 +27,8 @@ import org.araneaframework.uilib.list.util.like.WildcardUtil;
 /**
  * Helper class for database <code>LIKE</code> expression.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Rein Raudjärv (rein@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * 
  * @see RegexpLikeUtil
  */

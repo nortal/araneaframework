@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -22,50 +22,52 @@ import org.araneaframework.uilib.form.FormElementContext;
 /**
  * Reverses the conversion of a contained converter.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  */
-public class ReverseConverter extends BaseConverter {
+public class ReverseConverter<C, D> extends BaseConverter<C, D> {
 
-  protected Converter toReverse;
+  protected Converter<D, C> toReverse;
 
   /**
-	 * Creates class initializing the contained converter.
-	 * 
-	 * @param toReverse converter that will be reversed.
-	 */
-  public ReverseConverter(Converter toReverse) {
+   * Creates class initializing the contained converter.
+   * 
+   * @param toReverse converter that will be reversed.
+   */
+  public ReverseConverter(Converter<D, C> toReverse) {
     this.toReverse = toReverse;
   }
 
   /**
-	 * Converts the data using {@link BaseConverter#reverseConvertNotNull}of the
-	 * contained converter.
-	 */
-  public Object convertNotNull(Object data) {
-    Object result = toReverse.reverseConvert(data);
-  	return result;    
+   * Converts the data using {@link BaseConverter#reverseConvertNotNull}of the contained converter.
+   */
+  @Override
+  public D convertNotNull(C data) {
+    D result = this.toReverse.reverseConvert(data);
+    return result;
   }
 
   /**
-	 * Converts the data using {@link BaseConverter#convertNotNull}of the
-	 * contained converter.
-	 */
-  public Object reverseConvertNotNull(Object data) {    
-    Object result = toReverse.convert(data);  
-  	return result;       
+   * Converts the data using {@link BaseConverter#convertNotNull}of the contained converter.
+   */
+  @Override
+  public C reverseConvertNotNull(D data) {
+    C result = this.toReverse.convert(data);
+    return result;
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
   public void setFormElementCtx(FormElementContext feCtx) {
     super.setFormElementCtx(feCtx);
-    
-    toReverse.setFormElementCtx(feCtx);
+    this.toReverse.setFormElementCtx(feCtx);
   }
 
   /**
    * Returns a <code>new ReverseConverter(toReverse)</code>.
    */
-  public Converter newConverter() {
-    return new ReverseConverter(toReverse.newConverter());
+  @Override
+  public Converter<C, D> newConverter() {
+    return new ReverseConverter<C, D>(this.toReverse.newConverter());
   }
 }

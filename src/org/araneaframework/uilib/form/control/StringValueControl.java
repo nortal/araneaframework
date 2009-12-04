@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,148 +12,130 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
-
 
 /**
- * This class represents controls, that have a value of type <code>String</code>
- * and a single request parameter of same type. 
+ * This class represents controls, that have a value of type <code>String</code> and a single request parameter of same
+ * type.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class StringValueControl extends EmptyStringNullableControl {
-  
+public abstract class StringValueControl extends BlankStringNullableControl<String> {
+
   private Long minLength;
+
   private Long maxLength;
-  
+
   private boolean trimValue = false;
 
   /**
-   * Sets the maximum length.
-   * @param maxLength maximum length.
+   * Sets the maximum length. A <code>null</code> value means that the maximum length check is not enforced. Any numeric
+   * value will be compared with the length property of a <code>String</code>. By default, no length checks are done.
+   * 
+   * @param maxLength The maximum length to be used for validating input <code>String</code>s.
    */
   public void setMaxLength(Long maxLength) {
     this.maxLength = maxLength;
   }
 
   /**
-   * Sets the minimum length.
-   * @param minLength minimum length.
+   * Sets the minimum length. A <code>null</code> value means that the minimum length check is not enforced. Any numeric
+   * value will be compared with the length property of a <code>String</code>. By default, no length checks are done.
+   * 
+   * @param minLength The minimum length to be used for validating input <code>String</code>s.
    */
   public void setMinLength(Long minLength) {
     this.minLength = minLength;
   }
-  
-  /**
-   * Sets whether the value from request will be trimmed.
-   * @param trimValue whether the value from request will be trimmed.
-   */
-	public void setTrimValue(boolean trimValue) {
-		this.trimValue = trimValue;
-	}
-	
-  /**
-   * Returns "String".
-   * @return "String".
-   */
-  public String getRawValueType() {
-    return "String";
-  }  
-  
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************  	
-  
-  /**
-   * Direct copy.
-   */
-  protected Object fromRequest(String parameterValue) {
-  	if (parameterValue != null && trimValue)
-  		return parameterValue.trim();
-  	
-    return parameterValue;
-  }
 
   /**
-   * Direct copy.
+   * Sets whether the value from request will be trimmed (default: <code>false</code>).
+   * 
+   * @param trimValue Whether the value from request will be trimmed.
    */
-  protected String toResponse(Object controlValue) {
-    return (String) controlValue;
+  public void setTrimValue(boolean trimValue) {
+    this.trimValue = trimValue;
   }
-  
+
+  public DataType getRawValueType() {
+    return new DataType(String.class);
+  }
+
+  @Override
+  protected String fromRequest(String parameterValue) {
+    return this.trimValue ? StringUtils.trimToNull(parameterValue) : parameterValue;
+  }
+
+  @Override
+  protected String toResponse(String controlValue) {
+    return controlValue;
+  }
+
   /**
    * Checks that the value (<code>String</code>) length is between the given values.
    */
-  protected void validateNotNull() {   
-    if (minLength != null && ((String) getRawValue()).length() < minLength.longValue()) {      
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.STRING_TOO_SHORT, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          minLength.toString(),
-          getEnvironment()));        
+  @Override
+  protected void validateNotNull() {
+    if (this.minLength != null && getRawValue().length() < this.minLength.longValue()) {
+      addErrorWithLabel(UiLibMessages.STRING_TOO_SHORT, this.minLength.toString());
     }
-    
-    if (maxLength != null && ((String) getRawValue()).length() > maxLength.longValue()) {  
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.STRING_TOO_LONG, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          maxLength.toString(),
-          getEnvironment()));          
-    }    
-  }
-  
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
-  public Object getViewModel() {
-    return new ViewModel();
-  }	  
 
-  //*********************************************************************
-  //* VIEW MODEL
-  //*********************************************************************  	
-  
+    if (this.maxLength != null && getRawValue().length() > this.maxLength.longValue()) {
+      addErrorWithLabel(UiLibMessages.STRING_TOO_LONG, this.maxLength.toString());
+    }
+  }
+
+  @Override
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  // *********************************************************************
+  // * VIEW MODEL
+  // *********************************************************************
+
   /**
+   * The view model implementation of <code>StringValueControl</code>. The view model provides the data for tags to
+   * render the control.
+   * 
    * @author <a href="mailto:olegm@webmedia.ee">Oleg Mürk</a>
    */
-  public class ViewModel extends StringArrayRequestControl.ViewModel {
- 
+  public class ViewModel extends StringArrayRequestControl<String>.ViewModel {
+
     private Long minLength;
+
     private Long maxLength;
-    
+
     /**
-     * Takes an outer class snapshot.     
-     */    
+     * Takes an outer class snapshot.
+     */
     public ViewModel() {
       this.minLength = StringValueControl.this.minLength;
       this.maxLength = StringValueControl.this.maxLength;
-    }         
-        
-    
+    }
+
     /**
-     * Returns the minimum length.
-     * @return the minimum length.
+     * Returns the minimum allowed length for the input.
+     * 
+     * @return the minimum allowed length for the input.
      */
     public Long getMinLength() {
-      return minLength;
+      return this.minLength;
     }
-    
+
     /**
-     * Returns the maximum length.
-     * @return the maximum length.
+     * Returns the maximum allowed length for the input.
+     * 
+     * @return the maximum allowed length for the input.
      */
     public Long getMaxLength() {
-      return maxLength;
+      return this.maxLength;
     }
   }
 }

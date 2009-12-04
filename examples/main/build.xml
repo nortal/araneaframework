@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project basedir="." default="build" name="Aranea Main Example">
-	<property environment="env" />
 
-<!--
-     ======================================================================
-     =                           CLASSPATHS                               =
-     ======================================================================
--->
+	<property environment="env"/>
 
-	<path id="classpath" description="The classpath to compile the demo application.">
-		<fileset dir="../lib" includes="**/*.jar" />
-		<fileset dir="../../lib" includes="**/*.jar" />
-		<fileset dir="../.." includes="dist/aranea.jar" />
-		<fileset dir="../.." includes="examples/common/dist/aranea-examples-common.jar" />
+	<property name="rootDir" value="../.."/>
+
+	<property name="lib.dir" value="${rootDir}/lib"/>
+
+	<property name="example.jar" value="../common/dist/aranea-examples-common.jar"/>
+
+	<property name="jetty.tmp.dir" value="tmp.jetty"/>
+
+	<path id="build.cp">
+		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
+		<fileset dir="${lib.dir}/build/" includes="*.jar" />
+		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
+		<path path="${rootDir}/dist/aranea.jar"/>
+		<path path="${example.jar}"/>
 	</path>
 
-	<path id="classpath.jetty" description="The Jetty classpath to run the demo application.">
-		<fileset dir="../lib/jetty" includes="*.jar" />
-		<pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
-		<pathelement location="${env.ANT_HOME}/lib/ant.jar" />
-		<pathelement location="${env.ANT_HOME}/lib/ant-launcher.jar" />
+	<path id="jetty.cp">
+		<path refid="build.cp"/>
+		<fileset dir="${lib.dir}/jetty" includes="**/*.jar"/>
 	</path>
 
-<!--
-     ======================================================================
-     =                   DEMO APP CODE BUILDING                           =
-     ======================================================================
--->
+	<taskdef classpathref="jetty.cp" resource="tasks.properties" loaderref="jetty.loader" />
+	<typedef name="selectChannelConnector" classname="org.mortbay.jetty.nio.SelectChannelConnector" classpathref="jetty.cp" loaderref="jetty.loader" />
+
+	<!--
+	======================================================================
+	=                   DEMO APP CODE BUILDING                           =
+	======================================================================
+	-->
 
 	<target name="clean" description="Deletes copied and compiled resources.">
 		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="war/WEB-INF/classes"/>
-			<fileset dir="war/WEB-INF/lib"/>
-			<fileset dir="war/jsp"/>
-			<fileset dir="war/src"/>
-			<fileset dir="dist"/>
-			<fileset dir="tmp"/>
+			<fileset dir="${jetty.tmp.dir}" />
+			<fileset dir="war/WEB-INF/classes" />
+			<fileset dir="war/WEB-INF/lib" />
+			<fileset dir="war/jsp" />
+			<fileset dir="war/src" />
+			<fileset dir="dist" />
+			<fileset dir="tmp" />
 		</delete>
 	</target>
 
@@ -45,55 +50,41 @@
 		<mkdir dir="war/WEB-INF/lib" />
 	</target>
 
-	 <target name="compile" depends="init" description="Compiles Java source files">
-		<javac destdir="war/WEB-INF/classes"
-			debug="on"
-			debuglevel="lines,vars,source"
-			encoding="utf-8"
-			target="1.5"
-			source="1.5"
-			srcdir="src"
-			includes="**/*.java"
-			classpathref="classpath"
-		/>
-	</target>	
-		
-	<target name="build" depends="compile" description="Copies the needed libraries and files, and builds the Java code">
+	<target name="compile" depends="init" description="Compiles demo Java source files.">
+		<javac destdir="war/WEB-INF/classes" debug="on" debuglevel="lines,vars,source" encoding="utf-8"
+			target="1.5" source="1.5" srcdir="src" includes="**/*.java" classpathref="build.cp" />
+	</target>
+
+	<target name="build" depends="compile" description="Copies the needed libraries and files, and builds the demo Java code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
-			<fileset dir="../lib/">
-				<include name="**/*.jar" />
-				<exclude name="jasper/*jar" />
-				<exclude name="jetty/*jar" />
-			</fileset>
-			<fileset dir="../../lib/runtime/"/>
-			<fileset dir="../../lib/build/" excludes="j2ee.jar"/>
-			<fileset dir="../../lib/demo/"/>
+			<fileset dir="${lib.dir}/runtime/" />
+			<fileset dir="${lib.dir}/build/" excludes="servlet-api.jar" />
+			<fileset dir="${lib.dir}/demo/" />
+			<fileset file="${example.jar}" />
 			<fileset file="../../dist/aranea.jar" />
-			<fileset file="../../examples/common/dist/aranea-examples-common.jar" />
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
+			<fileset dir="." includes="META-INF\**\*" />
 			<fileset dir=".." includes="log4j.xml,commons-logging.properties" />
 		</copy>
 
 		<!-- We also copy the source code of Java and JSP files to "war/src" and "war/jsp". -->
 
 		<copy todir="war/src/">
-			<fileset dir="src"/>
+			<fileset dir="src" includes="**/*.java"/>
 		</copy>
 
 		<copy todir="war/jsp/">
 			<fileset dir="war/WEB-INF/jsp" includes="**/*.jsp" />
 			<mapper type="glob" from="*.jsp" to="*.xml" />
 		</copy>
-
 	</target>
-	
+
 	<target name="build-all" depends="compile" description="Same as 'build' but also recompiles Aranea-MVC code.">
-		<ant dir="../.." target="build-all" />
+		<ant dir="../.." target="build-all" inheritall="false"/>
 		<antcall target="build" />
 	</target>
-
 
 	<target name="war" depends="build" description="Creates the ready-to-deploy WAR archive.">
 		<mkdir dir="dist" />
@@ -102,36 +93,20 @@
 		</war>
 	</target>
 
-<!--
-     ======================================================================
-     =                        RUNNING THE DEMO APP                        =
-     ======================================================================
--->
+	<!--
+	======================================================================
+	=                        RUNNING THE DEMO APP                        =
+	======================================================================
+	-->
 
-	<target name="run-app-only" description="Runs in standalone container">
-		<mkdir dir="tmp/jsp" />
-		<java classname="org.mortbay.jetty.Server" dir="war" fork="yes">
-			<jvmarg line="-Dsun.io.serialization.extendedDebugInfo=true -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5999,suspend=n" />
-			<arg value="../jetty.xml" />
-			<classpath>
-				<pathelement location="war/WEB-INF/classes" />
-				<path refid="classpath" />
-				<path refid="classpath.jetty" />
-			</classpath>
-		</java>
-	</target>
-
-	<target name="run-app" depends="build, run-app-only" description="Builds and runs in standalone container." />
-
-	<target name="run-database" description="Runs the HSQL database for the demo application">
-		<mkdir dir="data" />
-
-		<java classname="org.hsqldb.Server" dir="data" fork="yes">
-			<classpath>
-				<pathelement location="../lib/hsqldb.jar" />
-			</classpath>
-			<arg line="-database.0 'templateapp' -dbname.0 'templateapp'" />
-		</java>
+	<target name="run-app" depends="build" description="Runs app in the Jetty server.">
+		<delete dir="${jetty.tmp.dir}"/>
+		<jetty tempdirectory="${jetty.tmp.dir}" >
+			<webapp warfile="war" contextPath="/mainExample"/>
+			<connectors>
+				<selectChannelConnector port="2000"/>
+			</connectors>
+		</jetty>
 	</target>
 
 	<target name="run-database-manager" description="Runs the HSQL database manager for the demo application.">
@@ -142,4 +117,5 @@
 			<arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>
 	</target>
+
 </project>

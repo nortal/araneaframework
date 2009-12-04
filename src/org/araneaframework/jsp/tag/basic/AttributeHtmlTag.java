@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.basic;
 
@@ -52,6 +52,7 @@ public class AttributeHtmlTag extends BaseTag {
    */
   protected boolean omitEmpty = true;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -84,7 +85,7 @@ public class AttributeHtmlTag extends BaseTag {
 
   /* ***********************************************************************************
    * Tag attributes
-   * ***********************************************************************************/
+   * ********************************************************************************* */
 
   /**
    * @jsp.attribute
@@ -92,8 +93,8 @@ public class AttributeHtmlTag extends BaseTag {
    *   required = "true" 
    *   description = "Attribute name."
    */
-  public void setName(String name) throws JspException {
-    this.name = (String)evaluateNotNull("name", name, String.class);
+  public void setName(String name) throws JspException{
+    this.name = evaluateNotNull("name", name, String.class);
   }
 
   /**
@@ -102,8 +103,8 @@ public class AttributeHtmlTag extends BaseTag {
    *   required = "true"
    *   description = "Attribute value." 
    */
-  public void setValue(String value) throws JspException {
-    this.value = (String)evaluate("value", value, String.class);
+  public void setValue(String value){
+    this.value = evaluate("value", value, String.class);
   }
 
   /**

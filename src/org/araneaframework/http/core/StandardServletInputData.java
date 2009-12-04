@@ -16,7 +16,7 @@
 
 package org.araneaframework.http.core;
 
-import org.araneaframework.core.StandardPath;
+import java.util.StringTokenizer;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.iterators.EnumerationIterator;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
@@ -37,25 +38,27 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpInputData;
 
 /**
- * A ServletInputdata implementation which uses a {@link StandardPath} for determining the scope.
+ * A ServletInputdata implementation which uses a StandardPath for determining the scope.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletInputData implements HttpInputData {
 
+  protected static final String PATH_SEPARATOR = "/";
+
   private HttpServletRequest req;
 
-  private Map extensions = new HashMap();
+  private Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
 
-  private Map globalData = new HashMap();
+  private Map<String, String> globalData = new HashMap<String, String>();
 
-  private Map scopedData = new HashMap();
+  private Map<String, Map<String, String>> scopedData = new HashMap<String, Map<String, String>>();
 
   private boolean dataInited;
 
-  private StringBuffer path;
+  private String path;
 
-  private LinkedList pathPrefixes = new LinkedList();
+  private LinkedList<String> pathPrefixes = new LinkedList<String>();
 
   private String servletPath;
 
@@ -79,31 +82,32 @@ public class StandardServletInputData implements HttpInputData {
     this.req = request;
     this.dataInited = false;
 
-    this.path = new StringBuffer(req.getPathInfo() == null ? "" : req.getPathInfo());
-    this.pathPrefixes = new LinkedList();
+    this.path = StringUtils.defaultString(this.req.getPathInfo());
+    this.pathPrefixes = new LinkedList<String>();
   }
 
+  @SuppressWarnings("unchecked")
   private void initData() {
     this.globalData.clear();
     this.scopedData.clear();
 
-    Enumeration params = this.req.getParameterNames();
+    Enumeration<String> params = this.req.getParameterNames();
 
     while (params.hasMoreElements()) {
-      String key = (String) params.nextElement();
+      String key = params.nextElement();
 
-      if (key.lastIndexOf(".") == -1) {
+      if (!StringUtils.contains(key, Path.SEPARATOR)) {
         // global data - no prefix data
         this.globalData.put(key, this.req.getParameter(key));
       } else {
         // scoped data
-        String prefix = key.substring(0, key.lastIndexOf("."));
-        String subKey = key.substring(key.lastIndexOf(".") + 1);
+        String prefix = StringUtils.substringBeforeLast(key, Path.SEPARATOR);
+        String subKey = StringUtils.substringAfterLast(key, Path.SEPARATOR);
 
-        Map map = (Map) this.scopedData.get(prefix);
+        Map<String, String> map = this.scopedData.get(prefix);
 
         if (map == null) {
-          map = new HashMap();
+          map = new HashMap<String, String>();
           this.scopedData.put(prefix, map);
         }
 
@@ -114,30 +118,38 @@ public class StandardServletInputData implements HttpInputData {
     this.dataInited = true;
   }
 
-  public Map getGlobalData() {
+  public Map<String, String> getGlobalData() {
     if (!this.dataInited) {
       initData();
     }
     return Collections.unmodifiableMap(this.globalData);
   }
 
-  public Map getScopedData(Path scope) {
+  public Map<String, String> getScopedData(Path scope) {
     if (!this.dataInited) {
       initData();
     }
-    Map result = (Map) scopedData.get(scope.toString());
-    return result != null ? Collections.unmodifiableMap(result) : Collections.EMPTY_MAP;
+
+    Map<String, String> result = this.scopedData.get(scope.toString());
+
+    if (result != null) {
+      return Collections.unmodifiableMap(result);
+    } else {
+      return Collections.emptyMap();
+    }
   }
 
-  public void extend(Class interfaceClass, Object implementation) {
+  public <T> void extend(Class<T> interfaceClass, T implementation) {
     if (HttpServletRequest.class.equals(interfaceClass) && implementation != null) {
       setRequest((HttpServletRequest) implementation);
     }
+
     this.extensions.put(interfaceClass, implementation);
   }
 
-  public Object narrow(Class interfaceClass) {
-    Object extension = this.extensions.get(interfaceClass);
+  @SuppressWarnings("unchecked")
+  public <T> T narrow(Class<T> interfaceClass) {
+    T extension = (T) this.extensions.get(interfaceClass);
     if (extension == null) {
       throw new NoSuchNarrowableException(interfaceClass);
     }
@@ -202,8 +214,9 @@ public class StandardServletInputData implements HttpInputData {
     return this.req.getLocale();
   }
 
-  public Iterator getParameterNames() {
-    return new EnumerationIterator(req.getParameterNames());
+  @SuppressWarnings("unchecked")
+  public Iterator<String> getParameterNames() {
+    return new EnumerationIterator(this.req.getParameterNames());
   }
 
   public String[] getParameterValues(String name) {
@@ -214,24 +227,67 @@ public class StandardServletInputData implements HttpInputData {
     return this.path.toString();
   }
 
-  public void popPathPrefix() {
-    this.path.insert(0, (String) pathPrefixes.removeLast());
+  public String getSimplePath() {
+    return trim(this.path.toString());
+  }
+
+  public String popPathPrefix() {
+    String path = null;
+
+    if (!this.pathPrefixes.isEmpty()) {
+      path = this.pathPrefixes.removeLast();
+      this.path = new StringBuffer(path).append(PATH_SEPARATOR).append(this.path).toString();
+    }
+
+    return path;
   }
 
   public void pushPathPrefix(String pathPrefix) {
     Assert.notEmptyParam(pathPrefix, "pathPrefix");
-    this.pathPrefixes.addLast(pathPrefix);
-    this.path.delete(0, pathPrefix.length() - 1);
+
+    if (startsWith(this.path, pathPrefix)) {
+      this.pathPrefixes.addLast(pathPrefix);
+      this.path = StringUtils.substringAfter(this.path, pathPrefix);
+    }
   }
 
   public void setCharacterEncoding(String encoding) {
     Assert.notEmptyParam(encoding, "encoding");
 
     try {
-      req.setCharacterEncoding(encoding);
+      this.req.setCharacterEncoding(encoding);
     } catch (UnsupportedEncodingException e) {
       ExceptionUtil.uncheckException(e);
     }
+  }
+
+  /**
+   * Checks whether the path (<code>src</code>) starts with the given <code>pathItem</code>. Similar to
+   * {@link String#startsWith(String)}, but does not care whether the path starts with a forward-slash ("/").
+   * 
+   * @param src The path.
+   * @param pathItem The path item that the path must begin with. Must not contain a forward-slash!
+   * @return Whether the path starts with the given <code>pathItem</code>
+   * @since 2.0
+   */
+  protected static boolean startsWith(String src, String pathItem) {
+    Assert.isTrue(pathItem.indexOf(PATH_SEPARATOR) < 0, "The path item must not contain a forward-slash!");
+    StringTokenizer pathItems = new StringTokenizer(trim(src), PATH_SEPARATOR);
+    return StringUtils.equals(pathItem, pathItems.hasMoreTokens() ? pathItems.nextToken() : null);
+  }
+
+  /**
+   * Removes forward-slashes from the beginning of the input string.
+   * 
+   * @param path The string from which forward-slashes should be removed from the beginning.
+   * @return The input string without forward-slashes in the beginning.
+   * @since 2.0
+   */
+  protected static String trim(String path) {
+    while (StringUtils.startsWith(path, PATH_SEPARATOR)) {
+      path = StringUtils.substringAfter(path, PATH_SEPARATOR);
+    }
+    return path;
   }
 
   public void setUseFullURL(boolean useFullURL) {

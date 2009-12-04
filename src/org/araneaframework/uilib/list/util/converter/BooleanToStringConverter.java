@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,65 +12,58 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list.util.converter;
 
 import org.araneaframework.uilib.list.util.Converter;
+import org.springframework.util.Assert;
 
 /**
- * Not-null converter for converting <code>Boolean</code> values into
- * <code>String</code> values and vice-versa.
+ * Not-null converter for converting <code>Boolean</code> values into <code>String</code> values and vice-versa.
  */
-public class BooleanToStringConverter implements Converter {
-	private static final long serialVersionUID = 1L;
-	
-	public static final Converter YN_UPPER_CONVERTER = new BooleanToStringConverter("Y", "N");
-	public static final Converter YN_LOWER_CONVERTER = new BooleanToStringConverter("y", "n");
+public class BooleanToStringConverter implements Converter<Boolean, String> {
 
-	protected String trueValue;
-	protected String falseValue;
+  public static final Converter<Boolean, String> YN_UPPER_CONVERTER = new BooleanToStringConverter("Y", "N");
 
-	public BooleanToStringConverter(String trueValue, String falseValue) {
-		if (trueValue == null || falseValue == null) {
-			throw new ConversionException("Target values can not be null");
-		}
-		if (trueValue.equals(falseValue)) {
-			throw new ConversionException("Target values can not be the same");
-		}
-		this.trueValue = trueValue;
-		this.falseValue = falseValue;
-	}
+  public static final Converter<Boolean, String> YN_LOWER_CONVERTER = new BooleanToStringConverter("y", "n");
 
-	public Object convert(Object data) throws ConversionException {
-		return convert((Boolean) data);
-	}
+  protected String trueValue;
 
-	public String convert(Boolean data) throws ConversionException {
-		if (data == null) {
-			throw new ConversionException("Data can not be null");
-		}
-		return Boolean.TRUE.equals(data) ? this.trueValue : this.falseValue;
-	}
+  protected String falseValue;
 
-	public Object reverseConvert(Object data) throws ConversionException {
-		if (data == null) {
-			throw new ConversionException("Data can not be null");
-		}
-		if (this.trueValue.equals(data)) {
-			return Boolean.TRUE;
-		}
-		if (this.falseValue.equals(data)) {
-			return Boolean.FALSE;
-		}
-		throw new ConversionException("Data " + data + " not supported");
-	}
+  public BooleanToStringConverter(String trueValue, String falseValue) {
+    if (trueValue == null || falseValue == null) {
+      throw new ConversionException("Target values can not be null");
+    }
+    if (trueValue.equals(falseValue)) {
+      throw new ConversionException("Target values can not be the same");
+    }
+    this.trueValue = trueValue;
+    this.falseValue = falseValue;
+  }
 
-	public Class getSourceType() {
-		return Boolean.class;
-	}
+  public String convert(Boolean data) throws ConversionException {
+    Assert.notNull(data, "Data can not be null");
+    return data ? this.trueValue : this.falseValue;
+  }
 
-	public Class getDestinationType() {
-		return String.class;
-	}
+  public Boolean reverseConvert(String data) throws ConversionException {
+    if (data == null) {
+      throw new ConversionException("Data can not be null");
+    } else if (this.trueValue.equals(data)) {
+      return true;
+    } else if (this.falseValue.equals(data)) {
+      return false;
+    }
+    throw new ConversionException("Data " + data + " not supported");
+  }
+
+  public Class<Boolean> getSourceType() {
+    return Boolean.class;
+  }
+
+  public Class<String> getDestinationType() {
+    return String.class;
+  }
 }

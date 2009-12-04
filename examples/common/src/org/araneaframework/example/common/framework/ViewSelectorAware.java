@@ -1,4 +1,4 @@
-/**
+/*
  * 
  */
 package org.araneaframework.example.common.framework;

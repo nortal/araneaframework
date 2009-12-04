@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.tree;
 
@@ -30,8 +30,6 @@ import org.araneaframework.http.HttpOutputData;
  * @since 1.0.7
  */
 public class TreeWidget extends TreeNodeWidget implements TreeContext {
-
-  private static final long serialVersionUID = 1L;
 
   private TreeDataProvider dataProvider;
   private boolean removeChildrenOnCollapse = true;
@@ -64,12 +62,14 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     this.dataProvider = dataProvider;
   }
 
+  @Override
   protected void init() throws Exception {
-    List children = loadChildren();
+    List<TreeNodeWidget> children = loadChildren();
     if (children != null)
       addAllNodes(children);
   }
 
+  @Override
   public Environment getEnvironment() {
     return new StandardEnvironment(super.getEnvironment(), TreeContext.class, this);
   }
@@ -127,6 +127,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     return renderer;
   }
 
+  @Override
   protected void render(OutputData output) throws Exception {
     super.render(output);
     Writer out = ((HttpOutputData) output).getWriter();
@@ -136,13 +137,16 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   // The following methods do nothing, because the root node of the tree has no
   // display widget and therefore is always expanded.
 
+  @Override
   public Widget getDisplayWidget() {
     return null;
   }
 
+  @Override
   public void setCollapsed(boolean collapsed) {
   }
 
+  @Override
   public void toggleCollapsed() {
   }
 

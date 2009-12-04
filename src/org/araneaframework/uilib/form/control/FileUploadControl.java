@@ -16,8 +16,11 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.araneaframework.uilib.support.DataType;
+
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
@@ -39,15 +42,16 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * This class represents an HTML form file upload control.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * 
  */
-public class FileUploadControl extends BaseControl {
+public class FileUploadControl extends BaseControl<FileInfo> {
 
-  private static final Log log = LogFactory.getLog(FileUploadControl.class);
+  private static final Log LOG = LogFactory.getLog(FileUploadControl.class);
 
   public static final String LISTENER_NAME = "fileUpload";
 
-  protected List permittedMimeFileTypes;
+  protected List<String> permittedMimeFileTypes;
 
   protected boolean uploadSucceeded = true;
 
@@ -55,36 +59,39 @@ public class FileUploadControl extends BaseControl {
 
   protected boolean ajaxRequest;
 
-  protected List ajaxMessages = new LinkedList();
+  protected List<String> ajaxMessages = new LinkedList<String>();
 
+  @Override
   protected void init() throws Exception {
     super.init();
     addActionListener(LISTENER_NAME, new FileUploadActionListener());
   }
 
+  @Override
   public boolean isRead() {
-    return innerData != null;
+    return this.innerData != null;
   }
 
   /**
-   * Sets the MIME file types that will be permitted,
+   * Sets the MIME file types that will be permitted, or <code>null</code> to indicate that no MIME checks will be done.
    * 
-   * @param permittedMimeFileTypes
-   *          the MIME file types that will be permitted.
+   * @param permittedMimeFileTypes the MIME file types that will be permitted, or <code>null</code>.
    */
-  public void setPermittedMimeFileTypes(List permittedMimeFileTypes) {
+  public void setPermittedMimeFileTypes(List<String> permittedMimeFileTypes) {
     this.permittedMimeFileTypes = permittedMimeFileTypes;
   }
 
-  /**
-   * Returns "FileInfo".
-   * 
-   * @return "FileInfo".
-   */
-  public String getRawValueType() {
-    return "FileInfo";
+  @Override
+  public void setRawValue(FileInfo value) {
+    super.setRawValue(value);
+    this.innerData = value;
   }
 
+  public DataType getRawValueType() {
+    return new DataType(FileInfo.class);
+  }
+
+  @Override
   protected void addError(String error) {
     if (this.ajaxRequest) {
       this.ajaxMessages.add(error);
@@ -92,20 +99,16 @@ public class FileUploadControl extends BaseControl {
       super.addError(error);
     }
   }
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
 
   /**
-   * Empty.
+   * Empty. There is no response for file upload control.
    */
-  protected void prepareResponse() {
-    // There is no response for file upload control.
-  }
+  protected void prepareResponse() {}
 
   /**
-   * Reads the {@link FileInfo}data from request {@link HttpInputData}.
+   * Reads the {@link FileInfo} data from request {@link HttpInputData}.
    */
+  @Override
   protected void readFromRequest(HttpInputData request) {
     FileUploadInputExtension fileUpload = getFileUploadInputExtension(request);
     // this is acceptable, see comments in getFileUploadInputExtension()
@@ -114,138 +117,133 @@ public class FileUploadControl extends BaseControl {
     }
 
     // FIXME: unfortunately this conditional code is unreachable because when request
-    // parsing fails transaction id is usually not set (inconsistent) and update() is never called
-    uploadSucceeded = fileUpload.uploadSucceeded();
-    if (!uploadSucceeded) {
+    // parsing fails then transaction ID is usually not set (inconsistent) and update() is never called
+    this.uploadSucceeded = fileUpload.uploadSucceeded();
+    if (!this.uploadSucceeded) {
       return;
     }
 
     if (fileUpload.getUploadedFile(getScope().toString()) != null) {
       FileItem file = fileUpload.getUploadedFile(getScope().toString());
       String mimeType = file.getContentType();
-      
-      mimeTypePermitted = permittedMimeFileTypes == null || permittedMimeFileTypes.contains(mimeType);
 
-      if (mimeTypePermitted) {
-        innerData = new FileInfo(file);
+      this.mimeTypePermitted = this.permittedMimeFileTypes == null || this.permittedMimeFileTypes.contains(mimeType);
+      if (this.mimeTypePermitted) {
+        this.innerData = new FileInfo(file);
       }
     }
   }
 
   private FileUploadInputExtension getFileUploadInputExtension(HttpInputData request) {
-    if (getEnvironment().getEntry(FileUploadContext.class) == null)
-      throw new AraneaRuntimeException("It seems that attempt was made to use FileUploadControl, but upload filter is not present.");
+    if (getEnvironment().getEntry(FileUploadContext.class) == null) {
+      throw new AraneaRuntimeException(
+          "It seems that attempt was made to use FileUploadControl, but upload filter is not present.");
+    }
 
     FileUploadInputExtension fileUpload = null;
-    // Motivation for try: when one opens fileuploaddemo in new window (cloning!), exception occurs b/c
+
+    // Motivation for try: when one opens FileUploadDemo in new window (cloning!), exception occurs b/c
     // FileUploadInputExtension extension does not exist in InputData which is
-    // extended only when request is multipart, while cloning filter always sends ordinary GET.
+    // extended only when request is "multipart", while cloning filter always sends ordinary GET.
     try {
-      fileUpload = (FileUploadInputExtension) request.narrow(FileUploadInputExtension.class);
-    }
-    catch (NoSuchNarrowableException e) {
-      // If no fileupload extension is present and fileupload filter is enabled, control should
-      // just sit there and be beautiful, otherwise just return null
+      fileUpload = request.narrow(FileUploadInputExtension.class);
+    } catch (NoSuchNarrowableException e) {
+      // If no file-upload extension is present and file-upload filter is enabled, control should
+      // just sit there and be beautiful, otherwise just return null.
     }
     return fileUpload;
   }
 
+  @Override
   public void convert() {
-    value = innerData;
-    
-    if (!uploadSucceeded) {
+    this.value = (FileInfo) this.innerData;
+
+    if (!this.uploadSucceeded) {
       Long sizeLimit = (getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
-      addError(MessageUtil.localizeAndFormat(
-          UiLibMessages.FILE_UPLOAD_FAILED,
-          sizeLimit.toString(),
-          getEnvironment()
-          ));
-      return;
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.FILE_UPLOAD_FAILED, sizeLimit.toString()));
     }
   }
 
+  @Override
   public void validate() {
     boolean fieldFilled = false;
-    FileInfo info = (FileInfo)innerData;
-    fieldFilled = 
-      info != null &&
-      info.getSize() > 0 &&
-      info.getOriginalFilename() != null && 
-      !info.getOriginalFilename().trim().equals("");
+    FileInfo info = (FileInfo) this.innerData;
+    fieldFilled = info != null && info.getSize() > 0 && !StringUtils.isBlank(info.getOriginalFilename());
 
-    if ((isMandatory() && !isRead()) || (isMandatory() && !fieldFilled)) {
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.MANDATORY_FIELD, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          getEnvironment()));        
+    if (isMandatory() && !(isRead() && fieldFilled)) {
+      addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
-    if (!mimeTypePermitted) {
-      addError(
-          MessageUtil.localizeAndFormat(
-          UiLibMessages.FORBIDDEN_MIME_TYPE, 
-          MessageUtil.localize(getLabel(), getEnvironment()),
-          getEnvironment()));        
+    if (!this.mimeTypePermitted) {
+      addErrorWithLabel(UiLibMessages.FORBIDDEN_MIME_TYPE);
     }
   }
 
-  /**
-   * Returns {@link ViewModel}.
-   * 
-   * @return {@link ViewModel}.
-   */
-  public Object getViewModel() {
+  @Override
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
   /**
    * The default implementation for AJAX file upload listener.
+   * 
    * @since 1.2.2
    */
   protected class FileUploadActionListener implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * The response that is used, when AJAX file upload is successful.
+     */
+    public static final String RESPONSE_OK = "OK";
+
+    /**
+     * The response that is used, when AJAX file upload fails.
+     */
+    public static final String RESPONSE_FAIL = "FAIL";
 
     public void processAction(String actionId, InputData input, OutputData output) throws Exception {
-      FileInfo file = (FileInfo) innerData;
-      ajaxRequest = true;
+      FileInfo file = (FileInfo) FileUploadControl.this.innerData;
+      FileUploadControl.this.ajaxRequest = true;
       convertAndValidate();
 
-      if (file == null || file.getSize() == 0) {
-        log.debug("Did not get a file!");
+      if (file == null || file.isFilePresent()) {
+        LOG.debug("Did not get a file!");
         PrintWriter out = ServletUtil.getResponse(output).getWriter();
-        out.write("FAIL");
+        out.write(RESPONSE_FAIL);
 
-        if (!ajaxMessages.isEmpty()) {
+        if (!FileUploadControl.this.ajaxMessages.isEmpty()) {
           out.print("(");
-          for (Iterator i = ajaxMessages.iterator(); i.hasNext(); ) {
-            out.print(i.next());
-            if (i.hasNext()) {
+          boolean isFirst = true;
+          for (String msg : FileUploadControl.this.ajaxMessages) {
+            if (!isFirst) {
               out.print("\n");
+            } else {
+              isFirst = false;
             }
+            out.print(msg);
           }
           out.print(")");
-          ajaxMessages.clear();
+          FileUploadControl.this.ajaxMessages.clear();
         }
-
-        ajaxRequest = false;
       } else {
-        log.debug("Got file '" + file.getOriginalFilename() + "'");
-        ServletUtil.getResponse(output).getWriter().write("OK");
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Got file '" + file.getOriginalFilename() + "'");
+        }
+        ServletUtil.getResponse(output).getWriter().write(RESPONSE_OK);
       }
+
+      FileUploadControl.this.ajaxRequest = false;
     }
   }
-  
-  // *********************************************************************
-  // * VIEW MODEL
-  // *********************************************************************
 
   /**
-   * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+   * The view model implementation of <code>FileUploadControl</code>. The view model provides the data for tags to
+   * render the control.
+   * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
-  public class ViewModel extends BaseControl.ViewModel {
+  public class ViewModel extends BaseControl<FileInfo>.ViewModel {
 
-    private List permittedMimeFileTypes;
+    private List<String> permittedMimeFileTypes;
 
     /**
      * Takes an outer class snapshot.
@@ -259,8 +257,8 @@ public class FileUploadControl extends BaseControl {
      * 
      * @return the MIME file types that will be permitted.
      */
-    public List getPermittedMimeFileTypes() {
-      return permittedMimeFileTypes;
+    public List<String> getPermittedMimeFileTypes() {
+      return this.permittedMimeFileTypes;
     }
   }
 }

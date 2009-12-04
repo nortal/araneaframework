@@ -1,0 +1,43 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes out all messages in the MessageContext."
+		import="org.araneaframework.Environment,org.araneaframework.http.util.*"
+		body-content="empty"/>
+
+	<jsp:scriptlet>
+		Environment env = ServletUtil.getEnvironment(request);
+		getJspContext().setAttribute("messages",
+		    EnvironmentUtil.getMessageContext(env).getMessages());
+	</jsp:scriptlet>
+
+	<c:set var="msgs" value="${messages['info']}"/>
+	<c:if test="${not empty msgs}">
+		<div class="message">
+			<c:forEach items="${msgs}" var="msg">
+				<h2><fmt:message key="${msg}"/></h2>
+			</c:forEach>
+		</div>
+	</c:if>
+
+	<c:set var="msgs" value="${messages['success']}"/>
+	<c:if test="${not empty msgs}">
+		<div class="message msg-ok">
+			<c:forEach items="${msgs}" var="msg">
+				<h2><fmt:message key="${msg}"/></h2>
+			</c:forEach>
+		</div>
+	</c:if>
+
+	<c:set var="msgs" value="${messages['error']}"/>
+	<c:if test="${not empty msgs}">
+		<div class="message msg-error">
+			<c:forEach items="${msgs}" var="msg">
+				<h2><fmt:message key="${msg}"/></h2>
+			</c:forEach>
+		</div>
+	</c:if>
+
+</jsp:root>

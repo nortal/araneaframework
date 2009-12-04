@@ -20,8 +20,6 @@ import org.apache.commons.lang.exception.NestableException;
 
 public class ExpressionEvaluationException extends NestableException {
 
-  private static final long serialVersionUID = 1L;
-
   public ExpressionEvaluationException() {
     super();
   }

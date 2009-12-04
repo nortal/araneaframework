@@ -19,11 +19,9 @@ package org.araneaframework.core;
 /**
  * Exception thrown when event could not be delivered to receiver.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class EventException extends AraneaRuntimeException {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * Creates an exception, which means that the event could not be developed to

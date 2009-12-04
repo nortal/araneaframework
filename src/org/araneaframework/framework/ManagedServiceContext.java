@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework;
 
@@ -28,19 +28,19 @@ import org.araneaframework.Service;
  * determined via <code>getCurrentId()</code>.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ManagedServiceContext extends Serializable {
 
   /**
    * Returns the id of the current service. 
    */
-  public Object getCurrentId();
+  public String getCurrentId();
 
   /**
    * Adds a child service with the specified id.
    */
-  public Service addService(Object id, Service service);
+  public Service addService(String id, Service service);
 
   /**
    * Adds a child service with the specified id, and specifies that service may 
@@ -48,16 +48,16 @@ public interface ManagedServiceContext extends Serializable {
    * When the service is killed or whether it is killed at all is up to the 
    * implementation.
    */
-  public Service addService(Object id, Service service, Long timeToLive);
+  public Service addService(String id, Service service, Long timeToLive);
 
   /**
    * @return a child service with the specified id.
    */
-  public Service getService(Object id);
+  public Service getService(String id);
 
   /**
    * Closes the service under the key id.
    */
-  public void close(Object id);
+  public void close(String id);
 
 }

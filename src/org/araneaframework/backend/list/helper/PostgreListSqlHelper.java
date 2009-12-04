@@ -16,8 +16,8 @@
 
 package org.araneaframework.backend.list.helper;
 
-import java.util.Iterator;
 import java.util.List;
+
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.expression.PostgreExpressionToSqlExprBuilder;
@@ -27,17 +27,12 @@ import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
 import org.araneaframework.backend.list.sqlexpr.constant.SqlStringExpression;
 
 /**
- * Extends the <code>ListSqLHelper</code> to support PostgreSQL database
- * queries.
+ * Extends the <code>ListSqLHelper</code> to support PostgreSQL database queries.
  * 
  * @author Roman Tekhov
  * @since 1.1.3
  */
 public class PostgreListSqlHelper extends ListSqlHelper {
-
-  protected SqlStatement statement = new SqlStatement();
-
-  protected String countSqlQuery = null;
 
   public PostgreListSqlHelper(DataSource dataSource, ListQuery query) {
     super(dataSource, query);
@@ -53,76 +48,54 @@ public class PostgreListSqlHelper extends ListSqlHelper {
 
   public PostgreListSqlHelper() {}
 
-  protected SqlStatement getCountSqlStatement() {
-    if (countSqlQuery != null) {
-      return new SqlStatement(countSqlQuery, statement.getParams());
-    }
-
-    String temp = new StringBuffer("SELECT COUNT(*) FROM (").append(
-        statement.getQuery()).append(") t").toString();
-
-    return new SqlStatement(temp, this.statement.getParams());
-  }
-
-  protected SqlStatement getRangeSqlStatement() {
-    StringBuffer sb = new StringBuffer(this.statement.getQuery());
+  @Override
+  protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
+    StringBuffer query = new StringBuffer(super.createItemRangeQuery(fromSql, customWhereSql, customOrderbySql));
 
     if (this.itemRangeCount != null) {
-      sb.append(" LIMIT ?");
+      query.append(" LIMIT ?");
     }
 
-    sb.append(" OFFSET ?");
-
-    // Create a SQL statement to hold the query and its parameters:
-    SqlStatement rangeStmt = new SqlStatement(sb.toString());
-    rangeStmt.addAllParams(this.statement.getParams());
-
-    if (this.itemRangeCount != null) {
-      rangeStmt.addParam(this.itemRangeCount);
+    if (this.itemRangeStart != null) {
+      query.append(" OFFSET ?");
     }
 
-    rangeStmt.addParam(this.itemRangeStart);
-    return rangeStmt;
+    return query.toString();
   }
 
+  @Override
+  protected List<Object> getItemRangeQueryParams(Object[] customWhereArgs, Object[] customOrderbyArgs) {
+    List<Object> params = super.getItemRangeQueryParams(customWhereArgs, customOrderbyArgs);
+
+    if (this.itemRangeCount != null) {
+      params.add(this.itemRangeCount);
+    }
+
+    if (this.itemRangeStart != null) {
+      params.add(this.itemRangeStart);
+    }
+
+    return params;
+  }
+
+  @Override
   protected SqlExpression getFieldsSqlExpression() {
     SqlCollectionExpression result = new SqlCollectionExpression();
-    for (Iterator it = fields.getNames().iterator(); it.hasNext();) {
-      String variable = (String) it.next();
-      String dbField = namingStrategy.fieldToColumnName(variable);
-      String dbAlias = namingStrategy.fieldToColumnAlias(variable);
+    for (String fieldName : this.fields.getNames()) {
+      String dbField = this.namingStrategy.fieldToColumnName(fieldName);
+      String dbAlias = this.namingStrategy.fieldToColumnAlias(fieldName);
 
       if (dbAlias.equals(dbField)) {
         result.add(new SqlStringExpression(dbField));
       } else {
-        result.add(new SqlStringExpression(new StringBuffer(dbField).append(
-            " AS ").append(dbAlias).toString()));
+        result.add(new SqlStringExpression(new StringBuffer(dbField).append(" AS ").append(dbAlias).toString()));
       }
     }
     return result;
   }
 
+  @Override
   protected StandardExpressionToSqlExprBuilder createFilterSqlExpressionBuilder() {
     return new PostgreExpressionToSqlExprBuilder();
-  }
-
-  public void setCountSqlQuery(String countSqlQuery) {
-    this.countSqlQuery = countSqlQuery;
-  }
-
-  public void setSqlQuery(String sqlQuery) {
-    this.statement.setQuery(sqlQuery);
-  }
-
-  public void addNullParam(int valueType) {
-    this.statement.addNullParam(valueType);
-  }
-
-  public void addStatementParam(Object param) {
-    this.statement.addParam(param);
-  }
-
-  public void addStatementParams(List params) {
-    this.statement.addAllParams(params);
   }
 }

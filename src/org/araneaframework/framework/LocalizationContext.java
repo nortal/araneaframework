@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework;
 
@@ -29,7 +29,7 @@ import org.araneaframework.core.ApplicationComponent;
  * subsequent request to <code>getResourceBundle()</code> will use the new current Locale.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface LocalizationContext extends Serializable {
 
@@ -63,13 +63,13 @@ public interface LocalizationContext extends Serializable {
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
    * If the localized message cannot be resolved uses <code>defaultMessage</code> instead.
    */
-  public String getMessage(String code, Object[] args, String defaultMessage);
+  public String getMessage(String code, String defaultMessage, Object... args);
   
   /**
    * Localizes the code and uses it to format the message with the passed arguments. 
    * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
    */
-  public String getMessage(String code, Object[] args);
+  public String getMessage(String code, Object... args);
 
   /** @since 1.1 */
   public void addLocaleChangeListener(LocaleChangeListener listener);

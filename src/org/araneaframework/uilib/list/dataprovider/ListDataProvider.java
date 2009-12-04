@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.list.dataprovider;
 
@@ -31,7 +31,7 @@ import org.araneaframework.uilib.list.structure.ListStructure;
  * This interface defines the behaviour of a list data provider, that is used by the
  * {@link org.araneaframework.uilib.list.ListWidget}to retrieve the list data.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Rein Raudjärv
  */
 public interface ListDataProvider<T> extends Serializable {
@@ -42,7 +42,7 @@ public interface ListDataProvider<T> extends Serializable {
 	public void init() throws Exception;
 
 	/**
-	 * This method should deinitialize data provider, releasing all taken handles and resources.
+	 * This method should destroy data provider, releasing all taken handles and resources.
 	 */
 	public void destroy() throws Exception;
 

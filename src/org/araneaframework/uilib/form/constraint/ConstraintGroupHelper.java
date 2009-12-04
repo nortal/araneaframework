@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+*/
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -46,9 +46,7 @@ import org.araneaframework.uilib.form.Constraint;
  */
 public class ConstraintGroupHelper implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-
-  private Set activeGroups = new HashSet();
+  private Set<String> activeGroups = new HashSet<String>();
 
   /**
    * Wrap the <code>constraint</code> in the <code>GroupedConstraint</code>
@@ -69,8 +67,8 @@ public class ConstraintGroupHelper implements Serializable {
    * 
    * @param activeGroups The names of the groups to be made active.
    */
-  public void setActiveGroups(Set activeGroups) {
-    this.activeGroups = activeGroups == null ? new HashSet() : activeGroups;
+  public void setActiveGroups(Set<String> activeGroups) {
+    this.activeGroups = activeGroups == null ? new HashSet<String>() : activeGroups;
   }
 
   /**
@@ -82,7 +80,7 @@ public class ConstraintGroupHelper implements Serializable {
    * @param activeGroups The names of the groups to be made active.
    */
   public void setActiveGroups(String[] activeGroups) {
-    this.activeGroups = new HashSet();
+    this.activeGroups = new HashSet<String>();
     CollectionUtils.addAll(this.activeGroups, activeGroups);
   }
 
@@ -99,11 +97,11 @@ public class ConstraintGroupHelper implements Serializable {
    */
   public void setActiveGroup(String activeGroup) {
     if (activeGroup == null) {
-      this.activeGroups = new HashSet();
-      return;
+      this.activeGroups = new HashSet<String>();
+    } else {
+      this.activeGroups = new HashSet<String>();
+      this.activeGroups.add(activeGroup);
     }
-    this.activeGroups = new HashSet(1);
-    this.activeGroups.add(activeGroup);
   }
 
   /**
@@ -111,8 +109,8 @@ public class ConstraintGroupHelper implements Serializable {
    * 
    * @return currently activated groups.
    */
-  public Set getActiveGroups() {
-    return activeGroups;
+  public Set<String> getActiveGroups() {
+    return this.activeGroups;
   }
 
   /**

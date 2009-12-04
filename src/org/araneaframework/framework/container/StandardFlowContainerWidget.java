@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.framework.container;
 
 import java.io.Serializable;
@@ -23,7 +24,6 @@ import java.util.Map;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.OutputData;
@@ -42,35 +42,24 @@ import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * A {@link org.araneaframework.framework.FlowContext} where the flows are
- * structured as a stack.
+ * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StandardFlowContainerWidget extends BaseApplicationWidget
-  implements FlowContextWidget {
+@SuppressWarnings("unchecked")
+public class StandardFlowContainerWidget extends BaseApplicationWidget implements FlowContextWidget {
 
-  private static final long serialVersionUID = 1L;
-
-  // *******************************************************************
-  // CONSTANTS
-  // *******************************************************************
-
-  private static final Log log = LogFactory.getLog(StandardFlowContainerWidget.class);
+  private static final Log LOG = LogFactory.getLog(StandardFlowContainerWidget.class);
 
   private static final String BASE_FLOW_KEY = "f";
 
   private static final String TOP_FLOW_KEY = BASE_FLOW_KEY + 0;
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
-
   /**
    * The stack of all the calls.
    */
-  protected LinkedList callStack = new LinkedList();
+  protected LinkedList<CallFrame> callStack = new LinkedList<CallFrame>();
 
   /**
    * The top callable widget.
@@ -79,17 +68,13 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
 
   protected boolean finishable = true;
 
-  private Map nestedEnvironmentEntries = new HashMap();
+  private Map<Class<?>, Object> nestedEnvironmentEntries = new HashMap<Class<?>, Object>();
 
-  private Map nestedEnvEntryStacks = new HashMap();
-
-  // *******************************************************************
-  // CONSTRUCTORS
-  // *******************************************************************
+  private Map<Class<?>, LinkedList<Object>> nestedEnvEntryStacks = new HashMap<Class<?>, LinkedList<Object>>();
 
   /**
-   * Constructs a {@link StandardFlowContainerWidget} with
-   * <code>topWidget</code> being the first flow on the top of flow stack.
+   * Constructs a {@link StandardFlowContainerWidget} with <code>topWidget</code> being the first flow on the top of
+   * flow stack.
    */
   public StandardFlowContainerWidget(Widget topWidget) {
     this.top = topWidget;
@@ -97,21 +82,16 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
 
   public StandardFlowContainerWidget() {}
 
-  // *******************************************************************
-  // PUBLIC METHODS
-  // *******************************************************************
   public void setTop(Widget topWidget) {
     this.top = topWidget;
   }
 
   /**
-   * Determines whether this {@link StandardFlowContainerWidget} will ever
-   * return control to {@link FlowContext} higher in the
-   * {@link org.araneaframework.Component} hierarchy. If such
-   * {@link FlowContext} exists and finishable is set to true, this
-   * {@link StandardFlowContainerWidget} will return control to it when last
-   * running flow inside it is finished ({@link FlowContext#finish(Object)}) or
-   * canceled ({@link FlowContext#cancel()}). Default is <code>true</code>.
+   * Determines whether this {@link StandardFlowContainerWidget} will ever return control to {@link FlowContext} higher
+   * in the {@link org.araneaframework.Component} hierarchy. If such {@link FlowContext} exists and finishable is set to
+   * true, this {@link StandardFlowContainerWidget} will return control to it when last running flow inside it is
+   * finished ({@link FlowContext#finish(Object)}) or canceled ({@link FlowContext#cancel()}). Default is
+   * <code>true</code>.
    * 
    * @param finishable
    * @since 1.1
@@ -141,22 +121,19 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   public void replace(Widget flow, Configurator configurator) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ReplaceClosure replaceClosure = new ReplaceClosure(flow, configurator);
-    doTransition(transitionHandler, FlowContext.TRANSITION_REPLACE,
-        replaceClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_REPLACE, replaceClosure);
   }
 
   public void finish(Object returnValue) {
     TransitionHandler transitionHandler = getTransitionHandler();
     FinishClosure finishClosure = new FinishClosure(returnValue);
-    doTransition(transitionHandler, FlowContext.TRANSITION_FINISH,
-        finishClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_FINISH, finishClosure);
   }
 
   public void cancel() {
     TransitionHandler transitionHandler = getTransitionHandler();
     CancelClosure cancelClosure = new CancelClosure();
-    doTransition(transitionHandler, FlowContext.TRANSITION_CANCEL,
-        cancelClosure);
+    doTransition(transitionHandler, FlowContext.TRANSITION_CANCEL, cancelClosure);
   }
 
   public void reset(final EnvironmentAwareCallback callback) {
@@ -194,22 +171,13 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     }
   }
 
-  /**
-   * @deprecated
-   */
-  public FlowContext.FlowReference getCurrentReference() {
-    return new FlowReference();
-  }
-
-  public void addNestedEnvironmentEntry(ApplicationWidget scope,
-      final Object entryId, Object envEntry) {
+  public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, final Class<T> entryId, T envEntry) {
     Assert.notNullParam(scope, "scope");
     Assert.notNullParam(entryId, "entryId");
     pushGlobalEnvEntry(entryId, envEntry);
     BaseWidget scopedWidget = new BaseWidget() {
 
-      private static final long serialVersionUID = 1L;
-
+      @Override
       protected void destroy() throws Exception {
         popGlobalEnvEntry(entryId);
       }
@@ -221,26 +189,25 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     return !this.callStack.isEmpty();
   }
 
-  // *******************************************************************
-  // PROTECTED LIFECYCLE METHODS
-  // *******************************************************************
+  @Override
   protected void init() throws Exception {
     super.init();
     refreshGlobalEnvironment();
 
     if (this.top != null) {
-      start(this.top, null, null);
+      start(this.top);
       this.top = null;
     }
   }
 
+  @Override
   protected void destroy() throws Exception {
     if (!this.callStack.isEmpty()) {
       this.callStack.removeFirst();
     }
 
-    for (Iterator i = this.callStack.iterator(); i.hasNext();) {
-      CallFrame frame = (CallFrame) i.next();
+    for (Iterator<CallFrame> i = this.callStack.iterator(); i.hasNext();) {
+      CallFrame frame = i.next();
       i.remove();
       frame.getWidget()._getComponent().destroy();
     }
@@ -251,40 +218,38 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   /**
    * Invokes render on the top frame on the stack of callframes.
    */
+  @Override
   protected void render(OutputData output) throws Exception {
-    // Don't render empty callstack
-    if (getCallStack().isEmpty()) {
-      return;
+    // Don't render empty call stack:
+    if (!getCallStack().isEmpty()) {
+      CallFrame frame = this.callStack.getFirst();
+      getWidget(frame.getName())._getWidget().render(output);
     }
-    CallFrame frame = (CallFrame) this.callStack.getFirst();
-    getWidget(frame.getName())._getWidget().render(output);
   }
 
   // *******************************************************************
   // IMPL SPECIFIC PROTECTED METHODS
   // *******************************************************************
 
-  protected void putLocalEnvironmentEntries(Map nestedEnvironmentEntries) {
+  protected void putLocalEnvironmentEntries(Map<Class<?>, Object> nestedEnvironmentEntries) {
     nestedEnvironmentEntries.put(FlowContext.class, this);
   }
 
+  @Override
   protected Environment getChildWidgetEnvironment() throws Exception {
-    return new StandardEnvironment(getEnvironment(),
-        this.nestedEnvironmentEntries);
+    return new StandardEnvironment(getEnvironment(), this.nestedEnvironmentEntries);
   }
 
   /**
-   * Returns a new CallFrame constructed of the callable, configurator and
-   * handler.
+   * Returns a new CallFrame constructed of the callable, configurator and handler.
    */
-  protected CallFrame makeCallFrame(Widget callable, Configurator configurator,
-      Handler handler, CallFrame previous) {
+  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler<Object> handler,
+      CallFrame previous) {
     return new CallFrame(callable, configurator, handler, previous);
   }
 
   protected CallFrame getActiveCallFrame() {
-    return this.callStack.isEmpty() ? null : (CallFrame) this.callStack
-        .getFirst();
+    return this.callStack.isEmpty() ? null : this.callStack.getFirst();
   }
 
   /** @since 1.1 */
@@ -304,19 +269,17 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   /** @since 1.1 */
-  protected void doTransition(TransitionHandler transitionHandler,
-      int transitionType, Closure closure) {
+  protected void doTransition(TransitionHandler transitionHandler, int transitionType, Closure closure) {
     transitionHandler.doTransition(transitionType, getActiveFlow(), closure);
   }
 
   /** @since 1.1 */
   protected void doReset(final EnvironmentAwareCallback callback) {
-    if (log.isDebugEnabled()) {
-      log.debug("Resetting flows '" + this.callStack + "'");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Resetting flows '" + this.callStack + "'");
     }
 
-    for (Iterator i = this.callStack.iterator(); i.hasNext();) {
-      CallFrame frame = (CallFrame) i.next();
+    for (CallFrame frame : this.callStack) {
       _getChildren().put(frame.getName(), frame.getWidget());
       removeWidget(frame.getName());
     }
@@ -333,14 +296,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   /** @since 1.1 */
-  protected void doStart(Widget flow, Configurator configurator, Handler handler) {
+  protected void doStart(Widget flow, Configurator configurator, Handler<Object> handler) {
     Assert.notNullParam(flow, "flow");
 
     CallFrame previous = getActiveCallFrame();
     CallFrame frame = makeCallFrame(flow, configurator, handler, previous);
 
-    if (log.isDebugEnabled()) {
-      log.debug("Starting flow '" + flow.getClass().getName() + "'");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Starting flow '" + flow.getClass().getName() + "'");
     }
 
     if (previous != null && _getChildren().get(previous.getName()) != null) {
@@ -366,19 +329,18 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       throw new EmptyCallStackException();
     }
 
-    CallFrame previousFrame = (CallFrame) this.callStack.removeFirst();
+    CallFrame previousFrame = this.callStack.removeFirst();
     CallFrame frame = getActiveCallFrame();
 
-    if (log.isDebugEnabled()) {
-      log.debug("Finishing flow '"
-          + previousFrame.getWidget().getClass().getName() + "'");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Finishing flow '" + previousFrame.getWidget().getClass().getName() + "'");
     }
 
     removeWidget(previousFrame.getName());
 
     if (frame != null) {
       _getChildren().put(frame.getName(), frame.getWidget());
-      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
+      getChildren().get(frame.getName())._getComponent().enable();
     }
 
     if (previousFrame.getHandler() != null) {
@@ -390,9 +352,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     }
 
     if (this.finishable && this.callStack.isEmpty()) {
-      FlowContext parentFlowContainer =
-        EnvironmentUtil.getFlowContext(getEnvironment());
-
+      FlowContext parentFlowContainer = EnvironmentUtil.getFlowContext(getEnvironment());
       if (parentFlowContainer != null) {
         parentFlowContainer.finish(returnValue);
       }
@@ -405,19 +365,18 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       throw new EmptyCallStackException();
     }
 
-    CallFrame previousFrame = (CallFrame) this.callStack.removeFirst();
+    CallFrame previousFrame = this.callStack.removeFirst();
     CallFrame frame = getActiveCallFrame();
 
-    if (log.isDebugEnabled()) {
-      log.debug("Cancelling flow '"
-          + previousFrame.getWidget().getClass().getName() + "'");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Cancelling flow '" + previousFrame.getWidget().getClass().getName() + "'");
     }
 
     removeWidget(previousFrame.getName());
 
     if (frame != null) {
       _getChildren().put(frame.getName(), frame.getWidget());
-      ((Component) getChildren().get(frame.getName()))._getComponent().enable();
+      getChildren().get(frame.getName())._getComponent().enable();
     }
 
     if (previousFrame.getHandler() != null) {
@@ -429,8 +388,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     }
 
     if (this.finishable && this.callStack.isEmpty()) {
-      FlowContext parentFlowContainer =
-        EnvironmentUtil.getFlowContext(getEnvironment());
+      FlowContext parentFlowContainer = EnvironmentUtil.getFlowContext(getEnvironment());
       if (parentFlowContainer != null) {
         parentFlowContainer.cancel();
       }
@@ -441,13 +399,11 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   protected void doReplace(Widget flow, Configurator configurator) {
     Assert.notNullParam(flow, "flow");
 
-    CallFrame previousFrame = (CallFrame) this.callStack.removeFirst();
-    CallFrame frame = makeCallFrame(flow, configurator,
-        previousFrame.getHandler(), previousFrame);
+    CallFrame previousFrame = this.callStack.removeFirst();
+    CallFrame frame = makeCallFrame(flow, configurator, previousFrame.getHandler(), previousFrame);
 
-    if (log.isDebugEnabled()) {
-      log.debug("Replacing flow '"
-          + previousFrame.getWidget().getClass().getName() + "' with flow '"
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Replacing flow '" + previousFrame.getWidget().getClass().getName() + "' with flow '"
           + flow.getClass().getName() + "'");
     }
 
@@ -464,7 +420,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     }
   }
 
-  protected LinkedList getCallStack() {
+  protected LinkedList<CallFrame> getCallStack() {
     return this.callStack;
   }
 
@@ -476,106 +432,56 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     this.nestedEnvironmentEntries.clear();
     putLocalEnvironmentEntries(this.nestedEnvironmentEntries);
 
-    for (Iterator i = this.nestedEnvEntryStacks.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Map.Entry) i.next();
-      Object entryId = entry.getKey();
-      LinkedList stack = (LinkedList) entry.getValue();
-
-      if (!stack.isEmpty()) {
-        Object envEntry = stack.getFirst();
-        this.nestedEnvironmentEntries.put(entryId, envEntry);
+    for (Map.Entry<Class<?>, LinkedList<Object>> entry : this.nestedEnvEntryStacks.entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        this.nestedEnvironmentEntries.put(entry.getKey(), entry.getValue().getFirst());
       }
     }
   }
 
-  private LinkedList getEnvEntryStack(Object entryId) {
-    LinkedList envEntryStack =
-      (LinkedList) this.nestedEnvEntryStacks.get(entryId);
+  private LinkedList<Object> getEnvEntryStack(Class<?> entryId) {
+    LinkedList<Object> envEntryStack = this.nestedEnvEntryStacks.get(entryId);
     if (envEntryStack == null) {
-      envEntryStack = new LinkedList();
+      envEntryStack = new LinkedList<Object>();
       this.nestedEnvEntryStacks.put(entryId, envEntryStack);
     }
     return envEntryStack;
   }
 
-  private void pushGlobalEnvEntry(Object entryId, Object envEntry) {
+  private void pushGlobalEnvEntry(Class<?> entryId, Object envEntry) {
     getEnvEntryStack(entryId).addFirst(envEntry);
     refreshGlobalEnvironment();
   }
 
-  private void popGlobalEnvEntry(Object entryId) {
+  private void popGlobalEnvEntry(Class<?> entryId) {
     getEnvEntryStack(entryId).removeFirst();
     refreshGlobalEnvironment();
   }
 
-  // *******************************************************************
-  // PROTECTED CLASSES
-  // *******************************************************************
-
   /**
-   * @deprecated
-   */
-  protected class FlowReference implements FlowContext.FlowReference {
-
-    private static final long serialVersionUID = 1L;
-
-    private int currentDepth = StandardFlowContainerWidget.this.callStack.size();
-
-    /**
-     * @deprecated
-     */
-    public void reset(EnvironmentAwareCallback callback) throws Exception {
-      Iterator i = StandardFlowContainerWidget.this.callStack.iterator();
-
-      while (i.hasNext()
-          && StandardFlowContainerWidget.this.callStack.size() > this.currentDepth) {
-        CallFrame frame = (CallFrame) i.next();
-        _getChildren().put(frame.getName(), frame.getWidget());
-        removeWidget(frame.getName());
-        i.remove();
-      }
-
-      if (!StandardFlowContainerWidget.this.callStack.isEmpty()) {
-        CallFrame frame = (CallFrame) StandardFlowContainerWidget.this.callStack
-            .getFirst();
-        _getChildren().put(frame.getName(), frame.getWidget());
-        ((Component) getChildren().get(frame.getName()))._getComponent()
-            .enable();
-      }
-
-      callback.call(getChildWidgetEnvironment());
-    }
-  }
-
-  /**
-   * A widget, configurator and a handler are encapsulated into one logical
-   * structure, a call frame. Class is used internally.
+   * A widget, configurator and a handler are encapsulated into one logical structure, a call frame. Class is used
+   * internally.
    */
   protected static class CallFrame implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     private Widget widget;
 
     private Configurator configurator;
 
-    private Handler handler;
+    private Handler<Object> handler;
 
     private String name;
 
     private TransitionHandler transitionHandler;
 
-    protected CallFrame(Widget widget, Configurator configurator,
-        Handler handler, CallFrame previous) {
+    protected CallFrame(Widget widget, Configurator configurator, Handler<Object> handler, CallFrame previous) {
       this.configurator = configurator;
       this.handler = handler;
       this.widget = widget;
       if (previous == null) {
         this.name = TOP_FLOW_KEY;
       } else {
-        this.name = BASE_FLOW_KEY
-            + (Integer.parseInt(previous.getName().substring(
-                BASE_FLOW_KEY.length())) + 1);
+        this.name = BASE_FLOW_KEY + (Integer.parseInt(previous.getName().substring(BASE_FLOW_KEY.length())) + 1);
       }
     }
 
@@ -583,7 +489,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       return this.configurator;
     }
 
-    public Handler getHandler() {
+    public Handler<Object> getHandler() {
       return this.handler;
     }
 
@@ -599,6 +505,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       return this.name;
     }
 
+    @Override
     public String toString() {
       return this.widget.getClass().getName();
     }
@@ -613,13 +520,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   }
 
   /*
-   * Protected Closure classes for executing flow navigation events from
-   * callbacks.
+   * Protected Closure classes for executing flow navigation events from callbacks.
    */
   /** @since 1.1 */
   protected class CancelClosure implements Closure, Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     public void execute(Object obj) {
       doCancel();
@@ -628,8 +532,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
 
   /** @since 1.1 */
   protected class ResetClosure implements Closure, Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     protected EnvironmentAwareCallback callback;
 
@@ -645,8 +547,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   /** @since 1.1 */
   protected class FinishClosure implements Closure, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     protected Object result;
 
     public FinishClosure(Object result) {
@@ -660,8 +560,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
 
   /** @since 1.1 */
   protected class ReplaceClosure implements Closure, Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     protected Widget flow;
 
@@ -680,15 +578,13 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
   /** @since 1.1 */
   protected class StartClosure implements Closure, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     protected Widget flow;
 
     protected Configurator configurator;
 
-    protected Handler handler;
+    protected Handler<Object> handler;
 
-    public StartClosure(Widget flow, Configurator configurator, Handler handler) {
+    public StartClosure(Widget flow, Configurator configurator, Handler<Object> handler) {
       this.flow = flow;
       this.configurator = configurator;
       this.handler = handler;
@@ -699,13 +595,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
     }
   }
 
-  public static class StandardTransitionHandler
-    implements FlowContext.TransitionHandler {
+  public static class StandardTransitionHandler implements FlowContext.TransitionHandler {
 
-    private static final long serialVersionUID = 1L;
-
-    public void doTransition(int transitionType, Widget activeFlow,
-        Closure transition) {
+    public void doTransition(int transitionType, Widget activeFlow, Closure transition) {
       notifyScrollContext(transitionType, activeFlow);
       transition.execute(activeFlow);
     }
@@ -714,23 +606,22 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget
       if (activeFlow == null) {
         return;
       }
-      WindowScrollPositionContext scrollCtx = activeFlow
-          .getEnvironment().getEntry(WindowScrollPositionContext.class);
+      WindowScrollPositionContext scrollCtx = activeFlow.getEnvironment().getEntry(WindowScrollPositionContext.class);
       if (scrollCtx != null) {
         switch (transitionType) {
-          case FlowContext.TRANSITION_START:
-            scrollCtx.push();
-            break;
-          case FlowContext.TRANSITION_FINISH:
-          case FlowContext.TRANSITION_CANCEL:
-            scrollCtx.pop();
-            break;
-          case FlowContext.TRANSITION_REPLACE:
-            scrollCtx.resetCurrent();
-            break;
-          case FlowContext.TRANSITION_RESET:
-            scrollCtx.reset();
-            break;
+        case FlowContext.TRANSITION_START:
+          scrollCtx.push();
+          break;
+        case FlowContext.TRANSITION_FINISH:
+        case FlowContext.TRANSITION_CANCEL:
+          scrollCtx.pop();
+          break;
+        case FlowContext.TRANSITION_REPLACE:
+          scrollCtx.resetCurrent();
+          break;
+        case FlowContext.TRANSITION_RESET:
+          scrollCtx.reset();
+          break;
         }
       }
     }

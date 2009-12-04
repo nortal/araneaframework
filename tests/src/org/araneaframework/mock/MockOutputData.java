@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock;
 
@@ -30,97 +30,99 @@ import org.araneaframework.core.StandardPath;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
+ * 
  */
 public class MockOutputData implements OutputData {
-  private Map data;
-  private List pathPrefix;
-  
-  public MockOutputData(Map data) {
-    this();
+
+  private Map<String, Object> data;
+
+  private List<Object> pathPrefix;
+
+  public MockOutputData(Map<String, Object> data) {
     this.data = data;
   }
-  
+
   public MockOutputData() {
-    data = new HashMap();
-    pathPrefix = new ArrayList();
+    this.data = new HashMap<String, Object>();
+    this.pathPrefix = new ArrayList<Object>();
   }
-  
+
   public Path getScope() {
     return new StandardPath(getScopePathString());
   }
 
   public Object getAttribute(Object key) {
-    //XXX
+    // XXX
     return getScopedData().get(key);
   }
 
-  public Map getAttributes() {
-    //XXX
+  public Map<String, String> getAttributes() {
+    // XXX
     return Collections.unmodifiableMap(getScopedData());
   }
 
   public void pushScope(Object step) {
-    pathPrefix.add(step);
+    this.pathPrefix.add(step);
   }
 
   public void popScope() {
-    pathPrefix.remove(pathPrefix.size()-1);
+    this.pathPrefix.remove(this.pathPrefix.size() - 1);
   }
-  
+
+  @Override
   public String toString() {
     return getScopePathString();
   }
-  
+
   /*
-  ** PRIVATE METHODS  
-  */
-  private Map getScopedData() {
+   * * PRIVATE METHODS
+   */
+  @SuppressWarnings("unchecked")
+  private Map<String, String> getScopedData() {
     String path = getScopePathString();
-    if (data.get(path) == null) {
-      return new HashMap();
-    } 
-    else {
-      return (Map)data.get(path);
+    if (this.data.get(path) == null) {
+      return new HashMap<String, String>();
+    } else {
+      return (Map<String, String>) this.data.get(path);
     }
   }
-  
+
   private String getScopePathString() {
     StringBuffer result = new StringBuffer();
-    Iterator ite = pathPrefix.iterator();
+    Iterator<Object> ite = this.pathPrefix.iterator();
     while (ite.hasNext()) {
-      result.append(ite.next()+".");
+      result.append(ite.next() + Path.SEPARATOR);
     }
-    if (result.length()>0) {
-      result = new StringBuffer(result.substring(0, result.length()-1));
+    if (result.length() > 0) {
+      result = new StringBuffer(result.substring(0, result.length() - 1));
     }
     return result.toString();
   }
 
-  public void extend(Class interfaceClass, Object implementation) {
-    //XXX
-    throw new NotImplementedException();    
-  }
-
-  public Object narrow(Class interfaceClass) {
-    //XXX
+  public <T> void extend(Class<T> interfaceClass, T implementation) {
+    // XXX
     throw new NotImplementedException();
   }
 
-  public void pushAttribute(Object key, Object value) {
-    //XXX
+  public <T> T narrow(Class<T> interfaceClass) {
+    // XXX
+    throw new NotImplementedException();
   }
 
-  public Object popAttribute(Object key) {
-    //XXX
+  public void pushAttribute(@SuppressWarnings("unused") Object key, @SuppressWarnings("unused") Object value) {
+  // XXX
+  }
+
+  public Object popAttribute(@SuppressWarnings("unused") Object key) {
+    // XXX
     return null;
   }
 
-  public void restoreScope(Path scope) {
-    //XXX
+  public void restoreScope(@SuppressWarnings("unused") Path scope) {
+  // XXX
   }
 
-	public InputData getInputData() {
-		return null;
-	}
+  public InputData getInputData() {
+    return null;
+  }
 }

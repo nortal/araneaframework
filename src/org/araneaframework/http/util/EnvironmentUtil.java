@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.util;
 
-import org.araneaframework.framework.ConfirmationContext;
-import org.araneaframework.framework.ExpiringServiceContext;
-import org.araneaframework.framework.ContinuationContext;
+import java.lang.reflect.Field;
 import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.annotation.EnvironmentEntry;
+import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.framework.ConfirmationContext;
+import org.araneaframework.framework.ContinuationContext;
+import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.ManagedServiceContext;
@@ -47,12 +51,12 @@ public abstract class EnvironmentUtil {
     return env.requireEntry(TopServiceContext.class);
   }
 
-  public static Object getTopServiceId(Environment env) {
+  public static String getTopServiceId(Environment env) {
     TopServiceContext topServiceContext = getTopServiceContext(env);
     return topServiceContext == null ? null : topServiceContext.getCurrentId();
   }
 
-  public static Object requireTopServiceId(Environment env) {
+  public static String requireTopServiceId(Environment env) {
     return requireTopServiceContext(env).getCurrentId();
   }
 
@@ -64,12 +68,12 @@ public abstract class EnvironmentUtil {
     return env.requireEntry(ThreadContext.class);
   }
 
-  public static Object getThreadServiceId(Environment env) {
+  public static String getThreadServiceId(Environment env) {
     ThreadContext threadContext = getThreadContext(env);
     return threadContext == null ? null : threadContext.getCurrentId();
   }
   
-  public static Object requireThreadServiceId(Environment env) {
+  public static String requireThreadServiceId(Environment env) {
     return requireThreadContext(env).getCurrentId();
   }
 
@@ -136,10 +140,43 @@ public abstract class EnvironmentUtil {
   }
 
   public static ConfirmationContext getConfirmationContext(Environment env) {
-    return (ConfirmationContext) env.getEntry(ConfirmationContext.class);
+    return env.getEntry(ConfirmationContext.class);
   }
 
   public static ConfirmationContext requireConfirmationContext(Environment env) {
-    return (ConfirmationContext) env.requireEntry(ConfirmationContext.class);
+    return env.requireEntry(ConfirmationContext.class);
+  }
+
+  /**
+   * Injects appropriate environment entries to the fields of given object, if the field has annotation {@link EnvironmentEntry}.
+   * The annotation can provide the environment entry key or the type of the field will be used. If the annotation
+   * declares that the dependency is mandatory and the entry is not found, an exception will be thrown.
+   * <p>
+   * The parameters to this method must not be null!
+   * 
+   * @param env The environment to use for entries lookup.
+   * @param object The object that may contain fields with the {@link EnvironmentEntry} annotation.
+   * @since 2.0
+   */
+  public static void injectEnvironmentEntries(Environment env, Object object) {
+    Assert.notNullParam(EnvironmentUtil.class, env, "env");
+    Assert.notNullParam(EnvironmentUtil.class, object, "object");
+
+    for (Field field : object.getClass().getDeclaredFields()) {
+      if (field.isAnnotationPresent(EnvironmentEntry.class)) {
+        EnvironmentEntry data = field.getAnnotation(EnvironmentEntry.class);
+        Class<?> type = data.value();
+        if (type == null) {
+          type = field.getType();
+        }
+        Object entry = data.required() ? env.requireEntry(type) : env.getEntry(type);
+        try {
+          field.setAccessible(true);
+          field.set(object, entry);
+        } catch (Exception e) {
+          ExceptionUtil.uncheckException(e);
+        }
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
+
 package org.araneaframework.uilib.list;
 
 import org.araneaframework.http.util.EnvironmentUtil;
@@ -28,26 +29,24 @@ import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 
 /**
- * List fields types and comparators helper.  
+ * List fields types and comparators helper.
  * 
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * 
  * @see ListWidget
  */
+@SuppressWarnings("unchecked")
 public class TypeHelper implements Serializable {
-
-  private static final long serialVersionUID = 1L;
 
   // Configuration
   private Locale locale;
 
   private boolean ignoreCase = true;
 
-  // Map<String,Comparator> - custom comparators for fields
-  private Map comparators = new HashMap();
+  // Custom comparators for fields:
+  private Map<String, Comparator> comparators = new HashMap<String, Comparator>();
 
-  // Map<String,Class> - field types
-  private Map types = new HashMap();
+  private Map<String, Class> types = new HashMap<String, Class>();
 
   private boolean initialized = false;
 
@@ -56,11 +55,9 @@ public class TypeHelper implements Serializable {
   public void init(Environment env) throws Exception {
     if (this.locale == null) {
       LocalizationContext l10nCtx = EnvironmentUtil.getLocalizationContext(env);
-
       if (l10nCtx != null) {
         this.locale = l10nCtx.getLocale();
       }
-
       if (this.locale == null) {
         this.locale = Locale.getDefault();
       }
@@ -91,7 +88,7 @@ public class TypeHelper implements Serializable {
     if (!isInitialized()) {
       throw new IllegalStateException("Must be initialized first");
     }
-    return locale;
+    return this.locale;
   }
 
   public void setLocale(Locale locale) {
@@ -108,9 +105,8 @@ public class TypeHelper implements Serializable {
    * <p>
    * First, a custom comparator is returned if found.
    * <p>
-   * Otherwise a comparator is tryed to create according to the field type
-   * returned by {@link #getFieldType(String)}. Also {@link #isIgnoreCase()} and
-   * {@link #getLocale()} is considered for creating the new comparator.
+   * Otherwise a comparator is tryed to create according to the field type returned by {@link #getFieldType(String)}.
+   * Also {@link #isIgnoreCase()} and {@link #getLocale()} is considered for creating the new comparator.
    * 
    * @param fieldId field Id.
    * @return comparator for this field.
@@ -122,8 +118,7 @@ public class TypeHelper implements Serializable {
       Class fieldType = getFieldType(fieldId);
 
       if (fieldType == null) {
-        throw new AraneaRuntimeException(
-            "Could not resolve the value type of field '" + fieldId + "'");
+        throw new AraneaRuntimeException("Could not resolve the value type of field '" + fieldId + "'");
       }
 
       result = buildComparator(fieldType);
@@ -139,18 +134,17 @@ public class TypeHelper implements Serializable {
   /**
    * Returns the field type.
    * <p>
-   * Returns <code>null</code> if no type specifeid for this field or no such
-   * field exists.
+   * Returns <code>null</code> if no type specified for this field or no such field exists.
    * 
    * @param fieldId field Id.
    * @return type of this field.
    */
   public Class getFieldType(String fieldId) {
-    return (Class) this.types.get(fieldId);
+    return this.types.get(fieldId);
   }
 
   public Class removeFieldType(String fieldId) {
-    Class result = (Class) this.types.remove(fieldId);
+    Class result = this.types.remove(fieldId);
     fireChange();
     return result;
   }
@@ -161,11 +155,11 @@ public class TypeHelper implements Serializable {
   }
 
   public Comparator getCustomComparator(String fieldId) {
-    return (Comparator) this.comparators.get(fieldId);
+    return this.comparators.get(fieldId);
   }
 
   public Comparator removeCustomComparator(String fieldId) {
-    Comparator result = (Comparator) this.comparators.remove(fieldId);
+    Comparator result = this.comparators.remove(fieldId);
     fireChange();
     return result;
   }
@@ -175,15 +169,12 @@ public class TypeHelper implements Serializable {
     Assert.notNullParam(this, type, "type");
 
     if (String.class.equals(type)) {
-      return ComparatorFactory.getStringComparator(isNullFirst(),
-          isIgnoreCase(), getLocale());
+      return ComparatorFactory.getStringComparator(isNullFirst(), isIgnoreCase(), getLocale());
     }
 
     // Boolean is Comparable since Java 1.5
-    if (Boolean.class.equals(type)
-        && !Boolean.class.isAssignableFrom(Comparable.class)) {
-      return ComparatorFactory.getBooleanComparator(isNullFirst(),
-          isTrueFirst());
+    if (Boolean.class.equals(type) && !Boolean.class.isAssignableFrom(Comparable.class)) {
+      return ComparatorFactory.getBooleanComparator(isNullFirst(), isTrueFirst());
     }
 
     return ComparatorFactory.getDefault();
@@ -205,9 +196,8 @@ public class TypeHelper implements Serializable {
   }
 
   /**
-   * Returns whether the basic configuration that specifies which items are
-   * shown has changed since last call to this {@link TypeHelper}'s
-   * {@link TypeHelper#checkChanged()} method.
+   * Returns whether the basic configuration that specifies which items are shown has changed since last call to this
+   * {@link TypeHelper}'s {@link TypeHelper#checkChanged()} method.
    * 
    * @since 1.1
    */

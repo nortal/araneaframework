@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.filter;
 
@@ -24,24 +24,26 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
 
 /**
- * A filter which sets the character encoding of the request. 
+ * A filter which sets the character encoding of the request.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardRequestEncodingFilterService extends BaseFilterService {
+
   private String requestEncoding = "UTF-8";
-  
+
   /**
    * Sets the request encoding.
    */
   public void setRequestEncoding(String encoding) {
     Assert.notEmptyParam(encoding, "encoding");
-    
+
     this.requestEncoding = encoding;
   }
-  
+
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-  	((HttpInputData) input).setCharacterEncoding(requestEncoding);
-  	childService._getService().action(path, input, output);
+    ((HttpInputData) input).setCharacterEncoding(requestEncoding);
+    childService._getService().action(path, input, output);
   }
 }

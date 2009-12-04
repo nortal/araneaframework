@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.filter;
 
@@ -29,66 +29,85 @@ import org.araneaframework.http.WindowScrollPositionContext;
  * @author Taimo Peelo (taimo@webmedia.ee)
  */
 public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget implements WindowScrollPositionContext {
-  private static final Log log = LogFactory.getLog(StandardWindowScrollPositionFilterWidget.class);
-  
-  private static final long serialVersionUID = 1L;
-  protected LinkedList savedCoordinates = new LinkedList();
+
+  private static final Log LOG = LogFactory.getLog(StandardWindowScrollPositionFilterWidget.class);
+
+  protected LinkedList<String[]> savedCoordinates = new LinkedList<String[]>();
+
   protected String windowScrollX;
+
   protected String windowScrollY;
-  
+
   /* ************************************************************************
    * WindowScrollPositionContext interface methods.
-   * ************************************************************************/
+   * **********************************************************************
+   */
+
   public void reset() {
     resetCurrent();
-    savedCoordinates.clear();
-    log.debug("RESETTED all coords ");
+    this.savedCoordinates.clear();
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("RESETTED all coords ");
+    }
   }
-  
+
   public void pop() {
-    if (!savedCoordinates.isEmpty()) { 
-      String[] coords = (String[]) savedCoordinates.removeFirst();
-      windowScrollX = coords[0];
-      windowScrollY = coords[1];
-      
-      log.debug("popped to coords " + windowScrollX + " " + windowScrollY);
+    if (!this.savedCoordinates.isEmpty()) {
+      String[] coords = this.savedCoordinates.removeFirst();
+      this.windowScrollX = coords[0];
+      this.windowScrollY = coords[1];
+
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("popped to coords " + this.windowScrollX + " " + this.windowScrollY);
+      }
     }
   }
 
   public void push() {
-    savedCoordinates.addFirst(new String[] {windowScrollX, windowScrollY});
-    log.debug("pushed coords " + windowScrollX + " " + windowScrollY);
+    this.savedCoordinates.addFirst(new String[] { this.windowScrollX, this.windowScrollY });
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("pushed coords " + this.windowScrollX + " " + this.windowScrollY);
+    }
+
     resetCurrent();
   }
 
   public void resetCurrent() {
-    windowScrollX = windowScrollY = null;
+    this.windowScrollX = this.windowScrollY = null;
   }
 
   public String getX() {
-    return windowScrollX;
-  }
-  
-  public String getY() {
-    return windowScrollY;
-  }
-  
-  public void scrollTo(String x, String y) {
-    windowScrollX = x;
-    windowScrollY = y;
-    log.debug("scrolled to " + x + " " + y);
+    return this.windowScrollX;
   }
 
-  /* *********************************************************************** */
+  public String getY() {
+    return this.windowScrollY;
+  }
+
+  public void scrollTo(String x, String y) {
+    this.windowScrollX = x;
+    this.windowScrollY = y;
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("scrolled to " + x + " " + y);
+    }
+  }
+
+  @Override
   protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), WindowScrollPositionContext.class, this);
   }
 
+  @Override
   protected void update(InputData input) throws Exception {
-    windowScrollX = (String) input.getGlobalData().get(WINDOW_SCROLL_X_KEY);
-    windowScrollY = (String) input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
-    
-    log.debug("REQUEST COORDS READ TO BE  to " + windowScrollX + " " + windowScrollY);
+    this.windowScrollX = input.getGlobalData().get(WINDOW_SCROLL_X_KEY);
+    this.windowScrollY = input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("REQUEST COORDS READ TO BE  to " + this.windowScrollX + " " + this.windowScrollY);
+    }
 
     super.update(input);
   }

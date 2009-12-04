@@ -1,0 +1,63 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty"
+		description="Generates the tabs for tab container with given ID." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" required="true"
+		description="The ID of a tabs container widget." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<ui:widgetContext id="${id}">
+
+		<ui:h1 labelId="${widget.selectedTab.tabContentWidget.header}"/>
+
+		<ul class="tabs clear">
+
+			<c:forEach items="${widget.tabs}" var="tabsEntry">
+				<c:set var="tab" value="${tabsEntry.value}" />
+				<c:set var="styleClass" value="" />
+
+				<c:choose>
+					<c:when test="${tab.selected}">
+						<c:set var="styleClass" value="active" />
+					</c:when>
+					<c:when test="${tab.tabDisabled}">
+						<c:set var="styleClass" value="disabled" />
+					</c:when>
+				</c:choose>
+
+				<ui:element name="li">
+					<ui:attribute name="class" value="${styleClass}"/>
+					<ui:elementContent>
+						<c:choose>
+							<c:when test="${tab.tabDisabled}">
+								<a><span>${tab.label}</span></a>
+							</c:when>
+							<c:otherwise>
+								<ui:eventLinkButton eventId="activateTab"
+										eventTarget="${widget.scope}"
+										eventParam="${tab.scope.id}">
+									<span>${tab.label}</span>
+								</ui:eventLinkButton>
+							</c:otherwise>
+						</c:choose>
+					</ui:elementContent>
+				</ui:element>
+			</c:forEach>
+
+		</ul>
+
+		<ui:messages/>
+
+		<ui:widgetInclude id="${widget.selectedTab.scope.id}.tcw" />
+
+	</ui:widgetContext>
+
+</jsp:root>

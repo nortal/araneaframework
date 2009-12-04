@@ -1,0 +1,22 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes a table row and renders the content inside." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="id" description="An optional ID for the HTML element."/>
+	<jsp:directive.attribute name="styleClass" description="An optional style class for the HTML element."/>
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<ui:element name="tr">
+		<ui:attribute name="id" value="${id}"/>
+		<ui:attribute name="class" value="${styleClass}"/>
+		<ui:elementContent>
+			<jsp:doBody/>
+		</ui:elementContent>
+	</ui:element>
+
+</jsp:root>

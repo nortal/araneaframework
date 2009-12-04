@@ -42,7 +42,7 @@ public abstract class ClassLoaderUtil {
    * @return acquired classloader.
    */
   public static ClassLoader getDefaultClassLoader() {
-    return (ClassLoader) getClassLoaders().iterator().next();
+    return getClassLoaders().get(0);
   }
 
   public static InputStream getResourceAsStream(String name) {
@@ -63,11 +63,10 @@ public abstract class ClassLoaderUtil {
    * 
    * @throws ClassNotFoundException
    */
-  public static Class loadClass(String name) throws ClassNotFoundException {
+  public static Class<?> loadClass(String name) throws ClassNotFoundException {
     Assert.notNullParam(name, "name");
-    List loaders = getClassLoaders();
-    for (Iterator iter = loaders.iterator(); iter.hasNext();) {
-      ClassLoader loader = (ClassLoader) iter.next();
+    for (Iterator<ClassLoader> iter = getClassLoaders().iterator(); iter.hasNext();) {
+      ClassLoader loader = iter.next();
       try {
         return loader.loadClass(name);
       } catch (ClassNotFoundException e) {
@@ -85,12 +84,11 @@ public abstract class ClassLoaderUtil {
    */
   public static URL findResource(final String name) {
     Assert.notNullParam(name, "name");
-    List loaders = getClassLoaders();
-    for (Iterator iter = loaders.iterator(); iter.hasNext();) {
-      ClassLoader loader = (ClassLoader) iter.next();
+    for (ClassLoader loader : getClassLoaders()) {
       URL url = loader.getResource(name);
-      if (url != null)
+      if (url != null) {
         return url;
+      }
     }
     return null;
   }
@@ -99,13 +97,13 @@ public abstract class ClassLoaderUtil {
    * Searches through all the ClassLoaders provided by the getClassLoaders() for
    * the resources identified by name. Returns an union of all the found URLs.
    */
-  public static Enumeration findResources(final String name) throws IOException {
+  @SuppressWarnings("unchecked")
+  public static Enumeration<ClassLoader> findResources(final String name) throws IOException {
     Assert.notNullParam(name, "name");
-    List list = new ArrayList();
-    List loaders = getClassLoaders();
-    for (Iterator iter = loaders.iterator(); iter.hasNext();) {
-      ClassLoader loader = (ClassLoader) iter.next();
-      Enumeration resources = loader.getResources(name);
+    List<URL> list = new ArrayList<URL>();
+    List<ClassLoader> loaders = getClassLoaders();
+    for (ClassLoader loader : loaders) {
+      Enumeration<URL> resources = loader.getResources(name);
       list.addAll(EnumerationUtils.toList(resources));
     }
     return Collections.enumeration(loaders);
@@ -115,13 +113,13 @@ public abstract class ClassLoaderUtil {
    * Returns a list of ClassLoaders in the order that Aranea searches for
    * resources.
    */
-  public static List getClassLoaders() {
-    List rtrn = new ArrayList();
+  public static List<ClassLoader> getClassLoaders() {
+    List<ClassLoader> loaders = new ArrayList<ClassLoader>();
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     if (classLoader != null) {
-      rtrn.add(classLoader);
+      loaders.add(classLoader);
     }
-    rtrn.add(ClassLoaderUtil.class.getClassLoader());
-    return rtrn;
+    loaders.add(ClassLoaderUtil.class.getClassLoader());
+    return loaders;
   }
 }

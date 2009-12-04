@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.common.tags.wizard;
 
@@ -44,6 +44,7 @@ public class WizardFooterTag extends BaseTag {
   public static final String WIZARD_SUBMIT_LABEL_ID = "list.submit";
   public static final String WIZARD_CANCEL_LABEL_ID = "list.cancel";
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
 		  	
   	WizardContext wizard = (WizardContext) getContextWidget();

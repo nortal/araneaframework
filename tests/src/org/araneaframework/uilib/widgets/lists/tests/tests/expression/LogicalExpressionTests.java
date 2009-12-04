@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.tests.expression;
 
@@ -30,7 +30,7 @@ import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
 
 public class LogicalExpressionTests extends TestCase {
-	private static final Log log = LogFactory.getLog(LogicalExpressionTests.class);
+	private static final Log LOG = LogFactory.getLog(LogicalExpressionTests.class);
 
 	private VariableResolver resolver;
 
@@ -38,15 +38,17 @@ public class LogicalExpressionTests extends TestCase {
 	private Expression falseExpr;
 	private Expression notBoolExpr;
 
-	public void setUp() {
+	@Override
+  public void setUp() {
 		this.resolver = new MockVariableResolver();
 		
-		this.trueExpr = new MockValueExpression(Boolean.TRUE);
-		this.falseExpr = new MockValueExpression(Boolean.FALSE);
-		this.notBoolExpr = new MockValueExpression(new Long(0));
+		this.trueExpr = new MockValueExpression<Boolean>(true);
+		this.falseExpr = new MockValueExpression<Boolean>(false);
+		this.notBoolExpr = new MockValueExpression<Long>(0L);
 	}
 
-	public void tearDown() {
+	@Override
+  public void tearDown() {
 		this.resolver = null;
 		this.trueExpr = null;
 		this.falseExpr = null;
@@ -54,7 +56,7 @@ public class LogicalExpressionTests extends TestCase {
 	}
 
 	public void testAndExpression() throws ExpressionEvaluationException {
-		log.debug("Testing AndExpression");
+		LOG.debug("Testing AndExpression");
 		try {
 			new AndExpression().evaluate(this.resolver);
 			fail("AndExpression must throw an exception, because it has no child expressions");
@@ -89,11 +91,11 @@ public class LogicalExpressionTests extends TestCase {
 	}
 
 	public void testOrExpression() throws ExpressionEvaluationException {
-		log.debug("Testing OrExpression");
+		LOG.debug("Testing OrExpression");
 		try {
 			new OrExpression().evaluate(this.resolver);
 			fail("OrExpression must throw an exception");
-		} catch (ExpressionEvaluationException e) {
+		} catch (IllegalArgumentException e) {
 			// normal
 		}
 		try {
@@ -124,11 +126,11 @@ public class LogicalExpressionTests extends TestCase {
 	}
 
 	public void testNotExpression() throws ExpressionEvaluationException {
-		log.debug("Testing NotExpression");
+		LOG.debug("Testing NotExpression");
 		try {
 			new NotExpression(null).evaluate(this.resolver);
 			fail("NotExpression must throw an exception");
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			// normal
 		}
 		try {

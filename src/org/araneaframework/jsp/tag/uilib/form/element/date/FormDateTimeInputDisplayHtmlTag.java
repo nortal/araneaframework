@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
@@ -32,9 +32,10 @@ import org.araneaframework.uilib.form.control.DateTimeControl;
 public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
 
   {
-    baseStyleClass = "aranea-datetime-display";
+    this.baseStyleClass = "aranea-datetime-display";
   }
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlTypes("DateTimeControl", "JodaDateTimeControl");
 

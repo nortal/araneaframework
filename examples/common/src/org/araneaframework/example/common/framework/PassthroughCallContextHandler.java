@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.common.framework;
 
@@ -20,25 +20,23 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContext.Handler;
 
 /**
- * This CallContext.Handler implementation passes return and cancel calls to the
- * next handler in specified CallContext.
+ * This CallContext.Handler implementation passes return and cancel calls to the next handler in specified CallContext.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
-public class PassthroughCallContextHandler implements Handler {
+public class PassthroughCallContextHandler<T> implements Handler<T> {
 
-	private FlowContext ctx;
+  private FlowContext ctx;
 
-	public PassthroughCallContextHandler(FlowContext ctx) {
-		this.ctx = ctx;
-	}
+  public PassthroughCallContextHandler(FlowContext ctx) {
+    this.ctx = ctx;
+  }
 
-	public void onFinish(Object returnValue) throws Exception {
-		ctx.finish(returnValue);
-	}
+  public void onFinish(T returnValue) throws Exception {
+    this.ctx.finish(returnValue);
+  }
 
-	public void onCancel() throws Exception {
-		ctx.cancel();
-	}
-
+  public void onCancel() throws Exception {
+    this.ctx.cancel();
+  }
 }

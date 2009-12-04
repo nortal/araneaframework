@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
-
+ */
 
 package org.araneaframework.jsp.tag.basic;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Writer;
 import org.araneaframework.http.WindowScrollPositionContext;
@@ -28,36 +29,35 @@ import org.araneaframework.jsp.util.JspUtil;
  * @jsp.tag
  *   name = "registerScrollHandler"
  *   body-content = "empty"
- *   description = "Registers popups present in current popupcontext for opening. For this tag to work, produced HTML file BODY should have attribute onload='processLoadEvents()'".
+ *   description = "Registers popups present in current popup-context for opening. For this tag to work, produced HTML file BODY should have attribute onload='processLoadEvents()'".
  */
 public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
-   protected int doEndTag(Writer out) throws Exception {
-     WindowScrollPositionContext scrollHandler = getEnvironment().getEntry(WindowScrollPositionContext.class);
 
-     if (scrollHandler != null) {
-       registerScrollHandler(out, scrollHandler);
-     }
-       
-	 return EVAL_PAGE;
-   }
-   
-   protected void registerScrollHandler(Writer out, WindowScrollPositionContext scrollHandler) throws Exception {
-     String x = scrollHandler.getX();
-     String y = scrollHandler.getY();
+  protected static final String DEFAULT_POS = "0";
 
-     JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_X_KEY, x != null ? x : "0");
-     JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY, y != null ? y : "0");
+  @Override
+  protected int doEndTag(Writer out) throws Exception {
+    WindowScrollPositionContext scrollHandler = getEnvironment().getEntry(WindowScrollPositionContext.class);
 
-     out.write("<script type=\"text/javascript\">");
-     // ensure restoration of scroll position
-     out.write("_ap.addClientLoadEvent(function() { var form = _ap.getSystemForm();" +
-    		" if (form." +  WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + " && form."+WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ") "+
-     		"Aranea.UI.scrollToCoordinates("+x + ","+y+");});");
-    		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_X_KEY + ".value, " +
-     		//"form."+ WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY + ".value);});");
-     
-     // ensure that the scroll coordinates are submitted with request
-     out.write("_ap.addSubmitCallback(function() {Aranea.UI.saveScrollCoordinates()});");
-     out.write("</script>");
-   }
+    if (scrollHandler != null) {
+      registerScrollHandler(out, scrollHandler);
+    }
+
+    return EVAL_PAGE;
+  }
+
+  protected void registerScrollHandler(Writer out, WindowScrollPositionContext scrollHandler) throws Exception {
+    String x = StringUtils.isNumeric(scrollHandler.getX()) ? scrollHandler.getX() : DEFAULT_POS;
+    String y = StringUtils.isNumeric(scrollHandler.getY()) ? scrollHandler.getY() : DEFAULT_POS;
+
+    JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_X_KEY, x);
+    JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY, y);
+
+    // ensure restoration of scroll position:
+    out.write("<script type=\"text/javascript\">Aranea.Util.setWindowCoordinates(");
+    out.write(x);
+    out.write(",");
+    out.write(y);
+    out.write(");</script>");
+  }
 }

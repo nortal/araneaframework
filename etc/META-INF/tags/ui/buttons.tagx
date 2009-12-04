@@ -1,0 +1,18 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.1">
+
+	<jsp:directive.tag description="Wrapper for buttons in buttonContainer." />
+
+	<jsp:directive.attribute name="secondary" type="java.lang.Boolean"
+		description="Whether this container is not for primary buttons, e.g. is for back-button." />
+
+	<c:choose>
+		<c:when test="${empty secondary or not secondary}">
+			<p class="primary"><jsp:doBody /></p>
+		</c:when>
+		<c:otherwise>
+			<p class="secondary"><jsp:doBody /></p>
+		</c:otherwise>
+	</c:choose>
+
+</jsp:root>

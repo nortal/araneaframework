@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.tag;
 
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 
@@ -33,23 +32,25 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	protected String styleClass = null;
 	protected String baseStyleClass = null;
 
-	protected Map attributes = new HashMap();
+	protected Map<String, Object> attributes = new HashMap<String, Object>();
 	
-	protected int doStartTag(Writer out) throws Exception {
+	@Override
+  protected int doStartTag(Writer out) throws Exception {
 		super.doStartTag(out);
 		addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
 		addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 		return EVAL_BODY_INCLUDE;
 	}
 	
-	public void setPageContext(PageContext pageContext) {
+	@Override
+  public void setPageContext(PageContext pageContext) {
 		super.setPageContext(pageContext);
 	}
 
 	/**
 	 * Callback: add attribute.
 	 */
-	public void addAttribute(String name, String value) throws JspException {
+	public void addAttribute(String name, String value){
 		if (value == null)
 			attributes.remove(name);
 		else
@@ -63,8 +64,8 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	 *   required = "false" 
 	 *   description = "Inline style for HTML tag."
 	 */
-	public void setStyle(String style) throws JspException {
-		this.style = (String) evaluate("style", style, String.class);
+	public void setStyle(String style){
+		this.style = evaluate("style", style, String.class);
 	}
 	
 	public String getStyle() {
@@ -77,9 +78,9 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	 *   required = "false" 
 	 *   description = "CSS class for the tag."
 	 */
-	public void setStyleClass(String styleClass) throws JspException {
+	public void setStyleClass(String styleClass) {
 		if (styleClass != null)
-			this.styleClass = (String) evaluate("styleClass", styleClass, String.class);
+			this.styleClass = evaluate("styleClass", styleClass, String.class);
 	}
 
 	/**

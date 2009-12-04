@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
+
 package org.araneaframework.uilib.widgets.lists.tests.mock;
 
 import java.util.Comparator;
@@ -26,48 +27,49 @@ import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.util.Event;
 
 public class MockFilterContext implements FilterContext {
-	
-	private FormWidget form = new FormWidget();
-	private ConfigurationContext configuration = new MockConfiguration();
 
-	public FormWidget getForm() {
-		return form;
-	}
+  private FormWidget form = new FormWidget();
 
-	public boolean isStrict() {
-		return false;
-	}
+  private ConfigurationContext configuration = new MockConfiguration();
 
-	public ConfigurationContext getConfiguration() {
-		return configuration;
-	}
+  public FormWidget getForm() {
+    return this.form;
+  }
 
-	public Comparator getFieldComparator(String fieldId) {
-		return ComparatorFactory.getDefault();
-	}
+  public boolean isStrict() {
+    return false;
+  }
 
-	public String getFieldLabel(String fieldId) {
-		return null;
-	}
+  public ConfigurationContext getConfiguration() {
+    return this.configuration;
+  }
 
-	public Class getFieldType(String fieldId) {
-		return null;
-	}
+  public Comparator<?> getFieldComparator(String fieldId) {
+    return ComparatorFactory.getDefault();
+  }
 
-	public Locale getLocale() {
-		return Locale.getDefault();
-	}
+  public String getFieldLabel(String fieldId) {
+    return null;
+  }
 
-	public boolean isIgnoreCase() {
-		return true;
-	}
+  public Class<?> getFieldType(String fieldId) {
+    return null;
+  }
 
-	public void setLabelForElement(FormElement formElement, String fieldId) {
-		formElement.setLabel(fieldId);
-	}
+  public Locale getLocale() {
+    return Locale.getDefault();
+  }
 
-	public void addInitEvent(Event event) {
-		event.run();
-	}
+  public boolean isIgnoreCase() {
+    return true;
+  }
+
+  public void setLabelForElement(FormElement<?, ?> formElement, String fieldId) {
+    formElement.setLabel(fieldId);
+  }
+
+  public void addInitEvent(Event event) {
+    event.run();
+  }
 
 }

@@ -9,7 +9,7 @@ import org.araneaframework.http.HttpInputData;
 
 public class MockHttpInputData extends MockInputData implements HttpInputData {
 
-  public MockHttpInputData(Map data) {
+  public MockHttpInputData(Map<String, String> data) {
     super(data);
   }
 
@@ -48,7 +48,7 @@ public class MockHttpInputData extends MockInputData implements HttpInputData {
     throw new NotImplementedException();
   }
 
-  public Iterator getParameterNames() {
+  public Iterator<String> getParameterNames() {
     // TODO Auto-generated method stub
     throw new NotImplementedException();
   }
@@ -68,7 +68,7 @@ public class MockHttpInputData extends MockInputData implements HttpInputData {
     throw new NotImplementedException();
   }
 
-  public void popPathPrefix() {
+  public String popPathPrefix() {
     // TODO Auto-generated method stub
     throw new NotImplementedException();
   }
@@ -83,9 +83,10 @@ public class MockHttpInputData extends MockInputData implements HttpInputData {
     throw new NotImplementedException();
   }
 
-  public void setUseFullURL(boolean useFullURL) {
+  public String getSimplePath() {
     // TODO Auto-generated method stub
     throw new NotImplementedException();
   }
 
+  public void setUseFullURL(boolean useFullURL) {}
 }

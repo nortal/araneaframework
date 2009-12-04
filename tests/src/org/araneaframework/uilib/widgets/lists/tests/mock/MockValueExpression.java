@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.widgets.lists.tests.mock;
 
@@ -20,12 +20,11 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
-public class MockValueExpression implements Expression, Value {
-	private static final long serialVersionUID = 1L;
+public class MockValueExpression<T> implements Expression, Value<T> {
 
-	private Object value;
+	private T value;
 
-	public MockValueExpression(Object value) {
+	public MockValueExpression(T value) {
 		this.value = value;
 	}
 
@@ -33,7 +32,7 @@ public class MockValueExpression implements Expression, Value {
 		return null;
 	}
 
-	public Object getValue() {
+	public T getValue() {
 		return this.value;
 	}
 

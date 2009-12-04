@@ -16,6 +16,8 @@
 
 package org.araneaframework.backend.list.memorybased.expression.compare;
 
+import org.araneaframework.core.Assert;
+
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
@@ -23,21 +25,15 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class IsNullExpression implements CompositeExpression {
 
-  private static final long serialVersionUID = 1L;
-
   protected Expression expr;
 
   public IsNullExpression(Expression expr) {
-    if (expr == null) {
-      throw new IllegalArgumentException("Expression must be provided");
-    }
+    Assert.notNullParam(expr, "Expression must be provided");
     this.expr = expr;
   }
 
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-    return (this.expr.evaluate(resolver) == null) ? Boolean.TRUE
-        : Boolean.FALSE;
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
+    return this.expr.evaluate(resolver) == null;
   }
 
   public Expression[] getChildren() {

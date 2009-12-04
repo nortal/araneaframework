@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework;
 
@@ -30,7 +30,7 @@ import java.io.Serializable;
  * <br>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Widget extends Service, Serializable {
   public Interface _getWidget();
@@ -48,13 +48,12 @@ public interface Widget extends Service, Serializable {
      * Widget received an event. 
      * @param path
      * @param input
-     * @throws Exception
      */
     public void event(Path path, InputData input);
 
     /**
      * Widget outputs its graphical representation to OutputData. This method is
-     * idempotent and thus can be called mupltiple times.
+     * idempotent and thus can be called multiple times.
      */
     public void render(OutputData output) throws Exception;
   } 

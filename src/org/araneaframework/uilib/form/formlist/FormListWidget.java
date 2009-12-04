@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,40 +12,51 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.uilib.form.formlist;
+
+import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
+
+import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
+
+import org.araneaframework.uilib.form.formlist.model.ListFormListModel;
 
 import org.araneaframework.uilib.form.FormWidget;
 
 /**
- * Editable rows widget that is used to handle simultenous editing of multiple
- * forms with same structure.
+ * Editable rows widget that is used to handle simultaneous editing of multiple forms with same structure.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class FormListWidget extends BaseFormListWidget {
-
-  private static final long serialVersionUID = 1L;
-
-  // *******************************************************************
-  // CONSTRUCTORS
-  // *******************************************************************
+public class FormListWidget<K, R> extends BaseFormListWidget<K, R> {
 
   /**
-   * @param rowHandler row handler.
+   * Creates a new <code>FormListWidget</code> using the given <code>rowHandler</code>. Note that
+   * <code>rowHandler</code> must not be null.
+   * 
+   * @param rowHandler The row handler to be used with this <code>FormListWidget</code>.
    */
-  public FormListWidget(FormRowHandler rowHandler) {
+  public FormListWidget(FormRowHandler<K, R> rowHandler) {
     super(rowHandler);
   }
 
   /**
-   * @param rowHandler row handler.
+   * Creates a new <code>FormListWidget</code> using the given <code>rowHandler</code> and <code>listModel</code>. Note
+   * that <code>rowHandler</code> must not be null. The <code>listModel</code> can be used to fill the form with rows.
+   * 
+   * @param rowHandler The row handler to be used with this <code>FormListWidget</code>.
+   * @param listModel An object that implements {@link FormListModel} and provides the rows to this
+   *          <code>FormListWidget</code>.
+   * @see ListFormListModel
+   * @see ListWidgetFormListModel
+   * @see MapFormListModel
    */
-  public FormListWidget(FormRowHandler rowHandler, FormListModel model) {
-    super(rowHandler, model);
+  public FormListWidget(FormRowHandler<K, R> rowHandler, FormListModel<R> listModel) {
+    super(rowHandler, listModel);
   }
 
+  @Override
   protected FormWidget buildAddForm() {
     return new FormWidget();
   }

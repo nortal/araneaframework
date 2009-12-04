@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,12 @@
  */
 
 package org.araneaframework.integration.spring;
+
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.commons.logging.Log;
+
+import org.springframework.beans.factory.config.BeanDefinition;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -41,12 +47,12 @@ import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * Aranea dispatcher servlet that assembles Aranea components according to the
- * configuration specified in Spring bean configuration files.
+ * Aranea dispatcher servlet that assembles Aranea components according to the configuration specified in Spring bean
+ * configuration files.
  */
 public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
-  private static final long serialVersionUID = 1L;
+  private static final Log LOG = LogFactory.getLog(AraneaSpringDispatcherServlet.class);
 
   private static boolean isSpringWebPresent = true;
 
@@ -82,6 +88,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   protected BeanFactory beanFactory;
 
+  @Override
   public void init() throws ServletException {
     // Reading init-param's
     String araneaCustomConfXml = DEFAULT_ARANEA_CUSTOM_CONF_XML;
@@ -96,8 +103,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     }
 
     if (isSpringWebPresent()) {
-      isSpringWebPresent = WebApplicationContextUtils
-          .getWebApplicationContext(getServletContext()) != null;
+      isSpringWebPresent = WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null;
     }
 
     if (isSpringWebPresent()) {
@@ -109,9 +115,12 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     }
 
     // Loading default Aranea configuration
-    XmlBeanDefinitionReader confReader =
-      new XmlBeanDefinitionReader((BeanDefinitionRegistry) this.beanFactory);
+    XmlBeanDefinitionReader confReader = new XmlBeanDefinitionReader((BeanDefinitionRegistry) this.beanFactory);
     confReader.loadBeanDefinitions(new ClassPathResource(ARANEA_DEFAULT_CONF_XML));
+
+    if (LOG.isInfoEnabled()) {
+      LOG.info("Loaded default Aranea bean definitions from " + ARANEA_DEFAULT_CONF_XML + ".");
+    }
 
     // Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
@@ -134,8 +143,11 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     // Loading custom configuration
     try {
       if (getServletContext().getResource(araneaCustomConfXml) != null) {
-        confReader.loadBeanDefinitions(
-            new ServletContextResource(getServletContext(), araneaCustomConfXml));
+        confReader.loadBeanDefinitions(new ServletContextResource(getServletContext(), araneaCustomConfXml));
+
+        if (LOG.isInfoEnabled()) {
+          LOG.info("Updated default Aranea bean definitions with beans from " + araneaCustomConfXml + ".");
+        }
       }
     } catch (MalformedURLException e) {
       throw new AraneaRuntimeException(e);
@@ -146,18 +158,16 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
     // Reading the starting widget from an init parameter
     if (getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER) != null) {
-      Class startClass;
+      Class<?> startClass;
       try {
-        startClass = ClassLoaderUtil.loadClass(getServletConfig()
-            .getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
+        startClass = ClassLoaderUtil.loadClass(getServletConfig().getInitParameter(ARANEA_START_CLASS_INIT_PARAMETER));
       } catch (ClassNotFoundException e) {
         throw new AraneaRuntimeException(e);
       }
 
       RootBeanDefinition startBeanDef = new RootBeanDefinition(startClass);
-      startBeanDef.setSingleton(false);
-      ((BeanDefinitionRegistry) this.beanFactory).registerBeanDefinition(
-          ARANEA_START, startBeanDef);
+      startBeanDef.setScope(BeanDefinition.SCOPE_SINGLETON);
+      ((BeanDefinitionRegistry) this.beanFactory).registerBeanDefinition(ARANEA_START, startBeanDef);
     }
 
     super.init();
@@ -167,23 +177,23 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     return getServletConfig().getInitParameter(paramName);
   }
 
+  @Override
   protected ServletServiceAdapterComponent buildRootComponent() {
     // Getting the Aranea root component name
     String araneaRoot = DEFAULT_ARANEA_ROOT;
     if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER) != null) {
-      araneaRoot = getServletConfig().getInitParameter(
-          ARANEA_ROOT_INIT_PARAMETER);
+      araneaRoot = getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER);
     }
 
     // Creating the root bean
-    ServletServiceAdapterComponent adapter =
-        (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
+    ServletServiceAdapterComponent adapter = (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
 
     return adapter;
   }
 
-  protected Map getEnvironmentEntries() {
-    Map result = new HashMap();
+  @Override
+  protected Map<Class<?>, Object> getEnvironmentEntries() {
+    Map<Class<?>, Object> result = new HashMap<Class<?>, Object>();
     result.put(BeanFactory.class, this.beanFactory);
     if (isSpringWebPresent()) {
       result.put(ApplicationContext.class, this.webCtx);
@@ -193,10 +203,9 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   }
 
   /**
-   * Returns <code>true</code> if Spring web application context is present.
-   * When web application context is present, dispatcher servlet will use it,
-   * instead of creating new BeanFactory itself. This method should only be
-   * called after {@link AraneaSpringDispatcherServlet#init()} has run.
+   * Returns <code>true</code> if Spring web application context is present. When web application context is present,
+   * dispatcher servlet will use it, instead of creating new BeanFactory itself. This method should only be called after
+   * {@link AraneaSpringDispatcherServlet#init()} has run.
    * 
    * @since 1.1
    */

@@ -27,25 +27,20 @@ import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.FilterService;
 
 /**
- * A filter service is a Service which filters requests to its child service. A
- * filter overrides one of the methods:
+ * A filter service is a Service which filters requests to its child service. A filter overrides one of the methods:
  * <ul>
  * <li><code>action(Path, InputData, OutputData)</code></li>
  * </ul>
- * and does the filtering by allowing the action to be invoked on the child or
- * not. This class is a skeleton which lets all the requests through, sets the
- * child, handles the initilization and destroying of the child.
+ * and does the filtering by allowing the action to be invoked on the child or not. This class is a skeleton which lets
+ * all the requests through, sets the child, handles the initilization and destroying of the child.
  * <p>
- * The child is initilized with <code>getChildServiceEnvironment()</code>
- * which by default returns this component's Environment. For alternate
- * environments it should be overridden.
+ * The child is initilized with <code>getChildServiceEnvironment()</code> which by default returns this component's
+ * Environment. For alternate environments it should be overridden.
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class BaseFilterService extends BaseService implements FilterService {
-
-  private static final long serialVersionUID = 1L;
 
   protected Service childService;
 
@@ -64,27 +59,29 @@ public class BaseFilterService extends BaseService implements FilterService {
     this.childService = childService;
   }
 
+  @Override
   protected void init() throws Exception {
-    Assert.notNull(this, childService, "Filter cannot have a null child!");
-    childService._getComponent().init(getScope(), getChildEnvironment());
+    Assert.notNull(this, this.childService, "Filter cannot have a null child!");
+    this.childService._getComponent().init(getScope(), getChildEnvironment());
   }
 
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
     this.childService._getService().action(path, input, output);
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
-    message.send(null, childService);
+    message.send(null, this.childService);
   }
 
+  @Override
   protected void destroy() throws Exception {
-    childService._getComponent().destroy();
+    this.childService._getComponent().destroy();
   }
 
   /**
-   * Returns the Environment of this service by default. The child is initilized
-   * with this method. Meant for overriding.
+   * Returns the Environment of this service by default. The child is initilized with this method. Meant for overriding.
    */
   protected Environment getChildEnvironment() {
     return getEnvironment();

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,33 +12,48 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.support;
 
-import java.io.Serializable;
+import org.apache.commons.lang.ClassUtils;
 
+import java.io.Serializable;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
- * This class defines the <code>Map</code> key, that is used to find a
- * converter between data held in {@link org.araneaframework.uilib.form.Control} and 
- * corresponding {@link org.araneaframework.uilib.form.Data}.
+ * This class defines the <code>Map</code> key, that is used to find a converter between data held in
+ * {@link org.araneaframework.uilib.form.Control} and corresponding {@link org.araneaframework.uilib.form.Data}.
  * 
  * @see org.araneaframework.uilib.form.converter.ConverterFactory
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class ConverterKey implements Serializable {
-  private String fromType;
-  private String toType;
+public class ConverterKey <C, D> implements Serializable {
+
+  private Class<C> fromType;
+
+  private Class<D> toType;
+
+  /**
+   * Creates the class, initializing both "to" and "from" types.
+   * 
+   * @param fromType the type from which the conversion goes.
+   * @param toType the type to which the conversion goes.
+   */
+  @SuppressWarnings("unchecked")
+  public ConverterKey(Class<C> fromType, Class<D> toType) {
+    this.fromType = ClassUtils.primitiveToWrapper(fromType);
+    this.toType = ClassUtils.primitiveToWrapper(toType);
+  }
 
   /**
    * Returns the type from which the conversion goes.
    * 
    * @return the type from which the conversion goes.
    */
-  public String getFromType() {
-    return fromType;
+  public Class<C> getFromType() {
+    return this.fromType;
   }
 
   /**
@@ -46,48 +61,41 @@ public class ConverterKey implements Serializable {
    * 
    * @return the type to which the conversion goes.
    */
-  public String getToType() {
-    return toType;
+  public Class<D> getToType() {
+    return this.toType;
+  }
+
+  public ConverterKey<D, C> reverse() {
+    return new ConverterKey<D, C>(toType, fromType);
   }
 
   /**
-	 * Creates the class, initializing both "to" and "from" types.
-	 * 
-	 * @param fromType
-	 *          the type from which the conversion goes.
-	 * @param toType
-	 *          the type to which the conversion goes.
-	 */
-  public ConverterKey(String fromType, String toType) {
-    this.fromType = fromType;
-    this.toType = toType;
-  }
-
-  /**
-   * Implements the {@link Object#equals(java.lang.Object)} method, using both
-   * types.
+   * Implements the {@link Object#equals(java.lang.Object)} method, using both types.
    */
+  @Override
+  @SuppressWarnings("unchecked")
   public boolean equals(Object o) {
-    if (!(o instanceof ConverterKey))
-      return false;
-    ConverterKey inst = (ConverterKey) o;
-    if (!(this.fromType == null ? inst.fromType == null : this.fromType.equals(inst.fromType)))
-      return false;
-    if (!(this.toType == null ? inst.toType == null : this.toType.equals(inst.toType)))
-      return false;
-    return true;
+    if (o instanceof ConverterKey) {
+      ConverterKey other = (ConverterKey) o;
+      return new EqualsBuilder().append(this.fromType, other.fromType).append(this.toType, other.toType).isEquals();
+    }
+    return false;
   }
 
   /**
-   * Implemets the {@link Object#hashCode()} method, using both
-   * types. 
-   * 
-   * 
-	 */
+   * Implements the {@link Object#hashCode()} method, using both types.
+   */
+  @Override
   public int hashCode() {
-    int result = 17;
-    result = 37 * result + fromType.hashCode();
-    result = 37 * result + toType.hashCode();
-    return result;
+    return 5 * this.fromType.hashCode() + 7 * this.toType.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append(this.fromType == null ? "null" : this.fromType.getSimpleName());
+    sb.append("->");
+    sb.append(this.toType == null ? "null" : this.toType.getSimpleName());
+    return sb.toString();
   }
 }

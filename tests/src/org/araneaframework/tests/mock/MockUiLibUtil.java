@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.tests.mock;
+
+import org.araneaframework.Path;
+
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import org.araneaframework.Widget;
@@ -24,38 +28,38 @@ import org.araneaframework.http.core.StandardServletInputData;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class MockUiLibUtil {
+
   public static void emulateHandleEvent(Widget widget, String eventId, String eventParameter) throws Exception {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    
+
     String eventPath = "";
     String eventListenerId = eventId;
-    
-    int lastDot = eventId.lastIndexOf(".");
-    
-    if (lastDot != -1) {
-      eventPath = eventId.substring(0, lastDot);
-      eventListenerId = eventId.substring(lastDot + 1);
+
+    if (StringUtils.contains(eventId, Path.SEPARATOR)) {
+      eventPath = StringUtils.substringBeforeLast(eventId, Path.SEPARATOR);
+      eventListenerId = StringUtils.substringAfterLast(eventId, Path.SEPARATOR);
     }
-    
+
     request.addParameter(ApplicationWidget.EVENT_PARAMETER_KEY, eventParameter);
     request.addParameter(ApplicationWidget.EVENT_HANDLER_ID_KEY, eventListenerId);
     StandardServletInputData input = new StandardServletInputData(request);
-    
+
     widget._getWidget().event(new StandardPath(eventPath), input);
   }
-  
-  public static void emulateHandleEventForControl(Widget widget, String eventId, String eventParameter) throws Exception {
+
+  public static void emulateHandleEventForControl(Widget widget, String eventId, String eventParameter)
+      throws Exception {
     MockHttpServletRequest request = new MockHttpServletRequest();
-    
+
     request.addParameter(ApplicationWidget.EVENT_PARAMETER_KEY, eventParameter);
-   StandardServletInputData input = new StandardServletInputData(request);
-    
+    StandardServletInputData input = new StandardServletInputData(request);
+
     widget._getWidget().event(new StandardPath(eventId), input);
   }
-  
-  public static void emulateHandleRequest(Widget widget, String widgetId, HttpServletRequest request) throws Exception {
+
+  public static void emulateHandleRequest(Widget widget, @SuppressWarnings("unused") String widgetId,
+      HttpServletRequest request) throws Exception {
     StandardServletInputData input = new StandardServletInputData(request);
-    
     widget._getWidget().update(input);
-  }  
+  }
 }

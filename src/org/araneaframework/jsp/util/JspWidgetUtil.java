@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.jsp.util;
+
+import org.araneaframework.Path;
 
 import java.util.StringTokenizer;
 import javax.servlet.jsp.PageContext;
@@ -23,7 +25,7 @@ import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class JspWidgetUtil {
 
@@ -45,7 +47,7 @@ public abstract class JspWidgetUtil {
       throw new AraneaJspException("Trying to traverse to a widget with an empty path!");
     
 		// Traverse    
-		for(StringTokenizer tokenizer = new StringTokenizer(path, "."); tokenizer.hasMoreElements();) {
+		for(StringTokenizer tokenizer = new StringTokenizer(path, Path.SEPARATOR); tokenizer.hasMoreElements();) {
 			String token = tokenizer.nextToken();
 					
 			widget = (ApplicationWidget) widget._getComposite().getChildren().get(token);

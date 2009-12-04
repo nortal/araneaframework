@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.list;
 
@@ -21,7 +21,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
  *   name = "listRowButton"
@@ -29,10 +29,13 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
  *   description = "Represents an HTML form button."
  */
 public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
-  {
-    baseStyleClass = "aranea-button";
+ 
+  
+  public ListRowButtonHtmlTag() {
+    this.baseStyleClass = "aranea-button";
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -41,10 +44,10 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-    if (event.getId() != null) {
-      JspUtil.writeEventAttributes(out, event);
+    if (this.event.getId() != null) {
+      JspUtil.writeEventAttributes(out, this.event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }
     
@@ -53,9 +56,11 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
     return EVAL_BODY_INCLUDE;
   }    
 
+  @Override
   protected int doEndTag(Writer out) throws Exception {
-    if (localizedLabel != null)
-      JspUtil.writeEscaped(out, localizedLabel);
+    if (this.localizedLabel != null) {
+      JspUtil.writeEscaped(out, this.localizedLabel);
+    }
     JspUtil.writeEndTag(out, "button"); 
     return super.doEndTag(out);
   }  

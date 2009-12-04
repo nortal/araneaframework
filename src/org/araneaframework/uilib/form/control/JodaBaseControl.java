@@ -16,10 +16,14 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.text.SimpleDateFormat;
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.util.MessageUtil;
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
+import org.araneaframework.uilib.form.FilteredInputControl;
+import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
+import org.araneaframework.uilib.support.DataType;
+import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.JodaDateUtil;
+import org.araneaframework.uilib.util.JodaDateUtil.ParsedDate;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -30,81 +34,141 @@ import org.joda.time.format.DateTimeFormatter;
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
  * @since 1.2.3
  */
-public abstract class JodaBaseControl extends TimestampControl {
+public abstract class JodaBaseControl extends BlankStringNullableControl<DateTime> implements
+  FilteredInputControl<DateTime> {
+
+  /**
+   * The date-time format used by the control for parsing request data.
+   */
+  protected String dateTimeInputPattern;
+
+  /**
+   * The date-time format used by the control for outputting date-time value for rendering.
+   */
+  protected String dateTimeOutputPattern;
+
+  /**
+   * Controls whether a custom format has been specified.
+   */
+  protected boolean confOverridden = false;
+
+  /**
+   * The custom input filter for this control. This can be enforced both client-side and server-side.
+   */
+  private InputFilter inputFilter;
 
   public JodaBaseControl(String dateTimeFormat, String defaultOutputFormat) {
-    super(dateTimeFormat, defaultOutputFormat);
+    this.dateTimeInputPattern = dateTimeFormat;
+    this.dateTimeOutputPattern = defaultOutputFormat;
     this.confOverridden = true;
   }
 
+  public InputFilter getInputFilter() {
+    return this.inputFilter;
+  }
+
+  public void setInputFilter(InputFilter inputFilter) {
+    this.inputFilter = inputFilter;
+  }
+
+  public DataType getRawValueType() {
+    return new DataType(DateTime.class);
+  }
+
+  @Override
+  protected DateTime fromRequest(String parameterValue) {
+    ParsedDate result = parseDate(parameterValue);
+    DateTime resultDateTime = result.getDate();
+
+    if (resultDateTime != null) {
+      resultDateTime = modifyValue(resultDateTime);
+    }
+
+    if (resultDateTime != null) {
+      return resultDateTime;
+    }
+
+    addWrongTimeFormatError();
+
+    if (parameterValue != null && getInputFilter() != null
+        && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
+      addErrorWithLabel(getInputFilter().getInvalidInputMessage(), getInputFilter().getCharacterFilter());
+    }
+
+    return null;
+  }
+
+  @Override
+  protected String toResponse(DateTime controlValue) {
+    return controlValue != null ? getOutputFormatter().print(controlValue) : "";
+  }
+
   /**
-   * Returns the value class name ({@link DateTime}).
+   * Adds an error message to indicate that the input date could not be parsed with our pattern.
    * 
-   * @return The value class name ({@link DateTime}).
+   * @since 1.1
    */
-  public String getRawValueType() {
-    return "DateTime";
+  protected void addWrongTimeFormatError() {
+    addErrorWithLabel(UiLibMessages.WRONG_DATE_FORMAT, this.dateTimeInputPattern);
+  }
+
+  /**
+   * Used by {@link TimestampControl#fromRequest(String)} to convert value read from request to a <code>Date</code> in
+   * default <code>TimeZone</code> and <code>Locale</code>.
+   * 
+   * @param parameterValue The request parameter that should be parsed.
+   * @return The <code>ParsedDate</code> object containg the information about parsed value.
+   * @since 1.0.3
+   */
+  protected ParsedDate parseDate(String parameterValue) {
+    return JodaDateUtil.parseJoda(parameterValue, this.dateTimeInputPattern);
+  }
+
+  @Override
+  public ViewModel getViewModel() {
+    return new ViewModel();
   }
 
   // *********************************************************************
-  // * INTERNAL METHODS
+  // * VIEWMODEL
   // *********************************************************************
 
-  protected void init() throws Exception {
-    super.init();
+  /**
+   * The view model implementation of <code>TimestampControl</code>. The view model provides the data for tags to render
+   * the control.
+   */
+  public class ViewModel extends StringArrayRequestControl<DateTime>.ViewModel {
 
-    if (!this.confOverridden) {
-      ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
-      this.dateTimeInputPattern = getInputPattern(confCtx);
-      this.dateTimeOutputPattern = getOutputPattern(confCtx);
-    }
-  }
+    private String dateTimeOutputPattern;
 
-  private String getConf(ConfigurationContext confCtx, String key, String value) {
-    if (confCtx != null && confCtx.getEntry(key) != null) {
-      value = (String) confCtx.getEntry(key);
-    }
-    return value;
-  }
+    private InputFilter inputFilter;
 
-  protected String getInputPattern(ConfigurationContext confCtx) {
-    return getConf(confCtx, ConfigurationContext.CUSTOM_DATE_FORMAT, this.dateTimeInputPattern);
-  }
-
-  protected String getOutputPattern(ConfigurationContext confCtx) {
-    return getConf(confCtx, ConfigurationContext.DEFAULT_DATE_OUTPUT_FORMAT,
-        this.dateTimeOutputPattern);
-  }
-
-  protected Object fromRequest(String parameterValue) {
-    DateTime date = getInputFormatter().parseDateTime(parameterValue);
-
-    if (date != null) {
-      date = modifyValue(date);
-
-    } else {
-      addWrongTimeFormatError();
-
-      if (parameterValue != null && getInputFilter() != null
-          && !StringUtils.containsOnly(parameterValue, getInputFilter().getCharacterFilter())) {
-        addError(
-            MessageUtil.localizeAndFormat(
-            getInputFilter().getInvalidInputMessage(),
-            MessageUtil.localize(getLabel(), getEnvironment()),
-            getInputFilter().getCharacterFilter(),
-            getEnvironment()));
-      }
+    /**
+     * Takes an outer class snapshot.
+     */
+    public ViewModel() {
+      this.dateTimeOutputPattern = JodaBaseControl.this.dateTimeOutputPattern;
+      this.inputFilter = JodaBaseControl.this.getInputFilter();
     }
 
-    return date;
-  }
+    /**
+     * Provides the formatter using the specified output pattern formatter.
+     * 
+     * @return The formatter that can be use for rendering the values.
+     */
+    public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
+      return new SimpleDateFormat(this.dateTimeOutputPattern);
+    }
 
-  protected String toResponse(Object controlValue) {
-    return getOutputFormatter().print((DateTime) controlValue);
-  }
-
-  protected DateTimeFormatter getInputFormatter() {
-    return DateTimeFormat.forPattern(this.dateTimeInputPattern);
+    /**
+     * The filtering settings of this control that are used for validating the input. If <code>null</code> then no input
+     * filtering should be done.
+     * 
+     * @return The input filtering settings, or <code>null</code>.
+     */
+    public InputFilter getInputFilter() {
+      return this.inputFilter;
+    }
   }
 
   protected DateTimeFormatter getOutputFormatter() {

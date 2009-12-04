@@ -1,0 +1,50 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	version="2.1">
+
+	<jsp:directive.tag description="Writes the menu." />
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="labelId"
+		description="The label ID of the text." />
+
+	<jsp:directive.attribute name="tooltipId"
+		description="The label ID of the tooltip (optional)." />
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<ui:element name="p">
+		<c:choose>
+			<c:when test="${not empty tooltipId}">
+				<fmt:message key="${tooltipId}" var="tooltipId"/>
+				<ui:attribute name="class" value="help"/>
+				<ui:elementContent>
+					<ui:element name="strong">
+						<ui:attribute name="title" value="${tooltipId}"/>
+						<ui:elementContent>
+							<c:if test="${not empty labelId}">
+								<fmt:message key="${labelId}"/>
+							</c:if>
+							<jsp:doBody/>
+						</ui:elementContent>
+					</ui:element>
+				</ui:elementContent>
+			</c:when>
+			<c:when test="${not empty labelId}">
+				<ui:elementContent>
+					<fmt:message key="${labelId}"/>
+					<jsp:doBody/>
+				</ui:elementContent>
+			</c:when>
+			<c:otherwise>
+				<ui:elementContent>
+					<jsp:doBody/>
+				</ui:elementContent>
+			</c:otherwise>
+		</c:choose>
+	</ui:element>
+
+</jsp:root>

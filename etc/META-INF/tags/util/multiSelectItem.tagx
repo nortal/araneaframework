@@ -1,0 +1,81 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:ui="http://araneaframework.org/tag-library/2.0/ui"
+	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
+	version="2.1">
+
+	<jsp:directive.tag body-content="empty"
+		description="Generates one select input (either radio button or checkbox)."/>
+
+	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+
+	<jsp:directive.attribute name="displayItem" type="org.araneaframework.uilib.support.DisplayItem" required="true" description="A display item of this choice."/>
+	<jsp:directive.attribute name="type" required="true" description="A string that indicates the input[type]. Either 'checkbox' or 'radio' expected."/>
+	<jsp:directive.attribute name="styleClass" required="true" description="Appended CSS class for the tag."/>
+	<jsp:directive.attribute name="readonly" type="java.lang.Boolean" description="A Boolean specifying whether the disabled input is rendered read-only or disabled." />
+	<jsp:directive.attribute name="tabindex" required="true" description="HTML tabindex for the element."/>
+
+	<jsp:directive.attribute name="events" type="java.lang.Boolean" required="true" description="Whether the element will send the events that are registered by server-side (by default 'true')."/>
+	<jsp:directive.attribute name="onChangePrecondition" required="true" description="Precondition for deciding whether go to server side or not."/>
+	<jsp:directive.attribute name="updateRegions" required="true" description="Enumerates the regions of markup to be updated in this widget scope. Please see ui:updateRegion for details."/>
+	<jsp:directive.attribute name="globalUpdateRegions" required="true" description="Enumerates the regions of markup to be updated globally. Please see ui:updateRegion for details."/>
+
+	<!-- ================== TAG ATTRIBUTES END ================== -->
+
+	<util:assert test="${type eq 'checkbox' or type eq 'radio'}" msg="The 'type' attribute of multiSelectItem must be either 'checkbox' or 'radio'."/>
+
+	<c:choose>
+		<c:when test="${type eq 'checkbox'}">
+			<!-- This is used to generate unique IDs to associate labels with checkboxes. -->
+			<c:set var="_chkIdCnt" value="${empty _chkIdCnt ? 1 : _chkIdCnt + 1}" scope="request"/>
+			<c:set var="id" value="check${_chkIdCnt}"/>
+			<c:set var="selected" value="${not empty control.valuesMap[displayItem.value]}"/>
+			<c:set var="baseClass" value="aranea-multi-checkbox"/>
+		</c:when>
+
+		<c:when test="${type eq 'radio'}">
+			<!-- This is used to generate unique IDs to associate labels with radio buttons. -->
+			<c:set var="_radioIdCnt" value="${empty _radioIdCnt ? 1 : _radioIdCnt + 1}" scope="request"/>
+			<c:set var="id" value="radio${_radioIdCnt}"/>
+			<c:set var="selected" value="${formElement.value eq displayItem.value}"/>
+			<c:set var="baseClass" value="aranea-radio"/>
+		</c:when>
+	</c:choose>
+
+
+	<c:if test="${not displayItem.disabled}">
+		<ui:element name="input">
+			<ui:attribute name="type" value="${type}"/>
+			<ui:attribute name="id" value="${id}"/>
+			<ui:attribute name="name" value="${formElementFullId}"/>
+			<util:elementClassAttr baseClass="${baseClass}" styleClass="${styleClass}"/>
+			<util:formElementDisabledAttr readonly="${readonly}"/>
+			<ui:attribute name="value" value="${displayItem.value}"/>
+			<ui:attribute name="tabindex" value="${tabindex}"/>
+
+			<c:if test="${selected}">
+				<ui:attribute name="checked" value="checked"/>
+			</c:if>
+
+			<util:formElementBgValidationAttr/>
+			<util:formElementDisabledAttr/>
+
+			<c:if test="${events and formElement.onChangeEventRegistered}">
+				<ui:elementEventAttrs attr="onclick" eventId="onChanged"
+					eventCondition="${onChangePrecondition}"
+					updateRegions="${updateRegions}"
+					globalUpdateRegions="${globalUpdateRegions}" />
+			</c:if>
+		</ui:element>
+		<c:out value=" "/>
+		<ui:element name="label">
+			<ui:attribute name="for" value="${id}"/>
+			<ui:elementContent>
+				<fmt:message key="${displayItem.displayString}"/>
+			</ui:elementContent>
+		</ui:element>
+		<c:out value=" "/>
+	</c:if>
+
+</jsp:root>

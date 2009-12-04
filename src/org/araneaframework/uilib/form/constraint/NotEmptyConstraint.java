@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,29 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
 
 /**
- * This constraint checks that the <code>String</code> value of given form
- * field would not be empty.
+ * This constraint checks that the <code>String</code> value of given form field would not be empty.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class NotEmptyConstraint extends BaseFieldConstraint {
-
-  private static final long serialVersionUID = 1L;
+public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
 
   /**
-   * Specifies whether to trim a <code>String</code> value before checking its
-   * lenght. Default is false.
+   * Specifies whether to trim a <code>String</code> value before checking its length. Default is false.
    */
-  protected boolean trim = false; 
+  protected boolean trim = false;
 
   /**
    * Creates a new constraint without binding it to a form field.
@@ -42,11 +40,10 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
   public NotEmptyConstraint() {}
 
   /**
-   * Creates a new constraint without binding it to a form field, and specifies
-   * whether to trim a <code>String</code> value when checking its lenght.
+   * Creates a new constraint without binding it to a form field, and specifies whether to trim a <code>String</code>
+   * value when checking its length.
    * 
-   * @param trim <code>true</code>, if the <code>String</code> value should
-   *            be trimmed before checking its length.
+   * @param trim <code>true</code>, if the <code>String</code> value should be trimmed before checking its length.
    */
   public NotEmptyConstraint(boolean trim) {
     this.trim = trim;
@@ -57,19 +54,18 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
    * 
    * @param field The form element that this constraint should be bound to.
    */
-  public NotEmptyConstraint(FormElement field) {
+  public NotEmptyConstraint(FormElement<C, D> field) {
     super(field);
   }
 
   /**
-   * A constructor that binds given constraint to a form field, and specifies
-   * whether to trim a <code>String</code> value when checking its lenght.
+   * A constructor that binds given constraint to a form field, and specifies whether to trim a <code>String</code>
+   * value when checking its length.
    * 
    * @param field The form element that this constraint should be bound to.
-   * @param trim <code>true</code>, if the <code>String</code> value should
-   *            be trimmed before checking its length.
+   * @param trim <code>true</code>, if the <code>String</code> value should be trimmed before checking its length.
    */
-  public NotEmptyConstraint(FormElement field, boolean trim) {
+  public NotEmptyConstraint(FormElement<C, D> field, boolean trim) {
     super(field);
     this.trim = trim;
   }
@@ -77,17 +73,16 @@ public class NotEmptyConstraint extends BaseFieldConstraint {
   /**
    * Checks that the <code>String</code> value would not be empty.
    */
+  @Override
   public void validateConstraint() {
     boolean empty = getValue() == null;
 
-    if (!empty && trim && getValue() instanceof String) {
-      String value = (String) getValue();
-      empty = (value == null || value.length() == 0);
+    if (!empty && getValue() instanceof String && this.trim) {
+      empty = StringUtils.isEmpty((String) getValue());
     }
 
     if (empty) {
-      addError(MessageUtil.localizeAndFormat(UiLibMessages.ELEMENT_EMPTY,
-          t(getLabel()), getEnvironment()));
+      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.ELEMENT_EMPTY, t(getLabel())));
     }
   }
 

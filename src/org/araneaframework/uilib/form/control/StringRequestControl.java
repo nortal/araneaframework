@@ -17,36 +17,36 @@
 package org.araneaframework.uilib.form.control;
 
 /**
- * This class represents a further concretezation of {@link StringArrayRequestControl}, i.e. it
- * represents controls, that have a single <code>String</code> request parameter.
+ * This class represents a further concretization of {@link StringArrayRequestControl}, i.e. it represents controls,
+ * that have a single <code>String</code> request parameter.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public abstract class StringRequestControl extends StringArrayRequestControl {
-
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
+public abstract class StringRequestControl<T> extends StringArrayRequestControl<T> {
 
   /**
    * This is just a proxy to {@link #fromRequest(String)}.
    */
-  protected Object fromRequestParameters(String[] parameterValues) {
+  @Override
+  protected final T fromRequestParameters(String[] parameterValues) {
     return fromRequest(parameterValues[0]);
   }
 
   /**
    * This is just a proxy to {@link #preprocessRequestParameter(String)}.
    */
-  protected String[] preprocessRequestParameters(String[] parameterValues) {
-    String result = preprocessRequestParameter(parameterValues == null ? null : parameterValues[0]);
+  @Override
+  protected final String[] preprocessRequestParameters(String[] parameterValues) {
+    String result = parameterValues == null ? preprocessRequestParameter(null)
+        : preprocessRequestParameter(parameterValues[0]);
     return result == null ? null : new String[] { result };
   }
 
   /**
    * This is just a proxy to {@link #toResponse(Object)}.
    */
-  protected String[] toResponseParameters(Object controlValue) {
+  @Override
+  protected final String[] toResponseParameters(T controlValue) {
     String result = toResponse(controlValue);
     return result == null ? null : new String[] { result };
   }
@@ -56,29 +56,30 @@ public abstract class StringRequestControl extends StringArrayRequestControl {
   // *********************************************************************
 
   /**
-   * This method should preprocess the <code>parameterValue</code> and return the processed value.
-   * It may be used to <i>normalize</i> the request making the further parsing of it easier.
+   * The request preprocess method for given request parameter value.
    * 
-   * @param parameterValue The <code>String</code> value from request.
-   * @return The preprocessed value from request.
+   * @param parameterValue The value read from request for this control. May be <code>null</code>.
+   * @return The new value (either processed or the same) for this parameter. May be <code>null</code>.
+   * @see StringArrayRequestControl#preprocessRequestParameters(String[])
    */
   protected abstract String preprocessRequestParameter(String parameterValue);
 
   /**
-   * This method should parse the request parameters (preprocessed with
-   * {@link #preprocessRequestParameter(String)}) an produce the control value.
+   * Converts the request value to the control value.
    * 
-   * @param parameterValue The request parameter.
-   * @return The value of this control.
+   * @param parameterValue The value read from request for this control. May be <code>null</code>.
+   * @return The value for this control as parsed from the request. May be <code>null</code>.
+   * @see StringArrayRequestControl#fromRequestParameters(String[])
    */
-  protected abstract Object fromRequest(String parameterValue);
+  protected abstract T fromRequest(String parameterValue);
 
   /**
-   * This method should return the <code>String</code> representation of the control value. This
-   * value is used for outputting it to the resulting page once requested.
+   * Converts the control value to the request value.
    * 
-   * @param controlValue The control value.
-   * @return The <code>String</code> representation of the control value.
+   * @param controlValue The value to be converted to <code>String</code> that will be used as the rendered input value.
+   *          May be <code>null</code>.
+   * @return The value of this control as converted to <code>String</code>. May be <code>null</code>.
+   * @see StringArrayRequestControl#toResponseParameters(Object)
    */
-  protected abstract String toResponse(Object controlValue);
+  protected abstract <E extends T> String toResponse(E controlValue);
 }

@@ -18,8 +18,6 @@ package org.araneaframework.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
@@ -35,34 +33,29 @@ import org.araneaframework.Path;
 import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
+import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A full featured Service with support for composite, eventlisteners,
- * viewmodel.
+ * A full featured Service with support for composite, EventListeners, ViewModel.
  */
-public abstract class BaseApplicationService extends BaseService
-  implements ApplicationService {
+public abstract class BaseApplicationService extends BaseService implements ApplicationService {
 
-  private static final long serialVersionUID = 1L;
+  private static final Log LOG = LogFactory.getLog(BaseApplicationService.class);
 
-  private static final Log log = LogFactory.getLog(BaseApplicationService.class);
-
-  //*******************************************************************
+  // *******************************************************************
   // FIELDS
-  //*******************************************************************
+  // *******************************************************************
 
-  private Map actionListeners;
+  private Map<String, List<ActionListener>> actionListeners;
 
-  private Map viewData;
+  private Map<String, Object> viewData;
 
-  //*******************************************************************
+  // *******************************************************************
   // PROTECTED CLASSES
-  //*******************************************************************
+  // *******************************************************************
 
   protected class ViewableImpl implements Viewable.Interface {
-
-    private static final long serialVersionUID = 1L;
 
     public Object getViewModel() {
       try {
@@ -75,9 +68,7 @@ public abstract class BaseApplicationService extends BaseService
 
   protected class CompositeImpl implements Composite.Interface {
 
-    private static final long serialVersionUID = 1L;
-
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
@@ -86,13 +77,26 @@ public abstract class BaseApplicationService extends BaseService
     }
 
     public Component detach(Object key) {
-      return (Component) _getChildren().remove(key);
+      return _getChildren().remove(key);
+    }
+  }
+
+  /**
+   * Extends the base functionality with registering asynchronous actions.
+   * 
+   * @author Martti Tamm (martti@araneaframework.org)
+   * @since 2.0
+   */
+  protected class ComponentImpl extends BaseComponent.ComponentImpl {
+
+    @Override
+    public synchronized void init(Scope scope, Environment env) {
+      super.init(scope, env);
+      ComponentUtil.registerActionListeners(getEnvironment(), getScope(), getActionListeners());
     }
   }
 
   public class ViewModel implements ApplicationService.ServiceViewModel {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * @since 1.1
@@ -104,36 +108,38 @@ public abstract class BaseApplicationService extends BaseService
     /**
      * Returns the children of this StandardService.
      */
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
-    public Map getData() {
+    public Map<String, Object> getData() {
       return getViewData();
     }
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PRIVATE METHODS
-  //*******************************************************************
+  // *******************************************************************
 
-  private synchronized Map getActionListeners() {
-    if (actionListeners == null) {
-      actionListeners = new LinkedMap(1);
+  @SuppressWarnings("unchecked")
+  private synchronized Map<String, List<ActionListener>> getActionListeners() {
+    if (this.actionListeners == null) {
+      this.actionListeners = new LinkedMap(1);
     }
-    return actionListeners;
+    return this.actionListeners;
   }
 
-  private synchronized Map getViewData() {
-    if (viewData == null) {
-      viewData = new LinkedMap(1);
+  @SuppressWarnings("unchecked")
+  private synchronized Map<String, Object> getViewData() {
+    if (this.viewData == null) {
+      this.viewData = new LinkedMap(1);
     }
-    return viewData;
+    return this.viewData;
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   public Composite.Interface _getComposite() {
     return new CompositeImpl();
@@ -143,21 +149,27 @@ public abstract class BaseApplicationService extends BaseService
     return new ViewableImpl();
   }
 
+  @Override
+  public Component.Interface _getComponent() {
+    return new ComponentImpl();
+  }
   /**
-   * Adds the ActionListener listener with the specified action id. 
+   * Adds the ActionListener listener with the specified action id.
    */
-  public void addActionListener(Object actionId, ActionListener listener) {
+  public void addActionListener(String actionId, ActionListener listener) {
     Assert.notNullParam(this, actionId, "actionId");
     Assert.notNullParam(this, listener, "listener");
 
-    List list = (List) getActionListeners().get(actionId);
+    List<ActionListener> list = getActionListeners().get(actionId);
 
     if (list == null) {
-      list = new ArrayList(1);
+      list = new ArrayList<ActionListener>();
     }
 
     list.add(listener);
+
     getActionListeners().put(actionId, list);
+    ComponentUtil.registerActionListener(getEnvironment(), getScope(), actionId, listener);
   }
 
   /**
@@ -165,27 +177,30 @@ public abstract class BaseApplicationService extends BaseService
    */
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
-
-    Iterator ite = (new HashMap(getActionListeners())).values().iterator();
-    while (ite.hasNext()) {
-      ((List) ite.next()).remove(listener);
+    for (Map.Entry<String, List<ActionListener>> entry : getActionListeners().entrySet()) {
+      if (entry.getValue().contains(listener)) {
+        boolean existed = entry.getValue().remove(listener);
+        if (existed) {
+          ComponentUtil.unregisterActionListener(getEnvironment(), getScope(), entry.getKey(), listener);
+        }
+      }
     }
   }
 
   /**
    * Clears all the ActionListeners with the specified actionId.
    * 
-   * @param actionId the id of the ActionListeners.
+   * @param actionId The ID of the ActionListeners.
    */
-  public void clearActionlisteners(Object actionId) {
+  public void clearActionlisteners(String actionId) {
     Assert.notNullParam(this, actionId, "actionId");
-    getActionListeners().remove(actionId);
+    List<ActionListener> listeners = getActionListeners().remove(actionId);
+    ComponentUtil.unregisterActionListeners(getEnvironment(), getScope(), actionId, listeners);
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This
-   * data will be available until explicitly removed with
-   * {@link #removeViewData(String)}.
+   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available until explicitly
+   * removed with {@link #removeViewData(String)}.
    */
   public void putViewData(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -203,23 +218,22 @@ public abstract class BaseApplicationService extends BaseService
   /**
    * Returns an unmodifiable map of the children.
    */
-  public Map getChildren() {
+  @SuppressWarnings("unchecked")
+  public Map<Object, Component> getChildren() {
     return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
   }
 
   /**
-   * Adds a service with the specified key. Allready initilized services cannot
-   * be added. Duplicate keys not allowed. The child is initialized with the
-   * Environment env.
+   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
+   * The child is initialized with the Environment env.
    */
   public void addService(Object key, Service child, Environment env) {
     _addComponent(key, child, env);
   }
 
   /**
-   * Adds a service with the specified key. Allready initilized services cannot
-   * be added. Duplicate keys not allowed. The child is initialized with the
-   * Environment from <code>getChildServiceEnvironment()</code>.
+   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
+   * The child is initialized with the Environment from <code>getChildServiceEnvironment()</code>.
    */
   public void addService(Object key, Service child) {
     try {
@@ -237,28 +251,25 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo.
-   * The child will get the Environment specified by newEnv.
+   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment
+   * specified by newEnv.
    * 
    * @param parent is the current parent of the child to be relocated.
    * @param newEnv the new Environment of the child.
    * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this
-   *            StandardService.
+   * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateService(Composite parent, Environment newEnv,
-      Object keyFrom, Object keyTo) {
+  public void relocateService(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
   /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo.
-   * The child will get the Environment of this StandardService.
+   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment of
+   * this StandardService.
    * 
    * @param parent is the current parent of the child to be relocated.
    * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this
-   *            StandardService.
+   * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
   public void relocateService(Composite parent, Object keyFrom, Object keyTo) {
     try {
@@ -269,21 +280,21 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Enables the service with the specified key. Only a disabled service can be
-   * enabled.
+   * Enables the service with the specified key. Only a disabled service can be enabled.
    */
   public void enableService(Object key) {
     _enableComponent(key);
   }
 
   /**
-   * Disables the service with the specified key. Only a enabled service can be
-   * disabled. A disabled service does not get any actions routed to them.
+   * Disables the service with the specified key. Only a enabled service can be disabled. A disabled service does not
+   * get any actions routed to them.
    */
   public void disableService(Object key) {
     _disableComponent(key);
   }
 
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }
@@ -296,9 +307,9 @@ public abstract class BaseApplicationService extends BaseService
     }
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PROTECTED METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   /**
    * Returns the view model. Usually overridden.
@@ -315,34 +326,34 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Returns the id of the action based on the input. Uses the
-   * ACTION_HANDLER_ID_KEY key to extract it from InputData's global data.
+   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key to extract it from InputData's
+   * global data.
    */
   protected String getActionId(InputData input) {
     Assert.notNull(this, input, "Cannot extract action id from a null input!");
-    return (String) input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
+    return input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
     _propagate(message);
   }
 
   /**
-   * If path hasNextStep() routes to the correct child, otherwise calls the
-   * appropriate listener.
+   * If path hasNextStep() routes to the correct child, otherwise calls the appropriate listener.
    */
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
       Object next = path.next();
-      Assert.notNull(this, next,
-          "Cannot deliver action to child under null key!");
+      Assert.notNull(this, next, "Cannot deliver action to child under null key!");
 
       Service service = (Service) getChildren().get(next);
       if (service == null) {
-        log.warn("Service '" + getScope()
-            + "' could not deliver action as child '" + next
-            + "' was not found!" + Assert.thisToString(this));
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
+              + Assert.thisToString(this));
+        }
         return;
       }
 
@@ -353,35 +364,35 @@ public abstract class BaseApplicationService extends BaseService
   }
 
   /**
-   * Calls the approriate listener
+   * Calls the appropriate listener.
    */
-  protected void handleAction(InputData input, OutputData output)
-      throws Exception {
+  protected void handleAction(InputData input, OutputData output) throws Exception {
     String actionId = getActionId(input);
 
     if (actionId == null) {
-      log.warn("Service '" + getScope()
-          + "' cannot deliver action for a null action id!"
-          + Assert.thisToString(this));
-      return;
-    }
-
-    List listener = actionListeners != null ? null : (List) actionListeners
-        .get(actionId);
-
-    log.debug("Delivering action '" + actionId + "' to service '" + getClass()
-        + "'");
-
-    if (listener != null && listener.size() > 0) {
-      Iterator ite = (new ArrayList(listener)).iterator();
-      while (ite.hasNext()) {
-        ((ActionListener) ite.next()).processAction(actionId, input, output);
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action ID!"
+                + Assert.thisToString(this));
       }
       return;
     }
 
-    log.warn("Service '" + getScope() + "' cannot deliver action as no "
-        + "action listeners were registered for action id '" + actionId + "'!"
-        + Assert.thisToString(this));
+    List<ActionListener> listeners = this.actionListeners != null ? null : this.actionListeners.get(actionId);
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");
+    }
+
+    if (listeners != null && !listeners.isEmpty()) {
+      for (ActionListener listener : listeners) {
+        listener.processAction(actionId, input, output);
+      }
+      return;
+    }
+
+    if (LOG.isWarnEnabled()) {
+      LOG.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
+          + "id '" + actionId + "'!" + Assert.thisToString(this));
+    }
   }
 }

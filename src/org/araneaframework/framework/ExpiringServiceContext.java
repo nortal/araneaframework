@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.framework;
 
@@ -33,6 +33,6 @@ public interface ExpiringServiceContext extends Serializable {
    * Returns all expiring services. Keys of the Map are services' keepalive id's
    * (String). Values are services' time to live in milliseconds (Long).
    */
-  public Map getServiceTTLMap();
+  public Map<String, Long> getServiceTTLMap();
 
 }

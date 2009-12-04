@@ -17,10 +17,10 @@
 package org.araneaframework.uilib.form.converter;
 
 import java.io.Serializable;
-import org.araneaframework.Environment;
 import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.support.DataType;
 
 /**
  * Provides access to registered {@link Converter}s. 
@@ -33,16 +33,15 @@ import org.araneaframework.uilib.form.FormElement;
  * @see FormElement#convert()
  */
 public interface ConverterProvider extends Serializable {
-
   /**
- * This method should return a {@link BaseConverter }corresponding to the two
- * types given.
- * 
- * @param fromType from type.
+   * This method should return a {@link BaseConverter }corresponding to the two types given.
+   * 
+   * @param fromType from type.
    * @param toType to type.
- * @return {@link BaseConverter} corresponding to the types given.
- * @throws ConverterNotFoundException if {@link BaseConverter}is not found
- */
-  public Converter findConverter(String fromType, String toType, Environment env) throws ConverterNotFoundException;
-
+   * @return {@link BaseConverter} corresponding to the types given.
+   * 
+   * @throws ConverterNotFoundException if {@link BaseConverter}is not found  
+   */
+  @SuppressWarnings("unchecked")
+  public Converter findConverter(DataType fromType, DataType toType) throws ConverterNotFoundException;
 }

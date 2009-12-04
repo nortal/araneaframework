@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,68 +12,53 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This class represents a textarea control.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class TextareaControl extends StringValueControl {
-  
+
   /**
-   * Empty.
+   * Empty constructor.
    */
-  public TextareaControl() {
-    //Empty
-  }  
-  
+  public TextareaControl() {}
+
   /**
-   * Makes a text control with specific type and minimum and maximum length constraints.
+   * Makes a text control with specific minimum and maximum length constraints.
    * 
-   * @param minLength minimum permitted length.
-   * @param maxLength maximum permitted length.
+   * @param minLength The minimum permitted length.
+   * @param maxLength The maximum permitted length.
    */
-  public TextareaControl(Long minLength, Long maxLength) {    
+  public TextareaControl(Long minLength, Long maxLength) {
     setMinLength(minLength);
     setMaxLength(maxLength);
-  }    
-  
+  }
+
   /**
-   * Makes a text control with specific type and minimum and maximum length constraints.
+   * Makes a text control with specific minimum and maximum length constraints and trimming condition.
    * 
-   * @param minLength minimum permitted length.
-   * @param maxLength maximum permitted length.
-   * @param trimValue whether the value from request will be trimmed.
+   * @param minLength The minimum permitted length.
+   * @param maxLength The maximum permitted length.
+   * @param trimValue Whether the value from request will be trimmed.
    */
-  public TextareaControl(Long minLength, Long maxLength, boolean trimValue) {    
+  public TextareaControl(Long minLength, Long maxLength, boolean trimValue) {
     setMinLength(minLength);
     setMaxLength(maxLength);
     setTrimValue(trimValue);
-  }   
-  
-  //*********************************************************************
-  //* INTERNAL INTERFACE
-  //*********************************************************************  	
-	
+  }
+
   /**
-   * Takes away &lt;cr&gt; added by Intenet Explorer.
+   * Takes away &lt;CR&gt; added by Intenet Explorer.
    */
+  @Override
   protected String preprocessRequestParameter(String parameterValue) {
-    String superProcessed = super.preprocessRequestParameter(parameterValue);
-    
-    if (superProcessed == null) return null;
-    
-    StringBuffer stripped = new StringBuffer(superProcessed);
-    int lastCr = stripped.toString().lastIndexOf("\r");
-    while (lastCr != -1) {
-      stripped.delete(lastCr, lastCr + 1);
-      lastCr = stripped.toString().lastIndexOf("\r");
-    }
-    return stripped.toString();    
-  } 		  
+    return StringUtils.remove(super.preprocessRequestParameter(parameterValue), '\r');
+  }
 }

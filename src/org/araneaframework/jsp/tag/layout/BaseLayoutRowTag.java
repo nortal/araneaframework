@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
 import java.util.List;
-import javax.servlet.jsp.JspException;
 import org.apache.commons.collections.ResettableIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
 import org.araneaframework.jsp.tag.layout.support.NullIterator;
@@ -29,83 +29,87 @@ import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Layout row base tag.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseLayoutRowTag extends PresentationTag implements CellClassProvider {
+
   protected boolean overrideLayout = true;
 
   /**
-   * HTML id of the row. 
-   * @since 1.1 */
+   * HTML id of the row.
+   * 
+   * @since 1.1
+   */
   protected String id;
 
-  protected List cellClasses;
+  protected List<String> cellClasses;
+
   private ResettableIterator cellIter;
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    cellIter = cellClasses != null ? (ResettableIterator)new LoopingIterator(cellClasses) : new NullIterator();
-    if (cellClasses != null)
+    this.cellIter = this.cellClasses != null ? new LoopingIterator(this.cellClasses) : new NullIterator();
+    if (this.cellClasses != null) {
       addContextEntry(CellClassProvider.KEY, this);
+    }
 
     return EVAL_BODY_INCLUDE;
   }
-  
+
   public String getCellClass() {
-    return cellIter.hasNext() ? (String)cellIter.next() : null;
+    return this.cellIter.hasNext() ? (String) this.cellIter.next() : null;
   }
 
+  @Override
   public String getStyleClass() {
-    cellIter.reset();
-    RowClassProvider rowClassProvider = (RowClassProvider)getContextEntry(RowClassProvider.KEY);
-    String result = rowClassProvider != null? rowClassProvider.getRowClass():null;
-    result = (result != null && result.length() == 0) ? null : result;
+    this.cellIter.reset();
+    RowClassProvider rowClassProvider = (RowClassProvider) getContextEntry(RowClassProvider.KEY);
+    String result = rowClassProvider != null ? rowClassProvider.getRowClass() : null;
+    result = StringUtils.defaultIfEmpty(result, null);
 
     String superStyleClass = super.getStyleClass();
     if (superStyleClass != null) {
       StringBuffer sb = new StringBuffer(superStyleClass);
-      if (!overrideLayout && result != null)
+      if (!this.overrideLayout && result != null) {
         sb.append(' ').append(result);
+      }
 
       result = sb.toString();
     }
 
     return result;
   }
-  
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
-  
+
+  // Tag attributes
+
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Default styleclass of cells inside this row. This is multi-valued attribute and overwrites cell styleclasses defined by surrounding layout."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description ="Default CSS class of cells inside this row. This is multi-valued attribute and overwrites cell CSS classes defined by surrounding layout."
    */
-  public void setCellClasses(String cellClasses) throws JspException {
-    this.cellClasses = JspUtil.parseMultiValuedAttribute((String)evaluate("cellClasses", cellClasses, String.class));
+  public void setCellClasses(String cellClasses) {
+    this.cellClasses = JspUtil.parseMultiValuedAttribute(evaluate("cellClasses", cellClasses, String.class));
   }
-  
+
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether row's styleClass completely overrides styleClass provided by surrounding layout (default behaviour), or is appended to layout's styleClass."
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description ="Whether row's styleClass completely overrides CSS class provided by surrounding layout (default behavior), or is appended to layout's CSS class."
    */
-  public void setOverrideLayout(String overrideLayout) throws JspException {
-    this.overrideLayout = ((Boolean)evaluate("overrideLayout", overrideLayout, Boolean.class)).booleanValue();
+  public void setOverrideLayout(String overrideLayout) {
+    this.overrideLayout = evaluate("overrideLayout", overrideLayout, Boolean.class);
   }
-  
+
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "HTML id of this row."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "HTML id of this row."
    * @since 1.1
    */
-  public void setId(String id) throws JspException {
-    this.id =(String)evaluate("id", id, String.class);
+  public void setId(String id) {
+    this.id = evaluate("id", id, String.class);
   }
 }

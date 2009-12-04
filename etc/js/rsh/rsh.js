@@ -495,7 +495,7 @@ window.dhtmlHistory = {
 
 	/*Private: Notify the listener of new history changes.*/
 	fireHistoryEvent: function(newHash) {
-		var decodedHash = decodeURIComponent(newHash)
+		var decodedHash = decodeURIComponent(newHash);
 		/*extract the value from our history storage for this hash*/
 		var historyData = historyStorage.get(decodedHash);
 		this.changeTitle(historyData);
@@ -775,6 +775,6 @@ window.historyStorage = {
 		return o.toJSONString();
 	},
 	fromJSON: function(s) {
-		return s.parseJSON();
+		return s.evalJSON();
 	}
 };

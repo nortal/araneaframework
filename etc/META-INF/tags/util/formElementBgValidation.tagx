@@ -1,0 +1,25 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.1">
+
+	<jsp:directive.tag
+		description="Adds code for background validation of form elements." />
+
+	<jsp:directive.attribute name="label" required="true" type="java.lang.Boolean"
+		description="Whether the part rendered is a label (true) or an input (false). (Required)" />
+
+	<c:choose>
+		<c:when test="${label}">
+			<c:set var="id" value="label-${formElementFullId}"/>
+		</c:when>
+		<c:otherwise>
+			<c:set var="id" value="fe-${formElementFullId}"/>
+		</c:otherwise>
+	</c:choose>
+
+	<!--span id="${id}"-->
+		<jsp:doBody/>
+	<!--/span>
+
+	<script type="text/javascript">Aranea.UI.markFEContentStatus(true, $('id'));</script-->
+
+</jsp:root>

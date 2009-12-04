@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
@@ -22,16 +22,15 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
-
 /**
  * Renders concealed {@link org.araneaframework.uilib.form.control.HiddenControl} in an HTML page.
  * 
  * @author Konstantin Tretyakov
  * 
  * @jsp.tag
- *   name = "hiddenInput"
- *   body-content = "JSP"
- *   description = "Represents a "hidden" html input element mapped to an UiLib HiddenControl."
+ *  name = "hiddenInput"
+ *  body-content = "JSP"
+ *  description = "Represents a "hidden" HTML input element mapped to an UiLib HiddenControl."
  */
 public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
 
@@ -39,33 +38,31 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
     // Hidden element may not be validated!
     this.validateOnEvent = false;
   }
-  
+
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return r;
   }
 
-
+  @Override
+  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("HiddenControl");
 
     String name = this.getFullFieldId();
-    StringArrayRequestControl.ViewModel viewModel = ((StringArrayRequestControl.ViewModel)controlViewModel);
+    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
 
     JspUtil.writeOpenStartTag(out, "input");
-    JspUtil.writeAttribute(out, "name", name);     
+    JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "id", name);
     JspUtil.writeAttribute(out, "type", "hidden");
-    JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());  
+    JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
     JspUtil.writeCloseStartEndTag_SS(out);
 
     super.doEndTag(out);
     return EVAL_PAGE;
   }
 }
-
-
-
-

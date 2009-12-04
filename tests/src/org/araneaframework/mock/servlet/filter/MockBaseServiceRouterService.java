@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.mock.servlet.filter;
 
@@ -23,19 +23,20 @@ import org.araneaframework.mock.MockUtil;
 
 /**
  * @author "Toomas Römer" <toomas@webmedia.ee>
- *
  */
 public class MockBaseServiceRouterService extends BaseServiceRouterService {
 
-  protected Object getServiceId(InputData input) throws Exception {
+  @Override
+  protected String getServiceId(InputData input) throws Exception {
     return input.getGlobalData().get("serviceId");  
   }
   
-  protected Object getServiceKey() throws Exception {
+  @Override
+  protected String getServiceKey() throws Exception {
     return "serviceId";
   }
 
-  protected Environment getChildEnvironment(Object serviceId) throws Exception {
+  protected Environment getChildEnvironment(@SuppressWarnings("unused") Object serviceId) throws Exception {
     return MockUtil.getEnv();
   }
 }

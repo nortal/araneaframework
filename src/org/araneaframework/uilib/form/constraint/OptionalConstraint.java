@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -20,44 +20,43 @@ import org.araneaframework.Environment;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Optional <code>Constraint</code> only applies when constrained field has
- * some real value. This class is a wrapper around the <code>Constraint</code>,
- * and the wrapped <code>Constraint</code> will be applied only if the
- * constrained field has been read from the request.
+ * Optional <code>Constraint</code> only applies when constrained field has some real value. This class is a wrapper
+ * around the <code>Constraint</code>, and the wrapped <code>Constraint</code> will be applied only if the constrained
+ * field has been read from the request.
  * 
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class OptionalConstraint extends BaseFieldConstraint {
-
-  private static final long serialVersionUID = 1L;
+public class OptionalConstraint<C, D> extends BaseFieldConstraint<C, D> {
 
   private Constraint constraint;
 
   /**
-   * Creates a new <code>OptionalConstraint</code> wrapper for given
-   * <code>constraint</code>. The latter will be validated only if the field
-   * has a value.
+   * Creates a new <code>OptionalConstraint</code> wrapper for given <code>constraint</code>. The latter will be
+   * validated only if the field has a value.
    * 
    * @param constraint The constraint to use for validation.
    */
   public OptionalConstraint(Constraint constraint) {
     this.constraint = constraint;
   }
-  
+
+  @Override
   protected void validateConstraint() throws Exception {
     if (isRead()) {
-      constraint.validate();
+      this.constraint.validate();
       addErrors(constraint.getErrors());
-      constraint.clearErrors();
+      this.constraint.clearErrors();
     }
   }
 
+  @Override
   public void setCustomErrorMessage(String customErrorMessage) {
-    constraint.setCustomErrorMessage(customErrorMessage);
+    this.constraint.setCustomErrorMessage(customErrorMessage);
   }
 
+  @Override
   public void setEnvironment(Environment environment) {
     super.setEnvironment(environment);
-    constraint.setEnvironment(environment);
+    this.constraint.setEnvironment(environment);
   }
 }

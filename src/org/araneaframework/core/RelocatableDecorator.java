@@ -37,7 +37,7 @@ import org.araneaframework.Relocatable.RelocatableWidget;
  * decorator is swappable.
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class RelocatableDecorator extends BaseService
   implements Serializable, RelocatableService, RelocatableWidget,
@@ -46,8 +46,6 @@ public class RelocatableDecorator extends BaseService
   // *******************************************************************
   // FIELDS
   // *******************************************************************
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * The child service that is made relocatable.
@@ -59,8 +57,6 @@ public class RelocatableDecorator extends BaseService
   //*******************************************************************
 
   protected class RelocatableComponentImpl implements Relocatable.Interface {
-
-    private static final long serialVersionUID = 1L;
 
     public void overrideEnvironment(Environment newEnv) {
       _startCall();
@@ -105,27 +101,30 @@ public class RelocatableDecorator extends BaseService
   // PROTECTED METHODS
   //*******************************************************************
 
+  @Override
   protected void init() throws Exception {
     child._getComponent().init(getScope(), new BaseEnvironment() {
-
-      private static final long serialVersionUID = 1L;
 
       public <T> T getEntry(Class<T> key) {
         if (getEnvironment() == null)
           return null;
         return getEnvironment().getEntry(key);
       }
+
     });
   }
 
+  @Override
   protected void propagate(Message message) throws Exception {
     message.send(null, child);
   }
 
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     child._getService().action(path, input, output);
   }
 
+  @Override
   protected void destroy() throws Exception {
     child._getComponent().destroy();
   }

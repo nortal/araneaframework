@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
@@ -27,13 +27,14 @@ import org.araneaframework.uilib.form.control.DateControl;
  * @jsp.tag
  *   name = "dateInput"
  *   body-content = "JSP"
- *   description = "Form date input field (custom control), represents UiLib "DateControl"."
+ *   description = "Form date input field (custom control), represents UiLib 'DateControl'."
  */
 public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   {
     baseStyleClass = "aranea-date";
   }
+  @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlTypes("DateControl", "JodaDateControl");
 

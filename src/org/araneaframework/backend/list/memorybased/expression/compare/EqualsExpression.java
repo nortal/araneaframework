@@ -16,6 +16,8 @@
 
 package org.araneaframework.backend.list.memorybased.expression.compare;
 
+import org.springframework.util.Assert;
+
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
@@ -23,26 +25,20 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 
 public class EqualsExpression implements CompositeExpression {
 
-  private static final long serialVersionUID = 1L;
-
   protected Expression expr1;
 
   protected Expression expr2;
 
   public EqualsExpression(Expression expr1, Expression expr2) {
-    if (expr1 == null || expr2 == null) {
-      throw new IllegalArgumentException("Operands must be provided");
-    }
+    Assert.isTrue(expr1 != null && expr2 != null, "Operands must be provided");
     this.expr1 = expr1;
     this.expr2 = expr2;
   }
 
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
     Object value1 = this.expr1.evaluate(resolver);
     Object value2 = this.expr2.evaluate(resolver);
-    return (value1 == null ? value2 == null : value1.equals(value2)) ? Boolean.TRUE
-        : Boolean.FALSE;
+    return value1 == null ? value2 == null : value1.equals(value2);
   }
 
   public Expression[] getChildren() {

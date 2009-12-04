@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript" src="app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-util.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Tests for "aranea-util.js"</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function testNamespaces() {
+			assertNotNull('Aranea namespace must exist!', Aranea);
+			assertNotNull('Aranea.Data namespace must exist!', Aranea.Data);
+			assertNotNull('Aranea.Logger namespace must exist!', Aranea.Logger);
+			assertNotNull('Aranea.Util namespace must exist!', Aranea.Util);
+		}
+
+		function testLoggers() {
+			validateLogger('Aranea.Logger', Aranea.Logger);
+			validateLogger('Aranea.Logger.DUMMY_LOGGER', Aranea.Logger.DUMMY_LOGGER);
+			validateLogger('Aranea.Logger.SAFARI_LOGGER', Aranea.Logger.SAFARI_LOGGER);
+			validateLogger('Aranea.Logger.FIREBUG_LOGGER', Aranea.Logger.FIREBUG_LOGGER);
+			validateLogger('Aranea.Logger.LOG4JS_LOGGER', Aranea.Logger.LOG4JS_LOGGER);
+		}
+
+		function validateLogger(name, logger) {
+			assertNotUndefined(name + ' must not be undefined!', logger);
+			assertNotNull(name + ' must not be null!', logger);
+			assert(name + '.trace must be a function!', Object.isFunction(logger.trace));
+			assert(name + '.debug must be a function!', Object.isFunction(logger.debug));
+			assert(name + '.info must be a function!', Object.isFunction(logger.info));
+			assert(name + '.warn must be a function!', Object.isFunction(logger.warn));
+			assert(name + '.error must be a function!', Object.isFunction(logger.error));
+			assert(name + '.fatal must be a function!', Object.isFunction(logger.fatal));
+		}
+
+		function testLoggerChange() {
+			assert('Aranea.Logger.setLogger must be a function!', Object.isFunction(Aranea.Logger.setLogger));
+			Aranea.Logger.setLogger('dummy');
+			assertEquals('DUMMY_LOGGER expected!', Aranea.Data.logger, Aranea.Logger.DUMMY_LOGGER);
+			Aranea.Logger.setLogger('SaFaRi');
+			assertEquals('SAFARI_LOGGER expected!', Aranea.Data.logger, Aranea.Logger.SAFARI_LOGGER);
+			Aranea.Logger.setLogger('FIREBUG');
+			assertEquals('FIREBUG_LOGGER expected!', Aranea.Data.logger, Aranea.Logger.FIREBUG_LOGGER);
+			Aranea.Logger.setLogger('Log4JS');
+			assertEquals('LOG4JS_LOGGER expected!', Aranea.Data.logger, Aranea.Logger.LOG4JS_LOGGER);
+
+			try {
+				Aranea.Logger.setLogger('logger');
+				fail('setLogger must throw an exception for "logger"!')
+			} catch (e) {}
+
+			try {
+				Aranea.Logger.setLogger('');
+				fail('setLogger must throw an exception for ""!')
+			} catch (e) {}
+
+			try {
+				Aranea.Logger.setLogger(null);
+				fail('setLogger must throw an exception for null!')
+			} catch (e) {}
+		}
+
+		function testAjaxResponse() {
+			assertNotUndefined('Aranea.Util.AjaxResponse is required!', Aranea.Util.AjaxResponse);
+
+			var testStr = 'testResponseId\ntestKey\n13\nHello, World!';
+			var response = new Aranea.Util.AjaxResponse(testStr);
+
+			assertEquals('Response ID is not correct!', response.getResponseId(), 'testResponseId');
+			assertEquals('The remaining response text was not as expected!', testStr.substring(15), response.toString());
+
+			var count = 0;
+			response.each(function(key, value, length) {
+				count++;
+				assertEquals('Data key is not correct!', key, 'testKey');
+				assertEquals('Data value is not correct!', value, 'Hello, World!');
+				assertEquals('Data length is not correct!', length, 13);
+			});
+
+			assertTrue('The response function must have been executed only once!', count == 1);
+			assertTrue('Must be at the end of response!', response.isEndOfResponse());
+		}
+
+		function testNotTestedFunctions() {
+			assert(Object.isFunction(Aranea.Util.setWindowCoordinates));
+		}
+	</script>
+
+	<p>This page contains JsUnit-tests for <b>aranea-util.js</b>.</p>
+
+</body>
+</html>

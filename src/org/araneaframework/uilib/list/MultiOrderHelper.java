@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,49 +12,45 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.list;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class MultiOrderHelper {
-	private static final Log log = LogFactory.getLog(MultiOrderHelper.class);
 
-	public static OrderInfo getOrderInfo(Map orderInfoMap) {
-		Map fieldOrders = new TreeMap();
+  private static final Log LOG = LogFactory.getLog(MultiOrderHelper.class);
 
-		for (Iterator i = orderInfoMap.entrySet().iterator(); i.hasNext();) {
-			Map.Entry entry = (Map.Entry) i.next();
-			String column = (String) entry.getKey();
-			long value = Long.parseLong(entry.getValue().toString());
-			if (value != 0) {
-				boolean ascending = value > 0;
-				Long priority = new Long(Math.abs(value));
-				if (log.isDebugEnabled()) {
-					log.debug("Ordered column \"" + column + "\", priority: "
-							+ priority + ", " + (ascending ? "asc" : "desc"));
-				}
+  public static OrderInfo getOrderInfo(Map<String, Number> orderInfoMap) {
+    Map<Long, OrderInfoField> fieldOrders = new TreeMap<Long, OrderInfoField>();
 
-				OrderInfoField orderInfoField = new OrderInfoField(column,
-						ascending);
-				fieldOrders.put(priority, orderInfoField);
-			}
-		}
+    for (Map.Entry<String, Number> entry : orderInfoMap.entrySet()) {
+      String column = entry.getKey();
+      long priority = entry.getValue().longValue();
+      if (priority != 0) {
+        boolean ascend = priority > 0;
+        priority = Math.abs(priority);
 
-		OrderInfo orderInfo = new OrderInfo();
-		for (Iterator i = fieldOrders.values().iterator(); i.hasNext();) {
-			OrderInfoField orderInfoField = (OrderInfoField) i.next();
-			if (log.isDebugEnabled()) {
-				log.debug("Column order \"" + orderInfoField.getId() + "\", "
-						+ (orderInfoField.isAscending() ? "asc" : "desc"));
-			}
-			orderInfo.addField(orderInfoField);
-		}
-		return orderInfo;
-	}
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Ordered column \"" + column + "\", priority: " + priority + ", " + (ascend ? "asc" : "desc"));
+        }
+
+        OrderInfoField orderInfoField = new OrderInfoField(column, ascend);
+        fieldOrders.put(priority, orderInfoField);
+      }
+    }
+
+    OrderInfo orderInfo = new OrderInfo();
+    for (OrderInfoField orderInfoField : fieldOrders.values()) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Column order '" + orderInfoField.getId() + "', " + (orderInfoField.isAscending() ? "asc" : "desc"));
+      }
+      orderInfo.addField(orderInfoField);
+    }
+    return orderInfo;
+  }
 }

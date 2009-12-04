@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import org.araneaframework.Path;
+
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -28,7 +29,7 @@ import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
-import org.araneaframework.uilib.util.ConfigurationContextUtil;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Standard select form element tag.
@@ -36,10 +37,11 @@ import org.araneaframework.uilib.util.ConfigurationContextUtil;
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "select"
- *   body-content = "JSP"
- *   description = "Form dropdown list input field, represents UiLib "SelectControl"."
+ *  name = "select"
+ *  body-content = "JSP"
+ *  description = "Form drop-down list input field, represents UiLib 'SelectControl'."
  */
+@SuppressWarnings("unchecked")
 public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long size = null;
@@ -47,30 +49,31 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   protected String onChangePrecondition;
 
   /**
-   * A boolean setting to override default configuration of
-   * {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
+   * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
    * 
    * @since 1.2
    */
   protected Boolean localizeDisplayItems;
 
-  {
-    baseStyleClass = "aranea-select";
+  
+  public FormSelectHtmlTag() {
+    this.baseStyleClass = "aranea-select";
   }
 
+  @Override
   protected int doStartTag(Writer out) throws Exception {
     int r = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return r;
   }
 
+  @Override
   public int doEndTag(Writer out) throws Exception {
-    // Type check
-    assertControlType("SelectControl");    
+    assertControlType("SelectControl");
 
     // Prepare
-    String name = this.getFullFieldId();     
-    SelectControl.ViewModel viewModel = ((SelectControl.ViewModel)controlViewModel);
+    String name = this.getFullFieldId();
+    SelectControl<Object>.ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");
@@ -85,40 +88,33 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
-    if (events && viewModel.isOnChangeEventRegistered()) {
-      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, formFullId + "." + derivedId, null, updateRegionNames);
-      event.setEventPrecondition(onChangePrecondition);
+    if (this.events && viewModel.isOnChangeEventRegistered()) {
+      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, this.formFullId + Path.SEPARATOR
+          + this.derivedId, null, this.updateRegionNames);
+      event.setEventPrecondition(this.onChangePrecondition);
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onchange");
     }
 
-    JspUtil.writeAttributes(out, attributes);
-    writeBackgroundValidationAttribute(out);
+    JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartTag(out);
 
+    this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
+
     // Write items
-    String selectedValue = viewModel.getSimpleValue();
-
-    if (this.localizeDisplayItems == null) {
-      this.localizeDisplayItems = ConfigurationContextUtil
-          .isLocalizeControlData(getEnvironment());
-    }
-
-    for(Iterator i = viewModel.getSelectItems().iterator(); i.hasNext();) {
-      DisplayItem item = (DisplayItem)i.next();
+    for (DisplayItem item : viewModel.getSelectItems()) {
       if (!item.isDisabled()) {
         String value = item.getValue();
-        String label = item.getDisplayString();
+        String label = item.getLabel();
 
-        if (this.localizeDisplayItems.booleanValue()) {
-          label = JspUtil.getResourceString(pageContext, label);
+        if (this.localizeDisplayItems) {
+          label = JspUtil.getResourceString(this.pageContext, label);
         }
 
-        JspUtil.writeOpenStartTag(out, "option");      
+        JspUtil.writeOpenStartTag(out, "option");
         JspUtil.writeAttribute(out, "value", value != null ? value : "");
 
-        if ((value == null && selectedValue == null) ||              
-            (value != null && value.equals(selectedValue))) {
+        if (viewModel.isSelected(value)) {
           JspUtil.writeAttribute(out, "selected", "selected");
         }
 
@@ -133,44 +129,38 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     // Continue
     super.doEndTag(out);
-    return EVAL_PAGE;  
+    return EVAL_PAGE;
   }
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ***********************************************************************************/
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Number of select elements visible at once." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Number of select elements visible at once."
    */
-  public void setSize(String size) throws JspException {
-    this.size = (Long)evaluate("size", size, Long.class);
+  public void setSize(String size) {
+    this.size = evaluate("size", size, Long.class);
   }
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Precondition for deciding whether go to server side or not." 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Precondition for deciding whether go to server side or not."
    */
-  public void setOnChangePrecondition(String onChangePrecondition)throws JspException {
-    this.onChangePrecondition = (String) evaluate("onChangePrecondition", onChangePrecondition, String.class);
+  public void setOnChangePrecondition(String onChangePrecondition) {
+    this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
-   * 
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
    * @since 1.2
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = (Boolean) evaluateNotNull(
-        "localizeDisplayItems", localizeDisplayItems, Boolean.class);
+    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 
 }

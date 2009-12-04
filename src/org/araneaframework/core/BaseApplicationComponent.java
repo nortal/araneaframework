@@ -17,8 +17,8 @@
 package org.araneaframework.core;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.araneaframework.Component;
 import org.araneaframework.Composite;
 import org.araneaframework.Environment;
@@ -32,35 +32,28 @@ import org.araneaframework.core.util.ExceptionUtil;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
-public abstract class BaseApplicationComponent extends BaseComponent
-  implements ApplicationComponent {
+public abstract class BaseApplicationComponent extends BaseComponent implements ApplicationComponent {
 
-  private static final long serialVersionUID = 1L;
-
-  //*******************************************************************
+  // *******************************************************************
   // PROTECTED CLASSES
-  //*******************************************************************
+  // *******************************************************************
 
   protected class ViewModel implements ApplicationComponent.ComponentViewModel {
 
-    private static final long serialVersionUID = 1L;
-
     /**
-     * @see ApplicationComponent.ComponentViewModel#getScope() 
+     * @see ApplicationComponent.ComponentViewModel#getScope()
      * @since 1.1
      */
     public Scope getScope() {
       return BaseApplicationComponent.this.getScope();
     }
 
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
   }
 
   protected class ViewableImpl implements Viewable.Interface {
-
-    private static final long serialVersionUID = 1L;
 
     public Object getViewModel() {
       try {
@@ -73,9 +66,7 @@ public abstract class BaseApplicationComponent extends BaseComponent
 
   protected class CompositeComponentImpl implements Composite.Interface {
 
-    private static final long serialVersionUID = 1L;
-
-    public Map getChildren() {
+    public Map<Object, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
 
@@ -84,22 +75,21 @@ public abstract class BaseApplicationComponent extends BaseComponent
     }
 
     public Component detach(Object key) {
-      return (Component) _getChildren().remove(key);
+      return _getChildren().remove(key);
     }
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   /**
-   * Returns a unmodifiable map of all the child components under this
-   * Component.
+   * Returns a unmodifiable map of all the child components under this Component.
    * 
    * @return a map of child components
    */
-  public Map getChildren() {
-    return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
+  public Map<Object, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
   }
 
   public Viewable.Interface _getViewable() {
@@ -111,18 +101,16 @@ public abstract class BaseApplicationComponent extends BaseComponent
   }
 
   /**
-   * Adds a component with the specified key. Allready initilized component
-   * cannot be added. Duplicate keys not allowed. The child is initialized with
-   * the Environment env.
+   * Adds a component with the specified key. Already initialized component cannot be added. Duplicate keys not allowed.
+   * The child is initialized with the Environment env.
    */
   public void addComponent(Object key, Component child, Environment env) {
     _addComponent(key, child, env);
   }
 
   /**
-   * Adds a component with the specified key. Allready initilized components
-   * cannot be added. Duplicate keys not allowed. The child is initialized with
-   * the Environment from <code>getChildComponentEnvironment()</code>.
+   * Adds a component with the specified key. Already initialized components cannot be added. Duplicate keys not
+   * allowed. The child is initialized with the Environment from <code>getChildComponentEnvironment()</code>.
    * 
    */
   public void addComponent(Object key, Component child) {
@@ -130,44 +118,39 @@ public abstract class BaseApplicationComponent extends BaseComponent
   }
 
   /**
-   * Relocates parent's child with keyFrom to this component with a new key
-   * keyTo. The child will get the Environment specified by newEnv.
+   * Relocates parent's child with keyFrom to this component with a new key keyTo. The child will get the Environment
+   * specified by newEnv.
    * 
    * @param parent is the current parent of the child to be relocated.
    * @param newEnv the new Environment of the child.
    * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this
-   *            StandardService.
+   * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateComponent(Composite parent, Environment newEnv,
-      Object keyFrom, Object keyTo) {
+  public void relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
   /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo.
-   * The child will get the Environment of this StandardService.
+   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment of
+   * this StandardService.
    * 
    * @param parent is the current parent of the child to be relocated.
    * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this
-   *            StandardService.
+   * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
   public void relocateComponent(Composite parent, Object keyFrom, Object keyTo) {
     _relocateComponent(parent, getChildComponentEnvironment(), keyFrom, keyTo);
   }
 
   /**
-   * Enables the component with the specified key. Only a disabled componet can
-   * be enabled.
+   * Enables the component with the specified key. Only a disabled component can be enabled.
    */
   public void enableComponent(Object key) {
     _enableComponent(key);
   }
 
   /**
-   * Disables the component with the specified key. Only a enabled component can
-   * be disabled.
+   * Disables the component with the specified key. Only a enabled component can be disabled.
    */
   public void disableComponent(Object key) {
     _disableComponent(key);
@@ -180,10 +163,12 @@ public abstract class BaseApplicationComponent extends BaseComponent
     _removeComponent(key);
   }
 
+  @Override
   protected void propagate(Message message) {
     _propagate(message);
   }
 
+  @Override
   public Environment getEnvironment() {
     return super.getEnvironment();
   }
@@ -191,10 +176,6 @@ public abstract class BaseApplicationComponent extends BaseComponent
   public Environment getChildEnvironment() {
     return getChildComponentEnvironment();
   }
-
-  //*******************************************************************
-  // PROTECTED METHODS
-  //*******************************************************************
 
   /**
    * Returns the view model. Usually overridden.
@@ -204,8 +185,7 @@ public abstract class BaseApplicationComponent extends BaseComponent
   }
 
   /**
-   * Returns the the Environment of this Component by default. Usually
-   * overridden.
+   * Returns the the Environment of this Component by default. Usually overridden.
    */
   protected Environment getChildComponentEnvironment() {
     return getEnvironment();

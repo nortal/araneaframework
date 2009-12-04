@@ -27,9 +27,7 @@ import org.araneaframework.core.Assert;
  * @author Rein Raudjärv
  * @since 1.1
  */
-public class LazyExpression implements Expression {
-
-  private static final long serialVersionUID = 1L;
+public class LazyExpression<T> implements Expression {
 
   private final ExpressionFactory factory;
 
@@ -41,20 +39,18 @@ public class LazyExpression implements Expression {
   }
 
   public ExpressionFactory getFactory() {
-    return factory;
+    return this.factory;
   }
 
   public Expression getExpression() {
-    if (expression == null) {
-      expression = factory.createExpression();
-      Assert.notNull(expression,
-          "ExpressionFactory must not create a null object");
+    if (this.expression == null) {
+      this.expression = this.factory.createExpression();
+      Assert.notNull(this.expression, "ExpressionFactory must not create a null object");
     }
-    return expression;
+    return this.expression;
   }
 
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
+  public Object evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
     return getExpression().evaluate(resolver);
   }
 }

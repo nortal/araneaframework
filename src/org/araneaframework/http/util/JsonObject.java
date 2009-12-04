@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.http.util;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.core.Assert;
 
@@ -37,10 +36,10 @@ public class JsonObject implements Serializable {
     buf.append('{');
   }
   
-  public JsonObject(Map map) {
+  public <T,U> JsonObject(Map<T, U> map) {
     this();
-    for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
-      Map.Entry entry = (Entry) i.next();
+    for (Iterator<Map.Entry<T, U>> i = map.entrySet().iterator(); i.hasNext();) {
+      Map.Entry<T, U> entry = i.next();
       if (entry.getValue() instanceof String)
         setStringProperty(entry.getKey().toString(), (String)entry.getValue());
       else
@@ -93,6 +92,7 @@ public class JsonObject implements Serializable {
   /**
    * Get this object in JSON data-interchange format.
    */
+  @Override
   public String toString() {
     buf.append('}');
     String string = buf.toString();

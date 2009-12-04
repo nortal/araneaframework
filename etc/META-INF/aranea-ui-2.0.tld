@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+	version="2.1">
+
+	<description>A set of UI tags that integrate with Aranea server-side functionality for &gt; JSP 2.1.</description>
+	<display-name>Aranea UI</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>ui</short-name>
+	<uri>http://araneaframework.org/tag-library/2.0/ui</uri>
+
+	<tag-file>
+		<name>attribute</name>
+		<path>/META-INF/tags/ui/attribute.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>basicButton</name>
+		<path>/META-INF/tags/ui/basicButton.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>basicLinkButton</name>
+		<path>/META-INF/tags/ui/basicLinkButton.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>body</name>
+		<path>/META-INF/tags/ui/body.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>button</name>
+		<path>/META-INF/tags/ui/button.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>buttonContainer</name>
+		<path>/META-INF/tags/ui/buttonContainer.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>cell</name>
+		<path>/META-INF/tags/ui/cell.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>checkbox</name>
+		<path>/META-INF/tags/ui/checkbox.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>checkboxMultiSelect</name>
+		<path>/META-INF/tags/ui/checkboxMultiSelect.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>dateInput</name>
+		<path>/META-INF/tags/ui/dateInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>dateRangeInput</name>
+		<path>/META-INF/tags/ui/dateRangeInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>element</name>
+		<path>/META-INF/tags/ui/element.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>elementContent</name>
+		<path>/META-INF/tags/ui/elementContent.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>eventButton</name>
+		<path>/META-INF/tags/ui/eventButton.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>eventLinkButton</name>
+		<path>/META-INF/tags/ui/eventLinkButton.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>fileUpload</name>
+		<path>/META-INF/tags/ui/fileUpload.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>floatInput</name>
+		<path>/META-INF/tags/ui/floatInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>form</name>
+		<path>/META-INF/tags/ui/form.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>formEnterKeyboardHandler</name>
+		<path>/META-INF/tags/ui/formEnterKeyboardHandler.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>linkButton</name>
+		<path>/META-INF/tags/ui/linkButton.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>list</name>
+		<path>/META-INF/tags/ui/list.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listAddRow</name>
+		<path>/META-INF/tags/ui/listAddRow.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listBodyRows</name>
+		<path>/META-INF/tags/ui/listBodyRows.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listFilterRow</name>
+		<path>/META-INF/tags/ui/listFilterRow.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listHeader</name>
+		<path>/META-INF/tags/ui/listHeader.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listPager</name>
+		<path>/META-INF/tags/ui/listPager.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>listRowLinkButton</name>
+		<path>/META-INF/tags/ui/listRowLinkButton.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>messages</name>
+		<path>/META-INF/tags/ui/messages.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>multiSelect</name>
+		<path>/META-INF/tags/ui/multiSelect.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>numberInput</name>
+		<path>/META-INF/tags/ui/numberInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>numberInputDisplay</name>
+		<path>/META-INF/tags/ui/numberInputDisplay.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>passwordInput</name>
+		<path>/META-INF/tags/ui/passwordInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>radioSelect</name>
+		<path>/META-INF/tags/ui/radioSelect.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>row</name>
+		<path>/META-INF/tags/ui/row.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>select</name>
+		<path>/META-INF/tags/ui/select.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>systemForm</name>
+		<path>/META-INF/tags/ui/systemForm.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>tabs</name>
+		<path>/META-INF/tags/ui/tabs.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>textarea</name>
+		<path>/META-INF/tags/ui/textarea.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>textInput</name>
+		<path>/META-INF/tags/ui/textInput.tagx</path>
+	</tag-file>
+	<tag-file>
+		<name>textInputDisplay</name>
+		<path>/META-INF/tags/ui/textInputDisplay.tagx</path>
+	</tag-file>
+
+	<function>
+		<name>registerUpdateRegion</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String registerUpdateRegion(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>getUpdateRegionBegin</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getUpdateRegionBegin(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>getUpdateRegionEnd</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getUpdateRegionEnd(javax.servlet.jsp.PageContext, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>evalCSSClass</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String evalCSSClass(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>addMapEntry</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Map addMapEntry(java.util.Map, java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>pushPreviousAttributes</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Map pushPreviousAttributes(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>popPreviousAttributes</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Map popPreviousAttributes(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>setBodyAttributes</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>void setBodyAttributes(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getAcceptCharset</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getAcceptCharset(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getFormAction</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String getFormAction(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>isOverlay</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>boolean isOverlay(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getHiddenFormFields</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.util.Set getHiddenFormFields(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>getFormBackgroundValidation</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>boolean getFormBackgroundValidation(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>markFormElementRendered</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>void markFormElementRendered(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+	<function>
+		<name>renderFormElementErrorMessages</name>
+		<function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+		<function-signature>java.lang.String renderFormElementErrorMessages(javax.servlet.jsp.JspContext)</function-signature>
+	</function>
+
+</taglib>

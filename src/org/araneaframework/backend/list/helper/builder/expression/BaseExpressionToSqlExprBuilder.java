@@ -16,6 +16,8 @@
 
 package org.araneaframework.backend.list.helper.builder.expression;
 
+import org.araneaframework.core.AraneaRuntimeException;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -25,31 +27,27 @@ import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilde
 import org.araneaframework.backend.list.memorybased.Expression;
 
 /**
- * @author <a href="mailto:rein@araneaframework.org">Rein Raudjärv</a>
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
-public class BaseExpressionToSqlExprBuilder
-  implements ExpressionToSqlExprBuilder {
+public class BaseExpressionToSqlExprBuilder implements ExpressionToSqlExprBuilder {
 
-  private static final Log log = LogFactory.getLog(BaseExpressionToSqlExprBuilder.class);
+  private static final Log LOG = LogFactory.getLog(BaseExpressionToSqlExprBuilder.class);
 
-  private Map translators = new HashMap();
+  private Map<Class<?>, ExprToSqlExprTranslator> translators = new HashMap<Class<?>, ExprToSqlExprTranslator>();
 
-  protected void addTranslator(Class expressionClass,
-      ExprToSqlExprTranslator translator) {
+  protected void addTranslator(Class<?> expressionClass, ExprToSqlExprTranslator translator) {
     this.translators.put(expressionClass, translator);
   }
 
   public SqlExpression buildSqlExpression(Expression expression) {
-    if (log.isDebugEnabled()) {
-      log.debug("Expression class: " + expression.getClass().getName());
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Expression class: " + expression.getClass().getName());
     }
 
-    ExprToSqlExprTranslator translator =
-      (ExprToSqlExprTranslator) this.translators.get(expression.getClass());
+    ExprToSqlExprTranslator translator = this.translators.get(expression.getClass());
 
     if (translator == null) {
-      throw new RuntimeException("Expression of class " + expression.getClass()
-          + " not supported");
+      throw new AraneaRuntimeException("Expression of class " + expression.getClass() + " not supported");
     }
 
     return translator.translate(expression, this);

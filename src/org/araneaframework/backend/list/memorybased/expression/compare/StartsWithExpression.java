@@ -25,9 +25,8 @@ import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 /**
- * Expression for StartsWith condition. Supports both database query and
- * mempry-based lists. To use this expression in Aranea, it must be bound to a
- * translator that recognizes it.
+ * Expression for StartsWith condition. Supports both database query and mempry-based lists. To use this expression in
+ * Aranea, it must be bound to a translator that recognizes it.
  * 
  * @see StandardExpressionToSqlExprBuilder
  * @author Martti Tamm
@@ -35,23 +34,20 @@ import org.araneaframework.uilib.list.util.like.LikeConfiguration;
  */
 public class StartsWithExpression extends LikeExpression {
 
-  private static final long serialVersionUID = 1L;
-
-  public StartsWithExpression(Expression expr, Value mask, boolean ignoreCase,
-      LikeConfiguration configuration) {
+  public StartsWithExpression(Expression expr, Value<String> mask, boolean ignoreCase, LikeConfiguration configuration) {
     super(expr, mask, ignoreCase, configuration);
   }
 
-  public Object evaluate(VariableResolver resolver)
-      throws ExpressionEvaluationException {
-    String stringToCompare = ObjectUtils.toString(expr.evaluate(resolver));
-    String maskStr = ObjectUtils.toString(mask.getValue());
+  @Override
+  public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
+    String stringToCompare = ObjectUtils.toString(this.expr.evaluate(resolver));
+    String maskStr = this.mask.getValue();
 
     if (this.ignoreCase) {
       stringToCompare = stringToCompare.toLowerCase();
       maskStr = maskStr.toLowerCase();
     }
 
-    return new Boolean(stringToCompare.startsWith(maskStr));
+    return stringToCompare.startsWith(maskStr);
   }
 }

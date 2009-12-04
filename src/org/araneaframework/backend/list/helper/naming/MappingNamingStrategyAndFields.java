@@ -63,7 +63,7 @@ import org.araneaframework.backend.list.helper.fields.Fields;
  */
 public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
 
-  private static final Log log = LogFactory.getLog(MappingNamingStrategyAndFields.class);
+  private static final Log LOG = LogFactory.getLog(MappingNamingStrategyAndFields.class);
 
   /**
    * Field name --&gt; Database column name (all these fields are in
@@ -226,8 +226,8 @@ public class MappingNamingStrategyAndFields implements NamingStrategy, Fields {
       alias = tmp + index++;
     }
 
-    if (log.isDebugEnabled()) {
-      log.debug("Generated '" + alias + "' as alias for field '" + columnName
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Generated '" + alias + "' as alias for field '" + columnName
           + "'");
     }
 
