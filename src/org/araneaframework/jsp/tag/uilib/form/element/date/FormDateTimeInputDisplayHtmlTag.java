@@ -30,6 +30,7 @@ import org.araneaframework.uilib.form.control.DateTimeControl;
  *   description = "Form date-time display field, represents UiLib 'DateTimeControl'."
  */
 public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
+<<<<<<< .working
 	{
 		baseStyleClass = "aranea-datetime-display";
 	}
@@ -54,4 +55,31 @@ public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
 		
 		return super.doEndTag(out);
 	}
+=======
+
+  {
+    baseStyleClass = "aranea-datetime-display";
+  }
+
+  protected int doEndTag(Writer out) throws Exception {
+    assertControlTypes("DateTimeControl", "JodaDateTimeControl");
+
+    DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
+
+    JspUtil.writeOpenStartTag(out, "span");
+
+    JspUtil.writeAttribute(out, "class", getStyleClass());
+    JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeCloseStartTag(out);
+
+    JspUtil.writeEscaped(out, viewModel.getDate());
+    out.write("&nbsp;");
+    JspUtil.writeEscaped(out, viewModel.getTime());
+
+    JspUtil.writeEndTag(out, "span");
+
+    return super.doEndTag(out);
+  }
+>>>>>>> .merge-right.r5153
 }

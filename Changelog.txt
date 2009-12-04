@@ -11,6 +11,18 @@ Features and Improvements
 	Started parametrizing ListWidget and ListDataProvider
 
 ---------------------------------------------------------------------------------------------
+2009.07.08    | Aranea 1.2.3
+
+Features and Improvements
+    action requests must be one at the time                                     | See #794
+    Multiple eventParameter support                                             | See #495
+    AutoComplete Control Local Data support                                     | See #271
+    File downloading using AJAX method                                          | See #763
+
+Bugfixes
+    InputFilter should not allow pasting (ctrl+v) illegal characters            | See #803
+
+---------------------------------------------------------------------------------------------
 2009.06.18    | Aranea 1.2.2
 
 Features and Improvements

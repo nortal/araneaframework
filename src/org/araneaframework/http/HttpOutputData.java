@@ -36,7 +36,14 @@ public interface HttpOutputData extends OutputData {
    * Note that Aranea may include some information not present in the servlet spec.
    */
   String encodeURL(String url);
-  
+
+  /**
+   * Encodes the redirect URL to include some additional information (e.g. HTTP session identifier). 
+   * Note that Aranea may include some information not present in the servlet spec.
+   * @since 1.2.3
+   */
+  String encodeRedirectURL(String url);
+
   /**
    * Sends an HTTP redirect to a specified location URL.
    */

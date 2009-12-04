@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.util;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.DateTime;
 import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,9 +44,9 @@ public abstract class JodaDateUtil {
 
     if (value.trim().length() == pattern.length()) {
       try {
-        org.joda.time.DateTime date = org.joda.time.format.DateTimeFormat.forPattern(pattern).parseDateTime(value);
+        DateTime date = DateTimeFormat.forPattern(pattern).parseDateTime(value);
 
-        if (date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
+        if (date != null && date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
           // The DateTime.toDate() does not always return the exact date in a JDK
           // Date object. (Note that it is NOT a Joda Date API bug!) Therefore we
           // copy fields one by one.
@@ -59,9 +61,8 @@ public abstract class JodaDateUtil {
           cal.set(Calendar.MILLISECOND, date.millisOfSecond().get());
 
           if (LOG.isTraceEnabled()) {
-            String text = org.joda.time.format.DateTimeFormat.forPattern(pattern).print(date);
-            LOG.trace("Parsed Joda date '" + text + "'; JDK Date version: '"
-                + cal.getTime() + "'.");
+            String text = DateTimeFormat.forPattern(pattern).print(date);
+            LOG.trace("Parsed Joda date '" + text + "'; JDK Date version: '" + cal.getTime() + "'.");
           }
 
           return new ValidationUtil.ParsedDate(cal.getTime(), pattern);

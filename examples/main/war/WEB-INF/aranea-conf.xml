@@ -15,6 +15,11 @@
 		</property>
 	</bean>
 
+	<bean id="araneaApplicationRoot" class="org.araneaframework.http.core.StandardServletServiceAdapterComponent" singleton="false">
+		<property name="childService" ref="araneaApplicationFilters" />
+		<property name="useFullURL" value="true" />
+	</bean>
+
 	<!-- Set the limits for file uploads. -->
 	<bean id="araneaFileUploadFilter" class="org.araneaframework.http.filter.StandardFileUploadFilterService" scope="prototype">
 		<property name="maximumSize" value="1048576" />

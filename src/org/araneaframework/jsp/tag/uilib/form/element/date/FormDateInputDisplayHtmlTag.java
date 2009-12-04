@@ -33,7 +33,7 @@ public class FormDateInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtm
   }
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("DateControl");
+    assertControlTypes("DateControl", "JodaDateControl");
     return super.doEndTag(out);
   }
 }

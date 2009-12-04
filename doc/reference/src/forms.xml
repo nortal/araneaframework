@@ -308,6 +308,31 @@ TextControl textBox = new TextControl(new Long(10), null);
               </row>
 
               <row>
+                <entry><literal>JodaDateControl</literal></entry>
+
+                <entry>A date selection control that allows to choose a date.
+                Supports custom formats of date input and output. The data is stored and returned as
+                <literal>org.joda.time.DateTime</literal>.</entry>
+              </row>
+
+              <row>
+                <entry><literal>JodaDateTimeControl</literal></entry>
+
+                <entry>A date and time selection control that allows to choose
+                a date with a corresponding time. Supports custom formats of
+                date and time input and output. The data is stored and returned as
+                <literal>org.joda.time.DateTime</literal>.</entry>
+              </row>
+
+              <row>
+                <entry><literal>JodaTimeControl</literal></entry>
+
+                <entry>A time selection control that allows to choose a time
+                of day. Supports custom formats of time input and output. The
+                data is stored and returned as <literal>org.joda.time.DateTime</literal>.</entry>
+              </row>
+
+              <row>
                 <entry><literal>NumberControl</literal></entry>
 
                 <entry>A textbox control that constrains the text to be
@@ -2569,7 +2594,7 @@ el.click();</programlisting>
     <sect2>
       <title>&lt;ui:dateInput&gt;</title>
 
-      <para>Form date input field, represents <literal>DateControl</literal>.
+      <para>Form date input field, represents <literal>(Joda)DateControl</literal>.
       Default <literal>styleClass="aranea-date"</literal>.</para>
 
       <sect3>
@@ -2617,7 +2642,7 @@ el.click();</programlisting>
       <title>&lt;ui:dateInputDisplay&gt;</title>
 
       <para>Form date display field, represents
-      <literal>DateControl</literal>. Default
+      <literal>(Joda)DateControl</literal>. Default
       <literal>styleClass="aranea-date-display"</literal>.</para>
 
       <sect3>
@@ -2633,7 +2658,7 @@ el.click();</programlisting>
     <sect2>
       <title>&lt;ui:timeInput&gt;</title>
 
-      <para>Form time input field, represents <literal>TimeControl</literal>.
+      <para>Form time input field, represents <literal>(Joda)TimeControl</literal>.
       Default <literal>styleClass="aranea-time"</literal>. HTML &lt;select&gt;s for easy hour/minute selection
       are rendered too, unless <literal>showTimeSelect</literal> attribute forbids it.</para>
 
@@ -2695,7 +2720,7 @@ el.click();</programlisting>
       <title>&lt;ui:timeInputDisplay&gt;</title>
 
       <para>Form time display field, represents
-      <literal>TimeControl</literal>. Default
+      <literal>(Joda)TimeControl</literal>. Default
       <literal>styleClass="aranea-time-display"</literal>.</para>
 
       <sect3>
@@ -2710,7 +2735,7 @@ el.click();</programlisting>
       <title>&lt;ui:dateTimeInput&gt;</title>
 
       <para>Form input field for both date and time, represents
-      <literal>DateTimeControl</literal>. It is rendered as input fields for date and time + date picker and
+      <literal>(Joda)DateTimeControl</literal>. It is rendered as input fields for date and time + date picker and
       time picker (time picker can be switched off by setting <literal>showTimeSelect="false"</literal> if so desired).</para>
       <sect3>
         <title>Attributes</title>
@@ -2792,7 +2817,7 @@ el.click();</programlisting>
       <title>&lt;ui:dateTimeInputDisplay&gt;</title>
 
       <para>Form display field for both date and time, represents
-      <literal>TimeControl</literal>. Default
+      <literal>(Joda)DateTimeControl</literal>. Default
       <literal>styleClass="aranea-datetime-display"</literal>.</para>
 
       <sect3>
