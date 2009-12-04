@@ -116,8 +116,36 @@ Aranea.Behaviour = {
 	applyCharacterFilter: function(element) {
 		var filter = element.readAttribute(Aranea.Behaviour.ATTR_FILTER);
 		if (filter && !element.getStorage().get(Aranea.Behaviour.ATTACHED_FILTER)) {
-			Event.observe(element, 'keypress', Aranea.Keyboard.getKeyboardInputFilterFunction(filter));
+			element.observe('keypress', Aranea.Keyboard.getKeyboardInputFilterFunction(filter));
+			element.observe("paste", Aranea.Behaviour.onCharacterFilterPaste); //quirksmode (does not work in Opera)
+			Aranea.Behaviour.monitorCharacterFilterInput(element);
 			element.getStorage().set(Aranea.Behaviour.ATTACHED_FILTER, true);
+		}
+	},
+
+	function onCharacterFilterPaste(event) {
+		Aranea.Behaviour.characterFilterInputMonitor.curry(event.element()).defer();
+	},
+
+	function monitorCharacterFilterInput(input) {
+		input = $(input);
+		if (!input) return;
+		window.setInterval(Aranea.Behaviour.characterFilterInputMonitor.curry(input), 1000);
+	},
+
+	function characterFilterInputMonitor(input) {
+		if (!(input = $(input))) return;
+		var filter = input.readAttribute('arn-charFilter')
+		var value = $F(input);
+		if (value == null) return;
+		for (var i = 0; i < value.length; i++) {
+			if (filter.indexOf(value.charAt(i)) == -1) {
+				value = value.substring(0, i) + value.substring(i + 1);
+				i--;
+			}
+		}
+		if ($F(input) != value) {
+			input.value = value;
 		}
 	},
 

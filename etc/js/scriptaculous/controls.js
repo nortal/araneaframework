@@ -46,6 +46,10 @@ Autocompleter.Base = Class.create({
     this.element     = element;
     this.update      = $(update);
     this.hasFocus    = false;
+<<<<<<< .working
+=======
+    this.hasUpdateFocus = 0;
+>>>>>>> .merge-right.r5153
     this.changed     = false;
     this.active      = false;
     this.index       = 0;
@@ -64,13 +68,13 @@ Autocompleter.Base = Class.create({
     this.options.onShow       = this.options.onShow ||
       function(element, update){
         if(!update.style.position || update.style.position=='absolute') {
-          update.style.position = 'absolute';
+          update.setStyle('position', 'absolute');
           Position.clone(element, update, {
             setHeight: false,
             offsetTop: element.offsetHeight
           });
         }
-        Effect.Appear(update,{duration:0.15});
+        Effect.Appear(update, { duration: 0.15 });
       };
     this.options.onHide = this.options.onHide ||
       function(element, update){ new Effect.Fade(update,{duration:0.15}) };
@@ -89,8 +93,14 @@ Autocompleter.Base = Class.create({
 
     Event.observe(this.element, 'blur', this.onBlur.bindAsEventListener(this));
     Event.observe(this.element, 'keydown', this.onKeyPress.bindAsEventListener(this));
+<<<<<<< .working
   },
 
+=======
+    Event.observe(this.update, 'mousedown', function() { this.hasUpdateFocus = true; }.bind(this));
+},
+
+>>>>>>> .merge-right.r5153
   show: function() {
     if(Element.getStyle(this.update, 'display')=='none') this.options.onShow(this.element, this.update);
     if(!this.iefix &&
@@ -106,7 +116,7 @@ Autocompleter.Base = Class.create({
   },
 
   fixIEOverlapping: function() {
-    Position.clone(this.update, this.iefix, {setTop:(!this.update.style.height)});
+    this.update.clonePosition(this.iefix, { setTop: !this.update.style.height });
     this.iefix.style.zIndex = 1;
     this.update.style.zIndex = 2;
     Element.show(this.iefix);

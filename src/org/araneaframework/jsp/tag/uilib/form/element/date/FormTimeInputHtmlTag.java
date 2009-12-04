@@ -51,7 +51,7 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("TimeControl");
+    assertControlTypes("TimeControl", "JodaTimeControl");
 
     // Prepare
     String name = this.getFullFieldId();
