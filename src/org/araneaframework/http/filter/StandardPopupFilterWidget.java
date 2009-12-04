@@ -252,7 +252,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
    */
   protected void render(OutputData output) throws Exception {
     removeRenderedPopups();
-
     super.render(output);
   }
 

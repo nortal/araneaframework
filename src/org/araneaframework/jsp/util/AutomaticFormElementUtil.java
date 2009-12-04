@@ -16,6 +16,12 @@
 
 package org.araneaframework.jsp.util;
 
+import org.araneaframework.uilib.form.control.JodaDateTimeControl;
+
+import org.araneaframework.uilib.form.control.JodaTimeControl;
+
+import org.araneaframework.uilib.form.control.JodaDateControl;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,6 +87,10 @@ public class AutomaticFormElementUtil {
     CONTROLS_TO_EDITABLE_TAGS.put(DateControl.class, "dateInput");
     CONTROLS_TO_EDITABLE_TAGS.put(DateTimeControl.class, "dateTimeInput");
     CONTROLS_TO_EDITABLE_TAGS.put(TimeControl.class, "timeInput");
+
+    CONTROLS_TO_EDITABLE_TAGS.put(JodaDateControl.class, "dateInput");
+    CONTROLS_TO_EDITABLE_TAGS.put(JodaDateTimeControl.class, "dateTimeInput");
+    CONTROLS_TO_EDITABLE_TAGS.put(JodaTimeControl.class, "timeInput");
 
     //-------------------------------------------------------------
     CONTROLS_TO_DISPLAY_TAGS.put(CheckboxControl.class, "checkboxDisplay");

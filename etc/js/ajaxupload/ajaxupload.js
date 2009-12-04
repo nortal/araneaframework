@@ -49,7 +49,7 @@ var AjaxUpload = Class.create({
 			// Fired when hidden iframe is loaded. Usually you don't need to override it.
 			iframeOnLoad: this.defaultIframeOnLoad,
 
-			target: $(target).addClassName('ajax-upload')
+			target: $(target)
 		};
 
 		// Merge the users options with our defaults
@@ -75,9 +75,10 @@ var AjaxUpload = Class.create({
 		var form = new Element('form', {
 				method: 'post',
 				enctype: 'multipart/form-data',
-				encoding: 'multipart/form-data',
-				action: this.options.action
+				encoding: 'multipart/form-data'
 		});
+
+		form.action = this.options.action;
 
 		$(document.body).insert(form);
 
@@ -87,7 +88,7 @@ var AjaxUpload = Class.create({
 		}
 
 		// Add input element for this form:
-		this._input = new Element('input', { type: 'file', name: this.options.name, 'class': 'ajax-upload' });
+		this._input = new Element('input', { type: 'file', name: this.options.name, 'class': 'ajax-upload-input' });
 		this._input.setStyle({
 			position : 'absolute',
 			margin: '-5px 0 0 -175px',
@@ -172,7 +173,7 @@ var AjaxUpload = Class.create({
 	 * Upload file without refreshing the page
 	 */
 	submit: function(){
-		if (!this.fileProvided()) {
+		if (!this.isFileProvided()) {
 			return false;	// there is no file
 		}
 
@@ -203,7 +204,7 @@ var AjaxUpload = Class.create({
 		return file ? (/[.]/.exec(file) ? /[^.]+$/.exec(file.toLowerCase()) : '') : '';
 	},
 
-	fileProvided: function() {
+	isFileProvided: function() {
 		return this._input && this._input.value != '';
 	},
 
@@ -235,13 +236,73 @@ var AjaxUpload = Class.create({
 });
 
 Object.extend(AjaxUpload, {
-	getBox: function(element) {
-		var offset = $(element) ? $(element).cumulativeOffset() : null;
-		return !offset ? null : {
-			left: offset.left,
-			right: offset.left + element.offsetWidth,
-			top: offset.top,
-			bottom: offset.top + element.offsetHeight
+
+	getOffset: function(el){
+		// getOffset function copied from jQuery lib (http://jquery.com/)
+		if (document.documentElement["getBoundingClientRect"]){
+			// Get Offset using getBoundingClientRect
+			// http://ejohn.org/blog/getboundingclientrect-is-awesome/
+			var box = el.getBoundingClientRect(),
+			doc = el.ownerDocument,
+			body = doc.body,
+			docElem = doc.documentElement,
+
+			// for ie 
+			clientTop = docElem.clientTop || body.clientTop || 0,
+			clientLeft = docElem.clientLeft || body.clientLeft || 0,
+
+			// In Internet Explorer 7 getBoundingClientRect property is treated as physical,
+			// while others are logical. Make all logical, like in IE8.
+
+			zoom = 1;
+			if (body.getBoundingClientRect) {
+				var bound = body.getBoundingClientRect();
+				zoom = (bound.right - bound.left)/body.clientWidth;
+			}
+			if (zoom > 1){
+				clientTop = 0;
+				clientLeft = 0;
+			}
+			var top = box.top + (window.pageYOffset || docElem && docElem.scrollTop || body.scrollTop) - clientTop,
+			left = box.left + (window.pageXOffset|| docElem && docElem.scrollLeft || body.scrollLeft) - clientLeft;
+
+			return {
+				top: top,
+				left: left
+			};
+		} else {
+			// Get offset adding all offsets 
+			if (w.jQuery){
+				return jQuery(el).offset();
+			}
+
+			var top = 0, left = 0;
+			do {
+				top += el.offsetTop || 0;
+				left += el.offsetLeft || 0;
+			}
+			while (el = el.offsetParent);
+
+			return {
+				left: left,
+				top: top
+			};
+		}
+	},
+
+	getBox: function (el) {
+		var left, right, top, bottom;
+		var offset = this.getOffset(el);
+		left = offset.left;
+		top = offset.top;
+		right = left + el.offsetWidth;
+		bottom = top + el.offsetHeight;
+
+		return {
+			left: left,
+			right: right,
+			top: top,
+			bottom: bottom
 		};
 	},
 

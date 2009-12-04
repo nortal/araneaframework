@@ -15,6 +15,8 @@
 **/
 package org.araneaframework.http.filter;
 
+import org.araneaframework.core.util.ExceptionUtil;
+
 import org.apache.commons.lang.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,9 +43,14 @@ import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.http.util.URLUtil;
 
 /**
+ * A service that takes care of reading files from resources and writing them to output stream. The
+ * files can be provided individually or by group, as specified in aranea-resources.xml. The service
+ * listens for certain requests that contain {@value #FILE_IMPORTER_NAME} in the request path. The
+ * remaining path is used for file/group lookup.
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
-*/
+ */
 public class StandardFileImportFilterService  extends BaseFilterService {
 
   private static final long serialVersionUID = 1L;
@@ -62,8 +69,12 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 
   public static final String IMPORTER_GROUP_NAME = "FileImporterGroupName";
 
-  public static final String OVERRIDE_PREFIX = "override";
+  public static final String OVERRIDE_PREFIX1 = "/WEB-INF/override/";
+  
+  public static final String OVERRIDE_PREFIX2 = "/override/";
 
+  public static final String OVERRIDE_PREFIX3 = "/";
+  
   public static final String FILE_IMPORTER_NAME = "fileimporter";
 
   synchronized static void initialize(ServletContext context) {
@@ -79,8 +90,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
     }
   }
 
-  protected void action(Path path, InputData input, OutputData output)
-      throws Exception {
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
 
     if (!isInitialized) {
       ServletConfig config = (ServletConfig) getEnvironment().getEntry(ServletConfig.class);
@@ -91,7 +101,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 
     if (uri == null || URLUtil.splitURI(uri).length == 0
         || !URLUtil.splitURI(uri)[0].equals(FILE_IMPORTER_NAME)) {
-      childService._getService().action(path, input, output);
+      this.childService._getService().action(path, input, output);
       return;
     }
 
@@ -110,14 +120,13 @@ public class StandardFileImportFilterService  extends BaseFilterService {
 
     HttpServletResponse response = ServletUtil.getResponse(output);
     List filesToLoad = new ArrayList();
-    OutputStream out = response.getOutputStream();
 
     try {
       if (fileName != null) {
         if (resources.isAllowedFile(fileName)) {
           setHeaders(response, resources.getContentType(fileName));
           filesToLoad.add(fileName);
-          loadFiles(filesToLoad, out);
+          loadFiles(filesToLoad, response.getOutputStream());
         }
       } else if (groupName != null) {
         Map group = resources.getGroupByName(groupName);
@@ -126,7 +135,7 @@ public class StandardFileImportFilterService  extends BaseFilterService {
           Map.Entry entry = (Map.Entry) (group.entrySet().iterator().next());
           setHeaders(response, (String) entry.getValue());
           filesToLoad.addAll(group.keySet());
-          loadFiles(filesToLoad, out);
+          loadFiles(filesToLoad, response.getOutputStream());
         } else {
           log.warn("Unexistent group specified for file importing, " + groupName);
           throw new FileNotFoundException();
@@ -134,87 +143,103 @@ public class StandardFileImportFilterService  extends BaseFilterService {
       }
     } catch (FileNotFoundException e) {
       String notFoundName = fileName == null ? groupName : fileName;
-      response.sendError(HttpServletResponse.SC_NOT_FOUND,
-          "Imported file or group '" + notFoundName + "' not found.");
+      response.sendError(HttpServletResponse.SC_NOT_FOUND, "Imported file or group '"
+          + notFoundName + "' not found.");
     }
   }
 
-  private void setHeaders(HttpServletResponse response, String contentType) {
+  protected void setHeaders(HttpServletResponse response, String contentType) {
     response.setHeader("Cache-Control", "max-age=" + (cacheHoldingTime / 1000));
-    response.setDateHeader("Expires", System.currentTimeMillis()
-        + cacheHoldingTime);
+    response.setDateHeader("Expires", System.currentTimeMillis() + cacheHoldingTime);
     response.setContentType(contentType);
   }
 
-  private void loadFiles(List files, OutputStream out) throws Exception {
-    ServletContext context = (ServletContext) getEnvironment().getEntry(ServletContext.class);
-
+  protected void loadFiles(List files, OutputStream out) throws Exception {
     for (Iterator iter = files.iterator(); iter.hasNext();) {
       String fileName = (String) iter.next();
-      ClassLoader loader = getClass().getClassLoader();
+      URL fileURL = getFileURL(fileName);
+      InputStream fileInputStream = getInputStream(fileURL, fileName);
 
-      // first we try load an override
-      URL fileURL = context.getResource("/" + OVERRIDE_PREFIX + "/" + fileName);
-      if (fileURL == null) {
-        fileURL = context.getResource("/" + fileName);
-      }
-
-      if (fileURL == null) {
-        // fallback to the original
-        fileURL = loader.getResource(fileName);
-      } else if (log.isDebugEnabled()) {
-        log.debug("Serving override of file '" + fileName + "'"
-            + " from context path resource '" + fileURL.getFile() + "'.");
-      }
-
-      FileInputStream fileInputStream = null;
-      // fallback to the filesystem
-      if (fileURL == null) {
-        try {
-          fileInputStream = new FileInputStream(fileName);
-        } catch (FileNotFoundException e) {
-          // not being able to load results in FileNotFoundException, see below
-        } catch (SecurityException e) {
-          // not being able to load results in FileNotFoundException, see below
-        }
-      }
-
-      if (fileURL == null && fileInputStream == null) {
-        if (log.isWarnEnabled()) {
-          log.warn("Unable to locate resource '" + fileName + "'");
-        }
-        throw new FileNotFoundException("Unable to locate resource '"
-            + fileName + "'");
-      }
-
-      InputStream inputStream = null;
       try {
         if (fileInputStream != null) {
-          inputStream = fileInputStream;
-        } else if (fileURL != null) {
-          inputStream = fileURL.openStream();
-        }
-
-        if (inputStream != null) {
           int length = 0;
           byte[] bytes = new byte[1024];
 
           do {
-            length = inputStream.read(bytes);
-            if (length == -1)
-              break;
-            out.write(bytes, 0, length);
+            length = fileInputStream.read(bytes);
+            if (length >= 0) {
+              out.write(bytes, 0, length);
+            }
           } while (length != -1);
         }
 
       } finally {
-        if (inputStream != null) {
-          inputStream.close();
+        if (fileInputStream != null) {
+          fileInputStream.close();
         }
       }
-
     }
-
   }
 
+  protected URL getFileURL(String fileName) {
+    ServletContext context = (ServletContext) getEnvironment().getEntry(ServletContext.class);
+    ClassLoader loader = getClass().getClassLoader();
+    URL fileURL = null;
+
+    // first we try load an override
+    try {
+      fileURL = context.getResource(OVERRIDE_PREFIX1 + fileName);
+      if (fileURL == null) {
+        fileURL = context.getResource(OVERRIDE_PREFIX2 + fileName);
+        if (fileURL == null) {
+          fileURL = context.getResource(OVERRIDE_PREFIX3 + fileName);
+        }
+      }
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
+
+    if (fileURL == null) { // fallback to the original
+      fileURL = loader.getResource(fileName);
+    } else if (log.isDebugEnabled()) {
+      log.debug("Serving override of file '" + fileName + "'" + " from context path resource '"
+          + fileURL.getFile() + "'.");
+    }
+    return fileURL;
+  }
+
+  protected InputStream getInputStream(URL fileURL, String fileName) {
+    InputStream result = null;
+
+    // fallback to the filesystem
+    if (fileURL == null) {
+      try {
+        result = new FileInputStream(fileName);
+      } catch (FileNotFoundException e) {
+        // not being able to load results in FileNotFoundException, see below
+      } catch (SecurityException e) {
+        // not being able to load results in FileNotFoundException, see below
+      }
+    }
+
+    try {
+      if (result == null && fileURL != null) {
+        result = fileURL.openStream();
+
+      } else if (fileURL == null && result == null) {
+        if (log.isWarnEnabled()) {
+          log.warn("Unable to locate resource '" + fileName + "'");
+        }
+
+        throw new FileNotFoundException("Unable to locate resource '" + fileName + "'");
+      }
+    } catch (Exception e) {
+      if (log.isWarnEnabled()) {
+        log.warn("The resource URL points to a file that is inaccessible. Skipping the file.", e);
+      }
+      result = null;
+    }
+
+    return result;
+  }
 }

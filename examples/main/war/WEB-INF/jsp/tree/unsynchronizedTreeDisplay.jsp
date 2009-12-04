@@ -7,8 +7,8 @@
 	version="1.2">
 
 	<ui:widgetContext>
-		A link for <a href="#" onclick="return AraneaTree.displayAction(this, 'test', 'someData');">test action</a> in node display widget (clicked <c:out value="${viewData.counter}"/> times).
-		<a href="#" onclick="return AraneaTree.displayAction(this, 'sleep', 'someData');">Sleep</a>
+		A link for <a href="#" onclick="return new AraneaTree().displayAction(this, 'test', 'someData');">test action</a> in node display widget (clicked <c:out value="${viewData.counter}"/> times).
+		<a href="#" onclick="return new AraneaTree().displayAction(this, 'sleep', 'someData');">Sleep</a>
 	</ui:widgetContext>
 
 </jsp:root>

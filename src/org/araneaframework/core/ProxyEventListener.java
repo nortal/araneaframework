@@ -29,7 +29,7 @@ public class ProxyEventListener implements EventListener {
 
   private static final long serialVersionUID = 1L;
 
-  public static final Log log = LogFactory.getLog(ProxyEventListener.class);
+  protected static final Log log = LogFactory.getLog(ProxyEventListener.class);
 
   protected Widget eventTarget;
 
@@ -38,7 +38,7 @@ public class ProxyEventListener implements EventListener {
   }
 
   public void processEvent(String eventId, InputData input) throws Exception {
-    String eventParam = (String) input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
-    ProxiedHandlerUtil.invokeEventHandler(eventId, eventParam, eventTarget);
+    Object eventParam = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
+    ProxiedHandlerUtil.invokeEventHandler(eventId, (String) eventParam, this.eventTarget);
   }
 }

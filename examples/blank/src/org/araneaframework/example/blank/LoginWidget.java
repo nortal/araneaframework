@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006-2007 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.example.blank;
 
@@ -23,34 +23,36 @@ import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.data.StringData;
 
 /**
- * This is login widget. After receiving "successful" login event, it
- * replaces itself on the call stack with real application root widget.
+ * This is login widget. After receiving "successful" login event, it replaces itself on the call
+ * stack with real application root widget.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  */
 public class LoginWidget extends BaseUIWidget {
+
   private static final long serialVersionUID = 1L;
+
   /* Widget we will create and attach to this widget. */
-	private FormWidget form;
+  private FormWidget form;
 
-	protected void init() throws Exception {
-		setViewSelector("login");
-	    setGlobalEventListener(new ProxyEventListener(this));
+  protected void init() throws Exception {
+    setViewSelector("login");
+    setGlobalEventListener(new ProxyEventListener(this));
 
-		form = new FormWidget();
-		form.addElement("username", "#User", new TextControl(), new StringData(), true);
-		form.addElement("password", "#Password", new TextControl(), new StringData(), true);
+    form = new FormWidget();
+    form.addElement("username", "#User", new TextControl(), new StringData(), true);
+    form.addElement("password", "#Password", new TextControl(), new StringData(), true);
 
-		addWidget("loginForm", form);
-	}
+    addWidget("loginForm", form);
+  }
 
-	private void handleEventLogin() throws Exception {
-		if (form.convertAndValidate()) {
-			// validate login, start root flow
-		}
-	}
+  public void handleEventLogin() throws Exception {
+    if (form.convertAndValidate()) {
+      // validate login, start root flow
+    }
+  }
 
-	private void handleEventJustLetMeIn() throws Exception {
-		getFlowCtx().replace(new RootWidget(), null);
-	}
+  public void handleEventJustLetMeIn() throws Exception {
+    getFlowCtx().replace(new RootWidget(), null);
+  }
 }

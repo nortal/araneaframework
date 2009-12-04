@@ -88,6 +88,10 @@ public class StandardServletOutputData implements HttpOutputData {
     return res.encodeURL(url);
   }
 
+  public String encodeRedirectURL(String url) {
+    return res.encodeRedirectURL(url);
+  }
+
   public String getCharacterEncoding() {
     return res.getCharacterEncoding();
   }

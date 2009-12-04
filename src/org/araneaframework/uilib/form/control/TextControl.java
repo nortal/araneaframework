@@ -16,6 +16,8 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.araneaframework.core.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
@@ -50,7 +52,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param textType specific type.
    */
   public TextControl(TextType textType) {
-    this.textType = textType;
+    setTextType(textType);
   }  
   
   /**
@@ -82,7 +84,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param maxLength maximum permitted length.
    */
   public TextControl(TextType textType, Long minLength, Long maxLength) {
-    this.textType = textType;
+    setTextType(textType);
     setMinLength(minLength);
     setMaxLength(maxLength);
   }
@@ -92,6 +94,7 @@ public class TextControl extends StringValueControl implements FilteredInputCont
    * @param textType the specific text type.
    */
   public void setTextType(TextType textType) {
+    Assert.notNullParam(this, textType, "textType");
     this.textType = textType;
   }
 

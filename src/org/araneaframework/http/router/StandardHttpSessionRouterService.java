@@ -163,17 +163,22 @@ public class StandardHttpSessionRouterService extends BaseService {
       }
     }
   }
-  
-  public void propagate(Message message, InputData input, OutputData output) { // XXX who uses this method?
+
+  protected void propagate(Message message) throws Exception {
+    if (getInputData() != null) {
+      propagate(message, getInputData(), getOutputData());
+    } else {
+      super.propagate(message);
+    }
+  }
+
+  public void propagate(Message message, InputData input, OutputData output) {
     HttpSession sess = ServletUtil.getRequest(input).getSession();
-    
     RelocatableService service = getOrCreateSessionService(sess);
-    
     message.send(null, service);
-    
     sess.setAttribute(SESSION_SERVICE_KEY, service);
   }
-  
+
   private synchronized Object getOrCreateSessionSyncObject(HttpSession sess) {
     Object syncObject = sess.getAttribute(SESSION_SYNC_OBJECT_KEY);
     if (syncObject == null) {

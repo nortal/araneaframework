@@ -6,11 +6,9 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 	<ui:widgetContext>
-		<ui:form id="form">
-			<ui:formElement id="classSelect">
-				<ui:label/>
-				<ui:select/>
-			</ui:formElement>
-		</ui:form>
+		<h1><fmt:message key="componentsTree.title" /></h1>
+		<p><fmt:message key="componentsTree.desc1" /></p>
+		<p><fmt:message key="componentsTree.desc2" /></p>
+		<p><c:out value="${viewData.tree}" escapeXml="false" /></p>
 	</ui:widgetContext>
 </jsp:root>

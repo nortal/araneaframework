@@ -2,8 +2,6 @@ package org.araneaframework.jsp.tag.uilib.form.element.date;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.text.ParseException;
-import java.util.Calendar;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.util.FileImportUtil;
@@ -13,9 +11,7 @@ import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.event.OnChangeEventListener;
-import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
-import org.araneaframework.uilib.form.control.TimestampControl.ViewModel;
 
 /**
  * Date/time input form element tag.
@@ -46,57 +42,55 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
   }
 
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("DateTimeControl");
+    assertControlTypes("DateTimeControl", "JodaDateTimeControl");
 
     // Prepare
     String name = this.getFullFieldId();
     DateTimeControl.ViewModel viewModel = (DateTimeControl.ViewModel) this.controlViewModel;
-    Long timeInputSize = DEFAULT_TIME_INPUT_SIZE;
-    Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;
+
+    Integer hour = viewModel.getHour();
+    Integer minute = viewModel.getMinute();
+
+    if (this.showTimeSelect) {
+      if (hour == null) {
+        hour = getParamValue(name + ".select1");
+      }
+      if (minute == null) {
+        minute = getParamValue(name + ".select2");
+      }
+    }
 
     // Write
     if (!this.inline) {
       out.write("<table border='0' cellpadding='0' cellspacing='0'><tr><td nowrap='true'>\n");
     }
 
-    this.writeDateInput(out, name, name + ".date", viewModel.getDate(),
-        this.localizedLabel, viewModel.isMandatory(),
-        this.formElementViewModel.isValid(), dateInputSize, viewModel.isDisabled(),
-        getDateStyleClass(), this.accessKey, viewModel.getDateViewModel());
+    this.writeDateInput(
+        out,
+        name,
+        name + ".date",
+        viewModel.getDate(),
+        this.localizedLabel,
+        viewModel.isMandatory(),
+        this.formElementViewModel.isValid(),
+        DEFAULT_DATE_INPUT_SIZE,
+        viewModel.isDateDisabled(),
+        getDateStyleClass(),
+        this.accessKey);
 
     out.write("&nbsp;");
 
-    writeTimeInput(out, name, viewModel.getTime(), this.localizedLabel,
-        timeInputSize, viewModel.isDisabled());
-
-    Integer minute = null, hour = null;
-
-    try {
-      ViewModel timeViewModel = viewModel.getTimeViewModel();
-      if (timeViewModel.getSimpleValue() != null) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(timeViewModel.getCurrentSimpleDateTimeFormat().parse(
-            timeViewModel.getSimpleValue()));
-        hour = new Integer(calendar.get(Calendar.HOUR_OF_DAY));
-        minute = new Integer(calendar.get(Calendar.MINUTE));
-      }
-    } catch (ParseException e) {
-      // try to preserve the contents of selects anyway
-      if (this.showTimeSelect) {
-        String strHour = ServletUtil.getRequest(getOutputData().getInputData())
-            .getParameter(name + ".select1");
-        if (strHour != null && !(strHour.trim().length() == 0))
-          hour = Integer.valueOf(strHour.trim());
-        String strMinute = ServletUtil.getRequest(
-            getOutputData().getInputData()).getParameter(name + ".select2");
-        if (strMinute != null && !(strMinute.trim().length() == 0))
-          minute = Integer.valueOf(strMinute);
-      }
-    }
+    writeTimeInput(
+        out,
+        name,
+        viewModel.getTime(),
+        this.localizedLabel,
+        DEFAULT_TIME_INPUT_SIZE,
+        viewModel.isDisabled());
 
     if (this.showTimeSelect) {
-      writeHourSelect(out, name, viewModel.isDisabled(), hour);
-      writeMinuteSelect(out, name, viewModel.isDisabled(), minute);
+      writeHourSelect(out, name, viewModel.isTimeDisabled(), viewModel.getHour());
+      writeMinuteSelect(out, name, viewModel.isTimeDisabled(), viewModel.getMinute());
     }
 
     if (!this.inline) {
@@ -104,6 +98,11 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     }
 
     return super.doEndTag(out);
+  }
+
+  protected Integer getParamValue(String param) {
+    String value = ServletUtil.getRequest(getOutputData().getInputData()).getParameter(param);
+    return StringUtils.isBlank(value) ? null : Integer.valueOf(value);
   }
 
   public String getTimeStyleClass() {
@@ -273,23 +272,22 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       String name,
       String value,
       String label,
-      boolean isMandatory,
-      boolean isValid,
+      boolean mandatory,
+      boolean valid,
       Long size,
       boolean disabled,
       String styleClass,
-      String accessKey,
-      DateControl.ViewModel viewModel) throws Exception {
+      String accessKey) throws Exception {
     DateTimeControl.ViewModel dateTimeViewModel = ((DateTimeControl.ViewModel) controlViewModel);
     // Write input tag
 
-      if (dateTimeViewModel.getDateViewModel().getInputFilter() != null) {
-        this.attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getInputFilter().getCharacterFilter());
+    if (dateTimeViewModel.getDateViewModel().getInputFilter() != null) {
+      this.attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, dateTimeViewModel.getDateViewModel().getInputFilter().getCharacterFilter());
     }
 
-        if (StringUtils.isBlank(id)) {
-          id = name;
-        }
+    if (StringUtils.isBlank(id)) {
+      id = name;
+    }
 
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", id);
@@ -303,10 +301,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     if (!StringUtils.isBlank(accessKey)) JspUtil.writeAttribute(out, "accesskey", accessKey);
 
     if (disabled) {
-      if (viewModel.isDisabled()) {
-        JspUtil.writeAttribute(out, this.disabledRenderMode,
-          this.disabledRenderMode);
-      }
+      JspUtil.writeAttribute(out, this.disabledRenderMode,
+        this.disabledRenderMode);
     } else if (this.events && dateTimeViewModel.isOnChangeEventRegistered()) {
       writeSubmitScriptForUiEvent(out, "onchange", this.derivedId, "onChanged",
           this.onChangePrecondition, this.updateRegionNames);

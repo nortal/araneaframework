@@ -16,10 +16,8 @@
 
 package org.araneaframework.uilib.util;
 
-import org.joda.time.DateTime;
-
 import org.joda.time.format.DateTimeFormat;
-
+import org.joda.time.DateTime;
 import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,7 +61,7 @@ public abstract class JodaDateUtil {
           cal.set(Calendar.MILLISECOND, date.millisOfSecond().get());
 
           if (LOG.isTraceEnabled()) {
-            String text = org.joda.time.format.DateTimeFormat.forPattern(pattern).print(date);
+            String text = DateTimeFormat.forPattern(pattern).print(date);
             LOG.trace("Parsed Joda date '" + text + "'; JDK Date version: '"
                 + cal.getTime() + "'.");
           }

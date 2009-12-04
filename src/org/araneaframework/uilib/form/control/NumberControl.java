@@ -31,7 +31,7 @@ import org.araneaframework.uilib.util.MessageUtil;
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  */
-public class NumberControl extends EmptyStringNullableControl implements FilteredInputControl {
+public class NumberControl extends StringValueControl implements FilteredInputControl {
   private InputFilter inputFilter;
   private BigInteger minValue;
   private BigInteger maxValue;

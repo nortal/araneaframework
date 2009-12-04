@@ -81,12 +81,37 @@ function setCloningUrl(el) {
 function applyCharacterFilter(el) {
   var filter = el.readAttribute('arn-charFilter');
   if (filter) {
+    filter += '\t';
     Event.observe(el, "keydown", getKeyboardInputFilterFunction(filter));
-    if (!Prototype.Browser.IE && !Prototype.Browser.Opera) {
-      Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
-    } else {
-      el.attachEvent('onkeypress', function() { getKeyboardInputFilterFunction(filter)(window.event); });
+    Event.observe(el, "keypress", getKeyboardInputFilterFunction(filter));
+    Event.observe(el, "paste", onCharacterFilterPaste); //quirksmode (does not work in Opera)
+    monitorCharacterFilterInput(el);
+  }
+}
+
+function onCharacterFilterPaste(event) {
+  characterFilterInputMonitor.curry(event.element()).defer();
+}
+
+function monitorCharacterFilterInput(input) {
+  input = $(input);
+  if (!input) return;
+  window.setInterval(characterFilterInputMonitor.curry(input), 1000);
+}
+
+function characterFilterInputMonitor(input) {
+  if (!$(input)) return;
+  var filter = input.readAttribute('arn-charFilter')
+  var value = $F(input);
+  if (value == null) return;
+  for (var i = 0; i < value.length; i++) {
+    if (filter.indexOf(value.charAt(i)) == -1) {
+      value = value.substring(0, i) + value.substring(i + 1);
+      i--;
     }
+  }
+  if ($F(input) != value) {
+    input.value = value;
   }
 }
 
@@ -185,7 +210,7 @@ Object.extend(Aranea.Behaviour, {
    * @param options - Options for Ajax.Autocompleter.
    * @since 1.2.1
    */
-  doAutoCompleteInputSetup: function(name, eventType, updateRegions, options) {
+  doAutoCompleteInputSetup: function(name, eventType, updateRegions, options, data) {
     _ap.addClientLoadEvent(function() {
       var form = AraneaPage.findSystemForm();
 
@@ -203,7 +228,11 @@ Object.extend(Aranea.Behaviour, {
 
       form = null;
       var url = Aranea.Behaviour.getAutoCompleteURL(name);
-      new Ajax.Autocompleter(name, "ACdiv." + name, url, options);
+      if (data && typeof data == 'boolean') {
+        new Ajax.Autocompleter(name, "ACdiv." + name, url, options);
+      } else if (Object.isArray(data) && data.length > 0) {
+        new Autocompleter.Local(name, "ACdiv." + name, data, options);
+      }
     });
   }
 });

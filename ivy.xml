@@ -62,7 +62,7 @@
 		<dependency conf="build" org="javax" rev="1.4" name="j2ee" transitive="false"/>
 		<dependency conf="build" org="joda-time" rev="1.6" name="joda-time" transitive="false"/>
 		<dependency conf="build" org="javax.servlet" rev="1.0.6" name="jstl" transitive="false"/>
-		<dependency conf="build" org="springframework" rev="1.2.6" name="spring" transitive="false"/>
+		<dependency conf="build" org="springframework" rev="1.2.6" name="spring"/>
 		<dependency conf="build" org="taglibs" rev="1.0.6" name="standard" transitive="false"/>
 		<dependency conf="build" org="xerces" rev="2.9.1" name="xercesImpl"/>
 
