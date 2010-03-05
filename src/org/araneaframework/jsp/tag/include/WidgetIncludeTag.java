@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.include;
 
-import java.io.PrintWriter;
-
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +26,6 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
-import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -68,14 +66,15 @@ public class WidgetIncludeTag extends BaseIncludeTag {
         hideGlobalContextEntries(this.pageContext);
 
         // Let's wrap the response so that the rendered widgets would write to the given stream.
-        HttpServletResponse response = ServletUtil.getResponse(output);
-        output.extend(HttpServletResponse.class, new WidgetResponseWrapper(response, out));
+//        HttpServletResponse response = ServletUtil.getResponse(output);
+//        output.extend(HttpServletResponse.class, new WidgetResponseWrapper(response, out));
 
         // Render the specified widget:
+        out.flush();
         widget._getWidget().render(output);
 
         // Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
-        output.extend(HttpServletResponse.class, response);
+//        output.extend(HttpServletResponse.class, response);
       } else {
         JspContext config = getEnvironment().requireEntry(JspContext.class);
         JspUtil.include(this.pageContext, config.getJspPath() + "/" + this.page);

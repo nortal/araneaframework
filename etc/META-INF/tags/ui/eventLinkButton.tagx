@@ -34,7 +34,7 @@
 			<ui:attribute name="title" value="${tooltipId}"/>
 		</c:if>
 
-		<ui:elementEventAttrs attr="onclick"
+		<util:elementEventAttrs attr="onclick"
 			eventId="${eventId}"
 			eventParam="${eventParam}"
 			eventTarget="${eventTarget}"

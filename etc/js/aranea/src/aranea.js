@@ -671,7 +671,7 @@ Aranea.Page.Submitter.Plain = Class.create({
 	event_core: function(data) {
 		data.form.submit();
 	}
-})
+});
 
 /**
  * This class extends the default submitter, and overrides event() to initiate an AJAX request and to process result
@@ -1075,9 +1075,9 @@ Aranea.Page.RegionHandler = {
 		},
 
 		getParentElement: function(el, tagName, className) {
-			if (!el) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "element" must not be null!')
-			if (!tagName) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "tagName" must not be null!')
-			if (!className) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "className" must not be null!')
+			if (!el) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "element" must not be null!');
+			if (!tagName) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "tagName" must not be null!');
+			if (!className) throw('Aranea.Page.RegionHandler.FormBackgroundValidation: parameter "className" must not be null!');
 
 			var x = function(element) { return element.tagName.toUpperCase() == tagName.toUpperCase(); };
 			var y = function(element) { return x(element) && Element.hasClassName(element, className); };

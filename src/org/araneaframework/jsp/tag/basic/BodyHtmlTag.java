@@ -222,7 +222,7 @@ public class BodyHtmlTag extends PresentationTag {
     out.write(locale.getLanguage());
     out.write("',country:'");
     out.write(locale.getCountry());
-    out.write("');");
+    out.write("'});");
   }
 
   /**
