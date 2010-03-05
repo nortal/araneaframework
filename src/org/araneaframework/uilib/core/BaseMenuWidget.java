@@ -55,9 +55,6 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    */
   public BaseMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
-    this.menu = buildMenu();
-    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
-    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
 
   /**
@@ -70,6 +67,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   protected void init() throws Exception {
     super.init();
     setFinishable(false);
+    this.menu = buildMenu();
+    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
+    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
 
   @Override

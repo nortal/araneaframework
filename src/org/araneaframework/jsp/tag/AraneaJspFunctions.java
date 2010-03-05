@@ -161,7 +161,7 @@ public class AraneaJspFunctions {
     }
 
     // The map for new attributes:
-    return allAttrs.isEmpty() ? null : allAttrs.getLast();
+    return allAttrs.isEmpty() ? null : allAttrs.removeLast();
   }
 
   public static Map<String, String> addMapEntry(Map<String, String> map, String key, String value) {

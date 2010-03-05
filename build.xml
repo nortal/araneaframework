@@ -161,7 +161,7 @@
 			listerrors="true"
 			failonerror="true"
 			uriroot="etc/META-INF/tags/util"
-			verbose="true"
+			verbose="1"
 			javaencoding="UTF-8"
 			jspfiles="assert.tagx"
 			

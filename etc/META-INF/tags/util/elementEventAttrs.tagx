@@ -68,7 +68,7 @@
 			<c:set var="params" value="${empty eventId ? 'null' : eventId}${not empty params ? ',':''}${params}"/>
 		</c:if>
 
-		<ui:attribute name="${attr}" value="return ev(${params});"/>
+		<ui:attribute name="${attr}" value="javascript:return Aranea.Page.event(${params});"/>
 	</c:if>
 
 </jsp:root>

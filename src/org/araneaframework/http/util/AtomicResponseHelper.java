@@ -124,7 +124,7 @@ public class AtomicResponseHelper {
       if (this.out == null) {
         throw new IllegalStateException("Cannot reset buffer - response is already committed");
       }
-      getResponse().reset();
+     // getResponse().reset();
       resetStream();
       this.writerOut = null;
     }
