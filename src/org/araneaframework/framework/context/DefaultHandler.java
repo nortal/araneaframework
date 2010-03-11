@@ -30,10 +30,10 @@ public class DefaultHandler<T> implements Handler<T> {
   /**
    * An empty implementation for <code>onCancel</code> event.
    */
-  public void onCancel() throws Exception {}
+  public void onCancel() {}
 
   /**
    * An empty implementation for <code>onFinish</code> event.
    */
-  public void onFinish(T returnValue) throws Exception {}
+  public void onFinish(T returnValue) {}
 }

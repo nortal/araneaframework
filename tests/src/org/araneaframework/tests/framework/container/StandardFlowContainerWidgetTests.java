@@ -113,11 +113,11 @@ public class StandardFlowContainerWidgetTests extends TestCase {
     private boolean finished;
     private boolean cancelled;
     
-    public void onCancel() throws Exception {
+    public void onCancel() {
       cancelled = true;
     }
 
-    public void onFinish(Object returnValue) throws Exception {
+    public void onFinish(Object returnValue) {
       finished = true;
       this.returnValue = returnValue;
     }

@@ -1,8 +1,11 @@
 package org.araneaframework.uilib.form.control;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemBuilder;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 /**
@@ -12,6 +15,7 @@ import org.araneaframework.uilib.util.DisplayItemUtil;
  * required when adding new items through <code>SelectControl</code>.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
+ * @author Vassili Jakovlev (vassili@webmedia.ee)
  * @since 2.0
  */
 public class DefaultSelectControl extends SelectControl<DisplayItem> {
@@ -20,16 +24,22 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
     super(DisplayItem.class, "label", "value");
   }
 
+  public <V> void addItems(Collection<V> values, DisplayItemBuilder<V> itemBuilder) {
+    List<DisplayItem> displayItems = DisplayItemUtil.buildDisplayItems(values, itemBuilder);
+    addItems(displayItems);
+  }
+
+  public <V> void addItems(Collection<V> values, DisplayItemBuilder<V> itemBuilder, Comparator<V> comparator) {
+    List<DisplayItem> displayItems = DisplayItemUtil.buildOrderedDisplayItems(values, itemBuilder, comparator);
+    addItems(displayItems);
+  }
+
   @Override
   public void addItem(String label, String value) {
     Assert.notNullParam(label, "label");
-    try {
-      DisplayItem newItem = new DisplayItem(value, label);
-      DisplayItemUtil.assertUnique(this.items, newItem);
-      this.items.add(newItem);
-    } catch (Exception e) {
-      ExceptionUtil.uncheckException(e);
-    }
+    DisplayItem newItem = new DisplayItem(value, label);
+    DisplayItemUtil.assertUnique(this.items, newItem);
+    this.items.add(newItem);
   }
 
   @Override
@@ -38,6 +48,20 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
   }
 
   protected class ViewModel extends SelectControl<DisplayItem>.ViewModel {
+
+    @Override
+    protected void initItems() {
+      for (DisplayItem item : DefaultSelectControl.this.items) {
+        boolean isDisabled = DefaultSelectControl.this.disabledItems.contains(item);
+        this.selectItems.add(item);
+        if (isDisabled) {
+          item.setDisabled(isDisabled);
+          this.disabledItems.add(item);
+        } else {
+          this.enabledItems.add(item);
+        }
+      }
+    }
 
     @Override
     public String getControlType() {

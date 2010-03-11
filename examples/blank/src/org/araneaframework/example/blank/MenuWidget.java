@@ -28,7 +28,7 @@ public class MenuWidget extends BaseMenuWidget {
 	}
 
 	@Override
-  protected MenuItem buildMenu() throws Exception {
+  protected MenuItem buildMenu() {
 		MenuItem result = new MenuItem();
 		result.addMenuItem(new MenuItem("#Blank1", BlankWidget.class));
 		result.addMenuItem(new MenuItem("#Blank2", BlankWidget.class));

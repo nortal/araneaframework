@@ -107,7 +107,7 @@ public interface ListDataProvider<T> extends Serializable {
 	 * This method should synchronize the list data provider data with the storage, if any
 	 * synchronization is necessary.
 	 */
-	public void refreshData() throws Exception;
+	public void refreshData();
 
 	/**
 	 * This method should return a range of items from the list data.

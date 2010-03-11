@@ -57,19 +57,19 @@ public class ContractListWidget extends TemplateBaseWidget {
     addWidget("contractList", this.list);
   }
 
-  private void refreshList() throws Exception {
+  private void refreshList() {
     this.list.getDataProvider().refreshData();
   }
 
   public void handleEventAdd() throws Exception {
     getFlowCtx().start(new ContractAddEditWidget(), new FlowContext.Handler<Long>() {
 
-      public void onFinish(Long id) throws Exception {
+      public void onFinish(Long id) {
         LOG.debug("Contract added with Id of " + id + " sucessfully");
         refreshList();
       }
 
-      public void onCancel() throws Exception {}
+      public void onCancel() {}
     });
   }
 

@@ -149,8 +149,8 @@ public interface FlowContext extends Serializable {
    * Callback that will be run when flow has finished some way. 
    */
   public interface Handler<T> extends Serializable {
-    public void onFinish(T returnValue) throws Exception;   
-    public void onCancel() throws Exception;
+    public void onFinish(T returnValue);   
+    public void onCancel();
   }
   
   /**

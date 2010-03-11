@@ -344,11 +344,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
 
     if (previousFrame.getHandler() != null) {
-      try {
-        previousFrame.getHandler().onFinish(returnValue);
-      } catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
+      previousFrame.getHandler().onFinish(returnValue);
     }
 
     if (this.finishable && this.callStack.isEmpty()) {
@@ -380,11 +376,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
 
     if (previousFrame.getHandler() != null) {
-      try {
-        previousFrame.getHandler().onCancel();
-      } catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
+      previousFrame.getHandler().onCancel();
     }
 
     if (this.finishable && this.callStack.isEmpty()) {

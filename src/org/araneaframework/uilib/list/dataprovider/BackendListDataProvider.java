@@ -99,7 +99,7 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
   /**
    * Empty.
    */
-  public void refreshData() throws Exception {
+  public void refreshData() {
     forceReload();
     notifyDataChangeListeners();
   }

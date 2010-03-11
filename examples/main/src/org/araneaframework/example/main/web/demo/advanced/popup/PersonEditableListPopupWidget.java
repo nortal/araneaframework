@@ -261,7 +261,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       this.rowObject = rowObject;
     }
 
-    public void onCancel() throws Exception {}
+    public void onCancel() {}
 
     public void onFinish(String returnValue) {
       this.rowObject.setName(returnValue);

@@ -32,11 +32,11 @@ public class PassthroughCallContextHandler<T> implements Handler<T> {
     this.ctx = ctx;
   }
 
-  public void onFinish(T returnValue) throws Exception {
+  public void onFinish(T returnValue) {
     this.ctx.finish(returnValue);
   }
 
-  public void onCancel() throws Exception {
+  public void onCancel() {
     this.ctx.cancel();
   }
 }

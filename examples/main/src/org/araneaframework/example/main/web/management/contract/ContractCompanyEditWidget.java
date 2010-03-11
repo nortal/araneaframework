@@ -51,12 +51,12 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
   public void handleEventChooseCompany() throws Exception {
     getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler<Long>() {
 
-      public void onFinish(Long id) throws Exception {
+      public void onFinish(Long id) {
         setCompany(getGeneralDAO().getById(CompanyMO.class, id));
         LOG.debug("Company with id of " + id + " set to this contract");
       }
 
-      public void onCancel() throws Exception {}
+      public void onCancel() {}
     });
   }
 }

@@ -92,9 +92,9 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 
   class SampleHandler implements FlowContext.Handler<String> {
 
-    public void onCancel() throws Exception {}
+    public void onCancel() {}
 
-    public void onFinish(String returnValue) throws Exception {
+    public void onFinish(String returnValue) {
       getFlowCtx().replace(new InvisibleElementFormWidget(returnValue), null);
     }
   }

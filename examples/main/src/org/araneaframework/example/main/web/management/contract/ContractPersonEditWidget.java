@@ -53,11 +53,11 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
     newFlow.setSelectOnly(true);
     getFlowCtx().start(newFlow, new FlowContext.Handler<Long>() {
 
-      public void onFinish(Long id) throws Exception {
+      public void onFinish(Long id) {
         setPerson(getGeneralDAO().getById(PersonMO.class, id));
       }
 
-      public void onCancel() throws Exception {}
+      public void onCancel() {}
     });
   }
 }

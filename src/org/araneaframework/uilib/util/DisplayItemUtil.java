@@ -17,7 +17,10 @@
 package org.araneaframework.uilib.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +35,7 @@ import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemBuilder;
 
 /**
  * Represents the items put into {@link org.araneaframework.uilib.form.control.SelectControl}or
@@ -269,5 +273,22 @@ public abstract class DisplayItemUtil implements Serializable {
       }
     }
     return result;
+  }
+  
+  public static <T> List<DisplayItem> buildDisplayItems(Collection<T> values, DisplayItemBuilder<T> itemBuilder) {
+    List<DisplayItem> items = new ArrayList<DisplayItem>();
+    for (T value : values) {
+      DisplayItem displayItem = itemBuilder.buildDisplayItem(value);
+      items.add(displayItem);
+    }
+    return items;
+  }
+
+  public static <T> List<DisplayItem> buildOrderedDisplayItems(Collection<T> values,
+                                                               DisplayItemBuilder<T> itemBuilder,
+                                                               Comparator<T> comparator) {
+    List<T> orderedValues = new ArrayList<T>(values);
+    Collections.sort(orderedValues, comparator);
+    return buildDisplayItems(orderedValues, itemBuilder);
   }
 }

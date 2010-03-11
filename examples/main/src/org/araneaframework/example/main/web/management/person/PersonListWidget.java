@@ -81,20 +81,20 @@ public class PersonListWidget extends TemplateBaseWidget {
     addWidget("personList", this.list);
   }
 
-  protected void refreshList() throws Exception {
+  protected void refreshList() {
     this.list.getDataProvider().refreshData();
   }
 
   public void handleEventAdd() {
     getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler<Long>() {
 
-      public void onFinish(Long returnValue) throws Exception {
+      public void onFinish(Long returnValue) {
         LOG.debug("Person added with ID=" + returnValue + " sucessfully");
         refreshList();
       }
 
       // ignore call cancel
-      public void onCancel() throws Exception {}
+      public void onCancel() {}
     });
   }
 
@@ -124,11 +124,11 @@ public class PersonListWidget extends TemplateBaseWidget {
     PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
     getFlowCtx().start(newFlow, new FlowContext.Handler<Object>() {
 
-      public void onFinish(Object returnValue) throws Exception {
+      public void onFinish(Object returnValue) {
         refreshList();
       }
 
-      public void onCancel() throws Exception {}
+      public void onCancel() {}
     });
   }
 

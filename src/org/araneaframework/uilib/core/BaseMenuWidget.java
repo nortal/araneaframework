@@ -51,9 +51,8 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * Constructor that initializes the menu widget and sets the <code>topWidget</code> as its parent
    * 
    * @param topWidget The parent widget.
-   * @throws Exception Any non-specific runtime exception that may occur.
    */
-  public BaseMenuWidget(Widget topWidget) throws Exception {
+  public BaseMenuWidget(Widget topWidget) {
     super(topWidget);
   }
 
@@ -139,9 +138,8 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * Method that must be implemented to build the menu.
    * 
    * @return built menu.
-   * @exception Exception Any non-specific runtime exception that may occur.
    */
-  protected abstract MenuItem buildMenu() throws Exception;
+  protected abstract MenuItem buildMenu();
 
   /**
    * Provides the {@link org.araneaframework.Path} of the currently selected menu item as a <code>String</code>.

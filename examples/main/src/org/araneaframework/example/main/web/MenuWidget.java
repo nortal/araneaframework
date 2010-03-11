@@ -107,7 +107,7 @@ public class MenuWidget extends TemplateMenuWidget {
   }
 
   @Override
-  protected MenuItem buildMenu() throws Exception {
+  protected MenuItem buildMenu() {
     MenuItem result = new MenuItem();
 
     // Aranea 2.0 features/demos

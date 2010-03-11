@@ -16,10 +16,6 @@
 
 package org.araneaframework.example.main.web.management.company;
 
-import org.araneaframework.framework.context.DefaultHandler;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,8 +23,10 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.CompanyMO;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.context.DefaultHandler;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This widget is for listing companies. It returns selected company's Id or cancels current call. It also allows a user
@@ -79,19 +77,19 @@ public class CompanyListWidget extends TemplateBaseWidget {
     this.list.addEmptyField("dummy");
   }
 
-  private void refreshList() throws Exception {
+  private void refreshList() {
     this.list.getDataProvider().refreshData();
   }
 
   public void handleEventAdd() {
     getFlowCtx().start(new CompanyEditWidget(), new FlowContext.Handler<Long>() {
 
-      public void onFinish(Long returnValue) throws Exception {
+      public void onFinish(Long returnValue) {
         LOG.debug("Company added with ID=" + returnValue + " sucessfully");
         refreshList();  // trick to refresh the list data when we suspect it has changed
       }
 
-      public void onCancel() throws Exception {}
+      public void onCancel() {}
     });
   }
 
@@ -109,12 +107,12 @@ public class CompanyListWidget extends TemplateBaseWidget {
     if (this.editMode) {
       getFlowCtx().start(new CompanyEditWidget(id), new FlowContext.Handler<Long>() {
 
-        public void onFinish(Long returnValue) throws Exception {
+        public void onFinish(Long returnValue) {
           LOG.debug("Company added with ID=" + returnValue + " sucessfully");
           refreshList();
         }
 
-        public void onCancel() throws Exception {}
+        public void onCancel() {}
       });
     } else {
       getFlowCtx().finish(id);
@@ -127,7 +125,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     getFlowCtx().start(new CompanyEditWidget(id), new DefaultHandler<Long>() {
 
       @Override
-      public void onFinish(Long returnValue) throws Exception {
+      public void onFinish(Long returnValue) {
         LOG.debug("Company added with ID=" + returnValue + " sucessfully");
         refreshList();
       }

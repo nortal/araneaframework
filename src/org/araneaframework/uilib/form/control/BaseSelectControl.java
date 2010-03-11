@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -352,28 +351,32 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    */
   public class ViewModel extends StringArrayRequestControl<C>.ViewModel {
 
-    private List<DisplayItem> selectItems = new LinkedList<DisplayItem>();
+    protected List<DisplayItem> selectItems = new LinkedList<DisplayItem>();
 
-    private List<DisplayItem> enabledItems = new LinkedList<DisplayItem>();
+    protected List<DisplayItem> enabledItems = new LinkedList<DisplayItem>();
 
-    private List<DisplayItem> disabledItems = new LinkedList<DisplayItem>();
+    protected List<DisplayItem> disabledItems = new LinkedList<DisplayItem>();
 
     /**
      * Takes an outer class snapshot.
      */
     public ViewModel() {
+      initItems();
+    }
+
+    protected void initItems() {
       for (T item : BaseSelectControl.this.items) {
-        boolean disabled = BaseSelectControl.this.disabledItems.contains(item);
+        boolean isDisabled = BaseSelectControl.this.disabledItems.contains(item);
 
         BeanDisplayItem<T> option = new BeanDisplayItem<T>(item,
             BaseSelectControl.this.labelProperty,
             BaseSelectControl.this.valueProperty,
             BaseSelectControl.this.groupProperty,
             BaseSelectControl.this.childrenProperty,
-            disabled);
+            isDisabled);
 
         this.selectItems.add(option);
-        if (disabled) {
+        if (isDisabled) {
           this.disabledItems.add(option);
         } else {
           this.enabledItems.add(option);
