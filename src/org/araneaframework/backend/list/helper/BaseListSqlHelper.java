@@ -507,8 +507,9 @@ public abstract class BaseListSqlHelper {
     StringBuffer sb = new StringBuffer("SELECT ");
     sb.append(getDatabaseFields());
 
-    sb.append(" FROM ");
+    sb.append(" FROM (");
     sb.append(fromSql);
+    sb.append(")");
 
     if (customWhereSql == null) {
       sb.append(getDatabaseFilterWith(" WHERE ", ""));
@@ -576,8 +577,9 @@ public abstract class BaseListSqlHelper {
    * @since 2.0
    */
   protected String createCountQuery(String fromSql, String customWhereSql) {
-    StringBuffer sb = new StringBuffer("SELECT COUNT(*) FROM ");
+    StringBuffer sb = new StringBuffer("SELECT COUNT(*) FROM (");
     sb.append(fromSql);
+    sb.append(")");
 
     if (customWhereSql == null) {
       sb.append(getDatabaseFilterWith(" WHERE ", ""));
@@ -631,7 +633,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the items range query.
    */
   public final void setSqlQuery(String sqlQuery, Object... params) {
-    this.rangeStatement = new SqlStatement(sqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+    this.rangeStatement = new SqlStatement(sqlQuery, ArrayUtils.isEmpty(params) ? null : Arrays.asList(params));
   }
 
   /**
@@ -663,7 +665,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the count query.
    */
   public final void setCountSqlQuery(String countSqlQuery, Object... params) {
-    this.countStatement = new SqlStatement(countSqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+    this.countStatement = new SqlStatement(countSqlQuery, ArrayUtils.isEmpty(params) ?  new ArrayList<Object>(0) : Arrays.asList(params));
   }
 
   /**
@@ -677,7 +679,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the count query.
    */
   public final void setCountSqlQuery(String countSqlQuery, List<Object> params) {
-    this.countStatement = new SqlStatement(countSqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+    this.countStatement = new SqlStatement(countSqlQuery, CollectionUtils.isEmpty(params) ? new ArrayList<Object>(0) : params);
   }
 
   /**

@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
-
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.model.ListQuery;
 
@@ -44,32 +43,32 @@ public class OracleListSqlHelper extends ListSqlHelper {
     super();
   }
 
-  @Override
-  protected String createCountQuery(String fromSql, String customWhereSql) {
-    StringBuffer sb = new StringBuffer();
-    sb.append("SELECT * FROM (SELECT rownum listRowNum, listItemData.* FROM (");
-    sb.append(super.createCountQuery(fromSql, customWhereSql));
-    sb.append(") listItemData) WHERE listRowNum >= ?");
+//  @Override
+//  protected String createCountQuery(String fromSql, String customWhereSql) {
+//    StringBuffer sb = new StringBuffer();
+//    sb.append("SELECT * FROM (SELECT rownum listRowNum, listItemData.* FROM (");
+//    sb.append(super.createCountQuery(fromSql, customWhereSql));
+//    sb.append(") listItemData) WHERE listRowNum >= ?");
+//
+//    if (this.itemRangeCount != null) {
+//      sb.append(" AND listRowNum <= ?");
+//    }
+//
+//    return sb.toString();
+//  }
 
-    if (this.itemRangeCount != null) {
-      sb.append(" AND listRowNum <= ?");
-    }
-
-    return sb.toString();
-  }
-
-  @Override
-  protected List<Object> getCountQueryParams(Object[] customWhereArgs) {
-    List<Object> params = super.getCountQueryParams(customWhereArgs);
-
-    params.add(this.itemRangeStart.longValue() + 1);
-
-    if (this.itemRangeCount != null) {
-      params.add(this.itemRangeStart.longValue() + this.itemRangeCount.longValue());
-    }
-
-    return params;
-  }
+//  @Override
+//  protected List<Object> getCountQueryParams(Object[] customWhereArgs) {
+//    List<Object> params = super.getCountQueryParams(customWhereArgs);
+//
+//    params.add(this.itemRangeStart.longValue() + 1);
+//
+//    if (this.itemRangeCount != null) {
+//      params.add(this.itemRangeStart.longValue() + this.itemRangeCount.longValue());
+//    }
+//
+//    return params;
+//  }
 
   @Override
   protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
@@ -82,7 +81,7 @@ public class OracleListSqlHelper extends ListSqlHelper {
       sb.append(" AND listRowNum <= ?");
     }
 
-    return super.createItemRangeQuery(fromSql, customWhereSql, customOrderbySql);
+    return sb.toString();
   }
 
   @Override

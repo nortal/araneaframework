@@ -167,6 +167,9 @@ public class SqlStatement implements Serializable, Cloneable {
    * @throws SQLException
    */
   protected void propagateStatementWithParams(PreparedStatement pstmt) throws SQLException {
+    if (this.parameters == null) {
+      return;
+    }
     for (int i = 1; i <= this.parameters.size(); i++) {
       Object parameter = this.parameters.get(i - 1);
       if (parameter instanceof NullValue) {

@@ -375,7 +375,10 @@
 		<property name="tagUri" value="http://araneaframework.org/tag-library/standard"/>
 		<property name="destdir" value="etc/META-INF"/>
 		<property name="filename" value="${destdir}/aranea-standard"/>
-
+		
+	  <!-- remove old tld -->
+	  <delete file="${filename}_rt.tld" failonerror="false"/>
+	  
 		<xslt style="etc/build/rt_tld-transform.xsl" in="${filename}.tld" out="${filename}_rt.tld"/>
 		<replace file="${filename}_rt.tld" token="${tagUri}" value="${tagUri}_rt"/>
 	</target>
