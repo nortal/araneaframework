@@ -32,6 +32,8 @@ import java.io.Writer;
  *   description = "Represents localizable label that is bound to a form element."
  */
 public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
+  
+  protected String mandatoryLabelClass = null;
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);    
@@ -43,10 +45,14 @@ public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
         derivedId,
         pageContext,
         showColon,
-        accessKey, getStyle()
+        accessKey, getStyle(), mandatoryLabelClass
     );
 
     return EVAL_BODY_INCLUDE;    
+  }
+  
+  public void setMandatoryLabelClass(String mandatoryLabelClass) {
+    this.mandatoryLabelClass = evaluate("mandatoryLabelClass", mandatoryLabelClass, String.class);
   }
 }
 
