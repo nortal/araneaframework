@@ -202,7 +202,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   public void addItems(Collection<T> items) {
     Assert.noNullElementsParam(items, "items");
     this.items.addAll(items);
-    DisplayItemUtil.assertUnique(this.items);
+    //DisplayItemUtil.assertUnique(this.items);
   }
 
   /**
