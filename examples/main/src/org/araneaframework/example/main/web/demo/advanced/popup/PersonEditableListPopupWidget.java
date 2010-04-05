@@ -90,7 +90,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     @Override
-    public List<PersonMO> loadData() throws Exception {
+    public List<PersonMO> loadData() {
       if (this.data == null) {
         this.data = getGeneralDAO().getAll(PersonMO.class);
       }

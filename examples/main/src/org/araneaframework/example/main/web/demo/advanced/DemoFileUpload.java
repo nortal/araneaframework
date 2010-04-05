@@ -108,7 +108,7 @@ public class DemoFileUpload extends TemplateBaseWidget {
     }
 
     @Override
-    public List<FileInfo> loadData() throws Exception {
+    public List<FileInfo> loadData() {
       return DemoFileUpload.this.files;
     }
   }

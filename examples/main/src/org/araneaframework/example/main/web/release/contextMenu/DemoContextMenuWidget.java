@@ -106,7 +106,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
     }
 
     @Override
-    public List<ExampleData.Client> loadData() throws Exception {
+    public List<ExampleData.Client> loadData() {
       return DemoContextMenuWidget.this.friends;
     }
   }

@@ -153,7 +153,7 @@ public class PersonListWidget extends TemplateBaseWidget {
     }
 
     @Override
-    public List<PersonMO> loadData() throws Exception {
+    public List<PersonMO> loadData() {
       return getGeneralDAO().getAll(PersonMO.class);
     }
   }

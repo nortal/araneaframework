@@ -77,7 +77,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), FlowContext.class, this);
   }
 

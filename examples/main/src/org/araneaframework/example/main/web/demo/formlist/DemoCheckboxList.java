@@ -100,7 +100,7 @@ public class DemoCheckboxList extends TemplateBaseWidget {
     }
 
     @Override
-    public List<DataDTO> loadData() throws Exception {
+    public List<DataDTO> loadData() {
       return new LinkedList<DataDTO>(DemoCheckboxList.this.data.values());
     }
   }

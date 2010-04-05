@@ -54,7 +54,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), SecurityContext.class, this);
   }
 

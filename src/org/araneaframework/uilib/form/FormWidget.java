@@ -58,7 +58,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), FormContext.class, this);
   }
 

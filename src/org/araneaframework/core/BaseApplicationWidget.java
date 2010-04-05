@@ -16,8 +16,6 @@
 
 package org.araneaframework.core;
 
-import org.araneaframework.core.util.ComponentUtil;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,6 +36,7 @@ import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
@@ -159,7 +158,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   /**
    * Returns the widget's Environment by default. Usually overridden.
    */
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return getEnvironment();
   }
 

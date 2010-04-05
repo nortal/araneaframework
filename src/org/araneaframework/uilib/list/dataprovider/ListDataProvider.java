@@ -39,12 +39,12 @@ public interface ListDataProvider<T> extends Serializable {
 	/**
 	 * This method should initialize the data provider, getting all needed handles and resources.
 	 */
-	public void init() throws Exception;
+	public void init();
 
 	/**
 	 * This method should destroy data provider, releasing all taken handles and resources.
 	 */
-	public void destroy() throws Exception;
+	public void destroy();
 
 	/**
 	 * This method should be used to store the structure of the list.  
@@ -116,14 +116,14 @@ public interface ListDataProvider<T> extends Serializable {
 	 * @param count the amount of items to return.
 	 * @return a range of items from the list data provider.
 	 */
-	public ListItemsData<T> getItemRange(Long start, Long count) throws Exception;
+	public ListItemsData<T> getItemRange(Long start, Long count);
 
 	/**
 	 * This method should return the total item count in the list data.
 	 * 
 	 * @return the total item count in the list data.
 	 */
-	public Long getItemCount() throws Exception;
+	public Long getItemCount();
 
 	/**
 	 * This method should return an individual item from the list data.
@@ -131,14 +131,14 @@ public interface ListDataProvider<T> extends Serializable {
 	 * @param index the index of item to be returned.
 	 * @return an individual item from the list data.
 	 */
-	public T getItem(Long index) throws Exception;
+	public T getItem(Long index);
 
 	/**
 	 * This method should return all items from the list data.
 	 * 
 	 * @return all items from the list data.
 	 */
-	public ListItemsData<T> getAllItems() throws Exception;
+	public ListItemsData<T> getAllItems();
 	
 	/** @since 1.1 */
 	public void addDataUpdateListener(DataUpdateListener listener);
