@@ -30,7 +30,7 @@ public class BooleanToDisplayItemConverter extends BaseConverter<Boolean, Displa
   }
 
   /**
-   * Converts <code>Integer</code> to <code>String</code>.
+   * Converts <code>DisplayItem</code> to <code>Boolean</code>.
    */
   @Override
   public Boolean reverseConvertNotNull(DisplayItem data) {
