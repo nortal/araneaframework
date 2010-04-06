@@ -29,6 +29,7 @@ public abstract class BaseWildcardHandler implements WildcardHandler, Serializab
 	
 	protected int startsWith;
 	protected int endsWith;
+	protected String escapedMask;
 
 	public void setStartsWith(int startsWith) {
 		this.startsWith = startsWith;
@@ -46,4 +47,11 @@ public abstract class BaseWildcardHandler implements WildcardHandler, Serializab
 		return startsWith;
 	}
 
+  public String getEscapedMask() {
+    return escapedMask;
+  }
+
+  public void setEscapedMask(String escapedMask) {
+    this.escapedMask = escapedMask;
+  }
 }
