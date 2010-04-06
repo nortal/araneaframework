@@ -63,7 +63,7 @@ public class SqlLikeUtil {
 
     // Handle wildcards at the start and end
     WildcardHandler handler = escapeMaskAndCreateHandler(mask, config, escapeChar);
-    mask = startMask(handler, mask);
+    mask = startMask(handler, handler.getEscapedMask());
     mask = endMask(handler, mask);
     return mask;
   }
@@ -89,7 +89,8 @@ public class SqlLikeUtil {
     Assert.notNull(escapeChar, "Escape character must be specified");
 
     // Handle wildcards at the start:
-    return startMask(escapeMaskAndCreateHandler(mask, config, escapeChar), mask);
+    WildcardHandler wildcardHandler = escapeMaskAndCreateHandler(mask, config, escapeChar);
+    return startMask(wildcardHandler, wildcardHandler.getEscapedMask());
   }
 
   /**
@@ -113,7 +114,8 @@ public class SqlLikeUtil {
     Assert.notNull(escapeChar, "Escape character must be specified");
 
     // Handle wildcards at the start:
-    return endMask(escapeMaskAndCreateHandler(mask, config, escapeChar), mask);
+    WildcardHandler wildcardHandler = escapeMaskAndCreateHandler(mask, config, escapeChar);
+    return endMask(wildcardHandler, wildcardHandler.getEscapedMask());
   }
 
   /**
@@ -209,6 +211,7 @@ public class SqlLikeUtil {
 
     // 2. Create and return a wildcard handler:
     WildcardHandler handler = config.createWildcardHandler();
+    handler.setEscapedMask(mask);
     WildcardUtil.setWildcards(handler, mask, SQL_LIKE_ANY_STRING_WILDCARD,
         SQL_LIKE_ANY_CHAR_WILDCARD);
     return handler;

@@ -38,8 +38,6 @@ public class WildcardUtil {
 			// Start
 			if (mask.startsWith(anyStringWildcard)) {
 				handler.setStartsWith(WildcardHandler.ANY_STRING_WILDCARD);
-			} else if (mask.startsWith(anyCharWildcard)) {
-				handler.setStartsWith(WildcardHandler.ANY_CHAR_WILDCARD);
 			} else {
 				handler.setStartsWith(WildcardHandler.NO_WILDCARD);
 			}		
@@ -47,8 +45,6 @@ public class WildcardUtil {
 			// End
 			if (mask.endsWith(anyStringWildcard)) {
 				handler.setEndsWith(WildcardHandler.ANY_STRING_WILDCARD);
-			} else if (mask.endsWith(anyCharWildcard)) {
-				handler.setEndsWith(WildcardHandler.ANY_CHAR_WILDCARD);
 			} else {
 				handler.setEndsWith(WildcardHandler.NO_WILDCARD);
 			}					

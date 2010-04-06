@@ -72,7 +72,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), MenuContext.class, this);
   }
 

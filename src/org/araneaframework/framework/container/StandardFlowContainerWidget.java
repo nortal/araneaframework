@@ -236,7 +236,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(getEnvironment(), this.nestedEnvironmentEntries);
   }
 

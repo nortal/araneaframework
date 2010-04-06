@@ -70,11 +70,11 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
   // empty
   }
 
-  public void init() throws Exception {
+  public void init() {
   // for subclasses to implement if needed
   }
 
-  public void destroy() throws Exception {
+  public void destroy() {
   // for subclasses to implement if needed
   }
 
@@ -112,14 +112,14 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
   /**
    * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve the item.
    */
-  public T getItem(Long index) throws Exception {
+  public T getItem(Long index) {
     return getItemRange(index, Long.valueOf(1)).getItemRange().get(0);
   }
 
   /**
    * Returns the total item count.
    */
-  public Long getItemCount() throws Exception {
+  public Long getItemCount() {
     return getItemRange(Long.valueOf(0), Long.valueOf(1)).getTotalCount();
   }
 
@@ -127,11 +127,11 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
    * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve all
    * items.
    */
-  public ListItemsData<T> getAllItems() throws Exception {
+  public ListItemsData<T> getAllItems() {
     return getItemRange(Long.valueOf(0), null);
   }
 
-  public ListItemsData<T> getItemRange(Long startIdx, Long count) throws Exception {
+  public ListItemsData<T> getItemRange(Long startIdx, Long count) {
     if (!this.useCache || this.forceReload || !startIdx.equals(this.lastStart)
         || (count == null || this.lastCount == null) && count != this.lastCount
         || count != null && this.lastCount != null
@@ -175,6 +175,5 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
    * This method should be overridden to return a range of items from the list
    * data.
    */
-  protected abstract ListItemsData<T> getItemRange(ListQuery query)
-      throws Exception;
+  protected abstract ListItemsData<T> getItemRange(ListQuery query);
 }

@@ -26,9 +26,9 @@ import java.io.Serializable;
 public class LikeConfiguration implements Serializable {
 	
 	/** Default custom any string wildcards. */
-	public static final String[] DEFAULT_ANY_STRING_WILDCARDS = {"*","%"};
+	public static final String[] DEFAULT_ANY_STRING_WILDCARDS = {};
 	/** Default custom any character wildcards. */
-	public static final String[] DEFAULT_ANY_CHAR_WILDCARDS = {".","_","?"};
+	public static final String[] DEFAULT_ANY_CHAR_WILDCARDS = {};
 	/** Default line start/end any string wildcard handler. */
 	public static final WildcardHandler DEFAULT_HANDLER = new AutomaticWildcardHandler();
 	

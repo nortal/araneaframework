@@ -31,7 +31,6 @@ import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.model.ListItemsData;
-import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * This class provides a memory based implementation of the list. It takes care of the filtering, ordering and returning
@@ -88,7 +87,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * Loads the data using the <code>loadData</code> method, initializes the filtering and ordering and returns the
    * number of items loaded.
    */
-  public void init() throws Exception {
+  public void init() {
     this.allData = loadData();
     this.processedData.addAll(this.allData);
   }
@@ -103,7 +102,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * 
    * @return the number of items in the processed list.
    */
-  public Long getItemCount() throws Exception {
+  public Long getItemCount() {
     process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
     return new Long(this.processedData.size());
   }
@@ -113,7 +112,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * 
    * @return <code>List</code> of all processed items.
    */
-  public ListItemsData<T> getAllItems() throws Exception {
+  public ListItemsData<T> getAllItems() {
     ListItemsData<T> result = new ListItemsData<T>();
 
     process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
@@ -130,7 +129,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * @param start the start of item range.
    * @param count the count of items in the range.
    */
-  public ListItemsData<T> getItemRange(Long start, Long count) throws Exception {
+  public ListItemsData<T> getItemRange(Long start, Long count) {
     ListItemsData<T> result = new ListItemsData<T>();
 
     process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
@@ -146,7 +145,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * @param index 0-based index of processed item
    * @return processed item.
    */
-  public T getItem(Long index) throws Exception {
+  public T getItem(Long index) {
     process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
     return this.processedData.get(index.intValue());
   }
@@ -183,11 +182,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    */
   public void refreshData() {
     LOG.debug("Loading all data");
-    try {
-      this.allData = loadData();
-    } catch (Exception e) {
-      ExceptionUtil.uncheckException(e);
-    }
+    this.allData = loadData();
     this.doFilter = true;
     this.doOrder = true;
 
@@ -360,5 +355,5 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * 
    * @return <code>List</code> of Value Objects.
    */
-  public abstract List<T> loadData() throws Exception;
+  public abstract List<T> loadData();
 }

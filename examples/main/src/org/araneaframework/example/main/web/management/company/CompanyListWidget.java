@@ -153,7 +153,7 @@ public class CompanyListWidget extends TemplateBaseWidget {
     // Overloading the real data loading method. Should
     // return java.util.List containing CompanuMO objects.
     @Override
-    public List<CompanyMO> loadData() throws Exception {
+    public List<CompanyMO> loadData() {
       // Here, database query is performed and all rows from COMPANY table retrieved.
       // But you could also get the data from parsing some XML file, /dev/random etc.
       // All that matters is that returned List really contains CompanyMO objects.

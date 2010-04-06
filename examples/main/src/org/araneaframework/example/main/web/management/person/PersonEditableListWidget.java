@@ -108,7 +108,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       }
 
       @Override
-      public List<PersonMO> loadData() throws Exception {
+      public List<PersonMO> loadData() {
         return getGeneralDAO().getAll(PersonMO.class);
       }
     }
@@ -138,7 +138,7 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
       }
 
       @Override
-      protected ListItemsData<PersonMO> getItemRange(ListQuery query) throws Exception {
+      protected ListItemsData<PersonMO> getItemRange(ListQuery query) {
         return ((PersonListDAO) getBeanFactory().getBean("personListDAO")).getItems(query);
       }
     }

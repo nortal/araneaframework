@@ -119,7 +119,7 @@ public class DemoSimpleEditableList extends TemplateBaseWidget {
     }
 
     @Override
-    public List<ExampleData.Client> loadData() throws Exception {
+    public List<ExampleData.Client> loadData() {
       return DemoSimpleEditableList.this.friends;
     }
   }

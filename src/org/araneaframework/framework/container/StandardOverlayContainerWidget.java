@@ -165,7 +165,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), OverlayContext.class, this);
   }
 

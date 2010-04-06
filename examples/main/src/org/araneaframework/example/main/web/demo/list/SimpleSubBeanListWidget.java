@@ -57,7 +57,7 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
     }
 
     @Override
-    public List<ContactMO> loadData() throws Exception {
+    public List<ContactMO> loadData() {
       List<ContactMO> contacts = new ArrayList<ContactMO>(3);
       contacts.add(contact("Alice", "", "Wonderland", ""));
       contacts.add(contact("Chuck", "Norris", "USA", "Texas"));

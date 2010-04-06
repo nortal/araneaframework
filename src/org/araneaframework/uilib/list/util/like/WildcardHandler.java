@@ -71,6 +71,16 @@ public interface WildcardHandler {
 	int shouldEndWith();
 	
 	/**
+	 * Returns preprocessed mask (escaped using defined ESCAPE symbol)
+	 */
+	String getEscapedMask();
+	
+	/**
+	 * Sets preprocessed mask.
+	 */
+	void setEscapedMask(String escapedMask);
+	
+	/**
 	 * Returns new instance of the same class.
 	 * 
 	 * @return new instance of the same class.

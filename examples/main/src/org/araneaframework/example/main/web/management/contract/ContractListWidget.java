@@ -96,7 +96,7 @@ public class ContractListWidget extends TemplateBaseWidget {
     }
 
     @Override
-    public List<ContractMO> loadData() throws Exception {
+    public List<ContractMO> loadData() {
       return getGeneralDAO().getAll(ContractMO.class);
     }
   }
