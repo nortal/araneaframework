@@ -596,7 +596,7 @@ Aranea.Page.Request = {
 		Aranea.Data.loaded = false;
 		Aranea.Data.submitted = true;
 
-		document.fire('aranea:beforeEvent', data, false);
+		document.fire('aranea:beforeEvent', data, true);
 
 		Aranea.Page.Request.customBefore(data);
 		Aranea.Page.Parameter.writeToForm(data); // Write event data to form so that it would be sent to server-side.
@@ -610,7 +610,7 @@ Aranea.Page.Request = {
 		Aranea.Data.submitted = false;
 		Aranea.Data.loaded = true;
 
-		document.fire('aranea:afterEvent', data, false);
+		document.fire('aranea:afterEvent', data, true);
 
 		Aranea.Page.Request.customAfter(data);
 		Aranea.Page.onUpdate(data);
