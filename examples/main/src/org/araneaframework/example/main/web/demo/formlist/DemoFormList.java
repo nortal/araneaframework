@@ -109,14 +109,14 @@ public class DemoFormList extends TemplateBaseWidget {
       BeanFormWidget<DataDTO> rowForm = editableRow.getForm();
       addCommonFormFields(rowForm);
 
-      FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, getRowKey(row));
-      FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(row));
+      FormListUtil.addSaveButtonToRowForm("#", editableRow);
+      FormListUtil.addDeleteButtonToRowForm("#", editableRow);
 
       rowForm.readFromBean(row);
     }
 
     @Override
-    public void initAddForm(FormWidget addForm) throws Exception {
+    public void initAddForm(BeanFormWidget<DataDTO> addForm) throws Exception {
       addCommonFormFields(addForm);
       FormListUtil.addAddButtonToAddForm("#", formList, addForm);
     }

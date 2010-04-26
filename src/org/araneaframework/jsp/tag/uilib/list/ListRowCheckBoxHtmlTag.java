@@ -16,11 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 
@@ -67,8 +66,8 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "value", this.value != null ? this.value : LIST_CHECK_VALUE);
 
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeAttribute(out, "accessKey", accesskey);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    JspUtil.writeAttribute(out, "accessKey", this.accesskey);
 
     writeOnClickEvent(out);
 
@@ -86,7 +85,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
       JspUtil.writeOpenStartTag(out, "label");
       JspUtil.writeAttribute(out, "for", id);
       JspUtil.writeCloseStartTag_SS(out);
-      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, this.labelId));
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(this.pageContext, this.labelId));
       JspUtil.writeStartEndTag(out, "label");
     }
 
@@ -94,9 +93,9 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   }
 
   /**
-   * Creates the onclick event script, including the onclick script that the user specifies through attribute value.
+   * Creates the "onclick" event script, including the "onclick" script that the user specifies through attribute value.
    * 
-   * @return The entire script for check box onclick event.
+   * @return The entire script for check box "onclick" event.
    */
   @Override
   protected String getOnclickScript() {
@@ -139,11 +138,13 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    * @throws JspException This method expects to have access to <code>ROW_KEY</code> and list view model in the JSP
    *           context.
    */
-  @SuppressWarnings("unchecked")
   protected boolean isChecked() throws JspException {
     Object row = requireContextEntry(BaseListRowsTag.ROW_KEY);
-    ListWidget<?>.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
-    List<?> checkedRows = (List<?>) viewModel.getData().get(SELECTION_SCOPE);
+
+    ListWidget<?>.ViewModel viewModel = ListWidget.ViewModel.class
+        .cast(requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY));
+
+    List<?> checkedRows = List.class.cast(viewModel.getData().get(SELECTION_SCOPE));
 
     boolean prevChecked = checkedRows != null && checkedRows.contains(row);
 

@@ -35,13 +35,13 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 
   public static final String MARKERCLASS = "widgetMarker";
 
-  protected String tag = null;
+  protected String tag = "div";
 
   @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    JspUtil.writeOpenStartTag(out, this.tag == null ? "div" : this.tag);
+    JspUtil.writeOpenStartTag(out, this.tag);
     JspUtil.writeAttribute(out, "class", MARKERCLASS);
     JspUtil.writeAttribute(out, AraneaAttributes.WIDGET_ID, this.widget.getScope().toString());
     JspUtil.writeCloseStartTag(out);
@@ -51,7 +51,7 @@ public class WidgetMarkerTag extends BaseWidgetTag {
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    JspUtil.writeEndTag(out, this.tag == null ? "div" : this.tag);
+    JspUtil.writeEndTag(out, this.tag);
     return super.doEndTag(out);
   }
 
@@ -59,7 +59,7 @@ public class WidgetMarkerTag extends BaseWidgetTag {
    * @jsp.attribute
    *    type = "java.lang.String"
    *    required = "false"
-   *    description = "UiLib widget id."
+   *    description = "Widget marker HTML tag (default is &lt;div&gt;). Content will be rendered inside that tag."
    */
   public void setTag(String tag) throws Exception {
     this.tag = evaluateNotNull("tag", tag, String.class);

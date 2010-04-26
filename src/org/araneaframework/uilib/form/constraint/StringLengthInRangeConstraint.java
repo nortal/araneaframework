@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;

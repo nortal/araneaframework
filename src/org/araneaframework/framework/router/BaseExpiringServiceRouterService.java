@@ -89,7 +89,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     }
 
     if (capsule != null) {
-      capsule.setLastActivity(new Long(System.currentTimeMillis()));
+      capsule.setLastActivity(System.currentTimeMillis());
     }
   }
 

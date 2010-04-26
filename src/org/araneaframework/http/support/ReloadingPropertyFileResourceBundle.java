@@ -18,11 +18,13 @@ package org.araneaframework.http.support;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +36,8 @@ import org.araneaframework.core.util.ClassLoaderUtil;
 public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBundle {
 
   private static final Log LOG = LogFactory.getLog(ReloadingPropertyFileResourceBundle.class);
+
+  private static final String PROPS_SUFFIX = ".properties";
 
   protected String propertyResource = "resources";
 
@@ -66,11 +70,12 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
 
   private void reloadProperties() {
     try {
-      String resourceName = this.propertyResource + "_" + getLocale().getLanguage() + ".properties";
+      String language = getLocale().getLanguage();
+      String resourceName = this.propertyResource + "_" + language + PROPS_SUFFIX;
       URL propertyURL = ClassLoaderUtil.findResource(resourceName);
 
       if (propertyURL == null) {
-        resourceName = this.propertyResource + ".properties";
+        resourceName = this.propertyResource + PROPS_SUFFIX;
         propertyURL = ClassLoaderUtil.findResource(resourceName);
       }
 
@@ -85,8 +90,14 @@ public class ReloadingPropertyFileResourceBundle extends LocaleAwareResourceBund
 
         LOG.debug("Reloading localization data from property file '" + propertyFile + "'.");
 
+        InputStream propertiesStream = new FileInputStream(propertyURL.getFile());
         Properties result = new Properties();
-        result.load(new FileInputStream(propertyURL.getFile()));
+
+        try {
+          result.load(propertiesStream);
+        } finally {
+          IOUtils.closeQuietly(propertiesStream);
+        }
 
         loadData(result);
 

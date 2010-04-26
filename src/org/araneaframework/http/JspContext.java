@@ -22,6 +22,8 @@ import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
+ * One of Aranea environment contexts, this one for retrieving information about some JSP configuration.
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface JspContext extends Serializable {

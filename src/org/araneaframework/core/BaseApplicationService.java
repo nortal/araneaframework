@@ -68,15 +68,15 @@ public abstract class BaseApplicationService extends BaseService implements Appl
 
   protected class CompositeImpl implements Composite.Interface {
 
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
-    public void attach(Object key, Component comp) {
+    public void attach(String key, Component comp) {
       _getChildren().put(key, comp);
     }
 
-    public Component detach(Object key) {
+    public Component detach(String key) {
       return _getChildren().remove(key);
     }
   }
@@ -108,7 +108,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     /**
      * Returns the children of this StandardService.
      */
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationService.this.getChildren();
     }
 
@@ -219,7 +219,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Returns an unmodifiable map of the children.
    */
   @SuppressWarnings("unchecked")
-  public Map<Object, Component> getChildren() {
+  public Map<String, Component> getChildren() {
     return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
   }
 
@@ -227,7 +227,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
    * The child is initialized with the Environment env.
    */
-  public void addService(Object key, Service child, Environment env) {
+  public void addService(String key, Service child, Environment env) {
     _addComponent(key, child, env);
   }
 
@@ -235,7 +235,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
    * The child is initialized with the Environment from <code>getChildServiceEnvironment()</code>.
    */
-  public void addService(Object key, Service child) {
+  public void addService(String key, Service child) {
     try {
       _addComponent(key, child, getChildServiceEnvironment());
     } catch (Exception e) {
@@ -259,7 +259,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateService(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
+  public void relocateService(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
@@ -271,7 +271,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateService(Composite parent, Object keyFrom, Object keyTo) {
+  public void relocateService(Composite parent, String keyFrom, String keyTo) {
     try {
       _relocateComponent(parent, getChildServiceEnvironment(), keyFrom, keyTo);
     } catch (Exception e) {
@@ -282,7 +282,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   /**
    * Enables the service with the specified key. Only a disabled service can be enabled.
    */
-  public void enableService(Object key) {
+  public void enableService(String key) {
     _enableComponent(key);
   }
 
@@ -290,7 +290,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
    * Disables the service with the specified key. Only a enabled service can be disabled. A disabled service does not
    * get any actions routed to them.
    */
-  public void disableService(Object key) {
+  public void disableService(String key) {
     _disableComponent(key);
   }
 
@@ -377,7 +377,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       return;
     }
 
-    List<ActionListener> listeners = this.actionListeners != null ? null : this.actionListeners.get(actionId);
+    List<ActionListener> listeners = this.actionListeners == null ? null : this.actionListeners.get(actionId);
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");

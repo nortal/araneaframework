@@ -48,7 +48,7 @@ public class ExpressionTests extends TestCase {
 				new ValueExpression<Long>(null).evaluate(this.resolver));
 		assertEquals("ValueExpression must return true", Boolean.TRUE,
 				new ValueExpression<Boolean>(Boolean.TRUE).evaluate(this.resolver));
-		assertEquals("ValueExpression must return 0", new Long(0),
+		assertEquals("ValueExpression must return 0", Long.valueOf(0),
 				new ValueExpression<Long>(0L).evaluate(this.resolver));
 
 		// name

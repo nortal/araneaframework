@@ -23,6 +23,7 @@ import java.util.List;
  * The interface that defines methods for callbacks that dynamically provide the data a the form list.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @see BaseFormListWidget
  */
 public interface FormListModel<R> extends Serializable {
 
@@ -30,6 +31,7 @@ public interface FormListModel<R> extends Serializable {
    * Provides the rows to the form list.
    * 
    * @return A list of row data objects.
+   * @see BaseFormListWidget
    */
   public List<R> getRows();
 }

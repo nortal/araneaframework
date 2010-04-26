@@ -29,7 +29,12 @@ import org.araneaframework.uilib.list.ListWidget;
  * @jsp.tag
  *  name = "list"
  *  body-content = "JSP"
- *  description = "Makes available following page scope variables:<ul><li><i>list</i> - UiLib list view model.</li><li><i>listId</i> - UiLib list id.</li></ul>"
+ *  description = "Makes available following page scope variables:
+ *      <ul>
+ *      <li><i>list</i> - list widget <i>view model</i>.</li>
+ *      <li><i>listId</i> - list widget ID.</li>
+ *      <li><i>listFullId</i> - list widget full ID.</li>
+ *      </ul>"
  */
 public class ListTag extends BaseWidgetTag {
 
@@ -39,18 +44,16 @@ public class ListTag extends BaseWidgetTag {
 
   public final static String LIST_FULL_ID_KEY = "listFullId";
 
-  @SuppressWarnings("unchecked")
-  protected ListWidget.ViewModel listViewModel;
+  protected ListWidget<?>.ViewModel listViewModel;
 
   protected String varSequence = "listSequence";
 
-  @SuppressWarnings("unchecked")
   @Override
   public int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     try {
-      this.listViewModel = (ListWidget.ViewModel) this.viewModel;
+      this.listViewModel = ListWidget.ViewModel.class.cast(this.viewModel);
     } catch (ClassCastException e) {
       throw new AraneaJspException(
           "Could not acquire list view model. <ui:list> should have id specified or should be in context of "
@@ -81,7 +84,7 @@ public class ListTag extends BaseWidgetTag {
    * @jsp.attribute
    *    type = "java.lang.String"
    *    required = "false"
-   *    description = "Name of variable that represents list sequence info (by default "listSequence")."
+   *    description = "Name of variable that represents list sequence info (by default 'listSequence')."
    */
   public void setVarSequence(String varSequence) {
     this.varSequence = varSequence;

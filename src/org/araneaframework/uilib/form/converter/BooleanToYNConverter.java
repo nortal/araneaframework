@@ -22,16 +22,19 @@ import org.araneaframework.uilib.form.Converter;
  * Convert the <code>Boolean</code> to <code>String</code>, true - "Y", false - "N" and back.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
- * 
  */
 public class BooleanToYNConverter extends BaseConverter<Boolean, String> {
+
+  public static final String YES = "Y";
+
+  public static final String NO = "N";
 
   /**
    * Converts <code>Boolean</code> to <code>Y|N</code>.
    */
   @Override
   public String convertNotNull(Boolean data) {
-    return data.booleanValue() ? "Y" : "N";
+    return data ? YES : NO;
   }
 
   /**
@@ -40,7 +43,7 @@ public class BooleanToYNConverter extends BaseConverter<Boolean, String> {
    */
   @Override
   public Boolean reverseConvertNotNull(String data) {
-    return data.equals("Y") ? Boolean.TRUE : Boolean.FALSE;
+    return data.equals(YES);
   }
 
   /**

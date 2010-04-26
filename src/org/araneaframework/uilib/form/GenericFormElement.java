@@ -38,21 +38,21 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
 
-  /** @since 1.1 */
+  /**
+   * The ID of the action that request form element background (AJAX) validation.
+   * @since 1.1
+   */
   public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
   protected Constraint constraint;
 
   protected Map<Object, Object> properties;
 
-  protected boolean converted = false;
+  protected boolean converted;
 
-  protected boolean validated = false;
+  protected boolean validated;
 
-  protected Boolean backgroundValidation = null;
+  protected Boolean backgroundValidation;
 
   private Set<String> errors;
 
@@ -338,7 +338,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
      */
     public ViewModel() {
       Map<Object, Object> m = GenericFormElement.this.properties;
-      this.properties = m == null ? m : Collections.unmodifiableMap(m);
+      this.properties = m == null ? null : Collections.unmodifiableMap(m);
     }
 
     /**

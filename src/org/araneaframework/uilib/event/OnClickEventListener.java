@@ -16,15 +16,16 @@
 
 package org.araneaframework.uilib.event;
 
+import java.io.Serializable;
+
 /**
- * This interface defines a "on click" event listener that is usually attached
- * to a button. This listener will receive notification when the control is
- * being clicked by the user
+ * This interface defines an "on click" event listener that is usually attached to a button. This listener will receive
+ * notification when the control is being clicked by the user
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @see OnChangeEventListener
  */
-public interface OnClickEventListener extends java.io.Serializable {
+public interface OnClickEventListener extends Serializable {
 
   /**
    * This constant is the name of the event, that this listener listens to.
@@ -33,6 +34,7 @@ public interface OnClickEventListener extends java.io.Serializable {
 
   /**
    * Event callback function that is called when the registered event occurs.
+   * 
    * @throws Exception if something goes wrong.
    */
   public void onClick() throws Exception;

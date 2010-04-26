@@ -67,7 +67,7 @@
 
 		<!-- "build-util" -->
 		<!-- These files are not needed by Aranea users, but are still needed when building a release. -->
-		<dependency conf="build-util" org="checkstyle" rev="5.0" name="checkstyle" transitive="false"/>
+		<dependency conf="build-util" org="checkstyle" rev="4.4" name="checkstyle"/>
 		<dependency conf="build-util" org="taglibrarydoc" rev="1.3" name="tlddoc" transitive="false"/>
 		<dependency conf="build-util" org="tomcat" rev="5.5.23" name="jasper-compiler" transitive="false"/>
 

@@ -34,9 +34,8 @@ import org.araneaframework.uilib.support.DisplayItem;
  * @jsp.tag
  *  name = "checkboxMultiSelect"
  *  body-content = "JSP"
- *  description = "Form multiselect checkbox field, represents UiLib 'MultiSelectControl'."
+ *  description = "Form multi-select checkbox field, represents UiLib 'MultiSelectControl'."
  */
-@SuppressWarnings("unchecked")
 public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
   /**
@@ -48,7 +47,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
   protected String type = "horizontal";
 
-  protected boolean labelBefore = false;
+  protected boolean labelBefore;
 
   public FormCheckboxMultiSelectHtmlTag() {
     setHasElementContextSpan(false);
@@ -62,6 +61,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");
 

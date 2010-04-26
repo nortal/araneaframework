@@ -17,11 +17,11 @@
 package org.araneaframework.http.filter;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -281,8 +281,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       LOG.debug("Received service request for versioned component hierarchy '" + requestStateId + "'.");
     }
 
-    if (requestStateId == null || requestStateId.trim().length() == 0) {
+    if (StringUtils.isBlank(requestStateId)) {
       requestStateId = this.lastStateId;
+
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Using the last state ID to resolve current state: '" + requestStateId + "'.");
+      }
     }
 
     if (this.versionedStates.get(requestStateId) == null) {

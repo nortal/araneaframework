@@ -20,12 +20,13 @@ import java.util.Date;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 public class BlankWidget extends BaseUIWidget {
-	@Override
-  protected void init() throws Exception {
-		setViewSelector("blankwidget");
-	}
 
-	public String getDate() {
-		return new String("Time was '" + new Date() + "' when you activated this menu item.");
-	}
+  @Override
+  protected void init() throws Exception {
+    setViewSelector("blankwidget");
+  }
+
+  public String getDate() {
+    return "Time was '" + new Date() + "' when you activated this menu item.";
+  }
 }

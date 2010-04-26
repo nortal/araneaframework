@@ -16,10 +16,9 @@
 
 package org.araneaframework.jsp.tag.uilib.form;
 
-import org.araneaframework.jsp.exception.AraneaJspException;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -109,7 +108,7 @@ public class BaseFormElementLabelTag extends PresentationTag {
    * @jsp.attribute
    *    type = "java.lang.String"
    *    required = "false"
-   *    description = "Element id."
+   *    description = "Element ID."
    */
   public void setId(String id) throws JspException {
     this.id = evaluateNotNull("id", id, String.class);

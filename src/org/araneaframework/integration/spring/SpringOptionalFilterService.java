@@ -27,26 +27,22 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 /**
- * This is a utility service to enable custom filter service chains in XML
- * configuration. More specifically, once it is defined as a (Spring) bean in
- * the <code>default-aranea-conf.xml</code> and its <code>beanId</code>
- * property is set, upon initialization it will try to find the bean
- * <code>beanId</code> and add it as a child service (therefore, the bean
- * should indeed be a <i>service</i>!).
+ * This is a utility service to enable custom filter service chains in XML configuration. More specifically, once it is
+ * defined as a (Spring) bean in the <code>default-aranea-conf.xml</code> and its <code>beanId</code> property is set,
+ * upon initialization it will try to find the bean <code>beanId</code> and add it as a child service (therefore, the
+ * bean should indeed be a <i>service</i>!).
  * <p>
- * To see it in use, look at the <code>default-aranea-conf.xml</code> and then
- * the <code>aranea-conf.xml</code> file.
+ * To see it in use, look at the <code>default-aranea-conf.xml</code> and then the <code>aranea-conf.xml</code> file.
  */
 public class SpringOptionalFilterService extends BaseFilterService {
 
-  private static final Log LOG = LogFactory
-      .getLog(SpringOptionalFilterService.class);
+  private static final Log LOG = LogFactory.getLog(SpringOptionalFilterService.class);
 
   private String beanId;
 
   /**
-   * A bean property to define the <code>beanId</code> that will be used to
-   * find the bean that will be incorporated as a child service.
+   * A bean property to define the <code>beanId</code> that will be used to find the bean that will be incorporated as a
+   * child service.
    * 
    * @param beanName The name of the bean to incorporate.
    */
@@ -55,22 +51,27 @@ public class SpringOptionalFilterService extends BaseFilterService {
   }
 
   /**
-   * During initialization it will try to locate and add the bean with Id of
-   * <code>beanId</code> as its child service. Note that the bean must be an
-   * instance of {@link FilterService}.
+   * During initialization it will try to locate and add the bean with Id of <code>beanId</code> as its child service.
+   * Note that the bean must be an instance of {@link FilterService}.
    */
   @Override
   protected void init() throws Exception {
-    BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
     try {
-      FilterService filter = (FilterService) bf.getBean(beanId);
-      filter.setChildService(childService);
-      childService = filter;
+      BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
+      FilterService filter = (FilterService) bf.getBean(this.beanId);
 
-      LOG.debug("Found optional bean '" + beanId + "'");
+      filter.setChildService(this.childService);
+      this.childService = filter;
+
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Found optional bean '" + this.beanId + "'");
+      }
     } catch (NoSuchBeanDefinitionException e) {
-      LOG.debug("Could not find optional bean '" + beanId + "'");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Could not find optional bean '" + this.beanId + "'");
+      }
     }
+
     super.init();
   }
 

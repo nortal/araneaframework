@@ -17,7 +17,6 @@
 package org.araneaframework.http.util;
 
 import org.araneaframework.core.Assert;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -190,6 +189,9 @@ public abstract class ServletUtil {
   }
 
   private static void setAttribute(HttpServletRequest req, Map<String, Object> attributeBackupMap, String name, Object value) {
+    Assert.notNullParam(req, "req");
+    Assert.notNullParam(attributeBackupMap, "attributeBackupMap");
+
     attributeBackupMap.put(name, req.getAttribute(name));
     if (value != null) {
       req.setAttribute(name, value);
@@ -199,6 +201,9 @@ public abstract class ServletUtil {
   }
 
   private static void restoreAttributes(HttpServletRequest req, Map<String, Object> attributeBackupMap) {
+    Assert.notNullParam(req, "req");
+    Assert.notNullParam(attributeBackupMap, "attributeBackupMap");
+
     for (Map.Entry<String, Object> entry : attributeBackupMap.entrySet()) {
       if (entry.getValue() != null) {
         req.setAttribute(entry.getKey(), entry.getValue());
@@ -240,6 +245,11 @@ public abstract class ServletUtil {
   }
 
   public static void simpleInclude(String filePath, Environment env, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    Assert.notNullParam(filePath, "filePath");
+    Assert.notNullParam(env, "env");
+    Assert.notNullParam(req, "req");
+    Assert.notNullParam(resp, "resp");
+
     ServletContext servletContext = env.getEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(req, resp);
   }
@@ -249,32 +259,41 @@ public abstract class ServletUtil {
   }
 
   public static HttpServletRequest getRequest(InputData input) {
+    Assert.notNullParam(input, "input");
     return input.narrow(HttpServletRequest.class);
   }
 
-  public static void setRequest(InputData input, HttpServletRequest req) {
-    input.extend(HttpServletRequest.class, req);
+  public static void setRequest(InputData input, HttpServletRequest request) {
+    Assert.notNullParam(input, "input");
+    Assert.notNullParam(request, "request");
+    input.extend(HttpServletRequest.class, request);
   }
 
   public static HttpServletResponse getResponse(OutputData output) {
+    Assert.notNullParam(output, "output");
     return output.narrow(HttpServletResponse.class);
   }
 
-  public static void setResponse(OutputData output, HttpServletResponse res) {
-    output.extend(HttpServletResponse.class, res);
+  public static void setResponse(OutputData output, HttpServletResponse response) {
+    Assert.notNullParam(output, "output");
+    Assert.notNullParam(response, "response");
+    output.extend(HttpServletResponse.class, response);
   }
 
-  public static HttpInputData getInputData(ServletRequest req) {
-    return (HttpInputData) req.getAttribute(InputData.INPUT_DATA_KEY);
+  public static HttpInputData getInputData(ServletRequest request) {
+    Assert.notNullParam(request, "request");
+    return (HttpInputData) request.getAttribute(InputData.INPUT_DATA_KEY);
   }
 
-  public static HttpOutputData getOutputData(ServletRequest req) {
-    return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
+  public static HttpOutputData getOutputData(ServletRequest request) {
+    Assert.notNullParam(request, "request");
+    return (HttpOutputData) request.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
 
   /** @since 1.1 */
-  public static Environment getEnvironment(ServletRequest req) {
-    return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
+  public static Environment getEnvironment(ServletRequest request) {
+    Assert.notNullParam(request, "request");
+    return (Environment) request.getAttribute(Environment.ENVIRONMENT_KEY);
   }
 
   /** @since 2.0 */
@@ -302,10 +321,17 @@ public abstract class ServletUtil {
    */
   @SuppressWarnings("unchecked")
   public static boolean isAraneaAjaxRequest(ServletRequest req) {
+    Assert.notNullParam(req, "req");
+
     Map<String, Object> params = req.getParameterMap() != null ? req.getParameterMap() : new HashMap<String, Object>();
     return params.containsKey(ApplicationService.ACTION_HANDLER_ID_KEY)
         || params.containsKey(UpdateRegionContext.UPDATE_REGIONS_KEY)
         || params.containsKey(OverlayContext.OVERLAY_REQUEST_KEY);
+  }
+
+  public static String getEncodedContainerUrl(InputData input) {
+    Assert.notNullParam(input, "input");
+    return ((HttpOutputData) input.getOutputData()).encodeURL(((HttpInputData) input).getContainerURL());
   }
 
   /**

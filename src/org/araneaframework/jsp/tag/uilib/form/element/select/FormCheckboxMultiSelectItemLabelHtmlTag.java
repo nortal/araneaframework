@@ -16,16 +16,14 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.ConfigurationUtil;
-
-import org.araneaframework.uilib.ConfigurationContext;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Form checkbox label, represents label of one item from
@@ -55,7 +53,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
     super.doStartTag(out);
 
     // Prepare
-    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel) controlViewModel);
+    MultiSelectControl.ViewModel viewModel = (MultiSelectControl.ViewModel) controlViewModel;
 
     if (this.value != null && viewModel.getSelectItem(this.value) == null) {
       throw new AraneaJspException("Value '" + this.value + "' not found in values list.");
@@ -111,7 +109,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
 
   protected String evaluateLabel(String value) {
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
-    if (this.localizeDisplayItems.booleanValue()) {
+    if (this.localizeDisplayItems) {
       value = JspUtil.getResourceString(this.pageContext, value);
     }
     return value;

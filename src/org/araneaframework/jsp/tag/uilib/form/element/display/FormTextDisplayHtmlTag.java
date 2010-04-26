@@ -19,6 +19,7 @@ package org.araneaframework.jsp.tag.uilib.form.element.display;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.DisplayControl;
@@ -26,8 +27,10 @@ import org.araneaframework.uilib.form.control.DisplayControl;
 /**
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
- * @jsp.tag name = "textDisplay" body-content = "empty" description =
- *          "Display element value as string, represents UiLib 'DisplayControl'."
+ * @jsp.tag
+ *  name = "textDisplay"
+ *  body-content = "empty"
+ *  description = "Display element value as string, represents UiLib 'DisplayControl'."
  */
 public class FormTextDisplayHtmlTag extends BaseFormElementDisplayTag {
 
@@ -48,23 +51,23 @@ public class FormTextDisplayHtmlTag extends BaseFormElementDisplayTag {
       JspUtil.writeOpenStartTag(out, "span");
       JspUtil.writeAttribute(out, "class", getStyleClass());
       JspUtil.writeAttribute(out, "style", getStyle());
-      JspUtil.writeAttributes(out, attributes);
+      JspUtil.writeAttributes(out, this.attributes);
       JspUtil.writeCloseStartTag(out);
     }
 
     if (viewModel.getValue() != null) {
       String value = ObjectUtils.toString(viewModel.getValue().toString(), "");
-      if (this.localizeText) {
+      if (this.localizeText && StringUtils.isNotBlank(value)) {
         value = JspUtil.getResourceString(this.pageContext, value);
       }
       JspUtil.writeEscaped(out, value);
     }
 
-    if (getStyleClass() != null)
+    if (getStyleClass() != null) {
       JspUtil.writeEndTag(out, "span");
+    }
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
   /**

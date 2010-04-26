@@ -16,8 +16,6 @@
 
 package org.araneaframework.http.filter;
 
-import org.araneaframework.framework.LocalizationContext;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +38,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
@@ -405,9 +404,14 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return this.threadServiceId;
     }
 
-    /** @since 1.0.4 */
-    public void setTransactionOverride(boolean b) {
-      this.overrideTransaction = b;
+    /**
+     * Specifies whether the window closing request should contain parameter "araTransactionId=override". By default, contains.
+     * 
+     * @param overrideTransaction If set to <code>false</code>, the parameter will be excluded from the response.
+     * @since 1.0.4
+     */
+    public void setTransactionOverride(boolean overrideTransaction) {
+      this.overrideTransaction = overrideTransaction;
     }
 
     public String toURL() {

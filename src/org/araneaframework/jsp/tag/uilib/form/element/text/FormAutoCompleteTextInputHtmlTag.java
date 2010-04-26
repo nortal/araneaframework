@@ -38,18 +38,21 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
  */
 public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
-  protected String divClass = "autocompletediv";  
+  protected String divClass = "autocompletediv";
+
   protected String localDataVar;
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("AutoCompleteTextControl");
 
-    AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
+    AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) this.controlViewModel);
 
     Map<String, String> attributes = new HashMap<String, String>();
-    attributes.put("maxlength", viewModel.getMaxLength() + "");
     attributes.put("autocomplete", "off");
+    if (viewModel.getMaxLength() != null) {
+      attributes.put("maxlength", viewModel.getMaxLength().toString());
+    }
 
     if (this.onChangePrecondition == null) {
       this.onChangePrecondition = "return ";
@@ -68,7 +71,7 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", "ACdiv." + getFullFieldId());
-    JspUtil.writeAttribute(out, "class", divClass);
+    JspUtil.writeAttribute(out, "class", this.divClass);
     JspUtil.writeAttribute(out, "style", "display:none;");
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEndTag(out, "div");
@@ -119,10 +122,6 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     return script.toString();
   }
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
-  
   /**
    * @jsp.attribute
    *    type = "java.lang.String"

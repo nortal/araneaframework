@@ -16,8 +16,6 @@
 
 package org.araneaframework.http.core;
 
-import java.util.StringTokenizer;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -26,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.apache.commons.lang.StringUtils;
@@ -130,7 +129,7 @@ public class StandardServletInputData implements HttpInputData {
       initData();
     }
 
-    Map<String, String> result = this.scopedData.get(scope.toString());
+    Map<String, String> result = this.scopedData.get(scope);
 
     if (result != null) {
       return Collections.unmodifiableMap(result);
@@ -224,11 +223,11 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public String getPath() {
-    return this.path.toString();
+    return this.path;
   }
 
   public String getSimplePath() {
-    return trim(this.path.toString());
+    return trim(this.path);
   }
 
   public String popPathPrefix() {

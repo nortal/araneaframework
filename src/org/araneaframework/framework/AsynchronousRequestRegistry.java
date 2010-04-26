@@ -31,7 +31,7 @@ import java.io.Serializable;
  * By the way, Aranea users should use this interface directly to enable asynchronous actions. The action is registered
  * automatically as asynchronous when it implements {@link AsynchronousActionListener}.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public interface AsynchronousRequestRegistry extends Serializable {

@@ -43,8 +43,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public class WidgetTest extends TestCase {
 
-  boolean eventsWork = false;
-
   private FormWidget makeUsualForm() throws Exception {
 
     // Creating form :-)

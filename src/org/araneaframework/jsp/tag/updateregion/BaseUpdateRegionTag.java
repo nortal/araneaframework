@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.updateregion;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
+import org.araneaframework.Path;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.ServletUtil;
@@ -67,14 +66,14 @@ public class BaseUpdateRegionTag extends BaseTag {
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Local id of the update region."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Local ID of the update region."
    */
   public void setId(String id) {
     this.id = evaluate("id", id, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Global id of the update region."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Global ID of the update region."
    */
   public void setGlobalId(String globalId) {
     this.globalId = evaluate("globalId", globalId, String.class);

@@ -16,10 +16,6 @@
 
 package org.araneaframework.framework.filter;
 
-import org.apache.commons.beanutils.MethodUtils;
-
-import org.apache.commons.lang.ClassUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,6 +29,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import javax.servlet.ServletContext;
+import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

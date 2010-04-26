@@ -148,7 +148,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(getRequestURL(), m));
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parameterizeURI(getRequestURL(), m));
   }
 
   private FlowContext getOpenerFlowContext() {

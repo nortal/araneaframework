@@ -118,7 +118,7 @@
 	<files content-type="text/javascript" group="core-all-devel.js">
 		<file path="js/rsh/rsh.js" />
 		<file path="js/prototype/prototype.js" />
-        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
 		<file path="js/aranea/src/aranea.js" />
@@ -164,35 +164,35 @@
 	</files>
 
 	<files content-type="text/javascript" group="modalbox.js">
-        <file path="js/aranea/aranea-modalbox.js" />
-        <file path="js/modalbox/modalbox.js" />
+		<file path="js/aranea/aranea-modalbox.js" />
+		<file path="js/modalbox/modalbox.js" />
 	</files>
 
 	<files content-type="text/javascript" group="modalbox-devel.js">
-        <file path="js/aranea/src/aranea-modalbox.js" />
-        <file path="js/modalbox/modalbox.js" />
+		<file path="js/aranea/src/aranea-modalbox.js" />
+		<file path="js/modalbox/modalbox.js" />
 	</files>
 
 	<files content-type="text/javascript" group="scriptaculous.js">
-        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
 	</files>
 
 	<files content-type="text/javascript" group="popup.js">
-        <file path="js/aranea/aranea-popups.js" />
+		<file path="js/aranea/aranea-popups.js" />
 	</files>
 
 	<files content-type="text/javascript" group="popup-devel.js">
-        <file path="js/aranea/src/aranea-popups.js" />
+		<file path="js/aranea/src/aranea-popups.js" />
 	</files>
 
 	<files content-type="text/javascript" group="tree.js">
-        <file path="js/aranea/aranea-tree.js" />
+		<file path="js/aranea/aranea-tree.js" />
 	</files>
 
 	<files content-type="text/javascript" group="tree-devel.js">
-        <file path="js/aranea/src/aranea-tree.js" />
+		<file path="js/aranea/src/aranea-tree.js" />
 	</files>
 
 	<files content-type="text/javascript" group="rsh.js">

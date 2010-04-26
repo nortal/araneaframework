@@ -16,13 +16,12 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.uilib.support.DataType;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ValidationUtil;
 import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
@@ -48,7 +47,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
   /**
    * Controls whether a custom format has been specified.
    */
-  protected boolean confOverridden = false;
+  protected boolean confOverridden;
 
   /**
    * The custom input filter for this control. This can be enforced both client-side and server-side.
@@ -120,7 +119,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
 
   @Override
   protected String toResponse(Timestamp controlValue) {
-    return new SimpleDateFormat(dateTimeOutputPattern).format(controlValue);
+    return new SimpleDateFormat(this.dateTimeOutputPattern).format(controlValue);
   }
 
   @Override
@@ -156,7 +155,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
      * @return The formatter that can be use for rendering the values.
      */
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
-      return new SimpleDateFormat(dateTimeOutputPattern);
+      return new SimpleDateFormat(this.dateTimeOutputPattern);
     }
 
     /**

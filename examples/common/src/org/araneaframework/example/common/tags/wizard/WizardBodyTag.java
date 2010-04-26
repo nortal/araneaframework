@@ -21,19 +21,15 @@ import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.jsp.tag.BaseTag;
 
-
 /**
- * This tag includes wizard's current page.
- * It must be nested into WizardTag.
+ * This tag includes wizard's current page. It must be nested into WizardTag.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  * 
- * @jsp.tag
- *   name = "wizardBody"
- *   body-content = "JSP"
- *   description = "Includes the current wizard page."
+ * @jsp.tag name = "wizardBody" body-content = "JSP" description = "Includes the current wizard page."
  */
 public class WizardBodyTag extends BaseTag {
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     ApplicationWidget widget = getContextWidget();

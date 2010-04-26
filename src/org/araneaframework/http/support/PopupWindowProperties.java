@@ -23,11 +23,12 @@ import java.util.Map;
 
 /**
  * Simple class including the getters/setters for properties that can be set when opening browser windows. Note that all
- * of these may not work on all platforms and browsers. For meaning of all these attributes
- * <link>"http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/open_0.asp"</link> is good reference.
- * 
+ * of these may not work on all platforms and browsers. For the meaning of all these attributes
+ * <a href="https://developer.mozilla.org/En/DOM/Window.open">here</a> is good reference.
+ * <p>
  * Note that modeless and modal popups (IE proprietary extension) are not really fully-functional browser windows and
- * should only be used for displaying statical content.
+ * should only be used for displaying static content. Check the browser DOM reference for more precise information which
+ * properties and how they are supported in browsers.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -62,68 +63,92 @@ public class PopupWindowProperties implements Serializable {
     }
   }
 
+  /**
+   * A global way to specify popup window properties that are not defined as properties of this class.
+   * 
+   * @param property The name of the popup window property.
+   * @param value The value for the popup window property. If value is <code>null</code>, the property will be removed.
+   */
+  public void set(String property, String value) {
+    if (value == null) {
+      this.propertyMap.remove(property);
+    } else {
+      this.propertyMap.put(property, value);
+    }
+  }
+
+  /**
+   * A global way to get a value of a popup window property. If the value is <code>null</code> then the property is not
+   * included in the output of the {@link #toString()} method.
+   * 
+   * @param property The name of the popup window property.
+   */
+  public String get(String property) {
+    return this.propertyMap.get(property);
+  }
+
   public String getChannelmode() {
-    return this.propertyMap.get("channelmode");
+    return get("channelmode");
   }
 
   public void setChannelmode(String channelmode) {
-    this.propertyMap.put("channelmode", channelmode);
+    set("channelmode", channelmode);
   }
 
   public String getDirectories() {
-    return this.propertyMap.get("directories");
+    return get("directories");
   }
 
   public void setDirectories(String directories) {
-    this.propertyMap.put("directories", directories);
+    set("directories", directories);
   }
 
   public String getFullscreen() {
-    return this.propertyMap.get("fullscreen");
+    return get("fullscreen");
   }
 
   public void setFullscreen(String fullscreen) {
-    this.propertyMap.put("fullscreen", fullscreen);
+    set("fullscreen", fullscreen);
   }
 
   public String getHeight() {
-    return this.propertyMap.get("height");
+    return get("height");
   }
 
   public void setHeight(String height) {
-    this.propertyMap.put("height", height);
+    set("height", height);
   }
 
   public String getLeft() {
-    return this.propertyMap.get("left");
+    return get("left");
   }
 
   public void setLeft(String left) {
-    this.propertyMap.put("left", left);
+    set("left", left);
   }
 
   public String getLocation() {
-    return this.propertyMap.get("location");
+    return get("location");
   }
 
   public void setLocation(String location) {
-    this.propertyMap.put("location", location);
+    set("location", location);
   }
 
   public String getMenubar() {
-    return this.propertyMap.get("menubar");
+    return get("menubar");
   }
 
   public void setMenubar(String menubar) {
-    this.propertyMap.put("menubar", menubar);
+    set("menubar", menubar);
   }
 
   public String getResizable() {
-    return this.propertyMap.get("resizable");
+    return get("resizable");
   }
 
   public void setResizable(String resizable) {
-    this.propertyMap.put("resizable", resizable);
+    set("resizable", resizable);
   }
 
   /**
@@ -131,9 +156,9 @@ public class PopupWindowProperties implements Serializable {
    */
   public String getScrollbars() {
     if (isModal() || isModeless()) {
-      return this.propertyMap.get("scroll");
+      return get("scroll");
     }
-    return this.propertyMap.get("scrollbars");
+    return get("scrollbars");
   }
 
   /**
@@ -144,50 +169,50 @@ public class PopupWindowProperties implements Serializable {
    */
   public void setScrollbars(String scrollbars) {
     if (isModal() || isModeless()) {
-      this.propertyMap.put("scroll", scrollbars);
+      set("scroll", scrollbars);
     } else {
-      this.propertyMap.put("scrollbars", scrollbars);
+      set("scrollbars", scrollbars);
     }
   }
 
   public String getStatus() {
-    return this.propertyMap.get("status");
+    return get("status");
   }
 
   public void setStatus(String status) {
-    this.propertyMap.put("status", status);
+    set("status", status);
   }
 
   public String getTitlebar() {
-    return this.propertyMap.get("titlebar");
+    return get("titlebar");
   }
 
   public void setTitlebar(String titlebar) {
-    this.propertyMap.put("titlebar", titlebar);
+    set("titlebar", titlebar);
   }
 
   public String getToolbar() {
-    return this.propertyMap.get("toolbar");
+    return get("toolbar");
   }
 
   public void setToolbar(String toolbar) {
-    this.propertyMap.put("toolbar", toolbar);
+    set("toolbar", toolbar);
   }
 
   public String getTop() {
-    return this.propertyMap.get("top");
+    return get("top");
   }
 
   public void setTop(String top) {
-    this.propertyMap.put("top", top);
+    set("top", top);
   }
 
   public String getWidth() {
-    return this.propertyMap.get("width");
+    return get("width");
   }
 
   public void setWidth(String width) {
-    this.propertyMap.put("width", width);
+    set("width", width);
   }
 
   /**
@@ -195,11 +220,11 @@ public class PopupWindowProperties implements Serializable {
    * modal and modeless popups.
    */
   public String getCenter() {
-    return this.propertyMap.get("center");
+    return get("center");
   }
 
   public void setCenter(String center) {
-    this.propertyMap.put("center", center);
+    set("center", center);
   }
 
   /**
@@ -208,18 +233,18 @@ public class PopupWindowProperties implements Serializable {
    * modeless popups.
    */
   public String getDialogHide() {
-    return this.propertyMap.get("dialogHide");
+    return get("dialogHide");
   }
 
   public void setDialogHide(String dialogHide) {
-    this.propertyMap.put("dialogHide", dialogHide);
+    set("dialogHide", dialogHide);
   }
 
   /**
    * Edge specifies the edge style of the dialog window, default is "raised". Applicable to modal and modeless popups.
    */
   public String getEdge() {
-    return this.propertyMap.get("edge");
+    return get("edge");
   }
 
   /**
@@ -227,7 +252,7 @@ public class PopupWindowProperties implements Serializable {
    * Applicable to modal and modeless popups.
    */
   public void setEdge(String edge) {
-    this.propertyMap.put("edge", edge);
+    set("edge", edge);
   }
 
   /**
@@ -235,7 +260,7 @@ public class PopupWindowProperties implements Serializable {
    * modal and modeless popups.
    */
   public String getHelp() {
-    return this.propertyMap.get("help");
+    return get("help");
   }
 
   /**
@@ -243,7 +268,7 @@ public class PopupWindowProperties implements Serializable {
    * modal and modeless popups.
    */
   public void setHelp(String help) {
-    this.propertyMap.put("help", help);
+    set("help", help);
   }
 
   /**
@@ -251,7 +276,7 @@ public class PopupWindowProperties implements Serializable {
    * box is opened from a trusted application. The default is no. Applicable to modal and modeless popups.
    */
   public String getUnadorned() {
-    return this.propertyMap.get("unadorned");
+    return get("unadorned");
   }
 
   /**
@@ -259,11 +284,11 @@ public class PopupWindowProperties implements Serializable {
    * box is opened from a trusted application. The default is no. Applicable to modal and modeless popups.
    */
   public void setUnadorned(String unadorned) {
-    this.propertyMap.put("unadorned", unadorned);
+    set("unadorned", unadorned);
   }
 
   public String getDialogHeight() {
-    return this.propertyMap.get("dialogHeight");
+    return get("dialogHeight");
   }
 
   /**
@@ -273,11 +298,11 @@ public class PopupWindowProperties implements Serializable {
    * @param dialogHeight
    */
   public void setDialogHeight(String dialogHeight) {
-    this.propertyMap.put("dialogHeight", dialogHeight);
+    set("dialogHeight", dialogHeight);
   }
 
   public String getDialogWidth() {
-    return this.propertyMap.get("dialogWidth");
+    return get("dialogWidth");
   }
 
   /**
@@ -287,11 +312,11 @@ public class PopupWindowProperties implements Serializable {
    * @param dialogWidth
    */
   public void setDialogWidth(String dialogWidth) {
-    this.propertyMap.put("dialogWidth", dialogWidth);
+    set("dialogWidth", dialogWidth);
   }
 
   public String getDialogLeft() {
-    return this.propertyMap.get("dialogLeft");
+    return get("dialogLeft");
   }
 
   /**
@@ -301,11 +326,11 @@ public class PopupWindowProperties implements Serializable {
    * @param dialogLeft
    */
   public void setDialogLeft(String dialogLeft) {
-    this.propertyMap.put("dialogLeft", dialogLeft);
+    set("dialogLeft", dialogLeft);
   }
 
   public String getDialogTop() {
-    return this.propertyMap.get("dialogTop");
+    return get("dialogTop");
   }
 
   /**
@@ -315,18 +340,18 @@ public class PopupWindowProperties implements Serializable {
    * @param dialogTop
    */
   public void setDialogTop(String dialogTop) {
-    this.propertyMap.put("dialogTop", dialogTop);
+    set("dialogTop", dialogTop);
   }
 
   @Override
   public String toString() {
-    StringBuffer sb = new StringBuffer("");
+    StringBuffer sb = new StringBuffer();
 
     for (Iterator<String> i = this.propertyMap.keySet().iterator(); i.hasNext();) {
       String key = i.next();
       sb.append(key);
       sb.append((this.modal || this.modeless) ? ':' : '=');
-      sb.append(this.propertyMap.get(key).toString());
+      sb.append(get(key));
       if (i.hasNext()) {
         sb.append((this.modal || this.modeless) ? "; " : ",");
       }

@@ -52,8 +52,8 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
    * 
    * @param shouldConfirm The predicate that is used to check whether confirmation should be shown.
    * @param confirmationMessage The message to show if the predicate returns <code>true</code>.
-   * @param allCancellings If <code>true</code> then transition type may be eiter {@link FlowContext#TRANSITION_CANCEL},
-   *          {@link FlowContext#TRANSITION_REPLACE}, or {@link FlowContext#TRANSITION_RESET}. Otherwise, only
+   * @param allCancellings If <code>true</code> then transition type may be either {@link FlowContext#TRANSITION_CANCEL}
+   *          , {@link FlowContext#TRANSITION_REPLACE}, or {@link FlowContext#TRANSITION_RESET}. Otherwise, only
    *          {@link FlowContext#TRANSITION_CANCEL} is monitored.
    * @since 1.2.2
    */
@@ -62,6 +62,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     Assert.isInstanceOf(Serializable.class, shouldConfirm,
         "shouldConfirm Predicate must implement java.io.Serializable");
     Assert.notNullParam(this, confirmationMessage, "confirmationMessage");
+
     this.shouldConfirm = shouldConfirm;
     this.confirmationMessage = confirmationMessage;
     this.allCancellings = allCancellings;

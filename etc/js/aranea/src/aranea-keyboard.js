@@ -149,20 +149,22 @@ Aranea.Keyboard = {
 	 *                     when it is false, the called handler is the last one to be invoked.
 	 * @since 1.1
 	 */
-	registerKeypressHandler: function(elementPrefix, keyCode, metaCondStr, handler) {
-		if (arguments.length == 3) {
-			handler = arguments[2];
-			if (Object.isNumber(arguments[1])) {
-				metaCondStr = null;
-			} else if (Object.isString(arguments[1])) {
-				metaCondStr = arguments[1];
-				keyCode = null;
-			}
+	registerKeypressHandler: function(elementPrefix, eventCond, handler) {
+		if (arguments.length != 3) {
+			throw('Aranea.Keyboard.registerKeypressHandler: expected 3 parameters instead of ' + arguments.length);
 		}
 
-		if (keyCode == null && metaCondStr == null) {
+		var keyCode, metaCondStr;
+
+		if (Object.isNumber(eventCond)) {
+			keyCode = eventCond;
+		} else if (Object.isString(eventCond)) {
+			metaCondStr = eventCond;
+		} else {
 			throw('Aranea.Keyboard.registerKeypressHandler: At least "keyCode" or "metaCondStr" parameter must be provided!');
-		} else if (handler == null) {
+		}
+
+		if (handler == null) {
 			Aranea.Logger.warn('Aranea.Keyboard.registerKeypressHandler: No event handler was registered for element-prefix "'
 				+ elementPrefix + '" (keyCode=' + keyCode + ',metaCond="' + metaCondStr + '") because event handler was not provided!');
 		}

@@ -27,7 +27,7 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public abstract class BaseImageHtmlTag extends BaseImageTag {
 
-  {
+  public BaseImageHtmlTag() {
     this.baseStyleClass = "aranea-image";
   }
 
@@ -49,11 +49,6 @@ public abstract class BaseImageHtmlTag extends BaseImageTag {
       String title) throws IOException {
     writeImage(out, src, width, height, alt, styleClass, title);
   }
-
-  /* ***********************************************************************************
-   * STATIC methods for writing out <IMG> tag
-   * *********************************************************************************
-   */
 
   /**
    * Static method to write out image with given properties.
@@ -77,7 +72,7 @@ public abstract class BaseImageHtmlTag extends BaseImageTag {
     JspUtil.writeAttribute(out, "src", src, false);
     JspUtil.writeAttribute(out, "width", width);
     JspUtil.writeAttribute(out, "height", height);
-    JspUtil.writeAttribute(out, "border", 0 + "");
+    JspUtil.writeAttribute(out, "border", "0");
     JspUtil.writeAttribute(out, "alt", alt);
     JspUtil.writeAttribute(out, "title", title);
 

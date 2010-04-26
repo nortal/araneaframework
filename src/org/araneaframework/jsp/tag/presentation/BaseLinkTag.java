@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.tag.presentation;   
+package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
@@ -27,20 +27,18 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
  * @author Oleg Mürk
  */
 public class BaseLinkTag extends PresentationTag {
+
   protected String id, href, target;
-  protected boolean disabled = false;
-  
+
+  protected boolean disabled;
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
-
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.id);
     return EVAL_BODY_INCLUDE;
   }
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
   /**
    * @throws JspException 
    * @jsp.attribute
@@ -49,7 +47,7 @@ public class BaseLinkTag extends PresentationTag {
    *   description = "Link id, allows to access link from JavaScript." 
    */
   public void setId(String id) throws JspException{
-    this.id = this.evaluateNotNull("id", id, String.class);
+    this.id = evaluateNotNull("id", id, String.class);
   }
 
   /**
@@ -60,7 +58,7 @@ public class BaseLinkTag extends PresentationTag {
    *   description = "Link target URL." 
    */
   public void setHref(String href) throws JspException{
-    this.href = this.evaluateNotNull("href", href, String.class);
+    this.href = evaluateNotNull("href", href, String.class);
   }
 
   /**
@@ -71,8 +69,9 @@ public class BaseLinkTag extends PresentationTag {
    *   description = "Link target, same as <i>&lt;a&gt;</i> HTML tag <i>target</i> attribute." 
    */
   public void setTarget(String target) throws JspException{
-    this.target = this.evaluateNotNull("target", target, String.class);
+    this.target = evaluateNotNull("target", target, String.class);
   }
+
   /**
    * @throws JspException 
    * @jsp.attribute
@@ -81,10 +80,6 @@ public class BaseLinkTag extends PresentationTag {
    *   description = "Controls whether the link is disabled, disabled link doesn't link anywhere." 
    */
   public void setDisabled(String disabled) throws JspException{
-    this.disabled = (this.evaluateNotNull("disabled", disabled, Boolean.class)).booleanValue();
+    this.disabled = evaluateNotNull("disabled", disabled, Boolean.class);
   }
 }
-
-
-
-

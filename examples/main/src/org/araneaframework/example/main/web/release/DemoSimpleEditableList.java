@@ -162,8 +162,8 @@ public class DemoSimpleEditableList extends TemplateBaseWidget {
       editableRow.close();
       BeanFormWidget<ExampleData.Client> rowForm = editableRow.getForm();
       addCommonFormFields(rowForm);
-      FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
-      FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+      FormListUtil.addEditSaveButtonToRowForm("#", editableRow);
+      FormListUtil.addDeleteButtonToRowForm("#", editableRow);
       rowForm.readFromBean(rowData);
     }
 
@@ -187,7 +187,7 @@ public class DemoSimpleEditableList extends TemplateBaseWidget {
     return result;
   }
 
-  private class SexConstraint extends BaseFieldConstraint<String, String> {
+  private static class SexConstraint extends BaseFieldConstraint<String, String> {
 
     @Override
     protected void validateConstraint() throws Exception {

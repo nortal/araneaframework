@@ -31,37 +31,32 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Acts as <i>&lt;font&gt;</i> HTML tag."
  */
 public class FontHtmlTag extends BaseTag {
-  protected String face = null;
-  protected String size = null;
-  protected String color = null;
+
+  protected String face;
+
+  protected String size;
+
+  protected String color;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
     JspUtil.writeOpenStartTag(out, "font");
-    JspUtil.writeAttribute(out, "face", face);
-    JspUtil.writeAttribute(out, "size", size);
-    JspUtil.writeAttribute(out, "color", color);
+    JspUtil.writeAttribute(out, "face", this.face);
+    JspUtil.writeAttribute(out, "size", this.size);
+    JspUtil.writeAttribute(out, "color", this.color);
     JspUtil.writeCloseStartTag_SS(out);
 
-    // Continue
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
 
   @Override
   protected int doEndTag(Writer out) throws Exception {   
     JspUtil.writeEndTag(out, "font");
-
-    // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;  
+    return super.doEndTag(out);
   }
 
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
 
   /**
    * @jsp.attribute

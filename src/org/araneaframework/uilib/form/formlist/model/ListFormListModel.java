@@ -16,12 +16,10 @@
 
 package org.araneaframework.uilib.form.formlist.model;
 
-import org.araneaframework.core.Assert;
-
-import org.araneaframework.uilib.form.formlist.FormListWidget;
-
 import java.util.List;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.formlist.FormListModel;
+import org.araneaframework.uilib.form.formlist.FormListWidget;
 
 /**
  * A <code>FormListModel</code> implementation that accepts list rows data in a {@link List}. This object can be

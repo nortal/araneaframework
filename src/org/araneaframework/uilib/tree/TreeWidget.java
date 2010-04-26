@@ -20,7 +20,7 @@ import java.io.Writer;
 import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
-import org.araneaframework.Widget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.http.HttpOutputData;
@@ -32,30 +32,29 @@ import org.araneaframework.http.HttpOutputData;
 public class TreeWidget extends TreeNodeWidget implements TreeContext {
 
   private TreeDataProvider dataProvider;
+
   private boolean removeChildrenOnCollapse = true;
-  private boolean useActions = false;
+
+  private boolean useActions;
+
   private boolean useSynchronizedActions = true;
+
   private TreeRenderer renderer;
 
-  //TODO features:
+  // TODO features:
   // * not-dispose-children in client side
   // * some nodes not collapsable
-  // * disable concrete tree node toggling client-side when request has been
-  //   submitted - response not yet arrived and processed
-  // * make sure that all methods can be called before init
+  // * disable concrete tree node toggling client-side when request has been submitted - response not yet arrived and processed
 
   /**
    * Creates a new {@link TreeWidget} instance.
    */
-  public TreeWidget() {
-  }
+  public TreeWidget() {}
 
   /**
-   * Creates a new {@link TreeWidget} instance which will acquire the
-   * tree data from supplied {@link TreeDataProvider}.
+   * Creates a new {@link TreeWidget} instance which will acquire the tree data from supplied {@link TreeDataProvider}.
    * 
-   * @param dataProvider
-   *          tree data provider.
+   * @param dataProvider tree data provider.
    */
   public TreeWidget(TreeDataProvider dataProvider) {
     Assert.notNullParam(dataProvider, "dataProvider");
@@ -65,8 +64,9 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   @Override
   protected void init() throws Exception {
     List<TreeNodeWidget> children = loadChildren();
-    if (children != null)
+    if (children != null) {
       addAllNodes(children);
+    }
   }
 
   @Override
@@ -75,24 +75,22 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   public TreeDataProvider getDataProvider() {
-    return dataProvider;
+    return this.dataProvider;
   }
 
   /**
-   * Set if actions are used instead of events in submit links. See
-   * {@link TreeContext#useActions()}.
+   * Set if actions are used instead of events in submit links. See {@link TreeContext#useActions()}.
    */
   public void setUseActions(boolean useActions) {
     this.useActions = useActions;
   }
 
   public boolean useActions() {
-    return useActions;
+    return this.useActions;
   }
 
   /**
-   * Set if AJAX requests to tree widget are synchronized. See
-   * {@link TreeContext#useSynchronizedActions()}.
+   * Set if AJAX requests to tree widget are synchronized. See {@link TreeContext#useSynchronizedActions()}.
    * 
    * @since 1.1
    */
@@ -101,7 +99,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   public boolean useSynchronizedActions() {
-    return useSynchronizedActions;
+    return this.useSynchronizedActions;
   }
 
   /**
@@ -112,7 +110,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   public boolean isRemoveChildrenOnCollapse() {
-    return removeChildrenOnCollapse;
+    return this.removeChildrenOnCollapse;
   }
 
   /**
@@ -124,7 +122,7 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   public TreeRenderer getRenderer() {
-    return renderer;
+    return this.renderer;
   }
 
   @Override
@@ -134,20 +132,12 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
     out.flush();
   }
 
-  // The following methods do nothing, because the root node of the tree has no
-  // display widget and therefore is always expanded.
-
-  @Override
-  public Widget getDisplayWidget() {
-    return null;
-  }
-
   @Override
   public void setCollapsed(boolean collapsed) {
-  }
-
-  @Override
-  public void toggleCollapsed() {
+    if (!collapsed) {
+      throw new AraneaRuntimeException("Cannot change TreeWidget collapsed property to false because it is always "
+          + "expanded due to not having a display widget to expand it later.");
+    }
   }
 
 }

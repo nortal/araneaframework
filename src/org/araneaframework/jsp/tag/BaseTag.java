@@ -16,12 +16,6 @@
 
 package org.araneaframework.jsp.tag;
 
-import org.araneaframework.http.HttpInputData;
-
-import org.araneaframework.InputData;
-
-import org.araneaframework.http.HttpOutputData;
-
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,10 +28,13 @@ import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.araneaframework.Environment;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
@@ -328,6 +325,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /**
+   * Returns the widget environment for which this tag is rendered.
+   * 
+   * @return The current widget environment.
    * @since 1.1
    */
   protected Environment getEnvironment() {
@@ -335,6 +335,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /**
+   * Returns the widget for which this tag is rendered.
+   * 
+   * @return The current context widget.
    * @since 1.1
    */
   protected ApplicationWidget getContextWidget() {
@@ -342,6 +345,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /**
+   * Returns the full ID of the widget for which this tag is rendered.
+   * 
+   * @return The full ID of the current context widget.
    * @since 1.1
    */
   protected String getContextWidgetFullId() {
@@ -365,10 +371,10 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
       this.attributeBackup = new HashMap<Integer, Map<String, Object>>();
     }
 
-    Map<String, Object> map = this.attributeBackup.get(new Integer(scope));
+    Map<String, Object> map = this.attributeBackup.get(scope);
     if (map == null) {
       map = new HashMap<String, Object>();
-      this.attributeBackup.put(new Integer(scope), map);
+      this.attributeBackup.put(scope, map);
     }
     return map;
   }

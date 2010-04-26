@@ -188,7 +188,7 @@ public class JPAListSqlHelper extends ListSqlHelper {
   /**
    * A custom override to fetch the total items count using JPA entity manager.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 2.0
    */
   protected class JPACountCallback implements ConnectionCallback<Long> {
@@ -208,7 +208,7 @@ public class JPAListSqlHelper extends ListSqlHelper {
   /**
    * A custom override to fetch the item range using JPA entity manager.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 2.0
    */
   protected class JPASelectCallback<I> implements ConnectionCallback<List<I>> {

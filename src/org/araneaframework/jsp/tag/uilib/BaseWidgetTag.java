@@ -33,10 +33,7 @@ public class BaseWidgetTag extends BaseTag {
   protected ApplicationWidget.WidgetViewModel viewModel;
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "UiLib widget id."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "UiLib widget ID."
    */
   public void setId(String id) throws JspException {
     this.id = evaluateNotNull("id", id, String.class);
@@ -55,7 +52,6 @@ public class BaseWidgetTag extends BaseTag {
     this.fullId = this.widget.getScope().toString();
     this.viewModel = (ApplicationWidget.WidgetViewModel) this.widget._getViewable().getViewModel();
 
-    // Continue
     return EVAL_BODY_INCLUDE;
   }
 
@@ -63,7 +59,8 @@ public class BaseWidgetTag extends BaseTag {
   public void doFinally() {
     super.doFinally();
     // to prevent memory leaks in containers where tags might live very long
-    this.id = this.fullId = null;
+    this.id = null;
+    this.fullId = null;
     this.widget = null;
     this.viewModel = null;
   }

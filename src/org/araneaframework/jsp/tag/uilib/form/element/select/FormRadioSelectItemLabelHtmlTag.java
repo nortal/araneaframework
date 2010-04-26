@@ -40,7 +40,7 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   protected String radioId;
 
   /** @since 2.0 */
-  protected Boolean localizeLabel = false;
+  protected Boolean localizeLabel;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {

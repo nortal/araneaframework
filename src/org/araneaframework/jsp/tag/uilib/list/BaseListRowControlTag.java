@@ -62,7 +62,7 @@ public abstract class BaseListRowControlTag extends PresentationTag {
   /**
    * Specifies the initial state of the form control. Default is unchecked.
    */
-  protected boolean checked = false;
+  protected boolean checked;
 
   /**
    * The name of the event handler (in the widget that contains the list) that
@@ -206,8 +206,7 @@ public abstract class BaseListRowControlTag extends PresentationTag {
    *   required = "false"
    *   description = "Global update regions that must be updated."
    */
-  public void setGlobalUpdateRegions(String globalUpdateRegions)
-      throws JspException {
+  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException {
     this.globalUpdateRegions = evaluateNotNull("globalUpdateRegions", globalUpdateRegions, String.class);
   }
 

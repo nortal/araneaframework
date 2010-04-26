@@ -33,25 +33,27 @@ import org.araneaframework.uilib.form.control.NumberControl;
  *   description = "Form number input field, represents UiLib 'NumberControl'."
  */
 public class FormNumberInputHtmlTag extends BaseFormTextInputHtmlTag {
-  {
-    size = null;
-    baseStyleClass = "aranea-number";
+
+  public FormNumberInputHtmlTag() {
+    this.baseStyleClass = "aranea-number";
   }
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("NumberControl");
 
-    NumberControl.ViewModel viewModel = ((NumberControl.ViewModel)controlViewModel);
+    NumberControl.ViewModel viewModel = ((NumberControl.ViewModel) this.controlViewModel);
 
     Map<String, String> attributes = new HashMap<String, String>();
+
     if (viewModel.getInputFilter() != null) {
-      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter()
+          .getCharacterFilter());
     }
+
     writeTextInput(out, "text", true, attributes);
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
 }

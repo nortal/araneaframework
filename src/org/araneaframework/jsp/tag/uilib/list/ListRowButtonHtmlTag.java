@@ -29,8 +29,7 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
  *   description = "Represents an HTML form button."
  */
 public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
- 
-  
+
   public ListRowButtonHtmlTag() {
     this.baseStyleClass = "aranea-button";
   }
@@ -50,18 +49,18 @@ public class ListRowButtonHtmlTag extends BaseListRowButtonTag {
       JspUtil.writeEventAttributes(out, this.event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }
-    
+
     JspUtil.writeCloseStartTag_SS(out);
 
     return EVAL_BODY_INCLUDE;
-  }    
+  }
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
     if (this.localizedLabel != null) {
       JspUtil.writeEscaped(out, this.localizedLabel);
     }
-    JspUtil.writeEndTag(out, "button"); 
+    JspUtil.writeEndTag(out, "button");
     return super.doEndTag(out);
-  }  
+  }
 }

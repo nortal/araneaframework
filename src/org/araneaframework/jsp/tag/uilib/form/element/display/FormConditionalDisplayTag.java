@@ -21,38 +21,40 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementDisplayTag;
 import org.araneaframework.uilib.form.control.DisplayControl;
 
 /**
- * Depending whether form element boolean value is true or false display one or other content, 
- * represents {@link org.araneaframework.uilib.form.control.DisplayControl}. 
- * {@link org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionFalseTag} 
- * and {@link org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionTrueTag} tags 
- * are meant to be used 
- * inside this tag to define alternative contents. This tag itself does not render anything, it just
- * makes <code>Boolean</code> available to inner tags.
+ * Depending whether form element boolean value is true or false display one or other content, represents
+ * {@link org.araneaframework.uilib.form.control.DisplayControl}.
+ * {@link org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionFalseTag} and
+ * {@link org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionTrueTag} tags are meant to be used inside
+ * this tag to define alternative contents. This tag itself does not render anything, it just makes <code>Boolean</code>
+ * available to inner tags.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
- *   name = "conditionalDisplay"
- *   body-content = "JSP"
- *   description = "Depending whether element Boolean value is TRUE or FALSE display one or other content, represents UiLib 'DisplayControl'."
+ *  name = "conditionalDisplay"
+ *  body-content = "JSP"
+ *  description ="Depending whether element Boolean value is TRUE or FALSE display one or other content, represents UiLib 'DisplayControl'."
  */
 public class FormConditionalDisplayTag extends BaseFormElementDisplayTag {
-  public final static String CONDITION_KEY = "org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionalDisplayTag.CONDITION";    
+
+  public final static String CONDITION_KEY = "org.araneaframework.jsp.tag.uilib.form.element.display.FormConditionalDisplayTag.CONDITION";
+
   protected Boolean condition = Boolean.FALSE;
-  
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
+
     assertControlType("DisplayControl");
-    
-    DisplayControl.ViewModel viewModel = (DisplayControl.ViewModel) controlViewModel;
-        
-    if (viewModel.getValue() != null) 
-      condition = ((Boolean) viewModel.getValue());
-     
-    addContextEntry(CONDITION_KEY, condition);
-    
-    return EVAL_BODY_INCLUDE;   
+
+    DisplayControl.ViewModel viewModel = (DisplayControl.ViewModel) this.controlViewModel;
+
+    if (viewModel.getValue() != null) {
+      this.condition = ((Boolean) viewModel.getValue());
+    }
+
+    addContextEntry(CONDITION_KEY, this.condition);
+
+    return EVAL_BODY_INCLUDE;
   }
 }

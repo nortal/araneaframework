@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Back-end list query results.
- *
+ * 
  * @see ListQuery
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
@@ -32,8 +32,7 @@ public class ListItemsData<T> implements Serializable {
 
   /** @since 1.1 */
   @SuppressWarnings("unchecked")
-  public static final ListItemsData EMPTY = new ListItemsData(
-      Collections.EMPTY_LIST, new Long(0L));
+  public static final ListItemsData EMPTY = new ListItemsData(Collections.EMPTY_LIST, 0L);
 
   private List<T> itemRange;
 
@@ -48,9 +47,10 @@ public class ListItemsData<T> implements Serializable {
     this.totalCount = totalCount;
   }
 
-  public static <E> ListItemsData<E> getEmpty(){
+  public static <E> ListItemsData<E> getEmpty() {
     return new ListItemsData<E>(new LinkedList<E>(), 0L);
   }
+
   /**
    * @return Returns the itemRange.
    */

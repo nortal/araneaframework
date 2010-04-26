@@ -21,7 +21,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
-import org.araneaframework.uilib.form.formlist.FormListUtil.ButtonOnClickEventListener.Action;
+import org.araneaframework.uilib.form.formlist.FormListUtil.ButtonOnClickEventListener.ListFormAction;
 
 /**
  * Utility methods for adding buttons to {@link FormListWidget} rows and tracking state changes.
@@ -30,95 +30,172 @@ import org.araneaframework.uilib.form.formlist.FormListUtil.ButtonOnClickEventLi
  */
 public abstract class FormListUtil {
 
-  public static final String ADD = "add";
-  public static final String SAVE = "save";
-  public static final String DELETE = "delete";
-  public static final String OPEN_CLOSE = "openClose";
-  public static final String EDIT_SAVE = "editSave";
-
+  /**
+   * Adds a button to the given form. The button will have an ID of <code>elementName</code> and invoke the provided
+   * listener when clicked by the user.
+   * 
+   * @param labelId The ID of the label for the button.
+   * @param rowForm The form (of a row) where this button will be added.
+   * @param listener The on-click event listener to register for the button.
+   * @param elementName The ID for the button.
+   * @return The added button control.
+   */
   public static ButtonControl addButtonToRowForm(String labelId, FormWidget rowForm, OnClickEventListener listener,
       String elementName) {
     ButtonControl button = new ButtonControl();
-    button.addOnClickEventListener(listener);
-    rowForm.addElement(elementName, labelId, button, null, false);
+    if (listener != null) {
+      button.addOnClickEventListener(listener);
+    }
+    rowForm.addElement(elementName, labelId, button);
     return button;
   }
 
+  private static <K> ButtonControl addButtonToFormRow(String labelId, FormRow<K, ?> formRow, ListFormAction listenerAction) {
+    OnClickEventListener listener = new ButtonOnClickEventListener<K>(formRow.getKey(), formRow.getFormList(),
+        listenerAction);
+    return addButtonToRowForm(labelId, formRow.getForm(), listener, listenerAction.getEventId());
+  }
+
+  private static <K> ButtonControl addButtonToFormRow(String labelId, BaseFormListWidget<K, ?> editableRows,
+      FormWidget rowForm, K key, ListFormAction action) {
+    String eventId = action.getEventId();
+    return addButtonToRowForm(labelId, rowForm, new ButtonOnClickEventListener<K>(key, editableRows, action), eventId);
+  }
+
   /**
-   * Adds a save button to the given row form. Save button has id "save" and will save the specified row when pressed by
-   * user.
+   * Adds a "Save" button to the given row form. The button will have an ID of {@value #SAVE} and will save the
+   * specified row when pressed by the user.
    * 
-   * @param labelId button label id.
-   * @param editableRows editable rows widget.
-   * @param rowForm row form.
-   * @param key row key.
-   * @throws Exception
+   * @param labelId The ID of the label for the "Save" button.
+   * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
+   * @param rowForm The form of the row where this button will be added.
+   * @param key The key to identify the row.
+   * @return The added button control.
+   * @deprecated Use {@link #addSaveButtonToRowForm(String, FormRow)} instead.
    */
+  @Deprecated
   public static <K> ButtonControl addSaveButtonToRowForm(String labelId, BaseFormListWidget<K, ?> editableRows,
       FormWidget rowForm, K key) {
-    return addButtonToRowForm(labelId, rowForm, new ButtonOnClickEventListener<K>(key, editableRows, Action.Save), SAVE);
+    return addButtonToFormRow(labelId, editableRows, rowForm, key, ListFormAction.SAVE);
   }
 
   /**
-   * Adds a delete button to the given row form. Delete button has id "delete" and will delete the specified row when
-   * pressed by user.
+   * Adds a "Save" button to the given form (resolved through <code>formRow.getForm()</code>). The button will have an
+   * ID of {@value #SAVE} and will save the specified row when pressed by the user.
    * 
-   * @param labelId button label id.
-   * @param editableRows editable rows widget.
-   * @param rowForm row form.
-   * @param key row key.
-   * @throws Exception
+   * @param labelId The ID of the label for the "Save" button.
+   * @param formRow The <code>FormRow</code> where the button will be added.
+   * @return The added button control.
+   * @since 2.0
    */
+  public static <K> ButtonControl addSaveButtonToRowForm(String labelId, FormRow<K, ?> formRow) {
+    return addButtonToFormRow(labelId, formRow, ListFormAction.SAVE);
+  }
+
+  /**
+   * Adds a "Delete" button to the given row form. The button will have an ID of {@value #DELETE} and will delete the
+   * specified row when pressed by the user.
+   * 
+   * @param labelId The ID of the label for the "Delete" button.
+   * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
+   * @param rowForm The form of the row where this button will be added.
+   * @param key The key to identify the row.
+   * @return The added button control.
+   * @deprecated Use {@link #addDeleteButtonToRowForm(String, FormRow)} instead.
+   */
+  @Deprecated
   public static <K> ButtonControl addDeleteButtonToRowForm(String labelId, BaseFormListWidget<K, ?> editableRows,
       FormWidget rowForm, K key) {
-    return addButtonToRowForm(labelId, rowForm, new ButtonOnClickEventListener<K>(key, editableRows, Action.Delete),
-        DELETE);
+    return addButtonToFormRow(labelId, editableRows, rowForm, key, ListFormAction.DELETE);
   }
 
   /**
-   * Adds an open/close button to the given row form. Open/close button has id "openClose" and will open or close
-   * (negate the current status) the specified row when pressed by user.
+   * Adds a "Delete" button to the given form (resolved through <code>formRow.getForm()</code>). The button will have an
+   * ID of {@value #DELETE} and will save the specified row when pressed by the user.
    * 
-   * @param labelId button label id.
-   * @param editableRows editable rows widget.
-   * @param rowForm row form.
-   * @param key row key.
-   * @throws Exception
+   * @param labelId The ID of the label for the "Delete" button.
+   * @param formRow The <code>FormRow</code> where the button will be added.
+   * @return The added button control.
+   * @since 2.0
    */
+  public static <K> ButtonControl addDeleteButtonToRowForm(String labelId, FormRow<K, ?> formRow) {
+    return addButtonToFormRow(labelId, formRow, ListFormAction.DELETE);
+  }
+
+  /**
+   * Adds an "Open/Close" button to the given row form. The button will have an ID of {@value #OPEN_CLOSE} and will open
+   * or close a row for editing when pressed by the user.
+   * 
+   * @param labelId The ID of the label for the "Open/Close" button.
+   * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
+   * @param rowForm The form of the row where this button will be added.
+   * @param key The key to identify the row.
+   * @return The added button control.
+   * @deprecated Use {@link #addOpenCloseButtonToRowForm(String, FormRow)} instead.
+   */
+  @Deprecated
   public static <K> ButtonControl addOpenCloseButtonToRowForm(String labelId, BaseFormListWidget<K, ?> editableRows,
       FormWidget rowForm, K key) {
-    return addButtonToRowForm(labelId, rowForm, new ButtonOnClickEventListener<K>(key, editableRows, Action.OpenClose),
-        OPEN_CLOSE);
+    return addButtonToFormRow(labelId, editableRows, rowForm, key, ListFormAction.OPEN_CLOSE);
   }
 
   /**
-   * Adds an edit/save button to the given row form. Edit/save button has id "editSave" and will open or close (negate
-   * the current status) the specified row when pressed by user. Additionally when the row is closed it will save the
-   * row.
+   * Adds a "Open/Close" button to the given form (resolved through <code>formRow.getForm()</code>). The button will
+   * have an ID of {@value #OPEN_CLOSE} and will save the specified row when pressed by the user.
    * 
-   * @param labelId button label id.
-   * @param editableRows editable rows widget.
-   * @param rowForm row form.
-   * @param key row key.
+   * @param labelId The ID of the label for the button.
+   * @param formRow The <code>FormRow</code> where the button will be added.
+   * @return The added button control.
+   * @since 2.0
    */
+  public static <K> ButtonControl addOpenCloseButtonToRowForm(String labelId, FormRow<K, ?> formRow) {
+    return addButtonToFormRow(labelId, formRow, ListFormAction.OPEN_CLOSE);
+  }
+
+  /**
+   * Adds an "Edit/Save" button to the given row form. The button will have an ID of {@value #EDIT_SAVE} and, when
+   * pressed by the user, will open the row for editing when the row is not opened for editing, otherwise save the
+   * opened row and closes it.
+   * 
+   * @param labelId The ID of the label for the "Edit/Save" button.
+   * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
+   * @param rowForm The form of the row where this button will be added.
+   * @param key The key to identify the row.
+   * @return The added button control.
+   * @deprecated Use {@link #addEditSaveButtonToRowForm(String, FormRow)} instead.
+   */
+  @Deprecated
   public static <K> ButtonControl addEditSaveButtonToRowForm(String labelId, BaseFormListWidget<K, ?> editableRows,
       FormWidget rowForm, K key) {
-    return addButtonToRowForm(labelId, rowForm, new ButtonOnClickEventListener<K>(key, editableRows, Action.EditSave),
-        EDIT_SAVE);
+    return addButtonToFormRow(labelId, editableRows, rowForm, key, ListFormAction.EDIT_SAVE);
   }
 
   /**
-   * Adds an add button to the given add form. Add button has id "add" and will add the row from the add form when
-   * pressed by user.
+   * Adds a "Edit/Save" button to the given form (resolved through <code>formRow.getForm()</code>). The button will have
+   * an ID of {@value #EDIT_SAVE} and will save the specified row when pressed by the user.
    * 
-   * @param labelId button label id.
-   * @param editableRows editable rows widget.
-   * @param addForm add form.
-   * @throws Exception
+   * @param labelId The ID of the label for the button.
+   * @param formRow The <code>FormRow</code> where the button will be added.
+   * @return The added button control.
+   * @since 2.0
+   */
+  public static <K> ButtonControl addEditSaveButtonToRowForm(String labelId, FormRow<K, ?> formRow) {
+    return addButtonToFormRow(labelId, formRow, ListFormAction.EDIT_SAVE);
+  }
+
+  /**
+   * Adds an "Add" button to the given row form. The button will have an ID of {@value #ADD} and will add the
+   * specified row form data to the list when pressed by the user.
+   * 
+   * @param labelId The ID of the label for the "Save" button.
+   * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
+   * @param addForm The form of the row where this button will be added.
+   * @return The added button control.
    */
   public static <K> ButtonControl addAddButtonToAddForm(String labelId, BaseFormListWidget<K, ?> editableRows,
       FormWidget addForm) {
-    return addButtonToRowForm(labelId, addForm, new ButtonOnClickEventListener<K>(editableRows, addForm), ADD);
+    return addButtonToRowForm(labelId, addForm, new ButtonOnClickEventListener<K>(editableRows, addForm),
+        ListFormAction.ADD.getEventId());
   }
 
   /**
@@ -155,8 +232,18 @@ public abstract class FormListUtil {
 
   public static class ButtonOnClickEventListener<K> implements OnClickEventListener {
 
-    public enum Action {
-      Save, OpenClose, EditSave, Delete, AddForm
+    public enum ListFormAction {
+      SAVE("save"), OPEN_CLOSE("openClose"), EDIT_SAVE("editSave"), DELETE("delete"), ADD("add");
+
+      private String eventId;
+
+      ListFormAction(String eventId) {
+        this.eventId = eventId;
+      }
+
+      public String getEventId() {
+        return this.eventId;
+      }
     }
 
     protected K key;
@@ -165,9 +252,9 @@ public abstract class FormListUtil {
 
     protected FormWidget formToAdd;
 
-    protected Action action;
+    protected ListFormAction action;
 
-    public ButtonOnClickEventListener(K key, BaseFormListWidget<K, ?> editableRows, Action action) {
+    public ButtonOnClickEventListener(K key, BaseFormListWidget<K, ?> editableRows, ListFormAction action) {
       Assert.notNullParam(this, key, "key");
       Assert.notNullParam(this, editableRows, "editableRows");
       Assert.notNullParam(this, action, "action");
@@ -183,20 +270,20 @@ public abstract class FormListUtil {
 
       this.editableRows = editableRows;
       this.formToAdd = formToAdd;
-      this.action = Action.AddForm;
+      this.action = ListFormAction.ADD;
     }
 
     public void onClick() {
-      if (Action.AddForm.equals(this.action)) {
+      if (ListFormAction.ADD.equals(this.action)) {
         this.editableRows.addRow(this.formToAdd);
 
-      } else if (Action.Save.equals(this.action)) {
+      } else if (ListFormAction.SAVE.equals(this.action)) {
         this.editableRows.saveRow(this.key);
 
-      } else if (Action.OpenClose.equals(this.action)) {
+      } else if (ListFormAction.OPEN_CLOSE.equals(this.action)) {
         this.editableRows.openCloseRow(this.key);
 
-      } else if (Action.EditSave.equals(this.action)) {
+      } else if (ListFormAction.EDIT_SAVE.equals(this.action)) {
         FormRow<K, ?> row = this.editableRows.getFormRow(this.key);
 
         if (row.isOpen()) {
@@ -205,7 +292,7 @@ public abstract class FormListUtil {
           this.editableRows.openCloseRow(this.key);
         }
 
-      } else if (Action.Delete.equals(this.action)) {
+      } else if (ListFormAction.DELETE.equals(this.action)) {
         this.editableRows.deleteRow(this.key);
       }
     }

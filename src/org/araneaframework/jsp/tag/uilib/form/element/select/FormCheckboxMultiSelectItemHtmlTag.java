@@ -79,7 +79,7 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    if (this.localizeDisplayItems.booleanValue()) {
+    if (this.localizeDisplayItems) {
       this.value = JspUtil.getResourceString(this.pageContext, this.value);
     }
 

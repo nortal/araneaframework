@@ -130,17 +130,17 @@ public class FormTest extends TestCase {
     Date now = new Date(System.currentTimeMillis());
 
     // Setting initial form data
-    setValue(testForm, "myCheckBox", Boolean.TRUE);
-    setValue(testForm, "myLongText", new Long(16));
+    setValue(testForm, "myCheckBox", true);
+    setValue(testForm, "myLongText", 16L);
     setValue(testForm, "myDateTime", now);
     setValue(testForm, "hierarchyTest.mySelect", 12637L);
     setValue(testForm, "hierarchyTest.myTextarea", "MIB");
 
     // Checking that the data assigning works
-    testData(testForm, "myCheckBox", Boolean.TRUE);
-    testData(testForm, "myLongText", new Long(16));
+    testData(testForm, "myCheckBox", true);
+    testData(testForm, "myLongText", 16L);
     testData(testForm, "myDateTime", now);
-    testData(testForm, "hierarchyTest.mySelect", new Long(12637));
+    testData(testForm, "hierarchyTest.mySelect", 12637L);
     testData(testForm, "hierarchyTest.myTextarea", "MIB");
   }
 
@@ -205,7 +205,7 @@ public class FormTest extends TestCase {
 
     TextControl.ViewModel vm2 = ((TextControl) testForm.getControlByFullName("myLongText")).getViewModel();
 
-    assertEquals(Long.valueOf(vm2.getSimpleValue()), new Long(108L));
+    assertEquals(Long.valueOf(vm2.getSimpleValue()), Long.valueOf(108L));
     assertEquals(getValue(testForm, "myCheckBox"), Boolean.FALSE);
     assertEquals(getValue(testForm, "myLongText"), 108L);
     assertEquals(getValue(testForm, "myDateTime"), reqDate);

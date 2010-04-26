@@ -24,7 +24,7 @@ import org.araneaframework.http.HttpOutputData;
  * 
  * @see HttpOutputData
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author "Toomas Römer" (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface OutputData extends Extendable, Narrowable {

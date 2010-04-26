@@ -30,14 +30,9 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
  * @jsp.tag
  *  name = "hiddenInput"
  *  body-content = "JSP"
- *  description = "Represents a "hidden" HTML input element mapped to an UiLib HiddenControl."
+ *  description = "Represents a 'hidden' HTML input element mapped to an UiLib HiddenControl."
  */
 public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
-
-  public FormHiddenInputHtmlTag() {
-    // Hidden element may not be validated!
-    this.validateOnEvent = false;
-  }
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -47,13 +42,13 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("HiddenControl");
 
     String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
+    StringArrayRequestControl<?>.ViewModel viewModel =
+      StringArrayRequestControl.ViewModel.class.cast(this.controlViewModel);
 
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "name", name);
@@ -62,7 +57,6 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
     JspUtil.writeCloseStartEndTag_SS(out);
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 }

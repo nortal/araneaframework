@@ -16,23 +16,20 @@
 
 package org.araneaframework.integration.spring;
 
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.logging.Log;
-
-import org.springframework.beans.factory.config.BeanDefinition;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.http.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -54,13 +51,15 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   private static final Log LOG = LogFactory.getLog(AraneaSpringDispatcherServlet.class);
 
-  private static boolean isSpringWebPresent = true;
+  private static boolean isSpringPresent = true;
+
+  private boolean isSpringWebAppContextPresent = true;
 
   static {
     try {
       Class.forName("org.springframework.web.context.WebApplicationContext");
     } catch (ClassNotFoundException e) {
-      isSpringWebPresent = false;
+      isSpringPresent = false;
     }
   }
 
@@ -103,7 +102,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     }
 
     if (isSpringWebPresent()) {
-      isSpringWebPresent = WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null;
+      isSpringWebAppContextPresent = WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null;
     }
 
     if (isSpringWebPresent()) {
@@ -181,14 +180,13 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   protected ServletServiceAdapterComponent buildRootComponent() {
     // Getting the Aranea root component name
     String araneaRoot = DEFAULT_ARANEA_ROOT;
+
     if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER) != null) {
       araneaRoot = getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER);
     }
 
     // Creating the root bean
-    ServletServiceAdapterComponent adapter = (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
-
-    return adapter;
+    return (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
   }
 
   @Override
@@ -210,7 +208,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
    * @since 1.1
    */
   protected boolean isSpringWebPresent() {
-    return isSpringWebPresent;
+    return isSpringPresent && isSpringWebAppContextPresent;
   }
 
 }

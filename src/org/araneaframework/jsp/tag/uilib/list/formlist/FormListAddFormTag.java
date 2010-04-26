@@ -25,18 +25,17 @@ import org.araneaframework.jsp.tag.uilib.form.FormTag;
  * @jsp.tag
  *   name = "formListAddForm"
  *   body-content = "JSP"
- *   description = "UiLib editable list add form tag. <br/> 
-           Makes available following page scope variables: 
-           <ul>
-             <li><i>form</i> - UiLib form view model.</li>
-             <li><i>formId</i> - UiLib form id.</li>
-           </ul> "
+ *   description = "The tag for rendering form for adding new row to an editable list. Makes available following page scope variables:
+ *      <ul>
+ *      <li><i>form</i> - the add-form <i>view model</i>.</li>
+ *      <li><i>formId</i> - the add-form ID (not full ID!).</li>
+ *      </ul>"
  */
 public class FormListAddFormTag extends FormTag {
 
   @Override
-  public int doStartTag(Writer out) throws Exception {		
-    String editableListId = (String)requireContextEntry(FormListTag.FORM_LIST_ID_KEY);
+  public int doStartTag(Writer out) throws Exception {
+    String editableListId = (String) requireContextEntry(FormListTag.FORM_LIST_ID_KEY);
     this.id = editableListId + ".addForm";
     return super.doStartTag(out);
   }

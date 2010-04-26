@@ -16,10 +16,9 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
-import org.araneaframework.Path;
-
 import java.io.IOException;
 import java.io.Writer;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -52,12 +51,15 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+
     if (this.events && !this.viewModel.isDisabled()) {
       writeEventAttribute(out);
     } else if (this.viewModel.isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
+
     JspUtil.writeAttributes(out, this.attributes);
+
     if (this.accessKey != null) {
       JspUtil.writeAttribute(out, "accesskey", this.accessKey);
     }
@@ -71,10 +73,7 @@ public class FormButtonHtmlTag extends BaseFormButtonTag {
   @Override
   protected int doEndTag(Writer out) throws Exception {
     writeButtonCloseTag(out, true);
-
-    // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
   protected boolean writeEventAttribute(Writer out) throws IOException {

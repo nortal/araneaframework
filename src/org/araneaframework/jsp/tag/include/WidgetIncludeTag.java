@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.include;
 
-import java.io.PrintWriter;
-
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +39,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  * @jsp.tag
  *  name = "widgetInclude"
  *  body-content = "JSP"
- *  description = "The JSP specified by the path given in <i>page</i> is included as the widget with id specified in <i>id</i>."
+ *  description = "The JSP specified by the path given in <i>page</i> is included as the widget with ID specified in <i>id</i>."
  */
 public class WidgetIncludeTag extends BaseIncludeTag {
 
@@ -48,33 +47,28 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 
   protected String page;
 
-  public WidgetIncludeTag() {
-    this.widgetId = null;
-    this.page = null;
-  }
-
   @Override
   protected int doEndTag(Writer out) throws Exception {
     ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), this.widgetId);
 
-    WidgetContextTag widgetContextTag = new WidgetContextTag();
-    registerSubtag(widgetContextTag);
+    WidgetContextTag widgetContextTag = registerSubtag(new WidgetContextTag());
     widgetContextTag.setId(this.widgetId);
     executeStartSubtag(widgetContextTag);
+
     OutputData output = getOutputData();
 
     try {
       if (this.page == null) {
         hideGlobalContextEntries(this.pageContext);
 
-        // Let's wrap the response so that the rendered widgets would write to the given stream.
+        // 1. Let's wrap the response so that the rendered widgets would write to the given stream.
         HttpServletResponse response = ServletUtil.getResponse(output);
         output.extend(HttpServletResponse.class, new WidgetResponseWrapper(response, out));
 
-        // Render the specified widget:
+        // 2. Render the specified widget:
         widget._getWidget().render(output);
 
-        // Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
+        // 3. Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
         output.extend(HttpServletResponse.class, response);
       } else {
         JspContext config = getEnvironment().requireEntry(JspContext.class);
@@ -84,8 +78,8 @@ public class WidgetIncludeTag extends BaseIncludeTag {
       restoreGlobalContextEntries(this.pageContext);
       executeEndTagAndUnregister(widgetContextTag);
     }
-    super.doEndTag(out);
-    return EVAL_PAGE;
+
+    return super.doEndTag(out);
   }
 
   /*
@@ -93,14 +87,14 @@ public class WidgetIncludeTag extends BaseIncludeTag {
    */
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Widget id."
+   * @jsp.attribute type = "java.lang.String" required = "true" description = "Widget ID."
    */
   public void setId(String widgetId) throws JspException {
     this.widgetId = evaluateNotNull("widgetId", widgetId, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Path to JSP."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Path to JSP. When omitted, widget will be used to resolve the view."
    */
   public void setPage(String page) {
     this.page = evaluate("page", page, String.class);
@@ -110,11 +104,11 @@ public class WidgetIncludeTag extends BaseIncludeTag {
    * A temporary wrapper to make widgets write to the given writer. This work-around makes <code>out.flush()</code>,
    * which may throw an exception, unnecessary
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 2.0
    */
   @SuppressWarnings("deprecation")
-  private class WidgetResponseWrapper extends HttpServletResponseWrapper {
+  private static class WidgetResponseWrapper extends HttpServletResponseWrapper {
 
     private ServletOutputStream stream;
     private PrintWriter writer;
@@ -139,7 +133,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
      * A temporary wrapper to make widgets write to the given writer. This work-around makes <code>out.flush()</code>,
      * which may throw an exception, unnecessary
      * 
-     * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+     * @author Martti Tamm (martti@araneaframework.org)
      * @since 2.0
      */
     private class WidgetOutputStream extends ServletOutputStream {
@@ -151,7 +145,7 @@ public class WidgetIncludeTag extends BaseIncludeTag {
       }
 
       @Override
-      public void write(int b) throws IOException { // IMPLEMENTED
+      public void write(int b) throws IOException {
         this.out.write(b);
       }
 

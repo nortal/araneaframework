@@ -16,12 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;

@@ -139,7 +139,9 @@ public abstract class BaseMessageContextTests extends TestCase {
     infoMessages = messages.get(MessageContext.INFO_TYPE);
     warningMessages = messages.get(MessageContext.WARNING_TYPE);
 
+    assertTrue("Warning message must not be present, since they were hidden", warningMessages.isEmpty());
     assertTrue("Info message must be present, since only warning was hidden", !infoMessages.isEmpty());
+    assertTrue("Error message not be present, since only warning was hidden", !errorMessages.isEmpty());
   }
 
   // test that hiding of permanent messages works

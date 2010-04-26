@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.util.List;
-
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -62,7 +61,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
     // Prepare
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 
-    SelectControl<Object>.ViewModel viewModel = (SelectControl.ViewModel) controlViewModel;
+    SelectControl<Object>.ViewModel viewModel = (SelectControl.ViewModel) this.controlViewModel;
     renderItems(out, viewModel.getSelectItems(), viewModel.getScope().toString());
 
     super.doEndTag(out);

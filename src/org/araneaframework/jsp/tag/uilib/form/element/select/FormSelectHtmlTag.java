@@ -16,10 +16,9 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -44,7 +43,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
 @SuppressWarnings("unchecked")
 public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
-  protected Long size = null;
+  protected Long size;
 
   protected String onChangePrecondition;
 
@@ -81,8 +80,8 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeAttribute(out, "size", size);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    JspUtil.writeAttribute(out, "size", this.size);
 
     if (viewModel.isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");

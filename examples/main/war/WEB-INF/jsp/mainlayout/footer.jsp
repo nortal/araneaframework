@@ -11,16 +11,17 @@
 	<div id="footer">
 		<div class="box1">
 			<c:if test="${not empty viewData['srcLink']}">
-				<c:out value="${viewData['srcLink']}" escapeXml="false"/><i>|</i>
+				${viewData['srcLink']}<i>|</i>
 			</c:if>
 
 			<c:if test="${not empty viewData['templateSrcLink']}">
-	 			<c:out value="${viewData['templateSrcLink']}" escapeXml="false"/><i>|</i>
+				${viewData['templateSrcLink']}<i>|</i>
 			</c:if>
 
-			<ui:entity code="copy"/> <a href="http://www.webmedia.ee" target="_blank">Webmedia</a> 2009 <i>|</i>
+			<ui:entity code="copy"/>
+			<a href="http://www.webmedia.ee" target="_blank">Webmedia</a> 2009 <i>|</i>
 
-			<b>Aranea <c:out value="${viewData['aranea-version']}"/></b><i>|</i> 
+			<b>Aranea <c:out value="${viewData['aranea-version']}"/></b><i>|</i>
 			<a href="mailto:info@araneaframework.org">info@araneaframework.org</a>
 		</div>
 	</div>

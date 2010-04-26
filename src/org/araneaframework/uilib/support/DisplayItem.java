@@ -15,14 +15,10 @@
  */
 package org.araneaframework.uilib.support;
 
-import java.util.List;
-
-import java.util.LinkedList;
-
-import java.util.Collection;
-
 import java.io.Serializable;
-
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;

@@ -25,7 +25,6 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 
-
 /**
  * Standard text input form element base tag.
  * 
@@ -34,11 +33,13 @@ import org.araneaframework.uilib.form.control.StringArrayRequestControl;
 public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
 
   protected Long size;
+
   protected String onChangePrecondition;
+
   protected String disabledRenderMode = RENDER_DISABLED_DISABLED;
 
-  {
-    baseStyleClass = "aranea-text";
+  public BaseFormTextInputHtmlTag() {
+    this.baseStyleClass = "aranea-text";
   }
   
   @Override
@@ -48,9 +49,6 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     return result;
   }  
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -81,9 +79,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     this.disabledRenderMode = evaluateDisabledRenderMode(disabledRenderMode);
   }
 
-  /* ***********************************************************************************
-   * INPUT writing functions
-   * ********************************************************************************* */
+  // INPUT writing functions:
 
   protected void writeTextInput(Writer out, String inputType) throws Exception {
     writeTextInput(out, inputType, true, new HashMap<String, String>());
@@ -94,7 +90,7 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
       throws Exception {
 
     String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) controlViewModel;
+    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
 
     // Write
     JspUtil.writeOpenStartTag(out, "input");
@@ -113,25 +109,28 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
     }
 
     if (viewModel.isDisabled()) {
-      JspUtil.writeAttribute(out, this.disabledRenderMode,
-          this.disabledRenderMode);
+      JspUtil.writeAttribute(out, this.disabledRenderMode, this.disabledRenderMode);
     }
 
-    if (events && viewModel.isOnChangeEventRegistered()) {
+    if (this.events && viewModel.isOnChangeEventRegistered()) {
       // We use "onblur" to simulate the textbox's "onchange" event
       // this is _not_ good, but there seems to be no other way
       JspUtil.writeAttribute(out, "onfocus", "Aranea.UI.saveValue(this)");
-      if (onChangePrecondition == null)
-        onChangePrecondition = "return Aranea.UI.isChanged('" + name + "');";
-      this.writeSubmitScriptForUiEvent(out, "onblur", derivedId, "onChanged", onChangePrecondition, updateRegionNames);
+
+      if (this.onChangePrecondition == null) {
+        this.onChangePrecondition = "return Aranea.UI.isChanged('" + name + "');";
+      }
+
+      this.writeSubmitScriptForUiEvent(out, "onblur", this.derivedId, "onChanged", this.onChangePrecondition,
+          this.updateRegionNames);
     }
-    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartEndTag_SS(out);
   }
 
   @Override
   public void doFinally() {
     super.doFinally();
-    onChangePrecondition = null;
+    this.onChangePrecondition = null;
   }
 }

@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -32,7 +31,7 @@ public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
   /**
    * Specifies whether to trim a <code>String</code> value before checking its length. Default is false.
    */
-  protected boolean trim = false;
+  protected boolean trim;
 
   /**
    * Creates a new constraint without binding it to a form field.

@@ -6,16 +6,12 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.1">
 
-	<jsp:directive.page import="org.araneaframework.http.HttpInputData" />
 	<jsp:directive.page import="org.araneaframework.http.util.ServletUtil" />
-	<jsp:directive.page import="org.araneaframework.InputData" />
-	
+
 	<!--  variables -->
 	<c:set var="activeStyle" value="active" />
-
 	<jsp:scriptlet>
-		InputData input = ServletUtil.getInputData(request);
-		request.setAttribute("containerURL", ((HttpInputData) input).getContainerURL());
+		request.setAttribute("containerURL", ServletUtil.getInputData(request).getContainerURL());
 	</jsp:scriptlet>
 
 	<!--
@@ -30,8 +26,8 @@
 				<div id="menu1">
 
 					<!--
-					${viewData.VariableName} allows us to access data that was explicitly added to widget view model by the programmer
-					with putViewData() method.
+					${viewData.VariableName} allows us to access data that was explicitly added to widget view model by the
+					programmer with putViewData() method.
 					-->
 
 					<c:forEach items="${viewData.menu.subMenu}" var="item">
@@ -45,11 +41,11 @@
 											* CSS class is active, indicating that this menu item is selected currently
 									-->
 									<ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}"
-										styleClass="${activeStyle}" />
+										styleClass="${activeStyle}"/>
 								</c:when>
 								<c:otherwise>
 									<!-- same as the other button, but menu item is not selected -->
-									<ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}" />
+									<ui:eventLinkButton eventId="menuSelect" eventParam="${item.value.label}" labelId="${item.value.label}"/>
 								</c:otherwise>
 							</c:choose>
 						</div>

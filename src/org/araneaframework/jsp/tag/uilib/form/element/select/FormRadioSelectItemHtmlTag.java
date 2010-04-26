@@ -16,8 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.DisplayItemUtil;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -25,6 +23,7 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.util.DisplayItemUtil;
 
 /**
  * Standard radio select item form element tag.
@@ -99,10 +98,6 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     super.doEndTag(out);
     return EVAL_PAGE;
   }
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
 
   /**
    * @jsp.attribute

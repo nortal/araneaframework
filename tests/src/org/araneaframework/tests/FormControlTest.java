@@ -263,8 +263,8 @@ public class FormControlTest extends TestCase {
     textControl.setFormElementCtx(mockFormElementContext);
     textControl._getComponent().init(new StandardScope("myTextBox", null), new MockEnvironment());
 
-    textControl.setMinLength(new Long(5));
-    textControl.setMaxLength(new Long(20));
+    textControl.setMinLength(5L);
+    textControl.setMaxLength(20L);
 
     MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", correctValueRequest);
     textControl.convertAndValidate();
@@ -295,8 +295,8 @@ public class FormControlTest extends TestCase {
 
     // min=max correct
 
-    textControl.setMinLength(new Long(10));
-    textControl.setMaxLength(new Long(10));
+    textControl.setMinLength(10L);
+    textControl.setMaxLength(10L);
 
     correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myTextBox", "1234567890");

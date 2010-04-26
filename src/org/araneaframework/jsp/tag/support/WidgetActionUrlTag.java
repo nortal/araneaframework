@@ -29,7 +29,7 @@ import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 
 /**
- * Widget action url tag. Makes available <code>widgetActionUrl</code> EL variable that can be used to fetch data from
+ * Widget action URL tag. Makes available <code>widgetActionUrl</code> EL variable that can be used to fetch data from
  * widget's action.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
@@ -37,7 +37,7 @@ import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
  * @jsp.tag
  *  name = "widgetActionUrl"
  *  body-content = "JSP"
- *  description = "Widget action url tag.<br/>Makes available following page scope variables:<ul><li><i>widgetActionUrl</i> - URL which points to widget's action.</ul>"
+ *  description = "Provides page scope variable <i>widgetActionUrl</i> &mdash; URL which points to widget's action."
  */
 public class WidgetActionUrlTag extends BaseWidgetTag {
 
@@ -63,7 +63,7 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
       m.put(ApplicationService.ACTION_HANDLER_ID_KEY, this.actionId);
     }
 
-    return getHttpOutputData().encodeURL(URLUtil.parametrizeURI(getHttpInputData().getContainerURL(), m));
+    return getHttpOutputData().encodeURL(URLUtil.parameterizeURI(getHttpInputData().getContainerURL(), m));
   }
 
   @Override
@@ -73,7 +73,7 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Action id"
+   * @jsp.attribute type = "java.lang.String" required = "required" description = "The ID of an 'action' to call."
    */
   public void setActionId(String actionId) throws JspException {
     this.actionId = evaluateNotNull("actionId", actionId, String.class);

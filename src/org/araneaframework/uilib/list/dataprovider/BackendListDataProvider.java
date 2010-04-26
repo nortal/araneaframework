@@ -18,6 +18,7 @@ package org.araneaframework.uilib.list.dataprovider;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
@@ -26,8 +27,7 @@ import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
 
 /**
- * This class provides a basic list data provider implementation that may be
- * used with SQL- or PL/SQL-based lists.
+ * This class provides a basic list data provider implementation that may be used with SQL- or PL/SQL-based lists.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -49,13 +49,12 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
 
   protected ListItemsData<T> lastItemRange;
 
-  private boolean forceReload = false;
+  private boolean forceReload;
 
   protected boolean useCache = USE_CACHE_BY_DEFAULT;
 
   /**
-   * Instantiates the backend list data provider and sets whether to use
-   * caching.
+   * Instantiates the backend list data provider and sets whether to use caching.
    * 
    * @param useCache whether to use caching.
    */
@@ -113,31 +112,31 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
    * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve the item.
    */
   public T getItem(Long index) throws Exception {
-    return getItemRange(index, Long.valueOf(1)).getItemRange().get(0);
+    return getItemRange(index, 1L).getItemRange().get(0);
   }
 
   /**
    * Returns the total item count.
    */
   public Long getItemCount() throws Exception {
-    return getItemRange(Long.valueOf(0), Long.valueOf(1)).getTotalCount();
+    return getItemRange(0L, 1L).getTotalCount();
   }
 
   /**
-   * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve all
-   * items.
+   * Uses {@link ListDataProvider#getItemRange(Long, Long)}to retrieve all items.
    */
   public ListItemsData<T> getAllItems() throws Exception {
-    return getItemRange(Long.valueOf(0), null);
+    return getItemRange(0L, null);
   }
 
   public ListItemsData<T> getItemRange(Long startIdx, Long count) throws Exception {
-    if (!this.useCache || this.forceReload || !startIdx.equals(this.lastStart)
-        || (count == null || this.lastCount == null) && count != this.lastCount
-        || count != null && this.lastCount != null
-        && !count.equals(this.lastCount)) {
+    boolean refresh = !this.useCache || this.forceReload;
+    refresh = refresh || !ObjectUtils.equals(this.lastStart, startIdx);
+    refresh = refresh || !ObjectUtils.equals(this.lastCount, count);
+
+    if (refresh) {
       ListQuery query = new ListQuery();
-      query.setListStructure(listStructure);
+      query.setListStructure(this.listStructure);
       query.setItemRangeStart(startIdx);
       query.setItemRangeCount(count);
       query.setFilterInfo(this.filterInfo);
@@ -145,11 +144,12 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
       query.setFilterExpression(this.filterExpr);
       query.setOrderExpression(this.orderExpr);
       this.lastItemRange = getItemRange(query);
+
       if (LOG.isTraceEnabled()) {
-        LOG.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx)
-            + ", count=" + String.valueOf(count));
+        LOG.trace("Refreshing itemrange: startIdx=" + String.valueOf(startIdx) + ", count=" + String.valueOf(count));
       }
     }
+
     this.forceReload = false;
     this.lastStart = startIdx;
     this.lastCount = count;
@@ -158,23 +158,21 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
 
   /** @since 1.1 */
   protected void notifyDataChangeListeners() {
-    for (DataUpdateListener listener : dataUpdateListeners) {
+    for (DataUpdateListener listener : this.dataUpdateListeners) {
       listener.onDataUpdate();
     }
   }
 
   public void addDataUpdateListener(DataUpdateListener listener) {
-    dataUpdateListeners.add(listener);
+    this.dataUpdateListeners.add(listener);
   }
 
   public void removeDataUpdateListener(DataUpdateListener listener) {
-    dataUpdateListeners.remove(listener);
+    this.dataUpdateListeners.remove(listener);
   }
 
   /**
-   * This method should be overridden to return a range of items from the list
-   * data.
+   * This method should be overridden to return a range of items from the list data.
    */
-  protected abstract ListItemsData<T> getItemRange(ListQuery query)
-      throws Exception;
+  protected abstract ListItemsData<T> getItemRange(ListQuery query) throws Exception;
 }

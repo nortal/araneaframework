@@ -27,7 +27,7 @@ import org.araneaframework.InputData;
  * implement {@link #processEvent(String, String[], InputData)} to implement their own event
  * handling.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public abstract class MultiParamEventListener implements EventListener {

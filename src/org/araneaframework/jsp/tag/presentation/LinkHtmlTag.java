@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.tag.presentation;     
+package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import org.araneaframework.jsp.util.JspUtil;
@@ -30,6 +30,7 @@ import org.araneaframework.jsp.util.JspUtil;
  *   description = "Usual HTML link, acts as a <i>&lt;a&gt;</i> HTML tag."
  */
 public class LinkHtmlTag extends BaseLinkTag {
+
   private String disabledStyleClass;
 
   @Override
@@ -37,15 +38,16 @@ public class LinkHtmlTag extends BaseLinkTag {
     super.doStartTag(out);
 
     JspUtil.writeOpenStartTag(out, "a");
-    JspUtil.writeAttribute(out, "id", id);
-    JspUtil.writeAttribute(out, "class", !disabled ? getStyleClass() : getDisabledStyleClass());
+    JspUtil.writeAttribute(out, "id", this.id);
+    JspUtil.writeAttribute(out, "class", !this.disabled ? getStyleClass() : getDisabledStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    if (!disabled) {
-      JspUtil.writeAttribute(out, "href", href);
-      JspUtil.writeAttribute(out, "target", target);   
-    }
-    else
+
+    if (!this.disabled) {
+      JspUtil.writeAttribute(out, "href", this.href);
+      JspUtil.writeAttribute(out, "target", this.target);
+    } else {
       JspUtil.writeAttribute(out, "href", "javascript:");
+    }
 
     JspUtil.writeCloseStartTag_SS(out);
 
@@ -53,20 +55,14 @@ public class LinkHtmlTag extends BaseLinkTag {
   }
 
   @Override
-  protected int doEndTag(Writer out) throws Exception {  
+  protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag_SS(out, "a");
-
-    super.doEndTag(out);
-    return EVAL_PAGE;      
+    return super.doEndTag(out);
   }
-  
+
   public String getDisabledStyleClass() {
-    return disabledStyleClass;
+    return this.disabledStyleClass;
   }
-
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
 
   /**
    * @jsp.attribute

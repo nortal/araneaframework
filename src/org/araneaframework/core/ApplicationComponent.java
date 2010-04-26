@@ -50,6 +50,6 @@ public interface ApplicationComponent extends Component, Composite, Viewable {
     /**
      * Return component's child components.
      */
-    public Map<Object, Component> getChildren();
+    public Map<String, Component> getChildren();
   }
 }

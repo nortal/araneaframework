@@ -59,7 +59,7 @@ public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
 
     String label = viewModel.getSelectedItem().getLabel();
 
-    if (this.localizeDisplayItems.booleanValue()) {
+    if (this.localizeDisplayItems) {
       label = JspUtil.getResourceString(this.pageContext, label);
     }
 

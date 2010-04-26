@@ -28,14 +28,14 @@ import org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag;
  * {@link org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag KeyboardHandlerHtmlTag} with a few modifications:
  * <ul>
  * <li>There is no <code>scope</code> attribute. Instead, the tag assumes that it is located inside a form, and takes
- * the full id of that form as its scope.</li>
+ * the full ID of that form as its scope.</li>
  * <li>As an alternative to specifying the <code>handler</code> attribute, you may specify a form element and a
- * javascript event to invoke on that element. You specify the element by its id relative to the surrounding form. The
+ * javascript event to invoke on that element. You specify the element by its ID relative to the surrounding form. The
  * event is given as a name of the javascript function to be invoked on the element. For example, if you specify the
  * element as "someButton", and event as "click", then when the required keyboard event occurs, the following javascript
  * will be executed:
  * <pre>
- * var el = $(&quot;&lt;form-id&gt;.someButton&quot;);
+ * var el = $(&quot;&lt;form-full-id&gt;.someButton&quot;);
  * el.click();</pre>
  * </li>
  * </ul>
@@ -46,7 +46,7 @@ import org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag;
  * @jsp.tag
  *  name = "formKeyboardHandler"
  *  body-content = "empty"
- *  description = "Registers a 'form' keyboard handler. Similar to keyboardHandler, but here the scope is relative to the form inside which the tag is located, and instead of specifying the handler, you may give the id of an element, and a javascript event to call on that element."
+ *  description = "Registers a 'form' keyboard handler. Similar to keyboardHandler, but here the scope is relative to the form inside which the tag is located, and instead of specifying the handler, you may give the ID of an element, and a javascript event to call on that element."
  */
 public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
 
@@ -136,6 +136,7 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
   //
   // Implementation
   //
+
   @Override
   protected final int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -195,14 +196,14 @@ public class FormKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
   }
 
   /**
-   * Given full element id (as it is in HTML) and event, creates a keyboard handler, that will invoke given event on the
+   * Given full element ID (as it is in HTML) and event, creates a keyboard handler, that will invoke given event on the
    * element. The generated handler might look like this:
    * 
    * <pre>
    *  function() { return $('fullElementId').click(); };
    * </pre>
    * 
-   * This string might be given as a parameter to a javascript function "uiRegisterKeypressHandler".
+   * This string might be given as a parameter to a JavaScript function "uiRegisterKeypressHandler".
    * 
    * Any of the parameters may be null. In this case the componentId is searched for in the pageContext, and in other
    * cases taken as empty string.

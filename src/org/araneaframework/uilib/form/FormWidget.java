@@ -16,25 +16,20 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.Path;
-
-import java.util.StringTokenizer;
-
-import org.araneaframework.backend.util.BeanUtil;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.araneaframework.uilib.form.control.ButtonControl;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
+import org.araneaframework.Path;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.InvalidFormElementNameException;
+import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.util.NameUtil;
@@ -560,7 +555,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
      * 
      * @return the <code>Map</code> with element views.
      */
-    public Map<Object, Component> getElements() {
+    public Map<String, Component> getElements() {
       return getChildren();
     }
   }

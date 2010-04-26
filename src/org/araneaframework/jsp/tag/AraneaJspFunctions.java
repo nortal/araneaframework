@@ -16,15 +16,13 @@
 
 package org.araneaframework.jsp.tag;
 
-import java.util.LinkedList;
-
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
@@ -47,7 +45,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
 /**
  * Contains commons function to simplify tags logic.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public class AraneaJspFunctions {
@@ -120,14 +118,7 @@ public class AraneaJspFunctions {
   }
 
   public static String evalCSSClass(String baseClass, String styleClass) {
-    StringBuffer result = new StringBuffer(StringUtils.defaultIfEmpty(baseClass, ""));
-    if (!StringUtils.isBlank(styleClass)) {
-      if (result.length() > 0) {
-        result.append(' ');
-      }
-      result.append(styleClass);
-    }
-    return result.toString();
+    return PresentationTag.calculateStyleClass(baseClass, styleClass);
   }
 
   @SuppressWarnings("unchecked")

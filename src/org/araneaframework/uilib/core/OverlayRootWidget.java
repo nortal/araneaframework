@@ -16,15 +16,14 @@
 
 package org.araneaframework.uilib.core;
 
-import org.araneaframework.InputData;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * This class can be used to start an overlay flow. This is provided as-is standard implementation for overlay flow that
@@ -35,6 +34,7 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * <li><code>childWidget</code> - the widget that will be rendered inside the flow;
  * <li><code>viewSelector</code> - the JSP page for flow renderer (default: "overlayRoot.jsp");
  * <li><code>errorPage</code> - the JSP page to render errors (default: "/WEB-INF/jsp/error.jsp").
+ * </ul>
  * <p>
  * These parameters are configurable through constructors and setters of this class.
  * <p>
@@ -55,6 +55,19 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * <p>
  * Note on the error page: the JSP can make use of variables "viewData.rootStackTrace" and "viewData.fullStackTrace" to
  * display the error.
+ * <p>
+ * Since Aranea 2.0, the provided overlay content widget will be initialized upon first request to it (overlay is opened
+ * with two requests). Notice that the change was due to the problem that when opening overlay mode, messages that were
+ * put into {@link MessageContext} in an overlay component's <code>init()</code> method would be rendered on the parent
+ * page (because the second request had not even started yet!).
+ * <ol>
+ * <li>A request (event) comes to a non-overlay widget that opens a widget in overlay. Overlay context is used only so
+ * much that when rendering the response page, a JavaScript script is added that opens overlay mode visually and
+ * initiates the second request.
+ * <li>The second request goes directly to overlay mode, invokes its components and renders only overlay root and its
+ * child components. Therefore the response contains HTML fragment that is put into the visual overlay container on
+ * client-side.
+ * </ol>
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
@@ -82,6 +95,14 @@ public class OverlayRootWidget extends BaseUIWidget {
    * sets it to "/WEB-INF/jsp/error.jsp",
    */
   protected String errorPage;
+
+  /**
+   * Informs whether our child component is already initialized or not. Child component will be initialized when it is
+   * about to receive its first request (see task 839).
+   * 
+   * @since 2.0
+   */
+  protected boolean childInitialized;
 
   /**
    * Constructs a new root overlay widget with given subwidget to render. The sub widget is a required parameter.
@@ -115,9 +136,12 @@ public class OverlayRootWidget extends BaseUIWidget {
   }
 
   @Override
-  protected void init() throws Exception {
-    Assert.notNull(this.child, "The child component must be provided!");
-    addWidget("c", new OverlayFlowContainer(this.child));
+  protected void update(InputData input) throws Exception {
+    if (!this.childInitialized) {
+      addWidget("c", new OverlayFlowContainer(this.child));
+      this.childInitialized = true;
+    }
+    super.update(input);
   }
 
   public void setErrorPage(String errorPage) {
@@ -133,24 +157,8 @@ public class OverlayRootWidget extends BaseUIWidget {
    */
   protected class OverlayFlowContainer extends ExceptionHandlingFlowContainerWidget {
 
-    protected Widget topWidget;
-
     public OverlayFlowContainer(Widget topWidget) {
-      this.topWidget = topWidget;
-    }
-
-    @Override
-    protected void update(InputData input) throws Exception {
-      // Custom overlay widget initialization during update(). The problem came with a complaining that when an overlay
-      // child widget attempted to show messages in its init() method, these would be actually rendered during rendering
-      // of the page that initiated the overlay. Therefore we need to initialize the overlay child just before the first
-      // request arrives. Aranea Changelogic task 839.
-
-      if (this.top != null) {
-        start(this.top);
-        this.top = null;
-      }
-      super.update(input);
+      super(topWidget);
     }
 
     @Override

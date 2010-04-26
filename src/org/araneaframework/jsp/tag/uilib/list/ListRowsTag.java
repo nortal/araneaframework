@@ -30,17 +30,16 @@ import org.araneaframework.uilib.list.ListWidget;
  *  body-content = "JSP"
  *  description = "Iterating tag that gives access to each row on the UiLib list current page."
  */
-@SuppressWarnings("unchecked")
 public class ListRowsTag extends BaseListRowsTag {
 
   protected String var = "row";
 
-  protected ListWidget.ViewModel viewModel;
+  protected ListWidget<?>.ViewModel viewModel;
 
   @Override
   public int doStartTag(Writer out) throws Exception {
     // Get list data:
-    this.viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
+    this.viewModel = ListWidget.ViewModel.class.cast(requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY));
     return super.doStartTag(out);
   }
 

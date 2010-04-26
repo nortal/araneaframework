@@ -16,35 +16,32 @@
 
 package org.araneaframework.uilib.form.formlist.adapter;
 
-import org.araneaframework.uilib.form.formlist.BeanFormRow;
-
-import org.araneaframework.uilib.form.formlist.FormRow;
-
 import org.araneaframework.uilib.form.BeanFormWidget;
-
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.formlist.BeanFormRow;
+import org.araneaframework.uilib.form.formlist.FormRow;
 
 @SuppressWarnings("unchecked")
 public abstract class ValidOnlyIndividualBeanFormRowHandler<K, R> extends ValidOnlyIndividualFormRowHandler<K, R> {
 
   @Override
-  public void initAddForm(FormWidget addForm) throws Exception {
-    initAddForm((BeanFormWidget<R>) addForm);
+  public final void initAddForm(FormWidget addForm) throws Exception {
+    initAddForm(BeanFormWidget.class.cast(addForm));
   }
 
   @Override
   public final void initFormRow(FormRow<K, R> editableRow, R row) throws Exception {
-    initFormRow((BeanFormRow<K, R>) editableRow, row);
+    initFormRow(BeanFormRow.class.cast(editableRow), row);
   }
 
   @Override
   public final void addValidRow(FormWidget rowForm) throws Exception {
-    addValidRow((BeanFormWidget<R>) rowForm);
+    addValidRow(BeanFormWidget.class.cast(rowForm));
   }
 
   @Override
   public final void saveValidRow(FormRow<K, R> formRow) throws Exception {
-    saveValidRow((BeanFormRow<K, R>) formRow);
+    saveValidRow(BeanFormRow.class.cast(formRow));
   }
 
   /**

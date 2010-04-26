@@ -39,10 +39,6 @@ import org.araneaframework.uilib.util.MessageUtil;
  */
 public abstract class BaseControl<T> extends BaseApplicationWidget implements Serializable, Control<T> {
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
-
   protected T value;
 
   protected Object innerData;
@@ -130,8 +126,9 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!isDisabled())
+    if (!isDisabled()) {
       super.action(path, input, output);
+    }
   }
 
   @Override
@@ -150,7 +147,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   }
 
   /**
-   * Returns control label.
+   * Returns control label using form element context.
    * 
    * @return control label.
    */
@@ -159,7 +156,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   }
 
   /**
-   * * Returns whether the control is mandatory, that is must be inserted by user.
+   * Returns whether the control is mandatory, that is must be inserted by user.
    * 
    * @return whether the control is mandatory, that is must be inserted by user.
    */
@@ -184,17 +181,15 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
         getEnvironment()), lastParam1, lastParam2));
   }
 
-  /**
-   * Returns whether the control is disabled.
-   * 
-   * @return whether the control is disabled
-   * 
-   * @since 1.1 this method is public and part of {@link Control} interface
-   */
   public boolean isDisabled() {
     return this.feCtx.isDisabled();
   }
 
+  /**
+   * Returns whether the control state is valid using form element context.
+   * 
+   * @return A boolean that is <code>true</code> when the control data is valid.
+   */
   protected boolean isValid() {
     return this.feCtx.isValid();
   }
@@ -249,45 +244,24 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
       this.label = BaseControl.this.getLabel();
     }
 
-    /** @since 1.1 */
     public Scope getScope() {
       return BaseControl.this.getScope();
     }
 
-    /**
-     * Returns control type.
-     * 
-     * @return control type.
-     */
     public String getControlType() {
-      return controlType;
+      return this.controlType;
     }
 
-    /**
-     * Returns whether the control is mandatory.
-     * 
-     * @return whether the control is mandatory.
-     */
     public boolean isMandatory() {
-      return mandatory;
+      return this.mandatory;
     }
 
-    /**
-     * Returns control label.
-     * 
-     * @return control label.
-     */
     public String getLabel() {
-      return label;
+      return this.label;
     }
 
-    /**
-     * Returns whether the control is disabled.
-     * 
-     * @return whether the control is disabled.
-     */
     public boolean isDisabled() {
-      return disabled;
+      return this.disabled;
     }
 
   }

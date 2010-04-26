@@ -129,10 +129,10 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       // The IDs of the buttons remain the same: "save" and "delete".
       FeedBackProvidingListener listener = new FeedBackProvidingListener();
 
-      ButtonControl saveButton = FormListUtil.addSaveButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+      ButtonControl saveButton = FormListUtil.addSaveButtonToRowForm("#", editableRow);
       saveButton.addOnClickEventListener(listener);
 
-      ButtonControl deleteButton = FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, editableRow.getKey());
+      ButtonControl deleteButton = FormListUtil.addDeleteButtonToRowForm("#", editableRow);
       deleteButton.addOnClickEventListener(listener);
 
       rowForm.readFromBean(row);
@@ -140,7 +140,7 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
     }
 
     @Override
-    public void initAddForm(FormWidget addForm) throws Exception {
+    public void initAddForm(BeanFormWidget<DataDTO> addForm) throws Exception {
       addCommonFormFields(addForm);
 
       // The ID of the "addButton" is "add" (to reference it in JSP).

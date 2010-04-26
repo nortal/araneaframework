@@ -24,12 +24,11 @@ import org.araneaframework.jsp.util.JspUtil;
  * Standard button tag.
  * 
  * @author Oleg Mürk
- * 
  * @jsp.tag name = "basicButton" body-content = "JSP" description = "Represents an HTML form button."
  */
 public class ButtonHtmlTag extends BaseButtonTag {
 
-  {
+  public ButtonHtmlTag() {
     this.baseStyleClass = "aranea-button";
   }
 
@@ -49,17 +48,13 @@ public class ButtonHtmlTag extends BaseButtonTag {
 
     writeButtonCloseTag(out, false);
 
-    // Continue
     return EVAL_BODY_INCLUDE;
   }
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
     writeButtonCloseTag(out, true);
-
-    // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
 }

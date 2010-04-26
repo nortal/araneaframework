@@ -36,7 +36,7 @@ public class ComparableComparator<T extends Comparable<T>> implements Comparator
 
   @Override
   public boolean equals(Object obj) {
-    return ComparableComparator.class.equals(obj.getClass());
+    return obj instanceof ComparableComparator<?>;
   }
 
   @Override

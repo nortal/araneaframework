@@ -224,16 +224,16 @@ public class JspUtil {
    * the entities).
    */
   public static void writeAttribute(Writer out, String name, Object value, boolean escape) throws IOException {
-    if (name != null && value != null) {
-    out.write(" ");
-    out.write(name);
-    out.write("=\"");
-    if (escape) {
-      writeEscapedAttribute(out, value.toString());
-    } else {
-      out.write(value.toString());
-    }
-    out.write("\"");
+    if (value != null && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(value.toString())) {
+      out.write(" ");
+      out.write(name);
+      out.write("=\"");
+      if (escape) {
+        writeEscapedAttribute(out, value.toString());
+      } else {
+        out.write(value.toString());
+      }
+      out.write("\"");
     }
   }
 

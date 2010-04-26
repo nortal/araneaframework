@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.converter;
 
 import org.apache.commons.lang.ObjectUtils;
-
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.control.BaseSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;

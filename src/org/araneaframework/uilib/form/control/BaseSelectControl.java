@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;

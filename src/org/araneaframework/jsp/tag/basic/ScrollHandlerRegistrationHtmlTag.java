@@ -16,12 +16,12 @@
 
 package org.araneaframework.jsp.tag.basic;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
+
 /**
  * Tag that registers functions dealing with window scroll position storing and restoring.
  * @author Taimo Peelo (taimo@araneaframework.org)

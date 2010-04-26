@@ -33,22 +33,24 @@ import org.araneaframework.uilib.form.control.FloatControl;
  *   description = "Form floating-point number input field, represents UiLib 'FloatControl'."
  */
 public class FormFloatInputHtmlTag extends BaseFormTextInputHtmlTag {
-  {
-    baseStyleClass = "aranea-float";
+
+  public FormFloatInputHtmlTag() {
+    this.baseStyleClass = "aranea-float";
   }
+
   @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("FloatControl");
 
-    FloatControl.ViewModel viewModel = ((FloatControl.ViewModel)controlViewModel);
+    FloatControl.ViewModel viewModel = ((FloatControl.ViewModel) this.controlViewModel);
 
     Map<String, String> attributes = new HashMap<String, String>();
     if (viewModel.getInputFilter() != null) {
-      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter()
+          .getCharacterFilter());
     }
     writeTextInput(out, "text", true, attributes);
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 }

@@ -26,6 +26,7 @@ import org.araneaframework.uilib.support.DataType;
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @see Data
+ * @since 2.0
  */
 public class ListData<T> extends Data<List<T>> {
 

@@ -28,21 +28,14 @@ import org.araneaframework.jsp.util.JspUtil;
  * @jsp.tag
  *   name = "newLine"
  *   body-content = "empty"
- *   description = "Puts a visual new line into resulting text."
+ *   description = "Puts a visual new line (HTML &lt;br/&gt;) into resulting text."
  */
 public class NewLineHtmlTag extends BaseTag {
-  
-  //
-  // Implementation
-  //
-  
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
     JspUtil.writeStartEndTag_SS(out, "br");
-    
-    // Continue
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
 }

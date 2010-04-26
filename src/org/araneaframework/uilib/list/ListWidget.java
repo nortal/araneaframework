@@ -11,12 +11,6 @@
 
 package org.araneaframework.uilib.list;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.araneaframework.Path;
-
-import org.araneaframework.core.StandardPath;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,15 +20,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
+import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -68,10 +65,25 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected static final Log LOG = LogFactory.getLog(ListWidget.class);
 
+  /**
+   * The virtual scope to check which list rows checkboxes were checked.
+   * 
+   * @since 1.2
+   */
   public static final String LIST_CHECK_SCOPE = "checked";
 
+  /**
+   * The virtual scope to check which list rows radio button was selected.
+   * 
+   * @since 1.2
+   */
   public static final String LIST_RADIO_SCOPE = "radio";
 
+  /**
+   * The expected value for list rows checkboxes to verify that they were checked.
+   * 
+   * @since 1.2
+   */
   public static final String LIST_CHECK_VALUE = "checked";
 
   /**
@@ -121,7 +133,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private boolean changed = true;
 
-  private boolean selectFromMultiplePages = false;
+  private boolean selectFromMultiplePages;
 
   private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
@@ -141,6 +153,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   // *********************************************************************
   // * CONSTRUCTOR
   // *********************************************************************
+
   /**
    * Creates a new {@link ListWidget} instance.
    */
@@ -202,7 +215,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     // Now we read index numbers of selected rows:
     for (Map.Entry<String, String> reqParam : listData.entrySet()) {
       if (reqParam.getKey() != null && LIST_CHECK_VALUE.equals(reqParam.getValue())) {
-        rowKeys.add(new Integer(reqParam.getKey().toString()));
+        rowKeys.add(Integer.valueOf(reqParam.getKey()));
       }
     }
 
@@ -646,16 +659,14 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @param fieldId field identifier.
    * @return field type
    */
-  @SuppressWarnings("unchecked")
-  public Class getFieldType(String fieldId) {
+  public Class<?> getFieldType(String fieldId) {
     return this.typeHelper.getFieldType(fieldId);
   }
 
   /**
    * Returns {@link Comparator} for the specified field.
    */
-  @SuppressWarnings("unchecked")
-  public Comparator getFieldComparator(String fieldId) {
+  public Comparator<?> getFieldComparator(String fieldId) {
     return this.typeHelper.getFieldComparator(fieldId);
   }
 
@@ -811,8 +822,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   public void setInitialOrder(String fieldId, boolean ascending, String fieldId2, boolean ascending2) {
     OrderInfo orderInfo = new OrderInfo();
-    orderInfo.addField(new OrderInfoField(fieldId, ascending));
-    orderInfo.addField(new OrderInfoField(fieldId2, ascending2));
+    orderInfo.addField(fieldId, ascending);
+    orderInfo.addField(fieldId2, ascending2);
     setOrderInfo(orderInfo);
   }
 
@@ -830,9 +841,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   public void setInitialOrder(String fieldId, boolean ascending, String fieldId2, boolean ascending2, String fieldId3,
       boolean ascending3) {
     OrderInfo orderInfo = new OrderInfo();
-    orderInfo.addField(new OrderInfoField(fieldId, ascending));
-    orderInfo.addField(new OrderInfoField(fieldId2, ascending2));
-    orderInfo.addField(new OrderInfoField(fieldId3, ascending3));
+    orderInfo.addField(fieldId, ascending);
+    orderInfo.addField(fieldId2, ascending2);
+    orderInfo.addField(fieldId3, ascending3);
     setOrderInfo(orderInfo);
   }
   

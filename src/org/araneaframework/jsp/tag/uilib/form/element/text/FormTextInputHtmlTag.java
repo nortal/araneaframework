@@ -34,19 +34,19 @@ import org.araneaframework.uilib.form.control.TextControl;
  *   description = "Form text input field, represents UiLib &quot;TextControl&quot;."
  */
 public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
+
   @Override
   protected int doEndTag(Writer out) throws Exception {
     assertType();
 
-    TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
+    TextControl.ViewModel viewModel = (TextControl.ViewModel) this.controlViewModel;
 
     // Write
     Map<String, String> attributes = getCustomAttributes(viewModel);
     writeTextInput(out, "text", true, attributes);
 
     // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
   /** @since 1.1 */
@@ -57,14 +57,16 @@ public class FormTextInputHtmlTag extends BaseFormTextInputHtmlTag {
   /** @since 1.1 */
   protected Map<String, String> getCustomAttributes(TextControl.ViewModel viewModel) {
     Map<String, String> attributes = new HashMap<String, String>();
-    attributes.put("maxLength", String.valueOf(viewModel.getMaxLength()));
-    if (viewModel.getInputFilter() != null) {
-      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter().getCharacterFilter());
+
+    if (viewModel.getMaxLength() != null) {
+      attributes.put("maxLength", viewModel.getMaxLength().toString());
     }
+
+    if (viewModel.getInputFilter() != null) {
+      attributes.put(AraneaAttributes.FilteredInputControl.CHARACTER_FILTER, viewModel.getInputFilter()
+          .getCharacterFilter());
+    }
+
     return attributes;
   }
 }
-
-
-
-

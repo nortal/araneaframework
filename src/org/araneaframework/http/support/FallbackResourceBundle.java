@@ -97,10 +97,7 @@ public class FallbackResourceBundle extends ResourceBundle implements Serializab
 
   @Override
   public Locale getLocale() {
-    if (this.locale != null) {
-      return this.locale;
-    }
-    return super.getLocale();
+    return this.locale != null ? this.locale : super.getLocale();
   }
 
 }

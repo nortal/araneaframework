@@ -143,9 +143,7 @@ public class BaseFormDateTimeInputHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
-    if (StringUtils.isNotBlank(accessKey)) {
-      JspUtil.writeAttribute(out, "accesskey", accessKey);
-    }
+    JspUtil.writeAttribute(out, "accesskey", accessKey);
 
     if (disabled) {
       if (viewModel.isDisabled()) {

@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.form.converter;
 
-import org.araneaframework.uilib.support.DisplayItem;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -29,6 +27,7 @@ import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
 import org.araneaframework.uilib.support.DataType;
+import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -64,11 +63,6 @@ public class ConverterFactory implements ConverterProvider {
     addConverter(BigDecimal.class, Double.class, new BigDecimalToDoubleConverter());
     addConverter(BigInteger.class, Long.class, new BigIntegerToLongConverter());
     addConverter(BigInteger.class, Integer.class, new BigIntegerToIntegerConverter());
-
-    addConverter(BigDecimal.class, float.class, new BigDecimalToFloatConverter());
-    addConverter(BigDecimal.class, double.class, new BigDecimalToDoubleConverter());
-    addConverter(BigInteger.class, long.class, new BigIntegerToLongConverter());
-    addConverter(BigInteger.class, int.class, new BigIntegerToIntegerConverter());
 
     addConverter(Timestamp.class, Date.class, new TimestampToDateConverter());
   }

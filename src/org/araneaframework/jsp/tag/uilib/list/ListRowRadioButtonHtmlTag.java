@@ -16,10 +16,9 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 

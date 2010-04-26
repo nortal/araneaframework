@@ -25,28 +25,26 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * 
  * @jsp.tag
- *   name = "listDisplay"
- *   body-content = "empty"
- *   description = "Display element value as list of strings, 
-          represents DisplayControl and requires that element value would be of type Collection."
+ *  name = "listDisplay"
+ *  body-content = "empty"
+ *  description = "Display element value as list of strings, represents DisplayControl and requires that element value would be of type Collection."
  */
 public class FormListDisplayHtmlTag extends BaseFormListDisplayHtmlTag {
-    
-  /**
-   */
+
   @Override
-  protected int doEndTag(Writer out) throws Exception {    
-    
-    if (displayControlViewModel.getValue() != null) {
-      for (Iterator<?> i = ((List<?>) displayControlViewModel.getValue()).iterator(); i.hasNext(); ) { 
-      	JspUtil.writeEscaped(out, i.next().toString());
-        
-        if (i.hasNext()) 
+  protected int doEndTag(Writer out) throws Exception {
+
+    if (this.displayControlViewModel.getValue() != null) {
+      for (Iterator<?> i = ((List<?>) this.displayControlViewModel.getValue()).iterator(); i.hasNext();) {
+        JspUtil.writeEscaped(out, i.next().toString());
+
+        if (i.hasNext()) {
           writeSeparator(out);
+        }
       }
     }
-    
-    super.doEndTag(out);    
+
+    super.doEndTag(out);
     return EVAL_PAGE;
   }
 }

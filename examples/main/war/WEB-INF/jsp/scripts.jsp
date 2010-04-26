@@ -65,10 +65,7 @@
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
-	<script type="text/javascript">
-		Aranea.Data.absoluteUrls = true;
-		Aranea.Logger.setLogger('firebug');
-	</script>
+	<script type="text/javascript">Aranea.Logger.setLogger('firebug');</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>

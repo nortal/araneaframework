@@ -17,23 +17,18 @@
 package org.araneaframework.core.util;
 
 import java.util.List;
-
 import java.util.Map;
-
-import org.araneaframework.Scope;
-
-import org.araneaframework.core.ActionListener;
-
-import org.araneaframework.core.AsynchronousActionListener;
-import org.araneaframework.framework.AsynchronousRequestRegistry;
-
 import org.apache.commons.lang.math.RandomUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
+import org.araneaframework.Scope;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.AsynchronousActionListener;
 import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.core.StandardScope;
+import org.araneaframework.framework.AsynchronousRequestRegistry;
 
 /**
  * This utility class handles listening of component lifecycle events. Thus, it

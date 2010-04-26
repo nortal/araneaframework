@@ -98,7 +98,7 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
     }
   }
 
-  public void addAttribute(String name, String value) throws JspException {
+  public void addAttribute(String name, String value) {
     value = evaluate("value", value, String.class);
     this.attributes.put(name, value);
   }

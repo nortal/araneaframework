@@ -36,7 +36,7 @@ import org.araneaframework.uilib.support.FileInfo;
  * {@link FileDownloadHandler} is the callback used to retrieve file data to upload it to the client
  * once file upload is requested.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class FileDownloadActionListener extends StandardActionListener {

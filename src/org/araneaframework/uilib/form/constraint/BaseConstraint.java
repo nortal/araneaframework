@@ -17,12 +17,10 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.io.Serializable;
-
-import org.apache.commons.collections.CollectionUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
@@ -67,13 +65,13 @@ public abstract class BaseConstraint implements Serializable, Constraint {
    * Returns whether the constraint is satisfied/valid. Constraint is valid when no validation errors were produced.
    */
   public boolean isValid() {
-    // XXX: should it throw NotValidatedYetException if called before validation
     return CollectionUtils.isEmpty(this.errors);
   }
 
   public Set<String> getErrors() {
-    if (this.errors == null)
+    if (this.errors == null) {
       this.errors = new HashSet<String>();
+    }
     return this.errors;
   }
 

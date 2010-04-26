@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.sql.Timestamp;
-
 import java.util.Calendar;
 import java.util.Date;
 import org.araneaframework.uilib.support.UiLibMessages;

@@ -37,83 +37,89 @@ import org.araneaframework.http.HttpOutputData;
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class StandardServletOutputData implements HttpOutputData {
+
   private HttpServletRequest req;
+
   private HttpServletResponse res;
-  
+
   private Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
-  
+
   /**
-   * Constructs a StandardServletOutputData with the request and response. 
+   * Constructs a StandardServletOutputData with the request and response.
    */
   public StandardServletOutputData(HttpServletRequest request, HttpServletResponse response) {
     Assert.notNullParam(request, "request");
     Assert.notNullParam(response, "response");
-    
+
     this.req = request;
     this.res = response;
-    
-    extend(HttpServletResponse.class, res);
+
+    extend(HttpServletResponse.class, this.res);
   }
 
   public <T> void extend(Class<T> interfaceClass, T implementation) {
-    if (HttpServletResponse.class.equals(interfaceClass))
+    if (HttpServletResponse.class.equals(interfaceClass)) {
       setResponse((HttpServletResponse) implementation);
-    
-    extensions.put(interfaceClass, implementation);
+    }
+
+    this.extensions.put(interfaceClass, implementation);
   }
 
   @SuppressWarnings("unchecked")
   public <T> T narrow(Class<T> interfaceClass) {
-    if (!extensions.containsKey(interfaceClass))
+    if (!this.extensions.containsKey(interfaceClass)) {
       throw new NoSuchNarrowableException(interfaceClass);
-    return (T) extensions.get(interfaceClass);
+    }
+    return (T) this.extensions.get(interfaceClass);
   }
 
   public OutputStream getOutputStream() throws IOException {
-    return res.getOutputStream();
+    return this.res.getOutputStream();
   }
-  
+
   public void setResponse(HttpServletResponse res) {
     this.res = res;
   }
 
-	public InputData getInputData() {
-		InputData inputData = (InputData)req.getAttribute(InputData.INPUT_DATA_KEY);
-		if (inputData == null)
-			throw new NoCurrentInputDataSetException("No InputData set in the request.");
-		else
-			return inputData;
-	}
+  public InputData getInputData() {
+    InputData inputData = (InputData) this.req.getAttribute(InputData.INPUT_DATA_KEY);
+
+    if (inputData == null) {
+      throw new NoCurrentInputDataSetException("No InputData set in the request.");
+    }
+
+    return inputData;
+  }
 
   public String encodeURL(String url) {
-    return res.encodeURL(url);
+    return this.res.encodeURL(url);
   }
 
   public String encodeRedirectURL(String url) {
-    return res.encodeRedirectURL(url);
+    return this.res.encodeRedirectURL(url);
   }
 
   public String getCharacterEncoding() {
-    return res.getCharacterEncoding();
+    return this.res.getCharacterEncoding();
   }
 
   public Locale getLocale() {
-    return res.getLocale();
+    return this.res.getLocale();
   }
 
   public PrintWriter getWriter() throws IOException {
-    return res.getWriter();
+    return this.res.getWriter();
   }
 
   public void sendRedirect(String location) throws IOException {
-    res.sendRedirect(location);
+    this.res.sendRedirect(location);
   }
-  
+
   public void setContentType(String type) {
-    res.setContentType(type);
+    this.res.setContentType(type);
   }
 
   public void setCharacterEncoding(String encoding) {
-    res.setCharacterEncoding(encoding);
+    this.res.setCharacterEncoding(encoding);
   }
 }

@@ -16,34 +16,40 @@
 
 package org.araneaframework.uilib.util;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.GenericValidator;
 
 /**
+ * Provides data validation helper and date-time parsing methods.
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ValidationUtil {
 
   protected static final Log LOG = LogFactory.getLog(ValidationUtil.class);
 
+  /**
+   * The minimum year the date parsing functionality accepts.
+   */
   protected static final int MIN_YEAR = 1;
 
+  /**
+   * The maximum year the date parsing functionality accepts.
+   */
   protected static final int MAX_YEAR = 9999;
 
   /**
-   * Tries to parse the date according to the given patterns. The patterns
-   * correspond to the usual {@link SimpleDateFormat} patterns with one
-   * addition: one can combine them using "|" so that if at least one pattern
+   * Tries to parse the date according to the given patterns. The patterns correspond to the usual
+   * {@link SimpleDateFormat} patterns with one addition: one can combine them using "|" so that if at least one pattern
    * parses the input it will be used.
-   *
+   * 
    * @param dateTimeString date to be parsed.
    * @param format {@link SimpleDateFormat} patterns with "|".
    * @return parsed {@link Date} or null if parsing fails.
@@ -67,6 +73,13 @@ public abstract class ValidationUtil {
     return result;
   }
 
+  /**
+   * Parses the date <code>value</code> using the given <code>pattern</code> in the standard JDK way.
+   * 
+   * @param pattern The date/time pattern to use when parsing.
+   * @param value The value that should match the given pattern.
+   * @return The {@link ParsedDate} object when parsing was successful, or <code>null</code>.
+   */
   protected static ParsedDate parseJDK(String pattern, String value) {
     if (LOG.isTraceEnabled()) {
       LOG.trace("Using JDK with pattern '" + pattern + "' to parse date '" + value + "'.");
@@ -105,6 +118,11 @@ public abstract class ValidationUtil {
     return null;
   }
 
+  /**
+   * Detects whether the class-path contains a Joda API.
+   * 
+   * @return A Boolean that is <code>true</code> when the class-path contains a Joda API.
+   */
   protected static boolean hasJodaSupport() {
     try {
       Class.forName("org.joda.time.format.DateTimeFormat");
@@ -114,21 +132,40 @@ public abstract class ValidationUtil {
     }
   }
 
+  /**
+   * The class storing parsed date information.
+   */
   public static class ParsedDate {
 
     protected Date date;
 
     protected String outputPattern;
 
+    /**
+     * Constructs a new instance using the given parsed <code>date</code> and the pattern that was used to parse it.
+     * 
+     * @param date The parsed date.
+     * @param outputPattern Informational: the pattern that was used to parse the date. 
+     */
     public ParsedDate(Date date, String outputPattern) {
       this.date = date;
       this.outputPattern = outputPattern;
     }
 
+    /**
+     * Provides the parsed date.
+     * 
+     * @return The parsed date.
+     */
     public Date getDate() {
       return this.date;
     }
 
+    /**
+     * Provides the pattern that the parsed date matched.
+     * 
+     * @return The pattern that the parsed date matched.
+     */
     public String getOutputPattern() {
       return this.outputPattern;
     }

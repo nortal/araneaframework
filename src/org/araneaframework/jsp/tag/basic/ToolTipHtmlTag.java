@@ -27,56 +27,67 @@ import org.araneaframework.jsp.util.JspUtil;
  * @jsp.tag
  *   name = "tooltip"
  *   body-content = "empty"
- *   description = 
- *   "Defines tooltip that is shown when end-user hovers over element to which the tooltip was attached."
+ *   description = "Defines tooltip that is shown when end-user hovers over element to which the tooltip was attached."
  */
 public class ToolTipHtmlTag extends BaseTag {
-	protected String element;
-	protected String text;
-	protected String options;
 
-	@Override
+  protected String element;
+
+  protected String text;
+
+  protected String options;
+
+  @Override
   protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);
+    super.doStartTag(out);
 
-		JspUtil.writeOpenStartTag(out, "script");
-		JspUtil.writeAttribute(out, "type", "text/javascript");
-		JspUtil.writeCloseStartTag_SS(out);
-		out.write("new Tip($('" + element + "'), \"" + text + "\"");
-		if (options != null)
-		out.write(", " + options);
-		out.write(");");
-		JspUtil.writeEndTag(out, "script");
-		return SKIP_BODY;
-	}
-	
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true"
-     *   description = "HTML element id to which tooltip should be attached." 
-	 */
-	public void setElement(String element){
-		this.element = evaluate("element", element, String.class);
-	}
+    JspUtil.writeOpenStartTag(out, "script");
+    JspUtil.writeAttribute(out, "type", "text/javascript");
+    JspUtil.writeCloseStartTag_SS(out);
 
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "true"
-	 *   description = "Tooltip content." 
-	 */
-	public void setText(String text){
-		this.text = evaluate("text", text, String.class);
-	}
-	
-	 /**
+    out.write("new Tip($('");
+    out.write(this.element);
+    out.write("'),\"");
+    out.write(this.text);
+    out.write("\"");
+
+    if (this.options != null) {
+      out.write("," + this.options);
+    }
+
+    out.write(");");
+    JspUtil.writeEndTag(out, "script");
+
+    return SKIP_BODY;
+  }
+
+  /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details)." 
+   *    type = "java.lang.String"
+   *    required = "true"
+   *    description = "HTML element id to which tooltip should be attached."
    */
-	public void setOptions(String options){
-	  this.options = evaluate("options", options, String.class);
-	}
+  public void setElement(String element) {
+    this.element = evaluate("element", element, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "true"
+   *    description = "Tooltip content."
+   */
+  public void setText(String text) {
+    this.text = evaluate("text", text, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Options for tooltip (including tooltip classname, title, etc -- see prototip.js for details)."
+   */
+  public void setOptions(String options) {
+    this.options = evaluate("options", options, String.class);
+  }
 }

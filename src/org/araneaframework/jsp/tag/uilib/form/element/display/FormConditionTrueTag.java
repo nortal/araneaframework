@@ -32,13 +32,11 @@ import org.araneaframework.jsp.tag.BaseTag;
  *   description = "The content of this tag will be displayed if the element value is TRUE."
  */
 public class FormConditionTrueTag extends BaseTag {
-  /**
-   */
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
     Boolean condition = (Boolean) requireContextEntry(FormConditionalDisplayTag.CONDITION_KEY);
-    
-    return condition.booleanValue() ? EVAL_BODY_INCLUDE : SKIP_BODY;  }
+    return condition ? EVAL_BODY_INCLUDE : SKIP_BODY;
+  }
 }

@@ -384,119 +384,129 @@ public class SequenceHelper implements Serializable {
   }
 
   /**
-   * View Model.
+   * Sequence helper view model.
    * 
    * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
    */
   public class ViewModel implements Serializable {
+
     private Long firstPage;
+
     private Long lastPage;
+
     private Long blockFirstPage;
+
     private Long blockLastPage;
+
     private Long currentPage;
+
     private Long totalItemCount;
+
     private Boolean allItemsShown;
+
     private Long pageFirstItem;
+
     private Long pageLastItem;
+
     private Long itemsOnPage;
 
     /**
      * Takes a snapshot of outer class state.
      */
     protected ViewModel() {
-      this.firstPage = new Long(0);
+      this.firstPage = 0L;
       long pageCount = SequenceHelper.this.getPageCount();
-      this.lastPage = new Long(pageCount > 0 ? pageCount - 1: pageCount);
-      
-      this.blockFirstPage = new Long(SequenceHelper.this.getBlockFirstPage());
-      this.blockLastPage = new Long(SequenceHelper.this.getBlockLastPage());
-      
-      this.currentPage = new Long(SequenceHelper.this.currentPage);
-      this.totalItemCount = new Long(SequenceHelper.this.totalItemCount);
-      
-      this.allItemsShown = SequenceHelper.this.allItemsShown ? Boolean.TRUE : Boolean.FALSE;
-      
-      this.pageFirstItem = new Long(SequenceHelper.this.getCurrentPageFirstItemIndex() + 1);
-      this.pageLastItem = new Long(SequenceHelper.this.getCurrentPageLastItemIndex() + 1);
-      
-      this.itemsOnPage = new Long(SequenceHelper.this.itemsOnPage);
+      this.lastPage = pageCount > 0 ? pageCount - 1 : pageCount;
+
+      this.blockFirstPage = SequenceHelper.this.getBlockFirstPage();
+      this.blockLastPage = SequenceHelper.this.getBlockLastPage();
+
+      this.currentPage = SequenceHelper.this.currentPage;
+      this.totalItemCount = SequenceHelper.this.totalItemCount;
+
+      this.allItemsShown = SequenceHelper.this.allItemsShown;
+
+      this.pageFirstItem = SequenceHelper.this.getCurrentPageFirstItemIndex() + 1;
+      this.pageLastItem = SequenceHelper.this.getCurrentPageLastItemIndex() + 1;
+
+      this.itemsOnPage = SequenceHelper.this.itemsOnPage;
     }
 
     /**
      * @return Returns the allItemsShown.
      */
     public Boolean getAllItemsShown() {
-      return allItemsShown;
+      return this.allItemsShown;
     }
 
     /**
      * @return Returns the blockFirstPage.
      */
     public Long getBlockFirstPage() {
-      return blockFirstPage;
+      return this.blockFirstPage;
     }
 
     /**
      * @return Returns the blockLastPage.
      */
     public Long getBlockLastPage() {
-      return blockLastPage;
+      return this.blockLastPage;
     }
 
     /**
      * @return Returns the currentPage.
      */
     public Long getCurrentPage() {
-      return currentPage;
+      return this.currentPage;
     }
 
     /**
      * @return Returns the firstPage.
      */
     public Long getFirstPage() {
-      return firstPage;
+      return this.firstPage;
     }
 
     /**
      * @return Returns the lastPage.
      */
     public Long getLastPage() {
-      return lastPage;
+      return this.lastPage;
     }
 
     /**
      * @return Returns the pageFirstItem.
      */
     public Long getPageFirstItem() {
-      return pageFirstItem;
+      return this.pageFirstItem;
     }
 
     /**
      * @return Returns the pageLastItem.
      */
     public Long getPageLastItem() {
-      return pageLastItem;
+      return this.pageLastItem;
     }
 
     /**
      * @return Returns the totalItemCount.
      */
     public Long getTotalItemCount() {
-      return totalItemCount;
+      return this.totalItemCount;
     }
 
-	/**
-	 * @return Returns the itemsOnPage.
-	 */
-	public Long getItemsOnPage() {
-		return itemsOnPage;
-	}
+    /**
+     * @return Returns the itemsOnPage.
+     */
+    public Long getItemsOnPage() {
+      return this.itemsOnPage;
+    }
   }
-  
+
   /** 
    * @since 1.1
    */
   protected void fireChange() {
-    changed = true;
+    this.changed = true;
   }
 }

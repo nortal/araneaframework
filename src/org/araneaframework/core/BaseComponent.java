@@ -46,9 +46,9 @@ public class BaseComponent implements Component {
 
   private Scope scope;
 
-  private Map<Object, Component> children;
+  private Map<String, Component> children;
 
-  private Map<Object, Component> disabledChildren;
+  private Map<String, Component> disabledChildren;
 
   private static final byte UNBORN = 1;
 
@@ -265,10 +265,10 @@ public class BaseComponent implements Component {
   /**
    * Returns the children of this component.
    */
-  protected Map<Object, Component> _getChildren() {
+  protected Map<String, Component> _getChildren() {
     synchronized (this) {
       if (this.children == null) {
-        this.children = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
+        this.children = Collections.synchronizedMap(new LinkedHashMap<String, Component>(1));
       }
     }
     return this.children;
@@ -277,28 +277,28 @@ public class BaseComponent implements Component {
   /**
    * Returns the children of this component.
    */
-  protected Map<Object, Component> _getDisabledChildren() {
+  protected Map<String, Component> _getDisabledChildren() {
     synchronized (this) {
       if (this.disabledChildren == null) {
-        this.disabledChildren = Collections.synchronizedMap(new LinkedHashMap<Object, Component>(1));
+        this.disabledChildren = Collections.synchronizedMap(new LinkedHashMap<String, Component>(1));
       }
     }
     return this.disabledChildren;
   }
 
   /**
-   * Adds a child component to this component with the key and initilizes it with the specified Environment env.
+   * Adds a child component to this component with the key and initializes it with the specified Environment env.
    */
-  protected void _addComponent(Object key, Component component, Environment env) {
+  protected void _addComponent(String key, Component component, Environment env) {
     _addComponent(key, component, new StandardScope(key, getScope()), env);
   }
 
   /**
-   * Adds a child component to this component with the key and initilizes it with the specified Environment env.
+   * Adds a child component to this component with the key and initializes it with the specified Environment env.
    * 
    * @since 1.1
    */
-  protected void _addComponent(Object key, Component component, Scope scope, Environment env) {
+  protected void _addComponent(String key, Component component, Scope scope, Environment env) {
 
     Assert.notNull(this, component, "The component for key '" + key + "' is required.");
     Assert.notNull(this, key, "Cannot add a component of class '" + component.getClass() + "' under a null key!");
@@ -350,7 +350,7 @@ public class BaseComponent implements Component {
    * 
    * @param key The ID of the child component to disable.
    */
-  protected void _disableComponent(Object key) {
+  protected void _disableComponent(String key) {
     Assert.notNullParam(this, key, "key");
 
     // Only Strings are supported by this implementation
@@ -376,7 +376,7 @@ public class BaseComponent implements Component {
    * 
    * @param key The ID of the child component to enable.
    */
-  protected void _enableComponent(Object key) {
+  protected void _enableComponent(String key) {
     Assert.notNullParam(this, key, "key");
 
     // Only Strings are supported by this implementation
@@ -405,7 +405,7 @@ public class BaseComponent implements Component {
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  protected void _relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
+  protected void _relocateComponent(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
     Assert.notNull(this, parent, "Cannot relocate a component from under key '" + keyFrom + "' to key '" + keyTo
         + "' from a null parent!");
 
@@ -440,10 +440,10 @@ public class BaseComponent implements Component {
       return;
     }
 
-    Map<Object, Component> children = _getChildren();
+    Map<String, Component> children = _getChildren();
 
     synchronized (children) {
-      for (Map.Entry<Object, Component> entry : children.entrySet()) {
+      for (Map.Entry<String, Component> entry : children.entrySet()) {
         // message has not destroyed by previously existing child
         if (entry.getValue() != null) {
           message.send(entry.getKey(), entry.getValue());
@@ -514,7 +514,7 @@ public class BaseComponent implements Component {
 
         _getChildren();
         synchronized (children) {
-          for (Iterator<Map.Entry<Object, Component>> i = children.entrySet().iterator(); i.hasNext();) {
+          for (Iterator<Map.Entry<String, Component>> i = children.entrySet().iterator(); i.hasNext();) {
             i.next().getValue()._getComponent().destroy();
             i.remove();
           }
@@ -522,7 +522,7 @@ public class BaseComponent implements Component {
 
         _getDisabledChildren();
         synchronized (disabledChildren) {
-          for (Iterator<Map.Entry<Object, Component>> i = disabledChildren.entrySet().iterator(); i.hasNext();) {
+          for (Iterator<Map.Entry<String, Component>> i = disabledChildren.entrySet().iterator(); i.hasNext();) {
             Component component = i.next().getValue();
             if (component != null) {
               component._getComponent().destroy();

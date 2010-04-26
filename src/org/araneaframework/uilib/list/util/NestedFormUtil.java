@@ -16,11 +16,9 @@
 
 package org.araneaframework.uilib.list.util;
 
-import org.araneaframework.backend.util.BeanUtil;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;

@@ -42,11 +42,12 @@ public class InMemoryFormRowHandlerDecorator<K, R> implements FormRowHandler<K, 
 
   public K getRowKey(R row) {
     K result = this.rowHandler.getRowKey(row);
-    if (result != null) {
-      return result;
+
+    if (result == null) {
+      result = this.inMemoryRowHelper.getKey(row);
     }
 
-    return this.inMemoryRowHelper.getKey(row);
+    return result;
   }
 
   public void saveRows(Map<K, FormRow<K, R>> rowForms) throws Exception {

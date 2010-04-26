@@ -16,10 +16,9 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.uilib.form.formlist.FormListUtil;
-
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
 import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
 

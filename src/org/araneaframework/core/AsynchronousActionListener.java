@@ -19,7 +19,7 @@ package org.araneaframework.core;
 /**
  * If an action wants to be asynchronous, this interface declares that the action listener is asynchronous.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public interface AsynchronousActionListener extends ActionListener {}

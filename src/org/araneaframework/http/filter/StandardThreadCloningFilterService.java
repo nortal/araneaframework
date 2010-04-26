@@ -203,7 +203,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
     Map<String, String> m = new HashMap<String, String>();
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
-    return URLUtil.parametrizeURI(url, m);
+    return URLUtil.parameterizeURI(url, m);
   }
 
   protected ThreadContext getThreadServiceCtx() {

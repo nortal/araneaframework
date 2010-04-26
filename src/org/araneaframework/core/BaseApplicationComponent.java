@@ -48,7 +48,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
       return BaseApplicationComponent.this.getScope();
     }
 
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
   }
@@ -66,15 +66,15 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
 
   protected class CompositeComponentImpl implements Composite.Interface {
 
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
 
-    public void attach(Object key, Component comp) {
+    public void attach(String key, Component comp) {
       _getChildren().put(key, comp);
     }
 
-    public Component detach(Object key) {
+    public Component detach(String key) {
       return _getChildren().remove(key);
     }
   }
@@ -88,8 +88,8 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * 
    * @return a map of child components
    */
-  public Map<Object, Component> getChildren() {
-    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
+  public Map<String, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<String, Component>(_getChildren()));
   }
 
   public Viewable.Interface _getViewable() {
@@ -104,7 +104,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * Adds a component with the specified key. Already initialized component cannot be added. Duplicate keys not allowed.
    * The child is initialized with the Environment env.
    */
-  public void addComponent(Object key, Component child, Environment env) {
+  public void addComponent(String key, Component child, Environment env) {
     _addComponent(key, child, env);
   }
 
@@ -113,7 +113,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * allowed. The child is initialized with the Environment from <code>getChildComponentEnvironment()</code>.
    * 
    */
-  public void addComponent(Object key, Component child) {
+  public void addComponent(String key, Component child) {
     _addComponent(key, child, getChildComponentEnvironment());
   }
 
@@ -126,7 +126,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateComponent(Composite parent, Environment newEnv, Object keyFrom, Object keyTo) {
+  public void relocateComponent(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
@@ -138,28 +138,28 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateComponent(Composite parent, Object keyFrom, Object keyTo) {
+  public void relocateComponent(Composite parent, String keyFrom, String keyTo) {
     _relocateComponent(parent, getChildComponentEnvironment(), keyFrom, keyTo);
   }
 
   /**
    * Enables the component with the specified key. Only a disabled component can be enabled.
    */
-  public void enableComponent(Object key) {
+  public void enableComponent(String key) {
     _enableComponent(key);
   }
 
   /**
    * Disables the component with the specified key. Only a enabled component can be disabled.
    */
-  public void disableComponent(Object key) {
+  public void disableComponent(String key) {
     _disableComponent(key);
   }
 
   /**
    * Removes the component with the specified key.
    */
-  public void removeComponent(Object key) {
+  public void removeComponent(String key) {
     _removeComponent(key);
   }
 

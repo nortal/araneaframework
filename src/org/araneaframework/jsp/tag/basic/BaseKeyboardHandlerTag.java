@@ -78,20 +78,24 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
   /**
    * Writes "uiRegisterKeypressHandler" javascript, surrounded by &lt;script&gt tags. Throws exceptions if parameters
    * are not consistent (e.g. keyCode not specified).
+   * 
+   * @param out The response writer.
+   * @param scope An optional scope of the event. For example, an element ID or Prototype expression ("div.target").
+   * @param keyCode An optional key code the event would listen for.
+   * @param keyMetaCond An optional keys expression (e.g. "ctrl+a").
+   * @param handler The event handling function name (required).
    */
   public static final void writeRegisterKeypressHandlerScript(Writer out, String scope, Integer keyCode,
       String keyMetaCond, String handler) throws JspException, IOException {
 
     if (StringUtils.isBlank(handler)) {
-      throw new JspException("handler may not be empty in the KeyboardHandlerHtmlTag");
+      throw new JspException("'handler' may not be empty in the KeyboardHandlerHtmlTag");
     }
 
-    StringUtils.defaultIfEmpty(scope, "");
-
-    JspUtil.writeStartTag_SS(out, "script type='text/javascript'");
+    JspUtil.writeStartTag_SS(out, "script type=\"text/javascript\"");
     out.write("Aranea.Keyboard.registerKeypressHandler('");
-    out.write(scope);
-    out.write("', ");
+    out.write(StringUtils.defaultIfEmpty(scope, ""));
+    out.write("',");
     if (keyCode != null) {
       out.write(keyCode.toString());
     } else if (keyMetaCond != null) {
@@ -99,7 +103,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
       out.write(keyMetaCond);
       out.write('\'');
     } else {
-      out.write("null");
+      throw new JspException("KeyboardHandlerHtmlTag: keyCode or keyMetaCond must not be null!");
     }
     out.write(",");
     JspUtil.writeEscaped(out, handler);

@@ -4,12 +4,9 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="1.2">
 
-	<ui:eventLinkButton labelId="#Redirect" eventId="redirect" />
-
-	<ui:newLine />
-
-	<ui:newLine />
-
-	<ui:eventLinkButton labelId="#Mount and redirect" eventId="mountAndRedirect" />
+	<ui:eventLinkButton labelId="#Redirect" eventId="redirect"/>
+	<ui:newLine/>
+	<ui:newLine/>
+	<ui:eventLinkButton labelId="#Mount and redirect" eventId="mountAndRedirect"/>
 
 </jsp:root>

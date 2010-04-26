@@ -16,9 +16,8 @@
 
 package org.araneaframework.http.service;
 
-import javax.servlet.http.HttpServletResponse;
-
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.http.util.EnvironmentUtil;

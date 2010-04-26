@@ -28,9 +28,11 @@ import org.araneaframework.uilib.form.reader.BeanFormWriter;
 public class BeanFormWidget<T> extends FormWidget {
 
   private BeanMapper<T> beanMapper;
+
   private Class<T> beanClass;
+
   private T bean;
-  
+
   public BeanFormWidget(Class<T> beanClass, T bean) {
     Assert.notNullParam(beanClass, "beanClass");
     Assert.notNullParam(bean, "bean");
@@ -51,7 +53,7 @@ public class BeanFormWidget<T> extends FormWidget {
       throw ExceptionUtil.uncheckException(e);
     }
   }
-  
+
   @Override
   protected void init() throws Exception {
     super.init();
@@ -146,32 +148,46 @@ public class BeanFormWidget<T> extends FormWidget {
     return result;
   }
 
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control) {
+  public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control) {
     return addBeanElement(elementName, labelId, control, false);
   }
 
   @SuppressWarnings("unchecked")
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
+  public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control,
+      boolean mandatory) {
     Data<D> data = new Data(BeanUtil.getPropertyType(this.beanClass, elementName));
     return addElement(elementName, labelId, control, data, mandatory);
   }
 
   @SuppressWarnings("unchecked")
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
+  public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control,
+      D initialValue, boolean mandatory) {
     if (initialValue == null) {
       return addBeanElement(elementName, labelId, control, mandatory);
     } else {
-      return addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
+      return addElement(elementName, labelId, control, Data.newInstance((Class<D>) initialValue.getClass()),
+          initialValue, mandatory);
     }
   }
 
+  /**
+   * Writes form data to given bean. Deprecated in favor of {@link #writeToBean()}.
+   * 
+   * @param bean An instance of bean where form values will be written.
+   * @return The same bean as provided for input.
+   */
   @Deprecated
   public T writeToBean(T bean) {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(bean);
     return bean;
   }
-  
+
+  /**
+   * Writes data from given <code>bean</code> to the underlying form.
+   * 
+   * @param bean An instance of <code>bean</code>.
+   */
   public void readFromBean(T bean) {
     BeanFormWriter<T> writer = new BeanFormWriter<T>(this.beanClass);
     writer.writeFormBean(this, bean);
@@ -180,19 +196,19 @@ public class BeanFormWidget<T> extends FormWidget {
   public void readFromBean() {
     readFromBean(this.bean);
   }
-  
+
   public T writeToBean() {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(this.bean);
     return this.bean;
   }
-  
+
   public T getBean() {
     return this.bean;
   }
-  
+
   public Class<T> getBeanClass() {
     return this.beanClass;
-  }  
-  
+  }
+
 }

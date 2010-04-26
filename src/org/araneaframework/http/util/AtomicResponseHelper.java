@@ -70,10 +70,7 @@ public class AtomicResponseHelper {
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
-      if (this.out == null) {
-        return getResponse().getOutputStream();
-      }
-      return this.out;
+      return this.out == null ? getResponse().getOutputStream() : this.out;
     }
 
     @Override

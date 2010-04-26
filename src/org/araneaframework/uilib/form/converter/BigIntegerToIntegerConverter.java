@@ -39,7 +39,7 @@ public class BigIntegerToIntegerConverter extends BaseConverter<BigInteger, Inte
    */
   @Override
   protected Integer convertNotNull(BigInteger data) {
-    return new Integer(data.intValue());
+    return data.intValue();
   }
 
   /**

@@ -16,8 +16,6 @@
 
 package org.araneaframework.core;
 
-import org.araneaframework.core.util.ComponentUtil;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,6 +36,7 @@ import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
@@ -75,21 +74,21 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
      * 
      * @return a map of child components
      */
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }
 
     /**
      * @see org.araneaframework.Composite.Interface#attach(java.lang.Object, org.araneaframework.Component)
      */
-    public void attach(Object key, Component comp) {
+    public void attach(String key, Component comp) {
       _getChildren().put(key, comp);
     }
 
     /**
      * @see org.araneaframework.Composite.Interface#detach(java.lang.Object)
      */
-    public Component detach(Object key) {
+    public Component detach(String key) {
       return _getChildren().remove(key);
     }
   }
@@ -115,7 +114,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       return BaseApplicationWidget.this.getScope();
     }
 
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }
 
@@ -364,8 +363,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * 
    * @return a map of the child-components under this component
    */
-  public Map<Object, Component> getChildren() {
-    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
+  public Map<String, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<String, Component>(_getChildren()));
   }
 
   /**
@@ -374,7 +373,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * @param key of the child being returned
    * @return the Widget under the provided key
    */
-  public Widget getWidget(Object key) {
+  public Widget getWidget(String key) {
     return (Widget) getChildren().get(key);
   }
 
@@ -385,7 +384,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * @param child Widget being added
    * @param env the Environment the child will be initialized with
    */
-  public void addWidget(Object key, Widget child, Environment env) {
+  public void addWidget(String key, Widget child, Environment env) {
     _addComponent(key, child, env);
   }
 
@@ -395,7 +394,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * @param key of the the child Widget
    * @param child Widget being added
    */
-  public void addWidget(Object key, Widget child) {
+  public void addWidget(String key, Widget child) {
     try {
       addWidget(key, child, this.getChildWidgetEnvironment());
     } catch (Exception e) {
@@ -415,14 +414,14 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   /**
    * Enables the widget with the specified key. Only a disabled widgets can be enabled.
    */
-  public void enableWidget(Object key) {
+  public void enableWidget(String key) {
     _enableComponent(key);
   }
 
   /**
    * Disables the widget with the specified key. Only a enabled widgets can be disabled.
    */
-  public void disableWidget(Object key) {
+  public void disableWidget(String key) {
     _disableComponent(key);
   }
 

@@ -16,18 +16,16 @@
 
 package org.araneaframework.uilib.support;
 
-import org.apache.commons.lang.ClassUtils;
-
 import java.io.Serializable;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 /**
  * This class defines the <code>Map</code> key, that is used to find a converter between data held in
  * {@link org.araneaframework.uilib.form.Control} and corresponding {@link org.araneaframework.uilib.form.Data}.
  * 
- * @see org.araneaframework.uilib.form.converter.ConverterFactory
- * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @see org.araneaframework.uilib.form.converter.ConverterFactory
  */
 public class ConverterKey <C, D> implements Serializable {
 

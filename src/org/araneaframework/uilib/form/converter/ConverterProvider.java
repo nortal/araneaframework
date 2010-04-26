@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-**/
+ */
 
 package org.araneaframework.uilib.form.converter;
 
@@ -23,9 +23,10 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.DataType;
 
 /**
- * Provides access to registered {@link Converter}s. 
- * 
+ * Provides access to registered {@link Converter}s.
+ * <p>
  * Since 1.1 this interface extends <code>Serializable</code>.
+ * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  * 
  * @see Converter
@@ -33,6 +34,7 @@ import org.araneaframework.uilib.support.DataType;
  * @see FormElement#convert()
  */
 public interface ConverterProvider extends Serializable {
+
   /**
    * This method should return a {@link BaseConverter }corresponding to the two types given.
    * 

@@ -38,7 +38,7 @@ public class BigIntegerToLongConverter extends BaseConverter<BigInteger, Long> {
    */
   @Override
   protected Long convertNotNull(BigInteger data) {
-    return new Long(data.longValue());
+    return data.longValue();
   }
   
   /**

@@ -73,12 +73,12 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
     @Override
     protected void init() throws Exception {
       setViewSelector("demo/tree/unsynchronized/treeNode");
-      putViewData("counter", new Integer(this.counter));
+      putViewData("counter", this.counter);
       addActionListener("test", new AsynchronousActionListener() {
 
         public void processAction(String actionId, InputData input, OutputData output) throws Exception {
           LOG.debug("Received action with id='" + actionId + "'");
-          putViewData("counter", new Integer(++counter));
+          putViewData("counter", ++counter);
           getTreeNodeCtx().renderNode(output); // Boilerplate code to render the changes
         }
 

@@ -126,4 +126,13 @@ public class DemoVO implements Serializable, Cloneable {
   public void setSubTestVO(DemoVO subTestVO) {
     this.subTestVO = subTestVO;
   }
+
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    DemoVO other = (DemoVO) super.clone();
+    if (other.subTestVO != null) {
+      other.subTestVO = (DemoVO) this.subTestVO.clone();
+    }
+    return other;
+  }
 }

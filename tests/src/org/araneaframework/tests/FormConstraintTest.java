@@ -49,8 +49,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public class FormConstraintTest extends TestCase {
 
-  boolean eventsWork = false;
-
   public FormConstraintTest(String name) {
     super(name);
   }

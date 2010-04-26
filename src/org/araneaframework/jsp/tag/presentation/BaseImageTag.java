@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.presentation;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -30,7 +29,9 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public abstract class BaseImageTag extends PresentationTag {
 
-  // Usual HTML <img> tag attributes
+  /**
+   * Usual HTML &lt;img&gt; tag attribute.
+   */
   protected String code, src, width, height, alt, title;
 
   @Override
@@ -62,6 +63,14 @@ public abstract class BaseImageTag extends PresentationTag {
    */
   protected static class Info {
 
+    public String src;
+
+    public String width;
+
+    public String height;
+
+    public String alt;
+
     public Info(String src, String width, String height) {
       this.src = src;
       this.width = width;
@@ -75,14 +84,6 @@ public abstract class BaseImageTag extends PresentationTag {
       this.height = height;
       this.alt = alt;
     }
-
-    public String src;
-
-    public String width;
-
-    public String height;
-
-    public String alt;
   }
 
   /**

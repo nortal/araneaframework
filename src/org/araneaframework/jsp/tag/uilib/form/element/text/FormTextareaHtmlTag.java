@@ -95,28 +95,30 @@ public class FormTextareaHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEscaped(out, viewModel.getSimpleValue());
     JspUtil.writeEndTag_SS(out, "textarea");
+
     if (!StringUtils.isBlank(this.accessKey)) {
       JspUtil.writeAttribute(out, "accesskey", this.accessKey);
     }
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
    // Tag attributes
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Number of visible columns."
+   * @throws JspException 
+   * @jsp.attribute type = "java.lang.String" required = "true" description = "Number of visible columns."
    */
-  public void setCols(String size) {
-    this.cols = evaluate("cols", size, Long.class);
+  public void setCols(String size) throws JspException {
+    this.cols = evaluateNotNull("cols", size, Long.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Number of visible rows."
+   * @throws JspException 
+   * @jsp.attribute type = "java.lang.String" required = "true" description = "Number of visible rows."
    */
-  public void setRows(String size) {
-    this.rows = evaluate("rows", size, Long.class);
+  public void setRows(String size) throws JspException {
+    this.rows = evaluateNotNull("rows", size, Long.class);
   }
 
   /**

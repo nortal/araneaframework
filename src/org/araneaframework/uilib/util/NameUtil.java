@@ -16,9 +16,8 @@
 
 package org.araneaframework.uilib.util;
 
-import org.araneaframework.backend.util.BeanUtil;
-
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
 
 /**
  * This class is a general helper, which is used throughout UiLib to parse <code>String</code>s like events and

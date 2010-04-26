@@ -16,8 +16,6 @@
 
 package org.araneaframework.http.filter;
 
-import javax.servlet.http.Cookie;
-
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -104,16 +102,6 @@ public class StandardRedirectingFilterWidget extends BaseFilterWidget {
     public boolean canRender() {
       int s = this.status;
       return !new IntRange(300, 399).containsInteger(s) && !new IntRange(500, 599).containsInteger(s);
-    }
-
-    @Override
-    public void addCookie(Cookie cookie) {
-      super.addCookie(cookie);
-    }
-
-    @Override
-    public void addHeader(String name, String value) {
-      super.addHeader(name, value);
     }
   }
 }

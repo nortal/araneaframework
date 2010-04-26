@@ -24,7 +24,6 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.support.UiLibMessages;
 
-
 /**
  * Tag that renders the {@link ListWidget}'s filter form clearance button. Should be used inside list filter form
  * (&lt;ui:listFilter&gt; tag). Button uses label specified by {@link ListWidget}&mdash;
@@ -40,12 +39,13 @@ import org.araneaframework.uilib.support.UiLibMessages;
  * @since 1.0.3
  */
 public class ListFilterClearButtonHtmlTag extends FormLinkButtonHtmlTag {
+
   public static final String RENDER_BUTTON = "button";
+
   public static final String RENDER_INPUT = "input";
+
   public static final String RENDER_EMPTY = "empty";
-  
-  protected String renderMode;
-	  
+
   public ListFilterClearButtonHtmlTag() {
     this.id = ListWidget.FILTER_RESET_BUTTON_ID;
     this.showLabel = false;

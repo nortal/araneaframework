@@ -16,15 +16,13 @@
 
 package org.araneaframework.jsp.tag.uilib.form;
 
-import org.araneaframework.Path;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -77,10 +75,10 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
 
   protected boolean events = true;
 
-  protected boolean validateOnEvent = false;
+  protected boolean validateOnEvent;
 
   /** @since 1.1 */
-  protected boolean backgroundValidation = false;
+  protected boolean backgroundValidation;
 
   protected String accessKey;
 

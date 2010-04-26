@@ -143,6 +143,11 @@ public class BeanDisplayItem<T> extends DisplayItem {
     }
   }
 
+  /**
+   * Provides the underlying bean for this display item.
+   * 
+   * @return The underlying bean.
+   */
   public T getTargetObject() {
     return this.targetObjct;
   }
@@ -162,4 +167,23 @@ public class BeanDisplayItem<T> extends DisplayItem {
     }
   }
 
+  /**
+   * <code>BeanDisplayItem</code> basically uses the same <code>equals</code> logic because all display items need only
+   * to be compared by the <code>value</code> property. This method is explicitly overridden here to show that we have
+   * not forgot it.
+   */
+  @Override
+  public boolean equals(Object obj) {
+    return super.equals(obj);
+  }
+
+  /**
+   * <code>BeanDisplayItem</code> basically uses the same <code>hashCode</code> logic because all display items need only
+   * to be compared by the <code>value</code> property. This method is explicitly overridden here to show that we have
+   * not forgot it.
+   */
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
 }

@@ -26,8 +26,6 @@ import org.araneaframework.Path;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.http.HttpInputData;
-import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.filter.StandardPopupFilterWidget.StandardPopupServiceInfo;
 import org.araneaframework.http.util.EnvironmentUtil;
@@ -39,8 +37,16 @@ import org.araneaframework.uilib.util.MessageUtil;
 /**
  * Service that returns response that closes browser window that made the request; and if possible, reloads the opener
  * of that window.
+ * <p>
+ * In 2.0 version, this class was simplified for extending the default solution. Now the referenced JavaScript files can
+ * be specified using the {@link #setScriptsImportFileNames(String[])} variable, the parent window reloading script can
+ * be specified through {@link #setReloadParentScript(String)} (note that URL will be injected to the positional
+ * parameter '{0}'!), and the popup close script can be customized through {@link #setDelayedCloseScript(String)}
+ * variable. Using these three properties should be enough to avoid changing the HTML response entirely for most of the
+ * cases.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 public class WindowClosingService extends BaseService {
 
@@ -76,8 +82,7 @@ public class WindowClosingService extends BaseService {
     if (opener != null) {
       String threadId = EnvironmentUtil.requireThreadServiceId(opener.getEnvironment());
       String topserviceId = EnvironmentUtil.requireTopServiceId(opener.getEnvironment());
-      String url = ((HttpOutputData) getInputData().getOutputData()).encodeURL(((HttpInputData) getInputData())
-          .getContainerURL());
+      String url = ServletUtil.getEncodedContainerUrl(getInputData());
       serviceInfo = new StandardPopupServiceInfo(topserviceId, threadId, null, url);
       serviceInfo.setTransactionOverride(false);
     }

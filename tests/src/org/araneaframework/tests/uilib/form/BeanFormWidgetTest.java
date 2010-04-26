@@ -121,13 +121,13 @@ public class BeanFormWidgetTest extends TestCase {
     FlatBean bean = makeFlatBean(234, "aaac");
     BeanFormWidget<FlatBean> form = makeFlatBeanForm(bean);
     form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
-    assertEquals(new Integer(234), form.getValueByFullName("a"));
-    assertEquals(new String("aaac"), form.getValueByFullName("s"));
+    assertEquals(234, form.getValueByFullName("a"));
+    assertEquals("aaac", form.getValueByFullName("s"));
 
     form.readFromBean(makeFlatBean(2, "xyz"));
 
     assertEquals(2, form.getValueByFullName("a"));
-    assertEquals(new String("xyz"), form.getValueByFullName("s"));
+    assertEquals("xyz", form.getValueByFullName("s"));
   }
 
   // tests that bean fields that are not tied to BeanFormWidget elements
@@ -142,9 +142,9 @@ public class BeanFormWidgetTest extends TestCase {
 
     bean = form.writeToBean();
 
-    assertEquals(new Integer(100), new Integer(bean.a));
-    assertEquals(new String("newString"), bean.s);
-    assertEquals(new Integer(200), new Integer(bean.subFlatBean.a));
-    assertEquals(new String("value"), bean.subFlatBean.s);
+    assertEquals(100, bean.a);
+    assertEquals("newString", bean.s);
+    assertEquals(200, bean.subFlatBean.a);
+    assertEquals("value", bean.subFlatBean.s);
   }
 }

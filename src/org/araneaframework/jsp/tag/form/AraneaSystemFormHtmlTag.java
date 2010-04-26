@@ -19,8 +19,8 @@ package org.araneaframework.jsp.tag.form;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-import javax.servlet.jsp.JspException;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.Assert;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
@@ -82,9 +82,10 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
 
     if (regionsFromRequest == null && stateVersionCtx != null) {
       State state = stateVersionCtx.saveState();
-      if (state != null) {
-        JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_REQUEST_KEY, state.getStateId());
-      }
+
+      Assert.notNull(state, "Saved state was null!");
+
+      JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_REQUEST_KEY, state.getStateId());
     } else if (stateVersionCtx != null) { // write just a place-holder
       JspUtil.writeHiddenInputElement(out, StateVersioningContext.STATE_ID_REQUEST_KEY, "");
     }
@@ -103,7 +104,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
   }
 
   @Override
-  protected String getFormAction() throws JspException {
+  protected String getFormAction() {
     return ((HttpInputData) getOutputData().getInputData()).getContainerURL();
   }
 }

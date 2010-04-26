@@ -31,7 +31,7 @@ public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
    */
   @Override
   public Long convertNotNull(Boolean data) {
-    return data.booleanValue() ? 1L : 0L;
+    return data ? 1L : 0L;
   }
 
   /**
@@ -39,7 +39,7 @@ public class BooleanToLongConverter extends BaseConverter<Boolean, Long> {
    */
   @Override
   public Boolean reverseConvertNotNull(Long data) {
-    return data.longValue() != 0;
+    return data != 0;
   }
 
   /**

@@ -114,16 +114,19 @@ public class ReverseConstraint extends BaseConstraint {
   protected void validateConstraint() throws Exception {
     this.toReverse.validate();
     Set<String> errors = toReverse.getErrors();
+
     // Reverse constraint is invalid when wrapped constraint validates
     if (errors.isEmpty()) {
-      if (this.customErrorMessage != null)
+      if (this.customErrorMessage != null) {
         addError(this.customErrorMessage);
-      else if (this.errorMessageFactory != null)
+      } else if (this.errorMessageFactory != null) {
         addErrors(this.errorMessageFactory.getErrorMessage(this));
-      else
+      } else {
         addError("Reverse constraint validation failed for constraint " + getConstraint()
             + ". No details available because custom validation error message was not set.");
+      }
     }
+
     this.toReverse.clearErrors();
   }
 

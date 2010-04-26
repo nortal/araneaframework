@@ -17,14 +17,11 @@
 package org.araneaframework.uilib.form.control;
 
 import java.util.List;
-
-import org.springframework.util.Assert;
-
-import org.araneaframework.uilib.support.DataType;
-
 import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
+import org.springframework.util.Assert;
 
 /**
  * This class represents a select box (a.k.a. drop-down) control.

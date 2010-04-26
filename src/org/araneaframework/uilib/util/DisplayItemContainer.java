@@ -21,6 +21,8 @@ import java.util.List;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
+ * The base specification for containers that deal with {@link DisplayItem}s.
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface DisplayItemContainer<T> {
@@ -59,7 +61,21 @@ public interface DisplayItemContainer<T> {
    */
   public int getValueIndex(String value);
 
+  /**
+   * When the underlying <code>DisplayItem</code> container uses a bean property to resolve its label, the method
+   * returns the property name. Otherwise, returns <code>null</code>.
+   * 
+   * @return The property of <code>DisplayItem</code> to resolve its label, or <code>null</code>.
+   * @return 2.0
+   */
   public String getItemLabelProperty();
 
+  /**
+   * When the underlying <code>DisplayItem</code> container uses a bean property to resolve its value, the method
+   * returns the property name. Otherwise, returns <code>null</code>.
+   * 
+   * @return The property of <code>DisplayItem</code> to resolve its value, or <code>null</code>.
+   * @return 2.0
+   */
   public String getItemValueProperty();
 }

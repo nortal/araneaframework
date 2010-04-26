@@ -33,11 +33,11 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
 
   public static final String RENDER_INPUT = "input";
 
-  {
+  protected String renderMode = EventButtonHtmlTag.RENDER_BUTTON;
+
+  public EventButtonHtmlTag() {
     this.baseStyleClass = "aranea-button";
   }
-
-  protected String renderMode = EventButtonHtmlTag.RENDER_BUTTON;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -54,7 +54,7 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
     JspUtil.writeEventAttributes(out, this.event);
 
     if (isDisabled()) {
-      out.write(" disabled=\"disabled\" ");
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
     if (this.event.getId() != null) {
@@ -83,19 +83,20 @@ public class EventButtonHtmlTag extends BaseEventButtonTag {
       JspUtil.writeEndTag(out, "button");
     }
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description =
-   *                "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Allowed values are (button | input) - the corresponding HTML tag will be used for rendering. Default is button."
    */
   public void setRenderMode(String renderMode) throws JspException {
     String tmpMode = evaluate("renderMode", renderMode, String.class);
 
     if (!(RENDER_BUTTON.equals(tmpMode) || RENDER_INPUT.endsWith(tmpMode))) {
-      throw new AraneaJspException("<ui:eventButton> 'renderMode' attribute " + "must be '" + RENDER_BUTTON + "' or '"
+      throw new AraneaJspException("<ui:eventButton> 'renderMode' attribute must be '" + RENDER_BUTTON + "' or '"
           + RENDER_INPUT + "'");
     }
 

@@ -102,15 +102,15 @@ public class DemoEmbeddedFormList extends TemplateBaseWidget {
       editableRow.close();
       addCommonFormFields(editableRow.getForm());
 
-      FormListUtil.addEditSaveButtonToRowForm("#", editableRows, editableRow.getForm(), getRowKey(row));
-      FormListUtil.addDeleteButtonToRowForm("#", editableRows, editableRow.getForm(), getRowKey(row));
+      FormListUtil.addEditSaveButtonToRowForm("#", editableRow);
+      FormListUtil.addDeleteButtonToRowForm("#", editableRow);
 
       editableRow.getForm().readFromBean(row);
       editableRow.getForm().addWidget("embeddedFormList", new DemoDisplayableEditableList());
     }
 
     @Override
-    public void initAddForm(FormWidget addForm) throws Exception {
+    public void initAddForm(BeanFormWidget<DataDTO> addForm) throws Exception {
       addCommonFormFields(addForm);
       FormListUtil.addAddButtonToAddForm("#", editableRows, addForm);
     }

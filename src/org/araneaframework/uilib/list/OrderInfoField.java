@@ -16,9 +16,8 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.core.Assert;
-
 import java.io.Serializable;
+import org.araneaframework.core.Assert;
 
 /**
  * This class represents information about the ordering of one list column supplied by user during UI interaction.

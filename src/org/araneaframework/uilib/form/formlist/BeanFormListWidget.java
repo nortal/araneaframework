@@ -16,11 +16,9 @@
 
 package org.araneaframework.uilib.form.formlist;
 
-import org.araneaframework.uilib.form.FormWidget;
-
-import org.araneaframework.uilib.form.reader.ListFormReader;
-
 import org.araneaframework.uilib.form.BeanFormWidget;
+import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.reader.ListFormReader;
 
 /**
  * Editable rows list widget that is used to handle simultaneous editing of multiple forms with same structure. The

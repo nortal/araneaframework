@@ -34,10 +34,15 @@ import org.araneaframework.uilib.ConfigurationContext;
  */
 public class DefaultExpressionEvaluationManager implements ExpressionEvaluationManager {
 
-  @SuppressWarnings("unchecked")
   public <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject, PageContext pageContext)
       throws JspException {
-    return attributeValue == null ? null : (T) ExpressionEvaluatorManager.evaluate(attributeName, attributeValue,
-        classObject, pageContext);
+    T result = null;
+
+    if (attributeValue != null) {
+      result = classObject.cast(ExpressionEvaluatorManager.evaluate(attributeName, attributeValue, classObject,
+          pageContext));
+    }
+
+    return result;
   }
 }

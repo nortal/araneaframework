@@ -16,13 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
-import org.araneaframework.Path;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
@@ -37,7 +36,7 @@ import org.araneaframework.uilib.form.control.TimeControl;
  * @jsp.tag
  *  name = "timeInput"
  *  body-content = "JSP"
- *  description = "Form time input field (custom control), represents UiLib 'TimeControl'."
+ *  description = "Form time input field (custom control), represents UiLib 'TimeControl'/'JodaTimeControl'."
  */
 public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
@@ -72,8 +71,8 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(viewModel.getCurrentSimpleDateTimeFormat().parse(viewModel.getSimpleValue()));
 
-        hour = new Integer(calendar.get(Calendar.HOUR_OF_DAY));
-        minute = new Integer(calendar.get(Calendar.MINUTE));
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
       }
     } catch (ParseException e) {
       if (this.showTimeSelect) {
@@ -173,9 +172,6 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeEndTag_SS(out, "select");
   }
 
-  /**
-   * Writes out time input
-   * 
   /**
    * Writes out time INPUT
    * 

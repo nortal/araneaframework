@@ -17,9 +17,15 @@
 package org.araneaframework.example.main.web.management.person;
 
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Environment;
+import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
+import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
+import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
@@ -27,6 +33,7 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.uilib.list.BeanListWidget;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
+import org.araneaframework.uilib.list.structure.ListFilter;
 
 /**
  * This widget is for listing persons. It returns selected person's Id or cancels current call. It also allows a user to
@@ -72,6 +79,18 @@ public class PersonListWidget extends TemplateBaseWidget {
     this.list.addField("phone", "persons.address").like();
     this.list.addField("birthdate", "persons.birthdate").range();
     this.list.addField("salary", "persons.salary").range();
+
+    this.list.addFilter(new ListFilter() {
+      
+      public Expression buildExpression(Map<String, Object> data) {
+        return new EqualsExpression(new VariableExpression("test"), new ValueExpression<Object>(data.get("test")));
+      }
+
+      public void init(Environment env) {}
+      
+      public void destroy() {}
+    });
+
     this.list.setInitialOrder("name", true);
 
     // The dummy column without label (in list rows, some listRowLinkButton's will be written there).

@@ -16,19 +16,17 @@
 
 package org.araneaframework.http.support;
 
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.logging.Log;
-
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The resolver that always returns the provided key. Good to be used in {@link FallbackResourceBundle} as the last step
  * because otherwise an exception is thrown if a resource could not be resolved by the given key. Using an instance of
  * this class in the last step always returns a non-null result (if the key is non-null).
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public class IdentityResourceBundle extends ResourceBundle {

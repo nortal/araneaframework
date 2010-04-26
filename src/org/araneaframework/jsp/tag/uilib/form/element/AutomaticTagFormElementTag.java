@@ -70,7 +70,6 @@ public class AutomaticTagFormElementTag extends BaseTag {
 
   protected FormElementTagInterface controlTag;
 
-  @SuppressWarnings("unchecked")
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -88,8 +87,8 @@ public class AutomaticTagFormElementTag extends BaseTag {
       throw new MissingFormElementIdAraneaJspException(this);
     }
 
-    this.formElementViewModel = (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, this.derivedId)
-        ._getViewable().getViewModel();
+    this.formElementViewModel = FormElement.ViewModel.class.cast(JspWidgetUtil
+        .traverseToSubWidget(form, this.derivedId)._getViewable().getViewModel());
 
     // Get control
     this.controlViewModel = this.formElementViewModel.getControl();
@@ -150,6 +149,12 @@ public class AutomaticTagFormElementTag extends BaseTag {
     executeEndSubtag(this.controlTag);
     unregisterSubtag(this.controlTag);
     return super.doEndTag(out);
+  }
+
+  protected void initTagAttributes(Object tag, Map<String, Object> attributes) throws Exception {
+    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+      PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
+    }
   }
 
   // Tag attributes
@@ -216,11 +221,5 @@ public class AutomaticTagFormElementTag extends BaseTag {
    */
   public void setGlobalUpdateRegions(String globalUpdateRegions) {
     this.globalUpdateRegions = globalUpdateRegions;
-  }
-
-  protected void initTagAttributes(Object tag, Map<String, Object> attributes) throws Exception {
-    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-      PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
-    }
   }
 }

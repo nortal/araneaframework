@@ -16,10 +16,10 @@
 
 package org.araneaframework.http.extension;
 
-import java.util.StringTokenizer;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
@@ -85,14 +86,14 @@ public class ExternalResourceInitializer {
 
       for (String resource : this.resources) {
         Enumeration<URL> classPathResources = loader.getResources(resource);
-        Enumeration<URL> contextPathResources = getContextResources(context, resource);
+        Enumeration<URI> contextPathResources = getContextResources(context, resource);
 
         if (LOG.isWarnEnabled() && !(classPathResources.hasMoreElements() || contextPathResources.hasMoreElements())) {
           LOG.warn("Could not find resource file '" + resource + "'!");
         }
 
-        loadResources(classPathResources, xr);
-        loadResources(contextPathResources, xr);
+        loadURLResources(classPathResources, xr);
+        loadURIResources(contextPathResources, xr);
       }
 
       return handler.getResource();
@@ -102,10 +103,12 @@ public class ExternalResourceInitializer {
       throw new AraneaRuntimeException("Problem while parsing resource configuration file", e);
     } catch (IOException e) {
       throw new AraneaRuntimeException("Problem while reading configuration file", e);
+    } catch (URISyntaxException e) {
+      throw new AraneaRuntimeException("Problem while converting URL into URI", e);
     }
   }
 
-  protected void loadResources(Enumeration<URL> resources, XMLReader xr) throws IOException, SAXException {
+  protected void loadURLResources(Enumeration<URL> resources, XMLReader xr) throws IOException, SAXException {
     while (resources.hasMoreElements()) {
       URL fileURL = resources.nextElement();
       if (LOG.isDebugEnabled()) {
@@ -114,9 +117,20 @@ public class ExternalResourceInitializer {
       xr.parse(new InputSource(fileURL.openStream()));
     }
   }
+  
+  protected void loadURIResources(Enumeration<URI> resources, XMLReader xr) throws IOException, SAXException {
+    while (resources.hasMoreElements()) {
+      URI fileURL = resources.nextElement();
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Adding resources from file'" + fileURL + "'");
+      }
+      xr.parse(new InputSource(fileURL.toURL().openStream()));
+    }
+  }
 
-  protected Enumeration<URL> getContextResources(ServletContext ctx, String fileName) throws MalformedURLException {
-    Set<URL> fileURLSet = new HashSet<URL>();
+  protected Enumeration<URI> getContextResources(ServletContext ctx, String fileName) throws MalformedURLException,
+      URISyntaxException {
+    Set<URI> fileURLSet = new HashSet<URI>();
     StringTokenizer paths = new StringTokenizer(this.searchDirs, ";");
 
     while (paths.hasMoreTokens()) {
@@ -126,8 +140,22 @@ public class ExternalResourceInitializer {
     return Collections.enumeration(fileURLSet);
   }
 
-  private void addURL(Set<URL> fileURLSet, ServletContext ctx, String urlPath) throws MalformedURLException {
-    URL url = ctx.getResource(urlPath);
+  /**
+   * Adds the given URL to the given URL set.
+   * <p>
+   * Changed this method protected in 2.0. This method was changed for an important blocking behaviour exhibited by
+   * {@link java.net.URL}. Since the URI has better performance in collections, the URL is now converted into
+   * {@link URI}.
+   * 
+   * @param fileURLSet A set of URLs.
+   * @param ctx The current servlet context.
+   * @param urlPath The path that the URL should have.
+   * @throws MalformedURLException When the given URL string is not valid.
+   * @throws URISyntaxException When a problem occurred converting the URL into URI.
+   */
+  protected void addURL(Set<URI> fileURLSet, ServletContext ctx, String urlPath) throws MalformedURLException,
+      URISyntaxException {
+    URI url = ctx.getResource(urlPath).toURI();
     if (url != null) {
       fileURLSet.add(url);
     }
