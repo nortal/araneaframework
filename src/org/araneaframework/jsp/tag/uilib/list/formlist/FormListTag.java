@@ -44,6 +44,7 @@ public class FormListTag extends BaseWidgetTag {
   public final static String FORM_LIST_VIEW_MODEL_KEY = "formList";
 
   @Override
+  @SuppressWarnings("unchecked")
   public int doStartTag(Writer out) throws Exception {
     if (this.id == null) {
       this.id = (String) requireContextEntry(ListTag.LIST_ID_KEY) + ".formList";
@@ -52,7 +53,7 @@ public class FormListTag extends BaseWidgetTag {
     super.doStartTag(out);
 
     try {
-      this.formListViewModel = FormListWidget.ViewModel.class.cast(this.viewModel);
+      this.formListViewModel = (FormListWidget.ViewModel) this.viewModel;
     } catch (ClassCastException e) {
       throw new AraneaJspException("Could not acquire form list view model. <ui:formList> should have id specified "
           + "or should be in context of real FormListWidget.", e);

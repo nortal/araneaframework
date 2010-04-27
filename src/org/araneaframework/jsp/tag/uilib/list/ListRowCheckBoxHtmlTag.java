@@ -138,11 +138,11 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    * @throws JspException This method expects to have access to <code>ROW_KEY</code> and list view model in the JSP
    *           context.
    */
+  @SuppressWarnings("unchecked")
   protected boolean isChecked() throws JspException {
     Object row = requireContextEntry(BaseListRowsTag.ROW_KEY);
 
-    ListWidget<?>.ViewModel viewModel = ListWidget.ViewModel.class
-        .cast(requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY));
+    ListWidget<?>.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
 
     List<?> checkedRows = List.class.cast(viewModel.getData().get(SELECTION_SCOPE));
 

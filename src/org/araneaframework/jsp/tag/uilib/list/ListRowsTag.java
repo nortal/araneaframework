@@ -36,10 +36,11 @@ public class ListRowsTag extends BaseListRowsTag {
 
   protected ListWidget<?>.ViewModel viewModel;
 
+  @SuppressWarnings("unchecked")
   @Override
   public int doStartTag(Writer out) throws Exception {
     // Get list data:
-    this.viewModel = ListWidget.ViewModel.class.cast(requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY));
+    this.viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
     return super.doStartTag(out);
   }
 

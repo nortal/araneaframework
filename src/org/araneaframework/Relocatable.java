@@ -19,16 +19,13 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * Relocatable is a component that can be relocated from one parent to another.
- * As the {@link Environment} of a component is inherited from its parent, and
- * once the parent changes, the new parent's <code>Environment</code> can
- * be different, this class provides
- * {@link Interface#overrideEnvironment(Environment)} for resetting the
+ * Relocatable is a component that can be relocated from one parent to another. As the {@link Environment} of a
+ * component is inherited from its parent, and once the parent changes, the new parent's <code>Environment</code> can be
+ * different, this class provides {@link Interface#overrideEnvironment(Environment)} for resetting the
  * {@link Environment}.
  * <p>
- * This interface should not be used directly, subinterfaces
- * {@link RelocatableComponent}, {@link RelocatableService}, and
- * {@link RelocatableWidget} should be used.
+ * This interface should not be used directly, subinterfaces {@link RelocatableComponent}, {@link RelocatableService},
+ * and {@link RelocatableWidget} should be used.
  * </p>
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
@@ -37,17 +34,15 @@ import java.io.Serializable;
 public interface Relocatable extends Component {
 
   /**
-   * This method must provide a <code>Relocatable.Interface</code> that will
-   * be used to change the <code>Environment</code> of the relocatable
-   * component/service/widget.
+   * This method must provide a <code>Relocatable.Interface</code> that will be used to change the
+   * <code>Environment</code> of the relocatable component/service/widget.
    * 
    * @return An implementation of <code>Relocatable.Interface</code>.
    */
   public Relocatable.Interface _getRelocatable();
 
   /**
-   * The <code>Relocatable</code>'s main interface that handles the change of
-   * <code>Environment</code>.
+   * The <code>Relocatable</code>'s main interface that handles the change of <code>Environment</code>.
    */
   public interface Interface extends Serializable {
 
@@ -59,32 +54,26 @@ public interface Relocatable extends Component {
     public void overrideEnvironment(Environment newEnv);
 
     /**
-     * Provides access to the current <code>Environment</code> of the
-     * relocatable component.
+     * Provides access to the current <code>Environment</code> of the relocatable component.
      * 
-     * @return The current <code>Environment</code> of the relocatable
-     *         component.
+     * @return The current <code>Environment</code> of the relocatable component.
      */
     public Environment getCurrentEnvironment();
-
   }
 
   /**
    * An interface for a relocatable <code>Component</code>.
    */
-  public interface RelocatableComponent extends Relocatable, Component,
-      Serializable {}
+  public interface RelocatableComponent extends Relocatable, Component, Serializable {}
 
   /**
    * An interface for a relocatable <code>Service</code>.
    */
-  public interface RelocatableService extends RelocatableComponent, Service,
-      Serializable {}
+  public interface RelocatableService extends RelocatableComponent, Service, Serializable {}
 
   /**
    * An interface for a relocatable <code>Widget</code>.
    */
-  public interface RelocatableWidget extends RelocatableService, Widget,
-      Serializable {}
+  public interface RelocatableWidget extends RelocatableService, Widget, Serializable {}
 
 }

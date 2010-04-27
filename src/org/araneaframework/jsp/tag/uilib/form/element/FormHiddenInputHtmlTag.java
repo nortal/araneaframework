@@ -42,13 +42,13 @@ public class FormHiddenInputHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
     // Type check
     assertControlType("HiddenControl");
 
     String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel =
-      StringArrayRequestControl.ViewModel.class.cast(this.controlViewModel);
+    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
 
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "name", name);

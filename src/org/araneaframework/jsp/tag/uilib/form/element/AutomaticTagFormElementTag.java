@@ -71,6 +71,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
   protected FormElementTagInterface controlTag;
 
   @Override
+  @SuppressWarnings("unchecked")
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -87,8 +88,8 @@ public class AutomaticTagFormElementTag extends BaseTag {
       throw new MissingFormElementIdAraneaJspException(this);
     }
 
-    this.formElementViewModel = FormElement.ViewModel.class.cast(JspWidgetUtil
-        .traverseToSubWidget(form, this.derivedId)._getViewable().getViewModel());
+    this.formElementViewModel = (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, this.derivedId)
+        ._getViewable().getViewModel();
 
     // Get control
     this.controlViewModel = this.formElementViewModel.getControl();

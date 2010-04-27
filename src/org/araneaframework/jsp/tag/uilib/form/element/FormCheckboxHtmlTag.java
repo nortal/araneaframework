@@ -50,13 +50,13 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("CheckboxControl");
 
     // Prepare
     String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel =
-      StringArrayRequestControl.ViewModel.class.cast(this.controlViewModel);
+    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "input");

@@ -17,15 +17,15 @@
 package org.araneaframework.backend.list.helper.reader;
 
 import java.sql.ResultSet;
+import org.apache.commons.lang.ObjectUtils;
 
 /**
  * ResultSetColumnReader for Boolean type.
  * <p>
- * This implementation wraps an existing {@link ResultSetColumnReader}
- * by adding additional behavior for boolean Java type. 
+ * This implementation wraps an existing {@link ResultSetColumnReader} by adding additional behavior for boolean Java
+ * type.
  * 
  * @author Rein Raudjärv
- * 
  * @since 1.1
  */
 public class BooleanColumnReader extends FilterResultSetColumnReader {
@@ -36,8 +36,7 @@ public class BooleanColumnReader extends FilterResultSetColumnReader {
 
   private final Object nullValue;
 
-  public BooleanColumnReader(ResultSetColumnReader child, Object trueValue,
-      Object falseValue, Object nullValue) {
+  public BooleanColumnReader(ResultSetColumnReader child, Object trueValue, Object falseValue, Object nullValue) {
     super(child);
     this.trueValue = trueValue;
     this.falseValue = falseValue;
@@ -46,22 +45,19 @@ public class BooleanColumnReader extends FilterResultSetColumnReader {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Object readFromResultSet(String columnName, ResultSet resultSet, Class javaType) {
+  public <T> T readFromResultSet(String columnName, ResultSet resultSet, Class<T> javaType) {
     if (Boolean.class.equals(javaType)) {
       Object value = super.readFromResultSet(columnName, resultSet, Object.class);
 
-      if (trueValue.equals(value)) {
-        return Boolean.TRUE;
-      }
-      if (falseValue.equals(value)) {
-        return Boolean.FALSE;
-      }
-      if (nullValue.equals(value)) {
+      if (ObjectUtils.equals(this.trueValue, value)) {
+        return (T) Boolean.TRUE;
+      } else if (ObjectUtils.equals(this.falseValue, value)) {
+        return (T) Boolean.FALSE;
+      } else if (ObjectUtils.equals(this.nullValue, value)) {
         return null;
       }
-      throw new IllegalStateException("Unexpected value '" + value + "' ("
-          + "expected either " + trueValue + ", " + falseValue + " or "
-          + nullValue + ")");
+      throw new IllegalStateException("Unexpected value '" + value + "' (expected either '" + this.trueValue + "', '"
+          + this.falseValue + "', or '" + this.nullValue + "')");
     }
     // Other type
     return super.readFromResultSet(columnName, resultSet, javaType);

@@ -155,9 +155,9 @@ public class ExternalResourceInitializer {
    */
   protected void addURL(Set<URI> fileURLSet, ServletContext ctx, String urlPath) throws MalformedURLException,
       URISyntaxException {
-    URI url = ctx.getResource(urlPath).toURI();
+    URL url = ctx.getResource(urlPath);
     if (url != null) {
-      fileURLSet.add(url);
+      fileURLSet.add(url.toURI());
     }
   }
 

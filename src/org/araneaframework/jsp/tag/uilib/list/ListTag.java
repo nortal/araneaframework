@@ -36,6 +36,7 @@ import org.araneaframework.uilib.list.ListWidget;
  *      <li><i>listFullId</i> - list widget full ID.</li>
  *      </ul>"
  */
+@SuppressWarnings("unchecked")
 public class ListTag extends BaseWidgetTag {
 
   public final static String LIST_ID_KEY = "listId";
@@ -44,7 +45,7 @@ public class ListTag extends BaseWidgetTag {
 
   public final static String LIST_FULL_ID_KEY = "listFullId";
 
-  protected ListWidget<?>.ViewModel listViewModel;
+  protected ListWidget.ViewModel listViewModel;
 
   protected String varSequence = "listSequence";
 
@@ -53,7 +54,7 @@ public class ListTag extends BaseWidgetTag {
     super.doStartTag(out);
 
     try {
-      this.listViewModel = ListWidget.ViewModel.class.cast(this.viewModel);
+      this.listViewModel = (ListWidget.ViewModel) this.viewModel;
     } catch (ClassCastException e) {
       throw new AraneaJspException(
           "Could not acquire list view model. <ui:list> should have id specified or should be in context of "
