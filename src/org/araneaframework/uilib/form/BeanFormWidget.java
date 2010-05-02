@@ -70,9 +70,9 @@ public class BeanFormWidget<T> extends FormWidget {
    * @param path The (simple or nested) path of bean-sub-form to add where path must also correspond to bean properties.
    *          Nested path has dots separating sub-form IDs in the order they will be created (the second sub-form will
    *          be the sub-form of the first sub-form, etc).
-   * @return If path is empty or simple (not nested) then the current bean form widget is returned. Otherwise, the last
-   *         created bean-sub-form widget is returned.
+   * @return The last created sub-form, or the current bean (when the path is empty).
    * @see #addSubForm(String)
+   * @see #addSimpleBeanSubForm(String)
    */
   public BeanFormWidget<?> addBeanSubForm(String path) {
     BeanFormWidget<?> result = this;
@@ -171,19 +171,6 @@ public class BeanFormWidget<T> extends FormWidget {
   }
 
   /**
-   * Writes form data to given bean. Deprecated in favor of {@link #writeToBean()}.
-   * 
-   * @param bean An instance of bean where form values will be written.
-   * @return The same bean as provided for input.
-   */
-  @Deprecated
-  public T writeToBean(T bean) {
-    BeanFormReader reader = new BeanFormReader(this);
-    reader.readFormBean(bean);
-    return bean;
-  }
-
-  /**
    * Writes data from given <code>bean</code> to the underlying form.
    * 
    * @param bean An instance of <code>bean</code>.
@@ -203,10 +190,35 @@ public class BeanFormWidget<T> extends FormWidget {
     return this.bean;
   }
 
+  /**
+   * Writes form data to given bean. Prefer using {@link #writeToBean()} instead, when possible, because it makes use of
+   * the existing bean object that was provided to this form widget.
+   * 
+   * @param bean An instance of bean where form values will be written.
+   * @return The same bean as provided for input.
+   */
+  public T writeToBean(T bean) {
+    BeanFormReader reader = new BeanFormReader(this);
+    reader.readFormBean(bean);
+    return bean;
+  }
+
+  /**
+   * Provides the bean that was provided for input. Note that the bean may have different property values compared to
+   * the state when the form was initialized, because when {@link #writeToBean()} is used, it updates the bean
+   * properties with values from the form.
+   * 
+   * @return The bean object that was used to initialize this form widget.
+   */
   public T getBean() {
     return this.bean;
   }
 
+  /**
+   * Provides the bean class that this form widget is using for resolving bean elements.
+   * 
+   * @return The bean class that this form widget is using.
+   */
   public Class<T> getBeanClass() {
     return this.beanClass;
   }

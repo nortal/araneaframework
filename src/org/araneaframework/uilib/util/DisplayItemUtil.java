@@ -189,6 +189,25 @@ public abstract class DisplayItemUtil implements Serializable {
   }
 
   /**
+   * Returns display item index (zero based) by the specified value, or <code>-1</code> when the value is not found.
+   * 
+   * @param items The display items.
+   * @param value display The value to search for in display items.
+   * @return The index of the display item with the specified value.
+   */
+  public static int getValueIndex(List<DisplayItem> items, String value) {
+    if (CollectionUtils.isNotEmpty(items)) {
+      for (ListIterator<DisplayItem> i = items.listIterator(); i.hasNext();) {
+        String currentValue = i.next().getValue();
+        if (StringUtils.equals(value, currentValue)) {
+          return i.previousIndex();
+        }
+      }
+    }
+    return -1;
+  }
+
+  /**
    * Returns a subset of <code>items</code> that have values in the <code>values</code> array. Instead of iterating over
    * <code>values</code>, this method iterates over <code>items</code>. This way the order of subset items will be in
    * the same order as in the <code>items</code> list.

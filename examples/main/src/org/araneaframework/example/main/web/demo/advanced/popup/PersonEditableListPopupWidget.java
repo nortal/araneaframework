@@ -232,7 +232,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private class TestActionListener extends StandardActionListener {
+  private static class TestActionListener extends StandardActionListener {
 
     @Override
     public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
@@ -246,7 +246,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private class MyHandler implements FlowContext.Handler<String> {
+  private static class MyHandler implements FlowContext.Handler<String> {
 
     private BeanFormWidget<PersonMO> form;
 
@@ -278,7 +278,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   public String getTitle() {
-    if (usePopupFlow) {
+    if (this.usePopupFlow) {
       return "Server-side return";
     } else if (useAction) {
       return "Client-side return calling serverside action";

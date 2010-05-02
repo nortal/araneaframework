@@ -43,9 +43,9 @@ public class BodyHtmlTag extends PresentationTag {
 
   public static final String KEY = "org.araneaframework.jsp.tag.basic.BodyHtmlTag";
 
-  protected String onload;
+  protected String onload = "Aranea.Page.onLoad()";
 
-  protected String onunload;
+  protected String onunload = "Aranea.Page.onUnload()";
 
   /**
    * HTML tag attribute.
@@ -70,7 +70,7 @@ public class BodyHtmlTag extends PresentationTag {
   /**
    * Scripts registered by nested tags?
    */
-  protected StringBuffer afterBodyEndScripts = null;
+  protected StringBuffer afterBodyEndScripts;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -200,13 +200,13 @@ public class BodyHtmlTag extends PresentationTag {
 
     out.write("Aranea.Data.servletURL='");
     out.write(servletUrl);
-    out.write("';");
+    out.write("';\n");
 
     if (!servletUrl.equals(encodedServletUrl)) {
       String urlSuffix = encodedServletUrl.substring(servletUrl.length());
       out.write("Object.extend(Aranea.Page,{encodeURL:function(url){return(url+'");
       out.write(urlSuffix);
-      out.write("')}});");
+      out.write("')}});\n");
     }
   }
 
@@ -222,7 +222,7 @@ public class BodyHtmlTag extends PresentationTag {
     out.write(locale.getLanguage());
     out.write("',country:'");
     out.write(locale.getCountry());
-    out.write("');");
+    out.write("'});");
   }
 
   /**

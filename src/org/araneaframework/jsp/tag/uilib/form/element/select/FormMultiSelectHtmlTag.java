@@ -16,9 +16,11 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -92,32 +94,48 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    for (DisplayItem item : viewModel.getSelectItems()) {
-      String value = StringUtils.defaultString(item.getValue());
-      String label = item.getLabel();
-
-      if (label != null && this.localizeDisplayItems.booleanValue()) {
-        label = JspUtil.getResourceString(this.pageContext, label);
-      }
-
-      JspUtil.writeOpenStartTag(out, "option");
-      JspUtil.writeAttribute(out, "value", value);
-
-      List<DisplayItem> selectedItems = viewModel.getSelectedItems();
-      if (selectedItems.contains(item)) {
-        JspUtil.writeAttribute(out, "selected", "selected");
-      }
-
-      JspUtil.writeCloseStartTag_SS(out);
-      JspUtil.writeEscaped(out, label);
-      JspUtil.writeEndTag(out, "option");
-    }
+    writeOptions(out, viewModel.getEnabledItems(), viewModel.getValues());
 
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
 
     super.doEndTag(out);
     return EVAL_PAGE;
+  }
+
+  // Write items
+  protected void writeOptions(Writer out, List<DisplayItem> options, String[] selectedValues) throws IOException {
+    for (DisplayItem item : options) {
+      if (!item.isDisabled()) {
+        String value = StringUtils.defaultString(item.getValue());
+        String label = item.getLabel();
+
+        if (this.localizeDisplayItems) {
+          label = JspUtil.getResourceString(this.pageContext, label);
+        }
+
+        // Render "optgroup" check.
+        if (item.isGroup()) {
+          JspUtil.writeOpenStartTag(out, "optgroup");
+          JspUtil.writeAttribute(out, "label", label);
+          JspUtil.writeCloseStartTag(out);
+          writeOptions(out, item.getChildOptions(), selectedValues);
+          JspUtil.writeEndTag(out, "optgroup");
+          break;
+        }
+
+        JspUtil.writeOpenStartTag(out, "option");
+        JspUtil.writeAttributeForced(out, "value", value);
+
+        if (ArrayUtils.contains(selectedValues, value)) {
+          JspUtil.writeAttribute(out, "selected", "selected");
+        }
+
+        JspUtil.writeCloseStartTag_SS(out);
+        JspUtil.writeEscaped(out, label);
+        JspUtil.writeEndTag(out, "option");
+      }
+    }
   }
 
   /**

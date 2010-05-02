@@ -30,6 +30,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.fmt.LocalizationContext;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
@@ -203,6 +204,28 @@ public class JspUtil {
   }
 
   /**
+   * Writes <code>&lt;script type="text/javascript"&gt;</code> to the given writer.
+   * 
+   * @param out The writer where the text should be written.
+   * @throws IOException Any exception related to writing.
+   * @since 2.0
+   */
+  public static void writeJavaScriptStartTag(Writer out) throws IOException {
+    out.write("<script type=\"text/javascript\">");
+  }
+
+  /**
+   * Writes <code>&lt;/script&gt;</code> to the given writer.
+   * 
+   * @param out The writer where the text should be written.
+   * @throws IOException Any exception related to writing.
+   * @since 2.0
+   */
+  public static void writeScriptEndTag(Writer out) throws IOException {
+    out.write("</script>\n");
+  }
+
+  /**
    * Writes out attributes contained in the Map&lt;attributeName, attributeValue&gt;. If map is <code>null</code>,
    * writes nothing.
    */
@@ -218,20 +241,51 @@ public class JspUtil {
     writeAttribute(out, name, value, true);
   }
 
+  public static void writeAttributeForced(Writer out, String name, Object value) throws IOException {
+    writeAttribute(out, name, value, true, true);
+  }
+
   /**
-   * Writers attribute of form ' attrName"value"'. If value is <code>null</code>, writes nothing. If <code>escape</code>
-   * is set to <code>true</code>, HTML escaping takes place on the value (&lt;, &gt;, &quot;, &amp; get replaced with
-   * the entities).
+   * Writers attribute of form ' name"value"'. If the <code>name</code> or <code>value</code> is empty, writes nothing.
+   * If <code>escape</code> is set to <code>true</code>, HTML escaping takes place on the value (&lt;, &gt;, &quot;,
+   * &amp; get replaced with the entities).
+   * 
+   * @param out The writer where the text should be written.
+   * @param name The name for the attribute.
+   * @param value The value for the attribute. Will be translated into <code>String</code> using <code>toString()</code>
+   *          method. <code>null</code> will be translated into an empty string.
+   * @param escape A boolean indicating whether the value should be HTML-escaped before writing.
+   * @throws IOException Any exception related to writing.
    */
   public static void writeAttribute(Writer out, String name, Object value, boolean escape) throws IOException {
-    if (value != null && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(value.toString())) {
+    writeAttribute(out, name, value, escape, false);
+  }
+
+  /**
+   * Writers attribute of form ' name"value"'. If the <code>name</code> or <code>value</code> is empty, writing will
+   * depend on the <code>force</code> parameter. If <code>escape</code> is set to <code>true</code>, HTML escaping takes
+   * place on the value (&lt;, &gt;, &quot;, &amp; get replaced with the entities).
+   * 
+   * @param out The writer where the text should be written.
+   * @param name The name for the attribute.
+   * @param value The value for the attribute. Will be translated into <code>String</code> using <code>toString()</code>
+   *          method. <code>null</code> will be translated into an empty string.
+   * @param escape A boolean indicating whether the value should be HTML-escaped before writing.
+   * @param force A boolean indicating whether the value should written even when <code>name/value</code> is empty.
+   * @throws IOException Any exception related to writing.
+   * @since 2.0
+   */
+  public static void writeAttribute(Writer out, String name, Object value, boolean escape, boolean force)
+      throws IOException {
+    String valueStr = ObjectUtils.toString(value);
+    if (force || StringUtils.isNotBlank(name) && StringUtils.isNotBlank(valueStr)) {
       out.write(" ");
       out.write(name);
       out.write("=\"");
       if (escape) {
-        writeEscapedAttribute(out, value.toString());
+        writeEscapedAttribute(out, valueStr);
       } else {
-        out.write(value.toString());
+        out.write(valueStr);
       }
       out.write("\"");
     }

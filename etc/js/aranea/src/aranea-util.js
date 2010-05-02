@@ -53,17 +53,17 @@ Aranea.Logger = {
 	},
 
 	/**
-	 * Sets the logging mechanism to use for logging messages. Accepted types: "dummy", "firebug", "safari", "log4js".
-	 * Null is not allowed. The logger is resolved as a logger implementation in Aranea.Logger namespace as
-	 * [TYPE]_LOGGER variable, e.g. dummy resolves to Aranea.Logger.DUMMY_LOGGER.
+	 * Sets the logging mechanism to use for logging messages. Accepted types: "dummy", "firebug", "safari", "log4js",
+	 * "blackbird". Null parameter defaults to "dummy". The logger will be resolved to a predefined logger
+	 * implementation stored in Aranea.Logger.[TYPE]_LOGGER variable, e.g. "dummy" resolves to Aranea.Logger.DUMMY_LOGGER.
 	 * 
-	 * @param type Not null string, accepted types: "dummy", "firebug", "safari", "log4js".
+	 * @param type Accepted types: "dummy" (same as null), "firebug", "safari", "log4js", "blackbird".
 	 */
 	setLogger: function(type) {
-		type = type ? type.toUpperCase()+ '_LOGGER' : null;
+		type = (type || 'DUMMY').toUpperCase()+ '_LOGGER';
 		Aranea.Data.logger = type ? this[type] : null;
 		if (!type || Aranea.Data.logger == null) {
-			throw('The logger type was not recongized: "' + type + '" (expected: "dummy", "firebug", "safari", "log4js", or null)');
+			throw('The logger type was not recognized: "' + type + '" (expected: "dummy", "firebug", "safari", "log4js", "blackbird", or null)');
 		}
 	}
 };
@@ -74,7 +74,8 @@ Aranea.Logger.DUMMY_LOGGER = {
 	info: Prototype.emptyFunction,
 	warn: Prototype.emptyFunction,
 	error: Prototype.emptyFunction,
-	fatal: Prototype.emptyFunction
+	fatal: Prototype.emptyFunction,
+	profile: Prototype.emptyFunction
 };
 
 Aranea.Logger.SAFARI_LOGGER = window.console && window.console.log ? {
@@ -83,7 +84,8 @@ Aranea.Logger.SAFARI_LOGGER = window.console && window.console.log ? {
 	info: function(s) { window.console.log(s); },
 	warn: function(s) { window.console.log(s); },
 	error: function(s) { window.console.log(s); },
-	fatal: function(s) { window.console.log(s); }
+	fatal: function(s) { window.console.log(s); },
+	profile: Prototype.emptyFunction
 } : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.FIREBUG_LOGGER = window.console && window.console.debug ? {
@@ -92,11 +94,22 @@ Aranea.Logger.FIREBUG_LOGGER = window.console && window.console.debug ? {
 	info: function(s) { window.console.info(s); },
 	warn: function(s) { window.console.warn(s); },
 	error: function(s) { window.console.error(s); },
-	fatal: function(s) { window.console.error(s); }
+	fatal: function(s) { window.console.error(s); },
+	profile: Prototype.emptyFunction
 } : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.LOG4JS_LOGGER = window.log4javascript && window.log4javascript.getDefaultLogger ?
 	window.log4javascript.getDefaultLogger() : Aranea.Logger.DUMMY_LOGGER;
+
+Aranea.Logger.BLACKBIRD_LOGGER = window.log && window.log.toggle ? {
+	trace: log.debug,
+	debug: log.debug,
+	info: log.info,
+	warn: log.warn,
+	error: log.error,
+	fatal: log.error,
+	profile: log.profile
+} : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.setLogger('dummy');
 
@@ -113,11 +126,7 @@ Aranea.Util = {
 
 	setWindowCoordinates: function(x, y) {
 		document.observe('aranea:loaded', function() {
-			var form = Aranea.Data.systemForm;
-			if (form.windowScrollX && form.windowScrollX) {
-				Aranea.UI.scrollToCoordinates(x, y);
-			}
-			form = null;
+			Aranea.UI.scrollToCoordinates(x, y);
 			document.observe('aranea:beforeEvent', Aranea.UI.saveScrollCoordinates);
 		});
 	},

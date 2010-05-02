@@ -121,12 +121,22 @@ Aranea.UI = {
 	 */
 	saveScrollCoordinates: function() {
 		var offset = document.viewport.getScrollOffsets();
-		if (Aranea.Data.systemForm.windowScrollX) {
-			Aranea.Data.systemForm.windowScrollX.value = offset.left;
+		var form = Aranea.Data.systemForm, scrollX = form.windowScrollX, scrollY = form.windowScrollY;
+		var stored = false;
+		if (scrollX) {
+			scrollX.value = offset.left;
+			stored = true;
 		}
-		if (Aranea.Data.systemForm.windowScrollY) {
-			Aranea.Data.systemForm.windowScrollY.value = offset.top;
+		if (scrollY) {
+			scrollY.value = offset.top;
+			stored = true;
 		}
+		if (stored) {
+			Aranea.Logger.debug('Window scroll coordinates [' + offset.left + ',' + offset.top + '] were stored to system form.');
+		} else {
+			Aranea.Logger.warn('Window scroll coordinates were not stored because at least one of the system form fields was missing!');
+		}
+		form = scrollX = scrollY = null;
 	},
 
 	/**
@@ -137,6 +147,7 @@ Aranea.UI = {
 			throw ('Cannot scroll to ['+x+','+y+'] because one of given coordinates is not a number!');
 		}
 		window.scrollTo(x, y);
+		Aranea.Logger.debug('Window scroll coordinates were set to [' + x + ',' + y + ']');
 	},
 
 	/** 

@@ -29,7 +29,7 @@ import org.araneaframework.core.Assert;
  */
 public class JsonObject implements Serializable {
 
-  protected StringBuffer buf = new StringBuffer('{');
+  protected StringBuffer buf = new StringBuffer("{");
 
   public JsonObject() {}
   

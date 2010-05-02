@@ -32,9 +32,11 @@ import org.araneaframework.uilib.support.FileInfo;
 /**
  * An action listener for downloading files with AJAX. Register this listener in your widget, and
  * provide a callback or some data to it. In JSP, write a script like this:
- * <code>return AraneaPage.downloadFile('download','${widgetId}','${rowRequestId}');</code>. The
+ * <code>return Aranea.Page.downloadFile('download','${widgetId}','${rowRequestId}');</code>. The
  * {@link FileDownloadHandler} is the callback used to retrieve file data to upload it to the client
  * once file upload is requested.
+ * 
+ * @TODO Aranea.Page.downloadFile ?
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3

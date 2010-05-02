@@ -18,10 +18,10 @@
 			<jsp:include page="scripts.jsp"/>
 		</head>
 
-		<uis:body>
+		<ui:body>
 			<div id="cont1">
 				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion" tag="div">
-					<uis:systemForm id="aranea-form" method="post">
+					<ui:systemForm id="aranea-form" method="post">
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>
 						<ui:registerOverlay/>
@@ -58,13 +58,13 @@
 
 							<div class="clear1"><ui:nbsp/></div>
 						</div>
-					</uis:systemForm>
+					</ui:systemForm>
 					<ui:updateRegion globalId="demo-footer" tag="div">
 						<ui:widgetInclude id="menu.footer"/>
 					</ui:updateRegion>
 				</ui:updateRegion>
 			</div>
-		</uis:body>
+		</ui:body>
 	</html>
 	</ui:widgetContext>
 </jsp:root>

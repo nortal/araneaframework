@@ -219,18 +219,18 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
       this.overlay._getWidget().render(output);
       if (!isOverlayActive()) {
-        // response should be empty as nothing was rendered when overlay did not
-        // contain an active flow
-        // write out a hack of a response that should be interpreted by
-        // Aranea.ModalBox.afterLoad
+        // response should be empty as nothing was rendered when overlay did not contain an active flow
+        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
         HttpServletResponse response = ServletUtil.getResponse(output);
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
       }
     } else {
       this.main._getWidget().render(output);
-      if (!isOverlayActive()) { // overlay has become inactive for some reason
-        UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
-        urCtx.disableOnce();
+      if (isOverlayActive()) { // overlay has become active for some reason
+        UpdateRegionContext updateRegionCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
+        if (updateRegionCtx != null) {
+          updateRegionCtx.disableOnce();
+        }
       }
     }
   }

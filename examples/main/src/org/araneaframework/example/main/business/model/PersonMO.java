@@ -43,8 +43,6 @@ public class PersonMO implements GeneralMO {
 
   private BigDecimal salary;
 
-  private Long test;
-
   public Long getId() {
     return this.id;
   }
@@ -96,13 +94,5 @@ public class PersonMO implements GeneralMO {
   @Override
   public String toString() {
     return this.name;
-  }
-
-  public Long getTest() {
-    return test;
-  }
-
-  public void setTest(Long test) {
-    this.test = test;
   }
 }

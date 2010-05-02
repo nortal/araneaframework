@@ -459,10 +459,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   /**
-   * A widget, configurator and a handler are encapsulated into one logical structure, a call frame. Class is used
-   * internally.
+   * A widget, configurator and a handler are encapsulated into one logical structure, a call frame.
    */
-  protected static class CallFrame implements Serializable {
+  public static class CallFrame implements Serializable {
 
     private Widget widget;
 

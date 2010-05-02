@@ -16,8 +16,11 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Path;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -100,20 +103,41 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    // Write items
-    for (DisplayItem item : viewModel.getSelectItems()) {
+    writeOptions(out, viewModel.getSelectItems(), viewModel.getSimpleValue());
+
+    // Close tag
+    JspUtil.writeEndTag_SS(out, "select");
+
+    // Continue
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
+
+  // Write items
+  protected void writeOptions(Writer out, List<DisplayItem> options, String selectedValue) throws IOException {
+    for (DisplayItem item : options) {
       if (!item.isDisabled()) {
-        String value = item.getValue();
+        String value = StringUtils.defaultString(item.getValue());
         String label = item.getLabel();
 
         if (this.localizeDisplayItems) {
           label = JspUtil.getResourceString(this.pageContext, label);
         }
 
-        JspUtil.writeOpenStartTag(out, "option");
-        JspUtil.writeAttribute(out, "value", value != null ? value : "");
+        // Render "optgroup" check.
+        if (item.isGroup()) {
+          JspUtil.writeOpenStartTag(out, "optgroup");
+          JspUtil.writeAttribute(out, "label", label);
+          JspUtil.writeCloseStartTag(out);
+          writeOptions(out, item.getChildOptions(), selectedValue);
+          JspUtil.writeEndTag(out, "optgroup");
+          break;
+        }
 
-        if (viewModel.isSelected(value)) {
+        JspUtil.writeOpenStartTag(out, "option");
+        JspUtil.writeAttributeForced(out, "value", value);
+
+        if (StringUtils.equals(value, selectedValue)) {
           JspUtil.writeAttribute(out, "selected", "selected");
         }
 
@@ -122,13 +146,6 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
         JspUtil.writeEndTag(out, "option");
       }
     }
-
-    // Close tag
-    JspUtil.writeEndTag_SS(out, "select");
-
-    // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;
   }
 
   /**

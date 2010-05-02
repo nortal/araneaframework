@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.control;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
@@ -85,18 +86,19 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
    */
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
-      String[] data = (String[]) this.innerData;
-      boolean hasValue = (data != null && data.length > 0 && data[0].trim().length() != 0);
+    if (isRead()) { // It means possible value change.
 
-      if (!isDisabled() || (isDisabled() && !hasValue)) {
+      String[] data = (String[]) this.innerData;
+      boolean hasValue = data != null && data.length > 0 && StringUtils.isNotBlank(data[0]);
+
+      if (!hasValue && isMandatory()) { // Check the value for mandatory controls.
+
         addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
             getLabel(), getEnvironment())));
-      }
-    }
 
-    if (getRawValue() != null) {
-      validateNotNull();
+      } else if (getRawValue() != null) { // Check against converted value
+        validateNotNull();
+      }
     }
   }
 
@@ -171,18 +173,18 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
     }
 
     /**
-     * Returns control values.
+     * Returns control values as an array of values, or as <code>null</code> when no values exist.
      * 
-     * @return control values.
+     * @return Control values array, or <code>null</code>.
      */
     public String[] getValues() {
       return this.values;
     }
 
     /**
-     * Returns the first of control values.
+     * Returns the first of control values, or <code>null</code> when no values currently exist.
      * 
-     * @return the first of control values.
+     * @return the first of control values, or <code>null</code>.
      */
     public String getSimpleValue() {
       return !ArrayUtils.isEmpty(this.values) ? this.values[0] : null;

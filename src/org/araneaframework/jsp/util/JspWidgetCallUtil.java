@@ -71,27 +71,28 @@ public abstract class JspWidgetCallUtil {
 
   /** @since 1.0.2 */
   public static String getSubmitScriptForEvent(UiUpdateEvent event) {
-    StringBuffer sb = new StringBuffer("_ap.event_6(_ap.getSystemForm(),");
+    String eventId = formatParam(event.getId());
+    String eventTarget = formatParam(event.getTarget());
+    String eventParam = formatParam(event.getParam());
+    String eventPrecondition = formatParam(event.getEventPrecondition());
 
-    String eventId = event.getId() != null ? "'" + event.getId() + "'" : "null";
-    String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
-    String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";
-    String eventPrecondition = event.getEventPrecondition() != null ? "'" + event.getEventPrecondition() + "'" : "null";
+    List<String> updateRegionNames = event.getUpdateRegionNames();
 
-    List<String> updateRegionNames;
-
-    if (event.getUpdateRegionNames() != null) {
-      updateRegionNames = event.getUpdateRegionNames();
-    } else {
+    if (updateRegionNames == null) {
       updateRegionNames = Collections.emptyList();
     }
 
-    sb.append(eventId).append(",");
-    sb.append(eventTarget).append(",");
-    sb.append(eventParam).append(",");
-    sb.append(eventPrecondition).append(",");
-    sb.append("\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append("\"");
+    StringBuffer sb = new StringBuffer("Aranea.Page.event(");
+    sb.append(eventId).append(',');
+    sb.append(eventTarget).append(',');
+    sb.append(eventParam).append(',');
+    sb.append(eventPrecondition).append(',');
+    sb.append('\'').append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append('\'');
     sb.append(");");
     return sb.toString();
+  }
+
+  private static String formatParam(String paramValue) {
+    return paramValue == null ? "null" : "'" + paramValue + "'";
   }
 }

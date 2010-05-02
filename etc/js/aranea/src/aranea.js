@@ -111,12 +111,12 @@ Aranea.Page = {
 	 */
 	onLoad: function() {
 		Aranea.Page.findSystemForm();
-		Aranea.Page.initRSHURL();
 		Aranea.Page.addAutoFocusObserver();
 		Aranea.Data.loaded = true;
-		Aranea.Logger.debug("Aranea scripts are now initialized!");
+		Aranea.Logger.debug('Basic initialization done. Firing event "aranea:loaded"...');
 		document.fire('aranea:loaded');
 		document.stopObserving('aranea:loaded');
+		Aranea.Logger.debug("Aranea scripts are now initialized!");
 	},
 
 	onUpdate: function(data) {
@@ -171,8 +171,8 @@ Aranea.Page = {
 	 * @param element form or sub-element of form tag that triggers the action request.
 	 */
 	action: function(actionId, actionTarget, actionParam, extraParams, actionCallback, options, sync, element) {
-		if (actionId == null || actionId.blank()) throw ('Aranea.Page.action: parameter "actionId" is required!');
-		if (actionTarget == null || actionTarget.blank()) throw ('Aranea.Page.action: parameter "actionTarget" is required!');
+		if (!actionId || actionId.blank()) throw ('Aranea.Page.action: parameter "actionId" is required!');
+		if (!actionTarget || actionTarget.blank()) throw ('Aranea.Page.action: parameter "actionTarget" is required!');
 
 		element = Aranea.Page.findSystemForm(element);
 		options = Object.extend({
@@ -212,12 +212,11 @@ Aranea.Page = {
 	 * Sends an AJAX event to the server-side.
 	 * <p>
 	 * The expected parameters are:
-	 * 1) event(formElement, eventUpdateRgns) where formElement has event data.
-	 * 2) event(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form]) where parameters in
+	 * 1) ajax(formElement, eventUpdateRgns) where formElement has event data.
+	 * 2) ajax(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form]) where parameters in
 	 *    brackets are optional.
 	 * 
 	 * @param formElement The form-element that contains event data.
-	 * @param requestType The request type that affects how it's done ('submit', 'ajax', 'overlay').
 	 * @param eventId The event identifier sent to the server
 	 * @param widgetId The event target identifier (path to widget)
 	 * @param eventParam An optional event parameter.
@@ -248,11 +247,11 @@ Aranea.Page = {
 				} else {
 					this.findSubmitter(data).event(data);
 				}
+				return false; // Return false
 			}
 		} catch (e) {
-			Aranea.Logger.error('An error occurred during request.', e);
+			Aranea.Logger.error('An error occurred during "event" request.', e);
 		}
-		return false;
 	},
 
 	/**
@@ -485,28 +484,6 @@ Aranea.Page = {
 	},
 
 	/**
-	 * RSH initialization for state versioning. Has effect only when "aranea-rsh.js" is also included in the page.
-	 */
-	initRSHURL: function() {
-		Aranea.Logger.debug("Executing Aranea.Page.initRSHURL()");
-		if (window.dhtmlHistory && Aranea.Data.systemForm.araClientStateId) {
-
-			window.dhtmlHistory.firstLoad = true;
-			window.dhtmlHistory.ignoreLocationChange = true;
-
-			var stateId = Aranea.Data.systemForm.araClientStateId.value;
-
-			// If we generate hashes to HTTP requests, URL changes cause the browser never uses local history data, as
-			// the hash added later is not accessible from its memory cache. Thus we just keep the URL intact for these
-			// cases, so that browsers own history mechanisms can take over.
-			if (stateId.startsWith('HTTP')) {
-				window.location.hash = stateId;
-				window.dhtmlHistory.add(stateId, null);
-			}
-		}
-	},
-
-	/**
 	 * Exception handler that is invoked on Ajax.Request errors.
 	 *
 	 * @since 1.1
@@ -596,7 +573,7 @@ Aranea.Page.Request = {
 		Aranea.Data.loaded = false;
 		Aranea.Data.submitted = true;
 
-		document.fire('aranea:beforeEvent', data, false);
+		document.fire('aranea:beforeRequest', data, false);
 
 		Aranea.Page.Request.customBefore(data);
 		Aranea.Page.Parameter.writeToForm(data); // Write event data to form so that it would be sent to server-side.
@@ -610,7 +587,7 @@ Aranea.Page.Request = {
 		Aranea.Data.submitted = false;
 		Aranea.Data.loaded = true;
 
-		document.fire('aranea:afterEvent', data, false);
+		document.fire('aranea:afterRequest', data, false);
 
 		Aranea.Page.Request.customAfter(data);
 		Aranea.Page.onUpdate(data);
@@ -697,12 +674,11 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 			this.data = eventData;
 
 			var ajaxRequestId = Aranea.Page.getRandomRequestId();
-			var neededAraClientStateId = eventData.form.araClientStateId ? eventData.form.araClientStateId.value : null;
+			var neededAraClientStateId = eventData.form.araClientStateId ? $F(eventData.form.araClientStateId) : null;
 			var neededAraTransactionId = 'override';
 
-			if (eventData.eventUpdateRgns == 'araneaGlobalClientHistoryNavigationUpdateRegion') {
-				neededAraClientStateId = window.dhtmlHistoryListenerRequestedState;
-				window.dhtmlHistoryListenerRequestedState = null;
+			// For Aranea.History requests we need to set transaction ID to an inconsistent value.
+			if (Aranea.History && eventData.eventUpdateRgns == Aranea.History.UPDATE_REGION_ID) {
 				neededAraTransactionId = 'inconsistent';
 			}
 
@@ -732,12 +708,6 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 	},
 
 	onAjaxSuccess: function(ajaxRequestId, transport) {
-		// This gets executed twice, it may be that during update region processing
-		// something already needs current stateId presence, e.g. the reloading region
-		// handler. As it's likely that whole system form will be replaced completely
-		// when document region is updated, this must be repeated in onComplete.
-		Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
-
 		if (transport.responseText.substr(0, ajaxRequestId.length + 1) == ajaxRequestId + '\n') {
 			var logmsg = ['Partial rendering: received successful response (', transport.responseText.length,
 				' characters): ', transport.status, ' ', transport.statusText].join('');
@@ -759,6 +729,8 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 		// immediate execution of onload() is not guaranteed to be correct
 		var f = function() {
 			this.afterRequest();
+
+			Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
 
 			if (Aranea.ModalBox) {
 				Aranea.ModalBox.afterUpdateRegionResponseProcessing(Aranea.Data.systemForm);
@@ -812,24 +784,7 @@ Object.extend(Aranea.Page.Submitter.AJAX, {
 	/**
 	 * @since 1.2
 	 */
-	ResponseHeaderProcessor: function(transport) {
-		var stateVersion = null;
-		try {
-			stateVersion = transport.getResponseHeader('Aranea-Application-StateVersion');
-		} catch (e) {
-			stateVersion = null;
-		}
-
-		if (stateVersion != null && stateVersion.length > 0) {
-			var sForm = Aranea.Data.systemForm;
-			if (sForm.araClientStateId) {
-				sForm.araClientStateId.value = stateVersion;
-			}
-			if (window.dhtmlHistory) {
-				window.dhtmlHistory.add(stateVersion, true);
-			}
-		}
-	},
+	ResponseHeaderProcessor: function(transport) {},
 
 	/**
 	 * Process response of an update-regions AJAX request. Should be called only on successful response. Invokes

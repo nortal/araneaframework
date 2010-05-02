@@ -14,6 +14,7 @@
 
 	<!-- CSS for visual elements of Aranea:  -->
 	<ui:importStyles media="screen"/>
+	<ui:importStyles file="css/blackbird/blackbird.css"/>
 
 	<!-- CSS for the demo app:  -->
 	<ui:importStyles file="styles/_styles_global.css" media="all"/>
@@ -22,6 +23,9 @@
 
 	<!-- Includes stand-alone Log4JavaScript logging (it is not included by default). -->
 	<!-- ui:importScripts group="logger"/ -->
+
+	<!-- Imports blackbird logging framework (http://www.gscottolson.com/blackbirdjs/) -->
+	<ui:importScripts group="blackbird"/>
 
 	<!-- Imports all Aranea scripts (default group="all"). -->
 	<ui:importScripts group="all-devel"/>
@@ -65,7 +69,7 @@
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
-	<script type="text/javascript">Aranea.Logger.setLogger('firebug');</script>
+	<script type="text/javascript">Aranea.Logger.setLogger('blackbird');</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>
