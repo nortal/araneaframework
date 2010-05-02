@@ -21,7 +21,6 @@ import org.araneaframework.Environment;
 import org.araneaframework.Scope;
 import org.araneaframework.example.common.framework.ViewSelectorAware;
 import org.araneaframework.example.main.business.data.IGeneralDAO;
-import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.integration.spring.SpringInjectionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.springframework.beans.factory.BeanFactory;
@@ -33,18 +32,12 @@ import org.springframework.beans.factory.BeanFactory;
  */
 public abstract class TemplateBaseWidget extends BaseUIWidget implements ViewSelectorAware {
 
-  @Override
   protected BeanFactory getBeanFactory() {
     return getEnvironment().getEntry(BeanFactory.class);
   }
 
   protected SecurityContext getSecCtx() {
     return getEnvironment().getEntry(SecurityContext.class);
-  }
-
-  @Override
-  protected PopupWindowContext getPopupCtx() {
-    return getEnvironment().requireEntry(PopupWindowContext.class);
   }
 
   /**

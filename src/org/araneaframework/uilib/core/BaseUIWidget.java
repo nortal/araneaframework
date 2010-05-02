@@ -34,7 +34,6 @@ import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This widget represents the usual custom application widget that is rendered using JSP tags. It assumes to be
@@ -103,16 +102,6 @@ public class BaseUIWidget extends BaseApplicationWidget {
    */
   protected MountContext getMountCtx() {
     return getEnvironment().requireEntry(MountContext.class);
-  }
-
-  /**
-   * Provides the <code>BeanFactory</code> from the <code>Environment</code>. It can be used to access Spring framework
-   * configuration.
-   * 
-   * @return The <code>BeanFactory</code>.
-   */
-  protected BeanFactory getBeanFactory() {
-    return getEnvironment().requireEntry(BeanFactory.class);
   }
 
   /**

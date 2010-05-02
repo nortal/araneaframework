@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.util;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -97,6 +98,45 @@ public abstract class DisplayItemUtil implements Serializable {
   }
 
   /**
+   * Resolves the child options of the given "optgroup" bean. The bean is "not required" to have the given property.
+   * When the bean has the given property, and it returns an array or {@link List} of sub-beans, which is not empty and
+   * contains items of type <code>T</code>. Otherwise returns <code>null</code>.
+   * 
+   * @param <T> The type of the beans.
+   * @param bean The bean to check for child options.
+   * @param childrenProperty The bean property to use for fetching child options. 
+   * @return A list of child options, or <code>null</code>.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> List<T> getChildItemsValue(T bean, String childrenProperty) {
+    if (bean == null || childrenProperty == null) {
+      return null;
+    }
+
+    Class<?> type = BeanUtil.getPropertyType(bean.getClass(), childrenProperty);
+    List<?> value = null;
+
+    if (type == List.class || type.getComponentType() == bean.getClass()) {
+      Object tmpValue = getBeanValue(bean, childrenProperty);
+
+      if (tmpValue != null) {
+        if (type.isArray()) {
+          T[] arr = (T[]) tmpValue;
+          value = Arrays.asList(arr);
+        } else {
+          value = (List<T>) tmpValue;
+        }
+
+        if (value.isEmpty() || !type.isInstance(value.get(0))) {
+          value = null;
+        }
+      }
+    }
+
+    return (List<T>) value;
+  }
+
+  /**
    * Returns whether <code>value</code> is found in the select items.
    * 
    * @param items The items that should be checked whether given <code>value</code> is one of them.
@@ -117,13 +157,14 @@ public abstract class DisplayItemUtil implements Serializable {
   }
 
   /**
-   * Returns display item label by the specified value.
+   * Returns a display item bean the specified value.
    * 
-   * @param items display items.
-   * @param value display item value.
-   * @return display item label by the specified value.
+   * @param items The display items that represent all items to search from.
+   * @param valueProperty The name of the value property of the bean <code>B</code>.
+   * @param value The value to use for finding the matched display item.
+   * @return Single display item bean from <code>items</code>, or <code>null</code>.
    */
-  public static <B> B getSelectedItemByValue(List<B> items, String valueProperty, Object value) {
+  public static <B> B getSelectItem(List<B> items, String valueProperty, Object value) {
     if (value != null && CollectionUtils.isNotEmpty(items)) {
       value = ObjectUtils.toString(value);
 
@@ -137,16 +178,16 @@ public abstract class DisplayItemUtil implements Serializable {
     return null;
   }
 
-  public static DisplayItem getSelectedItemByValue(List<DisplayItem> items, String value) {
-    if (value != null && CollectionUtils.isNotEmpty(items)) {
-      value = ObjectUtils.toString(value);
-      for (DisplayItem item : items) {
-        if (ObjectUtils.equals(value, item.getValue())) {
-          return item;
-        }
-      }
-    }
-    return null;
+  /**
+   * Returns a display item for which a value is equal to the given <code>value</code>.
+   * 
+   * @param items The display items that represent all items to search from.
+   * @param value The value to use for finding the matched display item.
+   * @return Single display item from <code>items</code>, or <code>null</code>.
+   */
+  public static DisplayItem getSelectItem(List<DisplayItem> items, String value) {
+    List<DisplayItem> results = getSelectItems(items, new String[] { value });
+    return results != null && !results.isEmpty() ? results.get(0) : null;
   }
 
   /**
@@ -156,7 +197,7 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param values The (display items) values for filtering display items.
    * @return A subset of display items that were matched.
    */
-  public static List<DisplayItem> getSelectedItems(List<DisplayItem> items, String[] values) {
+  public static List<DisplayItem> getSelectItems(List<DisplayItem> items, String... values) {
     List<DisplayItem> results = new LinkedList<DisplayItem>();
     if (CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
@@ -239,6 +280,7 @@ public abstract class DisplayItemUtil implements Serializable {
     }
     return result;
   }
+
   /**
    * Checks whether the <code>item</code> (that is not yet added to <code>items</code>) would not have an other item
    * with the same value already in the <code>items</code> list.
@@ -250,7 +292,7 @@ public abstract class DisplayItemUtil implements Serializable {
    */
   public static <T> void assertUnique(List<T> items, T item) {
     if (CollectionUtils.isNotEmpty(items)) {
-      Assert.isTrue(!items.contains(item), "The *SelectControl items must have different values - not like " + item);
+      Assert.isTrue(!items.contains(item), "The *SelectControl items must have unique values - not like " + item);
     }
   }
 
@@ -267,6 +309,31 @@ public abstract class DisplayItemUtil implements Serializable {
     }
   }
 
+  /**
+   * Asserts whether the display item container contains unique items. If the uniqueness check fails, an exception will
+   * be thrown.
+   * 
+   * @param <T> The type of the display container.
+   * @param container The container of display items.
+   */
+  public static <T> void assertUnique(DisplayItemContainer<T> container) {
+    List<T> items = new LinkedList<T>(container.getAllItems());
+
+    if (CollectionUtils.isNotEmpty(items)) {
+      if (container.getItemGroupProperty() != null) {
+        for (T item : container.getAllItems()) {
+          List<T> subItems = getChildItemsValue(item, container.getItemChildrenProperty());
+
+          if (subItems != null) {
+            items.addAll(subItems);
+          }
+        }
+      }
+
+      assertUnique(items);
+    }
+  }
+  
   public static <T> void addItemsFromBeanCollection(SelectControl<DisplayItem> select, List<T> params,
       Transformer labelTransformer, Transformer valueTransformer) {
     for (T param : params) {

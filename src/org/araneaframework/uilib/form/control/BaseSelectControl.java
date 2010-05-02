@@ -25,9 +25,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.support.BeanDisplayItem;
@@ -37,8 +37,8 @@ import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
 /**
- * This class represents the base functionality of select controls. The generic T is the type of select control item.
- * The generic C is the internal value type used with {@link StringArrayRequestControl}.
+ * This class represents the base functionality of select controls. The generic <code>T</code> is the type of select
+ * control item. The generic <code>C</code> is the internal value type used with {@link StringArrayRequestControl}.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @version 2.0
@@ -85,77 +85,64 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   /**
    * A Boolean indicating whether the values must be unique. Default is <code>true</code>.
    */
-  protected boolean valuesUnique = true;
-
-  /**
-   * Creates a new instance of *SelectControl, and also defines item label and value property names. Note that when
-   * select items are defined one-by-one as value-label pairs then the class parameter is also needed to create new
-   * instances of items. The property names are required.
-   * 
-   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
-   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see BaseSelectControl#BaseSelectControl(Class, String, String)
-   */
-  public BaseSelectControl(String itemLabelProperty, String itemValueProperty) {
-    this(null, null, itemLabelProperty, itemValueProperty);
-  }
-
-  /**
-   * Creates a new instance of *SelectControl, and also defines item label and value property names. Note that when
-   * select items are defined one-by-one as value-label pairs then the class parameter is also needed to create new
-   * instances of items. The property names are required.
-   * 
-   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
-   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see BaseSelectControl#BaseSelectControl(Class, String, String)
-   */
-  public BaseSelectControl(List<T> items, String itemLabelProperty, String itemValueProperty) {
-    this(items, null, itemLabelProperty, itemValueProperty);
-  }
+  protected boolean checkValuesUnique = true;
 
   /**
    * Creates a new instance of *SelectControl, and also defines item class and label and value property names. Note that
-   * usually the class parameter is not needed. It is needed only when the select values are defined one-by-one (then
-   * class is used to create new instances). The property names are required.
-   * 
-   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
-   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
-   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see BaseSelectControl#BaseSelectControl(String, String)
-   */
-  public BaseSelectControl(Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
-    this(null, itemClass, itemLabelProperty, itemValueProperty);
-  }
-
-  /**
-   * Creates a new instance of *SelectControl, and also defines item class and label and value property names. Note that
-   * usually the class parameter is not needed. It is needed only when the select values are defined one-by-one (then
-   * class is used to create new instances). The property names are required.
+   * usually the class parameter is not needed. It is needed only when the select values are defined one-by-one with
+   * {@link #addItem(String, String)} method (then class is used to create new instances). The label and value property
+   * names are required.
+   * <p>
+   * Optional properties for making use of <code>&lt;optgroup&gt;</code>s are <code>itemIsGroupProperty</code> and
+   * <code>groupChildrenProperty</code>. The former property, when specified, is checked on every display item, and when
+   * the property is <code>true</code>, the display item is considered to represent an <code>&lt;optgroup&gt;</code>
+   * (its label property is used for fetching the name of the group; its value property will be ignored). For every
+   * <code>&lt;optgroup&gt;</code> item, the <code>groupChildrenProperty</code> will be checked to retrieve items of
+   * type <code>T</code> in an array or {@link List} to fetch the <code>&lt;option&gt;</code>s for the group.
+   * <p>
+   * <b>NB!</b> Specifying <code>itemIsGroupProperty</code> and <code>groupChildrenProperty</code> to a select control
+   * can only be done through this constructor!
    * 
    * @param items Predefined select items. May be <code>null</code>.
    * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
-   * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
-   * @param itemValueProperty The property of select item to retrieve the value of select item (required).
-   * @see BaseSelectControl#BaseSelectControl(String, String)
+   * @param itemLabelProperty The {@link String} property of select item to retrieve the label of select item
+   *          (required).
+   * @param itemValueProperty The {@link String} property of select item to retrieve the value of select item
+   *          (required).
+   * @param itemIsGroupProperty The {@link Boolean} property of select item to retrieve the condition value that this
+   *          select item is a non-selectable &lt;optgroup&gt; containing other child <code>&lt;option&gt;</code>s
+   *          (optional, but mandatory when <code>groupChildrenProperty</code> is provided).
+   * @param groupChildrenProperty The array/{@link List}&lt;T&gt; property of a group item to retrieve the child
+   *          <code>&lt;option&gt;</code>s to render in the <code>&lt;optgroup&gt;</code> (optional, but mandatory when
+   *          <code>itemIsGroupProperty</code> is provided).
+   * @see BaseSelectControl#BaseSelectControl(List, String, String, String, String)
+   * @see BaseSelectControl#addItem(String, String)
    */
-  public BaseSelectControl(List<T> items, Class<T> itemClass, String itemLabelProperty, String itemValueProperty) {
-    Assert.notNullParam(this, itemLabelProperty, "itemLabelProperty");
-    Assert.notNullParam(this, itemValueProperty, "itemValueProperty");
+  public BaseSelectControl(List<T> items, Class<T> itemClass, String itemLabelProperty, String itemValueProperty,
+      String itemIsGroupProperty, String groupChildrenProperty) {
+    Assert.notEmptyParam(this, itemLabelProperty, "itemLabelProperty");
+    Assert.notEmptyParam(this, itemValueProperty, "itemValueProperty");
+    Assert.isTrue(StringUtils.isEmpty(itemIsGroupProperty) == StringUtils.isEmpty(groupChildrenProperty),
+        "Both group and group children properties are required when either of them is provided.");
 
-    this.items = items == null ? this.items : items;
     this.itemClass = DisplayItemUtil.resolveClass(itemClass, items);
     this.labelProperty = itemLabelProperty;
     this.valueProperty = itemValueProperty;
+    this.groupProperty = itemIsGroupProperty;
+    this.childrenProperty = groupChildrenProperty;
+
+    if (items != null) {
+      addItems(items);
+    }
   }
 
-  /**
-   * Adds a new item to select choices.
-   * 
-   * @param item The item to be added.
-   */
   public void addItem(T item) {
     Assert.notNullParam(item, "item");
-    DisplayItemUtil.assertUnique(this.items, item);
+
+    if (this.checkValuesUnique) {
+      DisplayItemUtil.assertUnique(this.items, item);
+    }
+
     this.items.add(item);
   }
 
@@ -186,23 +173,21 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     Assert.notNullParam(label, "label");
     try {
       T item = itemClass.newInstance();
-      PropertyUtils.setProperty(item, this.labelProperty, label);
-      PropertyUtils.setProperty(item, this.valueProperty, value);
+      BeanUtil.setPropertyValue(item, this.labelProperty, label);
+      BeanUtil.setPropertyValue(item, this.valueProperty, value);
       addItem(item);
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
   }
 
-  /**
-   * Adds a display-items to the element.
-   * 
-   * @param items the items to be added.
-   */
   public void addItems(Collection<T> items) {
     Assert.noNullElementsParam(items, "items");
     this.items.addAll(items);
-    DisplayItemUtil.assertUnique(this.items);
+
+    if (this.checkValuesUnique) {
+      DisplayItemUtil.assertUnique(this.items);
+    }
   }
 
   /**
@@ -228,7 +213,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   }
 
   /**
-   * Enables the given select item, which should be among the defined select items. If the given item is not found then
+   * Enables the given select item, which should be among the disbaled select items. If the given item is not found then
    * it will be ignored.
    * 
    * @param item The select item to enable.
@@ -239,7 +224,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   }
 
   /**
-   * Enables the given select items, which should be among the defined select items. If any of the given items is not
+   * Enables the given select items, which should be among the disabled select items. If any of the given items is not
    * found then it will be ignored.
    * 
    * @param items The select items to disable.
@@ -249,9 +234,6 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     this.disabledItems.removeAll(items);
   }
 
-  /**
-   * Clears the list of select-items.
-   */
   public void clearItems() {
     this.items.clear();
     this.disabledItems.clear();
@@ -271,6 +253,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     return Collections.unmodifiableList(this.disabledItems);
   }
 
+  @Deprecated
   public int getValueIndex(String value) {
     return DisplayItemUtil.getValueIndex(this.items, this.valueProperty, value);
   }
@@ -283,6 +266,14 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     return this.valueProperty;
   }
 
+  public String getItemGroupProperty() {
+    return this.groupProperty;
+  }
+
+  public String getItemChildrenProperty() {
+    return this.childrenProperty;
+  }
+
   /**
    * Provides a way to sort the items in this <code>MultiSelectControl</code>. The <code>comparator</code> parameter is
    * used to compare select items and, therefore, to set the order.
@@ -292,6 +283,35 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    */
   public void sort(Comparator<T> comparator) {
     Collections.sort(this.items, comparator);
+  }
+
+  /**
+   * Provides whether this <code>SelectControl</code> checks whether the values are unique when adding a new value to
+   * the current values. By default, values uniqueness check is turned on.
+   * 
+   * @return A <code>Boolean</code> that is <code>true</code> when values uniqueness check is turned on.
+   * @since 2.0
+   */
+  public boolean isCheckValuesUnique() {
+    return this.checkValuesUnique;
+  }
+
+  /**
+   * Sets whether this <code>SelectControl</code> must check whether the values are unique when adding a new value to
+   * the current values. By default, values uniqueness check is turned on.
+   * <p>
+   * Setting this property to <code>true</code> when this <code>SelectControl</code> already has values will result in a
+   * values uniqueness check.
+   * 
+   * @param checkValuesUnique A <code>Boolean</code> that is <code>true</code> when values uniqueness check must be
+   *          turned on.
+   * @since 2.0
+   */
+  public void setCheckValuesUnique(boolean checkValuesUnique) {
+    this.checkValuesUnique = checkValuesUnique;
+    if (this.checkValuesUnique && !this.items.isEmpty()) {
+      DisplayItemUtil.assertUnique(this.items);
+    }
   }
 
   //*********************************************************************
@@ -409,15 +429,15 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
 
     public DisplayItem getSelectedItem() {
       String value = super.getSimpleValue();
-      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, value);
+      return DisplayItemUtil.getSelectItem(this.selectItems, value);
     }
 
     public List<DisplayItem> getSelectedItems() {
-      return DisplayItemUtil.getSelectedItems(this.selectItems, (String[]) innerData);
+      return DisplayItemUtil.getSelectItems(this.selectItems, (String[]) innerData);
     }
 
     public DisplayItem getSelectItem(String value) {
-      return DisplayItemUtil.getSelectedItemByValue(this.selectItems, value);
+      return DisplayItemUtil.getSelectItem(this.selectItems, value);
     }
 
     public boolean isSelected(String value) {
