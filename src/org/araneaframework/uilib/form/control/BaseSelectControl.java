@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +36,7 @@ import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
+import org.araneaframework.uilib.util.SelectControlUtil;
 
 /**
  * This class represents the base functionality of select controls. The generic <code>T</code> is the type of select
@@ -125,7 +127,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     Assert.isTrue(StringUtils.isEmpty(itemIsGroupProperty) == StringUtils.isEmpty(groupChildrenProperty),
         "Both group and group children properties are required when either of them is provided.");
 
-    this.itemClass = DisplayItemUtil.resolveClass(itemClass, items);
+    this.itemClass = SelectControlUtil.resolveClass(itemClass, items);
     this.labelProperty = itemLabelProperty;
     this.valueProperty = itemValueProperty;
     this.groupProperty = itemIsGroupProperty;
@@ -140,7 +142,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     Assert.notNullParam(item, "item");
 
     if (this.checkValuesUnique) {
-      DisplayItemUtil.assertUnique(this.items, item);
+      SelectControlUtil.assertUnique(this.items, item);
     }
 
     this.items.add(item);
@@ -186,7 +188,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     this.items.addAll(items);
 
     if (this.checkValuesUnique) {
-      DisplayItemUtil.assertUnique(this.items);
+      SelectControlUtil.assertUnique(this);
     }
   }
 
@@ -255,7 +257,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
 
   @Deprecated
   public int getValueIndex(String value) {
-    return DisplayItemUtil.getValueIndex(this.items, this.valueProperty, value);
+    return SelectControlUtil.getValueIndex(this.items, this.valueProperty, value);
   }
 
   public String getItemLabelProperty() {
@@ -310,7 +312,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   public void setCheckValuesUnique(boolean checkValuesUnique) {
     this.checkValuesUnique = checkValuesUnique;
     if (this.checkValuesUnique && !this.items.isEmpty()) {
-      DisplayItemUtil.assertUnique(this.items);
+      SelectControlUtil.assertUnique(this);
     }
   }
 
@@ -333,8 +335,8 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
       String value = i.next();
       if (StringUtils.isEmpty(value)) {
         i.remove();
-      } else if (!DisplayItemUtil.isValueInItems(BaseSelectControl.this, value)) {
-        throw new SecurityException("The submitted value '" + value + "' was not found among the select items!");
+      } else if (!SelectControlUtil.containsEnabledValue(this, value)) {
+        throw new SecurityException("The submitted value '" + value + "' is not allowed!");
       }
     }
 
@@ -344,7 +346,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
       Set<String> disabledItemValues = new HashSet<String>();
 
       for (T item : this.disabledItems) {
-        disabledItemValues.add(DisplayItemUtil.getBeanValue(item, this.valueProperty));
+        disabledItemValues.add(SelectControlUtil.getItemValue(item, this.valueProperty));
       }
 
       previousDisabledValues.retainAll(disabledItemValues);
@@ -429,15 +431,15 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
 
     public DisplayItem getSelectedItem() {
       String value = super.getSimpleValue();
-      return DisplayItemUtil.getSelectItem(this.selectItems, value);
+      return DisplayItemUtil.getItem(this.selectItems, value);
     }
 
     public List<DisplayItem> getSelectedItems() {
-      return DisplayItemUtil.getSelectItems(this.selectItems, (String[]) innerData);
+      return new ArrayList<DisplayItem>(DisplayItemUtil.getItems(this.selectItems, (String[]) innerData));
     }
 
     public DisplayItem getSelectItem(String value) {
-      return DisplayItemUtil.getSelectItem(this.selectItems, value);
+      return DisplayItemUtil.getItem(this.selectItems, value);
     }
 
     public boolean isSelected(String value) {

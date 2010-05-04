@@ -209,7 +209,7 @@ public class DisplayItem implements Serializable {
 
   @Override
   public int hashCode() {
-    return 227 * this.value.hashCode();
+    return 227 * (this.value == null ? 1 : this.value.hashCode());
   }
 
   @Override

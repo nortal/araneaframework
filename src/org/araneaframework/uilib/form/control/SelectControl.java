@@ -20,7 +20,7 @@ import java.util.List;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.DisplayItem;
-import org.araneaframework.uilib.util.DisplayItemUtil;
+import org.araneaframework.uilib.util.SelectControlUtil;
 import org.springframework.util.Assert;
 
 /**
@@ -164,22 +164,28 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
    * @since 1.0.5
    */
   public T getSelectedItem() {
-    return getFormElementCtx() == null ? null : DisplayItemUtil.getBean(this, (String) getFormElementCtx().getValue());
+    T result = null;
+    if (getFormElementCtx() != null) {
+      result = SelectControlUtil.getSelectItem(this, (String) getFormElementCtx().getValue());
+    }
+    return result;
   }
 
   @Override
   protected T fromRequestParameters(String[] parameterValues) {
     String value = parameterValues != null && parameterValues.length > 0 ? parameterValues[0] : null;
-    return DisplayItemUtil.getBean(this, value);
+    return SelectControlUtil.getSelectItem(this, value);
   }
 
   @Override
   protected String[] toResponseParameters(T controlValue) {
-    return new String[] { DisplayItemUtil.getBeanValue(controlValue, this.valueProperty) };
+    String[] params = new String[1];
+    params[0] = SelectControlUtil.getItemValue(controlValue, this.valueProperty);
+    return params;
   }
 
   public DataType getRawValueType() {
-    this.itemClass = DisplayItemUtil.resolveClass(this.itemClass, this.items);
+    this.itemClass = SelectControlUtil.resolveClass(this.itemClass, this.items);
     Assert.notNull(this.itemClass != null,
         "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(this.itemClass);

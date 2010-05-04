@@ -55,7 +55,7 @@ public class DefaultMultiSelectControl extends MultiSelectControl<DisplayItem> {
     Assert.notNullParam(label, "label");
     try {
       DisplayItem newItem = new DisplayItem(value, label);
-      DisplayItemUtil.assertUnique(this.items, newItem);
+      DisplayItemUtil.assertUnique(this, newItem);
       this.items.add(newItem);
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);

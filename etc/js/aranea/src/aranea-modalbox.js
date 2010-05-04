@@ -59,6 +59,8 @@ Aranea.ModalBox = {
 	 * @since 1.2.1.1
 	 */
 	doRequest: function(options, success, failure) {
+		Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
+
 		new Ajax.Request(this.getRequestURL(), {
 			method: options.method,
 			parameters: options.params,
@@ -70,6 +72,7 @@ Aranea.ModalBox = {
 				}
 				// Aranea initialization:
 				this.afterLoad(transport);
+				Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
 			}.bind(this),
 
 			onException: function(request, exception){
@@ -80,6 +83,7 @@ Aranea.ModalBox = {
 					Aranea.Logger.error("Exception has occured while processing Modalbox request.", exception);
 					throw('Modal dialog loading error: ' + exception);
 				}
+				Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
 			}.bind(this)
 		});
 	},

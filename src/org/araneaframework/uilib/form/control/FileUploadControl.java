@@ -199,36 +199,38 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     public static final String RESPONSE_FAIL = "FAIL";
 
     public void processAction(String actionId, InputData input, OutputData output) throws Exception {
-      FileInfo file = (FileInfo) FileUploadControl.this.innerData;
+
+      // Raising a flag that will inform this FileUploadControl to write error message to ajaxMessages collection:
       FileUploadControl.this.ajaxRequest = true;
+
+      FileInfo file = (FileInfo) FileUploadControl.this.innerData;
       convertAndValidate();
 
-      if (file == null || file.isFilePresent()) {
-        LOG.debug("Did not get a file!");
+      if (file == null || !file.isFilePresent()) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Did not get a file for some reason! Including error message in response when possible.");
+        }
+
         PrintWriter out = ServletUtil.getResponse(output).getWriter();
         out.write(RESPONSE_FAIL);
 
         if (!FileUploadControl.this.ajaxMessages.isEmpty()) {
-          out.print("(");
-          boolean isFirst = true;
-          for (String msg : FileUploadControl.this.ajaxMessages) {
-            if (!isFirst) {
-              out.print("\n");
-            } else {
-              isFirst = false;
-            }
-            out.print(msg);
-          }
-          out.print(")");
+          // Writing error messages, separated by new-lines:
+          out.print('(');
+          out.print(StringUtils.join(FileUploadControl.this.ajaxMessages, '\n'));
+          out.print(')');
+
+          // Reset error messages:
           FileUploadControl.this.ajaxMessages.clear();
         }
       } else {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Got file '" + file.getOriginalFilename() + "'");
+          LOG.debug("Got file '" + file.getOriginalFilename() + "' successfully!");
         }
         ServletUtil.getResponse(output).getWriter().write(RESPONSE_OK);
       }
 
+      // AJAX file upload processing is completed. Hide the flag:
       FileUploadControl.this.ajaxRequest = false;
     }
   }

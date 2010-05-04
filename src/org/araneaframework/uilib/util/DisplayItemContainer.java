@@ -31,19 +31,19 @@ public interface DisplayItemContainer<T> {
    * 
    * @param item A non-<code>null</code> item to be added.
    */
-  public void addItem(T item);
+  void addItem(T item);
 
   /**
    * Adds items from <code>Collection</code> to this <code>DisplayItemContainer</code>.
    * 
    * @param items A non-<code>null</code> <code>Collection</code> of display items.
    */
-  public void addItems(Collection<T> items);
+  void addItems(Collection<T> items);
 
   /**
    * Clears the currently held display items.
    */
-  public void clearItems();
+  void clearItems();
 
   /**
    * Returns a list of display items that this <code>DisplayItemContainer</code> currently holds.
@@ -51,7 +51,7 @@ public interface DisplayItemContainer<T> {
    * @return A list of all contained display items.
    * @since 2.0
    */
-  public List<T> getAllItems();
+  List<T> getAllItems();
 
   /**
    * Returns a list of display items that this <code>DisplayItemContainer</code> currently holds and that are enabled
@@ -81,7 +81,7 @@ public interface DisplayItemContainer<T> {
    * @deprecated Just don't use it. The index is meaningless.
    */
   @Deprecated
-  public int getValueIndex(String value);
+  int getValueIndex(String value);
 
   /**
    * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve its label, the method returns
@@ -90,7 +90,7 @@ public interface DisplayItemContainer<T> {
    * @return The property of a display item to resolve its label, or <code>null</code>.
    * @return 2.0
    */
-  public String getItemLabelProperty();
+  String getItemLabelProperty();
 
   /**
    * When the underlying <code>DisplayItemContainer</code uses a bean property to resolve its value, the method
@@ -99,7 +99,7 @@ public interface DisplayItemContainer<T> {
    * @return The property of a display item to resolve its value, or <code>null</code>.
    * @return 2.0
    */
-  public String getItemValueProperty();
+  String getItemValueProperty();
 
   /**
    * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve whether the display item
@@ -109,7 +109,7 @@ public interface DisplayItemContainer<T> {
    * @return The property of a display item to resolve whether it represents an options group, or <code>null</code>.
    * @return 2.0
    */
-  public String getItemGroupProperty();
+  String getItemGroupProperty();
 
   /**
    * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve child display items of those
@@ -119,6 +119,6 @@ public interface DisplayItemContainer<T> {
    * @return The property of a display item to resolve its child display items, or <code>null</code>.
    * @return 2.0
    */
-  public String getItemChildrenProperty();
+  String getItemChildrenProperty();
 
 }

@@ -55,7 +55,7 @@ public class StringToDisplayItemConverter extends BaseConverter<Object, Object> 
       return ((DisplayItem) data).getValue();
     } else {
       BaseSelectControl<DisplayItem, ?> control = (BaseSelectControl<DisplayItem, ?>) getFormElementCtx().getControl();
-      return DisplayItemUtil.getSelectItem(control.getEnabledItems(), ObjectUtils.toString(data));
+      return DisplayItemUtil.getItem(control.getEnabledItems(), ObjectUtils.toString(data));
     }
   }
 

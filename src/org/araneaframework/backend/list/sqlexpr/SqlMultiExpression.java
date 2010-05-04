@@ -18,21 +18,36 @@ package org.araneaframework.backend.list.sqlexpr;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.list.SqlExpression;
+import org.araneaframework.backend.list.memorybased.expression.AlwaysTrueExpression;
 
 public abstract class SqlMultiExpression implements SqlExpression {
 
   protected List<SqlExpression> children = new ArrayList<SqlExpression>();
 
   public SqlMultiExpression add(SqlExpression expression) {
-    this.children.add(expression);
+    if (!(expression instanceof SqlAlwaysTrueExpression)) {
+      this.children.add(expression);
+    }
     return this;
   }
 
   public SqlMultiExpression setChildren(SqlExpression[] children) {
-    this.children = Arrays.asList(children);
+    this.children.addAll(Arrays.asList(children));
+
+    for (Iterator<SqlExpression> i = this.children.iterator(); i.hasNext(); ) {
+      if (i.next() instanceof AlwaysTrueExpression) {
+        i.remove();
+      }
+    }
+
     return this;
+  }
+
+  public int getChildrenCount() {
+    return this.children.size();
   }
 
   public Object[] getValues() {

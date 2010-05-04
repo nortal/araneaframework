@@ -52,6 +52,10 @@ Aranea.Logger = {
 		Aranea.Data.logger.fatal(message, exception);
 	},
 
+	profile: function(message, exception) {
+		Aranea.Data.logger.profile(message, exception);
+	},
+
 	/**
 	 * Sets the logging mechanism to use for logging messages. Accepted types: "dummy", "firebug", "safari", "log4js",
 	 * "blackbird". Null parameter defaults to "dummy". The logger will be resolved to a predefined logger
@@ -79,22 +83,22 @@ Aranea.Logger.DUMMY_LOGGER = {
 };
 
 Aranea.Logger.SAFARI_LOGGER = window.console && window.console.log ? {
-	trace: function(s) { window.console.log(s); },
-	debug: function(s) { window.console.log(s); },
-	info: function(s) { window.console.log(s); },
-	warn: function(s) { window.console.log(s); },
-	error: function(s) { window.console.log(s); },
-	fatal: function(s) { window.console.log(s); },
+	trace: window.console.log,
+	debug: window.console.log,
+	info: window.console.log,
+	warn: window.console.log,
+	error: window.console.log,
+	fatal: window.console.log,
 	profile: Prototype.emptyFunction
 } : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.FIREBUG_LOGGER = window.console && window.console.debug ? {
-	trace: function(s) { window.console.debug(s); },
-	debug: function(s) { window.console.debug(s); },
-	info: function(s) { window.console.info(s); },
-	warn: function(s) { window.console.warn(s); },
-	error: function(s) { window.console.error(s); },
-	fatal: function(s) { window.console.error(s); },
+	trace: window.console.debug,
+	debug: window.console.debug,
+	info: window.console.info,
+	warn: window.console.warn,
+	error: window.console.error,
+	fatal: window.console.error,
 	profile: Prototype.emptyFunction
 } : Aranea.Logger.DUMMY_LOGGER;
 
@@ -102,13 +106,13 @@ Aranea.Logger.LOG4JS_LOGGER = window.log4javascript && window.log4javascript.get
 	window.log4javascript.getDefaultLogger() : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.BLACKBIRD_LOGGER = window.log && window.log.toggle ? {
-	trace: log.debug,
-	debug: log.debug,
-	info: log.info,
-	warn: log.warn,
-	error: log.error,
-	fatal: log.error,
-	profile: log.profile
+	trace: function(msg, exception) { log.debug((msg||'').escapeHTML(), exception) },
+	debug: function(msg, exception) { log.debug((msg||'').escapeHTML(), exception) },
+	info: function(msg, exception) { log.info((msg||'').escapeHTML(), exception) },
+	warn: function(msg, exception) { log.warn((msg||'').escapeHTML(), exception) },
+	error: function(msg, exception) { log.error((msg||'').escapeHTML(), exception) },
+	fatal: function(msg, exception) { log.error((msg||'').escapeHTML(), exception) },
+	profile: function(msg) { log.profile((msg||'').escapeHTML()) }
 } : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.setLogger('dummy');

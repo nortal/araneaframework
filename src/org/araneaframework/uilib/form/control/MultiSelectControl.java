@@ -18,7 +18,7 @@ package org.araneaframework.uilib.form.control;
 
 import java.util.List;
 import org.araneaframework.uilib.support.DataType;
-import org.araneaframework.uilib.util.DisplayItemUtil;
+import org.araneaframework.uilib.util.SelectControlUtil;
 import org.springframework.util.Assert;
 
 
@@ -156,16 +156,16 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
 
   @Override
   protected List<T> fromRequestParameters(String[] parameterValues) {
-    return DisplayItemUtil.getSelectedItems(this.items, this.valueProperty, parameterValues);
+    return SelectControlUtil.getSelectItems(this, parameterValues);
   }
 
   @Override
   protected String[] toResponseParameters(List<T> controlValues) {
-    return DisplayItemUtil.getItemsValues(controlValues, this.valueProperty);
+    return SelectControlUtil.getItemsValues(controlValues, this.valueProperty);
   }
 
   public DataType getRawValueType() {
-    this.itemClass = DisplayItemUtil.resolveClass(this.itemClass, this.items);
+    this.itemClass = SelectControlUtil.resolveClass(this.itemClass, this.items);
     Assert.notNull(this.itemClass != null,
         "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(List.class, this.itemClass);

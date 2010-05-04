@@ -147,7 +147,7 @@ Aranea.UI = {
 			throw ('Cannot scroll to ['+x+','+y+'] because one of given coordinates is not a number!');
 		}
 		window.scrollTo(x, y);
-		Aranea.Logger.debug('Window scroll coordinates were set to [' + x + ',' + y + ']');
+		Aranea.Logger.debug('Window scroll coordinates were set to [' + x + ',' + y + '].');
 	},
 
 	/** 

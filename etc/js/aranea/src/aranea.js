@@ -110,20 +110,26 @@ Aranea.Page = {
 	 * intended to be overridden by custom projects.
 	 */
 	onLoad: function() {
+		Aranea.Logger.profile('Aranea.Page.onLoad()')
+
 		Aranea.Page.findSystemForm();
 		Aranea.Page.addAutoFocusObserver();
 		Aranea.Data.loaded = true;
-		Aranea.Logger.debug('Basic initialization done. Firing event "aranea:loaded"...');
+
+		Aranea.Logger.info('Page loaded and basic initialization done. Firing event "aranea:loaded"...');
+
 		document.fire('aranea:loaded');
 		document.stopObserving('aranea:loaded');
-		Aranea.Logger.debug("Aranea scripts are now initialized!");
+
+		Aranea.Logger.profile('Aranea.Page.onLoad()')
 	},
 
 	onUpdate: function(data) {
+		Aranea.Logger.profile('Aranea.Page.onUpdate()')
 		Aranea.Page.findSystemForm();
-		if (Aranea.Page.ajaxUploadInit) Aranea.Page.ajaxUploadInit();
-		Aranea.Logger.debug("Aranea scripts were updated!");
+		Aranea.Logger.info('Page was updated. Firing event "aranea:updated"...');
 		document.fire('aranea:updated');
+		Aranea.Logger.profile('Aranea.Page.onUpdate()')
 	},
 
 	onUnload: function(data) {
@@ -239,6 +245,7 @@ Aranea.Page = {
 
 	invokeEvent: function(type, args) {
 		try {
+			Aranea.Logger.profile('Aranea.Page.invokeEvent()');
 			if (!Aranea.Data.submitted && Aranea.Data.loaded) {
 				var data = Aranea.Page.Parameter.getEventData(type, args);
 
@@ -250,7 +257,9 @@ Aranea.Page = {
 				return false; // Return false
 			}
 		} catch (e) {
-			Aranea.Logger.error('An error occurred during "event" request.', e);
+			Aranea.Logger.error('An error occurred during "event" request: ' + Object.inspect(e), e);
+		} finally {
+			Aranea.Logger.profile('Aranea.Page.invokeEvent()');
 		}
 	},
 
@@ -453,7 +462,6 @@ Aranea.Page = {
 	 * @since 1.1
 	 */
 	findSystemForm: function(element, changeData) {
-		Aranea.Logger.debug("Executing Aranea.Page.findSystemForm()...");
 		element = $(element);
 		var result = null;
 
@@ -478,6 +486,7 @@ Aranea.Page = {
 					+ 'element is inside a form.')
 		} else if (changeData != false) {
 			Aranea.Data.systemForm = result;
+			Aranea.Logger.info("Resolved system-form: " + Aranea.Data.systemForm.inspect() + '.');
 		}
 
 		return result;
@@ -573,7 +582,7 @@ Aranea.Page.Request = {
 		Aranea.Data.loaded = false;
 		Aranea.Data.submitted = true;
 
-		document.fire('aranea:beforeRequest', data, false);
+		document.fire('aranea:beforeRequest', data);
 
 		Aranea.Page.Request.customBefore(data);
 		Aranea.Page.Parameter.writeToForm(data); // Write event data to form so that it would be sent to server-side.
@@ -587,7 +596,7 @@ Aranea.Page.Request = {
 		Aranea.Data.submitted = false;
 		Aranea.Data.loaded = true;
 
-		document.fire('aranea:afterRequest', data, false);
+		document.fire('aranea:afterRequest', data);
 
 		Aranea.Page.Request.customAfter(data);
 		Aranea.Page.onUpdate(data);
@@ -634,13 +643,13 @@ Aranea.Page.Submitter.Plain = Class.create({
 	event: function(eventData) {
 		var result = false;
 		if (eventData.isSubmitAllowed()) {
-			Event.fire(Aranea.Data.systemForm, 'aranea:beforeEvent', eventData);
+			Aranea.Data.systemForm.fire('aranea:beforeEvent', eventData);
 			eventData.beforeRequest();
 
 			result = this.event_core(eventData);
 
 			eventData.afterRequest();
-			Event.fire(Aranea.Data.systemForm, 'aranea:afterEvent', eventData);
+			Aranea.Data.systemForm.fire('aranea:afterEvent', eventData);
 		}
 		return Object.isUndefined(result) ? false : result;
 	},
@@ -668,6 +677,8 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 	TYPE: Aranea.Page.Submitter.TYPE_AJAX,
 
 	event: function(eventData) {
+		Aranea.Logger.profile('Aranea.Page.Submitter.AJAX.event()');
+
 		if (eventData.isSubmitAllowed(eventData)) {
 			eventData.beforeRequest();
 
@@ -690,6 +701,8 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 				onFailure: this.onAjaxFailure.bind(this),
 				onException: this.onAjaxException.bind(this)
 			});
+		} else {
+			Aranea.Logger.profile('Aranea.Page.Submitter.AJAX.event()');
 		}
 		return false;
 	},
@@ -700,10 +713,10 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 
 	getAjaxParameters: function(neededAraTransactionId, ajaxRequestId, updateRegions, neededAraClientStateId) {
 		return {
-				araTransactionId: neededAraTransactionId,
-				ajaxRequestId: ajaxRequestId,
-				updateRegions: updateRegions,
-				araClientStateId: neededAraClientStateId
+			araTransactionId: neededAraTransactionId,
+			ajaxRequestId: ajaxRequestId,
+			updateRegions: updateRegions,
+			araClientStateId: neededAraClientStateId
 		};
 	},
 
@@ -750,6 +763,8 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 					}
 				}
 			}
+
+			Aranea.Logger.profile('Aranea.Page.Submitter.AJAX.event()');
 		}.bind(this);
 
 		// force the delay here
@@ -770,6 +785,7 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 	onAjaxException: function(request, exception) {
 		Aranea.Page.handleRequestException(request, exception);
 		this.afterRequest();
+		Aranea.Logger.profile('Aranea.Page.Submitter.AJAX.event()');
 	}
 });
 

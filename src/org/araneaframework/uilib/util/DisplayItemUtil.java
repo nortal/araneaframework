@@ -17,21 +17,18 @@
 package org.araneaframework.uilib.util;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.backend.util.BeanUtil;
+import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.Assert;
-import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 
 /**
@@ -43,151 +40,117 @@ import org.araneaframework.uilib.support.DisplayItem;
 public abstract class DisplayItemUtil implements Serializable {
 
   /**
-   * Returns whether <code>value</code> is found in the select items.
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
+   * <code>displayItemContainer</code>.
    * 
-   * @param value the value that is controlled.
-   * @return whether <code>value</code> is found in the select items.
-   * @since 2.0
-   */
-  public static boolean isValueInItems(DisplayItemContainer<?> displayItemContainer, String value) {
-    return isValueInItems(displayItemContainer.getAllItems(), displayItemContainer.getItemValueProperty(), value);
-  }
-
-  public static boolean isValueInItems(List<DisplayItem> displayItems, String value) {
-    boolean contains = false;
-    if (displayItems != null) {
-      for (DisplayItem item : displayItems) {
-        contains = contains || StringUtils.equals(item.getValue(), value);
-      }
-    }
-    return contains;
-  }
-
-  /**
-   * Returns whether <code>value</code> is found in the select items.
-   * 
-   * @param value the value that is controlled.
-   * @return whether <code>value</code> is found in the select items.
-   */
-  public static <T> T getBean(DisplayItemContainer<T> displayItemContainer, String value) {
-    if (!StringUtils.isBlank(value)) {
-      for (T item : displayItemContainer.getAllItems()) {
-        String currentValue = getBeanValue(item, displayItemContainer.getItemValueProperty());
-        if (StringUtils.equals(value, currentValue)) {
-          return item;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Retrieves a value from given bean using the given property. Therefore, the bean must have the appropriate getter.
-   * 
-   * @param bean Any kind of bean with getters.
-   * @param property The JavaBean property name that the bean has.
-   * @return The value of the bean getter coerced into <code>String</code>
-   * @since 2.0.
-   */
-  public static String getBeanValue(Object bean, String property) {
-    String value = null;
-    if (bean != null) {
-      value = ObjectUtils.toString(BeanUtil.getPropertyValue(bean, property));
-    }
-    return value;
-  }
-
-  /**
-   * Resolves the child options of the given "optgroup" bean. The bean is "not required" to have the given property.
-   * When the bean has the given property, and it returns an array or {@link List} of sub-beans, which is not empty and
-   * contains items of type <code>T</code>. Otherwise returns <code>null</code>.
-   * 
-   * @param <T> The type of the beans.
-   * @param bean The bean to check for child options.
-   * @param childrenProperty The bean property to use for fetching child options. 
-   * @return A list of child options, or <code>null</code>.
+   * @param displayItemContainer The container for new created {@link DisplayItem}s.
+   * @param beanCollection A <code>Collection</code> of beans, may not contain <code>null</code>s.
+   * @param valueProperty The name of the bean field corresponding to the (submitted) value of the select item.
+   * @param labelProperty The name of the bean field corresponding to the label of the select item.
    */
   @SuppressWarnings("unchecked")
-  public static <T> List<T> getChildItemsValue(T bean, String childrenProperty) {
-    if (bean == null || childrenProperty == null) {
-      return null;
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer<DisplayItem> displayItemContainer,
+      Collection<T> beanCollection, String valueProperty, String labelProperty) {
+
+    Assert.notNullParam(displayItemContainer, "displayItemContainer");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
+    Assert.notEmptyParam(valueProperty, "valueName");
+    Assert.notEmptyParam(labelProperty, "displayStringName");
+
+    if (beanCollection.isEmpty()) {
+      return;
     }
 
-    Class<?> type = BeanUtil.getPropertyType(bean.getClass(), childrenProperty);
-    List<?> value = null;
+    BeanMapper<T> beanMapper = new BeanMapper<T>((Class<T>) beanCollection.iterator().next().getClass());
 
-    if (type == List.class || type.getComponentType() == bean.getClass()) {
-      Object tmpValue = getBeanValue(bean, childrenProperty);
+    Transformer valueTransformer = new BeanToPropertyValueTransformer(beanMapper, valueProperty);
+    Transformer labelTransformer = new BeanToPropertyValueTransformer(beanMapper, labelProperty);
 
-      if (tmpValue != null) {
-        if (type.isArray()) {
-          T[] arr = (T[]) tmpValue;
-          value = Arrays.asList(arr);
-        } else {
-          value = (List<T>) tmpValue;
-        }
+    addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, labelTransformer);
+  }
 
-        if (value.isEmpty() || !type.isInstance(value.get(0))) {
-          value = null;
-        }
-      }
+
+  /**
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
+   * <code>displayItemContainer</code>.
+   * 
+   * @param displayItemContainer The container for new created {@link DisplayItem}s.
+   * @param beanCollection A <code>Collection</code> of beans, may not contain <code>null</code>s.
+   * @param valueProperty The name of the bean field corresponding to the (submitted) value of the select item.
+   * @param labelTransformer The transformer producing label ({@link DisplayItem#getLabel()}) value from a bean.
+   * @since 1.1
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer<DisplayItem> displayItemContainer,
+      Collection<T> beanCollection, String valueProperty, Transformer labelTransformer) {
+
+    Assert.notNullParam(displayItemContainer, "displayItemContainer");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
+    Assert.notEmptyParam(valueProperty, "valueProperty");
+    Assert.notNullParam(labelTransformer, "labelTransformer");
+
+    if (beanCollection.isEmpty()) {
+      return;
     }
 
-    return (List<T>) value;
+    BeanMapper<T> beanMapper = new BeanMapper<T>((Class<T>) beanCollection.iterator().next().getClass());
+    Transformer valueTransformer = new BeanToPropertyValueTransformer(beanMapper, valueProperty);
+
+    addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, labelTransformer);
+  }
+
+  /** 
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
+   * <code>displayItemContainer</code>.
+   * 
+   * @param displayItemContainer The container for new created {@link DisplayItem}s.
+   * @param beanCollection A <code>Collection</code> of beans, may not contain <code>null</code>s.
+   * @param valueTransformer The transformer producing value ({@link DisplayItem#getValue()}) from a bean.
+   * @param labelProperty The name of the bean field corresponding to the label of the select item.
+   * @since 1.1
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer<DisplayItem> displayItemContainer,
+      Collection<T> beanCollection, Transformer valueTransformer, String labelProperty) {
+
+    Assert.notNullParam(displayItemContainer, "displayItemContainer");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
+    Assert.notNullParam(valueTransformer, "valueTransformer");
+    Assert.notEmptyParam(labelProperty, "labelProperty");
+
+    if (beanCollection.isEmpty()) {
+      return;
+    }
+
+    BeanMapper<T> beanMapper = new BeanMapper<T>((Class<T>) beanCollection.iterator().next().getClass());
+    Transformer labelTransformer = new BeanToPropertyValueTransformer(beanMapper, labelProperty);
+
+    addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, labelTransformer);
   }
 
   /**
-   * Returns whether <code>value</code> is found in the select items.
-   * 
-   * @param items The items that should be checked whether given <code>value</code> is one of them.
-   * @param valueProperty The property of an item to retrieve its value (converted to String).
-   * @param value The value that an item is expected to have.
-   * @return whether <code>value</code> is found in the select items.
+   * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
+   * <code>displayItemContainer</code>.
+   *
+   * @param displayItemContainer the container for created {@link DisplayItem}s
+   * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
+   * @param valueTransformer The transformer producing value ({@link DisplayItem#getValue()}) from a bean.
+   * @param labelTransformer The transformer producing label ({@link DisplayItem#getLabel()}) value from a bean.
+   * @since 1.1
    */
-  public static <T> boolean isValueInItems(Collection<T> items, String valueProperty, String value) {
-    if (CollectionUtils.isNotEmpty(items)) {
-      for (T item : items) {
-        String currentValue = getBeanValue(item, valueProperty);
-        if (StringUtils.equals(value, currentValue)) {
-          return true;
-        }
-      }
+  public static <T> void addItemsFromBeanCollection(DisplayItemContainer<DisplayItem> displayItemContainer,
+      Collection<T> beanCollection, Transformer valueTransformer, Transformer labelTransformer) {
+
+    Assert.notNullParam(displayItemContainer, "displayItemContainer");
+    Assert.noNullElementsParam(beanCollection, "beanCollection");
+    Assert.notNullParam(valueTransformer, "valueTransformer");
+    Assert.notNullParam(labelTransformer, "labelTransformer");
+
+    for (T item : beanCollection) {
+      String value = (String) valueTransformer.transform(item);
+      String label = (String) labelTransformer.transform(item);
+      displayItemContainer.addItem(new DisplayItem(value, label));
     }
-    return false;
-  }
-
-  /**
-   * Returns a display item bean the specified value.
-   * 
-   * @param items The display items that represent all items to search from.
-   * @param valueProperty The name of the value property of the bean <code>B</code>.
-   * @param value The value to use for finding the matched display item.
-   * @return Single display item bean from <code>items</code>, or <code>null</code>.
-   */
-  public static <B> B getSelectItem(List<B> items, String valueProperty, Object value) {
-    if (value != null && CollectionUtils.isNotEmpty(items)) {
-      value = ObjectUtils.toString(value);
-
-      for (B item : items) {
-        String currentValue = getBeanValue(item, valueProperty);
-        if (ObjectUtils.equals(value, currentValue)) {
-          return item;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Returns a display item for which a value is equal to the given <code>value</code>.
-   * 
-   * @param items The display items that represent all items to search from.
-   * @param value The value to use for finding the matched display item.
-   * @return Single display item from <code>items</code>, or <code>null</code>.
-   */
-  public static DisplayItem getSelectItem(List<DisplayItem> items, String value) {
-    List<DisplayItem> results = getSelectItems(items, new String[] { value });
-    return results != null && !results.isEmpty() ? results.get(0) : null;
   }
 
   /**
@@ -197,8 +160,8 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param values The (display items) values for filtering display items.
    * @return A subset of display items that were matched.
    */
-  public static List<DisplayItem> getSelectItems(List<DisplayItem> items, String... values) {
-    List<DisplayItem> results = new LinkedList<DisplayItem>();
+  public static Collection<DisplayItem> getItems(Collection<DisplayItem> items, String... values) {
+    Collection<DisplayItem> results = new LinkedList<DisplayItem>();
     if (CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
         if (ArrayUtils.contains(values, item.getValue())) {
@@ -210,23 +173,129 @@ public abstract class DisplayItemUtil implements Serializable {
   }
 
   /**
-   * Returns display item index by the specified value.
+   * Returns a display item from the given collection by the given <code>value</code>.
    * 
-   * @param items display items.
-   * @param value display item value.
-   * @return display item index by the specified value.
+   * @param items A collection of {@link DisplayItem}s.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>null</code>, too.
+   * @return The found display item or <code>null</code>.
    */
-  public static <T> int getValueIndex(List<T> items, String valueProperty, String value) {
-    if (CollectionUtils.isNotEmpty(items)) {
-      for (ListIterator<T> i = items.listIterator(); i.hasNext();) {
-        T item = i.next();
-        String currentValue = getBeanValue(item, valueProperty);
-        if (StringUtils.equals(value, currentValue)) {
-          return i.previousIndex();
+  public static DisplayItem getItem(Collection<DisplayItem> items, String value) {
+    DisplayItem result = null;
+
+    if (!StringUtils.isBlank(value)) {
+      for (DisplayItem item : items) {
+        if (StringUtils.equals(value, item.getValue())) {
+          result = item;
+          break;
         }
       }
     }
-    return -1;
+
+    return result;
+  }
+
+  /**
+   * Returns a display item from the given container by the given <code>value</code>.
+   * 
+   * @param container A container of {@link DisplayItem}s.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>null</code>, too.
+   * @return The found display item or <code>null</code>.
+   */
+  public static DisplayItem getItem(DisplayItemContainer<DisplayItem> container, String value) {
+    Assert.notNullParam(container, "container");
+    return getItem(container.getAllItems(), value);
+  }
+
+  /**
+   * Returns an enabled display item from the given container by the given <code>value</code>.
+   * 
+   * @param container A container of {@link DisplayItem}s.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>null</code>, too.
+   * @return The found enabled display item or <code>null</code>.
+   */
+  public static DisplayItem getEnabledItem(DisplayItemContainer<DisplayItem> container, String value) {
+    Assert.notNullParam(container, "container");
+    return getItem(container.getEnabledItems(), value);
+  }
+
+  /**
+   * Returns whether the <code>value</code> is found in the select items.
+   * 
+   * @param displayItemContainer A container of {@link DisplayItem}s.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
+   * @return A Boolean that is <code>true</code> when the value was found.
+   * @deprecated Since 2.0: use {@link #containsItem(DisplayItemContainer, String)} instead.
+   */
+  @Deprecated
+  public static boolean isValueInItems(DisplayItemContainer<DisplayItem> displayItemContainer, String value) {
+    return containsItem(displayItemContainer, value);
+  }
+
+  /**
+   * Returns whether <code>value</code> is found in the select items.
+   * 
+   * @param displayItems A collection of display items to use for searching.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
+   * @return A Boolean that is <code>true</code> when the value was found.
+   * @deprecated Since 2.0: use {@link #containsItem(Collection, String) instead.
+   */
+  @Deprecated
+  public static boolean isValueInItems(Collection<DisplayItem> displayItems, String value) {
+    return getItem(displayItems, value) != null;
+  }
+
+  /**
+   * Returns whether <code>value</code> is found in the select items.
+   * 
+   * @param container A container of {@link DisplayItem}s.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
+   * @return The found display item or <code>null</code>.
+   * @return A Boolean that is <code>true</code> when the value was found.
+   */
+  public static boolean containsItem(DisplayItemContainer<DisplayItem> container, String value) {
+    return getItem(container, value) != null;
+  }
+
+  /**
+   * Returns whether <code>value</code> is found in the select items.
+   * 
+   * @param displayItems A collection of display items to use for searching.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
+   * @return A Boolean that is <code>true</code> when the value was found.
+   */
+  public static boolean containsItem(Collection<DisplayItem> displayItems, String value) {
+    return getItem(displayItems, value) != null;
+  }
+
+  /**
+   * Returns whether <code>value</code> is found in the select items.
+   * 
+   * @param container A container of {@link DisplayItem}s.
+   * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
+   * @return The found display item or <code>null</code>.
+   * @return A Boolean that is <code>true</code> when the value was found.
+   */
+  public static boolean containsEnabledItem(DisplayItemContainer<DisplayItem> container, String value) {
+    return getEnabledItem(container, value) != null;
+  }
+
+  /**
+   * Returns display item label by the specified value.
+   * 
+   * @param displayItems A collection of display items to use for searching.
+   * @param value The display item value to search for.
+   * @return The display item label by the specified value, or an empty string.
+   */
+  public static String getLabelForValue(Collection<DisplayItem> displayItems, String value) {
+    Assert.noNullElementsParam(displayItems, "displayItems");
+
+    for (DisplayItem item : displayItems) {
+      if (StringUtils.equals(value, item.getValue())) {
+        return item.getLabel();
+      }
+    }
+
+    return "";
   }
 
   /**
@@ -236,47 +305,25 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param value display The value to search for in display items.
    * @return The index of the display item with the specified value.
    */
-  public static int getValueIndex(List<DisplayItem> items, String value) {
+  public static int getValueIndex(Collection<DisplayItem> items, String value) {
     if (CollectionUtils.isNotEmpty(items)) {
-      for (ListIterator<DisplayItem> i = items.listIterator(); i.hasNext();) {
-        String currentValue = i.next().getValue();
-        if (StringUtils.equals(value, currentValue)) {
-          return i.previousIndex();
+      int index = -1;
+
+      for (DisplayItem item : items) {
+        index++;
+        if (StringUtils.equals(value, item.getValue())) {
+          break;
         }
       }
     }
     return -1;
   }
 
-  /**
-   * Returns a subset of <code>items</code> that have values in the <code>values</code> array. Instead of iterating over
-   * <code>values</code>, this method iterates over <code>items</code>. This way the order of subset items will be in
-   * the same order as in the <code>items</code> list.
-   * @param <T> The type of list items.
-   * @param items The allowed items. A subset of this list will be returned.
-   * @param valueProperty The bean property name of the item to retrieve its value.
-   * @param values The values (e.g. from request) that define which items are allowed in the result list.
-   * @return A subset of <code>items</code>.
-   * @since 2.0
-   */
-  public static <T> List<T> getSelectedItems(List<T> items, String valueProperty, String[] values) {
-    List<T> results = new LinkedList<T>();
-    for (T item : items) {
-      if (ArrayUtils.contains(values, DisplayItemUtil.getBeanValue(item, valueProperty))) {
-        results.add(item);
-        if (results.size() == values.length) {
-          break;
-        }
-      }
-    }
-    return results;
-  }
-
-  public static <T> String[] getItemsValues(List<T> items, String valueProperty) {
+  public static String[] getItemsValues(Collection<DisplayItem> items) {
     String[] result = new String[items.size()];
     int i = 0;
-    for (T item : items) {
-      result[i++] = getBeanValue(item, valueProperty);
+    for (DisplayItem item : items) {
+      result[i++] = item.getValue();
     }
     return result;
   }
@@ -288,24 +335,22 @@ public abstract class DisplayItemUtil implements Serializable {
    * If that constraint is violated, an assertion exception will be thrown.
    * 
    * @param items The display items of the control
-   * @param item An item to be added
+   * @param optionalItem An item to be added
    */
-  public static <T> void assertUnique(List<T> items, T item) {
-    if (CollectionUtils.isNotEmpty(items)) {
-      Assert.isTrue(!items.contains(item), "The *SelectControl items must have unique values - not like " + item);
-    }
-  }
-
-  /**
-   * Checks whether the <code>items</code> would contain unique values. If that constraint is violated, an assertion
-   * exception will be thrown.
-   * 
-   * @param items The display items of the control
-   */
-  public static <T> void assertUnique(List<T> items) {
+  private static <T> void assertUnique(Collection<T> items, T optionalItem) {
     if (CollectionUtils.isNotEmpty(items)) {
       Set<T> uniqueItems = new HashSet<T>(items);
-      Assert.isTrue(uniqueItems.size() == items.size(), "The *SelectControl items must have unique values.");
+      int inc = 0;
+
+      Assert.isTrue(uniqueItems.size() == items.size(), "The DisplayItemContainer items are not unique!");
+
+      if (optionalItem != null) {
+        uniqueItems.add(optionalItem);
+        inc++;
+      }
+
+      Assert.isTrue(uniqueItems.size() == items.size() + inc, "The item '" + optionalItem
+          + "' is already contained by DisplayItemContainer.");
     }
   }
 
@@ -316,44 +361,39 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param <T> The type of the display container.
    * @param container The container of display items.
    */
-  public static <T> void assertUnique(DisplayItemContainer<T> container) {
-    List<T> items = new LinkedList<T>(container.getAllItems());
+  public static void assertUnique(DisplayItemContainer<DisplayItem> container, DisplayItem optionalItem) {
+    List<DisplayItem> items = new LinkedList<DisplayItem>(container.getAllItems());
 
     if (CollectionUtils.isNotEmpty(items)) {
-      if (container.getItemGroupProperty() != null) {
-        for (T item : container.getAllItems()) {
-          List<T> subItems = getChildItemsValue(item, container.getItemChildrenProperty());
-
-          if (subItems != null) {
-            items.addAll(subItems);
-          }
+      for (DisplayItem item : items) {
+        if (item.isGroup() && CollectionUtils.isNotEmpty(item.getChildOptions())) {
+          items.addAll(item.getChildOptions());
         }
       }
 
-      assertUnique(items);
-    }
-  }
-  
-  public static <T> void addItemsFromBeanCollection(SelectControl<DisplayItem> select, List<T> params,
-      Transformer labelTransformer, Transformer valueTransformer) {
-    for (T param : params) {
-      String label = ObjectUtils.toString(labelTransformer.transform(param));
-      String value = ObjectUtils.toString(valueTransformer.transform(param));
-      select.addItem(label, value);
+      assertUnique(items, optionalItem);
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T> Class<T> resolveClass(Class<T> itemClass, List<T> items) {
-    Class<T> result = itemClass;
-    if (result == null && items != null && !items.isEmpty()) {
-      for (T item : items) {
-        if (item != null) {
-          result = (Class<T>) item.getClass();
-          break;
-        }
-      }
+  /**
+   * A tranformer that converts converts given object into a String value using the given property of the bean.
+   */
+  private static class BeanToPropertyValueTransformer implements Transformer, Serializable {
+
+    private final BeanMapper<?> bm;
+
+    private final String propertyName;
+
+    public BeanToPropertyValueTransformer(BeanMapper<?> beanMapper, String propertyName) {
+      Assert.notNullParam(this, beanMapper, "beanMapper");
+      Assert.notNullParam(this, propertyName, "propertyName");
+
+      this.bm = beanMapper;
+      this.propertyName = propertyName;
     }
-    return result;
+
+    public Object transform(Object bean) {
+      return ObjectUtils.toString(this.bm.getProperty(bean, this.propertyName), null);
+    }
   }
 }
