@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -123,34 +122,30 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     }
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, List<EventListener>> getEventListeners() {
     if (this.eventListeners == null) {
-      this.eventListeners = new LinkedMap(1);
+      this.eventListeners = new LinkedHashMap<String, List<EventListener>>();
     }
     return this.eventListeners;
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, List<ActionListener>> getActionListeners() {
     if (this.actionListeners == null) {
-      this.actionListeners = new LinkedMap(1);
+      this.actionListeners = new LinkedHashMap<String, List<ActionListener>>();
     }
     return this.actionListeners;
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, Object> getViewData() {
     if (this.viewData == null) {
-      this.viewData = new LinkedMap(1);
+      this.viewData = new LinkedHashMap<String, Object>();
     }
     return this.viewData;
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, Object> getViewDataOnce() {
     if (this.viewDataOnce == null) {
-      this.viewDataOnce = new LinkedMap(1);
+      this.viewDataOnce = new LinkedHashMap<String, Object>();
     }
     return this.viewDataOnce;
   }
@@ -497,8 +492,11 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available until explicitly
-   * removed with {@link #removeViewData(String)}.
+   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will
+   * be available, until explicitly removed with {@link #removeViewData(String)}.
+   * 
+   * @param key The key under which <code>customDataItem</code> will be made available.
+   * @param customDataItem The data that will be made available.
    */
   public void putViewData(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -506,7 +504,9 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Removes the custom data under key.
+   * Removes the custom data under <code>key</code>.
+   * 
+   * @param key The key, which will be removed from widget's view data.
    */
   public void removeViewData(String key) {
     Assert.notNullParam(this, key, "key");
@@ -514,8 +514,11 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available during this
-   * request only.
+   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will be available during this request
+   * only. It will be discarded right before update() is called.
+   * 
+   * @param key The key under which <code>customDataItem</code> will be made available.
+   * @param customDataItem The data that will be made available.
    */
   public void putViewDataOnce(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");

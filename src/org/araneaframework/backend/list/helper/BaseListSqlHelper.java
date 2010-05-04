@@ -23,10 +23,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -631,7 +630,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the items range query.
    */
   public final void setSqlQuery(String sqlQuery, Object... params) {
-    this.rangeStatement = new SqlStatement(sqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+    this.rangeStatement = new SqlStatement(sqlQuery, params == null ? Collections.emptyList() : Arrays.asList(params));
   }
 
   /**
@@ -649,7 +648,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the items range query.
    */
   public final void setSqlQuery(String sqlQuery, List<Object> params) {
-    this.rangeStatement = new SqlStatement(sqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+    this.rangeStatement = new SqlStatement(sqlQuery, params == null ? Collections.emptyList() : params);
   }
 
   /**
@@ -663,7 +662,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the count query.
    */
   public final void setCountSqlQuery(String countSqlQuery, Object... params) {
-    this.countStatement = new SqlStatement(countSqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+    this.countStatement = new SqlStatement(countSqlQuery, params == null ? Collections.emptyList() : Arrays.asList(params));
   }
 
   /**
@@ -677,7 +676,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the count query.
    */
   public final void setCountSqlQuery(String countSqlQuery, List<Object> params) {
-    this.countStatement = new SqlStatement(countSqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+    this.countStatement = new SqlStatement(countSqlQuery, params == null ? Collections.emptyList() : params);
   }
 
   /**

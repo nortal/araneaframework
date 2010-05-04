@@ -136,15 +136,15 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
    * This method should parse the request parameters (preprocessed with {@link #preprocessRequestParameters(String[])})
    * and produce the control value.
    * 
-   * @param parameterValues the request parameters.
-   * @return control value.
+   * @param parameterValues A not <code>null</code> array of request parameters.
+   * @return The control value.
    */
   protected abstract T fromRequestParameters(String[] parameterValues);
 
   /**
    * This method should return the <code>String[]</code> representation of the control value.
    * 
-   * @param controlValue the control value.
+   * @param controlValue The not <code>null</code> control value to convert into <code>String</code>.
    * @return the <code>String[]</code> representation of the control value.
    */
   protected abstract String[] toResponseParameters(T controlValue);
