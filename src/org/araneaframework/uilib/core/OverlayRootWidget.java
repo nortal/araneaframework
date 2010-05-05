@@ -97,14 +97,6 @@ public class OverlayRootWidget extends BaseUIWidget {
   protected String errorPage;
 
   /**
-   * Informs whether our child component is already initialized or not. Child component will be initialized when it is
-   * about to receive its first request (see task 839).
-   * 
-   * @since 2.0
-   */
-  protected boolean childInitialized;
-
-  /**
    * Constructs a new root overlay widget with given subwidget to render. The sub widget is a required parameter.
    * <p>
    * This constructor also sets the view selector of the this root widget to "overlayRoot" and the error page to
@@ -136,12 +128,8 @@ public class OverlayRootWidget extends BaseUIWidget {
   }
 
   @Override
-  protected void update(InputData input) throws Exception {
-    if (!this.childInitialized) {
-      addWidget("c", new OverlayFlowContainer(this.child));
-      this.childInitialized = true;
-    }
-    super.update(input);
+  protected void init() throws Exception {
+    addWidget("c", new OverlayFlowContainer(this.child));
   }
 
   public void setErrorPage(String errorPage) {
@@ -157,8 +145,33 @@ public class OverlayRootWidget extends BaseUIWidget {
    */
   protected class OverlayFlowContainer extends ExceptionHandlingFlowContainerWidget {
 
+    /**
+     * The sub widget to render. This widget is required. We initialize it on first request. That's why we store it
+     * here.
+     */
+    protected Widget topWidget;
+
+    /**
+     * Initializes this <code>OverlayFlowContainer</code> with the given <code>topWidget</code> to render. The widget is
+     * required.
+     * 
+     * @param topWidget The widget to render in the overlay container.
+     */
     public OverlayFlowContainer(Widget topWidget) {
-      super(topWidget);
+      Assert.notNullParam(topWidget, "topWidget");
+      this.topWidget = topWidget;
+    }
+
+    @Override
+    protected void update(InputData input) throws Exception {
+      if (this.topWidget != null) {
+        try {
+          start(this.topWidget);
+        } finally { // Important: no matter whether starting is successful or not - do not attempt to start it again.
+          this.topWidget = null;
+        }
+      }
+      super.update(input);
     }
 
     @Override

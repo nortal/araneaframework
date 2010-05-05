@@ -32,6 +32,7 @@ import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
@@ -178,6 +179,6 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public TransitionHandler getTransitionHandler() {
-    return getLocalFlowContext().getTransitionHandler();
+    return new StandardFlowContainerWidget.StandardTransitionHandler();
   }
 }

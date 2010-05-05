@@ -209,7 +209,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     for (Iterator<CallFrame> i = this.callStack.iterator(); i.hasNext();) {
       CallFrame frame = i.next();
       i.remove();
-      frame.getWidget()._getComponent().destroy();
+
+      if (frame.getWidget().isAlive()) {
+        frame.getWidget()._getComponent().destroy();
+      }
     }
 
     super.destroy();

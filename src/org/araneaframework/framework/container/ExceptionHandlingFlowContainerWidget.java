@@ -35,23 +35,20 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * sub-class will have to provide implementation for the <code>renderExceptionHandler(OutputData, Exception)</code>
  * method, that allows custom handling for given exception. To define the page that renders the exception to the user,
  * one can use following solution:
- * 
- * <pre>
- * &lt;code&gt;
- * ServletUtil.include(&quot;/WEB-INF/jsp/error.jsp&quot;, this, output);
- * &lt;/code&gt;
- * </pre>
- * 
+ * <code>
+ * <pre>ServletUtil.include(&quot;/WEB-INF/jsp/error.jsp&quot;, this, output);</pre>
+ * </code>
  * The page would be rendered as any other page inside this container.
  * <p>
  * Also note that this widget declares three events in its <code>init()</code> method to let users handle the situation:
  * <ul>
- * <li>retry - retries to process the last event;</li>
- * <li>cancel - cancels the last event;</li>
- * <li>reset - resets the entire flow context of this container widget.</li>
+ * <li>retry - retries to process the last event;
+ * <li>cancel - cancels the last event;
+ * <li>reset - resets the entire flow context of this container widget.
  * </ul>
+ * <p>
  * If you wish to use these events, make sure that when you override the <code>init()</code> method, also include the
- * <code>super.init();</code> line to that method.
+ * <code>super.init()</code> line to that method.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -106,7 +103,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * @throws Exception Any non-specific exception that may occur.
    */
   public void handleEventRetry() throws Exception {
-  // noop
+    // Empty: no code needed for "retry".
   }
 
   /**
@@ -133,11 +130,10 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   @Override
   protected void handleWidgetException(Exception e) throws Exception {
     this.exception = e;
-    if (ExceptionUtils.getRootCause(e) != null) {
-      LOG.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));
-    } else {
-      LOG.error("Critical exception occured: ", e);
-    }
+
+    Throwable original = ExceptionUtils.getRootCause(e) != null ? ExceptionUtils.getRootCause(e) : e;
+    LOG.error("Critical exception occured: ", original);
+
     UpdateRegionContext updateRegionContext = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
     if (updateRegionContext != null) {
       updateRegionContext.disableOnce();
@@ -149,10 +145,18 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    */
   @Override
   protected void update(InputData input) throws Exception {
-    if (this.exception == null) {
-      super.update(input);
-    } else {
-      handleUpdate(input);
+    try {
+      if (this.exception == null) {
+        super.update(input);
+      } else {
+        handleUpdate(input);
+      }
+    } catch (Exception e) {
+      try {
+        handleWidgetException(e);
+      } catch (Exception e2) {
+        ExceptionUtil.uncheckException(e2);
+      }
     }
   }
 
@@ -161,10 +165,18 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    */
   @Override
   protected void event(Path path, InputData input) throws Exception {
-    if (this.exception == null) {
-      super.event(path, input);
-    } else if (path != null && !path.hasNext()) {
-      handleEvent(input);
+    try {
+      if (this.exception == null) {
+        super.event(path, input);
+      } else if (path != null && !path.hasNext()) {
+        handleEvent(input);
+      }
+    } catch (Exception e) {
+      try {
+        handleWidgetException(e);
+      } catch (Exception e2) {
+        ExceptionUtil.uncheckException(e2);
+      }
     }
   }
 

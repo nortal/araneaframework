@@ -4257,7 +4257,7 @@
 		<attribute>
 			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
 			<name>handler</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
