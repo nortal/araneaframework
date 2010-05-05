@@ -241,5 +241,19 @@ Aranea.ModalBox = {
 	closeWithAjaxHandler: function() {
 		Aranea.ModalBox.close();
 		Aranea.ModalBox.reloadPage();
+	},
+
+	/**
+	 * This method can be called to make the modal dialog update its layout due to changes in its content. This method
+	 * should not go server-side, just resize the dialog window and/or update its position. There is no structure
+	 * changes monitoring mechanism, the logic that does changes is responsible for calling this method!
+	 * 
+	 * @since 2.0
+	 */
+	resize: function() {
+		if (window.Modalbox) {
+			Modalbox.resizeToContent();
+			Modalbox._setPosition();
+		}
 	}
 };
