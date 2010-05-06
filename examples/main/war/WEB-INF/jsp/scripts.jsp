@@ -69,7 +69,21 @@
 	-->
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
-	<script type="text/javascript">Aranea.Logger.setLogger('blackbird');</script>
+	<script type="text/javascript">
+		Aranea.Logger.setLogger('blackbird');
+
+		// Fills in missing system-form input/button IDs.
+		document.observe('aranea:loaded', Aranea.Util.fillMissingIds);
+		document.observe('aranea:updated', Aranea.Util.fillMissingIds);
+
+		// Preserves system-form input/button focus during AJAX requests.
+		document.observe('aranea:loaded', Aranea.Util.observeFormInputFocus);
+		document.observe('aranea:updated', Aranea.Util.observeFormInputFocus); // Add second observer for new elements.
+		document.observe('aranea:updated', Aranea.Util.updateFormInputFocus);
+
+		// Sets focus to the first system-form input/button on page load.
+		document.observe('aranea:loaded', Aranea.Util.focusFormFirstInput);
+	</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>

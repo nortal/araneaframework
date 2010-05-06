@@ -21,7 +21,6 @@ import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
-import org.apache.commons.lang.Validate;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;
@@ -57,38 +56,40 @@ public class FormUtil {
 
   @SuppressWarnings("unchecked")
   public static <T> Control<? super T> createControl(Class<T> type) {
-    Validate.notNull(type);
+    Assert.notNullParam(type, "type");
 
-    if (String.class.equals(type)) {
-      return (Control<? super T>) createTextControl();
-    } else if (Number.class.isAssignableFrom(type)) {
+    Control<?> result = null;
 
-      if (BigDecimal.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createFloatControl();
+    if (Number.class.isAssignableFrom(type)) {
+
+      if (BigInteger.class.isAssignableFrom(type) || Long.class == type || Integer.class == type || Short.class == type
+          || Byte.class == type) {
+        result = createNumberControl();
+
+      } else {
+        result = createFloatControl();
       }
-
-      if (BigInteger.class.isAssignableFrom(type) || Long.class.equals(type) || Integer.class.equals(type)
-          || Short.class.equals(type) || Byte.class.equals(type)) {
-        return (Control<? super T>) createNumberControl();
-      }
-
-      return (Control<? super T>) createFloatControl();
 
     } else if (Date.class.isAssignableFrom(type)) {
-      if (Date.class.equals(type) || java.sql.Date.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createDateControl();
+
+      if (Date.class.isAssignableFrom(type) || java.sql.Date.class.isAssignableFrom(type)) {
+        result = createDateControl();
+
+      } else if (Time.class.isAssignableFrom(type)) {
+        result = createTimeControl();
+
+      } else if (Timestamp.class.isAssignableFrom(type)) {
+        result = createDateTimeControl();
       }
-      if (Time.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createTimeControl();
-      }
-      if (java.sql.Timestamp.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createDateTimeControl();
-      }
-    } else if (Boolean.class.equals(type)) {
-      return (Control<? super T>) createCheckboxControl();
+
+    } else if (Boolean.class == type) {
+      result = createCheckboxControl();
+
+    } else {
+      result = createTextControl();
     }
 
-    return (Control<? super T>) createTextControl();
+    return (Control<? super T>) result;
   }
 
   public static Control<String> createTextControl() {

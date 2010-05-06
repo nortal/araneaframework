@@ -135,7 +135,7 @@ Aranea.Behaviour = {
 
 	characterFilterInputMonitor: function(input) {
 		if (!(input = $(input))) return;
-		var filter = input.readAttribute('arn-charFilter')
+		var filter = input.readAttribute('arn-charFilter');
 		var value = $F(input);
 		if (value == null) return;
 		for (var i = 0; i < value.length; i++) {

@@ -187,7 +187,7 @@ Aranea.History = {
 		window.dhtmlHistory.firstLoad = false;
 		window.dhtmlHistory.ignoreLocationChange = false;
 	}
-}
+};
 
 /**
  * Overrides original method to extract state 
@@ -202,6 +202,6 @@ Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor = function(transport) {
 		}
 		Aranea.History.registerNewStateAs(stateVersion);
 	}
-},
+};
 
 document.observe('aranea:loaded', Aranea.History.init);

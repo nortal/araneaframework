@@ -128,11 +128,124 @@ Aranea.Logger.setLogger('dummy');
  */
 Aranea.Util = {
 
+	/**
+	 * The selector for fetching elements where ID must be set. See Aranea.Util.fillMissingIds().
+	 * 
+	 * @since 2.0
+	 */
+	MISSING_IDS_SELECTOR: 'input[type!=hidden]:not([id]), select:not([id]), textarea:not([id]), button:not([id])',
+
+	/**
+	 * The selector for setting focus to the first input on the page. See Aranea.Util.focusFormFirstInput().
+	 * 
+	 * @since 2.0
+	 */
+	FOCUS_INPUT_SELECTOR: 'input[type!=hidden]:enabled, select:enabled, textarea:enabled, button:enabled',
+
+	/**
+	 * The selector for observing the focus status of these elements. See Aranea.Util.observeFormInputFocus().
+	 * 
+	 * @since 2.0
+	 */
+	AUTO_FOCUS_INPUT_SELECTOR: 'input[type!=hidden], select, textarea, button',
+
 	setWindowCoordinates: function(x, y) {
-		document.observe('aranea:loaded', function() {
+		if (Aranea.Data.loaded) {
 			Aranea.UI.scrollToCoordinates(x, y);
-			document.observe('aranea:beforeEvent', Aranea.UI.saveScrollCoordinates);
+		} else {
+			document.observe('aranea:loaded', function() {
+				Aranea.UI.scrollToCoordinates(x, y);
+				document.observe('aranea:beforeEvent', Aranea.UI.saveScrollCoordinates);
+			});
+		}
+	},
+
+	/**
+	 * A utility method for filling in missing IDs with generated ones. Useful when, for example, making use of
+	 * automated testing tools that use XPath to find elements on page. It makes use of Prototype JS library method
+	 * element#identify(). It is not called from anywhere. When a project wants to make use of it, it is recommended to
+	 * use page loaded event to do that:
+	 * 
+	 * document.observe('aranea:loaded' , Aranea.Util.fillMissingIds);
+	 * document.observe('aranea:updated', Aranea.Util.fillMissingIds);
+	 * 
+	 * See also Aranea.Util.MISSING_IDS_SELECTOR that can be customized.
+	 */
+	fillMissingIds: function() {
+		$$(Aranea.Util.MISSING_IDS_SELECTOR).invoke('identify');
+		Aranea.Logger.debug('Filled in missing IDs for form inputs and buttons.')
+	},
+
+	/**
+	 * A utility method for automatically setting focus to the first element on form input (including button) inside the
+	 * system-form. It should be called on page load, like this:
+	 * 
+	 * document.observe('aranea:loaded' , Aranea.Util.focusFormFirstInput);
+	 * 
+	 * See also Aranea.Util.FOCUS_INPUT_SELECTOR that can be customized.
+	 */
+	focusFormFirstInput: function() {
+		if (!Aranea.Data.systemForm) throw('Page system-form is required!');
+		var inpts = Aranea.Data.systemForm.select(Aranea.Util.FOCUS_INPUT_SELECTOR);
+		if (inpts.length) {
+			inpts.first().focus();
+			Aranea.Logger.debug('Focused form input/button element: ' + inpts.first().inspect())
+		}
+		inpts = null;
+	},
+
+	/**
+	 * Monitor the currently focused form input/button. This should be used together with
+	 * Aranea.Util.updateFormInputFocus() to preserve input focus during AJAX requests.
+	 * 
+	 * document.observe('aranea:loaded' , Aranea.Util.observeFormInputFocus);
+	 * document.observe('aranea:updated', Aranea.Util.observeFormInputFocus); // Add second observer for new elements.
+	 * document.observe('aranea:updated', Aranea.Util.updateFormInputFocus);
+	 * 
+	 * @since 1.2 (introduced), 2.0 (implemented in Aranea.Util)
+	 */
+	observeFormInputFocus: function() {
+		if (!Aranea.Data.systemForm) throw('Page system-form is required!');
+
+		Aranea.Data.systemForm.select(Aranea.Util.AUTO_FOCUS_INPUT_SELECTOR).each(function(element) {
+			if (!element.retrieve('autoFocusObserverAdded')) {
+				element.observe('focus', function(event) {
+					var name = event.element().name;
+					Aranea.Data.focusedFormElementName = name;
+
+					if (name) {
+						Aranea.Logger.debug('Remembered that element [name=' + name + '] was focused.');
+					}
+				}).store('autoFocusObserverAdded', true);
+			}
 		});
+
+		Aranea.Logger.debug('Enabled focus observer for form input/button elements.');
+	},
+
+	/**
+	 * Sets focus to the last known system-form input/button. This should be used together with
+	 * Aranea.Util.observeFormInputFocus() to preserve input focus during AJAX requests.
+	 * 
+	 * document.observe('aranea:loaded' , Aranea.Util.observeFormInputFocus);
+	 * document.observe('aranea:updated', Aranea.Util.observeFormInputFocus); // Add second observer for new elements.
+	 * document.observe('aranea:updated', Aranea.Util.updateFormInputFocus);
+	 * 
+	 * @since 1.2 (introduced), 2.0 (implemented in Aranea.Util)
+	 */
+	updateFormInputFocus: function() {
+		if (!Aranea.Data.systemForm) throw('Page system-form is required!');
+		if (!Aranea.Data.focusedFormElementName) return;
+
+		var name = Aranea.Data.focusedFormElementName;
+		Aranea.Data.focusedFormElementName = null;
+
+		Aranea.Data.systemForm.select('[name="' + name + '"]').invoke('focus');
+
+		name = Aranea.Data.focusedFormElementName;
+		if (name) {
+			Aranea.Logger.debug('Updated form input/button [name=' + name + '] focus.');
+		}
 	},
 
 	/**
