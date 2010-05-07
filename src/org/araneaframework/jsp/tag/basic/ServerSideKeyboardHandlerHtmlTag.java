@@ -60,16 +60,15 @@ public class ServerSideKeyboardHandlerHtmlTag extends BaseKeyboardHandlerTag {
       event.setTarget(JspWidgetUtil.getContextWidgetFullId(pageContext));
     }
 
-    // submit_6 : function(systemForm, eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
-    StringBuffer result = new StringBuffer("function (event, elementId) { ");
-    result.append("Aranea.Page.event(");
-
+    // Let's call JS function: event(eventId, eventTarget, eventParam, eventPrecondition, eventUpdateRegions)
+    StringBuffer result = new StringBuffer("function(event, elementId) { Aranea.Page.event(");
     append(result, event.getId(), true);
     append(result, event.getTarget(), true);
     append(result, event.getParam(), true);
     append(result, event.getEventPrecondition(), true);
     append(result, JspUpdateRegionUtil.formatUpdateRegionsJS(event.getUpdateRegionNames()), false);
     result.append(")}");
+
     return result.toString();
   }
 

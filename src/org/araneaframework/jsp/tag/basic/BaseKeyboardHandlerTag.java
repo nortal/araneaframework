@@ -54,8 +54,8 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
    *    description ="A meta case-insensitive representation of key(s) press. The order of meta keys is not important. E.g. A, Ctrl+A, Shift+A, Alt+A, Ctrl+Shift+A. 'keyCode' and/or 'keyMetaCond' must be specified."
    * @since 2.0
    */
-  public void setKeyMetaCond(String keyCombo) throws JspException {
-    this.keyMetaCond = evaluateNotNull("keyMetaCond", keyCombo, String.class);
+  public void setKeyMetaCond(String keyMetaCond) throws JspException {
+    this.keyMetaCond = evaluateNotNull("keyMetaCond", keyMetaCond, String.class);
   }
 
   /**
@@ -92,7 +92,7 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
       throw new JspException("'handler' may not be empty in the KeyboardHandlerHtmlTag");
     }
 
-    JspUtil.writeStartTag_SS(out, "script type=\"text/javascript\"");
+    JspUtil.writeJavaScriptStartTag(out);
     out.write("Aranea.Keyboard.registerKeypressHandler('");
     out.write(StringUtils.defaultIfEmpty(scope, ""));
     out.write("',");
@@ -105,9 +105,9 @@ public abstract class BaseKeyboardHandlerTag extends BaseTag implements Containe
     } else {
       throw new JspException("KeyboardHandlerHtmlTag: keyCode or keyMetaCond must not be null!");
     }
-    out.write(",");
+    out.write(',');
     JspUtil.writeEscaped(out, handler);
     out.write(");");
-    JspUtil.writeEndTag_SS(out, "script");
+    JspUtil.writeScriptEndTag(out);
   }
 }

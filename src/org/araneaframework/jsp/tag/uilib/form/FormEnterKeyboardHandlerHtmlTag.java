@@ -19,8 +19,8 @@ package org.araneaframework.jsp.tag.uilib.form;
 import javax.servlet.jsp.JspException;
 
 /**
- * {@link org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag FormKeyboardHandlerHtmlTag} with key="enter"
- * by default.
+ * {@link org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag FormKeyboardHandlerHtmlTag} with
+ * keyCode="13" by default.
  * 
  * @see org.araneaframework.jsp.tag.uilib.form.FormKeyboardHandlerHtmlTag
  * @author Konstantin Tretyakov (kt@webmedia.ee)
@@ -28,7 +28,7 @@ import javax.servlet.jsp.JspException;
  * @jsp.tag
  *  name = "formEnterKeyboardHandler"
  *  body-content = "empty"
- *  description = "Equivalent of formKeyboardHandler, but key='enter' and event='onclick' by default."
+ *  description = "Equivalent of formKeyboardHandler, but keyCode="13" and event='onclick' by default. As usually, the parameters elementId/fullElementId/handler must be provided."
  */
 public final class FormEnterKeyboardHandlerHtmlTag extends FormKeyboardHandlerHtmlTag {
 
@@ -41,15 +41,15 @@ public final class FormEnterKeyboardHandlerHtmlTag extends FormKeyboardHandlerHt
    * Throw an exception on attempt to set key. This tag supports 13 ("enter") only!
    */
   @Override
-  public void setKeyCode(String key) throws JspException {
-    throw new JspException("You may not set key for the enter handler tag!");
+  public void setKeyCode(String keyCode) throws JspException {
+    throw new JspException("You may not set 'keyCode' for the enter handler tag!");
   }
 
   /**
    * Throw an exception on attempt to set key meta condition. This tag supports "enter" (13) only!
    */
   @Override
-  public void setKeyMetaCond(String keyCode) throws JspException {
-    throw new JspException("You may not set keyCode for the enter handler tag!");
+  public void setKeyMetaCond(String keyMetaCond) throws JspException {
+    throw new JspException("You may not set 'keyMetaCond' for the enter handler tag!");
   }
 }

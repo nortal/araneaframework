@@ -37,7 +37,7 @@ import org.araneaframework.uilib.form.formlist.FormListWidget;
  */
 public class FormListTag extends BaseWidgetTag {
 
-  protected FormListWidget<?, ?>.ViewModel formListViewModel;
+  protected FormListWidget.ViewModel formListViewModel;
 
   public final static String FORM_LIST_ID_KEY = "formListId";
 
