@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.control;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
@@ -85,20 +86,22 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
    */
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
-      String[] data = (String[]) this.innerData;
-      boolean hasValue = (data != null && data.length > 0 && data[0].trim().length() != 0);
+    if (isRead()) { // It means possible value change.
 
-      if (!isDisabled() || (isDisabled() && !hasValue)) {
+      String[] data = (String[]) this.innerData;
+      boolean hasValue = data != null && data.length > 0 && StringUtils.isNotBlank(data[0]);
+
+      if (!hasValue && isMandatory()) { // Check the value for mandatory controls.
+
         addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
             getLabel(), getEnvironment())));
+
+      } else if (getRawValue() != null) { // Check against converted value
+        validateNotNull();
       }
     }
-
-    if (getRawValue() != null) {
-      validateNotNull();
-    }
   }
+
 
   @Override
   public ViewModel getViewModel() {
