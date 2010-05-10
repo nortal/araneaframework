@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.form.converter;
 
-import org.araneaframework.uilib.support.DisplayItem;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -29,6 +27,7 @@ import org.araneaframework.uilib.ConverterNotFoundException;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.ConverterKey;
 import org.araneaframework.uilib.support.DataType;
+import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -129,7 +128,8 @@ public class ConverterFactory implements ConverterProvider {
       throw new RuntimeException("Error while looking for converter from " + fromType + " to " + toType.isList()
           + ". Cannot convert to/from list as the other type is not list!");
     }
-    return fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
+    Converter<?, ?> c = fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
+    return c.newConverter(); // Return every time a new converter instance.
   }
 
   /**
