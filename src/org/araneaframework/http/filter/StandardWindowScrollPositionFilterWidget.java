@@ -17,6 +17,7 @@
 package org.araneaframework.http.filter;
 
 import java.util.LinkedList;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -31,6 +32,8 @@ import org.araneaframework.http.WindowScrollPositionContext;
 public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget implements WindowScrollPositionContext {
 
   private static final Log LOG = LogFactory.getLog(StandardWindowScrollPositionFilterWidget.class);
+
+  protected static final String DEFAULT_COORDINATE = "0";
 
   protected LinkedList<String[]> savedCoordinates = new LinkedList<String[]>();
 
@@ -48,7 +51,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     this.savedCoordinates.clear();
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("RESETTED all coords ");
+      LOG.debug("Reseted all stored window coordinates.");
     }
   }
 
@@ -59,7 +62,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
       this.windowScrollY = coords[1];
 
       if (LOG.isDebugEnabled()) {
-        LOG.debug("popped to coords " + this.windowScrollX + " " + this.windowScrollY);
+        LOG.debug("Popped to window coordinates " + this.windowScrollX + " " + this.windowScrollY);
       }
     }
   }
@@ -68,14 +71,14 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     this.savedCoordinates.addFirst(new String[] { this.windowScrollX, this.windowScrollY });
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("pushed coords " + this.windowScrollX + " " + this.windowScrollY);
+      LOG.debug("Pushed window coordinates " + this.windowScrollX + " " + this.windowScrollY);
     }
 
     resetCurrent();
   }
 
   public void resetCurrent() {
-    this.windowScrollX = this.windowScrollY = null;
+    this.windowScrollX = this.windowScrollY = defaultValue(null);
   }
 
   public String getX() {
@@ -87,11 +90,11 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   }
 
   public void scrollTo(String x, String y) {
-    this.windowScrollX = x;
-    this.windowScrollY = y;
+    this.windowScrollX = defaultValue(x);
+    this.windowScrollY = defaultValue(y);
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("scrolled to " + x + " " + y);
+      LOG.debug("The window will be scrolled to " + x + " " + y);
     }
   }
 
@@ -102,13 +105,24 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
 
   @Override
   protected void update(InputData input) throws Exception {
-    this.windowScrollX = input.getGlobalData().get(WINDOW_SCROLL_X_KEY);
-    this.windowScrollY = input.getGlobalData().get(WINDOW_SCROLL_Y_KEY);
+    this.windowScrollX = defaultValue(input.getGlobalData().get(WINDOW_SCROLL_X_KEY));
+    this.windowScrollY = defaultValue(input.getGlobalData().get(WINDOW_SCROLL_Y_KEY));
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("REQUEST COORDS READ TO BE  to " + this.windowScrollX + " " + this.windowScrollY);
+      LOG.debug("Window scoll coordinates from request:  " + this.windowScrollX + " " + this.windowScrollY);
     }
 
     super.update(input);
+  }
+
+  /**
+   * Resolves the default value for empty coordinate value.
+   * 
+   * @param value The value to check
+   * @return The value or its replacement.
+   * @since 2.0
+   */
+  protected static String defaultValue(String value) {
+    return StringUtils.defaultString(value, DEFAULT_COORDINATE);
   }
 }
