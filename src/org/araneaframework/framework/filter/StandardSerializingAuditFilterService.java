@@ -20,6 +20,8 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.math.BigDecimal;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
@@ -57,10 +59,10 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
   }
 
   /**
-   * Sets the path where to write the serialized class in xml format. The path must be valid and writable. Example:
+   * Sets the path where to write the serialized classes in XML format. The path must be valid and writable. Example:
    * "/home/user/tmp".
    * 
-   * @param testXmlSessionPath
+   * @param testXmlSessionPath The path where to write the serialized classes in XML format.
    */
   public void setTestXmlSessionPath(String testXmlSessionPath) {
     this.testXmlSessionPath = testXmlSessionPath;
@@ -83,7 +85,9 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
         HttpSession sess = getEnvironment().getEntry(HttpSession.class);
         byte[] serialized = SerializationUtils.serialize(this.childService);
 
-        LOG.debug("Serialized session size: " + serialized.length);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Serialized session size: " + formatSize(serialized.length));
+        }
 
         if (this.testXmlSessionPath != null) {
           String dumpPath = this.testXmlSessionPath + "/" + sess.getId() + ".xml";
@@ -91,7 +95,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
           LOG.debug("Dumping session XML to '" + dumpPath + "'");
 
           XStream xstream = new XStream(new DomDriver());
-          PrintWriter writer = new PrintWriter(new FileWriter(dumpPath));
+          Writer writer = new PrintWriter(new FileWriter(dumpPath));
           xstream.toXML(this.childService, writer);
           writer.close();
         }
@@ -103,5 +107,22 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   protected Relocatable getRelocatable() {
     return (Relocatable) this.childService;
+  }
+
+  protected static String formatSize(int size) {
+    BigDecimal limit = BigDecimal.valueOf(1024);
+    BigDecimal fSize = BigDecimal.valueOf(size);
+
+    char[] units = { ' ', 'k', 'M', 'G', 'T' };
+    int unit = 0;
+
+    while (unit < units.length - 2 && fSize.compareTo(limit) > -1) {
+      fSize = fSize.divide(limit);
+      unit++;
+    }
+
+    // Do some rounding to make the value easier to understand. 
+    fSize = fSize.setScale(2, BigDecimal.ROUND_HALF_UP);
+    return fSize.toString() + units[unit] + 'B';
   }
 }

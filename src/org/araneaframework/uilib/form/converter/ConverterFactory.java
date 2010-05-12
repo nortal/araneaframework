@@ -123,7 +123,8 @@ public class ConverterFactory implements ConverterProvider {
       throw new RuntimeException("Error while looking for converter from " + fromType + " to " + toType.isList()
           + ". Cannot convert to/from list as the other type is not list!");
     }
-    return fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
+    Converter<?, ?> c = fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
+    return c.newConverter();
   }
 
   /**

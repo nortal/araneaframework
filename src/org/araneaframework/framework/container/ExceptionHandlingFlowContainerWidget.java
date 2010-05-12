@@ -64,9 +64,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   /**
    * Initializes the flow container.
    */
-  public ExceptionHandlingFlowContainerWidget() {
-    super();
-  }
+  public ExceptionHandlingFlowContainerWidget() {}
 
   /**
    * Initializes the flow container, and specifies the <code>topWidget</code> as its parent.
@@ -141,6 +139,22 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   }
 
   /**
+   * Overrides the <code>propagate()</code> functionality to catch and handle exceptions.
+   */
+  @Override
+  protected void propagate(Message message) throws Exception {
+    try {
+      super.propagate(message);
+    } catch (Exception e) {
+      try {
+        handleWidgetException(e);
+      } catch (Exception e2) {
+        ExceptionUtil.uncheckException(e2);
+      }
+    }
+  }
+
+  /**
    * Overrides the <code>update()</code> functionality to catch and handle exceptions.
    */
   @Override
@@ -171,22 +185,6 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       } else if (path != null && !path.hasNext()) {
         handleEvent(input);
       }
-    } catch (Exception e) {
-      try {
-        handleWidgetException(e);
-      } catch (Exception e2) {
-        ExceptionUtil.uncheckException(e2);
-      }
-    }
-  }
-
-  /**
-   * Overrides the <code>propagate()</code> functionality to catch and handle exceptions.
-   */
-  @Override
-  protected void propagate(Message message) throws Exception {
-    try {
-      super.propagate(message);
     } catch (Exception e) {
       try {
         handleWidgetException(e);

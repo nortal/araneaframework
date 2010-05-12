@@ -16,11 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
@@ -54,15 +53,14 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
       attributes.put("maxlength", viewModel.getMaxLength().toString());
     }
 
-    if (this.onChangePrecondition == null) {
-      this.onChangePrecondition = "return ";
-    } else if (!this.onChangePrecondition.endsWith(";")) {
-      this.onChangePrecondition += " return ";
-    } else {
-      this.onChangePrecondition += " && ";
+    if (this.events && this.onChangePrecondition == null) {
+      if (viewModel.isOnChangeEventRegistered()) {
+        this.onChangePrecondition = "return Aranea.UI.isChanged('" + getFullFieldId() + "') && !$('ACdiv."
+            + getFullFieldId() + "').visible();";
+      } else {
+        this.onChangePrecondition = "return !$('ACdiv." + getFullFieldId() + "').visible();";
+      }
     }
-
-    this.onChangePrecondition += "!$('ACdiv." + getFullFieldId() + "').visible();";
 
     boolean events = this.events;
     this.events = false;

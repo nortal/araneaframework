@@ -31,6 +31,8 @@ import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.ObjectUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.LocalizationContext;
@@ -62,6 +64,12 @@ public class StandardMessagingFilterWidget extends BaseFilterWidget implements M
   protected Map<String, Collection<MessageData>> permanentMessages;
 
   protected Map<String, Collection<MessageData>> messages;
+
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    clearMessages();
+    super.action(path, input, output);
+  }
 
   @Override
   protected void update(InputData input) throws Exception {

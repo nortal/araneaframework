@@ -120,9 +120,12 @@ Aranea.History = {
 		that.lastReceivedStateVersion = stateId;
 
 		if (that.SUPPORTS_HASH_CHANGE_EVENT) {
-			window.location.hash = stateId; // Note: this will also cause "onhashchange" event.
+			if (!stateId.startsWith('HTTP')) {
+				window.location.hash = stateId; // Note: this will also cause "onhashchange" event.
+			}
 		} else {
-			window.dhtmlHistory.add(stateVersion, 'AJAX'); // The 2nd parameter is a memo for us that we can use later.
+			var memo = stateId.startsWith('HTTP') ? 'HTTP' : 'AJAX';
+			window.dhtmlHistory.add(stateVersion, memo); // The 2nd parameter is a memo for us that we can use later.
 		}
 	},
 
@@ -136,7 +139,11 @@ Aranea.History = {
 	StateChangeListener: function(previousStateId, newStateId) {
 		Aranea.Logger.debug('History: Detected navigation  "' + previousStateId + '" -> "' + newStateId + '"');
 
-		// TODO check for newStateId.startsWith('HTTP') ?
+		var form = Aranea.Page.findSystemForm();
+		if (form && form.araClientStateId) {
+			form.araClientStateId.value = newStateId;
+		}
+		form = null;
 
 		// ..a.Page.ajax(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form])
 		Aranea.Page.ajax('', '', null, null, Aranea.History.UPDATE_REGION_ID);
@@ -150,7 +157,8 @@ Aranea.History = {
 	 * @param fnListener The state change listener to call when a state change occurs.
 	 */
 	OnHashChangeStateChangeListenerWrapper: function(fnListener) {
-		if (newStateId == Aranea.History.lastReceivedStateVersion) {
+		var t = Aranea.History, newStateId = t.getCurrentStateIdFromUrl();
+		if (newStateId == t.lastReceivedStateVersion) {
 			return; // This state was just loaded, therefore not a state change.
 		}
 
@@ -158,12 +166,14 @@ Aranea.History = {
 		// that was later updated with AJAX requests. We try to reload the content either from a variable where the
 		// content is stored or we do an AJAX request to reload the content.
 		if (!newStateId) {
-			if (Aranea.History.lastHttpState) {
+			if (t.lastHttpState) {
 				Aranea.Logger.debug('History: Restoring previous state from memory...');
-				$(Aranea.History.UPDATE_REGION_ID).update(Aranea.History.lastHttpState); // Replace HTML.
-				Aranea.History.lastReceivedStateVersion = newStateId; // Remember the state (empty string) change.
+				$(t.UPDATE_REGION_ID).update(t.lastHttpState); // Replace HTML.
+				t.lastReceivedStateVersion = newStateId; // Remember the state (empty string) change.
 				Aranea.Page.findSystemForm(); // Important to make the updated page change use the correct system-form.
 				return; // Return because no need to go server-side.
+			} else if (t.lastReceivedStateVersion) {
+				newStateId = 'HTTP:' + t.lastReceivedStateVersion;
 			} else { // The last state was not stored in a variable. Reload from server.
 				newStateId = Aranea.Page.findSystemForm().araClientStateId.value; // Read the state ID from form.
 			}
@@ -171,7 +181,7 @@ Aranea.History = {
 
 		if (newStateId) {
 			Aranea.Logger.debug('History: Restoring previous state using AJAX update...');
-			fnListener(Aranea.History.currentStateId, newStateId);
+			fnListener(t.lastReceivedStateVersion, newStateId);
 		} else {
 			Aranea.Logger.debug('History: No changes were done during "onhashchange" event because new state is empty!');
 		}
@@ -182,7 +192,7 @@ Aranea.History = {
 	 * used. Helps to integrate Aranea browser history support with RSH.
 	 */
 	RshStateChangeListenerWrapper: function(fnListener, newStateId) {
-		fnListener(Aranea.History.currentStateId, newStateId);
+		fnListener(Aranea.History.lastReceivedStateVersion, newStateId);
 
 		window.dhtmlHistory.firstLoad = false;
 		window.dhtmlHistory.ignoreLocationChange = false;
