@@ -62,7 +62,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
       this.windowScrollY = coords[1];
 
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Popped to window coordinates " + this.windowScrollX + " " + this.windowScrollY);
+        LOG.debug("Popped to window coordinates [" + this.windowScrollX + "," + this.windowScrollY + "].");
       }
     }
   }
@@ -71,7 +71,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     this.savedCoordinates.addFirst(new String[] { this.windowScrollX, this.windowScrollY });
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Pushed window coordinates " + this.windowScrollX + " " + this.windowScrollY);
+      LOG.debug("Pushed window coordinates [" + this.windowScrollX + "," + this.windowScrollY + "].");
     }
 
     resetCurrent();
@@ -94,7 +94,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     this.windowScrollY = defaultValue(y);
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("The window will be scrolled to " + x + " " + y);
+      LOG.debug("The window will be scrolled to [" + x + "," + y + "].");
     }
   }
 
@@ -109,7 +109,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     this.windowScrollY = defaultValue(input.getGlobalData().get(WINDOW_SCROLL_Y_KEY));
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Window scoll coordinates from request:  " + this.windowScrollX + " " + this.windowScrollY);
+      LOG.debug("Window scoll coordinates from request: [" + this.windowScrollX + "," + this.windowScrollY + "].");
     }
 
     super.update(input);

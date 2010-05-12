@@ -476,6 +476,11 @@ public class BaseComponent implements Component {
     }
     this.callCount--;
     this.reentrantTLS.get().counter--;
+
+    if (this.reentrantTLS.get().counter == 0) {
+      this.reentrantTLS.set(null);
+      this.reentrantTLS = null;
+    }
   }
 
   private int getReentrantCount() {
