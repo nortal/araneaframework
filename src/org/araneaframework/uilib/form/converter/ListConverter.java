@@ -65,10 +65,11 @@ public class ListConverter<C, D> extends BaseConverter<List<C>, List<D>> {
     return result;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void setFormElementCtx(FormElementContext<List<C>, List<D>> feCtx) {
     super.setFormElementCtx(feCtx);
-//TODO    this.listItemConverter.setFormElementCtx(feCtx);
+    this.listItemConverter.setFormElementCtx(FormElementContext.class.cast(feCtx));
   }
 
   /**
