@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form.control;
 import java.util.List;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
@@ -60,6 +61,21 @@ public class DefaultMultiSelectControl extends MultiSelectControl<DisplayItem> {
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
+  }
+
+  @Override
+  protected List<DisplayItem> fromRequestParameters(String[] parameterValues) {
+    return DisplayItemUtil.getItems(getEnabledItems(), parameterValues);
+  }
+
+  @Override
+  protected String[] toResponseParameters(List<DisplayItem> controlValues) {
+    return DisplayItemUtil.getItemsValues(controlValues);
+  }
+
+  @Override
+  public DataType getRawValueType() {
+    return new DataType(List.class, DisplayItem.class);
   }
 
   @Override

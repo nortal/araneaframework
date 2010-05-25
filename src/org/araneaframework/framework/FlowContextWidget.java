@@ -20,8 +20,30 @@ import org.araneaframework.Widget;
 
 /**
  * {@link Widget} that is {@link FlowContext}.
+ * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
 public interface FlowContextWidget extends FlowContext, Widget {
+
+  /**
+   * The event ID that flow context widget can process to cancel the given number of last flows. The event parameter is
+   * a positive integer indicating how many steps back the flow should return. If the integer is greater than the number
+   * of opened flows, all child flows will be closed, keeping just the flow container (the menu). If the integer is zero
+   * or less, no changes will be done.
+   * 
+   * @since 2.0
+   */
+  String FLOW_CANCEL_EVENT = "cancelFlow";
+
+  /**
+   * The setter for controlling whether {@link #FLOW_CANCEL_EVENT} is allowed to be processed. By default, depending on
+   * the implementation, the event should be allowed. This method can be called to turn it off, e.g. for security
+   * purposes.
+   * 
+   * @param allowFlowCancelEvent A Boolean indicating whether {@link #FLOW_CANCEL_EVENT} is allowed.
+   * @since 2.0
+   */
+  void setAllowFlowCancelEvent(boolean allowFlowCancelEvent);
+
 }

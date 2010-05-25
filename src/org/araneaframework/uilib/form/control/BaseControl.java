@@ -156,9 +156,9 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   }
 
   /**
-   * Returns whether the control is mandatory, that is must be inserted by user.
+   * Returns whether the control is mandatory, i.e. must be inserted by user.
    * 
-   * @return whether the control is mandatory, that is must be inserted by user.
+   * @return whether the control is mandatory, i.e. must be inserted by user.
    */
   protected boolean isMandatory() {
     return this.feCtx.isMandatory();

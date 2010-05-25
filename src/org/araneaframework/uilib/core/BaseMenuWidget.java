@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.core;
 
+import java.util.Collection;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
@@ -86,7 +87,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     this.menu = buildMenu();
     addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
     initMenuSelectorMountSupport();
-    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
+    putViewData(MenuContext.MENU_VIEWDATA_KEY, this.menu);
   }
 
   @Override
@@ -123,17 +124,6 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     });
   }
 
-  /**
-   * Menu selection listener.
-   */
-  protected class ItemSelectionListener extends StandardEventListener {
-
-    @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
-      BaseMenuWidget.this.selectMenuItem(eventParam);
-    }
-  }
-
   public void selectMenuItem(String menuItemPath) throws Exception {
     this.selectionPath = null;
     final Widget newFlow = this.menu.selectMenuItem(menuItemPath);
@@ -155,6 +145,13 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * @exception Exception Any non-specific runtime exception that may occur.
    */
   protected abstract MenuItem buildMenu() throws Exception;
+
+  /**
+   * Sub classes can implement this method to do some general work here after a menu item has been selected.
+   * 
+   * @since 2.0
+   */
+  protected void onMenuItemSelection() {}
 
   /**
    * Provides the {@link org.araneaframework.Path} of the currently selected menu item as a <code>String</code>.
@@ -205,4 +202,17 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   public String getMenuMountContextId() {
     return this.menuMountContextId;
   }
+
+  /**
+   * Menu selection listener.
+   */
+  protected class ItemSelectionListener extends StandardEventListener {
+
+    @Override
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+      BaseMenuWidget.this.selectMenuItem(eventParam);
+      BaseMenuWidget.this.onMenuItemSelection();
+    }
+  }
+
 }

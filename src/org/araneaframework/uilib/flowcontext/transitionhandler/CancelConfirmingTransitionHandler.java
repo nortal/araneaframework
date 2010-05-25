@@ -81,9 +81,9 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   @Override
-  public void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
-    boolean test = this.allCancellings ? transitionType != FlowContext.TRANSITION_START
-        && transitionType != FlowContext.TRANSITION_FINISH : transitionType == FlowContext.TRANSITION_CANCEL;
+  public void doTransition(FlowContext.Transition transitionType, final Widget activeFlow, final Closure transition) {
+    boolean test = this.allCancellings ? transitionType != FlowContext.Transition.START
+        && transitionType != FlowContext.Transition.FINISH : transitionType == FlowContext.Transition.CANCEL;
 
     if (test && this.shouldConfirm.evaluate(null)) {
       ConfirmationContext ctx = requireConfirmationContext(activeFlow);
@@ -104,9 +104,9 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
 
     private final Widget activeFlow;
 
-    private int transitionType;
+    private FlowContext.Transition transitionType;
 
-    private ParameterizedTransition(int transitionType, Widget activeFlow, Closure transition) {
+    private ParameterizedTransition(FlowContext.Transition transitionType, Widget activeFlow, Closure transition) {
       this.transitionType = transitionType;
       this.transition = transition;
       this.activeFlow = activeFlow;
@@ -114,7 +114,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
 
     public void execute(Object obj) {
       notifyScrollContext(this.transitionType, this.activeFlow);
-      this.transition.execute(activeFlow);
+      this.transition.execute(this.activeFlow);
     }
   }
 }

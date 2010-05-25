@@ -31,13 +31,13 @@ import org.araneaframework.core.StandardScope;
 import org.araneaframework.framework.AsynchronousRequestRegistry;
 
 /**
- * This utility class handles listening of component lifecycle events. Thus, it
- * is possible to write a component (the listener) that, for example, modifies
- * the child <code>Environment</code> of a component (the target).
+ * This utility class handles listening of component life-cycle events. Thus, it is possible to write a component (the
+ * listener) that, for example, modifies the child <code>Environment</code> of a component (the target).
  * <p>
  * Its usage is quite simple:
  * 
- * <pre><code>
+ * <code>
+ * <pre>
  * pushGlobalEnvEntry(entryId, envEntry);
  * BaseWidget listenerComp = new BaseWidget() {
  * 
@@ -46,41 +46,37 @@ import org.araneaframework.framework.AsynchronousRequestRegistry;
  *   }
  * };
  * ComponentUtil.addListenerComponent(targetComp, listenerComp);
- * </code></pre>
+ * </pre>
+ * </code>
  * 
- * In the example above, it uses the lifecycle listener to remove an
- * <code>Environment</code> entry that was added before.
+ * In the example above, it uses the life-cycle listener to remove an <code>Environment</code> entry that was added
+ * before.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ComponentUtil {
 
   /**
-   * The request key prefix that will be used to identify the listeners invoked.
-   * Prior to 1.0.2 this constant contained illegal characters (dots), thus
-   * using <code>addListenerComponent</code> broke component name scoping.
+   * The request key prefix that will be used to identify the listeners invoked. Prior to 1.0.2 this constant contained
+   * illegal characters (dots), thus using <code>addListenerComponent</code> broke component name scoping.
    */
   public static final String LISTENER_KEY = "ComponentUtil_LISTENER";
 
   /**
-   * This method will attach the listener component to the target custom
-   * component, allowing it to receive all the lifecycle events (which exactly
-   * depends on the target component type). The listener component may never get
-   * to do something more than processing lifecycle events.
+   * This method will attach the listener component to the target custom component, allowing it to receive all the
+   * life-cycle events (which exactly depends on the target component type). The listener component may never get to do
+   * something more than processing life-cycle events.
    * <p>
-   * This allows for instance to add a child component that will execute some
-   * action on destroy, thus essentially tying some action to the lifecycle of
-   * the target component. A typical application is to scope something (e.g.
+   * This allows for instance to add a child component that will execute some action on destroy, thus essentially tying
+   * some action to the life-cycle of the target component. A typical application is to scope something (e.g.
    * environment entry) with the target component.
    * <p>
    * This method also handles initialization of the listener.
    * 
    * @param target The component that wants to have the new listener.
-   * @param listener The listener component that will be added as a child
-   *            component of the <code>target</code>.
+   * @param listener The listener component that will be added as a child component of the <code>target</code>.
    */
-  public static void addListenerComponent(ApplicationComponent target,
-      Component listener) {
+  public static void addListenerComponent(ApplicationComponent target, Component listener) {
     Assert.notNullParam(target, "target");
     Assert.notNullParam(listener, "listener");
     String key = LISTENER_KEY;
@@ -89,16 +85,13 @@ public abstract class ComponentUtil {
       key = LISTENER_KEY + RandomUtils.nextLong();
     }
 
-    Environment env = target.isAlive() ? target.getChildEnvironment()
-        : new LateBindingChildEnvironment(target);
+    Environment env = target.isAlive() ? target.getChildEnvironment() : new LateBindingChildEnvironment(target);
 
-    listener._getComponent().init(
-        new StandardScope(key, target.getScope()),env);
+    listener._getComponent().init(new StandardScope(key, target.getScope()), env);
     target._getComposite().attach(key, listener);
   }
 
-  // allows adding listener components to not yet initialized components by
-  // failing lazily
+  // allows adding listener components to not yet initialized components by failing lazily.
   private static class LateBindingChildEnvironment implements Environment {
 
     private ApplicationComponent component;
@@ -111,16 +104,14 @@ public abstract class ComponentUtil {
       return getDelegateEnvironment().getEntry(key);
     }
 
-    public <T> T requireEntry(Class<T> key)
-        throws NoSuchEnvironmentEntryException {
+    public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException {
       return getDelegateEnvironment().requireEntry(key);
     }
 
     private Environment getDelegateEnvironment() {
       Environment result = component.getChildEnvironment();
       if (result == null) {
-        throw new IllegalStateException(getClass().getName()
-            + " does not yet have access to environment.");
+        throw new IllegalStateException(getClass().getName() + " does not yet have access to environment.");
       }
       return result;
     }

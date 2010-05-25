@@ -22,7 +22,7 @@
  *
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @author Alar Kvell (alar@araneaframework.org)
- * @author Martti Tamm (alar@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 var Aranea = window.Aranea || {};
 
@@ -202,11 +202,10 @@ Aranea.Page = {
 	 * <p>
 	 * The expected parameters are:
 	 * 1) event(formElement) where formElement has event data.
-	 * 2) event(requestType, eventId, widgetId, [eventParam], [eventCondition], [eventUpdateRgns], [form]) where
+	 * 2) event(eventId, widgetId, [eventParam], [eventCondition], [eventUpdateRgns], [form]) where
 	 *    parameters in brackets are optional.
 	 * 
 	 * @param formElement The form-element that contains event data.
-	 * @param requestType The request type that affects how it's done ('submit', 'ajax', 'overlay').
 	 * @param eventId The event identifier sent to the server
 	 * @param widgetId The event target identifier (path to widget)
 	 * @param eventParam An optional event parameter.
@@ -291,7 +290,6 @@ Aranea.Page = {
 	 * getSubmitURL(formElement)
 	 * getSubmitURL([formElement], 'param1=value1&param2=value2&param3=value3' })
 	 * getSubmitURL([formElement], { param1: value1, param2: value2, param3: value3 })
-	 * getSubmitURL([formElement], valuesHash)
 	 * 
 	 * @param form An optional form to read form-specific parameters and append them to the request.
 	 * @param params Optional parameters to append to the request. May be a string ('a=b&c=d&e=f') or object
@@ -304,14 +302,14 @@ Aranea.Page = {
 		if (arguments.length >= 1) {
 			var index = 0;
 
-			if (Object.isElement(arguments[0])) {
+			// Read the form element parameter:
+			if (Object.isElement(arguments[index])) {
 				params = Aranea.Page.getFormParameters(arguments[0]);
-				index++;
-			} else if (arguments.length > 1) {
 				index++;
 			}
 
-			if (arguments.length >= index + 1 && arguments[index]) {
+			// Read the URL parameters:
+			if (index < arguments.length && arguments[index]) {
 				var param = arguments[index];
 				params.update(Object.isString(param) ? param.parseQuery() : $H(param));
 			}
@@ -326,15 +324,14 @@ Aranea.Page = {
 			urlStr = urlStr.gsub(/.*:\/\/.*?(?=\/)/, ''); // Returns URL starting with "/[context]..."
 		}
 
-		var url = $A(Aranea.Page.encodeURL(urlStr));
+		var url = Aranea.Page.encodeURL(urlStr);
 
 		if (params.size() > 0) {
 			var separator = (url.length == 0) || (url.first().indexOf('?') < 0) ? '?' : '&';
-			url.push(separator);
-			url.push(params.toQueryString());
+			url += separator + params.toQueryString();
 		}
 
-		return url.join('');
+		return url;
 	},
 
 	/**

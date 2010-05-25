@@ -66,7 +66,7 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
 
     // Write input tag
-    if (this.value != null && !DisplayItemUtil.isValueInItems(viewModel.getSelectItems(), this.value)) {
+    if (this.value != null && !DisplayItemUtil.containsItem(viewModel.getSelectItems(), this.value)) {
       throw new AraneaJspException("Value '" + this.value + "' not found in values list.");
     }
 

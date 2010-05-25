@@ -5,6 +5,7 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
 	version="2.1">
+
 	<ui:widgetContext>
 
 		<p><fmt:message key="easyajax.intro"/></p>

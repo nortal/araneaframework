@@ -201,6 +201,18 @@ public class SelectControlUtil {
   }
 
   /**
+   * Returns an enabled item from the given <code>container</code> by matching it to the given <code>value</code>.
+   * 
+   * @param <T> The type of container items.
+   * @param container The container of items to search.
+   * @param value The value that defines which item should be returned.
+   * @return An enabled item from the <code>container</code>, or <code>null</code>.
+   */
+  public static <T> T getEnabledSelectItem(DisplayItemContainer<T> container, String value) {
+    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), value);
+  }
+
+  /**
    * Returns a subset of all items from the given <code>container</code> by matching them to the given
    * <code>values</code>. The order of returned items will be the same as in the original list.
    * 
@@ -211,6 +223,19 @@ public class SelectControlUtil {
    */
   public static <T> List<T> getSelectItems(DisplayItemContainer<T> container, String[] values) {
     return getSelectItems(container.getAllItems(), container.getItemValueProperty(), values);
+  }
+
+  /**
+   * Returns a subset of all enabled items from the given <code>container</code> by matching them to the given
+   * <code>values</code>. The order of returned items will be the same as in the original list.
+   * 
+   * @param <T> The type of container items.
+   * @param container The container of items to search.
+   * @param values The values that define, which items are allowed in the result list.
+   * @return A subset of enabled items from the <code>container</code>, or <code>null</code>.
+   */
+  public static <T> List<T> getEnabledSelectItems(DisplayItemContainer<T> container, String[] values) {
+    return getSelectItems(container.getEnabledItems(), container.getItemValueProperty(), values);
   }
 
   private static <T> T getSelectItem(List<T> items, String valueProperty, String value) {

@@ -17,15 +17,20 @@
 package org.araneaframework.framework.container;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
@@ -33,6 +38,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
@@ -68,6 +74,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
   protected boolean finishable = true;
 
+  /**
+   * Flow container parameter that controls whether {@link FlowContextWidget#FLOW_CANCEL_EVENT} will be processed so
+   * that the given number number of last flows will be canceled.
+   * 
+   * @since 2.0
+   */
+  private boolean allowFlowCancelEvent = true;
+
   private Map<Class<?>, Object> nestedEnvironmentEntries = new HashMap<Class<?>, Object>();
 
   private Map<Class<?>, LinkedList<Object>> nestedEnvEntryStacks = new HashMap<Class<?>, LinkedList<Object>>();
@@ -100,6 +114,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     this.finishable = finishable;
   }
 
+  public void setAllowFlowCancelEvent(boolean allowFlowCancelEvent) {
+    this.allowFlowCancelEvent = allowFlowCancelEvent;
+  }
+
   public void start(Widget flow) {
     start(flow, null, null);
   }
@@ -111,7 +129,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void start(Widget flow, Configurator configurator, Handler handler) {
     TransitionHandler transitionHandler = getTransitionHandler();
     StartClosure startClosure = new StartClosure(flow, configurator, handler);
-    doTransition(transitionHandler, FlowContext.TRANSITION_START, startClosure);
+    doTransition(transitionHandler, Transition.START, startClosure);
   }
 
   public void replace(Widget flow) {
@@ -121,25 +139,25 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void replace(Widget flow, Configurator configurator) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ReplaceClosure replaceClosure = new ReplaceClosure(flow, configurator);
-    doTransition(transitionHandler, FlowContext.TRANSITION_REPLACE, replaceClosure);
+    doTransition(transitionHandler, Transition.REPLACE, replaceClosure);
   }
 
   public void finish(Object returnValue) {
     TransitionHandler transitionHandler = getTransitionHandler();
     FinishClosure finishClosure = new FinishClosure(returnValue);
-    doTransition(transitionHandler, FlowContext.TRANSITION_FINISH, finishClosure);
+    doTransition(transitionHandler, Transition.FINISH, finishClosure);
   }
 
   public void cancel() {
     TransitionHandler transitionHandler = getTransitionHandler();
     CancelClosure cancelClosure = new CancelClosure();
-    doTransition(transitionHandler, FlowContext.TRANSITION_CANCEL, cancelClosure);
+    doTransition(transitionHandler, Transition.CANCEL, cancelClosure);
   }
 
   public void reset(final EnvironmentAwareCallback callback) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ResetClosure resetClosure = new ResetClosure(callback);
-    doTransition(transitionHandler, FlowContext.TRANSITION_RESET, resetClosure);
+    doTransition(transitionHandler, Transition.RESET, resetClosure);
   }
 
   public TransitionHandler getTransitionHandler() {
@@ -189,15 +207,24 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     return !this.callStack.isEmpty();
   }
 
+  public Collection<Widget> getNestedFlows() {
+    List<Widget> nestedFlows = new ArrayList<Widget>(this.callStack.size());
+    for (CallFrame callFrame : this.callStack) {
+      nestedFlows.add(0, callFrame.getWidget());
+    }
+    return nestedFlows;
+  }
+
   @Override
   protected void init() throws Exception {
-    super.init();
     refreshGlobalEnvironment();
 
     if (this.top != null) {
       start(this.top);
       this.top = null;
     }
+
+    addEventListener(FLOW_CANCEL_EVENT, new FlowCancelListener());
   }
 
   @Override
@@ -272,7 +299,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   /** @since 1.1 */
-  protected void doTransition(TransitionHandler transitionHandler, int transitionType, Closure closure) {
+  protected void doTransition(TransitionHandler transitionHandler, Transition transitionType, Closure closure) {
     transitionHandler.doTransition(transitionType, getActiveFlow(), closure);
   }
 
@@ -599,33 +626,56 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
   public static class StandardTransitionHandler implements FlowContext.TransitionHandler {
 
-    public void doTransition(int transitionType, Widget activeFlow, Closure transition) {
+    public void doTransition(Transition transitionType, Widget activeFlow, Closure transition) {
       notifyScrollContext(transitionType, activeFlow);
       transition.execute(activeFlow);
     }
 
-    protected void notifyScrollContext(int transitionType, Widget activeFlow) {
+    protected void notifyScrollContext(Transition transitionType, Widget activeFlow) {
       if (activeFlow == null) {
         return;
       }
       WindowScrollPositionContext scrollCtx = activeFlow.getEnvironment().getEntry(WindowScrollPositionContext.class);
       if (scrollCtx != null) {
         switch (transitionType) {
-        case FlowContext.TRANSITION_START:
+        case START:
           scrollCtx.push();
           break;
-        case FlowContext.TRANSITION_FINISH:
-        case FlowContext.TRANSITION_CANCEL:
+        case FINISH:
+        case CANCEL:
           scrollCtx.pop();
           break;
-        case FlowContext.TRANSITION_REPLACE:
+        case REPLACE:
           scrollCtx.resetCurrent();
           break;
-        case FlowContext.TRANSITION_RESET:
+        case RESET:
           scrollCtx.reset();
           break;
         }
       }
     }
+  }
+
+  /**
+   * The listener expects a positive integer indicating the number of last flows to cancel. Permission to do so must be
+   * granted by {@link FlowContextWidget#setAllowFlowCancelEvent(boolean)}, which is enabled by default.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @see FlowContextWidget#FLOW_CANCEL_EVENT
+   * @see FlowContextWidget#setAllowFlowCancelEvent(boolean)
+   * @since 2.0
+   */
+  protected class FlowCancelListener extends StandardEventListener {
+
+    @Override
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+      if (StandardFlowContainerWidget.this.allowFlowCancelEvent && StringUtils.isNumeric(eventParam)) {
+        int times = Integer.parseInt(eventParam);
+        while (times-- > 0 && StandardFlowContainerWidget.this.isNested()) {
+          cancel();
+        }
+      }
+    }
+    
   }
 }

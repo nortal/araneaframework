@@ -16,7 +16,6 @@
 
 package org.araneaframework.http.util;
 
-import org.araneaframework.core.Assert;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +25,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -33,6 +33,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationService;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.http.HttpInputData;
@@ -132,6 +134,37 @@ public abstract class ServletUtil {
   public static void include(String filePath, Environment env, HttpServletRequest req, HttpServletResponse res)
       throws Exception {
     include(filePath, null, env, req, res);
+  }
+
+  /**
+   * A convenience method to include the given page and to provide the given error information through view-data
+   * variables. All parameters must not be <code>null</code>!
+   * <p>
+   * The error page will be provided with parameters <code>viewData.fullStackTrace</code> and
+   * <code>viewData.rootStackTrace</code> (when the given <code>error</code> is not the root cause), both are
+   * <code>String</code>s that represent formatted stack traces. These parameters will be available in the context of
+   * the provided <code>comp</code>.
+   * 
+   * @param filePath The file to include. Must begin with a forward slash (the root directory of deployment package).
+   * @param comp The component that will be used to render the page.
+   * @param error The error that has occurred.
+   * @param output The current output object.
+   * @throws Exception Any error that may occur.
+   * @since 2.0
+   */
+  public static void includeErrorPage(String filePath, BaseApplicationWidget comp, Exception error, OutputData output)
+      throws Exception {
+    Assert.notNullParam(filePath, "filePath");
+    Assert.notNullParam(comp, "comp");
+    Assert.notNullParam(error, "error");
+    Assert.notNullParam(output, "output");
+
+    comp.putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(error));
+    if (ExceptionUtils.getRootCause(error) != null) {
+      comp.putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(error)));
+    }
+
+    include(filePath, comp, output);
   }
 
   /**

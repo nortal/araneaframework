@@ -156,7 +156,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
 
   @Override
   protected List<T> fromRequestParameters(String[] parameterValues) {
-    return SelectControlUtil.getSelectItems(this, parameterValues);
+    return SelectControlUtil.getEnabledSelectItems(this, parameterValues);
   }
 
   @Override

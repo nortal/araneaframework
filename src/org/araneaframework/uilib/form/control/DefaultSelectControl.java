@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form.control;
 import java.util.List;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 
@@ -60,6 +61,30 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
+  }
+
+  @Override
+  public DisplayItem getSelectedItem() {
+    DisplayItem result = null;
+    if (getFormElementCtx() != null) {
+      result = DisplayItemUtil.getItem(getAllItems(), (String) getFormElementCtx().getValue());
+    }
+    return result;
+  }
+
+  @Override
+  protected DisplayItem fromRequestParameters(String[] parameterValues) {
+    return DisplayItemUtil.getItem(getEnabledItems(), parameterValues[0]);
+  }
+
+  @Override
+  protected String[] toResponseParameters(DisplayItem controlValue) {
+    return new String[] { controlValue.getValue() };
+  }
+
+  @Override
+  public DataType getRawValueType() {
+    return new DataType(DisplayItem.class);
   }
 
   @Override

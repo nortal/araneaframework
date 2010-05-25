@@ -73,11 +73,11 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
 
   /**
    * Breaks the procedure into two parts: conversion and validation. The conversion is done using method
-   * {@link #fromRequestParameters(String[])}and validation using method {@link #validate()}.
+   * {@link #fromRequestParameters(String[])} and validation using method {@link #validate()}.
    */
   @Override
   public void convert() {
-    this.value = this.innerData != null ? fromRequestParameters((String[]) this.innerData) : null;
+    this.value = ArrayUtils.getLength(this.innerData) > 0 ? fromRequestParameters((String[]) this.innerData) : null;
   }
 
   /**

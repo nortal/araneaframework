@@ -62,7 +62,7 @@ public class BaseComponent implements Component {
 
   private transient int reentrantCallCount = 0;
 
-  private transient ThreadLocal<Counter> reentrantTLS;
+  private transient ThreadLocal<Integer> reentrantTLS;
 
   // *******************************************************************
   // PUBLIC METHODS
@@ -456,35 +456,35 @@ public class BaseComponent implements Component {
   // PRIVATE METHODS
   // *******************************************************************
 
-  private void incCallCount() {
-    if (this.reentrantTLS == null) {
-      this.reentrantTLS = new ThreadLocal<Counter>();
-    }
-    if (this.reentrantTLS.get() == null) {
-      this.reentrantTLS.set(new Counter());
-    }
+  private synchronized void incCallCount() {
+    initReentrantCount();
     this.callCount++;
-    this.reentrantTLS.get().counter++;
+    this.reentrantTLS.set(this.reentrantTLS.get() + 1);
     if (getReentrantCount() > 1) {
       this.reentrantCallCount++;
     }
   }
 
-  private void decCallCount() {
+  private synchronized void decCallCount() {
     if (getReentrantCount() > 1) {
       this.reentrantCallCount--;
     }
+    this.reentrantTLS.set(this.reentrantTLS.get() - 1);
     this.callCount--;
-    this.reentrantTLS.get().counter--;
-
-    if (this.reentrantTLS.get().counter == 0) {
-      this.reentrantTLS.set(null);
-      this.reentrantTLS = null;
-    }
   }
 
   private int getReentrantCount() {
-    return (this.reentrantTLS == null || this.reentrantTLS.get() == null) ? 0 : this.reentrantTLS.get().counter;
+    int count = 0;
+    if (this.reentrantTLS != null && this.reentrantTLS.get() != null) {
+      count = this.reentrantTLS.get();
+    }
+    return count;
+  }
+
+  private void initReentrantCount() {
+    if (this.reentrantTLS == null) {
+      this.reentrantTLS = new Counter();
+    }
   }
 
   // *******************************************************************
@@ -580,11 +580,11 @@ public class BaseComponent implements Component {
     }
   }
 
-  private static class Counter {
+  private static class Counter extends ThreadLocal<Integer> {
 
-    /**
-     * The value of the counter
-     */
-    public int counter;
+    @Override
+    protected Integer initialValue() {
+      return Integer.valueOf(0);
+    }
   }
 }

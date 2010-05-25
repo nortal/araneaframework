@@ -160,8 +160,8 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param values The (display items) values for filtering display items.
    * @return A subset of display items that were matched.
    */
-  public static Collection<DisplayItem> getItems(Collection<DisplayItem> items, String... values) {
-    Collection<DisplayItem> results = new LinkedList<DisplayItem>();
+  public static List<DisplayItem> getItems(Collection<DisplayItem> items, String... values) {
+    List<DisplayItem> results = new LinkedList<DisplayItem>();
     if (CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
         if (ArrayUtils.contains(values, item.getValue())) {
@@ -237,7 +237,7 @@ public abstract class DisplayItemUtil implements Serializable {
    * @param displayItems A collection of display items to use for searching.
    * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
    * @return A Boolean that is <code>true</code> when the value was found.
-   * @deprecated Since 2.0: use {@link #containsItem(Collection, String) instead.
+   * @deprecated Since 2.0: use {@link #containsItem(Collection, String)} instead.
    */
   @Deprecated
   public static boolean isValueInItems(Collection<DisplayItem> displayItems, String value) {

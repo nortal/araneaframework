@@ -51,6 +51,5 @@ public class ImportScriptsHtmlTag extends BaseFileImportTag {
     JspUtil.writeAttribute(out, "src", srcFile, false);
     JspUtil.writeCloseStartTag_SS(out);
     JspUtil.writeEndTag(out, "script");
-    out.write("\n");
   }
 }

@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.core;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
@@ -122,6 +123,10 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     return getLocalFlowContext().isNested();
   }
 
+  public Collection<Widget> getNestedFlows() {
+    return getLocalFlowContext().getNestedFlows();
+  }
+
   public void reset(EnvironmentAwareCallback callback) {
     getLocalFlowContext().reset(callback);
     // XXX: and now what?
@@ -129,6 +134,12 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
 
   public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, Class<T> entryId, T envEntry) {
     getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId, envEntry);
+  }
+
+  public void setAllowFlowCancelEvent(boolean allowFlowCancelEvent) {
+    if (getLocalFlowContext() instanceof FlowContextWidget) {
+      ((FlowContextWidget) getLocalFlowContext()).setAllowFlowCancelEvent(allowFlowCancelEvent);
+    }
   }
 
   @Override

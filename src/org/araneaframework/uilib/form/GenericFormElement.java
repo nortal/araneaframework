@@ -221,19 +221,26 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   }
 
   /** @since 1.1 */
-  public void setBackgroundValidation(boolean b) {
-    this.backgroundValidation = Boolean.valueOf(b);
+  public void setBackgroundValidation(boolean backgroundValidation) {
+    this.backgroundValidation = backgroundValidation;
   }
 
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
-    if (this.backgroundValidation == null) {
+    boolean bgValidate = false;
+
+    if (this.backgroundValidation != null) {
+      bgValidate = this.backgroundValidation.booleanValue();
+    } else {
       FormContext fctx = UilibEnvironmentUtil.getFormContext(getEnvironment());
-      if (fctx != null)
-        return fctx.isBackgroundValidation();
-      return ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
+      if (fctx != null) {
+        bgValidate = fctx.isBackgroundValidation();
+      } else {
+        bgValidate = ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
+      }
     }
-    return this.backgroundValidation.booleanValue();
+
+    return bgValidate;
   }
 
   // *********************************************************************

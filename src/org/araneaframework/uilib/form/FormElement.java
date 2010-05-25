@@ -429,8 +429,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
 
   @Override
   protected boolean validateInternal() throws Exception {
-    if (getControl() != null)
+    if (getControl() != null) {
       getControl().validate();
+    }
 
     return super.validateInternal();
   }
@@ -519,6 +520,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
 
     private boolean valid;
 
+    private boolean disabled;
+
     private Object value;
 
     protected boolean mandatory;
@@ -533,7 +536,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
       this.label = FormElement.this.getLabel();
       this.valid = FormElement.this.isValid();
       this.value = FormElement.this.getData() != null ? FormElement.this.getData().getValue() : null;
-      this.mandatory = FormElement.this.mandatory;
+      this.mandatory = FormElement.this.isMandatory();
+      this.disabled = FormElement.this.isDisabled();
     }
 
     /**
@@ -546,7 +550,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     }
 
     /**
-     * Returns label for this form element..
+     * Returns label for this form element.
      * 
      * @return The label.
      */
@@ -581,6 +585,15 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
      */
     public boolean isMandatory() {
       return this.mandatory;
+    }
+
+    /**
+     * Returns whether this element is disabled or not.
+     * 
+     * @return A boolean that is <code>true</code> when this element is disabled.
+     */
+    public boolean isDisabled() {
+      return this.disabled;
     }
 
     /**

@@ -17,149 +17,183 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import java.util.Collection;
 import org.apache.commons.collections.Closure;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 
 /**
- * This context provides support for flow navigation and nesting. A flow is started using 
+ * This context provides support for flow navigation and nesting. A flow is started using
  * {@link #start(Widget, org.araneaframework.framework.FlowContext.Configurator, org.araneaframework.framework.FlowContext.Handler)}
  * and continues to be active until it explicitly returns control to the caller using {@link #finish(Object)} or
- * {@link #cancel()}. 
+ * {@link #cancel()}.
  * 
  * @see org.araneaframework.framework.container.StandardFlowContainerWidget
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FlowContext extends Serializable {
-  /** @since 1.1 */ 
-  int TRANSITION_START = 1;
-  /** @since 1.1 */
-  int TRANSITION_FINISH = 2;
-  /** @since 1.1 */
-  int TRANSITION_CANCEL = 3;
-  /** @since 1.1 */
-  int TRANSITION_REPLACE = 4;
-  /** @since 1.1 */
-  int TRANSITION_RESET = 5;
 
-  /** 
-   * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
+  /**
+   * Transition types supported by the <code>FlowContext</code>.
+   * 
+   * @since 1.1 (constants added), 2.0 (refactored infavor of enum)
+   */
+  enum Transition {
+    START, FINISH, CANCEL, REPLACE, RESET
+  }
+
+  /**
+   * Starts a new nested sub-flow. Current flow becomes inactive until sub-flow calls {@link #finish(Object)} or
    * {@link #cancel()}.
+   * 
+   * @param flow The uninitialized flow to start. Must not be <code>null</code>.
    * @since 1.0.9
    */
-  public void start(Widget flow);
+  void start(Widget flow);
 
   /**
-   * Starts a new nested subflow. Current flow becomes inactive untils subflow calls {@link #finish(Object)} or 
-   * {@link #cancel()}. {@link Handler} allows to receive notification, when the subflow ends execution.
+   * Starts a new nested sub-flow. Current flow becomes inactive until sub-flow calls {@link #finish(Object)} or
+   * {@link #cancel()}. {@link Handler} allows to receive notification, when the sub-flow ends execution.
+   * 
+   * @param flow The uninitialized flow to start. Must not be <code>null</code>.
+   * @param handler The callback handler that will called when the given flow returns.
    * @since 1.0.9
    */
-  public void start(Widget flow, Handler<?> handler);
-  
-  /**
-   * Starts a new nested subflow, that can be configured using the configurator. Current flow becomes inactive
-   * untils subflow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification,
-   * when the subflow ends execution.
-   */
-  public void start(Widget flow, Configurator configurator, Handler<?> handler);
+  void start(Widget flow, Handler<?> handler);
 
   /**
-   * Destroys the current flow and starts a new one. When the new flow will end execution it will return control
-   * to the caller of the current flow (if there is one). 
+   * Starts a new nested sub-flow, that can be configured using the configurator. Current flow becomes inactive until
+   * sub-flow calls {@link #finish(Object)} or {@link #cancel()}. {@link Handler} allows to receive notification, when
+   * the sub-flow ends execution.
+   * 
+   * @param flow The uninitialized flow to start. Must not be <code>null</code>.
+   * @param configurator The configurator that can configure the started flow after it is initialized.
+   * @param handler The callback handler that will called when the given flow returns.
    */
-  public void replace(Widget flow);
-  
-  /**
-   * Destroys the current flow and starts a new one. When the new flow ends execution it will return control
-   * to the caller of the current flow (if there is one). Started subflow can be configured using the configurator.
-   * @since 1.0.9 
-   */
-  public void replace(Widget flow, Configurator configurator);
+  void start(Widget flow, Configurator configurator, Handler<?> handler);
 
   /**
-   * Finishes the current flow passing control back to the calling flow. Optionally may return some value that 
-   * can be interpreted by the calling flow as the result of the call.
+   * Destroys the current last flow and starts a new one. When the new flow will end execution it will return control to
+   * the caller of the current flow (if there is one).
+   * 
+   * @param flow The uninitialized flow to start. Must not be <code>null</code>.
    */
-  public void finish(Object result);
-  
+  void replace(Widget flow);
+
   /**
-   * Finishes the current flow passing control back to the calling flow. 
-   * Should be interpreted by the calling flow as a unsuccessful return. 
+   * Destroys the current flow and starts a new one. When the new flow ends execution it will return control to the
+   * caller of the current flow (if there is one). Started sub-flow can be configured using the configurator.
+   * 
+   * @param flow The uninitialized flow to start. Must not be <code>null</code>.
+   * @param configurator The configurator that can configure the started flow after it is initialized.
+   * @since 1.0.9
    */
-  public void cancel();  
-  
+  void replace(Widget flow, Configurator configurator);
+
+  /**
+   * Finishes the current flow passing control back to the calling flow. Optionally may return some value that can be
+   * interpreted by the calling flow as the result of the call.
+   * 
+   * @param result The value to return by the finishing flow. It will be passed to the registered flow handler.
+   */
+  void finish(Object result);
+
+  /**
+   * Finishes the current flow passing control back to the calling flow. Should be interpreted by the calling flow as an
+   * "unsuccessful" return.
+   */
+  void cancel();
+
   /**
    * Returns whether the current flow is nested, that is has a caller flow.
-   */
-  public boolean isNested();
-  
-  /**
-   * Resets all currently running flows and calls the <code>callback</code> allowing to start 
-   * new flows. Useful e.g. in a menu, when selecting a new menu item and reseting the old
-   * stack. 
-   */
-  public void reset(EnvironmentAwareCallback callback);
-  
-//  /**
-//   * Returns a reference to the current flow that can be used later to manipulate the current flow.
-//   * @deprecated to be removed in Aranea 2.0. Also see {@link FlowReference}
-//   */
-//  public FlowReference getCurrentReference();
-
-  /**
-   * Adds an environment entry that is visible in all subflows.
-   */
-  public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, final Class<T> entryId, T envEntry);
-
-//  /** 
-//   * This is unused -- only implementation is a protected class StandardFlowContainerWidget.FlowReference
-//   * FlowReference.reset() is not called from anywhere and is duplicate of FlowContext.reset() anyway.
-//   * @deprecated to be removed in Aranea 2.0 
-//   */
-//  public interface FlowReference extends Serializable {
-//    /**
-//     * Resets the flow stack up to the referred flow and provides the callback with the local environment
-//     * that can be used to manipulate the flow stack further.
-//     */
-//    public void reset(EnvironmentAwareCallback callback) throws Exception;
-//  }
-
-  /**
-   * Sets the <code>FlowContext.TransitionHandler</code> which performs the
-   * flow navigation.
    * 
+   * @return A Boolean that is <code>true</code> when this flow container contains nested flows.
+   */
+  boolean isNested();
+
+  /**
+   * Returns the nested flows where they are sorted ascending in the order they were initialized.
+   * 
+   * @return A collection of nested flows, or an empty collection when {@link #isNested()} returns <code>false</code>.
+   * @since 2.0
+   */
+  Collection<Widget> getNestedFlows();
+
+  /**
+   * Resets all currently running flows and calls the <code>callback</code> allowing to start new flows. Useful e.g. in
+   * a menu, when selecting a new menu item and reseting the old stack.
+   * 
+   * @param callback An optional callback that can do some work after flows are reseted.
+   */
+  void reset(EnvironmentAwareCallback callback);
+
+  /**
+   * Adds an environment entry that is visible in all sub-flows under the given <code>scope</code>.
+   * 
+   * @param scope The widget that makes the environment entry visible to its all sub-flows.
+   * @param entryId The environment entry key.
+   * @param envEntry The environment entry value.
+   */
+  <T> void addNestedEnvironmentEntry(ApplicationWidget scope, final Class<T> entryId, T envEntry);
+
+  /**
+   * Sets the <code>FlowContext.TransitionHandler</code> which performs the flow navigation.
+   * 
+   * @param handler The transition handler that the last flow should use.
    * @since 1.1
-   */ 
+   */
   void setTransitionHandler(TransitionHandler handler);
 
   /**
-   * Returns currently active <code>FlowContext.TransitionHandler</code>. If the
-   * most current child is a {@link FlowContextWidget}, it will take its
-   * currenty active <code>FlowContext.TransitionHandler</code> (recursively)
-   * (since 1.2.2).
+   * Returns currently active <code>FlowContext.TransitionHandler</code>. If the most current child is a
+   * {@link FlowContextWidget}, it will take its currently active <code>FlowContext.TransitionHandler</code>
+   * recursively (since 1.2.2).
    * 
    * @since 1.1
    */
   TransitionHandler getTransitionHandler();
 
   /**
-   * Callback that will be run when flow has finished some way. 
+   * Callback that will be run when flow has finished some way.
    */
-  public interface Handler<T> extends Serializable {
-    public void onFinish(T returnValue) throws Exception;   
-    public void onCancel() throws Exception;
+  interface Handler<T> extends Serializable {
+
+    /**
+     * Callback method that will be called when the flow finishes by calling {@link FlowContext#finish(Object)}.
+     * 
+     * @param returnValue The value that was passed to {@link FlowContext#finish(Object)}.
+     * @throws Exception Any exception that may occur.
+     */
+    void onFinish(T returnValue) throws Exception;
+
+    /**
+     * Callback method that will be called when the flow finishes by calling {@link FlowContext#cancel()}.
+     * 
+     * @throws Exception Any exception that may occur.
+     */
+    void onCancel() throws Exception;
   }
-  
+
   /**
-   * Configurator runs when {@link FlowContext} starts flow.
+   * Configurator runs when {@link FlowContext} starts flow. It will be asked to configure the provided initialized
+   * flow.
+   * 
+   * @see FlowContext#start(Widget, Configurator, Handler)
    */
-  public interface Configurator extends Serializable {
-    public void configure(Widget flow) throws Exception;
+  interface Configurator extends Serializable {
+
+    /**
+     * Implementation should do the necessary work to configure the given initialized flow.
+     * 
+     * @param flow The initialized flow to configure.
+     * @throws Exception Any exception that may occur.
+     */
+    void configure(Widget flow) throws Exception;
   }
-  
+
   /**
    * Performs the flow transitions in {@link FlowContext}.
    * 
@@ -170,10 +204,11 @@ public interface FlowContext extends Serializable {
 
     /**
      * The implementation should handle the transition with given data.
-     * @param eventType <code>FlowContext.START<code> .. <code>FlowContext.RESET<code>
-     * @param activeFlow active flow at the moment of transition request
-     * @param transition <code>Serializable</code> closure that needs to be executed for transition to happen
+     * 
+     * @param eventType The transition type to handle.
+     * @param activeFlow The active flow at the moment of transition request
+     * @param transition <code>Serializable</code> closure that needs to be executed for transition to happen.
      */
-    void doTransition(int eventType, Widget activeFlow, Closure transition);
+    void doTransition(Transition eventType, Widget activeFlow, Closure transition);
   }
 }

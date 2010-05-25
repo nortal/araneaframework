@@ -2,6 +2,12 @@ ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
 2010.05.XX   | Aranea 2.0 RC2
 
+Features and Improvements:
+  RichTextAreaInitializationHtmlTag - possibility to add a function to TinyMCE  | See #875
+  StandardStateVersioningFilterWidget - refactor                                | See #876
+  Flow canceling events support in flow container widgets                       | See #883
+  Add DateRangeConstraint and StringRangeConstraint                             | See #885
+
 Bugfixes:
   The ID attribute of form elements missing                                     | See #665
   RichTextArea does not submit content in overlay                               | See #808
@@ -14,6 +20,12 @@ Bugfixes:
   [1.2.2] multiSelect checkboxes strange behavior                               | See #859
   [2.0] Move generics from DisplayItemUtil to SelectControlUtil                 | See #856
   [2.0] valuesUnique isn't used in SelectControl                                | See #855
+  [2.0] ConverterFactory - converters must not be shared. They must be created. | See #874
+  [2.0] Flow confirmation fails to send event with user response                | See #881
+  [2.0] JSPs are rendered in wrong encoding                                     | See #884
+  Autocomplete input does too many requests                                     | See #877
+  Background-validation: attached to wrong form-inputs                          | See #882
+  Move RefreshingListsFlowContextHandler to Uilib                               | See #886
 
 ---------------------------------------------------------------------------------------------
 2009.12.04   | Aranea 2.0 RC1

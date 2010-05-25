@@ -173,8 +173,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
 
   @Override
   protected T fromRequestParameters(String[] parameterValues) {
-    String value = parameterValues != null && parameterValues.length > 0 ? parameterValues[0] : null;
-    return SelectControlUtil.getSelectItem(this, value);
+    return SelectControlUtil.getEnabledSelectItem(this, parameterValues[0]);
   }
 
   @Override

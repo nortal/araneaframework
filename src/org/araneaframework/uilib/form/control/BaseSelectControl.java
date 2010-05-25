@@ -33,7 +33,6 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.support.BeanDisplayItem;
 import org.araneaframework.uilib.support.DisplayItem;
-import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 import org.araneaframework.uilib.util.SelectControlUtil;
@@ -354,15 +353,6 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     }
 
     return currentValues.toArray(new String[currentValues.size()]);
-  }
-
-  @Override
-  protected void validateNotNull() {
-    String[] data = this.innerData == null ? null : ((String[]) this.innerData);
-
-    if (isMandatory() && (data == null || data.length == 0)) {
-      addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
-    }
   }
 
   /**

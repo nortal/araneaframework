@@ -152,9 +152,9 @@ Autocompleter.Base = Class.create({
          Event.stop(event);
          return;
       }
-     else
-       if(event.keyCode==Event.KEY_TAB || event.keyCode==Event.KEY_RETURN ||
-         (Prototype.Browser.WebKit > 0 && event.keyCode == 0)) return;
+
+    // Let's not react to non-printable characters:
+    if (event.keyCode < 32) return;
 
     this.changed = true;
     this.hasFocus = true;

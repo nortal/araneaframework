@@ -16,10 +16,10 @@
 
 package org.araneaframework.example.main.web.demo.advanced.popup;
 
-import org.apache.commons.lang.ObjectUtils;
-
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -145,6 +145,10 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 
   public boolean isNested() {
     return getFlowCtx().isNested();
+  }
+
+  public Collection<Widget> getNestedFlows() {
+    return getFlowCtx().getNestedFlows();
   }
 
   public void replace(Widget flow) {

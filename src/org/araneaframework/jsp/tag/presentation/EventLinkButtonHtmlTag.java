@@ -29,41 +29,58 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
  *   description = "Represents a link with an onClick JavaScript event."
  */
 public class EventLinkButtonHtmlTag extends BaseEventButtonTag {
-  {
-     baseStyleClass = "aranea-link-button";
+
+  private String title;
+
+  public EventLinkButtonHtmlTag() {
+    this.baseStyleClass = "aranea-link-button";
   }
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
+
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeAttribute(out, "id", id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "href", "#");
+    JspUtil.writeAttribute(out, "title", this.title);
 
     if (!isDisabled()) {
-      JspUtil.writeAttribute(out, "tabindex", tabindex);
+      JspUtil.writeAttribute(out, "tabindex", this.tabindex);
       JspUtil.writeEventAttributes(out, event);
 
-      if (event.getId() != null)
+      if (this.event.getId() != null) {
         JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+      }
     } else {
       JspUtil.writeAttribute(out, "onclick", "return false;");
     }
 
-    JspUtil.writeCloseStartTag_SS(out);    
+    JspUtil.writeCloseStartTag_SS(out);
 
-    return EVAL_BODY_INCLUDE;    
-  }    
+    return EVAL_BODY_INCLUDE;
+  }
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    if (localizedLabel != null)
-      JspUtil.writeEscaped(out, localizedLabel);
+    if (this.localizedLabel != null) {
+      JspUtil.writeEscaped(out, this.localizedLabel);
+    }
 
-    JspUtil.writeEndTag_SS(out, "a"); 
+    JspUtil.writeEndTag_SS(out, "a");
     super.doEndTag(out);
     return EVAL_PAGE;
+  }
+
+  /**
+   * @jsp.attribute
+   *   type = "java.lang.String"
+   *   required = "false"
+   *   description = "The title attribute for link." 
+   */
+  public void setTitle(String title) {
+    this.title = evaluate("title", title, String.class);
   }
 }

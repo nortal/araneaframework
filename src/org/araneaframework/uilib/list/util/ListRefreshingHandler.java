@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.araneaframework.framework.context;
+package org.araneaframework.uilib.list.util;
 
-import java.util.List;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.uilib.list.ListWidget;
@@ -26,9 +25,13 @@ import org.araneaframework.uilib.list.ListWidget;
  * 
  * @author Anton Kuzmin (anton.kuzmin@webmedia.ee)
  */
-public class RefreshingListsFlowContextHandler<T> implements Handler<T> {
+public class ListRefreshingHandler implements Handler<Object> {
 
-  protected List<ListWidget<T>> lists;
+  public enum Handle {
+    CANCEL, FINISH, ALL;
+  }
+
+  protected ListWidget<?>[] lists;
 
   protected boolean handleCancel;
 
@@ -39,7 +42,7 @@ public class RefreshingListsFlowContextHandler<T> implements Handler<T> {
    * 
    * @param lists <code>ListWidget</code>s to be refreshed.
    */
-  public RefreshingListsFlowContextHandler(List<ListWidget<T>> lists) {
+  public ListRefreshingHandler(ListWidget<?>... lists) {
     this(true, true, lists);
   }
 
@@ -50,14 +53,26 @@ public class RefreshingListsFlowContextHandler<T> implements Handler<T> {
    * @param handleFinish if <true>true</code>, the lists will be refreshed on finish.
    * @param lists <code>ListWidget</code>s to be refreshed.
    */
-  public RefreshingListsFlowContextHandler(boolean handleCancel, boolean handleFinish, List<ListWidget<T>> lists) {
+  public ListRefreshingHandler(boolean handleCancel, boolean handleFinish, ListWidget<?>... lists) {
     Assert.notNullParam(lists, "lists");
     this.handleCancel = handleCancel;
     this.handleFinish = handleFinish;
     this.lists = lists;
+    Assert.notNullParam(this, lists, "lists");
   }
 
-  public void onFinish(T returnValue) {
+  /**
+   * Refreshes lists on finish and/or on cancel depending on the <code>handle</code> parameter.
+   * 
+   * @param handle The enum value that describes, in which case the lists will be refreshed.
+   * @param lists <code>ListWidget</code>s to be refreshed.
+   * @since 2.0
+   */
+  public ListRefreshingHandler(Handle handle, ListWidget<?>... lists) {
+    this(handle != Handle.FINISH, handle != Handle.CANCEL, lists);
+  }
+
+  public void onFinish(Object returnValue) {
     if (this.handleFinish) {
       refreshLists();
     }
@@ -69,8 +84,11 @@ public class RefreshingListsFlowContextHandler<T> implements Handler<T> {
     }
   }
 
+  /**
+   * Refreshes the provided lists.
+   */
   protected void refreshLists() {
-    for (ListWidget<T> list : this.lists) {
+    for (ListWidget<?> list : this.lists) {
       list.refresh();
     }
   }

@@ -16,10 +16,10 @@
 
 package org.araneaframework.jsp.tag.basic;
 
-import org.apache.commons.lang.StringUtils;
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.BaseTag;
 
 
@@ -65,22 +65,20 @@ public class AttributeHtmlTag extends BaseTag {
     }
 
     AttributedTagInterface attributedTag = (AttributedTagInterface)requireContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY);
-    attributedTag.addAttribute(name, value);
+    attributedTag.addAttribute(this.name, this.value);
     }
 
     return SKIP_BODY;
   }
 
   public void writeAttributeScript(Writer out, String elementKey) throws IOException {
-    out.write("<script type=\"text/javascript\">");
-    out.write("setElementAttr(\"");
+    out.write("<script type=\"text/javascript\">$('");
     out.write(elementKey);
-    out.write("\", \"");
-    out.write(name);
-    out.write("\", \"");
-    out.write(value);
-    out.write("\");");
-    out.write("</script>");
+    out.write("').writeAttribute('");
+    out.write(this.name);
+    out.write("','");
+    out.write(this.value);
+    out.write("')</script>");
   }
 
   /* ***********************************************************************************
