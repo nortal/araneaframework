@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.main.web;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
@@ -186,10 +185,6 @@ public class MenuWidget extends TemplateMenuWidget {
 
   @Override
   protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
-    if (ExceptionUtils.getRootCause(e) != null) {
-      putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
-    }
-    putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e));
-    ServletUtil.include("/WEB-INF/jsp/error.jsp", this, output);
+    ServletUtil.includeErrorPage("/WEB-INF/jsp/error.jsp", this, e, output);
   }
 }

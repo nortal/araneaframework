@@ -35,9 +35,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * sub-class will have to provide implementation for the <code>renderExceptionHandler(OutputData, Exception)</code>
  * method, that allows custom handling for given exception. To define the page that renders the exception to the user,
  * one can use following solution:
- * <code>
- * <pre>ServletUtil.include(&quot;/WEB-INF/jsp/error.jsp&quot;, this, output);</pre>
- * </code>
+ * <pre>ServletUtil.includeErrorPage(&quot;/WEB-INF/jsp/error.jsp&quot;, this, exception, output);</pre>
  * The page would be rendered as any other page inside this container.
  * <p>
  * Also note that this widget declares three events in its <code>init()</code> method to let users handle the situation:
@@ -219,9 +217,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
    * renders the exception to the user, one can use following solution:
    * 
    * <pre>
-   * &lt;code&gt;
-   * ServletUtil.include(&quot;/WEB-INF/jsp/error.jsp&quot;, this, output);
-   * &lt;/code&gt;
+   * ServletUtil.includeErrorPage(&quot;/WEB-INF/jsp/error.jsp&quot;, this, exception, output);
    * </pre>
    * 
    * @param output output data.

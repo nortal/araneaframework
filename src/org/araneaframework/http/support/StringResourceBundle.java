@@ -29,10 +29,20 @@ public class StringResourceBundle extends ResourceBundle {
 
   protected String prefix = "#";
 
+  /**
+   * Constructs a string-handling resource bundle that handles keys that begin with the default prefix (<code>#</code>).
+   */
   public StringResourceBundle() {}
 
-  public StringResourceBundle(String overrideSymbol) {
-    this.prefix = overrideSymbol;
+  /**
+   * Constructs a string-handling resource bundle that returns the value of the key following the given prefix (when the
+   * key begins with the given prefix), or <code>null</code>.
+   * 
+   * @param overridePrefix The prefix that can override the default prefix (<code>#</code>).
+   * @since 2.0
+   */
+  public StringResourceBundle(String overridePrefix) {
+    this.prefix = overridePrefix;
   }
 
   @Override

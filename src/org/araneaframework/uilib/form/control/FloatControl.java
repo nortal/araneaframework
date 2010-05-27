@@ -147,14 +147,6 @@ public class FloatControl extends BlankStringNullableControl<BigDecimal> impleme
   }
 
   /**
-   * Trims request parameter.
-   */
-  @Override
-  protected String preprocessRequestParameter(String parameterValue) {
-    return StringUtils.trimToNull(super.preprocessRequestParameter(parameterValue));
-  }
-
-  /**
    * Checks that the submitted data is a valid floating-point number.
    * 
    */

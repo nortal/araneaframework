@@ -33,6 +33,23 @@ public class IdentityResourceBundle extends ResourceBundle {
 
   private static final Log LOG = LogFactory.getLog(IdentityResourceBundle.class);
 
+  private boolean wrapInQuestionMarks;
+
+  /**
+   * Constructs identity resource bundle.
+   */
+  public IdentityResourceBundle() {}
+
+  /**
+   * Constructor that provides an option to wrap the returned key in question marks ("<code>???key???</code>") so that
+   * it would be easier to notice keys.
+   * 
+   * @param wrapInQuestionMarks When <code>true</code> then the returned key will be wrapped in question marks.
+   */
+  public IdentityResourceBundle(boolean wrapInQuestionMarks) {
+    this.wrapInQuestionMarks = wrapInQuestionMarks;
+  }
+
   @Override
   public Enumeration<String> getKeys() {
     return null;
@@ -43,6 +60,6 @@ public class IdentityResourceBundle extends ResourceBundle {
     if (LOG.isWarnEnabled()) {
       LOG.warn("Message for key '" + key + "'could not be resolved! Returning the key as the value.");
     }
-    return "???" + key + "???";
+    return this.wrapInQuestionMarks ? "???" + key + "???" : key;
   }
 }

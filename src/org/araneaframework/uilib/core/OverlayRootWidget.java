@@ -176,11 +176,7 @@ public class OverlayRootWidget extends BaseUIWidget {
 
     @Override
     protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
-      if (ExceptionUtils.getRootCause(e) != null) {
-        putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
-      }
-      putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e));
-      ServletUtil.include(OverlayRootWidget.this.errorPage, this, output);
+      ServletUtil.includeErrorPage(OverlayRootWidget.this.errorPage, this, e, output);
     }
 
   }

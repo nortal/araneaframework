@@ -102,14 +102,6 @@ public class NumberControl extends BlankStringNullableControl<BigInteger> implem
   }
 
   /**
-   * Trims the request parameter.
-   */
-  @Override
-  protected String preprocessRequestParameter(String parameterValue) {
-    return StringUtils.trimToNull(super.preprocessRequestParameter(parameterValue));
-  }
-
-  /**
    * Checks that the submitted data is a valid integer number.
    */
   @Override

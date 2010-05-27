@@ -43,7 +43,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
 
   protected Object innerData;
 
-  protected boolean isReadFromRequest = false;
+  protected boolean isReadFromRequest;
 
   private FormElementContext<T, Object> feCtx;
 
@@ -89,7 +89,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
    * By default the control is considered read if it has a not null data read from request.
    */
   public boolean isRead() {
-    return isReadFromRequest;
+    return this.isReadFromRequest;
   }
 
   // *********************************************************************

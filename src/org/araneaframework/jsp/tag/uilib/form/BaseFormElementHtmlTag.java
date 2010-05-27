@@ -187,9 +187,15 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
   protected String getStyleClass() {
     StringBuffer cssClass = new StringBuffer(StringUtils.defaultIfEmpty(super.getStyleClass(), ""));
     boolean globalBgValidation = ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
+
     if (this.backgroundValidation != globalBgValidation) {
-      cssClass.append(' ').append(AraneaAttributes.BACKGROUND_VALIDATION_CLASS);
+      if (this.backgroundValidation) {
+        cssClass.append(' ').append(AraneaAttributes.BACKGROUND_VALIDATION_CLASS);
+      } else {
+        cssClass.append(' ').append(AraneaAttributes.NO_BACKGROUND_VALIDATION_CLASS);
+      }
     }
+
     return cssClass.toString();
   }
 

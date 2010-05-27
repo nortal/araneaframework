@@ -68,7 +68,7 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
   protected void readFromRequest(HttpInputData request) {
     String parameterValues[] = request.getParameterValues(getScope().toString());
     this.innerData = preprocessRequestParameters(parameterValues);
-    this.isReadFromRequest = this.innerData != null;
+    this.isReadFromRequest = true;
   }
 
   /**

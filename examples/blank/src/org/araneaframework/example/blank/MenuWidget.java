@@ -16,35 +16,29 @@
 
 package org.araneaframework.example.blank;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.uilib.core.BaseMenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
 
 public class MenuWidget extends BaseMenuWidget {
-	public MenuWidget() throws Exception {
-		super(null);
-	}
 
-	@Override
+  public MenuWidget() throws Exception {
+    super(null);
+  }
+
+  @Override
   protected MenuItem buildMenu() throws Exception {
-		MenuItem result = new MenuItem();
-		result.addMenuItem(new MenuItem("#Blank1", BlankWidget.class));
-		result.addMenuItem(new MenuItem("#Blank2", BlankWidget.class));
-		result.addMenuItem(new MenuItem("#Exceptions happen", ExceptionWidget.class));
+    MenuItem result = new MenuItem();
+    result.addMenuItem(new MenuItem("#Blank1", BlankWidget.class));
+    result.addMenuItem(new MenuItem("#Blank2", BlankWidget.class));
+    result.addMenuItem(new MenuItem("#Exceptions happen", ExceptionWidget.class));
 
-		return result;
-	}
+    return result;
+  }
 
-	@Override
+  @Override
   protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
-	    if (ExceptionUtils.getRootCause(e) != null) {
-	        putViewDataOnce("rootStackTrace", 
-	            ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
-	      }        
-	      putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e)); 
-	      
-	      ServletUtil.include("/WEB-INF/jsp/error.jsp", this, output);		
-	}
+    ServletUtil.includeErrorPage("/WEB-INF/jsp/error.jsp", this, e, output);
+  }
 }
