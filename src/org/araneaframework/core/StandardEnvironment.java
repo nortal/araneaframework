@@ -16,6 +16,7 @@
 
 package org.araneaframework.core;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -104,5 +105,19 @@ public class StandardEnvironment extends BaseEnvironment {
     }
     result.append("\n");
     return result.toString();
+  }
+
+
+  /**
+   * Returns an unmodifiable Map of environment entries from this environment and its parent environment.<br/> 
+   * If a key exists in multiple environments, the child value will overwrite the parents value. 
+   */
+  public Map<Class<?>, Object> getAllEntries() {
+    Map<Class<?>, Object> result = new HashMap<Class<?>, Object>();
+    if(parentEnv != null && parentEnv instanceof StandardEnvironment) {
+      result.putAll(((StandardEnvironment)parentEnv).getAllEntries());
+    }
+    result.putAll(this.entries);
+    return Collections.unmodifiableMap(result);
   }
 }

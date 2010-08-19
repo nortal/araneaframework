@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.list.dataprovider;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.Expression;
@@ -117,6 +118,8 @@ public interface ListDataProvider<T> extends Serializable {
 	 * @return a range of items from the list data provider.
 	 */
 	public ListItemsData<T> getItemRange(Long start, Long count);
+	
+	public List<T> getLastItemRange();
 
 	/**
 	 * This method should return the total item count in the list data.

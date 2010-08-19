@@ -140,7 +140,8 @@
 			target="1.5"
 			source="1.5"
 			srcdir="src"
-			deprecation="yes">
+			deprecation="yes"
+		  includeantruntime="false">
 			<compilerarg line="-Xlint:unchecked"/>
 			<classpath refid="build.cp"/>
 			<include name="**/*.java" />

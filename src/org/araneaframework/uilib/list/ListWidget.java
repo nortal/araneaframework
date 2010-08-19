@@ -11,12 +11,6 @@
 
 package org.araneaframework.uilib.list;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.araneaframework.Path;
-
-import org.araneaframework.core.StandardPath;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,15 +20,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
+import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -859,14 +856,15 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Forces the list data provider to refresh the data.
    */
   public void refresh() {
-    Assert.notNull(this.dataProvider, "DataProvider was NULL in ListWidget.refresh().");
-    try {
-      this.dataProvider.refreshData();
-      this.selectedItems.clear();
-    } catch (Exception e) {
-      ExceptionUtil.uncheckException(e);
-    }
-    fireChange();
+    refreshCurrentItemRange();
+//    Assert.notNull(this.dataProvider, "DataProvider was NULL in ListWidget.refresh().");
+//    try {
+//      this.dataProvider.refreshData();
+//      this.selectedItems.clear();
+//    } catch (Exception e) {
+//      ExceptionUtil.uncheckException(e);
+//    }
+//    fireChange();
   }
 
   /**
@@ -961,6 +959,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     if (getDataProvider() != null) {
       initDataProvider();
     }
+    refresh();
   }
 
   protected SequenceHelper createSequenceHelper() {
@@ -1059,6 +1058,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextPage();
+      refresh();
     }
   }
 
@@ -1070,6 +1070,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToPreviousPage();
+      refresh();
     }
   }
 
@@ -1081,6 +1082,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToNextBlock();
+      refresh();
     }
   }
 
@@ -1092,6 +1094,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToPreviousBlock();
+      refresh();
     }
   }
 
@@ -1103,6 +1106,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToFirstPage();
+      refresh();
     }
   }
 
@@ -1114,6 +1118,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     @Override
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       ListWidget.this.sequenceHelper.goToLastPage();
+      refresh();
     }
   }
 
@@ -1131,6 +1136,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
         throw new AraneaRuntimeException("Invalid page index provided.", e);
       }
       ListWidget.this.sequenceHelper.goToPage(page);
+      refresh();
     }
   }
 
@@ -1143,6 +1149,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
       ListWidget.this.sequenceHelper.showFullPages();
+      refresh();
     }
   }
 
@@ -1155,6 +1162,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       filter();
       ListWidget.this.sequenceHelper.showDefaultPages();
+      refresh();
     }
   }
 
@@ -1173,6 +1181,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     this.orderInfo.addField(new OrderInfoField(fieldName, ascending));
     propagateListDataProviderWithOrderInfo(this.orderInfo);
     filter();
+    refresh();
   }
 
   protected class OrderEventHandler extends StandardEventListener {
@@ -1274,6 +1283,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     public void onClick() throws Exception {
       filter();
+      refresh();
       resetSelectedRows();
     }
   }
@@ -1282,6 +1292,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     public void onClick() throws Exception {
       clearFilter();
+      refresh();
       resetSelectedRows();
     }
   }
@@ -1319,7 +1330,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
      * @throws Exception
      */
     protected ViewModel() {
-      this.itemRange = ListWidget.this.getItemRange();
+      this.itemRange = ListWidget.this.dataProvider.getLastItemRange();
       this.sequence = ListWidget.this.sequenceHelper.getViewModel();
       this.listStructure = ListWidget.this.listStructure.getViewModel();
       this.orderInfo = ListWidget.this.getOrderInfo().getViewModel();

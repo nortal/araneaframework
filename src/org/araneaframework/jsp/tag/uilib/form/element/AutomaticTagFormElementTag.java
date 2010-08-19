@@ -1,22 +1,16 @@
 /*
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
 import java.io.Writer;
+import java.lang.reflect.Method;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -26,6 +20,7 @@ import org.araneaframework.jsp.exception.MissingFormElementIdAraneaJspException;
 import org.araneaframework.jsp.support.FormElementViewSelector;
 import org.araneaframework.jsp.support.TagInfo;
 import org.araneaframework.jsp.tag.BaseTag;
+import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
 import org.araneaframework.jsp.tag.uilib.form.FormElementTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
@@ -38,11 +33,8 @@ import org.araneaframework.uilib.form.FormWidget;
  * Automatic form element tag. Chooses the tag to draw the control based on the information supplied in the component.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
- * 
- * @jsp.tag
- *  name = "automaticFormElement"
- *  body-content = "JSP"
- *  description = "Automatic form element which dynamically draws correct form element tag."
+ * @jsp.tag name = "automaticFormElement" body-content = "JSP" description =
+ *          "Automatic form element which dynamically draws correct form element tag."
  */
 public class AutomaticTagFormElementTag extends BaseTag {
 
@@ -64,7 +56,7 @@ public class AutomaticTagFormElementTag extends BaseTag {
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement<?, ?>.ViewModel formElementViewModel;
+  protected FormElement.ViewModel formElementViewModel;
 
   protected Control.ViewModel controlViewModel;
 
@@ -88,14 +80,14 @@ public class AutomaticTagFormElementTag extends BaseTag {
       throw new MissingFormElementIdAraneaJspException(this);
     }
 
-    this.formElementViewModel = (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, this.derivedId)
-        ._getViewable().getViewModel();
+    this.formElementViewModel =
+        (FormElement.ViewModel) JspWidgetUtil.traverseToSubWidget(form, this.derivedId)._getViewable().getViewModel();
 
     // Get control
     this.controlViewModel = this.formElementViewModel.getControl();
 
-    FormElementViewSelector viewSelector = (FormElementViewSelector) this.formElementViewModel.getProperties().get(
-        FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY);
+    FormElementViewSelector viewSelector =
+        (FormElementViewSelector) this.formElementViewModel.getProperties().get(FormElementViewSelector.FORM_ELEMENT_VIEW_SELECTOR_PROPERTY);
 
     if (viewSelector == null) {
       throw new JspException("The form element view selector was not passed!.");
@@ -162,20 +154,16 @@ public class AutomaticTagFormElementTag extends BaseTag {
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Whether the element will send the events that are registered by server-side (by default "true")."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Whether the element will send the events that are registered by server-side (by default "true")."
    */
   public void setEvents(String events) {
     this.events = events;
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Whether the form will be validated on the client-side when the element generates an event (by default: false)."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Whether the form will be validated on the client-side when the element generates an event (by default: false)."
    */
   public void setValidateOnEvent(String validateOnEvent) {
     this.validateOnEvent = validateOnEvent;
@@ -189,38 +177,45 @@ public class AutomaticTagFormElementTag extends BaseTag {
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "CSS class without prefix of the dynamically selected tag."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "CSS class without prefix of the dynamically selected tag."
    */
   public void setStyleClass(String styleClass) {
     this.styleClass = styleClass;
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Enumerates the regions of markup to be updated in this widget scope. Please see <code>&lt;ui:updateRegion&gt;</code> for details."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Enumerates the regions of markup to be updated in this widget scope. Please see
+   *                <code>&lt;ui:updateRegion&gt;</code> for details."
    */
   public void setUpdateRegions(String updateRegions) {
     this.updateRegions = updateRegions;
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Enumerates the regions of markup to be updated globally. Please see <code>&lt;ui:updateRegion&gt;</code> for details."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Enumerates the regions of markup to be updated globally. Please see
+   *                <code>&lt;ui:updateRegion&gt;</code> for details."
    */
   public void setGlobalUpdateRegions(String globalUpdateRegions) {
     this.globalUpdateRegions = globalUpdateRegions;
   }
 
+  // protected void initTagAttributes(Object tag, Map<String, Object> attributes) throws Exception {
+  // for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+  // PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
+  // }
+  // }
   protected void initTagAttributes(Object tag, Map<String, Object> attributes) throws Exception {
     for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-      PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
+      try {
+        PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
+      } catch (Exception e) {
+        Method setter = PresentationTag.class.getMethod("addAttribute", new Class[] { String.class, String.class });
+        setter.invoke(tag, new Object[] { entry.getKey(), entry.getValue() });
+      }
     }
   }
+
 }

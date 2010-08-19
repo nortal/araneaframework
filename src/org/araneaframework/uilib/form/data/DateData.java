@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import org.araneaframework.uilib.form.Data;
 
@@ -26,5 +27,18 @@ public class DateData extends Data<Date> {
 
   public DateData() {
     super(Date.class);
+  }
+
+  /**
+   * Compare Date subclasses using their timestamp values. Works for {@link Timestamp} and {@link Date} comparison.
+   * @see org.araneaframework.uilib.form.Data#isStateChanged()
+   * @author Tanel Käär (tanelk@webmedia.ee)
+   */
+  @Override
+  public boolean isStateChanged() {
+    if(markedBaseValue == null || value == null) {
+      return super.isStateChanged();
+    }
+    return markedBaseValue.getTime() != value.getTime();
   }
 }

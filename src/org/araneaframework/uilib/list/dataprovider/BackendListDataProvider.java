@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib.list.dataprovider;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -154,6 +156,13 @@ public abstract class BackendListDataProvider<T> extends BaseListDataProvider<T>
     this.lastStart = startIdx;
     this.lastCount = count;
     return this.lastItemRange;
+  }
+  
+  public List<T> getLastItemRange() {
+    if(this.lastItemRange == null) {
+      return new ArrayList<T>(0);
+    }
+    return this.lastItemRange.getItemRange();
   }
 
   /** @since 1.1 */
