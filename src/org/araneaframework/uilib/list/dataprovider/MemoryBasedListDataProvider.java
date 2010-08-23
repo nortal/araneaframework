@@ -57,6 +57,8 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
   protected List<T> allData = new ArrayList<T>();
 
   protected List<T> processedData = new ArrayList<T>();
+  
+  protected List<T> lastItemRange;
 
   protected BeanFilter currentFilter = null;
 
@@ -130,13 +132,22 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    * @param count the count of items in the range.
    */
   public ListItemsData<T> getItemRange(Long start, Long count) {
+    refreshData();
     ListItemsData<T> result = new ListItemsData<T>();
 
     process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
     result.setItemRange(getSubList(this.processedData, start.intValue(), count == null ? -1 : start.intValue()
         + count.intValue() - 1));
     result.setTotalCount(getItemCount());
+    this.lastItemRange = result.getItemRange();
     return result;
+  }
+  
+  public List<T> getLastItemRange() {
+    if(this.lastItemRange == null) {
+      return new ArrayList<T>(0);
+    }
+    return this.lastItemRange;
   }
 
   /**

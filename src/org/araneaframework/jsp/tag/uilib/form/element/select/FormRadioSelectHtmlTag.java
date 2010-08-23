@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.util.List;
-
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -82,7 +81,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
       // selection:
       String radioId = scopePrefix + displayItem.getValue();
 
-      if (this.labelBefore) {
+      if (this.labelBefore && displayItem.getLabel() != null) {
         writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
       }
 
@@ -114,7 +113,7 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
       executeSubtag(item);
       unregisterSubtag(item);
 
-      if (!this.labelBefore) {
+      if (!this.labelBefore && displayItem.getLabel() != null) {
         writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
       }
 

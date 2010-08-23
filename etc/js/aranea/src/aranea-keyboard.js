@@ -246,10 +246,10 @@ Aranea.Keyboard = {
 			Aranea.Logger.debug([event.type,' detected! [event.charCode=',event.charCode,', event.keyCode=',event.keyCode,
 				', ctrlKey=',event.ctrlKey,', altKey=',event.altKey,', kev.metaKey=',event.metaKey,']'].join(''));
 
-			var char = String.fromCharCode(event.charCode ? event.charCode : event.keyCode);
+			var eventChar = String.fromCharCode(event.charCode ? event.charCode : event.keyCode);
 
-			if (char) {
-				if (filter.indexOf(char) >= 0) {
+			if (eventChar) {
+				if (filter.indexOf(eventChar) >= 0) {
 					event.stop();
 				}
 			}
@@ -324,8 +324,8 @@ Aranea.Keyboard = {
 				Aranea.Logger.debug("Invoking keyCode handlers, count=" + keyHandlers.length);
 				for (var i = keyHandlers.length - 1; i >= 0; i--) {
 					var handlerFn     = keyHandlers[i].handler;
-					var elementPrefix = keyHandlers[i].elementPrefix;
-					if (!elementPrefix || elementName.startsWith(elementPrefix)) {
+					var elementPrefix = keyHandlers[i].filter.prefix;
+					if (elementName && (!elementPrefix || elementName.startsWith(elementPrefix))) {
 						Aranea.Logger.debug("Invoking key handler: " + handlerFn);
 						var cont = handlerFn(event, elementName);
 						if (cont == false) {

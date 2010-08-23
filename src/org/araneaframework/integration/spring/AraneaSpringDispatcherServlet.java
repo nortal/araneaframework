@@ -1,26 +1,13 @@
 /*
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package org.araneaframework.integration.spring;
-
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.logging.Log;
-
-import org.springframework.beans.factory.config.BeanDefinition;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,11 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.http.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -74,9 +64,13 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   public static final String DEFAULT_ARANEA_CUSTOM_CONF_XML = "/WEB-INF/aranea-conf.xml";
 
+  public static final String DEFAULT_ARANEA_COMMON_CONF_XML = "conf/aranea-common-conf.xml";
+
   public static final String DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES = "/WEB-INF/aranea-conf.properties";
 
   public static final String ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER = "araneaCustomConfXML";
+
+  public static final String ARANEA_COMMON_CONF_XML_INIT_PARAMETER = "araneaCommonConfXML";
 
   public static final String ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER = "araneaCustomConfProperties";
 
@@ -93,9 +87,14 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     // Reading init-param's
     String araneaCustomConfXml = DEFAULT_ARANEA_CUSTOM_CONF_XML;
     String araneaCustomConfProperties = DEFAULT_ARANEA_CUSTOM_CONF_PROPERTIES;
+    String araneaCommonConfXml = DEFAULT_ARANEA_COMMON_CONF_XML;
 
     if (getParam(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER) != null) {
       araneaCustomConfXml = getParam(ARANEA_CUSTOM_CONF_XML_INIT_PARAMETER);
+    }
+
+    if (getParam(ARANEA_COMMON_CONF_XML_INIT_PARAMETER) != null) {
+      araneaCommonConfXml = getParam(ARANEA_COMMON_CONF_XML_INIT_PARAMETER);
     }
 
     if (getParam(ARANEA_CUSTOM_CONF_PROPERTIES_INIT_PARAMETER) != null) {
@@ -140,6 +139,11 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     cfg.setProperties(localConf);
     cfg.setLocalOverride(true);
 
+//    String[] araneaCommonConfXmls = araneaCommonConfXml.split(",");
+//    for(String singleCommonConfXml : araneaCommonConfXmls) {
+//      confReader.loadBeanDefinitions(new ClassPathResource(singleCommonConfXml));
+//    }
+    
     // Loading custom configuration
     try {
       if (getServletContext().getResource(araneaCustomConfXml) != null) {
