@@ -123,7 +123,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    * </tr>
    * </table>
    */
-  public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
+  public static final Map<String, Object> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, Object>();
 
   public static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
@@ -131,7 +131,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   protected static final String OVERLAY_CHILD_KEY = "o";
 
-  protected Map<String, String> presentationOptions = new LinkedHashMap<String, String>();
+  protected Map<String, Object> presentationOptions = new LinkedHashMap<String, Object>();
 
   protected Widget main;
 
@@ -139,13 +139,13 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   static {
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", "false");
-    DEFAULT_PRESENTATION_OPTIONS.put("width", "800");
-    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", "0.9");
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", false);
+    DEFAULT_PRESENTATION_OPTIONS.put("width", 800);
+    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", 0.9);
   }
 
   public StandardOverlayContainerWidget() {
@@ -261,11 +261,11 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   /* The presentation options of this overlay. */
-  public Map<String, String> getOverlayOptions() {
+  public Map<String, Object> getOverlayOptions() {
     return this.presentationOptions;
   }
 
-  public void setOverlayOptions(Map<String, String> presentationOptions) {
+  public void setOverlayOptions(Map<String, Object> presentationOptions) {
     this.presentationOptions = presentationOptions;
   }
 

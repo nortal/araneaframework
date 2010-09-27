@@ -54,14 +54,14 @@ public interface OverlayContext extends Serializable {
    * 
    * @param options options as <code>&lt;String, String&gt;</code> pair.
    */
-  void setOverlayOptions(Map<String, String> options);
+  void setOverlayOptions(Map<String, Object> options);
 
   /**
    * Provides the current options for overlay rendering.
    * 
    * @return the current options for overlay rendering.
    */
-  Map<String, String> getOverlayOptions();
+  Map<String, Object> getOverlayOptions();
 
   /**
    * Destroys the current flow and starts a new one inside the overlay mode. When the new flow ends execution, it will

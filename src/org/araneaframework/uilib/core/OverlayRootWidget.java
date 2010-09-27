@@ -16,15 +16,13 @@
 
 package org.araneaframework.uilib.core;
 
-import org.araneaframework.InputData;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * This class can be used to start an overlay flow. This is provided as-is standard implementation for overlay flow that
@@ -134,23 +132,25 @@ public class OverlayRootWidget extends BaseUIWidget {
   protected class OverlayFlowContainer extends ExceptionHandlingFlowContainerWidget {
 
     protected Widget topWidget;
-
+    
     public OverlayFlowContainer(Widget topWidget) {
+      Assert.notNullParam(topWidget, "topWidget must not be null!");
       this.topWidget = topWidget;
     }
 
     @Override
     protected void update(InputData input) throws Exception {
-      // Custom overlay widget initialization during update(). The problem came with a complaining that when an overlay
-      // child widget attempted to show messages in its init() method, these would be actually rendered during rendering
-      // of the page that initiated the overlay. Therefore we need to initialize the overlay child just before the first
-      // request arrives. Aranea Changelogic task 839.
-
-      if (this.top != null) {
-        start(this.top);
-        this.top = null;
-      }
+      startTopWidget();
       super.update(input);
+    }
+    private void startTopWidget() {
+      if (this.topWidget != null) {
+        try {
+          start(this.topWidget);
+        } finally {
+          this.topWidget = null;
+        }
+      }
     }
 
     @Override
