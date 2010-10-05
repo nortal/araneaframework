@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.core;
 
-import java.util.Collection;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
@@ -80,14 +79,14 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    */
   @Override
   protected void init() throws Exception {
-    super.init();
-    setFinishable(false);
-
     // Create menu.
     this.menu = buildMenu();
     addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
     initMenuSelectorMountSupport();
     putViewData(MenuContext.MENU_VIEWDATA_KEY, this.menu);
+
+    super.init();
+    setFinishable(false);
   }
 
   @Override

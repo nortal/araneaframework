@@ -17,10 +17,11 @@
 package org.araneaframework.uilib.form;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 
 /**
@@ -34,43 +35,33 @@ public class LocalFormElementValidationErrorRenderer implements FormElementValid
 
   public static final LocalFormElementValidationErrorRenderer INSTANCE = new LocalFormElementValidationErrorRenderer();
 
-  @SuppressWarnings("unchecked")
-  public void addError(FormElement<?, ?> element, String error) {
-    Set<String> c = (Set<String>) element.getProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY);
-    if (c == null) {
-      // usually form element produces just one validation error message
-      c = new LinkedHashSet<String>(1);
-      element.setProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY, c);
-    }
-
-    c.add(error);
+  public void addError(FormElement<?, ?> element, MessageData messageData) {
+    getMessages(element).add(messageData);
   }
 
   public void clearErrors(FormElement<?, ?> element) {
-    element.setProperty(FormElementValidationErrorRenderer.ERRORS_PROPERTY_KEY, null);
+    getMessages(element).clear();
   }
 
-  @SuppressWarnings("unchecked")
   public String getClientRenderText(FormElement<?, ?> element) {
-    Collection<String> messages = (Collection<String>) element.getProperty(ERRORS_PROPERTY_KEY);
+    Collection<MessageData> messages = getMessages(element);
     StringBuffer sb = new StringBuffer();
 
-    if (messages != null) {
+    if (!messages.isEmpty()) {
+      LocalizationContext locCtx = element.getEnvironment().requireEntry(LocalizationContext.class);
       String elScope = element.getScope().toString();
 
-      sb.append("<script type=\"text/javascript\">Aranea.UI.appendLocalFEValidationMessages('");
-
       // Attach error messages to the same span that contains rendered form element
-      sb.append(BaseFormElementHtmlTag.FORMELEMENT_SPAN_PREFIX);
+      sb.append("<script type=\"text/javascript\">Aranea.UI.appendLocalFEValidationMessages('"
+          + BaseFormElementHtmlTag.FORMELEMENT_SPAN_PREFIX);
       sb.append(elScope);
-      sb.append("', '<p class=\"");
-      sb.append(RENDERED_FORMELEMENTERROR_STYLECLASS);
-      sb.append(" ");
+      sb.append("', '<p class=\"" + RENDERED_FORMELEMENTERROR_STYLECLASS + " ");
       sb.append(elScope);
       sb.append("\">");
 
-      for (Iterator<String> i = messages.iterator(); i.hasNext();) {
-        sb.append(getFormattedMessage(i.next().toString()));
+      for (MessageData msg : messages) {
+        String msgStr = locCtx.getMessage(msg.getMessage(), msg.getMessageParameters());
+        sb.append(getFormattedMessage(msgStr));
       }
 
       sb.append("</p>')</script>");
@@ -79,7 +70,32 @@ public class LocalFormElementValidationErrorRenderer implements FormElementValid
     return sb.toString();
   }
 
-  protected String getFormattedMessage(String msg) {
+  /**
+   * Retrieves the messages collection for given form <code>element</code>.
+   * 
+   * @param element The form element for which the messages collection should be retrieved.
+   * @return A non-<code>null</code> collection.
+   * @since 2.0
+   */
+  @SuppressWarnings("unchecked")
+  protected static Set<MessageData> getMessages(FormElement<?, ?> element) {
+    Set<MessageData> msgs = (Set<MessageData>) element.getProperty(ERRORS_PROPERTY_KEY);
+
+    if (msgs == null) {
+      msgs = new LinkedHashSet<MessageData>();
+      element.setProperty(ERRORS_PROPERTY_KEY, msgs);
+    }
+
+    return msgs;
+  }
+
+  /**
+   * Formats the given message by escaping it from JavaScript code.
+   * 
+   * @param msg The message to escape.
+   * @return The escaped message that can be used in JavaScript code.
+   */
+  protected static String getFormattedMessage(String msg) {
     return StringEscapeUtils.escapeJavaScript(msg);
   }
 }

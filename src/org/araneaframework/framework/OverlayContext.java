@@ -136,8 +136,7 @@ public interface OverlayContext extends Serializable {
   void cancel();
 
   /**
-   * /** Similar to {@link FlowContext#finish(Object)} but closes the entire OverlayContext not just the last flow
-   * widget.
+   * Similar to {@link FlowContext#finish(Object)} but closes the entire OverlayContext not just the last flow widget.
    * 
    * @param result The result to return from the overlay context.
    * 

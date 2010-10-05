@@ -72,6 +72,20 @@ public class StandardPath implements Path {
    */
   @Override
   public String toString() {
-    return StringUtils.join(this.path, SEPARATOR);
+    return StringUtils.join(this.path, SEPARATOR).intern();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof Path)) {
+      return false;
+    }
+    String other = obj.toString();
+    return StringUtils.equals(other, toString());
+  }
+
+  @Override
+  public int hashCode() {
+    return toString().hashCode();
   }
 }

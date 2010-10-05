@@ -127,14 +127,16 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       LOG.debug("Popup service with identifier '" + threadId + "' was created.");
     }
 
-    OpenerRegistrationMessage msg = new OpenerRegistrationMessage(opener);
-    try {
-      if (opener != null) {
+    if (opener != null) {
+      OpenerRegistrationMessage msg = new OpenerRegistrationMessage(opener);
+
+      try {
         msg.send(null, service);
+      } finally {
+        if (!msg.isDelivered()) {
+          LOG.error("Opener registration message delivery failed.");
+        }
       }
-    } finally {
-      if (opener != null && !msg.isDelivered())
-        LOG.error("Opener registration message delivery failed.");
     }
 
     // TODO when exception happens here, should we kill serving session thread and not open popup window at all?
@@ -272,11 +274,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   @Override
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    super.action(path, input, output);
-  }
-
-  @Override
   protected void update(InputData input) throws Exception {
     removeRenderedPopups();
     super.update(input);
@@ -332,7 +329,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   protected TopServiceContext getTopServiceCtx() {
-    return (getEnvironment().requireEntry(TopServiceContext.class));
+    return getEnvironment().requireEntry(TopServiceContext.class);
   }
 
   protected String getRequestURL() {

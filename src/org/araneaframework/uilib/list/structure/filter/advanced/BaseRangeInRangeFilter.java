@@ -17,9 +17,9 @@
 package org.araneaframework.uilib.list.structure.filter.advanced;
 
 import java.util.Map;
-import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.structure.filter.BaseFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
@@ -39,7 +39,7 @@ public abstract class BaseRangeInRangeFilter extends BaseFilter {
 	}
 	
 	public void setLowFieldId(String lowFieldId) {
-		Validate.notNull(lowFieldId);
+	  Assert.notNull(lowFieldId, "lowFieldId");
 		this.lowFieldId = lowFieldId;
 	}
 	
@@ -48,7 +48,7 @@ public abstract class BaseRangeInRangeFilter extends BaseFilter {
 	}
 
 	public void setHighFieldId(String highFieldId) {
-		Validate.notNull(highFieldId);
+		Assert.notNullParam(highFieldId, "highFieldId");
 		this.highFieldId = highFieldId;
 	}
 

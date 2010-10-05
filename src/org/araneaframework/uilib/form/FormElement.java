@@ -26,6 +26,7 @@ import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.framework.core.RenderStateAware;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.ConverterNotFoundException;
@@ -245,7 +246,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   }
 
   @Override
-  public void addError(String error) {
+  public void addError(MessageData error) {
     super.addError(error);
     getFormElementValidationErrorRenderer().addError(this, error);
   }
@@ -275,10 +276,10 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @since 1.1
    */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = ConfigurationUtil.getFormElementErrorRenderer(getEnvironment());
+    FormElementValidationErrorRenderer result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
 
     if (result == null) {
-      result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
+      result = ConfigurationUtil.getFormElementErrorRenderer(getEnvironment());
     }
 
     if (result == null) {

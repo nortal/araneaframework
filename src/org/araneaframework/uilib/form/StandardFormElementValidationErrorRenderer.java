@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form;
 
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
@@ -30,12 +31,12 @@ public class StandardFormElementValidationErrorRenderer implements FormElementVa
 
   public static final StandardFormElementValidationErrorRenderer INSTANCE = new StandardFormElementValidationErrorRenderer();
 
-  public void addError(FormElement<?, ?> element, String error) {
-    EnvironmentUtil.requireMessageContext(element.getEnvironment()).showMessage(MessageContext.ERROR_TYPE, error);
+  public void addError(FormElement<?, ?> element, MessageData messageData) {
+    EnvironmentUtil.requireMessageContext(element.getEnvironment()).showMessage(MessageContext.ERROR_TYPE, messageData);
   }
 
   public void clearErrors(FormElement<?, ?> element) {
-    EnvironmentUtil.requireMessageContext(element.getEnvironment()).hideMessages(MessageContext.ERROR_TYPE,
+    EnvironmentUtil.requireMessageContext(element.getEnvironment()).hideMessagesData(MessageContext.ERROR_TYPE,
         element.getErrors());
   }
 

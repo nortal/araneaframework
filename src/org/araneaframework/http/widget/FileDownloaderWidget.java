@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.support.FileInfo;
 
@@ -114,7 +115,14 @@ public class FileDownloaderWidget extends DownloaderWidget {
 
   protected String getFileName() {
     FileDownloadStreamCallback c = getCallback();
-    return c != null && c.getFileName() != null ? c.getFileName() : this.fileName;
+    String name = c != null && c.getFileName() != null ? c.getFileName() : this.fileName;
+
+    // When name contains spaces but is not quoted, then the name has to be quoted.
+    if (StringUtils.contains(name, " ") && !StringUtils.startsWith(name, "\"")) {
+      name = "\"" + name + "\"";
+    }
+
+    return name;
   }
 
   /**

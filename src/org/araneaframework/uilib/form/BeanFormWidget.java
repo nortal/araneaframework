@@ -27,11 +27,22 @@ import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 public class BeanFormWidget<T> extends FormWidget {
 
-  private BeanMapper<T> beanMapper;
+  protected BeanMapper<T> beanMapper;
 
-  private Class<T> beanClass;
+  protected Class<T> beanClass;
 
-  private T bean;
+  protected T bean;
+
+  /**
+   * Holds information whether readFromBean(*) has been called before this widget is initialized. When this variable is
+   * still <code>false</code> by the time {@link #init()} occurs, the {@link #readFromBean()} method will be called
+   * automatically. This makes using <code>BeanFormWidget</code> more convenient when the bean object is provided to the
+   * constructor (by not having to call the read method manually). However, it also prevents writing over form data when
+   * a programmer has already called {@link #readFromBean(Object)}.
+   * 
+   * @since 2.0
+   */
+  protected boolean beanReadBeforeInit;
 
   public BeanFormWidget(Class<T> beanClass, T bean) {
     Assert.notNullParam(beanClass, "beanClass");
@@ -42,6 +53,10 @@ public class BeanFormWidget<T> extends FormWidget {
     this.bean = bean;
   }
 
+  /**
+   * Initiates a new <code>BeanFormWidget</code> using the given <code>beanClass</code> to analyze the bean and to 
+   * @param beanClass
+   */
   public BeanFormWidget(Class<T> beanClass) {
     Assert.notNullParam(beanClass, "beanClass");
 
@@ -57,7 +72,9 @@ public class BeanFormWidget<T> extends FormWidget {
   @Override
   protected void init() throws Exception {
     super.init();
-    readFromBean();
+    if (!this.beanReadBeforeInit) {
+      readFromBean();
+    }
   }
 
   /**
@@ -155,8 +172,10 @@ public class BeanFormWidget<T> extends FormWidget {
   @SuppressWarnings("unchecked")
   public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control,
       boolean mandatory) {
-    Data<D> data = new Data(BeanUtil.getPropertyType(this.beanClass, elementName));
-    return addElement(elementName, labelId, control, data, mandatory);
+    Class<?> type = BeanUtil.getPropertyType(this.beanClass, elementName);
+    Assert.notNull(type, "Could not resolve the type of property '" + elementName + "' in class " + this.beanClass);
+
+    return addElement(elementName, labelId, control, new Data(type), mandatory);
   }
 
   @SuppressWarnings("unchecked")
@@ -178,6 +197,7 @@ public class BeanFormWidget<T> extends FormWidget {
   public void readFromBean(T bean) {
     BeanFormWriter<T> writer = new BeanFormWriter<T>(this.beanClass);
     writer.writeFormBean(this, bean);
+    this.beanReadBeforeInit = true;
   }
 
   public void readFromBean() {

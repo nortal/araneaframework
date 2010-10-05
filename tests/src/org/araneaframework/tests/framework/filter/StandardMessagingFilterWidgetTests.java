@@ -23,6 +23,7 @@ import org.araneaframework.framework.filter.StandardMessagingFilterWidget;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class StandardMessagingFilterWidgetTests extends BaseMessageContextTests {
+
   @Override
   protected MessageContext getMessageContext() {
     return new StandardMessagingFilterWidget();

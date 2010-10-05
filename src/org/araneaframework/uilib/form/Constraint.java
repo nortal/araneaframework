@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.MessageContext.MessageData;
 
 
 /**
@@ -38,7 +39,7 @@ public interface Constraint extends Serializable {
    * Returns the validation errors produced while validating this {@link Constraint}.
    * @return validation errors.
    */
-  public Set<String> getErrors();
+  public Set<MessageData> getErrors();
 
   /**
    * Clears the the errors produced while validating this {@link Constraint}.

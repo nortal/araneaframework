@@ -205,8 +205,10 @@ Aranea.UI = {
 	 */
 	toggleListCheckBoxes: function(chkSelectAll) {
 		if (chkSelectAll) {
-			var selector = 'input[type=checkbox][id!="' + chkSelectAll.id + '"][id^="' + chkSelectAll.id + '"]';
-			Aranea.Data.systemForm.select(selector).invoke('writeAttribute', 'checked', chkSelectAll.checked);
+			var selector = 'input[type=checkbox][id^="' + chkSelectAll.id + '."]';
+			Aranea.Data.systemForm.select(selector).each(function(chk) {
+				chk.checked = chkSelectAll.checked;
+			});
 		}
 	},
 
@@ -216,14 +218,11 @@ Aranea.UI = {
 	 * that was clicked. If all check boxes are selected, the select-all will be also selected, and vice versa.
 	 * @since 1.1.3
 	 */
-	updateListSelectAll: function(chkSelect) {
-		var prefix = chkSelect ? chkSelect.id.match(/.*(?=\.)/)[0] : null;
-		if (prefix) {
-			var selector = 'input[type=checkbox][id^="' + prefix + '"][id!="' + prefix + '"]:not(:checked)';
-			var allSelected = Aranea.Data.systemForm.down(selector) == null;
-			if ($(prefix)) { // The "Select-All" check-box.
-				$(prefix).writeAttribute('checked', allSelected);
-			}
+	updateListSelectAll: function(chkSelectAllId) {
+		if ($(chkSelectAllId)) { // The "Select-All" check-box.
+			var selector = 'input[type=checkbox][id^="' + chkSelectAllId + '."]:not(:checked)';
+			var allSelected = Aranea.Data.systemForm.select(selector).length == 0;
+			$(chkSelectAllId).checked = allSelected;
 		}
 	}
 };

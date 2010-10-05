@@ -26,6 +26,7 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.ConfigurationUtil;
@@ -63,13 +64,13 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");
 
     // Prepare
     String name = this.getFullFieldId();
-    MultiSelectControl<Object>.ViewModel viewModel = ((MultiSelectControl.ViewModel) this.controlViewModel);
+    ViewModel viewModel = ((MultiSelectControl.ViewModel) this.controlViewModel);
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");

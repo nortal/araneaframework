@@ -21,7 +21,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.collections.comparators.NullComparator;
-import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.compare.ComparedEqualsExpression;
@@ -39,6 +38,7 @@ import org.araneaframework.backend.list.memorybased.expression.logical.NotExpres
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 /**
@@ -59,7 +59,7 @@ public class ExpressionUtil {
    * Creates VARIABLE expression.
    */
   public static VariableExpression var(String name) {
-    Validate.notEmpty(name);
+    Assert.notEmptyParam(name, "name");
     return new VariableExpression(name);
   }
 

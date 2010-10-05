@@ -164,11 +164,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
    * @since 1.0.5
    */
   public T getSelectedItem() {
-    T result = null;
-    if (getFormElementCtx() != null) {
-      result = SelectControlUtil.getSelectItem(this, (String) getFormElementCtx().getValue());
-    }
-    return result;
+    return this.value;
   }
 
   @Override
@@ -185,8 +181,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
 
   public DataType getRawValueType() {
     this.itemClass = SelectControlUtil.resolveClass(this.itemClass, this.items);
-    Assert.notNull(this.itemClass != null,
-        "Cannot resolve data type because select item class nor select items provided!");
+    Assert.notNull(this.itemClass, "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(this.itemClass);
   }
 

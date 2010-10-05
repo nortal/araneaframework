@@ -20,8 +20,10 @@ import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
+import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class is the base class for form converters. The converters' task is to convert the value of form
@@ -73,11 +75,22 @@ public abstract class BaseConverter<C, D> implements Serializable, Converter<C, 
   // * PROTECTED METHODS
   // *********************************************************************
 
-  protected void addError(String error) {
-    this.feCtx.addError(error);
+  protected void addError(String error, Object... params) {
+    this.feCtx.addError(error, params);
   }
 
-  protected void addErrors(Set<String> errors) {
+  /**
+   * Since mostly the parameter to the error message is the name of the input field, this method automatically adds the
+   * resolved input field name to the given error message.
+   * 
+   * @param error The error message that takes the input field name as its parameter.
+   * @since 2.0
+   */
+  protected void addErrorWithLabel(String error) {
+    this.feCtx.addError(error, MessageUtil.localize(getLabel(), getEnvironment()));
+  }
+
+  protected void addErrors(Set<MessageData> errors) {
     this.feCtx.addErrors(errors);
   }
 

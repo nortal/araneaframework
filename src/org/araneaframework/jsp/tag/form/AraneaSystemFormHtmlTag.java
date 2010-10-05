@@ -57,7 +57,7 @@ public class AraneaSystemFormHtmlTag extends BaseSystemFormHtmlTag {
     // if overlay is active, set the empty field which denotes that system form is running in overlay
     OverlayActivityMarkerContext oCtx = getEnvironment().getEntry(OverlayActivityMarkerContext.class);
     if (oCtx != null) {
-      JspUtil.writeHiddenInputElement(out, OverlayContext.OVERLAY_REQUEST_KEY, "");
+      JspUtil.writeHiddenInputElement(out, OverlayContext.OVERLAY_REQUEST_KEY, "true");
     }
 
     // Continue

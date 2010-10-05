@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
@@ -197,6 +198,22 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * all selected check boxes (from previous pages as well) stored (see {@link #setSelectFromMultiplePages(boolean)} for
    * more information).
    * 
+   * @since 2.0
+   * @see #setSelectFromMultiplePages(boolean)
+   * @see #getSelectedRows()
+   * @see #getSelectedRow()
+   */
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    super.action(path, input, output);
+    readRowsSelectedInputValues(input);
+  }
+
+  /**
+   * Reads information about selected check boxes and radio buttons, and stores this information. It is possible to make
+   * all selected check boxes (from previous pages as well) stored (see {@link #setSelectFromMultiplePages(boolean)} for
+   * more information).
+   * 
    * @since 1.1.3
    * @see #setSelectFromMultiplePages(boolean)
    * @see #getSelectedRows()
@@ -205,7 +222,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
+    readRowsSelectedInputValues(input);
+  }
 
+  protected void readRowsSelectedInputValues(InputData input) {
     // 1. Selected check boxes.
     // Path is used to read only those value-names that start with given prefix:
     Path checksPath = new StandardPath(getScope().toPath().toString() + Path.SEPARATOR + LIST_CHECK_SCOPE);
@@ -221,8 +241,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
     // Sort the rows in the order displayed on the page:
     Collections.sort(rowKeys);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("List [" + getScope().getId() + "]: Collect selected list rows from multiple pages: "
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("List [" + getScope().getId() + "]: Collect selected list rows from multiple pages: "
           + this.selectFromMultiplePages);
     }
 
@@ -271,8 +291,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
         putViewData(LIST_RADIO_SCOPE, rowKey);
       }
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("List [" + getScope().getId() + "]: Number of selected list rows: " + this.selectedItems.size());
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("List [" + getScope().getId() + "]: Number of selected list rows: " + this.selectedItems.size());
     }
   }
 
@@ -886,12 +906,19 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   public void refreshCurrentItemRange() {
     Assert.notNull(this.dataProvider, "DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
     ListItemsData<T> itemRangeData;
+
     try {
-      itemRangeData = this.dataProvider.getItemRange(this.sequenceHelper.getCurrentPageFirstItemIndex(),
-          this.sequenceHelper.getItemsOnPage());
+      if (this.sequenceHelper.getAllItemsShown()) {
+        itemRangeData = this.dataProvider.getAllItems();
+      } else {
+        long firstItemIndex = this.sequenceHelper.getCurrentPageFirstItemIndex();
+        long itemsOnPage = this.sequenceHelper.getItemsOnPage();
+        itemRangeData = this.dataProvider.getItemRange(firstItemIndex, itemsOnPage);
+      }
     } catch (Exception e) {
       throw new AraneaRuntimeException(e);
     }
+
     this.itemRange = itemRangeData.getItemRange();
     this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
     this.sequenceHelper.validateSequence();
@@ -1173,7 +1200,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles single column ordering.
    */
   protected void order(String fieldName) throws Exception {
-    LOG.debug("Processing Single Column Order");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Processing single-column ordering for field '" + fieldName + "'.");
+    }
+
     boolean ascending = true;
 
     List<OrderInfoField> orderFields = this.orderInfo.getFields();
@@ -1231,9 +1261,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Handles filtering.
+   * Handles filtering using the data in the list filter form.
    */
-  protected void filter() throws Exception {
+  public void filter() {
     if (this.form.convertAndValidate() && this.form.isStateChanged()) {
       Map<String, Object> filterInfo = ListUtil.readFilterInfo(this.form);
       propagateListDataProviderWithFilter(filterInfo);
@@ -1244,10 +1274,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Handles filter clearing.
+   * Resets filter form fields.
    */
   @SuppressWarnings("unchecked")
-  protected void clearFilter() {
+  public void clearFilter() {
     clearForm(this.form);
     propagateListDataProviderWithFilter(Collections.EMPTY_MAP);
     this.sequenceHelper.setCurrentPage(0);

@@ -129,7 +129,7 @@ public class StandardServletInputData implements HttpInputData {
       initData();
     }
 
-    Map<String, String> result = this.scopedData.get(scope);
+    Map<String, String> result = this.scopedData.get(scope.toString());
 
     if (result != null) {
       return Collections.unmodifiableMap(result);
@@ -169,17 +169,12 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public String getContainerURL() {
-    StringBuffer url = new StringBuffer();
+    String url = this.req.getRequestURI();
     if (this.useFullURL) {
-      url.append(this.req.getScheme());
-      url.append("://");
-      url.append(this.req.getServerName());
-      url.append(":");
-      url.append(this.req.getServerPort());
+      url = this.req.getRequestURL().toString();
     }
-    url.append(this.req.getContextPath());
-    url.append(this.servletPath);
-    return url.toString();
+    url = url.substring(0, url.indexOf(this.servletPath) + this.servletPath.length());
+    return url;
   }
 
   public String getContainerPath() {

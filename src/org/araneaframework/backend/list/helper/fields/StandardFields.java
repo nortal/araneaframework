@@ -16,13 +16,12 @@
 
 package org.araneaframework.backend.list.helper.fields;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;
@@ -193,8 +192,7 @@ public class StandardFields implements Fields {
   }
 
   private String addPrefix(String prefix, String field) {
-    String result = NameUtil.getFullName(prefix, field);
-    return this.globalPrefix == null ? result : NameUtil.getFullName(this.globalPrefix, result);
+    return NameUtil.getFullName(this.globalPrefix, prefix, field);
   }
 
   private Collection<String> addPrefix(String prefix, Collection<String> fields) {

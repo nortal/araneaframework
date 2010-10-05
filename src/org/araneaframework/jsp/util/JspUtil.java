@@ -237,10 +237,41 @@ public class JspUtil {
     }
   }
 
+  /**
+   * Writes out attributes contained in the Map&lt;attributeName, attributeValue&gt;. If map is <code>null</code>,
+   * writes nothing. Uses {@link #writeAttributeForced(Writer, String, Object)} to write out each attribute, meaning
+   * that empty attributes will be written out as well.
+   * 
+   * @param out The writer where to write.
+   * @param attributes A map of attributes, where keys will be treated as attribute values, to write. May be
+   *          <code>null</code> .
+   * @throws IOException Any exception related to writing to the given writer.
+   * @since 2.0
+   */
+  public static void writeAttributesForced(Writer out, Map<String, Object> attributes) throws IOException {
+    if (attributes != null) {
+      for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+        writeAttributeForced(out, entry.getKey(), entry.getValue());
+      }
+    }
+  }
+
   public static void writeAttribute(Writer out, String name, Object value) throws IOException {
     writeAttribute(out, name, value, true);
   }
 
+  /**
+   * Writes attribute of form ' name"value"'. When value is <code>null</code> or empty, the attribute value will be
+   * rendered as an empty <code>String</code>. The value will also be HTML-escaped.
+   * 
+   * @param out The writer where the text should be written.
+   * @param name The name for the attribute.
+   * @param value The value for the attribute. Will be translated into <code>String</code> using <code>toString()</code>
+   *          method. <code>null</code> will be translated into an empty string.
+   * @throws IOException Any exception related to writing.
+   * @since 2.0
+   * @see #writeAttribute(Writer, String, Object, boolean, boolean)
+   */
   public static void writeAttributeForced(Writer out, String name, Object value) throws IOException {
     writeAttribute(out, name, value, true, true);
   }

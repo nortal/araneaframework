@@ -51,9 +51,9 @@ Aranea.Behaviour = {
 
 	ARANEA_FILE_UPLOAD: 'input.aranea-file-upload',
 
-	ARANEA_BG_VALIDATE: '.aranea-bg-validate',
+	ARANEA_BG_VALIDATE: 'aranea-bg-validate',
 
-	ARANEA_NO_BG_VALIDATE: '.aranea-no-bg-validate',
+	ARANEA_NO_BG_VALIDATE: 'aranea-no-bg-validate',
 
 	setFormElementContext: function(element) {
 		element = $(element);
@@ -85,19 +85,19 @@ Aranea.Behaviour = {
 			|| !globalBgValidate &&  element.hasClassName(that.ARANEA_BG_VALIDATE))) {
 
 			element.observe('change', that.formElementValidationActionCall);
-			storage.set(that.ATTACHED_VALIDATE, true);
+			element.getStorage().set(that.ATTACHED_VALIDATE, true);
 		}
 	},
 
 	setCloningUrl: function(element) {
 		element = $(element);
-		if (String.blank(element.readAttribute('href')) || element.getStorage().get(Aranea.Behaviour.ATTACHED_URL)) {
+		if (!element.readAttribute('href') || element.getStorage().get(Aranea.Behaviour.ATTACHED_URL)) {
 			return;
 		}
 
-		var eventId = Aranea.Page.Parameter.getEventId(element);
-		var eventParam = Aranea.Page.Parameter.getEventParam(element);
-		var eventTarget = Aranea.Page.Parameter.getEventTarget(element);
+		var eventId = Aranea.Page.Form.getEventId(element);
+		var eventParam = Aranea.Page.Form.getEventParam(element);
+		var eventTarget = Aranea.Page.Form.getEventTarget(element);
 
 		var params = {
 			araPleaseClone: true,
@@ -166,21 +166,19 @@ Aranea.Behaviour = {
 
 	apply: function() {
 		Aranea.Logger.debug('Applying behaviour rules to form elements...');
-		$$(Aranea.Behaviour.ARANEA_LINK).each(function(el) {
+		$$(Aranea.Behaviour.ARANEA_LINKS).each(function(el) {
 			Aranea.Behaviour.setCloningUrl(el);
-		});
-
-		$$(Aranea.Behaviour.ARANEA_BG_VALIDATE).each(function(el) {
-			Aranea.Behaviour.setFormElementValidation(el);
 		});
 
 		$$(Aranea.Behaviour.ARANEA_INPUT).each(function(el) {
 			Aranea.Behaviour.applyCharacterFilter(el);
 			Aranea.Behaviour.setFormElementContext(el);
+			Aranea.Behaviour.setFormElementValidation(el);
 		});
 
-		$$(Aranea.Behaviour.ARANA_INPUT_OTHER).each(function(el) {
+		$$(Aranea.Behaviour.ARANEA_INPUT_OTHER).each(function(el) {
 			Aranea.Behaviour.setFormElementContext(el);
+			Aranea.Behaviour.setFormElementValidation(el);
 		});
 	},
 
@@ -192,9 +190,9 @@ Aranea.Behaviour = {
 	 */
 	getAutoCompleteURL: function(name) {
 		return Aranea.Page.getSubmitURL({
-			araTopServiceId: Aranea.Page.Parameter.getTopServiceId(Aranea.Data.systemForm),
-			araThreadServiceId: Aranea.Page.Parameter.getThreadServiceId(Aranea.Data.systemForm),
-			araTransactonId: Aranea.Page.Parameter.getTransactionId(Aranea.Data.systemForm),
+			araTopServiceId: Aranea.Page.Form.getTopServiceId(),
+			araThreadServiceId: Aranea.Page.Form.getThreadServiceId(),
+			araTransactonId: Aranea.Page.Form.getTransactionId(),
 			araServiceActionPath: name,
 			araServiceActionHandler: 'autocomplete',
 			araClientStateId: null

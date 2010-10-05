@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form;
 
 import java.io.Serializable;
+import org.araneaframework.framework.MessageContext.MessageData;
 
 /**
  * Interface through which {@link org.araneaframework.uilib.form.FormElement}s register the error messages produced by
@@ -44,9 +45,9 @@ public interface FormElementValidationErrorRenderer extends Serializable {
    * Called by {@link org.araneaframework.uilib.form.FormElement#addError(String)} to register validation errors.
    * 
    * @param element Element, which produced the validation error.
-   * @param error The detailed error message.
+   * @param messageData The error message data.
    */
-  void addError(FormElement<?, ?> element, String error);
+  void addError(FormElement<?, ?> element, MessageData messageData);
 
   /**
    * Called by {@link org.araneaframework.uilib.form.FormElement#clearErrors()} to clear validation errors.

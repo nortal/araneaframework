@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.release;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
@@ -72,7 +73,7 @@ public class DemoModalDialogWidget extends TemplateBaseWidget {
 
     // Require the number input field to be filled. It could have been achieved
     // already on form element creation by setting mandatory attribute to true.
-    this.form.getElement("number").setConstraint(new NotEmptyConstraint<Object, Object>());
+    this.form.getElement("number").setConstraint(new NotEmptyConstraint<BigDecimal, BigDecimal>());
 
     // Sets initial value of the form element:
     this.form.setValueByFullName("dateTime", DateUtils.truncate(new Date(), Calendar.MINUTE));

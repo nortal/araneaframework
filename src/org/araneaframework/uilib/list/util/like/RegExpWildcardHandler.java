@@ -25,16 +25,16 @@ package org.araneaframework.uilib.list.util.like;
  */
 public class RegExpWildcardHandler extends BaseWildcardHandler {
 
-	public int shouldStartWith() {
-		return ANY_STRING_WILDCARD;
-	}
+  public int shouldStartWith() {
+    return ANY_STRING_WILDCARD;
+  }
 
-	public int shouldEndWith() {
-		return ANY_STRING_WILDCARD;
-	}
+  public int shouldEndWith() {
+    return ANY_STRING_WILDCARD;
+  }
 
-	public WildcardHandler newInstance() {
-		return new RegExpWildcardHandler();
-	}
+  public WildcardHandler newInstance() {
+    return new RegExpWildcardHandler();
+  }
 
 }

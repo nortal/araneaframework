@@ -39,7 +39,7 @@ Aranea.History = {
 		if (Aranea.Page.Submitter.TYPE_SUBMIT != event.memo.type) {
 			var stateId = Aranea.History.getCurrentStateIdFromUrl() || Aranea.Data.systemForm.araClientStateId.value;
 			if (stateId.startsWith('HTTP')) {
-				Aranea.History.lastHttpState = $(AraneaPage.RSH_UPDATE_REGION_ID).innerHTML;
+				Aranea.History.lastHttpState = $(Aranea.Page.UPDATE_REGION_ID).innerHTML;
 			}
 		}
 	},
@@ -127,6 +127,12 @@ Aranea.History = {
 			var memo = stateId.startsWith('HTTP') ? 'HTTP' : 'AJAX';
 			window.dhtmlHistory.add(stateVersion, memo); // The 2nd parameter is a memo for us that we can use later.
 		}
+
+		var form = Aranea.Data.systemForm;
+		if (form && form.araClientStateId) {
+			form.araClientStateId.value = stateId;
+		}
+		form = null;
 	},
 
 	/**

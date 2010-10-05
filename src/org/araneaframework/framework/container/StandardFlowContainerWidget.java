@@ -381,7 +381,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
     }
 
-    if (this.finishable && this.callStack.isEmpty()) {
+    if (this.finishable && this.callStack.isEmpty() && isAlive()) {
       FlowContext parentFlowContainer = EnvironmentUtil.getFlowContext(getEnvironment());
       if (parentFlowContainer != null) {
         parentFlowContainer.finish(returnValue);
@@ -417,7 +417,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       }
     }
 
-    if (this.finishable && this.callStack.isEmpty()) {
+    if (this.finishable && this.callStack.isEmpty() && isAlive()) {
       FlowContext parentFlowContainer = EnvironmentUtil.getFlowContext(getEnvironment());
       if (parentFlowContainer != null) {
         parentFlowContainer.cancel();

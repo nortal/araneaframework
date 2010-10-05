@@ -67,17 +67,11 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
   public static final String DOCUMENT_REGION_KEY = "document";
 
-  private String characterEncoding = "UTF-8";
-
   private Map<String, String> documentRegions = new HashMap<String, String>();
 
   private List<String> renderedRegions = new ArrayList<String>();
 
   private boolean disabled = false;
-
-  public void setCharacterEncoding(String encoding) {
-    this.characterEncoding = encoding;
-  }
 
   public void disableOnce() {
     this.disabled = true;
@@ -288,7 +282,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
       }
 
       // Cut out regions by special comments
-      String widgetContent = new String(arUtil.getData(), this.characterEncoding);
+      String widgetContent = arUtil.getStringData();
       for (String id : regionIds) {
         String content = getContentById(widgetContent, id);
         if (content == null) {

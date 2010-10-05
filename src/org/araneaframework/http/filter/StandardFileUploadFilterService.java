@@ -295,6 +295,8 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
         if (this.maximumSize != null && this.maximumSize < item.getSize()) {
           uploadException = new FileUploadBase.FileSizeLimitExceededException("", item.getSize(), this.maximumSize);
           continue;
+        } else if (item.getSize() <= 0) {
+          continue;
         }
 
         if (LOG.isWarnEnabled() && fileItems.containsKey(item.getFieldName())) {

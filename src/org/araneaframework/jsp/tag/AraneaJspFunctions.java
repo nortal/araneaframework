@@ -19,8 +19,8 @@ package org.araneaframework.jsp.tag;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.PageContext;
 import org.araneaframework.Environment;
@@ -30,6 +30,7 @@ import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ConfirmationContext;
+import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -195,8 +196,8 @@ public class AraneaJspFunctions {
     return JspUtil.getFormActionURL(jspContext);
   }
 
-  public static boolean isOverlay(JspContext jspContext) {
-    return JspUtil.hasOverlayMarker(jspContext);
+  public static OverlayContext getOverlayContext(JspContext jspContext) {
+    return JspUtil.getEnvironment(jspContext).getEntry(OverlayContext.class);
   }
 
   public static Set<Entry<String, String>> getHiddenFormFields(JspContext jspContext) {

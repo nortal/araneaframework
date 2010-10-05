@@ -17,10 +17,10 @@
 package org.araneaframework.uilib.list.structure.filter.field;
 
 import java.util.Map;
-import org.apache.commons.lang.Validate;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.structure.filter.BaseFilter;
 import org.araneaframework.uilib.list.structure.filter.FieldFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
@@ -45,7 +45,7 @@ public abstract class BaseRangeFilter extends BaseFilter implements FieldFilter 
   }
 
   public void setFieldId(String fieldId) {
-    Validate.notNull(fieldId);
+    Assert.notNullParam(fieldId, "fieldId");
     this.fieldId = fieldId;
   }
 

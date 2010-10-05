@@ -162,13 +162,20 @@ public abstract class DisplayItemUtil implements Serializable {
    */
   public static List<DisplayItem> getItems(Collection<DisplayItem> items, String... values) {
     List<DisplayItem> results = new LinkedList<DisplayItem>();
-    if (CollectionUtils.isNotEmpty(items)) {
+
+    if (!ArrayUtils.isEmpty(values) && CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
-        if (ArrayUtils.contains(values, item.getValue())) {
+        if (item.isGroup()) {
+          results.addAll(getItems(item.getChildOptions(), values));
+        } else if (ArrayUtils.contains(values, item.getValue())) {
           results.add(item);
+        }
+        if (results.size() == values.length) {
+          break;
         }
       }
     }
+
     return results;
   }
 
@@ -182,10 +189,14 @@ public abstract class DisplayItemUtil implements Serializable {
   public static DisplayItem getItem(Collection<DisplayItem> items, String value) {
     DisplayItem result = null;
 
-    if (!StringUtils.isBlank(value)) {
+    if (CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
-        if (StringUtils.equals(value, item.getValue())) {
+        if (item.isGroup()) {
+          result = getItem(item.getChildOptions(), value);
+        } else if (StringUtils.equals(value, item.getValue())) {
           result = item;
+        }
+        if (result != null) {
           break;
         }
       }

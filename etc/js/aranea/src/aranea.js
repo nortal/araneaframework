@@ -251,7 +251,7 @@ Aranea.Page = {
 		try {
 			Aranea.Logger.profile('Aranea.Page.invokeEvent()');
 			if (!Aranea.Data.submitted && Aranea.Data.loaded) {
-				var data = Aranea.Page.Parameter.getEventData(type, args);
+				var data = Aranea.Page.Form.getEventData(type, args);
 
 				if (data.preconditionFailed) {
 					Aranea.Logger.debug('Request cancelled because event precondition returned false.');
@@ -327,7 +327,7 @@ Aranea.Page = {
 		var url = Aranea.Page.encodeURL(urlStr);
 
 		if (params.size() > 0) {
-			var separator = (url.length == 0) || (url.first().indexOf('?') < 0) ? '?' : '&';
+			var separator = (url || '').indexOf('?') < 0 ? '?' : '&';
 			url += separator + params.toQueryString();
 		}
 
@@ -377,10 +377,10 @@ Aranea.Page = {
 			throw('The "form" parameter must not be null!');
 		}
 		return $H({
-			araTransactionId: Aranea.Page.Parameter.getTransactionId(form),
-			araTopServiceId: Aranea.Page.Parameter.getTopServiceId(form),
-			araThreadServiceId: Aranea.Page.Parameter.getThreadServiceId(form),
-			araClientStateId: Aranea.Page.Parameter.getClientStateId(form)
+			araTransactionId: Aranea.Page.Form.getTransactionId(form),
+			araTopServiceId: Aranea.Page.Form.getTopServiceId(form),
+			araThreadServiceId: Aranea.Page.Form.getThreadServiceId(form),
+			araClientStateId: Aranea.Page.Form.getClientStateId(form)
 		});
 	},
 
@@ -587,7 +587,7 @@ Aranea.Page.Request = {
 		document.fire('aranea:beforeRequest', data);
 
 		Aranea.Page.Request.customBefore(data);
-		Aranea.Page.Parameter.writeToForm(data); // Write event data to form so that it would be sent to server-side.
+		Aranea.Page.Form.writeToForm(data); // Write event data to form so that it would be sent to server-side.
 	},
 
 	/**
@@ -640,7 +640,7 @@ Aranea.Page.Submitter.Plain = Class.create({
 	TYPE: Aranea.Page.Submitter.TYPE_PLAIN,
 
 	event_plain: function(args) {
-		return this.event(Aranea.Page.Parameter.getEventData(this.TYPE, args));
+		return this.event(Aranea.Page.Form.getEventData(this.TYPE, args));
 	},
 
 	event: function(eventData) {
@@ -671,7 +671,19 @@ Aranea.Page.Submitter.Overlay = Class.create(Aranea.Page.Submitter.Plain, {
 	TYPE: Aranea.Page.Submitter.TYPE_OVERLAY,
 
 	event_core: function(data) {
-		Aranea.ModalBox.update({ params: data.form.serialize(true) });
+		var submitParams = data.form.serialize(true);
+
+		submitParams.araTransactionId = 'override';
+
+		// For Aranea.History requests we need to set transaction ID to an inconsistent value.
+		if (Aranea.History && data.eventUpdateRgns == Aranea.History.UPDATE_REGION_ID) {
+			submitParams.araTransactionId = 'inconsistent';
+		}
+		if (data.eventUpdateRgns) {
+			submitParams.updateRegions = data.eventUpdateRgns;
+		}
+
+		Aranea.ModalBox.update({ params: submitParams });
 	},
 
 	event: function(eventData) {
@@ -824,7 +836,7 @@ Object.extend(Aranea.Page.Submitter.AJAX, {
 		var handlers = Aranea.Data.regionHandlers;
 
 		new Aranea.Util.AjaxResponse(responseText, true).each(function(key, content, length) {
-			counter[key] = counter[key] ? counter[key]++ : 1;
+			counter[key] = (counter[key] || 0) + 1;
 			var handler = handlers.get(key);
 			if (handler && handler.process) {
 				handler.process(content);
@@ -837,11 +849,11 @@ Object.extend(Aranea.Page.Submitter.AJAX, {
 		Aranea.Data.receivedRegionCounters = counter;
 
 		if (Aranea.Page.RELOAD_ON_NO_DOCUMENT_REGIONS && !hasRegions) {
-			log.debug('No document regions were received, forcing a reload of the page');
+			Aranea.Logger.debug('No document regions were received, forcing a reload of the page');
 			if (handlers.get('reload')) {
 				handlers.get('reload').process();
 			} else {
-				log.error('No handler is registered for "reload" region, unable to force page reload!');
+				Aranea.Logger.error('No handler is registered for "reload" region, unable to force page reload!');
 			}
 		}
 	}
@@ -860,7 +872,7 @@ Aranea.Page.RegionHandler = {
 			var systemForm = Aranea.Data.systemForm;
 			if (Aranea.Data.systemForm.araTransactionId) {
 				systemForm.araTransactionId.value = content;
-				log.debug('Transaction ID region: new value is "' + content + '".');
+				Aranea.Logger.debug('Transaction ID region: new value is "' + content + '".');
 			}
 		}
 	},
@@ -1079,7 +1091,7 @@ Aranea.Page.RegionHandler = {
 	}
 };
 
-Aranea.Page.Parameter = {
+Aranea.Page.Form = {
 
 	getArrayVal: function(arr, index) {
 		return arr != null && arr.length > index ? arr[index] : null;
@@ -1157,10 +1169,10 @@ Aranea.Page.Parameter = {
 
 	evaluateRequestType: function(data) {
 		var type = Aranea.Page.Submitter.TYPE_PLAIN;
-		if (data.form.id == 'aranea-overlay-form') {
-			type = Aranea.Page.Submitter.TYPE_OVERLAY;
-		} else if (data.eventUpdateRgns) {
+		if (data.eventUpdateRgns) {
 			type = Aranea.Page.Submitter.TYPE_AJAX;
+		} else if (data.form.id == 'aranea-overlay-form') {
+			type = Aranea.Page.Submitter.TYPE_OVERLAY;
 		}
 		data.type = type;
 	},
@@ -1172,9 +1184,9 @@ Aranea.Page.Parameter = {
 
 	writeToForm: function(data) {
 		if (data.form) {
-			data.form.araWidgetEventPath.value = data.widgetId;
-			data.form.araWidgetEventHandler.value = data.eventId;
-			data.form.araWidgetEventParameter.value = data.eventParam;
+			data.form.araWidgetEventPath.value = String.interpret(data.widgetId);
+			data.form.araWidgetEventHandler.value = String.interpret(data.eventId);
+			data.form.araWidgetEventParameter.value = String.interpret(data.eventParam);
 		}
 	},
 
@@ -1234,19 +1246,19 @@ Aranea.Page.Parameter = {
 	},
 
 	getTopServiceId: function(form) {
-		return this.getFormParameter(form, 'araTopServiceId');
+		return this.getFormParameter(form || Aranea.Data.systemForm, 'araTopServiceId');
 	},
 
 	getThreadServiceId: function(form) {
-		return this.getFormParameter(form, 'araThreadServiceId');
+		return this.getFormParameter(form || Aranea.Data.systemForm, 'araThreadServiceId');
 	},
 
 	getTransactionId: function(form) {
-		return this.getFormParameter(form, 'araTransactionId');
+		return this.getFormParameter(form || Aranea.Data.systemForm, 'araTransactionId');
 	},
 
 	getClientStateId: function(form) {
-		return this.getFormParameter(form, 'araClientStateId');
+		return this.getFormParameter(form || Aranea.Data.systemForm, 'araClientStateId');
 	}
 };
 

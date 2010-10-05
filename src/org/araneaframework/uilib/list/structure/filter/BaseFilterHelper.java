@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.araneaframework.Environment;
+import org.araneaframework.core.Assert;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.FormWidget;
@@ -74,7 +74,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
    * @param list list.
    */
   public BaseFilterHelper(ListWidget<?> list) {
-    Validate.notNull(list);
+    Assert.notNullParam(list, "list");
     this.list = list;
   }
 

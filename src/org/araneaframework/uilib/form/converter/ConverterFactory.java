@@ -57,7 +57,6 @@ public class ConverterFactory implements ConverterProvider {
     addConverter(String.class, DisplayItem.class, new StringToDisplayItemConverter());
 
     addConverter(Boolean.class, Long.class, new BooleanToLongConverter());
-    addConverter(Boolean.class, String.class, new BooleanToYNConverter());
 
     addConverter(BigDecimal.class, Float.class, new BigDecimalToFloatConverter());
     addConverter(BigDecimal.class, Double.class, new BigDecimalToDoubleConverter());
@@ -67,8 +66,13 @@ public class ConverterFactory implements ConverterProvider {
     addConverter(Timestamp.class, Date.class, new TimestampToDateConverter());
   }
 
-  private <S, D> void addConverter(Class<?> source, Class<?> dest, Converter<?, ?> converter) {
+  protected <S, D> void addConverter(Class<?> source, Class<?> dest, Converter<?, ?> converter) {
     this.converters.put(new ConverterKey(source, dest), converter);
+  }
+
+  protected Converter<?, ?> prepare(DataType fromType, DataType toType, Converter<?, ?> converter) {
+    Converter<?, ?> c = fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
+    return c.newConverter();
   }
 
   /**
@@ -83,15 +87,15 @@ public class ConverterFactory implements ConverterProvider {
   public Converter findConverter(DataType fromType, DataType toType) throws ConverterNotFoundException {
     if (fromType == null || toType == null) {
       throw new ConverterNotFoundException(fromType, toType);
+    } else if (fromType.isList() ^ toType.isList()) {
+      throw new RuntimeException("Error while looking for converter from " + fromType + " to " + toType
+          + ". Cannot convert to/from list when the other type is not list!");
     }
 
     ConverterKey<?, ?> key = new ConverterKey(fromType.getType(), toType.getType());
     ConverterKey<?, ?> keyReverse = key.reverse();
-    ConverterKey<?, ?> keyComposite1 = new ConverterKey(fromType.getType(), DataType.STRING_TYPE.getType());
-    ConverterKey<?, ?> keyComposite2 = new ConverterKey(DataType.STRING_TYPE.getType(), toType.getType());
-    
 
-    if (fromType.equals(toType) || fromType.getType().equals(Object.class) || toType.getType().equals(Object.class)) {
+    if (key.isIdentityConversion() || key.isAnyObjectType()) {
       return new IdenticalConverter();
 
     } else if (this.converters.containsKey(key)) {
@@ -100,31 +104,18 @@ public class ConverterFactory implements ConverterProvider {
     } else if (this.converters.containsKey(keyReverse)) {
       return prepare(fromType, toType, this.converters.get(keyReverse));
 
-    } else if (this.converters.containsKey(keyComposite1) && this.converters.containsKey(keyComposite2)) {
-      Converter c1 = this.converters.get(keyComposite1);
-      Converter c2 = this.converters.get(keyComposite2);
-      return prepare(fromType, toType, new CompositeConverter(c1, c2));
-
-    } else if (!DataType.STRING_TYPE.equals(fromType) && !DataType.STRING_TYPE.equals(toType)) {
+    } else if (!key.isAnyStringType()) {
       try {
-        Converter c1 = findConverter(fromType, DataType.STRING_TYPE);
-        Converter c2 = findConverter(DataType.STRING_TYPE, toType);
-        return prepare(fromType, toType, new CompositeConverter(c1, c2));
+        DataType intermediateType = fromType.isList() ? DataType.STRING_LIST_TYPE : DataType.STRING_TYPE;
+        Converter toString = findConverter(fromType, intermediateType);
+        Converter fromString = findConverter(intermediateType, toType);
+        return new CompositeConverter(toString, fromString);
       } catch (ConverterNotFoundException e) {
         // Do nothing. The right exception is thrown right below.
       }
     }
 
     throw new ConverterNotFoundException(fromType, toType);
-  }
-
-  private Converter<?, ?> prepare(DataType fromType, DataType toType, Converter<?, ?> converter) {
-    if (fromType.isList() ^ toType.isList()) {
-      throw new RuntimeException("Error while looking for converter from " + fromType + " to " + toType.isList()
-          + ". Cannot convert to/from list as the other type is not list!");
-    }
-    Converter<?, ?> c = fromType.isList() && toType.isList() ? new ListConverter(converter) : converter;
-    return c.newConverter();
   }
 
   /**

@@ -30,10 +30,11 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
+import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.RelocatableDecorator;
@@ -56,6 +57,7 @@ import org.araneaframework.http.util.ServletUtil;
  * "rsh.js". However, this widget needs to remember all the states to return to those as the user wishes.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2
  */
 public class StandardStateVersioningFilterWidget extends BaseFilterWidget implements StateVersioningContext {
@@ -101,7 +103,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    */
   protected LinkedList<State> versionedStates = new LinkedList<State>();
 
-  protected transient ThreadLocal<Boolean> stateSaved = new ThreadLocal<Boolean>(); 
+  protected transient ThreadLocal<Boolean> stateSaved; 
 
   // =============================================================
   // * Overriding BaseFilterWidget Methods
@@ -129,27 +131,27 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   @Override
+  protected void propagate(Message message) throws Exception {
+    // Restore the state just in case it's not restored yet:
+    if (this.childWidget == null) {
+      handleStateRestoration(false);
+    }
+
+    super.propagate(message);
+    // Not saving the state here. It has to be done by action(...) or render(...).
+  }
+
+  @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     synchronized (this) {
       try {
-        storeOriginalState();
-
-        this.lastStateId = resolvePreviousStateId();
-        this.stateSaved.set(false);
-
-        checkStateExpired();
-
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Using state '" + this.lastStateId + "' to route action() to.");
-        }
-
-        restoreState();
+        handleStateRestoration(false);
         notifyAboutNavigation(true);
-  
-        this.childWidget._getService().action(path, input, output);
-  
-        saveState();
         writeHeaders();
+
+        this.childWidget._getService().action(path, input, output);
+
+        saveState();
       } finally {
         this.childWidget = null;
       }
@@ -159,20 +161,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   @Override
   protected void update(InputData input) throws Exception {
     synchronized (this) {
-      storeOriginalState();
-
-      this.lastStateId = resolvePreviousStateId();
-      this.newStateId = resolveCurrentStateId();
-      this.stateSaved.set(false);
-
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("The processed state '" + this.lastStateId + "' will be versioned as '" + this.newStateId + "'.");
-      }
-
-      checkStateExpired();
-      restoreState();
+      handleStateRestoration(true);
       notifyAboutNavigation(false);
-      writeHeaders(); // Important: write headers before we start writing any content. 
+      writeHeaders(); 
 
       super.update(input);
     }
@@ -193,10 +184,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
         // Finally, when rendering is completed, we store the current state. The saveState() method is given full
         // autonomy to decide whether to save and how to manage the states.
-        if (!this.stateSaved.get()) {
-          saveState();
-          writeHeaders();
-        }
+        saveState();
 
       } finally {
         this.childWidget = null; // Release the child widget. We will use stored states to restore it the next time.
@@ -207,6 +195,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   @Override
   protected void destroy() throws Exception {
     expire();
+
     if (this.childWidget != null) {
       super.destroy();
     }
@@ -215,6 +204,50 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   // =============================================================
   // * State Versioning Implementation
   // =============================================================
+
+  /**
+   * Executes generalized logic to restore a correct state. Therefore, it's not just about restoring a state, but also
+   * about resolving the state ID, handling cases when state is expired.
+   * 
+   * @param event This parameter should be set to <code>true</code> when the state is restored for an event. Otherwise
+   *          should be <code>false</code>.
+   * @since 2.0
+   */
+  protected synchronized void handleStateRestoration(boolean event) throws Exception {
+    storeOriginalState();
+
+    if (stateSaved == null) {
+      this.stateSaved = new ThreadLocal<Boolean>();
+    }
+
+    this.stateSaved.set(false);
+
+//    String previousStateId = this.lastStateId;
+
+    this.lastStateId = resolvePreviousStateId();
+    if (event) {
+      this.newStateId = resolveCurrentStateId();
+    }
+
+    // Handles page refresh: does not generate new state.
+    // TODO The commented code is a bad solution:
+//    if (previousStateId != null && StringUtils.equals(previousStateId, this.lastStateId)) {
+//      this.newStateId = this.lastStateId;
+//    }
+
+    checkStateExpired();
+
+    if (LOG.isDebugEnabled()) {
+      if (event) {
+        LOG.debug("The processed state '" + this.lastStateId + "' will be versioned as '" + this.newStateId + "'.");
+      } else {
+        LOG.debug("Using state '" + this.lastStateId + "' to route action() to.");
+      }
+    }
+
+    restoreState();
+    discardInaccessibleStates();
+  }
 
   protected synchronized boolean containsState(String id) {
     boolean contains = false;
@@ -263,7 +296,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         if (targetFound) {
           State currentState = i.previous();
           if (currentState.getStateId().startsWith(HTTP_REQUEST_STATE_PREFIX)) {
-            stateId = currentState.getStateId();
+
+            // In case of overlay, we need the second state before overlay state, because the state before overlay
+            // is the one that opened overlay.
+
+            boolean overlay = Boolean.toString(true).equals(getRequestParam(OverlayContext.OVERLAY_REQUEST_KEY));
+            stateId = overlay && i.hasPrevious() ? i.previous().getStateId() : currentState.getStateId();
             break;
           }
         } else {
@@ -291,9 +329,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected synchronized String resolvePreviousStateId() {
     String lastStateId = null;
     String regions = getRequestParam(UpdateRegionContext.UPDATE_REGIONS_KEY);
+    String providedStateId = getRequestParam(STATE_ID_REQUEST_KEY);
 
     if (StringUtils.contains(regions, GLOBAL_CLIENT_NAVIGATION_REGION_ID)) {
       lastStateId = getStateIdFromRequest();
+    } else if (StringUtils.isNotBlank(providedStateId)) {
+      lastStateId = providedStateId;
     } else {
       lastStateId = this.newStateId; // The ID of the state that was returned the last time.
     }
@@ -337,12 +378,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * @since 2.0
    */
   protected synchronized void checkStateExpired() {
-    if (!this.versionedStates.isEmpty() && !containsState(this.lastStateId)) {
+    if (this.lastStateId != null && !containsState(this.lastStateId)) {
       if (LOG.isWarnEnabled()) {
         LOG.warn("State '" + this.lastStateId + "' has expired. Using the original state instead");
       }
       this.versionedStates.add(new State(originalState, this.lastStateId));
-      this.newStateId = this.lastStateId;
+      this.newStateId = this.lastStateId; // To make it look like as if it is updating the current state like actions do.
     }
   }
 
@@ -398,20 +439,16 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   /**
-   * Saves the current state as a new state. The new state will get a new random ID that will have a prefix "HTTP" if
-   * the request is simple browser's HTTP request.
-   * 
-   * @return The current state with new random identifier
-   */
-  /**
    * Acquires current state and when server-side state versioning is used, stores that for later use. When this
    * {@link StandardStateVersioningFilterWidget} is configured to hold state on client, it will only register state
    * identifier and state checksums, returned state must be saved by someone else.
    * 
-   * @return current state with supplied identifier
+   * @return The current state with its identifier.
    */
   public synchronized State saveState() {
-    if (this.childWidget == null) {
+    if (this.stateSaved.get()) {
+      return null;
+    } else if (this.childWidget == null) {
       if (LOG.isWarnEnabled()) {
         LOG.warn("Child-widget is null for some unknown reason. Cannot serialize it. Returning...");
       }
@@ -440,16 +477,24 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
 
     // Work with versioned states:
-    updateStates();
+    discardOldStatesOnLimitExceed();
     logStatus();
     notifyStatesUpdated();
 
     return state;
   }
 
-  protected synchronized void updateStates() {
-    // When there the base state is not the last and the new state is versioned, we discard all states after lastStateId
-    // to same some space, because browser back/forward button also discards these states.
+  /**
+   * When the base state is not the last and the new state is not versioned (is new), we discard all states after
+   * {@link #lastStateId} to save some space, because browser back/forward button also discards these states.
+   * <p>
+   * This method should be called when last and new state IDs are resolved, the previous state is restored, but before
+   * the new state ID is saved (e.g. in {@link #handleStateRestoration(boolean)}. This method will also notify listeners
+   * about updated changes.
+   * 
+   * @since 2.0
+   */
+  protected synchronized void discardInaccessibleStates() {
     if (!this.versionedStates.isEmpty()) {
       if (!StringUtils.equals(this.lastStateId, this.versionedStates.getLast().getStateId())
           && !containsState(this.newStateId)) {
@@ -465,10 +510,22 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
         this.versionedStates.subList(targetIndex, this.versionedStates.size()).clear();
       }
+      notifyStatesUpdated();
+    }
+  }
 
-      while (!this.versionedStates.isEmpty() && this.maxVersionedStates < this.versionedStates.size()) {
-        this.versionedStates.removeFirst();
-      }
+  /**
+   * When {@link #maxVersionedStates} is exceeded, this method will start removing the old states until the limit is not
+   * exceeded anymore.
+   * <p>
+   * This method will NOT notify any listeners about changed states because, by default, this method is used by
+   * {@link #saveState()}, which takes care of notifying, too.
+   * 
+   * @since 2.0
+   */
+  protected synchronized void discardOldStatesOnLimitExceed() {
+    while (!this.versionedStates.isEmpty() && this.maxVersionedStates < this.versionedStates.size()) {
+      this.versionedStates.removeFirst();
     }
   }
 

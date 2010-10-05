@@ -59,9 +59,9 @@ public class BeanFormReader {
       result = voClass.newInstance();
       readFormBean(result);
     } catch (InstantiationException e) {
-      throw new AraneaRuntimeException("Could not read Value Object from form", e);
+      throw new AraneaRuntimeException("Could not instantiate " + voClass + " to read its data from form.", e);
     } catch (IllegalAccessException e) {
-      throw new AraneaRuntimeException("Could not read Value Object from form", e);
+      throw new AraneaRuntimeException("Could not instantiate " + voClass + " to read its data from form.", e);
     }
     return result;
   }

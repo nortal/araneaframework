@@ -23,6 +23,7 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 
@@ -61,7 +62,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");
 
@@ -70,11 +71,13 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     // Prepare
-    MultiSelectControl<Object>.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
+    ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
 
-    for (DisplayItem displayItem : viewModel.getSelectItems()) {
+    for (Object selectItem : viewModel.getSelectItems()) {
+      DisplayItem displayItem = (DisplayItem) selectItem;
+
       // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
       String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
 

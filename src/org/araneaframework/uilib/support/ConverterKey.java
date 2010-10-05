@@ -63,8 +63,44 @@ public class ConverterKey <C, D> implements Serializable {
     return this.toType;
   }
 
+  /**
+   * Returns the converter key that has the source and destination types switched compared to this instance.
+   * 
+   * @return The new converter key with source and destination type switched.
+   */
+  @SuppressWarnings("unchecked")
   public ConverterKey<D, C> reverse() {
-    return new ConverterKey<D, C>(toType, fromType);
+    return (ConverterKey<D, C>) (isIdentityConversion() ? this : new ConverterKey<D, C>(this.toType, this.fromType));
+  }
+
+  /**
+   * Returns whether the source and destination types are equal.
+   * 
+   * @return A <code>Boolean</code> that is <code>true</code> when the source and destination types are equal.
+   * @since 2.0
+   */
+  public boolean isIdentityConversion() {
+    return this.fromType.equals(this.toType);
+  }
+
+  /**
+   * Returns whether either source or target type is <code>Object</code>.
+   * 
+   * @return A <code>Boolean</code> that is <code>true</code> when either source or target type is <code>Object</code>.
+   * @since 2.0
+   */
+  public boolean isAnyObjectType() {
+    return this.fromType == Object.class || this.toType == Object.class;
+  }
+
+  /**
+   * Returns whether either source or target type is <code>String</code>.
+   * 
+   * @return A <code>Boolean</code> that is <code>true</code> when either source or target type is <code>String</code>.
+   * @since 2.0
+   */
+  public boolean isAnyStringType() {
+    return this.fromType == String.class || this.toType == String.class;
   }
 
   /**

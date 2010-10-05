@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -120,17 +121,20 @@ public class DownloaderWidget extends BaseApplicationWidget {
 
   protected InputStream getDataStream() {
     DownloadStreamCallback c = this.dataStreamCallback;
-    return c != null && c.getStreamToDownload() != null ? c.getStreamToDownload() : this.dataStream;
+    InputStream result = c != null ? c.getStreamToDownload() : null;
+    return result != null ? result : this.dataStream;
   }
 
   protected String getContentType() {
     DownloadStreamCallback c = this.dataStreamCallback;
-    return c != null && c.getContentType() != null ? c.getContentType() : this.contentType;
+    String result = c != null ? c.getContentType() : null;
+    return StringUtils.defaultString(result, this.contentType);
   }
 
   protected int getLength() {
     DownloadStreamCallback c = this.dataStreamCallback;
-    return c != null && c.getLength() >= 0 ? c.getLength() : this.length;
+    int result = c != null ? c.getLength() : -1;
+    return result >= 0 ? result : this.length;
   }
 
   protected Map<String, String> getHeaders() {

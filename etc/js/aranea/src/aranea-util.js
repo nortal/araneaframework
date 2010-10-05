@@ -29,31 +29,31 @@ Aranea.Data = Aranea.Data || {};
 Aranea.Logger = {
 
 	trace: function(message, exception) {
-		Aranea.Data.logger.trace(message, exception);
+		Aranea.Data.logger.trace(message || '', exception || '');
 	},
 
 	debug: function(message, exception) {
-		Aranea.Data.logger.debug(message, exception);
+		Aranea.Data.logger.debug(message || '', exception || '');
 	},
 
 	info: function(message, exception) {
-		Aranea.Data.logger.info(message, exception);
+		Aranea.Data.logger.info(message || '', exception || '');
 	},
 
 	warn: function(message, exception) {
-		Aranea.Data.logger.warn(message, exception);
+		Aranea.Data.logger.warn(message || '', exception || '');
 	},
 
 	error: function(message, exception) {
-		Aranea.Data.logger.error(message, exception);
+		Aranea.Data.logger.error(message || '', exception || '');
 	},
 
 	fatal: function(message, exception) {
-		Aranea.Data.logger.fatal(message, exception);
+		Aranea.Data.logger.fatal(message || '', exception || '');
 	},
 
 	profile: function(message, exception) {
-		Aranea.Data.logger.profile(message, exception);
+		Aranea.Data.logger.profile(message || '', exception || '');
 	},
 
 	/**
@@ -106,13 +106,13 @@ Aranea.Logger.LOG4JS_LOGGER = window.log4javascript && window.log4javascript.get
 	window.log4javascript.getDefaultLogger() : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.BLACKBIRD_LOGGER = window.log && window.log.toggle ? {
-	trace: function(msg, exception) { log.debug((msg||'').escapeHTML(), exception) },
-	debug: function(msg, exception) { log.debug((msg||'').escapeHTML(), exception) },
-	info: function(msg, exception) { log.info((msg||'').escapeHTML(), exception) },
-	warn: function(msg, exception) { log.warn((msg||'').escapeHTML(), exception) },
-	error: function(msg, exception) { log.error((msg||'').escapeHTML(), exception) },
-	fatal: function(msg, exception) { log.error((msg||'').escapeHTML(), exception) },
-	profile: function(msg) { log.profile((msg||'').escapeHTML()) }
+	trace: function(msg, exception) { log.debug(msg.escapeHTML(), exception) },
+	debug: function(msg, exception) { log.debug(msg.escapeHTML(), exception) },
+	info: function(msg, exception) { log.info(msg.escapeHTML(), exception) },
+	warn: function(msg, exception) { log.warn(msg.escapeHTML(), exception) },
+	error: function(msg, exception) { log.error(msg.escapeHTML(), exception) },
+	fatal: function(msg, exception) { log.error(msg.escapeHTML(), exception) },
+	profile: function(msg) { log.profile(msg.escapeHTML()) }
 } : Aranea.Logger.DUMMY_LOGGER;
 
 Aranea.Logger.setLogger('dummy');
@@ -149,6 +149,12 @@ Aranea.Util = {
 	 */
 	AUTO_FOCUS_INPUT_SELECTOR: 'input[type!=hidden], select, textarea, button',
 
+	/**
+	 * Same as Aranea.UI.scrollToCoordinates() but also makes sure that scrolling is done when the page is loaded. Also
+	 * adds an event listener that stores window scroll position data before an event is sent to the server.
+	 * 
+	 * @since 2.0
+	 */
 	setWindowCoordinates: function(x, y) {
 		if (Aranea.Data.loaded) {
 			Aranea.UI.scrollToCoordinates(x, y);
@@ -246,6 +252,29 @@ Aranea.Util = {
 		if (name) {
 			Aranea.Logger.debug('Updated form input/button [name=' + name + '] focus.');
 		}
+	},
+
+	/**
+	 * Action-request (AJAX) based solution for downloading a file. On the server side, there should be a
+	 * FileDownloadActionListener or similar listener handling the request.
+	 * 
+	 * The first three parameters are used for doing action request. The fourth parameter can be specified to override
+	 * the default callback for initiating download process in browser.
+	 * 
+	 * @since 2.0
+	 */
+	downloadFile: function(actionId, actionTarget, actionParam, callback) {
+		callback = callback || function(transport) {
+			var url = transport.responseText;
+			if (url != 'error') {
+				window.location.href = url;
+			} else {
+				window.alert('Could not download file!');
+			}
+		};
+
+		Aranea.Page.action(actionId, actionTarget, actionParam, null, callback);
+		return false;
 	},
 
 	/**

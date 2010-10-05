@@ -259,6 +259,10 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     return SelectControlUtil.getValueIndex(this.items, this.valueProperty, value);
   }
 
+  public Class<T> getItemType() {
+    return this.itemClass;
+  }
+
   public String getItemLabelProperty() {
     return this.labelProperty;
   }

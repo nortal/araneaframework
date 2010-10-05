@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.support;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.util.BeanUtil;
@@ -102,8 +103,8 @@ public class BeanDisplayItem<T> extends DisplayItem {
     if (!StringUtils.isBlank(groupProperty) && !StringUtils.isBlank(childProperty)) {
       try {
         boolean group = (Boolean) BeanUtil.getPropertyValue(target, groupProperty);
-        Collection<DisplayItem> childOptions = (Collection<DisplayItem>) BeanUtil.getPropertyValue(target, childProperty);
-        setGroupAndOptions(group, childOptions);
+        Collection<T> childOptions = (Collection<T>) BeanUtil.getPropertyValue(target, childProperty);
+        setBeanGroupAndOptions(group, childOptions, labelProperty, valueProperty);
       } catch (Exception e) {
         ExceptionUtil.uncheckException(e);
       }
@@ -132,15 +133,30 @@ public class BeanDisplayItem<T> extends DisplayItem {
     super(resolveProperty(target, valueProperty), resolveProperty(target, labelProperty), disabled);
     this.targetObjct = target;
 
+    // Convert group options, too:
     if (!StringUtils.isBlank(groupProperty) && !StringUtils.isBlank(childProperty)) {
       try {
         boolean group = (Boolean) BeanUtil.getPropertyValue(target, groupProperty);
-        Collection<DisplayItem> childOptions = (Collection<DisplayItem>) BeanUtil.getPropertyValue(target, childProperty);
-        setGroupAndOptions(group, childOptions);
+        Collection<T> childOptions = (Collection<T>) BeanUtil.getPropertyValue(target, childProperty);
+        setBeanGroupAndOptions(group, childOptions, labelProperty, valueProperty);
       } catch (Exception e) {
         ExceptionUtil.uncheckException(e);
       }
     }
+  }
+
+  public void setBeanGroupAndOptions(boolean group, Collection<T> groupOptions, String labelProperty, String valueProperty) {
+    Collection<DisplayItem> childDisplayOptions = new LinkedList<DisplayItem>();
+
+    if (groupOptions != null) {
+      for (T childOption : groupOptions) {
+        if (childOption != null) {
+          childDisplayOptions.add(new BeanDisplayItem<T>(childOption, labelProperty, valueProperty));
+        }
+      }
+    }
+
+    setGroupAndOptions(group, childDisplayOptions);
   }
 
   /**

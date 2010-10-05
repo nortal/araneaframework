@@ -84,6 +84,14 @@ public interface DisplayItemContainer<T> {
   int getValueIndex(String value);
 
   /**
+   * Returns the type of the underlying beans that this container holds.
+   * 
+   * @return The type of the underlying beans.
+   * @since 2.0
+   */
+  Class<T> getItemType();
+
+  /**
    * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve its label, the method returns
    * the property name. Otherwise, returns <code>null</code>.
    * 

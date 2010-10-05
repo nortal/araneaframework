@@ -58,6 +58,6 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
     out.write(x);
     out.write(",");
     out.write(y);
-    out.write(");</script>");
+    out.write(")</script>");
   }
 }

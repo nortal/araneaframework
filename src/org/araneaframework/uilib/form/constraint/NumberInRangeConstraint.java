@@ -19,7 +19,6 @@ package org.araneaframework.uilib.form.constraint;
 import java.math.BigInteger;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This constraint checks that the number value would be inside a given range.
@@ -66,8 +65,7 @@ public class NumberInRangeConstraint<C, T extends Number> extends BaseFieldConst
   @Override
   protected void validateConstraint() {
     if (getValue() == null) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()),
-          this.rangeStart.toString(), this.rangeEnd.toString()));
+      addError(UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()), this.rangeStart, this.rangeEnd);
       return;
     }
 
@@ -76,14 +74,11 @@ public class NumberInRangeConstraint<C, T extends Number> extends BaseFieldConst
     boolean greaterThan = this.rangeEnd != null ? value.compareTo(this.rangeEnd) == 1 : false;
 
     if (lessThan && greaterThan) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()),
-          this.rangeStart.toString(), this.rangeEnd.toString()));
+      addError(UiLibMessages.NUMBER_NOT_BETWEEN, t(getLabel()), this.rangeStart, this.rangeEnd);
     } else if (lessThan) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_GREATER, t(getLabel()),
-          this.rangeStart.toString()));
+      addError(UiLibMessages.NUMBER_NOT_GREATER, t(getLabel()), this.rangeStart);
     } else if (greaterThan) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.NUMBER_NOT_LESS, t(getLabel()),
-          this.rangeEnd.toString()));
+      addError(UiLibMessages.NUMBER_NOT_LESS, t(getLabel()), this.rangeEnd);
     }
   }
 

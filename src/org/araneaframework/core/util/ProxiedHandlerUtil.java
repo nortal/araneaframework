@@ -190,7 +190,7 @@ public abstract class ProxiedHandlerUtil {
 
     } else if (hasHandler(eventTarget, handlerName, String[].class)) {
       log(handlerName, "String[]", className);
-      MethodUtils.invokeExactMethod(eventTarget, handlerName, splitParam(eventTarget, param));
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, new Object[] { splitParam(eventTarget, param) });
 
     } else if (hasHandler(eventTarget, handlerName, List.class)) {
       log(handlerName, "List<String>", className);
@@ -252,7 +252,7 @@ public abstract class ProxiedHandlerUtil {
       try {
         MethodUtils.invokeExactMethod(target.getClass(), PARAMETER_SEPARTOR_RESOLVER, param);
       } catch (NoSuchMethodException e) {
-        LOG.debug("The action/event target does not have the '" + PARAMETER_SEPARTOR_RESOLVER + "' method.");
+        LOG.debug("The action/event target does not have the 'String " + PARAMETER_SEPARTOR_RESOLVER + "()' method.");
       } catch (Exception e) {
         LOG.warn("Unexpected exception while resolving parameter separator.", e);
       }

@@ -37,7 +37,6 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.form.control.TimeControl;
 import org.araneaframework.uilib.form.data.DateData;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
@@ -93,8 +92,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
         if (appointmentDate.isValid() && appointmentTime.isValid()) {
           Room appointmentRoom = getValue();
           if (appointmentRoom.isOccupied()) {
-            addError("#"+MessageUtil.localizeAndFormat(getEnvironment(), "seamless.room.not.available", t(appointmentRoom
-                .getName())));
+            addError("seamless.room.not.available", t(appointmentRoom.getName()));
           }
         }
       }
@@ -124,7 +122,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
 
           if (!preoccupiedAttendees.isEmpty()) {
             String names = StringUtils.join(preoccupiedAttendees, ", ");
-            addError("#"+MessageUtil.localizeAndFormat(getEnvironment(), "seamless.attendees.not.available", names));
+            addError("seamless.attendees.not.available", names);
           }
         }
       }

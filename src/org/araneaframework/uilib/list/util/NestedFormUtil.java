@@ -234,10 +234,10 @@ public class NestedFormUtil {
    * @return The element returned from the adder.
    */
   private static <C, D> FormElement<C, D> addElement(FormWidget form, String elementId, FormElementAdder<C, D> adder) {
-    if (StringUtils.contains(elementId, BeanUtil.NESTED_DELIM)) {
-      String fullSubFormsId = StringUtils.substringBeforeLast(elementId, BeanUtil.NESTED_DELIM);
-      elementId = StringUtils.substringAfterLast(elementId, BeanUtil.NESTED_DELIM);
+    String fullSubFormsId = NameUtil.getLongestPrefix(elementId);
+    if (fullSubFormsId != null) {
       form = form.addSubForm(fullSubFormsId);
+      elementId = NameUtil.getShortestSuffix(elementId);
     }
     return adder.addFormElement(form, elementId);
   }

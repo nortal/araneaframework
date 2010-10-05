@@ -20,6 +20,8 @@ import junit.framework.TestCase;
 import org.araneaframework.core.StandardScope;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.BeanFormWidget;
+import org.araneaframework.uilib.form.FormElement;
+import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
@@ -30,7 +32,7 @@ import org.araneaframework.uilib.form.data.StringData;
  */
 public class BeanFormWidgetTest extends TestCase {
 
-  public static class FlatBean {
+  public static class FlatBean implements Cloneable {
 
     protected int a;
 
@@ -59,13 +61,19 @@ public class BeanFormWidgetTest extends TestCase {
       this.s = s;
     }
 
+    @Override
+    protected FlatBean clone() {
+      return new FlatBean(this.a, this.s);
+    }
   }
 
   public static class HierarhicalBean extends FlatBean {
 
     private FlatBean subFlatBean;
 
-    public HierarhicalBean() {}
+    public HierarhicalBean() {
+      super(0, null);
+    }
 
     public HierarhicalBean(int a, String s, FlatBean subFlatBean) {
       super(a, s);
@@ -80,71 +88,161 @@ public class BeanFormWidgetTest extends TestCase {
       this.subFlatBean = subFlatBean;
     }
 
+    @Override
+    protected HierarhicalBean clone() {
+      FlatBean subBean = this.subFlatBean == null ? null : this.subFlatBean.clone();
+      return new HierarhicalBean(this.a, this.s, subBean);
+    }
   }
 
-  protected FlatBean makeFlatBean(int integer, String string) {
-    return new FlatBean(integer, string);
-  }
+  private static BeanFormWidget<HierarhicalBean> makeBeanForm(HierarhicalBean bean) throws Exception {
+    BeanFormWidget<HierarhicalBean> result = null;
 
-  protected HierarhicalBean makeHierarchicalBean(int integer, String string, int subInteger, String subString) {
-    return new HierarhicalBean(integer, string, makeFlatBean(subInteger, subString));
-  }
+    if (bean != null) {
+      result = new BeanFormWidget<HierarhicalBean>(HierarhicalBean.class, bean);
+    } else {
+      result = new BeanFormWidget<HierarhicalBean>(HierarhicalBean.class);
+    }
 
-  protected BeanFormWidget<FlatBean> makeFlatBeanForm(FlatBean bean) throws Exception {
-    BeanFormWidget<FlatBean> result = new BeanFormWidget<FlatBean>(FlatBean.class, bean);
-    result.addBeanElement("a", "#dummyLabel1", new NumberControl(), true);
-    result.addBeanElement("s", "#dummyLabel2", new TextControl());
+    result.addBeanElement("a", "#dummyLabelX", new NumberControl(), true);
+    result.addBeanElement("s", "#dummyLabelY", new TextControl());
+    result.addBeanElement("subFlatBean.a", "#dummyLabel1", new NumberControl(), true);
+    result.addBeanElement("subFlatBean.s", "#dummyLabel2", new TextControl());
     result.addElement("b", "b", new TextControl(), new StringData());
     result.addElement("button", "button", new ButtonControl());
     return result;
   }
 
-  protected BeanFormWidget<HierarhicalBean> makeHierarchicalBeanForm(HierarhicalBean bean) throws Exception {
-    BeanFormWidget<HierarhicalBean> result = new BeanFormWidget<HierarhicalBean>(HierarhicalBean.class, bean);
-    result.addBeanElement("a", "#dummyLabelX", new NumberControl(), true);
-    result.addBeanElement("s", "#dummyLabelY", new TextControl(), false);
-    result.addBeanElement("subFlatBean.a", "#dummyLabel1", new NumberControl(), true);
-    return result;
+  private static void assertFormValuesEqualTo(BeanFormWidget<HierarhicalBean> form, HierarhicalBean expected) {
+    assertNotNull("The expected bean must not be null.", expected);
+    assertNotNull("The form to test must not be null.", form);
+    assertEquals(expected.a, form.getValueByFullName("a"));
+    assertEquals(expected.s, form.getValueByFullName("s"));
+
+    if (expected.subFlatBean != null) {
+      assertEquals(expected.subFlatBean.a, form.getValueByFullName("subFlatBean.a"));
+      assertEquals(expected.subFlatBean.s, form.getValueByFullName("subFlatBean.s"));
+    }
+
+    // Read form data into separate bean and test values one-by-one:
+
+    HierarhicalBean testBean = new HierarhicalBean(0, "", null);
+    assertSame("BeanFormWidget.writeToBean() must return the same object as provided", testBean,
+        form.writeToBean(testBean));
+
+    assertEquals(expected.a, testBean.a);
+    assertEquals(expected.s, testBean.s);
+
+    if (expected.subFlatBean != null) {
+      assertEquals(expected.subFlatBean.a, testBean.subFlatBean.a);
+      assertEquals(expected.subFlatBean.s, testBean.subFlatBean.s);
+    }
   }
 
-  public void testFlatBeanWrite() throws Exception {
-    BeanFormWidget<FlatBean> form = makeFlatBeanForm(makeFlatBean(100, "newString"));
-    form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
+  private static void assertFormElement(FormWidget form, String id, String label, Class<?> control, Class<?> data,
+      Object value, boolean mandatory) {
+    FormElement<?, ?> element = (FormElement<?, ?>) form.getElement(id);
+    assertNotNull("The form should contain element '" + id + "'.", element);
+    assertEquals("The form element label does not match.", label, element.getLabel());
+    assertNotNull("The form element control must not be null.", element.getControl());
+    assertEquals("The form element control does not match.", control, element.getControl().getClass());
 
-    FlatBean bean = form.writeToBean();
+    if (data == null) {
+      assertNull("The form element data must be null.", element.getData());
+    } else {
+      assertNotNull("The form element data must not be null.", element.getData());
+      assertFalse("The form element data type must not be list.", element.getData().getValueType().isList());
+      assertEquals("The form element data does not match.", data, element.getData().getValueType().getType());
+    }
 
-    assertEquals(100, bean.a);
-    assertEquals("newString", bean.s);
+    if (value == null) {
+      assertNull("The form element value must be null.", element.getValue());
+    } else {
+      assertEquals("The form element value does not match.", value, element.getValue());
+    }
+
+    assertEquals("The form element mandatory property does not match.", mandatory, element.isMandatory());
   }
 
-  public void testFlatBeanRead() throws Exception {
-    FlatBean bean = makeFlatBean(234, "aaac");
-    BeanFormWidget<FlatBean> form = makeFlatBeanForm(bean);
+  private static void testForm(HierarhicalBean testBean, HierarhicalBean readBean, boolean emptyConstruct)
+      throws Exception {
+    HierarhicalBean valuesBean = testBean.clone();
+
+    // 1. Test with bean as a constructor parameter.
+    BeanFormWidget<HierarhicalBean> form = makeBeanForm(emptyConstruct ? null : testBean);
+
+    if (emptyConstruct) {
+      form.readFromBean(testBean);
+      testBean = form.writeToBean();
+    }
+
+    form.readFromBean(readBean);
+    assertNotSame("BeanFormWidget.getBean() must return the original bean.", readBean, form.getBean());
+    assertFormValuesEqualTo(form, readBean); // Form data must be equal to the *read* bean.
+
     form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
-    assertEquals(234, form.getValueByFullName("a"));
-    assertEquals("aaac", form.getValueByFullName("s"));
 
-    form.readFromBean(makeFlatBean(2, "xyz"));
+    assertFormValuesEqualTo(form, readBean); // Form data must be equal to the *read* bean. 
 
-    assertEquals(2, form.getValueByFullName("a"));
-    assertEquals("xyz", form.getValueByFullName("s"));
+    if (emptyConstruct) {
+      form.readFromBean(valuesBean);
+    } else {
+      form.readFromBean();
+    }
+    assertFormValuesEqualTo(form, testBean); // Form data must be equal to the *original* bean.
+
+    assertEquals(valuesBean.a, testBean.a);
+    assertEquals(valuesBean.s, testBean.s);
+
+    assertSame("BeanFormWidget.getBean() must return the original bean.", testBean, form.getBean());
+    assertSame("BeanFormWidget.writeToBean() must return the original bean.", testBean, form.writeToBean());
+    assertFormValuesEqualTo(form, valuesBean);
+
+    // Changing form values using another bean:
+    form.readFromBean(readBean);
+    assertSame("BeanFormWidget.getBean() must return the original bean.", testBean, form.getBean());
+    assertFormValuesEqualTo(form, readBean);
+
+    // Reverting form values using original bean:
+    form.readFromBean();
+    assertSame("BeanFormWidget.getBean() must return the original bean.", testBean, form.getBean());
+    assertFormValuesEqualTo(form, valuesBean);
   }
 
-  // tests that bean fields that are not tied to BeanFormWidget elements
-  // are not modified when writing hierarchical form into hierarchical bean
-  public void testHierarchicalBeanWrite() throws Exception {
-    BeanFormWidget<HierarhicalBean> form = makeHierarchicalBeanForm(new HierarhicalBean(100, "newString", new FlatBean(
-        200, "value")));
-    form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
+  public void testBeanReadWrite() throws Exception {
+    FlatBean subBean1 = new FlatBean(123, "Hello");
+    FlatBean subBean2 = new FlatBean(987, "World");
+    HierarhicalBean valuesBean = new HierarhicalBean(100, "newString", subBean1); // For testing bean properties and their values.
+    HierarhicalBean readBean = new HierarhicalBean(678, "newStringValue", subBean2); // For testing form data changes.
 
-    HierarhicalBean bean = new HierarhicalBean();
-    bean.setSubFlatBean(new FlatBean(100, "value"));
+    // 1. Test with bean as a constructor parameter.
+    testForm(valuesBean, readBean, false);
 
-    bean = form.writeToBean();
+    // =================================================
 
-    assertEquals(100, bean.a);
-    assertEquals("newString", bean.s);
-    assertEquals(200, bean.subFlatBean.a);
-    assertEquals("value", bean.subFlatBean.s);
+    // 2. Test with bean NOT as a constructor parameter.
+    subBean1 = new FlatBean(123, "Hello");
+    subBean2 = new FlatBean(987, "World");
+    valuesBean = new HierarhicalBean(100, "newString", subBean1); // For testing bean properties and their values.
+    readBean = new HierarhicalBean(678, "newStringValue", subBean2); // For testing form data changes.
+
+    testForm(valuesBean, readBean, true);
+  }
+
+  public void testBeanFormElements() throws Exception {
+    // Beans for testing their properties and their values.
+    FlatBean subBean1 = new FlatBean(123, "Hello");
+    HierarhicalBean valuesBean = new HierarhicalBean(100, "newString", subBean1);
+
+    BeanFormWidget<HierarhicalBean> form = makeBeanForm(valuesBean);
+    form.readFromBean();
+
+    assertEquals("The form should have 5 elements", 5, form.getElements().size());
+    assertFormElement(form, "a", "#dummyLabelX", NumberControl.class, int.class, 100, true);
+    assertFormElement(form, "s", "#dummyLabelY", TextControl.class, String.class, "newString", false);
+    assertFormElement(form, "subFlatBean.a", "#dummyLabel1", NumberControl.class, int.class, 123, true);
+    assertFormElement(form, "subFlatBean.s", "#dummyLabel2", TextControl.class, String.class, "Hello", false);
+    assertFormElement(form, "b", "b", TextControl.class, String.class, null, false);
+    assertFormElement(form, "button", "button", ButtonControl.class, null, null, false);
   }
 }

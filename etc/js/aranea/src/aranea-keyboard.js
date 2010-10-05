@@ -204,7 +204,10 @@ Aranea.Keyboard = {
 
 		try {
 			// The registry takes care of calling the right handlers:
-			Aranea.Keyboard.HANDLER_REGISTRY.invokeHandlers(event);
+			var result = Aranea.Keyboard.HANDLER_REGISTRY.invokeHandlers(event);
+			if (result == false) {
+				event.stop(); // When an handler returned false then the intent was to block event propagation.
+			}
 		} catch (e) {
 			// Keyboard handler errors may be thrown after AJAX region updates.
 			Aranea.Logger.warn("Aranea.Keyboard.handleKeypress: a handler threw error (non-critical): " + e.message, e);
@@ -228,7 +231,7 @@ Aranea.Keyboard = {
 
 		if (filter.prefix) {
 			var id = (event.element() || {}).id || '';
-			result = result && id.startsWith(filter.prefix);
+			result = result && (id == filter.prefix || id.startsWith(filter.prefix + '.'));
 		}
 
 		Aranea.Logger.debug('Aranea.Keyboard.isMatch: was the keypress the one expected (' + filter + '): ' + result);

@@ -19,7 +19,6 @@ package org.araneaframework.uilib.form.constraint;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This constraint checks that the <code>String</code> value of given form field would not be empty.
@@ -29,7 +28,7 @@ import org.araneaframework.uilib.util.MessageUtil;
 public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
 
   /**
-   * Specifies whether to trim a <code>String</code> value before checking its length. Default is false.
+   * Specifies whether to trim a <code>D</code> value before checking its length. Default is false.
    */
   protected boolean trim;
 
@@ -39,10 +38,10 @@ public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
   public NotEmptyConstraint() {}
 
   /**
-   * Creates a new constraint without binding it to a form field, and specifies whether to trim a <code>String</code>
+   * Creates a new constraint without binding it to a form field, and specifies whether to trim a <code>D</code>
    * value when checking its length.
    * 
-   * @param trim <code>true</code>, if the <code>String</code> value should be trimmed before checking its length.
+   * @param trim <code>true</code>, if the <code>D</code> value should be trimmed before checking its length.
    */
   public NotEmptyConstraint(boolean trim) {
     this.trim = trim;
@@ -58,11 +57,11 @@ public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
   }
 
   /**
-   * A constructor that binds given constraint to a form field, and specifies whether to trim a <code>String</code>
+   * A constructor that binds given constraint to a form field, and specifies whether to trim a <code>D</code>
    * value when checking its length.
    * 
    * @param field The form element that this constraint should be bound to.
-   * @param trim <code>true</code>, if the <code>String</code> value should be trimmed before checking its length.
+   * @param trim <code>true</code>, if the <code>D</code> value should be trimmed before checking its length.
    */
   public NotEmptyConstraint(FormElement<C, D> field, boolean trim) {
     super(field);
@@ -70,18 +69,20 @@ public class NotEmptyConstraint<C, D> extends BaseFieldConstraint<C, D> {
   }
 
   /**
-   * Checks that the <code>String</code> value would not be empty.
+   * Checks that the <code>D</code> value would not be empty.
    */
   @Override
   public void validateConstraint() {
-    boolean empty = getValue() == null;
+    D value = getValue();
+    boolean empty = value == null;
 
-    if (!empty && getValue() instanceof String && this.trim) {
-      empty = StringUtils.isEmpty((String) getValue());
+    if (!empty && value instanceof String) {
+      String valueStr = (String) value;
+      empty = this.trim ? StringUtils.isBlank(valueStr) : StringUtils.isEmpty(valueStr);
     }
 
     if (empty) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.ELEMENT_EMPTY, t(getLabel())));
+      addError(UiLibMessages.ELEMENT_EMPTY, t(getLabel()));
     }
   }
 

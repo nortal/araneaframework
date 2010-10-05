@@ -66,6 +66,12 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   }
 
   @Override
+  protected void update(InputData input) throws Exception {
+    this.mimeTypePermitted = true;
+    super.update(input);
+  }
+
+  @Override
   public boolean isRead() {
     return this.innerData != null;
   }
@@ -90,11 +96,11 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   }
 
   @Override
-  protected void addError(String error) {
+  protected void addError(String error, Object... params) {
     if (this.ajaxRequest) {
-      this.ajaxMessages.add(error);
+      this.ajaxMessages.add(MessageUtil.localizeAndFormat(getEnvironment(), error, params));
     } else {
-      super.addError(error);
+      super.addError(error, params);
     }
   }
 
@@ -158,7 +164,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
 
     if (!this.uploadSucceeded) {
       Long sizeLimit = (getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.FILE_UPLOAD_FAILED, sizeLimit.toString()));
+      addError(UiLibMessages.FILE_UPLOAD_FAILED, sizeLimit.toString());
     }
   }
 

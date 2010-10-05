@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,7 +88,7 @@ public class SelectControlUtil {
   private static Object getProperty(Object bean, String property) {
     Object value = null;
     if (bean != null && StringUtils.isNotBlank(property)) {
-      value = ObjectUtils.toString(BeanUtil.getPropertyValue(bean, property));
+      value = BeanUtil.getPropertyValue(bean, property);
     }
     return value;
   }
@@ -173,7 +175,8 @@ public class SelectControlUtil {
    * @return A Boolean that is <code>true</code> when the container contains the given value among its items.
    */
   public static <T> boolean containsValue(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), value) != null;
+    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), container
+        .getItemGroupProperty(), container.getItemChildrenProperty(), value) != null;
   }
 
   /**
@@ -185,7 +188,8 @@ public class SelectControlUtil {
    * @return A Boolean that is <code>true</code> when the container contains the given value among <i>enabled</i> items.
    */
   public static <T> boolean containsEnabledValue(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), value) != null;
+    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), container
+        .getItemGroupProperty(), container.getItemChildrenProperty(), value) != null;
   }
 
   /**
@@ -197,7 +201,8 @@ public class SelectControlUtil {
    * @return An item from the <code>container</code>, or <code>null</code>.
    */
   public static <T> T getSelectItem(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), value);
+    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), container.getItemGroupProperty(),
+        container.getItemChildrenProperty(), value);
   }
 
   /**
@@ -209,7 +214,8 @@ public class SelectControlUtil {
    * @return An enabled item from the <code>container</code>, or <code>null</code>.
    */
   public static <T> T getEnabledSelectItem(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), value);
+    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), container
+        .getItemGroupProperty(), container.getItemChildrenProperty(), value);
   }
 
   /**
@@ -222,7 +228,8 @@ public class SelectControlUtil {
    * @return A subset of items from the <code>container</code>, or <code>null</code>.
    */
   public static <T> List<T> getSelectItems(DisplayItemContainer<T> container, String[] values) {
-    return getSelectItems(container.getAllItems(), container.getItemValueProperty(), values);
+    return getSelectItems(container.getAllItems(), container.getItemValueProperty(), container.getItemGroupProperty(),
+        container.getItemChildrenProperty(), values);
   }
 
   /**
@@ -235,34 +242,66 @@ public class SelectControlUtil {
    * @return A subset of enabled items from the <code>container</code>, or <code>null</code>.
    */
   public static <T> List<T> getEnabledSelectItems(DisplayItemContainer<T> container, String[] values) {
-    return getSelectItems(container.getEnabledItems(), container.getItemValueProperty(), values);
+    return getSelectItems(container.getEnabledItems(), container.getItemValueProperty(), container
+        .getItemGroupProperty(), container.getItemChildrenProperty(), values);
   }
 
-  private static <T> T getSelectItem(List<T> items, String valueProperty, String value) {
-    if (value != null && CollectionUtils.isNotEmpty(items)) {
-      value = ObjectUtils.toString(value);
+  // Internal method for resolving the item by value:
+  private static <T> T getSelectItem(List<T> items, String valueProperty, String groupProperty,
+      String groupItemsProperty, String value) {
+    T result = null;
+
+    if (CollectionUtils.isNotEmpty(items)) {
+      value = ObjectUtils.toString(value, null);
 
       for (T item : items) {
-        String currentValue = getPropertyStr(item, valueProperty);
-        if (ObjectUtils.equals(value, currentValue)) {
-          return item;
+        if (isGroupItem(item, groupProperty)) {
+          List<T> groupItems = new ArrayList<T>(getGroupItems(item, groupItemsProperty));
+          result = getSelectItem(groupItems, valueProperty, groupProperty, groupItemsProperty, value);
+        } else {
+          String currentValue = getPropertyStr(item, valueProperty);
+          if (ObjectUtils.equals(value, currentValue)) {
+            result = item;
+          }
+        }
+        if (result != null) {
+          break;
         }
       }
     }
-    return null;
+    return result;
   }
 
-  private static <T> List<T> getSelectItems(List<T> items, String valueProperty, String[] values) {
+  // Internal method for resolving the items by values:
+  private static <T> List<T> getSelectItems(List<T> items, String valueProperty, String groupProperty,
+      String groupItemsProperty, String[] values) {
     List<T> results = new LinkedList<T>();
-    for (T item : items) {
-      if (ArrayUtils.contains(values, getPropertyStr(item, valueProperty))) {
-        results.add(item);
+
+    if (CollectionUtils.isNotEmpty(items)) {
+      for (T item : items) {
+        if (isGroupItem(item, groupProperty)) {
+          List<T> groupItems = new ArrayList<T>(getGroupItems(item, groupItemsProperty));
+          results.addAll(getSelectItems(groupItems, valueProperty, groupProperty, groupItemsProperty, values));
+        } else if (ArrayUtils.contains(values, getPropertyStr(item, valueProperty))) {
+          results.add(item);
+        }
         if (results.size() == values.length) {
           break;
         }
       }
     }
     return results;
+  }
+
+  private static <T> boolean isGroupItem(T item, String groupProperty) {
+    Boolean isGroup = (Boolean) getProperty(item, groupProperty);
+    return isGroup != null && isGroup.booleanValue();
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> Collection<T> getGroupItems(T item, String groupChildrenProperty) {
+    Collection<T> children = (Collection<T>) getProperty(item, groupChildrenProperty);
+    return CollectionUtils.isEmpty(children) ? null : children;
   }
 
   /**

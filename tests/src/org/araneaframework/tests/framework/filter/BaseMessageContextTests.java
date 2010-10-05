@@ -16,8 +16,6 @@
 
 package org.araneaframework.tests.framework.filter;
 
-import org.araneaframework.framework.MessageContext.MessageData;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +29,7 @@ import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.FilterWidget;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.mock.MockInputData;
 
 /**
@@ -135,9 +134,11 @@ public abstract class BaseMessageContextTests extends TestCase {
     // also test that only messages of given type are hidden (cleared)
     msgCtx.showInfoMessage("simplemessage");
     msgCtx.hideWarningMessage("simplemessage");
+    msgCtx.showErrorMessage("errormessage");
 
     infoMessages = messages.get(MessageContext.INFO_TYPE);
     warningMessages = messages.get(MessageContext.WARNING_TYPE);
+    errorMessages = messages.get(MessageContext.ERROR_TYPE);
 
     assertTrue("Warning message must not be present, since they were hidden", warningMessages.isEmpty());
     assertTrue("Info message must be present, since only warning was hidden", !infoMessages.isEmpty());

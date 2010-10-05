@@ -64,7 +64,8 @@ public class AutomaticTagFormElementTag extends BaseTag {
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement<?, ?>.ViewModel formElementViewModel;
+  @SuppressWarnings("unchecked")
+  protected FormElement.ViewModel formElementViewModel;
 
   protected Control.ViewModel controlViewModel;
 

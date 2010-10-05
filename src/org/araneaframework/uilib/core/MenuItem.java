@@ -253,4 +253,24 @@ public class MenuItem implements Serializable {
   public Map<String, MenuItem> getSubMenu() {
     return this.subMenu;
   }
+
+  /**
+   * Provides the flow class parameter that was provided to this menu item during initialization.
+   * 
+   * @return The flow class of this menu item.
+   * @since 2.0
+   */
+  public Class<? extends Widget> getFlowClass() {
+    return this.flowClass;
+  }
+
+  /**
+   * Provides the flow creator parameter that was provided to this menu item during initialization.
+   * 
+   * @return The flow creator of this menu item.
+   * @since 2.0
+   */
+  public FlowCreator getFlowCreator() {
+    return this.flowCreator;
+  }
 }

@@ -56,7 +56,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    String id = getCheckBoxId();
+    String id = getCheckBoxId(false);
 
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "type", "checkbox");
@@ -109,7 +109,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
 
     try {
       result.append("return Aranea.UI.updateListSelectAll('");
-      result.append(getCheckBoxId());
+      result.append(getCheckBoxId(true));
       result.append("');");
     } catch (JspException e) {}
 
@@ -120,13 +120,18 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    * Creates the check box ID. Note that it is very important how the ID looks like. It means that the ID of the row
    * check box must begin with the ID value of the select-all check box to make the JavaScript methods work.
    * 
+   * @param parent Whether the returned ID is the ID of the select-all-checkbox.
    * @return The ID that will be used for the generated check box.
    * @throws JspException This method requires listId and rowRequestId entries from the context.
    */
-  protected String getCheckBoxId() throws JspException {
+  protected String getCheckBoxId(boolean parent) throws JspException {
     String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
-    return listId + Path.SEPARATOR + SELECTION_SCOPE + Path.SEPARATOR + rowRequestId;
+    StringBuffer result = new StringBuffer(listId).append(Path.SEPARATOR + SELECTION_SCOPE);
+    if (!parent) {
+      result.append(Path.SEPARATOR).append(rowRequestId);
+    }
+    return result.toString();
   }
 
   /**

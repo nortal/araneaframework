@@ -29,6 +29,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.event.OnChangeEventListener;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.ConfigurationUtil;
@@ -70,12 +71,13 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
+  @SuppressWarnings("rawtypes")
   public int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");
 
     // Prepare
     String name = this.getFullFieldId();
-    SelectControl<Object>.ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
+    ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");
@@ -131,7 +133,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
           JspUtil.writeCloseStartTag(out);
           writeOptions(out, item.getChildOptions(), selectedValue);
           JspUtil.writeEndTag(out, "optgroup");
-          break;
+          continue;
         }
 
         JspUtil.writeOpenStartTag(out, "option");

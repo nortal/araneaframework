@@ -309,14 +309,14 @@ public class JSMin {
 
     if (fileNames.length > 0 && isDir(fileNames[i])) {
       targetDir = new File(fileNames[i++]).getAbsolutePath() + File.separatorChar;
-      System.out.println("The generated files will be placed to " + targetDir);
+      System.out.println("The compressed files will be placed to " + targetDir);
     }
 
     while (i < fileNames.length) {
       String srcFileName = fileNames[i++];
       OutputStream out = System.out;
 
-      System.out.println("Processing file " + srcFileName + "...");
+      System.out.println("Compressing file " + srcFileName + "...");
 
       if (targetDir != null) {
         out = new FileOutputStream(targetDir + getSimpleFileName(srcFileName));
@@ -331,7 +331,7 @@ public class JSMin {
       if (arg != null) {
         processFiles(arg);
       }
-      System.out.println("Completed processing all input files successfully!");
+      System.out.println("Completed compressing all input files successfully!");
     } catch (Exception e) {
       e.printStackTrace();
     }

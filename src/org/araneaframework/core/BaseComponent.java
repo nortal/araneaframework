@@ -416,10 +416,6 @@ public class BaseComponent implements Component {
         "The component of class '" + parent._getComposite().getChildren().get(keyFrom).getClass()
             + "' to be relocated from under key '" + keyFrom + "' to key '" + keyTo + "' must implement Relocatable!");
 
-    // Only Strings are supported by this implementation
-    Assert.isInstanceOfParam(String.class, keyFrom, "keyFrom");
-    Assert.isInstanceOfParam(String.class, keyTo, "keyTo");
-
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
     _getChildren().put(keyTo, comp);

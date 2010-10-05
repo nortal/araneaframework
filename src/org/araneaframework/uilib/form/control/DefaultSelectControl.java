@@ -64,15 +64,6 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
   }
 
   @Override
-  public DisplayItem getSelectedItem() {
-    DisplayItem result = null;
-    if (getFormElementCtx() != null) {
-      result = DisplayItemUtil.getItem(getAllItems(), (String) getFormElementCtx().getValue());
-    }
-    return result;
-  }
-
-  @Override
   protected DisplayItem fromRequestParameters(String[] parameterValues) {
     return DisplayItemUtil.getItem(getEnabledItems(), parameterValues[0]);
   }

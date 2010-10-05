@@ -58,7 +58,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     TimeCapsule capsule = null;
 
-    if (this.timeCapsules != null) {
+    if (!getTimeCapsules().isEmpty()) {
       killExpiredServices(System.currentTimeMillis());
       capsule = getTimeCapsules().get(getServiceId(input));
     }

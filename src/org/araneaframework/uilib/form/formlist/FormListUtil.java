@@ -223,8 +223,9 @@ public abstract class FormListUtil {
   public static <K, R> boolean convertAndValidateRowForms(Map<K, FormRow<K, R>> formRows) {
     boolean result = true;
 
+    // We convert and validate ALL rows here:
     for (FormRow<?, ?> editableRow : formRows.values()) {
-      result = result && editableRow.getForm().convertAndValidate();
+      result = editableRow.getForm().convertAndValidate() && result;
     }
 
     return result;

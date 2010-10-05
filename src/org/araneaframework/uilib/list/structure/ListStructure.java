@@ -19,7 +19,6 @@ package org.araneaframework.uilib.list.structure;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.lang.Validate;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.list.TypeHelper;
@@ -127,7 +126,7 @@ public class ListStructure extends BaseListStructure {
       @SuppressWarnings("unchecked")
       public void run() {
         Comparator comp = ListStructure.this.typeHelper.getFieldComparator(fieldId);
-        Validate.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
+        Assert.notNull(comp, "Could not get comparator for field '" + fieldId + "'");
         fieldOrder.setComparator(comp);
       }
     });

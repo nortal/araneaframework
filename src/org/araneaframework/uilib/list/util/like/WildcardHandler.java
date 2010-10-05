@@ -16,65 +16,66 @@
 
 package org.araneaframework.uilib.list.util.like;
 
-
 /**
  * Wildcard Like pattern handler.
  * 
  * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public interface WildcardHandler {
-	
-	int ANY_STRING_WILDCARD = 1;
-	int ANY_CHAR_WILDCARD = 2;
-	int NO_WILDCARD = 0;
-	
-	/**
-	 * Must be set as which wildcard the Like pattern starts with.
-	 * 
-	 * @param wildcard Like pattern wildcard.
-	 */
-	void setStartsWith(int wildcard);
-	
-	/**
-	 * Must be set as which wildcard the Like pattern ends with
-	 * 
-	 * @param wildcard Like pattern wildcard.
-	 */
-	void setEndsWith(int wildcard);
-	
-	/**
-	 * Returns which wildcard the Like pattern currently starts with. 
-	 * 
-	 * @return Like pattern wildcard.
-	 */
-	int getStartsWith();
-	
-	/**
-	 * Returns which wildcard the Like pattern currently ends with. 
-	 * 
-	 * @return Like pattern wildcard.
-	 */
-	int getEndsWith();
-	
-	/**
-	 * Returns which wildcard the Like pattern should start with.
-	 * 
-	 * @return Like pattern wildcard.
-	 */
-	int shouldStartWith();
-	
-	/**
-	 * Returns which wildcard the Like pattern should end with.
-	 * 
-	 * @return Like pattern wildcard.
-	 */
-	int shouldEndWith();
-	
-	/**
-	 * Returns new instance of the same class.
-	 * 
-	 * @return new instance of the same class.
-	 */
-	WildcardHandler newInstance();
-	
+
+  int ANY_STRING_WILDCARD = 1;
+
+  int ANY_CHAR_WILDCARD = 2;
+
+  int NO_WILDCARD = 0;
+
+  /**
+   * Must be set as which wildcard the Like pattern starts with.
+   * 
+   * @param wildcard Like pattern wildcard.
+   */
+  void setStartsWith(int wildcard);
+
+  /**
+   * Must be set as which wildcard the Like pattern ends with
+   * 
+   * @param wildcard Like pattern wildcard.
+   */
+  void setEndsWith(int wildcard);
+
+  /**
+   * Returns which wildcard the Like pattern currently starts with.
+   * 
+   * @return Like pattern wildcard.
+   */
+  int getStartsWith();
+
+  /**
+   * Returns which wildcard the Like pattern currently ends with.
+   * 
+   * @return Like pattern wildcard.
+   */
+  int getEndsWith();
+
+  /**
+   * Returns which wildcard the Like pattern should start with.
+   * 
+   * @return Like pattern wildcard.
+   */
+  int shouldStartWith();
+
+  /**
+   * Returns which wildcard the Like pattern should end with.
+   * 
+   * @return Like pattern wildcard.
+   */
+  int shouldEndWith();
+
+  /**
+   * Returns new instance of the same class.
+   * 
+   * @return new instance of the same class.
+   */
+  WildcardHandler newInstance();
+
 }

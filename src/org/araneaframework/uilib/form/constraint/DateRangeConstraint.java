@@ -20,7 +20,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * A default range constraint for date form elements.
@@ -61,8 +60,7 @@ public class DateRangeConstraint extends RangeConstraint<Timestamp, Date> {
     int comparison = valueLo.compareTo(valueHi);
 
     if (!this.allowEquals && comparison == 0 || comparison > 0) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.RANGE_CHECK_FAILED, t(this.fieldLo
-          .getLabel()), t(this.fieldHi.getLabel())));
+      addError(UiLibMessages.RANGE_CHECK_FAILED, t(this.fieldLo.getLabel()), t(this.fieldHi.getLabel()));
     }
   }
   

@@ -166,8 +166,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
 
   public DataType getRawValueType() {
     this.itemClass = SelectControlUtil.resolveClass(this.itemClass, this.items);
-    Assert.notNull(this.itemClass != null,
-        "Cannot resolve data type because select item class nor select items provided!");
+    Assert.notNull(this.itemClass, "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(List.class, this.itemClass);
   }
 }

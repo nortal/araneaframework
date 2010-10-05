@@ -19,7 +19,6 @@ package org.araneaframework.uilib.form.converter;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Converts <code>String</code> to <code>BigInteger</code> and back.
@@ -45,9 +44,7 @@ public class StringToNumberConverter<T extends Number> extends BaseConverter<Str
     try {
       result = (T) ConstructorUtils.invokeExactConstructor(this.numberClass, data);
     } catch (Exception e) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(),
-          UiLibMessages.NOT_A_NUMBER,
-          MessageUtil.localize(getLabel(), getEnvironment())));
+      addErrorWithLabel(UiLibMessages.NOT_A_NUMBER);
     }
     return result;
   }

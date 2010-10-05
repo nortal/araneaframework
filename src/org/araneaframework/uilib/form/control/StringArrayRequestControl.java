@@ -22,7 +22,6 @@ import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class is a generalization of controls that have a single <code>String[]</code> request parameter.
@@ -93,8 +92,7 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
 
       if (!hasValue && isMandatory()) { // Check the value for mandatory controls.
 
-        addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
-            getLabel(), getEnvironment())));
+        addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
 
       } else if (getRawValue() != null) { // Check against converted value
         validateNotNull();

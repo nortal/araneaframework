@@ -22,7 +22,6 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Given two form elements, it checks that their values are one after another. It assumes that the values of both form
@@ -120,8 +119,7 @@ public class RangeConstraint<C, D> extends BaseConstraint {
    * @since 2.0
    */
   protected void addErrorMessage() {
-    addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.RANGE_CHECK_FAILED, t(this.fieldLo
-        .getLabel()), t(this.fieldHi.getLabel())));
+    addError(UiLibMessages.RANGE_CHECK_FAILED, t(this.fieldLo.getLabel()), t(this.fieldHi.getLabel()));
   }
 
   /**

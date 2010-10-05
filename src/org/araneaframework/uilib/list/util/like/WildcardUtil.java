@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.list.util.like;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import org.araneaframework.core.Assert;
 
 /**
  * Like filter wildcards utils.
@@ -26,32 +26,31 @@ import org.apache.commons.lang.Validate;
  */
 public class WildcardUtil {
 
-	public static void setWildcards(WildcardHandler handler, String mask,
-			String anyStringWildcard, String anyCharWildcard) {
-		
-		Validate.notNull(handler);
-		
-		if (StringUtils.isEmpty(mask)) {
-			handler.setStartsWith(WildcardHandler.NO_WILDCARD);
-			handler.setEndsWith(WildcardHandler.NO_WILDCARD);
-		} else {
-			// Start
-			if (mask.startsWith(anyStringWildcard)) {
-				handler.setStartsWith(WildcardHandler.ANY_STRING_WILDCARD);
-			} else if (mask.startsWith(anyCharWildcard)) {
-				handler.setStartsWith(WildcardHandler.ANY_CHAR_WILDCARD);
-			} else {
-				handler.setStartsWith(WildcardHandler.NO_WILDCARD);
-			}		
-			
-			// End
-			if (mask.endsWith(anyStringWildcard)) {
-				handler.setEndsWith(WildcardHandler.ANY_STRING_WILDCARD);
-			} else if (mask.endsWith(anyCharWildcard)) {
-				handler.setEndsWith(WildcardHandler.ANY_CHAR_WILDCARD);
-			} else {
-				handler.setEndsWith(WildcardHandler.NO_WILDCARD);
-			}					
-		}
-	}
+  public static void setWildcards(WildcardHandler handler, String mask, String anyStringWildcard, String anyCharWildcard) {
+
+    Assert.notNullParam(handler, "handler");
+
+    if (StringUtils.isEmpty(mask)) {
+      handler.setStartsWith(WildcardHandler.NO_WILDCARD);
+      handler.setEndsWith(WildcardHandler.NO_WILDCARD);
+    } else {
+      // Start
+      if (mask.startsWith(anyStringWildcard)) {
+        handler.setStartsWith(WildcardHandler.ANY_STRING_WILDCARD);
+      } else if (mask.startsWith(anyCharWildcard)) {
+        handler.setStartsWith(WildcardHandler.ANY_CHAR_WILDCARD);
+      } else {
+        handler.setStartsWith(WildcardHandler.NO_WILDCARD);
+      }
+
+      // End
+      if (mask.endsWith(anyStringWildcard)) {
+        handler.setEndsWith(WildcardHandler.ANY_STRING_WILDCARD);
+      } else if (mask.endsWith(anyCharWildcard)) {
+        handler.setEndsWith(WildcardHandler.ANY_CHAR_WILDCARD);
+      } else {
+        handler.setEndsWith(WildcardHandler.NO_WILDCARD);
+      }
+    }
+  }
 }

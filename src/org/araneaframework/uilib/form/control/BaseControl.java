@@ -164,21 +164,27 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
     return this.feCtx.isMandatory();
   }
 
-  protected void addError(String error) {
-    this.feCtx.addError(error);
+  protected void addError(String error, Object... params) {
+    this.feCtx.addError(error, params);
   }
 
-  protected void addErrorWithLabel(String errorMsg) {
-    addErrorWithLabel(errorMsg, null);
+  /**
+   * Since mostly the parameter to the error message is the name of the input field, this method automatically adds the
+   * resolved input field name to the given error message. In addition, can append other parameters, too.
+   * 
+   * @param errorMsg The error message that takes the input field name as its (first) parameter.
+   * @param params Additional parameters to the error message.
+   * @since 2.0
+   */
+  protected void addErrorWithLabel(String errorMsg, Object... params) {
+    Object[] paramsAll = new Object[params.length + 1];
+    paramsAll[0] = t(getLabel());
+    System.arraycopy(params, 0, paramsAll, 1, params.length);
+    addError(errorMsg, paramsAll);
   }
 
-  protected void addErrorWithLabel(String errorMsg, Object lastParam) {
-    addErrorWithLabel(errorMsg, lastParam, null);
-  }
-
-  protected void addErrorWithLabel(String errorMsg, Object lastParam1, Object lastParam2) {
-    addError(MessageUtil.localizeAndFormat(getEnvironment(), errorMsg, MessageUtil.localize(getLabel(),
-        getEnvironment()), lastParam1, lastParam2));
+  protected String t(String label) {
+    return MessageUtil.localize(label, getEnvironment());
   }
 
   public boolean isDisabled() {

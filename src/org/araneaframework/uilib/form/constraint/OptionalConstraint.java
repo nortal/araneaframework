@@ -42,9 +42,9 @@ public class OptionalConstraint<C, D> extends BaseFieldConstraint<C, D> {
 
   @Override
   protected void validateConstraint() throws Exception {
-    if (isRead()) {
+    if (getValue() != null) {
       this.constraint.validate();
-      addErrors(constraint.getErrors());
+      addErrors(this.constraint.getErrors());
       this.constraint.clearErrors();
     }
   }

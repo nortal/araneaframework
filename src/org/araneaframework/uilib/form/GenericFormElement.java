@@ -27,6 +27,8 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
+import org.araneaframework.framework.filter.StandardMessagingFilterWidget.StandardMessageData;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -40,6 +42,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   /**
    * The ID of the action that request form element background (AJAX) validation.
+   * 
    * @since 1.1
    */
   public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
@@ -54,7 +57,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
 
   protected Boolean backgroundValidation;
 
-  private Set<String> errors;
+  private Set<MessageData> errors;
 
   // *********************************************************************
   // * PUBLIC METHODS
@@ -193,18 +196,35 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * Since 1.1 this returns an immutable Set.
    */
-  public Set<String> getErrors() {
+  public Set<MessageData> getErrors() {
     return Collections.unmodifiableSet(getMutableErrors());
   }
 
-  public void addError(String error) {
+  /**
+   * Adds an error message to the collection of all error messages belonging to the same form element.
+   * 
+   * @param error The error message label.
+   * @param params Optional error message label parameters.
+   */
+  public void addError(String error, Object... params) {
     Assert.notEmptyParam(error, "error");
+    addError(new StandardMessageData(error, params));
+  }
+
+  /**
+   * Adds an error message to the collection of all error messages belonging to the same form element.
+   * 
+   * @param error The error message data to add.
+   * @since 2.0
+   */
+  public void addError(MessageData error) {
+    Assert.notNullParam(error, "error");
     getMutableErrors().add(error);
   }
 
-  public void addErrors(Set<String> errors) {
+  public void addErrors(Set<MessageData> errors) {
     Assert.notNullParam(errors, "errors");
-    for (String error : errors) {
+    for (MessageData error : errors) {
       addError(error);
     }
   }
@@ -320,9 +340,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    * @since 1.1
    */
-  protected Set<String> getMutableErrors() {
+  protected Set<MessageData> getMutableErrors() {
     if (this.errors == null) {
-      this.errors = new HashSet<String>();
+      this.errors = new HashSet<MessageData>();
     }
     return this.errors;
   }

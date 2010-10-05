@@ -20,7 +20,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Constraint that fails when checked {@link java.util.Date} is not after the current date.
@@ -65,10 +64,9 @@ public class AfterTodayConstraint extends BaseFieldConstraint<Timestamp, Date> {
 
     if (today.getTime().compareTo(getValue()) == 1) {
       if (!this.allowToday) {
-        addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.DATE_BEFORE_TODAY, t(getLabel())));
+        addError(UiLibMessages.DATE_BEFORE_TODAY, t(getLabel()));
       } else {
-        addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.DATE_BEFORE_TODAY_TODAY_ALLOWED,
-            t(getLabel())));
+        addError(UiLibMessages.DATE_BEFORE_TODAY_TODAY_ALLOWED, t(getLabel()));
       }
     }
   }

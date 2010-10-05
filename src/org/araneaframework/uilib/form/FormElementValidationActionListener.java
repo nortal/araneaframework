@@ -120,7 +120,7 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
       object.setStringProperty("clientRenderText", clientRenderText);
     }
 
-    out.write(ajaxRequestId);
+    out.write(StringUtils.defaultString(ajaxRequestId));
     out.write("\n");
     writeRegion(out, FORM_VALIDATION_REGION_KEY, object.toString());
   }

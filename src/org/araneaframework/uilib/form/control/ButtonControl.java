@@ -50,12 +50,36 @@ public class ButtonControl extends BaseControl<String> {
   }
 
   /**
+   * Adds an "onClick" listener.
+   * 
    * @param onClickEventListener {@link OnClickEventListener} which is called when the control is clicked.
    * 
    * @see StandardControlEventListenerAdapter#addOnClickEventListener(OnClickEventListener)
    */
   public void addOnClickEventListener(OnClickEventListener onClickEventListener) {
     this.eventHelper.addOnClickEventListener(onClickEventListener);
+  }
+
+  /**
+   * Removes the given "onClick" listener from the registered "onClick" listeners.
+   * 
+   * @param onClickEventListener {@link OnClickEventListener} which is called when the control is clicked.
+   * 
+   * @see StandardControlEventListenerAdapter#removeOnClickEventListener(OnClickEventListener)
+   * @since 2.0
+   */
+  public void removeOnClickEventListener(OnClickEventListener onClickEventListener) {
+    this.eventHelper.removeOnClickEventListener(onClickEventListener);
+  }
+
+  /**
+   * Discards all registered "onClick" listeners.
+   * 
+   * @see StandardControlEventListenerAdapter#clearOnClickEventListeners()
+   * @since 2.0
+   */
+  public void clearOnClickEventListeners() {
+    this.eventHelper.clearOnClickEventListeners();
   }
 
   /**

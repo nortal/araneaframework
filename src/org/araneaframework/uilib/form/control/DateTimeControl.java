@@ -17,7 +17,11 @@
 package org.araneaframework.uilib.form.control;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.form.FormElementContext;
@@ -207,15 +211,17 @@ public class DateTimeControl extends BaseControl<Timestamp> {
    */
   public class ViewModel extends BaseControl<Timestamp>.ViewModel {
 
-    private String time;
+    protected String time;
 
-    private String date;
+    protected String date;
 
-    private DateControl.ViewModel dateViewModel;
+    protected DateControl.ViewModel dateViewModel;
 
-    private TimeControl.ViewModel timeViewModel;
+    protected TimeControl.ViewModel timeViewModel;
 
-    private boolean hasOnChangeEventListeners;
+    protected boolean hasOnChangeEventListeners;
+
+    protected String timeOutputPattern;
 
     /**
      * Takes an outer class snapshot.
@@ -230,6 +236,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
       this.date = dateInnerData == null ? null : dateInnerData[0];
 
       this.hasOnChangeEventListeners = DateTimeControl.this.eventHelper.hasOnChangeEventListeners();
+      this.timeOutputPattern = DateTimeControl.this.timeControl.dateTimeOutputPattern;
     }
 
     /**
@@ -242,12 +249,86 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     }
 
     /**
+     * Provides the hour (0-23) part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed hour value as string.
+     * @since 2.0
+     */
+    public String getHourOfDay() {
+      return readDateValue(this.time, this.timeOutputPattern, Calendar.HOUR_OF_DAY, 0);
+    }
+
+    /**
+     * Provides the hour (0-11) part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed hour value as string.
+     * @since 2.0
+     */
+    public String getHour() {
+      return readDateValue(this.time, this.timeOutputPattern, Calendar.HOUR_OF_DAY, 0);
+    }
+
+    /**
+     * Provides the minute part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed minute value as string.
+     * @since 2.0
+     */
+    public String getMinutes() {
+      return readDateValue(this.time, this.timeOutputPattern, Calendar.MINUTE, 0);
+    }
+
+    /**
+     * Provides the seconds part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed seconds value as string.
+     * @since 2.0
+     */
+    public String getSeconds() {
+      return readDateValue(this.time, this.timeOutputPattern, Calendar.SECOND, 0);
+    }
+
+    /**
      * Returns date as <code>String</code>.
      * 
      * @return date as <code>String</code>.
      */
     public String getDate() {
       return this.date;
+    }
+
+    /**
+     * Parses a specific value (specified by <code>calendarField</code>) from the given date/time <code>value</code>
+     * using the given <code>pattern</code>. When the given <code>value</code> is null or an exception occurs then the
+     * <code>defaultValue</code> will be returned as string. The calendar field is expected to be a value of a constant
+     * in {@link Calendar} class.
+     * 
+     * @param value The date/time value as string. May be <code>null</code> or an empty string.
+     * @param pattern The date/time pattern to use for parsing the <code>value</code>.
+     * @param calendarField A constant from {@link Calendar} class.
+     * @param defaultValue The default value to use when parsing fails. It will be converted into string.
+     * @return The date/time field value as string.
+     * @since 2.0
+     */
+    protected String readDateValue(String value, String pattern, int calendarField, int defaultValue) {
+      int parsedValue = defaultValue;
+
+      if (StringUtils.isNotBlank(value)) {
+        try {
+          Calendar cal = Calendar.getInstance();
+          Date time = new SimpleDateFormat(pattern).parse(value);
+          cal.setTime(time);
+          parsedValue = cal.get(calendarField);
+        } catch (ParseException e) {
+          // OK, we use the default value.
+        }
+      }
+
+      return Integer.toString(parsedValue);
     }
 
     /**

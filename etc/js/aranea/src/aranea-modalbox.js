@@ -84,6 +84,8 @@ Aranea.ModalBox = {
 			}.bind(this),
 
 			onComplete: function(transport) {
+				Aranea.Data.submitted = false;
+				Aranea.Data.loaded = true;
 				this.afterLoad(transport);
 				Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
 			}.bind(this)
@@ -139,11 +141,7 @@ Aranea.ModalBox = {
 		Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
 
 		if (this.isCloseOverlay(transport.responseText)) {
-			if (Aranea.Data.loaded) {
-				this.closeWithAjaxHandler();
-			} else {
-				document.observe('aranea:updated', this.closeWithAjaxHandler);
-			}
+			this.closeWithAjaxHandler();
 		}
 	},
 

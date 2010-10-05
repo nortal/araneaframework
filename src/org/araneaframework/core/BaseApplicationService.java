@@ -377,7 +377,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
       return;
     }
 
-    List<ActionListener> listeners = this.actionListeners == null ? null : this.actionListeners.get(actionId);
+    List<ActionListener> listeners = getActionListeners().get(actionId);
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Delivering action '" + actionId + "' to service '" + getClass() + "'.");

@@ -63,11 +63,12 @@ Autocompleter.Base = Class.create({
     this.options.minChars     = this.options.minChars || 1;
     this.options.onShow       = this.options.onShow ||
       function(element, update){
-        if(!update.style.position || update.style.position=='absolute') {
-          update.style.position = 'absolute';
-          Position.clone(element, update, {
-            setHeight: false,
-            offsetTop: element.offsetHeight
+        if(!update.getStyle('position') || update.getStyle('position') == 'absolute') {
+          var pos = element.positionedOffset();
+          update.absolutize().setStyle({
+            width: element.getWidth() + 'px',
+            top:   pos.top + element.offsetHeight + 'px',
+            left:  pos.left + 'px'
           });
         }
         Effect.Appear(update,{duration:0.15});

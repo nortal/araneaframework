@@ -16,7 +16,6 @@
 
 package org.araneaframework.uilib.core;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
@@ -163,7 +162,23 @@ public class OverlayRootWidget extends BaseUIWidget {
     }
 
     @Override
+    protected void init() throws Exception {
+      // When a flow is already is started, no need to delay the initialization of top widget.
+      // "Delay" is needed only when overlay is opened - as overlay actual is opened on second request.
+      if (getFlowCtx().getNestedFlows().size() > 1) {
+        startTopWidget();
+      }
+
+      super.init();
+    }
+
+    @Override
     protected void update(InputData input) throws Exception {
+      startTopWidget();
+      super.update(input);
+    }
+
+    private void startTopWidget() {
       if (this.topWidget != null) {
         try {
           start(this.topWidget);
@@ -171,7 +186,6 @@ public class OverlayRootWidget extends BaseUIWidget {
           this.topWidget = null;
         }
       }
-      super.update(input);
     }
 
     @Override
