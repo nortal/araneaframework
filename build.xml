@@ -175,7 +175,14 @@
 		</manifest>
 	</target>
 
-	<target name="js" description="Compresses aranea*.js JavaScript files">
+	<target name="js_changed" description="Provides a variable when JS files to compress have changed after last compress.">
+		<uptodate property="aranea.js.uptodate">
+			<srcfiles dir="etc/js/aranea/src/" includes="*.js"/>
+			<mapper type="glob" from="etc/js/aranea/src/*" to="etc/js/aranea/*"/>
+		</uptodate>
+	</target>
+
+	<target name="js" depends="js_changed" unless="aranea.js.uptodate" description="Compresses aranea*.js JavaScript files">
 		<property name="jsmin.loc" location="etc/jsutil/JSMin.jar"/>
 
 		<java jar="${jsmin.loc}" dir="etc/js/aranea/" fork="true">
