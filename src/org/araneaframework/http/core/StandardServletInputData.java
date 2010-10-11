@@ -173,7 +173,6 @@ public class StandardServletInputData implements HttpInputData {
     if (this.useFullURL) {
       url = this.req.getRequestURL().toString();
     }
-    url = url.substring(0, url.indexOf(this.servletPath) + this.servletPath.length());
     return url;
   }
 
