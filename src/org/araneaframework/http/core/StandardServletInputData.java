@@ -169,12 +169,18 @@ public class StandardServletInputData implements HttpInputData {
   }
 
   public String getContainerURL() {
-    String url = this.req.getRequestURI();
-    if (this.useFullURL) {
-      url = this.req.getRequestURL().toString();
+      StringBuffer url = new StringBuffer();
+      if (this.useFullURL) {
+        url.append(this.req.getScheme());
+        url.append("://");
+        url.append(this.req.getServerName());
+        url.append(":");
+        url.append(this.req.getServerPort());
+      }
+      url.append(this.req.getContextPath());
+      url.append(this.servletPath);
+      return url.toString();
     }
-    return url;
-  }
 
   public String getContainerPath() {
     return this.servletPath;
