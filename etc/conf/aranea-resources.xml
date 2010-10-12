@@ -47,7 +47,7 @@
 	</files>
 
 	<files content-type="text/css" group="blackbird.css">
-		<file path="css/blackbird/blackbird.css" />
+		<file path="js/blackbird/blackbird.css" />
 	</files>
 
 <!-- ============================================================ -->
@@ -255,8 +255,8 @@
 	</files>
 
 	<files content-type="image/png">
-		<file path="css/blackbird/blackbird_icons.png" />
-		<file path="css/blackbird/blackbird_panel.png" />
+		<file path="js/blackbird/blackbird_icons.png" />
+		<file path="js/blackbird/blackbird_panel.png" />
 	</files>
 
 </resources>
