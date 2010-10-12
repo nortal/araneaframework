@@ -77,7 +77,7 @@ Aranea.History = {
 	initOnHashChange: function() {
 		var that = Aranea.History;
 		window.onhashchange = that.StateChangeListener.wrap(that.OnHashChangeStateChangeListenerWrapper);
-		document.observe('aranea:beforeEvent', that.beforeAjaxEvent.wrap(that.requestEventWrapper));
+		document.observe('aranea:beforeEvent', that.beforeAjaxEvent);
 		Aranea.Logger.debug('Initialized support for browser-history-based navigation using window.onhashchange event.');
 	},
 
