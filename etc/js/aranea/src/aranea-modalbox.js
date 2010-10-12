@@ -138,6 +138,7 @@ Aranea.ModalBox = {
 	 * @param transport The AJAX request transport.
 	 */
 	afterLoad: function(transport) {
+		Aranea.Page.findSystemForm();
 		Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
 
 		if (this.isCloseOverlay(transport.responseText)) {
