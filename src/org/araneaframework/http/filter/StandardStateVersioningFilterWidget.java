@@ -18,10 +18,16 @@ package org.araneaframework.http.filter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
@@ -33,13 +39,14 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.Widget;
+import org.araneaframework.Relocatable.RelocatableWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
@@ -69,6 +76,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * component hierarchy.
    */
   public static final int DEFAULT_MAX_STATES_STORED = 20;
+  
+  public static final String STATES_COOKIE_NAME_SUFFIX = "_araStates";
 
   /**
    * This field will be filled in when the first request comes in and before the request will be processed by child
@@ -149,9 +158,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         notifyAboutNavigation(true);
         writeHeaders();
 
+        // assume that list legal states does not change in action
+        addStatesCookie( output );
         this.childWidget._getService().action(path, input, output);
 
         saveState();
+        
       } finally {
         this.childWidget = null;
       }
@@ -180,12 +192,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void render(OutputData output) throws Exception {
     synchronized (this) {
       try {
+        // assume that list legal states does not change during render
+        addStatesCookie( output );
         super.render(output);
 
         // Finally, when rendering is completed, we store the current state. The saveState() method is given full
         // autonomy to decide whether to save and how to manage the states.
         saveState();
-
       } finally {
         this.childWidget = null; // Release the child widget. We will use stored states to restore it the next time.
       }
@@ -199,6 +212,35 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (this.childWidget != null) {
       super.destroy();
     }
+  }
+  
+  protected void addStatesCookie( OutputData output ){
+      HttpServletResponse response = ServletUtil.getResponse( output );
+      ThreadContext threadCtx = getEnvironment().getEntry( ThreadContext.class );
+      StringBuilder sb = new StringBuilder();
+      Set<String> ids = new LinkedHashSet<String>();
+      
+      // emulate state discarding/adding done in saveState()/discardOldStatesOnLimitExceed() 
+      for (Iterator<State> it =  versionedStates.iterator(); it.hasNext(); ) {
+          ids.add( it.next().getStateId() );
+      }
+      if (!ids.contains( this.newStateId )) {
+          ids.add( this.newStateId );
+      }
+      
+      while (!ids.isEmpty() && ids.size() > this.maxVersionedStates) {
+          ids.remove( ids.iterator().next());
+      }
+      
+      // cookie form: "stateId|stateId|... "
+      for (Iterator<String> it =  ids.iterator(); it.hasNext(); ) {
+          sb.append(it.next());
+          if (it.hasNext()) {
+              sb.append("|");
+          }
+      }
+      
+      response.addCookie(new Cookie(threadCtx.getCurrentId() + STATES_COOKIE_NAME_SUFFIX, sb.toString()));
   }
 
   // =============================================================
