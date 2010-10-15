@@ -86,7 +86,9 @@ Aranea.Data = {
 	/* Private fields */
 	loadingMessagePositionHack: false,
 
-	regionHandlers: $H()
+	regionHandlers: $H(),
+	
+	expiredPagedStateWarningShown: false
 };
 
 Aranea.Page = {
@@ -559,6 +561,50 @@ Aranea.Page = {
 					top: document.documentElement.scrollTop + 'px'
 			});
 		}
+	},
+	
+	/** Gets cookie value, borrowed from http://www.elated.com/articles/javascript-and-cookies tutorial */
+	getCookie: function(name) {
+      var results = document.cookie.match ( '(^|;) ?' + name + '=([^;]*)(;|$)' );
+      return results ? unescape(results[2]) : null;
+	},
+	
+	/** Tests whether the state in the system form is among valid ones. */
+	testStateValidity: function() {
+      var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
+      var topId = Aranea.Data.systemForm.araTopServiceId.value;
+      var clientStateId = Aranea.Data.systemForm.araClientStateId.value;
+      var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
+      
+      var legalStates = statesCookieValue.split("|");
+      var found = -1;
+      for (var c = 0; c < legalStates.length; c++) {
+        if (legalStates[c] == clientStateId) {
+          found = c;
+          break;
+        }
+      }
+      
+      if (found < 0 && Aranea.Data.expiredPagedStateWarningShown) {
+        Aranea.Page.warnExpiredPageState();
+      }
+	},
+	
+	/** shows message to the end user about expired state navigation on client side */
+	warnExpiredPageState: function() {
+		Aranea.Data.expiredPagedStateWarningShown = true;
+		alert("Back navigation is disallowed for safety reasons");
+		Aranea.Data.expiredPagedStateWarningShown = false;
+		Aranea.Page.redirectFromExpiredPage(Aranea.Data.systemForm.araTopServiceId.value, Aranea.Data.systemForm.araThreadServiceId.value);
+	},
+	
+	/** Performs redirect from expired state (detection from client side). */
+	redirectFromExpiredPage: function(topId, threadId) {
+      var params = {
+        araTopServiceId: topId,
+        araThreadServiceId: threadId,
+      };
+      document.location.href = Aranea.Page.getSubmitURL(params);
 	}
 };
 
