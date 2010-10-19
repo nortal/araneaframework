@@ -228,4 +228,6 @@ Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor = function(transport) {
 };
 
 document.observe('aranea:loaded', Aranea.History.init);
+document.observe('aranea:loaded', function() {Aranea.Page.normalizeStateCookie();});
+document.observe('aranea:loaded', function() {setInterval(Aranea.Page.testStateValidity, 200);});
 
