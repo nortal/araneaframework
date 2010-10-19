@@ -145,14 +145,18 @@ Aranea.History = {
 	StateChangeListener: function(previousStateId, newStateId) {
 		Aranea.Logger.debug('History: Detected navigation  "' + previousStateId + '" -> "' + newStateId + '"');
 
-		var form = Aranea.Page.findSystemForm();
-		if (form && form.araClientStateId) {
+		if (Aranea.Page.isStateValid(newStateId) >= 0) {
+		  var form = Aranea.Page.findSystemForm();
+		  if (form && form.araClientStateId) {
 			form.araClientStateId.value = newStateId;
-		}
-		form = null;
+		  }
+		  form = null;
 
-		// ..a.Page.ajax(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form])
-		Aranea.Page.ajax('', '', null, null, Aranea.History.UPDATE_REGION_ID);
+		  // ..a.Page.ajax(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form])
+		  Aranea.Page.ajax('', '', null, null, Aranea.History.UPDATE_REGION_ID);
+		} else {
+          Aranea.Logger.debug('History: AJAX request skipped, state "' + newStateId + '" expired.');
+		}
 	},
 
 	/**
@@ -164,6 +168,9 @@ Aranea.History = {
 	 */
 	OnHashChangeStateChangeListenerWrapper: function(fnListener) {
 		var t = Aranea.History, newStateId = t.getCurrentStateIdFromUrl();
+		if (Aranea.Page.isStateValid(newStateId) < 0) {
+			return; // not valid state, the message should be shown to end user and appropriate redirect done
+		}
 		if (newStateId == t.lastReceivedStateVersion) {
 			return; // This state was just loaded, therefore not a state change.
 		}
@@ -221,3 +228,4 @@ Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor = function(transport) {
 };
 
 document.observe('aranea:loaded', Aranea.History.init);
+
