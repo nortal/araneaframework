@@ -111,6 +111,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * <code>Map&lt;String stateId, byte[] serializedState&gt;</code>
    */
   protected LinkedList<State> versionedStates = new LinkedList<State>();
+  
+  protected boolean expiredDuringRequest = false;
 
   protected transient ThreadLocal<Boolean> stateSaved; 
 
@@ -154,6 +156,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     synchronized (this) {
       try {
+        expiredDuringRequest = false;
         handleStateRestoration(false);
         notifyAboutNavigation(true);
         writeHeaders();
@@ -173,6 +176,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   @Override
   protected void update(InputData input) throws Exception {
     synchronized (this) {
+      expiredDuringRequest = false;
       handleStateRestoration(true);
       notifyAboutNavigation(false);
       writeHeaders(); 
@@ -201,6 +205,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         saveState();
       } finally {
         this.childWidget = null; // Release the child widget. We will use stored states to restore it the next time.
+        expiredDuringRequest = false;
       }
     }
   }
@@ -215,32 +220,39 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
   
   protected void addStatesCookie( OutputData output ){
-      HttpServletResponse response = ServletUtil.getResponse( output );
-      ThreadContext threadCtx = getEnvironment().getEntry( ThreadContext.class );
-      StringBuilder sb = new StringBuilder();
-      Set<String> ids = new LinkedHashSet<String>();
+    HttpServletResponse response = ServletUtil.getResponse( output );
+    ThreadContext threadCtx = getEnvironment().getEntry( ThreadContext.class );
+    StringBuilder sb = new StringBuilder();
+    Set<String> ids = new LinkedHashSet<String>();
       
-      // emulate state discarding/adding done in saveState()/discardOldStatesOnLimitExceed() 
-      for (Iterator<State> it =  versionedStates.iterator(); it.hasNext(); ) {
-          ids.add( it.next().getStateId() );
+    // emulate state discarding/adding done in saveState()/discardOldStatesOnLimitExceed() 
+    for (Iterator<State> it =  versionedStates.iterator(); it.hasNext(); ) {
+      ids.add( it.next().getStateId() );
+    }
+    if (!ids.contains( this.newStateId )) {
+      ids.add( this.newStateId );
+    }
+    
+    while (!ids.isEmpty() && ids.size() > this.maxVersionedStates) {
+      ids.remove( ids.iterator().next());
+    }
+    
+    // cookie form: "stateId|stateId|... "
+    for (Iterator<String> it =  ids.iterator(); it.hasNext(); ) {
+      sb.append(it.next());
+      if (it.hasNext()) {
+        sb.append("|");
       }
-      if (!ids.contains( this.newStateId )) {
-          ids.add( this.newStateId );
-      }
+    }
+    
+    if (expiredDuringRequest && ids.size() == 1) { // hack -- write out the state identifier -- twice
+        sb.append("|").append(ids.iterator().next());
+    }
       
-      while (!ids.isEmpty() && ids.size() > this.maxVersionedStates) {
-          ids.remove( ids.iterator().next());
-      }
-      
-      // cookie form: "stateId|stateId|... "
-      for (Iterator<String> it =  ids.iterator(); it.hasNext(); ) {
-          sb.append(it.next());
-          if (it.hasNext()) {
-              sb.append("|");
-          }
-      }
-      
-      response.addCookie(new Cookie(threadCtx.getCurrentId() + STATES_COOKIE_NAME_SUFFIX, sb.toString()));
+    Cookie cookie = new Cookie(threadCtx.getCurrentId() + STATES_COOKIE_NAME_SUFFIX, sb.toString());
+    String contextPath = ServletUtil.getRequest( output.getInputData() ).getContextPath();
+    cookie.setPath( contextPath);
+    response.addCookie(cookie);
   }
 
   // =============================================================
@@ -399,7 +411,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (StringUtils.contains(regions, GLOBAL_CLIENT_NAVIGATION_REGION_ID)) {
       newId = getStateIdFromRequest(); // Use the same value that also lastStateId uses.
     } else {
-      newId = RandomStringUtils.randomAlphanumeric(30); // Generate a new state ID.
+      newId = String.valueOf(System.currentTimeMillis()) + RandomStringUtils.randomAlphanumeric(15); // Generate a new state ID.
 
       // When not an AJAX request, prepend "HTTP" to the ID.
       if (regions == null && overlay == null) {
@@ -634,7 +646,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   public void expire() {
+    expiredDuringRequest = true;
     this.versionedStates.clear();
+    notifyStatesUpdated();
   }
 
   // =============================================================
