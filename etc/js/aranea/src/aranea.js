@@ -53,7 +53,7 @@ Aranea.Data = {
 	absoluteURLs: true,
 
 	/**
-	 * Indicates whether the page is completely loaded or not. Page is considered to be loaded when all system "onload"
+	 * Indicates whether the page is completely 			 or not. Page is considered to be loaded when all system "onload"
 	 * events have completed execution.
 	 */
 	loaded: false,
@@ -88,7 +88,9 @@ Aranea.Data = {
 
 	regionHandlers: $H(),
 	
-	expiredPagedStateWarningShown: false
+	expiredPagedStateWarningShown: false,
+	
+	expiredPageRedirectInProgress: false
 };
 
 Aranea.Page = {
@@ -569,24 +571,46 @@ Aranea.Page = {
       return results ? unescape(results[2]) : null;
 	},
 	
-	/** Tests whether the state in the system form is among valid ones. */
-	testStateValidity: function() {
+	/** Returns non-negative integer when currently shown page state is among the ones considered valid server-side. */
+	isStateValid: function(clientStateId) {
       var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
       var topId = Aranea.Data.systemForm.araTopServiceId.value;
-      var clientStateId = Aranea.Data.systemForm.araClientStateId.value;
       var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
-      
-      var legalStates = statesCookieValue.split("|");
       var found = -1;
-      for (var c = 0; c < legalStates.length; c++) {
-        if (legalStates[c] == clientStateId) {
-          found = c;
-          break;
+
+      if (statesCookieValue) { // always exists, unless cookies disabled or deleted somehow
+        var legalStates = statesCookieValue.split("|");
+        // there is a special case where current state is invalid but we should not really report it
+        // as states have just been expired and there is only one valid state -- which has not yet
+        // activated -- page loading is not complete. In that case, it is contained twice in the cookie
+        // like AAA|AAA
+        
+        if (legalStates.length == 2) {
+          var currStateId = clientStateId;
+          if (legalStates[0] == legalStates[1]) {
+        	  return 0;
+          }
+        }
+        
+        for (var c = 0; c < legalStates.length; c++) {
+          if (legalStates[c] == clientStateId) {
+            found = c;
+            break;
+          }
         }
       }
       
-      if (found < 0 && Aranea.Data.expiredPagedStateWarningShown) {
-        Aranea.Page.warnExpiredPageState();
+	  return found;
+	},
+	
+	/** Tests whether the state in the system form is among valid ones, warns user about expiration when not. */
+	testStateValidity: function() {
+      var found = Aranea.Page.isStateValid(Aranea.Data.systemForm.araClientStateId.value);
+      if (found < 0 && !Aranea.Data.expiredPagedStateWarningShown && !Aranea.Data.expiredPageRedirectInProgress) {
+        // if that value does not exist, we are in wrong moment of time
+        if (Aranea.Data.systemForm.araClientStateId.value && !Aranea.Data.submitted) {
+          Aranea.Page.warnExpiredPageState();
+        }
       }
 	},
 	
@@ -595,7 +619,10 @@ Aranea.Page = {
 		Aranea.Data.expiredPagedStateWarningShown = true;
 		alert("Back navigation is disallowed for safety reasons");
 		Aranea.Data.expiredPagedStateWarningShown = false;
+		Aranea.Data.expiredPageRedirectInProgress = true;
 		Aranea.Page.redirectFromExpiredPage(Aranea.Data.systemForm.araTopServiceId.value, Aranea.Data.systemForm.araThreadServiceId.value);
+		// theoretically we should set expiredPageRedirectInProgress to false -- practically this will not work reliably,
+		// .. so we will not
 	},
 	
 	/** Performs redirect from expired state (detection from client side). */
@@ -605,6 +632,33 @@ Aranea.Page = {
         araThreadServiceId: threadId,
       };
       document.location.href = Aranea.Page.getSubmitURL(params);
+	},
+	
+	// http://www.quirksmode.org/js/cookies.html
+	createCookie: function(name,value,days, path) {
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			var expires = "; expires="+date.toGMTString();
+		}
+		else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=" + path;
+	},
+	
+	// a hack to normalize cookie, after request processing has been completed after expiration
+	// see StandardStateVersioningFilterWidget#addStatesCookie
+	normalizeStateCookie: function() {
+	   var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
+	   var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
+	   if (statesCookieValue) {
+		   var legalStates = statesCookieValue.split("|");
+		   if (legalStates.length == 2 && legalStates[0] == legalStates[1]) {
+			   var servletUrlSplit = Aranea.Data.servletURL.split('/');
+			   var path = '/' + servletUrlSplit[servletUrlSplit.length - 2];
+			   Aranea.Page.createCookie("" + threadId + "_araStates","",-1, path); // delete existing cookie
+			   Aranea.Page.createCookie("" + threadId + "_araStates", "" + legalStates[0], null, path);
+		   }
+	   }
 	}
 };
 
