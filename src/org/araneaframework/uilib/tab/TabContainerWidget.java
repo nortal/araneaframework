@@ -139,7 +139,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   public boolean isTabSelected(String id) {
     Assert.notNullParam(this, id, "id");
-    return this.selected == null ? id.equals(this.selected.getScope().getId()) : false;
+    return this.selected != null ? id.equals(this.selected.getScope().getId()) : false;
   }
 
   public TabContext getSelectedTab() {
