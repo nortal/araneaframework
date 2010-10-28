@@ -605,6 +605,9 @@ Aranea.Page = {
 	
 	/** Tests whether the state in the system form is among valid ones, warns user about expiration when not. */
 	testStateValidity: function() {
+	  if (window.console) {
+		  window.console.debug("testing state validity " + new Date());
+	  }
       var found = Aranea.Page.isStateValid(Aranea.Data.systemForm.araClientStateId.value);
       if (found < 0 && !Aranea.Data.expiredPagedStateWarningShown && !Aranea.Data.expiredPageRedirectInProgress) {
         // if that value does not exist, we are in wrong moment of time
@@ -620,6 +623,7 @@ Aranea.Page = {
 		alert("Back navigation is disallowed for safety reasons");
 		Aranea.Data.expiredPagedStateWarningShown = false;
 		Aranea.Data.expiredPageRedirectInProgress = true;
+		Aranea.Data.systemForm.araClientStateId.value = "invalid_forever"; 
 		Aranea.Page.redirectFromExpiredPage(Aranea.Data.systemForm.araTopServiceId.value, Aranea.Data.systemForm.araThreadServiceId.value);
 		// theoretically we should set expiredPageRedirectInProgress to false -- practically this will not work reliably,
 		// .. so we will not
