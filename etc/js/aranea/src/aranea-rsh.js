@@ -168,11 +168,11 @@ Aranea.History = {
 	 */
 	OnHashChangeStateChangeListenerWrapper: function(fnListener) {
 		var t = Aranea.History, newStateId = t.getCurrentStateIdFromUrl();
-		if (Aranea.Page.isStateValid(newStateId) < 0) {
-			return; // not valid state, the message should be shown to end user and appropriate redirect done
-		}
 		if (newStateId == t.lastReceivedStateVersion) {
 			return; // This state was just loaded, therefore not a state change.
+		}
+		if (Aranea.Page.isStateValid(newStateId) < 0) {
+			return; // not valid state, the message should be shown to end user and appropriate redirect done
 		}
 
 		// When the new hash is empty then we have navigated to the page that was initially loaded with HTTP request and
