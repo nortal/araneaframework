@@ -1,26 +1,19 @@
 /*
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package org.araneaframework.uilib.util;
 
 import java.util.Calendar;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 /**
@@ -49,7 +42,7 @@ public abstract class JodaDateUtil {
         // Date API bug!) Therefore we copy fields one by one.
 
         Calendar cal = Calendar.getInstance();
-        cal.setLenient(false);
+        cal.setLenient(true);
         cal.set(Calendar.YEAR, dateTime.year().get());
         cal.set(Calendar.MONTH, dateTime.monthOfYear().get() - 1);
         cal.set(Calendar.DAY_OF_MONTH, dateTime.dayOfMonth().get());
@@ -76,18 +69,30 @@ public abstract class JodaDateUtil {
     }
 
     if (value.trim().length() == pattern.length()) {
-      try {
-        DateTime date = DateTimeFormat.forPattern(pattern).parseDateTime(value);
-
-        if (date != null && date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
-          if (LOG.isTraceEnabled()) {
-            String text = DateTimeFormat.forPattern(pattern).print(date);
-            LOG.trace("Parsed Joda date '" + text + "'.");
+      int offset = 0;
+      DateTime date = null;
+      while (date == null) {
+        try {
+          date = DateTimeFormat.forPattern(pattern).withZone(DateTimeZone.forOffsetHours(offset)).parseDateTime(value);
+        } catch (Exception e) {
+          if (offset == 24) {
+            return null;
           }
-
-          return new ParsedDate(date, pattern);
+          offset++;
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("Trying to parse date with offset " + offset + "...");
+          }
         }
-      } catch (Exception e) {}
+      }
+
+      if (date != null && date.getYear() >= MIN_YEAR && date.getYear() <= MAX_YEAR) {
+        if (LOG.isTraceEnabled()) {
+          String text = DateTimeFormat.forPattern(pattern).print(date);
+          LOG.trace("Parsed Joda date '" + text + "'.");
+        }
+
+        return new ParsedDate(date, pattern);
+      }
     }
 
     return null;
