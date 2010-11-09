@@ -108,6 +108,8 @@ Aranea.Page = {
 	 * @since 1.1
 	 */
 	LOADING_MESSAGE_ID: 'aranea-loading-message',
+	
+	EXPIRED_PAGE_STATE_WARNING : 'Back navigation is disallowed for safety reasons',
 
 	/**
 	 * Whether to reload page when AJAX response contains no document regions (page is not updated). That behaviour
@@ -620,7 +622,7 @@ Aranea.Page = {
 	/** shows message to the end user about expired state navigation on client side */
 	warnExpiredPageState: function() {
 		Aranea.Data.expiredPagedStateWarningShown = true;
-		alert("Back navigation is disallowed for safety reasons");
+		alert(Aranea.Page.EXPIRED_PAGE_STATE_WARNING);
 		Aranea.Data.expiredPagedStateWarningShown = false;
 		Aranea.Data.expiredPageRedirectInProgress = true;
 		Aranea.Data.systemForm.araClientStateId.value = "invalid_forever"; 
@@ -755,8 +757,8 @@ Aranea.Page.Submitter.Plain = Class.create({
 
 			result = this.event_core(eventData);
 
-			eventData.afterRequest();
-			Aranea.Data.systemForm.fire('aranea:afterEvent', eventData);
+			// eventData.afterRequest();
+			// Aranea.Data.systemForm.fire('aranea:afterEvent', eventData);
 		}
 		return Object.isUndefined(result) ? false : result;
 	},
