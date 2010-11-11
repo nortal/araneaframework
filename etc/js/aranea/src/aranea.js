@@ -782,7 +782,7 @@ Aranea.Page.Submitter.Overlay = Class.create(Aranea.Page.Submitter.Plain, {
 		submitParams.araTransactionId = 'override';
 
 		// For Aranea.History requests we need to set transaction ID to an inconsistent value.
-		if (Aranea.History && data.eventUpdateRgns == Aranea.History.UPDATE_REGION_ID) {
+		if (Aranea.History && data.eventUpdateRgns.startsWith(Aranea.History.UPDATE_REGION_ID)) {
 			submitParams.araTransactionId = 'inconsistent';
 		}
 		if (data.eventUpdateRgns) {
@@ -831,7 +831,7 @@ Aranea.Page.Submitter.AJAX = Class.create(Aranea.Page.Submitter.Plain, {
 			var neededAraTransactionId = 'override';
 
 			// For Aranea.History requests we need to set transaction ID to an inconsistent value.
-			if (Aranea.History && eventData.eventUpdateRgns == Aranea.History.UPDATE_REGION_ID) {
+			if (Aranea.History && eventData.eventUpdateRgns.startsWith(Aranea.History.UPDATE_REGION_ID)) {
 				neededAraTransactionId = 'inconsistent';
 			}
 
