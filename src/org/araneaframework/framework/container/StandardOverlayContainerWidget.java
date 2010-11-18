@@ -182,6 +182,9 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   @Override
   protected void update(InputData input) throws Exception {
+    if(getInputData().getGlobalData().containsKey("resetOverlay")) {
+      reset(null);
+    }
     if (isOverlayActive()) {
       this.overlay._getWidget().update(input);
     } else {
