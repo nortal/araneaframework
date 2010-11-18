@@ -67,8 +67,8 @@ Modalbox.Methods = {
 		if(!this.options.title) this.MBheader.hide();
 		
 		// Inserting into DOM
-		document.body.insertBefore(this.MBwindow, document.body.childNodes[0]);
-		document.body.insertBefore(this.MBoverlay, document.body.childNodes[0]);
+		document.parentWindow.document.body.insertBefore(this.MBwindow, document.body.childNodes[0]);
+		document.parentWindow.document.body.insertBefore(this.MBoverlay, document.body.childNodes[0]);
 		
 		// Initial scrolling position of the window. To be used for remove scrolling effect during ModalBox appearing
 		this.initScrollX = window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft;
@@ -450,8 +450,8 @@ Modalbox.Methods = {
 	},
 	
 	_setPosition: function () {
-		var clientHeight = document.viewport.getHeight();
-		var clientWidth = document.viewport.getWidth();
+		var clientHeight = document.parentWindow.document.viewport.getHeight();
+		var clientWidth = document.parentWindow.document.viewport.getWidth();
 		var vleft = Math.round((clientWidth - $(this.MBwindow).getWidth()) / 2);
 		var vtop = Math.round((clientHeight - $(this.MBwindow).getHeight()) / 2);
 
