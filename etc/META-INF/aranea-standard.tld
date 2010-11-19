@@ -2371,6 +2371,12 @@
 		<tag-class>org.araneaframework.jsp.tag.basic.ScrollHandlerRegistrationHtmlTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
+	
+	<tag>
+    <name>registerFocus</name>
+    <tag-class>org.araneaframework.jsp.tag.basic.FocusRegistrationHtmlTag</tag-class>
+    <body-content>empty</body-content>
+  </tag>
 
 	<tag>
 		<name>listRowRadioButton</name>

@@ -1,27 +1,25 @@
 /*
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package org.araneaframework.http.filter;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.WindowScrollPositionContext;
 
@@ -110,5 +108,18 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
     }
 
     super.update(input);
+  }
+  
+  @Override
+  protected void render(OutputData output) throws Exception {
+    Map<String, Collection<MessageData>> messages = getEnvironment().getEntry(MessageContext.class).getMessages();
+    boolean messagesPresent = messages != null && !messages.isEmpty();
+    
+    if (messagesPresent) {
+      LOG.debug("Resetting coordinates because messages need to be shown");
+      resetCurrent();
+    }
+    
+    super.render(output);
   }
 }
