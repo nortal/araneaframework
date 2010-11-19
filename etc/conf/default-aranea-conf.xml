@@ -117,6 +117,8 @@
 				<ref bean="araneaMessagingFilter" />
 				<ref bean="araneaEnvContextFilter" />
 				<ref bean="araneaPopupFilter" />
+				<ref bean="araneaScrollingFilter"/>
+				<ref bean="araneaFocusFilter"/>
 				<bean scope="prototype"
 					class="org.araneaframework.integration.spring.SpringOptionalFilterWidget">
 					<property name="beanId" value="araneaCustomWidgetFilters" />
@@ -234,6 +236,9 @@
 
 	<bean scope="prototype" id="araneaScrollingFilter"
 		class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget"/>
+		
+	<bean scope="prototype" id="araneaFocusFilter"
+    class="org.araneaframework.http.filter.StandardWindowFocusPositionFilterWidget"/>
 
 	<bean id="araneaThreadCloningFilter" scope="prototype"
 		class="org.araneaframework.http.filter.StandardThreadCloningFilterService"/>
