@@ -112,6 +112,12 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   
   @Override
   protected void render(OutputData output) throws Exception {
+    resetScroll();
+    
+    super.render(output);
+  }
+
+  private void resetScroll() {
     Map<String, Collection<MessageData>> messages = getEnvironment().getEntry(MessageContext.class).getMessages();
     boolean messagesPresent = messages != null && !messages.isEmpty();
     
@@ -119,7 +125,5 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
       LOG.debug("Resetting coordinates because messages need to be shown");
       resetCurrent();
     }
-    
-    super.render(output);
   }
 }
