@@ -69,9 +69,14 @@ public class StandardWindowFocusPositionFilterWidget extends BaseFilterWidget im
   }
   
   @Override
+  public void resetFocus() {
+    this.focusPosition = null;
+  }
+  
+  @Override
   protected void render(OutputData output) throws Exception {
     super.render(output);
     LOG.debug("Nullifying focus.");
-    setFocusToElement(null);
+    resetFocus();
   }
 }

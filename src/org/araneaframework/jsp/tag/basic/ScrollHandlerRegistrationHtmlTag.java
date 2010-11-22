@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.basic;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -54,7 +53,8 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
     JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY, y);
 
     // ensure restoration of scroll position:
-    out.write("<script type=\"text/javascript\">Aranea.Util.setWindowCoordinates(");
+    out.write("<script type=\"text/javascript\">");
+    out.write("Aranea.Util.setWindowCoordinates(");
     out.write(x);
     out.write(",");
     out.write(y);

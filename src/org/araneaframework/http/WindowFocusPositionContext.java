@@ -28,4 +28,6 @@ public interface WindowFocusPositionContext extends Serializable {
   void setFocusToElement(String fullElementId);
   
   String getFocusedElement();
+  
+  void resetFocus();
 }

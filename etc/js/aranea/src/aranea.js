@@ -49,7 +49,7 @@ Aranea.Data = {
 	absoluteURLs: true,
 
 	// Enables/disables the effect of "focusedFormElementName" and "focusableElements":
-	autofocus: true,
+	autofocus: false,
 
 	// To monitor focused element and to make it focused after content updating by Ajax. (Since 1.2)
 	focusedFormElementName: null,

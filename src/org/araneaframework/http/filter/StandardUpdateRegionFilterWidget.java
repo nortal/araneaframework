@@ -19,6 +19,7 @@ package org.araneaframework.http.filter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,11 +40,15 @@ import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.UpdateRegionProvider;
+import org.araneaframework.http.WindowFocusPositionContext;
+import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
 import org.araneaframework.http.util.JsonObject;
 
@@ -377,8 +382,19 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
 
     @Override
     protected void execute(Component component) throws Exception {
+      Map<String, Collection<MessageData>> messages = component.getEnvironment().getEntry(MessageContext.class).getMessages();
+      boolean messagesPresent = messages != null && !messages.isEmpty();
+      
+      if (messagesPresent) {
+        LOG.debug("Resetting coordinates because messages need to be shown");
+        WindowScrollPositionContext scrollContext = component.getEnvironment().getEntry(WindowScrollPositionContext.class);
+        scrollContext.resetCurrent();
+      }
       ((Widget) component)._getWidget().render(this.output);
       ((HttpOutputData) this.output).getWriter().flush();
+      LOG.debug("Nullifying focus.");
+      WindowFocusPositionContext focusContext = component.getEnvironment().getEntry(WindowFocusPositionContext.class);
+      focusContext.resetFocus();
     }
 
   }
