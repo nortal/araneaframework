@@ -628,7 +628,7 @@ Aranea.Page = {
 	redirectFromExpiredPage: function(topId, threadId) {
 		var params = {
 			araTopServiceId: topId,
-			araThreadServiceId: threadId,
+			araThreadServiceId: threadId
 		};
 		document.location.href = Aranea.Page.getSubmitURL(params);
 	},
