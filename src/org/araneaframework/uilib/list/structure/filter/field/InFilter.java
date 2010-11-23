@@ -88,7 +88,7 @@ public class InFilter extends BaseFieldFilter {
   public Expression buildExpression(Map<String, Object> filterInfo) {
     List<String> valueIds = (List<String>) filterInfo.get(getValueId());
 
-    if (!isActive(filterInfo) || valueIds.isEmpty()) {
+    if (!isActive(filterInfo) || valueIds == null || valueIds.isEmpty()) {
       return null;
     }
 

@@ -86,7 +86,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
       JspUtil.writeAttribute(out, "for", id);
       JspUtil.writeCloseStartTag_SS(out);
       JspUtil.writeEscaped(out, JspUtil.getResourceString(this.pageContext, this.labelId));
-      JspUtil.writeStartEndTag(out, "label");
+      JspUtil.writeEndTag(out, "label");
     }
 
     return SKIP_BODY;

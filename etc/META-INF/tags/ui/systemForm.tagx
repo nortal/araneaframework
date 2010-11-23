@@ -43,10 +43,6 @@
 			<input type="hidden" name="araWidgetEventPath" value=""/>
 			<input type="hidden" name="araWidgetEventParameter" value=""/>
 
-			<c:if test="${ui:isOverlay(pageContext)}">
-				<input type="hidden" name="araOverlay" value=""/>
-			</c:if>
-
 			<jsp:doBody/>
 		</ui:elementContent>
 	</ui:element>

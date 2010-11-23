@@ -54,16 +54,16 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     this.fields.clear();
-    Object topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
+
+    String topServiceId = EnvironmentUtil.getTopServiceId(getEnvironment());
+    String threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
 
     if (topServiceId != null) {
-      addField(TopServiceContext.TOP_SERVICE_KEY, topServiceId.toString());
+      addField(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     }
 
-    Object threadServiceId = EnvironmentUtil.getThreadServiceId(getEnvironment());
-
     if (threadServiceId != null) {
-      addField(ThreadContext.THREAD_SERVICE_KEY, threadServiceId.toString());
+      addField(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     }
 
     super.action(path, input, output);

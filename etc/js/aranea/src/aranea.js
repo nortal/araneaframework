@@ -256,6 +256,8 @@ Aranea.Page = {
 	invokeEvent: function(type, args) {
 		try {
 			Aranea.Logger.profile('Aranea.Page.invokeEvent()');
+			Aranea.Data.systemForm.fire('aranea:beforeEvent');
+
 			if (!Aranea.Data.submitted && Aranea.Data.loaded) {
 				var data = Aranea.Page.Form.getEventData(type, args);
 
@@ -264,11 +266,12 @@ Aranea.Page = {
 				} else {
 					this.findSubmitter(data).event(data);
 				}
-				return false; // Return false
+				return false;
 			}
 		} catch (e) {
 			Aranea.Logger.error('An error occurred during "event" request: ' + Object.inspect(e), e);
 		} finally {
+			Aranea.Data.systemForm.fire('aranea:afterEvent');
 			Aranea.Logger.profile('Aranea.Page.invokeEvent()');
 		}
 	},
@@ -566,59 +569,49 @@ Aranea.Page = {
 			});
 		}
 	},
-	
+
 	/** Gets cookie value, borrowed from http://www.elated.com/articles/javascript-and-cookies tutorial */
 	getCookie: function(name) {
-      var results = document.cookie.match ( '(^|;) ?' + name + '=([^;]*)(;|$)' );
-      return results ? unescape(results[2]) : null;
+		var results = document.cookie.match ( '(^|;) ?' + name + '=([^;]*)(;|$)' );
+		return results ? window.unescape(results[2]) : null;
 	},
-	
+
 	/** Returns non-negative integer when currently shown page state is among the ones considered valid server-side. */
 	isStateValid: function(clientStateId) {
-      var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
-      var topId = Aranea.Data.systemForm.araTopServiceId.value;
-      var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
-      var found = -1;
+		var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
+		var topId = Aranea.Data.systemForm.araTopServiceId.value;
+		var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
+		var found = -1;
 
-      if (statesCookieValue) { // always exists, unless cookies disabled or deleted somehow
-        var legalStates = statesCookieValue.split("|");
-        // there is a special case where current state is invalid but we should not really report it
-        // as states have just been expired and there is only one valid state -- which has not yet
-        // activated -- page loading is not complete. In that case, it is contained twice in the cookie
-        // like AAA|AAA
-        
-        if (legalStates.length == 2) {
-          var currStateId = clientStateId;
-          if (legalStates[0] == legalStates[1]) {
-        	  return 0;
-          }
-        }
-        
-        for (var c = 0; c < legalStates.length; c++) {
-          if (legalStates[c] == clientStateId) {
-            found = c;
-            break;
-          }
-        }
-      }
-      
-	  return found;
+		if (statesCookieValue) { // always exists, unless cookies disabled or deleted somehow
+			var legalStates = $A(statesCookieValue.split("|"));
+			// there is a special case where current state is invalid but we should not really report it
+			// as states have just been expired and there is only one valid state -- which has not yet
+			// activated -- page loading is not complete. In that case, it is contained twice in the cookie
+			// like AAA|AAA
+
+			if (legalStates.length == 2 && legalStates[0] == legalStates[1]) {
+				found == 0;
+			} else {
+				found = legalStates.indexOf(clientStateId);
+			}
+		}
+
+		return found;
 	},
-	
+
 	/** Tests whether the state in the system form is among valid ones, warns user about expiration when not. */
 	testStateValidity: function() {
-	  if (window.console) {
-		  window.console.debug("testing state validity " + new Date());
-	  }
-      var found = Aranea.Page.isStateValid(Aranea.Data.systemForm.araClientStateId.value);
-      if (found < 0 && !Aranea.Data.expiredPagedStateWarningShown && !Aranea.Data.expiredPageRedirectInProgress) {
-        // if that value does not exist, we are in wrong moment of time
-        if (Aranea.Data.systemForm.araClientStateId.value && !Aranea.Data.submitted) {
-          Aranea.Page.warnExpiredPageState();
-        }
-      }
+		Aranea.Logger.debug("testing state validity " + new Date());
+		var found = Aranea.Page.isStateValid(Aranea.Data.systemForm.araClientStateId.value);
+		if (found < 0 && !Aranea.Data.expiredPagedStateWarningShown && !Aranea.Data.expiredPageRedirectInProgress) {
+			// if that value does not exist, we are in wrong moment of time
+			if (Aranea.Data.systemForm.araClientStateId.value && !Aranea.Data.submitted) {
+				Aranea.Page.warnExpiredPageState();
+			}
+		}
 	},
-	
+
 	/** shows message to the end user about expired state navigation on client side */
 	warnExpiredPageState: function() {
 		Aranea.Data.expiredPagedStateWarningShown = true;
@@ -633,11 +626,11 @@ Aranea.Page = {
 	
 	/** Performs redirect from expired state (detection from client side). */
 	redirectFromExpiredPage: function(topId, threadId) {
-      var params = {
-        araTopServiceId: topId,
-        araThreadServiceId: threadId,
-      };
-      document.location.href = Aranea.Page.getSubmitURL(params);
+		var params = {
+			araTopServiceId: topId,
+			araThreadServiceId: threadId,
+		};
+		document.location.href = Aranea.Page.getSubmitURL(params);
 	},
 	
 	// http://www.quirksmode.org/js/cookies.html
@@ -651,20 +644,22 @@ Aranea.Page = {
 		document.cookie = name+"="+value+expires+"; path=" + path;
 	},
 	
-	// a hack to normalize cookie, after request processing has been completed after expiration
-	// see StandardStateVersioningFilterWidget#addStatesCookie
+	/**
+	 * A hack to normalize cookie, after request processing has been completed after expiration
+	 * see StandardStateVersioningFilterWidget#addStatesCookie
+	 */
 	normalizeStateCookie: function() {
-	   var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
-	   var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
-	   if (statesCookieValue) {
-		   var legalStates = statesCookieValue.split("|");
-		   if (legalStates.length == 2 && legalStates[0] == legalStates[1]) {
-			   var servletUrlSplit = Aranea.Data.servletURL.split('/');
-			   var path = '/' + servletUrlSplit[servletUrlSplit.length - 2];
-			   Aranea.Page.createCookie("" + threadId + "_araStates","",-1, path); // delete existing cookie
-			   Aranea.Page.createCookie("" + threadId + "_araStates", "" + legalStates[0], null, path);
-		   }
-	   }
+		var threadId = Aranea.Data.systemForm.araThreadServiceId.value;
+		var statesCookieValue = Aranea.Page.getCookie("" + threadId + "_araStates");
+		if (statesCookieValue) {
+			var legalStates = statesCookieValue.split("|");
+			if (legalStates.length == 2 && legalStates[0] == legalStates[1]) {
+				var servletUrlSplit = Aranea.Data.servletURL.split('/');
+				var path = '/' + servletUrlSplit[servletUrlSplit.length - 2];
+				Aranea.Page.createCookie("" + threadId + "_araStates","",-1, path); // delete existing cookie
+				Aranea.Page.createCookie("" + threadId + "_araStates", "" + legalStates[0], null, path);
+			}
+		}
 	}
 };
 
@@ -752,13 +747,9 @@ Aranea.Page.Submitter.Plain = Class.create({
 	event: function(eventData) {
 		var result = false;
 		if (eventData.isSubmitAllowed()) {
-			Aranea.Data.systemForm.fire('aranea:beforeEvent', eventData);
 			eventData.beforeRequest();
-
 			result = this.event_core(eventData);
-
-			// eventData.afterRequest();
-			// Aranea.Data.systemForm.fire('aranea:afterEvent', eventData);
+			// No eventData.afterRequest() because request completes with the new page loading.
 		}
 		return Object.isUndefined(result) ? false : result;
 	},
@@ -797,14 +788,12 @@ Aranea.Page.Submitter.Overlay = Class.create(Aranea.Page.Submitter.Plain, {
 
 		var result = false;
 		if (eventData.isSubmitAllowed()) {
-			Aranea.Data.systemForm.fire('aranea:beforeEvent', eventData);
 			eventData.beforeRequest();
 
 			result = this.event_core(eventData);
 
 			var afterRequest = function(eventData) {
 				eventData.afterRequest();
-				Aranea.Data.systemForm.fire('aranea:afterEvent', eventData);
 				Aranea.Logger.profile('Aranea.Page.Submitter.Overlay.event()');
 			};
 

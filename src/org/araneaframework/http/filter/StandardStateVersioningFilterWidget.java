@@ -46,6 +46,7 @@ import org.araneaframework.core.BroadcastMessage;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.StateVersioningContext;
@@ -198,6 +199,15 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       try {
         // assume that list legal states does not change during render
         addStatesCookie( output );
+
+
+        // Before rendering, we add the system form parameter with stateId value to be rendered with the form.
+        // The stateId value does not need to provided when update regions are used.
+        String regionsFromRequest = getRequestParam(UpdateRegionContext.UPDATE_REGIONS_KEY);
+        String stateId = regionsFromRequest == null ? this.newStateId : "";
+
+        getEnvironment().requireEntry(SystemFormContext.class).addField(STATE_ID_REQUEST_KEY, stateId);
+
         super.render(output);
 
         // Finally, when rendering is completed, we store the current state. The saveState() method is given full

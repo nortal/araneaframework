@@ -40,6 +40,6 @@ public class FileInfoData extends Data<FileInfo> {
   }
 
   private boolean isValueNull() {
-    return this.value == null || this.value.isFilePresent();
+    return this.value == null || !this.value.isFilePresent();
   }
 }

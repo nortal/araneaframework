@@ -32,6 +32,7 @@ import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.http.PopupWindowContext;
+import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
 
 /**
@@ -124,6 +125,14 @@ public abstract class EnvironmentUtil {
 
   public static PopupWindowContext requirePopupWindowContext(Environment env) {
     return env.requireEntry(PopupWindowContext.class);
+  }
+
+  public static StateVersioningContext getStateVersioningContext(Environment env) {
+    return env.getEntry(StateVersioningContext.class);
+  }
+
+  public static StateVersioningContext requireStateVersioningContext(Environment env) {
+    return env.requireEntry(StateVersioningContext.class);
   }
 
   public static ContinuationContext getContinuationContext(Environment env) {

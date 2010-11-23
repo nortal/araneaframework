@@ -51,9 +51,9 @@ Aranea.Behaviour = {
 
 	ARANEA_FILE_UPLOAD: 'input.aranea-file-upload',
 
-	ARANEA_BG_VALIDATE: 'aranea-bg-validate',
+	ARANEA_BG_VALIDATE: '.aranea-bg-validate',
 
-	ARANEA_NO_BG_VALIDATE: 'aranea-no-bg-validate',
+	ARANEA_NO_BG_VALIDATE: '.aranea-no-bg-validate',
 
 	setFormElementContext: function(element) {
 		element = $(element);
@@ -81,8 +81,8 @@ Aranea.Behaviour = {
 		var globalBgValidate = Aranea.Data.backgroundValidation;
 
 		if (!element.getStorage().get(that.ATTACHED_VALIDATE)
-			&& (globalBgValidate && !element.hasClassName(that.ARANEA_NO_BG_VALIDATE)
-			|| !globalBgValidate &&  element.hasClassName(that.ARANEA_BG_VALIDATE))) {
+			&& (globalBgValidate && !element.match(that.ARANEA_NO_BG_VALIDATE)
+			|| !globalBgValidate &&  element.match(that.ARANEA_BG_VALIDATE))) {
 
 			element.observe('change', that.formElementValidationActionCall);
 			element.getStorage().set(that.ATTACHED_VALIDATE, true);

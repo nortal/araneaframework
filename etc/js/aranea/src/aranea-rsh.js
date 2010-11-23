@@ -39,7 +39,7 @@ Aranea.History = {
 		if (Aranea.Page.Submitter.TYPE_SUBMIT != event.memo.type) {
 			var stateId = Aranea.History.getCurrentStateIdFromUrl() || Aranea.Data.systemForm.araClientStateId.value;
 			if (stateId.startsWith('HTTP')) {
-				Aranea.History.lastHttpState = $(Aranea.Page.UPDATE_REGION_ID).innerHTML;
+				Aranea.History.lastHttpState = $(Aranea.History.UPDATE_REGION_ID).innerHTML;
 			}
 		}
 	},
@@ -228,6 +228,6 @@ Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor = function(transport) {
 };
 
 document.observe('aranea:loaded', Aranea.History.init);
-document.observe('aranea:loaded', function() {Aranea.Page.normalizeStateCookie();});
+document.observe('aranea:loaded', Aranea.Page.normalizeStateCookie);
 document.observe('aranea:loaded', function() {setInterval(Aranea.Page.testStateValidity, 200);});
 

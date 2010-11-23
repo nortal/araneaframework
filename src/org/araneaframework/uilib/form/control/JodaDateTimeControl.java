@@ -176,7 +176,7 @@ public class JodaDateTimeControl extends BaseControl<DateTime> {
 
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
+    if (isMandatory() && this.value == null) {
       addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
   }
