@@ -16,16 +16,13 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.ConfigurationUtil;
-
-import org.araneaframework.uilib.ConfigurationContext;
-
-import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.util.JspUtil;
+import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Form checkbox label, represents label of one item from
@@ -67,6 +64,8 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
 
   /** @since 1.1 */
   public void writeLabel(Writer out, String label) throws Exception {
+    out.write("\n");
+    
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeCloseStartTag_SS(out);

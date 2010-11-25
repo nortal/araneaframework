@@ -16,7 +16,6 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
@@ -94,6 +93,8 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
    * @since 1.1
    */
   public void writeLabel(Writer out, String label) throws Exception {
+    out.write("\n");
+    
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeCloseStartTag_SS(out);
