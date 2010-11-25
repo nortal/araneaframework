@@ -16,6 +16,7 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
@@ -41,7 +42,6 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   /** @since 2.0 */
   protected Boolean localizeLabel = false;
 
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     writeLabel(out, getSelectItemLabel());
