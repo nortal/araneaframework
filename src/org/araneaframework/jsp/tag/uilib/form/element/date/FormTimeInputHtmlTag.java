@@ -16,13 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
-import org.araneaframework.Path;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
@@ -133,6 +132,8 @@ public class FormTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       selectScript = getTimeSelectScript(name + Path.SEPARATOR + selectField, value, 60);
     }
 
+    out.write("\n");
+    
     out.write("<select id=\"");
     out.write(name);
     out.write('.');

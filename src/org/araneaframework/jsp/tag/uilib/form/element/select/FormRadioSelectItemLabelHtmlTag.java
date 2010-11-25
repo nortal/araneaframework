@@ -42,7 +42,6 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
   /** @since 2.0 */
   protected Boolean localizeLabel = false;
 
-  @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
     writeLabel(out, getSelectItemLabel());
@@ -94,6 +93,8 @@ public class FormRadioSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
    * @since 1.1
    */
   public void writeLabel(Writer out, String label) throws Exception {
+    out.write("\n");
+    
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeCloseStartTag_SS(out);
