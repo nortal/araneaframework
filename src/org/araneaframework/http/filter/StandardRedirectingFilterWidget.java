@@ -27,6 +27,11 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
+ * Provides better Aranea support for handling redirects that are called by sub-widgets of this filter. The idea is that
+ * this filter wraps the response object and when a sub-widget invokes redirect, the response wrapper remembers it.
+ * Using that information, this filter knows whether sub-widgets need to be rendered (redirected=false) or not
+ * (redirected=true).
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardRedirectingFilterWidget extends BaseFilterWidget {

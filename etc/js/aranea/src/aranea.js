@@ -473,22 +473,18 @@ Aranea.Page = {
 	 * @since 1.1
 	 */
 	findSystemForm: function(element, changeData) {
-		element = $(element);
+		var validFormIds = $w(Aranea.Page.SYSTEM_FORM_IDS);
 		var result = null;
 
-		if (!Object.isElement(element)) {
-			$w(Aranea.Page.SYSTEM_FORM_IDS).find(function(id) { return result = $(id) });
-		} else if (element.match('form') && Aranea.Page.SYSTEM_FORM_IDS.indexOf(element.id) >= 0) {
-			result = element;
-		} else {
-			result = element;
-			var targetIds = Aranea.Page.SYSTEM_FORM_IDS;
-			var validId = !String.interpret(result.id).empty() && targetIds.indexOf(result.id) >= 0;
-			while (result.tagName && (!validId || !result.match('form'))) {
-				result = result.up();
-				validId = result.tagName && !result.id.empty() && targetIds.indexOf(result.id) >= 0;
+		element = $(element);
+
+		if (!Object.isElement(element)) { // Find form using element lookup by form ID, returning the first result.
+			validFormIds.detect(function(id) { return result = $(id) });
+		} else { // Find the parent form, assuming element is its descendant element.
+			if (!element.match('form[id]') || !validFormIds.include(element.id)) {
+				element = element.up('form[id]');
 			}
-			result = result.tagName != null ? result : null;
+			result = validFormIds.include(element.id) ? element : null;
 		}
 
 		if (result == null) {
@@ -1258,8 +1254,9 @@ Aranea.Page.Form = {
 				data.eventUpdateRgns = data.eventUpdateRgns();
 			}
 			this.evaluateRequestType(data);
-			this.evaluateCustom(data);
 		}
+
+		this.evaluateCustom(data);
 	},
 
 	evaluateRequestType: function(data) {

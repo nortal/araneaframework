@@ -162,8 +162,10 @@ public abstract class Assert {
     notNullParam(collection, param);
     int i = 0;
     for (Iterator<?> it = collection.iterator(); it.hasNext();) {
-      if (it.next() == null)
-        throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!");
+      if (it.next() == null) {
+        throw new IllegalArgumentException("The validated collection parameter '" + param
+            + "' contains null element at index: '" + i + "'!");
+      }
       i++;
     }
   }
@@ -183,7 +185,8 @@ public abstract class Assert {
     int i = 0;
     for (Object element : collection) {
       if (element == null)
-        throw new IllegalArgumentException("The validated collection contains null element at index: '" + i + "'!" + thisToString(that));
+        throw new IllegalArgumentException("The validated collection parameter '" + param
+            + "' contains null element at index: '" + i + "'!" + thisToString(that));
       i++;
     }
   }
