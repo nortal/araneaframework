@@ -38,6 +38,7 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
+import org.araneaframework.http.ContainerStateContext;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 
@@ -590,29 +591,34 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public static class StandardTransitionHandler implements FlowContext.TransitionHandler {
 
     public void doTransition(int transitionType, Widget activeFlow, Closure transition) {
-      notifyScrollContext(transitionType, activeFlow);
+      notifyContexts(transitionType, activeFlow);
       transition.execute(activeFlow);
     }
 
-    protected void notifyScrollContext(int transitionType, Widget activeFlow) {
+    protected void notifyContexts(int transitionType, Widget activeFlow) {
       if (activeFlow == null) {
         return;
       }
       WindowScrollPositionContext scrollCtx = activeFlow.getEnvironment().getEntry(WindowScrollPositionContext.class);
+      ContainerStateContext containerStateContext = activeFlow.getEnvironment().getEntry(ContainerStateContext.class);
       if (scrollCtx != null) {
         switch (transitionType) {
         case FlowContext.TRANSITION_START:
           scrollCtx.push();
+          containerStateContext.push();
           break;
         case FlowContext.TRANSITION_FINISH:
         case FlowContext.TRANSITION_CANCEL:
           scrollCtx.pop();
+          containerStateContext.pop();
           break;
         case FlowContext.TRANSITION_REPLACE:
           scrollCtx.resetCurrent();
+          containerStateContext.resetCurrent();
           break;
         case FlowContext.TRANSITION_RESET:
           scrollCtx.reset();
+          containerStateContext.reset();
           break;
         }
       }
