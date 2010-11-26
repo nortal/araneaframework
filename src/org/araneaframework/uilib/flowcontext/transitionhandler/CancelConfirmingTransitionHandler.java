@@ -112,7 +112,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     }
 
     public void execute(Object obj) {
-      notifyScrollContext(this.transitionType, this.activeFlow);
+      notifyContexts(this.transitionType, this.activeFlow);
       this.transition.execute(activeFlow);
     }
   }
