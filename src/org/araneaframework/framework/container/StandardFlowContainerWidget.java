@@ -466,6 +466,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     private String name;
 
     private TransitionHandler transitionHandler;
+    private String pageTitle;
+    private String componentTitle;
 
     protected CallFrame(Widget widget, Configurator configurator, Handler<Object> handler, CallFrame previous) {
       this.configurator = configurator;
@@ -509,6 +511,22 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     protected void setTransitionHandler(TransitionHandler transitionHandler) {
       this.transitionHandler = transitionHandler;
+    }
+
+    public String getPageTitle() {
+      return pageTitle;
+    }
+
+    public void setPageTitle(String pageTitle) {
+      this.pageTitle = pageTitle;
+    }
+
+    public String getComponentTitle() {
+      return componentTitle;
+    }
+
+    public void setComponentTitle(String componentTitle) {
+      this.componentTitle = componentTitle;
     }
   }
 
@@ -623,5 +641,42 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
         }
       }
     }
+  }
+
+  @Override
+  public void setComponentTitle(String componentTitle) {
+    if(callStack.isEmpty()) {
+      return;
+    }
+    CallFrame frame = callStack.getFirst();
+    frame.setComponentTitle(componentTitle);
+    
+  }
+
+  @Override
+  public void setPageTitle(String pageTitle) {
+    if(callStack.isEmpty()) {
+      return;
+    }
+    CallFrame frame = callStack.getFirst();
+    frame.setPageTitle(pageTitle);
+  }
+
+  @Override
+  public String getComponentTitle() {
+    if(callStack.isEmpty()) {
+      return "";
+    }
+    CallFrame frame = callStack.getFirst();
+    return frame.getComponentTitle();
+  }
+
+  @Override
+  public String getPageTitle() {
+    if(callStack.isEmpty()) {
+      return "";
+    }
+    CallFrame frame = callStack.getFirst();
+    return frame.getPageTitle();
   }
 }

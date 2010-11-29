@@ -184,4 +184,28 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
   public TransitionHandler getTransitionHandler() {
     return getFlowCtx().getTransitionHandler();
   }
+  /**
+   * Sets the title of total page.
+   */
+  public void setPageTitle(String pageTitle) {
+    //
+  }
+  /**
+   * Sets the title of current page.
+   */
+  public void setComponentTitle(String componentTitle) {
+    //
+  }
+  /**
+   * Returns title of current page.
+   */
+  public String getPageTitle() {
+    return "";
+  }
+  /**
+   * Returns title of current component.
+   */
+  public String getComponentTitle() {
+    return "";
+  }
 }

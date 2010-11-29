@@ -59,7 +59,7 @@ public class ContainerStateFilterWidget extends BaseFilterWidget implements Cont
   }
 
   public void resetCurrent() {
-    this.currentState = null;
+    this.currentState = new HashMap<String, Boolean>();
   }
   
   public Map<String, Boolean> getCurrentState() {
