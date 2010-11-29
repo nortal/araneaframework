@@ -176,4 +176,21 @@ public interface FlowContext extends Serializable {
      */
     void doTransition(int eventType, Widget activeFlow, Closure transition);
   }
+  
+  /**
+   * Sets the title of total page.
+   */
+  public void setPageTitle(String pageTitle);
+  /**
+   * Sets the title of current page.
+   */
+  public void setComponentTitle(String componentTitle);
+  /**
+   * Returns title of current page.
+   */
+  public String getPageTitle();
+  /**
+   * Returns title of current component.
+   */
+  public String getComponentTitle();
 }
