@@ -104,7 +104,7 @@ public abstract class BaseListSqlHelper {
   protected Long itemRangeCount;
 
   // CONNECTION
-  protected DataSource ds;
+  protected transient DataSource ds;
 
   /**
    * Creates <code>ListSqlHelper</code> without initializing any fields.

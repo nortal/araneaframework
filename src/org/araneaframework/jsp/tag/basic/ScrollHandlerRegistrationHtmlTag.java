@@ -54,10 +54,6 @@ public class ScrollHandlerRegistrationHtmlTag extends BaseTag {
     JspUtil.writeHiddenInputElement(out, WindowScrollPositionContext.WINDOW_SCROLL_Y_KEY, y);
 
     // ensure restoration of scroll position:
-    out.write("<script type=\"text/javascript\">Aranea.Util.setWindowCoordinates(");
-    out.write(x);
-    out.write(",");
-    out.write(y);
-    out.write(")</script>");
+    out.write("<script type=\"text/javascript\">Aranea.Util.setWindowCoordinates()</script>");
   }
 }

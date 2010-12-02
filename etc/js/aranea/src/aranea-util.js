@@ -160,6 +160,11 @@ Aranea.Util = {
 			Aranea.UI.scrollToCoordinates(x, y);
 		} else {
 			document.observe('aranea:loaded', function() {
+				var form = Aranea.Data.systemForm;
+				x = x || parseInt(form.windowScrollX.value);
+				y = y || parseInt(form.windowScrollY.value);
+				form = null;
+
 				Aranea.UI.scrollToCoordinates(x, y);
 				document.observe('aranea:beforeEvent', Aranea.UI.saveScrollCoordinates);
 			});

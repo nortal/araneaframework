@@ -18,7 +18,10 @@ package org.araneaframework.integration.spring;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletException;
@@ -39,6 +42,7 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -83,7 +87,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
 
-  protected BeanFactory webCtx;
+  protected WebApplicationContext webCtx;
 
   protected BeanFactory beanFactory;
 
@@ -123,21 +127,26 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
     // Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
-    cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
     cfg.setIgnoreUnresolvablePlaceholders(true);
 
     // Loading custom properties
-    Properties localConf = new Properties();
     try {
-      if (getServletContext().getResource(araneaCustomConfProperties) != null) {
+      if (isSpringWebPresent()) {
+        List<Resource> resources = new LinkedList<Resource>();
+        resources.add(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
+        resources.addAll(Arrays.asList(this.webCtx.getResources(araneaCustomConfProperties)));
+        cfg.setLocations(resources.toArray(new Resource[resources.size()]));
+      } else {
+        Properties localConf = new Properties();
         localConf.load(getServletContext().getResourceAsStream(araneaCustomConfProperties));
+        cfg.setProperties(localConf);
+        cfg.setLocalOverride(true);
+        cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
       }
     } catch (IOException e) {
       throw new ServletException(e);
     }
 
-    cfg.setProperties(localConf);
-    cfg.setLocalOverride(true);
 
     // Loading custom configuration
     try {

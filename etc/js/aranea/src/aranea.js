@@ -587,7 +587,7 @@ Aranea.Page = {
 			// like AAA|AAA
 
 			if (legalStates.length == 2 && legalStates[0] == legalStates[1]) {
-				found == 0;
+				found = 0;
 			} else {
 				found = legalStates.indexOf(clientStateId);
 			}

@@ -22,9 +22,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.WindowScrollPositionContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * @author Taimo Peelo (taimo@webmedia.ee)
@@ -37,9 +41,9 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
 
   protected LinkedList<String[]> savedCoordinates = new LinkedList<String[]>();
 
-  protected String windowScrollX;
+  private String windowScrollX;
 
-  protected String windowScrollY;
+  private String windowScrollY;
 
   /* ************************************************************************
    * WindowScrollPositionContext interface methods.
@@ -58,8 +62,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   public void pop() {
     if (!this.savedCoordinates.isEmpty()) {
       String[] coords = this.savedCoordinates.removeFirst();
-      this.windowScrollX = coords[0];
-      this.windowScrollY = coords[1];
+      updateScroll(coords[0], coords[1]);
 
       if (LOG.isDebugEnabled()) {
         LOG.debug("Popped to window coordinates [" + this.windowScrollX + "," + this.windowScrollY + "].");
@@ -78,7 +81,7 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   }
 
   public void resetCurrent() {
-    this.windowScrollX = this.windowScrollY = defaultValue(null);
+    updateScroll(null, null);
   }
 
   public String getX() {
@@ -90,11 +93,10 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
   }
 
   public void scrollTo(String x, String y) {
-    this.windowScrollX = defaultValue(x);
-    this.windowScrollY = defaultValue(y);
+    updateScroll(x, y);
 
     if (LOG.isDebugEnabled()) {
-      LOG.debug("The window will be scrolled to [" + x + "," + y + "].");
+      LOG.debug("The window will be scrolled to [" + this.windowScrollX + "," + this.windowScrollY + "].");
     }
   }
 
@@ -105,14 +107,45 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
 
   @Override
   protected void update(InputData input) throws Exception {
-    this.windowScrollX = defaultValue(input.getGlobalData().get(WINDOW_SCROLL_X_KEY));
-    this.windowScrollY = defaultValue(input.getGlobalData().get(WINDOW_SCROLL_Y_KEY));
+    updateScroll(input.getGlobalData().get(WINDOW_SCROLL_X_KEY), input.getGlobalData().get(WINDOW_SCROLL_Y_KEY));
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Window scoll coordinates from request: [" + this.windowScrollX + "," + this.windowScrollY + "].");
     }
 
     super.update(input);
+  }
+
+
+  /**
+   * Resets window scroll coordinates when any message is present so that the user would see the message immediately.
+   * 
+   * @since 2.0
+   */
+  @Override
+  protected void render(OutputData output) throws Exception {
+    if (!getEnvironment().requireEntry(MessageContext.class).getMessages().isEmpty()) {
+      resetCurrent();
+      LOG.debug("Resetted window scroll coordinates due to presence of messages in MessageContext.");
+    }
+    super.render(output);
+  }
+
+  /**
+   * Method used internally to update scroll position. The class-level variables {@link #windowScrollX} and
+   * {@link #windowScrollY} should be updated only through this method so that the changes would also reach the form.
+   * 
+   * @param x A string value of horizontal scroll position, or <code>null</code> for no specific position.
+   * @param y A string value of vertical scroll position, or <code>null</code> for no specific position.
+   * @since 2.0
+   */
+  protected void updateScroll(String x, String y) {
+    this.windowScrollX = defaultValue(x);
+    this.windowScrollY = defaultValue(y);
+
+    SystemFormContext formCtx = EnvironmentUtil.getSystemFormContext(getEnvironment());
+    formCtx.addField(WINDOW_SCROLL_X_KEY, this.windowScrollX);
+    formCtx.addField(WINDOW_SCROLL_Y_KEY, this.windowScrollY);
   }
 
   /**
