@@ -191,14 +191,14 @@ public class TabContainerHtmlTag extends BaseWidgetTag implements StyledTagInter
     JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
 
     JspUtil.writeCloseStartTag_SS(out);
-    JspUtil.writeEscaped(out, tab.getLabel());
+    JspUtil.writeEscaped(out, JspUtil.getResourceString(this.pageContext, tab.getLabel()));
     JspUtil.writeEndTag_SS(out, "a");
   }
 
   protected void renderDisabledTabTextLabel(Writer out, TabWidget tab) throws IOException {
     JspUtil.writeOpenStartTag(out, "a");
     JspUtil.writeCloseStartTag_SS(out);
-    JspUtil.writeEscaped(out, tab.getLabel());
+    JspUtil.writeEscaped(out, JspUtil.getResourceString(this.pageContext, tab.getLabel()));
     JspUtil.writeEndTag(out, "a");
   }
 

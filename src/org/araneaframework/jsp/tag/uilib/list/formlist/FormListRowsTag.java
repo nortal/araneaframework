@@ -21,9 +21,9 @@ import java.util.ListIterator;
 import org.araneaframework.Path;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
 import org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget.ViewModel;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.BaseFormListWidget.ViewModel;
 
 /**
  * List widget rows tag.
@@ -92,5 +92,13 @@ public class FormListRowsTag<R> extends BaseListRowsTag {
   protected int afterBody(Writer out) throws Exception {
     executeEndTagAndUnregister(this.rowForm);
     return super.afterBody(out);
+  }
+
+  @Override
+  public void doFinally() {
+    super.doFinally();
+    this.editableListId = null;
+    this.editableListViewModel = null;
+    this.rowForm = null;
   }
 }

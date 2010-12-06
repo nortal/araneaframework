@@ -23,7 +23,6 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.WidgetFactory;
-import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * Represents a tab managed by {@link TabContainerContext} implementation {@link TabContainerWidget}. Tab consists of
@@ -117,10 +116,7 @@ public class TabWidget extends BaseApplicationWidget implements TabContext {
 
   /* PUBLIC GETTERS */
   public String getLabel() {
-    if (this.labelId == null) {
-      return null;
-    }
-    return EnvironmentUtil.requireLocalizationContext(getEnvironment()).localize(this.labelId);
+    return this.labelId;
   }
 
   public Widget getLabelWidget() {

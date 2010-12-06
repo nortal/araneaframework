@@ -52,6 +52,14 @@ public abstract class BaseListRowsTag extends BaseIterationTag {
     }
   }
 
+  @Override
+  public void doFinally() {
+    super.doFinally();
+
+    this.currentRow = null;
+    this.rowIterator = null;
+  }
+
   /**
    * This method must handle rendering each row. The {@link BaseListRowsTag#doForEachRow(Writer)} handles setting the
    * context variables, subclasses should extend that functionality with actual rendering.

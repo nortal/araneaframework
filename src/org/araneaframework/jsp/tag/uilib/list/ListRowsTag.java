@@ -64,4 +64,12 @@ public class ListRowsTag extends BaseListRowsTag {
   protected ListIterator<?> getIterator() {
     return this.viewModel.getItemRange().listIterator();
   }
+
+  @Override
+  public void doFinally() {
+    super.doFinally();
+
+    this.var = null;
+    this.viewModel = null;
+  }
 }
