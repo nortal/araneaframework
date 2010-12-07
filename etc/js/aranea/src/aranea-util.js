@@ -193,16 +193,11 @@ Aranea.Util = {
 	 * 
 	 * document.observe('aranea:loaded' , Aranea.Util.focusFormFirstInput);
 	 * 
-	 * See also Aranea.Util.FOCUS_INPUT_SELECTOR that can be customized.
+	 * See also Form#focusFirstElement() documentation in Prototype API.
 	 */
 	focusFormFirstInput: function() {
 		if (!Aranea.Data.systemForm) throw('Page system-form is required!');
-		var inpts = Aranea.Data.systemForm.select(Aranea.Util.FOCUS_INPUT_SELECTOR);
-		if (inpts.length) {
-			inpts.first().focus();
-			Aranea.Logger.debug('Focused form input/button element: ' + inpts.first().inspect())
-		}
-		inpts = null;
+		Aranea.Data.systemForm.focusFirstElement();
 	},
 
 	/**

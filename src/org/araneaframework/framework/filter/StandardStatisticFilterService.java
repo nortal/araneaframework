@@ -17,6 +17,7 @@
 package org.araneaframework.framework.filter;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
@@ -49,6 +50,13 @@ public class StandardStatisticFilterService extends BaseFilterService {
   public static final String EXPR_METHOD = "${METHOD}";
 
   /**
+   * A place-holder in message that, when met, will be replaced with {@link HttpServletRequest#getContextPath()}.
+   * 
+   * @since 2.0
+   */
+  public static final String EXPR_CONTEXT = "${CONTEXT}";
+
+  /**
    * A place-holder in message that, when met, will be replaced with {@link HttpServletRequest#getServletPath()}.
    * 
    * @since 2.0
@@ -56,11 +64,11 @@ public class StandardStatisticFilterService extends BaseFilterService {
   public static final String EXPR_SERVLET = "${SERVLET}";
 
   /**
-   * A place-holder in message that, when met, will be replaced with {@link HttpServletRequest#getContextPath()}.
+   * A place-holder in message that, when met, will be replaced with {@link HttpServletRequest#getPathTranslated()}.
    * 
    * @since 2.0
    */
-  public static final String EXPR_CONTEXT = "${CONTEXT}";
+  public static final String EXPR_PATH = "${PATH_INFO}";
 
   /**
    * A place-holder in message that, when met, will be replaced with {@link HttpServletRequest#getQueryString()}. When
@@ -112,6 +120,9 @@ public class StandardStatisticFilterService extends BaseFilterService {
     }
     if (msg.contains(EXPR_SERVLET)) {
       msg = msg.replace(EXPR_SERVLET, request.getServletPath());
+    }
+    if (msg.contains(EXPR_PATH)) {
+      msg = msg.replace(EXPR_PATH, StringUtils.defaultString(request.getPathInfo()));
     }
     if (msg.contains(EXPR_QUERY)) {
       msg = msg.replace(EXPR_QUERY, request.getQueryString() == null ? "" : "?" + request.getQueryString());
