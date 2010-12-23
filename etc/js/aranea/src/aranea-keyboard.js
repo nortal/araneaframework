@@ -194,7 +194,7 @@ Aranea.Keyboard = {
 			try {
 				var result = Aranea.Keyboard.HANDLER_REGISTRY.invokeHandlers(event);
 
-				if (result == false || event.keyCode == '13') { // The result may also be null (which means true) here!
+				if (result == false || event.keyCode == '13' && event.currentTarget.activeElement.nodeName != 'TEXTAREA') { // The result may also be null (which means true) here!
 					event.stop();
 				}
 			} catch (e) {
