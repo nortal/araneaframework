@@ -23,11 +23,24 @@ import java.io.Serializable;
  */
 public interface WindowFocusPositionContext extends Serializable {
 
+  /**
+   * Sets focus to element by concatination of given parameters. The focused element should be
+   * ${widgetId}.${formId}.${elementId}
+   */
   void setFocusToElement(String widgetId, String formId, String elementId);
   
+  /**
+   * Sets focus to element using its full id path.
+   */
   void setFocusToElement(String fullElementId);
-  
+
+  /**
+   * Returnes full element id of element that will receive focus after rendering.
+   */
   String getFocusedElement();
   
+  /**
+   * Resets focus, after execution of this method no focus will set on page rendering.
+   */
   void resetFocus();
 }

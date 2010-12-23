@@ -7,6 +7,10 @@ import java.util.Map;
  * @author Maksim Boiko <mailto:max@webmedia.ee>
  */
 public interface ContainerStateContext extends Serializable {
+  /**
+   * Returns current state of container where map id is container id and value defines whether 
+   * container is closed or not. True stands for closed and false for opened.
+   */
   public Map<String, Boolean> getCurrentState();
 
   /**
