@@ -119,14 +119,16 @@ Aranea.Util = {
 			}
 			form = null;
 			document.observe('aranea:beforeEvent', Aranea.UI.saveScrollCoordinates);
+			//alert('scroll on loaded');
 		});
-		document.observe('aranea:afterEvent', function() {
-			var form = Aranea.Data.systemForm;
-			if (form.windowScrollX && form.windowScrollX) {
-				Aranea.UI.scrollToCoordinates(x, y);
-			}
-			form = null;
-		});
+//		document.observe('aranea:afterEvent', function() {
+//			var form = Aranea.Data.systemForm;
+//			if (form.windowScrollX && form.windowScrollX) {
+//				Aranea.UI.scrollToCoordinates(x, y);
+//			}
+//			form = null;
+//			alert('scroll after event');
+//		});
 	},
 
 	/**
