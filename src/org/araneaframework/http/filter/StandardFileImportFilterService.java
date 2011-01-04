@@ -1,17 +1,10 @@
 /*
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package org.araneaframework.http.filter;
@@ -71,7 +64,7 @@ public class StandardFileImportFilterService extends BaseFilterService {
       isInitialized = true;
     }
   }
-  
+
   public void setCacheHoldingTime(Long cacheHoldingTime) {
     Assert.notNullParam(this, cacheHoldingTime, "cacheHoldingTime");
     this.cacheHoldingTime = cacheHoldingTime;
@@ -89,7 +82,11 @@ public class StandardFileImportFilterService extends BaseFilterService {
       return;
     }
 
-    input2.pushPathPrefix(FILE_IMPORTER_NAME);
+    int startIndex = uri.indexOf(FILE_IMPORTER_NAME);
+    int endIndex = uri.indexOf("/");
+    String fileimporterUriPart = uri.substring(startIndex, endIndex);
+    LOG.info("fileimport prefix " + fileimporterUriPart);
+    input2.pushPathPrefix(fileimporterUriPart);
 
     String target = input2.getSimplePath();
 
