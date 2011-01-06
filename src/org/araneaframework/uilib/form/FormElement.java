@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.uilib.support.DataType;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.araneaframework.Environment;
@@ -35,6 +33,7 @@ import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.form.converter.BaseConverter;
 import org.araneaframework.uilib.form.converter.ConverterFactory;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.Event;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -512,6 +511,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     private Object value;
 
     protected boolean mandatory;
+    
+    private String localizedLabel;
 
     /**
      * Takes an outer class snapshot.
@@ -568,6 +569,14 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
 
     public Object getValue() {
       return this.value;
+    }
+
+    public String getLocalizedLabel() {
+      return localizedLabel;
+    }
+
+    public void setLocalizedLabel(String localizedLabel) {
+      this.localizedLabel = localizedLabel;
     }
   }
 }

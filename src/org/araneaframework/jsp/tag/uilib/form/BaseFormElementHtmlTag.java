@@ -16,15 +16,13 @@
 
 package org.araneaframework.jsp.tag.uilib.form;
 
-import org.araneaframework.Path;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.AraneaAttributes;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.exception.AraneaJspException;
@@ -121,6 +119,7 @@ public class BaseFormElementHtmlTag extends PresentationTag implements FormEleme
     // Get control
     this.controlViewModel = this.formElementViewModel.getControl();
     this.localizedLabel = JspUtil.getResourceString(this.pageContext, this.formElementViewModel.getLabel());
+    this.formElementViewModel.setLocalizedLabel(localizedLabel);
 
     // We shall use the "accesskey" HTML attribute for this form element only if the attribute "accessKey"
     // was explicitly set (otherwise in most common cases the label tag sets up the access key)
