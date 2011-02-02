@@ -179,7 +179,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     BaseWidget scopedWidget = new BaseWidget() {
 
       @Override
-      protected void destroy() throws Exception {
+      protected void destroy() {
         popGlobalEnvEntry(entryId);
       }
     };
@@ -202,7 +202,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     if (!this.callStack.isEmpty()) {
       this.callStack.removeFirst();
     }

@@ -125,7 +125,7 @@ public class RelocatableDecorator extends BaseService
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     child._getComponent().destroy();
   }
 

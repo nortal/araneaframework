@@ -85,7 +85,7 @@ public abstract class BaseFilterHelper implements FilterContext, Serializable {
    */
   public void init(Environment env) throws Exception {}
 
-  public void destroy() throws Exception {}
+  public void destroy() {}
 
   public void addInitEvent(Event event) {
     this.list.addInitEvent(event);

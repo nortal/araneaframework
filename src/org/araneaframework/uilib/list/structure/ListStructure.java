@@ -70,7 +70,7 @@ public class ListStructure extends BaseListStructure {
     }
   }
 
-  public void destroy() throws Exception {
+  public void destroy() {
     this.filter.destroy();
     this.order.destroy();
   }

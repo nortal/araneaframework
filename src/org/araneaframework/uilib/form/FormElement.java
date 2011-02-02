@@ -391,7 +391,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     destroyControl();
   }
 

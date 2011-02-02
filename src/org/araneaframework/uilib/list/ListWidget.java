@@ -1021,7 +1021,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @throws Exception
    */
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     if (this.dataProvider != null) {
       this.dataProvider.destroy();
     }
