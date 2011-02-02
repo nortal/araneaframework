@@ -175,7 +175,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
 
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
+    if (isMandatory() && this.value == null) {
       addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
   }
