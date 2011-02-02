@@ -1,16 +1,14 @@
 <ivysettings>
-	<properties file="${ivy.conf.dir}/version.properties" />
+      <properties file="${ivy.conf.dir}/version.properties" />
+      <properties file="${ivy.conf.dir}/ivyrep.properties"/>
 
-	<property name="ibiblio-aranea-pattern" value="[organisation]/[module]/[revision]/[artifact]-[revision].[type]" />
-	<property name="ibiblio-aranea-root" value="http://www.araneaframework.org/repo/" />
+      <settings defaultResolver="defaultChainResolver" />
 
-	<settings defaultResolver="defaultChainResolver" />
-
-	<resolvers>
-		<chain name="defaultChainResolver">
-			<ibiblio name="ibiblio-araneaframework" m2compatible="true" root="${ibiblio-aranea-root}" pattern="${ibiblio-aranea-pattern}"/>
-			<ibiblio name="ibiblio-maven2" m2compatible="true" />
-		</chain>
-	</resolvers>
+      <resolvers>
+            <chain name="defaultChainResolver">
+                  <ibiblio m2compatible="true" name="ibiblio-aranea" root="${aranea.ivy.root}" pattern="${aranea.ivy.pattern}"/>
+                  <ibiblio m2compatible="true" name="ibiblio-maven2" root="${repo1.mvn.root}" pattern="${repo1.mvn.pattern}"/>
+            </chain>
+      </resolvers>
 
 </ivysettings>
