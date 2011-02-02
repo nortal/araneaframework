@@ -17,7 +17,6 @@
 package org.araneaframework.http.filter;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.RandomStringUtils;
@@ -375,7 +374,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     expire();
     if (this.childWidget != null) {
       super.destroy();

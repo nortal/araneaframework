@@ -55,6 +55,8 @@ public class BaseComponent implements Component {
   private static final byte ALIVE = 2;
 
   private static final byte DEAD = 3;
+  
+  private boolean enabled = true;
 
   private byte state = UNBORN;
 
@@ -88,21 +90,25 @@ public class BaseComponent implements Component {
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void destroy() throws Exception {}
+  protected void destroy() {}
 
   /**
    * Disables the component.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void disable() throws Exception {}
+  protected void disable() {
+    this.enabled = false;
+  }
 
   /**
    * Enables the component.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void enable() throws Exception {}
+  protected void enable() {
+    this.enabled = true;
+  }
 
   /**
    * Forwards the <code>message</code> to the component and to all of its children components.
@@ -142,6 +148,11 @@ public class BaseComponent implements Component {
 
   public boolean isAlive() {
     return this.state == ALIVE;
+  }
+  
+  @Override
+  public boolean isEnabled() {
+    return enabled;
   }
 
   /**

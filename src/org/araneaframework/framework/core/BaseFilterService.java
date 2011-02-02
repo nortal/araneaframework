@@ -76,7 +76,7 @@ public class BaseFilterService extends BaseService implements FilterService {
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     this.childService._getComponent().destroy();
   }
 

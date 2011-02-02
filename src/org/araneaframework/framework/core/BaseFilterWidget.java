@@ -97,7 +97,7 @@ public class BaseFilterWidget extends BaseWidget implements FilterWidget {
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     this.childWidget._getComponent().destroy();
   }
 

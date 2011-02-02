@@ -57,7 +57,7 @@ public class DemoRichTextForm extends TemplateBaseWidget {
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     if (isRunningInOverlay()) {
       getOverlayCtx().getOverlayOptions().remove("height");
     }

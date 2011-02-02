@@ -139,7 +139,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
     removePage(getPage(index));
   }
 
-  public void clearPages() throws Exception {
+  public void clearPages() {
     for (Widget page : this.pages) {
       destroyPage(page);
     }
@@ -156,7 +156,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
     }
   }
 
-  private void destroyPage(Widget page) throws Exception {
+  private void destroyPage(Widget page) {
     LOG.debug("Destroying page...");
     if (getIndexOfPage(page) == getCurrentPageIndex() && _getChildren().containsKey(CURRENT_PAGE_KEY)) {
       _getChildren().remove(CURRENT_PAGE_KEY);
@@ -211,7 +211,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     clearPages();
   }
 

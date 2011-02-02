@@ -54,19 +54,19 @@ public class MockEventfulBaseWidget extends BaseWidget {  private boolean update
   }
   
   @Override
-  protected void disable() throws Exception {
+  protected void disable() {
     super.disable();
     disableCalled = true;
   }
 
   @Override
-  protected void enable() throws Exception {
+  protected void enable() {
     super.enable();
     enableCalled = true;
   }
 
   @Override
-  public void destroy() throws Exception {
+  public void destroy() {
     destroyCalled = true;
   }
 

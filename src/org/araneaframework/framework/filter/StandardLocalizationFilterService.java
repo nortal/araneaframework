@@ -181,7 +181,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
     }
 
     @Override
-    protected void destroy() throws Exception {
+    protected void destroy() {
       LocalizationContext context = EnvironmentUtil.getLocalizationContext(getEnvironment());
       if (context != null) {
         context.removeLocaleChangeListener(this.listener);

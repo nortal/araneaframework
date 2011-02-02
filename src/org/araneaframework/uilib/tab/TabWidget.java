@@ -136,7 +136,7 @@ public class TabWidget extends BaseApplicationWidget implements TabContext {
 	}
 
 	@Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
 		TabRegistrationContext tabRegistrationContext = getEnvironment().requireEntry(TabRegistrationContext.class);
 		tabRegistrationContext.unregisterTab(TabWidget.this);
 

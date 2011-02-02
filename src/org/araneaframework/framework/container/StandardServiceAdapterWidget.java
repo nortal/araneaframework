@@ -90,7 +90,7 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     this.childService._getComponent().destroy();
   }
 }

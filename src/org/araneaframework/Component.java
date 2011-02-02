@@ -70,6 +70,8 @@ public interface Component extends Serializable {
    * @since 1.1
    */
   public boolean isAlive();
+  
+  public boolean isEnabled();
 
   /**
    * The factory method returning the implementation of the Component.

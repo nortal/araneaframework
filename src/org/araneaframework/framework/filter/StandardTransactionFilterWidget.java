@@ -63,7 +63,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     super.destroy();
   }
 
