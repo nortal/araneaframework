@@ -16,11 +16,10 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.core.Assert;
-
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.DataType;
@@ -212,7 +211,7 @@ public class FloatControl extends BlankStringNullableControl<BigDecimal> impleme
     boolean greaterThanMax = this.maxValue == null ? false : getRawValue().compareTo(this.maxValue) == 1;
 
     // minimum and maximum permitted values
-    if (lessThanMin || greaterThanMax) {
+    if (this.minValue != null && this.maxValue != null && (lessThanMin || greaterThanMax)) {
       addErrorWithLabel(UiLibMessages.NUMBER_NOT_BETWEEN, this.minValue, this.maxValue);
     } else if (lessThanMin) {
       addErrorWithLabel(UiLibMessages.NUMBER_NOT_GREATER, this.minValue);

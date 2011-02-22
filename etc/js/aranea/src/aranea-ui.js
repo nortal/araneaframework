@@ -206,7 +206,7 @@ Aranea.UI = {
 	 * @since 1.1.3
 	 */
 	updateListSelectAll: function(chkSelect) {
-		var prefix = chkSelect ? chkSelect.id.match(/.*(?=\.)/)[0] : null;
+		var prefix = chkSelect ? chkSelect.match(/.*(?=\.)/)[0] : null;
 		if (prefix) {
 			var selector = 'input[type=checkbox][id^="' + prefix + '"][id!="' + prefix + '"]:not(:checked)';
 			var allSelected = Aranea.Data.systemForm.down(selector) == null;
