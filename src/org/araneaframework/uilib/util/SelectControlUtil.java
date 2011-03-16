@@ -16,9 +16,6 @@
 
 package org.araneaframework.uilib.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,11 +27,13 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.Assert;
+import org.araneaframework.uilib.support.SelectGroup;
 
 /**
- * 
+ * Collection of methods used with <code>SelectControl</code>s.
  * 
  * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @see DisplayItemUtil
  */
 public class SelectControlUtil {
 
@@ -47,20 +46,7 @@ public class SelectControlUtil {
    */
   public static <T> void assertUnique(DisplayItemContainer<T> container) {
     List<T> items = new LinkedList<T>(container.getAllItems());
-
-    if (CollectionUtils.isNotEmpty(items)) {
-      if (container.getItemGroupProperty() != null) {
-        for (T item : container.getAllItems()) {
-          List<T> subItems = getChildItems(item, container.getItemChildrenProperty());
-
-          if (subItems != null) {
-            items.addAll(subItems);
-          }
-        }
-      }
-
-      assertUnique(items);
-    }
+    assertUnique(items);
   }
 
   /**
@@ -69,12 +55,16 @@ public class SelectControlUtil {
    * <p>
    * If that constraint is violated, an assertion exception will be thrown.
    * 
-   * @param items The display items of the control
-   * @param item An item to be added
+   * @param groups The display items of the control
+   * @param item An item to be added.
    */
-  public static <T> void assertUnique(List<T> items, T item) {
-    if (CollectionUtils.isNotEmpty(items)) {
-      Assert.isTrue(!items.contains(item), "The *SelectControl items must have unique values - not like " + item);
+  public static <T> void assertUnique(List<SelectGroup<T>> groups, T item) {
+    if (CollectionUtils.isNotEmpty(groups)) {
+      for (SelectGroup<T> group : groups) {
+        if (group.getOptions().contains(item)) {
+          Assert.isTrue(false, "The SelectControl items must be unique: [" + item + "] is already present in group [" + group.getLabel() + "].");
+        }
+      }
     }
   }
 
@@ -128,45 +118,6 @@ public class SelectControlUtil {
   }
   
   /**
-   * Resolves the child options of the given "optgroup" bean. The bean is "not required" to have the given property.
-   * When the bean has the given property, and it returns an array or {@link List} of sub-beans, which is not empty and
-   * contains items of type <code>T</code>. Otherwise returns <code>null</code>.
-   * 
-   * @param <T> The type of the beans.
-   * @param bean The bean to check for child options.
-   * @param childrenProperty The bean property to use for fetching child options. 
-   * @return A list of child options, or <code>null</code>.
-   */
-  @SuppressWarnings("unchecked")
-  public static <T> List<T> getChildItems(T bean, String childrenProperty) {
-    if (bean == null || childrenProperty == null) {
-      return null;
-    }
-
-    Class<?> type = BeanUtil.getPropertyType(bean.getClass(), childrenProperty);
-    List<?> value = null;
-
-    if (type == List.class || type.getComponentType() == bean.getClass()) {
-      Object tmpValue = BeanUtil.getPropertyValue(bean, childrenProperty);
-
-      if (tmpValue != null) {
-        if (type.isArray()) {
-          T[] arr = (T[]) tmpValue;
-          value = Arrays.asList(arr);
-        } else {
-          value = (List<T>) tmpValue;
-        }
-
-        if (value.isEmpty() || !type.isInstance(value.get(0))) {
-          value = null;
-        }
-      }
-    }
-
-    return (List<T>) value;
-  }
-
-  /**
    * Provides whether the given <code>container</code> contains the given <code>value</code> among its items.
    * 
    * @param <T> The type of container items.
@@ -175,8 +126,7 @@ public class SelectControlUtil {
    * @return A Boolean that is <code>true</code> when the container contains the given value among its items.
    */
   public static <T> boolean containsValue(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), container
-        .getItemGroupProperty(), container.getItemChildrenProperty(), value) != null;
+    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), value) != null;
   }
 
   /**
@@ -188,8 +138,7 @@ public class SelectControlUtil {
    * @return A Boolean that is <code>true</code> when the container contains the given value among <i>enabled</i> items.
    */
   public static <T> boolean containsEnabledValue(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), container
-        .getItemGroupProperty(), container.getItemChildrenProperty(), value) != null;
+    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), value) != null;
   }
 
   /**
@@ -201,8 +150,7 @@ public class SelectControlUtil {
    * @return An item from the <code>container</code>, or <code>null</code>.
    */
   public static <T> T getSelectItem(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), container.getItemGroupProperty(),
-        container.getItemChildrenProperty(), value);
+    return getSelectItem(container.getAllItems(), container.getItemValueProperty(), value);
   }
 
   /**
@@ -214,8 +162,7 @@ public class SelectControlUtil {
    * @return An enabled item from the <code>container</code>, or <code>null</code>.
    */
   public static <T> T getEnabledSelectItem(DisplayItemContainer<T> container, String value) {
-    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), container
-        .getItemGroupProperty(), container.getItemChildrenProperty(), value);
+    return getSelectItem(container.getEnabledItems(), container.getItemValueProperty(), value);
   }
 
   /**
@@ -228,8 +175,7 @@ public class SelectControlUtil {
    * @return A subset of items from the <code>container</code>, or <code>null</code>.
    */
   public static <T> List<T> getSelectItems(DisplayItemContainer<T> container, String[] values) {
-    return getSelectItems(container.getAllItems(), container.getItemValueProperty(), container.getItemGroupProperty(),
-        container.getItemChildrenProperty(), values);
+    return getSelectItems(container.getAllItems(), container.getItemValueProperty(), values);
   }
 
   /**
@@ -242,29 +188,20 @@ public class SelectControlUtil {
    * @return A subset of enabled items from the <code>container</code>, or <code>null</code>.
    */
   public static <T> List<T> getEnabledSelectItems(DisplayItemContainer<T> container, String[] values) {
-    return getSelectItems(container.getEnabledItems(), container.getItemValueProperty(), container
-        .getItemGroupProperty(), container.getItemChildrenProperty(), values);
+    return getSelectItems(container.getEnabledItems(), container.getItemValueProperty(), values);
   }
 
   // Internal method for resolving the item by value:
-  private static <T> T getSelectItem(List<T> items, String valueProperty, String groupProperty,
-      String groupItemsProperty, String value) {
+  private static <T> T getSelectItem(List<T> items, String valueProperty, String value) {
     T result = null;
 
     if (CollectionUtils.isNotEmpty(items)) {
       value = ObjectUtils.toString(value, null);
 
       for (T item : items) {
-        if (isGroupItem(item, groupProperty)) {
-          List<T> groupItems = new ArrayList<T>(getGroupItems(item, groupItemsProperty));
-          result = getSelectItem(groupItems, valueProperty, groupProperty, groupItemsProperty, value);
-        } else {
-          String currentValue = getPropertyStr(item, valueProperty);
-          if (ObjectUtils.equals(value, currentValue)) {
-            result = item;
-          }
-        }
-        if (result != null) {
+        String currentValue = getPropertyStr(item, valueProperty);
+        if (ObjectUtils.equals(value, currentValue)) {
+          result = item;
           break;
         }
       }
@@ -273,16 +210,12 @@ public class SelectControlUtil {
   }
 
   // Internal method for resolving the items by values:
-  private static <T> List<T> getSelectItems(List<T> items, String valueProperty, String groupProperty,
-      String groupItemsProperty, String[] values) {
+  private static <T> List<T> getSelectItems(List<T> items, String valueProperty, String[] values) {
     List<T> results = new LinkedList<T>();
 
     if (CollectionUtils.isNotEmpty(items)) {
       for (T item : items) {
-        if (isGroupItem(item, groupProperty)) {
-          List<T> groupItems = new ArrayList<T>(getGroupItems(item, groupItemsProperty));
-          results.addAll(getSelectItems(groupItems, valueProperty, groupProperty, groupItemsProperty, values));
-        } else if (ArrayUtils.contains(values, getPropertyStr(item, valueProperty))) {
+        if (ArrayUtils.contains(values, getPropertyStr(item, valueProperty))) {
           results.add(item);
         }
         if (results.size() == values.length) {
@@ -291,17 +224,6 @@ public class SelectControlUtil {
       }
     }
     return results;
-  }
-
-  private static <T> boolean isGroupItem(T item, String groupProperty) {
-    Boolean isGroup = (Boolean) getProperty(item, groupProperty);
-    return isGroup != null && isGroup.booleanValue();
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <T> Collection<T> getGroupItems(T item, String groupChildrenProperty) {
-    Collection<T> children = (Collection<T>) getProperty(item, groupChildrenProperty);
-    return CollectionUtils.isEmpty(children) ? null : children;
   }
 
   /**
@@ -330,6 +252,27 @@ public class SelectControlUtil {
    * 
    * @param <T> The type of the class.
    * @param itemClass The class of the item, or <code>null</code>.
+   * @param groups A list of items, which may be empty or even <code>null</code>.
+   * @return The resolved class.
+   */
+  public static <T> Class<T> resolveGroupClass(Class<T> itemClass, List<SelectGroup<T>> groups) {
+    Class<T> result = itemClass;
+    if (result == null && groups != null && !groups.isEmpty()) {
+      for (SelectGroup<T> group : groups) {
+        if (group != null && !group.isEmpty()) {
+          result = resolveClass(null, group.getOptions());
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Resolves the class of type <code>T</code>. When <code>itemClass</code> is not <code>null</code>, it will be
+   * returned. Otherwise, when <code>items</code> is not empty, returns the class of its first item.
+   * 
+   * @param <T> The type of the class.
+   * @param itemClass The class of the item, or <code>null</code>.
    * @param items A list of items, which may be empty or even <code>null</code>.
    * @return The resolved class.
    */
@@ -340,11 +283,13 @@ public class SelectControlUtil {
       for (T item : items) {
         if (item != null) {
           result = (Class<T>) item.getClass();
-          break;
         }
       }
     }
     return result;
   }
 
+  private SelectControlUtil() {
+    throw new RuntimeException("SelectControlUtil cannot be instantiated.");
+  }
 }

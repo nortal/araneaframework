@@ -137,4 +137,28 @@ public class NameUtil {
   public static String getEventParam(String eventActionParam) {
     return StringUtils.substringAfter(eventActionParam, ACTION_DELIM);
   }
+
+  public static String getLongestCommonPrefix(String name1, String name2) {
+    StringBuilder commonPrefix = new StringBuilder();
+
+    if (StringUtils.isNotBlank(name1) && StringUtils.isNotBlank(name2)) {
+      String[] name1Arr = name1.split("\\" + BeanUtil.NESTED_DELIM);
+      String[] name2Arr = name2.split("\\" + BeanUtil.NESTED_DELIM);
+
+      int limit = Math.min(name1Arr.length, name2Arr.length);
+
+      for (int i = 0; i < limit; i++) {
+        if (StringUtils.equals(name1Arr[i], name2Arr[i])) {
+          if (commonPrefix.length() != 0) {
+            commonPrefix.append(BeanUtil.NESTED_DELIM);
+          }
+          commonPrefix.append(name1Arr[i]);
+        } else {
+          break;
+        }
+      }
+    }
+
+    return StringUtils.trimToNull(commonPrefix.toString());
+  }
 }

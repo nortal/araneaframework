@@ -18,6 +18,7 @@ package org.araneaframework.uilib.form;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.araneaframework.uilib.support.DataType;
 
@@ -37,16 +38,13 @@ public class ListData<T> extends Data<List<T>> {
 
   /**
    * This Data object requires special check so that the order of elements in the values lists would not have any effect
-   * on whether the lists contain the same data.
+   * on whether the lists contain the same data. No distinction is made between a <code>null</code> list and empty list.
    * 
    * @since 1.2
    */
   @Override
   public boolean isStateChanged() {
-    if (this.markedBaseValue == null || this.value == null) {
-      return this.markedBaseValue != null || this.value != null;
-    } else {
-      return !ListUtils.isEqualList(this.markedBaseValue, this.value);
-    }
+    return !(CollectionUtils.isEmpty(this.markedBaseValue) && CollectionUtils.isEmpty(this.value))
+        && !ListUtils.isEqualList(this.markedBaseValue, this.value);
   }
 }

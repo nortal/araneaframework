@@ -22,6 +22,9 @@ import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
  * A <code>Constraint</code> that constrains the input length of a {@link FormElement}.
+ * <p>
+ * Usually form element text controls already have this kind of constraint built-in. However, when a text control does
+ * not have it built-in, this constraint can be used instead.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */

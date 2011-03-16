@@ -39,7 +39,7 @@ import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ReadWriteLock;
 import org.araneaframework.core.util.ReaderPreferenceReadWriteLock;
-import org.araneaframework.framework.AsynchronousRequestRegistry;
+import org.araneaframework.framework.SynchronizedRequestRegistry;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -49,7 +49,7 @@ import org.araneaframework.http.util.ServletUtil;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Alar Kvell (alar@araneaframework.org)
  */
-public class StandardHttpSessionRouterService extends BaseService implements AsynchronousRequestRegistry {
+public class StandardHttpSessionRouterService extends BaseService implements SynchronizedRequestRegistry {
 
   private static final Log LOG = LogFactory.getLog(StandardHttpSessionRouterService.class);
 
@@ -89,7 +89,7 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
    * 
    * @since 2.0
    */
-  private List<String> asynchronousActions = new LinkedList<String>();
+  private List<String> synchronousActions = new LinkedList<String>();
 
   /**
    * Sets the factory which is used to build the service if one does not exist in the session.
@@ -98,16 +98,16 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
     this.serviceFactory = factory;
   }
 
-  public void registerAsynchronousAction(String parentScope, String actionId) {
+  public void registerSynchronizedAction(String parentScope, String actionId) {
     Assert.notNullParam(this, parentScope, "parentScope");
     Assert.notNullParam(this, actionId, "actionId");
-    this.asynchronousActions.add(parentScope + Path.SEPARATOR + actionId);
+    this.synchronousActions.add(parentScope + Path.SEPARATOR + actionId);
   }
 
-  public void unregisterAsynchronousAction(String parentScope, String actionId) {
+  public void unregisterSynchronizedAction(String parentScope, String actionId) {
     Assert.notNullParam(this, parentScope, "parentScope");
     Assert.notNullParam(this, actionId, "actionId");
-    this.asynchronousActions.remove(parentScope + Path.SEPARATOR + actionId);
+    this.synchronousActions.remove(parentScope + Path.SEPARATOR + actionId);
   }
 
   /**
@@ -117,10 +117,11 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     HttpSession sess = ServletUtil.getRequest(input).getSession();
 
-    boolean destroySession = input.getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY) != null;
-    if (destroySession) {
+    // Check for request parameter that can invalidate existing session.
+    if (input.getGlobalData().get(DESTROY_SESSION_PARAMETER_KEY) != null) {
       sess.invalidate();
-    } else if (!isAsynchronous(input)) {
+      // Do not continue with the request.
+    } else if (isSynchronizedRequest(input)) {
       // "Synchronized" requests use an additional dummy object for synchronization, so that only one "synchronized"
       // request is processed at a time.
       synchronized (getOrCreateSessionSyncObject()) {
@@ -131,27 +132,26 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
     }
   }
 
-  private boolean isAsynchronous(InputData input) {
+  private boolean isSynchronizedRequest(InputData input) {
     Map<String, String> data = input.getGlobalData();
     String actionId = data.get(ApplicationService.ACTION_HANDLER_ID_KEY);
     String targetPath = data.get(ApplicationService.ACTION_PATH_KEY);
     String sync = data.get(SYNC_PARAMETER_KEY);
 
-    boolean result = isAsynchronous(actionId, targetPath) || !StringUtils.isBlank(sync) && !"false".equals(sync);
+    boolean result = isSynchronized(actionId, targetPath) || Boolean.parseBoolean(sync);
 
     if (result && LOG.isInfoEnabled()) {
-      LOG.info("The action '" + targetPath + Path.SEPARATOR + actionId
-          + "' is to be processed asynchronously!");
+      LOG.info("The action '" + targetPath + Path.SEPARATOR + actionId + "' is to be processed in synchronized mode (blocking other requests)!");
     }
 
     return result;
   }
 
-  public boolean isAsynchronous(String actionId, String targetPath) {
+  public boolean isSynchronized(String actionId, String targetPath) {
     final String defaultStr = "-";
     StringBuffer action = new StringBuffer(StringUtils.defaultIfEmpty(targetPath, defaultStr));
     action.append('.').append(StringUtils.defaultIfEmpty(actionId, defaultStr));
-    return this.asynchronousActions.contains(action.toString());
+    return this.synchronousActions.contains(action.toString());
   }
 
   /**
@@ -186,7 +186,7 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
       ReadWriteLock lock = this.locks.get(sess);
       if (lock.writeLock().attempt(0)) {
         try {
-          LOG.info("Propagating changes to session");
+          LOG.debug("Propagating changes to session");
           service._getRelocatable().overrideEnvironment(null);
 
           try {
@@ -231,7 +231,7 @@ public class StandardHttpSessionRouterService extends BaseService implements Asy
 
   @Override
   public Environment getEnvironment() {
-    return new StandardEnvironment(super.getEnvironment(), AsynchronousRequestRegistry.class, this);
+    return new StandardEnvironment(super.getEnvironment(), SynchronizedRequestRegistry.class, this);
   }
 
   // Objects of this class will be held in session. It is static so that it

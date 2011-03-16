@@ -34,13 +34,8 @@ import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
-import org.araneaframework.jsp.tag.uilib.form.FormTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
-import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -209,33 +204,4 @@ public class AraneaJspFunctions {
     return ConfigurationUtil.isBackgroundFormValidationEnabled(w.getEnvironment());
   }
 
-  @SuppressWarnings("unchecked")
-  public static void markFormElementRendered(JspContext jspContext) {
-    FormWidget form = (FormWidget) jspContext.getAttribute(FormTag.FORM_KEY, PageContext.REQUEST_SCOPE);
-    String id = (String) jspContext.getAttribute(FormElementTag.ID_KEY, PageContext.REQUEST_SCOPE);
-
-    try {
-      ((FormElement) JspWidgetUtil.traverseToSubWidget(form, id)).rendered();
-    } catch (AraneaJspException e) {
-      ExceptionUtil.uncheckException(e);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  public static String renderFormElementErrorMessages(JspContext jspContext) {
-    FormWidget form = (FormWidget) jspContext.getAttribute(FormTag.FORM_KEY, PageContext.REQUEST_SCOPE);
-    String id = (String) jspContext.getAttribute(FormElementTag.ID_KEY, PageContext.REQUEST_SCOPE);
-    String result = null;
-
-    try {
-      FormElement element = (FormElement) JspWidgetUtil.traverseToSubWidget(form, id);
-      FormElement.ViewModel vm = (FormElement.ViewModel) jspContext.getAttribute(FormElementTag.VIEW_MODEL_KEY,
-          PageContext.REQUEST_SCOPE);
-      result = vm.getFormElementValidationErrorRenderer().getClientRenderText(element);
-    } catch (AraneaJspException e) {
-      ExceptionUtil.uncheckException(e);
-    }
-
-    return result;
-  }
 }

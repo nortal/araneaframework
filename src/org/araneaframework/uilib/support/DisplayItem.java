@@ -16,9 +16,6 @@
 package org.araneaframework.uilib.support;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.SelectControl;
@@ -42,18 +39,6 @@ public class DisplayItem implements Serializable {
    * Item's value.
    */
   protected String value;
-
-  /**
-   * A Boolean indicating whether this item is rendered as options group. If <code>true</code> then it is expected that
-   * the {@link #childOptions} property contains the child-options. Default is <code>false</code>.
-   */
-  protected boolean group;
-
-  /**
-   * A collection of child options that are rendered when this select item has {@link #group} property is set to
-   * <code>true</code>.
-   */
-  protected List<DisplayItem> childOptions;
 
   /**
    * Whether this display item is disabled.
@@ -82,7 +67,7 @@ public class DisplayItem implements Serializable {
    * 
    * @param value The value of the item.
    * @param label The label (or other string to show) of the item.
-   * @param disabled Whether this item is disabled
+   * @param disabled Whether this item is disabled.
    */
   public DisplayItem(String value, String label, boolean disabled) {
     if (StringUtils.isBlank(value)) {
@@ -90,33 +75,7 @@ public class DisplayItem implements Serializable {
     }
     this.label = label;
     this.value = value;
-  }
-
-  /**
-   * Creates a new instance of {@link DisplayItem}.
-   * 
-   * @param value The value of the item.
-   * @param label The label (or other string to show) of the item.
-   * @param disabled Whether this item is disabled
-   */
-  public DisplayItem(String value, String label, boolean group, Collection<DisplayItem> childOptions, boolean disabled) {
-    this(value, label, disabled);
-    setGroupAndOptions(group, childOptions);
-  }
-
-  /**
-   * If this item is a group (<code>group == true</code>) then the group may have child options. A convenience method to
-   * specify those properties.
-   * 
-   * @param group A Boolean indicating whether this item represents a group of select items (this item cannot be
-   *          selected).
-   * @param childOptions The <code>DisplayItem</code>s that the group contains (if <code>group == false</code> then
-   *          these child options won't be stored).
-   * @since 2.0
-   */
-  protected void setGroupAndOptions(boolean group, Collection<DisplayItem> childOptions) {
-    this.group = group;
-    this.childOptions = this.group && childOptions != null ? new LinkedList<DisplayItem>(childOptions) : null;
+    this.disabled = disabled;
   }
 
   /**
@@ -155,25 +114,6 @@ public class DisplayItem implements Serializable {
    */
   public void setValue(String value) {
     this.value = value;
-  }
-
-  /**
-   * Provides whether this select item is select items group.
-   * 
-   * @return A Boolean indicating whether this select item is select items group.
-   */
-  public boolean isGroup() {
-    return this.group;
-  }
-
-  /**
-   * Provides whether this select item is select items group.
-   * 
-   * @return A Boolean indicating whether this select item is select items group.
-   * @since 2.0
-   */
-  public List<DisplayItem> getChildOptions() {
-    return this.childOptions;
   }
 
   /**

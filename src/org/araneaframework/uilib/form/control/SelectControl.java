@@ -180,7 +180,7 @@ public class SelectControl<T> extends BaseSelectControl<T, T> {
   }
 
   public DataType getRawValueType() {
-    this.itemClass = SelectControlUtil.resolveClass(this.itemClass, this.items);
+    this.itemClass = SelectControlUtil.resolveGroupClass(this.itemClass, this.groups);
     Assert.notNull(this.itemClass, "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(this.itemClass);
   }

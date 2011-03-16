@@ -148,16 +148,4 @@
     <function-signature>boolean getFormBackgroundValidation(javax.servlet.jsp.JspContext)</function-signature>
   </function>
 
-  <function>
-    <name>markFormElementRendered</name>
-    <function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
-    <function-signature>void markFormElementRendered(javax.servlet.jsp.JspContext)</function-signature>
-  </function>
-
-  <function>
-    <name>renderFormElementErrorMessages</name>
-    <function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
-    <function-signature>java.lang.String renderFormElementErrorMessages(javax.servlet.jsp.JspContext)</function-signature>
-  </function>
-
 </taglib>

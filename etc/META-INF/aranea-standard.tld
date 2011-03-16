@@ -341,6 +341,20 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>Optional CSS style for the region tag.</description>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Optional CSS class for the region tag.</description>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
   <tag>
@@ -364,6 +378,20 @@
     <attribute>
       <description>Provides a way to use custom HTML tag (default: SPAN). Does not break client-side scripts. Use with caution!</description>
       <name>tag</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Optional CSS style for the region tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Optional CSS class for the region tag.</description>
+      <name>styleClass</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.String</type>
@@ -1642,14 +1670,26 @@
 	</tag>
 
 	<tag>
+		<description>UiLib form element tag.&lt;br/&gt;Makes available following variables:&lt;ul&gt;&lt;li&gt;&lt;i&gt;formElement&lt;/i&gt; - form element view model.&lt;/li&gt;&lt;li&gt;&lt;i&gt;formElementId&lt;/i&gt; - form element ID.&lt;/li&gt;&lt;li&gt;&lt;i&gt;formElementFullId&lt;/i&gt; - form element complete ID.&lt;/li&gt;&lt;li&gt;&lt;i&gt;formElementValue&lt;/i&gt; - form element value.&lt;/li&gt;&lt;/ul&gt;</description>
 		<name>formElement</name>
 		<tag-class>org.araneaframework.jsp.tag.uilib.form.FormElementTag</tag-class>
 		<body-content>JSP</body-content>
-
 		<attribute>
-			<description>UiLib form element id.</description>
+			<description>Required form element ID in the context of current form (set by the form tag)</description>
 			<name>id</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Optional: the expected control name for checking control correctness.</description>
+			<name>expectedControl</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Optional: mark form element rendered (not rendered form element values won't be read during request).</description>
+			<name>markRendered</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
@@ -2860,6 +2900,20 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+    <attribute>
+      <description>Optional CSS style for the region tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Optional CSS class for the region tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
 	</tag>
 
 	<tag>

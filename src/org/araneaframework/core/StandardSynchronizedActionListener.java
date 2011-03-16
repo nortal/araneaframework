@@ -20,11 +20,11 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 
 /**
- * A base solution for asynchronous action listeners. All action listeners should implement
+ * A base solution for synchronized action listeners. All action listeners should implement
  * {@link #processAction(String, String, InputData, OutputData)} to provide their custom solution.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
-public abstract class StandardAsynchronousActionListener extends StandardActionListener implements
-    AsynchronousActionListener {}
+public abstract class StandardSynchronizedActionListener extends StandardActionListener implements
+    SynchronizedActionListener {}

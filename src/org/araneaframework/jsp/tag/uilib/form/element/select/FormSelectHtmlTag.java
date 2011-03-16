@@ -32,6 +32,7 @@ import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -105,7 +106,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    writeOptions(out, viewModel.getSelectItems(), viewModel.getSimpleValue());
+    writeOptions(out, viewModel.getGroups(), viewModel.getSimpleValue());
 
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
@@ -116,36 +117,46 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   // Write items
-  protected void writeOptions(Writer out, List<DisplayItem> options, String selectedValue) throws IOException {
-    for (DisplayItem item : options) {
-      if (!item.isDisabled()) {
-        String value = StringUtils.defaultString(item.getValue());
-        String label = item.getLabel();
+  protected void writeOptions(Writer out, List<DisplayItemGroup> groups, String selectedValue) throws IOException {
+    for (DisplayItemGroup group : groups) {
+      if (group.isDisabled() || group.isEnabledEmpty()) {
+        continue;
+      } else if (!group.isNoGroup()) {
+        String label = group.getLabel();
 
         if (this.localizeDisplayItems) {
           label = JspUtil.getResourceString(this.pageContext, label);
         }
 
-        // Render "optgroup" check.
-        if (item.isGroup()) {
-          JspUtil.writeOpenStartTag(out, "optgroup");
-          JspUtil.writeAttribute(out, "label", label);
-          JspUtil.writeCloseStartTag(out);
-          writeOptions(out, item.getChildOptions(), selectedValue);
-          JspUtil.writeEndTag(out, "optgroup");
-          continue;
+        JspUtil.writeOpenStartTag(out, "optgroup");
+        JspUtil.writeAttribute(out, "label", label);
+        JspUtil.writeCloseStartTag(out);
+      }
+
+      for (DisplayItem item : group.getEnabledOptions()) {
+        if (!item.isDisabled()) {
+          String value = StringUtils.defaultString(item.getValue());
+          String label = item.getLabel();
+
+          if (this.localizeDisplayItems) {
+            label = JspUtil.getResourceString(this.pageContext, label);
+          }
+
+          JspUtil.writeOpenStartTag(out, "option");
+          JspUtil.writeAttributeForced(out, "value", value);
+
+          if (StringUtils.equals(value, selectedValue)) {
+            JspUtil.writeAttribute(out, "selected", "selected");
+          }
+
+          JspUtil.writeCloseStartTag_SS(out);
+          JspUtil.writeEscaped(out, label);
+          JspUtil.writeEndTag(out, "option");
         }
+      }
 
-        JspUtil.writeOpenStartTag(out, "option");
-        JspUtil.writeAttributeForced(out, "value", value);
-
-        if (StringUtils.equals(value, selectedValue)) {
-          JspUtil.writeAttribute(out, "selected", "selected");
-        }
-
-        JspUtil.writeCloseStartTag_SS(out);
-        JspUtil.writeEscaped(out, label);
-        JspUtil.writeEndTag(out, "option");
+      if (!group.isNoGroup()) {
+        JspUtil.writeEndTag(out, "optgroup");
       }
     }
   }

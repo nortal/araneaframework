@@ -16,8 +16,6 @@
 
 package org.araneaframework.jsp.tag.updateregion;
 
-import java.io.Writer;
-import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Defines the update region in the HTML page that can be updated via AJAX requests. Should be used when updating
@@ -45,20 +43,8 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class UpdateRegionRowHtmlTag extends BaseUpdateRegionTag {
 
-  @Override
-  protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);
-    JspUtil.writeOpenStartTag(out, "tr");
-    JspUtil.writeAttribute(out, "id", fullId);
-    JspUtil.writeCloseStartTag(out);
-    out.write("<!--BEGIN:" + fullId + "-->");
-    return EVAL_BODY_INCLUDE;
+  public UpdateRegionRowHtmlTag() {
+    this.tag = "tr";
   }
 
-  @Override
-  protected int doEndTag(Writer out) throws Exception {
-    out.write("<!--END:" + fullId + "-->");
-    JspUtil.writeEndTag(out, "tr");
-    return super.doEndTag(out);
-  }
 }

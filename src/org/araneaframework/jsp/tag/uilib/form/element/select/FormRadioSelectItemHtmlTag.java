@@ -18,12 +18,10 @@ package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.SelectControl;
-import org.araneaframework.uilib.util.DisplayItemUtil;
 
 /**
  * Standard radio select item form element tag.
@@ -66,10 +64,6 @@ public class FormRadioSelectItemHtmlTag extends BaseFormElementHtmlTag {
     SelectControl.ViewModel viewModel = ((SelectControl.ViewModel) this.controlViewModel);
 
     // Write input tag
-    if (this.value != null && !DisplayItemUtil.containsItem(viewModel.getSelectItems(), this.value)) {
-      throw new AraneaJspException("Value '" + this.value + "' not found in values list.");
-    }
-
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", this.htmlId);
     JspUtil.writeAttribute(out, "name", name);

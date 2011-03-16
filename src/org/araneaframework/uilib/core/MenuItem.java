@@ -32,7 +32,7 @@ import org.araneaframework.uilib.support.FlowCreator;
  */
 public class MenuItem implements Serializable {
 
-  public static String MENU_PATH_SEPARATOR = ".";
+  public static final String MENU_PATH_SEPARATOR = ".";
 
   /**
    * Label for this menu item.

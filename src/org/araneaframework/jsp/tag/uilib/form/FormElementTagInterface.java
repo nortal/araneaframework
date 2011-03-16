@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.tag.uilib.form;				
+package org.araneaframework.jsp.tag.uilib.form;
 
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.StyledTagInterface;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
-
 
 /**
  * FormWidget element tag inteface.
@@ -27,10 +26,16 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
  * @author Oleg Mürk
  */
 public interface FormElementTagInterface extends StyledTagInterface, AttributedTagInterface {
-	public void setId(String id) throws JspException;
-	public void setEvents(String events) throws JspException;	
-	public void setValidateOnEvent(String validateOnEvent) throws JspException;	
-	public void setTabindex(String tabindex) throws JspException;
-	public void setUpdateRegions(String updateRegions) throws JspException;
-	public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException;
+
+  public void setId(String id) throws JspException;
+
+  public void setEvents(String events) throws JspException;
+
+  public void setValidateOnEvent(String validateOnEvent) throws JspException;
+
+  public void setTabindex(String tabindex) throws JspException;
+
+  public void setUpdateRegions(String updateRegions) throws JspException;
+
+  public void setGlobalUpdateRegions(String globalUpdateRegions) throws JspException;
 }

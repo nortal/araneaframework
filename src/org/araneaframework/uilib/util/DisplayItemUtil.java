@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
 
 /**
  * Represents the items put into {@link org.araneaframework.uilib.form.control.SelectControl}or
@@ -165,13 +166,30 @@ public abstract class DisplayItemUtil implements Serializable {
 
     if (!ArrayUtils.isEmpty(values) && CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
-        if (item.isGroup()) {
-          results.addAll(getItems(item.getChildOptions(), values));
-        } else if (ArrayUtils.contains(values, item.getValue())) {
+        if (ArrayUtils.contains(values, item.getValue())) {
           results.add(item);
         }
         if (results.size() == values.length) {
           break;
+        }
+      }
+    }
+
+    return results;
+  }
+
+  public static List<DisplayItem> getEnabledItems(List<DisplayItemGroup> groups, String... values) {
+    List<DisplayItem> results = new LinkedList<DisplayItem>();
+
+    if (!ArrayUtils.isEmpty(values) && CollectionUtils.isNotEmpty(groups)) {
+      for (DisplayItemGroup group : groups) {
+        for (DisplayItem item : group.getEnabledOptions()) {
+          if (ArrayUtils.contains(values, item.getValue())) {
+            results.add(item);
+          }
+          if (results.size() == values.length) {
+            break;
+          }
         }
       }
     }
@@ -191,11 +209,24 @@ public abstract class DisplayItemUtil implements Serializable {
 
     if (CollectionUtils.isNotEmpty(items)) {
       for (DisplayItem item : items) {
-        if (item.isGroup()) {
-          result = getItem(item.getChildOptions(), value);
-        } else if (StringUtils.equals(value, item.getValue())) {
+        if (StringUtils.equals(value, item.getValue())) {
           result = item;
         }
+        if (result != null) {
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  public static DisplayItem getEnabledGroupItem(Collection<DisplayItemGroup> groups, String value) {
+    DisplayItem result = null;
+
+    if (CollectionUtils.isNotEmpty(groups)) {
+      for (DisplayItemGroup group : groups) {
+        result = getItem(group.getEnabledOptions(), value);
         if (result != null) {
           break;
         }
@@ -331,10 +362,12 @@ public abstract class DisplayItemUtil implements Serializable {
   }
 
   public static String[] getItemsValues(Collection<DisplayItem> items) {
-    String[] result = new String[items.size()];
-    int i = 0;
-    for (DisplayItem item : items) {
-      result[i++] = item.getValue();
+    String[] result = new String[items == null ? 0 : items.size()];
+    if (items != null) {
+      int i = 0;
+      for (DisplayItem item : items) {
+        result[i++] = item.getValue();
+      }
     }
     return result;
   }
@@ -376,12 +409,6 @@ public abstract class DisplayItemUtil implements Serializable {
     List<DisplayItem> items = new LinkedList<DisplayItem>(container.getAllItems());
 
     if (CollectionUtils.isNotEmpty(items)) {
-      for (DisplayItem item : items) {
-        if (item.isGroup() && CollectionUtils.isNotEmpty(item.getChildOptions())) {
-          items.addAll(item.getChildOptions());
-        }
-      }
-
       assertUnique(items, optionalItem);
     }
   }

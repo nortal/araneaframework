@@ -16,30 +16,28 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import java.util.Arrays;
 import java.util.Collection;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * This constraint implements "OR" Boolean logic (checks that at least one
- * contained constraits is satisfied). It is eager by default, but can be set to
- * act lazily.
+ * This constraint implements "OR" Boolean logic (checks that at least one contained constraints is satisfied). It is
+ * eager by default, but can be set to act lazily.
  * <p>
- * Note that subconstraints produce error messages as they are being validated.
- * Unless some custom error message has been set, it makes often sense to
- * process all subconstraints.
+ * Note that sub-constraints produce error messages as they are being validated. Unless some custom error message has
+ * been set, it makes often sense to process all sub-constraints.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class OrConstraint extends BaseCompositeConstraint {
 
-  private boolean lazy = false;
+  private boolean lazy;
 
   public OrConstraint() {}
 
   /**
-   * Creates an <code>OrConstraint</code> for one constraint. Other
-   * constraints can be added later with {@link #addConstraint(Constraint)} or
-   * {@link #addConstraints(Collection)} methods.
+   * Creates an <code>OrConstraint</code> for one constraint. Other constraints can be added later with
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)} methods.
    * 
    * @param constraint The constraint to validate.
    * @since 1.0.9
@@ -49,16 +47,25 @@ public class OrConstraint extends BaseCompositeConstraint {
   }
 
   /**
-   * Creates an <code>OrConstraint</code> for a collection of
-   * <code>Constraint</code>s. Other constraints can be added later with
-   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
-   * methods.
+   * Creates an <code>OrConstraint</code> for a collection of <code>Constraint</code>s. Other constraints can be added
+   * later with {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)} methods.
    * 
    * @param constraints A collection of {@link Constraint}s.
    * @since 1.0.9
    */
   public OrConstraint(Collection<Constraint> constraints) {
     super(constraints);
+  }
+
+  /**
+   * Creates an <code>OrConstraint</code> for a collection of <code>Constraint</code>s. Other constraints can be added
+   * later with {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)} methods.
+   * 
+   * @param constraints A collection of {@link Constraint}s.
+   * @since 1.0.9
+   */
+  public OrConstraint(Constraint... constraints) {
+    super(Arrays.asList(constraints));
   }
 
   /**
@@ -82,12 +89,10 @@ public class OrConstraint extends BaseCompositeConstraint {
   }
 
   /**
-   * Sets whether this {@link OrConstraint} acts lazily, default is
-   * <code>false</code>.
+   * Sets whether this {@link OrConstraint} acts lazily, default is <code>false</code>.
    * 
-   * @param lazy If <code>true</code> then subconstraints will be validated
-   *            lazily (until one of them succeeds). If <code>false</code>
-   *            then all subconstraints will be validated.
+   * @param lazy If <code>true</code> then subconstraints will be validated lazily (until one of them succeeds). If
+   *          <code>false</code> then all subconstraints will be validated.
    * @return This <code>OrConstraint</code>.
    */
   public OrConstraint setLazy(boolean lazy) {

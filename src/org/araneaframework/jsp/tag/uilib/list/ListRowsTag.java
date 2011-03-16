@@ -68,8 +68,6 @@ public class ListRowsTag extends BaseListRowsTag {
   @Override
   public void doFinally() {
     super.doFinally();
-
-    this.var = null;
     this.viewModel = null;
   }
 }

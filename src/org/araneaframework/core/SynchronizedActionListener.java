@@ -17,9 +17,11 @@
 package org.araneaframework.core;
 
 /**
- * If an action wants to be asynchronous, this interface declares that the action listener is asynchronous.
+ * If an action wants to be processed in synchronized manner in the context of a non-session-based service, this
+ * interface declares that the action listener is synchronized. Note that synchronized actions will block *all* incoming
+ * requests until it completes.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
-public interface AsynchronousActionListener extends ActionListener {}
+public interface SynchronizedActionListener extends ActionListener {}

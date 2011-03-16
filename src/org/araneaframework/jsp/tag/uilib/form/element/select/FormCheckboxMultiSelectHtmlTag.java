@@ -17,15 +17,16 @@
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
-import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
 
 /**
  * Standard select form element tag.
@@ -62,7 +63,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings("unchecked")
   public int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");
 
@@ -71,56 +72,61 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     // Prepare
-    ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
+    MultiSelectControl.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
+    List<DisplayItemGroup> groups = viewModel.getGroups();
 
-    for (Object selectItem : viewModel.getSelectItems()) {
-      DisplayItem displayItem = (DisplayItem) selectItem;
-
-      // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
-      String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
-
-      registerSubtag(item);
-      item.setHtmlId(checkboxId);
-
-      if (this.labelBefore) {
-        writeLabel(label, this.derivedId, checkboxId, displayItem.getValue());
+    for (DisplayItemGroup group : groups) {
+      if (group.isDisabled() || group.isEmpty()) {
+        continue;
       }
 
-      item.setId(this.derivedId);
-      item.setValue(displayItem.getValue());
-      item.setEvents(Boolean.toString(this.events));
-      item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
-      item.setStyleClass(getStyleClass());
+      for (DisplayItem displayItem : group.getEnabledOptions()) {
 
-      if (this.updateRegions != null) {
-        item.setUpdateRegions(this.updateRegions);
-      }
+        // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
+        String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
 
-      if (this.globalUpdateRegions != null) {
-        item.setGlobalUpdateRegions(this.globalUpdateRegions);
-      }
+        if (this.labelBefore) {
+          writeLabel(label, this.derivedId, checkboxId, displayItem.getLabel());
+        }
 
-      if (getStyle() != null) {
-        item.setStyle(getStyle());
-      }
+        registerSubtag(item);
+        item.setHtmlId(checkboxId);
+        item.setId(this.derivedId);
+        item.setValue(displayItem.getValue());
+        item.setEvents(Boolean.toString(this.events));
+        item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
+        item.setStyleClass(getStyleClass());
 
-      if (this.tabindex != null) {
-        item.setTabindex(this.tabindex);
-      }
+        if (this.updateRegions != null) {
+          item.setUpdateRegions(this.updateRegions);
+        }
 
-      executeStartSubtag(item);
-      executeEndTagAndUnregister(item);
+        if (this.globalUpdateRegions != null) {
+          item.setGlobalUpdateRegions(this.globalUpdateRegions);
+        }
 
-      if (!this.labelBefore) {
-        writeLabel(label, this.derivedId, checkboxId, displayItem.getValue());
-      }
+        if (this.style != null) {
+          item.setStyle(this.style);
+        }
 
-      if ("horizontal".equals(this.type)) {
-        out.write("&nbsp;");
-      } else if ("vertical".equals(this.type)) {
-        JspUtil.writeStartEndTag(out, "br");
+        if (this.tabindex != null) {
+          item.setTabindex(this.tabindex);
+        }
+
+        executeStartSubtag(item);
+        executeEndTagAndUnregister(item);
+
+        if (!this.labelBefore) {
+          writeLabel(label, this.derivedId, checkboxId, displayItem.getLabel());
+        }
+
+        if ("horizontal".equals(this.type)) {
+          out.write("&nbsp;");
+        } else if ("vertical".equals(this.type)) {
+          JspUtil.writeStartEndTag(out, "br");
+        }
       }
     }
 
@@ -164,7 +170,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     label.setId(id);
     label.setCheckboxId(checkboxId);
     label.setLocalizeDisplayItems(this.localizeDisplayItems);
-    label.setValue(value);
+    label.setLabelId(value);
     executeStartSubtag(label);
     executeEndTagAndUnregister(label);
   }

@@ -26,6 +26,7 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -64,65 +65,67 @@ public class FormRadioSelectHtmlTag extends BaseFormElementHtmlTag {
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
 
     ViewModel viewModel = (SelectControl.ViewModel) this.controlViewModel;
-    renderItems(out, viewModel.getSelectItems(), viewModel.getScope().toString());
+    renderItems(out, viewModel.getGroups(), viewModel.getScope().toString());
 
     super.doEndTag(out);
     return EVAL_PAGE;
   }
 
-  protected void renderItems(Writer out, List<DisplayItem> items, String scopePrefix) throws Exception {
+  protected void renderItems(Writer out, List<DisplayItemGroup> groups, String scopePrefix) throws Exception {
     FormRadioSelectItemLabelHtmlTag label = new FormRadioSelectItemLabelHtmlTag();
 
-    for (DisplayItem displayItem : items) {
-      if (displayItem.isGroup()) {
-        renderItems(out, displayItem.getChildOptions(), scopePrefix);
+    for (DisplayItemGroup group : groups) {
+      if (group.isDisabled() || group.isEmpty()) {
         continue;
       }
 
-      // Set the same HTML id for label ("for") and radio-button ("id") so that clicking on label affects radio-button
-      // selection:
-      String radioId = scopePrefix + displayItem.getValue();
+      for (DisplayItem displayItem : group.getEnabledOptions()) {
 
-      if (this.labelBefore) {
-        writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
-      }
+        // Set the same HTML id for label ("for") and radio-button ("id") so that clicking on label affects radio-button
+        // selection:
+        String radioId = scopePrefix + displayItem.getValue();
 
-      FormRadioSelectItemHtmlTag item = registerSubtag(new FormRadioSelectItemHtmlTag());
-      item.setHtmlId(radioId);
-      item.setId(this.derivedId);
-      item.setValue(displayItem.getValue());
-      item.setDisabled(Boolean.toString(displayItem.isDisabled()));
-      item.setEvents(Boolean.toString(this.events));
-      item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
-      item.setStyleClass(getStyleClass());
+        if (this.labelBefore) {
+          writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
+        }
 
-      if (this.updateRegions != null) {
-        item.setUpdateRegions(this.updateRegions);
-      }
+        FormRadioSelectItemHtmlTag item = registerSubtag(new FormRadioSelectItemHtmlTag());
+        item.setHtmlId(radioId);
+        item.setId(this.derivedId);
+        item.setValue(displayItem.getValue());
+        item.setDisabled(Boolean.toString(displayItem.isDisabled()));
+        item.setEvents(Boolean.toString(this.events));
+        item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
+        item.setStyleClass(getStyleClass());
 
-      if (this.globalUpdateRegions != null) {
-        item.setGlobalUpdateRegions(this.globalUpdateRegions);
-      }
+        if (this.updateRegions != null) {
+          item.setUpdateRegions(this.updateRegions);
+        }
 
-      if (getStyle() != null) {
-        item.setStyle(getStyle());
-      }
+        if (this.globalUpdateRegions != null) {
+          item.setGlobalUpdateRegions(this.globalUpdateRegions);
+        }
 
-      if (this.tabindex != null) {
-        item.setTabindex(this.tabindex);
-      }
+        if (getStyle() != null) {
+          item.setStyle(getStyle());
+        }
 
-      executeSubtag(item);
-      unregisterSubtag(item);
+        if (this.tabindex != null) {
+          item.setTabindex(this.tabindex);
+        }
 
-      if (!this.labelBefore) {
-        writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
-      }
+        executeSubtag(item);
+        unregisterSubtag(item);
 
-      if ("horizontal".equals(this.type)) {
-        out.write("&nbsp;");
-      } else if ("vertical".equals(this.type)) {
-        JspUtil.writeStartEndTag(out, "br");
+        if (!this.labelBefore) {
+          writeLabel(label, this.derivedId, radioId, displayItem.getLabel());
+        }
+
+        if ("horizontal".equals(this.type)) {
+          out.write("&nbsp;");
+        } else if ("vertical".equals(this.type)) {
+          JspUtil.writeStartEndTag(out, "br");
+        }
       }
     }
   }

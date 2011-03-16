@@ -95,10 +95,8 @@ public class FormListRowsTag<R> extends BaseListRowsTag {
   }
 
   @Override
-  public void doFinally() {
-    super.doFinally();
-    this.editableListId = null;
+  protected int doEndTag(Writer out) throws Exception {
     this.editableListViewModel = null;
-    this.rowForm = null;
+    return super.doEndTag(out);
   }
 }

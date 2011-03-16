@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.AsynchronousActionListener;
+import org.araneaframework.core.ActionListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -74,7 +74,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
     protected void init() throws Exception {
       setViewSelector("demo/tree/unsynchronized/treeNode");
       putViewData("counter", this.counter);
-      addActionListener("test", new AsynchronousActionListener() {
+      addActionListener("test", new ActionListener() {
 
         public void processAction(String actionId, InputData input, OutputData output) throws Exception {
           LOG.debug("Received action with id='" + actionId + "'");
@@ -84,7 +84,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
       });
 
-      addActionListener("sleep", new AsynchronousActionListener() {
+      addActionListener("sleep", new ActionListener() {
 
         public void processAction(String actionId, InputData input, OutputData output) throws Exception {
           LOG.debug("Received action with id='" + actionId + "'");

@@ -26,7 +26,7 @@ import org.araneaframework.uilib.form.Constraint;
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class OptionalConstraint<C, D> extends BaseFieldConstraint<C, D> {
+public class OptionalConstraint extends BaseGenericFieldConstraint {
 
   private Constraint constraint;
 

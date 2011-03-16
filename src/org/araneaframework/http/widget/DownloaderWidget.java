@@ -147,8 +147,9 @@ public class DownloaderWidget extends BaseApplicationWidget {
     HttpServletResponse response = ServletUtil.getResponse(output);
     beforeFile(response);
 
-    long length = IOUtils.copyLarge(getDataStream(), response.getOutputStream());
-    IOUtils.closeQuietly(getDataStream());
+    InputStream dataStream = getDataStream();
+    long length = IOUtils.copyLarge(dataStream, response.getOutputStream());
+    IOUtils.closeQuietly(dataStream);
 
     afterFile(response, length);
   }

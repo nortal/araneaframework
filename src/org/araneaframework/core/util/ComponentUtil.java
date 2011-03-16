@@ -25,10 +25,10 @@ import org.araneaframework.Scope;
 import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.Assert;
-import org.araneaframework.core.AsynchronousActionListener;
 import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.core.StandardScope;
-import org.araneaframework.framework.AsynchronousRequestRegistry;
+import org.araneaframework.core.SynchronizedActionListener;
+import org.araneaframework.framework.SynchronizedRequestRegistry;
 
 /**
  * This utility class handles listening of component life-cycle events. Thus, it is possible to write a component (the
@@ -118,13 +118,14 @@ public abstract class ComponentUtil {
   }
 
   /**
-   * Registers asynchronous <code>actionListener</code> (which does not have to be {@link AsynchronousActionListener}).
-   * All parameters are required, except environment. If environment is <code>null</code> then no changes will be made.
+   * This method will register <code>actionListener</code> as synchronized, if it implements
+   * {@link SynchronizedActionListener}. All parameters are required, except environment. If environment is
+   * <code>null</code> then no changes will be made.
    * 
-   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param env The component's environment. Used for {@link SynchronizedRequestRegistry} lookup.
    * @param componentScope The scope of the calling component.
    * @param actionId The action listener ID.
-   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @param actionListener The object to check for {@link SynchronizedActionListener}.
    * @since 2.0
    */
   public static void registerActionListener(Environment env, Scope componentScope, String actionId,
@@ -133,13 +134,13 @@ public abstract class ComponentUtil {
   }
 
   /**
-   * Registers asynchronous action listeners that are provided among in (any kind of) <code>actionListeners</code>. All
-   * parameters are required, except environment and <code>actionListeners</code>. If environment is <code>null</code>
-   * then no changes will be made.
+   * This method will loop items in <code>actionListeners</code> and register an action listener as synchronized when
+   * interface {@link SynchronizedActionListener} is present on that listener. All parameters are required, except
+   * environment. If environment is <code>null</code> then no changes will be made.
    * 
-   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param env The component's environment. Used for {@link SynchronizedRequestRegistry} lookup.
    * @param componentScope The scope of the calling component.
-   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @param actionListeners The action listeners to check for {@link SynchronizedActionListener}s.
    * @since 2.0
    */
   public static void registerActionListeners(Environment env, Scope componentScope,
@@ -148,14 +149,14 @@ public abstract class ComponentUtil {
   }
 
   /**
-   * Unregisters asynchronous <code>actionListener</code> (which does not have to be {@link AsynchronousActionListener}
-   * ). All parameters are required, except environment. If environment is <code>null</code> then no changes will be
-   * made.
+   * This method will unregister synchronized <code>actionListener</code> (if it implements
+   * {@link SynchronizedActionListener}) to stop its requests to be processed in synchronized manner, . All parameters
+   * are required, except environment. If environment is <code>null</code> then no changes will be made.
    * 
-   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param env The component's environment. Used for {@link SynchronizedRequestRegistry} lookup.
    * @param componentScope The scope of the calling component.
    * @param actionId The action listener ID.
-   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @param actionListener The action listener to check for {@link SynchronizedActionListener}.
    * @since 2.0
    */
   public static void unregisterActionListener(Environment env, Scope componentScope, String actionId,
@@ -164,13 +165,13 @@ public abstract class ComponentUtil {
   }
 
   /**
-   * Unregisters asynchronous action listeners that are provided among in (any kind of) <code>actionListeners</code>.
-   * All parameters are required, except environment and <code>actionListeners</code>. If environment is
-   * <code>null</code> then no changes will be made.
+   * This method will unregister synchronized <code>actionListeners</code> (when {@link SynchronizedActionListener} is
+   * implemented) to stop their requests to be processed in synchronized manner. All parameters are required, except
+   * environment. If environment is <code>null</code> then no changes will be made.
    * 
-   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param env The component's environment. Used for {@link SynchronizedRequestRegistry} lookup.
    * @param componentScope The scope of the calling component.
-   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @param actionListeners The action listeners to check for {@link SynchronizedActionListener}s.
    * @since 2.0
    */
   public static void unregisterActionListeners(Environment env, Scope componentScope,
@@ -179,13 +180,13 @@ public abstract class ComponentUtil {
   }
 
   /**
-   * Unregisters asynchronous action listeners that are provided among in (any kind of) <code>actionListeners</code>.
-   * All parameters are required, except environment and <code>actionListeners</code>. If environment is
-   * <code>null</code> then no changes will be made.
+   * This method will unregister synchronized <code>actionListeners</code> (when {@link SynchronizedActionListener} is
+   * implemented) to stop their requests to be processed in synchronized manner, . All parameters are required, except
+   * environment. If environment is <code>null</code> then no changes will be made.
    * 
-   * @param env The component's environment. Used for {@link AsynchronousRequestRegistry} lookup.
+   * @param env The component's environment. Used for {@link SynchronizedRequestRegistry} lookup.
    * @param componentScope The scope of the calling component.
-   * @param actionListeners The action listeners to check for {@link AsynchronousActionListener}s.
+   * @param actionListeners The action listeners to check for {@link SynchronizedActionListener}s.
    * @since 2.0
    */
   public static void unregisterActionListeners(Environment env, Scope componentScope, String actionId,
@@ -221,12 +222,12 @@ public abstract class ComponentUtil {
     Assert.notNullParam(ComponentUtil.class, actionListener, "actionListener");
 
     if (env != null) {
-      AsynchronousRequestRegistry registry = env.getEntry(AsynchronousRequestRegistry.class);
-      if (registry != null && actionListener instanceof AsynchronousActionListener) {
+      SynchronizedRequestRegistry registry = env.getEntry(SynchronizedRequestRegistry.class);
+      if (registry != null && actionListener instanceof SynchronizedActionListener) {
         if (register) {
-          registry.registerAsynchronousAction(componentScope.toString(), actionId);
+          registry.registerSynchronizedAction(componentScope.toString(), actionId);
         } else {
-          registry.unregisterAsynchronousAction(componentScope.toString(), actionId);
+          registry.unregisterSynchronizedAction(componentScope.toString(), actionId);
         }
       }
     }

@@ -18,6 +18,7 @@ package org.araneaframework.uilib.util;
 
 import java.util.Collection;
 import java.util.List;
+import org.araneaframework.uilib.support.SelectGroup;
 
 /**
  * The base specification for containers that deal with display items.
@@ -44,6 +45,15 @@ public interface DisplayItemContainer<T> {
    * Clears the currently held display items.
    */
   void clearItems();
+
+  /**
+   * Returns a list of all groups that this <code>DisplayItemContainer</code> currently holds. The returned groups must
+   * also provide all the values that belong to that group.
+   * 
+   * @return A list of all contained display item groups.
+   * @since 2.0
+   */
+  List<SelectGroup<T>> getGroups();
 
   /**
    * Returns a list of display items that this <code>DisplayItemContainer</code> currently holds.
@@ -108,25 +118,5 @@ public interface DisplayItemContainer<T> {
    * @return 2.0
    */
   String getItemValueProperty();
-
-  /**
-   * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve whether the display item
-   * represents an <code>&lt;optgroup&gt;</code>, the method returns the <code>Boolean</code> property name. Otherwise,
-   * returns <code>null</code>.
-   * 
-   * @return The property of a display item to resolve whether it represents an options group, or <code>null</code>.
-   * @return 2.0
-   */
-  String getItemGroupProperty();
-
-  /**
-   * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve child display items of those
-   * display items that represent <code>&lt;optgroup&gt;</code>s, the method returns the array/<code>List</code>
-   * property name. Otherwise, returns <code>null</code>.
-   * 
-   * @return The property of a display item to resolve its child display items, or <code>null</code>.
-   * @return 2.0
-   */
-  String getItemChildrenProperty();
 
 }

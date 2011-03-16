@@ -45,7 +45,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
    * Creates a new instance of MultiSelectControl, and also defines initial items and label and value property names.
    * The label and value property names are required.
    * 
-   * @param items Predefined select items. May be <code>null</code>.
+   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
    * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
    * @param itemValueProperty The property of select item to retrieve the value of select item (required).
    * @see MultiSelectControl#MultiSelectControl(List, Class, String, String)
@@ -60,7 +60,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
    * with {@link #addItem(String, String)} method (then class is used to create new instances). The label and value
    * property names are required.
    * 
-   * @param itemClass The class of the items stored in this select (needed when select values are defined one-by-one).
+   * @param items Predefined select items. May be <code>null</code>.
    * @param itemLabelProperty The property of select item to retrieve the label of select item (required).
    * @param itemValueProperty The property of select item to retrieve the value of select item (required).
    * @see MultiSelectControl#MultiSelectControl(String, String)
@@ -165,7 +165,7 @@ public class MultiSelectControl<T> extends BaseSelectControl<T, List<T>> {
   }
 
   public DataType getRawValueType() {
-    this.itemClass = SelectControlUtil.resolveClass(this.itemClass, this.items);
+    this.itemClass = SelectControlUtil.resolveGroupClass(this.itemClass, this.groups);
     Assert.notNull(this.itemClass, "Cannot resolve data type because select item class nor select items provided!");
     return new DataType(List.class, this.itemClass);
   }

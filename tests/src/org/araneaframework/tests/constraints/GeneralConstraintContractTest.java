@@ -17,14 +17,13 @@
 package org.araneaframework.tests.constraints;
 
 import java.math.BigDecimal;
-
 import junit.framework.TestCase;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
-import org.araneaframework.uilib.form.constraint.BaseFieldConstraint;
+import org.araneaframework.uilib.form.constraint.FieldConstraintException;
 import org.araneaframework.uilib.form.constraint.NotEmptyConstraint;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.data.BigDecimalData;
@@ -51,7 +50,7 @@ public class GeneralConstraintContractTest extends TestCase {
       this.form.validate();
 
       fail("Exception should have occured, because field constraint NotEmptyConstraint is not applicable to FormWidget");
-    } catch (BaseFieldConstraint.FieldConstraintException e) {
+    } catch (FieldConstraintException e) {
       // OK
     }
   }

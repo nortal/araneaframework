@@ -131,7 +131,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   @SuppressWarnings("unchecked")
   public void setData(Data<D> data) {
     this.data = data;
-    data.setFormElementCtx(FormElementContext.class.cast(this));
+    if (data != null) {
+      data.setFormElementCtx(FormElementContext.class.cast(this));
+    }
   }
 
   /**
@@ -177,8 +179,8 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   public Converter<C, D> findConverter() {
     ConfigurationContext confCtx = getEnvironment().requireEntry(ConfigurationContext.class);
 
-    DataType source = getControl().getRawValueType();
-    DataType dest = getData().getValueType();
+    DataType source = this.control.getRawValueType();
+    DataType dest = this.data.getValueType();
 
     try {
       return ConverterFactory.getInstance(confCtx).findConverter(source, dest);
@@ -194,7 +196,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @return whether the form element was present in the last request.
    */
   public boolean isRead() {
-    return getControl() != null && getControl().isRead();
+    return this.control != null && this.control.isRead();
   }
 
   @Override
@@ -209,31 +211,31 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
 
   @Override
   public void markBaseState() {
-    if (getData() != null) {
-      getData().markBaseState();
+    if (this.data != null) {
+      this.data.markBaseState();
     }
   }
 
   @Override
   public void restoreBaseState() {
-    if (getData() != null) {
-      getData().restoreBaseState();
+    if (this.data != null) {
+      this.data.restoreBaseState();
     }
   }
 
   @Override
   public boolean isStateChanged() {
-    return getData() != null ? getData().isStateChanged() : false;
+    return this.data != null && this.data.isStateChanged();
   }
 
   @Override
   public D getValue() {
-    return getData() != null ? this.data.getValue() : null;
+    return this.data != null ? this.data.getValue() : null;
   }
 
   public void setValue(D value) {
-    if (getData() != null) {
-      getData().setValue(value);
+    if (this.data != null) {
+      this.data.setValue(value);
     }
   }
 
@@ -309,9 +311,9 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     super.update(input);
 
     // There is only point to read from request if we have a control
-    if (getControl() != null) {
+    if (this.control != null) {
       // Read the control
-      getControl()._getWidget().update(input);
+      this.control._getWidget().update(input);
     }
   }
 
@@ -325,7 +327,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   @Override
   protected void event(Path path, InputData input) throws Exception {
     if (!path.hasNext() && !isDisabled() && !isIgnoreEvents()) {
-      getControl()._getWidget().event(path, input);
+      this.control._getWidget().event(path, input);
     }
   }
 
@@ -376,12 +378,12 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   protected void init() throws Exception {
     super.init();
 
-    if (getConverter() == null && getData() != null && getControl() != null) {
+    if (getConverter() == null && this.data != null && this.control != null) {
       setConverter(findConverter());
     }
 
-    if (getControl() != null) {
-      getControl()._getComponent().init(getScope(), getEnvironment());
+    if (this.control != null) {
+      this.control._getComponent().init(getScope(), getEnvironment());
     }
 
     runInitEvents();
@@ -411,27 +413,27 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     D newDataValue = null;
 
     // There is only point to convert and set the data if it is present
-    if (getData() != null && getControl() != null) {
+    if (this.data != null && this.control != null) {
 
-      getControl().convert();
+      this.control.convert();
 
       // The data should be set only if control is valid
       if (isValid()) {
         // We assume that the convertor is present, if control and data are here
-        newDataValue = getConverter().convert(getControl().getRawValue());
+        newDataValue = getConverter().convert(this.control.getRawValue());
       }
     }
 
-    if (getData() != null && isValid()) {
+    if (this.data != null && isValid()) {
       // converting should not affect Control's value -- so setDataValue() instead of setValue()
-      getData().setDataValue(newDataValue);
+      this.data.setDataValue(newDataValue);
     }
   }
 
   @Override
   protected boolean validateInternal() throws Exception {
-    if (getControl() != null) {
-      getControl().validate();
+    if (this.control != null) {
+      this.control.validate();
     }
 
     return super.validateInternal();
@@ -533,10 +535,10 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
      * @throws Exception
      */
     public ViewModel() {
-      this.control = (Control.ViewModel) FormElement.this.getControl()._getViewable().getViewModel();
+      this.control = (Control.ViewModel) FormElement.this.control._getViewable().getViewModel();
       this.label = FormElement.this.getLabel();
       this.valid = FormElement.this.isValid();
-      this.value = FormElement.this.getData() != null ? FormElement.this.getData().getValue() : null;
+      this.value = FormElement.this.data != null ? FormElement.this.data.getValue() : null;
       this.mandatory = FormElement.this.isMandatory();
       this.disabled = FormElement.this.isDisabled();
     }
@@ -568,6 +570,10 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
      */
     public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
       return FormElement.this.getFormElementValidationErrorRenderer();
+    }
+
+    public String getRenderedErrorMessages() {
+      return FormElement.this.getFormElementValidationErrorRenderer().getClientRenderText(FormElement.this);
     }
 
     /**

@@ -22,6 +22,9 @@ import org.araneaframework.uilib.support.UiLibMessages;
 
 /**
  * This constraint checks that the number value would be inside a given range.
+ * <p>
+ * Usually form element number controls already have this kind of constraint built-in. However, when a number control
+ * does not have it built-in, this constraint can be used instead.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */

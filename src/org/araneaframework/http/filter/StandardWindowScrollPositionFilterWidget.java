@@ -107,7 +107,10 @@ public class StandardWindowScrollPositionFilterWidget extends BaseFilterWidget i
 
   @Override
   protected void update(InputData input) throws Exception {
-    updateScroll(input.getGlobalData().get(WINDOW_SCROLL_X_KEY), input.getGlobalData().get(WINDOW_SCROLL_Y_KEY));
+    String x = StringUtils.defaultString(input.getGlobalData().get(WINDOW_SCROLL_X_KEY), this.windowScrollX);
+    String y = StringUtils.defaultString(input.getGlobalData().get(WINDOW_SCROLL_Y_KEY), this.windowScrollY);
+
+    updateScroll(x, y);
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Window scoll coordinates from request: [" + this.windowScrollX + "," + this.windowScrollY + "].");

@@ -22,6 +22,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
+import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -128,11 +129,25 @@ public class OverlayRootWidget extends BaseUIWidget {
 
   @Override
   protected void init() throws Exception {
+    // When overlay is started, flow context cannot handle scroll context updating well, so we do it manually here.
+    // These new coordinates will be reset to previous coordinates when user closes the overlay window.
+    pushScrollCoordinates(getEnvironment().getEntry(WindowScrollPositionContext.class));
+
     addWidget("c", new OverlayFlowContainer(this.child));
   }
 
   public void setErrorPage(String errorPage) {
     this.errorPage = errorPage;
+  }
+
+  private static void pushScrollCoordinates(WindowScrollPositionContext scrollPositionCtx) {
+    if (scrollPositionCtx != null) {
+      String x = scrollPositionCtx.getX();
+      String y = scrollPositionCtx.getY();
+
+      scrollPositionCtx.push();
+      scrollPositionCtx.scrollTo(x, y);
+    }
   }
 
   /**
@@ -165,7 +180,7 @@ public class OverlayRootWidget extends BaseUIWidget {
     protected void init() throws Exception {
       // When a flow is already is started, no need to delay the initialization of top widget.
       // "Delay" is needed only when overlay is opened - as overlay actual is opened on second request.
-      if (getFlowCtx().getNestedFlows().size() > 1) {
+      if (getNestedFlows().size() > 1) {
         startTopWidget();
       }
 
@@ -180,6 +195,10 @@ public class OverlayRootWidget extends BaseUIWidget {
 
     private void startTopWidget() {
       if (this.topWidget != null) {
+        if (getNestedFlows().isEmpty()) {
+          pushScrollCoordinates(getEnvironment().getEntry(WindowScrollPositionContext.class));
+        }
+
         try {
           start(this.topWidget);
         } finally { // Important: no matter whether starting is successful or not - do not attempt to start it again.

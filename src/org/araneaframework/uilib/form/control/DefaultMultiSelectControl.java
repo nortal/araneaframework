@@ -52,12 +52,12 @@ public class DefaultMultiSelectControl extends MultiSelectControl<DisplayItem> {
   }
 
   @Override
-  public void addItem(String label, String value) {
+  public void addItem(String label, String value, String groupLabel) {
     Assert.notNullParam(label, "label");
     try {
       DisplayItem newItem = new DisplayItem(value, label);
       DisplayItemUtil.assertUnique(this, newItem);
-      this.items.add(newItem);
+      addItem(newItem, groupLabel);
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }

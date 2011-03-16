@@ -2,8 +2,32 @@
 <html>
 <body bgcolor="white">
 <p>
-  Contains the constraint classes, which may be used to impose 
-  arbitary constraints on the form data.
+  Contains the constraint classes, which may be used to impose arbitary constraints on the form data. Of course, no one
+  is restricted to using only those constraints provided here. Here are some basic classes to use for extending and
+  creating custom constraints:
+  <ul>
+    <li><code>BaseConstraint</code> - the most basic constraint class providing essential functionality to simplify the
+      work of its sub-classes.</li>
+    <li><code>BaseGenericFieldConstraint</code> - a constraint class for implementing <code>GenericFormElement</code>
+      (common super class for <code>FormWidget</code>s  and <code>FormElement</code>s) specific validation. Note that
+      <code>GenericFormElement</code> can return the value of the element but does not provide direct access to the
+      label of the element (e.g. <code>FormWidget</code>s don't have labels).</li>
+    <li><code>BaseFieldConstraint</code> - a constraint class for implementing <code>FormElement</code> specific
+      validation (this is usually the most used base class, because it also provides the label of form element).</li>
+  </ul>
+
+  In addition, some advanced constraints are designed to contain and handle multiple constraints so that more
+  complicated constaints could be created:
+  <ul>
+    <li><code>AndConstraint</code> - a constraint containing other constraints where each constraint must be validated
+      successfully in order to make this constraint validate. By default, it works in lazy mode, i.e. processes its
+      contained constraints until first constraint fails to validate successfully.</li>
+    <li><code>OrConstraint</code> - a constraint containing other constraints where at least one constraint must be
+      validated successfully in order to make this constraint validate. By default, it works in lazy mode, i.e.
+      processes its contained constraints until first successfully validating constraint is reached.</li>
+    <li><code>ConstraintGroupHelper</code> - an advanced helper that simplifies the task of assigning constraints to
+      different form elements and simplifies controling which group of constraints should be validated.</li>
+  </ul>
 </p>
 </body>
 </html>

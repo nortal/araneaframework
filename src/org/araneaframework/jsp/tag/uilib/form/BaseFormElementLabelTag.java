@@ -32,7 +32,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Oleg Mürk
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class BaseFormElementLabelTag extends PresentationTag {
 
   protected FormWidget.ViewModel formViewModel;

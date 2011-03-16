@@ -146,6 +146,8 @@ public class BaseListStructure implements Serializable {
 
     protected Map<String, ListField.ViewModel> columns = new HashMap<String, ListField.ViewModel>();
 
+    protected List<String> columnIds = new ArrayList<String>();
+
     protected List<ListField.ViewModel> columnList = new ArrayList<ListField.ViewModel>();
 
     protected Map<String, Boolean> columnOrders = new HashMap<String, Boolean>();
@@ -161,6 +163,7 @@ public class BaseListStructure implements Serializable {
         boolean isOrdered = multiOrder != null && multiOrder.isFiedOrdered(currentColumn.getId());
 
         this.columnList.add(currentColumn);
+        this.columnIds.add(currentColumn.getId());
         this.columns.put(currentColumn.getId(), currentColumn);
         this.columnOrders.put(currentColumn.getId(), isOrdered);
       }
@@ -171,6 +174,15 @@ public class BaseListStructure implements Serializable {
      */
     public List<ListField.ViewModel> getColumnList() {
       return this.columnList;
+    }
+
+    /**
+     * Provides column IDs in the same order as defined in list structure.
+     * 
+     * @return A list of column IDs.
+     */
+    public List<String> getColumnIds() {
+      return this.columnIds;
     }
 
     /**

@@ -16,8 +16,6 @@
 
 package org.araneaframework.uilib.support;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.util.BeanUtil;
@@ -41,7 +39,7 @@ public class BeanDisplayItem<T> extends DisplayItem {
   /**
    * The value object behind this item.
    */
-  protected T targetObjct; 
+  protected T targetObjct;
 
   /**
    * Item's label property to retrieve a label.
@@ -57,6 +55,12 @@ public class BeanDisplayItem<T> extends DisplayItem {
    * Whether this display item is disabled.
    */
   protected boolean disabled;
+
+  /**
+   * Creates a new instance of {@link DisplayItem}.
+   * 
+   */
+  public BeanDisplayItem() {}
 
   /**
    * Creates a new instance of {@link DisplayItem}.
@@ -78,85 +82,8 @@ public class BeanDisplayItem<T> extends DisplayItem {
    * @param disabled Whether this item is disabled.
    */
   public BeanDisplayItem(T target, String labelProperty, String valueProperty, boolean disabled) {
-    this(target, labelProperty, valueProperty, null, null, disabled);
-  }
-
-  /**
-   * Creates a new instance of {@link DisplayItem}. Note that it is possible to specify that this item is options group
-   * (OPTGROUP in HTML). To enable that, provide the <code>groupProperty</code> of the target that returns
-   * <code>true</code> (to indicate that this item is a group) and also provide the <code>childProperty</code> that
-   * returns a collection of {@link DisplayItem}s to provide the child-options. Note that <code>groupProperty</code> and
-   * <code>childProperty</code> properties need both to be specified to enable groups!
-   * 
-   * @param target The target object behind this item (required).
-   * @param labelProperty The property of target object that returns the label (String) of this select item (required).
-   * @param valueProperty The property of target object that returns the value (String) of this select item (required).
-   * @param groupProperty The property of target object that returns whether this item is an options group (Boolean).
-   * @param childProperty The property of target object that returns the childOptions (Collection&lt;DisplayItem&gt;) of
-   *          this select item.
-   */
-  @SuppressWarnings("unchecked")
-  public BeanDisplayItem(T target, String labelProperty, String valueProperty, String groupProperty, String childProperty) {
-    super(resolveProperty(target, valueProperty), resolveProperty(target, labelProperty), false);
-    this.targetObjct = target;
-
-    if (!StringUtils.isBlank(groupProperty) && !StringUtils.isBlank(childProperty)) {
-      try {
-        boolean group = (Boolean) BeanUtil.getPropertyValue(target, groupProperty);
-        Collection<T> childOptions = (Collection<T>) BeanUtil.getPropertyValue(target, childProperty);
-        setBeanGroupAndOptions(group, childOptions, labelProperty, valueProperty);
-      } catch (Exception e) {
-        ExceptionUtil.uncheckException(e);
-      }
-    }
-  }
-
-  /**
-   * Creates a new instance of {@link DisplayItem}. Note that it is possible to specify that this item is options group
-   * (OPTGROUP in HTML). To enable that, provide the <code>groupProperty</code> of the target that returns
-   * <code>true</code> (to indicate that this item is a group) and also provide the <code>childProperty</code> that
-   * returns a collection of {@link DisplayItem}s to provide the child-options. Note that <code>groupProperty</code> and
-   * <code>childProperty</code> properties need both to be specified to enable groups!
-   * 
-   * @param target The target object behind this item (required).
-   * @param labelProperty The property of target object that returns the label (String) of this select item (required).
-   * @param valueProperty The property of target object that returns the value (String) of this select item (required).
-   * @param groupProperty The property of target object that returns whether this item is an options group (Boolean).
-   * @param childProperty The property of target object that returns the childOptions (Collection&lt;DisplayItem&gt;) of
-   *          this select item.
-   * @param disabled Whether this item is disabled.
-   */
-  @SuppressWarnings("unchecked")
-  public BeanDisplayItem(T target, String labelProperty, String valueProperty, String groupProperty,
-      String childProperty, boolean disabled) {
-
     super(resolveProperty(target, valueProperty), resolveProperty(target, labelProperty), disabled);
     this.targetObjct = target;
-
-    // Convert group options, too:
-    if (!StringUtils.isBlank(groupProperty) && !StringUtils.isBlank(childProperty)) {
-      try {
-        boolean group = (Boolean) BeanUtil.getPropertyValue(target, groupProperty);
-        Collection<T> childOptions = (Collection<T>) BeanUtil.getPropertyValue(target, childProperty);
-        setBeanGroupAndOptions(group, childOptions, labelProperty, valueProperty);
-      } catch (Exception e) {
-        ExceptionUtil.uncheckException(e);
-      }
-    }
-  }
-
-  public void setBeanGroupAndOptions(boolean group, Collection<T> groupOptions, String labelProperty, String valueProperty) {
-    Collection<DisplayItem> childDisplayOptions = new LinkedList<DisplayItem>();
-
-    if (groupOptions != null) {
-      for (T childOption : groupOptions) {
-        if (childOption != null) {
-          childDisplayOptions.add(new BeanDisplayItem<T>(childOption, labelProperty, valueProperty));
-        }
-      }
-    }
-
-    setGroupAndOptions(group, childDisplayOptions);
   }
 
   /**
@@ -194,9 +121,9 @@ public class BeanDisplayItem<T> extends DisplayItem {
   }
 
   /**
-   * <code>BeanDisplayItem</code> basically uses the same <code>hashCode</code> logic because all display items need only
-   * to be compared by the <code>value</code> property. This method is explicitly overridden here to show that we have
-   * not forgot it.
+   * <code>BeanDisplayItem</code> basically uses the same <code>hashCode</code> logic because all display items need
+   * only to be compared by the <code>value</code> property. This method is explicitly overridden here to show that we
+   * have not forgot it.
    */
   @Override
   public int hashCode() {

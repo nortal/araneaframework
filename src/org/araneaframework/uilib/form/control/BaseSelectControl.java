@@ -33,6 +33,8 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.support.BeanDisplayItem;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
+import org.araneaframework.uilib.support.SelectGroup;
 import org.araneaframework.uilib.util.DisplayItemContainer;
 import org.araneaframework.uilib.util.DisplayItemUtil;
 import org.araneaframework.uilib.util.SelectControlUtil;
@@ -64,19 +66,9 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   protected String labelProperty;
 
   /**
-   * An item property of type Boolean that provides whether the item is group and has child-options.
+   * The items contained in this select control per group.
    */
-  protected String groupProperty;
-
-  /**
-   * An item property of type Collection that provides the child-options when the item is also a group.
-   */
-  protected String childrenProperty;
-
-  /**
-   * The items contained in this select control.
-   */
-  protected List<T> items = new LinkedList<T>();
+  protected List<SelectGroup<T>> groups = new LinkedList<SelectGroup<T>>();
 
   /**
    * A subset of items that contains disabled items.
@@ -129,8 +121,6 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     this.itemClass = SelectControlUtil.resolveClass(itemClass, items);
     this.labelProperty = itemLabelProperty;
     this.valueProperty = itemValueProperty;
-    this.groupProperty = itemIsGroupProperty;
-    this.childrenProperty = groupChildrenProperty;
 
     if (items != null) {
       addItems(items);
@@ -138,19 +128,24 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   }
 
   public void addItem(T item) {
+    addItem(item, SelectGroup.NO_GROUP);
+  }
+
+  public void addItem(T item, String groupLabel) {
     Assert.notNullParam(item, "item");
+    Assert.notNullParam(groupLabel, "groupLabel");
 
     if (this.checkValuesUnique) {
-      SelectControlUtil.assertUnique(this.items, item);
+      SelectControlUtil.assertUnique(this.groups, item);
     }
 
-    this.items.add(item);
+    getGroup(groupLabel).addOption(item);
   }
 
   /**
    * A convenient method for cases when select items are defined one-by-one as key-value pairs. An instance of the class
    * (that was given to the constructor) is created, and, using label and value properties, the given label and value
-   * are set.
+   * are set. The created item will be placed in the default group (placebo for items that are not rendered as a group).
    * 
    * @param label The label for the new item.
    * @param value The value for the new item.
@@ -160,9 +155,14 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     addItem(this.itemClass, label, value);
   }
 
+  public void addItem(String label, String value, String groupLabel) {
+    addItem(this.itemClass, label, value, groupLabel);
+  }
+
   /**
    * A convenient method for cases when select items are defined one-by-one. An instance of given class is created, and,
-   * using label and value properties, the given label and value are set.
+   * using label and value properties, the given label and value are set. The created item will be placed in the default
+   * group (placebo for items that are not rendered as a group).
    * 
    * @param itemClass The class that matches the items type of given select control.
    * @param label The label for the new item.
@@ -170,21 +170,39 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * @see #addItem(String, String)
    */
   public void addItem(Class<T> itemClass, String label, String value) {
+    addItem(itemClass, label, value, SelectGroup.NO_GROUP);
+  }
+
+  /**
+   * A convenient method for cases when select items are defined one-by-one. An instance of given class is created, and,
+   * using label and value properties, the given label and value are set. The created item will be placed in the group
+   * with given <code>groupLabel</code> (created, when it does not exist).
+   * 
+   * @param itemClass The class that matches the items type of given select control.
+   * @param label The label for the new item.
+   * @param value The value for the new item.
+   * @see #addItem(String, String)
+   */
+  public void addItem(Class<T> itemClass, String label, String value, String groupLabel) {
     Assert.notNullParam(itemClass, "clazz");
     Assert.notNullParam(label, "label");
     try {
       T item = itemClass.newInstance();
       BeanUtil.setPropertyValue(item, this.labelProperty, label);
       BeanUtil.setPropertyValue(item, this.valueProperty, value);
-      addItem(item);
+      addItem(item, groupLabel);
     } catch (Exception e) {
       ExceptionUtil.uncheckException(e);
     }
   }
 
   public void addItems(Collection<T> items) {
+    addItems(items, SelectGroup.NO_GROUP);
+  }
+
+  public void addItems(Collection<T> items, String groupLabel) {
     Assert.noNullElementsParam(items, "items");
-    this.items.addAll(items);
+    getGroup(groupLabel).addOptions(items);
 
     if (this.checkValuesUnique) {
       SelectControlUtil.assertUnique(this);
@@ -236,27 +254,64 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
   }
 
   public void clearItems() {
-    this.items.clear();
     this.disabledItems.clear();
+    this.groups.clear();
+    this.groups.add(new SelectGroup<T>());
+  }
+
+  public List<SelectGroup<T>> getGroups() {
+    return Collections.unmodifiableList(this.groups);
   }
 
   public List<T> getAllItems() {
-    return Collections.unmodifiableList(this.items);
+    List<T> result = new ArrayList<T>(this.groups.size() * 20);
+    for (SelectGroup<T> group : this.groups) {
+      result.addAll(group.getOptions());
+    }
+    return result;
   }
 
   public List<T> getEnabledItems() {
-    List<T> enabledItems = new LinkedList<T>(this.items);
+    List<T> enabledItems = getAllItems();
     enabledItems.removeAll(this.disabledItems);
-    return Collections.unmodifiableList(enabledItems);
+    return enabledItems;
   }
 
   public List<T> getDisabledItems() {
     return Collections.unmodifiableList(this.disabledItems);
   }
 
+  public SelectGroup<T> getDefaultGroup() {
+    return getGroup(SelectGroup.NO_GROUP);
+  }
+
+  /**
+   * Retrieves the group with given label. When such group does not exist, it will be created, added, and returned.
+   * 
+   * @param label The group label for which group must be returned.
+   * @return The select items group with given label.
+   */
+  public SelectGroup<T> getGroup(String label) {
+    SelectGroup<T> result = null;
+
+    for (SelectGroup<T> group : this.groups) {
+      if (StringUtils.equals(label, group.getLabel())) {
+        result = group;
+        break;
+      }
+    }
+
+    if (result == null) {
+      result = new SelectGroup<T>(label);
+      this.groups.add(result);
+    }
+
+    return result;
+  }
+
   @Deprecated
   public int getValueIndex(String value) {
-    return SelectControlUtil.getValueIndex(this.items, this.valueProperty, value);
+    return SelectControlUtil.getValueIndex(this.groups, this.valueProperty, value);
   }
 
   public Class<T> getItemType() {
@@ -271,23 +326,29 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     return this.valueProperty;
   }
 
-  public String getItemGroupProperty() {
-    return this.groupProperty;
-  }
-
-  public String getItemChildrenProperty() {
-    return this.childrenProperty;
-  }
-
   /**
-   * Provides a way to sort the items in this <code>MultiSelectControl</code>. The <code>comparator</code> parameter is
-   * used to compare select items and, therefore, to set the order.
+   * Provides a way to sort the items in this select control. When more than one group is present, the comparator will
+   * sort items per group.
    * 
-   * @param comparator Any <code>Comparator</code> that is used to define order of display items.
+   * @param comparator Used for defining the order of options per group, must not be <code>null</code>.
    * @since 1.2
    */
   public void sort(Comparator<T> comparator) {
-    Collections.sort(this.items, comparator);
+    Assert.notNullParam(comparator, "comparator");
+    for (SelectGroup<T> group : this.groups) {
+      group.sort(comparator);
+    }
+  }
+
+  /**
+   * Provides a way to sort the groups in this select control.
+   * 
+   * @param comparator Used for defining the order of groups, must not be <code>null</code>.
+   * @since 2.0
+   */
+  public void sortGroups(Comparator<SelectGroup<T>> comparator) {
+    Assert.notNullParam(comparator, "comparator");
+    Collections.sort(this.groups, comparator);
   }
 
   /**
@@ -314,14 +375,14 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    */
   public void setCheckValuesUnique(boolean checkValuesUnique) {
     this.checkValuesUnique = checkValuesUnique;
-    if (this.checkValuesUnique && !this.items.isEmpty()) {
+    if (this.checkValuesUnique) {
       SelectControlUtil.assertUnique(this);
     }
   }
 
   //*********************************************************************
   //* INTERNAL METHODS
-  //*********************************************************************  	
+  //*********************************************************************
 
   @Override
   public ViewModel getViewModel() {
@@ -363,77 +424,49 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * Represents a select control view model for the rendering layer.
    * 
    * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
-   * @author Martti Tamm (martt <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
    */
   public class ViewModel extends StringArrayRequestControl<C>.ViewModel {
 
-    private List<DisplayItem> selectItems = new LinkedList<DisplayItem>();
-
-    private List<DisplayItem> enabledItems = new LinkedList<DisplayItem>();
-
-    private List<DisplayItem> disabledItems = new LinkedList<DisplayItem>();
+    private List<DisplayItemGroup> groups = new LinkedList<DisplayItemGroup>();
 
     /**
      * Takes an outer class snapshot.
      */
     public ViewModel() {
-      for (T item : BaseSelectControl.this.items) {
-        boolean disabled = BaseSelectControl.this.disabledItems.contains(item);
+      for (SelectGroup<T> itemGroup : BaseSelectControl.this.groups) {
+        DisplayItemGroup group = new DisplayItemGroup(itemGroup.getLabel());
+        this.groups.add(group);
 
-        BeanDisplayItem<T> option = new BeanDisplayItem<T>(item,
-            BaseSelectControl.this.labelProperty,
-            BaseSelectControl.this.valueProperty,
-            BaseSelectControl.this.groupProperty,
-            BaseSelectControl.this.childrenProperty,
-            disabled);
+        for (T item : itemGroup.getOptions()) {
+          boolean disabled = BaseSelectControl.this.disabledItems.contains(item);
 
-        this.selectItems.add(option);
-        if (disabled) {
-          this.disabledItems.add(option);
-        } else {
-          this.enabledItems.add(option);
+          BeanDisplayItem<T> option = new BeanDisplayItem<T>(item,
+              BaseSelectControl.this.labelProperty,
+              BaseSelectControl.this.valueProperty,
+              disabled);
+
+          group.addOption(option);
         }
       }
     }
 
     /**
-     * Returns a <code>List</code> of {@link DisplayItem}s.
+     * Provides the groups to render. Use this as the main method for rendering select data.
      * 
-     * @return a <code>List</code> of {@link DisplayItem}s.
+     * @return The groups together with their values to render for the select control.
      */
-    public List<DisplayItem> getSelectItems() {
-      return this.selectItems;
-    }
-
-    /**
-     * Returns a <code>List</code> of enabled {@link DisplayItem}s.
-     * 
-     * @return a <code>List</code> of enabled {@link DisplayItem}s.
-     */
-    public List<DisplayItem> getEnabledItems() {
-      return this.enabledItems;
-    }
-
-    /**
-     * Returns a <code>List</code> of disabled {@link DisplayItem}s.
-     * 
-     * @return a <code>List</code> of disabled {@link DisplayItem}s.
-     */
-    public List<DisplayItem> getDisabledItems() {
-      return this.disabledItems;
+    public List<DisplayItemGroup> getGroups() {
+      return this.groups;
     }
 
     public DisplayItem getSelectedItem() {
       String value = super.getSimpleValue();
-      return DisplayItemUtil.getItem(this.selectItems, value);
+      return DisplayItemUtil.getEnabledGroupItem(this.groups, value);
     }
 
     public List<DisplayItem> getSelectedItems() {
-      return new ArrayList<DisplayItem>(DisplayItemUtil.getItems(this.selectItems, (String[]) innerData));
-    }
-
-    public DisplayItem getSelectItem(String value) {
-      return DisplayItemUtil.getItem(this.selectItems, value);
+      return new ArrayList<DisplayItem>(DisplayItemUtil.getEnabledItems(this.groups, (String[]) innerData));
     }
 
     public boolean isSelected(String value) {

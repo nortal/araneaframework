@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class BaseFormElementDisplayTag extends PresentationTag implements FormElementTagInterface {
 
   protected FormWidget.ViewModel formViewModel;
