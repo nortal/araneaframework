@@ -70,6 +70,8 @@ public class ConverterFactory implements ConverterProvider {
     addConverter(BigInteger.class, int.class, new BigIntegerToIntegerConverter());
 
     addConverter(Timestamp.class, Date.class, new TimestampToDateConverter());
+    
+    addConverter(DisplayItem.class, Long.class, new LongToDisplayItemConverter());
   }
 
   private <S, D> void addConverter(Class<?> source, Class<?> dest, Converter<?, ?> converter) {
