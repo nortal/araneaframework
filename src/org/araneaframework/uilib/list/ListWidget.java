@@ -1169,7 +1169,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Handles single column ordering.
    */
-  protected void order(String fieldName) throws Exception {
+  public void order(String fieldName) {
     LOG.debug("Processing Single Column Order");
     boolean ascending = true;
 
@@ -1231,7 +1231,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Handles filtering.
    */
-  protected void filter() throws Exception {
+  public void filter() {
     if (this.form.convertAndValidate() && this.form.isStateChanged()) {
       Map<String, Object> filterInfo = ListUtil.readFilterInfo(this.form);
       propagateListDataProviderWithFilter(filterInfo);
