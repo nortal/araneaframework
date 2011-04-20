@@ -506,6 +506,13 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     this.ignoreEvents = ignoreEvents;
   }
 
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder(super.toString());
+    sb.append(":[").append(this.data == null ? "no_data" : this.data).append("]=").append(this.label);
+    return sb.toString();
+  }
+
   // *********************************************************************
   // * VIEW MODEL
   // *********************************************************************

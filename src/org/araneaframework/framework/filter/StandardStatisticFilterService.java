@@ -87,18 +87,36 @@ public class StandardStatisticFilterService extends BaseFilterService {
 
   private String message;
 
+  private int threshold = -1;
+
+  /**
+   * Sets the log message that will be displayed when logging the request duration. The message may contain expressions
+   * that are defined as constants of this class.
+   * 
+   * @param message The message to render about the request duration.
+   */
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  /**
+   * Sets the threshold for duration so that only longer durations would be logged. Default threshold is -1 meaning that
+   * all requests will be logged.
+   * 
+   * @param threshold The duration threshold so that only longer requests will be logged.
+   */
+  public void setThreshold(int threshold) {
+    this.threshold = threshold;
   }
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     long start = System.currentTimeMillis();
     this.childService._getService().action(path, input, output);
-    long end = System.currentTimeMillis();
+    long duration = System.currentTimeMillis() - start;
 
-    if (LOG.isInfoEnabled()) {
-      LOG.info(evaluateMessage(this.message, ServletUtil.getRequest(input), end - start));
+    if (this.threshold < duration && LOG.isInfoEnabled()) {
+      LOG.info(evaluateMessage(this.message, ServletUtil.getRequest(input), duration));
     }
   }
 

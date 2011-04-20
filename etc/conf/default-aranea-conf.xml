@@ -184,6 +184,7 @@
 	<bean id="araneaStatisticFilter" scope="prototype"
 		class="org.araneaframework.framework.filter.StandardStatisticFilterService">
 		<property name="message" value="Request [${METHOD} ${CONTEXT}${SERVLET}${PATH_INFO}${QUERY}] took ${TIME} ms." />
+		<property name="threshold" value="100" />
 	</bean>
 
 	<bean id="araneaSerializingAudit" scope="prototype"

@@ -301,7 +301,11 @@
 				<include name="org/araneaframework/**/*"/>
 			</fileset>
 
-			<fileset dir="etc" excludes="build/"/>
+			<fileset dir="etc">
+				<exclude name="build/"/>
+				<exclude name="js/cruncher/"/>
+				<exclude name="jsutil/"/>
+			</fileset>
 		</jar>
 	</target>
 

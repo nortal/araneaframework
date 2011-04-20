@@ -170,7 +170,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     this.timeControl.convert();
 
     // Reading control data
-    if (getFormElementCtx().isValid() && isRead()) {
+    if (this.dateControl.getRawValue() != null && this.timeControl.getRawValue() != null) {
       this.value = addTimeToDate(this.dateControl.getRawValue(), this.timeControl.getRawValue());
     } else {
       this.value = null;

@@ -16,12 +16,15 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
@@ -261,6 +264,26 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
     }
 
     return bgValidate;
+  }
+
+  @Override
+  public String toString() {
+    List<String> props = new ArrayList<String>();
+    if (this.converted) {
+      props.add("converted");
+    }
+    if (this.validated) {
+      props.add("validated");
+    }
+    props.add(isValid() ? "valid" : "INVALID");
+    if (Boolean.TRUE.equals(this.backgroundValidation)) {
+      props.add("bgValidating");
+    }
+    if (this.properties != null && !this.properties.isEmpty()) {
+      props.add("propsCount=" + this.properties.size());
+    }
+
+    return new StringBuilder("Element: [").append(StringUtils.join(props, ";")).append("]").toString();
   }
 
   // *********************************************************************

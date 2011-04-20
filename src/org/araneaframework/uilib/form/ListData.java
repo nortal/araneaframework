@@ -16,10 +16,10 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.araneaframework.uilib.support.DataType;
 
 /**
@@ -44,7 +44,14 @@ public class ListData<T> extends Data<List<T>> {
    */
   @Override
   public boolean isStateChanged() {
-    return !(CollectionUtils.isEmpty(this.markedBaseValue) && CollectionUtils.isEmpty(this.value))
-        && !ListUtils.isEqualList(this.markedBaseValue, this.value);
+    if (CollectionUtils.isEmpty(this.markedBaseValue) || CollectionUtils.isEmpty(this.value)) {
+      return CollectionUtils.isEmpty(this.markedBaseValue) != CollectionUtils.isEmpty(this.value);
+    } else if (this.markedBaseValue.size() != this.value.size()) {
+      return true;
+    }
+
+    List<T> copy = new ArrayList<T>(this.markedBaseValue);
+    copy.removeAll(this.value);
+    return !copy.isEmpty();
   }
 }

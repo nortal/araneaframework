@@ -136,7 +136,7 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
 
   @Override
   public String toString() {
-    return "Data (Type=[" + this.type + "];Value=[" + this.value + "])";
+    return "Data<" + this.type + ">=[" + this.value + "]" + (isStateChanged() ? " (CHANGED)" : "");
   }
 
   /**
