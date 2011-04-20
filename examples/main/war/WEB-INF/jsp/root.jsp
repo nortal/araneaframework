@@ -1,6 +1,4 @@
 <jsp:root
-	xmlns:uis="http://araneaframework.org/tag-library/2.0/ui"
-	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"

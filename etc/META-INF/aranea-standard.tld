@@ -4534,7 +4534,6 @@
 			<name>validateOnEvent</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
@@ -4572,6 +4571,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+    <attribute>
+      <description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+      <name>localizeDisplayItems</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
 	</tag>
 
 	<tag>

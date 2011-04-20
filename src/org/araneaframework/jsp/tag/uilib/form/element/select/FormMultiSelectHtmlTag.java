@@ -142,10 +142,10 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
           JspUtil.writeEscaped(out, label);
           JspUtil.writeEndTag(out, "option");
         }
+      }
 
-        if (!group.isNoGroup()) {
-          JspUtil.writeEndTag(out, "optgroup");
-        }
+      if (!group.isNoGroup()) {
+        JspUtil.writeEndTag(out, "optgroup");
       }
     }
   }

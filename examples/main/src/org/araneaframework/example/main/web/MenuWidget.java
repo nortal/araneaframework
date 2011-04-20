@@ -171,14 +171,19 @@ public class MenuWidget extends TemplateMenuWidget {
     result.addMenuItem("Demos.Trees.Complex_Tree", ComplexTreeWidget.class);
     result.addMenuItem("Demos.Trees.Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class);
 
-    // The Misc menu:
-    // Here, we use the "Misc" menu item, and add its sub-menu elements directly:
-    MenuItem errorMenu = result.addMenuItem("Misc");
-    errorMenu.addMenuItem("Error_on_init", InitErrorWidget.class);
-    errorMenu.addMenuItem("Error_on_event", EventErrorWidget.class);
-    errorMenu.addMenuItem("Error_on_render", RenderErrorWidget.class);
-    errorMenu.addMenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class);
-    errorMenu.addMenuItem("Redirecting", RedirectingWidget.class);
+    result.addMenuItem("forms");
+    result.addMenuItem("forms.simple", org.araneaframework.example.main.web.form.SimpleFormWidget.class);
+
+    result.addMenuItem("lists");
+    result.addMenuItem("advanced");
+    result.addMenuItem("tags");
+
+    MenuItem testMenu = result.addMenuItem("test");
+    testMenu.addMenuItem("Error_on_init", InitErrorWidget.class);
+    testMenu.addMenuItem("Error_on_event", EventErrorWidget.class);
+    testMenu.addMenuItem("Error_on_render", RenderErrorWidget.class);
+    testMenu.addMenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class);
+    testMenu.addMenuItem("Redirecting", RedirectingWidget.class);
 
     return result;
   }
