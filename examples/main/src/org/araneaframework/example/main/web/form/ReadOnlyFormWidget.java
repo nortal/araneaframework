@@ -23,7 +23,6 @@ public class ReadOnlyFormWidget extends DisabledFormWidget {
     putViewData("readonly", Boolean.TRUE);
 
     getMessageCtx().clearPermanentMessages();
-    getMessageCtx().showPermanentMessage(MessageContext.INFO_TYPE,
-        "#The form elements (except select controls and buttons) are read-only!");
+    getMessageCtx().showPermanentMessage(MessageContext.INFO_TYPE, "form.msg.readonly");
   }
 }

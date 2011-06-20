@@ -46,6 +46,7 @@ import org.araneaframework.example.main.web.demo.simple.SimpleBeanFormWidget;
 import org.araneaframework.example.main.web.demo.simple.SimpleFormWidget;
 import org.araneaframework.example.main.web.demo.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.demo.tree.UnsynchronizedTreeWidget;
+import org.araneaframework.example.main.web.form.ConversionFormWidget;
 import org.araneaframework.example.main.web.form.DisabledFormWidget;
 import org.araneaframework.example.main.web.form.ReadOnlyFormWidget;
 import org.araneaframework.example.main.web.management.company.CompanyListWidget;
@@ -177,6 +178,7 @@ public class MenuWidget extends TemplateMenuWidget {
     result.addMenuItem("forms.simple", org.araneaframework.example.main.web.form.SimpleFormWidget.class);
     result.addMenuItem("forms.disabled", DisabledFormWidget.class);
     result.addMenuItem("forms.readonly", ReadOnlyFormWidget.class);
+    result.addMenuItem("forms.converters", ConversionFormWidget.class);
 
     result.addMenuItem("lists");
     result.addMenuItem("advanced");

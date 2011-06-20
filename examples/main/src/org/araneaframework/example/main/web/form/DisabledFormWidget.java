@@ -25,7 +25,7 @@ public class DisabledFormWidget extends SimpleFormWidget {
     // Note: FormWidget.isDisabled() returns true only when all of its elements are disabled.
     // Here it would return false, since buttons are enabled.
 
-    getMessageCtx().showPermanentMessage(MessageContext.INFO_TYPE, "#The form elements (except buttons) are disabled!");
+    getMessageCtx().showPermanentMessage(MessageContext.INFO_TYPE, "form.msg.disabled");
   }
 
   @Override

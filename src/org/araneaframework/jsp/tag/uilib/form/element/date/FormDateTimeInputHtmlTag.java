@@ -261,7 +261,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    * If just super.writeDateInput is called then date's ViewModel does not have correct information about whether
    * onChange listeners are registered and who has registered them.
    */
-  @Override
   protected void writeDateInput(Writer out, String id, String name, String value, String label, boolean isMandatory,
       boolean isValid, Long size, boolean disabled, String styleClass, String accessKey, DateControl.ViewModel viewModel)
       throws Exception {

@@ -193,7 +193,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 
   public void handleEventValidateValues() {
     if (this.simpleForm.convertAndValidate()) {
-      getMessageCtx().showInfoMessage("#The form validates!");
+      getMessageCtx().showInfoMessage("form.msg.valid");
     }
   }
 
