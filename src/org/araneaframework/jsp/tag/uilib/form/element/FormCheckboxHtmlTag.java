@@ -37,7 +37,6 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 
   protected String onChangePrecondition;
 
-  
   public FormCheckboxHtmlTag() {
     this.baseStyleClass = "aranea-checkbox";
   }
@@ -50,7 +49,7 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("CheckboxControl");
 

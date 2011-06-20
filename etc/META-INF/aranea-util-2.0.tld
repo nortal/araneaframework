@@ -148,4 +148,10 @@
     <function-signature>boolean getFormBackgroundValidation(javax.servlet.jsp.JspContext)</function-signature>
   </function>
 
+  <function>
+    <name>getPopupEntries</name>
+    <function-class>org.araneaframework.jsp.tag.AraneaJspFunctions</function-class>
+    <function-signature>java.util.Map getPopupEntries(javax.servlet.jsp.JspContext)</function-signature>
+  </function>
+
 </taglib>

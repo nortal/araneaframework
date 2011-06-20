@@ -9,6 +9,9 @@
   <!-- SimpleFormWidget context starts here -->
   <ui:widgetContext>
 
+    <!-- Variable to store how disabled form elements are rendered: as disabled or as read-only. -->
+    <c:set var="disabledRenderMode" value="${viewData.readonly ? 'readonly' : 'disabled'}" />
+
     <!-- Set the form widget context, in order to access and render form elements -->
     <ui:form id="simpleForm">
 
@@ -50,7 +53,7 @@
                 specific tag.
               -->
               <ui:formElement id="textbox1">
-                <ui:textInput styleClass="norm" />
+                <ui:textInput styleClass="norm" disabledRenderMode="${disabledRenderMode}" />
               </ui:formElement>
             </ui:cell>
           </ui:row>
@@ -60,7 +63,7 @@
               <ui:label id="textbox3" />
             </ui:cell>
             <ui:cell>
-              <ui:textInput id="textbox3" styleClass="norm" />
+              <ui:textInput id="textbox3" styleClass="norm" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -69,7 +72,7 @@
               <ui:label id="textbox2" />
             </ui:cell>
             <ui:cell>
-              <ui:textInput id="textbox2" styleClass="norm right" />
+              <ui:textInput id="textbox2" styleClass="norm right" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -78,7 +81,7 @@
               <ui:label id="textarea" />
             </ui:cell>
             <ui:cell>
-              <ui:textarea id="textarea" rows="4" cols="80" />
+              <ui:textarea id="textarea" rows="4" cols="80" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -87,7 +90,7 @@
               <ui:label id="richTextarea" />
             </ui:cell>
             <ui:cell>
-              <ui:richTextarea id="richTextarea" rows="4" cols="80" />
+              <ui:richTextarea id="richTextarea" rows="4" cols="80" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -96,7 +99,7 @@
               <ui:label id="dateTime" />
             </ui:cell>
             <ui:cell>
-              <ui:dateTimeInput id="dateTime" />
+              <ui:dateTimeInput id="dateTime" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -105,8 +108,8 @@
               <ui:label id="dateTimeRangeEnd" />
             </ui:cell>
             <ui:cell>
-              <ui:dateTimeInput id="dateTimeRangeStart" />
-              <ui:dateTimeInput id="dateTimeRangeEnd" />
+              <ui:dateTimeInput id="dateTimeRangeStart" disabledRenderMode="${disabledRenderMode}" />
+              <ui:dateTimeInput id="dateTimeRangeEnd" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -115,7 +118,7 @@
               <ui:label id="date" />
             </ui:cell>
             <ui:cell>
-              <ui:dateInput id="date" />
+              <ui:dateInput id="date" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -124,7 +127,7 @@
               <ui:label id="dateRangeEnd" />
             </ui:cell>
             <ui:cell>
-              <ui:dateInput id="dateRangeStart" /> - <ui:dateInput id="dateRangeEnd" />
+              <ui:dateInput id="dateRangeStart" /> - <ui:dateInput id="dateRangeEnd" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -133,7 +136,7 @@
               <ui:label id="time" />
             </ui:cell>
             <ui:cell>
-              <ui:timeInput id="time" />
+              <ui:timeInput id="time" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -142,8 +145,8 @@
               <ui:label id="timeRangeEnd" />
             </ui:cell>
             <ui:cell>
-              <ui:timeInput id="timeRangeStart" />
-              <ui:timeInput id="timeRangeEnd" />
+              <ui:timeInput id="timeRangeStart" disabledRenderMode="${disabledRenderMode}" />
+              <ui:timeInput id="timeRangeEnd" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -152,7 +155,7 @@
               <ui:label id="intNumber" />
             </ui:cell>
             <ui:cell>
-              <ui:numberInput id="intNumber" styleClass="right" />
+              <ui:numberInput id="intNumber" styleClass="right" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -161,9 +164,9 @@
               <ui:label id="intRangeEnd" />
             </ui:cell>
             <ui:cell>
-              <ui:numberInput id="intRangeStart" styleClass="right" />
+              <ui:numberInput id="intRangeStart" styleClass="right" disabledRenderMode="${disabledRenderMode}" />
               -
-              <ui:numberInput id="intRangeEnd" styleClass="right" />
+              <ui:numberInput id="intRangeEnd" styleClass="right" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -172,7 +175,7 @@
               <ui:label id="floatNumber" />
             </ui:cell>
             <ui:cell>
-              <ui:floatInput id="floatNumber" styleClass="right" />
+              <ui:floatInput id="floatNumber" styleClass="right" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -181,9 +184,9 @@
               <ui:label id="floatRangeEnd" />
             </ui:cell>
             <ui:cell>
-              <ui:floatInput id="floatRangeStart" styleClass="right" />
+              <ui:floatInput id="floatRangeStart" styleClass="right" disabledRenderMode="${disabledRenderMode}" />
               -
-              <ui:floatInput id="floatRangeEnd" styleClass="right" />
+              <ui:floatInput id="floatRangeEnd" styleClass="right" disabledRenderMode="${disabledRenderMode}" />
             </ui:cell>
           </ui:row>
 
@@ -192,6 +195,7 @@
               <ui:label id="checkbox" />
             </ui:cell>
             <ui:cell>
+              <!-- This input does not support read-only mode. -->
               <ui:checkbox id="checkbox" />
             </ui:cell>
           </ui:row>
@@ -201,6 +205,7 @@
               <ui:label id="select" />
             </ui:cell>
             <ui:cell>
+              <!-- This input does not support read-only mode. -->
               <ui:select id="select" localizeDisplayItems="false" />
             </ui:cell>
           </ui:row>
@@ -210,6 +215,7 @@
               <ui:label id="selectRadio" />
             </ui:cell>
             <ui:cell>
+              <!-- This input does not support read-only mode. -->
               <ui:radioSelect id="selectRadio" type="vertical" localizeDisplayItems="false" />
             </ui:cell>
           </ui:row>
@@ -219,6 +225,7 @@
               <ui:label id="multiselect" />
             </ui:cell>
             <ui:cell>
+              <!-- This input does not support read-only mode. -->
               <ui:multiSelect id="multiselect" size="10" localizeDisplayItems="false" />
             </ui:cell>
           </ui:row>
@@ -228,6 +235,7 @@
               <ui:label id="multiselectChecks" />
             </ui:cell>
             <ui:cell>
+              <!-- This input does not support read-only mode. -->
               <ui:checkboxMultiSelect id="multiselectChecks" type="vertical" localizeDisplayItems="false" />
             </ui:cell>
           </ui:row>
@@ -238,7 +246,6 @@
         <tui:componentActions>
           <ui:button id="fillBtn" />
           <ui:button id="validateBtn" />
-          <ui:button id="disableBtn" />
         </tui:componentActions>
       </tui:component>
 

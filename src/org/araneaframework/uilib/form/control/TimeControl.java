@@ -18,11 +18,16 @@ package org.araneaframework.uilib.form.control;
 
 import static org.araneaframework.uilib.util.ConfigurationUtil.getCustomTimeFormat;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.UiLibMessages;
+import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
 
 /**
  * This class represents a {@link org.araneaframework.uilib.form.control.TimestampControl}, that holds only time - that
@@ -63,6 +68,31 @@ public class TimeControl extends TimestampControl {
       this.dateTimeInputPattern = getCustomTimeFormat(getEnvironment(), true, this.dateTimeInputPattern);
       this.dateTimeOutputPattern = getCustomTimeFormat(getEnvironment(), false, this.dateTimeOutputPattern);
     }
+  }
+
+  @Override
+  protected ParsedDate parseDate(String parameterValue) {
+    Calendar cal = Calendar.getInstance();
+
+    try {
+      Date parsed = DateUtils.parseDate(parameterValue, new String[] { this.dateTimeInputPattern });
+      cal.setTime(parsed);
+
+      int hour = cal.get(Calendar.HOUR_OF_DAY);
+      int minute = cal.get(Calendar.MINUTE);
+      int second = cal.get(Calendar.SECOND);
+
+      if (this.value != null) {
+        cal.setTime(this.value);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, second);
+      }
+    } catch (ParseException e) {
+      ExceptionUtil.uncheckException(e);
+    }
+
+    return new ParsedDate(cal.getTime(), this.dateTimeOutputPattern);
   }
 
   /**
@@ -145,4 +175,74 @@ public class TimeControl extends TimestampControl {
     return result >= allowedRangeStart && result <= allowedRangeEnd ? result : allowedRangeStart;
   }
 
+  @Override
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  public class ViewModel extends TimestampControl.ViewModel {
+
+    protected String time;
+
+    /**
+     * Takes an outer class snapshot.
+     */
+    public ViewModel() {
+      String[] timeInnerData = (String[]) TimeControl.this.innerData;
+      this.time = timeInnerData == null ? null : timeInnerData[0];
+    }
+
+    /**
+     * Returns time as <code>String</code>.
+     * 
+     * @return time as <code>String</code>.
+     */
+    public String getTime() {
+      return this.time;
+    }
+
+    /**
+     * Provides the hour (0-23) part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed hour value as string.
+     * @since 2.0
+     */
+    public String getHourOfDay() {
+      return readDateValue(this.time, this.dateTimeOutputPattern, Calendar.HOUR_OF_DAY, 0);
+    }
+
+    /**
+     * Provides the hour (0-11) part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed hour value as string.
+     * @since 2.0
+     */
+    public String getHour() {
+      return readDateValue(this.time, this.dateTimeOutputPattern, Calendar.HOUR_OF_DAY, 0);
+    }
+
+    /**
+     * Provides the minute part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed minute value as string.
+     * @since 2.0
+     */
+    public String getMinutes() {
+      return readDateValue(this.time, this.dateTimeOutputPattern, Calendar.MINUTE, 0);
+    }
+
+    /**
+     * Provides the seconds part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed seconds value as string.
+     * @since 2.0
+     */
+    public String getSeconds() {
+      return readDateValue(this.time, this.dateTimeOutputPattern, Calendar.SECOND, 0);
+    }
+  }
 }

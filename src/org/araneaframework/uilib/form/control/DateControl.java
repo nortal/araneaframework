@@ -101,4 +101,31 @@ public class DateControl extends TimestampControl {
   protected Calendar getCalendarInstance() {
     return Calendar.getInstance();
   }
+
+  @Override
+  public ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  public class ViewModel extends TimestampControl.ViewModel {
+
+    protected String date;
+
+    /**
+     * Takes an outer class snapshot.
+     */
+    public ViewModel() {
+      String[] dateInnerData = (String[]) DateControl.this.innerData;
+      this.date = dateInnerData == null ? null : dateInnerData[0];
+    }
+
+    /**
+     * Returns date as <code>String</code>.
+     * 
+     * @return date as <code>String</code>.
+     */
+    public String getDate() {
+      return this.date;
+    }
+  }
 }

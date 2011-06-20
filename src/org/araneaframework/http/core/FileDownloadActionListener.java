@@ -89,7 +89,7 @@ public class FileDownloadActionListener extends StandardActionListener {
       // If this is called then the popup will be removed later.
       // This is important because we don't want to open previously opened popups.
       this.popupCtx.renderPopup(this.lastPopupId);
-      url = this.popupCtx.getPopups().get(this.lastPopupId).toURL();
+      url = this.popupCtx.getPopups().get(this.lastPopupId).getUrl();
 
     } finally {
       // We return the URL of the popup to the client.

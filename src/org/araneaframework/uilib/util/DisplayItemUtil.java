@@ -366,7 +366,7 @@ public abstract class DisplayItemUtil implements Serializable {
     if (items != null) {
       int i = 0;
       for (DisplayItem item : items) {
-        result[i++] = item.getValue();
+        result[i++] = item != null ? item.getValue() : null; // Just-in-case check.
       }
     }
     return result;

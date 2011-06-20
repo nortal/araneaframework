@@ -91,7 +91,7 @@ public class WindowClosingService extends BaseService {
     // Composing the BODY.onLoad script:
     StringBuffer script = new StringBuffer();
     if (serviceInfo != null && !StringUtils.isBlank(this.reloadParentScript)) {
-      script.append(MessageUtil.format(this.reloadParentScript, serviceInfo.toURL()));
+      script.append(MessageUtil.format(this.reloadParentScript, serviceInfo.getUrl()));
     }
     script.append(StringUtils.defaultIfEmpty(this.delayedCloseScript, ""));
 

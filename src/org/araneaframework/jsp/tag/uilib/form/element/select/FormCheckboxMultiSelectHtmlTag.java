@@ -16,17 +16,11 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
+import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
-import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
-import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
+import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
-import org.araneaframework.uilib.support.DisplayItem;
-import org.araneaframework.uilib.support.DisplayItemGroup;
 
 /**
  * Standard select form element tag.
@@ -38,140 +32,35 @@ import org.araneaframework.uilib.support.DisplayItemGroup;
  *  body-content = "JSP"
  *  description = "Form multi-select checkbox field, represents UiLib 'MultiSelectControl'."
  */
-public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
-
-  /**
-   * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
-   * 
-   * @since 1.2
-   */
-  protected String localizeDisplayItems;
-
-  protected String type = "horizontal";
-
-  protected boolean labelBefore;
-
-  public FormCheckboxMultiSelectHtmlTag() {
-    setHasElementContextSpan(false);
-  }
-
-  @Override
-  protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);
-    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
-    return EVAL_BODY_INCLUDE;
-  }
+public class FormCheckboxMultiSelectHtmlTag extends BaseFormCustomSelectHtmlTag {
 
   @Override
   @SuppressWarnings("unchecked")
-  public int doEndTag(Writer out) throws Exception {
-    assertControlType("MultiSelectControl");
-
-    if (!"horizontal".equals(this.type) && !"vertical".equals(this.type)) {
-      throw new AraneaJspException("Attribute 'type' can be only either 'horizontal' or 'vertical'!");
-    }
-
-    // Prepare
+  protected void writeInput(Writer out, String htmlId, String value, boolean disabled) throws IOException {
     MultiSelectControl.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
-    FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
-    FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
-    List<DisplayItemGroup> groups = viewModel.getGroups();
 
-    for (DisplayItemGroup group : groups) {
-      if (group.isDisabled() || group.isEmpty()) {
-        continue;
-      }
+    JspUtil.writeOpenStartTag(out, "input");
+    JspUtil.writeAttribute(out, "id", htmlId);
+    JspUtil.writeAttribute(out, "name", getFullFieldId());
+    JspUtil.writeAttribute(out, "class", getStyleClass());
+    JspUtil.writeAttribute(out, "style", getStyle());
+    JspUtil.writeAttribute(out, "type", "checkbox");
+    JspUtil.writeAttribute(out, "value", value);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-      for (DisplayItem displayItem : group.getEnabledOptions()) {
-
-        // Set the corresponding HTML id for label and checkbox so that clicking on label sets the checkbox value too:
-        String checkboxId = viewModel.getScope().toString() + displayItem.getValue();
-
-        if (this.labelBefore) {
-          writeLabel(label, this.derivedId, checkboxId, displayItem.getLabel());
-        }
-
-        registerSubtag(item);
-        item.setHtmlId(checkboxId);
-        item.setId(this.derivedId);
-        item.setValue(displayItem.getValue());
-        item.setEvents(Boolean.toString(this.events));
-        item.setValidateOnEvent(Boolean.toString(this.validateOnEvent));
-        item.setStyleClass(getStyleClass());
-
-        if (this.updateRegions != null) {
-          item.setUpdateRegions(this.updateRegions);
-        }
-
-        if (this.globalUpdateRegions != null) {
-          item.setGlobalUpdateRegions(this.globalUpdateRegions);
-        }
-
-        if (this.style != null) {
-          item.setStyle(this.style);
-        }
-
-        if (this.tabindex != null) {
-          item.setTabindex(this.tabindex);
-        }
-
-        executeStartSubtag(item);
-        executeEndTagAndUnregister(item);
-
-        if (!this.labelBefore) {
-          writeLabel(label, this.derivedId, checkboxId, displayItem.getLabel());
-        }
-
-        if ("horizontal".equals(this.type)) {
-          out.write("&nbsp;");
-        } else if ("vertical".equals(this.type)) {
-          JspUtil.writeStartEndTag(out, "br");
-        }
-      }
+    if (disabled) {
+      JspUtil.writeAttribute(out, "disabled", "disabled");
     }
 
-    return super.doEndTag(out);
-  }
+    if (ArrayUtils.contains(viewModel.getValues(), value)) {
+      JspUtil.writeAttribute(out, "checked", "checked");
+    }
 
-  /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "The way the checkboxes will be rendered - can be either 'vertical' or 'horizontal'. By default 'horizontal'."
-   */
-  public void setType(String type) {
-    this.type = evaluate("type", type, String.class);
-  }
+    if (this.events && viewModel.isOnChangeEventRegistered()) {
+      this.writeSubmitScriptForUiEvent(out, "onclick", this.derivedId, "onChanged", "", this.updateRegionNames);
+    }
 
-  /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Boolean that controls whether label is before or after each checkbox. False by default."
-   */
-  public void setLabelBefore(String labelBefore) throws JspException {
-    this.labelBefore = evaluateNotNull("labelBefore", labelBefore, Boolean.class);
-  }
-
-  /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
-   * @since 1.2
-   */
-  public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, String.class);
-  }
-
-  protected void writeLabel(FormCheckboxMultiSelectItemLabelHtmlTag label, String id, String checkboxId, String value)
-      throws JspException {
-    registerSubtag(label);
-    label.setId(id);
-    label.setCheckboxId(checkboxId);
-    label.setLocalizeDisplayItems(this.localizeDisplayItems);
-    label.setLabelId(value);
-    executeStartSubtag(label);
-    executeEndTagAndUnregister(label);
+    JspUtil.writeAttributes(out, this.attributes);
+    JspUtil.writeCloseStartEndTag_SS(out);
   }
 }

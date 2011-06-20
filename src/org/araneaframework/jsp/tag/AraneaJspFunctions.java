@@ -31,7 +31,10 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.http.PopupServiceInfo;
+import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.filter.StandardPopupFilterWidget;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.util.JspUtil;
@@ -204,4 +207,12 @@ public class AraneaJspFunctions {
     return ConfigurationUtil.isBackgroundFormValidationEnabled(w.getEnvironment());
   }
 
+  public static Map<String, PopupServiceInfo> getPopupEntries(JspContext jspContext) {
+    PopupWindowContext popupContext = JspUtil.getEnvironment(jspContext).getEntry(PopupWindowContext.class);
+    Map<String, PopupServiceInfo> popups = popupContext.getPopups();
+    for (String popupId : popups.keySet()) {
+      ((StandardPopupFilterWidget) popupContext).renderPopup(popupId);
+    }
+    return popups;
+  }
 }

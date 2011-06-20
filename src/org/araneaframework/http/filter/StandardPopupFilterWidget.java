@@ -185,7 +185,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         return properties;
       }
 
-      public String toURL() {
+      public String getUrl() {
         // XXX: Should I use something more generic here?
         return url + "?" + ThreadContext.THREAD_SERVICE_KEY + "=" + threadId;
       }
@@ -207,7 +207,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         return properties;
       }
 
-      public String toURL() {
+      public String getUrl() {
         return url;
       }
     });
@@ -411,7 +411,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       this.overrideTransaction = overrideTransaction;
     }
 
-    public String toURL() {
+    public String getUrl() {
       StringBuffer url = new StringBuffer(StringUtils.defaultString(this.requestUrl));
       url.append('?').append(TopServiceContext.TOP_SERVICE_KEY).append("=").append(this.topServiceId);
       if (this.threadServiceId != null) {
@@ -449,7 +449,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
       popupObject.setStringProperty("popupId", popup.getKey());
       popupObject.setStringProperty("windowProperties", serviceInfo.getPopupProperties().toString());
-      popupObject.setStringProperty("url", serviceInfo.toURL());
+      popupObject.setStringProperty("url", serviceInfo.getUrl());
       popupArray.append(popupObject.toString());
       this.renderedPopups.add(popup.getKey());
     }

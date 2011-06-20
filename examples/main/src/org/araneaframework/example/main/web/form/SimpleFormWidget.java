@@ -80,7 +80,7 @@ public class SimpleFormWidget extends TemplateBaseWidget {
 
   public static final String[] CARS_USA = { "Chrysler", "Ford", "Jeep" };
 
-  private FormWidget simpleForm = new FormWidget();
+  protected FormWidget simpleForm = new FormWidget();
 
   /**
    * Builds a simple form widget with elements and initializes this widget.
@@ -155,10 +155,6 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     ButtonControl validateButton = new ButtonControl(new ProxyOnClickEventListener(this, "validateValues"));
     this.simpleForm.addElement("validateBtn", "form.validate", validateButton);
 
-    // Add another button to form to disable/enable form elements.
-    ButtonControl disableButton = new ButtonControl(new ProxyOnClickEventListener(this, "disable"));
-    this.simpleForm.addElement("disableBtn", "form.disable", disableButton);
-
     // The usual, add the created widget to main widget.
     addWidget("simpleForm", this.simpleForm);
   }
@@ -199,16 +195,6 @@ public class SimpleFormWidget extends TemplateBaseWidget {
     if (this.simpleForm.convertAndValidate()) {
       getMessageCtx().showInfoMessage("#The form validates!");
     }
-  }
-
-  public void handleEventDisable() {
-    // We use the first textbox element to track whether form is disabled, since form.isDisabled() returns true only
-    // all of its elements are disabled. However, we want to keep the disable/enable button always enabled, to re-enable
-    // to form when it is disabled.
-
-    this.simpleForm.setDisabled(!this.simpleForm.getElement("textbox1").isDisabled());
-    this.simpleForm.getElement("disableBtn").setDisabled(false);
-    getMessageCtx().showInfoMessage("#The form elements were disabled or re-enabled!");
   }
 
   public static DefaultSelectControl createSimpleSelect(boolean radio) {
