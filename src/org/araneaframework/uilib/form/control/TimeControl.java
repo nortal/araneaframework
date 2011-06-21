@@ -24,7 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
@@ -37,7 +38,7 @@ import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
  */
 public class TimeControl extends TimestampControl {
 
-  private static final Logger LOG = Logger.getLogger(TimeControl.class);
+  private static final Log LOG = LogFactory.getLog(TimeControl.class);
 
   /**
    * This is the default time format for this control.
