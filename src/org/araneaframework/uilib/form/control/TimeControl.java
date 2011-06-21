@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.araneaframework.core.util.ExceptionUtil;
+import org.apache.log4j.Logger;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
@@ -36,6 +36,8 @@ import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
  */
 public class TimeControl extends TimestampControl {
+
+  private static final Logger LOG = Logger.getLogger(TimeControl.class);
 
   /**
    * This is the default time format for this control.
@@ -89,7 +91,7 @@ public class TimeControl extends TimestampControl {
         cal.set(Calendar.SECOND, second);
       }
     } catch (ParseException e) {
-      ExceptionUtil.uncheckException(e);
+      LOG.debug("Could not convert time value.");
     }
 
     return new ParsedDate(cal.getTime(), this.dateTimeOutputPattern);

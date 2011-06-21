@@ -115,7 +115,7 @@ public class StandardStatisticFilterService extends BaseFilterService {
     this.childService._getService().action(path, input, output);
     long duration = System.currentTimeMillis() - start;
 
-    if (this.threshold < duration && LOG.isInfoEnabled()) {
+    if (this.message != null && this.threshold < duration && LOG.isInfoEnabled()) {
       LOG.info(evaluateMessage(this.message, ServletUtil.getRequest(input), duration));
     }
   }
