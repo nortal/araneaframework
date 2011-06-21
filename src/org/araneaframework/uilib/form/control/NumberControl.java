@@ -102,14 +102,6 @@ public class NumberControl extends BlankStringNullableControl<BigInteger> implem
   }
 
   /**
-   * Trims the request parameter.
-   */
-  @Override
-  protected String preprocessRequestParameter(String parameterValue) {
-    return StringUtils.trimToNull(super.preprocessRequestParameter(parameterValue));
-  }
-
-  /**
    * Checks that the submitted data is a valid integer number.
    */
   @Override
@@ -142,7 +134,7 @@ public class NumberControl extends BlankStringNullableControl<BigInteger> implem
     boolean lessThanMin = this.minValue == null ? false : getRawValue().compareTo(this.minValue) == -1;
     boolean greaterThanMax = this.maxValue == null ? false : getRawValue().compareTo(this.maxValue) == 1;
 
-    if (lessThanMin || greaterThanMax) {
+    if (lessThanMin && greaterThanMax) {
       addErrorWithLabel(UiLibMessages.NUMBER_NOT_BETWEEN, this.minValue.toString(), this.maxValue.toString());
     } else if (lessThanMin) {
       addErrorWithLabel(UiLibMessages.NUMBER_NOT_GREATER, this.minValue.toString());

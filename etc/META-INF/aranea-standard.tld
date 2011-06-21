@@ -341,7 +341,62 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>Optional CSS style for the region tag.</description>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Optional CSS class for the region tag.</description>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
+
+  <tag>
+    <name>updateRegionRow</name>
+    <tag-class>org.araneaframework.jsp.tag.updateregion.UpdateRegionRowHtmlTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description>Local ID of the update region.</description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Global ID of the update region.</description>
+      <name>globalId</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Provides a way to use custom HTML tag (default: SPAN). Does not break client-side scripts. Use with caution!</description>
+      <name>tag</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Optional CSS style for the region tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Optional CSS class for the region tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
 
 	<tag>
 		<name>listRowCheckBox</name>
@@ -1615,14 +1670,26 @@
 	</tag>
 
 	<tag>
+		<description>UiLib form element tag.&lt;br/&gt;Makes available following variables:&lt;ul&gt;&lt;li&gt;&lt;i&gt;formElement&lt;/i&gt; - form element view model.&lt;/li&gt;&lt;li&gt;&lt;i&gt;formElementId&lt;/i&gt; - form element ID.&lt;/li&gt;&lt;li&gt;&lt;i&gt;formElementFullId&lt;/i&gt; - form element complete ID.&lt;/li&gt;&lt;li&gt;&lt;i&gt;formElementValue&lt;/i&gt; - form element value.&lt;/li&gt;&lt;/ul&gt;</description>
 		<name>formElement</name>
 		<tag-class>org.araneaframework.jsp.tag.uilib.form.FormElementTag</tag-class>
 		<body-content>JSP</body-content>
-
 		<attribute>
-			<description>UiLib form element id.</description>
+			<description>Required form element ID in the context of current form (set by the form tag)</description>
 			<name>id</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Optional: the expected control name for checking control correctness.</description>
+			<name>expectedControl</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Optional: mark form element rendered (not rendered form element values won't be read during request).</description>
+			<name>markRendered</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
@@ -1916,7 +1983,7 @@
 		<attribute>
 			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
 			<name>handler</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
@@ -1957,7 +2024,7 @@
 		<attribute>
 			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
 			<name>handler</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
@@ -2003,6 +2070,20 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+    <attribute>
+      <description>A Boolean that indicates whether the tag can be rendered or not. Default: true.</description>
+      <name>renderTag</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>A Boolean that indicates whether the body is rendered (even if the tag is not rendered) or not. Default: false.</description>
+      <name>forceRenderBody</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
 	</tag>
 
 	<tag>
@@ -2819,6 +2900,20 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+    <attribute>
+      <description>Optional CSS style for the region tag.</description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+    <attribute>
+      <description>Optional CSS class for the region tag.</description>
+      <name>styleClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
 	</tag>
 
 	<tag>
@@ -2837,6 +2932,13 @@
 			<description>Attribute value.</description>
 			<name>value</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Whether to omit this attribute, if value is empty.</description>
+			<name>omitEmpty</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
@@ -4257,7 +4359,7 @@
 		<attribute>
 			<description>A javascript handler function that takes two parameters - the event object and the element ID for which the event was fired. Example: function(event, elementId) { alert(elementId); }</description>
 			<name>handler</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
@@ -4432,7 +4534,6 @@
 			<name>validateOnEvent</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-
 			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
@@ -4470,6 +4571,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+    <attribute>
+      <description>Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA.</description>
+      <name>localizeDisplayItems</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
 	</tag>
 
 	<tag>

@@ -19,7 +19,8 @@ package org.araneaframework.uilib.form.data;
 import org.araneaframework.uilib.form.Data;
 
 /**
- * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
+ * @since 2.0
  */
 public class CharData extends Data<Character> {
 

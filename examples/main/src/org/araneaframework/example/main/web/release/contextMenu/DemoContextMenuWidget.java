@@ -65,7 +65,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
       friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
       friend.setCountry(allSuggestions.get(rn.nextInt(allSuggestions.size())));
       this.friends.add(friend);
-      this.lastId = this.lastId++;
+      this.lastId++;
     }
 
     for (String female : ExampleData.females) {
@@ -75,7 +75,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
       friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
       friend.setCountry(allSuggestions.get(rn.nextInt(allSuggestions.size())));
       this.friends.add(friend);
-      this.lastId = this.lastId++;
+      this.lastId++;
     }
   }
 

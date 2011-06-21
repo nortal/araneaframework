@@ -10,4 +10,5 @@
 	font-weight: bold;
 	font-size: 11px;
 	white-space: nowrap;
+	z-index: 100;
 }

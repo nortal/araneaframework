@@ -94,3 +94,5 @@ Aranea.Popup = {
 		window.setTimeout('window.close()', delay);
 	}
 };
+
+document.observe('aranea:loaded', Aranea.Popup.processPopups);

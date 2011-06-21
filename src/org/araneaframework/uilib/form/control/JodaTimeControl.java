@@ -23,7 +23,7 @@ import org.joda.time.DateTime;
  * The DateControl for storing the date data in {@link DateTime} object from the  Joda Time API.
  * Basically has the same functionlity as {@link DateControl}, except the data type.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class JodaTimeControl extends JodaBaseControl {

@@ -53,7 +53,7 @@ public class FormListTag extends BaseWidgetTag {
     super.doStartTag(out);
 
     try {
-      this.formListViewModel = (FormListWidget.ViewModel) viewModel;
+      this.formListViewModel = (FormListWidget.ViewModel) this.viewModel;
     } catch (ClassCastException e) {
       throw new AraneaJspException("Could not acquire form list view model. <ui:formList> should have id specified "
           + "or should be in context of real FormListWidget.", e);
@@ -64,9 +64,7 @@ public class FormListTag extends BaseWidgetTag {
     return EVAL_BODY_INCLUDE;
   }
 
-  /* ***********************************************************************************
-   * FINALLY - reset some fields to allow safe reuse from tag pool.
-   * ********************************************************************************* */
+  // FINALLY - reset some fields to allow safe reuse from tag pool:
 
   @Override
   public void doFinally() {

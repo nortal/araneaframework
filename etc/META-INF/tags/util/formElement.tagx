@@ -1,120 +1,46 @@
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
-	version="2.1">
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:ui="http://araneaframework.org/tag-library/standard_rt" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+  version="2.0">
 
-	<jsp:directive.tag import="java.util.Stack"/>
-	<jsp:directive.tag import="org.araneaframework.core.ApplicationWidget"/>
-	<jsp:directive.tag import="org.araneaframework.jsp.tag.uilib.form.FormElementTag"/>
-	<jsp:directive.tag import="org.araneaframework.jsp.tag.uilib.form.FormTag"/>
-	<jsp:directive.tag import="org.araneaframework.jsp.util.JspWidgetUtil"/>
-	<jsp:directive.tag import="org.araneaframework.uilib.form.FormWidget"/>
+  <jsp:directive.tag
+    description="Evaluates the ID of the form element and sets variables formElement, formElementId, formElementFullId, formElementValue, formElementControl. You can access them in the body." />
 
-	<jsp:directive.tag
-		description="Evaluates the Id of the form element and sets variables formElement, formElementId, and formElementValue. You can access them in the body." />
+  <!-- ================= TAG ATTRIBUTES BEGIN ================= -->
 
-	<!-- ================= TAG ATTRIBUTES BEGIN ================= -->
+  <jsp:directive.attribute name="id" description="The given ID of the form element (may be null)." />
+  <jsp:directive.attribute name="controlType" description="The type of the expected control." />
+  <jsp:directive.attribute name="markRendered" type="java.lang.Boolean"
+    description="Whether to mark form element rendered. Default: true." />
+  <jsp:directive.attribute name="label" type="java.lang.Boolean"
+    description="Whether the form element rendered is a label (true) or an input (false). Default is input mode." />
 
-	<jsp:directive.attribute name="id" description="The given ID of the form element (may be null)." />
-	<jsp:directive.attribute name="controlType" description="The type of the expected control." />
-	<jsp:directive.attribute name="label" type="java.lang.Boolean" description="Whether the form element rendered is a label (true) or an input (false)." />
-	<jsp:directive.attribute name="markRendered" type="java.lang.Boolean" description="Whether to mark form element rendered. Default: true." />
+  <!-- ================== TAG ATTRIBUTES END ================== -->
 
-	<!-- ================== TAG ATTRIBUTES END ================== -->
+  <ui:formElement id="${empty id ? formElementId : id}" expectedControl="${controlType}" markRendered="${empty markRendered or markRendered}">
 
-	<c:if test="${empty markRendered}">
-		<c:set var="markRendered" value="true"/>
-	</c:if>
+    <c:if test="${not empty formElementControl}">
+      <c:set var="control" value="${formElementControl}" scope="request" />
+    </c:if>
 
-	<util:assert test="${not empty formId}"
-		msg="No form context created with the 'form' tag." />
+    <c:choose>
+      <c:when test="${empty label}">
+        <jsp:doBody />
+      </c:when>
+      <c:otherwise>
+        <util:formElementBgValidation label="${label}">
+          <jsp:doBody />
+        </util:formElementBgValidation>
+      </c:otherwise>
+    </c:choose>
 
-	<util:assert test="${(not empty id) or (not empty formElementId)}"
-		msg="No ID attribute provided nor form element context created." />
+    <c:if test="${(not empty label) and not label and formElement.valid}">
+      <util:formElementErrors />
+    </c:if>
 
-	<!-- If there is already formElementId defined then let's store it in a stack so that we can return to it later. -->
+    <c:remove var="control" scope="request" />
 
-	<c:if test="${not empty formElementId}">
-		<jsp:scriptlet>
-			String id = (String) getJspContext().getAttribute(FormElementTag.ID_KEY, PageContext.REQUEST_SCOPE);
-			Stack ids = (Stack) getJspContext().getAttribute("formElementIds", PageContext.REQUEST_SCOPE);
-			if (ids == null) ids = new Stack();
-			ids.push(id); // Store the current form element
-			getJspContext().setAttribute("formElementIds", ids, PageContext.REQUEST_SCOPE);
-		</jsp:scriptlet>
-	</c:if>
+    <c:out value=" "/>
 
-	<c:if test="${not empty id and formElementId ne id}">
-		<c:set var="formElement" value="${form.elements[id].viewModel}" scope="request"/>
-		<c:set var="formElementId" value="${formElement.scope.id}" scope="request"/>
-		<c:set var="formElementValue" value="${formElement.value}" scope="request"/>
-	</c:if>
-
-	<util:assert test="${not empty formElementId}" msg="The form element ID not found."/>
-	<util:assert test="${not empty form.elements[formElementId]}" msg="The form '${formFullId}' does not have element '${formElementId}'."/>
-
-	<c:set var="formElementFullId" value="${formElement.scope}" scope="request"/>
-
-	<c:if test="${not empty formElement.control}">
-		<c:set var="control" value="${formElement.control}" scope="request"/>
-	</c:if>
-
-	<c:if test="${not empty controlType}">
-		<util:assertControl type="${controlType}"/>
-	</c:if>
-
-	<c:choose>
-		<c:when test="${empty label}">
-			<jsp:doBody/>
-		</c:when>
-		<c:otherwise>
-			<util:formElementBgValidation label="${label}">
-				<jsp:doBody/>
-			</util:formElementBgValidation>
-		</c:otherwise>
-	</c:choose>
-
-	<c:if test="${markRendered}">
-		<util:markFormElementRendered/>
-	</c:if>
-
-	<c:if test="${(not empty label) and not label}">
-		<util:formElementErrors/>
-	</c:if>
-
-	<c:out value=" "/>
-
-	<!-- When we are finished with the the body, we can restore the previous element. -->
-	<c:choose>
-		<c:when test="${not empty formElementIds}">
-			<jsp:scriptlet>
-				Stack ids = (Stack) getJspContext().getAttribute("formElementIds", PageContext.REQUEST_SCOPE);
-				getJspContext().setAttribute("id", ids.empty() ? "": ids.pop());
-				getJspContext().setAttribute("formElementIds", ids, PageContext.REQUEST_SCOPE);
-			</jsp:scriptlet>
-		</c:when>
-		<c:otherwise>
-			<c:set var="id" value=""/>
-		</c:otherwise>
-	</c:choose>
-
-	<c:choose>
-		<c:when test="${not empty id}">
-			<c:set var="formElement" value="${form.elements[id].viewModel}" scope="request"/>
-			<c:set var="formElementId" value="${formElement.scope.id}" scope="request"/>
-			<c:set var="formElementValue" value="${formElement.value}" scope="request"/>
-			<c:set var="formElementFullId" value="${formElement.scope}" scope="request"/>
-			<c:if test="${not empty formElement.control}">
-				<c:set var="control" value="${formElement.control}" scope="request"/>
-			</c:if>
-		</c:when>
-		<c:otherwise>
-			<c:remove var="formElement"/>
-			<c:remove var="formElementId"/>
-			<c:remove var="formElementValue"/>
-			<c:remove var="formElementFullId"/>
-			<c:remove var="control"/>
-		</c:otherwise>
-	</c:choose>
+  </ui:formElement>
 
 </jsp:root>

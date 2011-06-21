@@ -49,8 +49,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public class FormConstraintTest extends TestCase {
 
-  boolean eventsWork = false;
-
   public FormConstraintTest(String name) {
     super(name);
   }
@@ -124,8 +122,7 @@ public class FormConstraintTest extends TestCase {
 
     // Testing primitive constraint
     testForm.getElement("myLongText").setConstraint(
-        new OptionalConstraint<String, Long>(
-            new NumberInRangeConstraint<String, Long>(BigInteger.valueOf(20000), null)));
+        new OptionalConstraint(new NumberInRangeConstraint<String, Long>(BigInteger.valueOf(20000), null)));
 
     processRequest(new StandardServletInputData(request), testForm);
 
@@ -139,8 +136,7 @@ public class FormConstraintTest extends TestCase {
 
     // Testing primitive constraint
     testForm.getElement("myLongText").setConstraint(
-        new OptionalConstraint<String, Long>(
-            new NumberInRangeConstraint<String, Long>(BigInteger.valueOf(20000), null)));
+        new OptionalConstraint(new NumberInRangeConstraint<String, Long>(BigInteger.valueOf(20000), null)));
 
     processRequest(new StandardServletInputData(request), testForm);
 

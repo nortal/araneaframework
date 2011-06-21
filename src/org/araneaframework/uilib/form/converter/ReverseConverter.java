@@ -23,7 +23,6 @@ import org.araneaframework.uilib.form.FormElementContext;
  * Reverses the conversion of a contained converter.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
- * 
  */
 public class ReverseConverter<C, D> extends BaseConverter<C, D> {
 
@@ -43,8 +42,7 @@ public class ReverseConverter<C, D> extends BaseConverter<C, D> {
    */
   @Override
   public D convertNotNull(C data) {
-    D result = this.toReverse.reverseConvert(data);
-    return result;
+    return this.toReverse.reverseConvert(data);
   }
 
   /**
@@ -52,12 +50,11 @@ public class ReverseConverter<C, D> extends BaseConverter<C, D> {
    */
   @Override
   public C reverseConvertNotNull(D data) {
-    C result = this.toReverse.convert(data);
-    return result;
+    return this.toReverse.convert(data);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
+  @SuppressWarnings("unchecked")
   public void setFormElementCtx(FormElementContext feCtx) {
     super.setFormElementCtx(feCtx);
     this.toReverse.setFormElementCtx(feCtx);

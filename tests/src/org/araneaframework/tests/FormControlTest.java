@@ -24,6 +24,7 @@ import org.araneaframework.core.StandardScope;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.tests.mock.MockFormElementContext;
 import org.araneaframework.tests.mock.MockUiLibUtil;
+import org.araneaframework.uilib.form.control.DefaultMultiSelectControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.form.control.NumberControl;
@@ -44,16 +45,14 @@ public class FormControlTest extends TestCase {
    */
   public void testMultiSelectOnEmptyRequest() throws Exception {
 
-    MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
-    MultiSelectControl<DisplayItem> ms = new MultiSelectControl<DisplayItem>("label", "value");
+    DefaultMultiSelectControl ms = new DefaultMultiSelectControl();
     ms.setFormElementCtx(new MockFormElementContext<List<DisplayItem>, Object>());
     ms._getComponent().init(new StandardScope("myMultiSelect", null), new MockEnvironment());
-    MockUiLibUtil.emulateHandleRequest(ms, "myMultiSelect", emptyRequest);
+
+    MockUiLibUtil.emulateHandleRequest(ms, "myMultiSelect", new MockHttpServletRequest());
     ms.convertAndValidate();
 
-    assertNotNull("MultiSelect must not return null if it's not present in request", ms.getRawValue());
-    assertTrue("MultiSelect must return List if it's not present in request", ms.getRawValue() != null);
-    assertTrue("MultiSelect must return empty List if it's not present in request", ms.getRawValue().isEmpty());
+    assertNull("MultiSelect must return null if its value is not present in request.", ms.getRawValue());
 
     ms._getComponent().destroy();
   }
@@ -83,7 +82,7 @@ public class FormControlTest extends TestCase {
    * 
    * @throws Exception
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public void testControlRequestDataSaving() throws Exception {
     MockHttpServletRequest valueRequest = new MockHttpServletRequest();
 
@@ -263,8 +262,8 @@ public class FormControlTest extends TestCase {
     textControl.setFormElementCtx(mockFormElementContext);
     textControl._getComponent().init(new StandardScope("myTextBox", null), new MockEnvironment());
 
-    textControl.setMinLength(new Long(5));
-    textControl.setMaxLength(new Long(20));
+    textControl.setMinLength(5L);
+    textControl.setMaxLength(20L);
 
     MockUiLibUtil.emulateHandleRequest(textControl, "myTextBox", correctValueRequest);
     textControl.convertAndValidate();
@@ -295,8 +294,8 @@ public class FormControlTest extends TestCase {
 
     // min=max correct
 
-    textControl.setMinLength(new Long(10));
-    textControl.setMaxLength(new Long(10));
+    textControl.setMinLength(10L);
+    textControl.setMaxLength(10L);
 
     correctValueRequest = new MockHttpServletRequest();
     correctValueRequest.addParameter("myTextBox", "1234567890");

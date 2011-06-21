@@ -56,7 +56,9 @@ var AjaxUpload = Class.create({
 		Object.extend(this.options, options);
 
 		this._addForm();
-		this._addTargetListeners();
+
+		this._addInputListener()
+		this._addDocumentListener()
 	},
 
 	// removes ajaxupload
@@ -87,6 +89,14 @@ var AjaxUpload = Class.create({
 			form.insert(new Element('input', {type: 'hidden', name: prop, value: this.options.data[prop]}));
 		}
 
+		this._addInput(form);
+
+		return form;
+	},
+
+	_addInput: function(form) {
+		if (!form) throw('AjaxUplaod._addInput: "form" is required!');
+
 		// Add input element for this form:
 		this._input = new Element('input', { type: 'file', name: this.options.name, 'class': 'ajax-upload-input' });
 		this._input.setStyle({
@@ -101,21 +111,33 @@ var AjaxUpload = Class.create({
 		});
 
 		form.insert(this._input.hide());
-
-		return form;
 	},
 
-	_addTargetListeners: function () {
+	// Resets file input (this._input) value.
+	_resetInput: function() {
+		this._input.value = '';
+
+		if (this._input.value) {
+			var form = this._input.up('form');
+			this._input.remove();
+			this._addInput(form);
+			this._addInputListener()
+			form = null;
+		}
+	},
+
+	_addInputListener: function () {
 		if (!this._input) {
 			throw('AjaxUpload: No input to observe provided!');
 		}
 
-		// 1. Submiting file:
+		// Submiting file:
 		Event.observe(this._input, 'change', function(event) {
 			var file = this.getFileName();
 			var ext = this.getFileExt();
 
 			if (this.options.onChange && this.options.onChange(this, file, ext, this.options) == false) {
+				this._resetInput();
 				return;
 			}
 
@@ -124,8 +146,14 @@ var AjaxUpload = Class.create({
 				this.submit();
 			}
 		}.bind(this));
+	},
 
-		// 2. When mouse is on the target (invisible input is over it)
+	_addDocumentListener: function () {
+		if (!this._input) {
+			throw('AjaxUpload: No input to observe provided!');
+		}
+
+		// When mouse is on the target (invisible input will be placed over it)
 		Event.observe(document, 'mousemove', function(event) {
 			this._input = $(this._input);
 			if (!this._input) {
@@ -161,7 +189,8 @@ var AjaxUpload = Class.create({
 		var iframe = new Element('iframe', {
 			src: "javascript:false;",
 			name: id,
-			id: id});
+			id: id
+		});
 
 		$(document.body).insert(iframe.hide());
 		Event.observe(iframe, 'load', this.options.iframeOnLoad.bind(this));
@@ -188,20 +217,19 @@ var AjaxUpload = Class.create({
 			form = null;
 			// The iframe will remove itself when submit is completed.
 		} else { // clear input to allow user to select same file:
-			this._input.value = '';
+			this._resetInput();
 		}
 
-		this.options.target.value = '';
+		this.options.target.value = ''; // Just in case.
 	},
 
 	getFileName: function() {
-		return this._input &&  this._input.value ?
-				this._input.value.replace(/.*(\/|\\)/, "") : '';
+		return this._input &&  this._input.value ? this._input.value.replace(/.*(\/|\\)/, '') : '';
 	},
 
 	getFileExt: function() {
 		var file = this._input ? this._input.value : null;
-		return file ? (/[.]/.exec(file) ? /[^.]+$/.exec(file.toLowerCase()) : '') : '';
+		return (-1 !== file.indexOf('.')) ? file.replace(/.*[.]/, '') : '';
 	},
 
 	isFileProvided: function() {
@@ -218,14 +246,9 @@ var AjaxUpload = Class.create({
 				doc.body.innerHTML = '';
 			}
 
-			Aranea.Logger.debug('File upload iframe onload - content: "'
-					+ (content ? content.substring(0, 80) : content)
-					+ (content && content.length > 80 ? '...' : '')
-					+ '" (length: ' + content.length + ')');
-
 			if (content && content.indexOf('OK') == 0 || content.indexOf('FAIL') >= 0) {
 				var fileName = this.getFileName();
-				this._input.value = '';
+				this._resetInput();
 				AjaxUpload.onLoad(iframe, this.options, fileName, content);
 			}
 
@@ -328,7 +351,7 @@ Object.extend(AjaxUpload, {
 
 		// 2. response is html document or plain text:
 		} else if (doc.body) {
-			response = doc.body.innerHTML;
+			response = doc.body.innerHTML.stripTags();
 			if (response && response.isJSON()) {
 				response = response.evalJSON();
 			}

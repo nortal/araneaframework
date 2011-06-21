@@ -17,6 +17,7 @@
 package org.araneaframework.jsp.tag.layout;
 
 import java.io.Writer;
+import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
@@ -31,10 +32,15 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutCellHtmlTag extends BaseLayoutCellTag {
+
   protected String cellTag = "td";
+
   protected String colspan;
+
   protected String rowspan;
+
   protected String width;
+
   protected String height;
 
   @Override
@@ -48,7 +54,9 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
     return EVAL_BODY_INCLUDE;
   }
   
-  /** Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table cell. */
+  /**
+   * Overwrite if other attributes besides <code>styleclass</code> are needed for HTML table cell.
+   */
   protected void writeCellAttributes(Writer out) throws Exception {
     addAttribute("id", id);
     addAttribute("class",  getStyleClass());
@@ -66,9 +74,6 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
     return super.doEndTag(out);
   }
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -110,13 +115,14 @@ public class LayoutCellHtmlTag extends BaseLayoutCellTag {
   }
 
   /**
+   * @throws JspException 
    * @jsp.attribute
    *   type = "java.lang.String"
    *   required = "false"
    *   description = "Whether this cell is header cell, defaults to false. In HTML, tag is rendered with &lt;th&gt; or &lt;tr&gt;."
    */
-  public void setHeaderCell(String headerCell){
-    boolean isHeaderCell = (evaluate("headerCell", headerCell, Boolean.class)).booleanValue();
+  public void setHeaderCell(String headerCell) throws JspException{
+    boolean isHeaderCell = evaluateNotNull("headerCell", headerCell, Boolean.class);
     this.cellTag = isHeaderCell ? "th" : "td";
   }
 }

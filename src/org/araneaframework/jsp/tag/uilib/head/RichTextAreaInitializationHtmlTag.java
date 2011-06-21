@@ -19,6 +19,9 @@ package org.araneaframework.jsp.tag.uilib.head;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.jsp.tag.basic.ElementHtmlTag;
 import org.araneaframework.jsp.tag.uilib.form.element.text.FormRichTextAreaHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -38,6 +41,14 @@ import org.araneaframework.jsp.util.JspUtil;
 public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 
   public static final String KEY = "org.araneaframework.jsp.tag.uilib.head.KEY";
+
+  /**
+   * The prefix that makes the given String parameter value to TinyMCE to be treated as JavaScript function that will
+   * be rendered as the value after given prefix without apostrophes and quotation marks.
+   * 
+   * @since 2.0
+   */
+  protected static final String FUNCTION_PREFIX = "fn:";
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -64,6 +75,11 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
     this.attributes.put("mode", "textareas");
     this.attributes.put("theme", "simple");
     this.attributes.put("strict_loading_mode", Boolean.TRUE);
+
+    OverlayContext overlay = getEnvironment().getEntry(OverlayContext.class);
+    if (overlay != null && overlay.isOverlayActive()) {
+      this.attributes.put("oninit", "fn:Aranea.ModalBox.resize");
+    }
   }
 
   @Override
@@ -82,9 +98,20 @@ public class RichTextAreaInitializationHtmlTag extends ElementHtmlTag {
 
       StringBuffer buf = new StringBuffer("\t");
       buf.append(entry.getKey());
-      buf.append(" : '");
-      buf.append(entry.getValue().toString());
-      buf.append(ite.hasNext() ? "',\n" : "'");
+      buf.append(" : ");
+
+      if (entry.getValue() instanceof String) {
+        String value = entry.getValue().toString();
+        if (StringUtils.startsWith(value, FUNCTION_PREFIX)) {
+          buf.append(StringUtils.substringAfter(value, FUNCTION_PREFIX));
+        } else {
+          buf.append('\'').append(value).append('\'');
+        }
+      } else {
+        buf.append(ObjectUtils.toString(entry.getValue(), "null"));
+      }
+
+      buf.append(ite.hasNext() ? ",\n" : "");
       out.write(buf.toString());
     }
   }

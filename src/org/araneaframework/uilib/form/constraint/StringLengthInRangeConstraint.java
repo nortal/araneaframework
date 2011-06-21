@@ -17,13 +17,14 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * A <code>Constraint</code> that constrains the input length of a {@link FormElement}.
+ * <p>
+ * Usually form element text controls already have this kind of constraint built-in. However, when a text control does
+ * not have it built-in, this constraint can be used instead.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -75,8 +76,7 @@ public class StringLengthInRangeConstraint extends BaseFieldConstraint<String, S
   }
 
   private void addValidationError() {
-    addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.STRING_NOT_IN_RANGE, t(getLabel()),
-        Integer.toString(this.rangeStart), Integer.toString(this.rangeEnd)));
+    addError(UiLibMessages.STRING_NOT_IN_RANGE, t(getLabel()), this.rangeStart, this.rangeEnd);
   }
 
   /**

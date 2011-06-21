@@ -157,7 +157,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
    * @return The maximum allowed file size;
    */
   public Long getFileSizeLimit() {
-    return this.maximumSize != null ? this.maximumSize : new Long(new ServletFileUpload().getSizeMax());
+    return this.maximumSize != null ? this.maximumSize : new ServletFileUpload().getSizeMax();
   }
 
   @Override
@@ -294,6 +294,8 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
       if (!item.isFormField()) {
         if (this.maximumSize != null && this.maximumSize < item.getSize()) {
           uploadException = new FileUploadBase.FileSizeLimitExceededException("", item.getSize(), this.maximumSize);
+          continue;
+        } else if (item.getSize() <= 0) {
           continue;
         }
 

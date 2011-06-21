@@ -47,10 +47,13 @@ public abstract class ConfigurationUtil {
     return l;
   }
 
-  public static FormElementValidationErrorRenderer getFormElementValidationErrorRenderer(ConfigurationContext cctx) {
-    FormElementValidationErrorRenderer r = (FormElementValidationErrorRenderer) cctx
-        .getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
-    return r;
+  public static FormElementValidationErrorRenderer getFormElementErrorRenderer(Environment env) {
+    ConfigurationContext cctx = UilibEnvironmentUtil.getConfiguration(env);
+    FormElementValidationErrorRenderer renderer = null;
+    if (cctx != null) {
+      renderer = (FormElementValidationErrorRenderer) cctx.getEntry(ConfigurationContext.FORMELEMENT_ERROR_RENDERER);
+    }
+    return renderer;
   }
 
   public static boolean isLocalizeControlData(Environment env, Boolean overrideValue) {

@@ -52,8 +52,8 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
    * 
    * @param shouldConfirm The predicate that is used to check whether confirmation should be shown.
    * @param confirmationMessage The message to show if the predicate returns <code>true</code>.
-   * @param allCancellings If <code>true</code> then transition type may be eiter {@link FlowContext#TRANSITION_CANCEL},
-   *          {@link FlowContext#TRANSITION_REPLACE}, or {@link FlowContext#TRANSITION_RESET}. Otherwise, only
+   * @param allCancellings If <code>true</code> then transition type may be either {@link FlowContext#TRANSITION_CANCEL}
+   *          , {@link FlowContext#TRANSITION_REPLACE}, or {@link FlowContext#TRANSITION_RESET}. Otherwise, only
    *          {@link FlowContext#TRANSITION_CANCEL} is monitored.
    * @since 1.2.2
    */
@@ -62,6 +62,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
     Assert.isInstanceOf(Serializable.class, shouldConfirm,
         "shouldConfirm Predicate must implement java.io.Serializable");
     Assert.notNullParam(this, confirmationMessage, "confirmationMessage");
+
     this.shouldConfirm = shouldConfirm;
     this.confirmationMessage = confirmationMessage;
     this.allCancellings = allCancellings;
@@ -80,9 +81,9 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
   }
 
   @Override
-  public void doTransition(int transitionType, final Widget activeFlow, final Closure transition) {
-    boolean test = this.allCancellings ? transitionType != FlowContext.TRANSITION_START
-        && transitionType != FlowContext.TRANSITION_FINISH : transitionType == FlowContext.TRANSITION_CANCEL;
+  public void doTransition(FlowContext.Transition transitionType, final Widget activeFlow, final Closure transition) {
+    boolean test = this.allCancellings ? transitionType != FlowContext.Transition.START
+        && transitionType != FlowContext.Transition.FINISH : transitionType == FlowContext.Transition.CANCEL;
 
     if (test && this.shouldConfirm.evaluate(null)) {
       ConfirmationContext ctx = requireConfirmationContext(activeFlow);
@@ -103,9 +104,9 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
 
     private final Widget activeFlow;
 
-    private int transitionType;
+    private FlowContext.Transition transitionType;
 
-    private ParameterizedTransition(int transitionType, Widget activeFlow, Closure transition) {
+    private ParameterizedTransition(FlowContext.Transition transitionType, Widget activeFlow, Closure transition) {
       this.transitionType = transitionType;
       this.transition = transition;
       this.activeFlow = activeFlow;
@@ -113,7 +114,7 @@ public class CancelConfirmingTransitionHandler extends StandardFlowContainerWidg
 
     public void execute(Object obj) {
       notifyScrollContext(this.transitionType, this.activeFlow);
-      this.transition.execute(activeFlow);
+      this.transition.execute(this.activeFlow);
     }
   }
 }

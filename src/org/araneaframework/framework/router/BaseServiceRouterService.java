@@ -77,10 +77,9 @@ public abstract class BaseServiceRouterService extends BaseService {
 
   @Override
   protected void propagate(Message message) throws Exception {
-    Iterator<Map.Entry<Object, Component>> ite = _getChildren().entrySet().iterator();
+    Iterator<Component> ite = _getChildren().values().iterator();
     while (ite.hasNext()) {
-      Map.Entry<Object, Component> entry = ite.next();
-      message.send(null, entry.getValue());
+      message.send(null, ite.next());
     }
   }
 

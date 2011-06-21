@@ -25,27 +25,25 @@ import org.araneaframework.jsp.tag.BaseTag;
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  * 
- * @jsp.tag
- *   name = "wizardHeader"
- *   body-content = "JSP"
- *   description = "Includes navigation info."
+ * @jsp.tag name = "wizardHeader" body-content = "JSP" description = "Includes navigation info."
  */
 public class WizardHeaderTag extends BaseTag {
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
-	  WizardContext wizard = (WizardContext) getContextWidget();
-	  
-	  int index = wizard.getCurrentPageIndex();
-	  int count = wizard.countPages();
-	  
-	  StringBuffer sb = new StringBuffer();
-	  sb.append("Page ");
-	  sb.append(index + 1);
-	  sb.append(" of ");
-	  sb.append(count);
-	  
-	  out.write(sb.toString());
-	  
-	  return SKIP_BODY;		
-	}
+    WizardContext wizard = (WizardContext) getContextWidget();
+
+    int index = wizard.getCurrentPageIndex();
+    int count = wizard.countPages();
+
+    StringBuffer sb = new StringBuffer();
+    sb.append("Page ");
+    sb.append(index + 1);
+    sb.append(" of ");
+    sb.append(count);
+
+    out.write(sb.toString());
+
+    return SKIP_BODY;
+  }
 }

@@ -52,8 +52,8 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
       String s = "NOTHING";
 
       if (this.rn.nextInt(3) == 1) {
-        s = MessageUtil.localizeAndFormat(getEnvironment(), "poll.taskmsg", String.valueOf(random),
-            new SimpleDateFormat("HH:mm.ss").format(new Date()))
+        s = MessageUtil.localizeAndFormat(getEnvironment(), "poll.taskmsg", random, new SimpleDateFormat("HH:mm.ss")
+            .format(new Date()))
             + "<br/>";
       }
       httpOutput.setContentType("text/xml");

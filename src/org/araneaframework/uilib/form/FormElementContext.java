@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.MessageContext.MessageData;
 
 public interface FormElementContext<C,D> extends Serializable {
 
@@ -26,9 +27,9 @@ public interface FormElementContext<C,D> extends Serializable {
 
 	public boolean isValid();
 
-	public void addError(String error);
+	public void addError(String error, Object... params);
 
-	public void addErrors(Set<String> errors);
+	public void addErrors(Set<MessageData> errors);
 
 	public Environment getEnvironment();
 

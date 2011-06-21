@@ -22,9 +22,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
-import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Form multiselect rendering tag, represents one item from
@@ -50,13 +48,6 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
    */
   protected String htmlId;
 
-  /**
-   * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
-   * 
-   * @since 2.0
-   */
-  protected Boolean localizeDisplayItems;
-
   public FormCheckboxMultiSelectItemHtmlTag() {
     this.baseStyleClass = "aranea-multi-checkbox";
   }
@@ -77,12 +68,6 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
     String name = getFullFieldId();
     MultiSelectControl.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
 
-    this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
-
-    if (this.localizeDisplayItems.booleanValue()) {
-      this.value = JspUtil.getResourceString(this.pageContext, this.value);
-    }
-
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", this.htmlId);
     JspUtil.writeAttribute(out, "name", name);
@@ -97,7 +82,7 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
     }
 
     if (ArrayUtils.contains(viewModel.getValues(), this.value)) {
-      JspUtil.writeAttribute(out, "checked", "disabled");
+      JspUtil.writeAttribute(out, "checked", "checked");
     }
 
     JspUtil.writeAttributes(out, this.attributes);
@@ -132,16 +117,5 @@ public class FormCheckboxMultiSelectItemHtmlTag extends BaseFormElementHtmlTag {
    */
   public void setHtmlId(String htmlId) {
     this.htmlId = evaluate("htmlId", htmlId, String.class);
-  }
-
-  /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
-   * @since 2.0
-   */
-  public void setLocalizeDisplayItems(String localizeDisplayItems) throws JspException {
-    this.localizeDisplayItems = evaluateNotNull("localizeDisplayItems", localizeDisplayItems, Boolean.class);
   }
 }

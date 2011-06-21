@@ -16,8 +16,6 @@
 
 package org.araneaframework.jsp.tag.presentation;
 
-import org.araneaframework.framework.LocalizationContext;
-
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -88,9 +87,11 @@ public class MessagesHtmlTag extends PresentationTag {
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", getDivId());
     JspUtil.writeAttribute(out, "class", getStyleClass());
+
     if (this.type != null) {
       JspUtil.writeAttribute(out, "arn-msgs-type", this.type);
     }
+
     JspUtil.writeAttribute(out, "style", entries.size() == 0 ? "display: none" : getStyle());
     JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartTag(out);
@@ -131,7 +132,7 @@ public class MessagesHtmlTag extends PresentationTag {
    * @since 1.1
    */
   protected void writeMessageBody(Writer out, String message) throws Exception {
-    if (this.escapeHtml.booleanValue()) {
+    if (this.escapeHtml) {
       message = StringEscapeUtils.escapeHtml(message);
     }
     out.write(message);

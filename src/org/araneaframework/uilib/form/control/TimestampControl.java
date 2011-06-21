@@ -16,13 +16,15 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.uilib.support.DataType;
-
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.ValidationUtil;
 import org.araneaframework.uilib.util.ValidationUtil.ParsedDate;
@@ -48,7 +50,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
   /**
    * Controls whether a custom format has been specified.
    */
-  protected boolean confOverridden = false;
+  protected boolean confOverridden;
 
   /**
    * The custom input filter for this control. This can be enforced both client-side and server-side.
@@ -120,7 +122,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
 
   @Override
   protected String toResponse(Timestamp controlValue) {
-    return new SimpleDateFormat(dateTimeOutputPattern).format(controlValue);
+    return new SimpleDateFormat(this.dateTimeOutputPattern).format(controlValue);
   }
 
   @Override
@@ -138,7 +140,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
    */
   public class ViewModel extends StringArrayRequestControl<Timestamp>.ViewModel {
 
-    private String dateTimeOutputPattern;
+    protected final String dateTimeOutputPattern;
 
     private InputFilter inputFilter;
 
@@ -156,7 +158,7 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
      * @return The formatter that can be use for rendering the values.
      */
     public SimpleDateFormat getCurrentSimpleDateTimeFormat() {
-      return new SimpleDateFormat(dateTimeOutputPattern);
+      return new SimpleDateFormat(this.dateTimeOutputPattern);
     }
 
     /**
@@ -168,5 +170,36 @@ public abstract class TimestampControl extends BlankStringNullableControl<Timest
     public InputFilter getInputFilter() {
       return this.inputFilter;
     }
+
+    /**
+     * Parses a specific value (specified by <code>calendarField</code>) from the given date/time <code>value</code>
+     * using the given <code>pattern</code>. When the given <code>value</code> is null or an exception occurs then the
+     * <code>defaultValue</code> will be returned as string. The calendar field is expected to be a value of a constant
+     * in {@link Calendar} class.
+     * 
+     * @param value The date/time value as string. May be <code>null</code> or an empty string.
+     * @param pattern The date/time pattern to use for parsing the <code>value</code>.
+     * @param calendarField A constant from {@link Calendar} class.
+     * @param defaultValue The default value to use when parsing fails. It will be converted into string.
+     * @return The date/time field value as string.
+     * @since 2.0
+     */
+    protected String readDateValue(String value, String pattern, int calendarField, int defaultValue) {
+      int parsedValue = defaultValue;
+
+      if (StringUtils.isNotBlank(value)) {
+        try {
+          Calendar cal = Calendar.getInstance();
+          Date time = new SimpleDateFormat(pattern).parse(value);
+          cal.setTime(time);
+          parsedValue = cal.get(calendarField);
+        } catch (ParseException e) {
+          // OK, we use the default value.
+        }
+      }
+
+      return Integer.toString(parsedValue);
+    }
+
   }
 }

@@ -29,7 +29,7 @@ public interface PopupServiceInfo extends Serializable {
   /**
    * @return popup service's info translated into String containing URL style parameters. 
    */
-  public String toURL();
+  public String getUrl();
   /**
    * @return popup service's window properties. 
    */  

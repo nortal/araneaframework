@@ -19,6 +19,7 @@ package org.araneaframework.uilib.form.constraint;
 import java.util.Collection;
 import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -103,7 +104,7 @@ public class ReverseConstraint extends BaseConstraint {
      * @param c The <code>ReverseConstraint</code> where validation failed.
      * @return A collection of {@link String}s containing constraint validation error messages.
      */
-    public Collection<String> getErrorMessage(ReverseConstraint c);
+    public Collection<MessageData> getErrorMessage(ReverseConstraint c);
   }
 
   /**
@@ -113,17 +114,20 @@ public class ReverseConstraint extends BaseConstraint {
   @Override
   protected void validateConstraint() throws Exception {
     this.toReverse.validate();
-    Set<String> errors = toReverse.getErrors();
+    Set<MessageData> errors = toReverse.getErrors();
+
     // Reverse constraint is invalid when wrapped constraint validates
     if (errors.isEmpty()) {
-      if (this.customErrorMessage != null)
+      if (this.customErrorMessage != null) {
         addError(this.customErrorMessage);
-      else if (this.errorMessageFactory != null)
+      } else if (this.errorMessageFactory != null) {
         addErrors(this.errorMessageFactory.getErrorMessage(this));
-      else
-        addError("Reverse constraint validation failed for constraint " + getConstraint()
-            + ". No details available because custom validation error message was not set.");
+      } else {
+        addError("#Reverse constraint validation failed for constraint {0}. No details available because custom "
+            + "validation error message was not set.", getConstraint());
+      }
     }
+
     this.toReverse.clearErrors();
   }
 

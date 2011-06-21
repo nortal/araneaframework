@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.araneaframework.uilib.support.DataType;
 
 /**
@@ -68,6 +69,6 @@ public class CheckboxControl extends StringRequestControl<Boolean> {
    */
   @Override
   protected String toResponse(Boolean controlValue) {
-    return Boolean.toString(controlValue.booleanValue());
+    return ObjectUtils.toString(controlValue, Boolean.FALSE.toString());
   }
 }

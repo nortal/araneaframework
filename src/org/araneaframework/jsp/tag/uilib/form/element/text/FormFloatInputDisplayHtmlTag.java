@@ -28,8 +28,9 @@ import org.araneaframework.jsp.tag.uilib.form.BaseFormSimpleElementDisplayHtmlTa
  *   description = "Form float display field, represents UiLib 'FloatControl'."
  */
 public class FormFloatInputDisplayHtmlTag extends BaseFormSimpleElementDisplayHtmlTag {
-  {
-    baseStyleClass = "aranea-float-display";
+
+  public FormFloatInputDisplayHtmlTag() {
+    this.baseStyleClass = "aranea-float-display";
   }
 
   @Override

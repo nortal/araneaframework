@@ -28,10 +28,11 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.framework.FlowContextWidget;
-import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
+import org.araneaframework.framework.FlowContextWidget;
+import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -123,7 +124,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    * </tr>
    * </table>
    */
-  public static final Map<String, String> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, String>();
+  public static final Map<String, Object> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, Object>();
 
   public static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
 
@@ -131,7 +132,7 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   protected static final String OVERLAY_CHILD_KEY = "o";
 
-  protected Map<String, String> presentationOptions = new LinkedHashMap<String, String>();
+  protected Map<String, Object> presentationOptions = new LinkedHashMap<String, Object>();
 
   protected Widget main;
 
@@ -139,13 +140,13 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   static {
     DEFAULT_PRESENTATION_OPTIONS.put("method", "post");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", "false");
-    DEFAULT_PRESENTATION_OPTIONS.put("width", "800");
-    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", "0");
-    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", "0.9");
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayClose", false);
+    DEFAULT_PRESENTATION_OPTIONS.put("width", 800);
+    DEFAULT_PRESENTATION_OPTIONS.put("slideDownDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("slideUpDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("overlayDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("resizeDuration", 0);
+    DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", 0.9);
   }
 
   public StandardOverlayContainerWidget() {
@@ -216,21 +217,28 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
 
   @Override
   protected void render(OutputData output) throws Exception {
+    if (isOverlayActive()) {
+      // Add a field to system form that we can later check the request to contain it (in this method).
+      getEnvironment().requireEntry(SystemFormContext.class).addField(OVERLAY_REQUEST_KEY, Boolean.toString(true));
+    }
+
     if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
       this.overlay._getWidget().render(output);
+
       if (!isOverlayActive()) {
-        // response should be empty as nothing was rendered when overlay did not
-        // contain an active flow
-        // write out a hack of a response that should be interpreted by
-        // Aranea.ModalBox.afterLoad
+        // response should be empty as nothing was rendered when overlay did not contain an active flow
+        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
         HttpServletResponse response = ServletUtil.getResponse(output);
         response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
       }
     } else {
       this.main._getWidget().render(output);
-      if (!isOverlayActive()) { // overlay has become inactive for some reason
-        UpdateRegionContext urCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
-        urCtx.disableOnce();
+
+      if (isOverlayActive()) { // overlay has become active for some reason
+        UpdateRegionContext updateRegionCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
+        if (updateRegionCtx != null) {
+          updateRegionCtx.disableOnce();
+        }
       }
     }
   }
@@ -261,11 +269,11 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   }
 
   /* The presentation options of this overlay. */
-  public Map<String, String> getOverlayOptions() {
+  public Map<String, Object> getOverlayOptions() {
     return this.presentationOptions;
   }
 
-  public void setOverlayOptions(Map<String, String> presentationOptions) {
+  public void setOverlayOptions(Map<String, Object> presentationOptions) {
     this.presentationOptions = presentationOptions;
   }
 

@@ -30,7 +30,7 @@
 								(specifying this attribute also means that upon listener activation AJAX request is made instead of
 								ordinary HTTP request.
 								-->
-								<ui:select updateRegions="ajaxBeasts" localizeDisplayItems="true"/>
+								<ui:select updateRegions="ajaxBeasts"/>
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
@@ -57,7 +57,7 @@
 									</ui:cell>
 									<ui:cell>
 										<!-- Render MultiSelectControl with checkboxes. Instead ui:multiSelect could be used... -->
-										<ui:checkboxMultiSelect type="vertical" localizeDisplayItems="true"/>
+										<ui:checkboxMultiSelect type="vertical"/>
 									</ui:cell>
 								</ui:formElement>
 							</ui:row>

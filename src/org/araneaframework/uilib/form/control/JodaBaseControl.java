@@ -31,7 +31,7 @@ import org.joda.time.format.DateTimeFormatter;
 /**
  * This class holds the default functionality for Joda*Controls.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public abstract class JodaBaseControl extends BlankStringNullableControl<DateTime> implements

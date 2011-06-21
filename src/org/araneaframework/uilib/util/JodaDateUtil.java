@@ -17,17 +17,17 @@
 package org.araneaframework.uilib.util;
 
 import java.util.Calendar;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 /**
- * An util class for Joda Date parsing. Use it if you have Joda time API in your classpath.
+ * Utility class for Joda Date parsing. Use it if you have Joda time API in your classpath.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.1
+ * @see <a href="http://joda-time.sourceforge.net/" target="_blank">http://joda-time.sourceforge.net/</a>
  */
 public abstract class JodaDateUtil {
 
@@ -37,6 +37,14 @@ public abstract class JodaDateUtil {
 
   protected static final int MAX_YEAR = ValidationUtil.MAX_YEAR;
 
+  /**
+   * Parses the pattern into a date object using Joda date and time API. The returned date data will be stored in JDK
+   * date objects.
+   * 
+   * @param pattern The date/time pattern to use when parsing.
+   * @param value The value that should match the given pattern.
+   * @return The {@link ValidationUtil.ParsedDate} object when parsing was successful, or <code>null</code>.
+   */
   public static ValidationUtil.ParsedDate parseJodaJdk(String pattern, String value) {
     ParsedDate parsedDate = parseJoda(pattern, value);
     ValidationUtil.ParsedDate result = null;
@@ -70,6 +78,14 @@ public abstract class JodaDateUtil {
     return result;
   }
 
+  /**
+   * Parses the pattern into a date object using Joda date and time API. The returned date data will also be stored in
+   * Joda API objects.
+   * 
+   * @param pattern The date/time pattern to use when parsing.
+   * @param value The value that should match the given pattern.
+   * @return The {@link ParsedDate} object when parsing was successful, or <code>null</code>.
+   */
   public static ParsedDate parseJoda(String pattern, String value) {
     if (LOG.isTraceEnabled()) {
       LOG.trace("Using Joda with pattern '" + pattern + "' to parse date '" + value + "'.");
@@ -93,6 +109,12 @@ public abstract class JodaDateUtil {
     return null;
   }
 
+  /**
+   * Represents the parsed date. Unlike {@link ValidationUtil.ParsedDate}, this one works with Joda data objects.
+   * 
+   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @since 2.0
+   */
   public static class ParsedDate {
 
     protected DateTime date;

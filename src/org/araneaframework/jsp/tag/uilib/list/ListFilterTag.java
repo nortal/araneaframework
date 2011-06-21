@@ -16,9 +16,8 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.tag.BaseTag;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
 import org.araneaframework.uilib.list.ListWidget;
@@ -55,9 +54,8 @@ public class ListFilterTag extends BaseTag {
 
   @Override
   public int doEndTag(Writer out) throws Exception {
-    executeEndSubtag(registerSubtag(formTag));
-    unregisterSubtag(registerSubtag(formTag));
-    // Continue
+    executeEndSubtag(this.formTag);
+    unregisterSubtag(this.formTag);
     return super.doEndTag(out);
   }
 }

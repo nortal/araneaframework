@@ -21,9 +21,7 @@ package org.araneaframework.uilib.list.util.converter;
  */
 public class ConversionException extends RuntimeException {
 
-  public ConversionException() {
-    super();
-  }
+  public ConversionException() {}
 
   public ConversionException(String s) {
     super(s);

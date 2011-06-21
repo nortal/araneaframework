@@ -16,13 +16,15 @@
 
 package org.araneaframework.uilib.util;
 
-import org.araneaframework.backend.util.BeanUtil;
-
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
 
 /**
  * This class is a general helper, which is used throughout UiLib to parse <code>String</code>s like events and
- * hierarchical names.
+ * hierarchical names. This helper mainly deals with path-like names, which may contain dots to separate names. More
+ * specifically, a full name is in form like "<code>[zero.or.more.prefix.names.]name</code>". A full name may have a
+ * prefix, but always has a name. Therefore, when the full name has no prefix, methods parsing the prefix return
+ * <code>null</code>, and methods parsing the name suffix will return the original parameter.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -31,73 +33,87 @@ public class NameUtil {
   private static final String ACTION_DELIM = "$";
 
   /**
-   * Returns the full name as "<code>prefix</code>.<code>name</code>". If prefix isn't empty, a dot is added after it.
+   * This method is here to support tags which cannot use the fancier method {@link #getFullName(String...)} due to
+   * being legacy code.
    * 
-   * @param prefix the full name prefix.
-   * @param name the current name.
-   * @return The full name.
+   * @see #getFullName(String...)
    */
-  public static String getFullName(String prefix, String name) {
-    return StringUtils.isEmpty(prefix) ? name : prefix + BeanUtil.NESTED_DELIM + name;
+  public static String getFullName(String prefix, String suffix) {
+    return getFullName(new String[] { prefix, suffix });
   }
 
   /**
-   * Returns the last name of the <code>fullName</code> that doesn't contain any dots.
+   * Constructs a full name from the given <code>names</code>. Each name will be concatenated by a dot while omitting
+   * empty or <code>null</code> name values. This method is <code>null</code>-safe and when <code>names</code> array is
+   * empty, the result will be <code>null</code>.
    * 
-   * @param fullName The current name.
-   * @return The part that comes after final dot, or the same as input string.
+   * @param names An array of names to concatenate in the order they are given.
+   * @return The constructed full name or <code>null</code>.
    */
-  public static String getLastName(String fullName) {
-    boolean dot = StringUtils.contains(fullName, BeanUtil.NESTED_DELIM);
-    return dot ? StringUtils.substringAfterLast(fullName, BeanUtil.NESTED_DELIM) : fullName;
+  public static String getFullName(String... names) {
+    StringBuffer fullName = new StringBuffer();
+
+    if (names != null) {
+      for (String name : names) {
+        if (StringUtils.isNotEmpty(name)) {
+          if (fullName.length() > 0) {
+            fullName.append(BeanUtil.NESTED_DELIM);
+          }
+          fullName.append(name);
+        }
+      }
+    }
+
+    return fullName.length() > 0 ? fullName.toString() : null;
+  }
+
+  protected static boolean containsDot(String fullName) {
+    return StringUtils.contains(fullName, BeanUtil.NESTED_DELIM);
   }
 
   /**
-   * Returns the prefix of the full name (prefix is part before the first dot, or the whole full name if it contains no
-   * dots).
+   * Returns the part of <code>fullName</code> that follows the last dot. When the parameter contains no dots, the
+   * result will be equal to the original parameter value.
    * 
-   * @param fullName the full name.
-   * @return prefix of the full name.
+   * @param fullName The full name, which may or may not contain dots.
+   * @return The part that comes after the last dot, or the original input string.
    */
-  public static String getNamePrefix(String fullName) {
-    return StringUtils.substringBefore(fullName, BeanUtil.NESTED_DELIM);
+  public static String getShortestSuffix(String fullName) {
+    return containsDot(fullName) ? StringUtils.substringAfterLast(fullName, BeanUtil.NESTED_DELIM) : fullName;
   }
 
   /**
-   * Returns the full prefix of given full name. That is, the part before the last dot, or NULL when fullName is not
-   * nested).
+   * Returns the part of <code>fullName</code> that follows the first dot. When the parameter contains no dots, the
+   * result will be equal to the original parameter value.
    * 
-   * @param fullName the full name.
-   * @return full prefix of the full name.
+   * @param fullName The full name, which may or may not contain dots.
+   * @return The part that comes after the last dot, or the original input string.
+   */
+  public static String getLongestSuffix(String fullName) {
+    return containsDot(fullName) ? StringUtils.substringAfter(fullName, BeanUtil.NESTED_DELIM) : fullName;
+  }
+
+  /**
+   * Returns the part of <code>fullName</code> that precedes the first dot. When the parameter contains no dots, the
+   * result will be <code>null</code>.
+   * 
+   * @param fullName The full name, which may or may not contain dots.
+   * @return The part that comes before the first dot, or <code>null</code>.
+   */
+  public static String getShortestPrefix(String fullName) {
+    return containsDot(fullName) ? StringUtils.substringBefore(fullName, BeanUtil.NESTED_DELIM) : null;
+  }
+
+  /**
+   * Returns the part of <code>fullName</code> that precedes the last dot. When the parameter contains no dots, the
+   * result will be <code>null</code>.
+   * 
+   * @param fullName The full name, which may or may not contain dots.
+   * @return The part that comes before the last dot, or <code>null</code>.
    * @since 1.0.9
    */
   public static String getLongestPrefix(String fullName) {
-    boolean dot = StringUtils.contains(fullName, BeanUtil.NESTED_DELIM);
-    return dot ? StringUtils.substringBeforeLast(fullName, BeanUtil.NESTED_DELIM) : null;
-  }
-
-  /**
-   * Returns the shortest suffix of given full name. That is, the part after the last dot, or fullName when fullName is
-   * not nested).
-   * 
-   * @param fullName the full name.
-   * @return full prefix of the full name.
-   * @since 1.0.9
-   */
-  public static String getShortestSuffix(String fullName) {
-    return StringUtils.substringBefore(fullName, BeanUtil.NESTED_DELIM);
-  }
-
-  /**
-   * Returns suffix of the full name (suffix is part after the first dot, or a <code>null</code> if full name contains
-   * no dots).
-   * 
-   * @param fullName full name.
-   * @return suffix of the full name or <code>null</code>.
-   */
-  public static String getNameSuffix(String fullName) {
-    boolean dot = StringUtils.contains(fullName, BeanUtil.NESTED_DELIM);
-    return dot ? StringUtils.substringAfterLast(fullName, BeanUtil.NESTED_DELIM) : null;
+    return containsDot(fullName) ? StringUtils.substringBeforeLast(fullName, BeanUtil.NESTED_DELIM) : null;
   }
 
   /**
@@ -120,5 +136,29 @@ public class NameUtil {
    */
   public static String getEventParam(String eventActionParam) {
     return StringUtils.substringAfter(eventActionParam, ACTION_DELIM);
+  }
+
+  public static String getLongestCommonPrefix(String name1, String name2) {
+    StringBuilder commonPrefix = new StringBuilder();
+
+    if (StringUtils.isNotBlank(name1) && StringUtils.isNotBlank(name2)) {
+      String[] name1Arr = name1.split("\\" + BeanUtil.NESTED_DELIM);
+      String[] name2Arr = name2.split("\\" + BeanUtil.NESTED_DELIM);
+
+      int limit = Math.min(name1Arr.length, name2Arr.length);
+
+      for (int i = 0; i < limit; i++) {
+        if (StringUtils.equals(name1Arr[i], name2Arr[i])) {
+          if (commonPrefix.length() != 0) {
+            commonPrefix.append(BeanUtil.NESTED_DELIM);
+          }
+          commonPrefix.append(name1Arr[i]);
+        } else {
+          break;
+        }
+      }
+    }
+
+    return StringUtils.trimToNull(commonPrefix.toString());
   }
 }

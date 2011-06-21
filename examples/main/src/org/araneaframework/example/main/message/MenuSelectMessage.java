@@ -43,8 +43,7 @@ public class MenuSelectMessage extends BroadcastMessage {
   @Override
   protected void execute(Component component) throws Exception {
     if (component instanceof MenuWidget) {
-      MenuWidget w = (MenuWidget) component;
-      w.selectMenuItem(this.menuPath);
+      ((MenuWidget) component).selectMenuItem(this.menuPath);
     }
   }
 

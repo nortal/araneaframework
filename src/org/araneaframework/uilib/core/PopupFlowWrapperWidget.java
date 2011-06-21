@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.core;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
@@ -32,6 +33,7 @@ import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.TransactionContext;
+import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.PopupWindowContext;
@@ -121,6 +123,10 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     return getLocalFlowContext().isNested();
   }
 
+  public Collection<Widget> getNestedFlows() {
+    return getLocalFlowContext().getNestedFlows();
+  }
+
   public void reset(EnvironmentAwareCallback callback) {
     getLocalFlowContext().reset(callback);
     // XXX: and now what?
@@ -128,6 +134,12 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
 
   public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, Class<T> entryId, T envEntry) {
     getLocalFlowContext().addNestedEnvironmentEntry(scope, entryId, envEntry);
+  }
+
+  public void setAllowFlowCancelEvent(boolean allowFlowCancelEvent) {
+    if (getLocalFlowContext() instanceof FlowContextWidget) {
+      ((FlowContextWidget) getLocalFlowContext()).setAllowFlowCancelEvent(allowFlowCancelEvent);
+    }
   }
 
   @Override
@@ -148,7 +160,7 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(getRequestURL(), m));
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parameterizeURI(getRequestURL(), m));
   }
 
   private FlowContext getOpenerFlowContext() {
@@ -178,6 +190,6 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   }
 
   public TransitionHandler getTransitionHandler() {
-    return getLocalFlowContext().getTransitionHandler();
+    return new StandardFlowContainerWidget.StandardTransitionHandler();
   }
 }

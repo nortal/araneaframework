@@ -25,8 +25,16 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class BooleanComparator implements Comparator<Boolean>, Serializable {
 
+  /**
+   * An instance of {@link BooleanComparator} where <code>true</code> values are ordered before <code>false</code>
+   * values. Using instance variables is the only way to use a {@link BooleanComparator}.
+   */
   public static final Comparator<Boolean> TRUE_FIRST = new BooleanComparator(true);
 
+  /**
+   * An instance of {@link BooleanComparator} where <code>false</code> values are ordered before <code>true</code>
+   * values. Using instance variables is the only way to use a {@link BooleanComparator}.
+   */
   public static final Comparator<Boolean> FALSE_FIRST = new BooleanComparator(false);
 
   private boolean trueFirst;
@@ -36,21 +44,13 @@ public class BooleanComparator implements Comparator<Boolean>, Serializable {
   }
 
   public int compare(Boolean o1, Boolean o2) {
-    if (o1 == o2) {
-      return 0;
-    }
-    if (this.trueFirst) {
-      return o1 ? -1 : 1;
-    }
-    return o1 ? 1 : -1;
+    int trueFirst = this.trueFirst ? -1 : 1;
+    return trueFirst * o1.compareTo(o2);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (BooleanComparator.class == obj.getClass()) {
-      return ((BooleanComparator) obj).trueFirst == this.trueFirst;
-    }
-    return false;
+    return obj instanceof BooleanComparator && ((BooleanComparator) obj).trueFirst == this.trueFirst;
   }
 
   @Override

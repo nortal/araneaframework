@@ -23,7 +23,7 @@ import org.araneaframework.InputData;
 
 /**
  * Provides methods to deal with and manipulate low-level HTTP constructs. Wraps the {@link HttpServletRequest}.
- * 
+ * <p>
  * The main difference is how we handle the so called PATH_INFO (the additional path after the servlet). The problem is
  * that unlike most common cases Aranea components form a hierarchy. Therefore if a parent is mapped to path prefix
  * "myPath/*" and its child is mapped to a path prefix "myChildPath/*" if the path handling were absolute the child
@@ -32,7 +32,6 @@ import org.araneaframework.InputData;
  * will be correctly matched to the relative path "myChildPath".
  * 
  * @author Jevgeni Kabanov (ekabanov@webmedia.ee)
- * 
  * @see HttpOutputData
  */
 public interface HttpInputData extends InputData {

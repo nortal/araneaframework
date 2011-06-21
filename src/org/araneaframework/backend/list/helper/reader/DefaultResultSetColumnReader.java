@@ -54,13 +54,13 @@ public class DefaultResultSetColumnReader implements ResultSetColumnReader {
         return null;
       }
       if (Long.class.isAssignableFrom(javaType)) {
-        return (T) new Long(resultSet.getLong(columnName));
+        return (T) Long.valueOf(resultSet.getLong(columnName));
       }
       if (Integer.class.isAssignableFrom(javaType)) {
-        return (T) new Integer(resultSet.getInt(columnName));
+        return (T) Integer.valueOf(resultSet.getInt(columnName));
       }
       if (Boolean.class.isAssignableFrom(javaType)) {
-        return (T) (resultSet.getBoolean(columnName) ? Boolean.TRUE : Boolean.FALSE);
+        return (T) Boolean.valueOf(resultSet.getBoolean(columnName));
       }
       if (BigDecimal.class.isAssignableFrom(javaType)) {
         return (T) resultSet.getBigDecimal(columnName);

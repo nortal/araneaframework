@@ -17,7 +17,6 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.Environment;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.uilib.form.FormElement;
@@ -64,12 +63,12 @@ public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
    * @return constrained {@link FormElement}
    */
   @SuppressWarnings("unchecked")
-  protected FormElementContext getField() {
+  protected FormElementContext<C, D> getField() {
     if (this.field != null) {
       return this.field;
     }
 
-    FormElementContext result;
+    FormElementContext<C, D> result;
     try {
       result = getEnvironment().requireEntry(FormElementContext.class);
     } catch (NoSuchEnvironmentEntryException e) {
@@ -98,9 +97,8 @@ public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
    * 
    * @return the value of the constraint field.
    */
-  @SuppressWarnings("unchecked")
   protected D getValue() {
-    return (D) getField().getValue();
+    return getField().getValue();
   }
 
   /**
@@ -128,47 +126,5 @@ public abstract class BaseFieldConstraint<C, D> extends BaseConstraint {
    */
   public boolean isMandatory() {
     return getField().isMandatory();
-  }
-
-  /**
-   * Exception thrown when {@link org.araneaframework.uilib.form.FormElement} associated with
-   * {@link BaseFieldConstraint} could not be determined.
-   */
-  public static class FieldConstraintException extends AraneaRuntimeException {
-
-    /**
-     * Creates the exception without any message or other <code>Throwable</code>.
-     */
-    public FieldConstraintException() {
-      super();
-    }
-
-    /**
-     * Creates the exception with a descriptive message and the <code>Throwable</code> that was caught.
-     * 
-     * @param message A descriptive message to help solve this issue.
-     * @param cause A <code>Throwable</code> that was caught.
-     */
-    public FieldConstraintException(String message, Throwable cause) {
-      super(message, cause);
-    }
-
-    /**
-     * Creates the exception with a descriptive message.
-     * 
-     * @param message A descriptive message to help solve this issue.
-     */
-    public FieldConstraintException(String message) {
-      super(message);
-    }
-
-    /**
-     * Creates the exception with the <code>Throwable</code> that was caught.
-     * 
-     * @param cause A <code>Throwable</code> that was caught.
-     */
-    public FieldConstraintException(Throwable cause) {
-      super(cause);
-    }
   }
 }

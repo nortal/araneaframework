@@ -24,20 +24,19 @@ import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.UiUpdateEvent;
 
 /**
- * Standard util for producing calls to UiLib widgets in various
- * container frameworks. 
+ * Standard util for producing calls to UiLib widgets in various container frameworks.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class JspWidgetCallUtil {
+
   public static final String SIMPLE_SUBMIT_FUNCTION = "return Aranea.Page.event(this);";
 
   /**
-   * Write out form submit script for specified attribute of HTML element. Aranea custom HTML 
-   * tag attributes (See {@link org.araneaframework.jsp.AraneaAttributes}) are expected to be
-   * present for submit logic to work.
+   * Write out form submit script for specified attribute of HTML element. Aranea custom HTML tag attributes (See
+   * {@link org.araneaframework.jsp.AraneaAttributes}) are expected to be present for submit logic to work.
    * 
-   * @param out 
+   * @param out
    * @param attributeName HTML attribute name, ('onclick', 'onchange', ...)
    */
   public static void writeSubmitScriptForEvent(Writer out, String attributeName) throws IOException {
@@ -47,51 +46,53 @@ public abstract class JspWidgetCallUtil {
   }
 
   /**
-   * Write out form submit script for specified attribute of HTML element, along with Aranea 
-   * custom HTML tag attributes (See {@link org.araneaframework.jsp.AraneaAttributes}) that
-   * are determined by <code>event</code> parameter.
+   * Write out form submit script for specified attribute of HTML element, along with Aranea custom HTML tag attributes
+   * (See {@link org.araneaframework.jsp.AraneaAttributes}) that are determined by <code>event</code> parameter.
    * 
-   * @param out 
+   * @param out
    * @param attributeName HTML attribute name, ('onclick', 'onchange', ...)
-   * @param event event that should be activated when HTML element 
-   */  
+   * @param event event that should be activated when HTML element
+   */
   public static void writeSubmitScriptForEvent(Writer out, String attributeName, UiEvent event) throws IOException {
     JspUtil.writeEventAttributes(out, event);
-	JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
+    JspWidgetCallUtil.writeSubmitScriptForEvent(out, attributeName);
   }
 
-  /** 
-   * Returns simple submit script for HTML element. This should be used whenever HTML 
-   * element has just one event handling attribute that causes form submit, but can also 
-   * be used when submit event should always take the same attributes, regardless of 
-   * the DOM event that activates the submit function.
-   *  
-   * @return {@link #SIMPLE_SUBMIT_FUNCTION} */
+  /**
+   * Returns simple submit script for HTML element. This should be used whenever HTML element has just one event
+   * handling attribute that causes form submit, but can also be used when submit event should always take the same
+   * attributes, regardless of the DOM event that activates the submit function.
+   * 
+   * @return {@link #SIMPLE_SUBMIT_FUNCTION}
+   */
   public static String getSubmitScriptForEvent() {
     return SIMPLE_SUBMIT_FUNCTION;
   }
-  
+
   /** @since 1.0.2 */
   public static String getSubmitScriptForEvent(UiUpdateEvent event) {
-    StringBuffer sb = new StringBuffer();
-    sb.append("_ap.event_6(");
-    sb.append("_ap.getSystemForm(),");
-    String eventId = event.getId() != null ? "'" + event.getId() + "'" : "null";
-    String eventTarget = event.getTarget() != null ? "'" + event.getTarget() + "'" : "null";
-    String eventParam = event.getParam() != null ? "'" + event.getParam() + "'" : "null";
-    String eventPrecondition = event.getEventPrecondition() != null ? "'" + event.getEventPrecondition() + "'" : "null";
-    List<String> updateRegionNames;
-    if (event.getUpdateRegionNames() != null)
-      updateRegionNames = event.getUpdateRegionNames();
-    else
+    String eventId = formatParam(event.getId());
+    String eventTarget = formatParam(event.getTarget());
+    String eventParam = formatParam(event.getParam());
+    String eventPrecondition = formatParam(event.getEventPrecondition());
+
+    List<String> updateRegionNames = event.getUpdateRegionNames();
+
+    if (updateRegionNames == null) {
       updateRegionNames = Collections.emptyList();
-    
-    sb.append(eventId).append(",");
-    sb.append(eventTarget).append(",");
-    sb.append(eventParam).append(",");
-    sb.append(eventPrecondition).append(",");
-    sb.append("\"").append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append("\"");
+    }
+
+    StringBuffer sb = new StringBuffer("Aranea.Page.event(");
+    sb.append(eventId).append(',');
+    sb.append(eventTarget).append(',');
+    sb.append(eventParam).append(',');
+    sb.append(eventPrecondition).append(',');
+    sb.append('\'').append(JspUpdateRegionUtil.formatUpdateRegionsJS(updateRegionNames)).append('\'');
     sb.append(");");
     return sb.toString();
+  }
+
+  private static String formatParam(String paramValue) {
+    return paramValue == null ? "null" : "'" + paramValue + "'";
   }
 }

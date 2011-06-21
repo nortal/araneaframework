@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.core;
 
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -23,6 +24,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardEventListener;
@@ -34,6 +36,7 @@ import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWid
  * describe the menu structure in {@link #buildMenu()}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidget implements MenuContext {
 
@@ -48,16 +51,24 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   private String selectionPath;
 
   /**
-   * Constructor that initializes the menu widget and sets the <code>topWidget</code> as its parent
+   * An optional ID to be used with {@link MountContext}, so that requests coming to
+   * [app_url]/[menuMountContextId]/[menuItemId] would be translated to menu invocations where menu item with ID of
+   * [menuItemId] would be opened. When left to <code>null</code> then menu widget full path will be used instead for
+   * registering mount-context listener.
+   * 
+   * @since 2.0
+   */
+  private String menuMountContextId;
+
+  /**
+   * Constructor that initializes the menu widget and sets the <code>topWidget</code> as its parent. Actual menu is
+   * initialized in {@link #init()}.
    * 
    * @param topWidget The parent widget.
    * @throws Exception Any non-specific runtime exception that may occur.
    */
   public BaseMenuWidget(Widget topWidget) throws Exception {
     super(topWidget);
-    this.menu = buildMenu();
-    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
-    putViewData(MenuContext.MENU_VIEWDATA_KEY, menu);
   }
 
   /**
@@ -68,6 +79,12 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    */
   @Override
   protected void init() throws Exception {
+    // Create menu.
+    this.menu = buildMenu();
+    addEventListener(MenuContext.MENU_SELECT_EVENT_KEY, new ItemSelectionListener());
+    initMenuSelectorMountSupport();
+    putViewData(MenuContext.MENU_VIEWDATA_KEY, this.menu);
+
     super.init();
     setFinishable(false);
   }
@@ -84,21 +101,17 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    */
   protected void initMenuSelectorMountSupport() {
     MountContext mc = getEnvironment().getEntry(MountContext.class);
-    if (mc == null)
+    if (mc == null) {
       return;
+    }
 
-    mc.mount(getInputData(), "/" + getScope() + "/", new MountContext.MessageFactory() {
+    if (this.menuMountContextId == null) {
+      this.menuMountContextId = "/" + getScope() + "/";
+    }
+
+    mc.mount(getInputData(), this.menuMountContextId, new MountContext.MessageFactory() {
 
       public Message buildMessage(String url, final String suffix, InputData input, OutputData output) {
-        // TODO: Allow the bookmarks to work with login widget
-        // int i = suffix.indexOf('/');
-        // if (i == -1)
-        // throw new IllegalArgumentException("URL '" + url +
-        // "' should contain both menu widget identifier and menu item identifier!");
-        //        
-        // String menuWidgetId = suffix.substring(0, i);
-        // final String menuItemId = suffix.substring(i + 1);
-
         return new RoutedMessage(getScope().toPath()) {
 
           @Override
@@ -108,17 +121,6 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
         };
       }
     });
-  }
-
-  /**
-   * Menu selection listener.
-   */
-  protected class ItemSelectionListener extends StandardEventListener {
-
-    @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
-      BaseMenuWidget.this.selectMenuItem(eventParam);
-    }
   }
 
   public void selectMenuItem(String menuItemPath) throws Exception {
@@ -144,6 +146,13 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   protected abstract MenuItem buildMenu() throws Exception;
 
   /**
+   * Sub classes can implement this method to do some general work here after a menu item has been selected.
+   * 
+   * @since 2.0
+   */
+  protected void onMenuItemSelection() {}
+
+  /**
    * Provides the {@link org.araneaframework.Path} of the currently selected menu item as a <code>String</code>.
    * 
    * @return the path of the currently selected menu item, or <code>null</code>
@@ -161,5 +170,48 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     this.menu = menu;
   }
 
-  
+  /**
+   * Sets an optional ID to be used with {@link MountContext}, so that requests coming to
+   * [app_url]/[menuMountContextId]/[menuItemId] would be translated to menu invocations where menu item with ID of
+   * [menuItemId] would be opened. When left to <code>null</code> then menu widget full path will be used instead for
+   * registering mount-context listener.
+   * 
+   * @param menuMountContextId The mount-context ID to be used for registering menu mount-context support.
+   * 
+   * @since 2.0
+   * @see #initMenuSelectorMountSupport()
+   */
+  public void setMenuMountContextId(String menuMountContextId) {
+    if (menuMountContextId != null && StringUtils.isBlank(menuMountContextId)) {
+      throw new AraneaRuntimeException("The provided menu mount-context listener ID is blank!");
+    }
+    this.menuMountContextId = menuMountContextId;
+  }
+
+  /**
+   * Provides the ID that will be or is already used with {@link MountContext}, so that requests coming to
+   * [app_url]/[menuMountContextId]/[menuItemId] would be translated to menu invocations where menu item with ID of
+   * [menuItemId] would be opened.
+   * 
+   * @return The mount-context ID used for registering menu mount-context support.
+   * @since 2.0
+   * @see #setMenuMountContextId(String)
+   * @see #initMenuSelectorMountSupport()
+   */
+  public String getMenuMountContextId() {
+    return this.menuMountContextId;
+  }
+
+  /**
+   * Menu selection listener.
+   */
+  protected class ItemSelectionListener extends StandardEventListener {
+
+    @Override
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+      BaseMenuWidget.this.selectMenuItem(eventParam);
+      BaseMenuWidget.this.onMenuItemSelection();
+    }
+  }
+
 }

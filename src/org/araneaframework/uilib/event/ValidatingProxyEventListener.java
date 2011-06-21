@@ -1,8 +1,13 @@
 package org.araneaframework.uilib.event;
 
-import static org.araneaframework.core.util.ProxiedHandlerUtil.*;
-
-import org.araneaframework.core.util.ProxiedHandlerUtil;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.EVENT_HANDLER_PREFIX;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.getHandlerName;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.hasHandler;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.log;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.logHandlerNotFound;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.parseParamList;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.parseParamMap;
+import static org.araneaframework.core.util.ProxiedHandlerUtil.splitParam;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +19,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.EventListener;
+import org.araneaframework.core.util.ProxiedHandlerUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 
 /**

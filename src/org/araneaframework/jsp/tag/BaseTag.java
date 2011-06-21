@@ -16,12 +16,6 @@
 
 package org.araneaframework.jsp.tag;
 
-import org.araneaframework.http.HttpInputData;
-
-import org.araneaframework.InputData;
-
-import org.araneaframework.http.HttpOutputData;
-
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,10 +28,13 @@ import javax.servlet.jsp.jstl.fmt.LocalizationContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import org.araneaframework.Environment;
+import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.http.HttpInputData;
+import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
@@ -204,7 +201,7 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
    * Evaluates attribute value and checks that it is not null.
    */
   protected <T> T evaluateNotNull(String attributeName, String attributeValue, Class<T> classObject)
-      throws JspException {
+      throws AraneaJspException {
     T value = evaluate(attributeName, attributeValue, classObject);
     if (value == null) {
       throw new AraneaJspException("Attribute '" + attributeName + "' should not evaluate to null");
@@ -328,6 +325,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /**
+   * Returns the widget environment for which this tag is rendered.
+   * 
+   * @return The current widget environment.
    * @since 1.1
    */
   protected Environment getEnvironment() {
@@ -335,6 +335,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /**
+   * Returns the widget for which this tag is rendered.
+   * 
+   * @return The current context widget.
    * @since 1.1
    */
   protected ApplicationWidget getContextWidget() {
@@ -342,6 +345,9 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
   }
 
   /**
+   * Returns the full ID of the widget for which this tag is rendered.
+   * 
+   * @return The full ID of the current context widget.
    * @since 1.1
    */
   protected String getContextWidgetFullId() {
@@ -365,10 +371,10 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
       this.attributeBackup = new HashMap<Integer, Map<String, Object>>();
     }
 
-    Map<String, Object> map = this.attributeBackup.get(new Integer(scope));
+    Map<String, Object> map = this.attributeBackup.get(scope);
     if (map == null) {
       map = new HashMap<String, Object>();
-      this.attributeBackup.put(new Integer(scope), map);
+      this.attributeBackup.put(scope, map);
     }
     return map;
   }
@@ -406,28 +412,25 @@ public class BaseTag implements Tag, TryCatchFinally, ContainedTagInterface {
       throw new AraneaRuntimeException("ContextEntries were not restored properly");
     }
 
-    if (value == null) {
-      if (this.globalContextEntries != null) {
-        this.globalContextEntries.remove(key);
-      }
-    } else {
+    if (this.globalContextEntries == null) {
+      this.globalContextEntries = (Set<String>) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
       if (this.globalContextEntries == null) {
-        this.globalContextEntries = (Set<String>) getContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY);
-        if (this.globalContextEntries == null) {
-          this.globalContextEntries = new HashSet<String>();
-          addContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY, globalContextEntries);
-
-          // Hide context entries that are set in ServletUtil.include:
-          this.globalContextEntries.add(ServletUtil.UIWIDGET_KEY);
-          this.globalContextEntries.add(WidgetContextTag.CONTEXT_WIDGET_KEY);
-          this.globalContextEntries.add(Environment.ENVIRONMENT_KEY);
-          this.globalContextEntries.add(WidgetTag.WIDGET_KEY);
-          this.globalContextEntries.add(WidgetTag.WIDGET_ID_KEY);
-          this.globalContextEntries.add(WidgetTag.WIDGET_VIEW_MODEL_KEY);
-          this.globalContextEntries.add(WidgetTag.WIDGET_VIEW_DATA_KEY);
-          // XXX also hide ServletUtil.LOCALIZATION_CONTEXT_KEY ?
-        }
+        // Hide context entries that are set in ServletUtil.include:
+        this.globalContextEntries = new HashSet<String>();
+        this.globalContextEntries.add(ServletUtil.UIWIDGET_KEY);
+        this.globalContextEntries.add(WidgetContextTag.CONTEXT_WIDGET_KEY);
+        this.globalContextEntries.add(Environment.ENVIRONMENT_KEY);
+        this.globalContextEntries.add(WidgetTag.WIDGET_KEY);
+        this.globalContextEntries.add(WidgetTag.WIDGET_ID_KEY);
+        this.globalContextEntries.add(WidgetTag.WIDGET_VIEW_MODEL_KEY);
+        this.globalContextEntries.add(WidgetTag.WIDGET_VIEW_DATA_KEY);
+        addContextEntry(GLOBAL_CONTEXT_ENTRIES_KEY, this.globalContextEntries);
       }
+    }
+
+    if (value == null) {
+      this.globalContextEntries.remove(key);
+    } else {
       this.globalContextEntries.add(key);
     }
   }

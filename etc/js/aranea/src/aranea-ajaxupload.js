@@ -15,17 +15,33 @@
  */
 
 var Aranea = window.Aranea || {};
+Aranea.Page = Aranea.Page || {};
 
 /**
- * AJAX file upload functionality.
+ * AJAX file upload functionality. Integrates with AjaxUpload, and therefore "ajaxupload.js" is required.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
+ * @since 1.2 (introduced), 2.0 (namespace)
  */
-Object.extend(Aranea.Page, {
-	getAjaxUploadURL: function(element) {
-		return Aranea.Page.encodeURL(Aranea.Data.servletURL);
+Aranea.Page.AjaxUpload = {
+
+	/**
+	 * The selector used for fetching file upload inputs where AjaxUpload should be enabled.
+	 */
+	SELECTOR: 'input[type=file].ajax-upload,#aranea-overlay-form input[type=file]',
+
+	/**
+	 * Resolves URL where the file should be submitted for given element. By default, uses the same URL as system form.
+	 */
+	getURL: function(element) {
+		return Aranea.Data.systemForm.readAttribute('action');
 	},
-	getAjaxUploadFormData: function(systemForm, element) {
+
+	/**
+	 * This method provides the input data that will be submitted together with file. The system form and element can
+	 * be used to copy values.
+	 */
+	getFormData: function(systemForm, element) {
 		return {
 			topServiceId: systemForm.araTopServiceId.value,
 			araThreadServiceId: systemForm.araThreadServiceId.value,
@@ -36,22 +52,41 @@ Object.extend(Aranea.Page, {
 			araSync: 'false'
 		};
 	},
-	ajaxUploadInit: function() {
+
+	/**
+	 * The main method that initializes AjaxUpload support for found file upload elements (see
+	 * Aranea.Page.AjaxUpload.AJAX_FILE_UPLOAD_SELECTOR). This method should be registered for 'aranea:loaded' and
+	 * 'aranea:updated' events. The file upload inputs, where AjaxUpload is registered, are stored in
+	 * Aranea.Data.ajaxUploadInputs, and are not processed more than once.
+	 */
+	init: function() {
 		var form = Aranea.Data.systemForm;
-		var opts = Object.clone(this.AjaxUploadOptions);
-		$$('input[type=file].ajax-upload,form#overlaySystemForm input[type=file]').each(function(element) {
+		var that = Aranea.Page.AjaxUpload;
+		var opts = Object.clone(that.Options);
+		var inputs = Aranea.Data.ajaxUploadInputs = Aranea.Data.ajaxUploadInputs || $A();
+
+		$$(that.SELECTOR).without(inputs).each(function(element) {
+
+			// Enables AjaxUpload on the given input:
 			new AjaxUpload(element, Object.extend(opts, {
 				name: element ? element.name : '',
-				action: Aranea.Page.getAjaxUploadURL(element),
-				data: Aranea.Page.getAjaxUploadFormData(form, element)
+				action: that.getURL(element),
+				data: that.getFormData(form, element)
 			}));
-			element.removeClassName('ajax-upload');
+
+			// Remember this element so that we would not register AjaxUpload multiple times on one element:
+			inputs.push(element);
+
+			Aranea.Logger.debug('Added AJAX file upload support to ' + element.inspect() + '.');
 		});
-		form = null;
+
+		form = that = opts = inputs = null;
 	},
 
-	// Default options. Feel free to modify, esp. onComplete:
-	AjaxUploadOptions: {
+	/**
+	 * Default options suitable for Aranea. Feel free to modify, especially onComplete:
+	 */
+	Options: {
 		disabled: false,
 		autoSubmit: true,
 		onChange: function(file, extension, options) {},
@@ -72,4 +107,6 @@ Object.extend(Aranea.Page, {
 			}
 		}
 	}
-});
+};
+document.observe('aranea:loaded', Aranea.Page.AjaxUpload.init);
+document.observe('aranea:updated', Aranea.Page.AjaxUpload.init);

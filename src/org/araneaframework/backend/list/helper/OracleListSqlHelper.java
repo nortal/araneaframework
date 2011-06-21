@@ -17,7 +17,6 @@
 package org.araneaframework.backend.list.helper;
 
 import java.util.List;
-
 import javax.sql.DataSource;
 import org.araneaframework.backend.list.model.ListQuery;
 
@@ -44,6 +43,10 @@ public class OracleListSqlHelper extends ListSqlHelper {
     super();
   }
 
+  // ***********************************************************
+  // * The COUNT Query Creation
+  // ***********************************************************
+
   @Override
   protected String createCountQuery(String fromSql, String customWhereSql) {
     StringBuffer sb = new StringBuffer();
@@ -62,14 +65,18 @@ public class OracleListSqlHelper extends ListSqlHelper {
   protected List<Object> getCountQueryParams(Object[] customWhereArgs) {
     List<Object> params = super.getCountQueryParams(customWhereArgs);
 
-    params.add(this.itemRangeStart.longValue() + 1);
+    params.add(this.itemRangeStart + 1);
 
     if (this.itemRangeCount != null) {
-      params.add(this.itemRangeStart.longValue() + this.itemRangeCount.longValue());
+      params.add(this.itemRangeStart + this.itemRangeCount);
     }
 
     return params;
   }
+
+  // ***********************************************************
+  // * The SELECT Query Creation
+  // ***********************************************************
 
   @Override
   protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
@@ -89,10 +96,10 @@ public class OracleListSqlHelper extends ListSqlHelper {
   protected List<Object> getItemRangeQueryParams(Object[] customWhereArgs, Object[] customOrderbyArgs) {
     List<Object> params = super.getItemRangeQueryParams(customWhereArgs, customOrderbyArgs);
 
-    params.add(this.itemRangeStart.longValue() + 1);
+    params.add(this.itemRangeStart + 1);
 
     if (this.itemRangeCount != null) {
-      params.add(this.itemRangeStart.longValue() + this.itemRangeCount.longValue());
+      params.add(this.itemRangeStart + this.itemRangeCount);
     }
 
     return params;

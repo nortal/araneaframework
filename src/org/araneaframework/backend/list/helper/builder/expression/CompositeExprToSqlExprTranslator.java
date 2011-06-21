@@ -21,11 +21,9 @@ import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilde
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 
-public abstract class CompositeExprToSqlExprTranslator
-  implements ExprToSqlExprTranslator {
+public abstract class CompositeExprToSqlExprTranslator implements ExprToSqlExprTranslator {
 
-  public final SqlExpression translate(Expression expr,
-      ExpressionToSqlExprBuilder builder) {
+  public final SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder) {
 
     Expression[] children = ((CompositeExpression) expr).getChildren();
     SqlExpression[] sqlChildren = new SqlExpression[children.length];
@@ -37,6 +35,5 @@ public abstract class CompositeExprToSqlExprTranslator
     return translateParent(expr, sqlChildren);
   }
 
-  protected abstract SqlExpression translateParent(Expression expr,
-      SqlExpression[] sqlChildren);
+  protected abstract SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren);
 }

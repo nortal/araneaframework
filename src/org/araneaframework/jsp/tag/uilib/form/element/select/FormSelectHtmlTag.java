@@ -16,10 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.Path;
-
+import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -27,8 +29,10 @@ import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.event.OnChangeEventListener;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.SelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -44,7 +48,7 @@ import org.araneaframework.uilib.util.ConfigurationUtil;
 @SuppressWarnings("unchecked")
 public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
-  protected Long size = null;
+  protected Long size;
 
   protected String onChangePrecondition;
 
@@ -68,12 +72,13 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
+  @SuppressWarnings("rawtypes")
   public int doEndTag(Writer out) throws Exception {
     assertControlType("SelectControl");
 
     // Prepare
     String name = this.getFullFieldId();
-    SelectControl<Object>.ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
+    ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");
@@ -81,8 +86,8 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeAttribute(out, "size", size);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    JspUtil.writeAttribute(out, "size", this.size);
 
     if (viewModel.isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
@@ -101,28 +106,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    // Write items
-    for (DisplayItem item : viewModel.getSelectItems()) {
-      if (!item.isDisabled()) {
-        String value = item.getValue();
-        String label = item.getLabel();
-
-        if (this.localizeDisplayItems) {
-          label = JspUtil.getResourceString(this.pageContext, label);
-        }
-
-        JspUtil.writeOpenStartTag(out, "option");
-        JspUtil.writeAttribute(out, "value", value != null ? value : "");
-
-        if (viewModel.isSelected(value)) {
-          JspUtil.writeAttribute(out, "selected", "selected");
-        }
-
-        JspUtil.writeCloseStartTag_SS(out);
-        JspUtil.writeEscaped(out, label);
-        JspUtil.writeEndTag(out, "option");
-      }
-    }
+    writeOptions(out, viewModel.getGroups(), viewModel.getSimpleValue());
 
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
@@ -130,6 +114,51 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;
+  }
+
+  // Write items
+  protected void writeOptions(Writer out, List<DisplayItemGroup> groups, String selectedValue) throws IOException {
+    for (DisplayItemGroup group : groups) {
+      if (group.isDisabled() || group.isEnabledEmpty()) {
+        continue;
+      } else if (!group.isNoGroup()) {
+        String label = group.getLabel();
+
+        if (this.localizeDisplayItems) {
+          label = JspUtil.getResourceString(this.pageContext, label);
+        }
+
+        JspUtil.writeOpenStartTag(out, "optgroup");
+        JspUtil.writeAttribute(out, "label", label);
+        JspUtil.writeCloseStartTag(out);
+      }
+
+      for (DisplayItem item : group.getEnabledOptions()) {
+        if (!item.isDisabled()) {
+          String value = StringUtils.defaultString(item.getValue());
+          String label = item.getLabel();
+
+          if (this.localizeDisplayItems) {
+            label = JspUtil.getResourceString(this.pageContext, label);
+          }
+
+          JspUtil.writeOpenStartTag(out, "option");
+          JspUtil.writeAttributeForced(out, "value", value);
+
+          if (StringUtils.equals(value, selectedValue)) {
+            JspUtil.writeAttribute(out, "selected", "selected");
+          }
+
+          JspUtil.writeCloseStartTag_SS(out);
+          JspUtil.writeEscaped(out, label);
+          JspUtil.writeEndTag(out, "option");
+        }
+      }
+
+      if (!group.isNoGroup()) {
+        JspUtil.writeEndTag(out, "optgroup");
+      }
+    }
   }
 
   /**

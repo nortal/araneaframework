@@ -16,26 +16,47 @@
 
 package org.araneaframework.uilib.form.converter;
 
-import org.araneaframework.uilib.form.FormElementContext;
-
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import org.araneaframework.uilib.form.Converter;
+import org.araneaframework.uilib.form.FormElementContext;
 
+/**
+ * Represents a converter that is composed of multiple converters. This allows reuse of existing converters to simplify
+ * creation of different converters.
+ * 
+ * @author Martti Tamm (martti@araneaframework.org)
+ * @since 2.0
+ */
 @SuppressWarnings("unchecked")
 public class CompositeConverter extends BaseConverter<Object, Object> {
 
+  /**
+   * All internal converters used for converting.
+   */
   protected List<Converter> converters = new LinkedList<Converter>();
 
   public CompositeConverter() {}
 
-  public CompositeConverter(Converter converter1, Converter converter2) {
-    this.converters.add(converter1);
-    this.converters.add(converter2);
+  /**
+   * Initializes composite converter with given converters. The converters will be processed in the order they are
+   * provided here.
+   *  
+   * @param converters Converters to use in the given to reach value conversion to the correct type.
+   */
+  public CompositeConverter(Converter... converters) {
+    this.converters.addAll(Arrays.asList(converters));
   }
 
+  /**
+   * Initializes composite converter with given converters. The converters will be processed in the order they are
+   * provided here.
+   *  
+   * @param converters Converters to use in the given to reach value conversion to the correct type.
+   */
   public CompositeConverter(Collection<Converter> converters) {
     this.converters.addAll(converters);
   }

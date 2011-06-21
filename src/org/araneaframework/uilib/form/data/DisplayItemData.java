@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.araneaframework.core;
+package org.araneaframework.uilib.form.data;
 
-import org.araneaframework.InputData;
-import org.araneaframework.OutputData;
+import org.araneaframework.uilib.form.Data;
+import org.araneaframework.uilib.support.DisplayItem;
 
 /**
- * A base solution for asynchronous action listeners. All action listeners should implement
- * {@link #processAction(String, String, InputData, OutputData)} to provide their custom solution.
- * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
-public abstract class StandardAsynchronousActionListener extends StandardActionListener implements
-    AsynchronousActionListener {}
+public class DisplayItemData extends Data<DisplayItem> {
+
+  public DisplayItemData() {
+    super(DisplayItem.class);
+  }
+}

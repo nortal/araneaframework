@@ -16,11 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
 import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.list.ListWidget;
 
@@ -57,7 +56,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    String id = getCheckBoxId();
+    String id = getCheckBoxId(false);
 
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "type", "checkbox");
@@ -67,8 +66,8 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "value", this.value != null ? this.value : LIST_CHECK_VALUE);
 
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeAttribute(out, "accessKey", accesskey);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    JspUtil.writeAttribute(out, "accessKey", this.accesskey);
 
     writeOnClickEvent(out);
 
@@ -86,17 +85,17 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
       JspUtil.writeOpenStartTag(out, "label");
       JspUtil.writeAttribute(out, "for", id);
       JspUtil.writeCloseStartTag_SS(out);
-      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, this.labelId));
-      JspUtil.writeStartEndTag(out, "label");
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(this.pageContext, this.labelId));
+      JspUtil.writeEndTag(out, "label");
     }
 
     return SKIP_BODY;
   }
 
   /**
-   * Creates the onclick event script, including the onclick script that the user specifies through attribute value.
+   * Creates the "onclick" event script, including the "onclick" script that the user specifies through attribute value.
    * 
-   * @return The entire script for check box onclick event.
+   * @return The entire script for check box "onclick" event.
    */
   @Override
   protected String getOnclickScript() {
@@ -110,7 +109,7 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
 
     try {
       result.append("return Aranea.UI.updateListSelectAll('");
-      result.append(getCheckBoxId());
+      result.append(getCheckBoxId(true));
       result.append("');");
     } catch (JspException e) {}
 
@@ -121,13 +120,18 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
    * Creates the check box ID. Note that it is very important how the ID looks like. It means that the ID of the row
    * check box must begin with the ID value of the select-all check box to make the JavaScript methods work.
    * 
+   * @param parent Whether the returned ID is the ID of the select-all-checkbox.
    * @return The ID that will be used for the generated check box.
    * @throws JspException This method requires listId and rowRequestId entries from the context.
    */
-  protected String getCheckBoxId() throws JspException {
+  protected String getCheckBoxId(boolean parent) throws JspException {
     String listId = (String) requireContextEntry(ListTag.LIST_FULL_ID_KEY);
     String rowRequestId = (String) requireContextEntry(BaseListRowsTag.ROW_REQUEST_ID_KEY);
-    return listId + Path.SEPARATOR + SELECTION_SCOPE + Path.SEPARATOR + rowRequestId;
+    StringBuffer result = new StringBuffer(listId).append(Path.SEPARATOR + SELECTION_SCOPE);
+    if (!parent) {
+      result.append(Path.SEPARATOR).append(rowRequestId);
+    }
+    return result.toString();
   }
 
   /**
@@ -142,8 +146,10 @@ public class ListRowCheckBoxHtmlTag extends BaseListRowControlTag {
   @SuppressWarnings("unchecked")
   protected boolean isChecked() throws JspException {
     Object row = requireContextEntry(BaseListRowsTag.ROW_KEY);
+
     ListWidget<?>.ViewModel viewModel = (ListWidget.ViewModel) requireContextEntry(ListTag.LIST_VIEW_MODEL_KEY);
-    List<?> checkedRows = (List<?>) viewModel.getData().get(SELECTION_SCOPE);
+
+    List<?> checkedRows = List.class.cast(viewModel.getData().get(SELECTION_SCOPE));
 
     boolean prevChecked = checkedRows != null && checkedRows.contains(row);
 

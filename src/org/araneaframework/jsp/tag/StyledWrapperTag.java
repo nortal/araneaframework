@@ -18,39 +18,35 @@ package org.araneaframework.jsp.tag;
 
 import javax.servlet.jsp.JspException;
 
-
 /**
  * Styled wrapper tag.
  * 
  * @author Oleg Mürk
  */
-public abstract class StyledWrapperTag extends BaseTagWrapperTag  {
-	protected String styleClass;
-	
-	public StyledWrapperTag() {
-		this.styleClass = null;
-	}
-	
-	/**
-	 * Callback: configure row tag
-	 */
-	@Override
+public abstract class StyledWrapperTag extends BaseTagWrapperTag {
+
+  protected String styleClass;
+
+  public StyledWrapperTag() {
+    this.styleClass = null;
+  }
+
+  /**
+   * Callback: configure row tag
+   */
+  @Override
   protected void configureTag(ContainedTagInterface tag) throws JspException {
-		StyledTagInterface styledTag = (StyledTagInterface)tag; 
-		styledTag.setStyleClass(styleClass);
-	}
+    StyledTagInterface styledTag = (StyledTagInterface) tag;
+    styledTag.setStyleClass(styleClass);
+  }
 
-	/* ***********************************************************************************
-	 * Tag attributes
-	 * ********************************************************************************* */
-
-	/**
-	 * @jsp.attribute
-	 *   type = "java.lang.String"
-	 *   required = "false"
-	 *   description = "Cell css class, defines the way the cell will be rendered." 
-	 */
-	public void setStyleClass(String styleClass){
-		this.styleClass = evaluate("styleClass", styleClass, String.class);
-	}
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "Cell CSS class, defines the way the cell will be rendered."
+   */
+  public void setStyleClass(String styleClass) {
+    this.styleClass = evaluate("styleClass", styleClass, String.class);
+  }
 }

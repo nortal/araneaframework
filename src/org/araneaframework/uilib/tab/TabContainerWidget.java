@@ -139,7 +139,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   public boolean isTabSelected(String id) {
     Assert.notNullParam(this, id, "id");
-    return this.selected == null ? id.equals(this.selected.getScope().getId()) : false;
+    return this.selected != null ? id.equals(this.selected.getScope().getId()) : false;
   }
 
   public TabContext getSelectedTab() {
@@ -240,8 +240,9 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   /*****************************************************************************
    * Overrides for disableWidget()/enableWidget()
    ************************************************************************** */
+
   @Override
-  public void disableWidget(Object key) {
+  public void disableWidget(String key) {
     if (!this.tabs.containsKey(key)) {
       super.disableWidget(key);
       return;
@@ -250,7 +251,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   }
 
   @Override
-  public void enableWidget(Object key) {
+  public void enableWidget(String key) {
     if (!this.tabs.containsKey(key)) {
       super.enableWidget(key);
       return;

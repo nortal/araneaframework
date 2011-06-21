@@ -20,9 +20,18 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.araneaframework.core.Assert;
 
 /**
- * TODO Document.
+ * The data definition object. Before this implementation a string representation was used instead for defining data
+ * types. Since Java 1.5 provided <i>generics</i>, it also became important to represent data types in way that makes
+ * good use of this new feature in Java.
+ * <p>
+ * The data definition basically basically supports defining classes with a single parameter (e.g.
+ * <code>String.class</code>, <code>String[].class</code>) or with a collection class to represent the first parameter
+ * as a member of the collection class (e.g. <code>(String.class, List.class)</code>). The latter syntax was necessary
+ * because <i>generics</i> does not let one define a collection class with collection item type (e.g.
+ * <code>List&lt;String&gt;.class</code>).
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
@@ -35,6 +44,11 @@ public class DataType implements Serializable, Cloneable {
    */
   public static final DataType STRING_TYPE = new DataType(String.class);
 
+  /**
+   * Represents the {@link List}&lt;{@link String}&gt; type.
+   */
+  public static final DataType STRING_LIST_TYPE = new DataType(List.class, String.class);
+
   private Class<?> type;
 
   private Class<? extends Collection> collectionType;
@@ -44,6 +58,7 @@ public class DataType implements Serializable, Cloneable {
   }
 
   public DataType(Class<? extends Collection> collectionType, Class<?> type) {
+    Assert.notNull(type, "At least 'type' class must be defined for a DataType!");
     this.collectionType = collectionType;
     this.type = type;
   }
@@ -85,7 +100,15 @@ public class DataType implements Serializable, Cloneable {
   }
 
   @Override
-  public DataType clone() {
-    return new DataType(this.collectionType, this.type);
+  public int hashCode() {
+    int hash = 963;
+    hash += this.type == null ? 5892 : this.type.hashCode();
+    hash += this.collectionType == null ? 68 : this.collectionType.hashCode();
+    return hash;
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    return super.clone();
   }
 }

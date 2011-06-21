@@ -16,17 +16,32 @@
 
 package org.araneaframework.jsp.tag.basic;
 
-import javax.servlet.jsp.JspException;
-
-
 /**
  * Interface of a tag that can have attributes.
  * 
  * @author Oleg Mürk
  */
 public interface AttributedTagInterface {
-	public static final String HTML_ELEMENT_KEY = "AttributedTagInterface.HTML_ELEMENT_KEY";
-	public static final String ATTRIBUTED_TAG_KEY = "org.araneaframework.jsp.ui.basic.UiAttributedTagInterface.KEY";
-	
-	public void addAttribute(String name, String value) throws JspException;
+
+  /**
+   * The key for retrieving the target tag from page context.
+   */
+  public static final String HTML_ELEMENT_KEY = "AttributedTagInterface.HTML_ELEMENT_KEY";
+
+  /**
+   * The key for retrieving the map containing tag attributes from page context.
+   */
+  public static final String ATTRIBUTED_TAG_KEY = "org.araneaframework.jsp.ui.basic.UiAttributedTagInterface.KEY";
+
+  /**
+   * The method to add an attribute to the tag marked with this interface. When the tag already has an attribute with
+   * the same name, it will get the value, which is provided last.
+   * <p>
+   * Once an attribute is added, it cannot be removed. However, when an attribute has a null, empty, or blank
+   * string value, it won't be rendered.
+   * 
+   * @param name The name for the attribute to add. 
+   * @param value The value for the attribute to add.
+   */
+  public void addAttribute(String name, String value);
 }

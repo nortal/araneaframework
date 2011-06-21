@@ -29,15 +29,11 @@ import org.araneaframework.uilib.form.Constraint;
  * <pre><code>
  * ConstraintGroupHelper helper = new ConstraintGroupHelper();
  * ...
- * myFormElement1.setConstraint(
- *   helper.createGroupedConstraint(new MyConstraint1(), "group1"));
- * myFormElement2.setConstraint(
- *   helper.createGroupedConstraint(new MyConstraint2(), "group1"));
+ * myFormElement1.setConstraint(helper.createGroupedConstraint(new MyConstraint1(), "group1"));
+ * myFormElement2.setConstraint(helper.createGroupedConstraint(new MyConstraint2(), "group1"));
  * ...
- * myFormElement3.setConstraint(
- *   helper.createGroupedConstraint(new MyConstraint3(), "group2"));
- * myFormElement4.setConstraint(
- *   helper.createGroupedConstraint(new MyConstraint4(), "group2"));
+ * myFormElement3.setConstraint(helper.createGroupedConstraint(new MyConstraint3(), "group2"));
+ * myFormElement4.setConstraint(helper.createGroupedConstraint(new MyConstraint4(), "group2"));
  * ...
  * helper.setActiveGroup("group1")
  * </code></pre>
@@ -68,7 +64,11 @@ public class ConstraintGroupHelper implements Serializable {
    * @param activeGroups The names of the groups to be made active.
    */
   public void setActiveGroups(Set<String> activeGroups) {
-    this.activeGroups = activeGroups == null ? new HashSet<String>() : activeGroups;
+    if (activeGroups == null) {
+      this.activeGroups.clear();
+    } else {
+      this.activeGroups = activeGroups;
+    }
   }
 
   /**
@@ -80,7 +80,6 @@ public class ConstraintGroupHelper implements Serializable {
    * @param activeGroups The names of the groups to be made active.
    */
   public void setActiveGroups(String[] activeGroups) {
-    this.activeGroups = new HashSet<String>();
     CollectionUtils.addAll(this.activeGroups, activeGroups);
   }
 
@@ -96,12 +95,8 @@ public class ConstraintGroupHelper implements Serializable {
    *            <code>null</code>.
    */
   public void setActiveGroup(String activeGroup) {
-    if (activeGroup == null) {
-      this.activeGroups = new HashSet<String>();
-    } else {
-      this.activeGroups = new HashSet<String>();
-      this.activeGroups.add(activeGroup);
-    }
+    this.activeGroups.clear();
+    this.activeGroups.add(activeGroup);
   }
 
   /**

@@ -31,8 +31,9 @@ import org.araneaframework.jsp.util.JspUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class LayoutHtmlTag extends BaseLayoutTag {
+
   protected String width;
-	
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -44,7 +45,9 @@ public class LayoutHtmlTag extends BaseLayoutTag {
     return EVAL_BODY_INCLUDE;
   }
 
-  /** Overwrite if other attributes besides <code>styleclass</code> and <code>width</code> are needed for HTML table. */
+  /**
+   * Overwrite if other attributes besides <code>styleclass</code> and <code>width</code> are needed for HTML table.
+   */
   protected void writeTableAttributes(Writer out) throws Exception {
     addAttribute("style", getStyle());
     addAttribute("class", getStyleClass());
@@ -58,9 +61,6 @@ public class LayoutHtmlTag extends BaseLayoutTag {
     return super.doEndTag(out);
   }
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
   /**
    * @jsp.attribute
    *   type = "java.lang.String"

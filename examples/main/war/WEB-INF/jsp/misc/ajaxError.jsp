@@ -5,7 +5,7 @@
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.1">
 
-	When the Error button is clicked, a failing ajax request is made.
+	When the Error button is clicked, a failing AJAX request is made.
 
 	<ui:updateRegion id="ajaxErrorDemo">
 		<ui:newLine/>

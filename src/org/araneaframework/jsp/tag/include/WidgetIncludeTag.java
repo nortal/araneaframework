@@ -16,9 +16,9 @@
 
 package org.araneaframework.jsp.tag.include;
 
-import java.io.PrintWriter;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +27,7 @@ import javax.servlet.jsp.JspException;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
+import org.araneaframework.http.util.AtomicResponseHelper;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -40,7 +41,7 @@ import org.araneaframework.jsp.util.JspWidgetUtil;
  * @jsp.tag
  *  name = "widgetInclude"
  *  body-content = "JSP"
- *  description = "The JSP specified by the path given in <i>page</i> is included as the widget with id specified in <i>id</i>."
+ *  description = "The JSP specified by the path given in <i>page</i> is included as the widget with ID specified in <i>id</i>."
  */
 public class WidgetIncludeTag extends BaseIncludeTag {
 
@@ -48,33 +49,34 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 
   protected String page;
 
-  public WidgetIncludeTag() {
-    this.widgetId = null;
-    this.page = null;
-  }
-
   @Override
-  protected int doEndTag(Writer out) throws Exception {
+  protected int doStartTag(Writer out) throws Exception {
     ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), this.widgetId);
 
-    WidgetContextTag widgetContextTag = new WidgetContextTag();
-    registerSubtag(widgetContextTag);
+    WidgetContextTag widgetContextTag = registerSubtag(new WidgetContextTag());
     widgetContextTag.setId(this.widgetId);
     executeStartSubtag(widgetContextTag);
+
     OutputData output = getOutputData();
 
     try {
       if (this.page == null) {
         hideGlobalContextEntries(this.pageContext);
 
-        // Let's wrap the response so that the rendered widgets would write to the given stream.
+        // The provided writer might be a wrapper of the writer returned by ServletUtil.getResponse(output).getWriter().
+        // We must use this writer (out) instead, because it may contain some necessary custom logic for rendering JSPs.
+
+        // 1. Let's wrap the response so that the rendered widgets would write to the given stream (out).
         HttpServletResponse response = ServletUtil.getResponse(output);
-        output.extend(HttpServletResponse.class, new WidgetResponseWrapper(response, out));
+        WidgetResponseWrapper responseWrapper = new WidgetResponseWrapper(response, out);
 
-        // Render the specified widget:
+        output.extend(HttpServletResponse.class, responseWrapper);
+
+        // 2. Render the specified widget:
         widget._getWidget().render(output);
+        responseWrapper.flushBuffer();
 
-        // Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
+        // 3. Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
         output.extend(HttpServletResponse.class, response);
       } else {
         JspContext config = getEnvironment().requireEntry(JspContext.class);
@@ -84,8 +86,8 @@ public class WidgetIncludeTag extends BaseIncludeTag {
       restoreGlobalContextEntries(this.pageContext);
       executeEndTagAndUnregister(widgetContextTag);
     }
-    super.doEndTag(out);
-    return EVAL_PAGE;
+
+    return super.doStartTag(out);
   }
 
   /*
@@ -93,36 +95,40 @@ public class WidgetIncludeTag extends BaseIncludeTag {
    */
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Widget id."
+   * @jsp.attribute type = "java.lang.String" required = "true" description = "Widget ID."
    */
   public void setId(String widgetId) throws JspException {
     this.widgetId = evaluateNotNull("widgetId", widgetId, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Path to JSP."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Path to JSP. When omitted, widget will be used to resolve the view."
    */
   public void setPage(String page) {
     this.page = evaluate("page", page, String.class);
   }
 
   /**
-   * A temporary wrapper to make widgets write to the given writer. This work-around makes <code>out.flush()</code>,
-   * which may throw an exception, unnecessary
+   * A temporary wrapper to make widgets write to the given JSP writer. To make use of it, the {@link OutputData} should
+   * refer to this response wrapper.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 2.0
    */
   @SuppressWarnings("deprecation")
-  private class WidgetResponseWrapper extends HttpServletResponseWrapper {
+  private static class WidgetResponseWrapper extends HttpServletResponseWrapper {
 
     private ServletOutputStream stream;
+
     private PrintWriter writer;
+
+    private String encoding;
 
     public WidgetResponseWrapper(HttpServletResponse response, Writer out) {
       super(response);
-      this.stream = new WidgetOutputStream(out);
-      this.writer = new PrintWriter(out);
+      this.encoding = response.getCharacterEncoding();
+      this.stream = new ServletContentOutputStream(out, this.encoding);
+      this.writer = new PrintWriter(out, true);
     }
 
     @Override
@@ -135,86 +141,52 @@ public class WidgetIncludeTag extends BaseIncludeTag {
       return this.writer;
     }
 
+    @Override
+    public String getCharacterEncoding() {
+      return this.encoding;
+    }
+
+    @Override
+    public void flushBuffer() throws IOException {
+      this.stream.flush();
+      super.flushBuffer();
+    }
+
     /**
-     * A temporary wrapper to make widgets write to the given writer. This work-around makes <code>out.flush()</code>,
-     * which may throw an exception, unnecessary
+     * A temporary stream wrapper to make widgets write to the given JSP writer. Although no output stream should be
+     * used when rendering JSPs, it is still provided because {@link AtomicResponseHelper} depends on it. This class
+     * works together with {@link WidgetResponseWrapper} to use the same encoding for gathering data, but in the end the
+     * JSP writer encoding will matter.
      * 
-     * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+     * @author Martti Tamm (martti@araneaframework.org)
      * @since 2.0
      */
-    private class WidgetOutputStream extends ServletOutputStream {
+    private static class ServletContentOutputStream extends ServletOutputStream {
 
       private Writer out;
 
-      public WidgetOutputStream(Writer out) {
+      private ByteArrayOutputStream bufferedOut = new ByteArrayOutputStream();
+
+      private String encoding;
+
+      public ServletContentOutputStream(Writer out, String encoding) {
         this.out = out;
+        this.encoding = encoding;
       }
 
       @Override
-      public void write(int b) throws IOException { // IMPLEMENTED
-        this.out.write(b);
+      public void write(int b) throws IOException {
+        this.bufferedOut.write(b);
       }
 
       @Override
-      public void print(String str) throws IOException {
-        this.out.write(str);
-      }
-      @Override
-      public void print(boolean b) throws IOException {
-        this.out.write(Boolean.toString(b));
-      }
-      @Override
-      public void print(char c) throws IOException {
-        this.out.write(c);
-      }
-      @Override
-      public void print(int i) throws IOException {
-        this.out.write(i);
-      }
-      @Override
-      public void print(long l) throws IOException {
-        this.out.write(Long.toString(l));
-      }
-      @Override
-      public void print(float f) throws IOException {
-        this.out.write(Float.toString(f));
-      }
-      @Override
-      public void print(double d) throws IOException {
-        this.out.write(Double.toString(d));
-      }
-      @Override
-      public void println() throws IOException {
-        this.out.write('\n');
-      }
-      @Override
-      public void println(String str) throws IOException {
-        this.out.write(str);
-        println();
-      }
-      @Override
-      public void println(boolean b) throws IOException {
-        println(Boolean.toString(b));
-      }
-      @Override
-      public void println(char c) throws IOException {
-        println(Character.toString(c));
-      }
-      @Override
-      public void println(int i) throws IOException {
-        println(Integer.toString(i));
-      }
-      @Override
-      public void println(long l) throws IOException {
-        println(Long.toString(l));
-      }
-      @Override
-      public void println(float l) throws IOException {
-        println(Float.toString(l));
-      }
-      @Override
-      public void println(double l) throws IOException {
-        println(Double.toString(l));
+      public void flush() throws IOException {
+        if (this.encoding != null) {
+          this.out.write(new String(this.bufferedOut.toByteArray(), this.encoding));
+        } else {
+          this.out.write(new String(this.bufferedOut.toByteArray()));
+        }
+        this.bufferedOut.reset();
       }
     }
   }

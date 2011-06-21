@@ -39,15 +39,11 @@ import org.araneaframework.uilib.util.MessageUtil;
  */
 public abstract class BaseControl<T> extends BaseApplicationWidget implements Serializable, Control<T> {
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
-
   protected T value;
 
   protected Object innerData;
 
-  protected boolean isReadFromRequest = false;
+  protected boolean isReadFromRequest;
 
   private FormElementContext<T, Object> feCtx;
 
@@ -93,7 +89,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
    * By default the control is considered read if it has a not null data read from request.
    */
   public boolean isRead() {
-    return isReadFromRequest;
+    return this.isReadFromRequest;
   }
 
   // *********************************************************************
@@ -130,8 +126,9 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (!isDisabled())
+    if (!isDisabled()) {
       super.action(path, input, output);
+    }
   }
 
   @Override
@@ -150,7 +147,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   }
 
   /**
-   * Returns control label.
+   * Returns control label using form element context.
    * 
    * @return control label.
    */
@@ -159,42 +156,46 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   }
 
   /**
-   * * Returns whether the control is mandatory, that is must be inserted by user.
+   * Returns whether the control is mandatory, i.e. must be inserted by user.
    * 
-   * @return whether the control is mandatory, that is must be inserted by user.
+   * @return whether the control is mandatory, i.e. must be inserted by user.
    */
   protected boolean isMandatory() {
     return this.feCtx.isMandatory();
   }
 
-  protected void addError(String error) {
-    this.feCtx.addError(error);
-  }
-
-  protected void addErrorWithLabel(String errorMsg) {
-    addErrorWithLabel(errorMsg, null);
-  }
-
-  protected void addErrorWithLabel(String errorMsg, Object lastParam) {
-    addErrorWithLabel(errorMsg, lastParam, null);
-  }
-
-  protected void addErrorWithLabel(String errorMsg, Object lastParam1, Object lastParam2) {
-    addError(MessageUtil.localizeAndFormat(getEnvironment(), errorMsg, MessageUtil.localize(getLabel(),
-        getEnvironment()), lastParam1, lastParam2));
+  protected void addError(String error, Object... params) {
+    this.feCtx.addError(error, params);
   }
 
   /**
-   * Returns whether the control is disabled.
+   * Since mostly the parameter to the error message is the name of the input field, this method automatically adds the
+   * resolved input field name to the given error message. In addition, can append other parameters, too.
    * 
-   * @return whether the control is disabled
-   * 
-   * @since 1.1 this method is public and part of {@link Control} interface
+   * @param errorMsg The error message that takes the input field name as its (first) parameter.
+   * @param params Additional parameters to the error message.
+   * @since 2.0
    */
+  protected void addErrorWithLabel(String errorMsg, Object... params) {
+    Object[] paramsAll = new Object[params.length + 1];
+    paramsAll[0] = t(getLabel());
+    System.arraycopy(params, 0, paramsAll, 1, params.length);
+    addError(errorMsg, paramsAll);
+  }
+
+  protected String t(String label) {
+    return MessageUtil.localize(label, getEnvironment());
+  }
+
   public boolean isDisabled() {
     return this.feCtx.isDisabled();
   }
 
+  /**
+   * Returns whether the control state is valid using form element context.
+   * 
+   * @return A boolean that is <code>true</code> when the control data is valid.
+   */
   protected boolean isValid() {
     return this.feCtx.isValid();
   }
@@ -249,45 +250,24 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
       this.label = BaseControl.this.getLabel();
     }
 
-    /** @since 1.1 */
     public Scope getScope() {
       return BaseControl.this.getScope();
     }
 
-    /**
-     * Returns control type.
-     * 
-     * @return control type.
-     */
     public String getControlType() {
-      return controlType;
+      return this.controlType;
     }
 
-    /**
-     * Returns whether the control is mandatory.
-     * 
-     * @return whether the control is mandatory.
-     */
     public boolean isMandatory() {
-      return mandatory;
+      return this.mandatory;
     }
 
-    /**
-     * Returns control label.
-     * 
-     * @return control label.
-     */
     public String getLabel() {
-      return label;
+      return this.label;
     }
 
-    /**
-     * Returns whether the control is disabled.
-     * 
-     * @return whether the control is disabled.
-     */
     public boolean isDisabled() {
-      return disabled;
+      return this.disabled;
     }
 
   }

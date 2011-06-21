@@ -16,10 +16,9 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
-import org.araneaframework.Path;
-
 import java.io.IOException;
 import java.io.Writer;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
@@ -37,9 +36,11 @@ import org.araneaframework.uilib.event.OnClickEventListener;
  *   description = "HTML link, represents UiLib 'ButtonControl'."
  */
 public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
-  {
-    baseStyleClass = "aranea-link";
+
+  public FormLinkButtonHtmlTag() {
+    this.baseStyleClass = "aranea-link";
   }
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
@@ -50,13 +51,13 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "id", this.getFullFieldId());
     JspUtil.writeAttribute(out, "href", "#");    
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
 
-    if (events) {
+    if (this.events) {
       writeEventAttribute(out);
     }
 
-    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartTag_SS(out);
 
     // Continue
@@ -65,25 +66,24 @@ public class FormLinkButtonHtmlTag extends BaseFormButtonTag {
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    if (showLabel)
-      JspUtil.writeEscaped(out, localizedLabel);
+    if (this.showLabel) {
+      JspUtil.writeEscaped(out, this.localizedLabel);
+    }
 
     JspUtil.writeEndTag(out, "a");
 
-    // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }  
 
   protected boolean writeEventAttribute(Writer out) throws IOException {
-    if (viewModel.isOnClickEventRegistered()) {
-      UiUpdateEvent event = new UiUpdateEvent(OnClickEventListener.ON_CLICK_EVENT, formFullId + Path.SEPARATOR
-          + derivedId, null, updateRegionNames);
-      event.setEventPrecondition(onClickPrecondition);
+    if (this.viewModel.isOnClickEventRegistered()) {
+      UiUpdateEvent event = new UiUpdateEvent(OnClickEventListener.ON_CLICK_EVENT, this.formFullId + Path.SEPARATOR
+          + this.derivedId, null, this.updateRegionNames);
+      event.setEventPrecondition(this.onClickPrecondition);
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
     }
 
-    return viewModel.isOnClickEventRegistered();
+    return this.viewModel.isOnClickEventRegistered();
   }
 }

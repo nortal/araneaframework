@@ -17,23 +17,20 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.text.Collator;
-import org.araneaframework.Environment;
+import java.util.Locale;
 import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.http.util.EnvironmentUtil;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Given two form elements, it checks that their values are one after another. It assumes that the values of both form
- * elements are of the same type and {@link Comparable} (so most data types should be supported, inlcuding
+ * elements are of the same type and {@link Comparable} (so most data types should be supported, including
  * {@link java.lang.String} and {@link java.util.Date}).
- * <p>
- * TODO: Add locale support for string ranges.
  * 
  * @author <a href="mailto:kt@webmedia.ee">Konstantin Tretyakov</a>
  */
-public final class RangeConstraint<C, D> extends BaseConstraint {
+public class RangeConstraint<C, D> extends BaseConstraint {
 
   /**
    * Specifies whether the values may be equal or not.
@@ -97,14 +94,14 @@ public final class RangeConstraint<C, D> extends BaseConstraint {
 
     // Strings are handled separately because we have to compare them in given locale.
     if (valueLo instanceof String && valueHi instanceof String) {
-      Collator collator = Collator.getInstance();
+      Collator collator = Collator.getInstance(resolveLocale());
       comparison = collator.compare((String) valueLo, (String) valueHi);
 
-    } else if (valueLo instanceof Comparable && valueHi instanceof Comparable) {
+    } else if (valueLo instanceof Comparable<?> && valueHi instanceof Comparable<?>) {
       if (loExtendsHi) {
-        comparison = ((Comparable) valueLo).compareTo(valueHi);
+        comparison = ((Comparable<D>) valueLo).compareTo(valueHi);
       } else {
-        comparison = -1 * ((Comparable) valueHi).compareTo(valueLo);
+        comparison = -1 * ((Comparable<D>) valueHi).compareTo(valueLo);
       }
 
     } else { // Objects are not comparable
@@ -112,15 +109,33 @@ public final class RangeConstraint<C, D> extends BaseConstraint {
     }
 
     if (comparison > 0 || (!allowEquals && comparison == 0)) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.RANGE_CHECK_FAILED,
-          t(this.fieldLo.getLabel(), this.fieldLo.getEnvironment()),
-          t(this.fieldHi.getLabel(), this.fieldHi.getEnvironment())));
+      addErrorMessage();
     }
   }
 
-  // Translates the key into a message that will be displayed to the user.
-  private String t(String key, Environment env) {
-    return EnvironmentUtil.getLocalizationContext(env).localize(key);
+  /**
+   * Adds an error message that the data did not fulfill the range constraint.
+   * 
+   * @since 2.0
+   */
+  protected void addErrorMessage() {
+    addError(UiLibMessages.RANGE_CHECK_FAILED, t(this.fieldLo.getLabel()), t(this.fieldHi.getLabel()));
   }
 
+  /**
+   * Resolves the current locale.
+   * 
+   * @return The resolved locale, which is not <code>null</code>.
+   * @since 2.0
+   */
+  protected Locale resolveLocale() {
+    Locale result = Locale.getDefault();
+
+    LocalizationContext locCtx = getEnvironment().getEntry(LocalizationContext.class);
+    if (locCtx != null) {
+      result = locCtx.getLocale();
+    }
+
+    return result;
+  }
 }

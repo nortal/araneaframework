@@ -1,16 +1,15 @@
 <jsp:root
-	xmlns:uis="http://araneaframework.org/tag-library/2.0/ui"
-	xmlns:util="http://araneaframework.org/tag-library/2.0/util"
 	xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ui="http://araneaframework.org/tag-library/standard"
 	xmlns:tui="http://araneaframework.org/tag-library/template"
 	version="2.1">
 	<!-- This is a master page of Aranea framework template application. -->
+
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 	<ui:widgetContext>
-<![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-]]>
-		<html xmlns="http://www.w3.org/1999/xhtml">
 
 		<head>
 			<title>Aranea<ui:entity code="mdash"/>Java Web Framework Construction and Integration Kit</title>
@@ -18,10 +17,10 @@
 			<jsp:include page="scripts.jsp"/>
 		</head>
 
-		<uis:body>
+		<ui:body>
 			<div id="cont1">
 				<ui:updateRegion globalId="araneaGlobalClientHistoryNavigationUpdateRegion" tag="div">
-					<uis:systemForm id="aranea-form" method="post">
+					<ui:systemForm id="aranea-form" method="post">
 						<ui:registerScrollHandler/>
 						<ui:registerPopups/>
 						<ui:registerOverlay/>
@@ -58,13 +57,15 @@
 
 							<div class="clear1"><ui:nbsp/></div>
 						</div>
-					</uis:systemForm>
+					</ui:systemForm>
 					<ui:updateRegion globalId="demo-footer" tag="div">
 						<ui:widgetInclude id="menu.footer"/>
 					</ui:updateRegion>
 				</ui:updateRegion>
 			</div>
-		</uis:body>
-	</html>
+		</ui:body>
+
 	</ui:widgetContext>
+
+</html>
 </jsp:root>

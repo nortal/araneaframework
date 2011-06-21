@@ -16,7 +16,6 @@
 
 package org.araneaframework.example.main.web;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ProxyEventListener;
@@ -47,6 +46,9 @@ import org.araneaframework.example.main.web.demo.simple.SimpleBeanFormWidget;
 import org.araneaframework.example.main.web.demo.simple.SimpleFormWidget;
 import org.araneaframework.example.main.web.demo.tree.ComplexTreeWidget;
 import org.araneaframework.example.main.web.demo.tree.UnsynchronizedTreeWidget;
+import org.araneaframework.example.main.web.form.ConversionFormWidget;
+import org.araneaframework.example.main.web.form.DisabledFormWidget;
+import org.araneaframework.example.main.web.form.ReadOnlyFormWidget;
 import org.araneaframework.example.main.web.management.company.CompanyListWidget;
 import org.araneaframework.example.main.web.management.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.management.contract.ContractListWidget;
@@ -172,24 +174,28 @@ public class MenuWidget extends TemplateMenuWidget {
     result.addMenuItem("Demos.Trees.Complex_Tree", ComplexTreeWidget.class);
     result.addMenuItem("Demos.Trees.Tree_with_Unsynchronized_Actions", UnsynchronizedTreeWidget.class);
 
-    // The Misc menu:
-    // Here, we use the "Misc" menu item, and add its sub-menu elements directly:
-    MenuItem errorMenu = result.addMenuItem("Misc");
-    errorMenu.addMenuItem("Error_on_init", InitErrorWidget.class);
-    errorMenu.addMenuItem("Error_on_event", EventErrorWidget.class);
-    errorMenu.addMenuItem("Error_on_render", RenderErrorWidget.class);
-    errorMenu.addMenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class);
-    errorMenu.addMenuItem("Redirecting", RedirectingWidget.class);
+    result.addMenuItem("forms");
+    result.addMenuItem("forms.simple", org.araneaframework.example.main.web.form.SimpleFormWidget.class);
+    result.addMenuItem("forms.disabled", DisabledFormWidget.class);
+    result.addMenuItem("forms.readonly", ReadOnlyFormWidget.class);
+    result.addMenuItem("forms.converters", ConversionFormWidget.class);
+
+    result.addMenuItem("lists");
+    result.addMenuItem("advanced");
+    result.addMenuItem("tags");
+
+    MenuItem testMenu = result.addMenuItem("test");
+    testMenu.addMenuItem("Error_on_init", InitErrorWidget.class);
+    testMenu.addMenuItem("Error_on_event", EventErrorWidget.class);
+    testMenu.addMenuItem("Error_on_render", RenderErrorWidget.class);
+    testMenu.addMenuItem("Error_on_ajax_request", AjaxRequestErrorWidget.class);
+    testMenu.addMenuItem("Redirecting", RedirectingWidget.class);
 
     return result;
   }
 
   @Override
   protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
-    if (ExceptionUtils.getRootCause(e) != null) {
-      putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
-    }
-    putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e));
-    ServletUtil.include("/WEB-INF/jsp/error.jsp", this, output);
+    ServletUtil.includeErrorPage("/WEB-INF/jsp/error.jsp", this, e, output);
   }
 }

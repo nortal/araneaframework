@@ -346,7 +346,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * @see #addDatabaseFieldMapping(String, String)
    * @see #addResultSetMapping(String, String)
    */
-  public void addMapping(String fieldName, String columnName) {
-    getMappingNamingStrategyAndFields().addMapping(fieldName, columnName);
+  public void addMapping(String property, String columnName) {
+    getMappingNamingStrategyAndFields().addMapping(property, columnName);
   }
 }

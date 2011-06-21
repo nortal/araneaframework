@@ -64,14 +64,15 @@ public class AutomaticTagFormElementTag extends BaseTag {
 
   protected FormWidget.ViewModel formViewModel;
 
-  protected FormElement<?, ?>.ViewModel formElementViewModel;
+  @SuppressWarnings("unchecked")
+  protected FormElement.ViewModel formElementViewModel;
 
   protected Control.ViewModel controlViewModel;
 
   protected FormElementTagInterface controlTag;
 
-  @SuppressWarnings("unchecked")
   @Override
+  @SuppressWarnings("unchecked")
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
@@ -152,6 +153,12 @@ public class AutomaticTagFormElementTag extends BaseTag {
     return super.doEndTag(out);
   }
 
+  protected void initTagAttributes(Object tag, Map<String, Object> attributes) throws Exception {
+    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+      PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
+    }
+  }
+
   // Tag attributes
 
   /**
@@ -216,11 +223,5 @@ public class AutomaticTagFormElementTag extends BaseTag {
    */
   public void setGlobalUpdateRegions(String globalUpdateRegions) {
     this.globalUpdateRegions = globalUpdateRegions;
-  }
-
-  protected void initTagAttributes(Object tag, Map<String, Object> attributes) throws Exception {
-    for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-      PropertyUtils.setProperty(tag, entry.getKey(), entry.getValue());
-    }
   }
 }

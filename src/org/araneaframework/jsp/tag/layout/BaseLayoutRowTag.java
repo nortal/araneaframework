@@ -19,11 +19,11 @@ package org.araneaframework.jsp.tag.layout;
 import java.io.Writer;
 import java.util.List;
 import org.apache.commons.collections.ResettableIterator;
+import org.apache.commons.collections.iterators.EmptyIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
-import org.araneaframework.jsp.tag.layout.support.NullIterator;
 import org.araneaframework.jsp.tag.layout.support.RowClassProvider;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -37,7 +37,7 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
   protected boolean overrideLayout = true;
 
   /**
-   * HTML id of the row.
+   * HTML ID of the row.
    * 
    * @since 1.1
    */
@@ -51,7 +51,7 @@ public abstract class BaseLayoutRowTag extends PresentationTag implements CellCl
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    this.cellIter = this.cellClasses != null ? new LoopingIterator(this.cellClasses) : new NullIterator();
+    this.cellIter = this.cellClasses != null ? new LoopingIterator(this.cellClasses) : EmptyIterator.RESETTABLE_INSTANCE;
     if (this.cellClasses != null) {
       addContextEntry(CellClassProvider.KEY, this);
     }

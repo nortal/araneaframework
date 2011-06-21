@@ -26,7 +26,6 @@ import java.util.Set;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
@@ -50,12 +49,17 @@ import org.araneaframework.core.util.ExceptionUtil;
 public class BeanUtil {
 
   /**
-   * The prefix of getter method name.
+   * The prefix of a bean property getter method name.
    */
   public static final String GETTER_PREFIX = "get";
 
   /**
-   * The prefix of setter method name.
+   * Another allowed prefix of a bean property getter method name.
+   */
+  public static final String GETTER_PREFIX2 = "is";
+
+  /**
+   * The prefix of a bean property setter method name.
    */
   public static final String SETTER_PREFIX = "set";
 
@@ -151,9 +155,22 @@ public class BeanUtil {
    * @param property The name of bean property. May be nested.
    * @return Whether the bean property is readable.
    */
-  public static boolean isReadableProperty(Object bean, String property) {
-    assertData(bean, property);
-    return hasReadablePropertyMethod(bean, property) || hasReadablePropertyField(bean, property);
+  public static boolean isReadableProperty(Class<?> beanClass, String property) {
+    assertData(beanClass, property);
+
+    boolean readable = false;
+
+    while (StringUtils.isNotEmpty(property)) {
+      String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
+      readable = hasReadablePropertyMethod(beanClass, simpleProperty) || hasReadablePropertyField(beanClass, simpleProperty);
+      if (!readable) {
+        break;
+      }
+      beanClass = getPropertyType(beanClass, simpleProperty);
+      property = StringUtils.substringAfter(property, NESTED_DELIM);
+    }
+
+    return readable;
   }
 
   /**
@@ -165,7 +182,20 @@ public class BeanUtil {
    */
   public static boolean isWritableProperty(Class<?> beanClass, String property) {
     assertData(beanClass, property);
-    return hasWriteablePropertyMethod(beanClass, property) || hasWriteablePropertyField(beanClass, property);
+
+    boolean writable = false;
+
+    while (StringUtils.isNotEmpty(property)) {
+      String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
+      writable = hasWriteablePropertyMethod(beanClass, simpleProperty) || hasWriteablePropertyField(beanClass, simpleProperty);
+      if (!writable) {
+        break;
+      }
+      beanClass = getPropertyType(beanClass, simpleProperty);
+      property = StringUtils.substringAfter(property, NESTED_DELIM);
+    }
+
+    return writable;
   }
 
   /**
@@ -181,7 +211,7 @@ public class BeanUtil {
    * @return new instance of the Bean type.
    */
   public static <T> T newInstance(Class<T> beanClass) {
-    Validate.notNull(beanClass, "No bean class specified");
+    Assert.notNullParam(beanClass, "beanClass");
 
     T result;
     try {
@@ -233,7 +263,7 @@ public class BeanUtil {
    * @see #clone()
    */
   public static Object copy(Object from, Class<?> toType) {
-    Validate.isTrue(from != null && toType != null, "You cannot convert a Bean to null or vice versa");
+    Assert.isTrue(from != null && toType != null, "You cannot convert a Bean to null or vice versa");
     return copy(from, newInstance(toType));
   }
 
@@ -247,18 +277,18 @@ public class BeanUtil {
    * @see #copy(Object, Class)
    */
   public static Object clone(Object bean) {
-    Validate.notNull(bean, "No bean specified");
+    Assert.notNullParam(bean, "bean");
     return copy(bean, bean.getClass());
   }
 
   // *********************************************************
-  //  PRIVATE METHODS FOR MANIPULATING PROPERTIES OF ANY KIND
+  // PRIVATE METHODS FOR MANIPULATING PROPERTIES OF ANY KIND
   // *********************************************************
 
   private static Object getSimplePropertyValue(Object bean, String property) {
     Object result = null;
 
-    if (hasReadablePropertyMethod(bean, property)) {
+    if (hasReadablePropertyMethod(bean.getClass(), property)) {
 
       try {
         result = PropertyUtils.getSimpleProperty(bean, property);
@@ -267,7 +297,7 @@ public class BeanUtil {
             + "] using a getter method.", e);
       }
 
-    } else if (hasReadablePropertyField(bean, property)) {
+    } else if (hasReadablePropertyField(bean.getClass(), property)) {
       result = getFieldValue(bean, property);
     }
     return result;
@@ -298,7 +328,7 @@ public class BeanUtil {
 
   // If the property is nested, processes sub-properties until the the property is a simple property.
   private static Object getLastBean(Object bean, String property) {
-    while(StringUtils.contains(property, NESTED_DELIM)) {
+    while (StringUtils.contains(property, NESTED_DELIM)) {
       String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
       bean = instantiateIfNull(bean, simpleProperty);
       property = StringUtils.substringAfter(property, NESTED_DELIM);
@@ -308,7 +338,7 @@ public class BeanUtil {
 
   // If the property is nested, processes sub-properties until the the property is a simple property.
   private static Class<?> getLastBeanClass(Class<?> beanClass, String property) {
-    while(StringUtils.contains(property, NESTED_DELIM)) {
+    while (StringUtils.contains(property, NESTED_DELIM)) {
       String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
       Class<?> tmpClass = getSimplePropertyType(beanClass, simpleProperty);
       Assert.notNull(tmpClass, "Unable to resolve property '" + simpleProperty + "' of '" + beanClass.getName() + "'!");
@@ -320,7 +350,8 @@ public class BeanUtil {
 
   // Provides the last property, if the property is nested. Otherwise returns the original.
   private static String getLastProperty(String property) {
-    return StringUtils.contains(property, NESTED_DELIM) ? StringUtils.substringAfterLast(property, NESTED_DELIM) : property;
+    return StringUtils.contains(property, NESTED_DELIM) ? StringUtils.substringAfterLast(property, NESTED_DELIM)
+        : property;
   }
 
   // Instantiates and sets the bean property, if it is null.
@@ -338,32 +369,38 @@ public class BeanUtil {
       if (type != null) {
         result = newInstance(type);
 
-        if (result == null) {
+        if (result != null) {
           setSimplePropertyValue(bean, property, result);
         } else {
-          throw new AraneaRuntimeException("Was trying to instantiate class '" + type.getClass().getSimpleName()
-              + "' but some how could not. Make sure, it has default constructor.");
+          throw new AraneaRuntimeException("Was trying to instantiate class '" + type.getSimpleName()
+              + "' to set it as a value for [" + getTargetDesc(bean, property)
+              + "] but some how could not. Make sure, it has default constructor.");
         }
       } else {
-        throw new AraneaRuntimeException("For some reason, could not resolve the data type for property ["
-            + property + "] of class [" + getTargetDesc(bean, property) + "].");
+        throw new AraneaRuntimeException("For some reason, could not resolve the data type for property [" + property
+            + "] of class [" + getTargetDesc(bean, property) + "].");
       }
     }
     return result;
   }
 
-  // ********************************************************************
-  //  PRIVATE METHODS FOR PROPERTIES THAT ARE ACCESSIBLE THROUGH METHODS
-  // ********************************************************************
+  // *******************************************************************
+  // PRIVATE METHODS FOR PROPERTIES THAT ARE ACCESSIBLE THROUGH METHODS
+  // *******************************************************************
 
   private static Class<?> getPropertyMethodType(Method method) {
     String name = method == null ? null : method.getName();
-    if (method == null || !name.startsWith(GETTER_PREFIX) && !name.startsWith(SETTER_PREFIX)) {
+    if (name == null || method == null) {
       return null;
-    } else if (name.startsWith(GETTER_PREFIX)) {
+    } else if (StringUtils.startsWith(name, SETTER_PREFIX)) {
+      return method.getParameterTypes().length == 1 ? method.getParameterTypes()[0] : null;
+    } else if (StringUtils.startsWith(name, GETTER_PREFIX)) {
+      return method.getReturnType();
+    } else if (StringUtils.startsWith(name, GETTER_PREFIX2)) {
+      Assert.isTrue(boolean.class.equals(method.getReturnType()), "The return type of " + method + " is not boolean!");
       return method.getReturnType();
     }
-    return method.getParameterTypes().length == 1 ? method.getParameterTypes()[0] : null;
+    return null;
   }
 
   private static Class<?> getPropertyTypeByMethod(Class<?> beanClass, String property) {
@@ -378,7 +415,11 @@ public class BeanUtil {
 
   private static Method getPropertyGetter(Class<?> clazz, String property) {
     property = StringUtils.capitalize(property);
-    return getMethodByName(clazz, GETTER_PREFIX + property, 0);
+    Method method = getMethodByName(clazz, GETTER_PREFIX + property, 0);
+    if (method == null) {
+      method = getMethodByName(clazz, GETTER_PREFIX2 + property, 0);
+    }
+    return method;
   }
 
   private static Method getPropertySetter(Class<?> clazz, String property) {
@@ -396,23 +437,23 @@ public class BeanUtil {
 
   private static Method getMethodByName(Class<?> clazz, String methodName, int paramCount) {
     for (Method method : clazz.getMethods()) {
-     if (ObjectUtils.equals(methodName, method.getName()) && method.getParameterTypes().length == paramCount) {
-       return method;
-     }
+      if (ObjectUtils.equals(methodName, method.getName()) && method.getParameterTypes().length == paramCount) {
+        return method;
+      }
     }
     return null;
   }
 
-  private static boolean hasReadablePropertyMethod(Object bean, String property) {
-    return bean != null && getPropertyGetter(bean.getClass(), property) != null;
+  private static boolean hasReadablePropertyMethod(Class<?> beanClass, String property) {
+    return getPropertyGetter(beanClass, property) != null;
   }
 
   private static boolean hasWriteablePropertyMethod(Class<?> beanClass, String property) {
-    return beanClass != null && getPropertySetter(beanClass, property) != null;
+    return getPropertySetter(beanClass, property) != null;
   }
 
   // *******************************************************************************
-  //  PRIVATE METHODS FOR PROPERTIES THAT ARE ACCESSIBLE THROUGH CLASS-LEVEL FIELDS
+  // PRIVATE METHODS FOR PROPERTIES THAT ARE ACCESSIBLE THROUGH CLASS-LEVEL FIELDS
   // *******************************************************************************
 
   // Returns the field with the given name, or null.
@@ -458,12 +499,12 @@ public class BeanUtil {
     }
   }
 
-  private static boolean hasReadablePropertyField(Object bean, String property) {
-    return bean != null && getField(bean.getClass(), property) != null;
+  private static boolean hasReadablePropertyField(Class<?> beanClass, String property) {
+    return getField(beanClass, property) != null;
   }
 
-  private static boolean hasWriteablePropertyField(Object bean, String property) {
-    return hasReadablePropertyField(bean, property);
+  private static boolean hasWriteablePropertyField(Class<?> beanClass, String property) {
+    return hasReadablePropertyField(beanClass, property); // Same logic as in hasReadablePropertyField().
   }
 
   // Validation that is used by public methods that take a bean and its property as its parameters.
@@ -477,7 +518,6 @@ public class BeanUtil {
     return bean.getClass().getSimpleName() + NESTED_DELIM + property;
   }
 
-  
   // Used with exceptions: returns ["null"|"ValueClass"].
   private static String getValueDesc(Object value) {
     return value == null ? "null" : value.getClass().getSimpleName();

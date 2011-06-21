@@ -21,15 +21,14 @@ import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.util.ServletUtil;
 
-
 /**
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class RenderErrorWidget extends TemplateBaseWidget {
+
   @Override
   protected void render(OutputData output) throws Exception {
     ServletUtil.include("/WEB-INF/jsp/error/InitErrorWidget/main.jsp", this, output);
-    
     throw new AraneaRuntimeException("Error on render()!");
   }
 }

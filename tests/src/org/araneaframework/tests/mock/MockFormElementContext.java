@@ -19,6 +19,8 @@ package org.araneaframework.tests.mock;
 import java.util.HashSet;
 import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.MessageContext.MessageData;
+import org.araneaframework.framework.filter.StandardMessagingFilterWidget.StandardMessageData;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;
@@ -28,7 +30,7 @@ import org.araneaframework.uilib.form.FormElementContext;
  */
 public class MockFormElementContext<C, D> implements FormElementContext<C, D> {
 
-  private Set<String> errors;
+  private Set<MessageData> errors;
 
   private Environment environment;
 
@@ -54,11 +56,11 @@ public class MockFormElementContext<C, D> implements FormElementContext<C, D> {
     return (this.errors == null || this.errors.size() == 0);
   }
 
-  public void addError(String error) {
-    getErrors().add(error);
+  public void addError(String error, Object... params) {
+    getErrors().add(new StandardMessageData(error, params));
   }
 
-  public void addErrors(Set<String> errors) {
+  public void addErrors(Set<MessageData> errors) {
     getErrors().addAll(errors);
   }
 
@@ -110,9 +112,9 @@ public class MockFormElementContext<C, D> implements FormElementContext<C, D> {
     this.value = value;
   }
 
-  public Set<String> getErrors() {
+  public Set<MessageData> getErrors() {
     if (this.errors == null) {
-      this.errors = new HashSet<String>();
+      this.errors = new HashSet<MessageData>();
     }
     return this.errors;
   }

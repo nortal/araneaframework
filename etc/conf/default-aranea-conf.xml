@@ -183,7 +183,8 @@
 
 	<bean id="araneaStatisticFilter" scope="prototype"
 		class="org.araneaframework.framework.filter.StandardStatisticFilterService">
-		<property name="message" value="Total request time: " />
+		<property name="message" value="Request [${METHOD} ${CONTEXT}${SERVLET}${PATH_INFO}${QUERY}] took ${TIME} ms." />
+		<property name="threshold" value="100" />
 	</bean>
 
 	<bean id="araneaSerializingAudit" scope="prototype"
@@ -232,22 +233,11 @@
 		</property>
 	</bean>
 
-	<bean scope="prototype" id="araneaScrollingFilter"
-		class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget"/>
-
-	<bean id="araneaThreadCloningFilter" scope="prototype"
-		class="org.araneaframework.http.filter.StandardThreadCloningFilterService"/>
-
-	<bean id="araneaUpdateRegionFilter" scope="prototype"
-		class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget"/>
-
-	<bean id="araneaRenderStatusResettingFilter" scope="prototype"
-		class="org.araneaframework.framework.filter.StandardRenderStatusResettingFilterWidget"/>
-
-	<bean class="org.araneaframework.framework.StandardConfirmationFilterWidget"
-		id="araneaConfirmationFilter" scope="prototype" />
-
-	<bean id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration"
-		scope="prototype" />
+	<bean scope="prototype" id="araneaScrollingFilter" class="org.araneaframework.http.filter.StandardWindowScrollPositionFilterWidget"/>
+	<bean scope="prototype" id="araneaThreadCloningFilter" class="org.araneaframework.http.filter.StandardThreadCloningFilterService"/>
+	<bean scope="prototype" id="araneaUpdateRegionFilter" class="org.araneaframework.http.filter.StandardUpdateRegionFilterWidget"/>
+	<bean scope="prototype" id="araneaRenderStatusResettingFilter" class="org.araneaframework.framework.filter.StandardRenderStatusResettingFilterWidget"/>
+	<bean scope="prototype" id="araneaConfirmationFilter" class="org.araneaframework.framework.StandardConfirmationFilterWidget" />
+	<bean scope="prototype" id="araneaConfiguration" class="org.araneaframework.uilib.core.StandardConfiguration" />
 
 </beans>

@@ -83,7 +83,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     if (isConsistent()) {
       this.childWidget._getWidget().event(path, input);
     } else {
-      LOG.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing event().");
+      LOG.debug("Transaction ID '" + getTransactionId(input) + "' not consistent for routing event().");
     }
   }
 
@@ -93,8 +93,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    */
   @Override
   protected void render(OutputData output) throws Exception {
-    // CONFIRM: when transactionId was overridden in request, new transaction id
-    // should not be generated
+    // CONFIRM: when transactionId was overridden in request, new transaction ID should not be generated:
     if (this.transHelper.getCurrentTransactionId() == null
         || !this.transHelper.isOverride(getTransactionId(getInputData()))) {
       this.transHelper.resetTransactionId();
@@ -103,7 +102,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
     SystemFormContext systemFormContext = getEnvironment().requireEntry(SystemFormContext.class);
     systemFormContext.addField(TRANSACTION_ID_KEY, getTransactionId().toString());
 
-    LOG.debug("New transaction id '" + getTransactionId() + "'.");
+    LOG.debug("New transaction ID '" + getTransactionId() + "'.");
 
     this.childWidget._getWidget().render(output);
   }

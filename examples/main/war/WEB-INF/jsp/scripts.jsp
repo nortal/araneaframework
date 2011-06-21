@@ -14,6 +14,7 @@
 
 	<!-- CSS for visual elements of Aranea:  -->
 	<ui:importStyles media="screen"/>
+	<ui:importStyles file="css/blackbird/blackbird.css"/>
 
 	<!-- CSS for the demo app:  -->
 	<ui:importStyles file="styles/_styles_global.css" media="all"/>
@@ -22,6 +23,9 @@
 
 	<!-- Includes stand-alone Log4JavaScript logging (it is not included by default). -->
 	<!-- ui:importScripts group="logger"/ -->
+
+	<!-- Imports blackbird logging framework (http://www.gscottolson.com/blackbirdjs/) -->
+	<ui:importScripts group="blackbird"/>
 
 	<!-- Imports all Aranea scripts (default group="all"). -->
 	<ui:importScripts group="all-devel"/>
@@ -66,8 +70,19 @@
 
 	<!-- Enables (Firebug) console logging, if browser supports it. In general, you may not want to include it. -->
 	<script type="text/javascript">
-		Aranea.Data.absoluteUrls = true;
-		Aranea.Logger.setLogger('firebug');
+		Aranea.Logger.setLogger('blackbird');
+
+		// Fills in missing system-form input/button IDs.
+		document.observe('aranea:loaded', Aranea.Util.fillMissingIds);
+		document.observe('aranea:updated', Aranea.Util.fillMissingIds);
+
+		// Preserves system-form input/button focus during AJAX requests.
+		document.observe('aranea:loaded', Aranea.Util.observeFormInputFocus);
+		document.observe('aranea:updated', Aranea.Util.observeFormInputFocus); // Add second observer for new elements.
+		document.observe('aranea:updated', Aranea.Util.updateFormInputFocus);
+
+		// Sets focus to the first system-form input/button on page load.
+		document.observe('aranea:loaded', Aranea.Util.focusFormFirstInput);
 	</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->

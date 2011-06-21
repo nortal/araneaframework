@@ -16,7 +16,9 @@
 
 package org.araneaframework.uilib.form.constraint;
 
+import java.util.Set;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
@@ -43,9 +45,9 @@ public class GroupedConstraint extends BaseConstraint {
    * Usually, one should use a more convenient way to add constraints to a group by using
    * {@link ConstraintGroupHelper#createGroupedConstraint(Constraint, String)}.
    * 
-   * @param helper The helper for grouped constraints.
-   * @param constraint The constraint belonging to that group.
-   * @param group The name of the group.
+   * @param helper The helper for grouped constraints (required).
+   * @param constraint The constraint belonging to that group (required).
+   * @param group The name of the group (optional).
    * @see ConstraintGroupHelper#createGroupedConstraint(Constraint, String)
    */
   public GroupedConstraint(ConstraintGroupHelper helper, Constraint constraint, String group) {
@@ -59,12 +61,9 @@ public class GroupedConstraint extends BaseConstraint {
    */
   @Override
   protected void validateConstraint() throws Exception {
-    if (!this.conditionalConstraintHelper.isGroupActive(this.group)) {
-      return;
+    if (this.conditionalConstraintHelper.isGroupActive(this.group)) {
+      this.constraint.validate();
     }
-    this.constraint.validate();
-    addErrors(this.constraint.getErrors());
-    this.constraint.clearErrors();
   }
 
   /**
@@ -100,4 +99,13 @@ public class GroupedConstraint extends BaseConstraint {
     this.constraint.clearErrors();
   }
 
+  @Override
+  public Set<MessageData> getErrors() {
+    return this.constraint.getErrors();
+  }
+
+  @Override
+  public boolean isValid() {
+    return this.constraint instanceof BaseConstraint && ((BaseConstraint) this.constraint).isValid() || getErrors().isEmpty();
+  }
 }

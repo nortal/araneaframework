@@ -73,7 +73,7 @@ public class LogicalExpressionTests extends TestCase {
 					this.trueExpr).evaluate(this.resolver);
 			fail("AndExpression must throw an exception");
 		} catch (Exception e) {
-			// normal
+			LOG.info("Exception while evaluating resolver.", e);
 		}
 
 		assertEquals("AndExpression must return true", Boolean.TRUE,
@@ -108,7 +108,7 @@ public class LogicalExpressionTests extends TestCase {
 					this.trueExpr).evaluate(this.resolver);
 			fail("OrExpression must throw an exception");
 		} catch (Exception e) {
-			// normal
+          LOG.info("Exception while evaluating resolver.", e);
 		}
 
 		assertEquals("OrExpression must return true", Boolean.TRUE,
@@ -137,7 +137,7 @@ public class LogicalExpressionTests extends TestCase {
 			new NotExpression(this.notBoolExpr).evaluate(this.resolver);
 			fail("NotExpression must throw an exception");
 		} catch (Exception e) {
-			// normal
+          LOG.info("Exception while evaluating expression.", e);
 		}
 
 		assertEquals("NotExpression must return false", Boolean.FALSE,

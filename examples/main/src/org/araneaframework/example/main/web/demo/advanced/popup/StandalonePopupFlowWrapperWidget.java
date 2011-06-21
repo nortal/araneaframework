@@ -16,10 +16,10 @@
 
 package org.araneaframework.example.main.web.demo.advanced.popup;
 
-import org.apache.commons.lang.ObjectUtils;
-
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -147,6 +147,10 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
     return getFlowCtx().isNested();
   }
 
+  public Collection<Widget> getNestedFlows() {
+    return getFlowCtx().getNestedFlows();
+  }
+
   public void replace(Widget flow) {
     replace(flow, null);
   }
@@ -174,7 +178,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
     m.put(TopServiceContext.TOP_SERVICE_KEY, topServiceId);
     m.put(ThreadContext.THREAD_SERVICE_KEY, threadServiceId);
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
-    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parametrizeURI(url, m));
+    return ((HttpOutputData) getOutputData()).encodeURL(URLUtil.parameterizeURI(url, m));
   }
 
   public void setTransitionHandler(TransitionHandler handler) {

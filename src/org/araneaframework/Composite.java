@@ -48,7 +48,7 @@ public interface Composite extends Serializable {
      * Returns an unmodifiable map of all the child components.
      * @return a map of child components
      */
-    public Map<Object, Component> getChildren();
+    public Map<String, Component> getChildren();
     
     /**
      * Attaches a component as a child of this component. No initialization of the
@@ -57,7 +57,7 @@ public interface Composite extends Serializable {
      * @param key of the added component
      * @param comp the component being attached
      */
-    public void attach(Object key, Component comp);
+    public void attach(String key, Component comp);
     
     /**
      * Detaches a child component with the specified key from this component. Child
@@ -66,7 +66,7 @@ public interface Composite extends Serializable {
      * @param key of the child getting detached
      * @return the removed component
      */
-    public Component detach(Object key); 
+    public Component detach(String key); 
   }
   
   /**

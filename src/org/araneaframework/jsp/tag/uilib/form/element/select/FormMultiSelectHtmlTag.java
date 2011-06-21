@@ -16,18 +16,20 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
+import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
+import org.araneaframework.uilib.support.DisplayItemGroup;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
@@ -63,13 +65,13 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("MultiSelectControl");
 
     // Prepare
     String name = this.getFullFieldId();
-    MultiSelectControl<Object>.ViewModel viewModel = ((MultiSelectControl.ViewModel) this.controlViewModel);
+    ViewModel viewModel = ((MultiSelectControl.ViewModel) this.controlViewModel);
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");
@@ -94,32 +96,58 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    for (DisplayItem item : viewModel.getSelectItems()) {
-      String value = StringUtils.defaultString(item.getValue());
-      String label = item.getLabel();
-
-      if (label != null && this.localizeDisplayItems.booleanValue()) {
-        label = JspUtil.getResourceString(this.pageContext, label);
-      }
-
-      JspUtil.writeOpenStartTag(out, "option");
-      JspUtil.writeAttribute(out, "value", value);
-
-      List<DisplayItem> selectedItems = viewModel.getSelectedItems();
-      if (selectedItems.contains(item)) {
-        JspUtil.writeAttribute(out, "selected", "selected");
-      }
-
-      JspUtil.writeCloseStartTag_SS(out);
-      JspUtil.writeEscaped(out, label);
-      JspUtil.writeEndTag(out, "option");
-    }
+    writeOptions(out, viewModel.getGroups(), viewModel.getValues());
 
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
 
     super.doEndTag(out);
     return EVAL_PAGE;
+  }
+
+  // Write items
+  protected void writeOptions(Writer out, List<DisplayItemGroup> groups, String[] selectedValues) throws IOException {
+    for (DisplayItemGroup group : groups) {
+      if (group.isDisabled() || group.isEnabledEmpty()) {
+        continue;
+      } else if (!group.isNoGroup()) {
+        String label = group.getLabel();
+
+        if (this.localizeDisplayItems) {
+          label = JspUtil.getResourceString(this.pageContext, label);
+        }
+
+        JspUtil.writeOpenStartTag(out, "optgroup");
+        JspUtil.writeAttribute(out, "label", label);
+        JspUtil.writeCloseStartTag(out);
+      }
+
+      for (DisplayItem item : group.getEnabledOptions()) {
+        if (!item.isDisabled()) {
+          String value = StringUtils.defaultString(item.getValue());
+          String label = item.getLabel();
+
+          if (this.localizeDisplayItems) {
+            label = JspUtil.getResourceString(this.pageContext, label);
+          }
+
+          JspUtil.writeOpenStartTag(out, "option");
+          JspUtil.writeAttributeForced(out, "value", value);
+
+          if (ArrayUtils.contains(selectedValues, value)) {
+            JspUtil.writeAttribute(out, "selected", "selected");
+          }
+
+          JspUtil.writeCloseStartTag_SS(out);
+          JspUtil.writeEscaped(out, label);
+          JspUtil.writeEndTag(out, "option");
+        }
+      }
+
+      if (!group.isNoGroup()) {
+        JspUtil.writeEndTag(out, "optgroup");
+      }
+    }
   }
 
   /**

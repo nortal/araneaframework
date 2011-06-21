@@ -59,6 +59,8 @@ Aranea.ModalBox = {
 	 * @since 1.2.1.1
 	 */
 	doRequest: function(options, success, failure) {
+		Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
+
 		new Ajax.Request(this.getRequestURL(), {
 			method: options.method,
 			parameters: options.params,
@@ -68,8 +70,6 @@ Aranea.ModalBox = {
 				if (success) {
 					success(response);
 				}
-				// Aranea initialization:
-				this.afterLoad(transport);
 			}.bind(this),
 
 			onException: function(request, exception){
@@ -80,6 +80,14 @@ Aranea.ModalBox = {
 					Aranea.Logger.error("Exception has occured while processing Modalbox request.", exception);
 					throw('Modal dialog loading error: ' + exception);
 				}
+				Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
+			}.bind(this),
+
+			onComplete: function(transport) {
+				Aranea.Data.submitted = false;
+				Aranea.Data.loaded = true;
+				this.afterLoad(transport);
+				Aranea.Logger.profile('Aranea.ModalBox.doRequest()');
 			}.bind(this)
 		});
 	},
@@ -92,7 +100,7 @@ Aranea.ModalBox = {
 	 */
 	show: function(params) {
 		Aranea.ModalBox.Options = params;
-		Aranea.ModalBox.update(Aranea.ModalBox.Options);
+		new Aranea.Page.Submitter.Overlay().event_plain(); // It takes care of calling Aranea.ModalBox.update() the proper way.
 	},
 
 	/**
@@ -131,17 +139,11 @@ Aranea.ModalBox = {
 	 */
 	afterLoad: function(transport) {
 		Aranea.Page.findSystemForm();
-		var f = function() {
-			Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
-			if (this.isCloseOverlay(transport.responseText)) {
-				this.close();
-				this.reloadPage();
-			} else {
-				//The parameter is memo for identification of what was updated:
-				Aranea.Page.onUpdate({ type: 'overlay', transport: transport });
-			}
-		};
-		f.bind(Aranea.ModalBox).defer();
+		Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(transport);
+
+		if (this.isCloseOverlay(transport.responseText)) {
+			this.closeWithAjaxHandler();
+		}
 	},
 
 	/**
@@ -169,12 +171,16 @@ Aranea.ModalBox = {
 	 * @since 1.2.1
 	 */ 
 	reloadPage: function() {
-		if (Aranea.Data.systemForm.araTransactionId) {
-			Aranea.Data.systemForm.araTransactionId.value = 'inconsistent';
+		var form = Aranea.Page.findSystemForm();
+		if (form.araTransactionId) {
+			form.araTransactionId.value = 'inconsistent';
 		}
+		form = null;
+
 		if (window.modalTransport) {
 			Aranea.Page.Submitter.AJAX.ResponseHeaderProcessor(window.modalTransport);
 		}
+
 		return Aranea.Page.submit();
 	},
 
@@ -217,7 +223,7 @@ Aranea.ModalBox = {
 				},
 				onFailure: function(transport) {
 					Aranea.Data.loaded = true;
-					Aranea.Logger.debug("Received unexpected error response text:\n" + transport.responseText);
+					Aranea.Logger.error("Received unexpected error response text:\n" + transport.responseText);
 					throw("Was expecting the request (event) to close the " +
 							"modal dialog, but received non-qualifing (error) response.");
 				},
@@ -235,7 +241,22 @@ Aranea.ModalBox = {
 	 * You may also access the AJAX request transport object through window.modalTransport. 
 	 */
 	closeWithAjaxHandler: function() {
+		document.stopObserving('aranea:updated');
 		Aranea.ModalBox.close();
 		Aranea.ModalBox.reloadPage();
+	},
+
+	/**
+	 * This method can be called to make the modal dialog update its layout due to changes in its content. This method
+	 * should not go server-side, just resize the dialog window and/or update its position. There is no structure
+	 * changes monitoring mechanism, the logic that does changes is responsible for calling this method!
+	 * 
+	 * @since 2.0
+	 */
+	resize: function() {
+		if (window.Modalbox) {
+			Modalbox.resizeToContent();
+			Modalbox._setPosition();
+		}
 	}
 };

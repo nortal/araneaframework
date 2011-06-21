@@ -35,6 +35,7 @@ public interface FilteredInputControl<T> extends Control<T> {
 
   /**
    * Sets the input filtering settings for this control. If <code>null</code> then no filtering will be done.
+   * 
    * @param inputFilter The new filtering settings of this control.
    */
   public void setInputFilter(InputFilter inputFilter);

@@ -31,7 +31,7 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
   protected boolean overrideLayout = true;
 
   /**
-   * HTML id of the cell.
+   * HTML ID of the cell.
    * 
    * @since 1.1
    */
@@ -45,20 +45,22 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
   @Override
   public String getStyleClass() {
     CellClassProvider cellClassProvider = (CellClassProvider) getContextEntry(CellClassProvider.KEY);
-    String result = cellClassProvider != null ? cellClassProvider.getCellClass() : null;
-    result = StringUtils.defaultIfEmpty(result, null);
+    String cellClass = cellClassProvider != null ? cellClassProvider.getCellClass() : null;
+    cellClass = StringUtils.defaultIfEmpty(cellClass, null);
 
     String superStyleClass = super.getStyleClass();
+
     if (superStyleClass != null) {
       StringBuffer sb = new StringBuffer(superStyleClass);
 
-      if (!this.overrideLayout && result != null) {
-        sb.append(' ').append(result);
+      if (!this.overrideLayout && cellClass != null) {
+        sb.append(' ').append(cellClass);
       }
 
-      result = sb.toString();
+      cellClass = sb.toString();
     }
-    return result;
+
+    return cellClass;
   }
 
   // Tag attributes
@@ -67,7 +69,7 @@ public abstract class BaseLayoutCellTag extends PresentationTag {
    * @jsp.attribute
    *    type = "java.lang.String"
    *    required = "false"
-   *    description ="Whether cell's styleClass completely overrides styleClass provided by surrounding layout (default behavior), or is appended to layout's styleClass."
+   *    description = "Whether cell's styleClass completely overrides styleClass provided by surrounding layout (default behavior), or is appended to layout's styleClass."
    */
   public void setOverrideLayout(String overrideLayout) {
     this.overrideLayout = evaluate("overrideLayout", overrideLayout, Boolean.class);

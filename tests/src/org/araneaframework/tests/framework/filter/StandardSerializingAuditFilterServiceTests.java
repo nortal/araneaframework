@@ -86,7 +86,7 @@ public class StandardSerializingAuditFilterServiceTests extends TestCase {
     File file = new File(dir+"/"+httpSession.getId()+".xml");
     assertTrue(file.length()>0);
     // delete the file
-    file.delete();
+    assertTrue(file.delete());
     assertFalse(file.exists());
   }
 }

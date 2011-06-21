@@ -27,10 +27,23 @@ import org.araneaframework.uilib.form.reader.BeanFormWriter;
 
 public class BeanFormWidget<T> extends FormWidget {
 
-  private BeanMapper<T> beanMapper;
-  private Class<T> beanClass;
-  private T bean;
-  
+  protected BeanMapper<T> beanMapper;
+
+  protected Class<T> beanClass;
+
+  protected T bean;
+
+  /**
+   * Holds information whether readFromBean(*) has been called before this widget is initialized. When this variable is
+   * still <code>false</code> by the time {@link #init()} occurs, the {@link #readFromBean()} method will be called
+   * automatically. This makes using <code>BeanFormWidget</code> more convenient when the bean object is provided to the
+   * constructor (by not having to call the read method manually). However, it also prevents writing over form data when
+   * a programmer has already called {@link #readFromBean(Object)}.
+   * 
+   * @since 2.0
+   */
+  protected boolean beanReadBeforeInit;
+
   public BeanFormWidget(Class<T> beanClass, T bean) {
     Assert.notNullParam(beanClass, "beanClass");
     Assert.notNullParam(bean, "bean");
@@ -40,6 +53,10 @@ public class BeanFormWidget<T> extends FormWidget {
     this.bean = bean;
   }
 
+  /**
+   * Initiates a new <code>BeanFormWidget</code> using the given <code>beanClass</code> to analyze the bean and to 
+   * @param beanClass
+   */
   public BeanFormWidget(Class<T> beanClass) {
     Assert.notNullParam(beanClass, "beanClass");
 
@@ -51,11 +68,13 @@ public class BeanFormWidget<T> extends FormWidget {
       throw ExceptionUtil.uncheckException(e);
     }
   }
-  
+
   @Override
   protected void init() throws Exception {
     super.init();
-    readFromBean();
+    if (!this.beanReadBeforeInit) {
+      readFromBean();
+    }
   }
 
   /**
@@ -68,9 +87,9 @@ public class BeanFormWidget<T> extends FormWidget {
    * @param path The (simple or nested) path of bean-sub-form to add where path must also correspond to bean properties.
    *          Nested path has dots separating sub-form IDs in the order they will be created (the second sub-form will
    *          be the sub-form of the first sub-form, etc).
-   * @return If path is empty or simple (not nested) then the current bean form widget is returned. Otherwise, the last
-   *         created bean-sub-form widget is returned.
+   * @return The last created sub-form, or the current bean (when the path is empty).
    * @see #addSubForm(String)
+   * @see #addSimpleBeanSubForm(String)
    */
   public BeanFormWidget<?> addBeanSubForm(String path) {
     BeanFormWidget<?> result = this;
@@ -146,53 +165,82 @@ public class BeanFormWidget<T> extends FormWidget {
     return result;
   }
 
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control) {
+  public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control) {
     return addBeanElement(elementName, labelId, control, false);
   }
 
   @SuppressWarnings("unchecked")
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, boolean mandatory) {
-    Data<D> data = new Data(BeanUtil.getPropertyType(this.beanClass, elementName));
-    return addElement(elementName, labelId, control, data, mandatory);
+  public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control,
+      boolean mandatory) {
+    Class<?> type = BeanUtil.getPropertyType(this.beanClass, elementName);
+    Assert.notNull(type, "Could not resolve the type of property '" + elementName + "' in class " + this.beanClass);
+
+    return addElement(elementName, labelId, control, new Data(type), mandatory);
   }
 
   @SuppressWarnings("unchecked")
-  public <C,D> FormElement<C,D> addBeanElement(String elementName, String labelId, Control<C> control, D initialValue, boolean mandatory) {
+  public <C, D> FormElement<C, D> addBeanElement(String elementName, String labelId, Control<C> control,
+      D initialValue, boolean mandatory) {
     if (initialValue == null) {
       return addBeanElement(elementName, labelId, control, mandatory);
     } else {
-      return addElement(elementName, labelId, control, Data.newInstance((Class<D>)initialValue.getClass()), initialValue, mandatory);
+      return addElement(elementName, labelId, control, Data.newInstance((Class<D>) initialValue.getClass()),
+          initialValue, mandatory);
     }
   }
 
-  @Deprecated
-  public T writeToBean(T bean) {
-    BeanFormReader reader = new BeanFormReader(this);
-    reader.readFormBean(bean);
-    return bean;
-  }
-  
+  /**
+   * Writes data from given <code>bean</code> to the underlying form.
+   * 
+   * @param bean An instance of <code>bean</code>.
+   */
   public void readFromBean(T bean) {
     BeanFormWriter<T> writer = new BeanFormWriter<T>(this.beanClass);
     writer.writeFormBean(this, bean);
+    this.beanReadBeforeInit = true;
   }
 
   public void readFromBean() {
     readFromBean(this.bean);
   }
-  
+
   public T writeToBean() {
     BeanFormReader reader = new BeanFormReader(this);
     reader.readFormBean(this.bean);
     return this.bean;
   }
-  
+
+  /**
+   * Writes form data to given bean. Prefer using {@link #writeToBean()} instead, when possible, because it makes use of
+   * the existing bean object that was provided to this form widget.
+   * 
+   * @param bean An instance of bean where form values will be written.
+   * @return The same bean as provided for input.
+   */
+  public T writeToBean(T bean) {
+    BeanFormReader reader = new BeanFormReader(this);
+    reader.readFormBean(bean);
+    return bean;
+  }
+
+  /**
+   * Provides the bean that was provided for input. Note that the bean may have different property values compared to
+   * the state when the form was initialized, because when {@link #writeToBean()} is used, it updates the bean
+   * properties with values from the form.
+   * 
+   * @return The bean object that was used to initialize this form widget.
+   */
   public T getBean() {
     return this.bean;
   }
-  
+
+  /**
+   * Provides the bean class that this form widget is using for resolving bean elements.
+   * 
+   * @return The bean class that this form widget is using.
+   */
   public Class<T> getBeanClass() {
     return this.beanClass;
-  }  
-  
+  }
+
 }

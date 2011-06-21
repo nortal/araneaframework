@@ -166,7 +166,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     this.timeControl.convert();
 
     // Reading control data
-    if (getFormElementCtx().isValid() && isRead()) {
+    if (this.dateControl.getRawValue() != null && this.timeControl.getRawValue() != null) {
       this.value = addTimeToDate(this.dateControl.getRawValue(), this.timeControl.getRawValue());
     } else {
       this.value = null;
@@ -175,7 +175,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
 
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
+    if (isMandatory() && this.value == null) {
       addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
   }
@@ -207,28 +207,18 @@ public class DateTimeControl extends BaseControl<Timestamp> {
    */
   public class ViewModel extends BaseControl<Timestamp>.ViewModel {
 
-    private String time;
+    protected DateControl.ViewModel dateViewModel;
 
-    private String date;
+    protected TimeControl.ViewModel timeViewModel;
 
-    private DateControl.ViewModel dateViewModel;
-
-    private TimeControl.ViewModel timeViewModel;
-
-    private boolean hasOnChangeEventListeners;
+    protected boolean hasOnChangeEventListeners;
 
     /**
      * Takes an outer class snapshot.
      */
     public ViewModel() {
       this.dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
-      String[] timeInnerData = (String[]) DateTimeControl.this.timeControl.innerData;
-      this.time = timeInnerData == null ? null : timeInnerData[0];
-
       this.timeViewModel = (TimeControl.ViewModel) timeControl._getViewable().getViewModel();
-      String[] dateInnerData = (String[]) DateTimeControl.this.dateControl.innerData;
-      this.date = dateInnerData == null ? null : dateInnerData[0];
-
       this.hasOnChangeEventListeners = DateTimeControl.this.eventHelper.hasOnChangeEventListeners();
     }
 
@@ -238,7 +228,51 @@ public class DateTimeControl extends BaseControl<Timestamp> {
      * @return time as <code>String</code>.
      */
     public String getTime() {
-      return this.time;
+      return this.timeViewModel.getTime();
+    }
+
+    /**
+     * Provides the hour (0-23) part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed hour value as string.
+     * @since 2.0
+     */
+    public String getHourOfDay() {
+      return this.timeViewModel.getHourOfDay();
+    }
+
+    /**
+     * Provides the hour (0-11) part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed hour value as string.
+     * @since 2.0
+     */
+    public String getHour() {
+      return this.timeViewModel.getHour();
+    }
+
+    /**
+     * Provides the minute part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed minute value as string.
+     * @since 2.0
+     */
+    public String getMinutes() {
+      return this.timeViewModel.getMinutes();
+    }
+
+    /**
+     * Provides the seconds part value of the current time value. When the time value cannot be parsed (e.g. is
+     * undefined) then the default value as "0" will be returned.
+     * 
+     * @return The parsed seconds value as string.
+     * @since 2.0
+     */
+    public String getSeconds() {
+      return this.timeViewModel.getSeconds();
     }
 
     /**
@@ -247,7 +281,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
      * @return date as <code>String</code>.
      */
     public String getDate() {
-      return this.date;
+      return this.dateViewModel.date;
     }
 
     /**

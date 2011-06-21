@@ -29,44 +29,42 @@ import org.araneaframework.jsp.util.JspUpdateRegionUtil;
  * @author Oleg Mürk
  */
 public class BaseEventButtonTag extends BaseSimpleButtonTag {
+
   protected String disabled;
+
   protected String updateRegions;
+
   protected String globalUpdateRegions;
 
   protected List<String> updateRegionNames;
+
   protected String eventTarget;
 
-  protected UiUpdateEvent event;
-  
-  {
-	  event = new UiUpdateEvent();
-  }
+  protected UiUpdateEvent event = new UiUpdateEvent();
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
 
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
-    
-    if (contextWidgetId == null)
-      throw new AraneaJspException("'eventButton' tag can only be used in a context widget!");
 
-    updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(pageContext, updateRegions, globalUpdateRegions);
-    event.setUpdateRegionNames(updateRegionNames);
-    event.setTarget(eventTarget == null ? contextWidgetId : eventTarget);
-    event.setEventPrecondition(onClickPrecondition);
+    if (this.contextWidgetId == null) {
+      throw new AraneaJspException("'eventButton' tag can only be used in a context widget!");
+    }
+
+    this.updateRegionNames = JspUpdateRegionUtil.getUpdateRegionNames(this.pageContext, this.updateRegions,
+        this.globalUpdateRegions);
+    this.event.setUpdateRegionNames(this.updateRegionNames);
+    this.event.setTarget(this.eventTarget == null ? this.contextWidgetId : this.eventTarget);
+    this.event.setEventPrecondition(this.onClickPrecondition);
 
     return result;
   }
-  
+
   /** @since 1.1 */
   protected boolean isDisabled() {
-    return Boolean.valueOf(disabled).booleanValue();
+    return Boolean.valueOf(this.disabled);
   }
-  
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */  
 
   /**
    * @jsp.attribute
@@ -75,7 +73,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event id." 
    */
   public void setEventId(String eventId){
-    event.setId(evaluate("eventId", eventId, String.class));
+    this.event.setId(evaluate("eventId", eventId, String.class));
   }
 
   /**
@@ -85,9 +83,9 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
    *   description = "Event parameter." 
    */
   public void setEventParam(String eventParam){
-	event.setParam(evaluate("eventParam", eventParam, String.class));
+    this.event.setParam(evaluate("eventParam", eventParam, String.class));
   }
-  
+
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -107,7 +105,7 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   public void setGlobalUpdateRegions(String globalUpdateRegions){
     this.globalUpdateRegions = evaluate("globalUpdateRegions", globalUpdateRegions, String.class);
   }
-  
+
   /**
    * @jsp.attribute
    *   type = "java.lang.String"
@@ -127,10 +125,10 @@ public class BaseEventButtonTag extends BaseSimpleButtonTag {
   public void setDisabled(String disabled){
     this.disabled = evaluate("disabled", disabled, String.class);
   }
-  
+
   @Override
   public void doFinally() {
-	super.doFinally();
-	event.clear();
+    super.doFinally();
+    this.event.clear();
   }
 }

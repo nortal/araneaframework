@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.SerializationUtils;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.util.Event;
 
@@ -135,7 +136,7 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
 
   @Override
   public String toString() {
-    return "Data (Type=[" + this.type + "];Value=[" + this.value + "])";
+    return "Data<" + this.type + ">=[" + this.value + "]" + (isStateChanged() ? " (CHANGED)" : "");
   }
 
   /**
@@ -143,8 +144,14 @@ public class Data<T> implements Serializable, FormElementAware<Object, T> {
    * 
    * @return A new instance of current this {@link Data} that is of same type.
    */
+  @SuppressWarnings("unchecked")
   public Data<T> newData() {
-    return new Data<T>(this.type.clone());
+    try {
+      return (Data<T>) this.type.clone();
+    } catch (CloneNotSupportedException e) {
+      ExceptionUtil.uncheckException("Could not clone Data in Data#newData().", e);
+      return null; // Not reached.
+    }
   }
 
   /**

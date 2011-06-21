@@ -20,7 +20,7 @@ import org.araneaframework.uilib.form.Data;
 import org.joda.time.DateTime;
 
 /**
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class JodaDateData extends Data<DateTime> {

@@ -16,15 +16,14 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.araneaframework.jsp.util.JspStringUtil;
-
 import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
+import org.araneaframework.jsp.util.JspStringUtil;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.form.control.ButtonControl;
 
@@ -49,7 +48,6 @@ public class BaseFormButtonTag extends BaseFormElementHtmlTag {
 
   protected String renderMode = RENDER_BUTTON;
 
-  
   public BaseFormButtonTag() {
     setHasElementContextSpan(false);
   }

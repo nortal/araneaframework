@@ -16,7 +16,6 @@
 
 package org.araneaframework.tests.servlet.util;
 
-import javax.servlet.http.Cookie;
 import junit.framework.TestCase;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.http.util.AtomicResponseHelper;
@@ -24,6 +23,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
+ * Note: at least in Aranea 2.0, the {@link AtomicResponseHelper} only handles commit and roll-back of content. Headers,
+ * cookies etc are not handled. If necessary, it can be implemented in later versions.
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class AtomicResponseHelperTests extends TestCase {
@@ -42,10 +44,15 @@ public class AtomicResponseHelperTests extends TestCase {
     this.atomic = new AtomicResponseHelper(this.output);
   }
 
+  private int getResponseLength() {
+    return this.res.getContentAsByteArray().length;
+  }
+
   public void testCommitWriter() throws Exception {
-    this.res.getWriter().write("Hello, World!");
+    this.output.getWriter().write("Hello, World!");
+    assertEquals("The response must be empty, because the data is not committed.", getResponseLength(), 0);
     this.atomic.commit();
-    assertTrue(this.res.getContentAsByteArray().length > 0);
+    assertTrue("The response must NOT be empty, because the data is committed.", getResponseLength() > 0);
   }
 
   /*
@@ -56,25 +63,10 @@ public class AtomicResponseHelperTests extends TestCase {
    * solution.
    */
   public void testRollbackWriter() throws Exception {
-    this.res.getWriter().write("Hello, World!");
-    this.res.setCommitted(false);
+    this.output.getWriter().write("Hello, World!");
+    assertEquals("The response must be empty, because the data is not committed.", getResponseLength(), 0);
     this.atomic.rollback();
-    System.out.println(this.res.getContentAsByteArray().length + " " + this.res.getContentAsString());
-    this.res.getContentAsByteArray();
-    assertTrue(this.res.getContentAsByteArray().length == 0);
-  }
-
-  public void testRollBackHeaders() throws Exception {
-    this.res.setHeader("key", "value");
-    assertEquals("value", this.res.getHeader("key"));
-
-    Cookie cookie = new Cookie("key", "value");
-    this.res.addCookie(cookie);
-    assertEquals(cookie, this.res.getCookie("key"));
-
-    this.atomic.rollback();
-    assertEquals(null, this.res.getHeader("key"));
-    assertEquals(null, this.res.getCookie("key"));
+    assertEquals("The response must be empty, because the data was rolled back.", getResponseLength(), 0);
   }
 
   public void testDoubleCommit() throws Exception {

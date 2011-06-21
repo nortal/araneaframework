@@ -30,7 +30,10 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class StandardConfirmationFilterWidget extends BaseFilterWidget implements ConfirmationContext {  private Closure closure;
+public class StandardConfirmationFilterWidget extends BaseFilterWidget implements ConfirmationContext {
+
+  private Closure closure;
+
   private String message;
 
   // PUBLIC API

@@ -31,7 +31,7 @@ import org.araneaframework.uilib.form.FormWidget;
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class BaseFormElementDisplayTag extends PresentationTag implements FormElementTagInterface {
 
   protected FormWidget.ViewModel formViewModel;
@@ -50,7 +50,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
 
   protected boolean validate = true;
 
-  protected boolean validateOnEvent = false;
+  protected boolean validateOnEvent;
 
   @Override
   protected int doStartTag(Writer out) throws Exception {
@@ -88,7 +88,7 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
    * @jsp.attribute
    *    type = "java.lang.String"
    *    required = "false"
-   *    description = "Element id, can also be inherited."
+   *    description = "Element ID, can also be inherited."
    */
   public void setId(String id) throws JspException {
     this.id = evaluateNotNull("id", id, String.class);
@@ -133,10 +133,11 @@ public class BaseFormElementDisplayTag extends PresentationTag implements FormEl
    * 
    * @since 2.0
    */
-  protected void assertControlTypes(String type1, String type2) throws JspException {
-    if (!isType(type1) && !isType(type2)) {
-      throw new AraneaJspException("Control of type '" + type1 + "' or '" + type2 + "' expected in form element '"
-          + this.derivedId + "' instead of '" + this.controlViewModel.getControlType() + "'");
+  protected void assertControlTypes(String... types) throws JspException {
+    if (types != null) {
+      for (String type : types) {
+        assertControlType(type);
+      }
     }
   }
 }

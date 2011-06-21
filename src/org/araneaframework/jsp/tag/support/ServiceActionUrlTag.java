@@ -28,17 +28,15 @@ import org.araneaframework.http.util.URLUtil;
 import org.araneaframework.jsp.tag.BaseTag;
 
 /**
- * Service action url tag. Makes available <code>serviceActionUrl</code> EL variable that can be used to fetch data from
+ * Service action URL tag. Makes available <code>serviceActionUrl</code> EL variable that can be used to fetch data from
  * a service.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * 
- * @jsp.tag name = "serviceActionUrl" body-content = "JSP" description = "Service action url tag.<br/>
- *          Makes available following page scope variables:
- *          <ul>
- *          <li><i>serviceActionUrl</i> - URL which points to service.
- *          </ul>
- *          "
+ * @jsp.tag
+ *  name = "serviceActionUrl"
+ *  body-content = "empty"
+ *  description = "Provides page scope variable <i>serviceActionUrl</i> (URL which points to service)."
  */
 public class ServiceActionUrlTag extends BaseTag {
 
@@ -54,11 +52,16 @@ public class ServiceActionUrlTag extends BaseTag {
   }
 
   protected String getWidgetActionUrl() {
+    if (this.id == null) {
+      this.id = EnvironmentUtil.requireThreadServiceId(getEnvironment());
+    }
+
     Map<String, String> m = new HashMap<String, String>();
     m.put(TransactionContext.TRANSACTION_ID_KEY, TransactionContext.OVERRIDE_KEY);
     m.put(TopServiceContext.TOP_SERVICE_KEY, EnvironmentUtil.requireTopServiceId(getEnvironment()));
     m.put(ThreadContext.THREAD_SERVICE_KEY, this.id);
-    return getHttpOutputData().encodeURL(URLUtil.parametrizeURI(getHttpInputData().getContainerURL(), m));
+
+    return getHttpOutputData().encodeURL(URLUtil.parameterizeURI(getHttpInputData().getContainerURL(), m));
   }
 
   @Override
@@ -68,7 +71,10 @@ public class ServiceActionUrlTag extends BaseTag {
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "true" description = "Service id."
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "true"
+   *    description = "Thread-service ID. If not provided, the current thread service will be used instead."
    */
   public void setId(String id) throws JspException {
     this.id = evaluateNotNull("id", id, String.class);

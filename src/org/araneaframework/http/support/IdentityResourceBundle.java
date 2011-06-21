@@ -16,24 +16,39 @@
 
 package org.araneaframework.http.support;
 
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.logging.Log;
-
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The resolver that always returns the provided key. Good to be used in {@link FallbackResourceBundle} as the last step
  * because otherwise an exception is thrown if a resource could not be resolved by the given key. Using an instance of
  * this class in the last step always returns a non-null result (if the key is non-null).
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public class IdentityResourceBundle extends ResourceBundle {
 
   private static final Log LOG = LogFactory.getLog(IdentityResourceBundle.class);
+
+  private boolean wrapInQuestionMarks;
+
+  /**
+   * Constructs identity resource bundle.
+   */
+  public IdentityResourceBundle() {}
+
+  /**
+   * Constructor that provides an option to wrap the returned key in question marks ("<code>???key???</code>") so that
+   * it would be easier to notice keys.
+   * 
+   * @param wrapInQuestionMarks When <code>true</code> then the returned key will be wrapped in question marks.
+   */
+  public IdentityResourceBundle(boolean wrapInQuestionMarks) {
+    this.wrapInQuestionMarks = wrapInQuestionMarks;
+  }
 
   @Override
   public Enumeration<String> getKeys() {
@@ -45,6 +60,6 @@ public class IdentityResourceBundle extends ResourceBundle {
     if (LOG.isWarnEnabled()) {
       LOG.warn("Message for key '" + key + "'could not be resolved! Returning the key as the value.");
     }
-    return "???" + key + "???";
+    return this.wrapInQuestionMarks ? "???" + key + "???" : key;
   }
 }

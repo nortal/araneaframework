@@ -5,6 +5,9 @@
  * <ui:importStyles/> and <ui:importScripts/>. Style and script resources are
  * separated by the "type" attribute.
  * This file must be included in aranea*.jar.
+ * Note that this file includes just some predefined file groups to start with.
+ * Every application can define its own file groups in its own aranea-resources.xml
+ * See the reference manual for more information.
 -->
 
 <resources>
@@ -41,6 +44,10 @@
 
 	<files content-type="text/css" group="prototip.css">
 		<file path="css/prototip/prototip.css" />
+	</files>
+
+	<files content-type="text/css" group="blackbird.css">
+		<file path="js/blackbird/blackbird.css" />
 	</files>
 
 <!-- ============================================================ -->
@@ -118,7 +125,7 @@
 	<files content-type="text/javascript" group="core-all-devel.js">
 		<file path="js/rsh/rsh.js" />
 		<file path="js/prototype/prototype.js" />
-        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
 		<file path="js/aranea/src/aranea.js" />
@@ -164,35 +171,35 @@
 	</files>
 
 	<files content-type="text/javascript" group="modalbox.js">
-        <file path="js/aranea/aranea-modalbox.js" />
-        <file path="js/modalbox/modalbox.js" />
+		<file path="js/aranea/aranea-modalbox.js" />
+		<file path="js/modalbox/modalbox.js" />
 	</files>
 
 	<files content-type="text/javascript" group="modalbox-devel.js">
-        <file path="js/aranea/src/aranea-modalbox.js" />
-        <file path="js/modalbox/modalbox.js" />
+		<file path="js/aranea/src/aranea-modalbox.js" />
+		<file path="js/modalbox/modalbox.js" />
 	</files>
 
 	<files content-type="text/javascript" group="scriptaculous.js">
-        <file path="js/scriptaculous/builder.js" />
+		<file path="js/scriptaculous/builder.js" />
 		<file path="js/scriptaculous/effects.js" />
 		<file path="js/scriptaculous/controls.js" />
 	</files>
 
 	<files content-type="text/javascript" group="popup.js">
-        <file path="js/aranea/aranea-popups.js" />
+		<file path="js/aranea/aranea-popups.js" />
 	</files>
 
 	<files content-type="text/javascript" group="popup-devel.js">
-        <file path="js/aranea/src/aranea-popups.js" />
+		<file path="js/aranea/src/aranea-popups.js" />
 	</files>
 
 	<files content-type="text/javascript" group="tree.js">
-        <file path="js/aranea/aranea-tree.js" />
+		<file path="js/aranea/aranea-tree.js" />
 	</files>
 
 	<files content-type="text/javascript" group="tree-devel.js">
-        <file path="js/aranea/src/aranea-tree.js" />
+		<file path="js/aranea/src/aranea-tree.js" />
 	</files>
 
 	<files content-type="text/javascript" group="rsh.js">
@@ -219,8 +226,12 @@
 		<file path="js/prototip/prototip.js" />
 	</files>
 
-	<files content-type="text/javascript" group="logger.js">
+	<files content-type="text/javascript" group="log4javascript.js">
 		<file path="js/log4javascript/log4javascript.js" />
+	</files>
+
+	<files content-type="text/javascript" group="blackbird.js">
+		<file path="js/blackbird/blackbird.js" />
 	</files>
 
 	<!--
@@ -241,6 +252,11 @@
 		<file path="gfx/contextmenu/sub.gif" />
 		<file path="gfx/contextmenu/transparent.gif" />
 		<file path="gfx/modalbox/spinner.gif" />
+	</files>
+
+	<files content-type="image/png">
+		<file path="js/blackbird/blackbird_icons.png" />
+		<file path="js/blackbird/blackbird_panel.png" />
 	</files>
 
 </resources>

@@ -35,55 +35,51 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
+ * This class is a wrapper widget representing one node in a tree. This wrapper requires a display widget for rendering
+ * the node, and may take a list of sub-nodes. It also defines events for which tree nodes react to.
+ * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.0.7
  */
 public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeContext {
 
-  /** Display widget id. */
+  /**
+   * The ID of the display widget.
+   */
   public static final String DISPLAY_KEY = "display";
 
-  /** Toggle event or action id. */
+  /**
+   * The ID of the toggle event/action.
+   */
   public static final String TOGGLE_KEY = "toggle";
 
+  // Whether the node is collapsed.
   private boolean collapsed = true;
 
-  private boolean collapsedDecide = false;
+  // Whether this.collapsed will be resolved by tree contexts.
+  private boolean collapsedDecide;
 
+  // The display widget for the node.
   private Widget initDisplay;
 
+  // The sub-nodes of this node.
   private List<TreeNodeWidget> initNodes;
 
+  // The parent node of this node.
   private TreeNodeWidget parentNode;
 
+  // The index for tree node to define ordering. Must be non-negative. Usually set by the context.
   private int index = -1;
 
-  private int nextChildIndex = 0;
+  // The index that will be set to next sub-node when added.
+  private int nextChildIndex;
 
+  // The wrappers that contain child nodes and their IDs.
   private List<ChildNodeWrapper> childNodeWrappers;
 
-  private static class ChildNodeWrapper implements Serializable {
-
-    private TreeNodeWidget node;
-
-    private String widgetId;
-
-    public ChildNodeWrapper(TreeNodeWidget node, String widgetId) {
-      this.node = node;
-      this.widgetId = widgetId;
-    }
-
-    public TreeNodeWidget getNode() {
-      return this.node;
-    }
-
-    public String getWidgetId() {
-      return this.widgetId;
-    }
-
-  }
-
-  /* Used by TreeWidget */
+  /**
+   * Used by TreeWidget
+   */
   TreeNodeWidget() {
     this.collapsed = false;
   }
@@ -149,23 +145,6 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
   }
 
-  private class ToggleEventListener extends StandardEventListener {
-
-    @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
-      toggleCollapsed();
-    }
-  }
-
-  private class ToggleActionListener extends StandardActionListener {
-
-    @Override
-    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-      toggleCollapsed();
-      render(output);
-    }
-  }
-
   protected Environment getDisplayWidgetEnvironment() throws Exception {
     return new StandardEnvironment(getEnvironment(), TreeNodeContext.class, this);
   }
@@ -176,18 +155,12 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
 
   // returns List<TreeNodeWidget>
   protected List<TreeNodeWidget> loadChildren() {
-    if (getTreeCtx().getDataProvider() != null) {
-      return getTreeCtx().getDataProvider().getChildren(this);
-    }
-    return null;
+    return getTreeCtx().getDataProvider() != null ? getTreeCtx().getDataProvider().getChildren(this) : null;
   }
 
   protected boolean shouldRenderToggleLink() {
     if (getTreeCtx().getDataProvider() != null) {
-      if (isCollapsed()) {
-        return getTreeCtx().getDataProvider().hasChildren(this);
-      }
-      return true;
+      return isCollapsed() ? getTreeCtx().getDataProvider().hasChildren(this) : true;
     }
     return false;
   }
@@ -217,10 +190,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public int getNodeCount() {
-    if (this.childNodeWrappers == null) {
-      return 0;
-    }
-    return this.childNodeWrappers.size();
+    return this.childNodeWrappers == null ? 0 : this.childNodeWrappers.size();
   }
 
   public int addNode(TreeNodeWidget node) {
@@ -341,7 +311,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   }
 
   public void setIndex(int index) {
-    Assert.isTrue(index >= 0, "index must be >= 0");
+    Assert.isTrue(index >= 0, "Index must be non-negative!");
     this.index = index;
   }
 
@@ -404,6 +374,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   protected void renderDisplayPrefixRecursive(Writer out, TreeRenderer renderer) throws Exception {
     LinkedList<TreeNodeContext> parents = new LinkedList<TreeNodeContext>();
     TreeNodeContext parent = getParentNode();
+
     while (parent != null) {
       parents.addFirst(parent);
       parent = parent.getParentNode();
@@ -414,6 +385,47 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     }
 
     renderer.renderDisplayPrefix(out, this, true);
+  }
+
+  // The child node wrapper containing child node and its ID.
+  private static class ChildNodeWrapper implements Serializable {
+
+    private TreeNodeWidget node;
+
+    private String widgetId;
+
+    public ChildNodeWrapper(TreeNodeWidget node, String widgetId) {
+      this.node = node;
+      this.widgetId = widgetId;
+    }
+
+    public TreeNodeWidget getNode() {
+      return this.node;
+    }
+
+    public String getWidgetId() {
+      return this.widgetId;
+    }
+
+  }
+
+  // The event listener that performs toggling.
+  private class ToggleEventListener extends StandardEventListener {
+
+    @Override
+    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+      toggleCollapsed();
+    }
+  }
+
+  // The action listener that performs toggling.
+  private class ToggleActionListener extends StandardActionListener {
+
+    @Override
+    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
+      toggleCollapsed();
+      render(output);
+    }
   }
 
 }

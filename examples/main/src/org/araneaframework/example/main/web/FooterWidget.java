@@ -52,38 +52,33 @@ public class FooterWidget extends BaseUIWidget {
       String[] replaceFrom = { ".class", "." };
       String[] replaceTo = { "", "/" };
       String path = StringUtils.replaceEach(flowClassName, replaceFrom, replaceTo);
-
       path = StringUtils.substringBefore(path, "$");
 
-      StringBuffer reqUrl = new StringBuffer(((HttpInputData) getInputData()).getContextURL());
-      reqUrl.append("/src/");
-      reqUrl.append(path);
-      reqUrl.append(".javas");
-
-      StringBuffer srcLink = new StringBuffer("<a href=\"javascript:\" onclick=\"window.open('");
-      srcLink.append(reqUrl);
-      srcLink.append("', 'widgetSource', 'width=900,height=800,scrollbars=yes'); return false;\">Widget source</a>");
-
-      putViewDataOnce("srcLink", srcLink.toString());
+      putViewDataOnce("srcLink", createLink(path, "src", "javas", "widgetSource", "Widget source"));
     }
   }
 
   private void putJspSourceLinkData(TemplateMenuWidget menuWidget) {
     String viewSelector = menuWidget.getFlowViewSelector();
     if (viewSelector != null) {
-      StringBuffer reqUrl = new StringBuffer(((HttpInputData) getInputData()).getContextURL());
-      reqUrl.append("/jsp/");
-      reqUrl.append(viewSelector);
-      reqUrl.append(".xmls");
-
-      StringBuffer windowOpen = new StringBuffer("window.open('").append(reqUrl).append(
-          "', 'templateSource', 'width=900,height=800,scrollbars=yes')");
-
-      StringBuffer templateSrcLink = new StringBuffer("<a href=\"javascript:\" onclick=\"").append(windowOpen).append(
-          "; return false;\">");
-      templateSrcLink.append("Template source").append("</a>");
-
-      putViewDataOnce("templateSrcLink", templateSrcLink.toString());
+      putViewDataOnce("templateSrcLink", createLink(viewSelector, "jsp", "xmls", "templateSource", "Template source"));
     }
+  }
+
+  private String createLink(String viewSelector, String dir, String ext, String event, String label) {
+    StringBuffer result = new StringBuffer("<a href=\"javascript:\" onclick=\"window.open('");
+    result.append(((HttpInputData) getInputData()).getContextURL());
+    result.append('/');
+    result.append(dir);
+    result.append('/');
+    result.append(viewSelector);
+    result.append('.');
+    result.append(ext);
+    result.append("','");
+    result.append(event);
+    result.append("','width=900,height=800,scrollbars=yes');return false\">");
+    result.append(label);
+    result.append("</a>");
+    return result.toString();
   }
 }

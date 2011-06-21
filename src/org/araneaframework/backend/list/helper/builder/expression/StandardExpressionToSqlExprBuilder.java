@@ -47,6 +47,7 @@ import org.araneaframework.backend.list.memorybased.expression.variable.Variable
 import org.araneaframework.backend.list.sqlexpr.SqlAlwaysTrueExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlBracketsExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlEscapeExpression;
+import org.araneaframework.backend.list.sqlexpr.SqlMultiExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlEqualsExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlGreaterThanExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlIsNullExpression;
@@ -209,8 +210,8 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 
     @Override
     protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
-      SqlExpression temp = new SqlAndExpression().setChildren(sqlChildren);
-      return sqlChildren.length > 1 ? new SqlBracketsExpression(temp) : temp;
+      SqlMultiExpression temp = new SqlAndExpression().setChildren(sqlChildren);
+      return temp.getChildrenCount() > 1 ? new SqlBracketsExpression(temp) : temp;
     }
   }
 
@@ -218,8 +219,8 @@ public class StandardExpressionToSqlExprBuilder extends BaseExpressionToSqlExprB
 
     @Override
     protected SqlExpression translateParent(Expression expr, SqlExpression[] sqlChildren) {
-      SqlExpression temp = new SqlOrExpression().setChildren(sqlChildren);
-      return sqlChildren.length > 1 ? new SqlBracketsExpression(temp) : temp;
+      SqlMultiExpression temp = new SqlOrExpression().setChildren(sqlChildren);
+      return temp.getChildrenCount() > 1 ? new SqlBracketsExpression(temp) : temp;
     }
   }
 

@@ -28,31 +28,24 @@ import org.araneaframework.jsp.util.JspUtil;
  * @jsp.tag
  *   name = "style"
  *   body-content = "JSP"
- *   description = "Sets a CSS class for the content, acts as a <i>&lt;span&gt;</i> HTML tag with the <i>class</i> atribute set."
+ *   description = "Sets a CSS class for the content, acts as a <i>&lt;span&gt;</i> HTML tag with the <i>class</i> attribute set."
  */
 public class StyleHtmlTag extends PresentationTag {
-  //
-  // Implementation
-  //  
-    
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
+
     JspUtil.writeOpenStartTag(out, "span");
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeCloseStartTag_SS(out);
-    
-    // Continue
-    return EVAL_BODY_INCLUDE;    
+
+    return EVAL_BODY_INCLUDE;
   }
-  
+
   @Override
-  protected int doEndTag(Writer out) throws Exception {   
+  protected int doEndTag(Writer out) throws Exception {
     JspUtil.writeEndTag(out, "span");
-      
-    // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;  
+    return super.doEndTag(out);
   }
 }

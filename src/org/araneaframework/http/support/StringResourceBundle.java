@@ -18,19 +18,31 @@ package org.araneaframework.http.support;
 
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * The resolver that can resolve strings starting with the hash (#) symbol. If so, the string following the symbol will
- * be returned. Otherwise returns <code>null</code>. Since Aranea 2.0, the symbol can be overridden.
+ * be returned. Otherwise returns <code>null</code>. Since Aranea 2.0, the default hash symbol can be overridden through
+ * constructor parameter.
  */
 public class StringResourceBundle extends ResourceBundle {
 
-  protected char symbol = '#';
+  protected String prefix = "#";
 
+  /**
+   * Constructs a string-handling resource bundle that handles keys that begin with the default prefix (<code>#</code>).
+   */
   public StringResourceBundle() {}
 
-  public StringResourceBundle(char overrideSymbol) {
-    this.symbol = overrideSymbol;
+  /**
+   * Constructs a string-handling resource bundle that returns the value of the key following the given prefix (when the
+   * key begins with the given prefix), or <code>null</code>.
+   * 
+   * @param overridePrefix The prefix that can override the default prefix (<code>#</code>).
+   * @since 2.0
+   */
+  public StringResourceBundle(String overridePrefix) {
+    this.prefix = overridePrefix;
   }
 
   @Override
@@ -40,6 +52,6 @@ public class StringResourceBundle extends ResourceBundle {
 
   @Override
   protected Object handleGetObject(String key) {
-    return key.length() > 0 && key.charAt(0) == this.symbol ? key.substring(1) : null;
+    return StringUtils.startsWith(key, this.prefix) ? StringUtils.substringAfter(key, this.prefix) : null;
   }
 }

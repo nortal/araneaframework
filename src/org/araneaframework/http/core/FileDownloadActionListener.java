@@ -19,24 +19,27 @@ package org.araneaframework.http.core;
 import java.io.Serializable;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.Service;
+import org.araneaframework.Path;
+import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.filter.StandardPopupFilterWidget;
 import org.araneaframework.http.service.FileDownloaderService;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.http.widget.FileDownloaderWidget.FileDownloadStreamCallback;
 import org.araneaframework.uilib.support.FileInfo;
 
 /**
- * An action listener for downloading files with AJAX. Register this listener in your widget, and
- * provide a callback or some data to it. In JSP, write a script like this:
- * <code>return AraneaPage.downloadFile('download','${widgetId}','${rowRequestId}');</code>. The
- * {@link FileDownloadHandler} is the callback used to retrieve file data to upload it to the client
- * once file upload is requested.
+ * An action listener for downloading files with AJAX. Register this listener in your widget, and provide a callback or
+ * some data to it. In JSP, write a script like this:
+ * <code>return Aranea.Page.downloadFile('download','${widgetId}','${rowRequestId}');</code>. The
+ * {@link FileDownloadActionListener.FileDownloadHandler} is the callback used to retrieve file data to upload it to the
+ * client once file upload is requested.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class FileDownloadActionListener extends StandardActionListener {
@@ -65,10 +68,8 @@ public class FileDownloadActionListener extends StandardActionListener {
     this.downloadHandler = fileHandler;
   }
 
-  public FileDownloadActionListener(PopupWindowContext popupCtx, Service service) {
-    Assert.notNullParam(this, popupCtx, "popupCtx");
-    Assert.notNullParam(this, service, "service");
-    this.popupCtx = (StandardPopupFilterWidget) popupCtx;
+  public FileDownloadActionListener(PopupWindowContext popupCtx, Widget fileDownloaderWidget) {
+    this(popupCtx, new FileDownloadHandler(fileDownloaderWidget));
   }
 
   @Override
@@ -79,8 +80,8 @@ public class FileDownloadActionListener extends StandardActionListener {
       this.popupCtx.close(this.lastPopupId);
     }
 
-    Service service = this.downloadHandler.getService(actionId, actionParam, input, output);
-    this.lastPopupId = this.popupCtx.open(service, new PopupWindowProperties(), null);
+    Widget widget = new AsynchronousFileDownloadWidget(actionId, actionParam, this.downloadHandler);
+    this.lastPopupId = this.popupCtx.open(widget, new PopupWindowProperties(), null);
 
     String url = ERROR_CODE;
 
@@ -88,12 +89,46 @@ public class FileDownloadActionListener extends StandardActionListener {
       // If this is called then the popup will be removed later.
       // This is important because we don't want to open previously opened popups.
       this.popupCtx.renderPopup(this.lastPopupId);
-      url = this.popupCtx.getPopups().get(this.lastPopupId).toURL();
+      url = this.popupCtx.getPopups().get(this.lastPopupId).getUrl();
 
     } finally {
       // We return the URL of the popup to the client.
       // If no popup found then "error" will be returned.
       ServletUtil.getResponse(output).getOutputStream().print(url);
+    }
+  }
+
+  /**
+   * A temporary widget that invokes the handler's service upon request to commence file downloading. The idea of this
+   * widget is to delay the creation of file download widget until it is really necessary. Since this widget is used
+   * inside popup context, the request that comes in when actual file downloading should begin. Therefore, this widget
+   * indeed procrastinates creating file downloading widget until it is really needed.
+   * 
+   * @author Martti Tamm (martti@araneaframework.org)
+   * @since 2.0
+   */
+  protected static class AsynchronousFileDownloadWidget extends BaseApplicationWidget {
+
+    private FileDownloadHandler handler;
+
+    private String actionId;
+
+    private String actionParam;
+
+    
+    public AsynchronousFileDownloadWidget(String actionId, String actionParam, FileDownloadHandler handler) {
+      this.actionId = actionId;
+      this.actionParam = actionParam;
+      this.handler = handler;
+    }
+
+    @Override
+    protected void action(Path path, InputData input, OutputData output) throws Exception {
+      Widget widget = this.handler.getWidget(this.actionId, this.actionParam, input, output);
+      if (!widget.isAlive()) {
+        addWidget("service", widget);
+      }
+      widget._getService().action(path, input, output);
     }
   }
 
@@ -105,7 +140,9 @@ public class FileDownloadActionListener extends StandardActionListener {
 
     protected String contentType;
 
-    protected Service fileDownloaderService;
+    protected Widget fileDownloaderWidget;
+
+    protected FileDownloadStreamCallback fileStreamCallback;
 
     public FileDownloadHandler() {}
 
@@ -119,8 +156,12 @@ public class FileDownloadActionListener extends StandardActionListener {
       readData(file);
     }
 
-    public FileDownloadHandler(Service fileDownloaderService) {
-      this.fileDownloaderService = fileDownloaderService;
+    public FileDownloadHandler(Widget fileDownloaderWidget) {
+      this.fileDownloaderWidget = fileDownloaderWidget;
+    }
+
+    public FileDownloadHandler(FileDownloadStreamCallback fileStreamCallback) {
+      this.fileStreamCallback = fileStreamCallback;
     }
 
     protected void readData(FileInfo file) {
@@ -129,12 +170,12 @@ public class FileDownloadActionListener extends StandardActionListener {
       this.contentType = file.getContentType();
     }
 
-    public Service getService(String actionId, String actionParam, InputData input, OutputData output) {
-      Service service = this.fileDownloaderService;
-      if (service == null) {
-        service = createService(actionId, actionParam, input, output);
+    public Widget getWidget(String actionId, String actionParam, InputData input, OutputData output) {
+      Widget widget = this.fileDownloaderWidget;
+      if (widget == null) {
+        widget = createService(actionId, actionParam, input, output);
       }
-      return service;
+      return widget;
     }
 
     /**
@@ -145,13 +186,19 @@ public class FileDownloadActionListener extends StandardActionListener {
      * @param input The request data.
      * @param output The response data.
      */
-    protected Service createService(String actionId, String actionParam,
+    protected Widget createService(String actionId, String actionParam,
         InputData input, OutputData output) {
 
       prepareServiceData(actionId, actionParam, input, output);
 
-      FileDownloaderService service = new FileDownloaderService(this.file, this.contentType,
-          this.fileName);
+      FileDownloaderService service = null;
+
+      if (this.fileStreamCallback != null) {
+        service = new FileDownloaderService(this.fileStreamCallback);
+      } else {
+        service = new FileDownloaderService(this.file, this.contentType, this.fileName);
+      }
+
       service.setContentDispositionInline(Boolean.FALSE);
       return service;
     }

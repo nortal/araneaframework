@@ -21,22 +21,19 @@ import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilde
 import org.araneaframework.backend.list.memorybased.Expression;
 
 /**
- * General interface for translating an <code>Expression</code> into
- * <code>SqlExpression</code>. It is generally used to translate only a
- * specific type of <code>Expression</code>. Use (@see
- * org.araneaframework.uilib.widgets.lists.refactor.backend.builder.ExpressionToSqlExprBuilder)
- * to translate the whole hierarchy.
+ * General interface for translating an <code>Expression</code> into <code>SqlExpression</code>. It is generally used to
+ * translate only a specific type of <code>Expression</code>. Use (see {@link ExpressionToSqlExprBuilder}) to translate
+ * the whole hierarchy.
  */
 public interface ExprToSqlExprTranslator {
 
   /**
    * Translates an <code>Expression</code> into <code>SqlExpression</code>.
    * 
-   * @param expr an <code>Expression</code>.
-   * @param builder <code>ExpressionToSqlExprBuilder</code> that is used to
-   *            translate the children of the <code>Expression</code>.
-   * @return the <code>SqlExpression</code> that represents the former
-   *         <code>Expression</code>.
+   * @param expr an <code>Expression</code> object to translate into SQL.
+   * @param builder <code>ExpressionToSqlExprBuilder</code> that is used to translate the children of the
+   *          <code>Expression</code>.
+   * @return the <code>SqlExpression</code> that represents the former <code>Expression</code>.
    */
   SqlExpression translate(Expression expr, ExpressionToSqlExprBuilder builder);
 

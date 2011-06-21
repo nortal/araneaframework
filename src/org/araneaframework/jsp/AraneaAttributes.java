@@ -56,4 +56,6 @@ public abstract class AraneaAttributes {
   public static final String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
 
   public static final String BACKGROUND_VALIDATION_CLASS = "aranea-bg-validate";
+
+  public static final String NO_BACKGROUND_VALIDATION_CLASS = "aranea-no-bg-validate";
 }

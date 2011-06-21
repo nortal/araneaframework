@@ -20,12 +20,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import org.apache.commons.io.IOUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpOutputData;
 
 /**
@@ -35,136 +39,19 @@ import org.araneaframework.http.HttpOutputData;
  * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
- * 
- * TODO: rewrite as HttpOutputData wrapper
  */
 public class AtomicResponseHelper {
 
   private AtomicResponseWrapper atomicWrapper;
 
+  private OutputData output;
+
   public AtomicResponseHelper(OutputData outputData) {
     Assert.isInstanceOfParam(HttpOutputData.class, outputData, "outputData");
 
+    this.output = outputData;
     this.atomicWrapper = new AtomicResponseWrapper(ServletUtil.getResponse(outputData));
     ServletUtil.setResponse(outputData, this.atomicWrapper);
-  }
-
-  /**
-   * Wraps a HttpServletResponse to make it possible of resetting and committing it.
-   */
-  @SuppressWarnings("deprecation")
-  private static class AtomicResponseWrapper extends HttpServletResponseWrapper {
-
-    private ServletOutputStream out;
-
-    private PrintWriter writerOut;
-
-    public AtomicResponseWrapper(HttpServletResponse response) {
-      super(response);
-      resetStream();
-    }
-
-    private void resetStream() {
-      this.out = new AraneaServletOutputStream();
-    }
-
-    @Override
-    public ServletOutputStream getOutputStream() throws IOException {
-      if (this.out == null) {
-        return getResponse().getOutputStream();
-      }
-      return this.out;
-    }
-
-    @Override
-    public PrintWriter getWriter() throws IOException {
-      if (this.out == null) {
-        return getResponse().getWriter();
-      }
-
-      if (this.writerOut == null) {
-        if (getResponse().getCharacterEncoding() != null) {
-          this.writerOut = new PrintWriter(new OutputStreamWriter(this.out, getResponse().getCharacterEncoding()));
-        } else {
-          this.writerOut = new PrintWriter(new OutputStreamWriter(this.out));
-        }
-      }
-
-      return this.writerOut;
-    }
-
-    /**
-     * If the output has not been committed yet, commits it.
-     * 
-     * @throws AraneaRuntimeException if output has been committed already.
-     */
-    public void commit() throws IOException {
-      if (this.out == null) {
-        throw new IllegalStateException("Cannot commit buffer - response is already committed");
-      }
-
-      if (this.writerOut != null) {
-        this.writerOut.flush();
-      }
-      this.out.flush();
-
-      byte[] data = ((AraneaServletOutputStream) this.out).getData();
-
-      getResponse().getOutputStream().write(data);
-      getResponse().getOutputStream().flush();
-
-      this.out = null;
-    }
-
-    /**
-     * If the output has not been committed yet, clears the content of the underlying buffer in the response without
-     * clearing headers or status code.
-     */
-    public void rollback() {
-      if (this.out == null) {
-        throw new IllegalStateException("Cannot reset buffer - response is already committed");
-      }
-      getResponse().reset();
-      resetStream();
-      this.writerOut = null;
-    }
-
-    public byte[] getData() throws Exception {
-      return ((AraneaServletOutputStream) this.out).getData();
-    }
-  }
-
-  private static class AraneaServletOutputStream extends ServletOutputStream {
-
-    private ByteArrayOutputStream out;
-
-    private AraneaServletOutputStream() {
-      this.out = new ByteArrayOutputStream(20480);
-    }
-
-    @Override
-    public void write(int b) {
-      this.out.write(b);
-    }
-
-    @Override
-    public void write(byte[] b) throws IOException {
-      this.out.write(b);
-    }
-
-    @Override
-    public void write(byte[] b, int offset, int len) {
-      this.out.write(b, offset, len);
-    }
-
-    @Override
-    public void flush() throws IOException {
-      this.out.flush();
-    }
-
-    public byte[] getData() {
-      return this.out.toByteArray();
-    }
   }
 
   // *******************************************************************
@@ -173,13 +60,209 @@ public class AtomicResponseHelper {
 
   public void commit() throws Exception {
     this.atomicWrapper.commit();
+
+    // This helper cannot be used anymore. Let's restore the previous one:
+    ServletUtil.setResponse(this.output, (HttpServletResponse) this.atomicWrapper.getResponse());
   }
 
   public void rollback() throws Exception {
     this.atomicWrapper.rollback();
   }
 
-  public byte[] getData() throws Exception {
+  /**
+   * Returns the data that is collected by this output stream at this moment.
+   * 
+   * @return The collected data in raw format.
+   */
+  public byte[] getData() {
     return this.atomicWrapper.getData();
+  }
+
+  /**
+     * Returns the data as string that is collected by this output stream at this moment. The encoding will be taken
+     * from {@link ServletResponse#getCharacterEncoding()}. When the latter is <code>null</code>, this method will fail
+     * with an exception.
+     * 
+     * @return The collected data as <code>String</code> that is encoded as
+     *         {@link ServletResponse#getCharacterEncoding()}.
+     * @since 2.0
+   */
+  public String getStringData() {
+    return this.atomicWrapper.getStringData();
+  }
+
+  /**
+   * Wraps a HttpServletResponse to make it possible of resetting and committing it.
+   */
+  @SuppressWarnings("deprecation")
+  private static class AtomicResponseWrapper extends HttpServletResponseWrapper {
+
+    private AraneaServletOutputStream out;
+
+    private PrintWriter outWriter;
+
+    public AtomicResponseWrapper(HttpServletResponse response) {
+      super(response);
+
+      try {
+        // Important: we retrieve the output stream now, because there may be issues when retrieving it later,
+        // especially when rendering JSPs because the standard expects that getOutputStream() is not called after
+        // getWriter(). To simplify handling the writer and output stream, we instantiate both here, so that the writer
+        // would automatically write to our stream, and that our stream would write to the bound servlet output stream,
+        // when commit is ordered.
+
+        this.out = new AraneaServletOutputStream(response.getOutputStream());
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException("Unexpected exception when retrieving servlet response output stream.", e);
+      }
+    }
+
+    @Override
+    public ServletOutputStream getOutputStream() throws IOException {
+      return this.out;
+    }
+
+    @Override
+    public PrintWriter getWriter() throws IOException {
+      if (this.outWriter == null) {
+        if (getResponse().getCharacterEncoding() != null) {
+          this.outWriter = new PrintWriter(new OutputStreamWriter(getOut(), getResponse().getCharacterEncoding()));
+        } else {
+          this.outWriter = new PrintWriter(new OutputStreamWriter(getOut()));
+        }
+      }
+      return this.outWriter;
+    }
+
+    /**
+     * This method is used internally. Usually when we work with the <code>out</code> stream, we want its data to be
+     * up-to-date. Therefore, we flush the writer each time.
+     * 
+     * @return The current output stream.
+     */
+    protected AraneaServletOutputStream getOut() {
+      if (this.out == null) {
+        throw new IllegalStateException("Cannot retrieve output stream - response is already committed.");
+      }
+
+      if (this.outWriter != null) {
+        this.outWriter.flush();
+      }
+
+      return this.out;
+    }
+
+    /**
+     * If the output has not been committed yet, commits it.
+     * 
+     * @throws AraneaRuntimeException if output has been committed already.
+     */
+    public void commit() {
+      getOut().commit();
+
+      // Once committed, this helper cannot be used anymore. This is intentional.
+      this.outWriter = null;
+      this.out = null;
+    }
+
+    /**
+     * If the output has not been committed yet, clears the content of the underlying buffer in the response without
+     * clearing headers or status code.
+     */
+    public void rollback() {
+      getOut().rollback();
+    }
+
+    /**
+     * Returns the data that is collected by this output stream at this moment.
+     * 
+     * @return The collected data in raw format.
+     */
+    public byte[] getData() {
+      return getOut().getData();
+    }
+
+    /**
+     * Returns the data as string that is collected by this output stream at this moment. The encoding will be taken
+     * from {@link ServletResponse#getCharacterEncoding()}. When the latter is <code>null</code>, this method will fail
+     * with an exception.
+     * 
+     * @return The collected data as <code>String</code> that is encoded as
+     *         {@link ServletResponse#getCharacterEncoding()}.
+     * @since 2.0
+     */
+    public String getStringData() {
+      try {
+        return new String(getData(), getResponse().getCharacterEncoding());
+      } catch (UnsupportedEncodingException e) {
+        ExceptionUtil.uncheckException("Problem while converting bytes into string. "
+            + "Make sure that response character encoding is correct!", e);
+        return null; // Not reached.
+      }
+    }
+
+    @Override
+    public String toString() {
+      return "AtomicResponseWrapper for response object:\n" + getResponse();
+    }
+  }
+
+  private static class AraneaServletOutputStream extends ServletOutputStream {
+
+    private ByteArrayOutputStream bufferedOut = new ByteArrayOutputStream(20480);
+
+    private ServletOutputStream targetOut;
+
+    private AraneaServletOutputStream(ServletOutputStream targetOut) {
+      this.targetOut = targetOut;
+    }
+
+    @Override
+    public void write(int b) {
+      this.bufferedOut.write(b);
+    }
+
+    @Override
+    public void write(byte[] b) throws IOException {
+      this.bufferedOut.write(b);
+    }
+
+    @Override
+    public void write(byte[] b, int offset, int len) {
+      this.bufferedOut.write(b, offset, len);
+    }
+
+    @Override
+    public void flush() throws IOException {
+      this.bufferedOut.flush();
+    }
+
+    public void rollback() {
+      this.bufferedOut.reset();
+    }
+
+    public void commit() {
+      try {
+        this.bufferedOut.writeTo(this.targetOut);
+        // This is a bit of hack, but it let's sub-implementations know that we have completed writing data for now:
+        this.targetOut.flush();
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException("Unexpected exception when flushing data to the target output stream.", e);
+      } finally {
+        IOUtils.closeQuietly(this.bufferedOut);
+        this.bufferedOut = null;
+        this.targetOut = null;
+      }
+    }
+
+    public byte[] getData() {
+      try {
+        this.bufferedOut.flush();
+        return this.bufferedOut.toByteArray();
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException("Unexpected exception when flushing data.", e);
+      }
+      return null;
+    }
   }
 }

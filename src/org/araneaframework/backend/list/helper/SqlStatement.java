@@ -33,8 +33,8 @@ public class SqlStatement implements Serializable, Cloneable {
   protected List<Object> parameters;
 
   public SqlStatement(String query, List<Object> parameters) {
-    this.query = query;
-    this.parameters = parameters;
+    setQuery(query);
+    setParams(parameters);
   }
 
   public SqlStatement(String query) {

@@ -26,20 +26,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class BlankStringNullableControl<T> extends StringRequestControl<T> {
 
-  // *********************************************************************
-  // * INTERNAL METHODS
-  // *********************************************************************
-
-
   @Override
   protected String preprocessRequestParameter(String parameterValue) {
-    return StringUtils.defaultIfEmpty(parameterValue, null);
-  }
-
-  @Override
-  public boolean isRead() {
-    // semantically this is not right, as innerData may be not null when value was not
-    // actually read from current request: i.e. in cases when update() is not called.
-    return this.innerData != null && ((String[]) this.innerData)[0].trim().length() != 0;
+    return StringUtils.trimToNull(parameterValue);
   }
 }

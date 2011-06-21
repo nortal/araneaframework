@@ -16,9 +16,10 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.uilib.support.DataType;
 
 /**
@@ -26,6 +27,7 @@ import org.araneaframework.uilib.support.DataType;
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @see Data
+ * @since 2.0
  */
 public class ListData<T> extends Data<List<T>> {
 
@@ -36,16 +38,20 @@ public class ListData<T> extends Data<List<T>> {
 
   /**
    * This Data object requires special check so that the order of elements in the values lists would not have any effect
-   * on whether the lists contain the same data.
+   * on whether the lists contain the same data. No distinction is made between a <code>null</code> list and empty list.
    * 
    * @since 1.2
    */
   @Override
   public boolean isStateChanged() {
-    if (this.markedBaseValue == null || this.value == null) {
-      return this.markedBaseValue != null || this.value != null;
-    } else {
-      return !ListUtils.isEqualList(this.markedBaseValue, this.value);
+    if (CollectionUtils.isEmpty(this.markedBaseValue) || CollectionUtils.isEmpty(this.value)) {
+      return CollectionUtils.isEmpty(this.markedBaseValue) != CollectionUtils.isEmpty(this.value);
+    } else if (this.markedBaseValue.size() != this.value.size()) {
+      return true;
     }
+
+    List<T> copy = new ArrayList<T>(this.markedBaseValue);
+    copy.removeAll(this.value);
+    return !copy.isEmpty();
   }
 }

@@ -21,51 +21,46 @@ import java.util.Random;
 import org.araneaframework.framework.TransactionContext;
 
 /**
- * Helper class for determining if transaction id is consistent. Transaction
- * id is considered consistent when it equals {@link TransactionContext#OVERRIDE_KEY}
- * or current transaction id. If current transaction id is not yet set,
- * any transaction id is considered consistent.
- *  
+ * Helper class for determining if transaction id is consistent. Transaction id is considered consistent when it equals
+ * {@link TransactionContext#OVERRIDE_KEY} or current transaction id. If current transaction id is not yet set, any
+ * transaction id is considered consistent.
+ * 
  * @author "Toomas Römer" <toomas@webmedia.ee>
  */
 public class TransactionHelper implements Serializable {
-  //*******************************************************************
-  // FIELDS
-  //*******************************************************************
+
   private Long currentTransactionId;
+
   private Long nextTransactionId;
+
   private Random random = new Random(System.currentTimeMillis());
-  
-  {
+
+  public TransactionHelper() {
     resetTransactionId();
   }
-  
-  //*******************************************************************
-  // PUBLIC METHODS
-  //*******************************************************************
+
   /**
    * Generates a new current transaction id.
    */
   public void resetTransactionId() {
-    currentTransactionId = nextTransactionId; 
-    nextTransactionId = new Long(random.nextLong());
+    this.currentTransactionId = this.nextTransactionId;
+    this.nextTransactionId = this.random.nextLong();
   }
-  
+
   /**
    * Returns the current transaction id.
    */
   public Object getCurrentTransactionId() {
-    return currentTransactionId;  
+    return currentTransactionId;
   }
-  
+
   public Long getNextTransactionId() {
     return nextTransactionId;
   }
-  
+
   /**
-   * Returns true if current transaction id is null or transactionId 
-   * equals the current transaction id or transactionId has been
-   * overriden.
+   * Returns true if current transaction ID is <code>null</code> or transactionId equals the current transaction ID or
+   * transactionId has been overridden.
    */
   public boolean isConsistent(Object transactionId) {
     if (currentTransactionId == null)
@@ -78,8 +73,7 @@ public class TransactionHelper implements Serializable {
   }
 
   /**
-   * Returns true if current transaction id is null or transactionId does not
-   * equal the current transaction id. 
+   * Returns true if current transaction id is null or transactionId does not equal the current transaction id.
    */
   public boolean isOverride(Object transactionId) {
     return TransactionContext.OVERRIDE_KEY.equals(transactionId);

@@ -16,8 +16,6 @@
 
 package org.araneaframework.http.filter;
 
-import javax.servlet.http.Cookie;
-
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -29,6 +27,11 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
+ * Provides better Aranea support for handling redirects that are called by sub-widgets of this filter. The idea is that
+ * this filter wraps the response object and when a sub-widget invokes redirect, the response wrapper remembers it.
+ * Using that information, this filter knows whether sub-widgets need to be rendered (redirected=false) or not
+ * (redirected=true).
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardRedirectingFilterWidget extends BaseFilterWidget {
@@ -104,16 +107,6 @@ public class StandardRedirectingFilterWidget extends BaseFilterWidget {
     public boolean canRender() {
       int s = this.status;
       return !new IntRange(300, 399).containsInteger(s) && !new IntRange(500, 599).containsInteger(s);
-    }
-
-    @Override
-    public void addCookie(Cookie cookie) {
-      super.addCookie(cookie);
-    }
-
-    @Override
-    public void addHeader(String name, String value) {
-      super.addHeader(name, value);
     }
   }
 }

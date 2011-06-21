@@ -16,8 +16,6 @@
 
 package org.araneaframework.example.main.web.demo.advanced.popup;
 
-import org.araneaframework.example.main.web.demo.simple.NameWidget;
-
 import java.io.Writer;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -30,20 +28,21 @@ import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.message.PopupMessageFactory;
+import org.araneaframework.example.main.web.demo.simple.NameWidget;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.BeanFormWidget;
-import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
+import org.araneaframework.uilib.form.formlist.BeanFormRow;
 import org.araneaframework.uilib.form.formlist.FormListUtil;
 import org.araneaframework.uilib.form.formlist.FormRow;
-import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualFormRowHandler;
+import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualBeanFormRowHandler;
 import org.araneaframework.uilib.list.EditableBeanListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -98,14 +97,14 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  public class PersonEditableRowHandler extends ValidOnlyIndividualFormRowHandler<Long, PersonMO> {
+  public class PersonEditableRowHandler extends ValidOnlyIndividualBeanFormRowHandler<Long, PersonMO> {
 
     public Long getRowKey(PersonMO rowData) {
       return rowData.getId();
     }
 
     @Override
-    public void saveValidRow(FormRow<Long, PersonMO> editableRow) throws Exception {}
+    public void saveValidRow(BeanFormRow<Long, PersonMO> editableRow) throws Exception {}
 
     @Override
     public void deleteRow(Long key) throws Exception {
@@ -115,18 +114,16 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void addValidRow(FormWidget addForm) throws Exception {
-      PersonMO rowData = (((BeanFormWidget<PersonMO>) addForm).writeToBean());
+    public void addValidRow(BeanFormWidget<PersonMO> addForm) throws Exception {
+      PersonMO rowData = addForm.writeToBean();
       getGeneralDAO().add(rowData);
       list.getDataProvider().refreshData();
       formList.resetAddForm();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void initFormRow(FormRow<Long, PersonMO> editableRow, PersonMO rowData) throws Exception {
-      BeanFormWidget<PersonMO> rowForm = (BeanFormWidget<PersonMO>) editableRow.getForm();
+    public void initFormRow(BeanFormRow<Long, PersonMO> editableRow, PersonMO rowData) throws Exception {
+      BeanFormWidget<PersonMO> rowForm = editableRow.getForm();
       addCommonFormFields(rowForm);
 
       FormListUtil.addButtonToRowForm("#", rowForm, new PopupListenerFactory().createListener(rowData, rowForm),
@@ -136,9 +133,8 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void initAddForm(FormWidget addForm) throws Exception {
-      addCommonFormFields((BeanFormWidget<PersonMO>) addForm);
+    public void initAddForm(BeanFormWidget<PersonMO> addForm) throws Exception {
+      addCommonFormFields(addForm);
       FormListUtil.addAddButtonToAddForm("#", formList, addForm);
     }
 
@@ -236,7 +232,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private class TestActionListener extends StandardActionListener {
+  private static class TestActionListener extends StandardActionListener {
 
     @Override
     public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
@@ -250,7 +246,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private class MyHandler implements FlowContext.Handler<String> {
+  private static class MyHandler implements FlowContext.Handler<String> {
 
     private BeanFormWidget<PersonMO> form;
 
@@ -282,7 +278,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   }
 
   public String getTitle() {
-    if (usePopupFlow) {
+    if (this.usePopupFlow) {
       return "Server-side return";
     } else if (useAction) {
       return "Client-side return calling serverside action";

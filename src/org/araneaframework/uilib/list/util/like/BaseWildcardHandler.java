@@ -26,24 +26,25 @@ import java.io.Serializable;
  * @see WildcardHandler
  */
 public abstract class BaseWildcardHandler implements WildcardHandler, Serializable {
-	
-	protected int startsWith;
-	protected int endsWith;
 
-	public void setStartsWith(int startsWith) {
-		this.startsWith = startsWith;
-	}
+  protected int startsWith;
 
-	public void setEndsWith(int endsWith) {
-		this.endsWith = endsWith;
-	}
+  protected int endsWith;
 
-	public int getEndsWith() {
-		return endsWith;
-	}
+  public void setStartsWith(int startsWith) {
+    this.startsWith = startsWith;
+  }
 
-	public int getStartsWith() {
-		return startsWith;
-	}
+  public void setEndsWith(int endsWith) {
+    this.endsWith = endsWith;
+  }
+
+  public int getEndsWith() {
+    return endsWith;
+  }
+
+  public int getStartsWith() {
+    return startsWith;
+  }
 
 }

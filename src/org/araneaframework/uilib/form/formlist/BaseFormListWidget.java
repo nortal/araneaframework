@@ -58,9 +58,9 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
   protected Map<K, FormRow<K, R>> formRows = new LinkedHashMap<K, FormRow<K, R>>();
 
   /**
-   * TODO
+   * The row form counter that is used for creating unique IDs for row forms.
    */
-  protected int rowFormCounter = 0;
+  protected int rowFormCounter;
 
   /**
    * The default value for whether the list row forms are initiated as open by default or not. In the "old times" all
@@ -362,8 +362,8 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
   public boolean isStateChanged() {
     boolean result = false;
     for (FormRow<K, R> formRow : getFormRows().values()) {
-      result = result || formRow.getForm().isStateChanged();
-      if (result) {
+      if (formRow.getForm().isStateChanged()) {
+        result = true;
         break;
       }
     }
@@ -374,8 +374,8 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
   public boolean isDisabled() {
     boolean result = false;
     for (FormRow<K, R> formRow : getFormRows().values()) {
-      result = result && formRow.getForm().isDisabled();
-      if (result) {
+      if (formRow.getForm().isDisabled()) {
+        result = true;
         break;
       }
     }
@@ -425,16 +425,18 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
 
   @Override
   public boolean isValid() {
-    boolean result = super.isValid();
+    boolean valid = super.isValid();
 
-    for (FormRow<K, R> formRow : getFormRows().values()) {
-      result = result && formRow.getForm().isValid();
-      if (!result) {
-        break;
+    if (valid) {
+      for (FormRow<K, R> formRow : getFormRows().values()) {
+        if (!formRow.getForm().isValid()) {
+          valid = false;
+          break;
+        }
       }
     }
 
-    return result;
+    return valid;
   }
 
   // *********************************************************************

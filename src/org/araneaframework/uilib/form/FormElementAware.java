@@ -19,9 +19,16 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 
 /**
+ * An interface for components that mandates that the component is form element dependent and wants a reference to it.
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FormElementAware<C, D> extends Serializable {
 
+  /**
+   * A method to provide <code>FormElementContext</code> to the <code>FormElementAware</code> component.
+   * 
+   * @param feCtx The context of a form element.
+   */
   public void setFormElementCtx(FormElementContext<C, D> feCtx);
 }

@@ -32,7 +32,7 @@ import org.araneaframework.uilib.support.FlowCreator;
  */
 public class MenuItem implements Serializable {
 
-  public static String MENU_PATH_SEPARATOR = ".";
+  public static final String MENU_PATH_SEPARATOR = ".";
 
   /**
    * Label for this menu item.
@@ -252,5 +252,25 @@ public class MenuItem implements Serializable {
 
   public Map<String, MenuItem> getSubMenu() {
     return this.subMenu;
+  }
+
+  /**
+   * Provides the flow class parameter that was provided to this menu item during initialization.
+   * 
+   * @return The flow class of this menu item.
+   * @since 2.0
+   */
+  public Class<? extends Widget> getFlowClass() {
+    return this.flowClass;
+  }
+
+  /**
+   * Provides the flow creator parameter that was provided to this menu item during initialization.
+   * 
+   * @return The flow creator of this menu item.
+   * @since 2.0
+   */
+  public FlowCreator getFlowCreator() {
+    return this.flowCreator;
   }
 }

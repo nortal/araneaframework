@@ -19,8 +19,8 @@ package org.araneaframework.uilib.list.util.like;
 /**
  * Automatic implementation of {@link WildcardHandler}.
  * 
- * Wildcard is added at the start if there was no wildcard at the end
- *   and it is added at the end if there was no wildcard at the start.
+ * Wildcard is added at the start if there was no wildcard at the end and it is added at the end if there was no
+ * wildcard at the start.
  * 
  * @author Rein Raudjärv (rein@araneaframework.org)
  * 

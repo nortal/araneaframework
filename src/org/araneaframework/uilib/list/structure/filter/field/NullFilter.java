@@ -16,9 +16,8 @@
 
 package org.araneaframework.uilib.list.structure.filter.field;
 
-import org.apache.commons.lang.ObjectUtils;
-
 import java.util.Map;
+import org.apache.commons.lang.ObjectUtils;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;

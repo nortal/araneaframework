@@ -18,15 +18,13 @@ package org.araneaframework.uilib.form.constraint;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * This class is a generalization of a constraint that may contain other
- * constraints.
+ * This class is a generalization of a constraint that may contain other constraints.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -38,16 +36,14 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
   protected List<Constraint> constraints = new ArrayList<Constraint>();
 
   /**
-   * An empty constructor that expects other constraints to be added later. Use
-   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
-   * to add constraints.
+   * An empty constructor that expects other constraints to be added later. Use {@link #addConstraint(Constraint)} or
+   * {@link #addConstraints(Collection)} to add constraints.
    */
   public BaseCompositeConstraint() {}
-  
+
   /**
-   * A constructor that requires a constraint to be provided immediately, and
-   * other constraints later. Use {@link #addConstraint(Constraint)} or
-   * {@link #addConstraints(Collection)} to add more constraints.
+   * A constructor that requires a constraint to be provided immediately, and other constraints later. Use
+   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)} to add more constraints.
    * 
    * @param constraint a single constraint.
    * @since 1.0.9
@@ -55,11 +51,10 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
   public BaseCompositeConstraint(Constraint constraint) {
     addConstraint(constraint);
   }
-  
+
   /**
-   * A constructor that lets all constraints be added at once. Use
-   * {@link #addConstraint(Constraint)} or {@link #addConstraints(Collection)}
-   * to add more constraints.
+   * A constructor that lets all constraints be added at once. Use {@link #addConstraint(Constraint)} or
+   * {@link #addConstraints(Collection)} to add more constraints.
    * 
    * @param constraints a collection of {@link Constraint}s.
    * @since 1.0.9
@@ -75,10 +70,10 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
    * @return this composite constraint
    */
   public BaseCompositeConstraint addConstraint(Constraint constraint) {
-    constraints.add(constraint);
+    this.constraints.add(constraint);
     return this;
   }
-  
+
   /**
    * Adds contained constraints from supplied Collection.
    * 
@@ -96,15 +91,14 @@ public abstract class BaseCompositeConstraint extends BaseConstraint {
    * Clears contained constraints.
    */
   public void clearConstraints() {
-    constraints.clear();
+    this.constraints.clear();
   }
 
   @Override
   public void setEnvironment(Environment environment) {
-	super.setEnvironment(environment);
-	for (Iterator<Constraint> i = constraints.iterator(); i.hasNext();) {
-      Constraint c = i.next();
+    super.setEnvironment(environment);
+    for (Constraint c : this.constraints) {
       c.setEnvironment(environment);
-	}
+    }
   }
 }

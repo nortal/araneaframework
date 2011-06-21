@@ -43,7 +43,7 @@ public class IgnoreCaseComparator implements StringComparator, Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    return IgnoreCaseComparator.class.equals(obj.getClass());
+    return obj instanceof IgnoreCaseComparator;
   }
 
   @Override

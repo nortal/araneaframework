@@ -16,13 +16,13 @@
 
 package org.araneaframework.http.widget;
 
-import java.io.Serializable;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
@@ -31,7 +31,7 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
- * Widget that serves content.
+ * Widget that serves downloadable content.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  */
@@ -47,26 +47,59 @@ public class DownloaderWidget extends BaseApplicationWidget {
 
   protected DownloadStreamCallback dataStreamCallback;
 
+  /**
+   * Instantiates widget with download data.
+   * 
+   * @param data The data to be downloaded as bytes.
+   * @param contentType The content type for the bytes.
+   */
   public DownloaderWidget(byte[] data, String contentType) {
     this(new ByteArrayInputStream(data), data.length, contentType);
   }
   
-  /** @since 1.1 */
+  /**
+   * Instantiates widget with download data.
+   * 
+   * @param data The data to be downloaded as bytes.
+   * @param headers Headers to be sent with the downloaded data.
+   * @since 1.1
+   */
   public DownloaderWidget(byte[] data, Map<String, String> headers) {
     this(new ByteArrayInputStream(data), data.length, null, headers);
   }
 
-  /** @since 2.0 */
+  /**
+   * Instantiates widget with download data.
+   * 
+   * @param dataStream The stream pointing to the data to be downloaded.
+   * @param contentType The content type for the data stream.
+   * @since 2.0
+   */
   public DownloaderWidget(InputStream dataStream, String contentType) {
     this(dataStream, -1, contentType);
   }
 
-  /** @since 2.0 */
+  /**
+   * Instantiates widget with download data.
+   * 
+   * @param dataStream The stream pointing to the data to be downloaded.
+   * @param length The (data stream) length information to send with the downloaded data. Specify -1 for no length.
+   * @param contentType The content type for the data stream.
+   * @since 2.0
+   */
   public DownloaderWidget(InputStream dataStream, long length, String contentType) {
     this(dataStream, length, contentType, null);
   }
 
-  /** @since 2.0 */
+  /**
+   * Instantiates widget with download data.
+   * 
+   * @param dataStream The stream pointing to the data to be downloaded.
+   * @param length The (data stream) length information to send with the downloaded data. Specify -1 for no length.
+   * @param contentType The content type for the data stream.
+   * @param headers Headers to be sent with the downloaded data.
+   * @since 2.0
+   */
   public DownloaderWidget(InputStream dataStream, long length, String contentType, Map<String, String> headers) {
     Assert.notNullParam(dataStream, "dataStream");
     this.dataStream = dataStream;
@@ -75,7 +108,12 @@ public class DownloaderWidget extends BaseApplicationWidget {
     this.headers = headers;
   }
 
-  /** @since 2.0 */
+  /**
+   * Instantiates widget with download data. Providing a callback is the best way for sending large files to the client!
+   * 
+   * @param callback The callback that will be called to fetch download data.
+   * @since 2.0
+   */
   public DownloaderWidget(DownloadStreamCallback callback) {
     Assert.notNullParam(callback, "callback");
     this.dataStreamCallback = callback;
@@ -83,17 +121,20 @@ public class DownloaderWidget extends BaseApplicationWidget {
 
   protected InputStream getDataStream() {
     DownloadStreamCallback c = this.dataStreamCallback;
-    return c != null && c.getStreamToDownload() != null ? c.getStreamToDownload() : this.dataStream;
+    InputStream result = c != null ? c.getStreamToDownload() : null;
+    return result != null ? result : this.dataStream;
   }
 
   protected String getContentType() {
     DownloadStreamCallback c = this.dataStreamCallback;
-    return c != null && c.getContentType() != null ? c.getContentType() : this.contentType;
+    String result = c != null ? c.getContentType() : null;
+    return StringUtils.defaultString(result, this.contentType);
   }
 
   protected int getLength() {
     DownloadStreamCallback c = this.dataStreamCallback;
-    return c != null && c.getLength() >= 0 ? c.getLength() : this.length;
+    int result = c != null ? c.getLength() : -1;
+    return result >= 0 ? result : this.length;
   }
 
   protected Map<String, String> getHeaders() {
@@ -106,8 +147,9 @@ public class DownloaderWidget extends BaseApplicationWidget {
     HttpServletResponse response = ServletUtil.getResponse(output);
     beforeFile(response);
 
-    long length = IOUtils.copyLarge(getDataStream(), response.getOutputStream());
-    IOUtils.closeQuietly(getDataStream());
+    InputStream dataStream = getDataStream();
+    long length = IOUtils.copyLarge(dataStream, response.getOutputStream());
+    IOUtils.closeQuietly(dataStream);
 
     afterFile(response, length);
   }
@@ -137,11 +179,16 @@ public class DownloaderWidget extends BaseApplicationWidget {
    * serializable, this callback request the stream only when needed to output it. Therefore, it escapes the
    * serialization step.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 2.0
    */
   public abstract static class DownloadStreamCallback implements Serializable {
 
+    /**
+     * Override this to specify a stream to data to send as the download content.
+     * 
+     * @return The stream for the response content.
+     */
     public abstract InputStream getStreamToDownload();
 
     /**

@@ -43,8 +43,8 @@ public class MultiComparatorExpression implements CompositeComparatorExpression 
     int result = 0;
     for (ComparatorExpression expr : this.children) {
       result = expr.compare(resolver1, resolver2);
-      if (result == 0) {
-        return 0;
+      if (result != 0) {
+        break;
       }
     }
     return result;

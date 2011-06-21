@@ -16,16 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib;
 
-import java.util.HashMap;
-
-import java.util.Map;
-
-import org.araneaframework.core.StandardEnvironment;
-
-import org.araneaframework.Environment;
-
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.jsp.tagext.Tag;
+import org.araneaframework.Environment;
+import org.araneaframework.core.StandardEnvironment;
 
 /**
  * Widget base tag.
@@ -35,7 +31,13 @@ import javax.servlet.jsp.tagext.Tag;
  * @jsp.tag
  *  name = "widget"
  *  body-content = "JSP"
- *  description = "UiLib widget tag.<br/>Makes available following page scope variables:<ul><li><i>widget</i> - UiLib widget view model.</li></ul>"
+ *  description = "Widget tag makes available following page scope variables:<ul>
+ *  <li><i>widget</i> - widget itself.</li>
+ *  <li><i>widgetId</i> - widget ID (not full ID, use '<code>widget.scope</code>' instead).</li>
+ *  <li><i>environment</i> - widget environment.</li>
+ *  <li><i>viewModel</i> - widget <i>view model</i>.</li>
+ *  <li><i>viewData</i> - widget <i>view data</i>.</li>
+ *  </ul>"
  */
 public class WidgetTag extends BaseWidgetTag {
 

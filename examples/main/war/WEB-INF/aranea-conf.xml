@@ -67,8 +67,7 @@
 
 	<!-- Configuration for supporting the usage of state versioning filter -->
 
-	<!--bean class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget" id="araneaStateVersioningFilter" scope="prototype">
-		<property name="maxVersionedStates" value="20" />
-	</bean-->
+	<bean id="araneaStateVersioningFilter" scope="prototype"
+		class="org.araneaframework.http.filter.StandardStateVersioningFilterWidget"/>
 
 </beans>

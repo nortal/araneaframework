@@ -53,6 +53,8 @@ Aranea.Behaviour = {
 
 	ARANEA_BG_VALIDATE: '.aranea-bg-validate',
 
+	ARANEA_NO_BG_VALIDATE: '.aranea-no-bg-validate',
+
 	setFormElementContext: function(element) {
 		element = $(element);
 		if (!element.getStorage().get(Aranea.Behaviour.ATTACHED_FE_CONTEXT)) {
@@ -75,30 +77,32 @@ Aranea.Behaviour = {
 	/** @since 1.1 */
 	setFormElementValidation: function(element) {
 		element = $(element);
-		var b = Aranea.Behaviour;
-		var storage = element.getStorage();
+		var that = Aranea.Behaviour;
+		var globalBgValidate = Aranea.Data.backgroundValidation;
 
-		if (Aranea.Data.backgroundValidation && element.readAttribute(b.ATTR_BG_VALIDATE) != 'false'
-			|| element.hasClassName(b.ATTR_BG_VALIDATE) && !storage.get(b.ATTACHED_VALIDATE)) {
+		if (!element.getStorage().get(that.ATTACHED_VALIDATE)
+			&& (globalBgValidate && !element.match(that.ARANEA_NO_BG_VALIDATE)
+			|| !globalBgValidate &&  element.match(that.ARANEA_BG_VALIDATE))) {
 
-			element.observe('change', Aranea.Behaviour.formElementValidationActionCall);
-			storage.set(b.ATTACHED_VALIDATE, true);
+			element.observe('change', that.formElementValidationActionCall);
+			element.getStorage().set(that.ATTACHED_VALIDATE, true);
 		}
 	},
 
 	setCloningUrl: function(element) {
 		element = $(element);
-		if (String.blank(element.readAttribute('href')) || element.getStorage().get(Aranea.Behaviour.ATTACHED_URL)) {
+		if (!element.readAttribute('href') || element.getStorage().get(Aranea.Behaviour.ATTACHED_URL)) {
 			return;
 		}
 
-		var eventId = Aranea.Page.Parameter.getEventId(element);
-		var eventParam = Aranea.Page.Parameter.getEventParam(element);
-		var eventTarget = Aranea.Page.Parameter.getEventTarget(element);
-
+		var eventId = Aranea.Page.Form.getEventId(element);
+		var eventParam = Aranea.Page.Form.getEventParam(element);
+		var eventTarget = Aranea.Page.Form.getEventTarget(element);
+		
 		var params = {
 			araPleaseClone: true,
-			araThreadServiceId: 'override'
+			araThreadServiceId : Aranea.Page.Form.getThreadServiceId(null),
+			araTransactionId: 'override'
 		};
 		if (eventId) {
 			params.araWidgetEventHandler = eventId;
@@ -135,7 +139,7 @@ Aranea.Behaviour = {
 
 	characterFilterInputMonitor: function(input) {
 		if (!(input = $(input))) return;
-		var filter = input.readAttribute('arn-charFilter')
+		var filter = input.readAttribute('arn-charFilter');
 		var value = $F(input);
 		if (value == null) return;
 		for (var i = 0; i < value.length; i++) {
@@ -163,25 +167,19 @@ Aranea.Behaviour = {
 
 	apply: function() {
 		Aranea.Logger.debug('Applying behaviour rules to form elements...');
-		$$(Aranea.Behaviour.ARANEA_LINK).each(function(el) {
+		$$(Aranea.Behaviour.ARANEA_LINKS).each(function(el) {
 			Aranea.Behaviour.setCloningUrl(el);
-		});
-
-		$$(Aranea.Behaviour.ARANEA_BG_VALIDATE).each(function(el) {
-			Aranea.Behaviour.setFormElementValidation(el);
 		});
 
 		$$(Aranea.Behaviour.ARANEA_INPUT).each(function(el) {
 			Aranea.Behaviour.applyCharacterFilter(el);
 			Aranea.Behaviour.setFormElementContext(el);
+			Aranea.Behaviour.setFormElementValidation(el);
 		});
 
-		$$(Aranea.Behaviour.ARANA_INPUT_OTHER).each(function(el) {
+		$$(Aranea.Behaviour.ARANEA_INPUT_OTHER).each(function(el) {
 			Aranea.Behaviour.setFormElementContext(el);
-		});
-
-		$$(Aranea.Behaviour.ARANEA_FILE_UPLOAD).each(function(el) {
-			Aranea.Behaviour.setFormElementContext(el);
+			Aranea.Behaviour.setFormElementValidation(el);
 		});
 	},
 
@@ -193,11 +191,12 @@ Aranea.Behaviour = {
 	 */
 	getAutoCompleteURL: function(name) {
 		return Aranea.Page.getSubmitURL({
-			araTopServiceId: Aranea.Page.Parameter.getTopServiceId(Aranea.Data.systemForm),
-			araThreadServiceId: Aranea.Page.Parameter.getThreadServiceId(Aranea.Data.systemForm),
-			araTransactonId: Aranea.Page.Parameter.getTransactionId(Aranea.Data.systemForm),
+			araTopServiceId: Aranea.Page.Form.getTopServiceId(),
+			araThreadServiceId: Aranea.Page.Form.getThreadServiceId(),
+			araTransactonId: Aranea.Page.Form.getTransactionId(),
 			araServiceActionPath: name,
-			araServiceActionHandler: 'autocomplete'
+			araServiceActionHandler: 'autocomplete',
+			araClientStateId: null
 		});
 	},
 
@@ -213,15 +212,17 @@ Aranea.Behaviour = {
 		if (eventType && !options.afterUpdateElement) {
 			options = Object.extend(options, {
 				afterUpdateElement: function(el, selectedEl) {
-					Aranea.Page.event(eventType, name, null, null, updateRegions);
+					if (Aranea.UI.isChanged(name) && !$('ACdiv.' + name).visible()) {
+						Aranea.Page.event(eventType, name, null, null, updateRegions);
+					}
 				}
 			});
 		}
 
 		var init = function(event) {
 			if (!$(name) || $(name).getStorage().get('autocompleteSetupDone')) {
-				Event.stopObserving(this, 'aranea:loaded', this);
-				Event.stopObserving(this, 'aranea:updated', this);
+				document.stopObserving('aranea:loaded', this);
+				document.stopObserving('aranea:updated', this);
 				return;
 			}
 

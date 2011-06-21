@@ -18,38 +18,27 @@ package org.araneaframework.jsp.tag.uilib.form;
 
 import java.io.Writer;
 
-
-
 /**
- * Standard form element label tag. Renders localizable label bound to form element 
- * with HTML <code>&lt;span&gt;</code> and <code>&lt;label&gt;</code> tags.
+ * Standard form element label tag. Renders localizable label bound to form element with HTML <code>&lt;span&gt;</code>
+ * and <code>&lt;label&gt;</code> tags.
  * 
  * @author Oleg Mürk
  * 
  * @jsp.tag
- *   name = "label"
- *   body-content = "JSP"
- *   description = "Represents localizable label that is bound to a form element."
+ *  name = "label"
+ *  body-content = "JSP"
+ *  description = "Represents localizable label that is bound to a form element."
  */
 public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);    
-    FormSimpleLabelHtmlTag.writeLabel(
-        out, 
-        localizedLabel, 
-        (formElementViewModel.isMandatory() && showMandatory), 
-        getStyleClass(),
-        derivedId,
-        pageContext,
-        showColon,
-        accessKey, getStyle()
-    );
+    super.doStartTag(out);
 
-    return EVAL_BODY_INCLUDE;    
+    FormSimpleLabelHtmlTag.writeLabel(out, this.localizedLabel,
+        (this.formElementViewModel.isMandatory() && this.showMandatory), getStyleClass(), this.derivedId,
+        this.pageContext, this.showColon, this.accessKey, getStyle());
+
+    return EVAL_BODY_INCLUDE;
   }
 }
-
-
-
-

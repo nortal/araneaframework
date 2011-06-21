@@ -28,12 +28,10 @@ import org.araneaframework.OutputData;
  * implement {@link #processAction(String, String[], InputData, OutputData)} to implement their own
  * action handling.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public abstract class MultiParamActionListener implements ActionListener {
-
-  private static final long serialVersionUID = 1L;
 
   /**
    * This method is marked final. Subclasses should implement

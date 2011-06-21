@@ -55,7 +55,7 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
     this.editableRows.put(1L, new DataDTO(1L, Boolean.TRUE, 10L, "12313"));
     this.editableRows.put(2L, new DataDTO(2L, Boolean.FALSE, 123L, "werwer"));
     this.editableRows.put(3L, new DataDTO(3L, Boolean.TRUE, 10L, "adfhadfh"));
-    this.lastId = new Long(3);
+    this.lastId = 3L;
   }
 
   /**
@@ -87,8 +87,8 @@ public class DemoDisplayableEditableList extends TemplateBaseWidget {
 
       addCommonFormFields(rowForm);
 
-      FormListUtil.addEditSaveButtonToRowForm("#", formListWidget, rowForm, getRowKey(row));
-      FormListUtil.addDeleteButtonToRowForm("#", formListWidget, rowForm, getRowKey(row));
+      FormListUtil.addEditSaveButtonToRowForm("#", editableRow);
+      FormListUtil.addDeleteButtonToRowForm("#", editableRow);
 
       rowForm.readFromBean(row);
     }

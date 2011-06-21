@@ -16,14 +16,11 @@
 
 package org.araneaframework.uilib.list.util;
 
-import java.sql.Time;
-
-import java.util.Date;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
 import java.sql.Timestamp;
-import org.apache.commons.lang.Validate;
+import java.util.Date;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;
@@ -32,13 +29,15 @@ import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.constraint.AndConstraint;
 import org.araneaframework.uilib.form.constraint.BaseCompositeConstraint;
-import org.araneaframework.uilib.form.control.FloatControl;
+import org.araneaframework.uilib.form.constraint.DateRangeConstraint;
 import org.araneaframework.uilib.form.control.CheckboxControl;
 import org.araneaframework.uilib.form.control.DateControl;
 import org.araneaframework.uilib.form.control.DateTimeControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.NumberControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.control.TimeControl;
+import org.araneaframework.uilib.form.data.DateData;
 
 /**
  * Form utils.
@@ -59,38 +58,40 @@ public class FormUtil {
 
   @SuppressWarnings("unchecked")
   public static <T> Control<? super T> createControl(Class<T> type) {
-    Validate.notNull(type);
+    Assert.notNullParam(type, "type");
 
-    if (String.class.equals(type)) {
-      return (Control<? super T>) createTextControl();
-    } else if (Number.class.isAssignableFrom(type)) {
+    Control<?> result = null;
 
-      if (BigDecimal.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createFloatControl();
+    if (Number.class.isAssignableFrom(type)) {
+
+      if (BigInteger.class.isAssignableFrom(type) || Long.class == type || Integer.class == type || Short.class == type
+          || Byte.class == type) {
+        result = createNumberControl();
+
+      } else {
+        result = createFloatControl();
       }
-
-      if (BigInteger.class.isAssignableFrom(type) || Long.class.equals(type) || Integer.class.equals(type)
-          || Short.class.equals(type) || Byte.class.equals(type)) {
-        return (Control<? super T>) createNumberControl();
-      }
-
-      return (Control<? super T>) createFloatControl();
 
     } else if (Date.class.isAssignableFrom(type)) {
-      if (Date.class.equals(type) || java.sql.Date.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createDateControl();
+
+      if (Date.class.isAssignableFrom(type) || java.sql.Date.class.isAssignableFrom(type)) {
+        result = createDateControl();
+
+      } else if (Time.class.isAssignableFrom(type)) {
+        result = createTimeControl();
+
+      } else if (Timestamp.class.isAssignableFrom(type)) {
+        result = createDateTimeControl();
       }
-      if (Time.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createTimeControl();
-      }
-      if (java.sql.Timestamp.class.isAssignableFrom(type)) {
-        return (Control<? super T>) createDateTimeControl();
-      }
-    } else if (Boolean.class.equals(type)) {
-      return (Control<? super T>) createCheckboxControl();
+
+    } else if (Boolean.class == type) {
+      result = createCheckboxControl();
+
+    } else {
+      result = createTextControl();
     }
 
-    return (Control<? super T>) createTextControl();
+    return (Control<? super T>) result;
   }
 
   public static Control<String> createTextControl() {
@@ -176,4 +177,64 @@ public class FormUtil {
     }
   }
 
+  /**
+   * Adds date range elements to given form. A constraint will be associated with the range end element making sure that
+   * the end value is not less than the range start value. Both elements will be non-mandatory.
+   * 
+   * @param form Form where range elements will be added.
+   * @param prefix The common ID prefix for range elements.
+   * @param startSuffix ID suffix for the range start element.
+   * @param endSuffix ID suffix for the range end element.
+   * @param label Common label for range elements.
+   * @param allowEquals Whether equal dates are allowed.
+   * @since 2.0
+   */
+  public static void addDateRangeElements(FormWidget form, String prefix, String startSuffix, String endSuffix,
+      String label, boolean allowEquals) {
+    FormElement<Timestamp, Date> startEl = form.addElement(prefix + startSuffix, label, new DateControl(),
+        new DateData());
+    FormElement<Timestamp, Date> endEl = form.addElement(prefix + endSuffix, label, new DateControl(), new DateData());
+    endEl.setConstraint(new DateRangeConstraint(startEl, endEl, allowEquals));
+  }
+
+  /**
+   * Adds time range elements to given form. A constraint will be associated with the range end element making sure that
+   * the end value is not less than the range start value. Both elements will be non-mandatory.
+   * 
+   * @param form Form where range elements will be added.
+   * @param prefix The common ID prefix for range elements.
+   * @param startSuffix ID suffix for the range start element.
+   * @param endSuffix ID suffix for the range end element.
+   * @param label Common label for range elements.
+   * @param allowEquals Whether equal times are allowed.
+   * @since 2.0
+   */
+  public static void addTimeRangeElements(FormWidget form, String prefix, String startSuffix, String endSuffix,
+      String label, boolean allowEquals) {
+    FormElement<Timestamp, Date> startEl = form.addElement(prefix + startSuffix, label, new TimeControl(),
+        new DateData());
+    FormElement<Timestamp, Date> endEl = form.addElement(prefix + endSuffix, label, new TimeControl(), new DateData());
+    endEl.setConstraint(new DateRangeConstraint(startEl, endEl, allowEquals));
+  }
+
+  /**
+   * Adds date-time range elements to given form. A constraint will be associated with the range end element making sure
+   * that the end value is not less than the range start value. Both elements will be non-mandatory.
+   * 
+   * @param form Form where range elements will be added.
+   * @param prefix The common ID prefix for range elements.
+   * @param startSuffix ID suffix for the range start element.
+   * @param endSuffix ID suffix for the range end element.
+   * @param label Common label for range elements.
+   * @param allowEquals Whether equal times are allowed.
+   * @since 2.0
+   */
+  public static void addDateTimeRangeElements(FormWidget form, String prefix, String startSuffix, String endSuffix,
+      String label, boolean allowEquals) {
+    FormElement<Timestamp, Date> startElem = form.addElement(prefix + startSuffix, label, new DateTimeControl(),
+        new DateData());
+    FormElement<Timestamp, Date> endElem = form.addElement(prefix + endSuffix, label, new DateTimeControl(),
+        new DateData());
+    endElem.setConstraint(new DateRangeConstraint(startElem, endElem, allowEquals));
+  }
 }

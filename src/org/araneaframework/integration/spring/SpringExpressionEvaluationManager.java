@@ -34,7 +34,6 @@ import org.springframework.web.util.ExpressionEvaluationUtils;
  */
 public class SpringExpressionEvaluationManager implements ExpressionEvaluationManager {
 
-  @SuppressWarnings("unchecked")
   public <T> T evaluate(String attributeName, String attributeValue, Class<T> classObject, PageContext pageContext)
       throws JspException {
 
@@ -44,23 +43,23 @@ public class SpringExpressionEvaluationManager implements ExpressionEvaluationMa
       return null;
 
     } else if (String.class.equals(classObject)) {
-      return (T) ExpressionEvaluationUtils.evaluateString(attributeName, attributeValue, pageContext);
+      return classObject.cast(ExpressionEvaluationUtils.evaluateString(attributeName, attributeValue, pageContext));
 
     } else if (Boolean.class.equals(classObject)) {
-      return (T) Boolean.valueOf(ExpressionEvaluationUtils.evaluateBoolean(attributeName, attributeValue, pageContext));
+      return classObject.cast(ExpressionEvaluationUtils.evaluateBoolean(attributeName, attributeValue, pageContext));
 
     } else if (Integer.class.equals(classObject)) {
-      return (T) new Integer(ExpressionEvaluationUtils.evaluateInteger(attributeName, attributeValue, pageContext));
+      return classObject.cast(ExpressionEvaluationUtils.evaluateInteger(attributeName, attributeValue, pageContext));
 
     } else if (ExpressionEvaluationUtils.isExpressionLanguage(attributeValue)) {
-      return (T) ExpressionEvaluationUtils.evaluate(attributeName, attributeValue, classObject, pageContext);
+      return classObject.cast(ExpressionEvaluationUtils.evaluate(attributeName, attributeValue, classObject, pageContext));
 
     } else if (Object.class.equals(classObject)) {
-      return (T) ObjectUtils.toString(attributeValue);
+      return classObject.cast(ObjectUtils.toString(attributeValue));
 
     } else {
       try {
-        return (T) ConstructorUtils.invokeExactConstructor(classObject, attributeValue);
+        return classObject.cast(ConstructorUtils.invokeExactConstructor(classObject, attributeValue));
       } catch (Exception e) {
         throw new JspException("Error while changing the type of a JSP tag attribute value.", e);
       }

@@ -20,23 +20,24 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
- * An implementation of <code>OnClickEventListener</code> that does not
- * require to be sublassed, but instead allows registering a
- * <code>handleEvent*()</code> method of given widget that will be called when
- * the click occurs.
+ * An implementation of <code>OnClickEventListener</code> that does not require to be sublassed, but instead allows
+ * registering a <code>handleEvent*()</code> method of given widget that will be called when the click occurs.
  * <p>
  * It is quite easy to use compared to usual {@link OnClickEventListener}:
  * 
- * <pre><code>
+ * <code>
+ * <pre>
  * control.addOnClickEventListener(new OnClickEventListener(this, &quot;magic&quot;));
  * ...
  * public void handleEventMagic() throws Exception {
  *   ...
  * }
- * </code></pre>
+ * </pre>
+ * </code>
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @see ProxyOnChangeEventListener
+ * @see ProxiedHandlerUtil
  */
 public class ProxyOnClickEventListener implements OnClickEventListener {
 
@@ -46,23 +47,14 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
   protected Widget eventTarget;
 
   /**
-   * The name of the event handler that will be invoked. The target widget is
-   * expected to have a method like this:
-   * 
-   * <pre><code>
-   * public void handleEvent[eventId](String param) throws Exception
-   * </code></pre>
+   * The name of the event ID for which handlers will be invoked.
    */
   protected String eventId;
 
   /**
-   * A constructor that initializes the event listener with the given target
-   * widget (<code>eventTarget</code>) and event handler name (<code>eventId</code>).
-   * The target widget is expected to have a method like this:
-   * 
-   * <pre><code>
-   * public void handleEvent[eventId](String param) throws Exception
-   * </code></pre>
+   * A constructor that initializes the event listener with the given target widget (<code>eventTarget</code>) and event
+   * handler name (<code>eventId</code>).  The target widget is expected to have a standard event handling methods. See
+   * {@link ProxiedHandlerUtil} for list of all kinds of supported method signatures.
    * 
    * @param eventTarget The widget that contains the event handling method.
    * @param eventId The name of the event handler.
@@ -73,7 +65,7 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
   }
 
   public void onClick() throws Exception {
-    ProxiedHandlerUtil.invokeEventHandler(eventId, null, eventTarget);
+    ProxiedHandlerUtil.invokeEventHandler(this.eventId, null, this.eventTarget);
   }
 
 }

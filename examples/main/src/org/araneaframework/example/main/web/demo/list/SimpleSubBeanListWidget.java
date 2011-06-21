@@ -67,7 +67,7 @@ public class SimpleSubBeanListWidget extends TemplateBaseWidget {
 
     private ContactMO contact(String firstname, String lastname, String country, String city) {
       ContactMO contact = new ContactMO();
-      contact.setId(new Long(++this.lastId));
+      contact.setId(++this.lastId);
       contact.setName(name(firstname, lastname));
       contact.setAddress(address(country, city));
       return contact;

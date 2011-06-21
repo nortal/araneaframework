@@ -16,15 +16,13 @@
 
 package org.araneaframework.jsp.tag;
 
-import java.util.LinkedList;
-
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.PageContext;
-import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
@@ -32,22 +30,21 @@ import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ConfirmationContext;
+import org.araneaframework.framework.OverlayContext;
+import org.araneaframework.http.PopupServiceInfo;
+import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.UpdateRegionContext;
+import org.araneaframework.http.filter.StandardPopupFilterWidget;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.jsp.exception.AraneaJspException;
-import org.araneaframework.jsp.tag.uilib.form.FormElementTag;
-import org.araneaframework.jsp.tag.uilib.form.FormTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
-import org.araneaframework.uilib.form.FormElement;
-import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Contains commons function to simplify tags logic.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
 public class AraneaJspFunctions {
@@ -120,14 +117,7 @@ public class AraneaJspFunctions {
   }
 
   public static String evalCSSClass(String baseClass, String styleClass) {
-    StringBuffer result = new StringBuffer(StringUtils.defaultIfEmpty(baseClass, ""));
-    if (!StringUtils.isBlank(styleClass)) {
-      if (result.length() > 0) {
-        result.append(' ');
-      }
-      result.append(styleClass);
-    }
-    return result.toString();
+    return PresentationTag.calculateStyleClass(baseClass, styleClass);
   }
 
   @SuppressWarnings("unchecked")
@@ -204,8 +194,8 @@ public class AraneaJspFunctions {
     return JspUtil.getFormActionURL(jspContext);
   }
 
-  public static boolean isOverlay(JspContext jspContext) {
-    return JspUtil.hasOverlayMarker(jspContext);
+  public static OverlayContext getOverlayContext(JspContext jspContext) {
+    return JspUtil.getEnvironment(jspContext).getEntry(OverlayContext.class);
   }
 
   public static Set<Entry<String, String>> getHiddenFormFields(JspContext jspContext) {
@@ -217,33 +207,12 @@ public class AraneaJspFunctions {
     return ConfigurationUtil.isBackgroundFormValidationEnabled(w.getEnvironment());
   }
 
-  @SuppressWarnings("unchecked")
-  public static void markFormElementRendered(JspContext jspContext) {
-    FormWidget form = (FormWidget) jspContext.getAttribute(FormTag.FORM_KEY, PageContext.REQUEST_SCOPE);
-    String id = (String) jspContext.getAttribute(FormElementTag.ID_KEY, PageContext.REQUEST_SCOPE);
-
-    try {
-      ((FormElement) JspWidgetUtil.traverseToSubWidget(form, id)).rendered();
-    } catch (AraneaJspException e) {
-      ExceptionUtil.uncheckException(e);
+  public static Map<String, PopupServiceInfo> getPopupEntries(JspContext jspContext) {
+    PopupWindowContext popupContext = JspUtil.getEnvironment(jspContext).getEntry(PopupWindowContext.class);
+    Map<String, PopupServiceInfo> popups = popupContext.getPopups();
+    for (String popupId : popups.keySet()) {
+      ((StandardPopupFilterWidget) popupContext).renderPopup(popupId);
     }
-  }
-
-  @SuppressWarnings("unchecked")
-  public static String renderFormElementErrorMessages(JspContext jspContext) {
-    FormWidget form = (FormWidget) jspContext.getAttribute(FormTag.FORM_KEY, PageContext.REQUEST_SCOPE);
-    String id = (String) jspContext.getAttribute(FormElementTag.ID_KEY, PageContext.REQUEST_SCOPE);
-    String result = null;
-
-    try {
-      FormElement element = (FormElement) JspWidgetUtil.traverseToSubWidget(form, id);
-      FormElement.ViewModel vm = (FormElement.ViewModel) jspContext.getAttribute(FormElementTag.VIEW_MODEL_KEY,
-          PageContext.REQUEST_SCOPE);
-      result = vm.getFormElementValidationErrorRenderer().getClientRenderText(element);
-    } catch (AraneaJspException e) {
-      ExceptionUtil.uncheckException(e);
-    }
-
-    return result;
+    return popups;
   }
 }

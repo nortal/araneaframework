@@ -16,13 +16,10 @@
 
 package org.araneaframework.uilib.form.formlist;
 
-import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
-
-import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
-
-import org.araneaframework.uilib.form.formlist.model.ListFormListModel;
-
 import org.araneaframework.uilib.form.FormWidget;
+import org.araneaframework.uilib.form.formlist.model.ListFormListModel;
+import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;
+import org.araneaframework.uilib.form.formlist.model.MapFormListModel;
 
 /**
  * Editable rows widget that is used to handle simultaneous editing of multiple forms with same structure.

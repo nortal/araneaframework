@@ -21,8 +21,8 @@ import org.araneaframework.uilib.form.converter.BaseConverter;
 
 /**
  * Form data converter interface, for converting from one data type to another. See {@link BaseConverter} for
- * description of {@link Converter} purpose in forms. The generic <code>C</code> is the source data type, and the generic
- * <code>D</code> is the target data type after conversion.
+ * description of {@link Converter} purpose in forms. The generic <code>C</code> is the source data type, and the
+ * generic <code>D</code> is the target data type after conversion.
  */
 public interface Converter<C,D> extends Serializable, FormElementAware<C,D> {
 

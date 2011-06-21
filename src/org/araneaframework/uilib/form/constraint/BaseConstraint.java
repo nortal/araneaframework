@@ -17,13 +17,13 @@
 package org.araneaframework.uilib.form.constraint;
 
 import java.io.Serializable;
-
-import org.apache.commons.collections.CollectionUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.Environment;
+import org.araneaframework.framework.MessageContext.MessageData;
+import org.araneaframework.framework.filter.StandardMessagingFilterWidget.StandardMessageData;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.form.Constraint;
@@ -39,7 +39,7 @@ public abstract class BaseConstraint implements Serializable, Constraint {
 
   private Environment environment;
 
-  private Set<String> errors;
+  private Set<MessageData> errors;
 
   /**
    * Holds the custom error message for this constraint.
@@ -67,13 +67,13 @@ public abstract class BaseConstraint implements Serializable, Constraint {
    * Returns whether the constraint is satisfied/valid. Constraint is valid when no validation errors were produced.
    */
   public boolean isValid() {
-    // XXX: should it throw NotValidatedYetException if called before validation
     return CollectionUtils.isEmpty(this.errors);
   }
 
-  public Set<String> getErrors() {
-    if (this.errors == null)
-      this.errors = new HashSet<String>();
+  public Set<MessageData> getErrors() {
+    if (this.errors == null) {
+      this.errors = new HashSet<MessageData>();
+    }
     return this.errors;
   }
 
@@ -110,8 +110,8 @@ public abstract class BaseConstraint implements Serializable, Constraint {
    * 
    * @param error an error message
    */
-  protected void addError(String error) {
-    getErrors().add(error);
+  protected void addError(String error, Object... params) {
+    getErrors().add(new StandardMessageData(error, params));
   }
 
   /**
@@ -119,7 +119,7 @@ public abstract class BaseConstraint implements Serializable, Constraint {
    * 
    * @param errorList A list of error messages (<code>String</code>s).
    */
-  protected void addErrors(Collection<String> errorList) {
+  protected void addErrors(Collection<MessageData> errorList) {
     getErrors().addAll(errorList);
   }
 

@@ -40,17 +40,9 @@ public abstract class RangeFilter extends BaseRangeFilter {
 
     Class<?> type = ctx.getFieldType(fieldId);
     if (java.util.Date.class.equals(type) || java.sql.Date.class.isAssignableFrom(type)) {
-      if (ctx.isStrict()) {
-        filter = new DateStrict();
-      } else {
-        filter = new DateNonStrict();
-      }
+      filter = ctx.isStrict() ? new DateStrict() : new DateNonStrict();
     } else {
-      if (ctx.isStrict()) {
-        filter = new Strict();
-      } else {
-        filter = new NonStrict();
-      }
+      filter = ctx.isStrict() ? new Strict() : new NonStrict();
     }
 
     filter.setFieldId(fieldId);

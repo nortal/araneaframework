@@ -16,13 +16,11 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.araneaframework.uilib.support.UiLibMessages;
-
 import org.araneaframework.uilib.event.OnChangeEventListener;
-
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.form.FormElementContext;
 import org.araneaframework.uilib.support.DataType;
+import org.araneaframework.uilib.support.UiLibMessages;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
@@ -32,7 +30,7 @@ import org.joda.time.MutableDateTime;
  * 
  * The functionality basically extends {@link DateTimeControl} for compatibility without adding any special features.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class JodaDateTimeControl extends BaseControl<DateTime> {
@@ -178,7 +176,7 @@ public class JodaDateTimeControl extends BaseControl<DateTime> {
 
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
+    if (isMandatory() && this.value == null) {
       addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
     }
   }

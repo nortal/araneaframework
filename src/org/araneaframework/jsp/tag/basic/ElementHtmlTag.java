@@ -37,9 +37,9 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
 
   public static final String KEY = ElementHtmlTag.class.getName() + ".KEY";
 
-  protected String name = null;
-
   protected Map<String, Object> attributes = new HashMap<String, Object>();
+
+  protected String name;
 
   protected boolean hasContent;
 
@@ -93,12 +93,12 @@ public class ElementHtmlTag extends BaseTag implements AttributedTagInterface {
   protected void onContent(Writer out) throws Exception {
     if (this.renderTag) {
       this.hasContent = true;
-      JspUtil.writeAttributes(out, this.attributes);
+      JspUtil.writeAttributesForced(out, this.attributes);
       JspUtil.writeCloseStartTag_SS(out);
     }
   }
 
-  public void addAttribute(String name, String value) throws JspException {
+  public void addAttribute(String name, String value) {
     value = evaluate("value", value, String.class);
     this.attributes.put(name, value);
   }

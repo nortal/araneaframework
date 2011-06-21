@@ -16,25 +16,21 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.Path;
-
-import java.util.StringTokenizer;
-
-import org.araneaframework.backend.util.BeanUtil;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.araneaframework.uilib.form.control.ButtonControl;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
+import org.araneaframework.Path;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.uilib.InvalidFormElementNameException;
+import org.araneaframework.uilib.form.control.ButtonControl;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.list.util.NestedFormUtil;
 import org.araneaframework.uilib.util.NameUtil;
@@ -64,7 +60,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
 
   @Override
   public void clearErrors() {
-    getMessageCtx().hideMessages(MessageContext.ERROR_TYPE, getErrors());
+    getMessageCtx().hideMessagesData(MessageContext.ERROR_TYPE, getErrors());
     super.clearErrors();
     for (GenericFormElement element : getElements().values()) {
       element.clearErrors();
@@ -105,7 +101,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
 
     // form is now the actual form to add element into:
     FormWidget form = NestedFormUtil.getDeepestForm(afterId, this);
-    afterId = NameUtil.getLastName(afterId);
+    afterId = NameUtil.getShortestSuffix(afterId);
 
     form.addFlatElement(id, element, afterId, false);
   }
@@ -129,8 +125,12 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   private void addFlatElement(String id, GenericFormElement element, String existingId, boolean before) {
-    Assert.notEmptyParam(id, "id");
     Assert.notNullParam(element, "element");
+    Assert.notEmptyParam(id, "id");
+    Assert.notEmptyParam(existingId, "existingId");
+
+    Assert.isTrue(id.indexOf(Path.SEPARATOR) == -1,
+        "addFlatElement() method does not accept nested 'id': '" + id + "'!");
     Assert.isTrue(existingId.indexOf(Path.SEPARATOR) == -1,
         "addFlatElement() method does not accept nested 'exstingId': '" + existingId + "'!");
 
@@ -282,7 +282,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
   public FormWidget addSubForm(String path) {
     FormWidget result = this;
 
-    if (!StringUtils.isEmpty(path)) {
+    if (StringUtils.isNotEmpty(path)) {
       StringTokenizer tokens = new StringTokenizer(path, BeanUtil.NESTED_DELIM);
 
       while (tokens.hasMoreTokens()) {
@@ -290,11 +290,11 @@ public class FormWidget extends GenericFormElement implements FormContext {
         FormWidget subForm = result.getSubFormByFullName(subFormId);
 
         if (subForm == null) {
-          result = new FormWidget();
-          addElement(subFormId, result);
-        } else {
-          result = subForm;
+          subForm = new FormWidget();
+          result.addElement(subFormId, subForm);
         }
+
+        result = subForm;
       }
     }
 
@@ -443,30 +443,24 @@ public class FormWidget extends GenericFormElement implements FormContext {
   // *********************************************************************
 
   /**
-   * Returns form element specified by full name.
+   * Returns form element specified by full name, or <code>null</code> when it's not found.
    * 
    * @param fullName The full dot-separated name of the form element.
-   * @return form element specified by full name.
+   * @return The form element specified by full name, or <code>null</code> when it's not found.
    */
   public GenericFormElement getGenericElementByFullName(String fullName) {
     Assert.notEmptyParam(fullName, "fullName");
 
-    GenericFormElement result = null;
+    String targetElementName = NameUtil.getShortestSuffix(fullName);
+    String intermediateElementNames = NameUtil.getLongestPrefix(fullName);
 
-    String currentElementName = NameUtil.getNamePrefix(fullName);
-    String nextElementNames = NameUtil.getNameSuffix(fullName);
+    FormWidget intermediate = this;
 
-    if (nextElementNames == null) {
-      result = getElement(currentElementName);
-    } else {
-      FormWidget nextElement = (FormWidget) getElement(currentElementName);
-
-      if (nextElement != null) {
-        result = nextElement.getGenericElementByFullName(nextElementNames);
-      }
+    if (intermediateElementNames != null) {
+      intermediate = intermediate.getSubFormByFullName(intermediateElementNames);
     }
 
-    return result;
+    return intermediate == null ? null : intermediate.getElement(targetElementName);
   }
 
   /**
@@ -481,20 +475,22 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   /**
-   * Returns simple form element specified by full name.
+   * Returns a simple sub-form widget specified by full name, or <code>null</code> when it's not found (or is not a
+   * {@link FormWidget}).
    * 
    * @param fullName The full dot-separated name of the form element.
-   * @return simple form element specified by full name.
+   * @return Simple sub-form element specified by full name, or <code>null</code> when it's not found.
    */
   public FormWidget getSubFormByFullName(String fullName) {
-    return (FormWidget) getGenericElementByFullName(fullName);
+    GenericFormElement element = getGenericElementByFullName(fullName);
+    return element instanceof FormWidget ? (FormWidget) element : null;
   }
 
   /**
-   * Returns composite form element specified by full name.
+   * Returns form element control specified by form element full name, or <code>null</code> when it's not found.
    * 
    * @param fullName The full dot-separated name of the form element.
-   * @return composite form element specified by full name.
+   * @return Form element control specified by full name, or <code>null</code> when it's not found.
    */
   public Control<?> getControlByFullName(String fullName) {
     FormElement<?, ?> el = getElementByFullName(fullName);
@@ -502,10 +498,10 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   /**
-   * Returns form element value specified by full name.
+   * Returns form element value specified by full name, or <code>null</code> when form element is not found.
    * 
    * @param fullName The full dot-separated name of the form element.
-   * @return form element value specified by full name.
+   * @return form element value specified by full name, or <code>null</code>.
    */
   public Object getValueByFullName(String fullName) {
     FormElement<?, ?> el = getElementByFullName(fullName);
@@ -528,9 +524,9 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   @Override
-  public void addError(String error) {
+  public void addError(MessageData error) {
     super.addError(error);
-    getMessageCtx().showErrorMessage(error);
+    getMessageCtx().showMessage(MessageContext.ERROR_TYPE, error);
   }
 
   /**
@@ -555,13 +551,30 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public class ViewModel extends GenericFormElement.ViewModel {
 
+    private boolean valid;
+
+    
+    public ViewModel() {
+      this.valid = FormWidget.this.isValid();
+    }
+
     /**
      * Returns the <code>Map</code> with element views.
      * 
      * @return the <code>Map</code> with element views.
      */
-    public Map<Object, Component> getElements() {
+    public Map<String, Component> getElements() {
       return getChildren();
+    }
+
+    /**
+     * Returns whether the form widget is valid.
+     * 
+     * @return A Boolean that is <code>true</code> when the form is valid.
+     * @since 2.0
+     */
+    public boolean isValid() {
+      return this.valid;
     }
   }
 }

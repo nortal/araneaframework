@@ -16,11 +16,9 @@
 
 package org.araneaframework.uilib.list.util;
 
-import org.araneaframework.backend.util.BeanUtil;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
+import org.apache.commons.lang.StringUtils;
+import org.araneaframework.backend.util.BeanUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;
@@ -236,10 +234,10 @@ public class NestedFormUtil {
    * @return The element returned from the adder.
    */
   private static <C, D> FormElement<C, D> addElement(FormWidget form, String elementId, FormElementAdder<C, D> adder) {
-    if (StringUtils.contains(elementId, BeanUtil.NESTED_DELIM)) {
-      String fullSubFormsId = StringUtils.substringBeforeLast(elementId, BeanUtil.NESTED_DELIM);
-      elementId = StringUtils.substringAfterLast(elementId, BeanUtil.NESTED_DELIM);
+    String fullSubFormsId = NameUtil.getLongestPrefix(elementId);
+    if (fullSubFormsId != null) {
       form = form.addSubForm(fullSubFormsId);
+      elementId = NameUtil.getShortestSuffix(elementId);
     }
     return adder.addFormElement(form, elementId);
   }

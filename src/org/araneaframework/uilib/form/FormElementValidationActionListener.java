@@ -16,11 +16,11 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.Environment;
-
 import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.Assert;
@@ -54,39 +54,37 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
 
   @Override
   public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
-    if (!isValidationEnabled() && LOG.isWarnEnabled()) {
-      LOG.warn("Validation listener of '" + this.baseFormElement.getScope()
-          + "' was invoked although validation not enbled. Skipping response.");
+    if (!isValidationEnabled()) {
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Validation listener of '" + this.baseFormElement.getScope()
+            + "' was invoked although validation not enbled. Skipping response.");
+      }
       return;
     }
 
-    boolean valid = this.baseFormElement.convertAndValidate();
+    // Let's gather data first:
+
     Writer out = ((HttpOutputData) output).getWriter();
 
+    boolean valid = this.baseFormElement.convertAndValidate();
+
+    String formElementId = this.baseFormElement.getScope().toString();
     String ajaxRequestId = output.getInputData().getGlobalData().get(
         StandardUpdateRegionFilterWidget.AJAX_REQUEST_ID_KEY);
-
-    out.write(String.valueOf(ajaxRequestId) + "\n");
-
-    JsonObject object = new JsonObject();
-    object.setStringProperty("formElementId", this.baseFormElement.getScope().toString());
-    object.setProperty("valid", String.valueOf(valid));
 
     // Process error messages indirectly attached to validated form element
     String clientRenderText = this.baseFormElement.getFormElementValidationErrorRenderer().getClientRenderText(
         this.baseFormElement);
 
-    if (clientRenderText != null && clientRenderText.length() > 0) {
-      object.setStringProperty("clientRenderText", clientRenderText);
-    }
+    // Now let's write the gathered data to output stream:
+    writeValidationStatus(out, ajaxRequestId, formElementId, valid, clientRenderText);
 
-    writeRegion(out, FORM_VALIDATION_REGION_KEY, object.toString());
+    // Let's also try writing out messages region:
 
     Environment env = this.baseFormElement.getEnvironment();
-    MessageContext messageContext = EnvironmentUtil.getMessageContext(env);
+    UpdateRegionProvider messageRegion = EnvironmentUtil.getMessageContext(env);
 
-    if (messageContext != null) {
-      UpdateRegionProvider messageRegion = messageContext;
+    if (messageRegion != null) {
       LocalizationContext locCtx = env.getEntry(LocalizationContext.class);
       // TODO: general mechanism for writing out UpdateRegions from actions
       String messageRegionContent = messageRegion.getRegions(locCtx).get(MessageContext.MESSAGE_REGION_KEY).toString();
@@ -98,6 +96,43 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
     return this.baseFormElement.isBackgroundValidation();
   }
 
+  /**
+   * This method was added in Aranea 2.0 to separate writing to output stream logic from resolving the values to write.
+   * Therefore, it should be easier to customize the process. The parameters are filled in with correct values that
+   * should be returned to the client side. This method handles writing them in proper way.
+   * 
+   * @param out The output stream writer to write to.
+   * @param ajaxRequestId The current AJAX request ID that also should be returned.
+   * @param formElementId The form element ID for which the validation status applies.
+   * @param valid A boolean indicating the form element validation status.
+   * @param clientRenderText The text to show as provided by {@link FormElementValidationErrorRenderer}.
+   * @throws Exception Any exception that may occur during writing.
+   * @since 2.0
+   */
+  protected void writeValidationStatus(Writer out, String ajaxRequestId, String formElementId, boolean valid,
+      String clientRenderText) throws Exception {
+
+    JsonObject object = new JsonObject();
+    object.setStringProperty("formElementId", formElementId);
+    object.setProperty("valid", String.valueOf(valid));
+
+    if (StringUtils.isNotBlank(clientRenderText)) {
+      object.setStringProperty("clientRenderText", clientRenderText);
+    }
+
+    out.write(StringUtils.defaultString(ajaxRequestId));
+    out.write("\n");
+    writeRegion(out, FORM_VALIDATION_REGION_KEY, object.toString());
+  }
+
+  /**
+   * Handles the standard way of writing an update region to output stream.
+   *  
+   * @param out The output stream writer to write to.
+   * @param name The update region name.
+   * @param content The update region content.
+   * @throws Exception Any exception that may occur during writing.
+   */
   protected void writeRegion(Writer out, String name, String content) throws Exception {
     out.write(name);
     out.write("\n");

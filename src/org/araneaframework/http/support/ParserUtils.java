@@ -183,11 +183,11 @@ public class ParserUtils {
 class MyErrorHandler implements ErrorHandler {
 
     // Logger
-    private static final Log LOG = LogFactory.getLog(MyErrorHandler.class);
+    private static final Log log = LogFactory.getLog(MyErrorHandler.class);
 
     public void warning(SAXParseException ex) throws SAXException {
-        if (LOG.isDebugEnabled())
-            LOG.debug("ParserUtils: warning ", ex);
+        if (log.isDebugEnabled())
+            log.debug("ParserUtils: warning ", ex);
         // We ignore warnings
     }
 

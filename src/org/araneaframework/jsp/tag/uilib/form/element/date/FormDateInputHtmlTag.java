@@ -27,20 +27,21 @@ import org.araneaframework.uilib.form.control.DateControl;
  * @jsp.tag
  *   name = "dateInput"
  *   body-content = "JSP"
- *   description = "Form date input field (custom control), represents UiLib 'DateControl'."
+ *   description = "Form date input field (custom control), represents UiLib 'DateControl'/'JodaDateControl'."
  */
 public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
-  {
-    baseStyleClass = "aranea-date";
+  public FormDateInputHtmlTag() {
+    this.baseStyleClass = "aranea-date";
   }
+
   @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlTypes("DateControl", "JodaDateControl");
 
     // Prepare
-    String name = this.getFullFieldId();       
-    DateControl.ViewModel viewModel = ((DateControl.ViewModel)controlViewModel);
+    String name = this.getFullFieldId();
+    DateControl.ViewModel viewModel = ((DateControl.ViewModel) controlViewModel);
 
     Long dateInputSize = DEFAULT_DATE_INPUT_SIZE;
 
@@ -49,16 +50,15 @@ public class FormDateInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
         name,
         name, 
         viewModel.getSimpleValue(), 
-        localizedLabel,
+        this.localizedLabel,
         viewModel.isMandatory(), 
-        formElementViewModel.isValid(),
+        this.formElementViewModel.isValid(),
         dateInputSize,
         viewModel.isDisabled(),
         getStyleClass(),
-        accessKey,
+        this.accessKey,
         viewModel);
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 }

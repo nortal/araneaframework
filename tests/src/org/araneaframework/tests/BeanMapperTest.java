@@ -25,9 +25,9 @@ import org.araneaframework.backend.util.BeanMapper;
  */
 public class BeanMapperTest extends TestCase {
 
-  public static final Integer IA = new Integer(6);
+  public static final Integer IA = 6;
 
-  public static final Integer IB = new Integer(8);
+  public static final Integer IB = 8;
 
   public static class A {
 

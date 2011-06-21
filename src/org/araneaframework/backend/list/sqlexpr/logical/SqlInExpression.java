@@ -16,10 +16,9 @@
 
 package org.araneaframework.backend.list.sqlexpr.logical;
 
-import java.util.Collections;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.list.SqlExpression;

@@ -26,11 +26,11 @@ import org.araneaframework.uilib.list.structure.ListFilter;
  */
 public abstract class BaseFilter implements ListFilter {
 
-	public void init(Environment env) {
-		// empty		
-	}
-	
-	public void destroy() {
-		// empty		
-	}
+  public void init(Environment env) {
+  // empty
+  }
+
+  public void destroy() {
+  // empty
+  }
 }

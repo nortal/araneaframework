@@ -19,51 +19,55 @@ package org.araneaframework.uilib.form;
 import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
-
+import org.araneaframework.framework.MessageContext.MessageData;
 
 /**
- * A constraint operates on some form {@link org.araneaframework.Component} providing means 
- * for defining the conditions under which {@link org.araneaframework.Component} is considered
- * valid. During validation, {@link Constraint} may produce appropriate error messages.
+ * A constraint operates on some form {@link org.araneaframework.Component} providing means for defining the conditions
+ * under which {@link org.araneaframework.Component} is considered valid. During validation, {@link Constraint} may
+ * produce appropriate error messages.
  * 
  * @see org.araneaframework.uilib.form.constraint.BaseConstraint
  */
 public interface Constraint extends Serializable {
-  /**
-   * This method validates this {@link Constraint} conditions.
-   */
-  public boolean validate() throws Exception;
-  
-  /**
-   * Returns the validation errors produced while validating this {@link Constraint}.
-   * @return validation errors.
-   */
-  public Set<String> getErrors();
 
   /**
-   * Clears the the errors produced while validating this {@link Constraint}.
+   * This method validates this {@link Constraint} conditions and returns whether they are valid (fulfilled).
+   * 
+   * @return A Boolean that is <code>true</code> when the constraint is valid.
+   */
+  public boolean validate() throws Exception;
+
+  /**
+   * Provides the validation error messages produced while validating this {@link Constraint}. When no errors were
+   * produced, returns an empty collection.
+   * 
+   * @return A set of produced validation error messages, or an empty set when no errors were produced.
+   */
+  public Set<MessageData> getErrors();
+
+  /**
+   * Clears the the error messages produced while validating this {@link Constraint}.
    */
   public void clearErrors();
 
   /**
-   * Sets the custom error message, that will be used in place of default ones when
-   * this {@link Constraint} does not hold.
+   * Sets the custom error message, that will be used in place of default ones when this {@link Constraint} does not
+   * hold. When the custom error message is set to <code>null</code>, the default error messages will be produced again
+   * on errors.
    * 
-   * @param customErrorMessage custom error message
+   * @param customErrorMessage A custom error message, or <code>null</code> to disable custom message.
    */
   public void setCustomErrorMessage(String customErrorMessage);
 
   /**
-   * Sets the <code>Environment</code> of this <code>Constraint</code>.
-   * Environment should come from whatever {@link org.araneaframework.Component}
-   * that this <code>Constraint</code> is operating on.
+   * Sets the <code>Environment</code> of this <code>Constraint</code>. Environment should come from whatever
+   * {@link org.araneaframework.Component} that this <code>Constraint</code> is operating on.
    * <p>
-   * The <code>Environment</code> of a <code>Constraint</code> may be set to
-   * non-null value only once, further calls are ignored. Application programmer
-   * typically never calls this method as <code>Environment</code> is
-   * propagated seamlessly.
+   * The <code>Environment</code> of a <code>Constraint</code> may be set to non-null value only once, further calls are
+   * ignored. Application programmer typically never calls this method as <code>Environment</code> is propagated
+   * seamlessly.
    * 
-   * @param environment the <code>Environment</code> for this constraint.
+   * @param environment The <code>Environment</code> for this constraint to use.
    */
   public void setEnvironment(Environment environment);
 

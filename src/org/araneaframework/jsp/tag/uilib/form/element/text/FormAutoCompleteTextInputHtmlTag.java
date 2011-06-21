@@ -16,11 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.text;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
@@ -38,44 +37,38 @@ import org.araneaframework.uilib.form.control.AutoCompleteTextControl;
  */
 public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
 
-  protected String divClass = "autocompletediv";  
+  protected String divClass = "autocompletediv";
+
   protected String localDataVar;
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("AutoCompleteTextControl");
 
-    AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) controlViewModel);
+    AutoCompleteTextControl.ViewModel viewModel = ((AutoCompleteTextControl.ViewModel) this.controlViewModel);
 
     Map<String, String> attributes = new HashMap<String, String>();
-    attributes.put("maxlength", viewModel.getMaxLength() + "");
     attributes.put("autocomplete", "off");
-
-    if (this.onChangePrecondition == null) {
-      this.onChangePrecondition = "return ";
-    } else if (!this.onChangePrecondition.endsWith(";")) {
-      this.onChangePrecondition += " return ";
-    } else {
-      this.onChangePrecondition += " && ";
+    if (viewModel.getMaxLength() != null) {
+      attributes.put("maxlength", viewModel.getMaxLength().toString());
     }
 
-    this.onChangePrecondition += "!$('ACdiv." + getFullFieldId() + "').visible();";
-
-    boolean events = this.events;
+    // We turn off events, because auto-complete handles events differently
+    // (see Aranea.Behaviour.doAutoCompleteInputSetup).
     this.events = false;
+
     writeTextInput(out, "text", true, attributes);
-    this.events = events;
 
     JspUtil.writeOpenStartTag(out, "div");
     JspUtil.writeAttribute(out, "id", "ACdiv." + getFullFieldId());
-    JspUtil.writeAttribute(out, "class", divClass);
+    JspUtil.writeAttribute(out, "class", this.divClass);
     JspUtil.writeAttribute(out, "style", "display:none;");
     JspUtil.writeCloseStartTag(out);
     JspUtil.writeEndTag(out, "div");
 
-    JspUtil.writeStartTag_SS(out, "script type=\"text/javascript\"");
-   	out.write(constructACRegistrationScript(viewModel));
-   	JspUtil.writeEndTag(out, "script");
+    JspUtil.writeJavaScriptStartTag(out);
+    out.write(constructACRegistrationScript(viewModel));
+    JspUtil.writeScriptEndTag(out);
 
     super.doEndTag(out);
     return EVAL_PAGE;
@@ -119,10 +112,6 @@ public class FormAutoCompleteTextInputHtmlTag extends BaseFormTextInputHtmlTag {
     return script.toString();
   }
 
-  /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
-  
   /**
    * @jsp.attribute
    *    type = "java.lang.String"

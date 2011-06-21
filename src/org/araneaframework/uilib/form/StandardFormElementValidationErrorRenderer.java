@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form;
 
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
@@ -26,19 +27,20 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
  */
-public class StandardFormElementValidationErrorRenderer implements FormElementValidationErrorRenderer {  public static final StandardFormElementValidationErrorRenderer INSTANCE = new StandardFormElementValidationErrorRenderer();
+public class StandardFormElementValidationErrorRenderer implements FormElementValidationErrorRenderer {
 
-  public void addError(FormElement<?,?> element, String error) {
-    MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
-    messageCtx.showMessage(MessageContext.ERROR_TYPE, error);
+  public static final StandardFormElementValidationErrorRenderer INSTANCE = new StandardFormElementValidationErrorRenderer();
+
+  public void addError(FormElement<?, ?> element, MessageData messageData) {
+    EnvironmentUtil.requireMessageContext(element.getEnvironment()).showMessage(MessageContext.ERROR_TYPE, messageData);
   }
 
-  public void clearErrors(FormElement<?,?> element) {
-    MessageContext messageCtx = EnvironmentUtil.requireMessageContext(element.getEnvironment());
-    messageCtx.hideMessages(MessageContext.ERROR_TYPE, element.getErrors());
+  public void clearErrors(FormElement<?, ?> element) {
+    EnvironmentUtil.requireMessageContext(element.getEnvironment()).hideMessagesData(MessageContext.ERROR_TYPE,
+        element.getErrors());
   }
 
-  public String getClientRenderText(FormElement<?,?> element) {
+  public String getClientRenderText(FormElement<?, ?> element) {
     return "";
   }
 }

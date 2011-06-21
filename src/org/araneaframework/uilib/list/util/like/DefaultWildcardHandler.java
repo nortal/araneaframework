@@ -25,16 +25,16 @@ package org.araneaframework.uilib.list.util.like;
  */
 public class DefaultWildcardHandler extends BaseWildcardHandler {
 
-	public int shouldStartWith() {
-		return startsWith;
-	}
+  public int shouldStartWith() {
+    return startsWith;
+  }
 
-	public int shouldEndWith() {
-		return endsWith;
-	}
+  public int shouldEndWith() {
+    return endsWith;
+  }
 
-	public WildcardHandler newInstance() {
-		return new DefaultWildcardHandler();
-	}	
+  public WildcardHandler newInstance() {
+    return new DefaultWildcardHandler();
+  }
 
 }

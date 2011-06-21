@@ -16,13 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.date;
 
-import org.araneaframework.Path;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.text.ParseException;
 import java.util.Calendar;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.jsp.AraneaAttributes;
@@ -41,7 +40,7 @@ import org.araneaframework.uilib.form.control.TimestampControl.ViewModel;
  * @jsp.tag
  *  name = "dateTimeInput"
  *  body-content = "JSP"
- *  description = "Form date and time input field (custom control), represents UiLib 'DateTimeControl'."
+ *  description = "Form date and time input field (custom control), represents UiLib 'DateTimeControl'/'JodaDateTimeControl'."
  */
 public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
@@ -64,7 +63,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
 
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    assertControlType("DateTimeControl");
+    assertControlTypes("DateTimeControl", "JodaDateTimeControl");
 
     // Prepare
     String name = this.getFullFieldId();
@@ -92,8 +91,8 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
       if (timeViewModel.getSimpleValue() != null) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(timeViewModel.getCurrentSimpleDateTimeFormat().parse(timeViewModel.getSimpleValue()));
-        hour = new Integer(calendar.get(Calendar.HOUR_OF_DAY));
-        minute = new Integer(calendar.get(Calendar.MINUTE));
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
       }
     } catch (ParseException e) {
       // try to preserve the contents of selects anyway
@@ -262,7 +261,6 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
    * If just super.writeDateInput is called then date's ViewModel does not have correct information about whether
    * onChange listeners are registered and who has registered them.
    */
-  @Override
   protected void writeDateInput(Writer out, String id, String name, String value, String label, boolean isMandatory,
       boolean isValid, Long size, boolean disabled, String styleClass, String accessKey, DateControl.ViewModel viewModel)
       throws Exception {
@@ -287,9 +285,7 @@ public class FormDateTimeInputHtmlTag extends BaseFormDateTimeInputHtmlTag {
     JspUtil.writeAttribute(out, "value", value);
     JspUtil.writeAttribute(out, "size", size);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
-    if (!StringUtils.isBlank(accessKey)) {
-      JspUtil.writeAttribute(out, "accesskey", accessKey);
-    }
+    JspUtil.writeAttribute(out, "accesskey", accessKey);
 
     if (disabled) {
       if (viewModel.isDisabled()) {

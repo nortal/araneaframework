@@ -37,7 +37,6 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
 
   protected String onChangePrecondition;
 
-  
   public FormCheckboxHtmlTag() {
     this.baseStyleClass = "aranea-checkbox";
   }
@@ -50,7 +49,7 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   protected int doEndTag(Writer out) throws Exception {
     assertControlType("CheckboxControl");
 
@@ -73,10 +72,9 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
     if (viewModel.isDisabled()) {
       JspUtil.writeAttribute(out, "disabled", "disabled");
     }
+
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
-    if (this.accessKey != null) {
-      JspUtil.writeAttribute(out, "accesskey", this.accessKey);
-    }
+    JspUtil.writeAttribute(out, "accesskey", this.accessKey);
 
     if (viewModel.isOnChangeEventRegistered()) {
       writeEventAttributes(out, "onclick", OnChangeEventListener.ON_CHANGE_EVENT, this.onChangePrecondition);
@@ -85,8 +83,7 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
     JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartEndTag_SS(out);
 
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 
   /**

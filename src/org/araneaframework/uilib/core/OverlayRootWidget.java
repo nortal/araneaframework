@@ -17,14 +17,13 @@
 package org.araneaframework.uilib.core;
 
 import org.araneaframework.InputData;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.Assert;
+import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
+import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.ServletUtil;
-import org.araneaframework.uilib.core.BaseUIWidget;
 
 /**
  * This class can be used to start an overlay flow. This is provided as-is standard implementation for overlay flow that
@@ -35,6 +34,7 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * <li><code>childWidget</code> - the widget that will be rendered inside the flow;
  * <li><code>viewSelector</code> - the JSP page for flow renderer (default: "overlayRoot.jsp");
  * <li><code>errorPage</code> - the JSP page to render errors (default: "/WEB-INF/jsp/error.jsp").
+ * </ul>
  * <p>
  * These parameters are configurable through constructors and setters of this class.
  * <p>
@@ -55,6 +55,19 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * <p>
  * Note on the error page: the JSP can make use of variables "viewData.rootStackTrace" and "viewData.fullStackTrace" to
  * display the error.
+ * <p>
+ * Since Aranea 2.0, the provided overlay content widget will be initialized upon first request to it (overlay is opened
+ * with two requests). Notice that the change was due to the problem that when opening overlay mode, messages that were
+ * put into {@link MessageContext} in an overlay component's <code>init()</code> method would be rendered on the parent
+ * page (because the second request had not even started yet!).
+ * <ol>
+ * <li>A request (event) comes to a non-overlay widget that opens a widget in overlay. Overlay context is used only so
+ * much that when rendering the response page, a JavaScript script is added that opens overlay mode visually and
+ * initiates the second request.
+ * <li>The second request goes directly to overlay mode, invokes its components and renders only overlay root and its
+ * child components. Therefore the response contains HTML fragment that is put into the visual overlay container on
+ * client-side.
+ * </ol>
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
@@ -116,12 +129,25 @@ public class OverlayRootWidget extends BaseUIWidget {
 
   @Override
   protected void init() throws Exception {
-    Assert.notNull(this.child, "The child component must be provided!");
+    // When overlay is started, flow context cannot handle scroll context updating well, so we do it manually here.
+    // These new coordinates will be reset to previous coordinates when user closes the overlay window.
+    pushScrollCoordinates(getEnvironment().getEntry(WindowScrollPositionContext.class));
+
     addWidget("c", new OverlayFlowContainer(this.child));
   }
 
   public void setErrorPage(String errorPage) {
     this.errorPage = errorPage;
+  }
+
+  private static void pushScrollCoordinates(WindowScrollPositionContext scrollPositionCtx) {
+    if (scrollPositionCtx != null) {
+      String x = scrollPositionCtx.getX();
+      String y = scrollPositionCtx.getY();
+
+      scrollPositionCtx.push();
+      scrollPositionCtx.scrollTo(x, y);
+    }
   }
 
   /**
@@ -133,33 +159,57 @@ public class OverlayRootWidget extends BaseUIWidget {
    */
   protected class OverlayFlowContainer extends ExceptionHandlingFlowContainerWidget {
 
+    /**
+     * The sub widget to render. This widget is required. We initialize it on first request. That's why we store it
+     * here.
+     */
     protected Widget topWidget;
 
+    /**
+     * Initializes this <code>OverlayFlowContainer</code> with the given <code>topWidget</code> to render. The widget is
+     * required.
+     * 
+     * @param topWidget The widget to render in the overlay container.
+     */
     public OverlayFlowContainer(Widget topWidget) {
+      Assert.notNullParam(topWidget, "topWidget");
       this.topWidget = topWidget;
     }
 
     @Override
-    protected void update(InputData input) throws Exception {
-      // Custom overlay widget initialization during update(). The problem came with a complaining that when an overlay
-      // child widget attempted to show messages in its init() method, these would be actually rendered during rendering
-      // of the page that initiated the overlay. Therefore we need to initialize the overlay child just before the first
-      // request arrives. Aranea Changelogic task 839.
-
-      if (this.top != null) {
-        start(this.top);
-        this.top = null;
+    protected void init() throws Exception {
+      // When a flow is already is started, no need to delay the initialization of top widget.
+      // "Delay" is needed only when overlay is opened - as overlay actual is opened on second request.
+      if (getNestedFlows().size() > 1) {
+        startTopWidget();
       }
+
+      super.init();
+    }
+
+    @Override
+    protected void update(InputData input) throws Exception {
+      startTopWidget();
       super.update(input);
+    }
+
+    private void startTopWidget() {
+      if (this.topWidget != null) {
+        if (getNestedFlows().isEmpty()) {
+          pushScrollCoordinates(getEnvironment().getEntry(WindowScrollPositionContext.class));
+        }
+
+        try {
+          start(this.topWidget);
+        } finally { // Important: no matter whether starting is successful or not - do not attempt to start it again.
+          this.topWidget = null;
+        }
+      }
     }
 
     @Override
     protected void renderExceptionHandler(OutputData output, Exception e) throws Exception {
-      if (ExceptionUtils.getRootCause(e) != null) {
-        putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(e)));
-      }
-      putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(e));
-      ServletUtil.include(OverlayRootWidget.this.errorPage, this, output);
+      ServletUtil.includeErrorPage(OverlayRootWidget.this.errorPage, this, e, output);
     }
 
   }

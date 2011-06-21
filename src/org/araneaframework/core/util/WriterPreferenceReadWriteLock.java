@@ -35,7 +35,7 @@ public class WriterPreferenceReadWriteLock implements ReadWriteLock, Serializabl
 
   protected long activeReaders_ = 0;
 
-  protected Thread activeWriter_ = null;
+  protected transient Thread activeWriter_ = null;
 
   protected long waitingReaders_ = 0;
 

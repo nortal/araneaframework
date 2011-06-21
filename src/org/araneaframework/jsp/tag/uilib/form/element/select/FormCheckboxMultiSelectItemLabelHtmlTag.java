@@ -16,16 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.uilib.util.ConfigurationUtil;
-
-import org.araneaframework.uilib.ConfigurationContext;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
-import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementLabelTag;
 import org.araneaframework.jsp.util.JspUtil;
-import org.araneaframework.uilib.form.control.MultiSelectControl;
+import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
  * Form checkbox label, represents label of one item from
@@ -36,12 +32,11 @@ import org.araneaframework.uilib.form.control.MultiSelectControl;
  * 
  * @jsp.tag name = "checkboxMultiSelectItemLabel" body-content = "JSP" description = "Represents label to be localized."
  */
-@SuppressWarnings("unchecked")
 public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabelTag {
 
-  protected String value;
-
   protected String checkboxId;
+
+  protected String labelId;
 
   /**
    * A boolean setting to override default configuration of {@link ConfigurationContext#LOCALIZE_FIXED_CONTROL_DATA}.
@@ -53,15 +48,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
-    // Prepare
-    MultiSelectControl.ViewModel viewModel = ((MultiSelectControl.ViewModel) controlViewModel);
-
-    if (this.value != null && viewModel.getSelectItem(this.value) == null) {
-      throw new AraneaJspException("Value '" + this.value + "' not found in values list.");
-    }
-
-    writeLabel(out, viewModel.getSelectItem(this.value).getLabel());
+    writeLabel(out, this.labelId);
     return EVAL_BODY_INCLUDE;
   }
 
@@ -92,17 +79,17 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String" required = "false" description = "Select item value."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Select item label to be rendered."
    */
-  public void setValue(String value) throws JspException {
-    this.value = evaluateNotNull("value", value, String.class);
+  public void setLabelId(String labelId) throws JspException {
+    this.labelId = evaluateNotNull("labelId", labelId, String.class);
   }
 
   /**
    * @jsp.attribute
    *    type = "java.lang.String"
    *    required = "false"
-   *    description = "Whether to localize display items. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
+   *    description = "Whether to localize the provided label. Provides a way to override ConfigurationContext.LOCALIZE_FIXED_CONTROL_DATA."
    * @since 1.1
    */
   public void setLocalizeDisplayItems(String localizeDisplayItems) {
@@ -111,7 +98,7 @@ public class FormCheckboxMultiSelectItemLabelHtmlTag extends BaseFormElementLabe
 
   protected String evaluateLabel(String value) {
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
-    if (this.localizeDisplayItems.booleanValue()) {
+    if (this.localizeDisplayItems) {
       value = JspUtil.getResourceString(this.pageContext, value);
     }
     return value;

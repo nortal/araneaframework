@@ -16,18 +16,17 @@
 
 package org.araneaframework.tests.framework.router;
 
-import org.araneaframework.Service;
-
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
 import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.router.StandardThreadServiceRouterService;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -84,11 +83,13 @@ public class StandardThreadServiceRouterServiceTests extends TestCase {
   public void testServiceExpiration() throws Exception {
     ThreadContext ctx = EnvironmentUtil.requireThreadContext(child1.getTheEnvironment());
     ctx.addService("newService", new BaseService(), new Long(1000));
+
     Thread.sleep(1200);
-    assertNotNull("Action is not yet called.", ctx.getService("newService"));
+
+    assertNotNull("Action is not yet called, so service should still exist.", ctx.getService("newService"));
     service._getService().action(MockUtil.getPath(), input, output);
-    assertNull("Action is called when service should already be expired.", ctx.getService("newService"));
-    
+    assertNull("Action is called, so service should be expired now.", ctx.getService("newService"));
+
     // make sure that in addition to killing expired services, their lifetimes are updated in action()
     ctx.addService("nextService", new BaseService(), new Long(2000));
     MockHttpServletRequest req = new MockHttpServletRequest();

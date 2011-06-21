@@ -17,7 +17,6 @@
 package org.araneaframework.http.util;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.core.Assert;
@@ -30,20 +29,17 @@ import org.araneaframework.core.Assert;
  */
 public class JsonObject implements Serializable {
 
-  protected StringBuffer buf = new StringBuffer();
+  protected StringBuffer buf = new StringBuffer("{");
 
-  public JsonObject() {
-    buf.append('{');
-  }
+  public JsonObject() {}
   
   public <T,U> JsonObject(Map<T, U> map) {
-    this();
-    for (Iterator<Map.Entry<T, U>> i = map.entrySet().iterator(); i.hasNext();) {
-      Map.Entry<T, U> entry = i.next();
-      if (entry.getValue() instanceof String)
-        setStringProperty(entry.getKey().toString(), (String)entry.getValue());
-      else
-        setProperty(entry.getKey().toString(), String.valueOf(entry.getValue()));
+    for (Map.Entry<T, U> entry : map.entrySet()) {
+      if (entry.getValue() instanceof String) {
+        setStringProperty(String.valueOf(entry.getKey()), (String) entry.getValue());
+      } else {
+        setProperty(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+      }
     }
   }
 
@@ -58,13 +54,14 @@ public class JsonObject implements Serializable {
    */
   public void setProperty(String name, String value) {
     Assert.notNullParam(name, "name");
-    if (buf.length() > 1)
-      buf.append(',');
-    buf.append('"');
-    buf.append(StringEscapeUtils.escapeJavaScript(name));
-    buf.append('"');
-    buf.append(':');
-    buf.append(value);
+    if (this.buf.length() > 1) {
+      this.buf.append(',');
+    }
+    this.buf.append('"');
+    this.buf.append(StringEscapeUtils.escapeJavaScript(name));
+    this.buf.append('"');
+    this.buf.append(':');
+    this.buf.append(value);
   }
 
   /**
@@ -78,15 +75,20 @@ public class JsonObject implements Serializable {
    */
   public void setStringProperty(String name, String value) {
     Assert.notNullParam(name, "name");
-    if (buf.length() > 1)
-      buf.append(',');
-    buf.append('"');
-    buf.append(StringEscapeUtils.escapeJavaScript(name));
-    buf.append('"');
-    buf.append(':');
-    if (value != null) buf.append('"');
-    buf.append(StringEscapeUtils.escapeJavaScript(String.valueOf(value)));
-    if (value != null) buf.append('"');
+    if (this.buf.length() > 1) {
+      this.buf.append(',');
+    }
+    this.buf.append('"');
+    this.buf.append(StringEscapeUtils.escapeJavaScript(name));
+    this.buf.append('"');
+    this.buf.append(':');
+    if (value != null) {
+      this.buf.append('"');
+    }
+    this.buf.append(StringEscapeUtils.escapeJavaScript(String.valueOf(value)));
+    if (value != null) {
+      this.buf.append('"');
+    }
   }
 
   /**
@@ -94,9 +96,8 @@ public class JsonObject implements Serializable {
    */
   @Override
   public String toString() {
-    buf.append('}');
-    String string = buf.toString();
-    buf.deleteCharAt(buf.length() - 1);
-    return string;
+    String json = this.buf.append('}').toString();
+    this.buf.setLength(this.buf.length() - 1); // Remove the end parentheses we just added for JSON string.
+    return json;
   }
 }

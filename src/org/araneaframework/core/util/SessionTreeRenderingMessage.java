@@ -35,7 +35,7 @@ import org.araneaframework.framework.MountContext;
  * The recommended usage of this class is through the {@link #execute(Environment)} or
  * {@link #execute(Environment, ItemDecorator)} methods.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class SessionTreeRenderingMessage implements Message {
@@ -202,7 +202,7 @@ public class SessionTreeRenderingMessage implements Message {
    * The decorator class for taking care of rendering the result in <code>StringBuffer</code>
    * format. It is used by methods in {@link SessionTreeRenderingMessage}.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 1.2.3
    */
   public class ItemDecorator implements Serializable {
@@ -225,7 +225,7 @@ public class SessionTreeRenderingMessage implements Message {
   /**
    * A class implementation to store component related info in an easibly accessible manner.
    * 
-   * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+   * @author Martti Tamm (martti@araneaframework.org)
    * @since 1.2.3
    */
   public class ComponentItem implements Serializable {

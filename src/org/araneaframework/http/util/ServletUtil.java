@@ -16,8 +16,6 @@
 
 package org.araneaframework.http.util;
 
-import org.araneaframework.core.Assert;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +25,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -34,6 +33,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationService;
 import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.Assert;
+import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.http.HttpInputData;
@@ -136,6 +137,37 @@ public abstract class ServletUtil {
   }
 
   /**
+   * A convenience method to include the given page and to provide the given error information through view-data
+   * variables. All parameters must not be <code>null</code>!
+   * <p>
+   * The error page will be provided with parameters <code>viewData.fullStackTrace</code> and
+   * <code>viewData.rootStackTrace</code> (when the given <code>error</code> is not the root cause), both are
+   * <code>String</code>s that represent formatted stack traces. These parameters will be available in the context of
+   * the provided <code>comp</code>.
+   * 
+   * @param filePath The file to include. Must begin with a forward slash (the root directory of deployment package).
+   * @param comp The component that will be used to render the page.
+   * @param error The error that has occurred.
+   * @param output The current output object.
+   * @throws Exception Any error that may occur.
+   * @since 2.0
+   */
+  public static void includeErrorPage(String filePath, BaseApplicationWidget comp, Exception error, OutputData output)
+      throws Exception {
+    Assert.notNullParam(filePath, "filePath");
+    Assert.notNullParam(comp, "comp");
+    Assert.notNullParam(error, "error");
+    Assert.notNullParam(output, "output");
+
+    comp.putViewDataOnce("fullStackTrace", ExceptionUtils.getFullStackTrace(error));
+    if (ExceptionUtils.getRootCause(error) != null) {
+      comp.putViewDataOnce("rootStackTrace", ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(error)));
+    }
+
+    include(filePath, comp, output);
+  }
+
+  /**
    * Includes the JSP specified by <code>filePath</code> using the the request and response streams of the
    * <code>output</code>. The path name must begin with a "/" (the root directory of deployment package). The context
    * root in the <code>env</code> under the key <code>ServletContext.class</code> is used.
@@ -190,6 +222,9 @@ public abstract class ServletUtil {
   }
 
   private static void setAttribute(HttpServletRequest req, Map<String, Object> attributeBackupMap, String name, Object value) {
+    Assert.notNullParam(req, "req");
+    Assert.notNullParam(attributeBackupMap, "attributeBackupMap");
+
     attributeBackupMap.put(name, req.getAttribute(name));
     if (value != null) {
       req.setAttribute(name, value);
@@ -199,6 +234,9 @@ public abstract class ServletUtil {
   }
 
   private static void restoreAttributes(HttpServletRequest req, Map<String, Object> attributeBackupMap) {
+    Assert.notNullParam(req, "req");
+    Assert.notNullParam(attributeBackupMap, "attributeBackupMap");
+
     for (Map.Entry<String, Object> entry : attributeBackupMap.entrySet()) {
       if (entry.getValue() != null) {
         req.setAttribute(entry.getKey(), entry.getValue());
@@ -240,6 +278,11 @@ public abstract class ServletUtil {
   }
 
   public static void simpleInclude(String filePath, Environment env, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    Assert.notNullParam(filePath, "filePath");
+    Assert.notNullParam(env, "env");
+    Assert.notNullParam(req, "req");
+    Assert.notNullParam(resp, "resp");
+
     ServletContext servletContext = env.getEntry(ServletContext.class);
     servletContext.getRequestDispatcher(filePath).include(req, resp);
   }
@@ -249,32 +292,41 @@ public abstract class ServletUtil {
   }
 
   public static HttpServletRequest getRequest(InputData input) {
+    Assert.notNullParam(input, "input");
     return input.narrow(HttpServletRequest.class);
   }
 
-  public static void setRequest(InputData input, HttpServletRequest req) {
-    input.extend(HttpServletRequest.class, req);
+  public static void setRequest(InputData input, HttpServletRequest request) {
+    Assert.notNullParam(input, "input");
+    Assert.notNullParam(request, "request");
+    input.extend(HttpServletRequest.class, request);
   }
 
   public static HttpServletResponse getResponse(OutputData output) {
+    Assert.notNullParam(output, "output");
     return output.narrow(HttpServletResponse.class);
   }
 
-  public static void setResponse(OutputData output, HttpServletResponse res) {
-    output.extend(HttpServletResponse.class, res);
+  public static void setResponse(OutputData output, HttpServletResponse response) {
+    Assert.notNullParam(output, "output");
+    Assert.notNullParam(response, "response");
+    output.extend(HttpServletResponse.class, response);
   }
 
-  public static HttpInputData getInputData(ServletRequest req) {
-    return (HttpInputData) req.getAttribute(InputData.INPUT_DATA_KEY);
+  public static HttpInputData getInputData(ServletRequest request) {
+    Assert.notNullParam(request, "request");
+    return (HttpInputData) request.getAttribute(InputData.INPUT_DATA_KEY);
   }
 
-  public static HttpOutputData getOutputData(ServletRequest req) {
-    return (HttpOutputData) req.getAttribute(OutputData.OUTPUT_DATA_KEY);
+  public static HttpOutputData getOutputData(ServletRequest request) {
+    Assert.notNullParam(request, "request");
+    return (HttpOutputData) request.getAttribute(OutputData.OUTPUT_DATA_KEY);
   }
 
   /** @since 1.1 */
-  public static Environment getEnvironment(ServletRequest req) {
-    return (Environment) req.getAttribute(Environment.ENVIRONMENT_KEY);
+  public static Environment getEnvironment(ServletRequest request) {
+    Assert.notNullParam(request, "request");
+    return (Environment) request.getAttribute(Environment.ENVIRONMENT_KEY);
   }
 
   /** @since 2.0 */
@@ -302,10 +354,17 @@ public abstract class ServletUtil {
    */
   @SuppressWarnings("unchecked")
   public static boolean isAraneaAjaxRequest(ServletRequest req) {
+    Assert.notNullParam(req, "req");
+
     Map<String, Object> params = req.getParameterMap() != null ? req.getParameterMap() : new HashMap<String, Object>();
     return params.containsKey(ApplicationService.ACTION_HANDLER_ID_KEY)
         || params.containsKey(UpdateRegionContext.UPDATE_REGIONS_KEY)
         || params.containsKey(OverlayContext.OVERLAY_REQUEST_KEY);
+  }
+
+  public static String getEncodedContainerUrl(InputData input) {
+    Assert.notNullParam(input, "input");
+    return ((HttpOutputData) input.getOutputData()).encodeURL(((HttpInputData) input).getContainerURL());
   }
 
   /**

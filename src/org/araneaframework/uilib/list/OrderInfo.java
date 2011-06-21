@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.core.Assert;
 
 /**
  * This class represents the ordering information supplied by user in a series of UI interactions.
@@ -85,6 +86,18 @@ public class OrderInfo implements Serializable {
   }
 
   /**
+   * Adds an ordering field.
+   * 
+   * @param field The name of the field to order.
+   * @param ascending The order information.
+   * @since 2.0
+   */
+  public void addField(String field, boolean ascending) {
+    Assert.notEmptyParam(field, "field");
+    addField(new OrderInfoField(field, ascending));
+  }
+
+  /**
    * Returns view model.
    * 
    * @return view model.
@@ -116,7 +129,7 @@ public class OrderInfo implements Serializable {
     public ViewModel() {
       for (OrderInfoField field : OrderInfo.this.fields) {
         this.fields.add(field.getViewModel());
-        this.fieldsMap.put(field.getId(), new Boolean(field.isAscending()));
+        this.fieldsMap.put(field.getId(), field.isAscending());
       }
     }
 

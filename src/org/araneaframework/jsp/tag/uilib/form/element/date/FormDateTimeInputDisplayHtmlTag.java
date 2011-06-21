@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2006 Webmedia Group Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,11 +27,11 @@ import org.araneaframework.uilib.form.control.DateTimeControl;
  * @jsp.tag
  *   name = "dateTimeInputDisplay"
  *   body-content = "JSP"
- *   description = "Form date-time display field, represents UiLib "DateTimeControl"."
+ *   description = "Form date-time display field, represents UiLib 'DateTimeControl'/'JodaDateTimeControl'."
  */
 public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
 
-  {
+  public FormDateTimeInputDisplayHtmlTag() {
     this.baseStyleClass = "aranea-datetime-display";
   }
 
@@ -39,13 +39,13 @@ public class FormDateTimeInputDisplayHtmlTag extends BaseFormElementDisplayTag {
   protected int doEndTag(Writer out) throws Exception {
     assertControlTypes("DateTimeControl", "JodaDateTimeControl");
 
-    DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) controlViewModel);
+    DateTimeControl.ViewModel viewModel = ((DateTimeControl.ViewModel) this.controlViewModel);
 
     JspUtil.writeOpenStartTag(out, "span");
 
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
-    JspUtil.writeAttributes(out, attributes);
+    JspUtil.writeAttributes(out, this.attributes);
     JspUtil.writeCloseStartTag(out);
 
     JspUtil.writeEscaped(out, viewModel.getDate());

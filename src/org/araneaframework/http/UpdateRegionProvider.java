@@ -16,10 +16,9 @@
 
 package org.araneaframework.http;
 
-import org.araneaframework.framework.LocalizationContext;
-
 import java.io.Serializable;
 import java.util.Map;
+import org.araneaframework.framework.LocalizationContext;
 
 /**
  * A way to pass custom data back to client-side via AJAX requests.
@@ -30,16 +29,14 @@ import java.util.Map;
 public interface UpdateRegionProvider extends Serializable {
 
   /**
-   * Will be called only when updateregion filter is activated on AJAX requests.
-   * @param locCtx TODO
+   * Will be called only when update-region filter is activated on AJAX requests.
    * 
-   * @return map containing regions that will be passed to client-side. Map must
-   *         have region names as <code>String</code> keys and region contents
-   *         as <code>String</code> values. Region contents will be passed to
-   *         client-side Javascript region handler, designated by region name.
-   *         May return <code>null</code> or empty map. If map contains a
-   *         <code>null</code> value, then that region is not included in
-   *         response.
+   * @param locCtx Localization context for resolving region labels (e.g. in messages region). If the messages context
+   *          is not rendered then probably the context is not needed.
+   * @return A map containing regions that will be passed to client-side. Map must have region names as
+   *         <code>String</code> keys and region contents as <code>String</code> values. Region contents will be passed
+   *         to client-side Javascript region handler, designated by region name. May return <code>null</code> or empty
+   *         map. If map contains a <code>null</code> value, then that region is not included in response.
    */
   Map<String, String> getRegions(LocalizationContext locCtx);
 

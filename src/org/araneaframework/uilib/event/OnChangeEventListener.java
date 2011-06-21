@@ -16,15 +16,16 @@
 
 package org.araneaframework.uilib.event;
 
+import java.io.Serializable;
+
 /**
- * This interface defines a "on change" event listener that is usually attached
- * to a listbox. This listener will receive notification when the control data
- * is changing.
+ * This interface defines an "on change" event listener that is usually attached to a form control. This listener will
+ * receive notification when the control data is changing.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @see OnClickEventListener
  */
-public interface OnChangeEventListener extends java.io.Serializable {
+public interface OnChangeEventListener extends Serializable {
 
   /**
    * This constant is the name of the event, that this listener listens to.
@@ -33,6 +34,7 @@ public interface OnChangeEventListener extends java.io.Serializable {
 
   /**
    * Event callback function that is called when the registered event occurs.
+   * 
    * @throws Exception if something goes wrong.
    */
   public void onChange() throws Exception;

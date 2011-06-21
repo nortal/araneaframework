@@ -57,9 +57,9 @@ public class FormSelectDisplayHtmlTag extends BaseFormElementDisplayTag {
 
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
-    String label = viewModel.getSelectedItem().getLabel();
+    String label = viewModel.getSelectedItem() != null ? viewModel.getSelectedItem().getLabel() : null;
 
-    if (this.localizeDisplayItems.booleanValue()) {
+    if (label != null && this.localizeDisplayItems) {
       label = JspUtil.getResourceString(this.pageContext, label);
     }
 

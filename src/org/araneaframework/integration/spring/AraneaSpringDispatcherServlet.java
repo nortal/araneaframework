@@ -16,23 +16,23 @@
 
 package org.araneaframework.integration.spring;
 
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.commons.logging.Log;
-
-import org.springframework.beans.factory.config.BeanDefinition;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.servlet.ServletException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.http.core.BaseAraneaDispatcherServlet;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -42,6 +42,7 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -54,13 +55,15 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   private static final Log LOG = LogFactory.getLog(AraneaSpringDispatcherServlet.class);
 
-  private static boolean isSpringWebPresent = true;
+  private static boolean isSpringPresent = true;
+
+  private boolean isSpringWebAppContextPresent = true;
 
   static {
     try {
       Class.forName("org.springframework.web.context.WebApplicationContext");
     } catch (ClassNotFoundException e) {
-      isSpringWebPresent = false;
+      isSpringPresent = false;
     }
   }
 
@@ -84,7 +87,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
   public static final String ARANEA_ROOT_INIT_PARAMETER = "araneaApplicationRoot";
 
-  protected BeanFactory webCtx;
+  protected WebApplicationContext webCtx;
 
   protected BeanFactory beanFactory;
 
@@ -103,7 +106,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
     }
 
     if (isSpringWebPresent()) {
-      isSpringWebPresent = WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null;
+      isSpringWebAppContextPresent = WebApplicationContextUtils.getWebApplicationContext(getServletContext()) != null;
     }
 
     if (isSpringWebPresent()) {
@@ -124,21 +127,26 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
 
     // Loading default properties
     PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
-    cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
     cfg.setIgnoreUnresolvablePlaceholders(true);
 
     // Loading custom properties
-    Properties localConf = new Properties();
     try {
-      if (getServletContext().getResource(araneaCustomConfProperties) != null) {
+      if (isSpringWebPresent()) {
+        List<Resource> resources = new LinkedList<Resource>();
+        resources.add(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
+        resources.addAll(Arrays.asList(this.webCtx.getResources(araneaCustomConfProperties)));
+        cfg.setLocations(resources.toArray(new Resource[resources.size()]));
+      } else {
+        Properties localConf = new Properties();
         localConf.load(getServletContext().getResourceAsStream(araneaCustomConfProperties));
+        cfg.setProperties(localConf);
+        cfg.setLocalOverride(true);
+        cfg.setLocation(new ClassPathResource(ARANEA_DEFAULT_CONF_PROPERTIES));
       }
     } catch (IOException e) {
       throw new ServletException(e);
     }
 
-    cfg.setProperties(localConf);
-    cfg.setLocalOverride(true);
 
     // Loading custom configuration
     try {
@@ -181,14 +189,13 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
   protected ServletServiceAdapterComponent buildRootComponent() {
     // Getting the Aranea root component name
     String araneaRoot = DEFAULT_ARANEA_ROOT;
+
     if (getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER) != null) {
       araneaRoot = getServletConfig().getInitParameter(ARANEA_ROOT_INIT_PARAMETER);
     }
 
     // Creating the root bean
-    ServletServiceAdapterComponent adapter = (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
-
-    return adapter;
+    return (ServletServiceAdapterComponent) this.beanFactory.getBean(araneaRoot);
   }
 
   @Override
@@ -210,7 +217,7 @@ public class AraneaSpringDispatcherServlet extends BaseAraneaDispatcherServlet {
    * @since 1.1
    */
   protected boolean isSpringWebPresent() {
-    return isSpringWebPresent;
+    return isSpringPresent && isSpringWebAppContextPresent;
   }
 
 }

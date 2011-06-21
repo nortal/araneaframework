@@ -49,27 +49,19 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
 
   private Set<DataUpdateListener> dataUpdateListeners = new HashSet<DataUpdateListener>(1);
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
-
   protected Class<T> beanClass;
 
   protected List<T> allData = new ArrayList<T>();
 
   protected List<T> processedData = new ArrayList<T>();
 
-  protected BeanFilter currentFilter = null;
+  protected BeanFilter currentFilter;
 
   protected boolean doFilter = true;
 
-  protected Comparator<T> currentOrder = null;
+  protected Comparator<T> currentOrder;
 
   protected boolean doOrder = true;
-
-  // *********************************************************************
-  // * CONSTRUCTORS
-  // *********************************************************************
 
   /**
    * Creates the class initializing its parameters.
@@ -105,7 +97,7 @@ public abstract class MemoryBasedListDataProvider<T> extends BaseListDataProvide
    */
   public Long getItemCount() throws Exception {
     process(this.currentFilter, this.currentOrder, this.allData, this.processedData);
-    return new Long(this.processedData.size());
+    return Long.valueOf(this.processedData.size());
   }
 
   /**

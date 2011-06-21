@@ -17,8 +17,6 @@
 package org.araneaframework.jsp.tag.updateregion;
 
 import javax.servlet.jsp.JspException;
-import java.io.Writer;
-import org.araneaframework.jsp.util.JspUtil;
 
 /**
  * Defines the update region in the HTML page that can be updated via AJAX requests. Should be used when not updating
@@ -32,13 +30,9 @@ import org.araneaframework.jsp.util.JspUtil;
  */
 public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
 
-  /**
-   * The name of the tag that wraps the update region. Client-side scripts don't depend on the tag type, they just
-   * require the element to have an ID.
-   * 
-   * @since 1.2.1
-   */
-  protected String tag = "span";
+  public UpdateRegionHtmlTag() {
+    this.tag = "span";
+  }
 
   /**
    * @since 1.2.1
@@ -51,20 +45,4 @@ public class UpdateRegionHtmlTag extends BaseUpdateRegionTag {
     this.tag = evaluateNotNull("tag", tag, String.class);
   }
 
-  @Override
-  protected int doStartTag(Writer out) throws Exception {
-    super.doStartTag(out);
-    JspUtil.writeOpenStartTag(out, this.tag);
-    JspUtil.writeAttribute(out, "id", this.fullId);
-    JspUtil.writeCloseStartTag(out);
-    out.write("<!--BEGIN:" + this.fullId + "-->");
-    return EVAL_BODY_INCLUDE;
-  }
-
-  @Override
-  protected int doEndTag(Writer out) throws Exception {
-    out.write("<!--END:" + this.fullId + "-->");
-    JspUtil.writeEndTag(out, this.tag);
-    return super.doEndTag(out);
-  }
 }

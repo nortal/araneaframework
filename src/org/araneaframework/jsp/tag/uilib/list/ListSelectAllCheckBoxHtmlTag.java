@@ -16,11 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.list;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.apache.commons.lang.StringUtils;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -49,7 +48,7 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
 
   protected String tabindex;
 
-  protected boolean checked = false;
+  protected boolean checked;
 
   public ListSelectAllCheckBoxHtmlTag() {
     this.baseStyleClass = "aranea-checkbox";
@@ -68,8 +67,8 @@ public class ListSelectAllCheckBoxHtmlTag extends PresentationTag {
     // No value attribute because it's not being submitted.
     JspUtil.writeAttribute(out, "onclick", getOnclickScript());
 
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
-    JspUtil.writeAttribute(out, "accessKey", accesskey);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
+    JspUtil.writeAttribute(out, "accessKey", this.accesskey);
 
     if (checked) {
       JspUtil.writeAttribute(out, "checked", "checked");

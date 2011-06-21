@@ -19,10 +19,10 @@ package org.araneaframework.jsp.tag.layout;
 import java.io.Writer;
 import java.util.List;
 import org.apache.commons.collections.ResettableIterator;
+import org.apache.commons.collections.iterators.EmptyIterator;
 import org.apache.commons.collections.iterators.LoopingIterator;
 import org.araneaframework.jsp.tag.PresentationTag;
 import org.araneaframework.jsp.tag.layout.support.CellClassProvider;
-import org.araneaframework.jsp.tag.layout.support.NullIterator;
 import org.araneaframework.jsp.tag.layout.support.RowClassProvider;
 import org.araneaframework.jsp.util.JspUtil;
 
@@ -48,8 +48,8 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
     addContextEntry(RowClassProvider.KEY, this);
     addContextEntry(CellClassProvider.KEY, this);
 
-    this.rowIter = this.rowClasses != null ? new LoopingIterator(this.rowClasses) : new NullIterator();
-    this.cellIter = this.cellClasses != null ? new LoopingIterator(this.cellClasses) : new NullIterator();
+    this.rowIter = this.rowClasses != null ? new LoopingIterator(this.rowClasses) : EmptyIterator.RESETTABLE_INSTANCE;
+    this.cellIter = this.cellClasses != null ? new LoopingIterator(this.cellClasses) : EmptyIterator.RESETTABLE_INSTANCE;
 
     return EVAL_BODY_INCLUDE;
   }
@@ -62,8 +62,6 @@ public abstract class BaseLayoutTag extends PresentationTag implements RowClassP
   public String getCellClass() {
     return this.cellIter.hasNext() ? (String) this.cellIter.next() : null;
   }
-
-  // Tag attributes
 
   /**
    * @jsp.attribute

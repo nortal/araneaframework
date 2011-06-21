@@ -16,11 +16,10 @@
 
 package org.araneaframework.uilib.form.reader;
 
-import org.araneaframework.core.Assert;
-
 import java.io.Serializable;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
+import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;
@@ -53,13 +52,16 @@ public class BeanFormWriter<T> implements Serializable {
    */
   @SuppressWarnings("unchecked")
   public void writeFormBean(FormWidget form, T vo) {
+    Assert.notNullParam(form, "form");
+    Assert.notNullParam(vo, "vo");
+
     List<String> voFields = this.beanMapper.getPropertyNames();
 
     for (String field : voFields) {
       GenericFormElement element = form.getElement(field);
       if (element != null) {
-        if (element instanceof FormElement) {
-          Data data = ((FormElement) element).getData();
+        if (element instanceof FormElement<?, ?>) {
+          Data<Object> data = FormElement.class.cast(element).getData();
           if (data != null) {
             data.setValue(this.beanMapper.getProperty(vo, field));
           }
@@ -67,7 +69,7 @@ public class BeanFormWriter<T> implements Serializable {
           BeanFormWriter subVoWriter = getInstance(this.beanMapper.getPropertyType(field));
           Object subVO = this.beanMapper.getProperty(vo, field);
           if (subVO != null) {
-            subVoWriter.writeFormBean((FormWidget) element, subVO);
+            subVoWriter.writeFormBean(FormWidget.class.cast(element), subVO);
           }
         }
       }

@@ -16,12 +16,9 @@
 
 package org.araneaframework.example.common.framework;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import org.araneaframework.Widget;
 import org.araneaframework.framework.LocalizationContext;
-import org.araneaframework.framework.LocalizationContext.LocaleChangeListener;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.uilib.core.BaseMenuWidget;
 import org.araneaframework.uilib.event.OnChangeEventListener;
@@ -35,7 +32,7 @@ import org.araneaframework.uilib.support.DisplayItem;
 /**
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class TemplateMenuWidget extends BaseMenuWidget implements LocaleChangeListener {
+public abstract class TemplateMenuWidget extends BaseMenuWidget {
 
   private FormWidget form;
 
@@ -55,11 +52,12 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
     addWidget("form", this.form);
 
     createLangSelect();
-    getL10nCtx().addLocaleChangeListener(this);
   }
 
   public void createLangSelect() throws Exception {
     DefaultSelectControl select = new DefaultSelectControl();
+    select.addItem("lang.english", "en");
+    select.addItem("lang.estonian", "et");
     select.addOnChangeEventListener(new OnChangeEventListener() {
 
       public void onChange() throws Exception {
@@ -70,23 +68,8 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget implements Local
       }
     });
 
-    select.addItems(getLocales());
     this.langSelect.setControl(select);
     this.langSelect.setValue(getL10nCtx().getLocale().getLanguage());
-  }
-
-  public void onLocaleChange(Locale oldLocale, Locale newLocale) {
-    String lang = this.langSelect.getValue();
-    ((DefaultSelectControl) this.langSelect.getControl()).clearItems();
-    ((DefaultSelectControl) this.langSelect.getControl()).addItems(getLocales());
-    this.langSelect.setValue(lang);
-  }
-
-  public List<DisplayItem> getLocales() {
-    List<DisplayItem> result = new ArrayList<DisplayItem>();
-    result.add(new DisplayItem("en", "EnglishLang"));
-    result.add(new DisplayItem("et", "EstonianLang"));
-    return result;
   }
 
   protected LocalizationContext getL10nCtx() {

@@ -16,8 +16,6 @@
 
 package org.araneaframework.http.filter;
 
-import org.araneaframework.framework.LocalizationContext;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +38,7 @@ import org.araneaframework.core.Assert;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.ManagedServiceContext;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.TopServiceContext;
@@ -128,14 +127,16 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       LOG.debug("Popup service with identifier '" + threadId + "' was created.");
     }
 
-    OpenerRegistrationMessage msg = new OpenerRegistrationMessage(opener);
-    try {
-      if (opener != null) {
+    if (opener != null) {
+      OpenerRegistrationMessage msg = new OpenerRegistrationMessage(opener);
+
+      try {
         msg.send(null, service);
+      } finally {
+        if (!msg.isDelivered()) {
+          LOG.error("Opener registration message delivery failed.");
+        }
       }
-    } finally {
-      if (opener != null && !msg.isDelivered())
-        LOG.error("Opener registration message delivery failed.");
     }
 
     // TODO when exception happens here, should we kill serving session thread and not open popup window at all?
@@ -184,7 +185,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         return properties;
       }
 
-      public String toURL() {
+      public String getUrl() {
         // XXX: Should I use something more generic here?
         return url + "?" + ThreadContext.THREAD_SERVICE_KEY + "=" + threadId;
       }
@@ -206,7 +207,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
         return properties;
       }
 
-      public String toURL() {
+      public String getUrl() {
         return url;
       }
     });
@@ -273,11 +274,6 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   @Override
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    super.action(path, input, output);
-  }
-
-  @Override
   protected void update(InputData input) throws Exception {
     removeRenderedPopups();
     super.update(input);
@@ -333,7 +329,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   protected TopServiceContext getTopServiceCtx() {
-    return (getEnvironment().requireEntry(TopServiceContext.class));
+    return getEnvironment().requireEntry(TopServiceContext.class);
   }
 
   protected String getRequestURL() {
@@ -405,12 +401,17 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       return this.threadServiceId;
     }
 
-    /** @since 1.0.4 */
-    public void setTransactionOverride(boolean b) {
-      this.overrideTransaction = b;
+    /**
+     * Specifies whether the window closing request should contain parameter "araTransactionId=override". By default, contains.
+     * 
+     * @param overrideTransaction If set to <code>false</code>, the parameter will be excluded from the response.
+     * @since 1.0.4
+     */
+    public void setTransactionOverride(boolean overrideTransaction) {
+      this.overrideTransaction = overrideTransaction;
     }
 
-    public String toURL() {
+    public String getUrl() {
       StringBuffer url = new StringBuffer(StringUtils.defaultString(this.requestUrl));
       url.append('?').append(TopServiceContext.TOP_SERVICE_KEY).append("=").append(this.topServiceId);
       if (this.threadServiceId != null) {
@@ -448,7 +449,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
       popupObject.setStringProperty("popupId", popup.getKey());
       popupObject.setStringProperty("windowProperties", serviceInfo.getPopupProperties().toString());
-      popupObject.setStringProperty("url", serviceInfo.toURL());
+      popupObject.setStringProperty("url", serviceInfo.getUrl());
       popupArray.append(popupObject.toString());
       this.renderedPopups.add(popup.getKey());
     }

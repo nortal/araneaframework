@@ -17,8 +17,9 @@
 package org.araneaframework.backend.list.memorybased.expression.logical;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.ObjectUtils;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
@@ -66,18 +67,31 @@ public class InExpression extends MultiExpression {
    * Evaluates by verifying that the field value is one of the values in the array.
    */
   public Boolean evaluate(VariableResolver resolver) throws ExpressionEvaluationException {
-    if (this.children.isEmpty()) {
-      return true;
-    }
+    boolean evaluationResult = true;
 
-    Object fieldValue = this.expr1.evaluate(resolver);
+    if (!this.children.isEmpty()) { // When no value is selected, the filter will do no filtering.
+      Object fieldValue = this.expr1.evaluate(resolver);
 
-    for (Expression expression : this.children) {
-      Object userSelectedValue = expression.evaluate(resolver);
-      if (new EqualsBuilder().append(fieldValue, userSelectedValue).isEquals()) {
-        return true;
+      if (fieldValue instanceof Collection) {
+        List<Object> userSelectedValues = new ArrayList<Object>(this.children.size());
+        for (Expression expression : this.children) {
+          userSelectedValues.add(expression.evaluate(resolver));
+        }
+        evaluationResult = ((Collection<?>) fieldValue).containsAll(userSelectedValues);
+      } else {
+        evaluationResult = false;
+
+        for (Expression expression : this.children) {
+          Object userSelectedValue = expression.evaluate(resolver);
+
+          if (ObjectUtils.equals(fieldValue, userSelectedValue)) {
+            evaluationResult = true;
+            break;
+          }
+        }
       }
     }
-    return false;
+
+    return evaluationResult;
   }
 }

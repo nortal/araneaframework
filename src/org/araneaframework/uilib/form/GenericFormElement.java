@@ -16,17 +16,22 @@
 
 package org.araneaframework.uilib.form;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MessageContext;
+import org.araneaframework.framework.MessageContext.MessageData;
+import org.araneaframework.framework.filter.StandardMessagingFilterWidget.StandardMessageData;
 import org.araneaframework.uilib.form.visitor.FormElementVisitor;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
@@ -38,23 +43,24 @@ import org.araneaframework.uilib.util.UilibEnvironmentUtil;
  */
 public abstract class GenericFormElement extends BaseApplicationWidget {
 
-  /** @since 1.1 */
+  /**
+   * The ID of the action that request form element background (AJAX) validation.
+   * 
+   * @since 1.1
+   */
   public static final String SEAMLESS_VALIDATION_ACTION_ID = "bgValidate";
 
-  // *******************************************************************
-  // FIELDS
-  // *******************************************************************
   protected Constraint constraint;
 
   protected Map<Object, Object> properties;
 
-  protected boolean converted = false;
+  protected boolean converted;
 
-  protected boolean validated = false;
+  protected boolean validated;
 
-  protected Boolean backgroundValidation = null;
+  protected Boolean backgroundValidation;
 
-  private Set<String> errors;
+  private Set<MessageData> errors;
 
   // *********************************************************************
   // * PUBLIC METHODS
@@ -193,18 +199,35 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   /**
    * Since 1.1 this returns an immutable Set.
    */
-  public Set<String> getErrors() {
+  public Set<MessageData> getErrors() {
     return Collections.unmodifiableSet(getMutableErrors());
   }
 
-  public void addError(String error) {
+  /**
+   * Adds an error message to the collection of all error messages belonging to the same form element.
+   * 
+   * @param error The error message label.
+   * @param params Optional error message label parameters.
+   */
+  public void addError(String error, Object... params) {
     Assert.notEmptyParam(error, "error");
+    addError(new StandardMessageData(error, params));
+  }
+
+  /**
+   * Adds an error message to the collection of all error messages belonging to the same form element.
+   * 
+   * @param error The error message data to add.
+   * @since 2.0
+   */
+  public void addError(MessageData error) {
+    Assert.notNullParam(error, "error");
     getMutableErrors().add(error);
   }
 
-  public void addErrors(Set<String> errors) {
+  public void addErrors(Set<MessageData> errors) {
     Assert.notNullParam(errors, "errors");
-    for (String error : errors) {
+    for (MessageData error : errors) {
       addError(error);
     }
   }
@@ -221,19 +244,46 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
   }
 
   /** @since 1.1 */
-  public void setBackgroundValidation(boolean b) {
-    this.backgroundValidation = Boolean.valueOf(b);
+  public void setBackgroundValidation(boolean backgroundValidation) {
+    this.backgroundValidation = backgroundValidation;
   }
 
   /** @since 1.1 */
   public boolean isBackgroundValidation() {
-    if (this.backgroundValidation == null) {
+    boolean bgValidate = false;
+
+    if (this.backgroundValidation != null) {
+      bgValidate = this.backgroundValidation.booleanValue();
+    } else {
       FormContext fctx = UilibEnvironmentUtil.getFormContext(getEnvironment());
-      if (fctx != null)
-        return fctx.isBackgroundValidation();
-      return ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
+      if (fctx != null) {
+        bgValidate = fctx.isBackgroundValidation();
+      } else {
+        bgValidate = ConfigurationUtil.isBackgroundFormValidationEnabled(getEnvironment());
+      }
     }
-    return this.backgroundValidation.booleanValue();
+
+    return bgValidate;
+  }
+
+  @Override
+  public String toString() {
+    List<String> props = new ArrayList<String>();
+    if (this.converted) {
+      props.add("converted");
+    }
+    if (this.validated) {
+      props.add("validated");
+    }
+    props.add(isValid() ? "valid" : "INVALID");
+    if (Boolean.TRUE.equals(this.backgroundValidation)) {
+      props.add("bgValidating");
+    }
+    if (this.properties != null && !this.properties.isEmpty()) {
+      props.add("propsCount=" + this.properties.size());
+    }
+
+    return new StringBuilder("Element: [").append(StringUtils.join(props, ";")).append("]").toString();
   }
 
   // *********************************************************************
@@ -313,9 +363,9 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
    * 
    * @since 1.1
    */
-  protected Set<String> getMutableErrors() {
+  protected Set<MessageData> getMutableErrors() {
     if (this.errors == null) {
-      this.errors = new HashSet<String>();
+      this.errors = new HashSet<MessageData>();
     }
     return this.errors;
   }
@@ -338,7 +388,7 @@ public abstract class GenericFormElement extends BaseApplicationWidget {
      */
     public ViewModel() {
       Map<Object, Object> m = GenericFormElement.this.properties;
-      this.properties = m == null ? m : Collections.unmodifiableMap(m);
+      this.properties = m == null ? null : Collections.unmodifiableMap(m);
     }
 
     /**

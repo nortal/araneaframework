@@ -16,15 +16,12 @@
 
 package org.araneaframework.core;
 
-import org.araneaframework.core.util.ComponentUtil;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Component;
@@ -38,6 +35,7 @@ import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
@@ -75,21 +73,21 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
      * 
      * @return a map of child components
      */
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }
 
     /**
      * @see org.araneaframework.Composite.Interface#attach(java.lang.Object, org.araneaframework.Component)
      */
-    public void attach(Object key, Component comp) {
+    public void attach(String key, Component comp) {
       _getChildren().put(key, comp);
     }
 
     /**
      * @see org.araneaframework.Composite.Interface#detach(java.lang.Object)
      */
-    public Component detach(Object key) {
+    public Component detach(String key) {
       return _getChildren().remove(key);
     }
   }
@@ -115,7 +113,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       return BaseApplicationWidget.this.getScope();
     }
 
-    public Map<Object, Component> getChildren() {
+    public Map<String, Component> getChildren() {
       return BaseApplicationWidget.this.getChildren();
     }
 
@@ -124,34 +122,30 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     }
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, List<EventListener>> getEventListeners() {
     if (this.eventListeners == null) {
-      this.eventListeners = new LinkedMap(1);
+      this.eventListeners = new LinkedHashMap<String, List<EventListener>>();
     }
     return this.eventListeners;
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, List<ActionListener>> getActionListeners() {
     if (this.actionListeners == null) {
-      this.actionListeners = new LinkedMap(1);
+      this.actionListeners = new LinkedHashMap<String, List<ActionListener>>();
     }
     return this.actionListeners;
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, Object> getViewData() {
     if (this.viewData == null) {
-      this.viewData = new LinkedMap(1);
+      this.viewData = new LinkedHashMap<String, Object>();
     }
     return this.viewData;
   }
 
-  @SuppressWarnings("unchecked")
   private Map<String, Object> getViewDataOnce() {
     if (this.viewDataOnce == null) {
-      this.viewDataOnce = new LinkedMap(1);
+      this.viewDataOnce = new LinkedHashMap<String, Object>();
     }
     return this.viewDataOnce;
   }
@@ -364,8 +358,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * 
    * @return a map of the child-components under this component
    */
-  public Map<Object, Component> getChildren() {
-    return Collections.unmodifiableMap(new LinkedHashMap<Object, Component>(_getChildren()));
+  public Map<String, Component> getChildren() {
+    return Collections.unmodifiableMap(new LinkedHashMap<String, Component>(_getChildren()));
   }
 
   /**
@@ -374,7 +368,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * @param key of the child being returned
    * @return the Widget under the provided key
    */
-  public Widget getWidget(Object key) {
+  public Widget getWidget(String key) {
     return (Widget) getChildren().get(key);
   }
 
@@ -385,7 +379,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * @param child Widget being added
    * @param env the Environment the child will be initialized with
    */
-  public void addWidget(Object key, Widget child, Environment env) {
+  public void addWidget(String key, Widget child, Environment env) {
     _addComponent(key, child, env);
   }
 
@@ -395,7 +389,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * @param key of the the child Widget
    * @param child Widget being added
    */
-  public void addWidget(Object key, Widget child) {
+  public void addWidget(String key, Widget child) {
     try {
       addWidget(key, child, this.getChildWidgetEnvironment());
     } catch (Exception e) {
@@ -415,14 +409,14 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   /**
    * Enables the widget with the specified key. Only a disabled widgets can be enabled.
    */
-  public void enableWidget(Object key) {
+  public void enableWidget(String key) {
     _enableComponent(key);
   }
 
   /**
    * Disables the widget with the specified key. Only a enabled widgets can be disabled.
    */
-  public void disableWidget(Object key) {
+  public void disableWidget(String key) {
     _disableComponent(key);
   }
 
@@ -498,8 +492,11 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available until explicitly
-   * removed with {@link #removeViewData(String)}.
+   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will
+   * be available, until explicitly removed with {@link #removeViewData(String)}.
+   * 
+   * @param key The key under which <code>customDataItem</code> will be made available.
+   * @param customDataItem The data that will be made available.
    */
   public void putViewData(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -507,7 +504,9 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Removes the custom data under key.
+   * Removes the custom data under <code>key</code>.
+   * 
+   * @param key The key, which will be removed from widget's view data.
    */
   public void removeViewData(String key) {
     Assert.notNullParam(this, key, "key");
@@ -515,8 +514,11 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available during this
-   * request only.
+   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will be available during this request
+   * only. It will be discarded right before update() is called.
+   * 
+   * @param key The key under which <code>customDataItem</code> will be made available.
+   * @param customDataItem The data that will be made available.
    */
   public void putViewDataOnce(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");

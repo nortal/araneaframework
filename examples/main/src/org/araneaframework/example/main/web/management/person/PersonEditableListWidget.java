@@ -26,8 +26,8 @@ import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.data.PersonListDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.uilib.form.BeanFormWidget;
-import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.DateControl;
+import org.araneaframework.uilib.form.control.FloatControl;
 import org.araneaframework.uilib.form.control.TextControl;
 import org.araneaframework.uilib.form.formlist.BeanFormListWidget;
 import org.araneaframework.uilib.form.formlist.BeanFormRow;
@@ -222,10 +222,10 @@ public abstract class PersonEditableListWidget extends TemplateBaseWidget {
        * A button that opens row for editing upon receiving onClick event. Activating button in already opened row saves
        * the row data.
        */
-      FormListUtil.addEditSaveButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+      FormListUtil.addEditSaveButtonToRowForm("#", editableRow);
 
       /* A button that deletes this row and its data (calls deleteRow()). */
-      FormListUtil.addDeleteButtonToRowForm("#", formList, rowForm, getRowKey(rowData));
+      FormListUtil.addDeleteButtonToRowForm("#", editableRow);
 
       rowForm.readFromBean(rowData);
     }

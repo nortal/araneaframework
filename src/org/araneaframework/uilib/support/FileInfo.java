@@ -16,26 +16,21 @@
 
 package org.araneaframework.uilib.support;
 
-import org.araneaframework.core.util.ExceptionUtil;
-
 import java.io.IOException;
-
 import java.io.InputStream;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * This file represents a file info received from a {@link org.araneaframework.uilib.form.control.FileUploadControl}.
  * Besides common file attributes (name, original name, size and type) this class also provides a
- * {@link #readFileContent()} method, which allows to read the file content as a <code>byte[]</code>
+ * {@link #readFileContent()} method, which allows to read the file content into memory as a <code>byte[]</code>
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
- * 
  */
 public class FileInfo implements Serializable {
 

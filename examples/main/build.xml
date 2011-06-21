@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="build" name="Aranea Main Example">
 
-	<property environment="env"/>
-
-	<property name="rootDir" value="../.."/>
-
-	<property name="lib.dir" value="${rootDir}/lib"/>
-
-	<property name="example.jar" value="../common/dist/aranea-examples-common.jar"/>
-
+	<property name="root.dir" value="../.."/>
+	<property name="lib.dir" value="${root.dir}/lib"/>
 	<property name="jetty.tmp.dir" value="tmp.jetty"/>
+
+	<property name="aranea.jar" value="${root.dir}/dist/aranea.jar"/>
+	<property name="example.jar" value="../common/dist/aranea-examples-common.jar"/>
 
 	<path id="build.cp">
 		<fileset dir="${lib.dir}/runtime/" includes="*.jar"/>
-		<fileset dir="${lib.dir}/build/" includes="*.jar" />
 		<fileset dir="${lib.dir}/demo/" includes="*.jar"/>
-		<path path="${rootDir}/dist/aranea.jar"/>
+		<path path="${lib.dir}/build/servlet-api.jar"/>
+		<path path="${aranea.jar}"/>
 		<path path="${example.jar}"/>
 	</path>
 
 	<path id="jetty.cp">
-		<path refid="build.cp"/>
+		<path path="${lib.dir}/build/servlet-api.jar"/>
 		<fileset dir="${lib.dir}/jetty" includes="**/*.jar"/>
 	</path>
 
-	<taskdef classpathref="jetty.cp" resource="tasks.properties" loaderref="jetty.loader" />
-	<typedef name="selectChannelConnector" classname="org.mortbay.jetty.nio.SelectChannelConnector" classpathref="jetty.cp" loaderref="jetty.loader" />
+	<taskdef classpathref="jetty.cp" loaderref="jetty.loader" resource="tasks.properties" />
+	<typedef classpathref="jetty.cp" loaderref="jetty.loader" name="selectChannelConnector" classname="org.mortbay.jetty.nio.SelectChannelConnector" />
 
 	<!--
 	======================================================================
@@ -41,13 +38,11 @@
 			<fileset dir="war/jsp" />
 			<fileset dir="war/src" />
 			<fileset dir="dist" />
-			<fileset dir="tmp" />
 		</delete>
 	</target>
 
 	<target name="init" description="Initializes the build system.">
 		<mkdir dir="war/WEB-INF/classes" />
-		<mkdir dir="war/WEB-INF/lib" />
 	</target>
 
 	<target name="compile" depends="init" description="Compiles demo Java source files.">
@@ -57,25 +52,24 @@
 
 	<target name="build" depends="compile" description="Copies the needed libraries and files, and builds the demo Java code">
 		<copy todir="war/WEB-INF/lib" flatten="true">
-			<fileset dir="${lib.dir}/runtime/" />
-			<fileset dir="${lib.dir}/build/" excludes="servlet-api.jar" />
-			<fileset dir="${lib.dir}/demo/" />
+			<fileset dir="${lib.dir}/runtime" />
+			<fileset dir="${lib.dir}/demo" />
 			<fileset file="${example.jar}" />
-			<fileset file="../../dist/aranea.jar" />
+			<fileset file="${aranea.jar}" />
 		</copy>
 
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir="." includes="META-INF\**\*" />
+			<fileset dir="." includes="META-INF/persistence.xml" />
 			<fileset dir=".." includes="log4j.xml,commons-logging.properties" />
 		</copy>
 
 		<!-- We also copy the source code of Java and JSP files to "war/src" and "war/jsp". -->
 
-		<copy todir="war/src/">
+		<copy todir="war/src">
 			<fileset dir="src" includes="**/*.java"/>
 		</copy>
 
-		<copy todir="war/jsp/">
+		<copy todir="war/jsp">
 			<fileset dir="war/WEB-INF/jsp" includes="**/*.jsp" />
 			<mapper type="glob" from="*.jsp" to="*.xml" />
 		</copy>
@@ -88,7 +82,7 @@
 
 	<target name="war" depends="build" description="Creates the ready-to-deploy WAR archive.">
 		<mkdir dir="dist" />
-		<war destfile="dist/aranea-template-app.war">
+		<war destfile="dist/aranea-main-demo.war">
 			<fileset dir="war" />
 		</war>
 	</target>
@@ -101,19 +95,16 @@
 
 	<target name="run-app" depends="build" description="Runs app in the Jetty server.">
 		<delete dir="${jetty.tmp.dir}"/>
-		<jetty tempdirectory="${jetty.tmp.dir}" >
-			<webapp warfile="war" contextPath="/mainExample"/>
+		<jetty tempdirectory="${jetty.tmp.dir}">
+			<webapp name="aranea-mainExample" warfile="war" contextPath="/mainExample"/>
 			<connectors>
 				<selectChannelConnector port="2000"/>
 			</connectors>
 		</jetty>
 	</target>
 
-	<target name="run-database-manager" description="Runs the HSQL database manager for the demo application.">
-		<java classname="org.hsqldb.util.DatabaseManagerSwing" dir="data" fork="yes">
-			<classpath>
-				<pathelement location="../lib/hsqldb.jar" />
-			</classpath>
+	<target name="run-database-manager" description="Runs the HSQL database manager without the demo application.">
+		<java classname="org.hsqldb.util.DatabaseManagerSwing" classpathref="build.cp" dir="data" fork="yes">
 			<arg line="--user sa --url jdbc:hsqldb:hsql://localhost/templateapp" />
 		</java>
 	</target>

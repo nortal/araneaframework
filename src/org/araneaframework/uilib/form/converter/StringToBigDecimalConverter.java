@@ -19,7 +19,6 @@ package org.araneaframework.uilib.form.converter;
 import java.math.BigDecimal;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * Converts <code>String</code> to <code>BigDecimal</code> and back.
@@ -38,9 +37,7 @@ public class StringToBigDecimalConverter extends BaseConverter<String, BigDecima
     try {
       result = new BigDecimal(data);
     } catch (NumberFormatException e) {
-      addError(MessageUtil.localizeAndFormat(getEnvironment(),
-          UiLibMessages.NOT_A_NUMBER,
-          MessageUtil.localize(getLabel(), getEnvironment())));
+      addErrorWithLabel(UiLibMessages.NOT_A_NUMBER);
     }
     return result;
   }

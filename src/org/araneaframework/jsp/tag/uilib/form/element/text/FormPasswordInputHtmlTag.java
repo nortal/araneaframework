@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.araneaframework.uilib.form.control.TextControl;
 
-
 /**
  * Standard password input form element tag.
  * 
@@ -33,12 +32,12 @@ import org.araneaframework.uilib.form.control.TextControl;
  *   description = "Form password input field, represents UiLib 'TextControl'."
  */
 public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
+
   @Override
   protected int doEndTag(Writer out) throws Exception {
-    // Type check
     assertControlType("TextControl");
 
-    TextControl.ViewModel viewModel = ((TextControl.ViewModel)controlViewModel);
+    TextControl.ViewModel viewModel = ((TextControl.ViewModel) controlViewModel);
 
     // Write
     Map<String, String> attributes = new HashMap<String, String>();
@@ -46,11 +45,6 @@ public class FormPasswordInputHtmlTag extends BaseFormTextInputHtmlTag {
     writeTextInput(out, "password", false, attributes);
 
     // Continue
-    super.doEndTag(out);
-    return EVAL_PAGE;
+    return super.doEndTag(out);
   }
 }
-
-
-
-

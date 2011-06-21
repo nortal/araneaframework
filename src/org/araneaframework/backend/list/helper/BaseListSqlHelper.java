@@ -23,10 +23,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import javax.sql.DataSource;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -105,7 +104,7 @@ public abstract class BaseListSqlHelper {
   protected Long itemRangeCount;
 
   // CONNECTION
-  protected DataSource ds;
+  protected transient DataSource ds;
 
   /**
    * Creates <code>ListSqlHelper</code> without initializing any fields.
@@ -616,6 +615,14 @@ public abstract class BaseListSqlHelper {
     return params;
   }
 
+  private List<Object> asList(List<Object> list) {
+    return list == null ? new LinkedList<Object>() : new LinkedList<Object>(list);
+  }
+
+  private List<Object> asList(Object... array) {
+    return array == null || array.length == 0 ? new LinkedList<Object>() : new LinkedList<Object>(Arrays.asList(array));
+  }
+
   /**
    * Sets the SQL query that will be used to retrieve the item range from the list and count the items. SQL query must
    * start with SELECT. All query arguments must be added additionally.
@@ -631,7 +638,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the items range query.
    */
   public final void setSqlQuery(String sqlQuery, Object... params) {
-    this.rangeStatement = new SqlStatement(sqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+    this.rangeStatement = new SqlStatement(sqlQuery, asList(params));
   }
 
   /**
@@ -649,7 +656,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the items range query.
    */
   public final void setSqlQuery(String sqlQuery, List<Object> params) {
-    this.rangeStatement = new SqlStatement(sqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+    this.rangeStatement = new SqlStatement(sqlQuery, asList(params));
   }
 
   /**
@@ -663,7 +670,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the count query.
    */
   public final void setCountSqlQuery(String countSqlQuery, Object... params) {
-    this.countStatement = new SqlStatement(countSqlQuery, ArrayUtils.isEmpty(params) ? Arrays.asList(params) : null);
+    this.countStatement = new SqlStatement(countSqlQuery, asList(params));
   }
 
   /**
@@ -677,7 +684,7 @@ public abstract class BaseListSqlHelper {
    * @param params Optional parameters to the count query.
    */
   public final void setCountSqlQuery(String countSqlQuery, List<Object> params) {
-    this.countStatement = new SqlStatement(countSqlQuery, CollectionUtils.isEmpty(params) ? null : params);
+    this.countStatement = new SqlStatement(countSqlQuery, asList(params));
   }
 
   /**

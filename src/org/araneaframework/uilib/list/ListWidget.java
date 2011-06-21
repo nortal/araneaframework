@@ -11,12 +11,6 @@
 
 package org.araneaframework.uilib.list;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.araneaframework.Path;
-
-import org.araneaframework.core.StandardPath;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,15 +20,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
+import org.araneaframework.OutputData;
+import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.EventListener;
 import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.StandardPath;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.event.OnClickEventListener;
@@ -68,10 +66,25 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected static final Log LOG = LogFactory.getLog(ListWidget.class);
 
+  /**
+   * The virtual scope to check which list rows checkboxes were checked.
+   * 
+   * @since 1.2
+   */
   public static final String LIST_CHECK_SCOPE = "checked";
 
+  /**
+   * The virtual scope to check which list rows radio button was selected.
+   * 
+   * @since 1.2
+   */
   public static final String LIST_RADIO_SCOPE = "radio";
 
+  /**
+   * The expected value for list rows checkboxes to verify that they were checked.
+   * 
+   * @since 1.2
+   */
   public static final String LIST_CHECK_VALUE = "checked";
 
   /**
@@ -121,7 +134,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private boolean changed = true;
 
-  private boolean selectFromMultiplePages = false;
+  private boolean selectFromMultiplePages;
 
   private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
@@ -141,6 +154,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   // *********************************************************************
   // * CONSTRUCTOR
   // *********************************************************************
+
   /**
    * Creates a new {@link ListWidget} instance.
    */
@@ -184,6 +198,22 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * all selected check boxes (from previous pages as well) stored (see {@link #setSelectFromMultiplePages(boolean)} for
    * more information).
    * 
+   * @since 2.0
+   * @see #setSelectFromMultiplePages(boolean)
+   * @see #getSelectedRows()
+   * @see #getSelectedRow()
+   */
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    super.action(path, input, output);
+    readRowsSelectedInputValues(input);
+  }
+
+  /**
+   * Reads information about selected check boxes and radio buttons, and stores this information. It is possible to make
+   * all selected check boxes (from previous pages as well) stored (see {@link #setSelectFromMultiplePages(boolean)} for
+   * more information).
+   * 
    * @since 1.1.3
    * @see #setSelectFromMultiplePages(boolean)
    * @see #getSelectedRows()
@@ -192,7 +222,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   @Override
   protected void update(InputData input) throws Exception {
     super.update(input);
+    readRowsSelectedInputValues(input);
+  }
 
+  protected void readRowsSelectedInputValues(InputData input) {
     // 1. Selected check boxes.
     // Path is used to read only those value-names that start with given prefix:
     Path checksPath = new StandardPath(getScope().toPath().toString() + Path.SEPARATOR + LIST_CHECK_SCOPE);
@@ -202,14 +235,14 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     // Now we read index numbers of selected rows:
     for (Map.Entry<String, String> reqParam : listData.entrySet()) {
       if (reqParam.getKey() != null && LIST_CHECK_VALUE.equals(reqParam.getValue())) {
-        rowKeys.add(new Integer(reqParam.getKey().toString()));
+        rowKeys.add(Integer.valueOf(reqParam.getKey()));
       }
     }
 
     // Sort the rows in the order displayed on the page:
     Collections.sort(rowKeys);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("List [" + getScope().getId() + "]: Collect selected list rows from multiple pages: "
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("List [" + getScope().getId() + "]: Collect selected list rows from multiple pages: "
           + this.selectFromMultiplePages);
     }
 
@@ -258,8 +291,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
         putViewData(LIST_RADIO_SCOPE, rowKey);
       }
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("List [" + getScope().getId() + "]: Number of selected list rows: " + this.selectedItems.size());
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("List [" + getScope().getId() + "]: Number of selected list rows: " + this.selectedItems.size());
     }
   }
 
@@ -646,16 +679,14 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @param fieldId field identifier.
    * @return field type
    */
-  @SuppressWarnings("unchecked")
-  public Class getFieldType(String fieldId) {
+  public Class<?> getFieldType(String fieldId) {
     return this.typeHelper.getFieldType(fieldId);
   }
 
   /**
    * Returns {@link Comparator} for the specified field.
    */
-  @SuppressWarnings("unchecked")
-  public Comparator getFieldComparator(String fieldId) {
+  public Comparator<?> getFieldComparator(String fieldId) {
     return this.typeHelper.getFieldComparator(fieldId);
   }
 
@@ -811,8 +842,8 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   public void setInitialOrder(String fieldId, boolean ascending, String fieldId2, boolean ascending2) {
     OrderInfo orderInfo = new OrderInfo();
-    orderInfo.addField(new OrderInfoField(fieldId, ascending));
-    orderInfo.addField(new OrderInfoField(fieldId2, ascending2));
+    orderInfo.addField(fieldId, ascending);
+    orderInfo.addField(fieldId2, ascending2);
     setOrderInfo(orderInfo);
   }
 
@@ -830,9 +861,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   public void setInitialOrder(String fieldId, boolean ascending, String fieldId2, boolean ascending2, String fieldId3,
       boolean ascending3) {
     OrderInfo orderInfo = new OrderInfo();
-    orderInfo.addField(new OrderInfoField(fieldId, ascending));
-    orderInfo.addField(new OrderInfoField(fieldId2, ascending2));
-    orderInfo.addField(new OrderInfoField(fieldId3, ascending3));
+    orderInfo.addField(fieldId, ascending);
+    orderInfo.addField(fieldId2, ascending2);
+    orderInfo.addField(fieldId3, ascending3);
     setOrderInfo(orderInfo);
   }
   
@@ -875,12 +906,19 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   public void refreshCurrentItemRange() {
     Assert.notNull(this.dataProvider, "DataProvider was NULL in ListWidget.refreshCurrentItemRange().");
     ListItemsData<T> itemRangeData;
+
     try {
-      itemRangeData = this.dataProvider.getItemRange(this.sequenceHelper.getCurrentPageFirstItemIndex(),
-          this.sequenceHelper.getItemsOnPage());
+      if (this.sequenceHelper.getAllItemsShown()) {
+        itemRangeData = this.dataProvider.getAllItems();
+      } else {
+        long firstItemIndex = this.sequenceHelper.getCurrentPageFirstItemIndex();
+        long itemsOnPage = this.sequenceHelper.getItemsOnPage();
+        itemRangeData = this.dataProvider.getItemRange(firstItemIndex, itemsOnPage);
+      }
     } catch (Exception e) {
       throw new AraneaRuntimeException(e);
     }
+
     this.itemRange = itemRangeData.getItemRange();
     this.sequenceHelper.setTotalItemCount(itemRangeData.getTotalCount().intValue());
     this.sequenceHelper.validateSequence();
@@ -1162,7 +1200,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * Handles single column ordering.
    */
   protected void order(String fieldName) throws Exception {
-    LOG.debug("Processing Single Column Order");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Processing single-column ordering for field '" + fieldName + "'.");
+    }
+
     boolean ascending = true;
 
     List<OrderInfoField> orderFields = this.orderInfo.getFields();
@@ -1220,9 +1261,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Handles filtering.
+   * Handles filtering using the data in the list filter form.
    */
-  protected void filter() throws Exception {
+  public void filter() {
     if (this.form.convertAndValidate() && this.form.isStateChanged()) {
       Map<String, Object> filterInfo = ListUtil.readFilterInfo(this.form);
       propagateListDataProviderWithFilter(filterInfo);
@@ -1233,10 +1274,10 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   }
 
   /**
-   * Handles filter clearing.
+   * Resets filter form fields.
    */
   @SuppressWarnings("unchecked")
-  protected void clearFilter() {
+  public void clearFilter() {
     clearForm(this.form);
     propagateListDataProviderWithFilter(Collections.EMPTY_MAP);
     this.sequenceHelper.setCurrentPage(0);

@@ -25,7 +25,7 @@
 								<ui:label styleClass="nowrap"/>
 							</ui:cell>
 							<ui:cell styleClass="inpt">
-								<ui:select localizeDisplayItems="true"/>
+								<ui:select/>
 							</ui:cell>
 						</ui:formElement>
 					</ui:row>
@@ -42,7 +42,7 @@
 								</ui:cell>
 								<ui:cell>
 									<!-- Render MultiSelectControl with checkboxes. (Also, instead ui:multiSelect could be used.) -->
-									<ui:checkboxMultiSelect type="vertical" localizeDisplayItems="true" />
+									<ui:checkboxMultiSelect type="vertical"/>
 								</ui:cell>
 							</ui:formElement>
 						</ui:row>

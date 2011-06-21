@@ -16,14 +16,11 @@
 
 package org.araneaframework.uilib.form.control;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.araneaframework.uilib.support.DataType;
-
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
@@ -35,6 +32,7 @@ import org.araneaframework.framework.FileUploadContext;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.FileInfo;
 import org.araneaframework.uilib.support.UiLibMessages;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -68,6 +66,12 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   }
 
   @Override
+  protected void update(InputData input) throws Exception {
+    this.mimeTypePermitted = true;
+    super.update(input);
+  }
+
+  @Override
   public boolean isRead() {
     return this.innerData != null;
   }
@@ -92,11 +96,11 @@ public class FileUploadControl extends BaseControl<FileInfo> {
   }
 
   @Override
-  protected void addError(String error) {
+  protected void addError(String error, Object... params) {
     if (this.ajaxRequest) {
-      this.ajaxMessages.add(error);
+      this.ajaxMessages.add(MessageUtil.localizeAndFormat(getEnvironment(), error, params));
     } else {
-      super.addError(error);
+      super.addError(error, params);
     }
   }
 
@@ -160,7 +164,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
 
     if (!this.uploadSucceeded) {
       Long sizeLimit = (getEnvironment().getEntry(FileUploadContext.class)).getFileSizeLimit();
-      addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.FILE_UPLOAD_FAILED, sizeLimit.toString()));
+      addError(UiLibMessages.FILE_UPLOAD_FAILED, sizeLimit.toString());
     }
   }
 
@@ -201,36 +205,38 @@ public class FileUploadControl extends BaseControl<FileInfo> {
     public static final String RESPONSE_FAIL = "FAIL";
 
     public void processAction(String actionId, InputData input, OutputData output) throws Exception {
-      FileInfo file = (FileInfo) FileUploadControl.this.innerData;
+
+      // Raising a flag that will inform this FileUploadControl to write error message to ajaxMessages collection:
       FileUploadControl.this.ajaxRequest = true;
+
+      FileInfo file = (FileInfo) FileUploadControl.this.innerData;
       convertAndValidate();
 
-      if (file == null || file.isFilePresent()) {
-        LOG.debug("Did not get a file!");
+      if (file == null || !file.isFilePresent()) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Did not get a file for some reason! Including error message in response when possible.");
+        }
+
         PrintWriter out = ServletUtil.getResponse(output).getWriter();
         out.write(RESPONSE_FAIL);
 
         if (!FileUploadControl.this.ajaxMessages.isEmpty()) {
-          out.print("(");
-          boolean isFirst = true;
-          for (String msg : FileUploadControl.this.ajaxMessages) {
-            if (!isFirst) {
-              out.print("\n");
-            } else {
-              isFirst = false;
-            }
-            out.print(msg);
-          }
-          out.print(")");
+          // Writing error messages, separated by new-lines:
+          out.print('(');
+          out.print(StringUtils.join(FileUploadControl.this.ajaxMessages, '\n'));
+          out.print(')');
+
+          // Reset error messages:
           FileUploadControl.this.ajaxMessages.clear();
         }
       } else {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Got file '" + file.getOriginalFilename() + "'");
+          LOG.debug("Got file '" + file.getOriginalFilename() + "' successfully!");
         }
         ServletUtil.getResponse(output).getWriter().write(RESPONSE_OK);
       }
 
+      // AJAX file upload processing is completed. Hide the flag:
       FileUploadControl.this.ajaxRequest = false;
     }
   }

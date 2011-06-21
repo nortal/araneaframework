@@ -17,11 +17,11 @@
 package org.araneaframework.uilib.form.control;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.event.StandardControlEventListenerAdapter;
 import org.araneaframework.uilib.support.UiLibMessages;
-import org.araneaframework.uilib.util.MessageUtil;
 
 /**
  * This class is a generalization of controls that have a single <code>String[]</code> request parameter.
@@ -67,16 +67,16 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
   protected void readFromRequest(HttpInputData request) {
     String parameterValues[] = request.getParameterValues(getScope().toString());
     this.innerData = preprocessRequestParameters(parameterValues);
-    this.isReadFromRequest = this.innerData != null;
+    this.isReadFromRequest = true;
   }
 
   /**
    * Breaks the procedure into two parts: conversion and validation. The conversion is done using method
-   * {@link #fromRequestParameters(String[])}and validation using method {@link #validate()}.
+   * {@link #fromRequestParameters(String[])} and validation using method {@link #validate()}.
    */
   @Override
   public void convert() {
-    this.value = this.innerData != null ? fromRequestParameters((String[]) this.innerData) : null;
+    this.value = ArrayUtils.getLength(this.innerData) > 0 ? fromRequestParameters((String[]) this.innerData) : null;
   }
 
   /**
@@ -85,18 +85,18 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
    */
   @Override
   public void validate() {
-    if (isMandatory() && !isRead()) {
+    if (isRead()) { // It means possible value change.
+
       String[] data = (String[]) this.innerData;
-      boolean hasValue = (data != null && data.length > 0 && data[0].trim().length() != 0);
+      boolean hasValue = data != null && data.length > 0 && StringUtils.isNotBlank(data[0]);
 
-      if (!isDisabled() || (isDisabled() && !hasValue)) {
-        addError(MessageUtil.localizeAndFormat(getEnvironment(), UiLibMessages.MANDATORY_FIELD, MessageUtil.localize(
-            getLabel(), getEnvironment())));
+      if (!hasValue && isMandatory()) { // Check the value for mandatory controls.
+
+        addErrorWithLabel(UiLibMessages.MANDATORY_FIELD);
+
+      } else if (getRawValue() != null) { // Check against converted value
+        validateNotNull();
       }
-    }
-
-    if (getRawValue() != null) {
-      validateNotNull();
     }
   }
 
@@ -134,15 +134,15 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
    * This method should parse the request parameters (preprocessed with {@link #preprocessRequestParameters(String[])})
    * and produce the control value.
    * 
-   * @param parameterValues the request parameters.
-   * @return control value.
+   * @param parameterValues A not <code>null</code> array of request parameters.
+   * @return The control value.
    */
   protected abstract T fromRequestParameters(String[] parameterValues);
 
   /**
    * This method should return the <code>String[]</code> representation of the control value.
    * 
-   * @param controlValue the control value.
+   * @param controlValue The not <code>null</code> control value to convert into <code>String</code>.
    * @return the <code>String[]</code> representation of the control value.
    */
   protected abstract String[] toResponseParameters(T controlValue);
@@ -171,18 +171,18 @@ public abstract class StringArrayRequestControl<T> extends BaseControl<T> {
     }
 
     /**
-     * Returns control values.
+     * Returns control values as an array of values, or as <code>null</code> when no values exist.
      * 
-     * @return control values.
+     * @return Control values array, or <code>null</code>.
      */
     public String[] getValues() {
       return this.values;
     }
 
     /**
-     * Returns the first of control values.
+     * Returns the first of control values, or <code>null</code> when no values currently exist.
      * 
-     * @return the first of control values.
+     * @return the first of control values, or <code>null</code>.
      */
     public String getSimpleValue() {
       return !ArrayUtils.isEmpty(this.values) ? this.values[0] : null;

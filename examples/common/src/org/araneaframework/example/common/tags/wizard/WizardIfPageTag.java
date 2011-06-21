@@ -20,33 +20,33 @@ import java.io.Writer;
 import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.jsp.tag.BaseTag;
 
-
 /**
- * This tag includes its body if the wizard's current page index matches specified index.
- * Page index must fit into following format:
- * ["not"] (page index value | "first" | "last")
+ * This tag includes its body if the wizard's current page index matches specified index. Page index must fit into
+ * following format: ["not"] (page index value | "first" | "last")
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
  * 
- * @jsp.tag
- *   name = "wizardIfPage"
- *   body-content = "JSP"
- *   description = "Includes its body if the wizard's current page index matches specified index."
+ * @jsp.tag name = "wizardIfPage" body-content = "JSP" description =
+ *          "Includes its body if the wizard's current page index matches specified index."
  */
 public class WizardIfPageTag extends BaseTag {
+
   public static final String INDEX_FIRST = "first";
+
   public static final String INDEX_LAST = "last";
+
   public static final String INDEX_NOT_PREFIX = "not";
+
   // XXX: wrong. besides, wizardwidget does not have a viewmodel - and widgetcontexttag does not put
   // widget itself into pagecontext.
   public static final String WIDGET_CONTEXT_KEY = "org.araneaframework.jsp.ui.context.UiWidgetContextTag.WIDGET";
 
   private String index;
-  
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
 
-    WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY);    
+    WizardContext wizard = (WizardContext) requireContextEntry(WIDGET_CONTEXT_KEY);
 
     int curIndex = wizard.getCurrentPageIndex();
     int count = wizard.countPages();
@@ -62,11 +62,9 @@ public class WizardIfPageTag extends BaseTag {
     int index;
     if (ifIndex.equals(INDEX_FIRST)) {
       index = 0;
-    }
-    else if (ifIndex.equals(INDEX_LAST)) {
+    } else if (ifIndex.equals(INDEX_LAST)) {
       index = count - 1;
-    }
-    else {
+    } else {
       index = Integer.parseInt(ifIndex);
     }
 
@@ -75,10 +73,9 @@ public class WizardIfPageTag extends BaseTag {
 
   /**
    * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "true"
-   *   description = "Page index with following format:
-           ["not"] (page index value | "first" | "last")." 
+   *    type = "java.lang.String"
+   *    required = "true"
+   *    description = 'Page index with following format: ["not"] (page index value | "first" | "last").'
    */
   public void setIndex(String index) {
     this.index = index;
