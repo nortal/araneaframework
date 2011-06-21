@@ -203,13 +203,14 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
         throw this.exception;
       }
       super.render(output);
+      arUtil.commit();
     } catch (Exception e) {
       arUtil.rollback();
+      arUtil.commit();
       LOG.error("Handling error:", e);
       renderExceptionHandler(output, e);
       this.exception = null;
     }
-    arUtil.commit();
   }
 
   /**

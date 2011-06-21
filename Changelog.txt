@@ -1,6 +1,6 @@
 ARANEA FRAMEWORK CHANGELOG
 ---------------------------------------------------------------------------------------------
-2010.05.XX   | Aranea 2.0 RC2
+2011.06.20   | Aranea 2.0 RC2
 
 Features and Improvements:
   RichTextAreaInitializationHtmlTag - possibility to add a function to TinyMCE  | See #875
@@ -9,6 +9,7 @@ Features and Improvements:
   Add DateRangeConstraint and StringRangeConstraint                             | See #885
 
 Bugfixes:
+  ListRowsTag reference to viewModel not cleared                                | See #901
   The ID attribute of form elements missing                                     | See #665
   RichTextArea does not submit content in overlay                               | See #808
   Typo in js (excpetion)                                                        | See #849
@@ -26,6 +27,8 @@ Bugfixes:
   Autocomplete input does too many requests                                     | See #877
   Background-validation: attached to wrong form-inputs                          | See #882
   Move RefreshingListsFlowContextHandler to Uilib                               | See #886
+  ExpressionEvaluationManager may fail with newer JSP containers                | See #911
+  Messages added to MessageContext [during init()] don't appear in OverlayContex| See #696
 
 ---------------------------------------------------------------------------------------------
 2009.12.04   | Aranea 2.0 RC1
