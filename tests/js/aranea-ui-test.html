@@ -5,11 +5,12 @@
 	<script type="text/javascript" src="app/jsUnitCore.js"></script>
 	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
 	<script type="text/javascript" src="../../etc/js/rsh/rsh.compressed.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea.js"></script>
 	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-ui.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Tests for "aranea-ui.js"</title>
 </head>
-<body>
+<body onload="Aranea.Page.onLoad()">
 	<script type="text/javascript">
 		function testNamespaces() {
 			assertNotUndefined('Aranea namespace must exist!', Aranea);
@@ -132,14 +133,14 @@
 			assertTrue('8) Table checkboxes must be checked!', $$('input[id^=test.selectItem]:checked').length == 5);
 
 			$('test.selectItem4').checked = false;
-			Aranea.UI.updateListSelectAll($('test.selectItem4'));
+			Aranea.UI.updateListSelectAll('test');
 			assertTrue('9) The Select-All must not be checked!', !$('test').checked);
 		}
 
 		function setChecked(index, element) {
 			assertTrue(index + ') The Select-All must not be checked!', !$('test').checked);
 			$(element).checked = true;
-			Aranea.UI.updateListSelectAll($(element));
+			Aranea.UI.updateListSelectAll('test');
 		}
 	</script>
 
@@ -163,23 +164,23 @@
 					<td>Select All</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" id="test.selectItem1" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td><input type="checkbox" id="test.selectItem1" onchange="Aranea.UI.updateListSelectAll('test')"/></td>
 					<td>Item 1</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" id="test.selectItem2" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td><input type="checkbox" id="test.selectItem2" onchange="Aranea.UI.updateListSelectAll('test')"/></td>
 					<td>Item 2</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" id="test.selectItem3" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td><input type="checkbox" id="test.selectItem3" onchange="Aranea.UI.updateListSelectAll('test')"/></td>
 					<td>Item 3</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" id="test.selectItem4" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td><input type="checkbox" id="test.selectItem4" onchange="Aranea.UI.updateListSelectAll('test')"/></td>
 					<td>Item 4</td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" id="test.selectItem5" onchange="Aranea.UI.updateListSelectAll(this)"/></td>
+					<td><input type="checkbox" id="test.selectItem5" onchange="Aranea.UI.updateListSelectAll('test')"/></td>
 					<td>Item 5</td>
 				</tr>
 			</table>

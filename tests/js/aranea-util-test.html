@@ -67,9 +67,9 @@
 			assertNotUndefined('Aranea.Util.AjaxResponse is required!', Aranea.Util.AjaxResponse);
 
 			var testStr = 'testResponseId\ntestKey\n13\nHello, World!';
-			var response = new Aranea.Util.AjaxResponse(testStr);
+			var response = new Aranea.Util.AjaxResponse(testStr, true);
 
-			assertEquals('Response ID is not correct!', response.getResponseId(), 'testResponseId');
+			assertEquals('Response ID is not correct!', 'testResponseId', response.getResponseId());
 			assertEquals('The remaining response text was not as expected!', testStr.substring(15), response.toString());
 
 			var count = 0;

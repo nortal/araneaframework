@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="app/jsUnitCore.js"></script>
 	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
 	<script type="text/javascript" src="../../etc/js/aranea/src/aranea.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-util.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Tests for "aranea.js"</title>
 </head>
@@ -27,10 +28,9 @@
 		}
 
 		function testData() { // Tests default settings:
+			assertTrue('Aranea.Data.absoluteURLs must be true!', Aranea.Data.absoluteURLs);
+			assertFalse('Aranea.Data.backgroundValidation must be true!', Aranea.Data.backgroundValidation);
 			assertNotUndefined('Aranea.Data.servletURL must not be undefined!', Aranea.Data.servletURL);
-			assertTrue('Aranea.Data.autofocus must be true!', Aranea.Data.autofocus);
-			assertNull('Aranea.Data.focusedFormElementName must be null!', Aranea.Data.focusedFormElementName);
-			assertNotNull('Aranea.Data.focusableElements must not be null!', Aranea.Data.focusableElements);
 			assertFalse('Aranea.Data.loaded must be false!', Aranea.Data.loaded);
 			assertNotNull('Aranea.Data.locale must not be null!', Aranea.Data.focusableElements);
 			assertEquals('Aranea.Data.locale.lang must be empty string!', Aranea.Data.locale.lang, '');
@@ -40,10 +40,6 @@
 			assert('Aranea.Data.keepAliveTimers must be array!', Object.isArray(Aranea.Data.keepAliveTimers));
 			assertFalse('Aranea.Data.loadingMessagePositionHack must be false!', Aranea.Data.loadingMessagePositionHack);
 			assert('Aranea.Data.regionHandlers must be hash map!', Object.isHash(Aranea.Data.regionHandlers));
-			assert('Aranea.Data.loadingMessageContent must be a string!', Object.isString(Aranea.Data.loadingMessageContent));
-			assert('Aranea.Data.loadingMessageId must be a string!', Object.isString(Aranea.Data.loadingMessageId));
-			assertTrue('Aranea.Data.reloadOnNoDocumentRegions must be a string!', Aranea.Data.reloadOnNoDocumentRegions);
-			assert('Aranea.Data.systemFormId must be a string!', Object.isString(Aranea.Data.systemFormId));
 		}
 
 		function testLogger() {
@@ -194,13 +190,21 @@
 			assertNotNull('assertSubmitURLs: Data form is required!', Aranea.Data.systemForm);
 			assert('assertSubmitURLs: Aranea.Page.getSubmitURL must be a function!', Object.isFunction(Aranea.Page.getSubmitURL));
 
-			var form = withForm ? Aranea.Data.systemForm : null;
+			var gotURL = "";
 
-			var gotURL = Aranea.Page.getSubmitURL(form, 'test=me&fail=false');
-			assertEquals(url, gotURL);
+			if (withForm) {
+				gotURL = Aranea.Page.getSubmitURL(Aranea.Data.systemForm, 'test=me&fail=false');
+			} else {
+				gotURL = Aranea.Page.getSubmitURL('test=me&fail=false');
+			}
+			assertEquals("1", url, gotURL);
 
-			gotURL = Aranea.Page.getSubmitURL(form, { test: 'me', fail: false });
-			assertEquals(url, gotURL);
+			if (withForm) {
+				gotURL = Aranea.Page.getSubmitURL(Aranea.Data.systemForm, { test: 'me', fail: false });
+			} else {
+				gotURL = Aranea.Page.getSubmitURL({ test: 'me', fail: false });
+			}
+			assertEquals("2", url, gotURL);
 
 			if (!withForm) {
 				assertEquals(url, Aranea.Page.getSubmitURL('test=me&fail=false'));
@@ -359,13 +363,11 @@
 		}
 
 		function testNotTestedFunctions() {
-			assert(Object.isFunction(Aranea.Page.addAutoFocusObserver));
 			assert(Object.isFunction(Aranea.Page.event));
 			assert(Object.isFunction(Aranea.Page.ajax));
 			assert(Object.isFunction(Aranea.Page.overlayAjax));
 			assert(Object.isFunction(Aranea.Page.submit));
 			assert(Object.isFunction(Aranea.Page.invokeEvent));
-			assert(Object.isFunction(Aranea.Page.initRSHURL));
 		}
 
 		function testOnUpdate() {

@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="app/jsUnitCore.js"></script>
 	<script type="text/javascript" src="../../etc/js/prototype/prototype.js"></script>
 	<script type="text/javascript" src="../../etc/js/rsh/rsh.compressed.js"></script>
+	<script type="text/javascript" src="../../etc/js/aranea/src/aranea.js"></script>
 	<script type="text/javascript" src="../../etc/js/aranea/src/aranea-rsh.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Tests for "aranea-util.js"</title>
@@ -13,48 +14,56 @@
 	<script type="text/javascript">
 		function testNamespaces() {
 			assertNotNull('Aranea namespace must exist!', Aranea);
-			assertNotNull('Aranea.RSHListener namespace must exist!', Aranea.RSHListener);
+			assertNotNull('Aranea.History namespace must exist!', Aranea.History);
 		}
 
-		function testRSHInit() {
+		function testHistoryInit() {
 			assertNotUndefined('window.dhtmlHistory must be provided!', window.dhtmlHistory);
 
 			document.fire('aranea:loaded');
 
-			// Some checks to verify that window.dhtmlHistory was initialized:
-			assert(Object.isString(window.dhtmlHistory.originalTitle));
-			assertEquals(document.title, window.dhtmlHistory.originalTitle);
-			assertTrue(window.dhtmlHistory.firstLoad);
-			assertEquals('The listener was not as expected!', window.dhtmlHistory.listener, Aranea.RSHListener);
+			if (Aranea.History.SUPPORTS_HASH_CHANGE_EVENT) {
+				assert('window.onhashchange must be a function', Object.isFunction(window.onhashchange));
+			} else {
+				// Some checks to verify that window.dhtmlHistory was initialized:
+				assert('History title must be string', Object.isString(window.dhtmlHistory.originalTitle));
+				assertEquals('document title must be History item title', document.title, window.dhtmlHistory.originalTitle);
+				assertTrue('Must be first load of a page', window.dhtmlHistory.firstLoad);
+				assertEquals('The listener was not as expected!', window.dhtmlHistory.listener, Aranea.RSHListener);
+				assertEquals('toJSON must be Object.toJSON', Object.toJSON, window.historyStorage.toJSON);
+			}
 
-			assertEquals('toJSON must be Object.toJSON', Object.toJSON, window.historyStorage.toJSON);
 		}
 
-		function testRSHDetect() {
-			window.testRSHDetectReached = false;
-
+		function testHistoryDetect() {
 			Aranea.Page = {
-				event: function() {
+				invokeEvent: function(type, eventId, widgetId, eventParam, eventCondition, eventUpdateRgns) {
+					assertEquals(Aranea.History.UPDATE_REGION_ID, eventUpdateRgns);
 					window.testRSHDetectReached = true;
 				}
 			};
-			Aranea.Logger = { debug: Prototype.emptyFunction };
 
-			var page = 'HTTP://WWW.DEMO.ORG/DEMO/PATH/TESTPAGE.HTML';
-			Aranea.RSHListener(page, null);
+			window.testRSHDetectReached = false;
+			window.location = window.location + '#test1';
 
-			assertFalse('Aranea.Page.event was not supposed to be invoked!', window.testRSHDetectReached);
-			assertNotEquals(page, window.dhtmlHistoryListenerRequestedState);
-			assertFalse('firstLoad must be false!', window.dhtmlHistory.firstLoad);
-			assertFalse('ignoreLocationChange must be false!', window.dhtmlHistory.ignoreLocationChange);
+			assertTrue('1) Aranea.Page.event was supposed to be invoked!', window.testRSHDetectReached);
 
-			page = 'http://www.demo.org/demo/path/testpage.html';
-			Aranea.RSHListener(page, null);
+			if (!Aranea.History.SUPPORTS_HASH_CHANGE_EVENT) {
+				assertEquals('test1', window.dhtmlHistoryListenerRequestedState);
+				assertFalse('firstLoad must be false!', window.dhtmlHistory.firstLoad);
+				assertFalse('ignoreLocationChange must be false!', window.dhtmlHistory.ignoreLocationChange);
+			}
 
-			assertTrue('Aranea.Page.event was supposed to be invoked!', window.testRSHDetectReached);
-			assertEquals(page, window.dhtmlHistoryListenerRequestedState);
-			assertFalse('firstLoad must be false!', window.dhtmlHistory.firstLoad);
-			assertFalse('ignoreLocationChange must be false!', window.dhtmlHistory.ignoreLocationChange);
+			window.testRSHDetectReached = false;
+			window.location.hash = 'test2';
+
+			assertTrue('2) Aranea.Page.event was supposed to be invoked!', window.testRSHDetectReached);
+
+			if (!Aranea.History.SUPPORTS_HASH_CHANGE_EVENT) {
+				assertEquals('test2', window.dhtmlHistoryListenerRequestedState);
+				assertFalse('firstLoad must be false!', window.dhtmlHistory.firstLoad);
+				assertFalse('ignoreLocationChange must be false!', window.dhtmlHistory.ignoreLocationChange);
+			}
 		}
 	</script>
 
