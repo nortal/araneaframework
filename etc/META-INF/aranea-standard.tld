@@ -2056,6 +2056,13 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.String</type>
 		</attribute>
+		<attribute>
+			<description>A Boolean specifying whether the resource to include may be omitted when not found, defaults to false.</description>
+			<name>optional</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
 	<tag>

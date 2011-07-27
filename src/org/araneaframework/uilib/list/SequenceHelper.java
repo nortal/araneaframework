@@ -111,6 +111,7 @@ public class SequenceHelper implements Serializable {
    */
   public void setItemsOnPage(long itemsOnPage) {
     this.itemsOnPage = itemsOnPage;
+    setCurrentPage(this.currentPage); // Recalculates valid current page number.
     fireChange();
   }
   

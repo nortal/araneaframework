@@ -37,6 +37,7 @@ Aranea.Logger = {
 	warn: Prototype.emptyFunction,
 	error: Prototype.emptyFunction,
 	fatal: Prototype.emptyFunction,
+	profile: Prototype.emptyFunction,
 	setLogger: Prototype.emptyFunction
 };
 
@@ -1033,8 +1034,8 @@ Aranea.Page.RegionHandler = {
 				var messages = null;
 				if (region.hasAttribute(this.regionTypeAttribute)) {
 					var type = region.readAttribute(this.regionTypeAttribute);
-					if (messagesByType[type]) {
-						messages = messagesByType[type];
+					if (messagesByType.get(type)) {
+						messages = messagesByType.get(type);
 						if (messages.size() > 0) {
 							this.showMessageRegion(region, messages);
 							return;
@@ -1369,4 +1370,4 @@ Aranea.Data.regionHandlers.set('document', Aranea.Page.RegionHandler.Document);
 Aranea.Data.regionHandlers.set('messages', Aranea.Page.RegionHandler.Message);
 Aranea.Data.regionHandlers.set('popups', Aranea.Page.RegionHandler.Popup);
 Aranea.Data.regionHandlers.set('reload', Aranea.Page.RegionHandler.Reload);
-Aranea.Data.regionHandlers.set('aranea-formvalidation', Aranea.Page.FormBackgroundValidation);
+Aranea.Data.regionHandlers.set('aranea-formvalidation', Aranea.Page.RegionHandler.FormBackgroundValidation);

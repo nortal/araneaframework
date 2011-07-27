@@ -45,6 +45,7 @@ public class BaseWidgetTag extends BaseTag {
 
     if (this.id == null) {
       this.widget = getContextWidget();
+      this.id = (String) this.widget.getScope().getId();
     } else {
       this.widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), this.id);
     }

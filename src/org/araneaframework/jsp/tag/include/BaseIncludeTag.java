@@ -30,10 +30,7 @@ public class BaseIncludeTag extends BaseTag implements AttributedTagInterface {
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-
     addContextEntry(AttributedTagInterface.ATTRIBUTED_TAG_KEY, this);
-
-    // Continue
     return EVAL_BODY_INCLUDE;
   }
 

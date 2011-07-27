@@ -182,7 +182,7 @@
 		</uptodate>
 	</target>
 
-	<target name="js" depends="js_changed" unless="aranea.js.uptodate" description="Compresses aranea*.js JavaScript files">
+	<target name="js" depends="" unless="aranea.js.uptodate" description="Compresses aranea*.js JavaScript files">
 		<property name="jsmin.loc" location="etc/jsutil/JSMin.jar"/>
 
 		<java jar="${jsmin.loc}" dir="etc/js/aranea/" fork="true">

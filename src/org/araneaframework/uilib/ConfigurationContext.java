@@ -16,10 +16,10 @@
 
 package org.araneaframework.uilib;
 
+import java.io.Serializable;
 import org.araneaframework.integration.spring.SpringExpressionEvaluationManager;
 import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
 import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
-import java.io.Serializable;
 
 /**
  * Configuration context for UiLib widgets. Constants defined here are the keys under which some existing widgets search
@@ -131,7 +131,7 @@ public interface ConfigurationContext extends Serializable {
    * 
    * @since 1.0.1
    */
-  public static final String TAGS_EL_MANAGER = "uilib.tags.el.manager";
+  String TAGS_EL_MANAGER = "uilib.tags.el.manager";
 
   /**
    * This property is mostly used internally to store the full names to action listeners that must be handled
@@ -139,7 +139,7 @@ public interface ConfigurationContext extends Serializable {
    * 
    * @since 2.0
    */
-  public static final String ASYNC_ACTION_LISTENERS = "uilib.widget.async.actions";
+  String ASYNC_ACTION_LISTENERS = "uilib.widget.async.actions";
 
   /**
    * Returns a configuration entry with given name.

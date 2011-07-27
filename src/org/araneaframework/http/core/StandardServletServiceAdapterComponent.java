@@ -57,7 +57,7 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
 
   private Service childService;
 
-  private boolean useFullURL = true;
+  private boolean useFullURL;
 
   @Override
   protected void init() throws Exception {

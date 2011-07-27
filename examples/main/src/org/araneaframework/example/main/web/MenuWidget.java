@@ -49,6 +49,7 @@ import org.araneaframework.example.main.web.demo.tree.UnsynchronizedTreeWidget;
 import org.araneaframework.example.main.web.form.ConversionFormWidget;
 import org.araneaframework.example.main.web.form.DisabledFormWidget;
 import org.araneaframework.example.main.web.form.ReadOnlyFormWidget;
+import org.araneaframework.example.main.web.form.ValidationFormWidget;
 import org.araneaframework.example.main.web.management.company.CompanyListWidget;
 import org.araneaframework.example.main.web.management.contract.ContractAddEditWidget;
 import org.araneaframework.example.main.web.management.contract.ContractListWidget;
@@ -179,6 +180,7 @@ public class MenuWidget extends TemplateMenuWidget {
     result.addMenuItem("forms.disabled", DisabledFormWidget.class);
     result.addMenuItem("forms.readonly", ReadOnlyFormWidget.class);
     result.addMenuItem("forms.converters", ConversionFormWidget.class);
+    result.addMenuItem("forms.validation", ValidationFormWidget.class);
 
     result.addMenuItem("lists");
     result.addMenuItem("advanced");

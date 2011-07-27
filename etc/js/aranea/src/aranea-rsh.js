@@ -138,7 +138,7 @@ Aranea.History = {
 	/**
 	 * The core state change listener. It will be called when the state actually changes, provided with correct previous
 	 * and new state IDs.
-	 *  
+	 * 
 	 * @param previousStateId The ID (never empty) of the previous state.
 	 * @param newStateId The ID (never empty) of the new state.
 	 */
@@ -146,16 +146,16 @@ Aranea.History = {
 		Aranea.Logger.debug('History: Detected navigation  "' + previousStateId + '" -> "' + newStateId + '"');
 
 		if (Aranea.Page.isStateValid(newStateId) >= 0) {
-		  var form = Aranea.Page.findSystemForm();
-		  if (form && form.araClientStateId) {
+			var form = Aranea.Page.findSystemForm();
+			if (form && form.araClientStateId) {
 			form.araClientStateId.value = newStateId;
-		  }
-		  form = null;
+			}
+			form = null;
 
-		  // ..a.Page.ajax(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form])
-		  Aranea.Page.ajax('', '', null, null, Aranea.History.UPDATE_REGION_ID);
+			// ..a.Page.ajax(eventId, widgetId, [eventParam], [eventCondition], eventUpdateRgns, [form])
+			Aranea.Page.ajax('', '', null, null, Aranea.History.UPDATE_REGION_ID);
 		} else {
-          Aranea.Logger.debug('History: AJAX request skipped, state "' + newStateId + '" expired.');
+			Aranea.Logger.debug('History: AJAX request skipped, state "' + newStateId + '" expired.');
 		}
 	},
 

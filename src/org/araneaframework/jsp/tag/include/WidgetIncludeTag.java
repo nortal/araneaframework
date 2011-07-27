@@ -29,6 +29,7 @@ import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
 import org.araneaframework.http.util.ServletUtil;
+import org.araneaframework.jsp.exception.AraneaJspException;
 import org.araneaframework.jsp.tag.context.WidgetContextTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.jsp.util.JspWidgetUtil;
@@ -49,42 +50,53 @@ public class WidgetIncludeTag extends BaseIncludeTag {
 
   protected String page;
 
+  protected boolean optional;
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
-    ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), this.widgetId);
-
-    WidgetContextTag widgetContextTag = registerSubtag(new WidgetContextTag());
-    widgetContextTag.setId(this.widgetId);
-    executeStartSubtag(widgetContextTag);
-
-    OutputData output = getOutputData();
-
     try {
-      if (this.page == null) {
-        hideGlobalContextEntries(this.pageContext);
+      ApplicationWidget widget = JspWidgetUtil.traverseToSubWidget(getContextWidget(), this.widgetId);
 
-        // The provided writer might be a wrapper of the writer returned by ServletUtil.getResponse(output).getWriter().
-        // We must use this writer (out) instead, because it may contain some necessary custom logic for rendering JSPs.
+      WidgetContextTag widgetContextTag = registerSubtag(new WidgetContextTag());
+      widgetContextTag.setId(this.widgetId);
+      executeStartSubtag(widgetContextTag);
 
-        // 1. Let's wrap the response so that the rendered widgets would write to the given stream (out).
-        HttpServletResponse response = ServletUtil.getResponse(output);
-        WidgetResponseWrapper responseWrapper = new WidgetResponseWrapper(response, out);
+      OutputData output = getOutputData();
 
-        output.extend(HttpServletResponse.class, responseWrapper);
+      try {
+        if (this.page == null) {
+          hideGlobalContextEntries(this.pageContext);
 
-        // 2. Render the specified widget:
-        widget._getWidget().render(output);
-        responseWrapper.flushBuffer();
+          // The provided writer might be a wrapper of the writer returned by
+          // ServletUtil.getResponse(output).getWriter().
+          // We must use this writer (out) instead, because it may contain some necessary custom logic for rendering
+          // JSPs.
 
-        // 3. Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
-        output.extend(HttpServletResponse.class, response);
-      } else {
-        JspContext config = getEnvironment().requireEntry(JspContext.class);
-        JspUtil.include(this.pageContext, config.getJspPath() + "/" + this.page);
+          // 1. Let's wrap the response so that the rendered widgets would write to the given stream (out).
+          HttpServletResponse response = ServletUtil.getResponse(output);
+          WidgetResponseWrapper responseWrapper = new WidgetResponseWrapper(response, out);
+
+          output.extend(HttpServletResponse.class, responseWrapper);
+
+          // 2. Render the specified widget:
+          widget._getWidget().render(output);
+          responseWrapper.flushBuffer();
+
+          // 3. Restore the previous HttpServletResponse instance, the wrapper is not needed anymore.
+          output.extend(HttpServletResponse.class, response);
+        } else {
+          JspContext config = getEnvironment().requireEntry(JspContext.class);
+          JspUtil.include(this.pageContext, config.getJspPath() + "/" + this.page);
+        }
+      } finally {
+        restoreGlobalContextEntries(this.pageContext);
+        executeEndTagAndUnregister(widgetContextTag);
       }
-    } finally {
-      restoreGlobalContextEntries(this.pageContext);
-      executeEndTagAndUnregister(widgetContextTag);
+
+    } catch (AraneaJspException e) {
+      if (!this.optional) {
+        throw e;
+      }
     }
 
     return super.doStartTag(out);
@@ -106,6 +118,16 @@ public class WidgetIncludeTag extends BaseIncludeTag {
    */
   public void setPage(String page) {
     this.page = evaluate("page", page, String.class);
+  }
+
+  /**
+   * @jsp.attribute
+   *    type = "java.lang.String"
+   *    required = "false"
+   *    description = "A Boolean specifying whether the resource to include may be omitted when not found, defaults to false."
+   */
+  public void setOptional(String optional) throws AraneaJspException {
+    this.optional = evaluateNotNull("optional", optional, Boolean.class);
   }
 
   /**

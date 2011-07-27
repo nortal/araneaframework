@@ -90,7 +90,7 @@
               <ui:label id="richTextarea" />
             </ui:cell>
             <ui:cell>
-              <ui:richTextarea id="richTextarea" rows="4" cols="80" disabledRenderMode="${disabledRenderMode}" />
+              <ui:richTextarea id="richTextarea" rows="4" cols="80" />
             </ui:cell>
           </ui:row>
 

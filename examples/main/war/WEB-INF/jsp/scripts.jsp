@@ -28,7 +28,17 @@
 	<ui:importScripts group="blackbird"/>
 
 	<!-- Imports all Aranea scripts (default group="all"). -->
-	<ui:importScripts group="all-devel"/>
+<!-- 	<ui:importScripts group="all-devel"/> -->
+    <ui:importScripts group="core-devel"/>
+    <ui:importScripts group="calendar"/> 
+    <ui:importScripts group="calendar_et"/>
+    <ui:importScripts group="scriptaculous"/>
+    <ui:importScripts group="modalbox"/>
+    <ui:importScripts group="popup-devel"/>
+    <ui:importScripts group="tree-devel"/>
+    <ui:importScripts group="rsh-devel"/>
+    <ui:importScripts group="prototip"/> 
+    <ui:importScripts group="logger"/>
 
 	<!-- We also need tinyMCE, a JavaScript-based rich-text editor -->
 	<ui:importScripts file="js/tiny_mce/tiny_mce.js"/>
@@ -83,10 +93,14 @@
 
 		// Sets focus to the first system-form input/button on page load.
 		document.observe('aranea:loaded', Aranea.Util.focusFormFirstInput);
-	</script>
+		function isRichTextReadOnly() {
+			return $$('textarea.richTextEditor:disabled').length > 0 ? 1 : null;
+		}
+		</script>
 
 	<!-- Let's specify Tiny MCE preferences: -->
 	<ui:richTextAreaInit>
+		<ui:attribute name="readonly" value="fn:isRichTextReadOnly()"/>
 		<ui:attribute name="theme" value="advanced"/>
 		<ui:attribute name="theme_advanced_buttons1" value="bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink,code"/>
 		<ui:attribute name="theme_advanced_buttons3" value=""/>
