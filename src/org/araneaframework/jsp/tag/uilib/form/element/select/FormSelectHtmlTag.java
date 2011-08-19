@@ -16,10 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import org.araneaframework.Path;
-
+import java.io.IOException;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.UiUpdateEvent;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
@@ -28,6 +28,7 @@ import org.araneaframework.jsp.util.JspWidgetCallUtil;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.event.OnChangeEventListener;
 import org.araneaframework.uilib.form.control.SelectControl;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
@@ -73,7 +74,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
 
     // Prepare
     String name = this.getFullFieldId();
-    SelectControl<Object>.ViewModel viewModel = ((SelectControl.ViewModel) controlViewModel);
+    SelectControl<Object>.ViewModel viewModel = (ViewModel) controlViewModel;
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");
@@ -89,8 +90,11 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     if (this.events && viewModel.isOnChangeEventRegistered()) {
-      UiUpdateEvent event = new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT, this.formFullId + Path.SEPARATOR
-          + this.derivedId, null, this.updateRegionNames);
+      UiUpdateEvent event =
+          new UiUpdateEvent(OnChangeEventListener.ON_CHANGE_EVENT,
+                            this.formFullId + Path.SEPARATOR + this.derivedId,
+                            null,
+                            this.updateRegionNames);
       event.setEventPrecondition(this.onChangePrecondition);
       JspUtil.writeEventAttributes(out, event);
       JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onchange");
@@ -102,27 +106,7 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     this.localizeDisplayItems = ConfigurationUtil.isLocalizeControlData(getEnvironment(), this.localizeDisplayItems);
 
     // Write items
-    for (DisplayItem item : viewModel.getSelectItems()) {
-      if (!item.isDisabled()) {
-        String value = item.getValue();
-        String label = item.getLabel();
-
-        if (this.localizeDisplayItems) {
-          label = JspUtil.getResourceString(this.pageContext, label);
-        }
-
-        JspUtil.writeOpenStartTag(out, "option");
-        JspUtil.writeAttribute(out, "value", value != null ? value : "");
-
-        if (viewModel.isSelected(value)) {
-          JspUtil.writeAttribute(out, "selected", "selected");
-        }
-
-        JspUtil.writeCloseStartTag_SS(out);
-        JspUtil.writeEscaped(out, label);
-        JspUtil.writeEndTag(out, "option");
-      }
-    }
+    writeItems(out, viewModel);
 
     // Close tag
     JspUtil.writeEndTag_SS(out, "select");
@@ -130,6 +114,60 @@ public class FormSelectHtmlTag extends BaseFormElementHtmlTag {
     // Continue
     super.doEndTag(out);
     return EVAL_PAGE;
+  }
+
+  private void writeItems(Writer out, SelectControl<Object>.ViewModel viewModel) throws IOException {
+    for (DisplayItem item : viewModel.getSelectItems()) {
+      if (item.isDisabled()) {
+        continue;
+      }
+      if (item.isGroup()) {
+        writeOptionGroup(out, viewModel, item);
+      } else {
+        writeOption(out, viewModel, item);
+      }
+    }
+  }
+
+  private void writeOptionGroup(Writer out, SelectControl<Object>.ViewModel viewModel, DisplayItem group)
+      throws IOException {
+    String label = group.getLabel();
+
+    if (this.localizeDisplayItems) {
+      label = JspUtil.getResourceString(this.pageContext, label);
+    }
+
+    JspUtil.writeOpenStartTag(out, "optgroup");
+    JspUtil.writeAttribute(out, "label", label != null ? label : "");
+    JspUtil.writeCloseStartTag_SS(out);
+
+    for (DisplayItem child : group.getChildOptions()) {
+      if (!child.isDisabled()) {
+        writeOption(out, viewModel, child);
+      }
+    }
+
+    JspUtil.writeEndTag(out, "optgroup");
+  }
+
+  private void writeOption(Writer out, SelectControl<Object>.ViewModel viewModel, DisplayItem item) throws IOException {
+    String value = item.getValue();
+    String label = item.getLabel();
+
+    if (this.localizeDisplayItems) {
+      label = JspUtil.getResourceString(this.pageContext, label);
+    }
+
+    JspUtil.writeOpenStartTag(out, "option");
+    JspUtil.writeAttribute(out, "value", value != null ? value : "");
+
+    if (viewModel.isSelected(value)) {
+      JspUtil.writeAttribute(out, "selected", "selected");
+    }
+
+    JspUtil.writeCloseStartTag_SS(out);
+    JspUtil.writeEscaped(out, label);
+    JspUtil.writeEndTag(out, "option");
   }
 
   /**

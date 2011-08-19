@@ -16,12 +16,12 @@
 
 package org.araneaframework.jsp.tag.uilib.list.formlist;
 
-import org.araneaframework.Path;
-
 import java.io.Writer;
 import java.util.ListIterator;
+import org.araneaframework.Path;
 import org.araneaframework.jsp.tag.uilib.form.FormTag;
 import org.araneaframework.jsp.tag.uilib.list.BaseListRowsTag;
+import org.araneaframework.uilib.form.formlist.BaseFormListWidget.ViewModel;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRow;
 
@@ -50,7 +50,7 @@ public class FormListRowsTag<R> extends BaseListRowsTag {
 
   @Override
   public int doStartTag(Writer out) throws Exception {
-    this.editableListViewModel = (FormListWidget.ViewModel) requireContextEntry(FormListTag.FORM_LIST_VIEW_MODEL_KEY);
+    this.editableListViewModel = (ViewModel) requireContextEntry(FormListTag.FORM_LIST_VIEW_MODEL_KEY);
     this.editableListId = (String) requireContextEntry(FormListTag.FORM_LIST_ID_KEY);
     return super.doStartTag(out);
   }

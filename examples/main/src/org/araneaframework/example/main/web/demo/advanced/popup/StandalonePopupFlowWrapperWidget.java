@@ -16,10 +16,11 @@
 
 package org.araneaframework.example.main.web.demo.advanced.popup;
 
-import org.apache.commons.lang.ObjectUtils;
-
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
@@ -207,5 +208,9 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
    */
   public String getComponentTitle() {
     return "";
+  }
+
+  public List<String> getComponentTitles() {
+    return Collections.singletonList(getComponentTitle());
   }
 }

@@ -10,6 +10,7 @@
 package org.araneaframework.uilib.core;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.araneaframework.Environment;
@@ -174,23 +175,23 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
     return getLocalFlowContext().getTransitionHandler();
   }
 
-  @Override
   public void setComponentTitle(String componentTitle) {
     getLocalFlowContext().setComponentTitle(componentTitle);
   }
 
-  @Override
   public void setPageTitle(String pageTitle) {
     getLocalFlowContext().setPageTitle(pageTitle);
   }
 
-  @Override
   public String getComponentTitle() {
     return getLocalFlowContext().getComponentTitle();
   }
 
-  @Override
   public String getPageTitle() {
     return getLocalFlowContext().getPageTitle();
+  }
+  
+  public List<String> getComponentTitles(){
+    return getLocalFlowContext().getComponentTitles();
   }
 }

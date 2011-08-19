@@ -17,6 +17,7 @@
 package org.araneaframework.uilib.form.data;
 
 import java.math.BigDecimal;
+import org.apache.commons.lang.ObjectUtils;
 import org.araneaframework.uilib.form.Data;
 
 /**
@@ -30,7 +31,11 @@ public class BigDecimalData extends Data<BigDecimal> {
 
   @Override
   public boolean isStateChanged() {
+    if (this.markedBaseValue == null || this.value == null) {
+      return !ObjectUtils.equals(this.markedBaseValue, this.value);
+    }
+
     // Compare to is not sensitive on whether the value ends with ".0" or ".0000". 
-    return this.markedBaseValue != null && this.markedBaseValue.compareTo(this.value) == 0;
+    return this.markedBaseValue.compareTo(this.value) != 0;
   }
 }

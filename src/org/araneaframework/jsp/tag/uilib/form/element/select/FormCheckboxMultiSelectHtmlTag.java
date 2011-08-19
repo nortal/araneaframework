@@ -23,6 +23,7 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 
@@ -70,7 +71,7 @@ public class FormCheckboxMultiSelectHtmlTag extends BaseFormElementHtmlTag {
     }
 
     // Prepare
-    MultiSelectControl<Object>.ViewModel viewModel = (MultiSelectControl.ViewModel) this.controlViewModel;
+    MultiSelectControl<Object>.ViewModel viewModel = (ViewModel) this.controlViewModel;
     FormCheckboxMultiSelectItemLabelHtmlTag label = new FormCheckboxMultiSelectItemLabelHtmlTag();
     FormCheckboxMultiSelectItemHtmlTag item = new FormCheckboxMultiSelectItemHtmlTag();
 

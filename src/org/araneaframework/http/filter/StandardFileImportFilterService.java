@@ -50,7 +50,7 @@ public class StandardFileImportFilterService extends BaseFilterService {
 
   public static final String FILE_IMPORTER_NAME = "fileimporter";
 
-  protected long cacheHoldingTime = 3600000;
+  protected long cacheHoldingTime = 86400000;
 
   private synchronized void initialize() {
     if (!isInitialized) {

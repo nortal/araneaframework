@@ -44,12 +44,10 @@ public class StandardWindowFocusPositionFilterWidget extends BaseFilterWidget im
     return new StandardEnvironment(super.getChildWidgetEnvironment(), WindowFocusPositionContext.class, this);
   }
 
-  @Override
   public String getFocusedElement() {
     return this.focusPosition;
   }
 
-  @Override
   public void setFocusToElement(String widgetId, String formId, String elementId) {
     final StringBuffer newFocusPosition = new StringBuffer(StringUtils.defaultString(widgetId));
     if (StringUtils.isNotBlank(formId)) {
@@ -62,13 +60,11 @@ public class StandardWindowFocusPositionFilterWidget extends BaseFilterWidget im
     this.focusPosition = newFocusPosition.toString();
   }
 
-  @Override
   public void setFocusToElement(String fullElementId) {
     LOG.debug("Setting focus to " + fullElementId);
     this.focusPosition = fullElementId;
   }
   
-  @Override
   public void resetFocus() {
     this.focusPosition = null;
   }

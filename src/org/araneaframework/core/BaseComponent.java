@@ -150,7 +150,6 @@ public class BaseComponent implements Component {
     return this.state == ALIVE;
   }
   
-  @Override
   public boolean isEnabled() {
     return enabled;
   }
