@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Widget;
-import org.araneaframework.core.AraneaRuntimeException;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**
@@ -214,7 +213,7 @@ public class MenuItem implements Serializable {
       }
     } catch (Exception e) {
       clearSelection();
-      throw new AraneaRuntimeException("Selection of menu item '" + menuPath + "' failed at '" + pathElement + "'.", e);
+      //throw new AraneaRuntimeException("Selection of menu item '" + menuPath + "' failed at '" + pathElement + "'.", e);
     }
 
     return resultFlow;

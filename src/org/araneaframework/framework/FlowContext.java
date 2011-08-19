@@ -17,6 +17,7 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
+import java.util.List;
 import org.apache.commons.collections.Closure;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
@@ -193,4 +194,9 @@ public interface FlowContext extends Serializable {
    * Returns title of current component.
    */
   public String getComponentTitle();
+
+  /**
+   * @return all component titles in current flow call stack
+   */
+  List<String> getComponentTitles();
 }

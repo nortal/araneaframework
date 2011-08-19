@@ -17,11 +17,14 @@
 package org.araneaframework.framework.container;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
@@ -643,7 +646,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     }
   }
 
-  @Override
   public void setComponentTitle(String componentTitle) {
     if(callStack.isEmpty()) {
       return;
@@ -653,7 +655,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     
   }
 
-  @Override
   public void setPageTitle(String pageTitle) {
     if(callStack.isEmpty()) {
       return;
@@ -662,7 +663,6 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     frame.setPageTitle(pageTitle);
   }
 
-  @Override
   public String getComponentTitle() {
     if(callStack.isEmpty()) {
       return "";
@@ -671,12 +671,19 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     return frame.getComponentTitle();
   }
 
-  @Override
   public String getPageTitle() {
     if(callStack.isEmpty()) {
       return "";
     }
     CallFrame frame = callStack.getFirst();
     return frame.getPageTitle();
+  }
+  
+  public List<String> getComponentTitles(){
+    List<String> titles = new ArrayList<String>();
+    for(CallFrame callFrame : getCallStack()) {
+      titles.add(0, StringUtils.defaultString(callFrame.getComponentTitle()));
+    }
+    return titles;
   }
 }

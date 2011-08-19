@@ -293,7 +293,7 @@ Aranea.Keyboard = {
 			var keyCode = event.keyCode ? event.keyCode : event.which;
 			var keyHandlers = this.handlers.get(keyCode);
 			var elHandlers = this.getElementHandlers(event.element());
-			var elementName = event.element().name;
+			var elementName = event.element().name ? event.element().name : event.element().localName;
 
 			if (elHandlers) {
 				Aranea.Logger.debug('Invoking element handlers, count=' + elHandlers.length);

@@ -16,16 +16,15 @@
 
 package org.araneaframework.jsp.tag.uilib.form.element.select;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Writer;
+import java.util.List;
 import javax.servlet.jsp.JspException;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.ConfigurationContext;
+import org.araneaframework.uilib.form.control.BaseSelectControl.ViewModel;
 import org.araneaframework.uilib.form.control.MultiSelectControl;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.util.ConfigurationUtil;
@@ -69,7 +68,7 @@ public class FormMultiSelectHtmlTag extends BaseFormElementHtmlTag {
 
     // Prepare
     String name = this.getFullFieldId();
-    MultiSelectControl<Object>.ViewModel viewModel = ((MultiSelectControl.ViewModel) this.controlViewModel);
+    MultiSelectControl<Object>.ViewModel viewModel = (ViewModel) this.controlViewModel;
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "select");

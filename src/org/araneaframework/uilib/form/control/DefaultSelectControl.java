@@ -1,8 +1,11 @@
 package org.araneaframework.uilib.form.control;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import org.araneaframework.core.Assert;
 import org.araneaframework.uilib.support.DisplayItem;
 import org.araneaframework.uilib.support.DisplayItemBuilder;
@@ -40,6 +43,30 @@ public class DefaultSelectControl extends SelectControl<DisplayItem> {
     DisplayItem newItem = new DisplayItem(value, label);
     DisplayItemUtil.assertUnique(this.items, newItem);
     this.items.add(newItem);
+  }
+
+  @Override
+  public List<DisplayItem> getAllItems() {        
+    return Collections.unmodifiableList(collectAllItems(this.items));
+  }
+
+  private List<DisplayItem> collectAllItems(List<DisplayItem> displayItems) {
+    final List<DisplayItem> allItems = new ArrayList<DisplayItem>();
+    for (DisplayItem item : displayItems) {
+      if (item.isGroup()) {
+        allItems.addAll(collectAllItems(item.getChildOptions()));
+      } else {
+        allItems.add(item);
+      }
+    }
+    return allItems;
+  }
+
+  @Override
+  public List<DisplayItem> getEnabledItems() {
+    List<DisplayItem> enabledItems = new LinkedList<DisplayItem>(getAllItems());
+    enabledItems.removeAll(this.disabledItems);
+    return Collections.unmodifiableList(enabledItems);
   }
 
   @Override
