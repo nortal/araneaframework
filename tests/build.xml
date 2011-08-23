@@ -37,6 +37,7 @@
 			debuglevel="lines,vars,source"
 			encoding="utf-8"
 			srcdir="src"
+			source="1.5"
 			target="1.5"
 		>
 			<classpath refid="classpath"/>
