@@ -23,10 +23,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
  */
 public class AsyncFormModificationTest extends TestCase {
 
-  public AsyncFormModificationTest() {
-    super("");
-  }
-
   protected FormWidget makeForm() throws Exception {
     FormWidget testForm = new FormWidget();
     testForm.addElement("myLongText", "my long text", new TextControl(), new StringData(), true);
