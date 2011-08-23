@@ -446,7 +446,7 @@
 				<include name="org/araneaframework/*.java"/>
 				<include name="org/araneaframework/core/**/*.java"/>
 			</fileset>
-			<formatter type="plain" tofile="${checkstyle.report.dir}/checkstyle_report.txt"/>
+			<formatter type="xml" tofile="${checkstyle.report.dir}/report.xml"/>
 		</checkstyle>
 	</target>
 
