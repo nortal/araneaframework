@@ -1,23 +1,25 @@
 <ivysettings>
 
+  <!-- This configuration should be used in araneaframework.org server (especially with Jenkins) -->
+
   <properties file="${ivy.conf.dir}/version.properties" />
   <properties file="${ivy.conf.dir}/ivyrep.properties" />
 
   <settings defaultResolver="defaultChainResolver" />
 
   <caches>
-    <cache name="tomcat-cache" basedir="/var/lib/tomcat6/shared/" />
+    <cache defaultCacheDir="${local.ivy.cache.location}" />
   </caches>
 
   <resolvers>
-    <chain name="defaultChainResolver">
-      <ibiblio m2compatible="true" name="ibiblio-aranea" root="${aranea.ivy.root}" pattern="${aranea.ivy.pattern}" />
-      <ibiblio m2compatible="true" name="ibiblio-maven2" root="${repo1.mvn.root}" pattern="${repo1.mvn.pattern}" />
-    </chain>
     <filesystem name="repository" checkmodified="true">
       <ivy pattern="${local.ivy.root}/${local.ivy.pattern.ivy}" />
       <artifact pattern="${local.ivy.root}/${local.ivy.pattern.artifact}" />
     </filesystem>
+    <chain name="defaultChainResolver">
+      <ibiblio m2compatible="true" name="ibiblio-aranea" root="${aranea.ivy.root}" pattern="${aranea.ivy.pattern}" />
+      <ibiblio m2compatible="true" name="ibiblio-maven2" root="${repo1.mvn.root}" pattern="${repo1.mvn.pattern}" />
+    </chain>
   </resolvers>
 
 </ivysettings>
