@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.list.util.like;
 
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * Like filter wildcards utils.

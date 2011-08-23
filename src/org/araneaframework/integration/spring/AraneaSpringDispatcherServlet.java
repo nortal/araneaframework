@@ -27,7 +27,7 @@ import java.util.Properties;
 import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 import org.araneaframework.http.core.BaseAraneaDispatcherServlet;

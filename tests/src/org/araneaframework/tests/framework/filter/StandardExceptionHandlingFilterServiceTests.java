@@ -22,7 +22,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.framework.ExceptionHandlerFactory;
 import org.araneaframework.framework.filter.StandardCriticalExceptionHandlingFilterService;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -35,7 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardExceptionHandlingFilterServiceTests extends TestCase {
   private StandardCriticalExceptionHandlingFilterService service;

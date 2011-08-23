@@ -19,15 +19,15 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * Implements <code>Iterator</code> pattern, providing one-time access to the specific steps that form a path in a
- * hierarchical structure.
+ * Implements iterator design pattern, providing one-time access to the specific steps that form a path in a
+ * hierarchical structure, starting from the beginning.
  * <p>
  * Path can be used to show the path to a specific component in a composite (hierarchy of components) and then events
- * can be routed exactly to certain components.
+ * can be routed exactly to certain components identified by path.
  * <p>
- * Path is also used in {@link org.araneaframework.InputData} to specify which data is meant for which component.
+ * Path is also used in {@link org.araneaframework.InputData} to specify scoped data.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
@@ -35,30 +35,32 @@ import java.io.Serializable;
 public interface Path extends Cloneable, Serializable {
 
   /**
-   * The constant representing the path items separator.
+   * The constant representing path items separator.
    * 
    * @since 2.0
    */
   String SEPARATOR = ".";
 
   /**
-   * Returns next step in the path without changing the current position.
+   * Provides the next path item in the path without changing the current position. May throw an exception, when there
+   * are no more path items available.
    * 
-   * @return the next step in the path
+   * @return The next path item in the path.
    */
-  public String getNext();
+  String getNext();
 
   /**
-   * Returns the next step in path.
+   * Provides the next path item in the path, moving the current position in the path one step forward. May throw an
+   * exception, when there are no more path items available.
    * 
-   * @return the next step in the path
+   * @return The next path item in the path.
    */
-  public String next();
+  String next();
 
   /**
-   * Returns true if this path has more elements.
+   * Provides whether there are more path items available to iterate over them.
    * 
-   * @return true if path has more elements
+   * @return A Boolean that is <code>true</code>, when the underlying path has more elements.
    */
-  public boolean hasNext();
+  boolean hasNext();
 }

@@ -17,22 +17,44 @@
 package org.araneaframework;
 
 /**
- * Allows to acquire information about running Aranea version. It depends on jar file manifest having this information.
+ * Allows to acquire information about running Aranea version. It depends on JAR file manifest having this information.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class AraneaVersion {
 
+  /**
+   * Instantiating this class is prohibited.
+   */
+  protected AraneaVersion() {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Provides Aranea implementation title from the JAR file.
+   * 
+   * @return Aranea implementation title.
+   */
   public static String getTitle() {
     Package p = AraneaVersion.class.getPackage();
     return p == null ? null : p.getImplementationTitle();
   }
 
+  /**
+   * Provides Aranea implementation version from the JAR file.
+   * 
+   * @return Aranea implementation version.
+   */
   public static String getVersion() {
     Package p = AraneaVersion.class.getPackage();
     return p == null ? null : p.getImplementationVersion();
   }
 
+  /**
+   * The main method for running this class alone: just prints out Aranea implementation title and version.
+   * 
+   * @param args Command line parameters - ignored in this method.
+   */
   public static void main(String[] args) {
     System.out.println(getTitle() + " " + getVersion());
   }

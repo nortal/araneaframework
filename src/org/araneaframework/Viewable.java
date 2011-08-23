@@ -21,32 +21,55 @@ import java.io.Serializable;
 /**
  * Viewable is a component which has a view model via <code>getViewModel()</code>.
  * <p>
- * Viewable should not be implemented directly but subinterfaces ComponentInterface, 
- * ServiceInterface, WidgetInterface should be used.
- * </p>
+ * Viewable should not be implemented directly, instead {@link ViewableComponent}, {@link ViewableService},
+ * {@link ViewableWidget} should be used.
+ * <p>
+ * <tt>Viewable</tt> follows the template pattern by defining <code>_getViewable()</code> which returns the
+ * implementation. The implementation is used for retrieving the view model. The <tt>Viewable</tt> contract itself does
+ * not expose direct view model exposing methods, since it's protected and handled by implementations.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Viewable extends Serializable {
-  public Interface _getViewable();
 
+  /**
+   * The factory method returning the implementation of the Viewable.
+   * 
+   * @return the implementation of the Viewable.
+   */
+  Interface _getViewable();
+
+  /**
+   * The interface which takes care of calling the hooks in the <tt>Viewable</tt> template design pattern.
+   * 
+   * @see Viewable
+   */
   interface Interface extends Serializable {
-    public Object getViewModel();
+
+    /**
+     * Exposes the view model for the viewable.
+     * 
+     * @return The view model of the viewable component. Must not be <code>null</code>!
+     */
+    Object getViewModel();
   }
-  
+
   /**
-   * Viewable Component.
+   * A viewable <code>Component</code> contract.
    */
-  public interface ViewableComponent extends Viewable, Component, Serializable {}
-  
+  interface ViewableComponent extends Viewable, Component {
+  }
+
   /**
-   * Viewable Service.
+   * A viewable <code>Service</code> contract.
    */
-  public interface ViewableService extends ViewableComponent, Service, Serializable {}
-  
+  interface ViewableService extends Viewable.ViewableComponent, Service {
+  }
+
   /**
-   * Viewable Widget.
+   * A viewable <code>Widget</code> contract.
    */
-  public interface ViewableWidget extends ViewableService, Widget, Serializable {}
+  interface ViewableWidget extends Viewable.ViewableService, Widget {
+  }
 }

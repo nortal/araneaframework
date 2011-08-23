@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * Not-null comparator that compares <code>String</code> values according to the <code>Locale</code> and case sensitive

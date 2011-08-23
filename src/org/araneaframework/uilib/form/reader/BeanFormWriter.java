@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.reader;
 import java.io.Serializable;
 import java.util.List;
 import org.araneaframework.backend.util.BeanMapper;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormWidget;

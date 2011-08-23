@@ -40,7 +40,7 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
  * environment under the keys ServletContext.class and ServletConfig.class respectively.
  * </p>
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class BaseAraneaDispatcherServlet extends HttpServlet {
 

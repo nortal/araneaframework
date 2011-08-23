@@ -17,7 +17,6 @@
 package org.araneaframework.core.util;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.araneaframework.core.Assert;
 
 /**
  * This utility class contains methods for managing exceptions.

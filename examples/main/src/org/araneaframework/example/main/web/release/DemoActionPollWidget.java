@@ -16,12 +16,14 @@
 
 package org.araneaframework.example.main.web.release;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.core.action.StandardActionListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.util.MessageUtil;
@@ -44,7 +46,7 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
     int lastRandom = 0;
 
     @Override
-    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam, InputData input, OutputData output) {
 
       int random = this.rn.nextInt(100);
       this.lastRandom = random;
@@ -56,8 +58,13 @@ public class DemoActionPollWidget extends TemplateBaseWidget {
             .format(new Date()))
             + "<br/>";
       }
-      httpOutput.setContentType("text/xml");
-      httpOutput.getWriter().write(s);
+
+      try {
+        httpOutput.setContentType("text/xml");
+        httpOutput.getWriter().write(s);
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
 
   }

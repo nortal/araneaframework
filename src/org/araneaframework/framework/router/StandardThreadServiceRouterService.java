@@ -24,7 +24,7 @@ import org.araneaframework.framework.ThreadContext;
  * A {@link org.araneaframework.framework.router.BaseServiceRouterService} which handles threads. Enriches the
  * environment with an object of this class under the key StandardThreadServiceRouterService.class.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardThreadServiceRouterService extends BaseExpiringServiceRouterService {
 

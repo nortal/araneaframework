@@ -33,7 +33,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * Provides base64 encoding, decoding methods, generating a digest and checking
  * the digest methods.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class EncodingUtil {
 

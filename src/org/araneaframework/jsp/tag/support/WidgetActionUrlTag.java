@@ -78,5 +78,4 @@ public class WidgetActionUrlTag extends BaseWidgetTag {
   public void setActionId(String actionId) throws JspException {
     this.actionId = evaluateNotNull("actionId", actionId, String.class);
   }
-
 }

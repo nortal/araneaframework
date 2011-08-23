@@ -27,7 +27,7 @@ import org.araneaframework.Service;
  * having different children for different windows and the current service ID is
  * determined via <code>getCurrentId()</code>.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ManagedServiceContext extends Serializable {

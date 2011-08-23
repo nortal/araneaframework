@@ -20,7 +20,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  *
  */
 public class TimedSmokeTests {

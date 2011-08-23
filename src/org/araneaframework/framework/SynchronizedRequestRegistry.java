@@ -17,7 +17,7 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.core.SynchronizedActionListener;
+import org.araneaframework.core.action.SynchronizedActionListener;
 
 /**
  * A contract interface for components that take care of propagating actions synchronously and asynchronously (in the

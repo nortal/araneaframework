@@ -17,7 +17,7 @@
 package org.araneaframework.http.filter;
 
 import org.araneaframework.Component;
-import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.core.message.BroadcastMessage;
 import org.araneaframework.framework.core.RenderStateAware;
 
 /**

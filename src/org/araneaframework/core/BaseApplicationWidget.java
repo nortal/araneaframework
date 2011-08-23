@@ -35,6 +35,10 @@ import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
+import org.araneaframework.core.action.ActionListener;
+import org.araneaframework.core.event.EventListener;
+import org.araneaframework.core.exception.EventException;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
@@ -208,7 +212,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * 
    * @param input The request data.
    */
-  protected void handleUpdate(InputData input) throws Exception {}
+  protected void handleUpdate(InputData input) throws Exception {
+  }
 
   /**
    * Calls the respective listeners.
@@ -253,7 +258,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * If {@link Path#hasNext()} routes to the action to child, otherwise calls the appropriate
-   * {@link org.araneaframework.core.ActionListener}.
+   * {@link org.araneaframework.core.action.ActionListener}.
    */
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -283,9 +288,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
     if (actionId == null) {
       if (LOG.isWarnEnabled()) {
-        LOG
-            .warn("Service '" + getScope() + "' cannot deliver action for a null action id!"
-                + Assert.thisToString(this));
+        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
       }
       return;
     }
@@ -314,7 +317,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    * Renders the component to output, meant for overriding.
    */
   @Override
-  protected void render(OutputData output) throws Exception {}
+  protected void render(OutputData output) throws Exception {
+  }
 
   /**
    * Returns the id of the event in InputData. By default returns EVENT_HANDLER_ID_KEY from the input's global data.
@@ -514,8 +518,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will be available during this request
-   * only. It will be discarded right before update() is called.
+   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will
+   * be available during this request only. It will be discarded right before update() is called.
    * 
    * @param key The key under which <code>customDataItem</code> will be made available.
    * @param customDataItem The data that will be made available.

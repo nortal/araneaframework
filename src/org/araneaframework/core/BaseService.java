@@ -20,12 +20,14 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * Non-composite service component providing the extra action(Path, InputData, OutputData) to BaseComponent.
+ * The base class for all Aranea services built on top of <tt>BaseComponent</tt>. This class does not support composite
+ * design pattern, thus cannot contain child items by default.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class BaseService extends BaseComponent implements Service {
 
@@ -37,6 +39,55 @@ public class BaseService extends BaseComponent implements Service {
     return new ServiceImpl();
   }
 
+  /**
+   * Services provide their services through this method. An implementation of a non-composite service like
+   * <code>BaseService</code> uses the action method to hook in the middle of the action routing and provide filtering,
+   * logging etc.
+   * <p>
+   * Note that <tt>input</tt> and <tt>output</tt> data provided to this method are also available through
+   * {@link #getInputData()} and {@link #getOutputData()} methods during action processing.
+   * 
+   * @param path The path of the component to whom the action is targeted (<code>null</code> is also valid).
+   * @param input Input data for the service or for its child components.
+   * @param output Output data for the service or for its child components.
+   * @throws Exception Any runtime exception that may occur.
+   */
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+  }
+
+  /**
+   * A method for services to handle exceptions when the {@link #action(Path, InputData, OutputData)} method should
+   * fail. Default implementation just delegates exception handling to {@link BaseComponent#handleException(Exception)}.
+   * 
+   * @param e An exception that has occurred.
+   * @throws Exception Any exception that may occur during exception handling.
+   */
+  protected void handleServiceException(Exception e) throws Exception {
+    handleException(e);
+  }
+
+  /**
+   * Provides access to the current request data, which is available only during service action processing.
+   * 
+   * @return The current request data.
+   */
+  protected InputData getInputData() {
+    return this.currentInputData;
+  }
+
+  /**
+   * Provides access to the current response data, which is available only during service action processing.
+   * 
+   * @return The current response data.
+   */
+  protected OutputData getOutputData() {
+    return this.currentOutputData;
+  }
+
+  /**
+   * Base service implementation that uses synchronization to perform service actions to make sure no one else uses it
+   * at the same time.
+   */
   protected class ServiceImpl implements Service.Interface {
 
     public void action(Path path, InputData input, OutputData output) {
@@ -45,8 +96,8 @@ public class BaseService extends BaseComponent implements Service {
 
       _startCall();
 
-      currentInputData = input;
-      currentOutputData = output;
+      BaseService.this.currentInputData = input;
+      BaseService.this.currentOutputData = output;
       try {
         if (isAlive()) {
           BaseService.this.action(path, input, output);
@@ -58,52 +109,12 @@ public class BaseService extends BaseComponent implements Service {
           ExceptionUtil.uncheckException(e2);
         }
       } finally {
-        currentInputData = null;
-        currentOutputData = null;
+        BaseService.this.currentInputData = null;
+        BaseService.this.currentOutputData = null;
         _endCall();
       }
     }
 
-  }
-
-  /**
-   * Services provide their services through the <code>action(...)</code> method. An implementation of a non-composite
-   * service like <code>BaseService</code> uses the action method to hook in the middle of the action routing and
-   * provide filtering, logging etc.
-   * 
-   * @param path The path of the component to whom the action is targeted.
-   * @param input The request data.
-   * @param output The response data.
-   * @throws Exception Any runtime exception that may occur.
-   */
-  protected void action(Path path, InputData input, OutputData output) throws Exception {}
-
-  /**
-   * A method for <code>Service</code>-specific exception handling.
-   * 
-   * @param e An exception that ha occured.
-   * @throws Exception Any exception that may occur during exception handling.
-   */
-  protected void handleServiceException(Exception e) throws Exception {
-    handleException(e);
-  }
-
-  /**
-   * Provides access to the current request data.
-   * 
-   * @return The current request data.
-   */
-  protected InputData getInputData() {
-    return currentInputData;
-  }
-
-  /**
-   * Provides access to the current response data.
-   * 
-   * @return The current response data.
-   */
-  protected OutputData getOutputData() {
-    return currentOutputData;
   }
 
 }

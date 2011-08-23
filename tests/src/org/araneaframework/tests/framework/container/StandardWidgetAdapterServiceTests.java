@@ -29,7 +29,7 @@ import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardWidget;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardWidgetAdapterServiceTests extends TestCase {
   private StandardWidgetAdapterService adapter;

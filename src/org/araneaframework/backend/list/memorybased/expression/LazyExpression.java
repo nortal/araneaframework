@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.memorybased.expression;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.ExpressionFactory;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * Expression that is initialized lazily.

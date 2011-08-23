@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.tree;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -26,11 +27,12 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.StandardActionListener;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.action.StandardActionListener;
+import org.araneaframework.core.event.StandardEventListener;
+import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
@@ -319,7 +321,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
     return getScope().toString();
   }
 
-  public void renderNode(OutputData output) throws Exception { // Called only from display widget's action
+  public void renderNode(OutputData output) { // Called only from display widget's action
     Assert.notNullParam(output, "output");
     render(output);
   }
@@ -329,49 +331,55 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   // *******************************************************************
 
   @Override
-  protected void render(OutputData output) throws Exception {
+  protected void render(OutputData output) {
     TreeRenderer renderer = getTreeCtx().getRenderer();
     Assert.notNull(renderer, "renderer must be set");
-    Writer out = ((HttpOutputData) output).getWriter();
 
-    // Render display widget
     Widget display = getDisplayWidget();
-    if (display != null) { // display is null if this is root node (TreeWidget)
-      renderDisplayPrefixRecursive(out, renderer);
-      if (shouldRenderToggleLink()) {
-        renderer.renderToggleLink(out, this);
-      }
-      out.flush();
-      display._getWidget().render(output);
-    }
 
-    // Render child nodes
-    if (display == null || (!isCollapsed() && hasNodes())) {
-      if (display == null) {
-        renderer.renderTreeStart(out, this);
-      } else {
-        renderer.renderChildrenStart(out, this);
+    try {
+      Writer out = ((HttpOutputData) output).getWriter();
+
+      // Render display widget
+      if (display != null) { // display is null if this is root node (TreeWidget)
+        renderDisplayPrefixRecursive(out, renderer);
+        if (shouldRenderToggleLink()) {
+          renderer.renderToggleLink(out, this);
+        }
+        out.flush();
+        display._getWidget().render(output);
       }
 
-      if (!isCollapsed() && hasNodes()) {
-        for (ChildNodeWrapper nodeWrapper : this.childNodeWrappers) {
-          TreeNodeWidget node = nodeWrapper.getNode();
-          renderer.renderChildStart(out, this, node);
-          out.flush();
-          node.render(output);
-          renderer.renderChildEnd(out, this, node);
+      // Render child nodes
+      if (display == null || (!isCollapsed() && hasNodes())) {
+        if (display == null) {
+          renderer.renderTreeStart(out, this);
+        } else {
+          renderer.renderChildrenStart(out, this);
+        }
+
+        if (!isCollapsed() && hasNodes()) {
+          for (ChildNodeWrapper nodeWrapper : this.childNodeWrappers) {
+            TreeNodeWidget node = nodeWrapper.getNode();
+            renderer.renderChildStart(out, this, node);
+            out.flush();
+            node.render(output);
+            renderer.renderChildEnd(out, this, node);
+          }
+        }
+
+        if (display == null) {
+          renderer.renderTreeEnd(out, this);
+        } else {
+          renderer.renderChildrenEnd(out, this);
         }
       }
-
-      if (display == null) {
-        renderer.renderTreeEnd(out, this);
-      } else {
-        renderer.renderChildrenEnd(out, this);
-      }
+    } catch (IOException e) {
+      ExceptionUtil.uncheckException(e);
     }
   }
 
-  protected void renderDisplayPrefixRecursive(Writer out, TreeRenderer renderer) throws Exception {
+  protected void renderDisplayPrefixRecursive(Writer out, TreeRenderer renderer) {
     LinkedList<TreeNodeContext> parents = new LinkedList<TreeNodeContext>();
     TreeNodeContext parent = getParentNode();
 
@@ -422,7 +430,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleActionListener extends StandardActionListener {
 
     @Override
-    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam, InputData input, OutputData output) {
       toggleCollapsed();
       render(output);
     }

@@ -19,61 +19,69 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * Relocatable is a component that can be relocated from one parent to another. As the {@link Environment} of a
- * component is inherited from its parent, and once the parent changes, the new parent's <code>Environment</code> can be
- * different, this class provides {@link Interface#overrideEnvironment(Environment)} for resetting the
- * {@link Environment}.
+ * Relocatable is a component that can be relocated from one parent to another. The {@link Environment} of a component
+ * is usually inherited from its parent, and once the parent changes, the new parent's <code>Environment</code> can be
+ * different. This contract provides {@link Interface#overrideEnvironment(Environment)} for resetting the
+ * <tt>Environment</tt>.
  * <p>
- * This interface should not be used directly, subinterfaces {@link RelocatableComponent}, {@link RelocatableService},
- * and {@link RelocatableWidget} should be used.
- * </p>
+ * This interface should not be used directly, instead {@link RelocatableComponent}, {@link RelocatableService}, and
+ * {@link RelocatableWidget} should be used.
+ * <p>
+ * <tt>Relocatable</tt> follows the template pattern by defining <code>_getRelocatable()</code>, which returns the
+ * implementation. Latter is used for managing component relocation and environment change. The <tt>Relocatable</tt>
+ * contract itself does not expose direct methods for doing that, since they are protected and handled by
+ * implementations.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Relocatable extends Component {
 
   /**
-   * This method must provide a <code>Relocatable.Interface</code> that will be used to change the
-   * <code>Environment</code> of the relocatable component/service/widget.
+   * The factory method returning the implementation of the <tt>Relocatable</tt>.
    * 
-   * @return An implementation of <code>Relocatable.Interface</code>.
+   * @return The <tt>Relocatable</tt> implementation (must not return <code>null</code>).
    */
-  public Relocatable.Interface _getRelocatable();
+  Relocatable.Interface _getRelocatable();
 
   /**
-   * The <code>Relocatable</code>'s main interface that handles the change of <code>Environment</code>.
+   * The interface which takes care of calling the hooks in the <tt>Relocatable</tt> template design pattern.
+   * 
+   * @see Relocatable
    */
-  public interface Interface extends Serializable {
+  interface Interface extends Serializable {
 
     /**
      * Overrides the current <code>Environment</code> with <code>newEnv</code>.
      * 
      * @param newEnv The new <code>Environment</code>.
      */
-    public void overrideEnvironment(Environment newEnv);
+    void overrideEnvironment(Environment newEnv);
 
     /**
      * Provides access to the current <code>Environment</code> of the relocatable component.
      * 
      * @return The current <code>Environment</code> of the relocatable component.
      */
-    public Environment getCurrentEnvironment();
+    Environment getCurrentEnvironment();
   }
 
   /**
-   * An interface for a relocatable <code>Component</code>.
+   * A relocatable <code>Component</code> contract.
    */
-  public interface RelocatableComponent extends Relocatable, Component, Serializable {}
+  interface RelocatableComponent extends Relocatable, Component {
+  }
 
   /**
-   * An interface for a relocatable <code>Service</code>.
+   * A relocatable <code>Service</code> contract.
    */
-  public interface RelocatableService extends RelocatableComponent, Service, Serializable {}
+  interface RelocatableService extends Relocatable.RelocatableComponent, Service {
+  }
 
   /**
-   * An interface for a relocatable <code>Widget</code>.
+   * A relocatable <code>Widget</code> contract.
    */
-  public interface RelocatableWidget extends RelocatableService, Widget, Serializable {}
+  interface RelocatableWidget extends Relocatable.RelocatableService, Widget {
+  }
 
 }

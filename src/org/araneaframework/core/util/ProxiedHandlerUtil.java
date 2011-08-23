@@ -26,9 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.ProxyActionListener;
-import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.action.ProxyActionListener;
+import org.araneaframework.core.event.ProxyEventListener;
 
 /**
  * Utility class for accessing methods that will be invocation targets of {@link ProxyEventListener} and
@@ -45,14 +44,14 @@ import org.araneaframework.core.ProxyEventListener;
  * <li>a single {@link List} of strings parameter (which is empty, when no parameter is provided);
  * <li>a single {@link Map} of strings parameter (which is empty, when no parameter is provided);
  * </ul>
- * The first resolved handler will be used, others will be ignored. 
+ * The first resolved handler will be used, others will be ignored.
  * <p>
  * For array and list parameters, the incoming request parameter will be splitted by a separator (the one provided by
  * widget's <code>getParameterSeparator()</code> method, if exists, or by semicolon, which is default). For the map
- * parameter, the array/list values will be splitted by the equals (=) symbol so that the left side would become key
- * and the right side would become value. Unlike the list values separator, the equals symbol is not customizable.
+ * parameter, the array/list values will be splitted by the equals (=) symbol so that the left side would become key and
+ * the right side would become value. Unlike the list values separator, the equals symbol is not customizable.
  * <p>
- * The support for action/event handler array, list, and map parameters came in Aranea 2.0. 
+ * The support for action/event handler array, list, and map parameters came in Aranea 2.0.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
@@ -175,7 +174,8 @@ public abstract class ProxiedHandlerUtil {
     invokeHandler(ACTION_HANDLER_PREFIX, actionId, actionParam, actionTarget);
   }
 
-  private static void invokeHandler(String handlerPrefix, String handlerId, String param, Widget eventTarget) throws Exception {
+  private static void invokeHandler(String handlerPrefix, String handlerId, String param, Widget eventTarget)
+      throws Exception {
     String handlerName = getHandlerName(handlerPrefix, handlerId);
     String className = eventTarget.getClass().getName();
 

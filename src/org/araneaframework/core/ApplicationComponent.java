@@ -19,37 +19,67 @@ package org.araneaframework.core;
 import java.io.Serializable;
 import java.util.Map;
 import org.araneaframework.Component;
-import org.araneaframework.Composite;
+import org.araneaframework.Composite.CompositeComponent;
 import org.araneaframework.Environment;
 import org.araneaframework.Scope;
-import org.araneaframework.Viewable;
+import org.araneaframework.Viewable.ViewableComponent;
 
 /**
- * A base class for application development
- * <literal>org.araneaframework.core.BaseApplicationComponent</literal> is also
- * available.
+ * Application component unifies <tt>Component</tt>, <tt>Composite</tt> and <tt>Viewable</tt> contracts. It also extends
+ * <tt>Component</tt> with the child component environment and component view model features. They provide a couple of
+ * essential changes:
+ * <ul>
+ * <li>a component is now known to be able to provide an environment for its child components that they can interact
+ * with;
+ * <li>a component can now create a model of its data that can be passed on to any kind of rendering engine that just
+ * needs to be able to interact with the model.
+ * </ul>
+ * The base class for application development is also available: {@link BaseApplicationComponent}.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public interface ApplicationComponent extends Component, Composite, Viewable {
+public interface ApplicationComponent extends CompositeComponent, ViewableComponent {
 
   /**
-   * Get the child Environment of this component.
+   * This method must return a new environment instance that will we passed on to added child components. Child
+   * components should not have any way to modify the environment of their parents, although they can interact with the
+   * items from the parent component environment, and they can decide what kind of environment they pass on to their own
+   * child components. It is always up to the parent component to decide (and be responsible for) what the environment
+   * passed to child components will contain.
+   * 
+   * @return A new instance of environment, must not be <code>null</code>!
    */
-  public Environment getChildEnvironment();
+  Environment getChildEnvironment();
 
   /**
-   * A model based on which a view can be constructed.
+   * The contract for a model that is passed on the view. It declares the minimum set of properties available to the
+   * view.
+   * <p>
+   * Each component has its own view model that is used when rendering the component. However, only components that are
+   * <tt>Viewable</tt>, can be rendered. When one needs to be rendered, its view model instance will be created, taking
+   * a snapshot of data that it can pass on when requested from the view. Therefore, this interface declares the
+   * contract for the Model in Model-View-Controller design pattern (separating the controller from the view using the
+   * model).
    */
-  public interface ComponentViewModel extends Serializable {
-
-    /** @since 1.1 */
-    public Scope getScope();
+  interface ComponentViewModel extends Serializable {
 
     /**
-     * Return component's child components.
+     * Provides the scope (path) of the current component.
+     * 
+     * @return The scope object describing the path of the current component, or <code>null</code> when the component
+     *         has no such scope.
+     * @since 1.1
+     * @see Scope
      */
-    public Map<String, Component> getChildren();
+    Scope getScope();
+
+    /**
+     * Provides a map of child components of current component by their IDs.
+     * 
+     * @return A map of child components of current component by their IDs. An empty map, when no child component
+     *         exists.
+     */
+    Map<String, Component> getChildren();
   }
 }

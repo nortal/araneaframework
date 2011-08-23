@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.StandardScope;
 import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.uilib.core.BaseUIWidget;

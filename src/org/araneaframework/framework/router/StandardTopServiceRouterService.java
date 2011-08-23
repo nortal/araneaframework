@@ -24,7 +24,7 @@ import org.araneaframework.framework.TopServiceContext;
  * A top router service. Enriches the environment with an object of this class under the key
  * StandardTopServiceRouterService.class.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardTopServiceRouterService extends BaseExpiringServiceRouterService {
 

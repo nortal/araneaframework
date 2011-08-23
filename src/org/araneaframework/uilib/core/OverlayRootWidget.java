@@ -19,7 +19,7 @@ package org.araneaframework.uilib.core;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.http.WindowScrollPositionContext;

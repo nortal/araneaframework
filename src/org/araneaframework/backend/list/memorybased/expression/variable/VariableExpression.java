@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.memorybased.expression.variable;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 public class VariableExpression implements Expression, Variable {
 

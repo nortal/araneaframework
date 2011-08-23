@@ -22,7 +22,7 @@ import org.araneaframework.Path;
 import org.araneaframework.core.BaseWidget;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  *
  */
 public class MockEventfulBaseWidget extends BaseWidget {  private boolean updateCalled = false;

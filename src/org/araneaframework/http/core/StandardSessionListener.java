@@ -16,8 +16,8 @@
 
 package org.araneaframework.http.core;
 
+
 import javax.servlet.http.HttpSession;
-import org.araneaframework.core.Assert;
 import java.util.Collections;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -26,13 +26,14 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Relocatable;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.http.router.StandardHttpSessionRouterService;
 
 /**
  * A session listener which takes care of destroying the session service in the session.
  * 
  * @author "Taimo Peelo" (taimo@araneaframework.org)
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardSessionListener implements HttpSessionListener {
 

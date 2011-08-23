@@ -17,7 +17,7 @@
 package org.araneaframework.example.main.message;
 
 import org.araneaframework.Message;
-import org.araneaframework.core.SeriesMessage;
+import org.araneaframework.core.message.SeriesMessage;
 
 public class LoginAndMenuSelectMessage extends SeriesMessage {
 

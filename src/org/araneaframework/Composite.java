@@ -20,67 +20,80 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Composite is a component with a set of child components. In a Composite
- * children can form a hierarchially having composites as children and so on.
- * <br><br>
- * This class should not be directly implemented, but {@link CompositeComponent}, 
- * {@link CompositeService} or {@link CompositeWidget} instead. 
- * <br><br>
- * The Component follows the template pattern by defining <code>_getComposite</code> which returns the
- * implementation.
- *  
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * Represents an object with a set of child components. In a <tt>Composite</tt>, children can form a hierarchy having (
+ * <tt>Composite</tt>) <tt>Component</tt>s as children and so on.
+ * <p>
+ * This class should not be directly implemented, but {@link CompositeComponent}, {@link CompositeService} or
+ * {@link CompositeWidget} instead.
+ * <p>
+ * This contract follows the template pattern by defining <code>_getComposite</code> which returns the implementation.
+ * The implementation is used to interact with the underlying object for reading, adding, or removing child components.
+ * The <tt>Composite</tt> contract itself does not expose direct methods for accessing its child components, since they
+ * are protected and handled by implementations.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Composite extends Serializable {
-  
+
   /**
-   * The factory method returning the implementation of the Composite.
-   * @return the Composite implementation
+   * The factory method returning the implementation of the <tt>Composite</tt>.
+   * 
+   * @return The <tt>Composite</tt> implementation (must not return <code>null</code>).
    */
-  public Composite.Interface _getComposite();
-  
+  Composite.Interface _getComposite();
+
   /**
-   * The interface which takes care of calling the hooks in the template.
+   * The interface which takes care of calling the hooks in the <tt>Composite</tt> template design pattern.
    */
-  public interface Interface extends Serializable {
+  interface Interface extends Serializable {
+
     /**
-     * Returns an unmodifiable map of all the child components.
-     * @return a map of child components
-     */
-    public Map<String, Component> getChildren();
-    
-    /**
-     * Attaches a component as a child of this component. No initialization of the
-     * child takes place.
+     * Provides an unmodifiable map of all the child components.
      * 
-     * @param key of the added component
-     * @param comp the component being attached
+     * @return A map of child components, or an empty map when no child component exists.
      */
-    public void attach(String key, Component comp);
-    
+    Map<String, Component> getChildren();
+
     /**
-     * Detaches a child component with the specified key from this component. Child
-     * will not be destroyed, just removed.
+     * Attaches given component as a child of this component. The child must be initialized before attaching.
      * 
-     * @param key of the child getting detached
-     * @return the removed component
+     * @param key The ID for the added component.
+     * @param comp The component being attached
      */
-    public Component detach(String key); 
+    void attach(String key, Component comp);
+
+    /**
+     * Detaches a child component with the specified key (ID) from this component. Child will not be destroyed, just
+     * removed. The child component destruction should happen after calling this method, when appropriate.
+     * 
+     * @param key THE ID of the child getting detached.
+     * @return The removed component.
+     */
+    Component detach(String key);
   }
-  
+
   /**
    * A composite component.
+   * 
+   * @see Composite
    */
-  public interface CompositeComponent extends Composite, Component, Serializable {}
-  
+  interface CompositeComponent extends Composite, Component {
+  }
+
   /**
    * A composite service.
+   * 
+   * @see Composite
    */
-  public interface CompositeService extends CompositeComponent, Service, Serializable {}
-  
+  interface CompositeService extends Composite.CompositeComponent, Service {
+  }
+
   /**
    * A composite widget.
+   * 
+   * @see Composite
    */
-  public interface CompositeWidget extends CompositeService, Widget, Serializable {}
+  interface CompositeWidget extends Composite.CompositeService, Widget {
+  }
 }

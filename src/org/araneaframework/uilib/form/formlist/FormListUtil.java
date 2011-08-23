@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.form.formlist;
 
 import java.util.Map;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.event.OnClickEventListener;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.ButtonControl;

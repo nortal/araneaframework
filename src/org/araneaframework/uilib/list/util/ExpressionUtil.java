@@ -38,7 +38,7 @@ import org.araneaframework.backend.list.memorybased.expression.logical.NotExpres
 import org.araneaframework.backend.list.memorybased.expression.logical.OrExpression;
 import org.araneaframework.backend.list.memorybased.expression.procedure.ProcedureExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 /**

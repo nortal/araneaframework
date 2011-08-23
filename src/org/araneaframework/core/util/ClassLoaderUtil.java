@@ -25,13 +25,12 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.collections.EnumerationUtils;
-import org.araneaframework.core.Assert;
 
 /**
  * Utility to determine the classloader that should be used for loading
  * resources.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class ClassLoaderUtil {
 

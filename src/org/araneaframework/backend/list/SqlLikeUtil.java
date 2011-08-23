@@ -18,7 +18,7 @@ package org.araneaframework.backend.list;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 import org.araneaframework.uilib.list.util.like.RegexpLikeUtil;
 import org.araneaframework.uilib.list.util.like.WildcardHandler;

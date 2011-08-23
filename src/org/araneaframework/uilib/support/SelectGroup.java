@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * A group of select items that itself cannot be selected, but can contain child options that can be selected.

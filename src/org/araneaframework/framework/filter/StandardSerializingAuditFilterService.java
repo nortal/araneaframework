@@ -42,7 +42,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * <br>
  * The serialized session can be output to a file by setting the xml session path. The path must be valid & writable.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardSerializingAuditFilterService extends BaseFilterService {

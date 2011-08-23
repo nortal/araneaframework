@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.form.converter;
 
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.form.Converter;
 
 /**

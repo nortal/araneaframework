@@ -11,6 +11,7 @@
 	<property name="distname" value="aranea-mvc-${araneaframework.version}"/>
 
 	<property name="ivy.report.dir" value="build/reports/ivy" />
+	<property name="checkstyle.report.dir" value="build/reports/checkstyle" />
 
 	<!-- CLASSPATHS-->
 
@@ -394,7 +395,8 @@
 				docencoding="UTF-8"
 				packagenames="org.araneaframework.*" 
 				sourcepath="src"
-				destdir="${dist.dir}/doc/javadoc/">
+				destdir="${dist.dir}/doc/javadoc/"
+				windowtitle="Aranea framework API">
 
 			<classpath refid="runtime.cp"/>
 			<classpath refid="build.cp"/>
@@ -438,10 +440,14 @@
 	</target>
 
 	<target name="checkstyle" description="The CheckStyle code metrics task that generates checkstyle_report.xml.">
+		<mkdir dir="${checkstyle.report.dir}"/>
 		<taskdef resource="checkstyletask.properties" classpathref="build.util.cp"/>
-		<checkstyle config="checkstyle_checks.xml">
-			<fileset dir="src" includes="**/*.java"/>
-			<formatter type="plain" tofile="checkstyle_report.txt"/>
+		<checkstyle config="etc/checkstyle/conf.xml">
+			<fileset dir="src">
+				<include name="org/araneaframework/*.java"/>
+				<include name="org/araneaframework/core/**/*.java"/>
+			</fileset>
+			<formatter type="plain" tofile="${checkstyle.report.dir}/checkstyle_report.txt"/>
 		</checkstyle>
 	</target>
 

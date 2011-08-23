@@ -16,13 +16,14 @@
 
 package org.araneaframework.uilib.tree;
 
-import java.io.Writer;
+import java.io.IOException;
 import java.util.List;
 import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.exception.AraneaRuntimeException;
+import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpOutputData;
 
 /**
@@ -126,10 +127,14 @@ public class TreeWidget extends TreeNodeWidget implements TreeContext {
   }
 
   @Override
-  protected void render(OutputData output) throws Exception {
+  protected void render(OutputData output) {
     super.render(output);
-    Writer out = ((HttpOutputData) output).getWriter();
-    out.flush();
+
+    try {
+      ((HttpOutputData) output).getWriter().flush();
+    } catch (IOException e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 
   @Override

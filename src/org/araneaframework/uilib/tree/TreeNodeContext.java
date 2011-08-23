@@ -53,7 +53,7 @@ public interface TreeNodeContext extends Serializable {
    * Renders tree node and all of its children to specified {@link OutputData}.
    * Could be called from action listener of tree node display widget.
    */
-  void renderNode(OutputData data) throws Exception;
+  void renderNode(OutputData data);
 
   /**
    * Returns the number of child nodes this tree node has. The display widget is

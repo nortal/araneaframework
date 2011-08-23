@@ -17,7 +17,7 @@
 package org.araneaframework.uilib;
 
 import org.apache.commons.lang.ClassUtils;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.uilib.form.Data;
 import org.araneaframework.uilib.form.FormElementContext;
 

@@ -21,16 +21,17 @@ import org.araneaframework.Environment;
 import org.araneaframework.Service;
 
 /**
- * A simple factory interface for creating services with help from Environment.
+ * A simple factory contract for creating services.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface ServiceFactory extends Serializable {
 
   /**
-   * Returns a Service.
+   * Builds an instance of a <tt>Service</tt>.
    * 
-   * @return the Service
+   * @param env The environment of the component asking a service to be built.
+   * @return A service instance, must not be <code>null</code>.
    */
-  public Service buildService(Environment env);
+  Service buildService(Environment env);
 }

@@ -20,7 +20,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 public class NotExpression implements CompositeExpression {
 

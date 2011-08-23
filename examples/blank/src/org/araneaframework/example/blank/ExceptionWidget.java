@@ -16,7 +16,7 @@
 
 package org.araneaframework.example.blank;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 public class ExceptionWidget extends BaseUIWidget {

@@ -17,7 +17,7 @@
 package org.araneaframework.backend.list.sqlexpr.constant;
 
 import org.araneaframework.backend.list.SqlExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 public class SqlStringExpression implements SqlExpression {
 

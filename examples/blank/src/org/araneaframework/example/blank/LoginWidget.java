@@ -16,7 +16,7 @@
 
 package org.araneaframework.example.blank;
 
-import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.event.ProxyEventListener;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.form.FormWidget;
 import org.araneaframework.uilib.form.control.TextControl;

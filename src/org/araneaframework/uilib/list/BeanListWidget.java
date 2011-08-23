@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * ListWidget that is aware of field types according to the Bean type.

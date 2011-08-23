@@ -21,7 +21,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.NoSuchServiceException;
+import org.araneaframework.core.exception.NoSuchServiceException;
 import org.araneaframework.framework.ThreadContext;
 import org.araneaframework.framework.router.StandardThreadServiceRouterService;
 import org.araneaframework.http.core.StandardServletInputData;
@@ -33,7 +33,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardThreadServiceRouterServiceTests extends TestCase {
   private StandardThreadServiceRouterService service;

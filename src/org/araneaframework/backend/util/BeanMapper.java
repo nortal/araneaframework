@@ -16,10 +16,9 @@
 
 package org.araneaframework.backend.util;
 
-import org.araneaframework.core.Assert;
-
 import java.io.Serializable;
 import java.util.List;
+import org.araneaframework.core.util.Assert;
 
 /**
  * This class provides a way to manipulate Bean properties. This class assumes that the class passed to constructor (

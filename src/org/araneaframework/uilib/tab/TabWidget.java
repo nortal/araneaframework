@@ -20,9 +20,9 @@ import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.Scope;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.WidgetFactory;
+import org.araneaframework.core.util.Assert;
 
 /**
  * Represents a tab managed by {@link TabContainerContext} implementation {@link TabContainerWidget}. Tab consists of

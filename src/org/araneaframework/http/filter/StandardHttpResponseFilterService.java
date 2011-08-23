@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.ServletUtil;
 

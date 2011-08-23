@@ -18,7 +18,7 @@ package org.araneaframework.backend.list.sqlexpr;
 
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.sqlexpr.compare.SqlLikeExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * @author Rein Raudjärv (rein@araneaframework.org)

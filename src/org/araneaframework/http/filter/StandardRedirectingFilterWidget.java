@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.commons.lang.math.IntRange;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.NoSuchNarrowableException;
+import org.araneaframework.core.exception.NoSuchNarrowableException;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.ServletUtil;
 

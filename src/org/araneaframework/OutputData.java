@@ -16,26 +16,26 @@
 
 package org.araneaframework;
 
-import org.araneaframework.http.HttpOutputData;
-
-
 /**
- * Provides access to {@link InputData}.
+ * Output data contract for Aranea components. Components use it to return or store the response. Every output data is
+ * associated with the related {@link InputData}, and <i>vice-versa</i>.
  * 
- * @see HttpOutputData
- * 
- * @author "Toomas Römer" (toomas@webmedia.ee)
+ * @see InputData
+ * @see org.araneaframework.http.HttpOutputData
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface OutputData extends Extendable, Narrowable {
-  
+
   /**
-   * The key that can be used to retrieve OutputData (as an example a request scope attribute).
+   * The key that can be used to store or retrieve <tt>OutputData</tt> (as an example, a request scope attribute).
    */
-  public static final String OUTPUT_DATA_KEY = "org.araneaframework.OutputData";
-  
+  String OUTPUT_DATA_KEY = "org.araneaframework.OutputData";
+
   /**
-   * Returns the current InputData.
+   * Provides the associated input data.
+   * 
+   * @return Associated input data, which is never <code>null</code>.
    */
-  public InputData getInputData();
+  InputData getInputData();
 }

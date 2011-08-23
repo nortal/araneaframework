@@ -26,9 +26,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseComponent;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.framework.LocalizationContext;
@@ -40,7 +40,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * {@link org.araneaframework.framework.LocalizationContext}. Child components can use it and thus provide Locale
  * specific content.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardLocalizationFilterService extends BaseFilterService implements LocalizationContext {

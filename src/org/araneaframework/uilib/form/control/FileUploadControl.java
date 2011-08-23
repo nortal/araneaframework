@@ -16,6 +16,7 @@
 
 package org.araneaframework.uilib.form.control;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,9 +26,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ActionListener;
-import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.core.NoSuchNarrowableException;
+import org.araneaframework.core.action.ActionListener;
+import org.araneaframework.core.exception.AraneaRuntimeException;
+import org.araneaframework.core.exception.NoSuchNarrowableException;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FileUploadContext;
 import org.araneaframework.http.FileUploadInputExtension;
 import org.araneaframework.http.HttpInputData;
@@ -204,7 +206,7 @@ public class FileUploadControl extends BaseControl<FileInfo> {
      */
     public static final String RESPONSE_FAIL = "FAIL";
 
-    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, InputData input, OutputData output) {
 
       // Raising a flag that will inform this FileUploadControl to write error message to ajaxMessages collection:
       FileUploadControl.this.ajaxRequest = true;
@@ -212,28 +214,32 @@ public class FileUploadControl extends BaseControl<FileInfo> {
       FileInfo file = (FileInfo) FileUploadControl.this.innerData;
       convertAndValidate();
 
-      if (file == null || !file.isFilePresent()) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Did not get a file for some reason! Including error message in response when possible.");
-        }
+      try {
+        if (file == null || !file.isFilePresent()) {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Did not get a file for some reason! Including error message in response when possible.");
+          }
 
-        PrintWriter out = ServletUtil.getResponse(output).getWriter();
-        out.write(RESPONSE_FAIL);
+          PrintWriter out = ServletUtil.getResponse(output).getWriter();
+          out.write(RESPONSE_FAIL);
 
-        if (!FileUploadControl.this.ajaxMessages.isEmpty()) {
-          // Writing error messages, separated by new-lines:
-          out.print('(');
-          out.print(StringUtils.join(FileUploadControl.this.ajaxMessages, '\n'));
-          out.print(')');
+          if (!FileUploadControl.this.ajaxMessages.isEmpty()) {
+            // Writing error messages, separated by new-lines:
+            out.print('(');
+            out.print(StringUtils.join(FileUploadControl.this.ajaxMessages, '\n'));
+            out.print(')');
 
-          // Reset error messages:
-          FileUploadControl.this.ajaxMessages.clear();
+            // Reset error messages:
+            FileUploadControl.this.ajaxMessages.clear();
+          }
+        } else {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Got file '" + file.getOriginalFilename() + "' successfully!");
+          }
+          ServletUtil.getResponse(output).getWriter().write(RESPONSE_OK);
         }
-      } else {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Got file '" + file.getOriginalFilename() + "' successfully!");
-        }
-        ServletUtil.getResponse(output).getWriter().write(RESPONSE_OK);
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
       }
 
       // AJAX file upload processing is completed. Hide the flag:

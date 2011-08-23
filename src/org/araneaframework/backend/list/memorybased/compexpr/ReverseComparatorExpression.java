@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.memorybased.compexpr;
 import org.araneaframework.backend.list.memorybased.ComparatorExpression;
 import org.araneaframework.backend.list.memorybased.ExpressionEvaluationException;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * ComparatorExpression that reverses another ComparatorExpression comparison result.

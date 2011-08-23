@@ -17,7 +17,7 @@
 package org.araneaframework.backend.list.sqlexpr.logical;
 
 import org.araneaframework.backend.list.SqlExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 public class SqlNotExpression implements SqlExpression {
 

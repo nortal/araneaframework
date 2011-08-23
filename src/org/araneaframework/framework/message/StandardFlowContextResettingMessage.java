@@ -16,15 +16,15 @@
 
 package org.araneaframework.framework.message;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Message;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.FlowContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * Message that:
@@ -60,7 +60,7 @@ public class StandardFlowContextResettingMessage implements Message {
     final FlowContext fCtx = (FlowContext) component;
     fCtx.reset(new EnvironmentAwareCallback() {
 
-      public void call(Environment env) throws Exception {
+      public void call(Environment env) {
         FlowContext f = EnvironmentUtil.getFlowContext(env);
         if (flow != null)
           f.start(flow);

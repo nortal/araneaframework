@@ -16,10 +16,9 @@
 
 package org.araneaframework.example.main.message;
 
-import org.araneaframework.example.main.web.MenuWidget;
-
 import org.araneaframework.Component;
-import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.core.message.BroadcastMessage;
+import org.araneaframework.example.main.web.MenuWidget;
 
 /**
  * A message that searches the {@link MenuWidget} to select the given menu item.

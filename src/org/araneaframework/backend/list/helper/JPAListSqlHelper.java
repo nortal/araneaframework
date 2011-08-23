@@ -16,19 +16,16 @@
 
 package org.araneaframework.backend.list.helper;
 
-import org.araneaframework.core.util.ExceptionUtil;
-
-import org.araneaframework.core.Assert;
-
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.backend.list.model.ListQuery;
+import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 
 /**
  * A list helper that makes use of JPA methods to fetch list items.

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.araneaframework.backend.list.SqlExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 public abstract class SqlComparableExpression implements SqlExpression {
 

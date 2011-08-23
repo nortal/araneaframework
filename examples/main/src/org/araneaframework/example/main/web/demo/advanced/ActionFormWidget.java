@@ -16,14 +16,15 @@
 
 package org.araneaframework.example.main.web.demo.advanced;
 
-import java.io.Writer;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ProxyActionListener;
-import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.core.action.ProxyActionListener;
+import org.araneaframework.core.action.StandardActionListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.form.FormElement;
@@ -77,8 +78,7 @@ public class ActionFormWidget extends TemplateBaseWidget {
     addActionListener("quantityChange", new StandardActionListener() {
 
       @Override
-      public void processAction(String actionId, String actionParam,
-          InputData input, OutputData output) throws Exception {
+      public void processAction(String actionId, String actionParam, InputData input, OutputData output) {
         actionParam = StringUtils.substringBefore(prepareNumber(actionParam), ".");
         quantity.setValue(new Integer(actionParam));
         calculate();
@@ -121,7 +121,7 @@ public class ActionFormWidget extends TemplateBaseWidget {
     return total.add(vatTotal);
   }
 
-  protected void writeFields(OutputData output) throws Exception {
+  protected void writeFields(OutputData output) {
     StringBuffer s = new StringBuffer();
     s.append(this.quantity.getValue()).append("|");
     s.append(this.vat.getValue()).append("|");
@@ -129,8 +129,11 @@ public class ActionFormWidget extends TemplateBaseWidget {
     s.append(this.vatTotal.getValue()).append("|");
     s.append(this.bigTotal.getValue());
 
-    Writer out = ((HttpOutputData) output).getWriter();
-    out.write(s.toString());
+    try {
+      ((HttpOutputData) output).getWriter().write(s.toString());
+    } catch (IOException e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 
   public static BigDecimal round2(BigDecimal num) {

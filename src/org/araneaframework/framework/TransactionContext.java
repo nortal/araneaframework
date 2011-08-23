@@ -23,7 +23,7 @@ import java.io.Serializable;
  * achieved through defining a transaction ID <code>by getTransactionId()</code> and checking its consistency with
  * <code>isConsistent()</code>.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface TransactionContext extends Serializable {

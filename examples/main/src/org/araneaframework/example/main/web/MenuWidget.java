@@ -18,7 +18,7 @@ package org.araneaframework.example.main.web;
 
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.event.ProxyEventListener;
 import org.araneaframework.example.common.framework.TemplateMenuWidget;
 import org.araneaframework.example.main.SecurityContext;
 import org.araneaframework.example.main.web.demo.advanced.ActionFormWidget;

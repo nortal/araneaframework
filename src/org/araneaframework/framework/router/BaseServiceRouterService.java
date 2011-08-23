@@ -27,17 +27,17 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
-import org.araneaframework.core.NoSuchServiceException;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.exception.NoSuchServiceException;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 
 /**
  * A router service consists of multiple child services, they form a service map. One of the services is a default one.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class BaseServiceRouterService extends BaseService {
 

@@ -19,99 +19,98 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * An entity with a licecycle (<code>init</code>, <code>destroy</code>) and an Environment.
- * <br><br>
- * A components lifecycle is simple. It starts with init and ends with destroy.
+ * An entity with a life-cycle (<code>init</code>, <code>destroy</code>) and an Environment.
+ * <p>
+ * A components life-cycle is simple. It starts with initiation and ends with destruction.
  * <ul>
- *  <li>A component once inited, cannot be reinited.
- *  <li>A component once destroyed, cannot be reinited.
- *  <li>A component not inited, cannot be destroyed.
- * </ul> 
- * If a lifecycle contract is broken {@link org.araneaframework.core.AraneaRuntimeException}
- * will be thrown.
- * <br><br>
- * The component is initialized with an {@link org.araneaframework.Environment}. The component's
- * Environment cannot be altered after the initialization process. 
- * <br><br>
- * The Component follows the template pattern by defining <code>_getComponent()</code> 
- * which returns the implementation.
- *  
- * @author "Toomas Römer" <toomas@webmedia.ee>
- * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * <li>A component once initiated, cannot be re-initiated.
+ * <li>A component once destroyed, cannot be re-initiated.
+ * <li>A component not initiated, cannot be destroyed.
+ * </ul>
+ * When a life-cycle contract is broken, {@link org.araneaframework.core.exception.AraneaRuntimeException} will be
+ * thrown.
+ * <p>
+ * The component is initialized with an {@link Environment}, which cannot be altered during or after the initialization
+ * process.
+ * <p>
+ * The Component follows the template pattern by defining <code>_getComponent()</code> which returns the implementation.
+ * The implementation is used for managing the component life-cycle. The Component contract itself does not expose
+ * direct life-cycle methods, since they are protected and handled by implementations.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public interface Component extends Serializable {
 
   /**
-   * Provides access to the <code>Environment</code> of this
-   * <code>Component</code>.
+   * Provides access to the <code>Environment</code> of this <code>Component</code>.
    * 
    * @return the <code>Environment</code> of the <code>Component</code>.
    * @since 1.1
    */
-  public Environment getEnvironment();
+  Environment getEnvironment();
 
   /**
-   * Provides the scope of this <code>Component</code>. The
-   * <code>Scope</code> is related to {@link Path} and the idea behind it is
-   * quite similar.
+   * Provides the scope of this <code>Component</code>. The <code>Scope</code> is related to {@link Path} and the idea
+   * behind it is quite similar.
    * 
    * @return the scope of the <code>Component</code>
    * @since 1.1
    */
-  public Scope getScope();
+  Scope getScope();
 
   /**
-   * Specifies whether this <code>Component</code> is alive. If it is alive
-   * then it means that the <code>Component</code> has been initialized and is
-   * not destroyed yet.
+   * Informs whether this <code>Component</code> is alive. If it is alive then it means that the <code>Component</code>
+   * has been initialized and is not destroyed yet.
    * 
-   * @return <code>true</code>, if this component has been initialized and is
-   *         not destroyed. Otherwise, <code>false</code>.
+   * @return <code>true</code>, if this component has been initialized and is not destroyed. Otherwise,
+   *         <code>false</code>.
    * @since 1.1
    */
-  public boolean isAlive();
+  boolean isAlive();
 
   /**
    * The factory method returning the implementation of the Component.
    * 
    * @return the implementation of the Component.
    */
-  public Component.Interface _getComponent();
+  Component.Interface _getComponent();
 
   /**
-   * The interface which takes care of calling the hooks in the template.
+   * The interface which takes care of calling the hooks in the <tt>Component</tt> template design pattern.
+   * 
+   * @see Component
    */
-  public interface Interface extends Serializable {
+  interface Interface extends Serializable {
 
     /**
-     * Initializes this <code>Component</code> with the specified Environment.
+     * Initializes this <code>Component</code> with the specified scope and environment.
      * 
      * @param scope The <code>Scope</code> of the <code>Component</code>.
      * @param env The <code>Environment</code> of this <code>Component</code>.
      * @see Path
      */
-    public void init(Scope scope, Environment env);
+    void init(Scope scope, Environment env);
 
     /**
      * Destroys this <code>Component</code>.
      */
-    public void destroy();
+    void destroy();
 
     /**
-     * Forwards the given <code>Message</code> to the
-     * <code>Component<code> and its children.
+     * Forwards the given <code>Message</code> to the <code>Component</code> and its children.
+     * 
      * @param message The <code>Message</code> to forward.
      */
-    public void propagate(Message message);
+    void propagate(Message message);
 
     /**
      * Enables this <code>Component</code>.
      */
-    public void enable();
+    void enable();
 
     /**
      * Disables this <code>Component</code>.
      */
-    public void disable();
+    void disable();
   }
 }

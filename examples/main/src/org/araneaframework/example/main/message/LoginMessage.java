@@ -18,7 +18,7 @@ package org.araneaframework.example.main.message;
 
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
-import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.core.message.BroadcastMessage;
 import org.araneaframework.example.main.web.LoginWidget;
 import org.araneaframework.example.main.web.RootWidget;
 import org.araneaframework.http.util.EnvironmentUtil;

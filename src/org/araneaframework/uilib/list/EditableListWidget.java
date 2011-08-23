@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list;
 
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.form.formlist.FormListWidget;
 import org.araneaframework.uilib.form.formlist.FormRowHandler;
 import org.araneaframework.uilib.form.formlist.model.ListWidgetFormListModel;

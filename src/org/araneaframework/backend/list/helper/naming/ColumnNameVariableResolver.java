@@ -18,7 +18,7 @@ package org.araneaframework.backend.list.helper.naming;
 
 import org.araneaframework.backend.list.memorybased.Variable;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * VariableResolver that converts a variable (using its name) into column name.

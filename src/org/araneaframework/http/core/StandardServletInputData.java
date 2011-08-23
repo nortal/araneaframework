@@ -30,16 +30,16 @@ import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.NoCurrentOutputDataSetException;
-import org.araneaframework.core.NoSuchNarrowableException;
+import org.araneaframework.core.exception.NoCurrentOutputDataSetException;
+import org.araneaframework.core.exception.NoSuchNarrowableException;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpInputData;
 
 /**
  * A ServletInputdata implementation which uses a StandardPath for determining the scope.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServletInputData implements HttpInputData {
 

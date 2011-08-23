@@ -21,16 +21,17 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Path;
+import org.araneaframework.core.util.Assert;
 
 /**
  * Default implementation of {@link org.araneaframework.Path}, uses simple string identifiers like "a" or "b" and
  * combines them using dots forming full pathes like "a.b.c".
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardPath implements Path {
 
-  private LinkedList<String> path = new LinkedList<String>();
+  private final LinkedList<String> path = new LinkedList<String>();
 
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.Predicate;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.container.StandardFlowContainerWidget;

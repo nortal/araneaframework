@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * A context providing multiple sessions.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface SessionServiceContext extends ManagedServiceContext, Serializable {

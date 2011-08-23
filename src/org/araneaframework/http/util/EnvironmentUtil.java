@@ -18,8 +18,8 @@ package org.araneaframework.http.util;
 
 import java.lang.reflect.Field;
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.annotation.EnvironmentEntry;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.ContinuationContext;

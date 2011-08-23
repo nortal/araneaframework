@@ -29,7 +29,7 @@ import org.araneaframework.Path;
 import org.araneaframework.core.StandardPath;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * 
  */
 public class MockOutputData implements OutputData {

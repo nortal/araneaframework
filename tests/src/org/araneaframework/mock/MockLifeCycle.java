@@ -22,7 +22,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.core.StandardEnvironment;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class MockLifeCycle {
   public static Component begin(Component comp, Environment env) {

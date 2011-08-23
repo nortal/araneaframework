@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 
 /**
  * This exception is thrown if one of the {@link org.araneaframework.uilib.form.FormWidget}'s <code>get/setByFullNane</code>

@@ -34,11 +34,11 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.event.StandardEventListener;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.EmptyCallStackException;
@@ -50,7 +50,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
 /**
  * A {@link org.araneaframework.framework.FlowContext} where the flows are structured as a stack.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 @SuppressWarnings("unchecked")
@@ -82,9 +82,9 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    */
   private boolean allowFlowCancelEvent = true;
 
-  private Map<Class<?>, Object> nestedEnvironmentEntries = new HashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> nestedEnvironmentEntries = new HashMap<Class<?>, Object>();
 
-  private Map<Class<?>, LinkedList<Object>> nestedEnvEntryStacks = new HashMap<Class<?>, LinkedList<Object>>();
+  private final Map<Class<?>, LinkedList<Object>> nestedEnvEntryStacks = new HashMap<Class<?>, LinkedList<Object>>();
 
   /**
    * Constructs a {@link StandardFlowContainerWidget} with <code>topWidget</code> being the first flow on the top of
@@ -94,7 +94,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     this.top = topWidget;
   }
 
-  public StandardFlowContainerWidget() {}
+  public StandardFlowContainerWidget() {
+  }
 
   public void setTop(Widget topWidget) {
     this.top = topWidget;
@@ -493,11 +494,11 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
    */
   public static class CallFrame implements Serializable {
 
-    private Widget widget;
+    private final Widget widget;
 
-    private Configurator configurator;
+    private final Configurator configurator;
 
-    private Handler<Object> handler;
+    private final Handler<Object> handler;
 
     private String name;
 
@@ -671,11 +672,11 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
       if (StandardFlowContainerWidget.this.allowFlowCancelEvent && StringUtils.isNumeric(eventParam)) {
         int times = Integer.parseInt(eventParam);
-        while (times-- > 0 && StandardFlowContainerWidget.this.isNested()) {
+        while (times-- > 0 && isNested()) {
           cancel();
         }
       }
     }
-    
+
   }
 }

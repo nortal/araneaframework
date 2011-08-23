@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.control;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.form.FilteredInputControl;
 import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 import org.araneaframework.uilib.support.DataType;

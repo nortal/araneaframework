@@ -16,16 +16,14 @@
 
 package org.araneaframework.example.main.message;
 
-import org.araneaframework.example.main.web.MenuWidget;
-
-import org.araneaframework.example.main.web.release.DemoSimpleTreeWidget;
-
 import org.araneaframework.Component;
 import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.BroadcastMessage;
-import org.araneaframework.core.SeriesMessage;
+import org.araneaframework.core.message.BroadcastMessage;
+import org.araneaframework.core.message.SeriesMessage;
+import org.araneaframework.example.main.web.MenuWidget;
+import org.araneaframework.example.main.web.release.DemoSimpleTreeWidget;
 import org.araneaframework.framework.MountContext.MessageFactory;
 
 public class ExampleSimpleTreeMessageFactory implements MessageFactory {

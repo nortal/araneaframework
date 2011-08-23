@@ -32,8 +32,8 @@ public class ConstraintTestHelper<C, D> {
   private FormElement<C, D> element;
 
   public ConstraintTestHelper(FormWidget form, FormElement<C, D> element) {
-    org.araneaframework.core.Assert.notNullParam(this, form, "form");
-    org.araneaframework.core.Assert.notNullParam(this, element, "element");
+    org.araneaframework.core.util.Assert.notNullParam(this, form, "form");
+    org.araneaframework.core.util.Assert.notNullParam(this, element, "element");
 
     this.form = form;
     this.element = element;

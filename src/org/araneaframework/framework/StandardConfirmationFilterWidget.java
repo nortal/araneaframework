@@ -21,8 +21,8 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.core.BaseFilterWidget;
 import org.araneaframework.http.util.EnvironmentUtil;
 

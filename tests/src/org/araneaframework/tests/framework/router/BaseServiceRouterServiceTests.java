@@ -16,12 +16,11 @@
 
 package org.araneaframework.tests.framework.router;
 
-import org.araneaframework.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.araneaframework.core.NoSuchServiceException;
+import org.araneaframework.Service;
+import org.araneaframework.core.exception.NoSuchServiceException;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.mock.MockUtil;
@@ -32,7 +31,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class BaseServiceRouterServiceTests extends TestCase {
   private MockBaseServiceRouterService service;

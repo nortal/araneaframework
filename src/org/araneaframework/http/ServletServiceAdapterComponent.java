@@ -25,7 +25,7 @@ import org.araneaframework.Component;
  * A service adapter which by having the servlet's <code>service</code> method, translates a
  * servlet's request into a service call. 
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public interface ServletServiceAdapterComponent extends Component, Serializable {
   public void service(HttpServletRequest request, HttpServletResponse response);

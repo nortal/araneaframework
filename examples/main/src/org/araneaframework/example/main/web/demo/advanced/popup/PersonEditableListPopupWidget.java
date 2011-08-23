@@ -16,6 +16,7 @@
 
 package org.araneaframework.example.main.web.demo.advanced.popup;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -23,7 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.core.action.StandardActionListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
@@ -235,14 +237,18 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   private static class TestActionListener extends StandardActionListener {
 
     @Override
-    public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, String actionParam, InputData input, OutputData output) {
       StringBuffer s = new StringBuffer(
           "alert('this is a message from action that came back to haunt you, return value being: ");
       s.append(actionParam);
       s.append("')");
 
-      Writer out = ((HttpOutputData) output).getWriter();
-      out.write(s.toString());
+      try {
+        Writer out = ((HttpOutputData) output).getWriter();
+        out.write(s.toString());
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
   }
 

@@ -25,16 +25,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.NoCurrentInputDataSetException;
-import org.araneaframework.core.NoSuchNarrowableException;
+import org.araneaframework.core.exception.NoCurrentInputDataSetException;
+import org.araneaframework.core.exception.NoSuchNarrowableException;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.http.HttpOutputData;
 
 /**
  * A implementation of ServletOutputData, MimeOutputData and ServletOverridableOutputData using
  * StandardPath for scoping.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServletOutputData implements HttpOutputData {
 

@@ -18,7 +18,7 @@ package org.araneaframework.http.util;
 
 import javax.servlet.ServletRequest;
 import org.araneaframework.InputData;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.filter.StandardFileImportFilterService;
@@ -27,7 +27,7 @@ import org.araneaframework.http.filter.StandardFileImportFilterService;
  * Utility methods for converting file names to a form which allows them to be imported with
  * {@link StandardFileImportFilterService}. 
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract  class FileImportUtil {  
 

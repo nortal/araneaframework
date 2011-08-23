@@ -17,8 +17,8 @@
 package org.araneaframework.uilib.form.constraint;
 
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.NoSuchEnvironmentEntryException;
+import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.exception.NoSuchEnvironmentEntryException;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.form.FormElementContext;
 

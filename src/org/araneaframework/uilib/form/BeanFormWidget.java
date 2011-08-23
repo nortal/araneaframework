@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.util.BeanMapper;
 import org.araneaframework.backend.util.BeanUtil;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.form.reader.BeanFormReader;
 import org.araneaframework.uilib.form.reader.BeanFormWriter;

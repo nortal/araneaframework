@@ -32,7 +32,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardSessionServiceRouterServiceTests extends TestCase {
   private StandardSessionServiceRouterService service;

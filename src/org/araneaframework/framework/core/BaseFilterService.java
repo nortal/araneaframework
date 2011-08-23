@@ -22,8 +22,8 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Service;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseService;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.FilterService;
 
 /**
@@ -38,7 +38,7 @@ import org.araneaframework.framework.FilterService;
  * Environment. For alternate environments it should be overridden.
  * </p>
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class BaseFilterService extends BaseService implements FilterService {
 

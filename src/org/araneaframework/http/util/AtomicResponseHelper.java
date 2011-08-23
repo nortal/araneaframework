@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import org.apache.commons.io.IOUtils;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.exception.AraneaRuntimeException;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpOutputData;
 
@@ -37,7 +37,7 @@ import org.araneaframework.http.HttpOutputData;
  * OutputData, <code>commit()</code> will flush it, forcing any buffered output to be written out.
  * <code>rollback()</code> will discard the contents of the buffer.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class AtomicResponseHelper {

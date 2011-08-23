@@ -17,47 +17,49 @@
 package org.araneaframework;
 
 import java.util.Map;
-import org.araneaframework.http.HttpInputData;
 
 /**
- * Provides access to request parameters.
- * 
+ * Input data contract for Aranea components. Provides access to request parameters. Components use {@link OutputData}
+ * to return or store the response.
  * <p>
- * InputData has 2 types of getters
+ * <tt>InputData</tt> divides its data into 2 groups and thus provides 2 getters for accessing them:
  * <ul>
- *  <li>Scoped data - data that depends on the current scope</li>
- *  <li>Global data - data which isn't aware of scoping</li>
+ * <li>Scoped data - data that is {@link Scope}d and thus can be described as a {@link Path};
+ * <li>Global data - data which isn't aware of scoping.
  * </ul>
- * </p>
  * 
- * @see HttpInputData
- * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @see OutputData
+ * @see org.araneaframework.http.HttpInputData
+ * @see Scope
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface InputData extends Extendable, Narrowable {
-  
+
   /**
-   * The key that can be used to retrieve InputData (as an example a request scope attribute).
+   * The key that can be used to store or retrieve <tt>InputData</tt> (as an example, a request scope attribute).
    */
-  public static final String INPUT_DATA_KEY = "org.araneaframework.InputData";
-  
+  String INPUT_DATA_KEY = "org.araneaframework.InputData";
+
   /**
-   * Returns the data with the Path prefix.
-   * @param scope the Path prefix
-   * @return a map with the data
+   * Provides the scoped input data with exact given path prefix.
+   * 
+   * @param scope The exact path prefix for scoped input data.
+   * @return A map with the scoped data, or an empty map when no such scoped data is provided.
    */
-  public Map<String, String> getScopedData(Path scope);
-  
+  Map<String, String> getScopedData(Path scope);
+
   /**
-   * Returns the global data of this object. Global data is not the same
-   * as scoped data with empty path.
+   * Provides global input data. Global data excludes scoped data.
+   * 
    * @return the map with the global data
    */
-  public Map<String, String> getGlobalData();
-  
+  Map<String, String> getGlobalData();
+
   /**
-   * Returns the current OutputData.
+   * Provides the associated output data where response can be stored.
+   * 
+   * @return Associated output data, which is never <code>null</code>.
    */
-  public OutputData getOutputData();
+  OutputData getOutputData();
 }

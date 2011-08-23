@@ -16,7 +16,7 @@
 
 package org.araneaframework.example.main.web.misc;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.example.main.TemplateBaseWidget;
 
 

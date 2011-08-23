@@ -16,18 +16,19 @@
 
 package org.araneaframework.uilib.form.control;
 
-import java.util.LinkedList;
-
-import org.araneaframework.uilib.util.UilibEnvironmentUtil;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ActionListener;
+import org.araneaframework.core.action.ActionListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.support.TextType;
+import org.araneaframework.uilib.util.UilibEnvironmentUtil;
 
 /**
  * TextControl with AJAX autocompletion support.
@@ -202,7 +203,7 @@ public class AutoCompleteTextControl extends TextControl {
 
   private class AutoCompleteActionListener implements ActionListener {
 
-    public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+    public void processAction(String actionId, InputData input, OutputData output) {
       String str = innerData == null ? null : ((String[]) innerData)[0];
       List<String> suggestions = dataProvider.getSuggestions(str);
 
@@ -212,7 +213,12 @@ public class AutoCompleteTextControl extends TextControl {
       String xml = responseBuilder.getResponseContent(suggestions);
 
       httpOutput.setContentType(responseBuilder.getResponseContentType());
-      httpOutput.getWriter().write(xml);
+
+      try {
+        httpOutput.getWriter().write(xml);
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
   }
 

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Widget;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.uilib.support.FlowCreator;
 
 /**

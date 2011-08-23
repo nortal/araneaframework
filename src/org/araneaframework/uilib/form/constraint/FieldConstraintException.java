@@ -1,6 +1,6 @@
 package org.araneaframework.uilib.form.constraint;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 
 /**
  * Exception thrown when a <code>(Generic)FormElement</code> associated with a <code>Constraint</code> could not be

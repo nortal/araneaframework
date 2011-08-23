@@ -22,7 +22,7 @@ import org.araneaframework.backend.list.memorybased.ExpressionEvaluationExceptio
 import org.araneaframework.backend.list.memorybased.expression.CompositeExpression;
 import org.araneaframework.backend.list.memorybased.expression.StringExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.util.ComparatorFactory;
 import org.araneaframework.uilib.list.util.comparator.NullComparator;
 import org.araneaframework.uilib.list.util.comparator.StringComparator;

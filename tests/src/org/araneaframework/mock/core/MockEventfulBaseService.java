@@ -22,7 +22,7 @@ import org.araneaframework.Path;
 import org.araneaframework.core.BaseService;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  *
  */
 public class MockEventfulBaseService extends BaseService {

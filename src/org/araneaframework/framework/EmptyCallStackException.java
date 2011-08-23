@@ -16,12 +16,12 @@
 
 package org.araneaframework.framework;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 
 /**
  * Thrown to indicate that there are no elements in the Path to pop.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class EmptyCallStackException extends AraneaRuntimeException {
   public EmptyCallStackException() {

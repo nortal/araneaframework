@@ -28,7 +28,7 @@ import org.araneaframework.core.ApplicationComponent;
  * The current Locale can be changed with <code>setLocale(Locale)</code> and all
  * subsequent request to <code>getResourceBundle()</code> will use the new current Locale.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface LocalizationContext extends Serializable {

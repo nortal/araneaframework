@@ -21,7 +21,7 @@ import org.araneaframework.Component;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseComponent;
 import org.araneaframework.core.BaseWidget;
-import org.araneaframework.core.BroadcastMessage;
+import org.araneaframework.core.message.BroadcastMessage;
 import org.araneaframework.mock.MockInputData;
 import org.araneaframework.mock.MockOutputData;
 import org.araneaframework.tests.mock.MockEnvironment;

@@ -29,7 +29,7 @@ import org.araneaframework.framework.core.BaseFilterService;
  * <code>hasAction(InputData)</code> returns true, the action is routed to the child, otherwise
  * not.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardContainerService extends BaseFilterService {
 

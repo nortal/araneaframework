@@ -26,7 +26,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * Note: at least in Aranea 2.0, the {@link AtomicResponseHelper} only handles commit and roll-back of content. Headers,
  * cookies etc are not handled. If necessary, it can be implemented in later versions.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class AtomicResponseHelperTests extends TestCase {
 

@@ -31,7 +31,7 @@ import org.araneaframework.http.util.AtomicResponseHelper;
  * A custom exception handling filter service. If the child service's action method throws an exception, then the response
  * stream is rolled back, an exception handler constructed, initiated and the request routed to the handler.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardCriticalExceptionHandlingFilterService extends BaseFilterService {

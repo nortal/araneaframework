@@ -25,7 +25,7 @@ import org.araneaframework.framework.TransactionContext;
  * {@link TransactionContext#OVERRIDE_KEY} or current transaction id. If current transaction id is not yet set, any
  * transaction id is considered consistent.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class TransactionHelper implements Serializable {
 

@@ -31,7 +31,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.HttpOutputData;

@@ -16,14 +16,16 @@
 
 package org.araneaframework.http.core;
 
+import java.io.IOException;
 import java.io.Serializable;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.core.action.StandardActionListener;
+import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.PopupWindowContext;
 import org.araneaframework.http.filter.StandardPopupFilterWidget;
 import org.araneaframework.http.service.FileDownloaderService;
@@ -73,8 +75,7 @@ public class FileDownloadActionListener extends StandardActionListener {
   }
 
   @Override
-  public void processAction(String actionId, String actionParam, InputData input, OutputData output)
-      throws Exception {
+  public void processAction(String actionId, String actionParam, InputData input, OutputData output) {
 
     if (this.lastPopupId != null) {
       this.popupCtx.close(this.lastPopupId);
@@ -94,7 +95,11 @@ public class FileDownloadActionListener extends StandardActionListener {
     } finally {
       // We return the URL of the popup to the client.
       // If no popup found then "error" will be returned.
-      ServletUtil.getResponse(output).getOutputStream().print(url);
+      try {
+        ServletUtil.getResponse(output).getOutputStream().print(url);
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
   }
 

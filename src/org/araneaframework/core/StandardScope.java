@@ -27,9 +27,9 @@ import org.araneaframework.Scope;
  */
 public class StandardScope implements Scope {
 
-  private Object id;
+  private final Object id;
 
-  private Scope parent;
+  private final Scope parent;
 
   public StandardScope(Object id, Scope parent) {
     this.id = id;

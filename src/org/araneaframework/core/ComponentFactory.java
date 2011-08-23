@@ -21,15 +21,18 @@ import org.araneaframework.Component;
 import org.araneaframework.Environment;
 
 /**
- * A simple factory for creating components.
+ * A simple factory contract for creating components.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ComponentFactory extends Serializable {
 
   /**
-   * Builds a Component.
+   * Builds an instance of a <tt>Component</tt>.
+   * 
+   * @param env The environment of the component asking a component to be built.
+   * @return A component instance, must not be <code>null</code>.
    */
-  public Component buildComponent(Environment env);
+  Component buildComponent(Environment env);
 }

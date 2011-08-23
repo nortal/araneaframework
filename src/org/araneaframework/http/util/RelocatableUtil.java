@@ -16,7 +16,6 @@
 
 package org.araneaframework.http.util;
 
-import org.araneaframework.core.Assert;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import java.io.FileWriter;
@@ -27,6 +26,7 @@ import org.apache.commons.lang.SerializationUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Relocatable.RelocatableService;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**

@@ -22,7 +22,7 @@ import org.araneaframework.framework.router.BaseServiceRouterService;
 import org.araneaframework.mock.MockUtil;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class MockBaseServiceRouterService extends BaseServiceRouterService {
 

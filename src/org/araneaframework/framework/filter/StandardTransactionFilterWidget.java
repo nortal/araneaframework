@@ -33,7 +33,7 @@ import org.araneaframework.framework.util.TransactionHelper;
  * on the transaction ID. If the transaction ID is consistent, the mentioned actions get called on the child service,
  * otherwise they do not.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardTransactionFilterWidget extends BaseFilterWidget implements TransactionContext {
 

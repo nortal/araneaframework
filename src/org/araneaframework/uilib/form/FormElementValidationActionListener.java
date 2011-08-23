@@ -23,8 +23,9 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.StandardActionListener;
+import org.araneaframework.core.action.StandardActionListener;
+import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.http.HttpOutputData;
@@ -53,7 +54,7 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
   }
 
   @Override
-  public void processAction(String actionId, String actionParam, InputData input, OutputData output) throws Exception {
+  public void processAction(String actionId, String actionParam, InputData input, OutputData output)  {
     if (!isValidationEnabled()) {
       if (LOG.isWarnEnabled()) {
         LOG.warn("Validation listener of '" + this.baseFormElement.getScope()
@@ -64,31 +65,36 @@ public class FormElementValidationActionListener<C, D> extends StandardActionLis
 
     // Let's gather data first:
 
-    Writer out = ((HttpOutputData) output).getWriter();
+    try {
+      Writer out = ((HttpOutputData) output).getWriter();
 
-    boolean valid = this.baseFormElement.convertAndValidate();
+      boolean valid = this.baseFormElement.convertAndValidate();
 
-    String formElementId = this.baseFormElement.getScope().toString();
-    String ajaxRequestId = output.getInputData().getGlobalData().get(
-        StandardUpdateRegionFilterWidget.AJAX_REQUEST_ID_KEY);
+      String formElementId = this.baseFormElement.getScope().toString();
+      String ajaxRequestId = output.getInputData().getGlobalData()
+          .get(StandardUpdateRegionFilterWidget.AJAX_REQUEST_ID_KEY);
 
-    // Process error messages indirectly attached to validated form element
-    String clientRenderText = this.baseFormElement.getFormElementValidationErrorRenderer().getClientRenderText(
-        this.baseFormElement);
+      // Process error messages indirectly attached to validated form element
+      String clientRenderText = this.baseFormElement.getFormElementValidationErrorRenderer().getClientRenderText(
+          this.baseFormElement);
 
-    // Now let's write the gathered data to output stream:
-    writeValidationStatus(out, ajaxRequestId, formElementId, valid, clientRenderText);
+      // Now let's write the gathered data to output stream:
+      writeValidationStatus(out, ajaxRequestId, formElementId, valid, clientRenderText);
 
-    // Let's also try writing out messages region:
+      // Let's also try writing out messages region:
 
-    Environment env = this.baseFormElement.getEnvironment();
-    UpdateRegionProvider messageRegion = EnvironmentUtil.getMessageContext(env);
+      Environment env = this.baseFormElement.getEnvironment();
+      UpdateRegionProvider messageRegion = EnvironmentUtil.getMessageContext(env);
 
-    if (messageRegion != null) {
-      LocalizationContext locCtx = env.getEntry(LocalizationContext.class);
-      // TODO: general mechanism for writing out UpdateRegions from actions
-      String messageRegionContent = messageRegion.getRegions(locCtx).get(MessageContext.MESSAGE_REGION_KEY).toString();
-      writeRegion(out, MessageContext.MESSAGE_REGION_KEY, messageRegionContent);
+      if (messageRegion != null) {
+        LocalizationContext locCtx = env.getEntry(LocalizationContext.class);
+        // TODO: general mechanism for writing out UpdateRegions from actions
+        String messageRegionContent = messageRegion.getRegions(locCtx).get(MessageContext.MESSAGE_REGION_KEY)
+            .toString();
+        writeRegion(out, MessageContext.MESSAGE_REGION_KEY, messageRegionContent);
+      }
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
     }
   }
 

@@ -16,43 +16,51 @@
 
 package org.araneaframework.core;
 
-import java.io.Serializable;
 import java.util.Map;
-import org.araneaframework.Service;
 import org.araneaframework.Composite.CompositeService;
 import org.araneaframework.Viewable.ViewableService;
 
 /**
- * A Service Component.
+ * Application Service unifies <tt>Service</tt>, <tt>Composite</tt> and <tt>Viewable</tt> contracts. It also extends
+ * {@link ApplicationComponent} contract to application services.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public interface ApplicationService extends ApplicationComponent, Service, CompositeService, ViewableService {
+public interface ApplicationService extends ApplicationComponent, CompositeService, ViewableService {
 
   /**
-   * A view model for a Service.
-   */
-  public interface ServiceViewModel extends ApplicationComponent.ComponentViewModel, Serializable {
-    /**
-     * Can be used to custom data from the view.
-     */
-    public Map<String, Object> getData();
-  }
-
-  //*******************************************************************
-  // CONSTANTS
-  //*******************************************************************
-  /**
-   * The attribute of the action id.
+   * The request parameter name for retrieving delegated action handler ID.
+   * 
    * @since 1.0.4
    */
-  public static final String ACTION_HANDLER_ID_KEY = "araServiceActionHandler";
-  /** @since 1.0.4 */
-  public static final String ACTION_PARAMETER_KEY = "araServiceActionParameter";
+  String ACTION_HANDLER_ID_KEY = "araServiceActionHandler";
 
   /**
-   * The key of the path of the action in the request.
+   * The request parameter name for retrieving action handler parameter value.
+   * 
+   * @since 1.0.4
+   */
+  String ACTION_PARAMETER_KEY = "araServiceActionParameter";
+
+  /**
+   * The request parameter name for retrieving delegated action handler full path (scope).
    * 
    * @since 1.1
    */
-  public static final String ACTION_PATH_KEY = "araServiceActionPath";
+  String ACTION_PATH_KEY = "araServiceActionPath";
+
+  /**
+   * The view model contract for services.
+   */
+  interface ServiceViewModel extends ApplicationComponent.ComponentViewModel {
+
+    /**
+     * Provides a map with custom data from the view.
+     * 
+     * @return A map with data or an empty map.
+     */
+    Map<String, Object> getData();
+  }
 
 }

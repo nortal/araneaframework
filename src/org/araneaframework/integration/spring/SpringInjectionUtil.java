@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import javax.annotation.Resource;
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ClassLoaderUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.integration.spring.support.SpringBeanInvocationHandler;

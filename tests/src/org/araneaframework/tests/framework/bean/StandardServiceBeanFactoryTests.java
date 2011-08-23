@@ -24,7 +24,7 @@ import org.araneaframework.integration.spring.SpringServiceFactory;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServiceBeanFactoryTests extends TestCase {
   private SpringServiceFactory factory;

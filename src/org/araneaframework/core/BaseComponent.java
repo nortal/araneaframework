@@ -28,19 +28,28 @@ import org.araneaframework.Environment;
 import org.araneaframework.Message;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Scope;
+import org.araneaframework.core.exception.AraneaRuntimeException;
+import org.araneaframework.core.exception.NoSuchComponentException;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * The base class for all Aranea components. Base entities do not make a Composite pattern and only provide some very
- * basic services (mainly syncronization and messaging service)
+ * basic services (mainly synchronization and messaging service)
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class BaseComponent implements Component {
 
   private static final Log LOG = LogFactory.getLog(BaseComponent.class);
+
+  private static final byte UNBORN = 1;
+
+  private static final byte ALIVE = 2;
+
+  private static final byte DEAD = 3;
 
   private Environment environment;
 
@@ -49,12 +58,6 @@ public class BaseComponent implements Component {
   private Map<String, Component> children;
 
   private Map<String, Component> disabledChildren;
-
-  private static final byte UNBORN = 1;
-
-  private static final byte ALIVE = 2;
-
-  private static final byte DEAD = 3;
 
   private byte state = UNBORN;
 
@@ -77,32 +80,36 @@ public class BaseComponent implements Component {
   // *******************************************************************
 
   /**
-   * Init callback. Gets called when the component is initialized.
+   * Component initiation callback. Gets called when the component is initialized.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void init() throws Exception {}
+  protected void init() throws Exception {
+  }
 
   /**
-   * Destroy callback. Gets called when the component is destroyed.
+   * Component destruction callback. Gets called when the component is destroyed.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void destroy() throws Exception {}
+  protected void destroy() throws Exception {
+  }
 
   /**
    * Disables the component.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void disable() throws Exception {}
+  protected void disable() throws Exception {
+  }
 
   /**
    * Enables the component.
    * 
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void enable() throws Exception {}
+  protected void enable() throws Exception {
+  }
 
   /**
    * Forwards the <code>message</code> to the component and to all of its children components.
@@ -110,10 +117,11 @@ public class BaseComponent implements Component {
    * @param message A message to forward.
    * @throws Exception Any runtime exception that may occur.
    */
-  protected void propagate(Message message) throws Exception {}
+  protected void propagate(Message message) throws Exception {
+  }
 
   /**
-   * Handles any given exception.
+   * Handles any given exception. Default implementation just re-throws the exception.
    * 
    * @param e The exception that occurred.
    * @throws Exception Any runtime exception that may occur during error handling.
@@ -131,32 +139,32 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Gets whether the component has been initialized. "Initialized" means that the <code>init()</code> method has been
-   * called.
+   * Informs whether the component has been initialized. "Initialized" means that the <code>init()</code> method has
+   * been called.
    * 
-   * @return <code>true</code>, if the component has been initialized.
+   * @return A Boolean that is <code>true</code>, if the component has been initialized.
    */
-  public boolean isInitialized() {
+  public final boolean isInitialized() {
     return this.state != UNBORN;
   }
 
-  public boolean isAlive() {
+  public final boolean isAlive() {
     return this.state == ALIVE;
   }
 
   /**
-   * Specifies whether the component is dead. It means that the <code>destroy()</code> method has been called.
+   * Informs whether the component is dead. It means that the <code>destroy()</code> method has been called.
    * 
-   * @return <code>true</code>, if the component has been destroyed.
+   * @return A Boolean that is <code>true</code>, if the component has been destroyed.
    */
-  public boolean isDead() {
+  public final boolean isDead() {
     return this.state == DEAD;
   }
 
   /**
    * Sets the environment of this component to <code>env</code>.
    * 
-   * @param env The new <code>Envrionment</code> for this component.
+   * @param env The new <code>Environment</code> for this component.
    */
   protected synchronized void _setEnvironment(Environment env) {
     this.environment = env;
@@ -165,7 +173,7 @@ public class BaseComponent implements Component {
   /**
    * Sets the scope for this component.
    * 
-   * @param scope the new scope to identify this component.
+   * @param scope The new scope to identify this component.
    * @since 1.1
    */
   protected void _setScope(Scope scope) {
@@ -173,7 +181,10 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Waits until no call is made to the component. Used to synchronize calls to the component.
+   * Waits until no call is being made to the component. Used to synchronize calls to the component.
+   * <p>
+   * When a call to the component is in progress, default implementation waits 1 second before trying again. It waits up
+   * to 10 seconds in total before giving up.
    */
   protected synchronized void _waitNoCall() throws InterruptedException {
     long waitStart = System.currentTimeMillis();
@@ -188,8 +199,9 @@ public class BaseComponent implements Component {
         }
 
         if (waitStart < System.currentTimeMillis() - 10000) {
-          LOG.error("Deadlock or starvation not solved in 10s, call count '" + callCount + "', reentrant call count '"
-              + reentrantCallCount + "'", new AraneaRuntimeException("Deadlock or starvation suspected!"));
+          LOG.error("Deadlock or starvation not solved in 10s, call count '" + this.callCount
+              + "', reentrant call count '" + this.reentrantCallCount + "'", new AraneaRuntimeException(
+              "Deadlock or starvation suspected!"));
           return;
         }
       }
@@ -197,7 +209,12 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Checks if a call is valid (component is in the required state), increments the call count.
+   * Checks if a call is valid (component has been initialized) and increments the call count (registers a call being
+   * made to this component). Use {@link #_strictStartCall()}, if you also need to be sure that component is not
+   * destroyed.
+   * 
+   * @see #_strictStartCall()
+   * @see #_checkCall()
    */
   protected synchronized void _startCall() throws IllegalStateException {
     _checkCall();
@@ -205,6 +222,11 @@ public class BaseComponent implements Component {
   }
 
   /**
+   * Checks if a call is valid (component has been initialized and is not destroyed) and increments the call count
+   * (registers a call being made to this component).
+   * 
+   * @see #_startCall()
+   * @see #_strictCheckCall()
    * @since 1.1
    */
   protected synchronized void _strictStartCall() throws IllegalStateException {
@@ -213,15 +235,16 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Decrements the call count. Wakes up all threads that are waiting on this object's monitor
+   * Decrements the call count (unregisters a call that was made to this component). Wakes up all threads that are
+   * waiting on this object's monitor.
    */
   protected synchronized void _endCall() {
     decCallCount();
-    this.notifyAll();
+    notifyAll();
   }
 
   /**
-   * Used for starting a call that is a re-entrant call. Meaning a call of this component is doing the calling
+   * Used for starting a call that is a re-entrant call. Meaning a call of this component is doing the calling.
    */
   protected synchronized void _startWaitingCall() {
     if (getReentrantCount() >= 1) {
@@ -230,7 +253,7 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Decrements internal call count counter.
+   * Decrements internal call counter.
    */
   protected synchronized void _endWaitingCall() {
     if (getReentrantCount() >= 1) {
@@ -239,10 +262,10 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component was initialized. If not, throws IllegalStateException. This is relatively loose check,
-   * allowing leftover calls to dead components.
+   * Checks if this component has been initialized. If not, throws <tt>IllegalStateException</tt>. This is relatively
+   * loose check, allowing leftover calls to dead components.
    * 
-   * @throws IllegalStateException when component has never been initialized
+   * @throws IllegalStateException when this component has never been initialized.
    */
   protected void _checkCall() throws IllegalStateException {
     if (!isInitialized()) {
@@ -251,9 +274,9 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Checks if this component is currently alive. This is strict check that disallows leftover calls to dead components.
+   * Checks if this component is currently alive (initialized and not destroyed).
    * 
-   * @throws IllegalStateException when component is unborn or dead
+   * @throws IllegalStateException when this component is not initialized or is destroyed.
    * @since 1.1
    */
   protected void _strictCheckCall() throws IllegalStateException {
@@ -263,7 +286,10 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Returns the children of this component.
+   * Returns all enabled child components of this component. Note that the returned map is synchronized.
+   * 
+   * @return A map containing enabled child components of this component by their IDs. An empty map, when no child
+   *         exists.
    */
   protected Map<String, Component> _getChildren() {
     synchronized (this) {
@@ -275,7 +301,10 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Returns the children of this component.
+   * Returns all disabled child components of this component. Note that the returned map is synchronized.
+   * 
+   * @return A map containing disabled child components of this component by their IDs. An empty map, when no disabled
+   *         child exists.
    */
   protected Map<String, Component> _getDisabledChildren() {
     synchronized (this) {
@@ -287,24 +316,45 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Adds a child component to this component with the key and initializes it with the specified Environment env.
+   * Adds a child component to this component with the given ID (key) and initializes it with the specified environment.
+   * Note that there are some aspects about adding a component:
+   * <ul>
+   * <li>component to be added must not be initialized, therefore no component cannot be added twice;
+   * <li>when component key is already used, the previous component will be (enabled), removed and destroyed;
+   * <li>component to be added will also get its own scope: &lt;the scope of this component&gt;.&lt;key&gt;;
+   * <li>the provided environment does not necessarily have to contain parent component environment items.
+   * </ul>
+   * Input parameters will be validated and a runtime exception will be thrown, if they are not as required.
+   * 
+   * @param key A not empty string for component ID, may be already used for another child component (required).
+   * @param component Uninitialized component to be added to this component as a child (required).
+   * @param env The environment assigned to the component during initialization (required).
    */
   protected void _addComponent(String key, Component component, Environment env) {
     _addComponent(key, component, new StandardScope(key, getScope()), env);
   }
 
   /**
-   * Adds a child component to this component with the key and initializes it with the specified Environment env.
+   * Adds a child component to this component with the given ID (key) and initializes it with the specified environment.
+   * Note that there are some aspects about adding a component:
+   * <ul>
+   * <li>component to be added must not be initialized, therefore no component cannot be added twice;
+   * <li>when component key is already used, the previous component will be (enabled), removed and destroyed;
+   * <li>component to be added will also get its own scope: &lt;the provided scope&gt;.&lt;key&gt;;
+   * <li>the provided environment does not necessarily have to contain parent component environment items.
+   * </ul>
+   * Input parameters will be validated and a runtime exception will be thrown, if they are not as required.
    * 
+   * @param key A not empty string for component ID, may be already used for another child component (required).
+   * @param component Uninitialized component to be added to this component as a child (required).
+   * @param scope The parent scope for the component to be added (may be <code>null</code>).
+   * @param env The environment assigned to the component during initialization (required).
    * @since 1.1
    */
   protected void _addComponent(String key, Component component, Scope scope, Environment env) {
+    Assert.notNull(this, component, "The component to be added under key '" + key + "' must not be null.");
+    Assert.notEmpty(key, "Cannot add a component of class '" + component.getClass() + "' under an empty key!");
 
-    Assert.notNull(this, component, "The component for key '" + key + "' is required.");
-    Assert.notNull(this, key, "Cannot add a component of class '" + component.getClass() + "' under a null key!");
-
-    // Only Strings are supported by this implementation
-    Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
 
     // cannot add a child with key that clashes with a disabled child's key
@@ -315,22 +365,25 @@ public class BaseComponent implements Component {
       _removeComponent(key);
     }
 
-    // Sequence is very important as by the time of init, the component should be in place, since during init the
-    // component might be overridden.
+    if (scope == null) {
+      scope = new StandardScope(key, null);
+    }
+
+    // Sequence is very important as by the time of initialization, the component should be in place, since during
+    // initialization the component might be overridden.
     _getChildren().put(key, component);
     component._getComponent().init(scope, env);
   }
 
   /**
-   * Removes the child component with the specified key from the children and calls destroy on it.
+   * Removes the child component with the specified key from the children and calls destroy on it. When no child
+   * component with given key is found, nothing will happen.
    * 
-   * @param key The ID of the component to remove.
+   * @param key The ID of the component to remove (required).
    */
   protected void _removeComponent(Object key) {
     Assert.notNullParam(this, key, "key");
 
-    // Only Strings are supported by this implementation
-    Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
 
     Component comp = _getChildren().get(key);
@@ -338,23 +391,24 @@ public class BaseComponent implements Component {
       return;
     }
 
-    // Sequence is very important, and guarantees that there won't
-    // be a second destroy call if the first one doesn't succeed.
+    // Sequence is very important, and guarantees that there won't be a second destroy call if the first one doesn't
+    // succeed.
     _getChildren().remove(key);
     comp._getComponent().destroy();
   }
 
   /**
-   * Disables the child component with the specified key. A disabled child is a child that is removed from the standard
-   * set of children
+   * Disables the child component with the specified key. If the key does not correspond to any kind of child component,
+   * a runtime exception will occur. A disabled child is a child that is removed from the active set of children to
+   * disabled set of children. When child component is already disabled, nothing will happen.
    * 
-   * @param key The ID of the child component to disable.
+   * @param key The ID of the child component to disable (required).
+   * @see #_getChildren()
+   * @see #_getDisabledChildren()
    */
   protected void _disableComponent(String key) {
     Assert.notNullParam(this, key, "key");
 
-    // Only Strings are supported by this implementation
-    Assert.isInstanceOfParam(String.class, key, "key");
     _checkCall();
 
     boolean enabled = _getChildren().containsKey(key);
@@ -371,10 +425,12 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Enables a disabled child component with the specified key. If the key does not correspond to anything, a runtime
-   * exception will occur.
+   * Enables a disabled child component with the specified key. If the key does not correspond to any kind of child
+   * component, a runtime exception will occur. When child component is already disabled, nothing will happen.
    * 
-   * @param key The ID of the child component to enable.
+   * @param key The ID of the child component to enable (required).
+   * @see #_getChildren()
+   * @see #_getDisabledChildren()
    */
   protected void _enableComponent(String key) {
     Assert.notNullParam(this, key, "key");
@@ -397,24 +453,30 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Relocates parent's child with keyFrom to this BaseComponent with a new key keyTo. The child will get the
-   * Environment specified by newEnv.
+   * Relocates a component with ID <tt>keyFrom</tt> under given <tt>parent</tt> as child of this component with a new
+   * key <tt>keyTo</tt>. The child will get (possibly a new) <tt>Environment</tt> specified by <tt>newEnv</tt>.
+   * <p>
+   * A runtime exception will occur when
+   * <ul>
+   * <li>no such child component exists under given parent;
+   * <li>the child component is not {@link Relocatable}
+   * </ul>
    * 
-   * @param parent is the current parent of the child to be relocated.
-   * @param newEnv the new Environment of the child.
-   * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this StandardService.
+   * @param parent The current parent of the child component to be relocated (required).
+   * @param newEnv The new environment for the relocated child component.
+   * @param keyFrom The current key of the child to be relocated (required).
+   * @param keyTo The new key with which the child will be added as a child of component (required).
    */
   protected void _relocateComponent(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
-    Assert.notNull(this, parent, "Cannot relocate a component from under key '" + keyFrom + "' to key '" + keyTo
-        + "' from a null parent!");
+    Assert.notNullParam(this, parent, "parent");
+    Assert.notNullParam(this, keyFrom, "keyFrom");
+    Assert.notNullParam(this, keyTo, "keyTo");
 
-    Assert.notNull(this, parent._getComposite().getChildren().get(keyFrom),
-        "The component to be relocated must be a child under key '" + keyFrom + "'!");
+    Component child = parent._getComposite().getChildren().get(keyFrom);
 
-    Assert.isTrue(this, parent._getComposite().getChildren().get(keyFrom) instanceof Relocatable,
-        "The component of class '" + parent._getComposite().getChildren().get(keyFrom).getClass()
-            + "' to be relocated from under key '" + keyFrom + "' to key '" + keyTo + "' must implement Relocatable!");
+    Assert.notNull(this, child, "The component to be relocated must be a child under key '" + keyFrom + "'!");
+    Assert.isTrue(this, child instanceof Relocatable, "The component of class '" + child.getClass()
+        + "' to be relocated from under key '" + keyFrom + "' to key '" + keyTo + "' must implement Relocatable!");
 
     Relocatable comp = (Relocatable) parent._getComposite().detach(keyFrom);
     comp._getRelocatable().overrideEnvironment(newEnv);
@@ -422,13 +484,14 @@ public class BaseComponent implements Component {
   }
 
   /**
-   * Forwards the <code>message</code> to the component and to all of its children components.
+   * Forwards the <code>message</code> to this component and to all of its child components.
    * <p>
    * <b>Note:</b> this is the component propagation logic that should not be modified by applications (they should use
-   * just the {@link BaseComponent#propagate(Message)}).
+   * just the {@link #propagate(Message)} method for that).
+   * <p>
+   * When this component has no children or is destroyed, nothing will happen.
    * 
-   * @param message A message to forward.
-   * @throws Exception Any runtime exception that may occur.
+   * @param message A message to forward (required).
    */
   protected void _propagate(Message message) {
     Assert.notNullParam(this, message, "message");
@@ -452,6 +515,16 @@ public class BaseComponent implements Component {
   // PRIVATE METHODS
   // *******************************************************************
 
+  private void initReentrantCount() {
+    if (this.reentrantTLS == null) {
+      this.reentrantTLS = new Counter();
+    }
+  }
+
+  private int getReentrantCount() {
+    return this.reentrantTLS != null ? this.reentrantTLS.get() : 0;
+  }
+
   private synchronized void incCallCount() {
     initReentrantCount();
     this.callCount++;
@@ -469,36 +542,29 @@ public class BaseComponent implements Component {
     this.callCount--;
   }
 
-  private int getReentrantCount() {
-    int count = 0;
-    if (this.reentrantTLS != null && this.reentrantTLS.get() != null) {
-      count = this.reentrantTLS.get();
-    }
-    return count;
-  }
-
-  private void initReentrantCount() {
-    if (this.reentrantTLS == null) {
-      this.reentrantTLS = new Counter();
-    }
-  }
-
   // *******************************************************************
   // PROTECTED CLASSES
   // *******************************************************************
 
-  // component implementation
+  /**
+   * Base component implementation that uses synchronization to perform component actions to make sure no one else uses
+   * it at the same time.
+   */
   protected class ComponentImpl implements Component.Interface {
 
+    /**
+     * Before {@link BaseComponent#init()} method is called, environment entries will injected into component fields.
+     * 
+     * @see EnvironmentUtil#injectEnvironmentEntries(Environment, Object)
+     */
     public synchronized void init(Scope scope, Environment env) {
       Assert.notNull(this, env, "Environment cannot be null!");
       Assert.isTrue(this, !isInitialized(), "Cannot initialize the component more than once!");
 
-      BaseComponent.this._setScope(scope);
-      BaseComponent.this._setEnvironment(env);
-      BaseComponent.this.state = ALIVE;
-
+      _setScope(scope);
+      _setEnvironment(env);
       EnvironmentUtil.injectEnvironmentEntries(env, BaseComponent.this);
+      BaseComponent.this.state = ALIVE;
 
       try {
         BaseComponent.this.init();
@@ -507,6 +573,10 @@ public class BaseComponent implements Component {
       }
     }
 
+    /**
+     * Destroys all child components and then invokes the {@link BaseComponent#destroy()} method. The component state
+     * will end up dead and cannot be reused.
+     */
     public void destroy() {
       _startWaitingCall();
       _strictCheckCall();
@@ -514,30 +584,35 @@ public class BaseComponent implements Component {
         _waitNoCall();
 
         _getChildren();
-        synchronized (children) {
-          for (Iterator<Map.Entry<String, Component>> i = children.entrySet().iterator(); i.hasNext();) {
-            i.next().getValue()._getComponent().destroy();
+        synchronized (BaseComponent.this.children) {
+          for (Iterator<Component> i = BaseComponent.this.children.values().iterator(); i.hasNext();) {
+            try {
+              i.next()._getComponent().destroy();
+            } catch (Exception e) {
+              LOG.warn("An exception was caught from (enabled) component destruction process", e);
+            }
             i.remove();
           }
         }
 
         _getDisabledChildren();
-        synchronized (disabledChildren) {
-          for (Iterator<Map.Entry<String, Component>> i = disabledChildren.entrySet().iterator(); i.hasNext();) {
-            Component component = i.next().getValue();
-            if (component != null) {
-              component._getComponent().destroy();
-              i.remove();
+        synchronized (BaseComponent.this.disabledChildren) {
+          for (Iterator<Component> i = BaseComponent.this.disabledChildren.values().iterator(); i.hasNext();) {
+            try {
+              i.next()._getComponent().destroy();
+            } catch (Exception e) {
+              LOG.warn("An exception was caught from (disabled) component destruction process", e);
             }
+            i.remove();
           }
         }
 
         BaseComponent.this.destroy();
 
-        BaseComponent.this.state = DEAD;
       } catch (Exception e) {
         ExceptionUtil.uncheckException(e);
       } finally {
+        BaseComponent.this.state = DEAD;
         _endWaitingCall();
       }
     }
@@ -576,11 +651,17 @@ public class BaseComponent implements Component {
     }
   }
 
+  /**
+   * A thread local counter used for keeping track of calls to this component.
+   */
   private static class Counter extends ThreadLocal<Integer> {
 
+    /**
+     * Initial value is zero.
+     */
     @Override
     protected Integer initialValue() {
-      return Integer.valueOf(0);
+      return 0;
     }
   }
 }

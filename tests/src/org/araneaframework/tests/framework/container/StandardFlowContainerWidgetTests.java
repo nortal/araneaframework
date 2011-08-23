@@ -27,7 +27,7 @@ import org.araneaframework.framework.container.StandardFlowContainerWidget;
 import org.araneaframework.mock.core.MockEventfulBaseWidget;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  *
  */
 public class StandardFlowContainerWidgetTests extends TestCase {

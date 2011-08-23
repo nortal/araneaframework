@@ -17,22 +17,24 @@
 package org.araneaframework;
 
 /**
- * Provides objects with the capability of narrowing down to a specific implementation
- * of an interface added with extend from {@link org.araneaframework.Extendable}.
+ * Provides objects with the capability of narrowing down to a specific implementation of an interface added with extend
+ * from {@link Extendable}.
  * 
- * @see org.araneaframework.Extendable
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @see Extendable
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Narrowable {
-  
+
   /**
-   * Narrows down to the implementation of the interfaceClass, returns
-   * the object. Can be used after the <code>extend(Class, Object);</code>
-   * if the object implements {@link Extendable}.
-   *  
-   * @param interfaceClass the interface of the implementation in need of
-   * @return the implementation of the interfaceClass
+   * Narrows down to the implementation of the interfaceClass and returns that object. Can be used after calling
+   * <code>extend(Class, Object)</code> on this instance, if it implements {@link Extendable}.
+   * 
+   * @param <T> The type of the interface class, also the type of the returned object instance.
+   * @param interfaceClass The interface of the implementation that needs to be returned.
+   * @return The implementation of the <tt>interfaceClass</tt>.
+   * @throws org.araneaframework.core.exception.NoSuchNarrowableException When the <tt>interfaceClass</tt> has not been
+   *           extended beforehand on this instance of implementation.
    */
-  public <T> T narrow(Class<T> interfaceClass);
+  <T> T narrow(Class<T> interfaceClass);
 }

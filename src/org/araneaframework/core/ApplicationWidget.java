@@ -16,37 +16,39 @@
 
 package org.araneaframework.core;
 
-import java.io.Serializable;
-import org.araneaframework.Widget;
 import org.araneaframework.Composite.CompositeWidget;
 import org.araneaframework.Viewable.ViewableWidget;
 
 /**
- * A Widget Component.
+ * Application Widget unifies <tt>Widget</tt>, <tt>Composite</tt> and <tt>Viewable</tt> contracts. It also extends
+ * {@link ApplicationService} contract to application widgets.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public interface ApplicationWidget
-  extends ApplicationService, Widget, CompositeWidget, ViewableWidget {
+public interface ApplicationWidget extends ApplicationService, CompositeWidget, ViewableWidget {
 
   /**
-   * The key of the event handler.
+   * The request parameter name for retrieving delegated event handler ID.
    */
   String EVENT_HANDLER_ID_KEY = "araWidgetEventHandler";
 
   /**
-   * The key of the event parameter.
+   * The request parameter name for retrieving event handler parameter value.
    */
   String EVENT_PARAMETER_KEY = "araWidgetEventParameter";
 
   /**
-   * The key of the path of the event in the request.
+   * The request parameter name for retrieving delegated event handler full path (scope).
    * 
    * @since 1.1
    */
   String EVENT_PATH_KEY = "araWidgetEventPath";
 
   /**
-   * A view model for a Widget.
+   * The view model contract for widgets.
    */
-  public interface WidgetViewModel
-    extends ApplicationService.ServiceViewModel, Serializable {}
+  interface WidgetViewModel extends ApplicationService.ServiceViewModel {
+  }
+
 }

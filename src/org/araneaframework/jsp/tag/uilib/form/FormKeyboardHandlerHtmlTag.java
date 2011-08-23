@@ -20,7 +20,7 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.jsp.tag.basic.BaseKeyboardHandlerTag;
 import org.araneaframework.jsp.tag.basic.KeyboardHandlerHtmlTag;
 

@@ -27,7 +27,7 @@ import org.araneaframework.uilib.form.data.StringData;
  * Sample widget for using the rich textarea tag. The widget shows an area with rich-text controls. When users submits
  * the area's contents it is displayed in a preview div.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class DemoRichTextForm extends TemplateBaseWidget {
 

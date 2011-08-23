@@ -24,10 +24,10 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.AraneaRuntimeException;
-import org.araneaframework.core.RoutedMessage;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardEventListener;
+import org.araneaframework.core.event.StandardEventListener;
+import org.araneaframework.core.exception.AraneaRuntimeException;
+import org.araneaframework.core.message.RoutedMessage;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 
@@ -130,7 +130,7 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
 
     reset(new EnvironmentAwareCallback() {
 
-      public void call(Environment env) throws Exception {
+      public void call(Environment env) {
         if (newFlow != null)
           start(newFlow);
       }

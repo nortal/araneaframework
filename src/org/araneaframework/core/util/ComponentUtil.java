@@ -22,12 +22,11 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.Scope;
-import org.araneaframework.core.ActionListener;
 import org.araneaframework.core.ApplicationComponent;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.NoSuchEnvironmentEntryException;
 import org.araneaframework.core.StandardScope;
-import org.araneaframework.core.SynchronizedActionListener;
+import org.araneaframework.core.action.ActionListener;
+import org.araneaframework.core.action.SynchronizedActionListener;
+import org.araneaframework.core.exception.NoSuchEnvironmentEntryException;
 import org.araneaframework.framework.SynchronizedRequestRegistry;
 
 /**
@@ -36,7 +35,6 @@ import org.araneaframework.framework.SynchronizedRequestRegistry;
  * <p>
  * Its usage is quite simple:
  * 
- * <code>
  * <pre>
  * pushGlobalEnvEntry(entryId, envEntry);
  * BaseWidget listenerComp = new BaseWidget() {
@@ -47,8 +45,6 @@ import org.araneaframework.framework.SynchronizedRequestRegistry;
  * };
  * ComponentUtil.addListenerComponent(targetComp, listenerComp);
  * </pre>
- * </code>
- * 
  * In the example above, it uses the life-cycle listener to remove an <code>Environment</code> entry that was added
  * before.
  * 
@@ -94,7 +90,7 @@ public abstract class ComponentUtil {
   // allows adding listener components to not yet initialized components by failing lazily.
   private static class LateBindingChildEnvironment implements Environment {
 
-    private ApplicationComponent component;
+    private final ApplicationComponent component;
 
     public LateBindingChildEnvironment(ApplicationComponent component) {
       this.component = component;
@@ -109,7 +105,7 @@ public abstract class ComponentUtil {
     }
 
     private Environment getDelegateEnvironment() {
-      Environment result = component.getChildEnvironment();
+      Environment result = this.component.getChildEnvironment();
       if (result == null) {
         throw new IllegalStateException(getClass().getName() + " does not yet have access to environment.");
       }

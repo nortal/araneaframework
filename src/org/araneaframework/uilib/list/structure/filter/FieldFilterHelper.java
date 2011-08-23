@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list.structure.filter;
 
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.FormElement;
 import org.araneaframework.uilib.list.ListWidget;

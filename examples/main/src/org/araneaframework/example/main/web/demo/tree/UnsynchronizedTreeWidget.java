@@ -21,7 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ActionListener;
+import org.araneaframework.core.action.ActionListener;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
 import org.araneaframework.uilib.tree.TreeDataProvider;
 import org.araneaframework.uilib.tree.TreeNodeContext;
@@ -76,7 +77,7 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
       putViewData("counter", this.counter);
       addActionListener("test", new ActionListener() {
 
-        public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+        public void processAction(String actionId, InputData input, OutputData output) {
           LOG.debug("Received action with id='" + actionId + "'");
           putViewData("counter", ++counter);
           getTreeNodeCtx().renderNode(output); // Boilerplate code to render the changes
@@ -86,9 +87,15 @@ public class UnsynchronizedTreeWidget extends BaseUIWidget {
 
       addActionListener("sleep", new ActionListener() {
 
-        public void processAction(String actionId, InputData input, OutputData output) throws Exception {
+        public void processAction(String actionId, InputData input, OutputData output) {
           LOG.debug("Received action with id='" + actionId + "'");
-          Thread.sleep(10000);
+
+          try {
+            Thread.sleep(10000);
+          } catch (InterruptedException e) {
+            ExceptionUtil.uncheckException(e);
+          }
+
           getTreeNodeCtx().renderNode(output); // Boilerplate code to render the changes
         }
 

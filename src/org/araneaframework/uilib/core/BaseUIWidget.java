@@ -21,7 +21,7 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Scope;
 import org.araneaframework.core.BaseApplicationWidget;
-import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.event.ProxyEventListener;
 import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.LocalizationContext;

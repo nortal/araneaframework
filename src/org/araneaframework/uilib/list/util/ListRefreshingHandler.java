@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.list.util;
 
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.uilib.list.ListWidget;
 

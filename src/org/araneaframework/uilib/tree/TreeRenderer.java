@@ -30,75 +30,63 @@ public interface TreeRenderer extends Serializable {
   /**
    * Renders HTML in the beginning of the whole tree.
    * 
-   * @param node
-   *          tree node that is being rendered
+   * @param node tree node that is being rendered
    */
-  void renderTreeStart(Writer out, TreeNodeContext node) throws Exception;
+  void renderTreeStart(Writer out, TreeNodeContext node);
 
   /**
    * Renders HTML in the end of the whole tree.
    * 
-   * @param node
-   *          tree node that is being rendered
+   * @param node tree node that is being rendered
    */
-  void renderTreeEnd(Writer out, TreeNodeContext node) throws Exception;
+  void renderTreeEnd(Writer out, TreeNodeContext node);
 
   /**
-   * Renders toggle link after display prefix and before DisplayWidget. Called
-   * only if TreeDataProvider exists.
+   * Renders toggle link after display prefix and before DisplayWidget. Called only if TreeDataProvider exists.
    * 
-   * @param node
-   *          tree node that is being rendered
+   * @param node tree node that is being rendered
    */
-  void renderToggleLink(Writer out, TreeNodeContext node) throws Exception;
+  void renderToggleLink(Writer out, TreeNodeContext node);
 
   /**
-   * Renders HTML after DisplayWidget and before child nodes. Called only if
-   * there are child nodes and they are not collapsed.
+   * Renders HTML after DisplayWidget and before child nodes. Called only if there are child nodes and they are not
+   * collapsed.
    * 
-   * @param node
-   *          tree node that is being rendered
+   * @param node tree node that is being rendered
    */
-  void renderChildrenStart(Writer out, TreeNodeContext node) throws Exception;
+  void renderChildrenStart(Writer out, TreeNodeContext node);
 
   /**
-   * Renders HTML after all child nodes have been rendered. Called only if there
-   * are child nodes and they are not collapsed.
+   * Renders HTML after all child nodes have been rendered. Called only if there are child nodes and they are not
+   * collapsed.
    * 
-   * @param node
-   *          tree node that is being rendered
+   * @param node tree node that is being rendered
    */
-  void renderChildrenEnd(Writer out, TreeNodeContext node) throws Exception;
+  void renderChildrenEnd(Writer out, TreeNodeContext node);
 
   /**
    * Renders HTML immediately before each child node.
    * 
-   * @param node
-   *          parent node whose children are being rendered
-   * @param childNode
-   *          child node that is about to be rendered
+   * @param node parent node whose children are being rendered
+   * @param childNode child node that is about to be rendered
    */
-  void renderChildStart(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception;
+  void renderChildStart(Writer out, TreeNodeContext node, TreeNodeContext childNode);
 
   /**
    * Renders HTML immediately after each child node.
    * 
-   * @param node
-   *          parent node whose children are being rendered
-   * @param childNode
-   *          child node that was just rendered
+   * @param node parent node whose children are being rendered
+   * @param childNode child node that was just rendered
    */
-  void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception;
+  void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode);
 
   /**
-   * Renders HTML before DisplayWidget's toggle link. Called for each
-   * TreeNodeWidget, staring from TreeWidget. Usually overridden.
+   * Renders HTML before DisplayWidget's toggle link. Called for each TreeNodeWidget, staring from TreeWidget. Usually
+   * overridden.
    * 
-   * @param node
-   *          tree node that is being rendered
-   * @param current
-   *          if this TreeNodeWidget's DisplayWidget is about to be rendered
+   * @param node tree node that is being rendered
+   * @param current if this TreeNodeWidget's DisplayWidget is about to be rendered
    */
-  void renderDisplayPrefix(Writer out, TreeNodeContext node, boolean current) throws Exception;
+  void renderDisplayPrefix(Writer out, TreeNodeContext node, boolean current);
 
 }

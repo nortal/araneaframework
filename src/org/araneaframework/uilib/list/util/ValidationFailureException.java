@@ -1,6 +1,6 @@
 package org.araneaframework.uilib.list.util;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 
 /**
  * Represents a validation failure.

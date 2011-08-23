@@ -20,11 +20,13 @@ import org.araneaframework.Environment;
 import org.araneaframework.EnvironmentAwareCallback;
 
 /**
- * A dummy class that implements <code>EnvironmentAwareCallback</code>. The
- * sub classes may use it to provide custom solutions.
+ * A dummy class that implements <code>EnvironmentAwareCallback</code>. The sub-classes may use it to provide custom
+ * solutions.
+ * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class StandardEnvironmentAwareCallback
-  implements EnvironmentAwareCallback {
+public class StandardEnvironmentAwareCallback implements EnvironmentAwareCallback {
 
-  public void call(Environment env) throws Exception {}
+  public void call(Environment env) {
+  }
 }

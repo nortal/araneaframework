@@ -47,7 +47,7 @@ import org.araneaframework.http.ServletServiceAdapterComponent;
  * 
  * which allows access to request from {@link BaseComponent}'s initialization callback&mdash;<code>init()</code>. </p>
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServletServiceAdapterComponent extends BaseComponent implements ServletServiceAdapterComponent {
 

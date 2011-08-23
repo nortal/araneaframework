@@ -29,7 +29,7 @@ import org.araneaframework.framework.core.BaseFilterWidget;
 /**
  * Service that contains a widget.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardWidgetAdapterService extends BaseFilterWidget {
 

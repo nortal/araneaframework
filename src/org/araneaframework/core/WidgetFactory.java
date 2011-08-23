@@ -21,19 +21,19 @@ import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 
 /**
- * A simple factory for creating widgets.
+ * A simple factory contract for creating widgets.
  * 
- * @see org.araneaframework.uilib.tab.TabContainerContext
- * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ * @see org.araneaframework.uilib.tab.TabContainerContext
  */
 public interface WidgetFactory extends Serializable {
 
   /**
-   * Returns a Widget.
+   * Builds an instance of a <tt>Widget</tt>.
    * 
-   * @return the Widget
+   * @param env The environment of the component asking a widget to be built.
+   * @return A widget instance, must not be <code>null</code>.
    */
-  public Widget buildWidget(Environment env);
+  Widget buildWidget(Environment env);
 }

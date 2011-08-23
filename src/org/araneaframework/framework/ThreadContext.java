@@ -27,7 +27,7 @@ import java.io.Serializable;
  * ThreadContext.class to the environment for the children to be able to access.
  * </p>
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ThreadContext extends ManagedServiceContext, Serializable {

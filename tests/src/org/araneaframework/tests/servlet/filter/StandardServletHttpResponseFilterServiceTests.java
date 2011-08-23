@@ -20,7 +20,7 @@ import org.araneaframework.http.util.ServletUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.http.filter.StandardHttpResponseFilterService;
 import org.araneaframework.mock.MockLifeCycle;
@@ -30,7 +30,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  *
  */
 public class StandardServletHttpResponseFilterServiceTests extends TestCase {

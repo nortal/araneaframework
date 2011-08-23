@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.HttpInputData;
 import org.araneaframework.http.extension.ExternalResource;
@@ -42,7 +42,7 @@ import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.http.util.URLUtil;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class StandardFileImportFilterService extends BaseFilterService {

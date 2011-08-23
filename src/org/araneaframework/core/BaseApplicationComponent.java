@@ -28,9 +28,9 @@ import org.araneaframework.Viewable;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A component with support for composite.
+ * Basic abstraction of application component extending the basic component abstraction.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class BaseApplicationComponent extends BaseComponent implements ApplicationComponent {
 
@@ -40,22 +40,18 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
 
   protected class ViewModel implements ApplicationComponent.ComponentViewModel {
 
-    /**
-     * @see ApplicationComponent.ComponentViewModel#getScope()
-     * @since 1.1
-     */
-    public Scope getScope() {
+    public final Scope getScope() {
       return BaseApplicationComponent.this.getScope();
     }
 
-    public Map<String, Component> getChildren() {
+    public final Map<String, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
   }
 
   protected class ViewableImpl implements Viewable.Interface {
 
-    public Object getViewModel() {
+    public final Object getViewModel() {
       try {
         return BaseApplicationComponent.this.getViewModel();
       } catch (Exception e) {
@@ -66,15 +62,15 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
 
   protected class CompositeComponentImpl implements Composite.Interface {
 
-    public Map<String, Component> getChildren() {
+    public final Map<String, Component> getChildren() {
       return BaseApplicationComponent.this.getChildren();
     }
 
-    public void attach(String key, Component comp) {
+    public final void attach(String key, Component comp) {
       _getChildren().put(key, comp);
     }
 
-    public Component detach(String key) {
+    public final Component detach(String key) {
       return _getChildren().remove(key);
     }
   }
@@ -88,15 +84,15 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * 
    * @return a map of child components
    */
-  public Map<String, Component> getChildren() {
+  public final Map<String, Component> getChildren() {
     return Collections.unmodifiableMap(new LinkedHashMap<String, Component>(_getChildren()));
   }
 
-  public Viewable.Interface _getViewable() {
+  public final Viewable.Interface _getViewable() {
     return new ViewableImpl();
   }
 
-  public Composite.Interface _getComposite() {
+  public final Composite.Interface _getComposite() {
     return new CompositeComponentImpl();
   }
 
@@ -104,16 +100,15 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * Adds a component with the specified key. Already initialized component cannot be added. Duplicate keys not allowed.
    * The child is initialized with the Environment env.
    */
-  public void addComponent(String key, Component child, Environment env) {
+  public final void addComponent(String key, Component child, Environment env) {
     _addComponent(key, child, env);
   }
 
   /**
    * Adds a component with the specified key. Already initialized components cannot be added. Duplicate keys not
    * allowed. The child is initialized with the Environment from <code>getChildComponentEnvironment()</code>.
-   * 
    */
-  public void addComponent(String key, Component child) {
+  public final void addComponent(String key, Component child) {
     _addComponent(key, child, getChildComponentEnvironment());
   }
 
@@ -126,7 +121,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateComponent(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
+  public final void relocateComponent(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
@@ -138,29 +133,33 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * @param keyFrom is the key of the child to be relocated.
    * @param keyTo is the the key, with which the child will be added to this StandardService.
    */
-  public void relocateComponent(Composite parent, String keyFrom, String keyTo) {
+  public final void relocateComponent(Composite parent, String keyFrom, String keyTo) {
     _relocateComponent(parent, getChildComponentEnvironment(), keyFrom, keyTo);
   }
 
   /**
    * Enables the component with the specified key. Only a disabled component can be enabled.
    */
-  public void enableComponent(String key) {
+  public final void enableComponent(String key) {
     _enableComponent(key);
   }
 
   /**
    * Disables the component with the specified key. Only a enabled component can be disabled.
    */
-  public void disableComponent(String key) {
+  public final void disableComponent(String key) {
     _disableComponent(key);
   }
 
   /**
    * Removes the component with the specified key.
    */
-  public void removeComponent(String key) {
+  public final void removeComponent(String key) {
     _removeComponent(key);
+  }
+
+  public Environment getChildEnvironment() {
+    return getChildComponentEnvironment();
   }
 
   @Override
@@ -168,19 +167,10 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
     _propagate(message);
   }
 
-  @Override
-  public Environment getEnvironment() {
-    return super.getEnvironment();
-  }
-
-  public Environment getChildEnvironment() {
-    return getChildComponentEnvironment();
-  }
-
   /**
    * Returns the view model. Usually overridden.
    */
-  protected Object getViewModel() throws Exception {
+  protected Object getViewModel() {
     return new ViewModel();
   }
 

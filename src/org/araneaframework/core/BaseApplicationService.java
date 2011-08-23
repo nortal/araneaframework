@@ -33,6 +33,8 @@ import org.araneaframework.Path;
 import org.araneaframework.Scope;
 import org.araneaframework.Service;
 import org.araneaframework.Viewable;
+import org.araneaframework.core.action.ActionListener;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
@@ -153,6 +155,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
+
   /**
    * Adds the ActionListener listener with the specified action id.
    */
@@ -371,8 +374,7 @@ public abstract class BaseApplicationService extends BaseService implements Appl
 
     if (actionId == null) {
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action ID!"
-                + Assert.thisToString(this));
+        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action ID!" + Assert.thisToString(this));
       }
       return;
     }

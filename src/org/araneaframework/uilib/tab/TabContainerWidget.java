@@ -32,11 +32,11 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.Scope;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
-import org.araneaframework.core.StandardEventListener;
 import org.araneaframework.core.WidgetFactory;
+import org.araneaframework.core.event.StandardEventListener;
+import org.araneaframework.core.util.Assert;
 
 /**
  * This class represents a UI widget that contains tabs ({@link TabWidget})s. Only one tab can be selected (active) at a

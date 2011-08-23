@@ -24,7 +24,7 @@ import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ProxyEventListener;
+import org.araneaframework.core.event.ProxyEventListener;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.UpdateRegionContext;
 import org.araneaframework.http.util.AtomicResponseHelper;
@@ -35,7 +35,9 @@ import org.araneaframework.http.util.EnvironmentUtil;
  * sub-class will have to provide implementation for the <code>renderExceptionHandler(OutputData, Exception)</code>
  * method, that allows custom handling for given exception. To define the page that renders the exception to the user,
  * one can use following solution:
+ * 
  * <pre>ServletUtil.includeErrorPage(&quot;/WEB-INF/jsp/error.jsp&quot;, this, exception, output);</pre>
+ * 
  * The page would be rendered as any other page inside this container.
  * <p>
  * Also note that this widget declares three events in its <code>init()</code> method to let users handle the situation:
@@ -62,7 +64,8 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   /**
    * Initializes the flow container.
    */
-  public ExceptionHandlingFlowContainerWidget() {}
+  public ExceptionHandlingFlowContainerWidget() {
+  }
 
   /**
    * Initializes the flow container, and specifies the <code>topWidget</code> as its parent.

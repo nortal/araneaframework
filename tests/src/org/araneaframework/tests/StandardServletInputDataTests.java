@@ -26,7 +26,7 @@ import org.araneaframework.http.util.ServletUtil;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  *
  */
 public class StandardServletInputDataTests extends TestCase {

@@ -19,7 +19,7 @@ package org.araneaframework.uilib.form.converter;
 import java.io.Serializable;
 import java.util.Set;
 import org.araneaframework.Environment;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.MessageContext.MessageData;
 import org.araneaframework.uilib.form.Converter;
 import org.araneaframework.uilib.form.FormElementContext;

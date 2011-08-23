@@ -18,7 +18,7 @@ package org.araneaframework.http.util;
 
 import java.io.Serializable;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * An ordered list of values in JSON data-interchange format.

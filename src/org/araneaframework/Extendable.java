@@ -17,42 +17,38 @@
 package org.araneaframework;
 
 /**
- * Implementers can enrich their objects with external Objects 
- * implementing certain interfaces. If a class implements Extendable
- * then it always should implement Narrowable too.
+ * Implementers can enrich their objects with external Objects implementing certain interfaces. If a class implements
+ * <tt>Extendable</tt> then it always should implement <tt>Narrowable</tt>, too. A typical use-case would be:
  * 
- * A typical use-case would be:
  * <pre>
- * <code>
- * 
  *  public SampleClass implements Extendable, Narrowable {
  *    ...
  *  }
- *  
- *  
+ * 
+ * 
  *  SampleClass obj = new SampleClass();
- *  
+ * 
  *  obj.extend(SomeInterface.class, someObj);
- *  
+ * 
  *  ....
- *  
- *  SomeInterface newObj = (SomeInterface)obj.narrow(SomeInterface.class);
- * </code>
+ * 
+ *  SomeInterface newObj = obj.narrow(SomeInterface.class);
  * </pre>
+ * 
  * @see org.araneaframework.Narrowable
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Extendable {
-  
+
   /**
    * Adds an extension to the class, an interface with its implementation.
    * <p>
-   * Can later be used via <code>narrow(Class)</code>
-   * if the class implements {@link Narrowable}.
-   *  
-   * @param interfaceClass the interface of the extension being added 
+   * Can later be used via <code>narrow(Class)</code> if the class implements {@link Narrowable}.
+   * 
+   * @param <T> The type of the interface class, also the type of the returned object instance.
+   * @param interfaceClass the interface of the extension being added
    * @param extension a implementation of the interfaceClass
    */
-  public <T> void extend(Class<T> interfaceClass, T extension);
+  <T> void extend(Class<T> interfaceClass, T extension);
 }

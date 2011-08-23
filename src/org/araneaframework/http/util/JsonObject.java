@@ -19,7 +19,7 @@ package org.araneaframework.http.util;
 import java.io.Serializable;
 import java.util.Map;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * A collection of name/value pairs in JSON data-interchange format.

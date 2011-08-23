@@ -16,7 +16,7 @@
 
 package org.araneaframework.uilib.form.formlist.model;
 
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 import java.util.LinkedList;
 import java.util.List;

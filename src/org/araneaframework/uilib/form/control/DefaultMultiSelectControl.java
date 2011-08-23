@@ -17,7 +17,7 @@
 package org.araneaframework.uilib.form.control;
 
 import java.util.List;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.support.DataType;
 import org.araneaframework.uilib.support.DisplayItem;

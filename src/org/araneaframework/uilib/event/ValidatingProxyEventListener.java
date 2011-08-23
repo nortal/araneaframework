@@ -17,8 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.EventListener;
+import org.araneaframework.core.event.EventListener;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 

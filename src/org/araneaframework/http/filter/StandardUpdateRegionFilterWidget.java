@@ -33,9 +33,9 @@ import org.araneaframework.Environment;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.Assert;
-import org.araneaframework.core.BroadcastMessage;
-import org.araneaframework.core.RoutedMessage;
+import org.araneaframework.core.message.BroadcastMessage;
+import org.araneaframework.core.message.RoutedMessage;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.LocalizationContext;
@@ -51,7 +51,7 @@ import org.araneaframework.http.util.JsonObject;
  * Update region filter, supporting updating of HTML page regions and sending miscellaneous data back via AJAX requests.
  * 
  * @author Nikita Salnikov-Tarnovski
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */

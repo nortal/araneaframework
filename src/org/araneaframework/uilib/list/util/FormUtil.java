@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.form.Constraint;
 import org.araneaframework.uilib.form.Control;
 import org.araneaframework.uilib.form.Data;

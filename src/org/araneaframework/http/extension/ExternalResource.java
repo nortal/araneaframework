@@ -28,7 +28,7 @@ import java.util.Set;
  * files are grouped by group names. Every file has its specific content-type. Possible
  * to query by file name if a file is allowed to be loaded.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class ExternalResource {
 	private Map<String, Map<String, String>> groupsByName = new HashMap<String, Map<String, String>>();

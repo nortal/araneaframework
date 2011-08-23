@@ -19,7 +19,7 @@ package org.araneaframework.uilib.list.structure.filter.advanced;
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.structure.filter.BaseFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 

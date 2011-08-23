@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * Iterator that iterates over {@link Expression}s using an iterator over {@link ExpressionBuilder} objects and

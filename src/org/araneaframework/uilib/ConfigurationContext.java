@@ -94,7 +94,7 @@ public interface ConfigurationContext extends Serializable {
 
   /**
    * This <code>java.lang.Boolean</code> property should be set to <code>true</code> if application wants all forms to
-   * be validated on-the-fly. Validation is done by invoking server-side {@link org.araneaframework.core.ActionListener}
+   * be validated on-the-fly. Validation is done by invoking server-side {@link org.araneaframework.core.action.ActionListener}
    * s that perform the validation. When this is set to <code>false</code>, programmer can manually enable action
    * validation for those {@link org.araneaframework.uilib.form.FormWidget}/
    * {@link org.araneaframework.uilib.form.FormElement} which should be validated on-the-fly. When

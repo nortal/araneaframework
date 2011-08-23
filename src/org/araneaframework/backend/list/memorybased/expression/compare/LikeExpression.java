@@ -23,7 +23,7 @@ import org.araneaframework.backend.list.memorybased.expression.CompositeExpressi
 import org.araneaframework.backend.list.memorybased.expression.StringExpression;
 import org.araneaframework.backend.list.memorybased.expression.Value;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 public class LikeExpression implements CompositeExpression, StringExpression {

@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.backend.list.helper.ListSqlHelper;
 import org.araneaframework.backend.util.BeanUtil;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.structure.ListStructure;
 import org.araneaframework.uilib.util.NameUtil;
 

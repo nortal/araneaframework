@@ -16,10 +16,9 @@
 
 package org.araneaframework.backend.list.memorybased.expression.procedure;
 
-import org.araneaframework.core.Assert;
-
 import org.araneaframework.backend.list.memorybased.expression.MultiExpression;
 import org.araneaframework.backend.list.memorybased.expression.VariableResolver;
+import org.araneaframework.core.util.Assert;
 
 public class ProcedureExpression extends MultiExpression {
 

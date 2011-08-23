@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlCollectionExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * An IN expression for backend-based lists. Verifies that the field value is

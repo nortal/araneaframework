@@ -24,7 +24,7 @@ import org.araneaframework.Service;
  * be rendered on the current and subsequent request until it explicitly passes control back using {@link org.araneaframework.framework.ContinuationContext#finish()}. This
  * will end the continuation and restore control back.  
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ContinuationManagerContext extends Serializable {

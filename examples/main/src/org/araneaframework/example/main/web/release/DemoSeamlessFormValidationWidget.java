@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.InputData;
-import org.araneaframework.core.EventListener;
+import org.araneaframework.core.event.EventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.release.model.ExampleData;
 import org.araneaframework.example.main.web.release.model.ExampleData.Attendee;

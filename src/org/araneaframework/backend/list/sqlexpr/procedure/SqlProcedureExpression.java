@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.sqlexpr.procedure;
 import java.util.Iterator;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.sqlexpr.SqlMultiExpression;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 public class SqlProcedureExpression extends SqlMultiExpression {
 

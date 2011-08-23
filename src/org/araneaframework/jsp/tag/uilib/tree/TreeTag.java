@@ -16,8 +16,10 @@
 
 package org.araneaframework.jsp.tag.uilib.tree;
 
+import java.io.IOException;
 import java.io.Writer;
 import org.araneaframework.OutputData;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.tag.uilib.BaseWidgetTag;
 import org.araneaframework.jsp.util.JspUtil;
@@ -82,57 +84,85 @@ public class TreeTag extends BaseWidgetTag {
       return this.tree;
     }
 
-    public void renderTreeStart(Writer out, TreeNodeContext node) throws Exception {
-      JspUtil.writeOpenStartTag(out, "ul");
-      JspUtil.writeAttribute(out, "id", node.getFullId());
-      JspUtil.writeAttribute(out, "class", "aranea-tree");
-      if (!getTree().useSynchronizedActions()) {
-        JspUtil.writeAttribute(out, "arn-tree-sync", "false");
+    public void renderTreeStart(Writer out, TreeNodeContext node) {
+      try {
+        JspUtil.writeOpenStartTag(out, "ul");
+        JspUtil.writeAttribute(out, "id", node.getFullId());
+        JspUtil.writeAttribute(out, "class", "aranea-tree");
+        if (!getTree().useSynchronizedActions()) {
+          JspUtil.writeAttribute(out, "arn-tree-sync", "false");
+        }
+        JspUtil.writeCloseStartTag_SS(out);
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
       }
-      JspUtil.writeCloseStartTag_SS(out);
     }
 
-    public void renderTreeEnd(Writer out, TreeNodeContext node) throws Exception {
-      JspUtil.writeEndTag(out, "ul");
-    }
-
-    public void renderToggleLink(Writer out, TreeNodeContext node) throws Exception {
-      JspUtil.writeOpenStartTag(out, "a");
-      JspUtil.writeAttribute(out, "href", "#");
-
-      if (getTree().useActions()) {
-        JspUtil.writeAttribute(out, "onclick", "return Aranea.Tree.toggleNode(this);");
-      } else {
-        UiEvent event = new UiEvent("toggle", node.getFullId(), null);
-        JspUtil.writeEventAttributes(out, event);
-        JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+    public void renderTreeEnd(Writer out, TreeNodeContext node) {
+      try {
+        JspUtil.writeEndTag(out, "ul");
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
       }
-
-      JspUtil.writeCloseStartTag_SS(out);
-      out.write(node.isCollapsed() ? "+" : "-");
-      JspUtil.writeEndTag_SS(out, "a");
     }
 
-    public void renderChildrenStart(Writer out, TreeNodeContext node) throws Exception {
-      JspUtil.writeStartTag(out, "ul");
+    public void renderToggleLink(Writer out, TreeNodeContext node) {
+      try {
+        JspUtil.writeOpenStartTag(out, "a");
+        JspUtil.writeAttribute(out, "href", "#");
+
+        if (getTree().useActions()) {
+          JspUtil.writeAttribute(out, "onclick", "return Aranea.Tree.toggleNode(this);");
+        } else {
+          UiEvent event = new UiEvent("toggle", node.getFullId(), null);
+          JspUtil.writeEventAttributes(out, event);
+          JspWidgetCallUtil.writeSubmitScriptForEvent(out, "onclick");
+        }
+
+        JspUtil.writeCloseStartTag_SS(out);
+        out.write(node.isCollapsed() ? "+" : "-");
+        JspUtil.writeEndTag_SS(out, "a");
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
 
-    public void renderChildrenEnd(Writer out, TreeNodeContext node) throws Exception {
-      JspUtil.writeEndTag(out, "ul");
+    public void renderChildrenStart(Writer out, TreeNodeContext node) {
+      try {
+        JspUtil.writeStartTag(out, "ul");
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
 
-    public void renderChildStart(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception {
-      JspUtil.writeOpenStartTag(out, "li");
-      JspUtil.writeAttribute(out, "id", childNode.getFullId());
-      JspUtil.writeAttribute(out, "class", "aranea-tree-node");
-      JspUtil.writeCloseStartTag(out);
+    public void renderChildrenEnd(Writer out, TreeNodeContext node) {
+      try {
+        JspUtil.writeEndTag(out, "ul");
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
 
-    public void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode) throws Exception {
-      JspUtil.writeEndTag(out, "li");
+    public void renderChildStart(Writer out, TreeNodeContext node, TreeNodeContext childNode) {
+      try {
+        JspUtil.writeOpenStartTag(out, "li");
+        JspUtil.writeAttribute(out, "id", childNode.getFullId());
+        JspUtil.writeAttribute(out, "class", "aranea-tree-node");
+        JspUtil.writeCloseStartTag(out);
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
 
-    public void renderDisplayPrefix(Writer out, TreeNodeContext node, boolean current) throws Exception {}
+    public void renderChildEnd(Writer out, TreeNodeContext node, TreeNodeContext childNode) {
+      try {
+        JspUtil.writeEndTag(out, "li");
+      } catch (IOException e) {
+        ExceptionUtil.uncheckException(e);
+      }
+    }
+
+    public void renderDisplayPrefix(Writer out, TreeNodeContext node, boolean current) {}
 
   }
 

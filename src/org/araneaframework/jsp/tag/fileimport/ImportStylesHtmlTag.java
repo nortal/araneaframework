@@ -21,7 +21,7 @@ import org.araneaframework.http.util.FileImportUtil;
 import org.araneaframework.jsp.util.JspUtil;
 
 /**
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * 
  * @jsp.tag name = "importStyles" body-content="empty" description = "Imports CSS files."
  */

@@ -33,8 +33,8 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.core.ApplicationService;
 import org.araneaframework.core.ApplicationWidget;
-import org.araneaframework.core.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.http.HttpInputData;
@@ -47,7 +47,7 @@ import org.araneaframework.jsp.tag.uilib.WidgetTag;
  * Utility methods for Aranea framework running inside a servlet container. Includes functions for rendering JSP pages
  * and direct access to <code>HttpServletResponse</code> and <code>HttpServletRequest</code>.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Alar Kvell (alar@araneaframework.org)
  */

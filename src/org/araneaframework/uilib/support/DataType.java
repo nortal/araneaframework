@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.araneaframework.core.Assert;
+import org.araneaframework.core.util.Assert;
 
 /**
  * The data definition object. Before this implementation a string representation was used instead for defining data

@@ -19,39 +19,42 @@ package org.araneaframework;
 import java.io.Serializable;
 
 /**
- * <code>Service</code> is a component with an extra method
- * <code>action(Path, InputData, OutputData)</code> that provides services
- * based on the requests. As requests flow through the <code>action</code>
- * they can be filtered, logged, enhanced via extending the
- * <code>InputData</code>, provide custom routing etc.
+ * <code>Service</code> is a component that can perform some action. As requests flow through the <code>action</code>
+ * they can be filtered, logged, enhanced via extending the <code>InputData</code>, provide custom routing, etc.
  * <p>
  * All the filters and routers in the Aranea framework are services.
+ * <p>
+ * <tt>Service</tt> follows the template pattern by defining <code>_getService()</code> which returns the
+ * implementation. The implementation is used for managing the service actions. The <tt>Service</tt> contract itself
+ * does not expose direct action handling methods, since they are protected and handled by implementations.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public interface Service extends Component, Serializable {
+public interface Service extends Component {
 
   /**
-   * Provides access to the request handler.
+   * The factory method returning the implementation of the Service.
    * 
-   * @return An implementation of the interface that handles requests.
+   * @return the implementation of the Service.
    */
-  public Interface _getService();
+  Interface _getService();
 
   /**
-   * Defines the interface for handling requests.
+   * The interface which takes care of calling the hooks in the <tt>Service</tt> template design pattern.
+   * 
+   * @see Service
    */
-  public interface Interface extends Serializable {
+  interface Interface extends Serializable {
 
     /**
-     * Request handling method for services.
+     * Action handling method for services.
      * 
-     * @param path The path of the component to whom the action is targeted.
-     * @param input The request data.
-     * @param output The response data.
+     * @param path The path of the component to whom the action is targeted (<code>null</code> is also valid).
+     * @param input Input data for the service or for its child components.
+     * @param output Output data for the service or for its child components.
      */
-    public void action(Path path, InputData input, OutputData output);
+    void action(Path path, InputData input, OutputData output);
   }
 
 }

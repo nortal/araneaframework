@@ -24,7 +24,7 @@ import java.util.TreeMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
-import org.araneaframework.core.EventListener;
+import org.araneaframework.core.event.EventListener;
 
 /**
  * This class manages "onChange" and "onClick" events of {@link org.araneaframework.uilib.form.Control}s that support

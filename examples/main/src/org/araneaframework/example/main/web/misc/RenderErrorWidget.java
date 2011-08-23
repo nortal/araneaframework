@@ -17,7 +17,7 @@
 package org.araneaframework.example.main.web.misc;
 
 import org.araneaframework.OutputData;
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.util.ServletUtil;
 

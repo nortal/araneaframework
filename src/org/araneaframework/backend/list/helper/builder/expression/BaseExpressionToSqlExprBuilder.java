@@ -16,8 +16,6 @@
 
 package org.araneaframework.backend.list.helper.builder.expression;
 
-import org.araneaframework.core.AraneaRuntimeException;
-
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -25,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.backend.list.SqlExpression;
 import org.araneaframework.backend.list.helper.builder.ExpressionToSqlExprBuilder;
 import org.araneaframework.backend.list.memorybased.Expression;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 
 /**
  * @author Rein Raudjärv (rein@araneaframework.org)

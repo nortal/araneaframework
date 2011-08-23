@@ -16,7 +16,7 @@
 
 package org.araneaframework.http.extension;
 
-import org.araneaframework.core.AraneaRuntimeException;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.http.extension.ExternalResource.FileGroup;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -25,7 +25,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * SAX handler for parsing external resources' configuration files.
  * See 'etc/aranea-resources.xml' for a sample configuration file.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class ExternalResourceConfigurationHandler extends DefaultHandler {
 	private static final String TAG_FILES = "files";

@@ -27,7 +27,7 @@ import org.araneaframework.core.StandardPath;
 /**
  * A widget that contains a child service. Calls the service's action only if it gets an event.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServiceAdapterWidget extends BaseWidget {
 

@@ -37,7 +37,7 @@ import org.araneaframework.http.UpdateRegionProvider;
  * user has seen them once.
  * </p>
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  */

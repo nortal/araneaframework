@@ -22,7 +22,7 @@ import org.araneaframework.jsp.tag.BaseTag;
 /**
  * Base implementation for writing references to files in the aranea JAR or other deployment files.
  * 
- * @author "Toomas Römer" <toomas@webmedia.ee>
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class BaseFileImportTag extends BaseTag {
 
