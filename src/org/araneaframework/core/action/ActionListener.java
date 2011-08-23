@@ -19,18 +19,16 @@ package org.araneaframework.core.action;
 import java.io.Serializable;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationService;
 
 /**
- * An <code>ActionListener</code> for a service. If a service needs a specific action routed to them, they will add an
- * <code>ActionListener</code>.
+ * An action listener for a composite service. Services can have several action listeners (each for a different action).
  * <p>
- * Just to remind, action listener depends on input (global) data:
- * <ul>
- * <li>{@link ApplicationService#ACTION_HANDLER_ID_KEY} value is mapped to <code>actionId</code>;
- * <li>{@link ApplicationService#ACTION_PATH_KEY} value is used for resolving target action listener;
- * <li>{@link ApplicationService#ACTION_PARAMETER_KEY} value is used as a parameter to action listener, when applicable.
- * </ul>
+ * Just to remind, action listener depends on input (global) data, see
+ * {@link org.araneaframework.core.ApplicationService} for more information about the parameters.
+ * 
+ * @see org.araneaframework.core.ApplicationService
+ * @author Alar Kvell (alar@araneaframework.org)
+ * @since 1.0.4
  */
 public interface ActionListener extends Serializable {
 
@@ -41,5 +39,5 @@ public interface ActionListener extends Serializable {
    * @param input The input data.
    * @param output The output data.
    */
-  public void processAction(String actionId, InputData input, OutputData output);
+  void processAction(String actionId, InputData input, OutputData output);
 }

@@ -20,7 +20,13 @@ import java.io.Serializable;
 import org.araneaframework.InputData;
 
 /**
- * A simple eventlistener which can be added to Composite Widgets.
+ * An event listener for composite widgets. Widgets can have several event listeners (each for a different event).
+ * <p>
+ * Just to remind, action listener depends on input (global) data, see
+ * {@link org.araneaframework.core.ApplicationWidget} for more information about the parameters.
+ * 
+ * @see org.araneaframework.core.ApplicationWidget
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface EventListener extends Serializable {
 
@@ -31,5 +37,5 @@ public interface EventListener extends Serializable {
    * @param input The request data of the event.
    * @throws Exception Any runtime exception that may occur.
    */
-  public void processEvent(String eventId, InputData input) throws Exception;
+  void processEvent(String eventId, InputData input) throws Exception;
 }
