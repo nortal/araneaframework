@@ -48,7 +48,7 @@
 			source="1.5"
 			target="1.5"
 		>
-			<classpath refid="classpath"/>
+			<classpath refid="test.cp"/>
 			<include name="**/*.java" />
 		</javac>
 

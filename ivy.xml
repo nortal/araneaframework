@@ -131,6 +131,7 @@
 		<exclude conf="runtime" artifact="junit"/>
 		<exclude conf="runtime" artifact="xpp3_min"/>
 		<exclude conf="build" artifact="commons-logging"/>
+		<exclude conf="build-util" artifact="junit"/>
 		<exclude conf="test" artifact="commons-logging"/>
 
 	</dependencies>
