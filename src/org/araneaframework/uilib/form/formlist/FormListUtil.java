@@ -50,7 +50,8 @@ public abstract class FormListUtil {
     return button;
   }
 
-  private static <K> ButtonControl addButtonToFormRow(String labelId, FormRow<K, ?> formRow, ListFormAction listenerAction) {
+  private static <K> ButtonControl addButtonToFormRow(String labelId, FormRow<K, ?> formRow,
+      ListFormAction listenerAction) {
     OnClickEventListener listener = new ButtonOnClickEventListener<K>(formRow.getKey(), formRow.getFormList(),
         listenerAction);
     return addButtonToRowForm(labelId, formRow.getForm(), listener, listenerAction.getEventId());
@@ -63,8 +64,8 @@ public abstract class FormListUtil {
   }
 
   /**
-   * Adds a "Save" button to the given row form. The button will have an ID of {@value #SAVE} and will save the
-   * specified row when pressed by the user.
+   * Adds a "Save" button to the given row form. The button will have an ID of {@link ListFormAction#SAVE} and will save
+   * the specified row when pressed by the user.
    * 
    * @param labelId The ID of the label for the "Save" button.
    * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
@@ -81,7 +82,7 @@ public abstract class FormListUtil {
 
   /**
    * Adds a "Save" button to the given form (resolved through <code>formRow.getForm()</code>). The button will have an
-   * ID of {@value #SAVE} and will save the specified row when pressed by the user.
+   * ID of {@link ListFormAction#SAVE} and will save the specified row when pressed by the user.
    * 
    * @param labelId The ID of the label for the "Save" button.
    * @param formRow The <code>FormRow</code> where the button will be added.
@@ -93,8 +94,8 @@ public abstract class FormListUtil {
   }
 
   /**
-   * Adds a "Delete" button to the given row form. The button will have an ID of {@value #DELETE} and will delete the
-   * specified row when pressed by the user.
+   * Adds a "Delete" button to the given row form. The button will have an ID of {@link ListFormAction#DELETE} and will
+   * delete the specified row when pressed by the user.
    * 
    * @param labelId The ID of the label for the "Delete" button.
    * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
@@ -111,7 +112,7 @@ public abstract class FormListUtil {
 
   /**
    * Adds a "Delete" button to the given form (resolved through <code>formRow.getForm()</code>). The button will have an
-   * ID of {@value #DELETE} and will save the specified row when pressed by the user.
+   * ID of {@link ListFormAction#DELETE} and will save the specified row when pressed by the user.
    * 
    * @param labelId The ID of the label for the "Delete" button.
    * @param formRow The <code>FormRow</code> where the button will be added.
@@ -123,8 +124,8 @@ public abstract class FormListUtil {
   }
 
   /**
-   * Adds an "Open/Close" button to the given row form. The button will have an ID of {@value #OPEN_CLOSE} and will open
-   * or close a row for editing when pressed by the user.
+   * Adds an "Open/Close" button to the given row form. The button will have an ID of {@link ListFormAction#OPEN_CLOSE}
+   * and will open or close a row for editing when pressed by the user.
    * 
    * @param labelId The ID of the label for the "Open/Close" button.
    * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
@@ -141,7 +142,7 @@ public abstract class FormListUtil {
 
   /**
    * Adds a "Open/Close" button to the given form (resolved through <code>formRow.getForm()</code>). The button will
-   * have an ID of {@value #OPEN_CLOSE} and will save the specified row when pressed by the user.
+   * have an ID of {@link ListFormAction#OPEN_CLOSE} and will save the specified row when pressed by the user.
    * 
    * @param labelId The ID of the label for the button.
    * @param formRow The <code>FormRow</code> where the button will be added.
@@ -153,9 +154,9 @@ public abstract class FormListUtil {
   }
 
   /**
-   * Adds an "Edit/Save" button to the given row form. The button will have an ID of {@value #EDIT_SAVE} and, when
-   * pressed by the user, will open the row for editing when the row is not opened for editing, otherwise save the
-   * opened row and closes it.
+   * Adds an "Edit/Save" button to the given row form. The button will have an ID of {@link ListFormAction#EDIT_SAVE}
+   * and, when pressed by the user, will open the row for editing when the row is not opened for editing, otherwise save
+   * the opened row and closes it.
    * 
    * @param labelId The ID of the label for the "Edit/Save" button.
    * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
@@ -172,7 +173,7 @@ public abstract class FormListUtil {
 
   /**
    * Adds a "Edit/Save" button to the given form (resolved through <code>formRow.getForm()</code>). The button will have
-   * an ID of {@value #EDIT_SAVE} and will save the specified row when pressed by the user.
+   * an ID of {@link ListFormAction#EDIT_SAVE} and will save the specified row when pressed by the user.
    * 
    * @param labelId The ID of the label for the button.
    * @param formRow The <code>FormRow</code> where the button will be added.
@@ -184,8 +185,8 @@ public abstract class FormListUtil {
   }
 
   /**
-   * Adds an "Add" button to the given row form. The button will have an ID of {@value #ADD} and will add the
-   * specified row form data to the list when pressed by the user.
+   * Adds an "Add" button to the given row form. The button will have an ID of {@link ListFormAction#ADD} and will add
+   * the specified row form data to the list when pressed by the user.
    * 
    * @param labelId The ID of the label for the "Save" button.
    * @param editableRows The widget with editable rows. A corresponding method of the widget will be called upon event.
@@ -288,7 +289,7 @@ public abstract class FormListUtil {
         FormRow<K, ?> row = this.editableRows.getFormRow(this.key);
 
         if (row.isOpen()) {
-          this.editableRows.saveRow(key);
+          this.editableRows.saveRow(this.key);
         } else {
           this.editableRows.openCloseRow(this.key);
         }

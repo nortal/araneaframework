@@ -191,8 +191,8 @@ public abstract class BaseListSqlHelper {
   }
 
   /**
-   * Sets the count of items in the range. Count may be <code>null</code>, in which case the number of returned items
-   * is not limited.
+   * Sets the count of items in the range. Count may be <code>null</code>, in which case the number of returned items is
+   * not limited.
    */
   public void setItemRangeCount(Long itemRangeCount) {
     this.itemRangeCount = itemRangeCount == null || itemRangeCount == Long.MAX_VALUE ? null : itemRangeCount;
@@ -484,8 +484,8 @@ public abstract class BaseListSqlHelper {
         "ORDER BY SQL String and args must be both specified or null");
 
     // Set SQL query string and parameters for both items select query and items count query:
-    setSqlQuery(createItemRangeQuery(fromSql, customWhereSql, customOrderbySql), getItemRangeQueryParams(
-        customWhereArgs, customOrderbyArgs));
+    setSqlQuery(createItemRangeQuery(fromSql, customWhereSql, customOrderbySql),
+        getItemRangeQueryParams(customWhereArgs, customOrderbyArgs));
 
     setCountSqlQuery(createCountQuery(fromSql, customWhereSql), getCountQueryParams(customWhereArgs));
   }
@@ -599,7 +599,6 @@ public abstract class BaseListSqlHelper {
    * {@link #setSimpleSqlQuery(String, String, Object[], String, Object[])}
    * 
    * @param customWhereArgs Custom parameters to the where clause. May be null.
-   * @param customOrderbyArgs Custom parameters to the order-by clause. May be null.
    * @return A <code>null</code> or a list of parameters to the total count query.
    * @see #addStatementParams(List)
    * @see #getDatabaseFilterParams()
@@ -786,8 +785,10 @@ public abstract class BaseListSqlHelper {
   }
 
   protected void prepareQueries() {
-    Assert.notNull(this.rangeStatement, "The item range query is missing! Please specify it through setSqlQuery() first!");
-    Assert.notNull(this.countStatement, "The total count query is missing! Please specify it through setCountSqlQuery() first!");
+    Assert.notNull(this.rangeStatement,
+        "The item range query is missing! Please specify it through setSqlQuery() first!");
+    Assert.notNull(this.countStatement,
+        "The total count query is missing! Please specify it through setCountSqlQuery() first!");
   }
 
   /**
@@ -1191,7 +1192,7 @@ public abstract class BaseListSqlHelper {
   }
 
   private static List<Object> getSqlParams(SqlExpression expr) {
-    return (expr != null && expr.getValues() != null) ? Arrays.asList(expr.getValues()) : new ArrayList<Object>();
+    return expr != null && expr.getValues() != null ? Arrays.asList(expr.getValues()) : new ArrayList<Object>();
   }
 
   /**
@@ -1199,8 +1200,8 @@ public abstract class BaseListSqlHelper {
    */
   protected static RuntimeException createQueryFailedException(String queryString, List<Object> queryParams,
       SQLException nestedException) {
-    String str = new StringBuffer("Executing list query [").append(queryString).append("] with params: ").append(
-        queryParams).append(" failed").toString();
+    String str = new StringBuffer("Executing list query [").append(queryString).append("] with params: ")
+        .append(queryParams).append(" failed").toString();
     return new AraneaRuntimeException(str, nestedException);
   }
 }

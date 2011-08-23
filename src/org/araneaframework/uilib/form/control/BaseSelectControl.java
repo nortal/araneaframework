@@ -108,7 +108,6 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    * @param groupChildrenProperty The array/{@link List}&lt;T&gt; property of a group item to retrieve the child
    *          <code>&lt;option&gt;</code>s to render in the <code>&lt;optgroup&gt;</code> (optional, but mandatory when
    *          <code>itemIsGroupProperty</code> is provided).
-   * @see BaseSelectControl#BaseSelectControl(List, String, String, String, String)
    * @see BaseSelectControl#addItem(String, String)
    */
   public BaseSelectControl(List<T> items, Class<T> itemClass, String itemLabelProperty, String itemValueProperty,
@@ -380,14 +379,14 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     }
   }
 
-  //*********************************************************************
-  //* INTERNAL METHODS
-  //*********************************************************************
+  // *********************************************************************
+  // * INTERNAL METHODS
+  // *********************************************************************
 
   @Override
   public ViewModel getViewModel() {
     return new ViewModel();
-  }  
+  }
 
   @Override
   protected String[] preprocessRequestParameters(String[] parameterValues) {
@@ -395,7 +394,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     Set<String> currentValues = new HashSet<String>(Arrays.asList(parameterValues));
 
     // Remove submitted empty values and checks that values are allowed:
-    for (Iterator<String> i = currentValues.iterator(); i.hasNext(); ) {
+    for (Iterator<String> i = currentValues.iterator(); i.hasNext();) {
       String value = i.next();
       if (StringUtils.isEmpty(value)) {
         i.remove();
@@ -428,7 +427,7 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
    */
   public class ViewModel extends StringArrayRequestControl<C>.ViewModel {
 
-    private List<DisplayItemGroup> groups = new LinkedList<DisplayItemGroup>();
+    private final List<DisplayItemGroup> groups = new LinkedList<DisplayItemGroup>();
 
     /**
      * Takes an outer class snapshot.
@@ -441,10 +440,8 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
         for (T item : itemGroup.getOptions()) {
           boolean disabled = BaseSelectControl.this.disabledItems.contains(item);
 
-          BeanDisplayItem<T> option = new BeanDisplayItem<T>(item,
-              BaseSelectControl.this.labelProperty,
-              BaseSelectControl.this.valueProperty,
-              disabled);
+          BeanDisplayItem<T> option = new BeanDisplayItem<T>(item, BaseSelectControl.this.labelProperty,
+              BaseSelectControl.this.valueProperty, disabled);
 
           group.addOption(option);
         }
@@ -466,11 +463,13 @@ public abstract class BaseSelectControl<T, C> extends StringArrayRequestControl<
     }
 
     public List<DisplayItem> getSelectedItems() {
-      return new ArrayList<DisplayItem>(DisplayItemUtil.getEnabledItems(this.groups, (String[]) innerData));
+      return new ArrayList<DisplayItem>(DisplayItemUtil.getEnabledItems(this.groups,
+          (String[]) BaseSelectControl.this.innerData));
     }
 
     public boolean isSelected(String value) {
-      return innerData != null && value != null && ArrayUtils.contains((String[]) innerData, value);
+      return BaseSelectControl.this.innerData != null && value != null
+          && ArrayUtils.contains((String[]) BaseSelectControl.this.innerData, value);
     }
 
     @Override

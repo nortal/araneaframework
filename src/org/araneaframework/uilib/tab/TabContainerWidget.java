@@ -184,7 +184,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   /*****************************************************************************
    * TabRegistrationContext IMPL
-   ************************************************************************** */
+   */
   /**
    * @see org.araneaframework.uilib.tab.TabRegistrationContext#registerTab(org.araneaframework.uilib.tab.TabWidget)
    */
@@ -224,7 +224,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   /*****************************************************************************
    * Tab selection listener.
-   ************************************************************************** */
+   */
   protected class SelectionEventListener extends StandardEventListener {
 
     @Override
@@ -239,7 +239,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
 
   /*****************************************************************************
    * Overrides for disableWidget()/enableWidget()
-   ************************************************************************** */
+   */
 
   @Override
   public void disableWidget(String key) {
@@ -259,7 +259,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
     this.tabs.get(key).enableTab();
   }
 
-  /*  ****************** COMPONENT LIFECYCLE METHODS ************************** */
+  /* ****************** COMPONENT LIFECYCLE METHODS ************************** */
   @Override
   public Component.Interface _getComponent() {
     return new ComponentImpl();
@@ -285,12 +285,12 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
    * (per instance).
    * 
    * @author Martti Tamm (martti@araneaframework.org)
-   * @see TabSwitchListener
+   * @see TabContainerContext.TabSwitchListener
    * @since 1.2.2
    */
   public class TabSwitchClosure implements Closure, Serializable {
 
-    private TabWidget newSelectedTab;
+    private final TabWidget newSelectedTab;
 
     private boolean executed;
 

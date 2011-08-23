@@ -34,15 +34,17 @@ public interface FormElementValidationErrorRenderer extends Serializable {
    * <code>FormElement</code> property key (see {@link org.araneaframework.uilib.form.FormElement#getProperty(Object)})
    * under which validation errors may be stored.
    */
-  public static final String ERRORS_PROPERTY_KEY = "FormElementValidationErrors";
+  String ERRORS_PROPERTY_KEY = "FormElementValidationErrors";
 
   /**
    * Style class which should be present on all DOM elements which contain the rendered errors.
    */
-  public static final String RENDERED_FORMELEMENTERROR_STYLECLASS = "aranea-formelementerrors";
+  String RENDERED_FORMELEMENTERROR_STYLECLASS = "aranea-formelementerrors";
 
   /**
-   * Called by {@link org.araneaframework.uilib.form.FormElement#addError(String)} to register validation errors.
+   * Called by
+   * {@link org.araneaframework.uilib.form.FormElement#addError(org.araneaframework.framework.MessageContext.MessageData)}
+   * to register validation errors.
    * 
    * @param element Element, which produced the validation error.
    * @param messageData The error message data.

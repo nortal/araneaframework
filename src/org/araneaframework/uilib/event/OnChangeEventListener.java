@@ -30,13 +30,13 @@ public interface OnChangeEventListener extends Serializable {
   /**
    * This constant is the name of the event, that this listener listens to.
    */
-  public static final String ON_CHANGE_EVENT = "onChanged";
+  String ON_CHANGE_EVENT = "onChanged";
 
   /**
    * Event callback function that is called when the registered event occurs.
    * 
    * @throws Exception if something goes wrong.
    */
-  public void onChange() throws Exception;
+  void onChange() throws Exception;
 
 }

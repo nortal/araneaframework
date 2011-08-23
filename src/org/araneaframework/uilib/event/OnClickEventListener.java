@@ -30,13 +30,13 @@ public interface OnClickEventListener extends Serializable {
   /**
    * This constant is the name of the event, that this listener listens to.
    */
-  public static final String ON_CLICK_EVENT = "onClicked";
+  String ON_CLICK_EVENT = "onClicked";
 
   /**
    * Event callback function that is called when the registered event occurs.
    * 
    * @throws Exception if something goes wrong.
    */
-  public void onClick() throws Exception;
+  void onClick() throws Exception;
 
 }

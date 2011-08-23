@@ -151,7 +151,7 @@ public class BeanUtil {
   /**
    * Provides whether this <code>BeanUtil</code> can read the given <code>bean</code> <code>property</code>.
    * 
-   * @param bean Object for which the property must be resolved.
+   * @param beanClass Bean class for which the property must be resolved.
    * @param property The name of bean property. May be nested.
    * @return Whether the bean property is readable.
    */
@@ -162,7 +162,8 @@ public class BeanUtil {
 
     while (StringUtils.isNotEmpty(property)) {
       String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
-      readable = hasReadablePropertyMethod(beanClass, simpleProperty) || hasReadablePropertyField(beanClass, simpleProperty);
+      readable = hasReadablePropertyMethod(beanClass, simpleProperty)
+          || hasReadablePropertyField(beanClass, simpleProperty);
       if (!readable) {
         break;
       }
@@ -187,7 +188,8 @@ public class BeanUtil {
 
     while (StringUtils.isNotEmpty(property)) {
       String simpleProperty = StringUtils.substringBefore(property, NESTED_DELIM);
-      writable = hasWriteablePropertyMethod(beanClass, simpleProperty) || hasWriteablePropertyField(beanClass, simpleProperty);
+      writable = hasWriteablePropertyMethod(beanClass, simpleProperty)
+          || hasWriteablePropertyField(beanClass, simpleProperty);
       if (!writable) {
         break;
       }
@@ -236,7 +238,6 @@ public class BeanUtil {
    * @param from <code>Bean</code> from which to convert.
    * @param to <code>Bean</code> to which to convert.
    * @return <code>to</code> with <codefrom</code> values
-   * 
    * @see #copy(Object, Class)
    */
   public static Object copy(Object from, Object to) {
@@ -258,7 +259,6 @@ public class BeanUtil {
    * @param from <code>Bean</code> from which to read field values.
    * @param toType <code>Class</code> which object instance to create.
    * @return new instance of <code>toType</code> with <code>from</code> values
-   * 
    * @see #copy(Object, Object)
    * @see #clone()
    */
@@ -272,7 +272,6 @@ public class BeanUtil {
    * 
    * @param bean bean Object, which value to set.
    * @return new instance of <code>bean</code> type with same fields values (references)
-   * 
    * @see #copy(Object, Object)
    * @see #copy(Object, Class)
    */

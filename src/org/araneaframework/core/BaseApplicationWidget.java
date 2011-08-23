@@ -82,14 +82,14 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     }
 
     /**
-     * @see org.araneaframework.Composite.Interface#attach(java.lang.Object, org.araneaframework.Component)
+     * @see org.araneaframework.Composite.Interface#attach(String, Component)
      */
     public void attach(String key, Component comp) {
       _getChildren().put(key, comp);
     }
 
     /**
-     * @see org.araneaframework.Composite.Interface#detach(java.lang.Object)
+     * @see org.araneaframework.Composite.Interface#detach(String)
      */
     public Component detach(String key) {
       return _getChildren().remove(key);
@@ -395,7 +395,7 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
    */
   public void addWidget(String key, Widget child) {
     try {
-      addWidget(key, child, this.getChildWidgetEnvironment());
+      addWidget(key, child, getChildWidgetEnvironment());
     } catch (Exception e) {
       throw ExceptionUtil.uncheckException(e);
     }

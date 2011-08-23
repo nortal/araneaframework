@@ -70,7 +70,6 @@ public abstract class DisplayItemUtil implements Serializable {
     addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, labelTransformer);
   }
 
-
   /**
    * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
    * <code>displayItemContainer</code>.
@@ -100,7 +99,7 @@ public abstract class DisplayItemUtil implements Serializable {
     addItemsFromBeanCollection(displayItemContainer, beanCollection, valueTransformer, labelTransformer);
   }
 
-  /** 
+  /**
    * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
    * <code>displayItemContainer</code>.
    * 
@@ -132,7 +131,7 @@ public abstract class DisplayItemUtil implements Serializable {
   /**
    * Creates {@link DisplayItem}s corresponding to beans in <code>beanCollection</code> and adds these to the provided
    * <code>displayItemContainer</code>.
-   *
+   * 
    * @param displayItemContainer the container for created {@link DisplayItem}s
    * @param beanCollection <code>Collection</code> of beans, may not contain <code>null</code>.
    * @param valueTransformer The transformer producing value ({@link DisplayItem#getValue()}) from a bean.
@@ -349,10 +348,7 @@ public abstract class DisplayItemUtil implements Serializable {
    */
   public static int getValueIndex(Collection<DisplayItem> items, String value) {
     if (CollectionUtils.isNotEmpty(items)) {
-      int index = -1;
-
       for (DisplayItem item : items) {
-        index++;
         if (StringUtils.equals(value, item.getValue())) {
           break;
         }
@@ -402,14 +398,14 @@ public abstract class DisplayItemUtil implements Serializable {
    * Asserts whether the display item container contains unique items. If the uniqueness check fails, an exception will
    * be thrown.
    * 
-   * @param <T> The type of the display container.
    * @param container The container of display items.
+   * @param newItem The display item that should not already exist in the container.
    */
-  public static void assertUnique(DisplayItemContainer<DisplayItem> container, DisplayItem optionalItem) {
+  public static void assertUnique(DisplayItemContainer<DisplayItem> container, DisplayItem newItem) {
     List<DisplayItem> items = new LinkedList<DisplayItem>(container.getAllItems());
 
     if (CollectionUtils.isNotEmpty(items)) {
-      assertUnique(items, optionalItem);
+      assertUnique(items, newItem);
     }
   }
 

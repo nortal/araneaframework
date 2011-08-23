@@ -34,7 +34,7 @@ public abstract class MultiParamActionListener implements ActionListener {
 
   /**
    * This method is marked final. Subclasses should implement
-   * {@link #processAction(Object, String, InputData, OutputData)}.
+   * {@link #processAction(String, String[], InputData, OutputData)}.
    */
   public final void processAction(String actionId, InputData input, OutputData output) {
     Object parameter = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);

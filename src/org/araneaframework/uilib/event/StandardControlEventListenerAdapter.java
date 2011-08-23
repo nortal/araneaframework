@@ -39,11 +39,11 @@ public class StandardControlEventListenerAdapter implements EventListener {
 
   private static final Log LOG = LogFactory.getLog(StandardControlEventListenerAdapter.class);
 
-  private Collection<OnClickEventListener> onClickEventListeners = new ArrayList<OnClickEventListener>();
+  private final Collection<OnClickEventListener> onClickEventListeners = new ArrayList<OnClickEventListener>();
 
-  private Collection<OnChangeEventListener> onChangeEventListeners = new ArrayList<OnChangeEventListener>();
+  private final Collection<OnChangeEventListener> onChangeEventListeners = new ArrayList<OnChangeEventListener>();
 
-  private Map<String, Collection<CustomEventListener>> customEventListeners = new TreeMap<String, Collection<CustomEventListener>>();
+  private final Map<String, Collection<CustomEventListener>> customEventListeners = new TreeMap<String, Collection<CustomEventListener>>();
 
   /**
    * Adds a {@link OnChangeEventListener}, which is called when the control value is changing.
@@ -199,12 +199,12 @@ public class StandardControlEventListenerAdapter implements EventListener {
 
   /**
    * Fires <code>onChange</code>, <code>onClick</code>, and custom event listeners, if they are in the request. When
-   * incoming event ID equals to {@value OnChangeEventListener#ON_CHANGE_EVENT} or to
-   * {@value OnClickEventListener#ON_CLICK_EVENT} and there are listeners registered for the same event among custom
+   * incoming event ID equals to {@link OnChangeEventListener#ON_CHANGE_EVENT} or to
+   * {@link OnClickEventListener#ON_CLICK_EVENT} and there are listeners registered for the same event among custom
    * event listeners then the latter ones will also get called.
    * 
    * @param eventId The name of the event for which listeners will be called.
-   * @param input The incoming request data..
+   * @param input The input data.
    */
   public void processEvent(String eventId, InputData input) throws Exception {
     boolean listenersFound = false;

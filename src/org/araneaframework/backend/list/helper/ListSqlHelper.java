@@ -54,7 +54,8 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
   /**
    * Creates <code>ListSqlHelper</code> without initializing any fields.
    */
-  public ListSqlHelper() {}
+  public ListSqlHelper() {
+  }
 
   /**
    * Creates <code>ListSqlHelper</code> and provides it with the <code>DataSource</code>.
@@ -134,7 +135,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
     // Update "namingStrategy"
     if (this.namingStrategy == null) {
       this.namingStrategy = newNamingStrategy;
-    } else if (namingStrategy instanceof OrNamingStrategy) {
+    } else if (this.namingStrategy instanceof OrNamingStrategy) {
       OrNamingStrategy or = (OrNamingStrategy) this.namingStrategy;
       if (first) {
         or.addFirst(newNamingStrategy);
@@ -283,9 +284,9 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
   }
 
   /**
-   * Maps a bean <b>property</b> to a database <b>column name</b> so that the
-   * query would include the condition where the column name "matches" (as the condition associated with the property)
-   * the property value. The corresponding <b>column alias</b> is generated automatically.
+   * Maps a bean <b>property</b> to a database <b>column name</b> so that the query would include the condition where
+   * the column name "matches" (as the condition associated with the property) the property value. The corresponding
+   * <b>column alias</b> is generated automatically.
    * <p>
    * The given field is listed in the <code>SELECT</code> but is not read from the {@link ResultSet}.
    * 
@@ -306,7 +307,7 @@ public abstract class ListSqlHelper extends BaseListSqlHelper {
    * A given field is not listed in the <code>SELECT</code> but is read from the {@link ResultSet}.
    * 
    * @param property The bean property name that corresponds to the result-set column.
-   * @param columnName The database column alias to fetch from the result-set.!
+   * @param columnAlias The database column alias to fetch from the result-set.!
    * @see #addMapping(String, String, String)
    * @see #addMapping(String, String)
    * @see #addDatabaseFieldMapping(String, String, String)
