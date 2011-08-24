@@ -68,14 +68,14 @@ public class DemoComplexForm extends TemplateBaseWidget {
     /* Adds the onChange event listener to selectControl */
     this.beastSelectionControl.addOnChangeEventListener(new OnChangeEventListener() {
 
-      public void onChange() throws Exception {
+      public void onChange() {
 
         // Form must be converted before new values can be read from form. As we want to be sure that entered data is
         // valid (no random strings where numbers are expected, length and content constraints are met) we usually also
         // validate data before using it for anything.
 
         if (DemoComplexForm.this.complexForm.convertAndValidate()) {
-   
+
           // Get the value from control (what beast was selected).
 
           SelectItem selectedBeast = DemoComplexForm.this.beastSelectionControl.getRawValue();
@@ -112,7 +112,8 @@ public class DemoComplexForm extends TemplateBaseWidget {
   private void addBeastMultiSelect(FormWidget form, SelectItem selectedBeast) {
 
     // Create the MultiSelectControl allowing selection of some more specific beasts of selected type:
-    MultiSelectControl<SelectItem> beastMultiSelect = new MultiSelectControl<SelectItem>(SelectItem.class, "label", "value");
+    MultiSelectControl<SelectItem> beastMultiSelect = new MultiSelectControl<SelectItem>(SelectItem.class, "label",
+        "value");
 
     for (String label : getMultiSelectItems(selectedBeast)) {
       beastMultiSelect.addItem(new SelectItem(label));
@@ -177,8 +178,8 @@ public class DemoComplexForm extends TemplateBaseWidget {
   }
 
   // ==========================================================================================
-  //  The data to show is defined here. The constants contain the keys to resolve labels,
-  //  while the last part of the key following the last dot is used as the corresponding value
+  // The data to show is defined here. The constants contain the keys to resolve labels,
+  // while the last part of the key following the last dot is used as the corresponding value
   // ==========================================================================================
 
   private static final String BIRD = "complexForm.value.bird";
@@ -199,9 +200,9 @@ public class DemoComplexForm extends TemplateBaseWidget {
   private static final String[] DRAGONS = { DRAGON + ".smaug", DRAGON + ".chrysophylax", DRAGON + ".devon" };
 
   // =============================================================================================
-  //  Here is the select item model used in this demo. Also note that Aranea comes by default
-  //  with two similar classes: DisplayItem and BeanDisplayItem. However, we have some additional
-  //  custom logic defined here as regards to interpreting the value of this item.
+  // Here is the select item model used in this demo. Also note that Aranea comes by default
+  // with two similar classes: DisplayItem and BeanDisplayItem. However, we have some additional
+  // custom logic defined here as regards to interpreting the value of this item.
   // =============================================================================================
 
   public static class SelectItem implements Serializable {
@@ -210,7 +211,8 @@ public class DemoComplexForm extends TemplateBaseWidget {
 
     private String label;
 
-    public SelectItem() {}
+    public SelectItem() {
+    }
 
     public SelectItem(String label) {
       this.label = label;

@@ -351,7 +351,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
       }
 
       // Render child nodes
-      if (display == null || (!isCollapsed() && hasNodes())) {
+      if (display == null || !isCollapsed() && hasNodes()) {
         if (display == null) {
           renderer.renderTreeStart(out, this);
         } else {
@@ -398,9 +398,9 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   // The child node wrapper containing child node and its ID.
   private static class ChildNodeWrapper implements Serializable {
 
-    private TreeNodeWidget node;
+    private final TreeNodeWidget node;
 
-    private String widgetId;
+    private final String widgetId;
 
     public ChildNodeWrapper(TreeNodeWidget node, String widgetId) {
       this.node = node;
@@ -421,7 +421,7 @@ public class TreeNodeWidget extends BaseApplicationWidget implements TreeNodeCon
   private class ToggleEventListener extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       toggleCollapsed();
     }
   }

@@ -37,6 +37,6 @@ public interface OnClickEventListener extends Serializable {
    * 
    * @throws Exception if something goes wrong.
    */
-  void onClick() throws Exception;
+  void onClick();
 
 }

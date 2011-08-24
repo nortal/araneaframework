@@ -61,8 +61,7 @@ public abstract class ProxiedHandlerUtil {
 
   private static final Log LOG = LogFactory.getLog(ProxiedHandlerUtil.class);
 
-  @SuppressWarnings("unchecked")
-  private static final Class[] EMTPY_CLASS_ARRAY = new Class[0];
+  private static final Class<?>[] EMTPY_CLASS_ARRAY = new Class[0];
 
   /**
    * The event handler method prefix (used for event handler lookup).
@@ -145,10 +144,13 @@ public abstract class ProxiedHandlerUtil {
    * @param eventId The event that should be called. It is used to look up the right method.
    * @param eventParam An optional parameter to be provided to the handler.
    * @param eventTarget The widget that is expected to handle this event by providing a corresponding event handler.
-   * @throws Exception Any unexpected exception that may occur (e.g. while invoking the method).
    */
-  public static void invokeEventHandler(String eventId, String eventParam, Widget eventTarget) throws Exception {
-    invokeHandler(EVENT_HANDLER_PREFIX, eventId, eventParam, eventTarget);
+  public static void invokeEventHandler(String eventId, String eventParam, Widget eventTarget) {
+    try {
+      invokeHandler(EVENT_HANDLER_PREFIX, eventId, eventParam, eventTarget);
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 
   /**
@@ -168,10 +170,13 @@ public abstract class ProxiedHandlerUtil {
    * @param actionId The action that should be called. It is used to look up the right method.
    * @param actionParam An optional parameter to be provided to the handler.
    * @param actionTarget The widget that is expected to handle this action by providing a corresponding action handler.
-   * @throws Exception Any unexpected exception that may occur (e.g. while invoking the method).
    */
-  public static void invokeActionHandler(String actionId, String actionParam, Widget actionTarget) throws Exception {
-    invokeHandler(ACTION_HANDLER_PREFIX, actionId, actionParam, actionTarget);
+  public static void invokeActionHandler(String actionId, String actionParam, Widget actionTarget) {
+    try {
+      invokeHandler(ACTION_HANDLER_PREFIX, actionId, actionParam, actionTarget);
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 
   private static void invokeHandler(String handlerPrefix, String handlerId, String param, Widget eventTarget)

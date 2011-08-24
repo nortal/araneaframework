@@ -228,7 +228,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   protected class SelectionEventListener extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       if (LOG.isTraceEnabled()) {
         LOG.trace(ClassUtils.getShortClassName(TabContainerWidget.class) + " received tab selection event for tab '"
             + eventParam + "'.");

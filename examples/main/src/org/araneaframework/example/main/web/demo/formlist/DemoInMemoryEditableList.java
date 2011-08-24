@@ -37,8 +37,8 @@ import org.araneaframework.uilib.form.formlist.InMemoryFormListHelper;
 import org.araneaframework.uilib.form.formlist.adapter.ValidOnlyIndividualBeanFormRowHandler;
 
 /**
- * Editable list component. Seperate forms are used for individual rows, so that
- * client-side validation would work on the same separate rows.
+ * Editable list component. Seperate forms are used for individual rows, so that client-side validation would work on
+ * the same separate rows.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -46,11 +46,10 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
   private BeanFormListWidget<Long, DataDTO> formList;
 
-  private List<DataDTO> data = new ArrayList<DataDTO>();
+  private final List<DataDTO> data = new ArrayList<DataDTO>();
 
   private InMemoryFormListHelper<Long, DataDTO> inMemoryHelper;
 
-  
   public DemoInMemoryEditableList() {
     // Just making the initial data. In reality it should have been read from the database.
     this.data.add(new DataDTO(1L, true, 10L, "12313"));
@@ -69,7 +68,8 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
     addWidget("editableList", this.formList);
   }
 
-  public void handleEventTest() throws Exception {}
+  public void handleEventTest() throws Exception {
+  }
 
   public void handleEventReturn() throws Exception {
     getFlowCtx().cancel();
@@ -86,10 +86,10 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
 
   private class FeedBackProvidingListener implements OnClickEventListener {
 
-    public void onClick() throws Exception {
-      getMessageCtx().showInfoMessage("Added: " + inMemoryHelper.getAdded().values());
-      getMessageCtx().showInfoMessage("Updated: " + inMemoryHelper.getUpdated().values());
-      getMessageCtx().showInfoMessage("Deleted: " + inMemoryHelper.getDeleted());
+    public void onClick() {
+      getMessageCtx().showInfoMessage("Added: " + DemoInMemoryEditableList.this.inMemoryHelper.getAdded().values());
+      getMessageCtx().showInfoMessage("Updated: " + DemoInMemoryEditableList.this.inMemoryHelper.getUpdated().values());
+      getMessageCtx().showInfoMessage("Deleted: " + DemoInMemoryEditableList.this.inMemoryHelper.getDeleted());
     }
   }
 
@@ -105,19 +105,19 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       DataDTO rowData = editableRow.getForm().writeToBean();
 
       // Saving data
-      inMemoryHelper.update(editableRow.getKey(), rowData);
+      DemoInMemoryEditableList.this.inMemoryHelper.update(editableRow.getKey(), rowData);
       editableRow.getForm().markBaseState();
     }
 
     @Override
     public void deleteRow(Long key) throws Exception {
       // Deleting data
-      inMemoryHelper.delete(key);
+      DemoInMemoryEditableList.this.inMemoryHelper.delete(key);
     }
 
     @Override
     public void addValidRow(BeanFormWidget<DataDTO> addForm) throws Exception {
-      inMemoryHelper.add(addForm.writeToBean());
+      DemoInMemoryEditableList.this.inMemoryHelper.add(addForm.writeToBean());
     }
 
     @Override
@@ -144,7 +144,8 @@ public class DemoInMemoryEditableList extends TemplateBaseWidget {
       addCommonFormFields(addForm);
 
       // The ID of the "addButton" is "add" (to reference it in JSP).
-      ButtonControl addButton = FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+      ButtonControl addButton = FormListUtil
+          .addAddButtonToAddForm("#", DemoInMemoryEditableList.this.formList, addForm);
 
       // Here we also set our custom event listener to override the default one.
       addButton.addOnClickEventListener(new FeedBackProvidingListener());

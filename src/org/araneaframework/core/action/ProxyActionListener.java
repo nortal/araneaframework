@@ -19,30 +19,34 @@ package org.araneaframework.core.action;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationService;
-import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
+ * Action listener that proxies incoming actions (where this listener is registered) to the provided action target,
+ * calling its <code>handleAction*</code> methods. The logic of calling these methods is actually contained in
+ * {@link ProxiedHandlerUtil#invokeActionHandler(String, String, Widget)}.
+ * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.0.11
  */
-public class ProxyActionListener implements ActionListener {
+public final class ProxyActionListener extends StandardActionListener {
 
-  protected Widget actionTarget;
+  private final Widget actionTarget;
 
+  /**
+   * Creates an action listener that proxies actions to given action target.
+   * 
+   * @param actionTarget The target widget receiving actions (required).
+   */
   public ProxyActionListener(Widget actionTarget) {
+    Assert.notNullParam(actionTarget, "actionTarget");
     this.actionTarget = actionTarget;
   }
 
-  public void processAction(String actionId, InputData input, OutputData output) {
-    String actionParameter = input.getGlobalData().get(ApplicationService.ACTION_PARAMETER_KEY);    
-    try {
-      ProxiedHandlerUtil.invokeActionHandler(actionId, actionParameter, actionTarget);
-    } catch (Exception e) {
-      ExceptionUtil.uncheckException(e);
-    }
+  @Override
+  protected void processAction(String actionId, String actionParam, InputData input, OutputData output) {
+    ProxiedHandlerUtil.invokeActionHandler(actionId, actionParam, this.actionTarget);
   }
-
 }

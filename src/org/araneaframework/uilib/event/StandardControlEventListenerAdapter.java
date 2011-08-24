@@ -206,7 +206,7 @@ public class StandardControlEventListenerAdapter implements EventListener {
    * @param eventId The name of the event for which listeners will be called.
    * @param input The input data.
    */
-  public void processEvent(String eventId, InputData input) throws Exception {
+  public void processEvent(String eventId, InputData input) {
     boolean listenersFound = false;
 
     if (OnChangeEventListener.ON_CHANGE_EVENT.equals(eventId)) {

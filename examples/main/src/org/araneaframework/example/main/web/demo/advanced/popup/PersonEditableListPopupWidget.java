@@ -54,7 +54,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   private IContractDAO contractDAO;
 
-  private MemoryBasedListDataProvider<PersonMO> dataProvider = new DataProvider();
+  private final MemoryBasedListDataProvider<PersonMO> dataProvider = new DataProvider();
 
   private EditableBeanListWidget<Long, PersonMO> list;
 
@@ -106,21 +106,22 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
 
     @Override
-    public void saveValidRow(BeanFormRow<Long, PersonMO> editableRow) throws Exception {}
+    public void saveValidRow(BeanFormRow<Long, PersonMO> editableRow) throws Exception {
+    }
 
     @Override
     public void deleteRow(Long key) throws Exception {
-      contractDAO.removeByPersonId(key);
+      PersonEditableListPopupWidget.this.contractDAO.removeByPersonId(key);
       getGeneralDAO().remove(PersonMO.class, key);
-      list.getDataProvider().refreshData();
+      PersonEditableListPopupWidget.this.list.getDataProvider().refreshData();
     }
 
     @Override
     public void addValidRow(BeanFormWidget<PersonMO> addForm) throws Exception {
       PersonMO rowData = addForm.writeToBean();
       getGeneralDAO().add(rowData);
-      list.getDataProvider().refreshData();
-      formList.resetAddForm();
+      PersonEditableListPopupWidget.this.list.getDataProvider().refreshData();
+      PersonEditableListPopupWidget.this.formList.resetAddForm();
     }
 
     @Override
@@ -137,7 +138,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     @Override
     public void initAddForm(BeanFormWidget<PersonMO> addForm) throws Exception {
       addCommonFormFields(addForm);
-      FormListUtil.addAddButtonToAddForm("#", formList, addForm);
+      FormListUtil.addAddButtonToAddForm("#", PersonEditableListPopupWidget.this.formList, addForm);
     }
 
     private void addCommonFormFields(BeanFormWidget<PersonMO> form) throws Exception {
@@ -152,9 +153,9 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   private class PopupListenerFactory {
 
     public OnClickEventListener createListener(Object data, Widget w) {
-      if (usePopupFlow) {
+      if (PersonEditableListPopupWidget.this.usePopupFlow) {
         return new PopupFlowListener((PersonMO) data);
-      } else if (useAction) {
+      } else if (PersonEditableListPopupWidget.this.useAction) {
         return new PopupClientListenerActionInvoker(PersonEditableListPopupWidget.this, w);
       }
       return new PopupClientListener(PersonEditableListPopupWidget.this, w);
@@ -163,35 +164,35 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   private class PopupFlowListener implements OnClickEventListener {
 
-    private PersonMO person;
+    private final PersonMO person;
 
     public PopupFlowListener(PersonMO eventParam) {
       this.person = eventParam;
     }
 
     @SuppressWarnings("unchecked")
-    public void onClick() throws Exception {
-      Long key = list.getFormList().getFormRowHandler().getRowKey(this.person);
-      FormRow<Long, PersonMO> formRow = list.getFormList().getFormRows().get(key);
+    public void onClick() {
+      Long key = PersonEditableListPopupWidget.this.list.getFormList().getFormRowHandler().getRowKey(this.person);
+      FormRow<Long, PersonMO> formRow = PersonEditableListPopupWidget.this.list.getFormList().getFormRows().get(key);
       final BeanFormWidget<PersonMO> rowForm = (BeanFormWidget<PersonMO>) formRow.getForm();
       PopupFlowWidget pfw = new PopupFlowWidget(new NameWidget(), new PopupWindowProperties(),
           new PopupMessageFactory());
-      getFlowCtx().start(pfw, null, new MyHandler(rowForm, person));
+      getFlowCtx().start(pfw, null, new MyHandler(rowForm, this.person));
     }
   }
 
   private class PopupClientListener implements OnClickEventListener {
 
-    private Widget starter;
+    private final Widget starter;
 
-    private Widget receiver;
+    private final Widget receiver;
 
     public PopupClientListener(Widget opener, Widget receiver) {
       this.starter = opener;
       this.receiver = receiver;
     }
 
-    public void onClick() throws Exception {
+    public void onClick() {
       String widgetId = this.receiver.getScope().toString();
       widgetId = widgetId + ".name";
 
@@ -209,16 +210,16 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   private class PopupClientListenerActionInvoker implements OnClickEventListener {
 
-    private Widget starter;
+    private final Widget starter;
 
-    private Widget receiver;
+    private final Widget receiver;
 
     public PopupClientListenerActionInvoker(Widget opener, Widget receiver) {
       this.starter = opener;
       this.receiver = receiver;
     }
 
-    public void onClick() throws Exception {
+    public void onClick() {
       String widgetId = this.receiver.getScope().toString();
       widgetId = widgetId + ".name";
 
@@ -254,16 +255,17 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
 
   private static class MyHandler implements FlowContext.Handler<String> {
 
-    private BeanFormWidget<PersonMO> form;
+    private final BeanFormWidget<PersonMO> form;
 
-    private PersonMO rowObject;
+    private final PersonMO rowObject;
 
     public MyHandler(BeanFormWidget<PersonMO> form, PersonMO rowObject) {
       this.form = form;
       this.rowObject = rowObject;
     }
 
-    public void onCancel() throws Exception {}
+    public void onCancel() throws Exception {
+    }
 
     public void onFinish(String returnValue) {
       this.rowObject.setName(returnValue);
@@ -286,7 +288,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
   public String getTitle() {
     if (this.usePopupFlow) {
       return "Server-side return";
-    } else if (useAction) {
+    } else if (this.useAction) {
       return "Client-side return calling serverside action";
     } else {
       return "Client-side return";

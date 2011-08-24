@@ -30,18 +30,19 @@ public abstract class StandardEventListener implements EventListener {
   /**
    * This method is marked final. Subclasses should implement {@link #processEvent(String, String, InputData)}.
    */
-  public final void processEvent(String eventId, InputData input) throws Exception {
+  public final void processEvent(String eventId, InputData input) {
     String eventParameter = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
     processEvent(eventId, eventParameter, input);
   }
 
   /**
-   * Event handling with a parameter. All implementations should handle each <code>eventId</code> separately.
+   * Event processing method that includes an event parameter. Implementation should be able to handle different
+   * <code>eventId</code>s.
    * 
-   * @param eventId The ID of the event.
-   * @param eventParam The parameter for the event.
-   * @param input The request data of the event.
-   * @throws Exception Any runtime exception that may occur.
+   * @param eventId The ID of the incoming event (not empty string).
+   * @param eventParam The parameter for the event (<code>null</code>, when it's absent).
+   * @param input The input data (always present).
+   * @param output The output data for the incoming data (always present).
    */
-  public abstract void processEvent(String eventId, String eventParam, InputData input) throws Exception;
+  protected abstract void processEvent(String eventId, String eventParam, InputData input);
 }

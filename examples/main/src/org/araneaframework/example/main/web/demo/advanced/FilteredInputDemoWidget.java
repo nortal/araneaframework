@@ -47,10 +47,10 @@ public class FilteredInputDemoWidget extends TemplateBaseWidget {
     filtered.setInputFilter(inputFilter);
     filter.addOnChangeEventListener(new OnChangeEventListener() {
 
-      public void onChange() throws Exception {
-        form.convert();
-        inputFilter.setCharacterFilter((String) form.getValueByFullName("filter"));
-        form.setValueByFullName("filtered", null);
+      public void onChange() {
+        FilteredInputDemoWidget.this.form.convert();
+        inputFilter.setCharacterFilter((String) FilteredInputDemoWidget.this.form.getValueByFullName("filter"));
+        FilteredInputDemoWidget.this.form.setValueByFullName("filtered", null);
       }
     });
 

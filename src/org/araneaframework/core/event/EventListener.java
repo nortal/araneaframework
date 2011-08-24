@@ -31,11 +31,10 @@ import org.araneaframework.InputData;
 public interface EventListener extends Serializable {
 
   /**
-   * Gets called when the event happens.
+   * Event processing method. Implementation can be able to handle different <code>eventId</code>s.
    * 
-   * @param eventId The ID of the event.
-   * @param input The request data of the event.
-   * @throws Exception Any runtime exception that may occur.
+   * @param eventId The ID of the incoming event.
+   * @param input The input data.
    */
-  void processEvent(String eventId, InputData input) throws Exception;
+  void processEvent(String eventId, InputData input);
 }

@@ -33,7 +33,7 @@ public abstract class MultiParamEventListener implements EventListener {
   /**
    * This method is marked final. Subclasses should implement {@link #processEvent(String, String[], InputData)}.
    */
-  public final void processEvent(String eventId, InputData input) throws Exception {
+  public final void processEvent(String eventId, InputData input) {
     Object parameter = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
 
     if (parameter == null) {
@@ -49,8 +49,9 @@ public abstract class MultiParamEventListener implements EventListener {
    * A method to override to use another separator for the given value.
    * 
    * @param value The value of the parameter to the event listener.
+   * @return A not empty string used for splitting the parameter value into an array (defaults to semi-colon).
    */
-  public String getParameterSeparator(String value) {
+  protected String getParameterSeparator(String value) {
     return ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR;
   }
 
@@ -61,7 +62,6 @@ public abstract class MultiParamEventListener implements EventListener {
    * @param eventId The ID of the event.
    * @param eventParams The parameters for the event.
    * @param input The request data of the event.
-   * @throws Exception Any runtime exception that may occur.
    */
-  public abstract void processEvent(String eventId, String[] eventParams, InputData input) throws Exception;
+  protected abstract void processEvent(String eventId, String[] eventParams, InputData input);
 }

@@ -1,3 +1,4 @@
+
 package org.araneaframework.uilib.event;
 
 import static org.araneaframework.core.util.ProxiedHandlerUtil.EVENT_HANDLER_PREFIX;
@@ -9,6 +10,7 @@ import static org.araneaframework.core.util.ProxiedHandlerUtil.parseParamList;
 import static org.araneaframework.core.util.ProxiedHandlerUtil.parseParamMap;
 import static org.araneaframework.core.util.ProxiedHandlerUtil.splitParam;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.beanutils.MethodUtils;
@@ -19,6 +21,7 @@ import org.araneaframework.Widget;
 import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.event.EventListener;
 import org.araneaframework.core.util.Assert;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 import org.araneaframework.uilib.form.BeanFormWidget;
 
@@ -27,14 +30,19 @@ import org.araneaframework.uilib.form.BeanFormWidget;
  * before passing the event to the target widget. If the form validation fails, the widget won't receive its event.
  * <p>
  * In the target widget, it looks for certain types of event listener methods:
+ * 
  * <pre><code>public void handleEvent[IncomingEventId](MyObject formObject);</code></pre>
  * or
+ * 
  * <pre><code>public void handleEvent[IncomingEventId](MyObject formObject, String eventParam);</code></pre>
  * or
+ * 
  * <pre><code>public void handleEvent[IncomingEventId](MyObject formObject, String[] eventParam);</code></pre>
  * or
+ * 
  * <pre><code>public void handleEvent[IncomingEventId](MyObject formObject, List&lt;String&gt; eventParam);</code></pre>
  * or
+ * 
  * <pre><code>public void handleEvent[IncomingEventId](MyObject formObject, Map&lt;String, String&gt; eventParam);</code></pre>
  * <p>
  * The data object class is either specified as a constructor parameter or determined by the <code>beanClass</code>
@@ -88,7 +96,7 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
     this(eventTarget, form, form.getBeanClass());
   }
 
-  public void processEvent(String eventId, InputData input) throws Exception {
+  public void processEvent(String eventId, InputData input) {
     if (!this.form.convertAndValidate()) {
       return;
     }
@@ -101,31 +109,39 @@ public final class ValidatingProxyEventListener<T> implements EventListener {
 
     // lets try to find a handle method with a bean argument
     // First, let's try to find a handle method with an empty argument:
-    if (hasHandler(this.eventTarget, methodName, this.modelType)) {
-      log(methodName, modelClassName, className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, bean);
+    try {
+      if (hasHandler(this.eventTarget, methodName, this.modelType)) {
+        log(methodName, modelClassName, className);
+        MethodUtils.invokeExactMethod(this.eventTarget, methodName, bean);
 
-    } else if (hasHandler(this.eventTarget, methodName, this.modelType, String.class)) {
-      log(methodName, modelClassName + ", String", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean, String.class });
+      } else if (hasHandler(this.eventTarget, methodName, this.modelType, String.class)) {
+        log(methodName, modelClassName + ", String", className);
+        MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean, String.class });
 
-    } else if (hasHandler(this.eventTarget, methodName, this.modelType, String.class)) {
-      log(methodName, modelClassName + ", String[]", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean,
-          splitParam(this.eventTarget, param) });
+      } else if (hasHandler(this.eventTarget, methodName, this.modelType, String.class)) {
+        log(methodName, modelClassName + ", String[]", className);
+        MethodUtils.invokeExactMethod(this.eventTarget, methodName,
+            new Object[] { bean, splitParam(this.eventTarget, param) });
 
-    } else if (hasHandler(this.eventTarget, methodName, this.modelType, List.class)) {
-      log(methodName, modelClassName + ", List<String>", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean,
-          parseParamList(this.eventTarget, param) });
+      } else if (hasHandler(this.eventTarget, methodName, this.modelType, List.class)) {
+        log(methodName, modelClassName + ", List<String>", className);
+        MethodUtils.invokeExactMethod(this.eventTarget, methodName,
+            new Object[] { bean, parseParamList(this.eventTarget, param) });
 
-    } else if (hasHandler(this.eventTarget, methodName, this.modelType, Map.class)) {
-      log(methodName, modelClassName + ", List<String>", className);
-      MethodUtils.invokeExactMethod(this.eventTarget, methodName, new Object[] { bean,
-          parseParamMap(this.eventTarget, param) });
+      } else if (hasHandler(this.eventTarget, methodName, this.modelType, Map.class)) {
+        log(methodName, modelClassName + ", List<String>", className);
+        MethodUtils.invokeExactMethod(this.eventTarget, methodName,
+            new Object[] { bean, parseParamMap(this.eventTarget, param) });
 
-    } else if (LOG.isWarnEnabled()) {
-      logHandlerNotFound(EVENT_HANDLER_PREFIX, eventId, this.eventTarget);
+      } else if (LOG.isWarnEnabled()) {
+        logHandlerNotFound(EVENT_HANDLER_PREFIX, eventId, this.eventTarget);
+      }
+    } catch (NoSuchMethodException e) {
+      ExceptionUtil.uncheckException(e);
+    } catch (IllegalAccessException e) {
+      ExceptionUtil.uncheckException(e);
+    } catch (InvocationTargetException e) {
+      ExceptionUtil.uncheckException(e);
     }
   }
 }

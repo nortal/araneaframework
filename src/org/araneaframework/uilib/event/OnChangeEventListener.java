@@ -37,6 +37,6 @@ public interface OnChangeEventListener extends Serializable {
    * 
    * @throws Exception if something goes wrong.
    */
-  void onChange() throws Exception;
+  void onChange();
 
 }

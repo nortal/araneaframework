@@ -81,16 +81,16 @@ public class DemoOnChangeListenersWidget extends TemplateBaseWidget {
 
   private class DemoChangeEventListener<T> implements OnChangeEventListener {
 
-    private Control<T> eventSource;
+    private final Control<T> eventSource;
 
     public DemoChangeEventListener(Control<T> eventSource) {
       this.eventSource = eventSource;
     }
 
-    public void onChange() throws Exception {
+    public void onChange() {
       FormElementContext<T, Object> element = ((BaseControl<T>) this.eventSource).getFormElementCtx();
       Object oldValue = element.getValue();
-      simpleForm.convert();
+      DemoOnChangeListenersWidget.this.simpleForm.convert();
       Object newValue = element.getValue();
       getMessageCtx().showInfoMessage("onChangeListener.msg", t(element.getLabel()), oldValue, newValue);
     }

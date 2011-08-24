@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.ClassUtils;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.MenuWidget;
 import org.araneaframework.uilib.core.MenuItem;
@@ -38,7 +39,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
 
   private FormWidget form;
 
-  private List<Class<?>> menuItems = new ArrayList<Class<?>>();
+  private final List<Class<?>> menuItems = new ArrayList<Class<?>>();
 
   @Override
   protected void init() throws Exception {
@@ -53,14 +54,20 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
     select.addItem(t("select.choose"), null);
     select.addOnChangeEventListener(new OnChangeEventListener() {
 
-      public void onChange() throws Exception {
-        if (form.getElement("classSelect").convertAndValidate()) {
-          String className = (String) form.getValueByFullName("classSelect");
-
-          Widget newInstance = (Widget) org.springframework.util.ClassUtils.forName(className).newInstance();
-          Widget testWidget = new OverlayRootWidget(new WrapperWidget(newInstance));
-
-          getOverlayCtx().start(testWidget);
+      public void onChange() {
+        if (ModalDialogTestWidget.this.form.getElement("classSelect").convertAndValidate()) {
+          try {
+            String className = (String) ModalDialogTestWidget.this.form.getValueByFullName("classSelect");
+            Widget newInstance = (Widget) org.springframework.util.ClassUtils.forName(className).newInstance();
+            Widget testWidget = new OverlayRootWidget(new WrapperWidget(newInstance));
+            getOverlayCtx().start(testWidget);
+          } catch (InstantiationException e) {
+            ExceptionUtil.uncheckException(e);
+          } catch (IllegalAccessException e) {
+            ExceptionUtil.uncheckException(e);
+          } catch (ClassNotFoundException e) {
+            ExceptionUtil.uncheckException(e);
+          }
         }
       }
     });
@@ -93,7 +100,7 @@ public class ModalDialogTestWidget extends TemplateBaseWidget {
 
   private static class WrapperWidget extends TemplateBaseWidget {
 
-    private Widget wrapped;
+    private final Widget wrapped;
 
     public WrapperWidget(Widget wrapped) {
       this.wrapped = wrapped;

@@ -76,7 +76,6 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
     final FormElement<Timestamp, Date> appointmentTime = form.addElement("time", "seamless.appointmenttime",
         new TimeControl(), new DateData(), true);
 
-
     // Creating and adding the select control:
 
     FormElement<Room, Room> rooms = form.addElement("meetingroom", "seamless.room", buildRoomSelect(), new Data<Room>(
@@ -97,7 +96,6 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
         }
       }
     });
-
 
     // Creating and adding the multi-select control:
 
@@ -128,7 +126,6 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
       }
     });
 
-
     // Finally, let's add an event callback to our form that would respond to "submit" event where, form would be
     // converted and validated. Note that it is easier defining the callback this way rather than as a "handleEvent*()"
     // method because here the event is bound to this specific form (otherwise, we would have to figure out which form
@@ -136,7 +133,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
 
     form.addEventListener("submit", new EventListener() {
 
-      public void processEvent(String eventId, InputData input) throws Exception {
+      public void processEvent(String eventId, InputData input) {
         form.convertAndValidate();
       }
     });
@@ -157,7 +154,7 @@ public class DemoSeamlessFormValidationWidget extends TemplateBaseWidget {
    * @return The <code>SelectControl</code> with selectable rooms.
    */
   private SelectControl<Room> buildRoomSelect() {
-    return new SelectControl<Room>(this.roomList, "name",  "id");
+    return new SelectControl<Room>(this.roomList, "name", "id");
   }
 
   /**

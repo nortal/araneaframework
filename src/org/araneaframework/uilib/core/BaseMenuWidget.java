@@ -28,6 +28,7 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.event.StandardEventListener;
 import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.message.RoutedMessage;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.MountContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 
@@ -131,8 +132,9 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
     reset(new EnvironmentAwareCallback() {
 
       public void call(Environment env) {
-        if (newFlow != null)
+        if (newFlow != null) {
           start(newFlow);
+        }
       }
     });
   }
@@ -150,7 +152,8 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * 
    * @since 2.0
    */
-  protected void onMenuItemSelection() {}
+  protected void onMenuItemSelection() {
+  }
 
   /**
    * Provides the {@link org.araneaframework.Path} of the currently selected menu item as a <code>String</code>.
@@ -177,7 +180,6 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
    * registering mount-context listener.
    * 
    * @param menuMountContextId The mount-context ID to be used for registering menu mount-context support.
-   * 
    * @since 2.0
    * @see #initMenuSelectorMountSupport()
    */
@@ -208,9 +210,13 @@ public abstract class BaseMenuWidget extends ExceptionHandlingFlowContainerWidge
   protected class ItemSelectionListener extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
-      BaseMenuWidget.this.selectMenuItem(eventParam);
-      BaseMenuWidget.this.onMenuItemSelection();
+    public void processEvent(String eventId, String eventParam, InputData input) {
+      try {
+        selectMenuItem(eventParam);
+        onMenuItemSelection();
+      } catch (Exception e) {
+        ExceptionUtil.uncheckException(e);
+      }
     }
   }
 

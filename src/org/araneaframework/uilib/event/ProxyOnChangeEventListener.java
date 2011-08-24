@@ -23,8 +23,7 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * An implementation of <code>OnChangeEventListener</code> that does not require to be sublassed, but instead allows
  * registering a <code>handleEvent*()</code> method of given widget that will be called when the change occurs.
  * <p>
- * It is quite easy to use compared to usual {@link OnChangeEventListener}:
- * <code>
+ * It is quite easy to use compared to usual {@link OnChangeEventListener}: <code>
  * <pre>
  * control.addOnChangeEventListener(new ProxyOnChangeEventListener(this, &quot;magic&quot;));
  * ...
@@ -52,7 +51,7 @@ public class ProxyOnChangeEventListener implements OnChangeEventListener {
 
   /**
    * A constructor that initializes the event listener with the given target widget (<code>eventTarget</code>) and event
-   * handler name (<code>eventId</code>).  The target widget is expected to have a standard event handling methods. See
+   * handler name (<code>eventId</code>). The target widget is expected to have a standard event handling methods. See
    * {@link ProxiedHandlerUtil} for list of all kinds of supported method signatures.
    * 
    * @param eventTarget The widget that contains the event handling method.
@@ -63,7 +62,7 @@ public class ProxyOnChangeEventListener implements OnChangeEventListener {
     this.eventId = eventId;
   }
 
-  public void onChange() throws Exception {
+  public void onChange() {
     ProxiedHandlerUtil.invokeEventHandler(this.eventId, null, this.eventTarget);
   }
 

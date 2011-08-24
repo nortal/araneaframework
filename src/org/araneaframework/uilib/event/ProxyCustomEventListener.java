@@ -23,8 +23,7 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * An implementation of <code>CustomEventListener</code> that does not require to be sublassed, but instead allows
  * registering a <code>handleEvent*()</code> method of given widget that will be called when the event occurs.
  * <p>
- * It is quite easy to use compared to usual {@link CustomEventListener}:
- * <code>
+ * It is quite easy to use compared to usual {@link CustomEventListener}: <code>
  * <pre>
  * control.addCustomEventListener("onDblClick", new ProxyCustomEventListener(this, &quot;magic&quot;));
  * ...
@@ -33,7 +32,7 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * }</pre>
  * </code>
  * <p>
- * The proxied event listener can also have a parameter - the original custom event name. 
+ * The proxied event listener can also have a parameter - the original custom event name.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @see ProxiedHandlerUtil
@@ -65,7 +64,7 @@ public class ProxyCustomEventListener implements CustomEventListener {
     this.eventId = eventId;
   }
 
-  public void onEvent(String event) throws Exception {
+  public void onEvent(String event) {
     ProxiedHandlerUtil.invokeEventHandler(this.eventId, event, this.eventTarget);
   }
 

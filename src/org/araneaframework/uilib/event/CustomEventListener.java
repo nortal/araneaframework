@@ -34,8 +34,7 @@ public interface CustomEventListener extends Serializable {
    * several events, the parameter <code>event</code> is provided to identify, which event was fired.
    * 
    * @param event The name of the event that was fired.
-   * @throws Exception if something goes wrong, will break application execution.
    */
-  public void onEvent(String event) throws Exception;
+  void onEvent(String event);
 
 }

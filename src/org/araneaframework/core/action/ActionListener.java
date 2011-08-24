@@ -33,9 +33,9 @@ import org.araneaframework.OutputData;
 public interface ActionListener extends Serializable {
 
   /**
-   * Action processing method. Implementation should be able to handle different <code>actionId</code>s.
+   * Action processing method. Implementation can be able to handle different <code>actionId</code>s.
    * 
-   * @param actionId The ID of the incoming action (may be <code>null</code>).
+   * @param actionId The ID of the incoming action.
    * @param input The input data.
    * @param output The output data.
    */

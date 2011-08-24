@@ -16,13 +16,11 @@
 
 package org.araneaframework.example.main.web.release;
 
-import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.web.release.model.ExampleData;
 import org.araneaframework.framework.LocalizationContext;
@@ -60,9 +58,10 @@ public class DemoInputSuggestWidget extends TemplateBaseWidget {
 
     actc.addOnChangeEventListener(new OnChangeEventListener() {
 
-      public void onChange() throws Exception {
-        form.convertAndValidate();
-        getMessageCtx().showInfoMessage("release.ac.onchangetext", form.getValueByFullName("acinput"));
+      public void onChange() {
+        DemoInputSuggestWidget.this.form.convertAndValidate();
+        getMessageCtx().showInfoMessage("release.ac.onchangetext",
+            DemoInputSuggestWidget.this.form.getValueByFullName("acinput"));
       }
     });
 
@@ -87,7 +86,7 @@ public class DemoInputSuggestWidget extends TemplateBaseWidget {
 
     private String language;
 
-    private LocalizationContextProvider locCtxProvider;
+    private final LocalizationContextProvider locCtxProvider;
 
     public DemoACDataProvider(LocalizationContextProvider locCtxProvider) {
       this.locCtxProvider = locCtxProvider;

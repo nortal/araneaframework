@@ -23,9 +23,7 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * An implementation of <code>OnClickEventListener</code> that does not require to be sublassed, but instead allows
  * registering a <code>handleEvent*()</code> method of given widget that will be called when the click occurs.
  * <p>
- * It is quite easy to use compared to usual {@link OnClickEventListener}:
- * 
- * <code>
+ * It is quite easy to use compared to usual {@link OnClickEventListener}: <code>
  * <pre>
  * control.addOnClickEventListener(new OnClickEventListener(this, &quot;magic&quot;));
  * ...
@@ -53,7 +51,7 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
 
   /**
    * A constructor that initializes the event listener with the given target widget (<code>eventTarget</code>) and event
-   * handler name (<code>eventId</code>).  The target widget is expected to have a standard event handling methods. See
+   * handler name (<code>eventId</code>). The target widget is expected to have a standard event handling methods. See
    * {@link ProxiedHandlerUtil} for list of all kinds of supported method signatures.
    * 
    * @param eventTarget The widget that contains the event handling method.
@@ -64,7 +62,7 @@ public class ProxyOnClickEventListener implements OnClickEventListener {
     this.eventId = eventId;
   }
 
-  public void onClick() throws Exception {
+  public void onClick() {
     ProxiedHandlerUtil.invokeEventHandler(this.eventId, null, this.eventTarget);
   }
 

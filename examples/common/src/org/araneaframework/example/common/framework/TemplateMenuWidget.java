@@ -60,7 +60,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
     select.addItem("lang.estonian", "et");
     select.addOnChangeEventListener(new OnChangeEventListener() {
 
-      public void onChange() throws Exception {
+      public void onChange() {
         if (TemplateMenuWidget.this.langSelect.convertAndValidate()) {
           String lang = TemplateMenuWidget.this.langSelect.getValue();
           getL10nCtx().setLocale(new Locale(lang, ""));
@@ -92,7 +92,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
   public String getFlowViewSelector() {
     String result = null;
     try {
-      result = ((ViewSelectorAware) callStack.getFirst().getWidget()).getViewSelector();
+      result = ((ViewSelectorAware) this.callStack.getFirst().getWidget()).getViewSelector();
     } catch (Exception e) {}
     return result;
   }

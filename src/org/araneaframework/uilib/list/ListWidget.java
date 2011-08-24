@@ -29,9 +29,9 @@ import org.araneaframework.Path;
 import org.araneaframework.backend.list.model.ListItemsData;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardPath;
-import org.araneaframework.core.exception.AraneaRuntimeException;
-import org.araneaframework.core.event.StandardEventListener;
 import org.araneaframework.core.event.EventListener;
+import org.araneaframework.core.event.StandardEventListener;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.uilib.core.BaseUIWidget;
@@ -136,9 +136,9 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   private boolean selectFromMultiplePages;
 
-  private DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
+  private final DataProviderDataUpdateListener dataProviderDataUpdateListener = new DataProviderDataUpdateListener();
 
-  private Map<String, EventListener> listEventListeners = new HashMap<String, EventListener>();
+  private final Map<String, EventListener> listEventListeners = new HashMap<String, EventListener>();
 
   /**
    * This an initial value for whether the list should show full pages. It is set by {@link #showDefaultPages()} and
@@ -866,7 +866,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
     orderInfo.addField(fieldId3, ascending3);
     setOrderInfo(orderInfo);
   }
-  
+
   /**
    * Sets the order information to list data provider and list widget.
    * 
@@ -1095,7 +1095,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class NextPageEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       ListWidget.this.sequenceHelper.goToNextPage();
     }
   }
@@ -1106,7 +1106,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class PreviousPageEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       ListWidget.this.sequenceHelper.goToPreviousPage();
     }
   }
@@ -1117,7 +1117,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class NextBlockEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       ListWidget.this.sequenceHelper.goToNextBlock();
     }
   }
@@ -1128,7 +1128,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class PreviousBlockEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       ListWidget.this.sequenceHelper.goToPreviousBlock();
     }
   }
@@ -1139,7 +1139,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class FirstPageEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       ListWidget.this.sequenceHelper.goToFirstPage();
     }
   }
@@ -1150,7 +1150,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class LastPageEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       ListWidget.this.sequenceHelper.goToLastPage();
     }
   }
@@ -1161,7 +1161,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class JumpToPageEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       int page;
       try {
         page = Integer.parseInt(eventParam);
@@ -1178,7 +1178,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class ShowAllEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       filter();
       ListWidget.this.sequenceHelper.showFullPages();
     }
@@ -1190,7 +1190,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class ShowSliceEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       filter();
       ListWidget.this.sequenceHelper.showDefaultPages();
     }
@@ -1199,7 +1199,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   /**
    * Handles single column ordering.
    */
-  protected void order(String fieldName) throws Exception {
+  protected void order(String fieldName) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Processing single-column ordering for field '" + fieldName + "'.");
     }
@@ -1219,7 +1219,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
   protected class OrderEventHandler extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       // single column ordering
       if (eventParam.length() > 0) {
         order(eventParam);
@@ -1313,7 +1313,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected class FilterEventHandler implements OnClickEventListener {
 
-    public void onClick() throws Exception {
+    public void onClick() {
       filter();
       resetSelectedRows();
     }
@@ -1321,7 +1321,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
 
   protected class FilterClearEventHandler implements OnClickEventListener {
 
-    public void onClick() throws Exception {
+    public void onClick() {
       clearFilter();
       resetSelectedRows();
     }
@@ -1344,15 +1344,15 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    */
   public class ViewModel extends BaseApplicationWidget.ViewModel {
 
-    private List<T> itemRange;
+    private final List<T> itemRange;
 
-    private SequenceHelper.ViewModel sequence;
+    private final SequenceHelper.ViewModel sequence;
 
-    private ListStructure.ViewModel listStructure;
+    private final ListStructure.ViewModel listStructure;
 
-    private OrderInfo.ViewModel orderInfo;
+    private final OrderInfo.ViewModel orderInfo;
 
-    private FormWidget.ViewModel filterForm;
+    private final FormWidget.ViewModel filterForm;
 
     /**
      * Takes a snapshot of outer class state.

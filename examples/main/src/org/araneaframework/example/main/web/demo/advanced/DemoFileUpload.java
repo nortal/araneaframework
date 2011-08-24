@@ -19,6 +19,7 @@ package org.araneaframework.example.main.web.demo.advanced;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.http.service.FileDownloaderService;
 import org.araneaframework.http.support.PopupWindowProperties;
@@ -46,13 +47,14 @@ import org.araneaframework.uilib.support.FileInfo;
 public class DemoFileUpload extends TemplateBaseWidget {
 
   private static final String FILE_INPUT = "file";
+
   private static final String FILE_LIST = "uploadList";
 
   private FormWidget form;
 
   private ListWidget<FileInfo> uploadList;
 
-  private List<FileInfo> files = new ArrayList<FileInfo>();
+  private final List<FileInfo> files = new ArrayList<FileInfo>();
 
   @Override
   public void init() throws Exception {
@@ -115,28 +117,32 @@ public class DemoFileUpload extends TemplateBaseWidget {
 
   private class FileUploadButtonListener implements OnClickEventListener {
 
-    public void onClick() throws Exception {
+    public void onClick() {
       // We only convert the the upload control:
-      form.getElementByFullName(FILE_INPUT).convertAndValidate();
+      DemoFileUpload.this.form.getElementByFullName(FILE_INPUT).convertAndValidate();
 
-      FileInfo fileInfo = (FileInfo) form.getValueByFullName(FILE_INPUT);
+      FileInfo fileInfo = (FileInfo) DemoFileUpload.this.form.getValueByFullName(FILE_INPUT);
       if (fileInfo != null && fileInfo.isFilePresent()) {
-        if (files.isEmpty()) { // It means: is file is first? 
-          DemoFileUpload.this.addWidget(FILE_LIST, uploadList);
+        if (DemoFileUpload.this.files.isEmpty()) { // It means: is file is first?
+          DemoFileUpload.this.addWidget(FILE_LIST, DemoFileUpload.this.uploadList);
         }
 
-        files.add(fileInfo);
-        form.setValueByFullName(FILE_INPUT, null);
+        DemoFileUpload.this.files.add(fileInfo);
+        DemoFileUpload.this.form.setValueByFullName(FILE_INPUT, null);
 
         // refresh the list data
-        uploadList.getDataProvider().refreshData();
+        try {
+          DemoFileUpload.this.uploadList.getDataProvider().refreshData();
+        } catch (Exception e) {
+          ExceptionUtil.uncheckException(e);
+        }
       }
     }
   }
 
   private class DownloadFileProvider extends FileDownloadStreamCallback {
 
-    private FileInfo file;
+    private final FileInfo file;
 
     public DownloadFileProvider(FileInfo file) {
       this.file = file;

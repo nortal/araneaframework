@@ -16,28 +16,37 @@
 
 package org.araneaframework.core.event;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
+ * Event listener that proxies incoming events (where this listener is registered) to the provided event target, calling
+ * its <code>handleEvent*</code> methods. The logic of calling these methods is actually contained in
+ * {@link ProxiedHandlerUtil#invokeEventHandler(String, String, Widget)}.
+ * <p>
+ * Note that this event listener can be used in a widget globally and/or with scoped events:
+ * <ul>
+ * <li><code>setGlobalEventListener(new ProxyEventListener(this));</code>
+ * <li>
+ * 
+ * <code>setEventListener("myEvent", new ProxyEventListener(this));</br>
+ * public void handleEventMyEvent() { ... }</code>
+ * </ul>
+ * 
+ * @see ProxiedHandlerUtil
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class ProxyEventListener implements EventListener {
+public final class ProxyEventListener extends StandardEventListener {
 
-  public static final Log LOG = LogFactory.getLog(ProxyEventListener.class);
-
-  protected Widget eventTarget;
+  private final Widget eventTarget;
 
   public ProxyEventListener(Widget eventTarget) {
     this.eventTarget = eventTarget;
   }
 
-  public void processEvent(String eventId, InputData input) throws Exception {
-    String eventParam = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
+  @Override
+  protected void processEvent(String eventId, String eventParam, InputData input) {
     ProxiedHandlerUtil.invokeEventHandler(eventId, eventParam, this.eventTarget);
   }
 }

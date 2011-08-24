@@ -42,13 +42,11 @@ public abstract class StandardActionListener implements ActionListener {
    * Action processing method that includes an action parameter. Implementation should be able to handle different
    * <code>actionId</code>s.
    * 
-   * @param actionId The ID of the incoming action.
-   * @param actionParam The parameter for the action (from request under name
-   *          {@link ApplicationService#ACTION_PARAMETER_KEY})
-   * @param input The request data.
-   * @param output The response data.
-   * @throws Exception Any runtime exception that might occur.
+   * @param actionId The ID of the incoming action (not empty string).
+   * @param actionParam The parameter for the action (<code>null</code>, when it's absent).
+   * @param input The input data (always present).
+   * @param output The output data for the incoming data (always present).
    */
-  public abstract void processAction(String actionId, String actionParam, InputData input, OutputData output);
+  protected abstract void processAction(String actionId, String actionParam, InputData input, OutputData output);
 
 }

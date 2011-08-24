@@ -669,7 +669,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   protected class FlowCancelListener extends StandardEventListener {
 
     @Override
-    public void processEvent(String eventId, String eventParam, InputData input) throws Exception {
+    public void processEvent(String eventId, String eventParam, InputData input) {
       if (StandardFlowContainerWidget.this.allowFlowCancelEvent && StringUtils.isNumeric(eventParam)) {
         int times = Integer.parseInt(eventParam);
         while (times-- > 0 && isNested()) {
