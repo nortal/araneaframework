@@ -55,7 +55,7 @@ public abstract class MultiParamEventListener extends StandardEventListener {
    * This method is marked final. Subclasses should implement {@link #processEvent(String, String[], InputData)}.
    */
   @Override
-  protected void processEvent(String eventId, String eventParam, InputData input) {
+  protected final void processEvent(String eventId, String eventParam, InputData input) {
     String[] parameter = eventParam == null ? new String[0] : StringUtils.split(eventParam, this.paramSeparator);
     processEvent(eventId, parameter, input);
   }

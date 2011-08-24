@@ -31,7 +31,7 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * <li><code>setGlobalEventListener(new ProxyEventListener(this));</code>
  * <li>
  * 
- * <code>setEventListener("myEvent", new ProxyEventListener(this));</br>
+ * <code>setEventListener("myEvent", new ProxyEventListener(this));<br>
  * public void handleEventMyEvent() { ... }</code>
  * </ul>
  * 
@@ -42,6 +42,11 @@ public final class ProxyEventListener extends StandardEventListener {
 
   private final Widget eventTarget;
 
+  /**
+   * Creates an event listener that proxies actions to given event target.
+   * 
+   * @param eventTarget The target widget receiving events (required).
+   */
   public ProxyEventListener(Widget eventTarget) {
     Assert.notNullParam(eventTarget, "eventTarget");
     this.eventTarget = eventTarget;

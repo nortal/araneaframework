@@ -24,4 +24,5 @@ package org.araneaframework.core.action;
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  */
-public interface SynchronizedActionListener extends ActionListener {}
+public interface SynchronizedActionListener extends ActionListener {
+}

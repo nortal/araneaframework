@@ -59,7 +59,7 @@ public abstract class MultiParamActionListener extends StandardActionListener {
    * {@link #processAction(String, String[], InputData, OutputData)}.
    */
   @Override
-  protected void processAction(String actionId, String actionParam, InputData input, OutputData output) {
+  protected final void processAction(String actionId, String actionParam, InputData input, OutputData output) {
     String[] parameter = actionParam == null ? new String[0] : StringUtils.split(actionParam, this.paramSeparator);
     processAction(actionId, parameter, input, output);
   }

@@ -17,14 +17,9 @@
 package org.araneaframework.core.annotation;
 
 import java.lang.annotation.Documented;
-
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import org.araneaframework.Environment;
-
-import java.lang.annotation.ElementType;
-
 import java.lang.annotation.Target;
 
 /**
@@ -40,17 +35,13 @@ import java.lang.annotation.Target;
 public @interface EnvironmentEntry {
 
   /**
-   * An optional parameter to the {@link Environment} entry lookup. Uses the given class as the environment entry lookup
-   * key. By default, it can use the field type.
-   * 
-   * @return The key to use for environment entry lookup
+   * An optional parameter to the {@link org.araneaframework.Environment} entry lookup. Uses the given class as the
+   * environment entry lookup key. By default, it can use the field type.
    */
   Class<?> value();
 
   /**
    * Specifies whether the environment entry is required. By default, it is not required.
-   * 
-   * @return A <code>Boolean</code> indicating whether the field is required.
    */
   boolean required() default false;
 }

@@ -28,7 +28,7 @@ import org.araneaframework.core.ApplicationWidget;
 public abstract class StandardEventListener implements EventListener {
 
   /**
-   * @{inheritDoc}
+   * {@inheritDoc}
    * <p>
    * This method is marked final. Subclasses should implement {@link #processEvent(String, String, InputData)}.
    */
@@ -44,7 +44,6 @@ public abstract class StandardEventListener implements EventListener {
    * @param eventId The ID of the incoming event (not empty string).
    * @param eventParam The parameter for the event (<code>null</code>, when it's absent).
    * @param input The input data (always present).
-   * @param output The output data for the incoming data (always present).
    */
   protected abstract void processEvent(String eventId, String eventParam, InputData input);
 }
