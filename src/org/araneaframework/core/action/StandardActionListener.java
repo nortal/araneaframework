@@ -30,6 +30,8 @@ import org.araneaframework.core.ApplicationService;
 public abstract class StandardActionListener implements ActionListener {
 
   /**
+   * @{inheritDoc}
+   * <p>
    * This method is marked final. Subclasses should implement
    * {@link #processAction(String, String, InputData, OutputData)}.
    */

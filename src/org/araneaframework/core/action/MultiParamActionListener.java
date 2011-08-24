@@ -19,8 +19,7 @@ package org.araneaframework.core.action;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
-import org.araneaframework.core.ApplicationService;
-import org.araneaframework.core.ApplicationWidget;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
@@ -30,31 +29,39 @@ import org.araneaframework.core.util.ProxiedHandlerUtil;
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
-public abstract class MultiParamActionListener implements ActionListener {
+public abstract class MultiParamActionListener extends StandardActionListener {
+
+  private final String paramSeparator;
 
   /**
-   * This method is marked final. Subclasses should implement
-   * {@link #processAction(String, String[], InputData, OutputData)}.
+   * Creates a multi-parameter action listener with default separator.
+   * 
+   * @see ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR
    */
-  public final void processAction(String actionId, InputData input, OutputData output) {
-    Object parameter = input.getGlobalData().get(ApplicationWidget.EVENT_PARAMETER_KEY);
-
-    if (parameter == null) {
-      parameter = new String[0];
-    } else if (parameter instanceof String) {
-      parameter = StringUtils.split((String) parameter, getParameterSeparator((String) parameter));
-    }
-
-    processAction(actionId, (String[]) parameter, input, output);
+  public MultiParamActionListener() {
+    this(ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR);
   }
 
   /**
-   * A method to override to use another separator for the given value.
+   * Creates a multi-parameter action listener with a custom separator.
    * 
-   * @param value The value of the parameter to the action listener.
+   * @param paramSeparator A custom parameter separator to use.
    */
-  public String getParameterSeparator(String value) {
-    return ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR;
+  public MultiParamActionListener(String paramSeparator) {
+    Assert.notNullParam(paramSeparator, "paramSeparator");
+    this.paramSeparator = paramSeparator;
+  }
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * This method is marked final. Subclasses should implement
+   * {@link #processAction(String, String[], InputData, OutputData)}.
+   */
+  @Override
+  protected void processAction(String actionId, String actionParam, InputData input, OutputData output) {
+    String[] parameter = actionParam == null ? new String[0] : StringUtils.split(actionParam, this.paramSeparator);
+    processAction(actionId, parameter, input, output);
   }
 
   /**
@@ -62,11 +69,9 @@ public abstract class MultiParamActionListener implements ActionListener {
    * <code>actionId</code>s.
    * 
    * @param actionId The ID of the incoming action.
-   * @param actionParams The parameter for the action (from request under name
-   *          {@link ApplicationService#ACTION_PARAMETER_KEY})
+   * @param actionParams The parameters for the event (never <code>null</code>).
    * @param input The input data.
    * @param output The output data.
    */
-  public abstract void processAction(String actionId, String[] actionParams, InputData input, OutputData output);
-
+  protected abstract void processAction(String actionId, String[] actionParams, InputData input, OutputData output);
 }

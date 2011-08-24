@@ -18,6 +18,7 @@ package org.araneaframework.core.event;
 
 import org.araneaframework.InputData;
 import org.araneaframework.Widget;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ProxiedHandlerUtil;
 
 /**
@@ -42,6 +43,7 @@ public final class ProxyEventListener extends StandardEventListener {
   private final Widget eventTarget;
 
   public ProxyEventListener(Widget eventTarget) {
+    Assert.notNullParam(eventTarget, "eventTarget");
     this.eventTarget = eventTarget;
   }
 
