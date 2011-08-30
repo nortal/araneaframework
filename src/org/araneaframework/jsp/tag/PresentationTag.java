@@ -20,6 +20,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.jsp.PageContext;
+import org.apache.commons.lang.StringUtils;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 
 /**
@@ -72,6 +73,10 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 		return this.style;
 	}
 	
+	public void setBaseStyleClass(String baseStyleClass) {
+    this.baseStyleClass = baseStyleClass;
+  }
+	
 	/**
 	 * @jsp.attribute
 	 *   type = "java.lang.String"
@@ -93,7 +98,7 @@ public class PresentationTag extends BaseTag implements AttributedTagInterface {
 	/** @since 1.1 */
 	public static final String calculateStyleClass(String baseStyleClass, String styleClass) {
 		StringBuffer result = new StringBuffer();
-		if (baseStyleClass != null) {
+		if (StringUtils.isNotEmpty(baseStyleClass)) {
 			result.append(baseStyleClass);
 			if (styleClass != null)
 				result.append(" ");
