@@ -471,6 +471,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     private TransitionHandler transitionHandler;
     private String pageTitle;
     private String componentTitle;
+    private Map<String, Object> properties = new HashMap<String, Object>();
 
     protected CallFrame(Widget widget, Configurator configurator, Handler<Object> handler, CallFrame previous) {
       this.configurator = configurator;
@@ -531,6 +532,15 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     public void setComponentTitle(String componentTitle) {
       this.componentTitle = componentTitle;
     }
+
+    public Map<String, Object> getProperties() {
+      return properties;
+    }
+
+    public void putProperty(String key, Object value) {
+      this.properties.put(key, value);
+    }
+    
   }
 
   /*
@@ -685,5 +695,21 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
       titles.add(0, StringUtils.defaultString(callFrame.getComponentTitle()));
     }
     return titles;
+  }
+  
+  public Map<String, Object> getProperties() {
+    if(callStack.isEmpty()) {
+      return new HashMap<String, Object>();
+    }
+    CallFrame frame = callStack.getFirst();
+    return frame.getProperties();
+  }
+
+  public void putProperty(String key, Object value) {
+    if(callStack.isEmpty()) {
+      return;
+    }
+    CallFrame frame = callStack.getFirst();
+    frame.putProperty(key, value);
   }
 }
