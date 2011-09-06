@@ -194,4 +194,12 @@ public class PopupFlowWrapperWidget extends BaseApplicationWidget implements Flo
   public List<String> getComponentTitles(){
     return getLocalFlowContext().getComponentTitles();
   }
+
+  public Map<String, Object> getProperties() {
+    return getLocalFlowContext().getProperties();
+  }
+
+  public void putProperty(String key, Object value) {
+    getLocalFlowContext().putProperty(key, value);
+  }
 }

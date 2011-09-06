@@ -1,17 +1,10 @@
 /*
- * Copyright 2006 Webmedia Group Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2006 Webmedia Group Ltd. Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 
 package org.araneaframework.framework.container;
@@ -24,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,9 +32,13 @@ import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
+import org.araneaframework.framework.ConfirmationContext;
 import org.araneaframework.framework.EmptyCallStackException;
 import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.FlowContextWidget;
+import org.araneaframework.framework.ResetConfirmationContext;
+import org.araneaframework.framework.TransitionConfirmation;
+import org.araneaframework.framework.TransitionConfirmationContext;
 import org.araneaframework.http.ContainerStateContext;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.EnvironmentUtil;
@@ -84,7 +82,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     this.top = topWidget;
   }
 
-  public StandardFlowContainerWidget() {}
+  public StandardFlowContainerWidget() {
+  }
 
   public void setTop(Widget topWidget) {
     this.top = topWidget;
@@ -143,7 +142,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   public void reset(final EnvironmentAwareCallback callback) {
     TransitionHandler transitionHandler = getTransitionHandler();
     ResetClosure resetClosure = new ResetClosure(callback);
-    doTransition(transitionHandler, FlowContext.TRANSITION_RESET, resetClosure);
+    ResetConfirmationContext ctx = getEnvironment().getEntry(ResetConfirmationContext.class);
+    doConfirmationTransition(ctx, transitionHandler, FlowContext.TRANSITION_RESET, resetClosure);
   }
 
   public TransitionHandler getTransitionHandler() {
@@ -247,8 +247,10 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /**
    * Returns a new CallFrame constructed of the callable, configurator and handler.
    */
-  protected CallFrame makeCallFrame(Widget callable, Configurator configurator, Handler<Object> handler,
-      CallFrame previous) {
+  protected CallFrame makeCallFrame(Widget callable,
+                                    Configurator configurator,
+                                    Handler<Object> handler,
+                                    CallFrame previous) {
     return new CallFrame(callable, configurator, handler, previous);
   }
 
@@ -275,6 +277,24 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   /** @since 1.1 */
   protected void doTransition(TransitionHandler transitionHandler, int transitionType, Closure closure) {
     transitionHandler.doTransition(transitionType, getActiveFlow(), closure);
+  }
+
+  /**
+   * If a confirmation is present in the context, then it is executed before performing the transition.
+   */
+  protected void doConfirmationTransition(TransitionConfirmationContext ctx,
+                                          TransitionHandler transitionHandler,
+                                          int transitionType,
+                                          Closure closure) {
+    TransitionConfirmation confirmation = getRequiredConfirmation(ctx);
+    if (confirmation != null) {
+      // if required confirmation exists, transition handling is passed to the transition closure
+      ConfirmationContext confirmCtx = getEnvironment().requireEntry(ConfirmationContext.class);
+      confirmCtx.confirm(new TransitionConfirmationClosure(transitionHandler, transitionType, closure),
+                         confirmation.getMessage());
+    } else {
+      doTransition(transitionHandler, transitionType, closure);
+    }
   }
 
   /** @since 1.1 */
@@ -454,6 +474,19 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     refreshGlobalEnvironment();
   }
 
+  // the first confirmation that requires confirming is taken from the list, if such exists
+  private TransitionConfirmation getRequiredConfirmation(TransitionConfirmationContext ctx) {
+    if (ctx != null && CollectionUtils.isNotEmpty(ctx.getConfirmations())) {
+      for (TransitionConfirmation confirmation : ctx.getConfirmations()) {
+        if (confirmation.confirmRequired()) {
+          return confirmation;
+        }
+      }
+    }
+
+    return null;
+  }
+
   /**
    * A widget, configurator and a handler are encapsulated into one logical structure, a call frame. Class is used
    * internally.
@@ -471,6 +504,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     private TransitionHandler transitionHandler;
     private String pageTitle;
     private String componentTitle;
+    private Map<String, Object> properties = new HashMap<String, Object>();
 
     protected CallFrame(Widget widget, Configurator configurator, Handler<Object> handler, CallFrame previous) {
       this.configurator = configurator;
@@ -531,6 +565,14 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
     public void setComponentTitle(String componentTitle) {
       this.componentTitle = componentTitle;
     }
+
+    public Map<String, Object> getProperties() {
+      return properties;
+    }
+
+    public void putProperty(String key, Object value) {
+      this.properties.put(key, value);
+    }
   }
 
   /*
@@ -555,6 +597,22 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
 
     public void execute(Object obj) {
       doReset(this.callback);
+    }
+  }
+
+  protected class TransitionConfirmationClosure implements Closure, Serializable {
+    protected TransitionHandler transitionHandler;
+    protected int transitionType;
+    protected Closure closure;
+
+    public TransitionConfirmationClosure(TransitionHandler transitionHandler, int transitionType, Closure closure) {
+      this.transitionHandler = transitionHandler;
+      this.transitionType = transitionType;
+      this.closure = closure;
+    }
+
+    public void execute(Object obj) {
+      doTransition(transitionHandler, transitionType, closure);
     }
   }
 
@@ -647,16 +705,16 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public void setComponentTitle(String componentTitle) {
-    if(callStack.isEmpty()) {
+    if (callStack.isEmpty()) {
       return;
     }
     CallFrame frame = callStack.getFirst();
     frame.setComponentTitle(componentTitle);
-    
+
   }
 
   public void setPageTitle(String pageTitle) {
-    if(callStack.isEmpty()) {
+    if (callStack.isEmpty()) {
       return;
     }
     CallFrame frame = callStack.getFirst();
@@ -664,7 +722,7 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public String getComponentTitle() {
-    if(callStack.isEmpty()) {
+    if (callStack.isEmpty()) {
       return "";
     }
     CallFrame frame = callStack.getFirst();
@@ -672,18 +730,34 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
   }
 
   public String getPageTitle() {
-    if(callStack.isEmpty()) {
+    if (callStack.isEmpty()) {
       return "";
     }
     CallFrame frame = callStack.getFirst();
     return frame.getPageTitle();
   }
-  
-  public List<String> getComponentTitles(){
+
+  public List<String> getComponentTitles() {
     List<String> titles = new ArrayList<String>();
-    for(CallFrame callFrame : getCallStack()) {
+    for (CallFrame callFrame : getCallStack()) {
       titles.add(0, StringUtils.defaultString(callFrame.getComponentTitle()));
     }
     return titles;
+  }
+
+  public Map<String, Object> getProperties() {
+    if (callStack.isEmpty()) {
+      return new HashMap<String, Object>();
+    }
+    CallFrame frame = callStack.getFirst();
+    return frame.getProperties();
+  }
+
+  public void putProperty(String key, Object value) {
+    if (callStack.isEmpty()) {
+      return;
+    }
+    CallFrame frame = callStack.getFirst();
+    frame.putProperty(key, value);
   }
 }

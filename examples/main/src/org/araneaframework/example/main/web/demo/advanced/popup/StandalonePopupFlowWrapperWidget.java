@@ -213,4 +213,12 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
   public List<String> getComponentTitles() {
     return Collections.singletonList(getComponentTitle());
   }
+
+  public Map<String, Object> getProperties() {
+    return null;
+  }
+
+  public void putProperty(String key, Object value) {
+    
+  }
 }
