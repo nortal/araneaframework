@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import org.araneaframework.Path;
 import org.araneaframework.Scope;
-import org.araneaframework.core.util.Assert;
 
 /**
  * Default implementation of {@link Scope}.
@@ -38,13 +37,10 @@ public class StandardScope implements Scope {
   /**
    * Constructs a scope with given ID and with given parent scope.
    * 
-   * @param id Scope ID (required).
-   * @param parent Parent scope.
+   * @param id Scope ID (may be <code>null</code>).
+   * @param parent Parent scope (may be <code>null</code>).
    */
   public StandardScope(String id, Scope parent) {
-    Assert.notNullParam(id, "id");
-    Assert.isTrue(id.contains(Path.SEPARATOR), "The scope ID must not contain a separator.");
-
     this.id = id;
     this.parent = parent;
   }
