@@ -25,19 +25,17 @@ import org.araneaframework.http.support.PopupWindowProperties;
 /**
  * A (pseudo)widget that allows opening flows in popup windows by starting flows almost the usual way.
  * 
- * <code>
  * <pre>
  *   ((FlowContext)getEnvironment.getEntry(FlowContext.class)).
  *       start(
  *         new PopupFlowWidget(
- *           new NiceWidget(),  // flow to start  
+ *           new NiceWidget(),  // flow to start
  *           new PopupWindowProperties(), // exactly what it says
  *           // Factory that constructs the initial {@link org.araneaframework.Message} sent to created session thread.
  *           new ApplicationAndSituationSpecificMessageFactory()
  *         )
  *     );
  * </pre>
- * </code>
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -82,6 +80,6 @@ public class PopupFlowWidget extends BaseApplicationWidget {
      * @return {@link org.araneaframework.Message} that starts <code>rootFlow</code> when it is sent to a freshly
      *         created session-thread
      */
-    public Message buildMessage(Widget rootFlow);
+    Message buildMessage(Widget rootFlow);
   }
 }

@@ -1,3 +1,4 @@
+
 package org.araneaframework.example.common.framework;
 
 import java.io.IOException;
@@ -7,13 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Redirection servlet that should be mapped at "/".
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public class RedirectionServlet extends HttpServlet {
-	@Override
+
+  @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (!request.getServletPath().trim().equals("/"))
-			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Accessing something besides '/' and mapped URLs!");
-		else
-			response.sendRedirect(getServletConfig().getInitParameter("webapp-root"));
-	}
+    if (!"/".equals(request.getServletPath().trim())) {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND, "Accessing something besides '/' and mapped URLs!");
+    } else {
+      response.sendRedirect(getServletConfig().getInitParameter("webapp-root"));
+    }
+  }
 }

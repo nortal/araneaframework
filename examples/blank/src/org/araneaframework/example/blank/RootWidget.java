@@ -19,14 +19,16 @@ package org.araneaframework.example.blank;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
 public class RootWidget extends BaseUIWidget {
-	private MenuWidget menuWidget;
 
-	public RootWidget() {}
+  private MenuWidget menuWidget;
 
-	@Override
+  public RootWidget() {
+  }
+
+  @Override
   protected void init() throws Exception {
-		menuWidget = new MenuWidget();
-		addWidget("menu", menuWidget);
-		setViewSelector("root");
-	}
+    this.menuWidget = new MenuWidget();
+    addWidget("menu", this.menuWidget);
+    setViewSelector("root");
+  }
 }

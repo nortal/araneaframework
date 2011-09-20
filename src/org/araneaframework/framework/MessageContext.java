@@ -151,7 +151,7 @@ public interface MessageContext extends UpdateRegionProvider {
   // ==========================================================================
   // Some concrete methods of showMessage() and hideMessage():
   // ==========================================================================
-  
+
   /**
    * Adds the <code>message</code> to the messages of {@link #ERROR_TYPE} to be shown to the user.
    * 
@@ -251,6 +251,7 @@ public interface MessageContext extends UpdateRegionProvider {
    * keys are collections of messages associated with that type.
    * <p>
    * A child service should do as follows to access the messages
+   * 
    * <pre>
    * MessageContext msgCtx = getEnvironment().requireEntry(MessageContext.class);
    * Map&lt;String, Collection&lt;MessageData&gt;&gt; map = msgCtx.getMessages();

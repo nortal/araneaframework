@@ -64,9 +64,9 @@ public class DemoSimpleEditableList extends TemplateBaseWidget {
       allSuggestions.add(new Locale("en", country).getDisplayCountry(Locale.ENGLISH));
     }
 
-    for (int i = 0; i < ExampleData.males.length; i++) {
+    for (int i = 0; i < ExampleData.MALES.length; i++) {
       ExampleData.Client friend = new ExampleData.Client();
-      friend.setForename(ExampleData.males[i]);
+      friend.setForename(ExampleData.MALES[i]);
       friend.setId(this.lastId);
       friend.setSex(ExampleData.Client.SEX_M);
       friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);
@@ -75,9 +75,9 @@ public class DemoSimpleEditableList extends TemplateBaseWidget {
       this.lastId = this.lastId + 1;
     }
 
-    for (int i = 0; i < ExampleData.females.length; i++) {
+    for (int i = 0; i < ExampleData.FEMALES.length; i++) {
       ExampleData.Client friend = new ExampleData.Client();
-      friend.setForename(ExampleData.females[i]);
+      friend.setForename(ExampleData.FEMALES[i]);
       friend.setId(this.lastId);
       friend.setSex(ExampleData.Client.SEX_F);
       friend.setSurname(ExampleData.fungi[rn.nextInt(ExampleData.fungi.length)]);

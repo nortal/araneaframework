@@ -54,8 +54,7 @@ public class FileDownloadActionListener extends StandardActionListener {
 
   protected String lastPopupId;
 
-  public FileDownloadActionListener(PopupWindowContext popupCtx, byte[] file, String fileName,
-      String contentType) {
+  public FileDownloadActionListener(PopupWindowContext popupCtx, byte[] file, String fileName, String contentType) {
     this(popupCtx, new FileDownloadHandler(file, fileName, contentType));
   }
 
@@ -114,13 +113,12 @@ public class FileDownloadActionListener extends StandardActionListener {
    */
   protected static class AsynchronousFileDownloadWidget extends BaseApplicationWidget {
 
-    private FileDownloadHandler handler;
+    private final FileDownloadHandler handler;
 
-    private String actionId;
+    private final String actionId;
 
-    private String actionParam;
+    private final String actionParam;
 
-    
     public AsynchronousFileDownloadWidget(String actionId, String actionParam, FileDownloadHandler handler) {
       this.actionId = actionId;
       this.actionParam = actionParam;
@@ -149,7 +147,8 @@ public class FileDownloadActionListener extends StandardActionListener {
 
     protected FileDownloadStreamCallback fileStreamCallback;
 
-    public FileDownloadHandler() {}
+    public FileDownloadHandler() {
+    }
 
     public FileDownloadHandler(byte[] file, String fileName, String contentType) {
       this.file = file;
@@ -191,8 +190,7 @@ public class FileDownloadActionListener extends StandardActionListener {
      * @param input The request data.
      * @param output The response data.
      */
-    protected Widget createService(String actionId, String actionParam,
-        InputData input, OutputData output) {
+    protected Widget createService(String actionId, String actionParam, InputData input, OutputData output) {
 
       prepareServiceData(actionId, actionParam, input, output);
 
@@ -216,8 +214,7 @@ public class FileDownloadActionListener extends StandardActionListener {
      * @param input The request data.
      * @param output The response data.
      */
-    protected void prepareServiceData(String actionId, String actionParam,
-        InputData input, OutputData output) {
+    protected void prepareServiceData(String actionId, String actionParam, InputData input, OutputData output) {
     }
   }
 }

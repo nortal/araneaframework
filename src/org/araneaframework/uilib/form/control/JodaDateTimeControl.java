@@ -26,9 +26,8 @@ import org.joda.time.MutableDateTime;
 
 /**
  * This class represents a control that has both date and time. This control is meant to be used with Joda Time API. The
- * expected date data type is {@link DateTime}.
- * 
- * The functionality basically extends {@link DateTimeControl} for compatibility without adding any special features.
+ * expected date data type is {@link DateTime}. The functionality basically extends {@link DateTimeControl} for
+ * compatibility without adding any special features.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
@@ -213,24 +212,26 @@ public class JodaDateTimeControl extends BaseControl<DateTime> {
    */
   public class ViewModel extends BaseControl<DateTime>.ViewModel {
 
-    private String time;
+    private final String time;
 
-    private String date;
+    private final String date;
 
-    private DateControl.ViewModel dateViewModel;
+    private final DateControl.ViewModel dateViewModel;
 
-    private TimeControl.ViewModel timeViewModel;
+    private final TimeControl.ViewModel timeViewModel;
 
-    private boolean hasOnChangeEventListeners;
+    private final boolean hasOnChangeEventListeners;
 
     public ViewModel() {
-      this.dateViewModel = (DateControl.ViewModel) dateControl._getViewable().getViewModel();
-      this.date = dateControl.innerData == null ? null : ((String[]) dateControl.innerData)[0];
+      this.dateViewModel = (DateControl.ViewModel) JodaDateTimeControl.this.dateControl._getViewable().getViewModel();
+      this.date = JodaDateTimeControl.this.dateControl.innerData == null ? null
+          : ((String[]) JodaDateTimeControl.this.dateControl.innerData)[0];
 
-      this.timeViewModel = (TimeControl.ViewModel) timeControl._getViewable().getViewModel();
-      this.time = timeControl.innerData == null ? null : ((String[]) timeControl.innerData)[0];
+      this.timeViewModel = (TimeControl.ViewModel) JodaDateTimeControl.this.timeControl._getViewable().getViewModel();
+      this.time = JodaDateTimeControl.this.timeControl.innerData == null ? null
+          : ((String[]) JodaDateTimeControl.this.timeControl.innerData)[0];
 
-      this.hasOnChangeEventListeners = eventHelper.hasOnChangeEventListeners();
+      this.hasOnChangeEventListeners = JodaDateTimeControl.this.eventHelper.hasOnChangeEventListeners();
     }
 
     /**

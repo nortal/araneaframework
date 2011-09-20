@@ -26,28 +26,34 @@ import org.apache.commons.fileupload.FileItem;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FileUploadInputExtension extends Serializable {
-  /**
-   * @param fieldName upload field name from which to read file content
-   * @return file content and information
-   */
-  public FileItem getUploadedFile(String fieldName);
-  
-  /**
-   * @return Map of &lt;fileName, fileContent&gt;
-   */
-  public Map<String, ? extends FileItem> getUploadedFiles();
-
-  
-  /**
-   * Returns the exception that occurred when trying to parse file upload.
-   * @return exception that occurred when trying to parse file upload
-   */
-  public Exception getUploadException();
 
   /**
-   * Returns whether file upload succeeded, this should only be true when 
-   * {@link FileUploadInputExtension#getUploadException()} is <code>null</code>.
-   * @return whether upload was successful
+   * Provides an uploaded file by field name.
+   * 
+   * @param fieldName A field name that contained a file.
+   * @return File content and information, or <code>null</code> when no file is associated with given field name.
    */
-  public boolean uploadSucceeded();
+  FileItem getUploadedFile(String fieldName);
+
+  /**
+   * Provides a map of uploaded files by file upload field names.
+   * 
+   * @return An unmodifiable map of files by field names.
+   */
+  Map<String, ? extends FileItem> getUploadedFiles();
+
+  /**
+   * Provides the exception that occurred when trying to parse file upload.
+   * 
+   * @return Exception that occurred when trying to parse file upload, or <code>null</code> when no exception occurred.
+   */
+  Exception getUploadException();
+
+  /**
+   * Returns whether file upload succeeded, this should only be true when {@link #getUploadException()} is
+   * <code>null</code>.
+   * 
+   * @return A Boolean that is <code>true</code> when file(s) upload was successful.
+   */
+  boolean uploadSucceeded();
 }

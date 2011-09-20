@@ -22,8 +22,10 @@ import org.araneaframework.uilib.form.formlist.FormRow;
 
 /**
  * A more precise form row handler that narrows rows handling down to only adding, saving and deleting valid rows
- * <u>one-by-one</u>.
+ * <i>one-by-one</i>.
  * 
+ * @param <K> The type of the form row key value.
+ * @param <R> The type of the form row value.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ValidOnlyIndividualFormRowHandler<K, R> extends ValidOnlyFormRowHandler<K, R> {
@@ -37,8 +39,9 @@ public abstract class ValidOnlyIndividualFormRowHandler<K, R> extends ValidOnlyF
 
   @Override
   public void deleteRows(Set<K> keys) throws Exception {
-    for (K key : keys)
+    for (K key : keys) {
       deleteRow(key);
+    }
   }
 
   /**
@@ -48,7 +51,8 @@ public abstract class ValidOnlyIndividualFormRowHandler<K, R> extends ValidOnlyF
    * @param formRow The form row data to add into a persistent data source.
    * @throws Exception Any exception that might occur during saving the data.
    */
-  public void saveValidRow(FormRow<K, R> formRow) throws Exception {}
+  public void saveValidRow(FormRow<K, R> formRow) throws Exception {
+  }
 
   /**
    * This method is called by {@link #deleteRows(Set)} to delete only one row. The implementation of this method should
@@ -57,5 +61,6 @@ public abstract class ValidOnlyIndividualFormRowHandler<K, R> extends ValidOnlyF
    * @param key The key (unique identifier) of the row that is to be deleted from the persistent data source.
    * @throws Exception Any exception that might occur during deleting the data.
    */
-  public void deleteRow(K key) throws Exception {}
+  public void deleteRow(K key) throws Exception {
+  }
 }

@@ -16,35 +16,35 @@
 
 package org.araneaframework.uilib.util;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.text.MessageFormat;
 import org.araneaframework.Environment;
 import org.araneaframework.Widget;
 import org.araneaframework.framework.LocalizationContext;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.jsp.UiEvent;
 import org.araneaframework.jsp.util.JspWidgetCallUtil;
 
 /**
  * Contains various useful methods to localize, format and create link messages.
+ * 
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public class MessageUtil {
+public final class MessageUtil {
 
   /**
    * Localizes a message that does not require any parameter.
    * 
    * @param messageCode The code to retrieve the message.
-   * @param env The environment that is expected to contain the localization
-   *            context.
+   * @param env The environment that is expected to contain the localization context.
    * @return The localized message.
    */
   public static String localize(String messageCode, Environment env) {
     LocalizationContext locCtx = EnvironmentUtil.getLocalizationContext(env);
-    return locCtx.getResourceBundle().getString(messageCode);    
+    return locCtx.getResourceBundle().getString(messageCode);
   }
 
   /**
-   * Formats the localized message by inserting given <code>parameters</code>
-   * to the placeholders in the message.
+   * Formats the localized message by inserting given <code>parameters</code> to the placeholders in the message.
    * 
    * @param message The message containing placeholders for the parameters.
    * @param parameters The parameters that will be used in the message.
@@ -55,14 +55,11 @@ public class MessageUtil {
   }
 
   /**
-   * Localizes and then formats the localized message by inserting given
-   * <code>parameters</code> to the placeholders.
+   * Localizes and then formats the localized message by inserting given <code>parameters</code> to the placeholders.
    * 
    * @param message The key to retrieve the message.
-   * @param parameters The parameters that will be used in the localized
-   *          message.
-   * @param env The environment that is expected to contain the localization
-   *          context.
+   * @param parameters The parameters that will be used in the localized message.
+   * @param env The environment that is expected to contain the localization context.
    * @return The localized and formatted message.
    */
   public static String localizeAndFormat(Environment env, String message, Object... parameters) {
@@ -72,8 +69,7 @@ public class MessageUtil {
   /**
    * Returns HTML code for wrapping the message in a link to invoke an event. The event is described by event ID (that
    * refers to the event handler), optional event parameter, and the runtime full widget ID (to deliver the event to the
-   * right widget).
-   * <br>
+   * right widget). <br>
    * Note that the message should be rendered as-is (not escaped).
    * 
    * @param env The environment that is expected to contain the localization context.
@@ -83,7 +79,6 @@ public class MessageUtil {
    * @param message The key to retrieve and localize the message.
    * @param params The parameters for the localized message.
    * @return The HTML code that contains a link.
-   * 
    * @since 1.1.4
    */
   public static String createEventMessage(Environment env, String eventId, String eventParam, String widgetFullId,
@@ -94,8 +89,7 @@ public class MessageUtil {
   /**
    * Returns HTML code for wrapping the message in a link to invoke an event. The event is described by event ID (that
    * refers to the event handler), optional event parameter, and the runtime full widget ID (to deliver the event to the
-   * right widget).
-   * <br>
+   * right widget). <br>
    * Note that the message should be rendered as-is (not escaped).
    * 
    * @param eventId The ID of the event to be invoked.
@@ -113,8 +107,7 @@ public class MessageUtil {
   /**
    * Returns HTML code for wrapping the message in a link to invoke an event. The event is described by event ID (that
    * refers to the event handler), optional event parameter, and the runtime full widget ID (to deliver the event to the
-   * right widget).
-   * <br>
+   * right widget). <br>
    * Note that the message should be rendered as-is (not escaped).
    * 
    * @param localizedMessage The localized message.
@@ -124,7 +117,8 @@ public class MessageUtil {
    * @return The HTML code that contains a link.
    * @since 1.1.4
    */
-  public static String createEventMessage(String eventId, String eventParam, String widgetFullId, String localizedMessage) {
+  public static String createEventMessage(String eventId, String eventParam, String widgetFullId,
+      String localizedMessage) {
     UiEvent event = new UiEvent();
     event.setId(eventId);
     event.setParam(eventParam);
@@ -135,8 +129,7 @@ public class MessageUtil {
   /**
    * Returns HTML code for wrapping the message in a link to invoke an event. The event is described by event ID (that
    * refers to the event handler), optional event parameter, and the runtime full widget ID (to deliver the event to the
-   * right widget).
-   * <br>
+   * right widget). <br>
    * Note that the message should be rendered as-is (not escaped).
    * 
    * @param localizedMessage The localized message.
@@ -153,5 +146,9 @@ public class MessageUtil {
     msg.append(localizedMessage);
     msg.append("</a>");
     return msg.toString();
+  }
+
+  private MessageUtil() {
+    throw new UnsupportedOperationException();
   }
 }

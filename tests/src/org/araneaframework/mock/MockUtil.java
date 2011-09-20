@@ -30,28 +30,28 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
-public class MockUtil {  
+public class MockUtil {
+
   public static StandardServletInputData getInput() {
     HttpServletRequest req = new MockHttpServletRequest();
     return new StandardServletInputData(req);
   }
-  
+
   public static StandardServletOutputData getOutput() {
     HttpServletRequest req = new MockHttpServletRequest();
     HttpServletResponse res = new MockHttpServletResponse();
     return new StandardServletOutputData(req, res);
   }
-  
+
   public static Path getPath() {
     return new StandardPath("");
   }
-  
+
   public static Path getPath(String str) {
     return new StandardPath(str);
   }
-  
+
   public static Environment getEnv() {
     return new StandardEnvironment(null, new HashMap<Class<?>, Object>());
   }

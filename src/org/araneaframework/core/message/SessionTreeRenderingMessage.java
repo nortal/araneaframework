@@ -32,31 +32,36 @@ import org.araneaframework.framework.MountContext;
  * A special message that can be used to render the components tree. It does not go to all components because not all of
  * higher level components are accessible. However, most of the components are still available in the result.
  * <p>
- * The recommended usage of this class is through the {@link #execute(Environment)} or
- * {@link #execute(Environment, ItemDecorator)} methods.
+ * The recommended usage of this class is through static methods:
+ * 
+ * <pre>
+ * SessionTreeRenderingMessage.execute(getEnvironment()).getResult();
+ * SessionTreeRenderingMessage.execute(getEnvironment()).getResultStr();
+ * // - or -
+ * SessionTreeRenderingMessage.execute(getEnvironment(), new CustomItemDecorator()).getResult();
+ * SessionTreeRenderingMessage.execute(getEnvironment(), new CustomItemDecorator()).getResultStr();
+ * </pre>
  * 
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.3
  */
 public class SessionTreeRenderingMessage implements Message {
 
-  protected static final String SPACES3 = "&nbsp;&nbsp;&nbsp;";
+  private static final String SPACES3 = "&nbsp;&nbsp;&nbsp;";
 
-  protected ItemDecorator decorator = new ItemDecorator();
+  private ItemDecorator decorator = new ItemDecorator();
 
-  protected int level = 0;
+  private List<ComponentItem> components = new LinkedList<ComponentItem>();
 
-  protected List<ComponentItem> components = new LinkedList<ComponentItem>();
-
-  protected ComponentItem activeComponent;
+  private ComponentItem activeComponent;
 
   /**
    * Executes the <code>SessionTreeRenderingMessage</code> and returns an instance of it so that its different
-   * <code>get*()</a> methods could be invoke to retrieve results in different formats.
+   * <code>get*()</code> methods could be invoke to retrieve results in different formats.
    * 
    * @param env The environment, which is required for initial component lookup to start traversing.
-   * @return An instance of <code>SessionTreeRenderingMessage</code> so that its
-   *         <code>get*()</a> methods could be invoke to retrieve results in different formats.
+   * @return An instance of <code>SessionTreeRenderingMessage</code> so that its <code>get*()</code> methods could be
+   *         invoke to retrieve results in different formats.
    */
   public static SessionTreeRenderingMessage execute(Environment env) {
     return execute(env, null);
@@ -64,13 +69,13 @@ public class SessionTreeRenderingMessage implements Message {
 
   /**
    * Executes the <code>SessionTreeRenderingMessage</code> and returns an instance of it so that its different
-   * <code>get*()</a> methods could be invoke to retrieve results in different formats.
+   * <code>get*()</code> methods could be invoke to retrieve results in different formats.
    * 
    * @param env The environment, which is required for initial component lookup to start traversing.
    * @param decorator The decorator for the string result, which may be <code>null</code> to use the default
    *          implementation.
-   * @return An instance of <code>SessionTreeRenderingMessage</code> so that its
-   *         <code>get*()</a> methods could be invoke to retrieve results in different formats.
+   * @return An instance of <code>SessionTreeRenderingMessage</code> so that its <code>get*()</code> methods could be
+   *         invoke to retrieve results in different formats.
    */
   public static SessionTreeRenderingMessage execute(Environment env, ItemDecorator decorator) {
     return execute(env, decorator, MountContext.class);
@@ -78,21 +83,22 @@ public class SessionTreeRenderingMessage implements Message {
 
   /**
    * Executes the <code>SessionTreeRenderingMessage</code> and returns an instance of it so that its different
-   * <code>get*()</a> methods could be invoke to retrieve results in different formats.
+   * <code>get*()</code> methods could be invoke to retrieve results in different formats.
    * 
    * @param env The environment, which is required for initial component lookup to start traversing.
-   * @param decorator The decorator for the string result, which may be <code>null</code> to use the default
+   * @param customDecorator The decorator for the string result, which may be <code>null</code> to use the default
    *          implementation.
    * @param initialEnvEntry The class that will be looked for in the environment to find the initial component, from
    *          which the sub components look up is started.
-   * @return An instance of <code>SessionTreeRenderingMessage</code> so that its
-   *         <code>get*()</a> methods could be invoke to retrieve results in different formats.
+   * @return An instance of <code>SessionTreeRenderingMessage</code> so that its <code>get*()</code> methods could be
+   *         invoke to retrieve results in different formats.
    */
-  public static SessionTreeRenderingMessage execute(Environment env, ItemDecorator decorator, Class<?> initialEnvEntry) {
+  public static SessionTreeRenderingMessage execute(Environment env, ItemDecorator customDecorator,
+      Class<?> initialEnvEntry) {
     Assert.notNullParam(env, "env");
 
     Component c = (Component) env.requireEntry(initialEnvEntry);
-    SessionTreeRenderingMessage msg = new SessionTreeRenderingMessage(decorator);
+    SessionTreeRenderingMessage msg = new SessionTreeRenderingMessage(customDecorator);
 
     c._getComponent().propagate(msg);
 
@@ -112,6 +118,9 @@ public class SessionTreeRenderingMessage implements Message {
     this.decorator = decorator == null ? new ItemDecorator() : decorator;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void send(Object id, Component component) {
     if (component != null) {
       ComponentItem currentComponent = this.activeComponent;
@@ -122,9 +131,7 @@ public class SessionTreeRenderingMessage implements Message {
         throw ExceptionUtil.uncheckException(e);
       }
 
-      this.level++;
       component._getComponent().propagate(this);
-      this.level--;
 
       this.activeComponent = currentComponent;
     }
@@ -166,7 +173,7 @@ public class SessionTreeRenderingMessage implements Message {
   public StringBuffer getResult() {
     StringBuffer result = new StringBuffer();
     if (!this.components.isEmpty()) {
-      compose(this.decorator, result, this.components.get(0), 0);
+      compose(result, this.components.get(0), 0);
     }
     return result;
   }
@@ -174,16 +181,15 @@ public class SessionTreeRenderingMessage implements Message {
   /**
    * An internal solution for composing the <code>StringBuffer</code> result recursively.
    * 
-   * @param decorator The decorator used for composing the <code>StringBuffer</code>.
    * @param sb The <code>StringBuffer</code> where the output is stored.
    * @param item The component that is added to the output. Its children are also recursively processed by this method.
    * @param level The depth of the item compared to the root component in the results.
    */
-  protected void compose(ItemDecorator decorator, StringBuffer sb, ComponentItem item, int level) {
-    decorator.add(sb, item, level);
+  protected void compose(StringBuffer sb, ComponentItem item, int level) {
+    this.decorator.add(sb, item, level);
     if (item.hasChildren()) {
       for (ComponentItem component : item.getChildren()) {
-        compose(decorator, sb, component, level + 1);
+        compose(sb, component, level + 1);
       }
     }
   }
@@ -204,7 +210,7 @@ public class SessionTreeRenderingMessage implements Message {
    * @author Martti Tamm (martti@araneaframework.org)
    * @since 1.2.3
    */
-  public class ItemDecorator implements Serializable {
+  public static class ItemDecorator implements Serializable {
 
     /**
      * Adds an item to the resulting <code>StringBuffer</code>.

@@ -30,19 +30,19 @@ public class TextType extends Enum implements Serializable {
   // So you can't change them.
 
   /**
-   * Any text. 
+   * Any text.
    */
-  public final static TextType TEXT = new TextType("TEXT");  
+  public final static TextType TEXT = new TextType("TEXT");
 
   /**
-   * String containing numbers only. 
+   * String containing numbers only.
    */
-  public final static TextType NUMBER_ONLY = new TextType("NUMBER_ONLY");   
+  public final static TextType NUMBER_ONLY = new TextType("NUMBER_ONLY");
 
   /**
    * E-mail.
    */
-  public final static TextType EMAIL = new TextType("EMAIL");  
+  public final static TextType EMAIL = new TextType("EMAIL");
 
   private TextType(String textType) {
     super(textType);

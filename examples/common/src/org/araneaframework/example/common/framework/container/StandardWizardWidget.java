@@ -24,8 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
-import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.StandardScope;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.example.common.framework.context.WizardContext;
 import org.araneaframework.uilib.core.BaseUIWidget;
 
@@ -49,13 +49,13 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   public static final String CURRENT_PAGE_KEY = "currentPage";
 
   // List of Widget objects
-  private List<Widget> pages = new ArrayList<Widget>();
+  private final List<Widget> pages = new ArrayList<Widget>();
 
   // Active page index in the list
   private int currentPageIndex = 0;
 
   public int getCurrentPageIndex() {
-    return currentPageIndex;
+    return this.currentPageIndex;
   }
 
   private void setCurrentPageIndex(int currentPageIndex) {
@@ -231,7 +231,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
    * Event listeners
    */
 
-  private Collection<WizardContext.EventListener> eventListeners = new LinkedList<WizardContext.EventListener>();
+  private final Collection<WizardContext.EventListener> eventListeners = new LinkedList<WizardContext.EventListener>();
 
   public void addEventListener(EventListener listener) {
     this.eventListeners.add(listener);
@@ -282,7 +282,7 @@ public class StandardWizardWidget extends BaseUIWidget implements WizardContext 
   /**
    * The handler for <em>goto</em> event. The parameter is passed from the client side.
    * 
-   * @param The page number passed from the client-side.
+   * @param eventParameter The page number passed from the client-side.
    */
   public void handleEventGoto(String eventParameter) {
     gotoPage(Integer.parseInt(eventParameter));

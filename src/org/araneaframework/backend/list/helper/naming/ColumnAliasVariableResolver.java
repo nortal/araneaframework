@@ -23,11 +23,10 @@ import org.araneaframework.core.util.Assert;
 /**
  * VariableResolver that converts a variable (using its name) into column alias.
  * <p>
- * Column aliases should be used in <code>WHERE</code> and
- * <code>ORDER BY </code> clauses.
+ * Column aliases should be used in <code>WHERE</code> and <code>ORDER BY </code> clauses.
  * 
  * @see ColumnNameVariableResolver
- * @author Rein Raudjärv
+ * @author Rein Raudjärv (rein@araneaframework.org)
  * @since 1.1
  */
 public class ColumnAliasVariableResolver implements VariableResolver {
@@ -40,6 +39,6 @@ public class ColumnAliasVariableResolver implements VariableResolver {
   }
 
   public Object resolve(Variable variable) {
-    return namingStrategy.fieldToColumnAlias(variable.getName());
+    return this.namingStrategy.fieldToColumnAlias(variable.getName());
   }
 }

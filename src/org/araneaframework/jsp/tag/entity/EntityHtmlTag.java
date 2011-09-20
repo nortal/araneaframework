@@ -20,61 +20,56 @@ import java.io.Writer;
 import javax.servlet.jsp.JspException;
 import org.araneaframework.jsp.tag.BaseTag;
 
-
 /**
  * Entity tag.
  * 
  * @author Oleg Mürk
- * 
- * @jsp.tag
- *   name = "entity"
- *   body-content = "empty"
- *   description = "Represents an HTML entity, for instance <i>&amp;nbsp;</i>."
+ * @jsp.tag name = "entity" body-content = "empty" description =
+ *          "Represents an HTML entity, for instance <i>&amp;nbsp;</i>."
  */
 public class EntityHtmlTag extends BaseTag {
+
   protected String code = null;
+
   protected long count = 1;
-  
-  public EntityHtmlTag() {}
-  public EntityHtmlTag(String code) {
-	  this.code = code;
+
+  public EntityHtmlTag() {
   }
-  
+
+  public EntityHtmlTag(String code) {
+    this.code = code;
+  }
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    for(long i = 0; i < count; i++) {
+
+    for (long i = 0; i < this.count; i++) {
       out.write("&");
-      out.write(code);
-      out.write(";");      
-    }    
-    
+      out.write(this.code);
+      out.write(";");
+    }
+
     // Continue
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
 
-   /* ***********************************************************************************
-   * Tag attributes
-   * ********************************************************************************* */
+  /* ***********************************************************************************
+   * Tag attributes *********************************************************************************
+   */
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "HTML entity code, e.g. <i>nbsp</i> or <i>#012</i>." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "HTML entity code, e.g. <i>nbsp</i> or <i>#012</i>."
    */
   public void setCode(String code) throws JspException {
-    this.code = evaluateNotNull("code", code, String.class);  
+    this.code = evaluateNotNull("code", code, String.class);
   }
-  
+
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Number of times to repeat the entity." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Number of times to repeat the entity."
    */
-  public void setCount(String count){
-    this.count = (evaluate("count", count, Long.class)).longValue();  
+  public void setCount(String count) {
+    this.count = evaluate("count", count, Long.class).longValue();
   }
 }

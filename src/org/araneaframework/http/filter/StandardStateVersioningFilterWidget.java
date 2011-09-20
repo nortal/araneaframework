@@ -37,12 +37,12 @@ import org.araneaframework.InputData;
 import org.araneaframework.Message;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.Widget;
 import org.araneaframework.Relocatable.RelocatableWidget;
-import org.araneaframework.core.message.BroadcastMessage;
-import org.araneaframework.core.util.Assert;
+import org.araneaframework.Widget;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.message.BroadcastMessage;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.ThreadContext;
@@ -75,7 +75,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * component hierarchy.
    */
   public static final int DEFAULT_MAX_STATES_STORED = 20;
-  
+
   public static final String STATES_COOKIE_NAME_SUFFIX = "_araStates";
 
   /**
@@ -110,10 +110,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * <code>Map&lt;String stateId, byte[] serializedState&gt;</code>
    */
   protected LinkedList<State> versionedStates = new LinkedList<State>();
-  
+
   protected boolean expiredDuringRequest = false;
 
-  protected transient ThreadLocal<Boolean> stateSaved; 
+  protected transient ThreadLocal<Boolean> stateSaved;
 
   // =============================================================
   // * Overriding BaseFilterWidget Methods
@@ -155,17 +155,17 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     synchronized (this) {
       try {
-        expiredDuringRequest = false;
+        this.expiredDuringRequest = false;
         handleStateRestoration(false);
         notifyAboutNavigation(true);
         writeHeaders();
 
         // assume that list legal states does not change in action
-        addStatesCookie( output );
+        addStatesCookie(output);
         this.childWidget._getService().action(path, input, output);
 
         saveState();
-        
+
       } finally {
         this.childWidget = null;
       }
@@ -175,10 +175,10 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   @Override
   protected void update(InputData input) throws Exception {
     synchronized (this) {
-      expiredDuringRequest = false;
+      this.expiredDuringRequest = false;
       handleStateRestoration(true);
       notifyAboutNavigation(false);
-      writeHeaders(); 
+      writeHeaders();
 
       super.update(input);
     }
@@ -196,8 +196,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     synchronized (this) {
       try {
         // assume that list legal states does not change during render
-        addStatesCookie( output );
-
+        addStatesCookie(output);
 
         // Before rendering, we add the system form parameter with stateId value to be rendered with the form.
         // The stateId value does not need to provided when update regions are used.
@@ -213,7 +212,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         saveState();
       } finally {
         this.childWidget = null; // Release the child widget. We will use stored states to restore it the next time.
-        expiredDuringRequest = false;
+        this.expiredDuringRequest = false;
       }
     }
   }
@@ -226,40 +225,40 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       super.destroy();
     }
   }
-  
-  protected void addStatesCookie( OutputData output ){
-    HttpServletResponse response = ServletUtil.getResponse( output );
-    ThreadContext threadCtx = getEnvironment().getEntry( ThreadContext.class );
+
+  protected void addStatesCookie(OutputData output) {
+    HttpServletResponse response = ServletUtil.getResponse(output);
+    ThreadContext threadCtx = getEnvironment().getEntry(ThreadContext.class);
     StringBuilder sb = new StringBuilder();
     Set<String> ids = new LinkedHashSet<String>();
-      
-    // emulate state discarding/adding done in saveState()/discardOldStatesOnLimitExceed() 
-    for (Iterator<State> it =  versionedStates.iterator(); it.hasNext(); ) {
-      ids.add( it.next().getStateId() );
+
+    // emulate state discarding/adding done in saveState()/discardOldStatesOnLimitExceed()
+    for (State state2 : this.versionedStates) {
+      ids.add(state2.getStateId());
     }
-    if (!ids.contains( this.newStateId )) {
-      ids.add( this.newStateId );
+    if (!ids.contains(this.newStateId)) {
+      ids.add(this.newStateId);
     }
-    
+
     while (!ids.isEmpty() && ids.size() > this.maxVersionedStates) {
-      ids.remove( ids.iterator().next());
+      ids.remove(ids.iterator().next());
     }
-    
+
     // cookie form: "stateId|stateId|... "
-    for (Iterator<String> it =  ids.iterator(); it.hasNext(); ) {
+    for (Iterator<String> it = ids.iterator(); it.hasNext();) {
       sb.append(it.next());
       if (it.hasNext()) {
         sb.append("|");
       }
     }
-    
-    if (expiredDuringRequest && ids.size() == 1) { // hack -- write out the state identifier -- twice
-        sb.append("|").append(ids.iterator().next());
+
+    if (this.expiredDuringRequest && ids.size() == 1) { // hack -- write out the state identifier -- twice
+      sb.append("|").append(ids.iterator().next());
     }
-      
+
     Cookie cookie = new Cookie(threadCtx.getCurrentId() + STATES_COOKIE_NAME_SUFFIX, sb.toString());
-    String contextPath = ServletUtil.getRequest( output.getInputData() ).getContextPath();
-    cookie.setPath( contextPath);
+    String contextPath = ServletUtil.getRequest(output.getInputData()).getContextPath();
+    cookie.setPath(contextPath);
     response.addCookie(cookie);
   }
 
@@ -278,13 +277,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected synchronized void handleStateRestoration(boolean event) throws Exception {
     storeOriginalState();
 
-    if (stateSaved == null) {
+    if (this.stateSaved == null) {
       this.stateSaved = new ThreadLocal<Boolean>();
     }
 
     this.stateSaved.set(false);
 
-//    String previousStateId = this.lastStateId;
+    // String previousStateId = this.lastStateId;
 
     this.lastStateId = resolvePreviousStateId();
     if (event) {
@@ -293,9 +292,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
     // Handles page refresh: does not generate new state.
     // TODO The commented code is a bad solution:
-//    if (previousStateId != null && StringUtils.equals(previousStateId, this.lastStateId)) {
-//      this.newStateId = this.lastStateId;
-//    }
+    // if (previousStateId != null && StringUtils.equals(previousStateId, this.lastStateId)) {
+    // this.newStateId = this.lastStateId;
+    // }
 
     checkStateExpired();
 
@@ -354,7 +353,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       // Keeps track whether the current value of stateId has been passed during iterating:
       boolean targetFound = false;
 
-      for (ListIterator<State> i = this.versionedStates.listIterator(this.versionedStates.size()); i.hasPrevious(); ) {
+      for (ListIterator<State> i = this.versionedStates.listIterator(this.versionedStates.size()); i.hasPrevious();) {
         if (targetFound) {
           State currentState = i.previous();
           if (currentState.getStateId().startsWith(HTTP_REQUEST_STATE_PREFIX)) {
@@ -419,7 +418,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     if (StringUtils.contains(regions, GLOBAL_CLIENT_NAVIGATION_REGION_ID)) {
       newId = getStateIdFromRequest(); // Use the same value that also lastStateId uses.
     } else {
-      newId = String.valueOf(System.currentTimeMillis()) + RandomStringUtils.randomAlphanumeric(15); // Generate a new state ID.
+      newId = String.valueOf(System.currentTimeMillis()) + RandomStringUtils.randomAlphanumeric(15); // Generate a new
+                                                                                                     // state ID.
 
       // When not an AJAX request, prepend "HTTP" to the ID.
       if (regions == null && overlay == null) {
@@ -445,7 +445,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         LOG.warn("State '" + this.lastStateId + "' has expired. Using the original state instead");
       }
       this.versionedStates.add(new State(originalState, this.lastStateId));
-      this.newStateId = this.lastStateId; // To make it look like as if it is updating the current state like actions do.
+      this.newStateId = this.lastStateId; // To make it look like as if it is updating the current state like actions
+                                          // do.
     }
   }
 
@@ -523,7 +524,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     State state = new State(serializedChild, this.newStateId);
 
     if (containsState(this.newStateId)) {
-      for (ListIterator<State> i = this.versionedStates.listIterator(); i.hasNext(); ) {
+      for (ListIterator<State> i = this.versionedStates.listIterator(); i.hasNext();) {
         if (i.next().getStateId().equals(this.newStateId)) {
           i.set(state);
           break;
@@ -608,7 +609,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * Does the given size formatting to represent it in bytes. For example, for input value 2048, returns "2MB". Supports
    * formatting units up to TB.
    * 
-   * @param size The size value to format. 
+   * @param size The size value to format.
    * @return The string of formatted input size together with unit information.
    * @since 2.0
    */
@@ -624,7 +625,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
       unit++;
     }
 
-    // Do some rounding to make the value easier to understand. 
+    // Do some rounding to make the value easier to understand.
     fSize = fSize.setScale(2, BigDecimal.ROUND_HALF_UP);
     return fSize.toString() + units[unit] + 'B';
   }
@@ -654,13 +655,13 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   public void expire() {
-    expiredDuringRequest = true;
+    this.expiredDuringRequest = true;
     this.versionedStates.clear();
     notifyStatesUpdated();
   }
 
   // =============================================================
-  // * Implementation for calling ClientNavigationAware components 
+  // * Implementation for calling ClientNavigationAware components
   // =============================================================
 
   protected synchronized void notifyAboutNavigation(boolean action) {
@@ -735,9 +736,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   protected static class UsualNavigationNotifierMessage extends BroadcastMessage {
 
-    private String baseStateId;
+    private final String baseStateId;
 
-    private String newStateId;
+    private final String newStateId;
 
     public UsualNavigationNotifierMessage(String baseStateId, String newStateId) {
       super(ClientNavigationAware.class);
@@ -754,7 +755,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   protected static class CurrentStateUpdateNotifierMessage extends BroadcastMessage {
 
-    private String stateId;
+    private final String stateId;
 
     public CurrentStateUpdateNotifierMessage(String currentStateId) {
       super(ClientNavigationAware.class);
@@ -770,9 +771,9 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   protected static class HistoryNavigationNotifierMessage extends BroadcastMessage {
 
-    private String sourceStateId;
+    private final String sourceStateId;
 
-    private String targetStateId;
+    private final String targetStateId;
 
     public HistoryNavigationNotifierMessage(String sourceStateId, String targetStateId) {
       super(ClientNavigationAware.class);
@@ -789,7 +790,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
   protected static class StatesUpdatedMessage extends BroadcastMessage {
 
-    private List<String> stateIds;
+    private final List<String> stateIds;
 
     public StatesUpdatedMessage(List<String> stateIds) {
       super(ClientNavigationAware.class);

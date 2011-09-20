@@ -9,35 +9,29 @@
   History:
   Date       Who                What
   11Jun1998  dl               Create public version
-*/
+ */
 
 package org.araneaframework.core.util;
 
 /**
- * A simple non-reentrant mutual exclusion lock.
- * The lock is free upon construction. Each acquire gets the
- * lock, and each release frees it. Releasing a lock that
- * is already free has no effect. 
+ * A simple non-reentrant mutual exclusion lock. The lock is free upon construction. Each acquire gets the lock, and
+ * each release frees it. Releasing a lock that is already free has no effect.
  * <p>
- * This implementation makes no attempt to provide any fairness
- * or ordering guarantees. If you need them, consider using one of
- * the Semaphore implementations as a locking mechanism.
+ * This implementation makes no attempt to provide any fairness or ordering guarantees. If you need them, consider using
+ * one of the Semaphore implementations as a locking mechanism.
  * <p>
  * <b>Sample usage</b><br>
  * <p>
- * Mutex can be useful in constructions that cannot be
- * expressed using java synchronized blocks because the
- * acquire/release pairs do not occur in the same method or
- * code block. For example, you can use them for hand-over-hand
- * locking across the nodes of a linked list. This allows
- * extremely fine-grained locking,  and so increases 
- * potential concurrency, at the cost of additional complexity and
- * overhead that would normally make this worthwhile only in cases of
- * extreme contention.
+ * Mutex can be useful in constructions that cannot be expressed using java synchronized blocks because the
+ * acquire/release pairs do not occur in the same method or code block. For example, you can use them for hand-over-hand
+ * locking across the nodes of a linked list. This allows extremely fine-grained locking, and so increases potential
+ * concurrency, at the cost of additional complexity and overhead that would normally make this worthwhile only in cases
+ * of extreme contention.
+ * 
  * <pre>
- * class Node { 
- *   Object item; 
- *   Node next; 
+ * class Node {
+ *   Object item;
+ *   Node next;
  *   Mutex lock = new Mutex(); // each node keeps its own lock
  *
  *   Node(Object x, Node n) { item = x; next = n; }
@@ -92,7 +86,7 @@ package org.araneaframework.core.util;
  *
  *    synchronized void add(Object x) { // simple prepend
  *      // The use of `synchronized'  here protects only head field.
- *      // The method does not need to wait out other traversers 
+ *      // The method does not need to wait out other traversers
  *      // who have already made it past head.
  *
  *      head = new Node(x, head);
@@ -101,67 +95,71 @@ package org.araneaframework.core.util;
  *    // ...  other similar traversal and update methods ...
  * }
  * </pre>
- * <p>[<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this package. </a>]
+ * <p>
+ * [<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this
+ * package. </a>]
+ * 
+ * @author Doug Lea
  */
+public class Mutex implements Sync {
 
-public class Mutex implements Sync  {
-
-  /** The lock status */
+  /** The lock status. */
   protected boolean inuse_ = false;
 
   public void acquire() throws InterruptedException {
-    if (Thread.interrupted()) throw new InterruptedException();
-    synchronized(this) {
+    if (Thread.interrupted()) {
+      throw new InterruptedException();
+    }
+    synchronized (this) {
       try {
-        while (inuse_) wait();
-        inuse_ = true;
-      }
-      catch (InterruptedException ex) {
+        while (this.inuse_) {
+          wait();
+        }
+        this.inuse_ = true;
+      } catch (InterruptedException ex) {
         notify();
         throw ex;
       }
     }
   }
 
-  public synchronized void release()  {
-    inuse_ = false;
-    notify(); 
+  public synchronized void release() {
+    this.inuse_ = false;
+    notify();
   }
 
-
   public boolean attempt(long msecs) throws InterruptedException {
-    if (Thread.interrupted()) throw new InterruptedException();
-    synchronized(this) {
-      if (!inuse_) {
-        inuse_ = true;
+    if (Thread.interrupted()) {
+      throw new InterruptedException();
+    }
+    synchronized (this) {
+      if (!this.inuse_) {
+        this.inuse_ = true;
         return true;
-      }
-      else if (msecs <= 0)
+      } else if (msecs <= 0) {
         return false;
-      else {
+      } else {
         long waitTime = msecs;
         long start = System.currentTimeMillis();
         try {
           for (;;) {
             wait(waitTime);
-            if (!inuse_) {
-              inuse_ = true;
+            if (!this.inuse_) {
+              this.inuse_ = true;
               return true;
-            }
-            else {
+            } else {
               waitTime = msecs - (System.currentTimeMillis() - start);
-              if (waitTime <= 0) 
+              if (waitTime <= 0) {
                 return false;
+              }
             }
           }
-        }
-        catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
           notify();
           throw ex;
         }
       }
-    }  
+    }
   }
 
 }
-

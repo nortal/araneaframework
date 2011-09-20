@@ -25,15 +25,15 @@ import org.araneaframework.http.filter.StandardFileImportFilterService;
 
 /**
  * Utility methods for converting file names to a form which allows them to be imported with
- * {@link StandardFileImportFilterService}. 
+ * {@link StandardFileImportFilterService}.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
-public abstract  class FileImportUtil {  
+public abstract class FileImportUtil {
 
   /**
-   * Given a filename, returns the string that can be used for importing via the
-   * file importing service {@link StandardFileImportFilterService}. 
+   * Given a filename, returns the string that can be used for importing via the file importing service
+   * {@link StandardFileImportFilterService}.
    */
   public final static String getImportString(String fileName) {
     Assert.notEmptyParam(fileName, "fileName");
@@ -46,16 +46,16 @@ public abstract  class FileImportUtil {
   }
 
   /**
-   * Given a filename, returns the string with absolute URL that can be used 
-   * for importing via the file importing service {@link StandardFileImportFilterService}. 
+   * Given a filename, returns the string with absolute URL that can be used for importing via the file importing
+   * service {@link StandardFileImportFilterService}.
    */
   public final static String getImportString(String fileName, ServletRequest req) {
     return getImportString(fileName, ServletUtil.getInputData(req));
   }
 
   /**
-   * Given a filename, returns the string with absolute URL that can be used 
-   * for importing via the file importing service {@link StandardFileImportFilterService}. 
+   * Given a filename, returns the string with absolute URL that can be used for importing via the file importing
+   * service {@link StandardFileImportFilterService}.
    */
   public final static String getImportString(String fileName, InputData input) {
     Assert.notNullParam(input, "input");
@@ -66,13 +66,12 @@ public abstract  class FileImportUtil {
     url.append(((HttpInputData) input).getContainerURL());
     url.append(getImportString(fileName));
 
-    return (url.toString());
+    return url.toString();
   }
 
-
   /**
-   * Given a filename, returns the string with absolute encoded URL that can be used 
-   * for importing via the file importing service {@link StandardFileImportFilterService}.
+   * Given a filename, returns the string with absolute encoded URL that can be used for importing via the file
+   * importing service {@link StandardFileImportFilterService}.
    */
   public final static String getEncodedImportString(String fileName, InputData input) {
     return ((HttpOutputData) input.getOutputData()).encodeURL(getImportString(fileName, input));

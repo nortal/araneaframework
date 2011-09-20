@@ -129,7 +129,7 @@ public class StandardStatisticFilterService extends BaseFilterService {
    * @param time The time in milliseconds to replace the {@link #EXPR_TIME} expression.
    * @return The evaluated message.
    */
-  private static final String evaluateMessage(String msg, HttpServletRequest request, long time) {
+  private static String evaluateMessage(String msg, HttpServletRequest request, long time) {
     if (msg.contains(EXPR_METHOD)) {
       msg = msg.replace(EXPR_METHOD, request.getMethod());
     }
@@ -149,9 +149,5 @@ public class StandardStatisticFilterService extends BaseFilterService {
       msg = msg.replace(EXPR_TIME, Long.toString(time));
     }
     return msg;
-  }
-
-  public String getMessage() {
-    return this.message;
   }
 }

@@ -28,121 +28,113 @@ import org.araneaframework.backend.list.memorybased.expression.logical.OrExpress
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockValueExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
-
 public class LogicalExpressionTests extends TestCase {
-	private static final Log LOG = LogFactory.getLog(LogicalExpressionTests.class);
 
-	private VariableResolver resolver;
+  private static final Log LOG = LogFactory.getLog(LogicalExpressionTests.class);
 
-	private Expression trueExpr;
-	private Expression falseExpr;
-	private Expression notBoolExpr;
+  private VariableResolver resolver;
 
-	@Override
+  private Expression trueExpr;
+
+  private Expression falseExpr;
+
+  private Expression notBoolExpr;
+
+  @Override
   public void setUp() {
-		this.resolver = new MockVariableResolver();
-		
-		this.trueExpr = new MockValueExpression<Boolean>(true);
-		this.falseExpr = new MockValueExpression<Boolean>(false);
-		this.notBoolExpr = new MockValueExpression<Long>(0L);
-	}
+    this.resolver = new MockVariableResolver();
 
-	@Override
+    this.trueExpr = new MockValueExpression<Boolean>(true);
+    this.falseExpr = new MockValueExpression<Boolean>(false);
+    this.notBoolExpr = new MockValueExpression<Long>(0L);
+  }
+
+  @Override
   public void tearDown() {
-		this.resolver = null;
-		this.trueExpr = null;
-		this.falseExpr = null;
-		this.notBoolExpr = null;
-	}
+    this.resolver = null;
+    this.trueExpr = null;
+    this.falseExpr = null;
+    this.notBoolExpr = null;
+  }
 
-	public void testAndExpression() throws ExpressionEvaluationException {
-		LOG.debug("Testing AndExpression");
-		try {
-			new AndExpression().evaluate(this.resolver);
-			fail("AndExpression must throw an exception, because it has no child expressions");
-		} catch (IllegalArgumentException e) {
-			// normal
-		}
-		try {
-			new AndExpression().add(this.trueExpr).evaluate(this.resolver);			
-		} catch (ExpressionEvaluationException e) {
-			fail("AndExpression must pass with one child");
-		}
-		try {
-			new AndExpression().add(this.notBoolExpr).add(this.trueExpr).add(
-					this.trueExpr).evaluate(this.resolver);
-			fail("AndExpression must throw an exception");
-		} catch (Exception e) {
-			LOG.info("Exception while evaluating resolver.", e);
-		}
+  public void testAndExpression() throws ExpressionEvaluationException {
+    LOG.debug("Testing AndExpression");
+    try {
+      new AndExpression().evaluate(this.resolver);
+      fail("AndExpression must throw an exception, because it has no child expressions");
+    } catch (IllegalArgumentException e) {
+      // normal
+    }
+    try {
+      new AndExpression().add(this.trueExpr).evaluate(this.resolver);
+    } catch (ExpressionEvaluationException e) {
+      fail("AndExpression must pass with one child");
+    }
+    try {
+      new AndExpression().add(this.notBoolExpr).add(this.trueExpr).add(this.trueExpr).evaluate(this.resolver);
+      fail("AndExpression must throw an exception");
+    } catch (Exception e) {
+      LOG.info("Exception while evaluating resolver.", e);
+    }
 
-		assertEquals("AndExpression must return true", Boolean.TRUE,
-				new AndExpression().add(this.trueExpr).add(this.trueExpr)
-						.evaluate(this.resolver));
-		assertEquals("AndExpression must return false", Boolean.FALSE,
-				new AndExpression().add(this.falseExpr).add(this.trueExpr)
-						.evaluate(this.resolver));
-		assertEquals("AndExpression must return false", Boolean.FALSE,
-				new AndExpression().add(this.trueExpr).add(this.falseExpr)
-						.evaluate(this.resolver));
-		assertEquals("AndExpression must return false", Boolean.FALSE,
-				new AndExpression().add(this.falseExpr).add(this.falseExpr)
-						.evaluate(this.resolver));
-	}
+    assertEquals("AndExpression must return true", Boolean.TRUE,
+        new AndExpression().add(this.trueExpr).add(this.trueExpr).evaluate(this.resolver));
+    assertEquals("AndExpression must return false", Boolean.FALSE,
+        new AndExpression().add(this.falseExpr).add(this.trueExpr).evaluate(this.resolver));
+    assertEquals("AndExpression must return false", Boolean.FALSE,
+        new AndExpression().add(this.trueExpr).add(this.falseExpr).evaluate(this.resolver));
+    assertEquals("AndExpression must return false", Boolean.FALSE,
+        new AndExpression().add(this.falseExpr).add(this.falseExpr).evaluate(this.resolver));
+  }
 
-	public void testOrExpression() throws ExpressionEvaluationException {
-		LOG.debug("Testing OrExpression");
-		try {
-			new OrExpression().evaluate(this.resolver);
-			fail("OrExpression must throw an exception");
-		} catch (IllegalArgumentException e) {
-			// normal
-		}
-		try {
-			new OrExpression().add(this.trueExpr).evaluate(this.resolver);
-		} catch (ExpressionEvaluationException e) {
-			fail("OrExpression must pass with one child");			
-		}
-		try {
-			new OrExpression().add(this.notBoolExpr).add(this.trueExpr).add(
-					this.trueExpr).evaluate(this.resolver);
-			fail("OrExpression must throw an exception");
-		} catch (Exception e) {
-          LOG.info("Exception while evaluating resolver.", e);
-		}
+  public void testOrExpression() throws ExpressionEvaluationException {
+    LOG.debug("Testing OrExpression");
+    try {
+      new OrExpression().evaluate(this.resolver);
+      fail("OrExpression must throw an exception");
+    } catch (IllegalArgumentException e) {
+      // normal
+    }
+    try {
+      new OrExpression().add(this.trueExpr).evaluate(this.resolver);
+    } catch (ExpressionEvaluationException e) {
+      fail("OrExpression must pass with one child");
+    }
+    try {
+      new OrExpression().add(this.notBoolExpr).add(this.trueExpr).add(this.trueExpr).evaluate(this.resolver);
+      fail("OrExpression must throw an exception");
+    } catch (Exception e) {
+      LOG.info("Exception while evaluating resolver.", e);
+    }
 
-		assertEquals("OrExpression must return true", Boolean.TRUE,
-				new OrExpression().add(this.trueExpr).add(this.trueExpr)
-						.evaluate(this.resolver));
-		assertEquals("OrExpression must return true", Boolean.TRUE,
-				new OrExpression().add(this.falseExpr).add(this.trueExpr)
-						.evaluate(this.resolver));
-		assertEquals("OrExpression must return true", Boolean.TRUE,
-				new OrExpression().add(this.trueExpr).add(this.falseExpr)
-						.evaluate(this.resolver));
-		assertEquals("OrExpression must return false", Boolean.FALSE,
-				new OrExpression().add(this.falseExpr).add(this.falseExpr)
-						.evaluate(this.resolver));
-	}
+    assertEquals("OrExpression must return true", Boolean.TRUE, new OrExpression().add(this.trueExpr)
+        .add(this.trueExpr).evaluate(this.resolver));
+    assertEquals("OrExpression must return true", Boolean.TRUE,
+        new OrExpression().add(this.falseExpr).add(this.trueExpr).evaluate(this.resolver));
+    assertEquals("OrExpression must return true", Boolean.TRUE,
+        new OrExpression().add(this.trueExpr).add(this.falseExpr).evaluate(this.resolver));
+    assertEquals("OrExpression must return false", Boolean.FALSE,
+        new OrExpression().add(this.falseExpr).add(this.falseExpr).evaluate(this.resolver));
+  }
 
-	public void testNotExpression() throws ExpressionEvaluationException {
-		LOG.debug("Testing NotExpression");
-		try {
-			new NotExpression(null).evaluate(this.resolver);
-			fail("NotExpression must throw an exception");
-		} catch (IllegalArgumentException e) {
-			// normal
-		}
-		try {
-			new NotExpression(this.notBoolExpr).evaluate(this.resolver);
-			fail("NotExpression must throw an exception");
-		} catch (Exception e) {
-          LOG.info("Exception while evaluating expression.", e);
-		}
+  public void testNotExpression() throws ExpressionEvaluationException {
+    LOG.debug("Testing NotExpression");
+    try {
+      new NotExpression(null).evaluate(this.resolver);
+      fail("NotExpression must throw an exception");
+    } catch (IllegalArgumentException e) {
+      // normal
+    }
+    try {
+      new NotExpression(this.notBoolExpr).evaluate(this.resolver);
+      fail("NotExpression must throw an exception");
+    } catch (Exception e) {
+      LOG.info("Exception while evaluating expression.", e);
+    }
 
-		assertEquals("NotExpression must return false", Boolean.FALSE,
-				new NotExpression(this.trueExpr).evaluate(this.resolver));
-		assertEquals("NotExpression must return true", Boolean.TRUE,
-				new NotExpression(this.falseExpr).evaluate(this.resolver));
-	}
+    assertEquals("NotExpression must return false", Boolean.FALSE,
+        new NotExpression(this.trueExpr).evaluate(this.resolver));
+    assertEquals("NotExpression must return true", Boolean.TRUE,
+        new NotExpression(this.falseExpr).evaluate(this.resolver));
+  }
 }

@@ -146,7 +146,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
     return threadId;
   }
-  
+
   public String open(Service service) {
     return open(service, new PopupWindowProperties());
   }
@@ -325,7 +325,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
   }
 
   protected <T extends ManagedServiceContext> ManagedServiceContext getServiceCtx(Class<T> contextClass) {
-    return (getEnvironment().requireEntry(contextClass));
+    return getEnvironment().requireEntry(contextClass);
   }
 
   protected TopServiceContext getTopServiceCtx() {
@@ -344,7 +344,7 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
     private boolean delivered = false;
 
-    private Widget opener;
+    private final Widget opener;
 
     public OpenerRegistrationMessage(Widget opener) {
       this.opener = opener;
@@ -377,13 +377,13 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
 
     private boolean overrideTransaction = true;
 
-    private String topServiceId;
+    private final String topServiceId;
 
-    private String threadServiceId;
+    private final String threadServiceId;
 
-    private String requestUrl;
+    private final String requestUrl;
 
-    private PopupWindowProperties popupProperties;
+    private final PopupWindowProperties popupProperties;
 
     public StandardPopupServiceInfo(String topServiceId, String threadId, PopupWindowProperties popupProperties,
         String requestUrl) {
@@ -402,7 +402,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
     }
 
     /**
-     * Specifies whether the window closing request should contain parameter "araTransactionId=override". By default, contains.
+     * Specifies whether the window closing request should contain parameter "araTransactionId=override". By default,
+     * contains.
      * 
      * @param overrideTransaction If set to <code>false</code>, the parameter will be excluded from the response.
      * @since 1.0.4
@@ -419,8 +420,8 @@ public class StandardPopupFilterWidget extends BaseFilterWidget implements Popup
       }
 
       if (this.overrideTransaction) {
-        url.append('&').append(TransactionContext.TRANSACTION_ID_KEY).append("=").append(
-            TransactionContext.OVERRIDE_KEY);
+        url.append('&').append(TransactionContext.TRANSACTION_ID_KEY).append("=")
+            .append(TransactionContext.OVERRIDE_KEY);
       }
       return url.toString();
     }

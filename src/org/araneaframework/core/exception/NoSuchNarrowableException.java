@@ -16,15 +16,20 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
- * Thrown to indicate that such a Narrowable does not exist in the extensions of the object.
+ * An exception thrown to indicate that such a <tt>Narrowable</tt> does not exist in the extensions of the object.
  * 
+ * @see org.araneaframework.Narrowable
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class NoSuchNarrowableException extends AraneaRuntimeException {
 
-  public NoSuchNarrowableException(Class<?> target) {
-    super("Target " + target.getName() + " does not exist!");
+  /**
+   * Creates a new exception for an extension with given <tt>key</tt> not being found.
+   * 
+   * @param extension The <tt>Narrowable</tt> extension that was not found.
+   */
+  public NoSuchNarrowableException(Class<?> extension) {
+    super("Target " + extension.getName() + " does not exist!");
   }
 }

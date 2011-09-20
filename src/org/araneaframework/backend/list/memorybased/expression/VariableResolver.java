@@ -22,6 +22,8 @@ import org.araneaframework.backend.list.memorybased.Variable;
 /**
  * General interface for a resolver that resolves <code>Variables</code>. The <code>VariableResolver</code>
  * implementation may be used to evaluate <code>Variables</code> as well as transforming their names etc.
+ * 
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public interface VariableResolver extends Serializable {
 

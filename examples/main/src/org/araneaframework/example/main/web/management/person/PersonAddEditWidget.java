@@ -44,12 +44,13 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
   /**
    * Constructor for adding new person.
    */
-  public PersonAddEditWidget() {}
+  public PersonAddEditWidget() {
+  }
 
   /**
    * Constructor for editing existing person with specified Id.
    * 
-   * @param personId Person's Id.
+   * @param id Person's Id.
    */
   public PersonAddEditWidget(Long id) {
     this.personId = id;
@@ -66,7 +67,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
     addWidget("personForm", this.form);
   }
 
-  private BeanFormWidget<PersonMO> buildPersonEditForm() throws Exception {
+  private BeanFormWidget<PersonMO> buildPersonEditForm() {
     // Get the current person data (retrieved from database by getGeneralDAO() in case person already has assigned ID):
     PersonMO person = this.editMode ? getGeneralDAO().getById(PersonMO.class, this.personId) : new PersonMO();
 
@@ -86,7 +87,7 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
     return form;
   }
 
-  public void handleEventSave() throws Exception {
+  public void handleEventSave() {
     // If form data is found to be valid:
     if (this.form.convertAndValidate()) {
 
@@ -105,15 +106,14 @@ public class PersonAddEditWidget extends TemplateBaseWidget {
        * Finish current flow execution and return to calling flow, returning database ID of added or edited person
        */
       getFlowCtx().finish(this.personId);
-
-    } else {
-      // Do nothing, error messages are applied to MessageContext by validating methods so that application user
-      // receives immediate feedback about incorrectly filled form elements automatically.
     }
+
+    // Otherwise do nothing, error messages are applied to MessageContext by validating methods so that application user
+    // receives immediate feedback about incorrectly filled form elements automatically.
   }
 
   /* Cancels the adding/editing of current person, returns to calling flow */
-  public void handleEventCancel() throws Exception {
+  public void handleEventCancel() {
     getFlowCtx().cancel();
   }
 }

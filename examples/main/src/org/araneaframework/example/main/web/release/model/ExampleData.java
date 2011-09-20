@@ -24,12 +24,12 @@ import java.util.Locale;
 
 public class ExampleData {
 
-  public static final String males[] = { "Adar", "Arel", "Arhe", "Daniel-Bhekiwe", "Dimon", "Georg-Goswin", "Gomer",
+  public static final String MALES[] = { "Adar", "Arel", "Arhe", "Daniel-Bhekiwe", "Dimon", "Georg-Goswin", "Gomer",
       "Greito", "Hasgeir-Egert", "Indre", "Indy", "Ino", "Jamo", "Japheth", "Jeonel", "Jorke Patrick", "Kellven",
       "Kendris", "Kenomar", "Kösta", "Luukas Aeg", "Matrix", "Norton", "Oleander", "Radu", "Rato", "Relon", "Rhening",
       "Riko-Givy", "Ruud", "Signor", "Taigo Juunior", "Tristan Timothy", "Uko Hiid", "Örö Tormi" };
 
-  public static final String females[] = { "Aaria Lee", "Berlyka", "Bretie", "Cayro-Lyza", "Cameron", "Carlyne",
+  public static final String FEMALES[] = { "Aaria Lee", "Berlyka", "Bretie", "Cayro-Lyza", "Cameron", "Carlyne",
       "Carmelyta", "Chantell", "Darelyan", "Emmelgelina", "Genivive", "Grittel", "Gynethy", "Hailely", "Haldja",
       "Hertrudis", "Isis", "Jonete", "Kaleria", "Karetti", "Keira", "Kirteli", "Kärg", "Lomely", "Lorelai",
       "Madara Kuld", "Marimar", "Mirjam Sürr", "Nia", "Patrina", "Pipi Triinu", "Priti", "Randelyn", "Reneeta",

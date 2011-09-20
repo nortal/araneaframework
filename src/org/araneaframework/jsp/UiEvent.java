@@ -17,8 +17,7 @@
 package org.araneaframework.jsp;
 
 /**
- * Basic event that can be sent to widgets. Holds all the event properties
- * necessary to deliver the event.
+ * Basic event that can be sent to widgets. Holds all the event properties necessary to deliver the event.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -33,7 +32,8 @@ public class UiEvent {
   /**
    * Default constructor without specifying any values.
    */
-  public UiEvent() {}
+  public UiEvent() {
+  }
 
   /**
    * Constructor with values.
@@ -54,7 +54,7 @@ public class UiEvent {
    * @return the event ID (or <code>null</code>).
    */
   public String getId() {
-    return id;
+    return this.id;
   }
 
   /**
@@ -72,7 +72,7 @@ public class UiEvent {
    * @return the parameter for the event handler (or <code>null</code>).
    */
   public String getParam() {
-    return param;
+    return this.param;
   }
 
   /**
@@ -90,7 +90,7 @@ public class UiEvent {
    * @return the path of the target (or <code>null</code>).
    */
   public String getTarget() {
-    return target;
+    return this.target;
   }
 
   /**
@@ -103,8 +103,7 @@ public class UiEvent {
   }
 
   /**
-   * Provides the event attributes in a form suitable for outputting to HTML
-   * element as attributes.
+   * Provides the event attributes in a form suitable for outputting to HTML element as attributes.
    * 
    * @return the event attributes.
    */
@@ -112,10 +111,12 @@ public class UiEvent {
     StringBuffer result = new StringBuffer();
     result.append(AraneaAttributes.Event.ID).append("=\"").append(getId()).append("\" ");
 
-    if (getTarget() != null)
+    if (getTarget() != null) {
       result.append(AraneaAttributes.Event.TARGET_WIDGET_ID).append("=\"").append(getTarget()).append("\" ");
-    if (getParam() != null)
+    }
+    if (getParam() != null) {
       result.append(AraneaAttributes.Event.PARAM).append("=\"").append(getParam()).append("\"");
+    }
 
     return result;
   }
@@ -124,7 +125,7 @@ public class UiEvent {
    * Resets the event properties to <code>null</code>.
    */
   public void clear() {
-    id = target = param = null;
+    this.id = this.target = this.param = null;
   }
 
 }

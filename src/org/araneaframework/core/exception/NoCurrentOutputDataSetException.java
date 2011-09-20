@@ -16,12 +16,28 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
+ * An exception that is thrown when {@link org.araneaframework.OutputData} is being requested but it is not found. The
+ * situation, where this exception occurs, is rare because output data should always be available to components
+ * processing it. Therefore this exception should not be caught in most cases, and the code causing this exception
+ * should be reviewed..
+ * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class NoCurrentOutputDataSetException extends AraneaRuntimeException {
 
+  /**
+   * Creates a new instance of this runtime exception with default message.
+   */
+  public NoCurrentOutputDataSetException() {
+    super("No OutputData set in the request.");
+  }
+
+  /**
+   * Creates a new instance of this runtime exception with custom message.
+   * 
+   * @param msg A custom exception message.
+   */
   public NoCurrentOutputDataSetException(String msg) {
     super(msg);
   }

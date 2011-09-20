@@ -7,9 +7,9 @@
  * Copyright (c) 2006 John Reilly (www.inconspicuous.org)
  * 
  * This work is a translation from C to Java of jsmin.c published by
- * Douglas Crockford.  Permission is hereby granted to use the Java 
+ * Douglas Crockford.  Permission is hereby granted to use the Java
  * version under the same conditions as the jsmin.c on which it is
- * based.  
+ * based.
  * 
  * 
  * 

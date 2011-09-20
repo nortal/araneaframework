@@ -31,26 +31,26 @@ public interface TransactionContext extends Serializable {
   /**
    * The key in the request, under which is the transaction ID.
    */
-  public static final String TRANSACTION_ID_KEY = "araTransactionId";
+  String TRANSACTION_ID_KEY = "araTransactionId";
 
   /**
    * The key in the request that indicates situation where transaction ID was overridden on purpose.
    */
-  public static final String OVERRIDE_KEY = "override";
+  String OVERRIDE_KEY = "override";
 
   /**
    * Specifies whether the current request is consistent with the expected transaction ID.
    * 
    * @return <code>true</code>, if current request is consistent.
    */
-  public boolean isConsistent();
+  boolean isConsistent();
 
   /**
    * Provides the transaction ID of the current request.
    * 
    * @return The current transaction ID.
    */
-  public Object getTransactionId();
+  Object getTransactionId();
 
   /**
    * Provides the generated transaction ID that will be expected in the next request.
@@ -58,6 +58,6 @@ public interface TransactionContext extends Serializable {
    * @return The new transaction ID.
    * @since 1.1
    */
-  public Long getNextTransactionId();
+  Long getNextTransactionId();
 
 }

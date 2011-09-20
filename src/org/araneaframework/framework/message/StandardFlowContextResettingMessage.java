@@ -37,7 +37,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  */
 public class StandardFlowContextResettingMessage implements Message {
 
-  private Widget flow;
+  private final Widget flow;
 
   public StandardFlowContextResettingMessage(Widget flow) {
     Assert.notNullParam(flow, "flow");
@@ -49,7 +49,7 @@ public class StandardFlowContextResettingMessage implements Message {
       component._getComponent().propagate(this);
     } else {
       try {
-        this.execute(component);
+        execute(component);
       } catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
       }
@@ -62,8 +62,9 @@ public class StandardFlowContextResettingMessage implements Message {
 
       public void call(Environment env) {
         FlowContext f = EnvironmentUtil.getFlowContext(env);
-        if (flow != null)
-          f.start(flow);
+        if (StandardFlowContextResettingMessage.this.flow != null) {
+          f.start(StandardFlowContextResettingMessage.this.flow);
+        }
       }
     });
   }

@@ -25,8 +25,9 @@ import java.io.Serializable;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface SessionServiceContext extends ManagedServiceContext, Serializable {
+
   /**
-   * The key of the service id in the request.
+   * The key used for the session-service ID lookup in the request.
    */
-  public static final String SESSION_SERVICE_KEY = "sessionServiceId";
+  String SESSION_SERVICE_KEY = "sessionServiceId";
 }

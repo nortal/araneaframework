@@ -19,50 +19,50 @@ package org.araneaframework.jsp.tag;
 import java.io.Writer;
 import javax.servlet.jsp.JspException;
 
-
 /**
  * Tag wrapper tag.
  * 
  * @author Oleg Mürk
  */
 public abstract class BaseTagWrapperTag extends BaseTag {
-	protected ContainedTagInterface tag;
-  
-	@Override
+
+  protected ContainedTagInterface tag;
+
+  @Override
   protected int doStartTag(Writer out) throws Exception {
-		super.doStartTag(out);	
+    super.doStartTag(out);
 
-		// Get wrapped tag		
-		tag = getTag(); 
-		
-		// Prepare
-		this.registerSubtag(tag);
-		
-		// Configure
-		this.configureTag(tag);
-		
-		// Execute start tag	
-		this.executeStartSubtag(tag);
-		
-		return EVAL_BODY_INCLUDE;
-	}
+    // Get wrapped tag
+    this.tag = getTag();
 
-	@Override
-  protected int doEndTag(Writer out) throws Exception {				
-		this.executeEndSubtag(tag);
-    
-		// Complete
-		super.doEndTag(out);
-		return EVAL_PAGE;
-	}
-	
-	/**
-	 * Callback: get tag
-	 */
-	protected abstract ContainedTagInterface getTag() throws JspException;
+    // Prepare
+    this.registerSubtag(this.tag);
 
-	/**
-	 * Callback: configure tag
-	 */
-	protected abstract void configureTag(ContainedTagInterface tag) throws JspException;	
+    // Configure
+    configureTag(this.tag);
+
+    // Execute start tag
+    executeStartSubtag(this.tag);
+
+    return EVAL_BODY_INCLUDE;
+  }
+
+  @Override
+  protected int doEndTag(Writer out) throws Exception {
+    executeEndSubtag(this.tag);
+
+    // Complete
+    super.doEndTag(out);
+    return EVAL_PAGE;
+  }
+
+  /**
+   * Callback: get tag
+   */
+  protected abstract ContainedTagInterface getTag() throws JspException;
+
+  /**
+   * Callback: configure tag
+   */
+  protected abstract void configureTag(ContainedTagInterface tag) throws JspException;
 }

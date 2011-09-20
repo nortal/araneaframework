@@ -21,6 +21,7 @@ import org.araneaframework.uilib.form.control.inputfilter.InputFilter;
 /**
  * {@link Control} that allows specifying {@link InputFilter} for restricting the end-user input into a field.
  * 
+ * @param <T> The type of the inner value of the control.
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.0.11
  */
@@ -31,12 +32,12 @@ public interface FilteredInputControl<T> extends Control<T> {
    * 
    * @return The filtering settings of this control.
    */
-  public InputFilter getInputFilter();
+  InputFilter getInputFilter();
 
   /**
    * Sets the input filtering settings for this control. If <code>null</code> then no filtering will be done.
    * 
    * @param inputFilter The new filtering settings of this control.
    */
-  public void setInputFilter(InputFilter inputFilter);
+  void setInputFilter(InputFilter inputFilter);
 }

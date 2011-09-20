@@ -27,6 +27,11 @@ import org.araneaframework.EnvironmentAwareCallback;
  */
 public class StandardEnvironmentAwareCallback implements EnvironmentAwareCallback {
 
+  /**
+   * Default implementation does nothing.
+   * <p>
+   * {@inheritDoc}
+   */
   public void call(Environment env) {
   }
 }

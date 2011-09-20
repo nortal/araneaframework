@@ -57,7 +57,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
       allSuggestions.add(new Locale("en", country).getDisplayCountry(Locale.ENGLISH));
     }
 
-    for (String male : ExampleData.males) {
+    for (String male : ExampleData.MALES) {
       ExampleData.Client friend = new ExampleData.Client();
       friend.setForename(male);
       friend.setId(this.lastId);
@@ -68,7 +68,7 @@ public class DemoContextMenuWidget extends TemplateBaseWidget implements LocaleC
       this.lastId++;
     }
 
-    for (String female : ExampleData.females) {
+    for (String female : ExampleData.FEMALES) {
       ExampleData.Client friend = new ExampleData.Client();
       friend.setForename(female);
       friend.setSex(ExampleData.Client.SEX_F);

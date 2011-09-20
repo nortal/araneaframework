@@ -16,17 +16,23 @@
 
 package org.araneaframework.http;
 
-import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.Component;
 
 /**
- * A service adapter which by having the servlet's <code>service</code> method, translates a
- * servlet's request into a service call. 
+ * A service adapter which by having the servlet's <code>service</code> method, translates a servlet's request into a
+ * service call.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
-public interface ServletServiceAdapterComponent extends Component, Serializable {
-  public void service(HttpServletRequest request, HttpServletResponse response);
+public interface ServletServiceAdapterComponent extends Component {
+
+  /**
+   * A service method that handles HTTP request.
+   * 
+   * @param request The HTTP request (always not <code>null</code>).
+   * @param response The HTTP response (always not <code>null</code>)
+   */
+  void service(HttpServletRequest request, HttpServletResponse response);
 }

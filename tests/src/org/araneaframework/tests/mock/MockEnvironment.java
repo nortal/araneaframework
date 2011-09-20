@@ -23,26 +23,24 @@ import org.araneaframework.framework.LocalizationContext;
 import org.araneaframework.framework.MessageContext;
 import org.araneaframework.uilib.ConfigurationContext;
 
-
 /**
- * This class implements {@link Environment} interface
- * providing a straightforward implementation, which basically returns the
- * arguments passed without any specific processing. It is used primarily for testing.
+ * This class implements {@link Environment} interface providing a straightforward implementation, which basically
+ * returns the arguments passed without any specific processing. It is used primarily for testing.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
- * 
  */
 public class MockEnvironment extends BaseEnvironment {
+
   protected Map<Class<?>, Object> contexts = new HashMap<Class<?>, Object>();
 
   public MockEnvironment() {
-    contexts.put(ConfigurationContext.class, new MockConfiguration());
-    contexts.put(LocalizationContext.class, new MockLocalizationContext());
-    contexts.put(MessageContext.class, new MockMessageContext());
+    this.contexts.put(ConfigurationContext.class, new MockConfiguration());
+    this.contexts.put(LocalizationContext.class, new MockLocalizationContext());
+    this.contexts.put(MessageContext.class, new MockMessageContext());
   }
 
   @SuppressWarnings("unchecked")
   public <T> T getEntry(Class<T> key) {
-    return (T) contexts.get(key);
-  }	
+    return (T) this.contexts.get(key);
+  }
 }

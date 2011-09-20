@@ -16,14 +16,17 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
  * Thrown to indicate that there are no elements in the Path to pop.
  * 
+ * @see org.araneaframework.Path
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class EmptyPathStackException extends AraneaRuntimeException {
 
+  /**
+   * Creates a new Aranea-specific empty path exception.
+   */
   public EmptyPathStackException() {
     super();
   }

@@ -51,17 +51,22 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
   // PUBLIC METHODS
   // *******************************************************************
 
-  public Relocatable.Interface _getRelocatable() {
-    return new RelocatableComponentImpl();
-  }
-
   /**
    * Constructs a new <code>RelocatableDecorator</code> and sets its child service to child.
    * 
-   * @param child The service that should be relocatable.
+   * @param child import org.araneaframework.Relocatable; import org.araneaframework.Relocatable; The service that
+   *          should be relocatable. i import org.araneaframework.Relocatable; import org.araneaframework.Relocatable;
+   *          mport org.araneaframework.Relocatable; import org.araneaframework.Relocatable;
    */
   public RelocatableDecorator(Service child) {
     this.child = child;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Relocatable.Interface _getRelocatable() {
+    return new RelocatableComponentImpl();
   }
 
   // *******************************************************************
@@ -87,6 +92,8 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
 
   /**
    * Overrides default implementation so that messages would reach the child service.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void propagate(Message message) {
@@ -95,6 +102,8 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
 
   /**
    * Overrides default implementation so that actions would reach the child service.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void action(Path path, InputData input, OutputData output) {
@@ -111,6 +120,8 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
 
   /**
    * Overrides default implementation so that the child environment of the child service would be returned.
+   * <p>
+   * {@inheritDoc}
    */
   public Environment getChildEnvironment() {
     return ((ApplicationComponent) this.child).getChildEnvironment();
@@ -118,6 +129,8 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
 
   /**
    * Overrides default implementation so that the child service composite implementation would be returned.
+   * <p>
+   * {@inheritDoc}
    */
   public Composite.Interface _getComposite() {
     return ((Composite) this.child)._getComposite();
@@ -125,6 +138,8 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
 
   /**
    * Overrides default implementation so that the child service viewable implementation would be returned.
+   * <p>
+   * {@inheritDoc}
    */
   public Viewable.Interface _getViewable() {
     return ((Viewable) this.child)._getViewable();
@@ -132,6 +147,8 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
 
   /**
    * Overrides default implementation so that the child service widget implementation would be returned.
+   * <p>
+   * {@inheritDoc}
    */
   public Widget.Interface _getWidget() {
     return ((Widget) this.child)._getWidget();
@@ -147,12 +164,18 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
    */
   protected class RelocatableComponentImpl implements Relocatable.Interface {
 
+    /**
+     * {@inheritDoc}
+     */
     public void overrideEnvironment(Environment newEnv) {
       _startCall();
       _setEnvironment(newEnv);
       _endCall();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Environment getCurrentEnvironment() {
       return getEnvironment();
     }

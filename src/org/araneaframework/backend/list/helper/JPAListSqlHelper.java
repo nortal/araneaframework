@@ -35,18 +35,40 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public class JPAListSqlHelper extends ListSqlHelper {
 
+  /**
+   * The JPA entity manager used for making queries and fetching data.
+   */
   protected EntityManager entityManager;
 
+  /**
+   * Customizing option specifying whether JPA queries should start with "from" (default) or with "select".
+   */
   protected boolean beginFromSelect = false;
 
+  /**
+   * Creates a new JPA based list queries helper.
+   * 
+   * @param entityManager The entity manager used for performing searches.
+   */
   public JPAListSqlHelper(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
+  /**
+   * Creates a new JPA based list queries helper.
+   * 
+   * @param query List query data from the <tt>ListWidget</tt>.
+   */
   public JPAListSqlHelper(ListQuery query) {
     super(query);
   }
 
+  /**
+   * Creates a new JPA based list queries helper.
+   * 
+   * @param entityManager The entity manager used for performing searches.
+   * @param query List query data from the <tt>ListWidget</tt>.
+   */
   public JPAListSqlHelper(EntityManager entityManager, ListQuery query) {
     this(query);
     this.entityManager = entityManager;
@@ -64,6 +86,8 @@ public class JPAListSqlHelper extends ListSqlHelper {
 
   /**
    * Override to generate custom JPA query.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected String createItemRangeQuery(String fromSql, String customWhereSql, String customOrderbySql) {
@@ -98,6 +122,8 @@ public class JPAListSqlHelper extends ListSqlHelper {
 
   /**
    * An override to customize executing queries more suitable for JPA queries.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   public <T> T execute(ConnectionCallback<T> action) {
@@ -111,6 +137,8 @@ public class JPAListSqlHelper extends ListSqlHelper {
 
   /**
    * Override to use custom JPA <b>list data</b> query callback.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   public <T> ConnectionCallback<ListItemsData<T>> getListItemsDataCallback(ResultReader<T> reader) {
@@ -119,6 +147,8 @@ public class JPAListSqlHelper extends ListSqlHelper {
 
   /**
    * Override to use custom JPA <b>item range</b> query callback.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   public <T> ConnectionCallback<List<T>> getItemRangeSqlCallback(ResultReader<T> reader) {
@@ -127,6 +157,8 @@ public class JPAListSqlHelper extends ListSqlHelper {
 
   /**
    * Override to use custom JPA <b>total count</b> query callback.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   public ConnectionCallback<Long> getCountSqlCallback() {
@@ -135,6 +167,8 @@ public class JPAListSqlHelper extends ListSqlHelper {
 
   /**
    * Override to not waist time result reader creation, because it won't be used with JPA.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   public <T> ResultReader<T> createBeanResultReader(Class<T> itemClass) {
@@ -190,14 +224,24 @@ public class JPAListSqlHelper extends ListSqlHelper {
    */
   protected class JPACountCallback implements ConnectionCallback<Long> {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
+    /**
+     * Creates a new JPA count query callback.
+     * 
+     * @param entityManager The JPA entity manager (required).
+     */
     public JPACountCallback(EntityManager entityManager) {
       Assert.notNullParam(entityManager, "entityManager");
       this.entityManager = entityManager;
     }
 
-    public Long doInConnection(Connection con) throws SQLException {
+    /**
+     * Reads the count of matching results.
+     * <p>
+     * {@inheritDoc}
+     */
+    public Long doInConnection(Connection con) {
       return ((Number) createQuery(this.entityManager, getCountSqlStatement()).getSingleResult()).longValue();
     }
   }
@@ -210,22 +254,32 @@ public class JPAListSqlHelper extends ListSqlHelper {
    */
   protected class JPASelectCallback<I> implements ConnectionCallback<List<I>> {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
+    /**
+     * Creates a new JPA select query callback.
+     * 
+     * @param entityManager The JPA entity manager (required).
+     */
     public JPASelectCallback(EntityManager entityManager) {
       Assert.notNullParam(entityManager, "entityManager");
       this.entityManager = entityManager;
     }
 
+    /**
+     * Reads the result set rows into beans, which is mainly handled by JPA.
+     * <p>
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     public List<I> doInConnection(Connection con) throws SQLException {
-      Query query = createQuery(entityManager, getRangeSqlStatement());
+      Query query = createQuery(this.entityManager, getRangeSqlStatement());
 
-      if (itemRangeStart != null) {
-        query.setFirstResult(itemRangeStart.intValue());
+      if (JPAListSqlHelper.this.itemRangeStart != null) {
+        query.setFirstResult(JPAListSqlHelper.this.itemRangeStart.intValue());
       }
-      if (itemRangeCount != null) {
-        query.setMaxResults(itemRangeCount.intValue());
+      if (JPAListSqlHelper.this.itemRangeCount != null) {
+        query.setMaxResults(JPAListSqlHelper.this.itemRangeCount.intValue());
       }
 
       return query.getResultList();

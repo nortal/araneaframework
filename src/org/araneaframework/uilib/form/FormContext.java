@@ -16,14 +16,12 @@
 
 package org.araneaframework.uilib.form;
 
-import org.araneaframework.Environment;
-
 import java.io.Serializable;
 import java.util.Map;
 
 /**
  * The form context is the common interface of all kinds of forms and also the key to be used for form retrieval from
- * {@link Environment}.
+ * {@link org.araneaframework.Environment}.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1

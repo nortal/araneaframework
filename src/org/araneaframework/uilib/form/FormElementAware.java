@@ -21,6 +21,8 @@ import java.io.Serializable;
 /**
  * An interface for components that mandates that the component is form element dependent and wants a reference to it.
  * 
+ * @param <C> The type of the inner value of form element control.
+ * @param <D> The type of the form element value.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FormElementAware<C, D> extends Serializable {
@@ -30,5 +32,5 @@ public interface FormElementAware<C, D> extends Serializable {
    * 
    * @param feCtx The context of a form element.
    */
-  public void setFormElementCtx(FormElementContext<C, D> feCtx);
+  void setFormElementCtx(FormElementContext<C, D> feCtx);
 }

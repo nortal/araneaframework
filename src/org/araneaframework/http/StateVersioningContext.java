@@ -56,7 +56,7 @@ public interface StateVersioningContext extends Serializable {
    * @since 2.0
    */
   String HTTP_REQUEST_LOOKUP_PREFIX = HTTP_REQUEST_STATE_PREFIX + ":";
-  
+
   /**
    * Saves state of the component tree at the moment of calling this method. State will get an ID.
    * 
@@ -64,6 +64,12 @@ public interface StateVersioningContext extends Serializable {
    */
   State saveState();
 
+  /**
+   * Provides the current state ID as it will also be included on the rendered page. A state ID is generated before a
+   * request is handled. The underlying method should return the same request ID during the same request.
+   * 
+   * @return The current state ID.
+   */
   String getCurrentStateId();
 
   /**
@@ -80,9 +86,9 @@ public interface StateVersioningContext extends Serializable {
    */
   static class State implements Serializable {
 
-    private Object state;
+    private final Object state;
 
-    private String stateId;
+    private final String stateId;
 
     public State(Object state, String stateId) {
       this.state = state;
@@ -107,7 +113,8 @@ public interface StateVersioningContext extends Serializable {
    */
   class StateExpirationException extends NestableRuntimeException {
 
-    public StateExpirationException() {}
+    public StateExpirationException() {
+    }
 
     public StateExpirationException(String msg, Throwable cause) {
       super(msg, cause);

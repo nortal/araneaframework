@@ -16,30 +16,22 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
- * Thrown to indicate that a component does not exist in the set of
- * (child)components. The exception is thrown when:
- * <ul>
- * <li>Routing an event to a specific child component that does not exist.</li>
- * <li>Calling <code>disableComponent(Object key)</code> when the object does
- * not exist.</li>
- * <li>Calling <code>enableComponent(Object key)</code> when the object does
- * not exist in the set of disabled components.</li>
- * <li>Calling <code>removeComponent(Object key)</code> when the object does
- * not exist in the set of child components. </li>
- * </ul>
+ * Thrown to indicate that a component with given key (ID) does not exist in the set of (child) components.
  * <p>
- * Services and Widgets have corresponding exceptions,
- * {@link org.araneaframework.core.exception.NoSuchServiceException} and
- * {@link org.araneaframework.core.exception.NoSuchWidgetException} respectively.
- * </p>
+ * Services and Widgets have corresponding exceptions, {@link NoSuchServiceException} and {@link NoSuchWidgetException}
+ * respectively.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class NoSuchComponentException extends AraneaRuntimeException {
 
-  public NoSuchComponentException(Object key) {
+  /**
+   * Creates a new exception for a component with given <tt>key</tt> (ID) not being found.
+   * 
+   * @param key The ID of a child-component that was not found.
+   */
+  public NoSuchComponentException(String key) {
     super("No such component '" + key + "'");
   }
 }

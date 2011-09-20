@@ -329,9 +329,9 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
    * @param input The Aranea input holder.
    * @param output The Aranea output holder.
    * @param parameters The parsed parameters and their values.
-   * @param fileItems The parsed file params and their files.
+   * @param fileItems The parsed file parameters and their files.
    * @param uploadException The exception from sorting parsed parameters.
-   * @throws Various unexpected exceptions.
+   * @throws Exception Various unexpected exceptions.
    * @since 1.2.2
    */
   protected void afterMultipartRequestParsing(boolean parsingSucceeded, InputData input, OutputData output,
@@ -348,7 +348,6 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
   }
 
   /**
-   * 
    * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
   @SuppressWarnings("deprecation")

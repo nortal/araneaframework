@@ -23,78 +23,85 @@ import org.araneaframework.core.BaseWidget;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
-public class MockEventfulBaseWidget extends BaseWidget {  private boolean updateCalled = false;
+public class MockEventfulBaseWidget extends BaseWidget {
+
+  private boolean updateCalled = false;
+
   private boolean eventCalled = false;
+
   private boolean renderCalled = false;
+
   private boolean actionCalled = false;
+
   private boolean destroyCalled = false;
+
   private boolean disableCalled = false;
+
   private boolean enableCalled = false;
-  
+
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    actionCalled = true;
+    this.actionCalled = true;
   }
-    
+
   @Override
   protected void update(InputData input) throws Exception {
-    updateCalled = true;
+    this.updateCalled = true;
   }
 
   @Override
   protected void event(Path path, InputData input) throws Exception {
-    eventCalled = true;
+    this.eventCalled = true;
   }
 
   @Override
   protected void render(OutputData output) throws Exception {
-    renderCalled = true;
+    this.renderCalled = true;
   }
-  
+
   @Override
   protected void disable() throws Exception {
     super.disable();
-    disableCalled = true;
+    this.disableCalled = true;
   }
 
   @Override
   protected void enable() throws Exception {
     super.enable();
-    enableCalled = true;
+    this.enableCalled = true;
   }
 
   @Override
   public void destroy() throws Exception {
-    destroyCalled = true;
+    this.destroyCalled = true;
   }
 
   public boolean isActionCalled() {
-    return actionCalled;
+    return this.actionCalled;
   }
 
   public boolean isEventCalled() {
-    return eventCalled;
+    return this.eventCalled;
   }
 
   public boolean isRenderCalled() {
-    return renderCalled;
+    return this.renderCalled;
   }
 
   public boolean isUpdateCalled() {
-    return updateCalled;
+    return this.updateCalled;
   }
-  
+
   public boolean getDestroyCalled() {
-    return destroyCalled;
+    return this.destroyCalled;
   }
 
   public boolean isDisableCalled() {
-    return disableCalled;
+    return this.disableCalled;
   }
 
   public boolean isEnableCalled() {
-    return enableCalled;
+    return this.enableCalled;
   }
 }

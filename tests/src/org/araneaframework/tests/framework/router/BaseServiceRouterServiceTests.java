@@ -30,68 +30,71 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class BaseServiceRouterServiceTests extends TestCase {
+
   private MockBaseServiceRouterService service;
+
   private MockEventfulStandardService child1;
+
   private MockEventfulStandardService child2;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   private Map<String, Service> map;
-  
+
   @Override
   public void setUp() throws Exception {
-    service = new MockBaseServiceRouterService();
-    map = new HashMap<String, Service>();
-    
-    child1 = new MockEventfulStandardService();
-    child2 = new MockEventfulStandardService();
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
-    
-    map.put("first", child1);
-    map.put("second", child2);
-    
-    service.setServiceMap(map);
-    service._getComponent().init(null, MockUtil.getEnv());
+    this.service = new MockBaseServiceRouterService();
+    this.map = new HashMap<String, Service>();
+
+    this.child1 = new MockEventfulStandardService();
+    this.child2 = new MockEventfulStandardService();
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
+
+    this.map.put("first", this.child1);
+    this.map.put("second", this.child2);
+
+    this.service.setServiceMap(this.map);
+    this.service._getComponent().init(null, MockUtil.getEnv());
   }
-  
+
   public void testActionGetsCalled() throws Exception {
-    req.addParameter("serviceId", "first");
-    input = new StandardServletInputData(req);
-    
-    service._getService().action(MockUtil.getPath(), input, output);
-    
-    req = new MockHttpServletRequest();
-    req.addParameter("serviceId", "second");
-    input = new StandardServletInputData(req);
-    
-    service._getService().action(MockUtil.getPath(), input, output);
-    
-    assertTrue(child1.getActionCalled());
-    assertTrue(child2.getActionCalled());
+    this.req.addParameter("serviceId", "first");
+    this.input = new StandardServletInputData(this.req);
+
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+
+    this.req = new MockHttpServletRequest();
+    this.req.addParameter("serviceId", "second");
+    this.input = new StandardServletInputData(this.req);
+
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+
+    assertTrue(this.child1.getActionCalled());
+    assertTrue(this.child2.getActionCalled());
   }
-  
+
   public void testNonExistentServiceThrowsException() throws Exception {
-    req.addParameter("serviceId", "nonExistentService");
-    input = new StandardServletInputData(req);
+    this.req.addParameter("serviceId", "nonExistentService");
+    this.input = new StandardServletInputData(this.req);
     try {
-      service._getService().action(MockUtil.getPath(), input, output);
+      this.service._getService().action(MockUtil.getPath(), this.input, this.output);
       fail("Was able to call a non existent service");
-    }
-    catch (NoSuchServiceException e) {
-      //success
+    } catch (NoSuchServiceException e) {
+      // success
     }
   }
 }

@@ -18,26 +18,22 @@ package org.araneaframework.core.exception;
 
 import org.araneaframework.core.util.Assert;
 
-
 /**
- * Exception thrown when event could not be delivered to receiver.
+ * Exception thrown when a problem occurs with event processing (delivering, handling, etc).
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class EventException extends AraneaRuntimeException {
 
   /**
-   * Creates an exception, which means that the event could not be developed to
-   * the addressee (widget, form control, etc) or listener.
+   * Creates a new event delivery exception.
    * 
-   * @param that object which throws the exception
-   * @param widgetId id of event target widget
-   * @param eventId event id
-   * @param cause
+   * @param that The object, which is throwing the exception (required).
+   * @param widgetId The ID of (event target) widget that failed.
+   * @param eventId The ID of the registered event handler that was supposed to handle the event.
+   * @param cause An exception that was caught (optional).
    */
-  public EventException(Object that, String widgetId, String eventId,
-      Exception cause) {
-    super("Widget '" + widgetId + "' could not deliver event '" + eventId
-        + "'." + Assert.thisToString(that), cause);
+  public EventException(Object that, String widgetId, String eventId, Exception cause) {
+    super("Widget '" + widgetId + "' could not deliver event '" + eventId + "'." + Assert.thisToString(that), cause);
   }
 }

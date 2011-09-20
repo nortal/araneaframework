@@ -23,84 +23,89 @@ import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.structure.filter.BaseFilter;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
-
 public abstract class BaseRangeInRangeFilter extends BaseFilter {
-	
-	// Fields
-	private String lowFieldId;
-	private String highFieldId;
-	
-	// Values
-	private String lowValueId;
-	private String highValueId;	
-	
-	public String getLowFieldId() {
-		return this.lowFieldId;
-	}
-	
-	public void setLowFieldId(String lowFieldId) {
-	  Assert.notNull(lowFieldId, "lowFieldId");
-		this.lowFieldId = lowFieldId;
-	}
-	
-	public String getHighFieldId() {
-		return highFieldId;
-	}
 
-	public void setHighFieldId(String highFieldId) {
-		Assert.notNullParam(highFieldId, "highFieldId");
-		this.highFieldId = highFieldId;
-	}
+  // Fields
+  private String lowFieldId;
 
-	public String getHighValueId() {
-		return this.highValueId;
-	}
-	
-	public void setHighValueId(String highValueId) {
-		this.highValueId = highValueId;			
-	}
-	
-	public String getLowValueId() {
-		return this.lowValueId;
-	}
-	
-	public void setLowValueId(String lowValueId) {
-		this.lowValueId = lowValueId;			
-	}
-	
-	// Building expressions
-	
-	protected boolean isActive(Map<String, Object> filterInfo) {
-		return filterInfo.containsKey(getLowValueId()) || 
-			filterInfo.containsKey(getHighValueId());
-	}
-	
-	protected VariableExpression buildLowVariableExpression() {
-		return ExpressionUtil.var(getLowFieldId());
-	}
-	
-	protected VariableExpression buildHighVariableExpression() {
-		return ExpressionUtil.var(getHighFieldId());
-	}
-	
-	protected ValueExpression<Object> buildLowValueExpression(Map<String, Object> filterInfo) {
-		Object value = filterInfo.get(getLowValueId());
-		if (value == null) {
-			return null;
-		}
-		value = convertLowValue(value);
-		return ExpressionUtil.value(getLowValueId(), value);
-	}
-	
-	protected ValueExpression<Object> buildHighValueExpression(Map<String, Object> filterInfo) {
-		Object value = filterInfo.get(getHighValueId());
-		if (value == null) {
-			return null;
-		}
-		value = convertHighValue(value);
-		return ExpressionUtil.value(getHighValueId(), value);
-	}
-	
-	protected Object convertLowValue(Object value) { return value; }
-	protected Object convertHighValue(Object value) { return value; }			
+  private String highFieldId;
+
+  // Values
+  private String lowValueId;
+
+  private String highValueId;
+
+  public String getLowFieldId() {
+    return this.lowFieldId;
+  }
+
+  public void setLowFieldId(String lowFieldId) {
+    Assert.notNull(lowFieldId, "lowFieldId");
+    this.lowFieldId = lowFieldId;
+  }
+
+  public String getHighFieldId() {
+    return this.highFieldId;
+  }
+
+  public void setHighFieldId(String highFieldId) {
+    Assert.notNullParam(highFieldId, "highFieldId");
+    this.highFieldId = highFieldId;
+  }
+
+  public String getHighValueId() {
+    return this.highValueId;
+  }
+
+  public void setHighValueId(String highValueId) {
+    this.highValueId = highValueId;
+  }
+
+  public String getLowValueId() {
+    return this.lowValueId;
+  }
+
+  public void setLowValueId(String lowValueId) {
+    this.lowValueId = lowValueId;
+  }
+
+  // Building expressions
+
+  protected boolean isActive(Map<String, Object> filterInfo) {
+    return filterInfo.containsKey(getLowValueId()) || filterInfo.containsKey(getHighValueId());
+  }
+
+  protected VariableExpression buildLowVariableExpression() {
+    return ExpressionUtil.var(getLowFieldId());
+  }
+
+  protected VariableExpression buildHighVariableExpression() {
+    return ExpressionUtil.var(getHighFieldId());
+  }
+
+  protected ValueExpression<Object> buildLowValueExpression(Map<String, Object> filterInfo) {
+    Object value = filterInfo.get(getLowValueId());
+    if (value == null) {
+      return null;
+    }
+    value = convertLowValue(value);
+    return ExpressionUtil.value(getLowValueId(), value);
+  }
+
+  protected ValueExpression<Object> buildHighValueExpression(Map<String, Object> filterInfo) {
+    Object value = filterInfo.get(getHighValueId());
+    if (value == null) {
+      return null;
+    }
+    value = convertHighValue(value);
+    return ExpressionUtil.value(getHighValueId(), value);
+  }
+
+  protected Object convertLowValue(Object value) {
+    return value;
+  }
+
+  protected Object convertHighValue(Object value) {
+    return value;
+  }
 }

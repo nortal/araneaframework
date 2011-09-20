@@ -20,16 +20,14 @@ import java.io.Serializable;
 import org.araneaframework.Scope;
 import org.araneaframework.Viewable;
 import org.araneaframework.Widget;
-import org.araneaframework.uilib.form.control.BaseControl;
 import org.araneaframework.uilib.support.DataType;
 
 /**
  * {@link Control} is the widget that does the actual parsing and reading of the request parameters. It corresponds to
- * the controls found in HTML forms, like textbox, textarea, select-box, button &hellip;
+ * the controls found in HTML forms, like textbox, textarea, select-box, button &hellip; {@link Control} is meant to be
+ * used inside {@link FormElement} that provides type safety and additional {@link Constraint}s to request data.
  * 
- * {@link Control} is meant to be used inside {@link FormElement} that provides type safety and additional
- * {@link Constraint}s to request data.
- * 
+ * @param <T> The type of the inner data that the control uses and understands.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object> {
@@ -39,7 +37,7 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
    * 
    * @return whether the control data was present in the HTTP request.
    */
-  public boolean isRead();
+  boolean isRead();
 
   /**
    * This method should be overridden by the control, returning the type of the value of this control. It is later used
@@ -49,33 +47,33 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
    * 
    * @return The type of the value of this control as specified in the given <code>DataType</code> object.
    */
-  public abstract DataType getRawValueType();
+  DataType getRawValueType();
 
   /**
    * Returns the value of the control (value read from the request). Type of value depends on the type of control.
    * 
    * @return Returns the value of the control (value read from the request).
    */
-  public T getRawValue();
+  T getRawValue();
 
   /**
    * Sets the control value. It is usually set by {@link org.araneaframework.uilib.form.Converter} when value of
-   * {@link FormElement} (this is stored in {@link Data}) that owns this {@link BaseControl} changes.
+   * {@link FormElement} (this is stored in {@link Data}) that owns this control changes.
    * 
    * @param value control value.
    * @see #getRawValue()
    */
-  public void setRawValue(T value);
+  void setRawValue(T value);
 
   /**
    * Converts the data submitted by the user.
    */
-  public void convert();
+  void convert();
 
   /**
    * Validates the data submitted by the user.
    */
-  public void validate();
+  void validate();
 
   /**
    * Provides whether this control is disabled. Disabled controls do not process incoming requests.
@@ -83,42 +81,42 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
    * @return A boolean that is <code>true</code> when this control is disabled.
    * @since 1.1
    */
-  public boolean isDisabled();
+  boolean isDisabled();
 
   /**
    * The view model for a control. The view model is a snapshot of control data that will be used for rendering it.
    * 
    * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
-  public interface ViewModel extends Serializable {
+  interface ViewModel extends Serializable {
 
     /**
      * Provides the control's type, which is basically the control's simple class name.
      * 
      * @return The control's type.
      */
-    public String getControlType();
+    String getControlType();
 
     /**
      * Provides whether filling in this control with a non-empty value is mandatory for the user to reach a valid form.
      * 
      * @return A boolean that is <code>true</code> when this control is mandatory.
      */
-    public boolean isMandatory();
+    boolean isMandatory();
 
     /**
      * Provides the label ID that can be used resolve a label for control.
      * 
      * @return The control's label ID.
      */
-    public String getLabel();
+    String getLabel();
 
     /**
      * Provides whether this control is disabled. Disabled controls do not process incoming requests.
      * 
      * @return A boolean that is <code>true</code> when this control is disabled.
      */
-    public boolean isDisabled();
+    boolean isDisabled();
 
     /**
      * Provides the scope of this control. The latter can be used to uniquely identify the control's location in the
@@ -127,6 +125,6 @@ public interface Control<T> extends Widget, Viewable, FormElementAware<T, Object
      * @return The scope object of this control.
      * @since 1.1
      */
-    public Scope getScope();
+    Scope getScope();
   }
 }

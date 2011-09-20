@@ -23,90 +23,96 @@ import org.araneaframework.core.BaseApplicationWidget;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class MockEventfulStandardWidget extends BaseApplicationWidget {
+
   private boolean updateCalled = false;
+
   private boolean eventProcessed = false;
+
   private boolean renderCalled = false;
+
   private boolean destroyCalled = false;
-  
+
   private boolean actionCalled = false;
-  
+
   private transient InputData input;
+
   private transient OutputData output;
+
   private transient Path path;
-  
+
   @Override
   public void render(OutputData output) {
-    
     this.renderCalled = true;
   }
-  
+
   @Override
-  public void update(InputData input) throws Exception {
+  public void update(InputData input) {
     this.updateCalled = true;
     this.input = input;
   }
-  
+
   @Override
   public void event(Path path, InputData input) throws Exception {
-    eventProcessed = true;
+    this.eventProcessed = true;
     this.path = path;
     this.input = input;
     super.event(path, input);
   }
-  
+
   @Override
   public void action(Path path, InputData input, OutputData output) throws Exception {
-    actionCalled = true;
+    this.actionCalled = true;
     this.path = path;
     this.input = input;
     this.output = output;
     super.action(path, input, output);
   }
-  
-  @Override
-  protected void handleAction(InputData input, OutputData output) throws Exception {}
 
   @Override
-  protected void handleEvent(InputData input) throws Exception {}
+  protected void handleAction(InputData input, OutputData output) throws Exception {
+  }
+
+  @Override
+  protected void handleEvent(InputData input) throws Exception {
+  }
 
   @Override
   public void destroy() {
-    destroyCalled = true;
+    this.destroyCalled = true;
   }
-  
+
   public boolean getUpdateCalled() {
-    return updateCalled;
+    return this.updateCalled;
   }
 
   public boolean getEventProcessed() {
-    return eventProcessed;
+    return this.eventProcessed;
   }
 
   public boolean getRenderCalled() {
-    return renderCalled;
+    return this.renderCalled;
   }
 
   public boolean getActionCalled() {
-    return actionCalled;
+    return this.actionCalled;
   }
 
   public InputData getInput() {
-    return input;
+    return this.input;
   }
 
   public OutputData getOutput() {
-    return output;
+    return this.output;
   }
 
   public boolean getDestroyCalled() {
-    return destroyCalled;
+    return this.destroyCalled;
   }
 
   public Path getPath() {
-    return path;
+    return this.path;
   }
 
   public void setEventProcessed(boolean eventProcessed) {

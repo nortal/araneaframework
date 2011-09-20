@@ -16,29 +16,26 @@
 
 package org.araneaframework.uilib.list.structure;
 
-import org.araneaframework.uilib.list.structure.filter.FieldFilter;
-import org.araneaframework.uilib.list.structure.order.FieldOrder;
-
-
 /**
  * General interface for objects that are aware of one field.
  * 
- * @see FieldFilter
- * @see FieldOrder
- *  
- * @author Rein Raudjärv
+ * @see org.araneaframework.uilib.list.structure.filter.FieldFilter
+ * @see org.araneaframework.uilib.list.structure.order.FieldOrder
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public interface FieldAware {
-	/**
-	 * Returns the field Id.
-	 * @return field Id.
-	 */
-	String getFieldId();
 
-	/**
-	 * Saves the field Id.
-	 * 
-	 * @param id field Id.
-	 */
-	void setFieldId(String id);
+  /**
+   * Returns the field Id.
+   * 
+   * @return field Id.
+   */
+  String getFieldId();
+
+  /**
+   * Saves the field Id.
+   * 
+   * @param id field Id.
+   */
+  void setFieldId(String id);
 }

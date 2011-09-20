@@ -18,6 +18,17 @@ package org.araneaframework.framework;
 
 import java.io.Serializable;
 
+/**
+ * The context for file uploads.
+ * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ */
 public interface FileUploadContext extends Serializable {
-  public Long getFileSizeLimit();
+
+  /**
+   * Provides the maximum allowed file size.
+   * 
+   * @return The maximum allowed file size in bytes, or <code>null</code> when no limit is specified.
+   */
+  Long getFileSizeLimit();
 }

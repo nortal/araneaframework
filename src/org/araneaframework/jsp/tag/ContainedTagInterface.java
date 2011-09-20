@@ -19,37 +19,35 @@ package org.araneaframework.jsp.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
-
 /**
  * UI contained tag interface.
  * 
  * @author Oleg Mürk
  */
 public interface ContainedTagInterface {
-		
-	/**
-	 * Initialization.
-	 */
-	public void setPageContext(PageContext pageContext);
 
-	/**
-	 * Deinitialization.
-	 */
-	public void release();
-  
-  
+  /**
+   * Initialization.
+   */
+  public void setPageContext(PageContext pageContext);
+
+  /**
+   * Deinitialization.
+   */
+  public void release();
+
   /**
    * Tag deinitialization.
    */
   public void doFinally();
 
-	/**
-	 * Start tag.
-	 */
-	public int doStartTag() throws JspException;
+  /**
+   * Start tag.
+   */
+  public int doStartTag() throws JspException;
 
-	/**
-	 * End tag.
-	 */
-	public int doEndTag() throws JspException;
+  /**
+   * End tag.
+   */
+  public int doEndTag() throws JspException;
 }

@@ -21,13 +21,15 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Path;
+import org.araneaframework.core.exception.EmptyPathStackException;
 import org.araneaframework.core.util.Assert;
 
 /**
- * Default implementation of {@link org.araneaframework.Path}, uses simple string identifiers like "a" or "b" and
- * combines them using dots forming full pathes like "a.b.c".
+ * Default implementation of {@link Path}, uses simple string identifiers like "a" or "b" and combines them using dots
+ * forming full paths like "a.b.c".
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
+ * @see Path#SEPARATOR
  */
 public class StandardPath implements Path {
 
@@ -36,7 +38,7 @@ public class StandardPath implements Path {
   /**
    * Constructs a path from the fullPath. Expects fullPath to be a dot-separated String.
    * 
-   * @param fullPath
+   * @param fullPath The full path as text (required).
    */
   public StandardPath(String fullPath) {
     Assert.notNull(fullPath, "Path cannot be null!");
@@ -47,23 +49,42 @@ public class StandardPath implements Path {
     }
   }
 
-  public String getNext() {
-    return this.path.getFirst();
-  }
-
-  public String next() {
-    return this.path.removeFirst();
-  }
-
-  public boolean hasNext() {
-    return !this.path.isEmpty();
-  }
-
   /**
+   * Constructs a path from a collection of path items (note that order is important).
+   * 
+   * @param fullPath The full path as collection of path items (required).
    * @since 1.1
    */
   public StandardPath(Collection<String> fullPath) {
+    Assert.notNull(fullPath, "Path cannot be null!");
     this.path.addAll(fullPath);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public String getNext() {
+    if (!hasNext()) {
+      throw new EmptyPathStackException();
+    }
+    return this.path.getFirst();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public String next() {
+    if (!hasNext()) {
+      throw new EmptyPathStackException();
+    }
+    return this.path.removeFirst();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean hasNext() {
+    return !this.path.isEmpty();
   }
 
   /**

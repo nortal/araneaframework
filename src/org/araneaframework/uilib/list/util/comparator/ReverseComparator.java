@@ -41,18 +41,18 @@ public class ReverseComparator<T> implements Comparator<T>, Serializable {
   @SuppressWarnings("unchecked")
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof ReverseComparator == false) {
+    if (!(obj instanceof ReverseComparator)) {
       return false;
     } else if (this == obj) {
       return true;
     }
 
     ReverseComparator<T> rhs = (ReverseComparator<T>) obj;
-    return comparator.equals(rhs.comparator);
+    return this.comparator.equals(rhs.comparator);
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(20070327, 1239).append(comparator).toHashCode();
+    return new HashCodeBuilder(20070327, 1239).append(this.comparator).toHashCode();
   }
 }

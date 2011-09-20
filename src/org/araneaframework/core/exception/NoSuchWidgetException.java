@@ -16,14 +16,22 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
- * @see org.araneaframework.core.exception.NoSuchComponentException
+ * Thrown to indicate that a widget with given key (ID) does not exist in the set of (child) widgets.
+ * <p>
+ * Components and Services have corresponding exceptions, {@link NoSuchComponentException} and
+ * {@link NoSuchServiceException} respectively.
+ * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class NoSuchWidgetException extends AraneaRuntimeException {
 
-  public NoSuchWidgetException(Object key) {
+  /**
+   * Creates a new exception for a widget with given <tt>key</tt> (ID) not being found.
+   * 
+   * @param key The ID of a child-widget that was not found.
+   */
+  public NoSuchWidgetException(String key) {
     super("No such widget '" + key + "'");
   }
 }

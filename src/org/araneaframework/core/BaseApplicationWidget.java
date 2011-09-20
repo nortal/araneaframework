@@ -253,7 +253,6 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
       LOG.warn("Widget '" + getScope() + "' cannot deliver event as no event listeners were registered for the event "
           + "id '" + eventId + "'!" + Assert.thisToString(this));
     }
-
   }
 
   /**

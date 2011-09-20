@@ -26,7 +26,6 @@ import org.araneaframework.core.ApplicationComponent;
 import org.araneaframework.core.StandardScope;
 import org.araneaframework.core.action.ActionListener;
 import org.araneaframework.core.action.SynchronizedActionListener;
-import org.araneaframework.core.exception.NoSuchEnvironmentEntryException;
 import org.araneaframework.framework.SynchronizedRequestRegistry;
 
 /**
@@ -100,7 +99,7 @@ public abstract class ComponentUtil {
       return getDelegateEnvironment().getEntry(key);
     }
 
-    public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException {
+    public <T> T requireEntry(Class<T> key) {
       return getDelegateEnvironment().requireEntry(key);
     }
 
@@ -182,6 +181,7 @@ public abstract class ComponentUtil {
    * 
    * @param env The component's environment. Used for {@link SynchronizedRequestRegistry} lookup.
    * @param componentScope The scope of the calling component.
+   * @param actionId The action listener ID.
    * @param actionListeners The action listeners to check for {@link SynchronizedActionListener}s.
    * @since 2.0
    */

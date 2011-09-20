@@ -27,7 +27,6 @@ import org.araneaframework.jsp.tag.presentation.EventButtonHtmlTag;
  * This tag displays wizard's navigation buttons.
  * 
  * @author Rein Raudjärv <reinra@ut.ee>
- * 
  * @jsp.tag name = "wizardFooter" body-content = "empty" description = "Includes navigation buttons."
  */
 public class WizardFooterTag extends BaseTag {
@@ -72,7 +71,7 @@ public class WizardFooterTag extends BaseTag {
     if (eventParam != null) {
       buttonTag.setEventParam(eventParam);
     }
-    if (disabled == true) {
+    if (disabled) {
       buttonTag.setDisabled(Boolean.toString(true));
     }
     if (labelId != null) {

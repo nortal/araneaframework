@@ -16,17 +16,16 @@
 
 package org.araneaframework.tests.framework.router;
 
-import org.araneaframework.Service;
-
-import org.araneaframework.Environment;
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.araneaframework.Environment;
+import org.araneaframework.Service;
 import org.araneaframework.framework.TopServiceContext;
 import org.araneaframework.framework.router.StandardTopServiceRouterService;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.http.core.StandardServletOutputData;
+import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardService;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -34,49 +33,53 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardTopServiceRouterServiceTests extends TestCase {
+
   private StandardTopServiceRouterService service;
+
   private MockEventfulStandardService child1;
+
   private MockEventfulStandardService child2;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   private Map<String, Service> map;
-  
+
   @Override
   public void setUp() throws Exception {
-    service = new StandardTopServiceRouterService();
-    map = new HashMap<String, Service>();
-    
-    child1 = new MockEventfulStandardService();
-    child2 = new MockEventfulStandardService();
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
-    
-    map.put("child1", child1);
-    map.put("child2", child2);
-    
-    service.setServiceMap(map);
-    service._getComponent().init(null, MockUtil.getEnv());
-    
-    service.setDefaultServiceId("child1");
+    this.service = new StandardTopServiceRouterService();
+    this.map = new HashMap<String, Service>();
+
+    this.child1 = new MockEventfulStandardService();
+    this.child2 = new MockEventfulStandardService();
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
+
+    this.map.put("child1", this.child1);
+    this.map.put("child2", this.child2);
+
+    this.service.setServiceMap(this.map);
+    this.service._getComponent().init(null, MockUtil.getEnv());
+
+    this.service.setDefaultServiceId("child1");
   }
 
   public void testCloseRemoves() throws Exception {
-    service._getService().action(MockUtil.getPath(), input, output);
-    Environment env = child1.getTheEnvironment();
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+    Environment env = this.child1.getTheEnvironment();
     TopServiceContext sess = EnvironmentUtil.requireTopServiceContext(env);
     sess.close("child1");
-    assertTrue(child1.getDestroyCalled());
+    assertTrue(this.child1.getDestroyCalled());
   }
 }

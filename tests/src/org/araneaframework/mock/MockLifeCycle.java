@@ -25,17 +25,18 @@ import org.araneaframework.core.StandardEnvironment;
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class MockLifeCycle {
+
   public static Component begin(Component comp, Environment env) {
     comp._getComponent().init(comp.getScope(), env);
     return comp;
   }
-  
+
   public static Component begin(Component comp) {
     comp._getComponent().init(comp.getScope(), new StandardEnvironment(null, new HashMap<Class<?>, Object>()));
     return comp;
   }
-  
+
   public static void end(Component comp) {
-    comp._getComponent().destroy();    
+    comp._getComponent().destroy();
   }
 }

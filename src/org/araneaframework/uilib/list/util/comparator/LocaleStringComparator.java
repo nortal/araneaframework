@@ -28,9 +28,9 @@ import org.araneaframework.core.util.Assert;
  */
 public class LocaleStringComparator implements StringComparator, Serializable {
 
-  private boolean ignoreCase;
+  private final boolean ignoreCase;
 
-  private Locale locale;
+  private final Locale locale;
 
   private transient Collator collator;
 
@@ -55,15 +55,15 @@ public class LocaleStringComparator implements StringComparator, Serializable {
 
   private Collator getCollator() {
     if (this.collator == null) {
-      this.collator = Collator.getInstance(locale);
-      this.collator.setStrength(ignoreCase ? Collator.SECONDARY : Collator.TERTIARY);
+      this.collator = Collator.getInstance(this.locale);
+      this.collator.setStrength(this.ignoreCase ? Collator.SECONDARY : Collator.TERTIARY);
     }
     return this.collator;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof LocaleStringComparator == false) {
+    if (!(obj instanceof LocaleStringComparator)) {
       return false;
     }
 
@@ -72,11 +72,11 @@ public class LocaleStringComparator implements StringComparator, Serializable {
     }
 
     LocaleStringComparator rhs = (LocaleStringComparator) obj;
-    return ignoreCase == rhs.ignoreCase && locale.equals(rhs.locale);
+    return this.ignoreCase == rhs.ignoreCase && this.locale.equals(rhs.locale);
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(20070327, 1221).append(ignoreCase).append(locale).toHashCode();
+    return new HashCodeBuilder(20070327, 1221).append(this.ignoreCase).append(this.locale).toHashCode();
   }
 }

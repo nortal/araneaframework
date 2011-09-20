@@ -34,57 +34,61 @@ import org.springframework.mock.web.MockHttpSession;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardSerializingAuditFilterServiceTests extends TestCase {
+
   private StandardSerializingAuditFilterService service;
+
   private MockEventfulBaseService child;
+
   private MockHttpSession httpSession;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   @Override
   public void setUp() throws Exception {
-    service = new StandardSerializingAuditFilterService();
-    child = new MockEventfulBaseService();
-    service.setChildService(child);
-    
-    httpSession = new MockHttpSession();
-    
+    this.service = new StandardSerializingAuditFilterService();
+    this.child = new MockEventfulBaseService();
+    this.service.setChildService(this.child);
+
+    this.httpSession = new MockHttpSession();
+
     Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
     map.put(HttpSession.class, this.httpSession);
-    
-    MockLifeCycle.begin(service, new StandardEnvironment(null, map));
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
+
+    MockLifeCycle.begin(this.service, new StandardEnvironment(null, map));
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
   }
-    
+
   public void testDestroyDestroysChild() throws Exception {
-    service._getComponent().destroy();
-    assertTrue(child.getDestroyCalled());
+    this.service._getComponent().destroy();
+    assertTrue(this.child.getDestroyCalled());
   }
-  
+
   public void testAction() throws Exception {
-    service._getService().action(MockUtil.getPath(), input, output);
-    assertTrue(child.getActionCalled());
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+    assertTrue(this.child.getActionCalled());
   }
-  
+
   public void testXmlOutput() throws Exception {
     String dir = "build";
-    service.setTestXmlSessionPath(dir);
-    
-    service._getService().action(MockUtil.getPath(), input, output);
-    
-    File file = new File(dir+"/"+httpSession.getId()+".xml");
-    assertTrue(file.length()>0);
+    this.service.setTestXmlSessionPath(dir);
+
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+
+    File file = new File(dir + "/" + this.httpSession.getId() + ".xml");
+    assertTrue(file.length() > 0);
     // delete the file
     assertTrue(file.delete());
     assertFalse(file.exists());

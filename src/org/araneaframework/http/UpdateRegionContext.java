@@ -19,39 +19,38 @@ package org.araneaframework.http;
 import java.io.Serializable;
 
 /**
- * Update region filter, supporting updating of HTML page regions and sending
- * miscellaneous data back via AJAX requests.
+ * Update region filter, supporting updating of HTML page regions and sending miscellaneous data back via AJAX requests.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
  */
 public interface UpdateRegionContext extends Serializable {
-  /**
-   * The request key for update regions that should be processed by this {@link UpdateRegionContext}.
-   */
-  public static final String UPDATE_REGIONS_KEY = "updateRegions";
 
   /**
-   * Disable updateregion filter during this request only. Already rendered data
-   * will be discarded. In client-side, transactionId will be set inconsistent
-   * and page will be forced to reload in order to perform full render.
+   * The request key containing update-regions that should be processed by this {@link UpdateRegionContext}.
+   */
+  String UPDATE_REGIONS_KEY = "updateRegions";
+
+  /**
+   * Disable update-region filter during this request only. Already rendered data will be discarded. In client-side,
+   * transactionId will be set inconsistent and page will be forced to reload in order to perform full render.
    */
   void disableOnce();
 
   /**
-   * Adds the region which should be rendered and included in the current response.
-   * @param documentRegionId fully qualified update region id
+   * Adds an ID of an update-region, which was rendered and included in the current response.
+   * 
+   * @param documentRegionId A fully qualified update region ID that was rendered.
    */
   void addRenderedRegion(String documentRegionId);
-  
+
   /**
-   * Notify that a document region is rendered by the specified widget. The list
-   * of document regions is cleared before every full render. Updateregion tags
-   * should always call this, so that when updateregion filter is invoked, it is
+   * Notify that a document region is rendered by the specified widget. The list of document regions is cleared before
+   * every full render. Update-region tags should always call this, so that when update-region filter is invoked, it is
    * known which widget to render for a particular document region.
    * 
-   * @param documentRegionId document region id 
-   * @param widgetId id of the widget that will render the document region
+   * @param documentRegionId The document region ID.
+   * @param widgetId A full path to widget that will render the document region.
    */
   void addDocumentRegion(String documentRegionId, String widgetId);
 

@@ -23,35 +23,36 @@ import org.araneaframework.uilib.form.converter.BaseConverter;
  * Form data converter interface, for converting from one data type to another. See {@link BaseConverter} for
  * description of {@link Converter} purpose in forms. The generic <code>C</code> is the source data type, and the
  * generic <code>D</code> is the target data type after conversion.
+ * 
+ * @param <C> The type of the source value (usually control value).
+ * @param <D> The type of the target value (usually form element value).
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public interface Converter<C,D> extends Serializable, FormElementAware<C,D> {
-
-  public void setFormElementCtx(FormElementContext<C,D> feCtx);
+public interface Converter<C, D> extends Serializable, FormElementAware<C, D> {
 
   /**
    * This method converts the data from one type to another.
-   *  
-   * @param data Data to convert.
-   * @return Converted data.
-   */
-  public D convert(C data);
-
-  /**
-   * This method converts the data from one type to another (though the types are exchanged in
-   * comparison with {@link #convert(Object)}).
    * 
    * @param data Data to convert.
    * @return Converted data.
    */
-  public C reverseConvert(D data);
+  D convert(C data);
 
   /**
-   * This method should return a new converter, of the same type that the class that overrides it,
-   * however freshly initialized.
+   * This method converts the data from one type to another (though the types are exchanged in comparison with
+   * {@link #convert(Object)}).
    * 
-   * @return a new converter, of the same type that the class that overrides it, however freshly
+   * @param data Data to convert.
+   * @return Converted data.
+   */
+  C reverseConvert(D data);
+
+  /**
+   * This method should return a new converter, of the same type that the class that overrides it, however freshly
    * initialized.
+   * 
+   * @return a new converter, of the same type that the class that overrides it, however freshly initialized.
    */
-  public Converter<C,D> newConverter();
+  Converter<C, D> newConverter();
 
 }

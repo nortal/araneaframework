@@ -19,43 +19,51 @@ package org.araneaframework.jsp;
 import org.araneaframework.uilib.ConfigurationContext;
 
 /**
- * Non-standard-HTML attributes added to specific HTML tags to define
- * Aranea event and content model information.
+ * Non-standard-HTML attributes added to specific HTML tags to define Aranea event and content model information.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
-public abstract class AraneaAttributes {
-  private AraneaAttributes() {}
-	
+public interface AraneaAttributes {
+
   /** Attribute identifying Aranea system form */
-  public static final String SYSTEM_FORM = "arn-systemForm";
+  String SYSTEM_FORM = "arn-systemForm";
+
   /**
-   * Attribute attached to Aranea component markers for identification of component. 
+   * Attribute attached to Aranea component markers for identification of component.
+   * 
    * @since 1.1
-   * */
-  public static final String WIDGET_ID = "arn-widgetId";
+   */
+  String WIDGET_ID = "arn-widgetId";
+
+  /** @since 1.0.11 */
+  interface FilteredInputControl {
+
+    String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
+  }
+
+  /**
+   * This attribute will be present on the form elements whose which should be validated on-the-fly. (Default is set
+   * with {@link ConfigurationContext} entry {@link ConfigurationContext#BACKGROUND_FORM_VALIDATION}.
+   * 
+   * @since 1.1
+   */
+  String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
+
+  String BACKGROUND_VALIDATION_CLASS = "aranea-bg-validate";
+
+  String NO_BACKGROUND_VALIDATION_CLASS = "aranea-no-bg-validate";
 
   /** Event related non-standard HTML tag attributes */
-  public interface Event {
-     public static final String ID = "arn-evntId";
-     public static final String TARGET_WIDGET_ID = "arn-trgtwdgt";
-     public static final String PARAM = "arn-evntPar";
-     public static final String UPDATE_REGIONS = "arn-updrgns";
-     public static final String CONDITION = "arn-evntCond";
-  }
-  
-  /** @since 1.0.11 */
-  public interface FilteredInputControl {
-    public static final String CHARACTER_FILTER = org.araneaframework.uilib.form.control.inputfilter.InputFilter.CHARACTER_FILTER_ATTRIBUTE;
-  }
-  
-  /**
-   * This attribute will be present on the form elements whose which should be validated on-the-fly.
-   * (Default is set with {@link ConfigurationContext} entry {@link ConfigurationContext#BACKGROUND_FORM_VALIDATION}.
-   * @since 1.1 */
-  public static final String BACKGROUND_VALIDATION_ATTRIBUTE = "arn-bgValidate";
+  interface Event {
 
-  public static final String BACKGROUND_VALIDATION_CLASS = "aranea-bg-validate";
+    String ID = "arn-evntId";
 
-  public static final String NO_BACKGROUND_VALIDATION_CLASS = "aranea-no-bg-validate";
+    String TARGET_WIDGET_ID = "arn-trgtwdgt";
+
+    String PARAM = "arn-evntPar";
+
+    String UPDATE_REGIONS = "arn-updrgns";
+
+    String CONDITION = "arn-evntCond";
+  }
 }

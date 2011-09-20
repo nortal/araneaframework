@@ -46,7 +46,7 @@ public interface SynchronizedRequestRegistry extends Serializable {
    * @param actionId The simple action ID.
    * @since 2.0
    */
-  public void registerSynchronizedAction(String parentScope, String actionId);
+  void registerSynchronizedAction(String parentScope, String actionId);
 
   /**
    * Unregisters an action with given parent component scope and with given action ID. All action request to the given
@@ -61,7 +61,7 @@ public interface SynchronizedRequestRegistry extends Serializable {
    * @param actionId The simple action ID.
    * @since 2.0
    */
-  public void unregisterSynchronizedAction(String parentScope, String actionId);
+  void unregisterSynchronizedAction(String parentScope, String actionId);
 
   /**
    * Provides whether the action with given <code>actionId</code> and <code>targetPath</code> is processed in
@@ -72,5 +72,5 @@ public interface SynchronizedRequestRegistry extends Serializable {
    * @return A boolean indicating whether the matching action listener is synchronized.
    * @since 2.0
    */
-  public boolean isSynchronized(String actionId, String targetPath);
+  boolean isSynchronized(String actionId, String targetPath);
 }

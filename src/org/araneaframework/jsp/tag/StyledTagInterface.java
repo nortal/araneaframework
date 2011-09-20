@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.tag;				
+package org.araneaframework.jsp.tag;
 
 import javax.servlet.jsp.JspException;
 
-
 /**
- * UI styled tag interface.   
+ * UI styled tag interface.
  * 
  * @author Oleg Mürk
  */
 public interface StyledTagInterface extends ContainedTagInterface {
-	public void setStyleClass(String styleClass) throws JspException;
-	public void setStyle(String style) throws JspException;
+
+  public void setStyleClass(String styleClass) throws JspException;
+
+  public void setStyle(String style) throws JspException;
 }

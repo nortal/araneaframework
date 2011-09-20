@@ -25,10 +25,11 @@ import java.util.Comparator;
  */
 public class ComparableComparator<T extends Comparable<T>> implements Comparator<T>, Serializable {
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public static final ComparableComparator INSTANCE = new ComparableComparator();
 
-  private ComparableComparator() {}
+  private ComparableComparator() {
+  }
 
   public int compare(T o1, T o2) {
     return o1.compareTo(o2);

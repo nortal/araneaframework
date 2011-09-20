@@ -27,12 +27,12 @@ import java.io.Serializable;
 public interface TopServiceContext extends ManagedServiceContext, Serializable {
 
   /**
-   * The key of the top-service's ID in the request.
+   * The key used for the top-service ID lookup in the request.
    */
-  public static final String TOP_SERVICE_KEY = "araTopServiceId";
+  String TOP_SERVICE_KEY = "araTopServiceId";
 
   /**
-   * The key in the request that specifies whether the top-service should .
+   * The key used for checking the request for a keep-alive request (which won't be processed once detected).
    */
-  public static final String KEEPALIVE_KEY = "araTopServiceKeepAlive";
+  String KEEPALIVE_KEY = "araTopServiceKeepAlive";
 }

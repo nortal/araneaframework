@@ -28,9 +28,9 @@ import org.araneaframework.uilib.core.PopupFlowWidget.MessageFactory;
 
 /**
  * Wrapper around the flow that is started from new session-thread. It pretends to be
- * {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies method calls current
- * <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} and to
- * {@link org.araneaframework.framework.FlowContext} that requested starting of wrapped flow.
+ * {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies method calls current <em>real</em>
+ * {@link org.araneaframework.framework.FlowContext} and to {@link org.araneaframework.framework.FlowContext} that
+ * requested starting of wrapped flow.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -51,7 +51,7 @@ public class PopupMessageFactory implements MessageFactory, Serializable {
     public final void send(Object id, Component component) {
       if (component instanceof RootFlowContext) {
         try {
-          this.execute(component);
+          execute(component);
         } catch (Exception e) {
           throw ExceptionUtil.uncheckException(e);
         }

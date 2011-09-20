@@ -34,49 +34,57 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServletSessionRouterServiceTests extends TestCase {
+
   private StandardHttpSessionRouterService service;
+
   private MockEventfulBaseService child;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
- 
+
   private Path path;
-  
+
   @Override
   public void setUp() throws Exception {
-    service = new StandardHttpSessionRouterService();
-    child = new MockEventfulBaseService();
-    ServiceFactory factory = new ServiceFactory() {    	
+    this.service = new StandardHttpSessionRouterService();
+    this.child = new MockEventfulBaseService();
+    ServiceFactory factory = new ServiceFactory() {
+
       public Service buildService(Environment env) {
-        return child;
+        return StandardServletSessionRouterServiceTests.this.child;
       }
     };
-    
-    service.setSessionServiceFactory(factory);
-    MockLifeCycle.begin(service);
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
-  }
-  
-  public void testCreatesNewSession() throws Exception {
-    service._getService().action(path, input, output);
-    assertTrue(child.getInitCalled());
-    assertTrue(null != ServletUtil.getRequest(input).getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY));
-  } 
-  
-  public void testReusesOldSession() throws Exception {
-    service._getService().action(path, input, output);
-    Service sessService = (Service)ServletUtil.getRequest(input).getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
-    service._getService().action(path, input, output);
 
-    Service service = (Service)ServletUtil.getRequest(input).getSession().getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
+    this.service.setSessionServiceFactory(factory);
+    MockLifeCycle.begin(this.service);
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
+  }
+
+  public void testCreatesNewSession() throws Exception {
+    this.service._getService().action(this.path, this.input, this.output);
+    assertTrue(this.child.getInitCalled());
+    assertTrue(null != ServletUtil.getRequest(this.input).getSession()
+        .getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY));
+  }
+
+  public void testReusesOldSession() throws Exception {
+    this.service._getService().action(this.path, this.input, this.output);
+    Service sessService = (Service) ServletUtil.getRequest(this.input).getSession()
+        .getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
+    this.service._getService().action(this.path, this.input, this.output);
+
+    Service service = (Service) ServletUtil.getRequest(this.input).getSession()
+        .getAttribute(StandardHttpSessionRouterService.SESSION_SERVICE_KEY);
 
     assertEquals(sessService, service);
   }

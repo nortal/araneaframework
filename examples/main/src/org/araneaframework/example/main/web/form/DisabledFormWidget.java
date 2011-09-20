@@ -24,9 +24,9 @@ import org.araneaframework.framework.MessageContext;
  * Note that when elements are disabled in Aranea, they won't process requests. Therefore, even when inputs are enabled
  * in browser, their values changed, and committed back to the server, the values in disabled components will remain as
  * they were just before being disabled. However, it is possible to modify values of disabled form elements through the
- * API, as this demo confirms it. 
+ * API, as this demo confirms it.
  * 
- * @author Martti Tamm (martti <i>at</i> araneaframework <i>dot</i> org)
+ * @author Martti Tamm (martti@araneaframework.org)
  */
 public class DisabledFormWidget extends SimpleFormWidget {
 
@@ -45,7 +45,7 @@ public class DisabledFormWidget extends SimpleFormWidget {
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     getMessageCtx().clearPermanentMessages();
   }
 }

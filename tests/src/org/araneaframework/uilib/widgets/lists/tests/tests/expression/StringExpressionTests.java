@@ -26,58 +26,57 @@ import org.araneaframework.backend.list.memorybased.expression.string.Concatenat
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockValueExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
-
 public class StringExpressionTests extends TestCase {
-	private static final Log LOG = LogFactory.getLog(StringExpressionTests.class);
 
-	private VariableResolver resolver;
+  private static final Log LOG = LogFactory.getLog(StringExpressionTests.class);
 
-	private Expression part1expr;
-	private Expression part2expr;
-	private Expression part3expr;
+  private VariableResolver resolver;
 
-	@Override
+  private Expression part1expr;
+
+  private Expression part2expr;
+
+  private Expression part3expr;
+
+  @Override
   public void setUp() {
-		this.resolver = new MockVariableResolver();
-		
-		this.part1expr = new MockValueExpression<String>("part1");
-		this.part2expr = new MockValueExpression<String>("part2");
-		this.part3expr = new MockValueExpression<String>("part3");
-	}
+    this.resolver = new MockVariableResolver();
 
-	@Override
+    this.part1expr = new MockValueExpression<String>("part1");
+    this.part2expr = new MockValueExpression<String>("part2");
+    this.part3expr = new MockValueExpression<String>("part3");
+  }
+
+  @Override
   public void tearDown() {
-		this.resolver = null;
-		this.part1expr = null;
-		this.part2expr = null;
-		this.part3expr = null;
-	}
+    this.resolver = null;
+    this.part1expr = null;
+    this.part2expr = null;
+    this.part3expr = null;
+  }
 
-	public void testConcatenationExpression()
-			throws ExpressionEvaluationException {
-		LOG.debug("Testing ConcatenationExpression");
-		try {
-			new ConcatenationExpression().evaluate(this.resolver);
-			fail("ConcatenationExpression must throw an exception");
-		} catch (Exception e) {
-			// normal
-		}
-		try {
-			new ConcatenationExpression().add(this.part1expr).evaluate(
-					this.resolver);
-		} catch (Exception e) {
-			fail("ConcatenationExpression must pass with one child");
-		}
+  public void testConcatenationExpression() throws ExpressionEvaluationException {
+    LOG.debug("Testing ConcatenationExpression");
+    try {
+      new ConcatenationExpression().evaluate(this.resolver);
+      fail("ConcatenationExpression must throw an exception");
+    } catch (Exception e) {
+      // normal
+    }
+    try {
+      new ConcatenationExpression().add(this.part1expr).evaluate(this.resolver);
+    } catch (Exception e) {
+      fail("ConcatenationExpression must pass with one child");
+    }
 
-		assertEquals("ConcatenationExpression must return part1part2",
-				"part1part2", new ConcatenationExpression().add(this.part1expr)
-						.add(this.part2expr).evaluate(this.resolver));
-		assertEquals("ConcatenationExpression must return part2part1",
-				"part2part1", new ConcatenationExpression().add(this.part2expr)
-						.add(this.part1expr).evaluate(this.resolver));
-		assertEquals("ConcatenationExpression must return part1part2part3",
-				"part1part2part3", new ConcatenationExpression().add(
-						this.part1expr).add(this.part2expr).add(this.part3expr)
-						.evaluate(this.resolver));
-	}
+    assertEquals("ConcatenationExpression must return part1part2", "part1part2",
+        new ConcatenationExpression().add(this.part1expr).add(this.part2expr).evaluate(this.resolver));
+    assertEquals("ConcatenationExpression must return part2part1", "part2part1",
+        new ConcatenationExpression().add(this.part2expr).add(this.part1expr).evaluate(this.resolver));
+    assertEquals(
+        "ConcatenationExpression must return part1part2part3",
+        "part1part2part3",
+        new ConcatenationExpression().add(this.part1expr).add(this.part2expr).add(this.part3expr)
+            .evaluate(this.resolver));
+  }
 }

@@ -36,73 +36,74 @@ import org.araneaframework.mock.MockInputData;
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public abstract class BaseMessageContextTests extends TestCase {
+
   protected MessageContext msgCtx;
 
   protected abstract MessageContext getMessageContext();
 
   @Override
   protected void setUp() throws Exception {
-    msgCtx = getMessageContext();
+    this.msgCtx = getMessageContext();
 
     // assertions do not allow filter widgets without children :)
-    ((FilterWidget)msgCtx).setChildWidget(new BaseWidget());
+    ((FilterWidget) this.msgCtx).setChildWidget(new BaseWidget());
 
     Environment env = new StandardEnvironment(null, new HashMap<Class<?>, Object>());
-    ((Widget)msgCtx)._getComponent().init(null, env);
+    ((Widget) this.msgCtx)._getComponent().init(null, env);
   }
 
   // add nothing, test emptiness
   public void testEmpty_1() throws Exception {
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertTrue("MessageMap must be null or empty.", messages == null || messages.size() == 0);
   }
 
   // add something, clear, test emptiness
   public void testEmpty_2() throws Exception {
-    msgCtx.showInfoMessage("TestMessage");
-    msgCtx.clearMessages();
+    this.msgCtx.showInfoMessage("TestMessage");
+    this.msgCtx.clearMessages();
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertTrue("MessageMap must be null or empty.", messages == null || messages.size() == 0);
   }
 
   // test that non-permanent messages do not survive update(), map must be empty;
   public void testEmpty_3() throws Exception {
-    msgCtx.showInfoMessage("message survival test");
+    this.msgCtx.showInfoMessage("message survival test");
 
-    ((Widget)msgCtx)._getWidget().update(new MockInputData());
+    ((Widget) this.msgCtx)._getWidget().update(new MockInputData());
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertTrue("MessageMap must be null or empty.", messages == null || messages.size() == 0);
   }
 
   // test that added messages really are present after render();
   public void testNonEmpty_1() throws Exception {
-    msgCtx.showInfoMessage("surviving message");
+    this.msgCtx.showInfoMessage("surviving message");
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("MessageMap must contain ONE element!", messages.size() == 1);
   }
 
   // test that added permanent messages survive the update();
   public void testNonEmpty_2() throws Exception {
-    msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "message survival test");
+    this.msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "message survival test");
 
-    ((Widget)msgCtx)._getWidget().update(new MockInputData());
+    ((Widget) this.msgCtx)._getWidget().update(new MockInputData());
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("MessageMap must contain ONE element!", messages.size() == 1);
   }
 
   // test that permanent messages and messages for current render come together nicely in a Collection
   public void testNonEmpty_3() throws Exception {
-    msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");
-    msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
-    msgCtx.showErrorMessage("Another error message added with defined interface method.");
+    this.msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");
+    this.msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
+    this.msgCtx.showErrorMessage("Another error message added with defined interface method.");
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("Messages must contain ONE elements!", messages.size() == 1);
 
@@ -113,15 +114,15 @@ public abstract class BaseMessageContextTests extends TestCase {
 
   // test that message hiding works
   public void testMessageHiding() throws Exception {
-    msgCtx.showInfoMessage("infomessage");
-    msgCtx.showWarningMessage("warningmessage");
-    msgCtx.showErrorMessage("errormessage");
+    this.msgCtx.showInfoMessage("infomessage");
+    this.msgCtx.showWarningMessage("warningmessage");
+    this.msgCtx.showErrorMessage("errormessage");
 
-    msgCtx.hideInfoMessage("infomessage");
-    msgCtx.hideWarningMessage("warningmessage");
-    msgCtx.hideErrorMessage("errormessage");
+    this.msgCtx.hideInfoMessage("infomessage");
+    this.msgCtx.hideWarningMessage("warningmessage");
+    this.msgCtx.hideErrorMessage("errormessage");
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
 
     Collection<MessageData> infoMessages = messages.get(MessageContext.INFO_TYPE);
     Collection<MessageData> warningMessages = messages.get(MessageContext.WARNING_TYPE);
@@ -132,9 +133,9 @@ public abstract class BaseMessageContextTests extends TestCase {
     assertTrue("errorMessages must be empty", errorMessages.isEmpty());
 
     // also test that only messages of given type are hidden (cleared)
-    msgCtx.showInfoMessage("simplemessage");
-    msgCtx.hideWarningMessage("simplemessage");
-    msgCtx.showErrorMessage("errormessage");
+    this.msgCtx.showInfoMessage("simplemessage");
+    this.msgCtx.hideWarningMessage("simplemessage");
+    this.msgCtx.showErrorMessage("errormessage");
 
     infoMessages = messages.get(MessageContext.INFO_TYPE);
     warningMessages = messages.get(MessageContext.WARNING_TYPE);
@@ -147,13 +148,13 @@ public abstract class BaseMessageContextTests extends TestCase {
 
   // test that hiding of permanent messages works
   public void testPermanentMessageHiding() throws Exception {
-    msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");
-    msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
-    msgCtx.showErrorMessage("Another error message added with defined interface method.");
+    this.msgCtx.showPermanentMessage(MessageContext.ERROR_TYPE, "permanent message");
+    this.msgCtx.showMessage(MessageContext.ERROR_TYPE, "one-time message");
+    this.msgCtx.showErrorMessage("Another error message added with defined interface method.");
 
-    msgCtx.hidePermanentMessage("permanent message");
+    this.msgCtx.hidePermanentMessage("permanent message");
 
-    Map<String, Collection<MessageData>> messages = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> messages = this.msgCtx.getMessages();
     assertNotNull("messages must not be null", messages);
     assertTrue("Messages must contain ONE element!", messages.size() == 1);
 
@@ -167,15 +168,16 @@ public abstract class BaseMessageContextTests extends TestCase {
     for (int i = 0; i < 200; i++) {
       String nextMessage = RandomStringUtils.randomAlphanumeric(30);
       messages.add(i, nextMessage);
-        msgCtx.showErrorMessage(nextMessage);
+      this.msgCtx.showErrorMessage(nextMessage);
     }
 
-    Map<String, Collection<MessageData>> renderedMessageMap = msgCtx.getMessages();
+    Map<String, Collection<MessageData>> renderedMessageMap = this.msgCtx.getMessages();
     Collection<MessageData> renderedMessages = renderedMessageMap.get(MessageContext.ERROR_TYPE);
 
     int j = 0;
-    for (Iterator<MessageData> i = renderedMessages.iterator(); i.hasNext(); j++)
+    for (Iterator<MessageData> i = renderedMessages.iterator(); i.hasNext(); j++) {
       assertEquals(messages.get(j), i.next().getMessage());
+    }
 
     assertTrue("There should have been 200 error messages", j == 200);
   }

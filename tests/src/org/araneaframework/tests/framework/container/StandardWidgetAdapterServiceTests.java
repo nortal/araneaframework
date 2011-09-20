@@ -32,63 +32,67 @@ import org.araneaframework.mock.core.MockEventfulStandardWidget;
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardWidgetAdapterServiceTests extends TestCase {
+
   private StandardWidgetAdapterService adapter;
+
   private MockEventfulStandardWidget widget;
-  
+
   @Override
   public void setUp() throws Exception {
-    widget = new MockEventfulStandardWidget();
-    
-    adapter = new StandardWidgetAdapterService();
-    adapter.setChildWidget(widget);
-    MockLifeCycle.begin(adapter);
-  }
-  
-  public void testActionUpdatesEventsRendersOnSecondRequest() throws Exception {
-    adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
-    adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
-    
-    assertTrue(widget.getUpdateCalled());
-    assertTrue(!widget.getEventProcessed());
-    assertTrue(widget.getRenderCalled());
+    this.widget = new MockEventfulStandardWidget();
 
-    assertFalse(widget.getActionCalled());
+    this.adapter = new StandardWidgetAdapterService();
+    this.adapter.setChildWidget(this.widget);
+    MockLifeCycle.begin(this.adapter);
   }
-  
+
+  public void testActionUpdatesEventsRendersOnSecondRequest() throws Exception {
+    this.adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
+    this.adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
+
+    assertTrue(this.widget.getUpdateCalled());
+    assertTrue(!this.widget.getEventProcessed());
+    assertTrue(this.widget.getRenderCalled());
+
+    assertFalse(this.widget.getActionCalled());
+  }
+
   public void testDoesNotActionUpdatesEventsRendersOnFirstRequest() throws Exception {
     Map<String, String> globalData = new HashMap<String, String>();
     globalData.put(ApplicationService.ACTION_PATH_KEY, "");
     MockInputData input = new MockInputData(globalData);
-    adapter._getService().action(MockUtil.getPath(), input, MockUtil.getOutput());
-    
-    assertTrue(widget.getActionCalled());
-    assertFalse(widget.getUpdateCalled());
-    assertFalse(widget.getEventProcessed());
-    assertFalse(widget.getRenderCalled());
+    this.adapter._getService().action(MockUtil.getPath(), input, MockUtil.getOutput());
+
+    assertTrue(this.widget.getActionCalled());
+    assertFalse(this.widget.getUpdateCalled());
+    assertFalse(this.widget.getEventProcessed());
+    assertFalse(this.widget.getRenderCalled());
   }
-  
+
   public void testActionPropagates() throws Exception {
-    adapter = new StandardWidgetAdapterService() {
+    this.adapter = new StandardWidgetAdapterService() {
+
       @Override
       protected boolean hasAction(InputData input) {
         return true;
       }
+
       @Override
       protected Path getActionPath(InputData input) {
         return null;
       }
     };
-    widget = new MockEventfulStandardWidget();
-    adapter.setChildWidget(widget);
-    MockLifeCycle.begin(adapter);
-    
-    adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
-    
-    assertTrue(widget.getActionCalled());
+    this.widget = new MockEventfulStandardWidget();
+    this.adapter.setChildWidget(this.widget);
+    MockLifeCycle.begin(this.adapter);
+
+    this.adapter._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
+
+    assertTrue(this.widget.getActionCalled());
   }
-  
+
   public void testDestroyDestroysChild() throws Exception {
-    adapter._getComponent().destroy();
-    assertTrue(widget.getDestroyCalled());
+    this.adapter._getComponent().destroy();
+    assertTrue(this.widget.getDestroyCalled());
   }
 }

@@ -56,7 +56,7 @@ public class DownloaderWidget extends BaseApplicationWidget {
   public DownloaderWidget(byte[] data, String contentType) {
     this(new ByteArrayInputStream(data), data.length, contentType);
   }
-  
+
   /**
    * Instantiates widget with download data.
    * 

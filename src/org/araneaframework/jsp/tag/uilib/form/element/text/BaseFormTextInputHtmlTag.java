@@ -41,38 +41,33 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   public BaseFormTextInputHtmlTag() {
     this.baseStyleClass = "aranea-text";
   }
-  
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     int result = super.doStartTag(out);
     addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, null);
     return result;
-  }  
+  }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Horizontal size, in characters." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Horizontal size, in characters."
    */
-  public void setSize(String size){
+  public void setSize(String size) {
     this.size = evaluate("size", size, Long.class);
   }
 
   /**
-   * @jsp.attribute
-   *   type = "java.lang.String"
-   *   required = "false"
-   *   description = "Precondition for deciding whether go to server side or not." 
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Precondition for deciding whether go to server side or not."
    */
-  public void setOnChangePrecondition(String onChangePrecondition){
+  public void setOnChangePrecondition(String onChangePrecondition) {
     this.onChangePrecondition = evaluate("onChangePrecondition", onChangePrecondition, String.class);
   }
 
   /**
-   * @jsp.attribute type = "java.lang.String"
-   *                required = "false"
-   *                description = "Specifies how to render a disabled input. Valid options are <code>'disabled'</code> and <code>'readonly'</code>. Default is <code>'disabled'</code>."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Specifies how to render a disabled
+   *                input. Valid options are <code>'disabled'</code> and <code>'readonly'</code>. Default is
+   *                <code>'disabled'</code>."
    * @since 1.1.3
    */
   public void setDisabledRenderMode(String disabledRenderMode) throws JspException {
@@ -89,21 +84,22 @@ public class BaseFormTextInputHtmlTag extends BaseFormElementHtmlTag {
   protected void writeTextInput(Writer out, String inputType, boolean writeValue, Map<String, String> customAttributes)
       throws Exception {
 
-    String name = this.getFullFieldId();
+    String name = getFullFieldId();
     StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
 
     // Write
     JspUtil.writeOpenStartTag(out, "input");
     JspUtil.writeAttribute(out, "id", name);
-    JspUtil.writeAttribute(out, "name", name);    
+    JspUtil.writeAttribute(out, "name", name);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "type", inputType);
-    if (writeValue)
+    if (writeValue) {
       JspUtil.writeAttribute(out, "value", viewModel.getSimpleValue());
+    }
     JspUtil.writeAttribute(out, "size", this.size);
     JspUtil.writeAttribute(out, "tabindex", this.tabindex);
-    
+
     for (Map.Entry<String, String> attribute : customAttributes.entrySet()) {
       JspUtil.writeAttribute(out, "" + attribute.getKey(), attribute.getValue());
     }

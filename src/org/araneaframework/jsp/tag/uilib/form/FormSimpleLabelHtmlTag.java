@@ -34,7 +34,6 @@ import org.araneaframework.uilib.form.FormWidget;
  * Standard simple label tag.
  * 
  * @author Oleg Mürk
- * 
  * @jsp.tag name = "simpleLabel" body-content = "JSP" description = "Represents localizable label."
  */
 public class FormSimpleLabelHtmlTag extends PresentationTag {
@@ -180,30 +179,24 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Whether the label should display the asterisk, <code>false<code> by default."
+   * @jsp.attribute type = "java.lang.String" required = "false" description = "Whether the label should display the
+   *                asterisk, <code>false</code> by default."
    */
   public void setShowMandatory(String mandatory) throws JspException {
     this.mandatory = evaluateNotNull("mandatory", mandatory, Boolean.class);
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Whether a colon (&quot;:&quot;) is shown after the label."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Whether a colon (&quot;:&quot;) is shown after the label."
    */
   public void setShowColon(String showColon) throws JspException {
     this.showColon = evaluateNotNull("showColumn", showColon, Boolean.class);
   }
 
   /**
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "ID of the form element for which the label is created"
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "ID of the form element for which the label is created"
    */
   public void setFor(String elementName) {
     this.forElementId = evaluate("for", elementName, String.class);
@@ -214,10 +207,8 @@ public class FormSimpleLabelHtmlTag extends PresentationTag {
    * the resource ID is constructed as &lt;label-id&gt;.access-key. When this resource exists and contains a single
    * character, this character is used as an access key for the label. Otherwise no access key is used.
    * 
-   * @jsp.attribute
-   *    type = "java.lang.String"
-   *    required = "false"
-   *    description = "Sets an optional resource ID containing the access key for this label."
+   * @jsp.attribute type = "java.lang.String" required = "false" description =
+   *                "Sets an optional resource ID containing the access key for this label."
    */
   public void setAccessKeyId(String accessKeyId) {
     this.accessKeyId = evaluate("accessKeyId", accessKeyId, String.class);

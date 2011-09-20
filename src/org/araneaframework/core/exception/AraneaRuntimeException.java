@@ -19,25 +19,45 @@ package org.araneaframework.core.exception;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
- * A general nestable Aranea specific runtime exception.
+ * A general Aranea specific runtime exception that can be nested. This is also the base runtime exception class used by
+ * Aranea framework.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class AraneaRuntimeException extends NestableRuntimeException {
 
-  public AraneaRuntimeException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
+  /**
+   * Creates a new Aranea-specific runtime exception.
+   */
   public AraneaRuntimeException() {
     super();
   }
 
+  /**
+   * Creates a new Aranea-specific runtime exception.
+   * 
+   * @param message A message for the exception.
+   */
   public AraneaRuntimeException(String message) {
     super(message);
   }
 
+  /**
+   * Creates a new Aranea-specific runtime exception.
+   * 
+   * @param cause A source exception to be wrapped by this exception.
+   */
   public AraneaRuntimeException(Throwable cause) {
     super(cause);
+  }
+
+  /**
+   * Creates a new Aranea-specific runtime exception.
+   * 
+   * @param message A message for the exception.
+   * @param cause A source exception to be wrapped by this exception.
+   */
+  public AraneaRuntimeException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

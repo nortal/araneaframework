@@ -17,9 +17,6 @@
 package org.araneaframework.uilib;
 
 import java.io.Serializable;
-import org.araneaframework.integration.spring.SpringExpressionEvaluationManager;
-import org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager;
-import org.araneaframework.jsp.tag.support.ExpressionEvaluationManager;
 
 /**
  * Configuration context for UiLib widgets. Constants defined here are the keys under which some existing widgets search
@@ -82,8 +79,10 @@ public interface ConfigurationContext extends Serializable {
   String LIST_FILTER_CONFIGURATOR = "uilib.widgets.lists.ListFilterConfigurator";
 
   /**
-   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder} that configures how
-   * {@link org.araneaframework.uilib.form.control.AutoCompleteTextControl} sends back the suggested completions.
+   * A <tt>AutoCompleteTextControl.ResponseBuilder</tt> that configures how <tt>AutoCompleteTextControl</tt> sends back
+   * the suggested completions.
+   * 
+   * @see org.araneaframework.uilib.form.control.AutoCompleteTextControl.ResponseBuilder
    */
   String AUTO_COMPLETE_RESPONSE_BUILDER = "uilib.widgets.AutoCompleteTextControl.DefaultResponseBuilder";
 
@@ -93,22 +92,23 @@ public interface ConfigurationContext extends Serializable {
   String LIKE_CONFIGURATION = "uilib.widgets.lists.LikeConfiguration";
 
   /**
-   * This <code>java.lang.Boolean</code> property should be set to <code>true</code> if application wants all forms to
-   * be validated on-the-fly. Validation is done by invoking server-side {@link org.araneaframework.core.action.ActionListener}
-   * s that perform the validation. When this is set to <code>false</code>, programmer can manually enable action
-   * validation for those {@link org.araneaframework.uilib.form.FormWidget}/
-   * {@link org.araneaframework.uilib.form.FormElement} which should be validated on-the-fly. When
-   * {@link ConfigurationContext} does not include entry corresponding to this property, it defaults to
-   * <code>false</code>.
+   * This Boolean property should be set to <code>true</code> if application wants all forms to be validated on-the-fly.
+   * Validation is done by invoking server-side <tt>ActionListener</tt>s that perform the validation. When this is set
+   * to <code>false</code>, programmer can manually enable action validation for those <tt>FormWidget</tt> or
+   * <tt>FormElement</tt> which should be validated on-the-fly. When <tt>ConfigurationContext</tt> does not include
+   * entry corresponding to this property, it defaults to <code>false</code>.
    * 
+   * @see org.araneaframework.uilib.form.FormElement#setBackgroundValidation(boolean)
    * @since 1.1
    */
   String BACKGROUND_FORM_VALIDATION = "uilib.widgets.forms.seamless.validation";
 
   /**
-   * This property should be set to the class which stores the errors produced by failed
-   * {@link org.araneaframework.uilib.form.FormElement} validations. When this property is not set,
-   * {@link org.araneaframework.uilib.form.StandardFormElementValidationErrorRenderer} is used.
+   * This property should be set to the class which stores the errors produced by failed <tt>FormElement</tt>
+   * validations. When this property is not set, <tt>StandardFormElementValidationErrorRenderer</tt> is used.
+   * 
+   * @see org.araneaframework.uilib.form.FormElement
+   * @see org.araneaframework.uilib.form.StandardFormElementValidationErrorRenderer
    */
   String FORMELEMENT_ERROR_RENDERER = "uilib.widgets.forms.formelement.error.renderer";
 
@@ -125,11 +125,14 @@ public interface ConfigurationContext extends Serializable {
   String LOCALIZE_FIXED_CONTROL_DATA = "uilib.widgets.forms.control.data.localize";
 
   /**
-   * This property should be set as a class implementing {@link ExpressionEvaluationManager} to specify a custom EL
-   * evaluation manager. If none is provided, the {@link DefaultExpressionEvaluationManager} will be used, or
-   * {@link SpringExpressionEvaluationManager} in a Spring framework application.
+   * This property should be set as a class implementing <tt>ExpressionEvaluationManager</tt> to specify a custom EL
+   * evaluation manager. If none is provided, the <tt>DefaultExpressionEvaluationManager</tt> will be used, or
+   * <tt>SpringExpressionEvaluationManager</tt> in a Spring framework application.
    * 
    * @since 1.0.1
+   * @see org.araneaframework.jsp.tag.support.ExpressionEvaluationManager
+   * @see org.araneaframework.jsp.tag.support.DefaultExpressionEvaluationManager
+   * @see org.araneaframework.integration.spring.SpringExpressionEvaluationManager
    */
   String TAGS_EL_MANAGER = "uilib.tags.el.manager";
 
@@ -147,7 +150,7 @@ public interface ConfigurationContext extends Serializable {
    * @param entryName The name, the entry will be identified with.
    * @return The value to be associated with the entry.
    */
-  public Object getEntry(String entryName);
+  Object getEntry(String entryName);
 
   /**
    * Sets an entry in the configuration context. If the entry already exists, it will be overridden.
@@ -156,5 +159,5 @@ public interface ConfigurationContext extends Serializable {
    * @param value The value to be associated with the entry.
    * @since 2.0
    */
-  public void setEntry(String entryName, Object value);
+  void setEntry(String entryName, Object value);
 }

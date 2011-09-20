@@ -36,80 +36,85 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardThreadServiceRouterServiceTests extends TestCase {
+
   private StandardThreadServiceRouterService service;
+
   private MockEventfulStandardService child1;
+
   private MockEventfulStandardService child2;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   private Map<String, Service> map;
-  
+
   @Override
   public void setUp() throws Exception {
-    service = new StandardThreadServiceRouterService();
-    map = new HashMap<String, Service>();
-    
-    child1 = new MockEventfulStandardService();
-    child2 = new MockEventfulStandardService();
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
-    
-    map.put("child1", child1);
-    map.put("child2", child2);
-    
-    service.setServiceMap(map);
-    service._getComponent().init(null, MockUtil.getEnv());
-    
-    service.setDefaultServiceId("child1");
+    this.service = new StandardThreadServiceRouterService();
+    this.map = new HashMap<String, Service>();
+
+    this.child1 = new MockEventfulStandardService();
+    this.child2 = new MockEventfulStandardService();
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
+
+    this.map.put("child1", this.child1);
+    this.map.put("child2", this.child2);
+
+    this.service.setServiceMap(this.map);
+    this.service._getComponent().init(null, MockUtil.getEnv());
+
+    this.service.setDefaultServiceId("child1");
   }
-  
+
   public void testCloseRemoves() throws Exception, Throwable {
-    service._getService().action(MockUtil.getPath(), input, output);
-    ThreadContext sess = EnvironmentUtil.requireThreadContext(child1.getTheEnvironment());
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+    ThreadContext sess = EnvironmentUtil.requireThreadContext(this.child1.getTheEnvironment());
     assertNotNull(sess.getService("child1"));
     sess.close("child1");
-    assertTrue(child1.getDestroyCalled());
+    assertTrue(this.child1.getDestroyCalled());
     assertNull(sess.getService("child1"));
   }
 
   public void testServiceExpiration() throws Exception {
-    ThreadContext ctx = EnvironmentUtil.requireThreadContext(child1.getTheEnvironment());
+    ThreadContext ctx = EnvironmentUtil.requireThreadContext(this.child1.getTheEnvironment());
     ctx.addService("newService", new BaseService(), new Long(1000));
 
     Thread.sleep(1200);
 
     assertNotNull("Action is not yet called, so service should still exist.", ctx.getService("newService"));
-    service._getService().action(MockUtil.getPath(), input, output);
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
     assertNull("Action is called, so service should be expired now.", ctx.getService("newService"));
 
     // make sure that in addition to killing expired services, their lifetimes are updated in action()
     ctx.addService("nextService", new BaseService(), new Long(2000));
     MockHttpServletRequest req = new MockHttpServletRequest();
     req.addParameter(ThreadContext.THREAD_SERVICE_KEY, "nextService");
-    input = new StandardServletInputData(req);
-    
+    this.input = new StandardServletInputData(req);
+
     Thread.sleep(1000);
-    service._getService().action(MockUtil.getPath(), input, output);
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
     Thread.sleep(1500);
-    service._getService().action(MockUtil.getPath(), input, output);
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
 
     assertNotNull("Should still be alive", ctx.getService("nextService"));
-    
+
     Thread.sleep(2200);
-    
+
     try {
-      service._getService().action(MockUtil.getPath(), input, output);
+      this.service._getService().action(MockUtil.getPath(), this.input, this.output);
       fail("Routing to 'nextService' should have failed.");
     } catch (NoSuchServiceException e) {
-       //
+      //
     }
 
     assertNull("Should be dead now.", ctx.getService("nextService"));

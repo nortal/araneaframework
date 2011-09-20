@@ -117,7 +117,7 @@ public class ExternalResourceInitializer {
       xr.parse(new InputSource(fileURL.openStream()));
     }
   }
-  
+
   protected void loadURIResources(Enumeration<URI> resources, XMLReader xr) throws IOException, SAXException {
     while (resources.hasMoreElements()) {
       URI fileURL = resources.nextElement();

@@ -18,7 +18,6 @@ package org.araneaframework.http.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.araneaframework.Component;
 import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
@@ -30,54 +29,46 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.ServletServiceAdapterComponent;
 
 /**
+ * Creates a {@link StandardServletInputData} and {@link StandardServletOutputData} from the {@link HttpServletRequest}
+ * and {@link HttpServletResponse} respectively and routes the request to the child services using a <code>null</code>
+ * <tt>Path</tt>.
  * <p>
- * Creates a StandardServletInputData and StandardServletOutputData from the HttpServletRequest and HttpServletResponse
- * respectively and routes the request to the child services using a null Path.
- * </p>
- * <p>
- * Since <emphasis>1.0.3</emphasis> this adapter makes {@link OutputData} and {@link InputData} accessible from
- * {@link Component}'s {@link Environment}:
+ * Since <i>1.0.3</i> this adapter makes {@link OutputData} and {@link InputData} accessible from a <tt>Component</tt>'s
+ * {@link Environment}:
  * 
- * <p>
- * <code>
- *   InputData input = (InputData)getEnvironment().getEntry(InputData.class);<br>
- *   OutputData input = (OutputData)getEnvironment().getEntry(OutputData.class);
- * </code>
- * </p>
- * 
- * which allows access to request from {@link BaseComponent}'s initialization callback&mdash;<code>init()</code>. </p>
+ * <pre>
+ * InputData input = getEnvironment().getEntry(InputData.class);
+ * OutputData input = getEnvironment().getEntry(OutputData.class);
+ * </pre>
+ * This allows access to request from {@link BaseComponent}'s initialization callback&mdash;<code>init()</code>.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServletServiceAdapterComponent extends BaseComponent implements ServletServiceAdapterComponent {
 
-  private static final ThreadLocal<InputData> localInput = new ThreadLocal<InputData>();
+  private static final ThreadLocal<InputData> LOCAL_INPUT = new ThreadLocal<InputData>();
 
-  private static final ThreadLocal<OutputData> localOutput = new ThreadLocal<OutputData>();
+  private static final ThreadLocal<OutputData> LOCAL_OUTPUT = new ThreadLocal<OutputData>();
 
   private Service childService;
 
   private boolean useFullURL;
 
   @Override
-  protected void init() throws Exception {
+  protected void init() {
     this.childService._getComponent().init(getScope(), new BaseEnvironment() {
 
       @SuppressWarnings("unchecked")
       public <T> T getEntry(Class<T> key) {
         if (InputData.class.equals(key)) {
-          return (T) localInput.get();
+          return (T) LOCAL_INPUT.get();
         }
         if (OutputData.class.equals(key)) {
-          return (T) localOutput.get();
+          return (T) LOCAL_OUTPUT.get();
         }
         return getEnvironment().getEntry(key);
       }
     });
-  }
-
-  public void setChildService(Service service) {
-    this.childService = service;
   }
 
   @Override
@@ -85,12 +76,16 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
     this.childService._getComponent().destroy();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void service(HttpServletRequest request, HttpServletResponse response) {
     HttpInputData input = new StandardServletInputData(request);
     input.setUseFullURL(this.useFullURL);
-    localInput.set(input);
     HttpOutputData output = new StandardServletOutputData(request, response);
-    localOutput.set(output);
+
+    LOCAL_INPUT.set(input);
+    LOCAL_OUTPUT.set(output);
 
     try {
       request.setAttribute(InputData.INPUT_DATA_KEY, input);
@@ -98,9 +93,19 @@ public class StandardServletServiceAdapterComponent extends BaseComponent implem
 
       this.childService._getService().action(null, input, output);
     } finally {
-      localInput.set(null);
-      localOutput.set(null);
+      LOCAL_INPUT.set(null);
+      LOCAL_OUTPUT.set(null);
     }
+  }
+
+  /**
+   * Specifies the child service where this component will deliver its service call. This component will also destory
+   * the service when this component is destroyed.
+   * 
+   * @param service A new created child service.
+   */
+  public void setChildService(Service service) {
+    this.childService = service;
   }
 
   /**

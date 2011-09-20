@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.framework;
 
 import java.io.Serializable;
 import org.araneaframework.Service;
 
 /**
- * Service that has at least single child and acts as a guardian, deciding which data should be let 
- * through to children and what services should they be allowed to use.
+ * Service that has at least single child and acts as a guardian, deciding which data should be let through to children
+ * and what services should they be allowed to use.
  * 
  * @see org.araneaframework.framework.core.BaseFilterService
- * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FilterService extends Serializable, Service {
-  public void setChildService(Service childService);
+
+  /**
+   * A setter for specifying the child service where the filter should forward the request when the filtering condition
+   * succeeds.
+   * 
+   * @param childService An uninitialized child service (not null).
+   */
+  void setChildService(Service childService);
 }

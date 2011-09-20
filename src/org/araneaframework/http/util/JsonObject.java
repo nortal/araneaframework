@@ -31,9 +31,10 @@ public class JsonObject implements Serializable {
 
   protected StringBuffer buf = new StringBuffer("{");
 
-  public JsonObject() {}
-  
-  public <T,U> JsonObject(Map<T, U> map) {
+  public JsonObject() {
+  }
+
+  public <T, U> JsonObject(Map<T, U> map) {
     for (Map.Entry<T, U> entry : map.entrySet()) {
       if (entry.getValue() instanceof String) {
         setStringProperty(String.valueOf(entry.getKey()), (String) entry.getValue());
@@ -46,11 +47,9 @@ public class JsonObject implements Serializable {
   /**
    * Set a name/value pair on this object. Duplicate names are not checked.
    * 
-   * @param name
-   *          name of the property
-   * @param value
-   *          value of the property. Can be a string in double quotes, or a
-   *          number, or true or false or null, or an object or an array.
+   * @param name name of the property
+   * @param value value of the property. Can be a string in double quotes, or a number, or true or false or null, or an
+   *          object or an array.
    */
   public void setProperty(String name, String value) {
     Assert.notNullParam(name, "name");
@@ -67,11 +66,8 @@ public class JsonObject implements Serializable {
   /**
    * Set a name/value pair on this object. Duplicate names are not checked.
    * 
-   * @param name
-   *          name of the property
-   * @param value
-   *          value of the property. It is automatically double-quoted to
-   *          represent a string.
+   * @param name name of the property
+   * @param value value of the property. It is automatically double-quoted to represent a string.
    */
   public void setStringProperty(String name, String value) {
     Assert.notNullParam(name, "name");

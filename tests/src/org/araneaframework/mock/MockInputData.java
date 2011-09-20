@@ -26,51 +26,49 @@ import org.araneaframework.Path;
 
 /**
  * @author toomas
- *
  */
 public class MockInputData implements InputData {
+
   private Map<String, String> data;
-  
+
   public MockInputData(Map<String, String> data) {
     this();
     this.data = data;
   }
-  
+
   public MockInputData() {
-    data = new HashMap<String, String>();
+    this.data = new HashMap<String, String>();
   }
 
   public Map<String, String> getScopedData(Path path) {
-    /*System.out.println("getScopedData");
-    System.out.println("path is "+path);
-    System.out.println(data);*/
-    if (data.get(path.toString()) == null) {
-      //System.out.println("Returning null");
+    /*
+     * System.out.println("getScopedData"); System.out.println("path is "+path); System.out.println(data);
+     */
+    if (this.data.get(path.toString()) == null) {
+      // System.out.println("Returning null");
       return Collections.unmodifiableMap(new HashMap<String, String>());
-    } 
-    else {
-      //System.out.println("Returning "+data.get(path));
-      return Collections.unmodifiableMap(data);
+    } else {
+      // System.out.println("Returning "+data.get(path));
+      return Collections.unmodifiableMap(this.data);
     }
   }
 
   public <T> void extend(Class<T> interfaceClass, T implementation) {
-    //XXX
-    throw new NotImplementedException();    
+    // XXX
+    throw new NotImplementedException();
   }
 
   public <T> T narrow(Class<T> interfaceClass) {
-    //XXX
+    // XXX
     throw new NotImplementedException();
   }
 
   public Map<String, String> getGlobalData() {
-    return data;
+    return this.data;
   }
 
-	public OutputData getOutputData() {
-    //XXX
+  public OutputData getOutputData() {
+    // XXX
     throw new NotImplementedException();
-	}
+  }
 }
-

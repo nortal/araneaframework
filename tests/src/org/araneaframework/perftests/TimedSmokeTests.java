@@ -21,44 +21,30 @@ import junit.framework.TestSuite;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class TimedSmokeTests {
-  public static final long toleranceInMillis = 100;
-  
-  public static Test suite() throws Exception {
-    //TestSuite suite = new TestSuite();
-    /*
-    SmokeTests testCase = new SmokeTests("testSmoke");
-    testCase.initAdapter("smokeTest.xml");
-    Test timedTest = new TimedTest(testCase, 1000 + toleranceInMillis);
-    suite.addTest(timedTest);
 
-    testCase = new SmokeTests("testSerialization");
-    testCase.initAdapter("serializationTestsConf.xml");
-    timedTest = new TimedTest(testCase, 1000 + toleranceInMillis);
-    suite.addTest(timedTest);
-    
-    testCase = new SmokeTests("testDestroyPropagates");
-    testCase.initAdapter("repeatedRequest.xml");
-    timedTest = new TimedTest(testCase, 1000 + toleranceInMillis);
-    suite.addTest(timedTest);
-    
-    testCase = new SmokeTests("testRequestRoutingNonComposite");
-    testCase.initAdapter("repeatedRequest.xml");
-    timedTest = new TimedTest(testCase, 1000 + toleranceInMillis);
-    suite.addTest(timedTest);
-    
-    testCase = new SmokeTests("testRequestRoutingComposite");
-    testCase.initAdapter("repeatedRequest.xml");
-    timedTest = new TimedTest(testCase, 1000 + toleranceInMillis);
-    suite.addTest(timedTest);
-    */
-    //return suite;
+  public static final long toleranceInMillis = 100;
+
+  public static Test suite() throws Exception {
+    // TestSuite suite = new TestSuite();
+    /*
+     * SmokeTests testCase = new SmokeTests("testSmoke"); testCase.initAdapter("smokeTest.xml"); Test timedTest = new
+     * TimedTest(testCase, 1000 + toleranceInMillis); suite.addTest(timedTest); testCase = new
+     * SmokeTests("testSerialization"); testCase.initAdapter("serializationTestsConf.xml"); timedTest = new
+     * TimedTest(testCase, 1000 + toleranceInMillis); suite.addTest(timedTest); testCase = new
+     * SmokeTests("testDestroyPropagates"); testCase.initAdapter("repeatedRequest.xml"); timedTest = new
+     * TimedTest(testCase, 1000 + toleranceInMillis); suite.addTest(timedTest); testCase = new
+     * SmokeTests("testRequestRoutingNonComposite"); testCase.initAdapter("repeatedRequest.xml"); timedTest = new
+     * TimedTest(testCase, 1000 + toleranceInMillis); suite.addTest(timedTest); testCase = new
+     * SmokeTests("testRequestRoutingComposite"); testCase.initAdapter("repeatedRequest.xml"); timedTest = new
+     * TimedTest(testCase, 1000 + toleranceInMillis); suite.addTest(timedTest);
+     */
+    // return suite;
     return new TestSuite();
   }
-  
+
   public static void main(String args[]) throws Exception {
-    //junit.textui.TestRunner.run(suite());
+    // junit.textui.TestRunner.run(suite());
   }
 }

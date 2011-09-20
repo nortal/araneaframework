@@ -47,10 +47,10 @@ public class ListRefreshingHandler implements Handler<Object> {
   }
 
   /**
-   * Refreshes lists on finish and also on cancel if appropriate parameters are set to <true>true</code>.
+   * Refreshes lists on finish and also on cancel if appropriate parameters are set to <code>true</code>.
    * 
-   * @param handleCancel if <true>true</code>, the lists will be refreshed on cancel.
-   * @param handleFinish if <true>true</code>, the lists will be refreshed on finish.
+   * @param handleCancel if <code>true</code>, the lists will be refreshed on cancel.
+   * @param handleFinish if <code>true</code>, the lists will be refreshed on finish.
    * @param lists <code>ListWidget</code>s to be refreshed.
    */
   public ListRefreshingHandler(boolean handleCancel, boolean handleFinish, ListWidget<?>... lists) {

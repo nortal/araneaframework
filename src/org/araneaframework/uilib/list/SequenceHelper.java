@@ -21,13 +21,12 @@ import org.araneaframework.uilib.ConfigurationContext;
 import org.araneaframework.uilib.util.ConfigurationUtil;
 
 /**
- * This class incapsulates all the information and behavior connected with the moving through the list pages. That is
- * it translates the moves through the pages and other user activities (like expanding the list) to the exact indexes
- * in of list item range that is to be asked from the database. In addition it provides the renderer with enough
- * information to show the list "sequence", e.g. the breaking of list into pages and blocks.
+ * This class incapsulates all the information and behavior connected with the moving through the list pages. That is it
+ * translates the moves through the pages and other user activities (like expanding the list) to the exact indexes in of
+ * list item range that is to be asked from the database. In addition it provides the renderer with enough information
+ * to show the list "sequence", e.g. the breaking of list into pages and blocks.
  * 
  * @author <a href="mailto:ekabanov@webmedia.ee">Jevgeni Kabanov </a>
- *  
  */
 public class SequenceHelper implements Serializable {
 
@@ -40,37 +39,44 @@ public class SequenceHelper implements Serializable {
    * Default value of how many items of the list will be displayed on one page.
    */
   public static final long DEFAULT_ITEMS_ON_PAGE = 10;
-  
+
   /**
    * Default value of how many items of the list will be displayed on one page.
    */
-  public static final long FULL_ITEMS_ON_PAGE = Long.MAX_VALUE;  
-  
+  public static final long FULL_ITEMS_ON_PAGE = Long.MAX_VALUE;
+
   /**
    * Whether to preserve the list starting row when switching to showing full list and back.
    */
-  public static final boolean DEFAULT_PRESERVE_STARTING_ROW = false;  
+  public static final boolean DEFAULT_PRESERVE_STARTING_ROW = false;
 
   protected ConfigurationContext configuration;
-  
-  //Whether user has expanded the whole list.
+
+  // Whether user has expanded the whole list.
   private boolean allItemsShown = false;
 
   private long currentPage = 0;
+
   private long totalItemCount;
+
   private long itemsOnPage;
+
   private long pagesOnBlock;
-  
+
   private long firstItemIndex = 0;
-  
+
   private long fullItemsOnPage = FULL_ITEMS_ON_PAGE;
+
   private long defaultItemsOnPage = DEFAULT_ITEMS_ON_PAGE;
+
   private long defaultPagesOnBlock = DEFAULT_PAGES_ON_BLOCK;
+
   private boolean preserveStartingRow = DEFAULT_PRESERVE_STARTING_ROW;
-  
+
   private long oldItemsOnPage;
+
   private long oldFirstItemIndex;
-  
+
   private boolean changed = true;
 
   /**
@@ -81,30 +87,34 @@ public class SequenceHelper implements Serializable {
 
     Long confDefaultItemsOnPage = ConfigurationUtil.getDefaultListItemsOnPage(configuration);
 
-    if (confDefaultItemsOnPage != null)
-      defaultItemsOnPage = confDefaultItemsOnPage.longValue();
+    if (confDefaultItemsOnPage != null) {
+      this.defaultItemsOnPage = confDefaultItemsOnPage.longValue();
+    }
 
     Long confFullItemsOnPage = (Long) configuration.getEntry(ConfigurationContext.FULL_LIST_ITEMS_ON_PAGE);
-    if (confFullItemsOnPage != null)
-      fullItemsOnPage = confFullItemsOnPage.longValue();
+    if (confFullItemsOnPage != null) {
+      this.fullItemsOnPage = confFullItemsOnPage.longValue();
+    }
 
     Long confDefaultPagesOnBlock = (Long) configuration.getEntry(ConfigurationContext.DEFAULT_LIST_PAGES_ON_BLOCK);
-    if (confDefaultPagesOnBlock != null)
-      defaultPagesOnBlock = confDefaultPagesOnBlock.longValue();
+    if (confDefaultPagesOnBlock != null) {
+      this.defaultPagesOnBlock = confDefaultPagesOnBlock.longValue();
+    }
 
     Boolean confPreserveStartingRow = (Boolean) configuration.getEntry(ConfigurationContext.LIST_PRESERVE_STARTING_ROW);
-    if (confPreserveStartingRow != null)
-      preserveStartingRow = confPreserveStartingRow.booleanValue(); 
+    if (confPreserveStartingRow != null) {
+      this.preserveStartingRow = confPreserveStartingRow.booleanValue();
+    }
 
-    setItemsOnPage(defaultItemsOnPage);
-    setPagesOnBlock(defaultPagesOnBlock);
+    setItemsOnPage(this.defaultItemsOnPage);
+    setPagesOnBlock(this.defaultPagesOnBlock);
 
-    totalItemCount = Long.MAX_VALUE;
+    this.totalItemCount = Long.MAX_VALUE;
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // PUBLIC METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   /**
    * Sets how many items will be displayed on one page.
@@ -114,19 +124,18 @@ public class SequenceHelper implements Serializable {
     setCurrentPage(this.currentPage); // Recalculates valid current page number.
     fireChange();
   }
-  
+
   /**
    * Returns how many items will be displayed on one page.
    */
   public long getItemsOnPage() {
-  	return this.itemsOnPage;
+    return this.itemsOnPage;
   }
 
   /**
    * Sets size of the block.
    * 
-   * @param pagesOnBlock
-   * number of pages combined into one block.
+   * @param pagesOnBlock number of pages combined into one block.
    */
   public void setPagesOnBlock(long pagesOnBlock) {
     this.pagesOnBlock = pagesOnBlock;
@@ -136,39 +145,38 @@ public class SequenceHelper implements Serializable {
   /**
    * Sets the page which will be displayed. Page index is 0-based.
    * 
-   * @param currentPage
-   * index of the page.
+   * @param currentPage index of the page.
    */
   public void setCurrentPage(long currentPage) {
-  	if (currentPage < 0)
-  		this.currentPage = 0;
-  	else if (getPageCount() > 0 && currentPage >= getPageCount())
-  		this.currentPage = getPageCount() - 1;
-  	else
-  		this.currentPage = currentPage;
-    
-    firstItemIndex = this.currentPage * itemsOnPage;
-    
+    if (currentPage < 0) {
+      this.currentPage = 0;
+    } else if (getPageCount() > 0 && currentPage >= getPageCount()) {
+      this.currentPage = getPageCount() - 1;
+    } else {
+      this.currentPage = currentPage;
+    }
+
+    this.firstItemIndex = this.currentPage * this.itemsOnPage;
+
     fireChange();
   }
 
   /**
    * Sets how many items are there in the list.
    * 
-   * @param totalItemCount
-   * size of the list.
+   * @param totalItemCount size of the list.
    */
   public void setTotalItemCount(long totalItemCount) {
     this.totalItemCount = totalItemCount;
   }
-  
+
   /**
    * Gets first item to be displayed on the current page.
    * 
    * @return index of the first element from the list to be displayed.
    */
   public long getCurrentPageFirstItemIndex() {
-    return firstItemIndex;
+    return this.firstItemIndex;
   }
 
   /**
@@ -177,9 +185,10 @@ public class SequenceHelper implements Serializable {
    * @return index of the last element from the list to be displayed.
    */
   public long getCurrentPageLastItemIndex() {
-  	long result = firstItemIndex + itemsOnPage - 1;
-  	if (result >= totalItemCount)
-  		result = totalItemCount - 1;
+    long result = this.firstItemIndex + this.itemsOnPage - 1;
+    if (result >= this.totalItemCount) {
+      result = this.totalItemCount - 1;
+    }
     return result;
   }
 
@@ -187,99 +196,100 @@ public class SequenceHelper implements Serializable {
    * Alters indexes to change page to the next one.
    */
   public void goToNextPage() {
-  	setCurrentPage(currentPage + 1);
+    setCurrentPage(this.currentPage + 1);
   }
 
   /**
    * Alters indexes to change page to the pervious one.
    */
   public void goToPreviousPage() {
-  	setCurrentPage(currentPage - 1);
+    setCurrentPage(this.currentPage - 1);
   }
 
   /**
    * Alters indexes to change block to the next one.
    */
   public void goToNextBlock() {
-    setCurrentPage(currentPage + pagesOnBlock);
+    setCurrentPage(this.currentPage + this.pagesOnBlock);
   }
 
   /**
    * Alters indexes to change block to the previous one.
    */
   public void goToPreviousBlock() {
-  	setCurrentPage(currentPage - pagesOnBlock);
+    setCurrentPage(this.currentPage - this.pagesOnBlock);
   }
 
   /**
    * Alters indexes to change page to the first one. Page index is 0-based.
    */
   public void goToFirstPage() {
-  	setCurrentPage(0);
+    setCurrentPage(0);
   }
 
   /**
    * Alters indexes to change page to the last one.
    */
   public void goToLastPage() {
-  	setCurrentPage(getPageCount() - 1);
+    setCurrentPage(getPageCount() - 1);
   }
 
   /**
    * Alters indexes to change page.
    * 
-   * @param page
-   * 0-based index of the page to shift to.
+   * @param page 0-based index of the page to shift to.
    */
   public void goToPage(long page) {
     setCurrentPage(page);
   }
-  
+
   public void validateSequence() {
-  	if (currentPage >= getPageCount())
-  		goToLastPage();
+    if (this.currentPage >= getPageCount()) {
+      goToLastPage();
+    }
   }
 
   /**
    * Expands the list showing all items.
    */
   public void showFullPages() {
-    oldItemsOnPage = getItemsOnPage();
-    oldFirstItemIndex = firstItemIndex;
-  	
-  	setItemsOnPage(fullItemsOnPage);
-    setCurrentPage((long) Math.ceil((float) firstItemIndex / (float) fullItemsOnPage));
-    
+    this.oldItemsOnPage = getItemsOnPage();
+    this.oldFirstItemIndex = this.firstItemIndex;
+
+    setItemsOnPage(this.fullItemsOnPage);
+    setCurrentPage((long) Math.ceil((float) this.firstItemIndex / (float) this.fullItemsOnPage));
+
     setAllItemsShown(true);
-    
-    if (preserveStartingRow)
-      firstItemIndex = oldFirstItemIndex;
+
+    if (this.preserveStartingRow) {
+      this.firstItemIndex = this.oldFirstItemIndex;
+    }
   }
 
   /**
    * Collapses the list, showing only the current page.
    */
   public void showDefaultPages() {
-  	long curFirstItemIndex = preserveStartingRow ? firstItemIndex : oldFirstItemIndex;
-  	
-  	setItemsOnPage(oldItemsOnPage);
-  	setCurrentPage((long) Math.ceil((float) curFirstItemIndex / (float) itemsOnPage));  	
-    
+    long curFirstItemIndex = this.preserveStartingRow ? this.firstItemIndex : this.oldFirstItemIndex;
+
+    setItemsOnPage(this.oldItemsOnPage);
+    setCurrentPage((long) Math.ceil((float) curFirstItemIndex / (float) this.itemsOnPage));
+
     setAllItemsShown(false);
-    
-    firstItemIndex = curFirstItemIndex;
+
+    this.firstItemIndex = curFirstItemIndex;
   }
-  
-  //*******************************************************************
+
+  // *******************************************************************
   // PROTECTED METHODS
-  //*******************************************************************
+  // *******************************************************************
 
   protected void setAllItemsShown(boolean allItemsShown) {
-  	this.allItemsShown = allItemsShown;
-  	fireChange();
+    this.allItemsShown = allItemsShown;
+    fireChange();
   }
-  
-  /** 
+
+  /**
    * @since 1.1
    */
   protected boolean getAllItemsShown() {
@@ -292,7 +302,7 @@ public class SequenceHelper implements Serializable {
    * @return number of pages.
    */
   protected long getPageCount() {
-  	return (long) Math.ceil((double) this.totalItemCount / (double) this.itemsOnPage);
+    return (long) Math.ceil((double) this.totalItemCount / (double) this.itemsOnPage);
   }
 
   /**
@@ -304,7 +314,7 @@ public class SequenceHelper implements Serializable {
     long start = 0;
     long end = 0;
 
-    long tempPagesOnBlock = pagesOnBlock;
+    long tempPagesOnBlock = this.pagesOnBlock;
 
     if (tempPagesOnBlock > getPageCount()) {
       tempPagesOnBlock = getPageCount();
@@ -312,10 +322,10 @@ public class SequenceHelper implements Serializable {
     long toStartCnt = tempPagesOnBlock / 2;
     long toEndCnt = tempPagesOnBlock - 1 - toStartCnt;
 
-    start = currentPage - toStartCnt;
-    end = currentPage + toEndCnt;
+    start = this.currentPage - toStartCnt;
+    end = this.currentPage + toEndCnt;
     if (start < 0) {
-      end += (0 - start);
+      end += 0 - start;
       start = 0;
     }
     if (end >= getPageCount()) {
@@ -335,7 +345,7 @@ public class SequenceHelper implements Serializable {
     long start = 0;
     long end = 0;
 
-    long tempPagesOnBlock = pagesOnBlock;
+    long tempPagesOnBlock = this.pagesOnBlock;
 
     if (tempPagesOnBlock > getPageCount()) {
       tempPagesOnBlock = getPageCount();
@@ -343,10 +353,10 @@ public class SequenceHelper implements Serializable {
     long toStartCnt = tempPagesOnBlock / 2;
     long toEndCnt = tempPagesOnBlock - 1 - toStartCnt;
 
-    start = currentPage - toStartCnt;
-    end = currentPage + toEndCnt;
+    start = this.currentPage - toStartCnt;
+    end = this.currentPage + toEndCnt;
     if (start <= 0) {
-      end += (0 - start);
+      end += 0 - start;
       start = 0;
     }
     if (end >= getPageCount()) {
@@ -356,25 +366,23 @@ public class SequenceHelper implements Serializable {
 
     return end;
   }
-  
-  
+
   /**
-   * Returns whether the basic configuration that specifies which items are
-   * shown has changed since last call to this {@link SequenceHelper}'s {@link SequenceHelper#checkChanged()} 
-   * method.
+   * Returns whether the basic configuration that specifies which items are shown has changed since last call to this
+   * {@link SequenceHelper}'s {@link SequenceHelper#checkChanged()} method.
    * 
    * @since 1.1
    */
   public boolean checkChanged() {
-	  boolean result = changed;
-	  changed = false;
-	  return result;
+    boolean result = this.changed;
+    this.changed = false;
+    return result;
   }
 
-  //*******************************************************************
+  // *******************************************************************
   // VIEW MODEL
-  //*******************************************************************
-  
+  // *******************************************************************
+
   /**
    * Returns view model.
    * 
@@ -391,32 +399,32 @@ public class SequenceHelper implements Serializable {
    */
   public class ViewModel implements Serializable {
 
-    private Long firstPage;
+    private final Long firstPage;
 
-    private Long lastPage;
+    private final Long lastPage;
 
-    private Long blockFirstPage;
+    private final Long blockFirstPage;
 
-    private Long blockLastPage;
+    private final Long blockLastPage;
 
-    private Long currentPage;
+    private final Long currentPage;
 
-    private Long totalItemCount;
+    private final Long totalItemCount;
 
-    private Boolean allItemsShown;
+    private final Boolean allItemsShown;
 
-    private Long pageFirstItem;
+    private final Long pageFirstItem;
 
-    private Long pageLastItem;
+    private final Long pageLastItem;
 
-    private Long itemsOnPage;
+    private final Long itemsOnPage;
 
     /**
      * Takes a snapshot of outer class state.
      */
     protected ViewModel() {
       this.firstPage = 0L;
-      long pageCount = SequenceHelper.this.getPageCount();
+      long pageCount = getPageCount();
       this.lastPage = pageCount > 0 ? pageCount - 1 : pageCount;
 
       this.blockFirstPage = SequenceHelper.this.getBlockFirstPage();
@@ -427,8 +435,8 @@ public class SequenceHelper implements Serializable {
 
       this.allItemsShown = SequenceHelper.this.allItemsShown;
 
-      this.pageFirstItem = SequenceHelper.this.getCurrentPageFirstItemIndex() + 1;
-      this.pageLastItem = SequenceHelper.this.getCurrentPageLastItemIndex() + 1;
+      this.pageFirstItem = getCurrentPageFirstItemIndex() + 1;
+      this.pageLastItem = getCurrentPageLastItemIndex() + 1;
 
       this.itemsOnPage = SequenceHelper.this.itemsOnPage;
     }
@@ -504,7 +512,7 @@ public class SequenceHelper implements Serializable {
     }
   }
 
-  /** 
+  /**
    * @since 1.1
    */
   protected void fireChange() {

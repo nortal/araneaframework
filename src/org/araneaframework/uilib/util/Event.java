@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.uilib.util;
 
 import java.io.Serializable;
@@ -20,10 +21,10 @@ import java.io.Serializable;
 /**
  * A serializable runnable.
  * <p>
- * This is a shortcut for defining anonymous inner classes. 
+ * This is a shortcut for defining anonymous inner classes.
  * 
  * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public interface Event extends Runnable, Serializable {
-	// no additional methods
+  // no additional methods
 }

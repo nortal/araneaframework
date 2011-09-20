@@ -31,37 +31,36 @@ public class JsonArray implements Serializable {
   protected StringBuffer buf = new StringBuffer();
 
   public JsonArray() {
-    buf.append('[');
+    this.buf.append('[');
   }
 
   /**
    * Append a value to this array.
    * 
-   * @param element
-   *          value to append to this array. Can be a string in double quotes,
-   *          or a number, or true or false or null, or an object or an array.
+   * @param element value to append to this array. Can be a string in double quotes, or a number, or true or false or
+   *          null, or an object or an array.
    */
   public void append(String element) {
     Assert.notNullParam(element, "element");
-    if (buf.length() > 1)
-      buf.append(',');
-    buf.append(element);
+    if (this.buf.length() > 1) {
+      this.buf.append(',');
+    }
+    this.buf.append(element);
   }
 
   /**
    * Append a value to this array.
    * 
-   * @param element
-   *          value to append to this array. It is automatically double-quoted
-   *          to represent a string.
+   * @param element value to append to this array. It is automatically double-quoted to represent a string.
    */
   public void appendString(String element) {
     Assert.notNullParam(element, "element");
-    if (buf.length() > 1)
-      buf.append(',');
-    buf.append('"');
-    buf.append(StringEscapeUtils.escapeJavaScript(element));
-    buf.append('"');
+    if (this.buf.length() > 1) {
+      this.buf.append(',');
+    }
+    this.buf.append('"');
+    this.buf.append(StringEscapeUtils.escapeJavaScript(element));
+    this.buf.append('"');
   }
 
   /**
@@ -69,9 +68,9 @@ public class JsonArray implements Serializable {
    */
   @Override
   public String toString() {
-    buf.append(']');
-    String string = buf.toString();
-    buf.deleteCharAt(buf.length() - 1);
+    this.buf.append(']');
+    String string = this.buf.toString();
+    this.buf.deleteCharAt(this.buf.length() - 1);
     return string;
   }
 

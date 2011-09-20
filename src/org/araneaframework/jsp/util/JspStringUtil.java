@@ -24,39 +24,38 @@ import org.apache.commons.lang.StringEscapeUtils;
  * @author Konstantin Tretyakov
  */
 public abstract class JspStringUtil {
-	/**
-	 * Given a string and an accesskey, finds the first appearance of 
-	 * accessKey  in that string, and surrounds it with &lt;u&gt;&hellip;&lt/u&gt;.
-	 * Returns the result.
-	 * 
-	 * If accessKey is null, is not present in the string or its length is not 1,
-	 * returns the string unmodified.
-	 * 
-	 * Assumes that given string has no HTML elements in it. Does case-insensitive matching.
-	 * 
-	 * @param s String in which the access key is to be underlined. May be null.
-	 * @param accessKey Access key to underline. May be null.
-	 * @return Given string with accesskey underlined (if possible).
-	 */
-	public static String underlineAccessKey(String s, String accessKey) {
-		if (s == null || accessKey == null || accessKey.length() != 1) return s;
-		char lo = accessKey.toLowerCase().charAt(0);
-		char hi = accessKey.toUpperCase().charAt(0);
-		int pos = -1;
-		for (int i = 0; i < s.length(); i++){
-			if (s.charAt(i) == lo || s.charAt(i) == hi) {
-				pos = i;
-				break;
-			}
-		}
-		if (pos == -1) return s;
-		String result = s.substring(0, pos) + 
-					"<u>" + s.charAt(pos) + "</u>" +
-					s.substring(pos + 1);
-		return result;
-	}
-	
-	public static String escapeHtmlEntities(String s) {
-		return StringEscapeUtils.escapeHtml(s);
-	}
+
+  /**
+   * Given a string and an accesskey, finds the first appearance of accessKey in that string, and surrounds it with
+   * &lt;u&gt;&hellip;&lt/u&gt;. Returns the result. If accessKey is null, is not present in the string or its length is
+   * not 1, returns the string unmodified. Assumes that given string has no HTML elements in it. Does case-insensitive
+   * matching.
+   * 
+   * @param s String in which the access key is to be underlined. May be null.
+   * @param accessKey Access key to underline. May be null.
+   * @return Given string with accesskey underlined (if possible).
+   */
+  public static String underlineAccessKey(String s, String accessKey) {
+    if (s == null || accessKey == null || accessKey.length() != 1) {
+      return s;
+    }
+    char lo = accessKey.toLowerCase().charAt(0);
+    char hi = accessKey.toUpperCase().charAt(0);
+    int pos = -1;
+    for (int i = 0; i < s.length(); i++) {
+      if (s.charAt(i) == lo || s.charAt(i) == hi) {
+        pos = i;
+        break;
+      }
+    }
+    if (pos == -1) {
+      return s;
+    }
+    String result = s.substring(0, pos) + "<u>" + s.charAt(pos) + "</u>" + s.substring(pos + 1);
+    return result;
+  }
+
+  public static String escapeHtmlEntities(String s) {
+    return StringEscapeUtils.escapeHtml(s);
+  }
 }

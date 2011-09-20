@@ -16,9 +16,8 @@
 
 package org.araneaframework.tests;
 
-import org.araneaframework.core.StandardScope;
-
 import junit.framework.TestCase;
+import org.araneaframework.core.StandardScope;
 import org.araneaframework.http.core.StandardServletInputData;
 import org.araneaframework.tests.mock.MockEnvironment;
 import org.araneaframework.uilib.form.FormElement;
@@ -36,64 +35,65 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class FormElementTest extends TestCase {
-	@SuppressWarnings("unchecked")
+
+  @SuppressWarnings("unchecked")
   public void testDataCycling() throws Exception {
-		MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
-		emptyRequest.addParameter("myTextBox", "");
+    MockHttpServletRequest emptyRequest = new MockHttpServletRequest();
+    emptyRequest.addParameter("myTextBox", "");
 
-		FormElement<String, Long> sfe = new FormElement<String, Long>();
-		sfe.setLabel("textbox");
+    FormElement<String, Long> sfe = new FormElement<String, Long>();
+    sfe.setLabel("textbox");
 
-		sfe._getComponent().init(new StandardScope("testScope", null), new MockEnvironment());
+    sfe._getComponent().init(new StandardScope("testScope", null), new MockEnvironment());
 
-		TextControl tb = new TextControl();
-		sfe.setMandatory(true);
+    TextControl tb = new TextControl();
+    sfe.setMandatory(true);
 
-		sfe.setControl(tb);
-		sfe.setConverter(new StringToLongConverter());
-		sfe.setData(new LongData());
-		
-		sfe._getWidget().update(new StandardServletInputData(emptyRequest));
-		sfe.convertAndValidate();
+    sfe.setControl(tb);
+    sfe.setConverter(new StringToLongConverter());
+    sfe.setData(new LongData());
 
-		sfe.getData().setValue(110L);
+    sfe._getWidget().update(new StandardServletInputData(emptyRequest));
+    sfe.convertAndValidate();
 
-		assertEquals("The textbox must have the data item value!",
-				((StringArrayRequestControl.ViewModel) sfe.getControl()
-						._getViewable().getViewModel()).getSimpleValue(), "110");
+    sfe.getData().setValue(110L);
 
-		sfe._getComponent().destroy();
-	}
+    assertEquals("The textbox must have the data item value!", ((StringArrayRequestControl.ViewModel) sfe.getControl()
+        ._getViewable().getViewModel()).getSimpleValue(), "110");
 
-	/** Tests FormWidget getElement methods(); */
-	public void testGetElement() throws Exception {
-		FormWidget form = new FormWidget();
+    sfe._getComponent().destroy();
+  }
 
-		FormElement<String, Object> button = form.createElement("my button", new ButtonControl());
-		form.addElement("myButton", button);
-		
-		FormWidget subForm = form.addSubForm("subForm");
-		FormElement<String, String> textArea = subForm.createElement("my text area", new TextareaControl(), new StringData(), true);
-		subForm.addElement("myTextarea", textArea);
+  /** Tests FormWidget getElement methods(); */
+  public void testGetElement() throws Exception {
+    FormWidget form = new FormWidget();
 
-		form._getComponent().init(null, new MockEnvironment());
+    FormElement<String, Object> button = form.createElement("my button", new ButtonControl());
+    form.addElement("myButton", button);
 
-		// first level formElement
-		assertEquals(button, form.getElement("myButton"));
-		// the subForm
-		assertEquals(subForm, form.getElement("subForm"));
-		// second level formElement attached to subform
-		assertEquals(textArea, form.getElement("subForm.myTextarea"));
+    FormWidget subForm = form.addSubForm("subForm");
+    FormElement<String, String> textArea = subForm.createElement("my text area", new TextareaControl(),
+        new StringData(), true);
+    subForm.addElement("myTextarea", textArea);
 
-		// trying to get nonexistant element should just return null 
-		assertNull(form.getElement("nonexistant"));
-		assertNull(form.getElement("really.nonexistant"));
-	}
-	
-	  public void testUnInitializedFormElementConversion() throws Exception {
-		  FormWidget form = new FormWidget();
-		  FormElement<String, String> element = form.createElement( "labelId", new TextControl(), new StringData(), true);
-		  // should succeed
-		  element.convert();
-	  }
+    form._getComponent().init(null, new MockEnvironment());
+
+    // first level formElement
+    assertEquals(button, form.getElement("myButton"));
+    // the subForm
+    assertEquals(subForm, form.getElement("subForm"));
+    // second level formElement attached to subform
+    assertEquals(textArea, form.getElement("subForm.myTextarea"));
+
+    // trying to get nonexistant element should just return null
+    assertNull(form.getElement("nonexistant"));
+    assertNull(form.getElement("really.nonexistant"));
+  }
+
+  public void testUnInitializedFormElementConversion() throws Exception {
+    FormWidget form = new FormWidget();
+    FormElement<String, String> element = form.createElement("labelId", new TextControl(), new StringData(), true);
+    // should succeed
+    element.convert();
+  }
 }

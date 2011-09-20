@@ -23,30 +23,32 @@ import org.araneaframework.core.BaseService;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class MockEventfulBaseService extends BaseService {
+
   private boolean isActionCalled = false;
+
   private boolean destroyCalled = false;
+
   private boolean initCalled = false;
 
   @Override
   public void action(Path path, InputData input, OutputData output) throws Exception {
-    isActionCalled = true;
+    this.isActionCalled = true;
   }
-  
+
   @Override
   public void destroy() {
-    destroyCalled = true;
+    this.destroyCalled = true;
   }
-  
+
   @Override
   public void init() {
-    initCalled = true;
+    this.initCalled = true;
   }
-  
+
   public boolean getActionCalled() {
-    return isActionCalled;
+    return this.isActionCalled;
   }
 
   public void setActionCalled(boolean isActionCalled) {
@@ -54,10 +56,10 @@ public class MockEventfulBaseService extends BaseService {
   }
 
   public boolean getDestroyCalled() {
-    return destroyCalled;
+    return this.destroyCalled;
   }
 
   public boolean getInitCalled() {
-    return initCalled;
+    return this.initCalled;
   }
 }

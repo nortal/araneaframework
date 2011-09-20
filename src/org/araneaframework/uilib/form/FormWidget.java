@@ -116,8 +116,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public void addElementBefore(String id, GenericFormElement element, String beforeId) {
     Assert.notEmptyParam(beforeId, "beforeId");
-    Assert.isTrue(id.indexOf(Path.SEPARATOR) == -1,
-        "addElementBefore() does not accept nested 'id' parameter.");
+    Assert.isTrue(id.indexOf(Path.SEPARATOR) == -1, "addElementBefore() does not accept nested 'id' parameter.");
 
     // form is now the actual form to add element into:
     FormWidget form = NestedFormUtil.getDeepestForm(beforeId, this);
@@ -129,8 +128,8 @@ public class FormWidget extends GenericFormElement implements FormContext {
     Assert.notEmptyParam(id, "id");
     Assert.notEmptyParam(existingId, "existingId");
 
-    Assert.isTrue(id.indexOf(Path.SEPARATOR) == -1,
-        "addFlatElement() method does not accept nested 'id': '" + id + "'!");
+    Assert.isTrue(id.indexOf(Path.SEPARATOR) == -1, "addFlatElement() method does not accept nested 'id': '" + id
+        + "'!");
     Assert.isTrue(existingId.indexOf(Path.SEPARATOR) == -1,
         "addFlatElement() method does not accept nested 'exstingId': '" + existingId + "'!");
 
@@ -257,7 +256,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
     visitor.visit(id, this);
     visitor.pushContext(id, this);
 
-    for (Map.Entry<String, GenericFormElement> entry : elements.entrySet()) {
+    for (Map.Entry<String, GenericFormElement> entry : this.elements.entrySet()) {
       String elementId = entry.getKey();
       GenericFormElement element = entry.getValue();
       element.accept(elementId, visitor);
@@ -420,7 +419,6 @@ public class FormWidget extends GenericFormElement implements FormContext {
     return addElement(elementName, labelId, control, data, null, mandatory);
   }
 
-
   /**
    * This method adds a {@link FormElement} to this {@link FormWidget}.
    * 
@@ -494,7 +492,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public Control<?> getControlByFullName(String fullName) {
     FormElement<?, ?> el = getElementByFullName(fullName);
-    return (el == null) ? null : el.getControl();
+    return el == null ? null : el.getControl();
   }
 
   /**
@@ -505,7 +503,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    */
   public Object getValueByFullName(String fullName) {
     FormElement<?, ?> el = getElementByFullName(fullName);
-    return (el == null) ? null : el.getValue();
+    return el == null ? null : el.getValue();
   }
 
   /**
@@ -517,8 +515,9 @@ public class FormWidget extends GenericFormElement implements FormContext {
   public <T> void setValueByFullName(String fullName, T value) {
     FormElement<?, T> el = getElementByFullName(fullName);
 
-    if (el == null)
+    if (el == null) {
       throw new InvalidFormElementNameException(fullName);
+    }
 
     el.getData().setValue(value);
   }
@@ -547,13 +546,11 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * Represents a composite form element view model.
    * 
    * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
-   * 
    */
   public class ViewModel extends GenericFormElement.ViewModel {
 
-    private boolean valid;
+    private final boolean valid;
 
-    
     public ViewModel() {
       this.valid = FormWidget.this.isValid();
     }

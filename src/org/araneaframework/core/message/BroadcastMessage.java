@@ -22,37 +22,39 @@ import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A {@link Message} that is sent to and operates on every {@link Component} in hierarchy. In addition, this message
- * also supports executing {@link #execute(Component)} only when a component of defined component class is reached.
+ * A message that is sent to and operates on every component in hierarchy. In addition, this message also supports
+ * executing {@link #execute(Component)} only when a component of specific type is reached.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class BroadcastMessage implements Message {
 
-  private final Class<?> componentClass;
+  private final Class<?> componentType;
 
   /**
-   * Initiates a plain broadcast message.
+   * Initiates a broadcast message that will process all components on its way.
    */
   public BroadcastMessage() {
     this(Component.class);
   }
 
   /**
-   * Initiates a broadcast message with a component class for which {@link BroadcastMessage#execute(Component)} will be
-   * called.
+   * Initiates a broadcast message that will process only components of given type (when component is assignable to
+   * given type).
    * 
-   * @param componentClass The component class for which instance components {@link #execute(Component)} is called.
+   * @param componentType The component class for which instance components {@link #execute(Component)} is called.
    * @since 1.1.1
    */
-  public BroadcastMessage(Class<?> componentClass) {
-    Assert.notNullParam(componentClass, "componentClass");
-    this.componentClass = componentClass;
+  public BroadcastMessage(Class<?> componentType) {
+    Assert.notNullParam(componentType, "componentClass");
+    this.componentType = componentType;
   }
 
   /**
-   * Send method that causes {@link #execute(Component)} to be called for each <code>Component</code> in hierarchy or
-   * just with those <code>Component</code>s which are instances of the defined <code>componentClass</code>.
+   * Send method implementation that causes {@link #execute(Component)} to be called for each <code>Component</code> in
+   * hierarchy or just with those <code>Component</code>s which are of specific type (as specified in constructor).
+   * <p>
+   * {@inheritDoc}
    * 
    * @see org.araneaframework.Message#send(java.lang.Object, org.araneaframework.Component)
    */
@@ -60,7 +62,7 @@ public abstract class BroadcastMessage implements Message {
     if (component != null) {
       component._getComponent().propagate(this);
       try {
-        if (this.componentClass.isAssignableFrom(component.getClass())) {
+        if (this.componentType.isAssignableFrom(component.getClass())) {
           execute(component);
         }
       } catch (Exception e) {
@@ -70,10 +72,10 @@ public abstract class BroadcastMessage implements Message {
   }
 
   /**
-   * Method that is called on each {@link Component} present in the {@link Component} hierarchy where this
-   * {@link BroadcastMessage} is propagated.
+   * Method that is called on each component present in the component hierarchy where this message is propagated.
    * 
-   * @param component {@link Component} this {@link BroadcastMessage} has reached
+   * @param component A component this message has reached.
+   * @throws Exception Any exception that may occur during processing.
    */
   protected abstract void execute(Component component) throws Exception;
 }

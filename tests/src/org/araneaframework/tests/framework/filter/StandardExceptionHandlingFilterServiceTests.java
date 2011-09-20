@@ -38,62 +38,68 @@ import org.springframework.mock.web.MockHttpServletResponse;
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardExceptionHandlingFilterServiceTests extends TestCase {
+
   private StandardCriticalExceptionHandlingFilterService service;
+
   private MockEventfulBaseService child;
+
   private ExceptionHandlerFactory factory;
+
   private MockEventfulStandardService factoryCreatedService;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   private Throwable exception;
-  
+
   @Override
   public void setUp() throws Exception {
-    factoryCreatedService = new MockEventfulStandardService();
-    factoryCreatedService._getComponent().init(null, MockUtil.getEnv());
-    
-    factory = new ExceptionHandlerFactory() {
+    this.factoryCreatedService = new MockEventfulStandardService();
+    this.factoryCreatedService._getComponent().init(null, MockUtil.getEnv());
+
+    this.factory = new ExceptionHandlerFactory() {
 
       public Service buildExceptionHandler(Throwable e, Environment environment) {
         StandardExceptionHandlingFilterServiceTests.this.exception = e;
-        factoryCreatedService = new MockEventfulStandardService();
-        return factoryCreatedService;
+        StandardExceptionHandlingFilterServiceTests.this.factoryCreatedService = new MockEventfulStandardService();
+        return StandardExceptionHandlingFilterServiceTests.this.factoryCreatedService;
       }
     };
-    
-    service = new StandardCriticalExceptionHandlingFilterService();
-    child = new MockEventfulBaseService();
-    
-    service.setChildService(child);
-    service.setExceptionHandlerFactory(factory);
-    MockLifeCycle.begin(service);
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
+
+    this.service = new StandardCriticalExceptionHandlingFilterService();
+    this.child = new MockEventfulBaseService();
+
+    this.service.setChildService(this.child);
+    this.service.setExceptionHandlerFactory(this.factory);
+    MockLifeCycle.begin(this.service);
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
   }
-    
+
   public void testDestroyDestroysChild() throws Exception {
-    service._getComponent().destroy();
-    assertTrue(child.getDestroyCalled());
+    this.service._getComponent().destroy();
+    assertTrue(this.child.getDestroyCalled());
   }
-  
+
   public void testActionNoException() throws Exception {
-    service._getService().action(MockUtil.getPath(), input, output);
-    assertTrue(child.getActionCalled());
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+    assertTrue(this.child.getActionCalled());
   }
-  
+
   public void testActionThrowsException() throws Exception {
     final Exception exception = new AraneaRuntimeException("Another one bites the dust");
-    
-    service = new StandardCriticalExceptionHandlingFilterService();
-    child = new MockEventfulBaseService() {
+
+    this.service = new StandardCriticalExceptionHandlingFilterService();
+    this.child = new MockEventfulBaseService() {
 
       @Override
       public void action(Path path, InputData input, OutputData output) throws Exception {
@@ -101,16 +107,16 @@ public class StandardExceptionHandlingFilterServiceTests extends TestCase {
         throw exception;
       }
     };
-    
-    service.setChildService(child);
-    service.setExceptionHandlerFactory(factory);
-    MockLifeCycle.begin(service);
-    
-    service._getService().action(MockUtil.getPath(), input, output);
-    
+
+    this.service.setChildService(this.child);
+    this.service.setExceptionHandlerFactory(this.factory);
+    MockLifeCycle.begin(this.service);
+
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+
     // exception gets forwarded to render
     assertEquals(exception, this.exception);
     // render gets called
-    assertTrue(factoryCreatedService.getActionCalled());
+    assertTrue(this.factoryCreatedService.getActionCalled());
   }
 }

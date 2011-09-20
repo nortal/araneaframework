@@ -35,7 +35,7 @@ public interface Constraint extends Serializable {
    * 
    * @return A Boolean that is <code>true</code> when the constraint is valid.
    */
-  public boolean validate() throws Exception;
+  boolean validate() throws Exception;
 
   /**
    * Provides the validation error messages produced while validating this {@link Constraint}. When no errors were
@@ -43,12 +43,12 @@ public interface Constraint extends Serializable {
    * 
    * @return A set of produced validation error messages, or an empty set when no errors were produced.
    */
-  public Set<MessageData> getErrors();
+  Set<MessageData> getErrors();
 
   /**
    * Clears the the error messages produced while validating this {@link Constraint}.
    */
-  public void clearErrors();
+  void clearErrors();
 
   /**
    * Sets the custom error message, that will be used in place of default ones when this {@link Constraint} does not
@@ -57,7 +57,7 @@ public interface Constraint extends Serializable {
    * 
    * @param customErrorMessage A custom error message, or <code>null</code> to disable custom message.
    */
-  public void setCustomErrorMessage(String customErrorMessage);
+  void setCustomErrorMessage(String customErrorMessage);
 
   /**
    * Sets the <code>Environment</code> of this <code>Constraint</code>. Environment should come from whatever
@@ -69,6 +69,6 @@ public interface Constraint extends Serializable {
    * 
    * @param environment The <code>Environment</code> for this constraint to use.
    */
-  public void setEnvironment(Environment environment);
+  void setEnvironment(Environment environment);
 
 }

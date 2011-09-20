@@ -499,6 +499,7 @@ public abstract class BaseListSqlHelper {
    * 
    * @param fromSql The part of query that follows the " FROM " in the query. Never empty nor null.
    * @param customWhereSql The part of query that follows the " WHERE " in the query. Null when customWhereArgs is null.
+   * @param customOrderbySql The part of query that follows the " ORDER BY " in the query. Null when ordering is unused.
    * @return The complete query string to use for querying the number of all matching rows.
    * @since 2.0
    */

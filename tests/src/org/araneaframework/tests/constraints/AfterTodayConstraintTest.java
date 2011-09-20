@@ -17,7 +17,6 @@
 package org.araneaframework.tests.constraints;
 
 import java.sql.Timestamp;
-
 import java.util.Date;
 import junit.framework.TestCase;
 import org.araneaframework.mock.MockLifeCycle;
@@ -42,7 +41,7 @@ public class AfterTodayConstraintTest extends TestCase {
     }
   }
 
-  public static final long DAY = 1000l * 60 * 60 * 24;
+  public static final long DAY = 1000L * 60 * 60 * 24;
 
   private FormWidget form;
 
@@ -53,7 +52,7 @@ public class AfterTodayConstraintTest extends TestCase {
   @Override
   public void setUp() throws Exception {
     this.form = new FormWidget();
-    this.dateElement = form.createElement("#date", new FakeDateControl(), new DateData(), false);
+    this.dateElement = this.form.createElement("#date", new FakeDateControl(), new DateData(), false);
     this.form.addElement("date", this.dateElement);
     MockLifeCycle.begin(this.form, new MockEnvironment());
     this.helper = new ConstraintTestHelper<Timestamp, Date>(this.form, this.dateElement);
@@ -75,7 +74,7 @@ public class AfterTodayConstraintTest extends TestCase {
   public void testPresent() throws Exception {
     Date now = new Date();
     this.helper.testConstraintValidness(new AfterTodayConstraint(false), now, false); // disallow today
-    this.helper.testConstraintValidness(new AfterTodayConstraint(true), now, true);   // allow today
+    this.helper.testConstraintValidness(new AfterTodayConstraint(true), now, true); // allow today
   }
 
   // in case of date being null, after today constraint should validate

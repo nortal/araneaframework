@@ -33,17 +33,18 @@ public class StandardRequestEncodingFilterService extends BaseFilterService {
   private String requestEncoding = "UTF-8";
 
   /**
-   * Sets the request encoding.
+   * Sets the request encoding to be applied to incoming HTTP requests. Default encoding is UTF-8.
+   * 
+   * @param encoding Expected request encoding.
    */
   public void setRequestEncoding(String encoding) {
     Assert.notEmptyParam(encoding, "encoding");
-
     this.requestEncoding = encoding;
   }
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    ((HttpInputData) input).setCharacterEncoding(requestEncoding);
-    childService._getService().action(path, input, output);
+    ((HttpInputData) input).setCharacterEncoding(this.requestEncoding);
+    this.childService._getService().action(path, input, output);
   }
 }

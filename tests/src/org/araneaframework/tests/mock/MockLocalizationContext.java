@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang.NotImplementedException;
 import org.araneaframework.framework.LocalizationContext;
 
-
 /**
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -45,24 +44,24 @@ public class MockLocalizationContext implements LocalizationContext {
   public String localize(String key) {
     return key;
   }
-  
+
   public String getMessage(String code, Object... args) {
-    //XXX
+    // XXX
     throw new NotImplementedException();
   }
-  
+
   public String getMessage(String code, String defaultMessage, Object... args) {
-    //XXX
+    // XXX
     throw new NotImplementedException();
   }
 
   public void addLocaleChangeListener(LocaleChangeListener listener) {
-	// TODO Auto-generated method stub
-	  throw new NotImplementedException();
+    // TODO Auto-generated method stub
+    throw new NotImplementedException();
   }
 
   public boolean removeLocaleChangeListener(LocaleChangeListener listener) {
-	// TODO Auto-generated method stub
-	throw new NotImplementedException();
+    // TODO Auto-generated method stub
+    throw new NotImplementedException();
   }
 }

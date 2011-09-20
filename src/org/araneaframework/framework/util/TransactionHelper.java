@@ -33,7 +33,7 @@ public class TransactionHelper implements Serializable {
 
   private Long nextTransactionId;
 
-  private Random random = new Random(System.currentTimeMillis());
+  private final Random random = new Random(System.currentTimeMillis());
 
   public TransactionHelper() {
     resetTransactionId();
@@ -51,11 +51,11 @@ public class TransactionHelper implements Serializable {
    * Returns the current transaction id.
    */
   public Object getCurrentTransactionId() {
-    return currentTransactionId;
+    return this.currentTransactionId;
   }
 
   public Long getNextTransactionId() {
-    return nextTransactionId;
+    return this.nextTransactionId;
   }
 
   /**
@@ -63,13 +63,15 @@ public class TransactionHelper implements Serializable {
    * transactionId has been overridden.
    */
   public boolean isConsistent(Object transactionId) {
-    if (currentTransactionId == null)
+    if (this.currentTransactionId == null) {
       return true;
+    }
 
-    if (isOverride(transactionId))
+    if (isOverride(transactionId)) {
       return true;
+    }
 
-    return currentTransactionId.toString().equals(transactionId);
+    return this.currentTransactionId.toString().equals(transactionId);
   }
 
   /**

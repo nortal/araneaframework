@@ -22,6 +22,8 @@ import java.io.Serializable;
  * Callback handler that is used to query for the key of the row object. The generic parameter K corresponds to the type
  * of the key values, and the generic parameter R corresponds to the type of the row values.
  * 
+ * @param <K> The type of the form row key value.
+ * @param <R> The type of the form row value.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface RowHandler<K, R> extends Serializable {
@@ -32,5 +34,5 @@ public interface RowHandler<K, R> extends Serializable {
    * @param row The row object that must be identified.
    * @return The key that uniquely identifies the given row object among others.
    */
-  public K getRowKey(R row);
+  K getRowKey(R row);
 }

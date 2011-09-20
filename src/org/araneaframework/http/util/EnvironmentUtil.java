@@ -36,8 +36,7 @@ import org.araneaframework.http.StateVersioningContext;
 import org.araneaframework.http.UpdateRegionContext;
 
 /**
- * Utility class that provides shortcuts for accessing some {@link Environment}
- * entries.
+ * Utility class that provides shortcuts for accessing some {@link Environment} entries.
  * 
  * @author Alar Kvell (alar@araneaframework.org)
  * @since 1.1
@@ -73,7 +72,7 @@ public abstract class EnvironmentUtil {
     ThreadContext threadContext = getThreadContext(env);
     return threadContext == null ? null : threadContext.getCurrentId();
   }
-  
+
   public static String requireThreadServiceId(Environment env) {
     return requireThreadContext(env).getCurrentId();
   }
@@ -157,9 +156,10 @@ public abstract class EnvironmentUtil {
   }
 
   /**
-   * Injects appropriate environment entries to the fields of given object, if the field has annotation {@link EnvironmentEntry}.
-   * The annotation can provide the environment entry key or the type of the field will be used. If the annotation
-   * declares that the dependency is mandatory and the entry is not found, an exception will be thrown.
+   * Injects appropriate environment entries to the fields of given object, if the field has annotation
+   * {@link EnvironmentEntry}. The annotation can provide the environment entry key or the type of the field will be
+   * used. If the annotation declares that the dependency is mandatory and the entry is not found, an exception will be
+   * thrown.
    * <p>
    * The parameters to this method must not be null!
    * 

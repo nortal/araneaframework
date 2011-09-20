@@ -38,7 +38,8 @@ public class BeanFormWidgetTest extends TestCase {
 
     protected String s;
 
-    public FlatBean() {}
+    public FlatBean() {
+    }
 
     public FlatBean(int a, String s) {
       this.a = a;
@@ -182,7 +183,7 @@ public class BeanFormWidgetTest extends TestCase {
 
     form._getComponent().init(new StandardScope(null, null), new MockEnvironment());
 
-    assertFormValuesEqualTo(form, readBean); // Form data must be equal to the *read* bean. 
+    assertFormValuesEqualTo(form, readBean); // Form data must be equal to the *read* bean.
 
     if (emptyConstruct) {
       form.readFromBean(valuesBean);
@@ -212,7 +213,8 @@ public class BeanFormWidgetTest extends TestCase {
   public void testBeanReadWrite() throws Exception {
     FlatBean subBean1 = new FlatBean(123, "Hello");
     FlatBean subBean2 = new FlatBean(987, "World");
-    HierarhicalBean valuesBean = new HierarhicalBean(100, "newString", subBean1); // For testing bean properties and their values.
+    HierarhicalBean valuesBean = new HierarhicalBean(100, "newString", subBean1); // For testing bean properties and
+                                                                                  // their values.
     HierarhicalBean readBean = new HierarhicalBean(678, "newStringValue", subBean2); // For testing form data changes.
 
     // 1. Test with bean as a constructor parameter.

@@ -22,11 +22,10 @@ import java.util.ResourceBundle;
 import org.araneaframework.core.ApplicationComponent;
 
 /**
- * A context for providing localization via exposing the current
- * Locale and ResourceBundles. The ResourceBundle of a different Locale
- * can be accessed without chaning the current Locale with <code>getResourceBundle(Locale)</code>.
- * The current Locale can be changed with <code>setLocale(Locale)</code> and all
- * subsequent request to <code>getResourceBundle()</code> will use the new current Locale.
+ * A context for providing localization via exposing the current Locale and ResourceBundles. The ResourceBundle of a
+ * different Locale can be accessed without chaning the current Locale with <code>getResourceBundle(Locale)</code>. The
+ * current Locale can be changed with <code>setLocale(Locale)</code> and all subsequent request to
+ * <code>getResourceBundle()</code> will use the new current Locale.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
@@ -35,49 +34,97 @@ public interface LocalizationContext extends Serializable {
 
   /**
    * Returns the current session locale.
+   * 
+   * @return The currently used locale.
    */
-  public Locale getLocale();
-  
+  Locale getLocale();
+
   /**
    * Sets the current session locale.
+   * 
+   * @param locale The locale to use from now on.
    */
-  public void setLocale(Locale locale);
+  void setLocale(Locale locale);
 
   /**
    * Localizes a string returning one that corresponds to the current locale.
+   * 
+   * @param key The key for which a localized resource will be returned.
+   * @return The localized resource (may be <code>null</code>).
    */
-  public String localize(String key);
-  
+  String localize(String key);
+
   /**
    * Returns a resource bundle corresponding to the current locale.
+   * 
+   * @return The currently used resource bundle.
    */
-  public ResourceBundle getResourceBundle();
-  
+  ResourceBundle getResourceBundle();
+
   /**
    * Returns a resource bundle corresponding to arbitrary locale.
+   * 
+   * @param locale The locale for which a resource bundle will be returned.
+   * @return The resource bundle for the specified locale.
+   * @throws java.util.MissingResourceException when no resource bundle is found for the specified locale.
    */
-  public ResourceBundle getResourceBundle(Locale locale);
-  
-  /**
-   * Localizes the code and uses it to format the message with the passed arguments. 
-   * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
-   * If the localized message cannot be resolved uses <code>defaultMessage</code> instead.
-   */
-  public String getMessage(String code, String defaultMessage, Object... args);
-  
-  /**
-   * Localizes the code and uses it to format the message with the passed arguments. 
-   * The format of the localized message should be acceptable by <code>java.text.MessageFormat</code>.
-   */
-  public String getMessage(String code, Object... args);
+  ResourceBundle getResourceBundle(Locale locale);
 
-  /** @since 1.1 */
-  public void addLocaleChangeListener(LocaleChangeListener listener);
-  /** @since 1.1 */
-  public boolean removeLocaleChangeListener(LocaleChangeListener listener);
+  /**
+   * Localizes the code and uses it to format the message with the passed arguments. The format of the localized message
+   * should be acceptable by <code>java.text.MessageFormat</code>. If the localized message cannot be resolved uses
+   * <code>defaultMessage</code> instead.
+   * 
+   * @param code The key used for finding the localized message.
+   * @param defaultMessage The default message used when no localized message was found for <tt>code</tt>.
+   * @param args Optional arguments to be used in the message (where specified by place-holders).
+   * @return The localized message with arguments injected where applicable.
+   * @see java.text.MessageFormat
+   */
+  String getMessage(String code, String defaultMessage, Object... args);
 
-  /** @since 1.1 */
-  public static interface LocaleChangeListener extends ApplicationComponent {
-	  void onLocaleChange(Locale oldLocale, Locale newLocale);
+  /**
+   * Localizes the code and uses it to format the message with the passed arguments. The format of the localized message
+   * should be acceptable by <code>java.text.MessageFormat</code>.
+   * 
+   * @param code The key used for finding the localized message.
+   * @param args Optional arguments to be used in the message (where specified by place-holders).
+   * @return The localized message with arguments injected where applicable.
+   * @see java.text.MessageFormat
+   */
+  String getMessage(String code, Object... args);
+
+  /**
+   * Registers a locale change listener.
+   * 
+   * @param listener A listener to be called on locale change.
+   * @since 1.1
+   */
+  void addLocaleChangeListener(LocaleChangeListener listener);
+
+  /**
+   * Unregisters a locale change listener.
+   * 
+   * @param listener A listener to be unregistered.
+   * @return A Boolean that is <code>true</code> when the listener was unregistered.
+   * @since 1.1
+   */
+  boolean removeLocaleChangeListener(LocaleChangeListener listener);
+
+  /**
+   * Contract interface for locale change listeners.
+   * 
+   * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+   * @since 1.1
+   */
+  static interface LocaleChangeListener extends ApplicationComponent {
+
+    /**
+     * Callback method that is called when locale changes.
+     * 
+     * @param oldLocale The previous locale.
+     * @param newLocale The new locale.
+     */
+    void onLocaleChange(Locale oldLocale, Locale newLocale);
   }
 }

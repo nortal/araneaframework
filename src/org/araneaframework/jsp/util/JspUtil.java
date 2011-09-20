@@ -35,8 +35,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.araneaframework.Environment;
 import org.araneaframework.core.util.ExceptionUtil;
-import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.framework.OverlayContext.OverlayActivityMarkerContext;
+import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.http.JspContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
@@ -65,16 +65,26 @@ public class JspUtil {
     ATTR_ERROR.put(AttributedTagInterface.ATTRIBUTED_TAG_KEY, null);
     ATTR_ERROR.put(FormListTag.FORM_LIST_ID_KEY, "&lt;ui:formList&gt; tag expected, but not found!");
     ATTR_ERROR.put(FormListTag.FORM_LIST_VIEW_MODEL_KEY, "&lt;ui:formList&gt; tag expected, but not found!");
-    ATTR_ERROR.put(ElementHtmlTag.KEY, "&lt;ui:element&gt; tag expected, but not found! Probably this is an attempt to use &lt;ui:elementContent&gt; or &lt;ui:attribute&gt; outside &lt;ui:element&gt; tag.");
-    ATTR_ERROR.put(FormElementTag.ID_KEY, "&lt;ui:formElement&gt; tag expected, but not found!  Make sure that form element and control tags either have an 'id' or are used inside &lt;ui:formElement&gt; tag.");
-    ATTR_ERROR.put(FormTag.FORM_VIEW_MODEL_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");
-    ATTR_ERROR.put(FormTag.FORM_FULL_ID_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");		
-    ATTR_ERROR.put(FormTag.FORM_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and control tags are used inside &lt;ui:form&gt; tag.");
-    ATTR_ERROR.put(RowClassProvider.KEY, "&lt;ui:layout&gt; tag expected, but not found! Make sure that row tags are used inside &lt;ui:layout&gt; tag.");
-    ATTR_ERROR.put(CellClassProvider.KEY, "&lt;ui:layout&gt; or &lt;ui:row&gt; expected, but not found! Make sure that row and cell tags are inside inside &lt;ui:layout&gt; tag.");
-    ATTR_ERROR.put(ListTag.LIST_VIEW_MODEL_KEY, "&lt;ui:list&gt; tag expected, but not found! Make sure list tags is used inside &lt;ui:list&gt; tag.");
-    ATTR_ERROR.put(ListTag.LIST_ID_KEY, "&lt;ui:list&gt; tag expected, but not found!  Make sure list tags is used inside &lt;ui:list&gt; tag.");
-    ATTR_ERROR.put(BaseListRowsTag.ROW_REQUEST_ID_KEY, "&lt;ui:listRows&gt; or another list rows tag expected, but not found!");	
+    ATTR_ERROR.put(ElementHtmlTag.KEY, "&lt;ui:element&gt; tag expected, but not found! Probably this is an attempt "
+        + "to use &lt;ui:elementContent&gt; or &lt;ui:attribute&gt; outside &lt;ui:element&gt; tag.");
+    ATTR_ERROR.put(FormElementTag.ID_KEY, "&lt;ui:formElement&gt; tag expected, but not found!  Make sure that form "
+        + "element and control tags either have an 'id' or are used inside &lt;ui:formElement&gt; tag.");
+    ATTR_ERROR.put(FormTag.FORM_VIEW_MODEL_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element "
+        + "and control tags are used inside &lt;ui:form&gt; tag.");
+    ATTR_ERROR.put(FormTag.FORM_FULL_ID_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element "
+        + "and control tags are used inside &lt;ui:form&gt; tag.");
+    ATTR_ERROR.put(FormTag.FORM_KEY, "&lt;ui:form&gt; tag expected, but not found! Make sure form element and "
+        + "control tags are used inside &lt;ui:form&gt; tag.");
+    ATTR_ERROR.put(RowClassProvider.KEY, "&lt;ui:layout&gt; tag expected, but not found! Make sure that row tags are "
+        + "used inside &lt;ui:layout&gt; tag.");
+    ATTR_ERROR.put(CellClassProvider.KEY, "&lt;ui:layout&gt; or &lt;ui:row&gt; expected, but not found! Make sure "
+        + "that row and cell tags are inside inside &lt;ui:layout&gt; tag.");
+    ATTR_ERROR.put(ListTag.LIST_VIEW_MODEL_KEY,
+        "&lt;ui:list&gt; tag expected, but not found! Make sure list tags is used inside &lt;ui:list&gt; tag.");
+    ATTR_ERROR.put(ListTag.LIST_ID_KEY,
+        "&lt;ui:list&gt; tag expected, but not found!  Make sure list tags is used inside &lt;ui:list&gt; tag.");
+    ATTR_ERROR.put(BaseListRowsTag.ROW_REQUEST_ID_KEY,
+        "&lt;ui:listRows&gt; or another list rows tag expected, but not found!");
   }
 
   /**
@@ -140,7 +150,7 @@ public class JspUtil {
   }
 
   /**
-   * Writes closing of start tag that is also and end tag (space sensitive):  "<code>/&gt;</code>".
+   * Writes closing of start tag that is also and end tag (space sensitive): "<code>/&gt;</code>".
    */
   public static void writeCloseStartEndTag_SS(Writer out) throws IOException {
     out.write("/>");

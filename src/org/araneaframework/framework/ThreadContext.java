@@ -19,21 +19,26 @@ package org.araneaframework.framework;
 import java.io.Serializable;
 
 /**
- * A context for supporting multiple threads (windows) inside a single session. When
- * a user opens a new window there needs to be means to have a different set of child
- * services and widgets for the new window but the session should remain the same.
+ * A context for supporting multiple threads (windows) inside a single session. When a user opens a new window there
+ * needs to be means to have a different set of child services and widgets for the new window but the session should
+ * remain the same.
  * <p>
- * {@link org.araneaframework.framework.router.StandardThreadServiceRouterService} adds a
- * ThreadContext.class to the environment for the children to be able to access.
+ * {@link org.araneaframework.framework.router.StandardThreadServiceRouterService} adds a ThreadContext.class to the
+ * environment for the children to be able to access.
  * </p>
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ThreadContext extends ManagedServiceContext, Serializable {
+
   /**
-  * The key of the thread-service's id in the request.
-  */
-  public static final String THREAD_SERVICE_KEY = "araThreadServiceId";
-  public static final String KEEPALIVE_KEY = "araThreadServiceKeepAlive";
+   * The key used for the thread-service ID lookup in the request.
+   */
+  String THREAD_SERVICE_KEY = "araThreadServiceId";
+
+  /**
+   * The key used for checking the request for a keep-alive request (which won't be processed once detected).
+   */
+  String KEEPALIVE_KEY = "araThreadServiceKeepAlive";
 }

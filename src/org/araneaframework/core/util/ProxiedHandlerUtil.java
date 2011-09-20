@@ -26,13 +26,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.Widget;
-import org.araneaframework.core.action.ProxyActionListener;
-import org.araneaframework.core.event.ProxyEventListener;
 
 /**
- * Utility class for accessing methods that will be invocation targets of {@link ProxyEventListener} and
- * {@link ProxyActionListener}. Note that this class is used centrally so that rules described here are global to
- * Aranea.
+ * Utility class for accessing methods that will be invocation targets of actions and events. Note that this class is
+ * used centrally so that rules described here are global to Aranea.
  * <p>
  * The general rule is that for every incoming action ("actionId"), the target method will be resolved by name
  * handleAction[ActionId](...). For every incoming event, the target method will be resolved exactly the same way,
@@ -56,6 +53,8 @@ import org.araneaframework.core.event.ProxyEventListener;
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.0.12
+ * @see org.araneaframework.core.action.ProxyActionListener
+ * @see org.araneaframework.core.event.ProxyEventListener
  */
 public abstract class ProxiedHandlerUtil {
 
@@ -133,12 +132,12 @@ public abstract class ProxiedHandlerUtil {
    * This method tries to invoke even handlers in the given order (the method quits after a method has been found and
    * invoked):
    * <ol>
-   * <li>eventTarget.handleEvent[EventId]()</li>
-   * <li>eventTarget.handleEvent[EventId](String) (<code>eventParam</code>)</li>
-   * <li>eventTarget.handleEvent[EventId](String[]) (<code>eventParam</code> split into an array at every ';' symbol)</li>
-   * <li>eventTarget.handleEvent[EventId](List<String>) (<code>eventParam</code> split into a list at every ';' symbol)</li>
+   * <li>eventTarget.handleEvent[EventId]()
+   * <li>eventTarget.handleEvent[EventId](String) (<code>eventParam</code>)
+   * <li>eventTarget.handleEvent[EventId](String[]) (<code>eventParam</code> split into an array at every ';' symbol)
+   * <li>eventTarget.handleEvent[EventId](List<String>) (<code>eventParam</code> split into a list at every ';' symbol)
    * <li>eventTarget.handleEvent[EventId](Map<String, String>) (<code>eventParam</code> split into entries at every ';'
-   * symbol and into key and value at the first '=' symbol in every entry)</li>
+   * symbol and into key and value at the first '=' symbol in every entry)
    * </ol>
    * 
    * @param eventId The event that should be called. It is used to look up the right method.
@@ -160,11 +159,11 @@ public abstract class ProxiedHandlerUtil {
    * <p>
    * The following algorithm explains its work:
    * <ol>
-   * <li>look for a method: actionTarget.handleAction[ActionId](); if found, invoke it, and quit this method.</li>
+   * <li>look for a method: actionTarget.handleAction[ActionId](); if found, invoke it, and quit this method.
    * <li>look for a method: actionTarget.handleAction[ActionId](String); if found, invoke it with
-   * <code>actionParam</code>, and quit this method.</li>
+   * <code>actionParam</code>, and quit this method.
    * <li>look for a method: actionTarget.handleAction[ActionId](String[]); if found, split <code>actionParam</code> into
-   * array at every ';' symbol, invoke it with created array as its parameter, and quit this method.</li>
+   * array at every ';' symbol, invoke it with created array as its parameter, and quit this method.
    * </ol>
    * 
    * @param actionId The action that should be called. It is used to look up the right method.
@@ -195,7 +194,9 @@ public abstract class ProxiedHandlerUtil {
 
     } else if (hasHandler(eventTarget, handlerName, String[].class)) {
       log(handlerName, "String[]", className);
-      MethodUtils.invokeExactMethod(eventTarget, handlerName, new Object[] { splitParam(eventTarget, param) });
+      Object[] methodParam = new Object[1];
+      methodParam[0] = splitParam(eventTarget, param);
+      MethodUtils.invokeExactMethod(eventTarget, handlerName, methodParam);
 
     } else if (hasHandler(eventTarget, handlerName, List.class)) {
       log(handlerName, "List<String>", className);

@@ -24,25 +24,27 @@ import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class MockServlet extends BaseAraneaDispatcherServlet {
+
   private String beansFile = "smokeTest.xml";
+
   private ServletServiceAdapterComponent builtComponent;
+
   private BeanFactory factory;
-  
+
   @Override
   protected ServletServiceAdapterComponent buildRootComponent() {
-    ClassPathResource resource = new ClassPathResource(beansFile);
-    factory = new XmlBeanFactory(resource);  
-    ServletServiceAdapterComponent adapter = 
-      (ServletServiceAdapterComponent)factory.getBean("servletServiceAdapterComponent");
-    builtComponent = adapter;
+    ClassPathResource resource = new ClassPathResource(this.beansFile);
+    this.factory = new XmlBeanFactory(resource);
+    ServletServiceAdapterComponent adapter = (ServletServiceAdapterComponent) this.factory
+        .getBean("servletServiceAdapterComponent");
+    this.builtComponent = adapter;
     return adapter;
   }
-  
+
   public BeanFactory getFactory() {
-    return factory;
+    return this.factory;
   }
 
   public void setConfFile(String file) {
@@ -50,6 +52,6 @@ public class MockServlet extends BaseAraneaDispatcherServlet {
   }
 
   public ServletServiceAdapterComponent getBuiltComponent() {
-    return builtComponent;
-  } 
+    return this.builtComponent;
+  }
 }

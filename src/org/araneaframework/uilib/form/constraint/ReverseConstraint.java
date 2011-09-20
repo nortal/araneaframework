@@ -104,7 +104,7 @@ public class ReverseConstraint extends BaseConstraint {
      * @param c The <code>ReverseConstraint</code> where validation failed.
      * @return A collection of {@link String}s containing constraint validation error messages.
      */
-    public Collection<MessageData> getErrorMessage(ReverseConstraint c);
+    Collection<MessageData> getErrorMessage(ReverseConstraint c);
   }
 
   /**
@@ -114,7 +114,7 @@ public class ReverseConstraint extends BaseConstraint {
   @Override
   protected void validateConstraint() throws Exception {
     this.toReverse.validate();
-    Set<MessageData> errors = toReverse.getErrors();
+    Set<MessageData> errors = this.toReverse.getErrors();
 
     // Reverse constraint is invalid when wrapped constraint validates
     if (errors.isEmpty()) {

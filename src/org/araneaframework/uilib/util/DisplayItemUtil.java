@@ -290,7 +290,6 @@ public abstract class DisplayItemUtil implements Serializable {
    * 
    * @param container A container of {@link DisplayItem}s.
    * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
-   * @return The found display item or <code>null</code>.
    * @return A Boolean that is <code>true</code> when the value was found.
    */
   public static boolean containsItem(DisplayItemContainer<DisplayItem> container, String value) {
@@ -313,7 +312,6 @@ public abstract class DisplayItemUtil implements Serializable {
    * 
    * @param container A container of {@link DisplayItem}s.
    * @param value The value that will be searched for. If <code>null</code>, the result will be <code>false</code>.
-   * @return The found display item or <code>null</code>.
    * @return A Boolean that is <code>true</code> when the value was found.
    */
   public static boolean containsEnabledItem(DisplayItemContainer<DisplayItem> container, String value) {

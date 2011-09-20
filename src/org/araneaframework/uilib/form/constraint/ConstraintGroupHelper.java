@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 package org.araneaframework.uilib.form.constraint;
 
@@ -23,9 +23,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.araneaframework.uilib.form.Constraint;
 
 /**
- * Helper for the {@link GroupedConstraint} that holds a set of currently active
- * groups and provides a factory method for wrapping <code>Constraint</code>
- * instances in {@link GroupedConstraint}. An example would look like this:
+ * Helper for the {@link GroupedConstraint} that holds a set of currently active groups and provides a factory method
+ * for wrapping <code>Constraint</code> instances in {@link GroupedConstraint}. An example would look like this:
+ * 
  * <pre><code>
  * ConstraintGroupHelper helper = new ConstraintGroupHelper();
  * ...
@@ -45,8 +45,8 @@ public class ConstraintGroupHelper implements Serializable {
   private Set<String> activeGroups = new HashSet<String>();
 
   /**
-   * Wrap the <code>constraint</code> in the <code>GroupedConstraint</code>
-   * instance that is assigned to the specified <code>group<code>.
+   * Wrap the <code>constraint</code> in the <code>GroupedConstraint</code> instance that is assigned to the specified
+   * <code>group</code>.
    * 
    * @param constraint Constraint to wrap.
    * @param group Name of the group to assign the constraint to.
@@ -57,9 +57,8 @@ public class ConstraintGroupHelper implements Serializable {
   }
 
   /**
-   * Provides a way to specify multiple active groups as a <code>Set</code>.
-   * The previously activated groups, that are not contained in given
-   * <code>activeGroups</code> parameter, are made inactive.
+   * Provides a way to specify multiple active groups as a <code>Set</code>. The previously activated groups, that are
+   * not contained in given <code>activeGroups</code> parameter, are made inactive.
    * 
    * @param activeGroups The names of the groups to be made active.
    */
@@ -72,10 +71,8 @@ public class ConstraintGroupHelper implements Serializable {
   }
 
   /**
-   * Provides a way to specify multiple active groups as an array of
-   * <code>String</code>s. The previously activated groups, that are not
-   * contained in given <code>activeGroups</code> parameter, are made
-   * inactive.
+   * Provides a way to specify multiple active groups as an array of <code>String</code>s. The previously activated
+   * groups, that are not contained in given <code>activeGroups</code> parameter, are made inactive.
    * 
    * @param activeGroups The names of the groups to be made active.
    */
@@ -84,15 +81,12 @@ public class ConstraintGroupHelper implements Serializable {
   }
 
   /**
-   * Provides a way to specify only one active group. The previously activated
-   * groups, that are not the same as the given <code>activeGroup</code>, are
-   * made inactive.
+   * Provides a way to specify only one active group. The previously activated groups, that are not the same as the
+   * given <code>activeGroup</code>, are made inactive.
    * <p>
-   * If the <code>activeGroup</code> parameter is <code>null</code>, all
-   * groups will be made inactive.
+   * If the <code>activeGroup</code> parameter is <code>null</code>, all groups will be made inactive.
    * 
-   * @param activeGroup The name of the group to be made active, or
-   *            <code>null</code>.
+   * @param activeGroup The name of the group to be made active, or <code>null</code>.
    */
   public void setActiveGroup(String activeGroup) {
     this.activeGroups.clear();
@@ -109,8 +103,7 @@ public class ConstraintGroupHelper implements Serializable {
   }
 
   /**
-   * Specifies whether the given group is active. The group name used in search
-   * is case-sensitive.
+   * Specifies whether the given group is active. The group name used in search is case-sensitive.
    * 
    * @param group The name of the group to check whether it
    * @return <code>true</code>, if the group with given name is active.

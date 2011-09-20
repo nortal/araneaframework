@@ -16,14 +16,22 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
- * @see org.araneaframework.core.exception.NoSuchComponentException
+ * Thrown to indicate that a service with given key (ID) does not exist in the set of (child) services.
+ * <p>
+ * Components and Widgets have corresponding exceptions, {@link NoSuchComponentException} and
+ * {@link NoSuchWidgetException} respectively.
+ * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class NoSuchServiceException extends AraneaRuntimeException {
 
-  public NoSuchServiceException(Object key) {
+  /**
+   * Creates a new exception for a service with given <tt>key</tt> (ID) not being found.
+   * 
+   * @param key The ID of a child-service that was not found.
+   */
+  public NoSuchServiceException(String key) {
     super("No such service '" + key + "'");
   }
 }

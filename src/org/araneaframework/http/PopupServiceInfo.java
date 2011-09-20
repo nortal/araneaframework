@@ -20,18 +20,23 @@ import java.io.Serializable;
 import org.araneaframework.http.support.PopupWindowProperties;
 
 /**
- * Encapsulates info about popup window properties and URL where 
- * servicing session-thread lives.
+ * Encapsulates info about a popup service.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface PopupServiceInfo extends Serializable {
+
   /**
-   * @return popup service's info translated into String containing URL style parameters. 
+   * Provides the URL for accessing popup service.
+   * 
+   * @return The popup service URL.
    */
-  public String getUrl();
+  String getUrl();
+
   /**
-   * @return popup service's window properties. 
-   */  
-  public PopupWindowProperties getPopupProperties();
+   * Provides popup window properties.
+   * 
+   * @return Window properties of the popup service.
+   */
+  PopupWindowProperties getPopupProperties();
 }

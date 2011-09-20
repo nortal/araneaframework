@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.framework;
 
 import java.io.Serializable;
 import org.araneaframework.Widget;
 
 /**
- * Widget that has at least single child and acts as a guardian, deciding
- * which data should be let through to children and what services should
- * they be allowed to use.
+ * Widget that has at least single child and acts as a guardian, deciding which data should be let through to children
+ * and what services should they be allowed to use.
  * 
  * @see org.araneaframework.framework.core.BaseFilterWidget
- * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public interface FilterWidget extends Serializable, Widget{
-  public void setChildWidget(Widget childService);
+public interface FilterWidget extends Serializable, Widget {
+
+  /**
+   * Specifies the child widget where the request will be forwarded when the filter decides that the request can be
+   * processed.
+   * 
+   * @param childService The child service where the request can be forwarded.
+   */
+  void setChildWidget(Widget childService);
 }

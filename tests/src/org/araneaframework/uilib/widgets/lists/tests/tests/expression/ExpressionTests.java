@@ -25,72 +25,69 @@ import org.araneaframework.backend.list.memorybased.expression.procedure.Procedu
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
 import org.araneaframework.uilib.widgets.lists.tests.mock.MockVariableResolver;
 
-
 public class ExpressionTests extends TestCase {
-	private static final Log LOG = LogFactory.getLog(ExpressionTests.class);
 
-	private VariableResolver resolver;
+  private static final Log LOG = LogFactory.getLog(ExpressionTests.class);
 
-	@Override
+  private VariableResolver resolver;
+
+  @Override
   public void setUp() {
-		this.resolver = new MockVariableResolver();
-	}
+    this.resolver = new MockVariableResolver();
+  }
 
-	@Override
+  @Override
   public void tearDown() {
-		this.resolver = null;
-	}
+    this.resolver = null;
+  }
 
-	public void testValueExpression() {
-		LOG.debug("Testing ValueExpression");
-		// evaluating
-		assertNull("ValueExpression must return null",
-				new ValueExpression<Long>(null).evaluate(this.resolver));
-		assertEquals("ValueExpression must return true", Boolean.TRUE,
-				new ValueExpression<Boolean>(Boolean.TRUE).evaluate(this.resolver));
-		assertEquals("ValueExpression must return 0", Long.valueOf(0),
-				new ValueExpression<Long>(0L).evaluate(this.resolver));
+  public void testValueExpression() {
+    LOG.debug("Testing ValueExpression");
+    // evaluating
+    assertNull("ValueExpression must return null", new ValueExpression<Long>(null).evaluate(this.resolver));
+    assertEquals("ValueExpression must return true", Boolean.TRUE,
+        new ValueExpression<Boolean>(Boolean.TRUE).evaluate(this.resolver));
+    assertEquals("ValueExpression must return 0", Long.valueOf(0),
+        new ValueExpression<Long>(0L).evaluate(this.resolver));
 
-		// name
-		assertEquals("ValueExpression's name must be 'value1'", "value1",
-				new ValueExpression<String>("value1", null).getName());
-	}
+    // name
+    assertEquals("ValueExpression's name must be 'value1'", "value1",
+        new ValueExpression<String>("value1", null).getName());
+  }
 
-	public void testVariableExpression() {
-		LOG.debug("Testing VariableExpression");
-		// name
-		try {
-			new VariableExpression(null).getName();
-			fail("VariableExpression's name can't be null");
-		} catch (Exception e) {
-			// normal
-		}
-		assertEquals("VariableExpression's name must be 'var1'", "var1",
-				new VariableExpression("var1").getName());
+  public void testVariableExpression() {
+    LOG.debug("Testing VariableExpression");
+    // name
+    try {
+      new VariableExpression(null).getName();
+      fail("VariableExpression's name can't be null");
+    } catch (Exception e) {
+      // normal
+    }
+    assertEquals("VariableExpression's name must be 'var1'", "var1", new VariableExpression("var1").getName());
 
-		// evaluating
-		assertEquals("VariableExpression must return Tom", "Tom",
-				new VariableExpression("var").evaluate(new MockVariableResolver("var", "Tom")));
-	}
-	
-	public void testProcedureExpression() {
-		LOG.debug("Testing ProcedureExpression");
-		// name
-		try {
-			new ProcedureExpression(null).getName();
-			fail("ProcedureExpression's name can't be null");
-		} catch (Exception e) {
-			// normal
-		}
-		assertEquals("ProcedureExpression's name must be 'proc1'", "proc1",
-				new ProcedureExpression("proc1").getName());		
-		
-		// evaluating
-		try {
-			new ProcedureExpression("proc1").evaluate(this.resolver);
-			fail("ProcedureExpression should not be evaluatable");
-		} catch (Exception e) {
-			// normal
-		}
-	}
+    // evaluating
+    assertEquals("VariableExpression must return Tom", "Tom",
+        new VariableExpression("var").evaluate(new MockVariableResolver("var", "Tom")));
+  }
+
+  public void testProcedureExpression() {
+    LOG.debug("Testing ProcedureExpression");
+    // name
+    try {
+      new ProcedureExpression(null).getName();
+      fail("ProcedureExpression's name can't be null");
+    } catch (Exception e) {
+      // normal
+    }
+    assertEquals("ProcedureExpression's name must be 'proc1'", "proc1", new ProcedureExpression("proc1").getName());
+
+    // evaluating
+    try {
+      new ProcedureExpression("proc1").evaluate(this.resolver);
+      fail("ProcedureExpression should not be evaluatable");
+    } catch (Exception e) {
+      // normal
+    }
+  }
 }

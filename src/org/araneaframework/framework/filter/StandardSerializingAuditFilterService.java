@@ -51,7 +51,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   private String testXmlSessionPath;
 
-  private ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
+  private final ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
 
   @Override
   public void setChildService(Service child) {
@@ -105,10 +105,22 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
     }
   }
 
+  /**
+   * Returns the child service as relocatable since this service requires that the child service must also be
+   * relocatable.
+   * 
+   * @return The child - a relocatable service.
+   */
   protected Relocatable getRelocatable() {
     return (Relocatable) this.childService;
   }
 
+  /**
+   * Formats the size (provided in bytes) into human-friendly format using B, kB, MB, GB or TB as a unit.
+   * 
+   * @param size The size in bytes to format.
+   * @return The formatted size with units.
+   */
   protected static String formatSize(int size) {
     BigDecimal limit = BigDecimal.valueOf(1024);
     BigDecimal fSize = BigDecimal.valueOf(size);
@@ -121,7 +133,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
       unit++;
     }
 
-    // Do some rounding to make the value easier to understand. 
+    // Do some rounding to make the value easier to understand.
     fSize = fSize.setScale(2, BigDecimal.ROUND_HALF_UP);
     return fSize.toString() + units[unit] + 'B';
   }

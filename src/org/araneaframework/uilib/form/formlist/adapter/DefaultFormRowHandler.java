@@ -27,19 +27,26 @@ import org.araneaframework.uilib.form.formlist.FormRowHandler;
  * implement all methods of <code>FormRowHandler</code>. The generic parameter K corresponds to the type of the key
  * values, and the generic parameter R corresponds to the type of the row values.
  * 
+ * @param <K> The type of the form row key value.
+ * @param <R> The type of the form row value.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class DefaultFormRowHandler<K, R> implements FormRowHandler<K, R> {
 
-  public void initFormRow(FormRow<K, R> editableRow, R row) throws Exception {}
+  public void initFormRow(FormRow<K, R> editableRow, R row) throws Exception {
+  }
 
-  public void initAddForm(FormWidget addForm) throws Exception {}
+  public void initAddForm(FormWidget addForm) throws Exception {
+  }
 
-  public void addRow(FormWidget rowForm) throws Exception {}
+  public void addRow(FormWidget rowForm) throws Exception {
+  }
 
-  public void saveRows(Map<K, FormRow<K, R>> editableRows) throws Exception {}
+  public void saveRows(Map<K, FormRow<K, R>> editableRows) throws Exception {
+  }
 
-  public void deleteRows(Set<K> keys) throws Exception {}
+  public void deleteRows(Set<K> keys) throws Exception {
+  }
 
   /**
    * Opens a closed row or resets and closes open row.

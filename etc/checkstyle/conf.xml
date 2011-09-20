@@ -12,9 +12,11 @@
   <property name="charset" value="UTF-8" />
 
   <!-- Checks for common headers on Java files. -->
+<!--
   <module name="Header">
-    <property name="headerFile" value="etc/checkstyle/header-java.txt"/>
+    <property name="headerFile" value="./etc/checkstyle/header-java.txt"/>
   </module>
+-->
 
   <!-- Checks that a package-info.java file exists for each package. -->
   <module name="JavadocPackage" />
@@ -74,7 +76,7 @@
 
     <module name="JavadocType">
       <property name="scope" value="package"/>
-      <property name="authorFormat" value="\p{javaUpperCase}\p{javaLowerCase}+ \p{javaUpperCase}\p{javaLowerCase}+ \([a-z]+@[a-z]+\.[a-z]{2,3}\)"/>
+      <property name="authorFormat" value="\p{javaUpperCase}\p{javaLowerCase}+ \p{javaUpperCase}\p{javaLowerCase}+( \([a-z]+@[a-z]+\.[a-z]{2,3}\))?"/>
     </module>
 
     <module name="JavadocMethod">
@@ -166,7 +168,7 @@
 
     <module name="RequireThis">
       <property name="checkMethods" value="false"/>
-      <property name="tokens" value="CLASS_DEF,CTOR_DEF,ENUM_DEF,IDENT,INTERFACE_DEF,METHOD_DEF,PARAMETER_DEF,SLIST,VARIABLE_DEF"/>
+      <property name="tokens" value="IDENT,PARAMETER_DEF,SLIST,VARIABLE_DEF"/>
     </module>
 
     <module name="NestedIfDepth">
@@ -178,7 +180,7 @@
     </module>
 
     <!-- Checks for class design -->
-    <module name="DesignForExtension" />
+    <!-- <module name="DesignForExtension" /> -->
     <module name="FinalClass" />
     <module name="HideUtilityClassConstructor" />
     <module name="VisibilityModifier" />
@@ -191,5 +193,9 @@
     <module name="UpperEll" />
 
   </module>
+
+<!--   <module name="SuppressionFilter"> -->
+<!--     <property name="file" value="suppressions.xml"/> -->
+<!--   </module> -->
 
 </module>

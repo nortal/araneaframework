@@ -28,128 +28,139 @@ import org.araneaframework.mock.core.MockEventfulBaseWidget;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardFlowContainerWidgetTests extends TestCase {
+
   private StandardFlowContainerWidget stackWidget;
+
   private MockEventfulBaseWidget topWidget;
+
   private MockEventfulBaseWidget childWidget;
+
   private MockEventfulBaseWidget childWidget2;
+
   private StandardEnvironment env;
-  
-  private static String BASE_FLOW_KEY; 
+
+  private static String BASE_FLOW_KEY;
+
   private static String TOP_FLOW_KEY;
-  
-  static  {
-	  try {
-		  Field f = StandardFlowContainerWidget.class.getDeclaredField("BASE_FLOW_KEY");
-		  f.setAccessible(true);
-		  BASE_FLOW_KEY = (String) f.get(new StandardFlowContainerWidget());
-		  
-		  Field g = StandardFlowContainerWidget.class.getDeclaredField("TOP_FLOW_KEY");
-		  g.setAccessible(true);
-		  TOP_FLOW_KEY = (String) g.get(new StandardFlowContainerWidget());
-	  } catch (Exception e) {
-		ExceptionUtil.uncheckException(e);
-	}
+
+  static {
+    try {
+      Field f = StandardFlowContainerWidget.class.getDeclaredField("BASE_FLOW_KEY");
+      f.setAccessible(true);
+      BASE_FLOW_KEY = (String) f.get(new StandardFlowContainerWidget());
+
+      Field g = StandardFlowContainerWidget.class.getDeclaredField("TOP_FLOW_KEY");
+      g.setAccessible(true);
+      TOP_FLOW_KEY = (String) g.get(new StandardFlowContainerWidget());
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
-  
+
   @Override
-  public void setUp() throws Exception {    
-    topWidget = new MockEventfulBaseWidget();
-    childWidget = new MockEventfulBaseWidget();
-    childWidget2 = new MockEventfulBaseWidget();
-    
-    env = new StandardEnvironment(null, new HashMap<Class<?>, Object>());
-    
-    stackWidget = new StandardFlowContainerWidget(topWidget);
-    stackWidget._getComponent().init(null, env);
+  public void setUp() throws Exception {
+    this.topWidget = new MockEventfulBaseWidget();
+    this.childWidget = new MockEventfulBaseWidget();
+    this.childWidget2 = new MockEventfulBaseWidget();
+
+    this.env = new StandardEnvironment(null, new HashMap<Class<?>, Object>());
+
+    this.stackWidget = new StandardFlowContainerWidget(this.topWidget);
+    this.stackWidget._getComponent().init(null, this.env);
   }
-  
+
   public void testCallingContract() throws Exception {
     MemoizingFlowContextConfigurator configurator = new MemoizingFlowContextConfigurator();
     MemoizingFlowContextHandler handler = new MemoizingFlowContextHandler();
-    stackWidget.start(childWidget, configurator, handler);
+    this.stackWidget.start(this.childWidget, configurator, handler);
 
-    assertTrue(topWidget.isDisableCalled());
+    assertTrue(this.topWidget.isDisableCalled());
     assertTrue(configurator.isConfigured());
-    assertEquals(childWidget, stackWidget.getChildren().get(BASE_FLOW_KEY+"1"));
+    assertEquals(this.childWidget, this.stackWidget.getChildren().get(BASE_FLOW_KEY + "1"));
   }
-  
+
   public void testCancelCallContract() throws Exception {
     MemoizingFlowContextConfigurator configurator = new MemoizingFlowContextConfigurator();
     MemoizingFlowContextHandler handler = new MemoizingFlowContextHandler();
-    stackWidget.start(childWidget, configurator, handler);
-    
-    stackWidget.cancel();
+    this.stackWidget.start(this.childWidget, configurator, handler);
+
+    this.stackWidget.cancel();
     assertTrue(handler.isCancelled());
-    assertTrue(topWidget.isEnableCalled());
-    assertEquals(topWidget, stackWidget.getChildren().get(TOP_FLOW_KEY));
+    assertTrue(this.topWidget.isEnableCalled());
+    assertEquals(this.topWidget, this.stackWidget.getChildren().get(TOP_FLOW_KEY));
   }
-    
+
   public void testReturnCallContract() throws Exception {
     MemoizingFlowContextConfigurator configurator = new MemoizingFlowContextConfigurator();
     MemoizingFlowContextHandler handler = new MemoizingFlowContextHandler();
-    stackWidget.start(childWidget, configurator, handler);
-    
-    stackWidget.finish("returnCall");
-    assertTrue("returnCall".equals(handler.getReturnValue()));
-    assertTrue(topWidget.isEnableCalled());
-    assertEquals(topWidget, stackWidget.getChildren().get(TOP_FLOW_KEY));
-  }
-  
-  public void testDestroyDestroysChildrenOnStack() throws Exception {
-    stackWidget.start(childWidget, new MemoizingFlowContextConfigurator(),new MemoizingFlowContextHandler());
-    stackWidget.start(childWidget2, new MemoizingFlowContextConfigurator(), new MemoizingFlowContextHandler());
+    this.stackWidget.start(this.childWidget, configurator, handler);
 
-    stackWidget._getComponent().destroy();
-    
-    assertEquals(true, childWidget.getDestroyCalled());
-    assertEquals(true, childWidget2.getDestroyCalled());
+    this.stackWidget.finish("returnCall");
+    assertTrue("returnCall".equals(handler.getReturnValue()));
+    assertTrue(this.topWidget.isEnableCalled());
+    assertEquals(this.topWidget, this.stackWidget.getChildren().get(TOP_FLOW_KEY));
   }
-  
+
+  public void testDestroyDestroysChildrenOnStack() throws Exception {
+    this.stackWidget.start(this.childWidget, new MemoizingFlowContextConfigurator(), new MemoizingFlowContextHandler());
+    this.stackWidget
+        .start(this.childWidget2, new MemoizingFlowContextConfigurator(), new MemoizingFlowContextHandler());
+
+    this.stackWidget._getComponent().destroy();
+
+    assertEquals(true, this.childWidget.getDestroyCalled());
+    assertEquals(true, this.childWidget2.getDestroyCalled());
+  }
+
   protected static class MemoizingFlowContextHandler implements FlowContext.Handler<Object> {
+
     private Object returnValue = null;
+
     private boolean finished;
+
     private boolean cancelled;
-    
+
     public void onCancel() throws Exception {
-      cancelled = true;
+      this.cancelled = true;
     }
 
     public void onFinish(Object returnValue) throws Exception {
-      finished = true;
+      this.finished = true;
       this.returnValue = returnValue;
     }
 
     public Object getReturnValue() {
-      return returnValue;
+      return this.returnValue;
     }
 
     public boolean isFinished() {
-      return finished;
+      return this.finished;
     }
 
     public boolean isCancelled() {
-      return cancelled;
+      return this.cancelled;
     }
   }
-  
+
   protected static class MemoizingFlowContextConfigurator implements FlowContext.Configurator {
+
     private boolean configured;
+
     private Widget flow;
 
-    public void configure(Widget flow) throws Exception {
+    public void configure(Widget flow) {
       this.configured = true;
       this.flow = flow;
     }
 
     public boolean isConfigured() {
-      return configured;
+      return this.configured;
     }
 
     public Widget getFlow() {
-      return flow;
+      return this.flow;
     }
   }
 }

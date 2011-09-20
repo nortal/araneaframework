@@ -40,25 +40,21 @@ import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.exception.AraneaRuntimeException;
 
 /**
- * A container for all tag libraries that are defined "globally" for the web application.
- * 
- * Tag Libraries can be defined globally in one of two ways:
+ * A container for all tag libraries that are defined "globally" for the web application. Tag Libraries can be defined
+ * globally in one of two ways:
  * <ol>
  * <li>Via &lt;taglib&gt; elements in web.xml: the URI and location of the tag-library are specified in the
  * &lt;taglib&gt; element.</li>
  * <li>Via packaged jar files that contain .tld files within the META-INF directory, or some sub-directory of it. The
  * TagLib is 'global' if it has the &lt;uri&gt; element defined.</li>
  * </ol>
- * 
  * A mapping between the taglib URI and its associated TaglibraryInfoImpl is maintained in this container. Actually,
  * that's what we'd like to do. However, because of the way the classes TagLibraryInfo and TagInfo have been defined, it
  * is not currently possible to share an instance of TagLibraryInfo across page invocations. A bug has been submitted to
  * the spec lead. In the mean time, all we do is save the 'location' where the TLD associated with a taglib URI can be
- * found.
- * 
- * When a JSP page has a taglib directive, the mappings in this container are first searched (see method getLocation()).
- * If a mapping is found, then the location of the TLD is returned. If no mapping is found, then the uri specified in
- * the taglib directive is to be interpreted as the location for the TLD of this tag library.
+ * found. When a JSP page has a taglib directive, the mappings in this container are first searched (see method
+ * getLocation()). If a mapping is found, then the location of the TLD is returned. If no mapping is found, then the uri
+ * specified in the taglib directive is to be interpreted as the location for the TLD of this tag library.
  * 
  * @author Pierre Delisle
  * @author Jan Luehe
@@ -91,13 +87,13 @@ public class TldLocationsCache {
    * library. The location is returned as a String array: [0] The location [1] If the location is a jar file, this is
    * the location of the TLD.
    */
-  private Hashtable<String, String[]> mappings;
+  private final Hashtable<String, String[]> mappings;
 
   private boolean initialized;
 
-  private ServletContext ctxt;
+  private final ServletContext ctxt;
 
-  private boolean redeployMode;
+  private final boolean redeployMode;
 
   private static TldLocationsCache instance;
 
@@ -203,14 +199,11 @@ public class TldLocationsCache {
   }
 
   /**
-   * Gets the 'location' of the TLD associated with the given taglib 'uri'.
-   * 
-   * Returns null if the URI is not associated with any tag library 'exposed' in the web application. A tag library is
-   * 'exposed' either explicitly in web.xml or implicitly via the &lt;uri&gt; tag in the TLD of a TagLib deployed in a
-   * jar file (WEB-INF/lib).
+   * Gets the 'location' of the TLD associated with the given taglib 'uri'. Returns null if the URI is not associated
+   * with any tag library 'exposed' in the web application. A tag library is 'exposed' either explicitly in web.xml or
+   * implicitly via the &lt;uri&gt; tag in the TLD of a TagLib deployed in a jar file (WEB-INF/lib).
    * 
    * @param uri The TagLib URI.
-   * 
    * @return An array of two Strings: The first element denotes the real path to the TLD. If the path to the TLD points
    *         to a jar file, then the second element denotes the name of the TLD entry in the jar file. Returns null if
    *         the URI is not associated with any tag library 'exposed' in the web application.
@@ -429,17 +422,13 @@ public class TldLocationsCache {
   }
 
   /*
-   * Scans all JARs accessible to the webapp's class-loader and its parent class-loaders for TLDs.
-   * 
-   * The list of JARs always includes the JARs under WEB-INF/lib, as well as all shared JARs in the class-loader
-   * delegation chain of the webapp's class-loader.
-   * 
-   * Considering JARs in the class-loader delegation chain constitutes a Tomcat-specific extension to the TLD search
-   * order defined in the JSP spec. It allows tag libraries packaged as JAR files to be shared by web applications by
-   * simply dropping them in a location that all web applications have access to (e.g., <CATALINA_HOME>/common/lib).
-   * 
-   * The set of shared JARs to be scanned for TLDs is narrowed down by the <tt>noTldJars</tt> class variable, which
-   * contains the names of JARs that are known not to contain any TLDs.
+   * Scans all JARs accessible to the webapp's class-loader and its parent class-loaders for TLDs. The list of JARs
+   * always includes the JARs under WEB-INF/lib, as well as all shared JARs in the class-loader delegation chain of the
+   * webapp's class-loader. Considering JARs in the class-loader delegation chain constitutes a Tomcat-specific
+   * extension to the TLD search order defined in the JSP spec. It allows tag libraries packaged as JAR files to be
+   * shared by web applications by simply dropping them in a location that all web applications have access to (e.g.,
+   * <CATALINA_HOME>/common/lib). The set of shared JARs to be scanned for TLDs is narrowed down by the
+   * <tt>noTldJars</tt> class variable, which contains the names of JARs that are known not to contain any TLDs.
    */
   private void scanJars() throws Exception {
 
@@ -489,7 +478,7 @@ public class TldLocationsCache {
 
         // Will this work if the WebApp is packaged in a war?
         // Just have to check it...
-        if (entryUrl.getProtocol().equals("file")) {
+        if ("file".equals(entryUrl.getProtocol())) {
           entryUrl = new URL("jar:" + entryUrl.toExternalForm() + "!/");
         }
 
@@ -504,11 +493,8 @@ public class TldLocationsCache {
 
   /*
    * Determines if the JAR file with the given <tt>jarPath</tt> needs to be scanned for TLDs.
-   * 
    * @param loader The current class loader in the parent chain @param webappLoader The webapp class loader
-   * 
    * @param jarPath The JAR file path
-   * 
    * @return TRUE if the JAR file identified by <tt>jarPath</tt> needs to be scanned for TLDs, FALSE otherwise
    */
   private boolean needScanJar(ClassLoader loader, ClassLoader webappLoader, String jarPath) {
@@ -521,7 +507,7 @@ public class TldLocationsCache {
       if (slash >= 0) {
         jarName = jarPath.substring(slash + 1);
       }
-      return (!TldLocationsCache.noTldJars.contains(jarName));
+      return !TldLocationsCache.noTldJars.contains(jarName);
     }
   }
 }

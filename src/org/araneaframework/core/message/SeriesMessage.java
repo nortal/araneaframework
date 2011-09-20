@@ -21,8 +21,10 @@ import org.araneaframework.Message;
 import org.araneaframework.core.util.Assert;
 
 /**
- * A <code>Message</code> that contains several messages in one. Provides a way to send more than one message in the
- * given order.
+ * A <code>Message</code> containing zero-to-many messages. Provides a way to send multiple messages in the given
+ * processing order (next message takes over when previous message has completed).
+ * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class SeriesMessage implements Message {
 
@@ -30,19 +32,21 @@ public class SeriesMessage implements Message {
 
   /**
    * A constructor that takes an array of <code>Message</code>s for argument. These messages are processed in the same
-   * order as defined in the array.
+   * order as defined in the array (next message takes over when previous message has completed).
    * <p>
-   * The array may be empty but <code>null</code>.
+   * The array may be empty but not <code>null</code>.
    * 
    * @param series An array of messages to send.
    */
-  public SeriesMessage(Message[] series) {
+  public SeriesMessage(Message... series) {
     Assert.notNullParam(this, series, "series");
     this.series = series;
   }
 
   /**
-   * For each component the messages are processed in the same order as they appear in the array. {@inheritDoc}
+   * For each component the messages are processed in the same order as they appear in the array.
+   * <p>
+   * {@inheritDoc}
    */
   public void send(Object id, Component component) {
     for (Message serie : this.series) {

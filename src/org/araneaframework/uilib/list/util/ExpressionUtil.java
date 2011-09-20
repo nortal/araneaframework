@@ -42,9 +42,7 @@ import org.araneaframework.core.util.Assert;
 import org.araneaframework.uilib.list.util.like.LikeConfiguration;
 
 /**
- * Expression factory.
- * 
- * Null as a returned value means that there is no filter (like always true expression).
+ * Expression factory. Null as a returned value means that there is no filter (like always true expression).
  * 
  * @author Rein Raudjärv (rein@araneaframework.org)
  */
@@ -150,7 +148,7 @@ public class ExpressionUtil {
   public static Expression le(Expression expr1, Expression expr2, Comparator comp) {
     if (expr1 == null || expr2 == null) {
       return null;
-    } if (comp == null) {
+    } else if (comp == null) {
       comp = DEFAULT_COMPARATOR;
     }
     return new LowerThanExpression(expr1, expr2, comp, true);
@@ -331,11 +329,9 @@ public class ExpressionUtil {
       return null;
     }
 
-    int count = 0;
-    for (int i = 0; i < children.length; i++) {
-      if (children[i] != null) {
-        multiExpr.add(children[i]);
-        count++;
+    for (Expression element : children) {
+      if (element != null) {
+        multiExpr.add(element);
       } else if (!allowNulls) {
         throw new IllegalArgumentException("Expression can not be null");
       }
@@ -348,11 +344,9 @@ public class ExpressionUtil {
       return null;
     }
 
-    int count = 0;
     for (Expression expr : children) {
       if (expr != null) {
         multiExpr.add(expr);
-        count++;
       } else if (!allowNulls) {
         throw new IllegalArgumentException("Expression can not be null");
       }

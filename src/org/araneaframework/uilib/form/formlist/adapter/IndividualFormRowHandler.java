@@ -37,8 +37,9 @@ public abstract class IndividualFormRowHandler<K, R> extends DefaultFormRowHandl
 
   @Override
   public void deleteRows(Set<K> keys) throws Exception {
-    for (K object : keys)
+    for (K object : keys) {
       deleteRow(object);
+    }
   }
 
   /**
@@ -47,7 +48,8 @@ public abstract class IndividualFormRowHandler<K, R> extends DefaultFormRowHandl
    * @param formRow The form row data to be saved.
    * @throws Exception Any exception that may occur during saving.
    */
-  public void saveRow(FormRow<K, R> formRow) throws Exception {}
+  public void saveRow(FormRow<K, R> formRow) throws Exception {
+  }
 
   /**
    * This method, when implemented, should delete the given form row.
@@ -55,5 +57,6 @@ public abstract class IndividualFormRowHandler<K, R> extends DefaultFormRowHandl
    * @param key The unique identifier of the row as defined by {@link FormRow#getKey()}.
    * @throws Exception Any exception that may occur during deleting.
    */
-  public void deleteRow(K key) throws Exception {}
+  public void deleteRow(K key) throws Exception {
+  }
 }

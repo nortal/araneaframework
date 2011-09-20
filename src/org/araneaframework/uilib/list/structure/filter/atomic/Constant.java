@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.uilib.list.structure.filter.atomic;
 
 import java.util.Map;
@@ -21,23 +22,24 @@ import org.araneaframework.backend.list.memorybased.ExpressionBuilder;
 import org.araneaframework.uilib.list.util.ExpressionUtil;
 
 public class Constant implements ExpressionBuilder {
-	
-	private String valueId;
-	private Object value;
-			
-	public Constant(String value) {
-		this(null, value);
-	}
-	
-	public Constant(String valueId, Object value) {
-		this.valueId = valueId;
-		this.value = value;
-	}
 
-	public Expression buildExpression(Map<String, Object> filterInfo) {
-		if (this.value == null) {
-			return ExpressionUtil.nullValue(this.valueId);
-		}
-		return ExpressionUtil.value(this.valueId, this.value);
-	}
+  private final String valueId;
+
+  private final Object value;
+
+  public Constant(String value) {
+    this(null, value);
+  }
+
+  public Constant(String valueId, Object value) {
+    this.valueId = valueId;
+    this.value = value;
+  }
+
+  public Expression buildExpression(Map<String, Object> filterInfo) {
+    if (this.value == null) {
+      return ExpressionUtil.nullValue(this.valueId);
+    }
+    return ExpressionUtil.value(this.valueId, this.value);
+  }
 }

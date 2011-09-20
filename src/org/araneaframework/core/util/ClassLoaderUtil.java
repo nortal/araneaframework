@@ -27,28 +27,32 @@ import java.util.List;
 import org.apache.commons.collections.EnumerationUtils;
 
 /**
- * Utility to determine the classloader that should be used for loading
- * resources.
+ * Utility to determine the class-loader that should be used for loading resources.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class ClassLoaderUtil {
 
   /**
-   * Returns the thread context ClassLoader, if available. Otherwise falls back
-   * to the ClassLoader of ClassLoaderUtil.
+   * Returns the thread context ClassLoader, if available. Otherwise falls back to the ClassLoader of ClassLoaderUtil.
    * 
-   * @return acquired classloader.
+   * @return The acquired class-loader.
    */
   public static ClassLoader getDefaultClassLoader() {
     return getClassLoaders().get(0);
   }
 
+  /**
+   * Provides an input stream for a resource from class-path.
+   * 
+   * @param name The path to a resource (required).
+   * @return An input stream to the found resource, or <code>null</code> when the resource was not found.
+   */
   public static InputStream getResourceAsStream(String name) {
-    Assert.notNullParam(name, "name");
     URL url = findResource(name);
-    if (url == null)
+    if (url == null) {
       return null;
+    }
     try {
       return url.openStream();
     } catch (IOException e) {
@@ -57,10 +61,12 @@ public abstract class ClassLoaderUtil {
   }
 
   /**
-   * Trys to load class using the ClassLoaders in the order that
-   * getClassLoaders() returns them. On success returns the class.
+   * Tries to load class using the ClassLoaders in the order that getClassLoaders() returns them. On success returns the
+   * class.
    * 
-   * @throws ClassNotFoundException
+   * @param name The complete class name to load.
+   * @return The matching class that was found.
+   * @throws ClassNotFoundException When the class was not found in the class-path.
    */
   public static Class<?> loadClass(String name) throws ClassNotFoundException {
     Assert.notNullParam(name, "name");
@@ -69,19 +75,22 @@ public abstract class ClassLoaderUtil {
       try {
         return loader.loadClass(name);
       } catch (ClassNotFoundException e) {
-        if (!iter.hasNext())
+        if (!iter.hasNext()) {
           throw e;
+        }
       }
     }
     throw new ClassNotFoundException();
   }
 
   /**
-   * Searches through all the ClassLoaders provided by the getClassLoaders() for
-   * the resource identified by name. Returns the URL of the first found
-   * resource.
+   * Searches through all the ClassLoaders provided by the getClassLoaders() for the resource identified by name.
+   * Returns the URL of the first found resource.
+   * 
+   * @param name The path to a resource (required).
+   * @return The URL for the resource, or <code>null</code> when the resource was not found.
    */
-  public static URL findResource(final String name) {
+  public static URL findResource(String name) {
     Assert.notNullParam(name, "name");
     for (ClassLoader loader : getClassLoaders()) {
       URL url = loader.getResource(name);
@@ -93,11 +102,15 @@ public abstract class ClassLoaderUtil {
   }
 
   /**
-   * Searches through all the ClassLoaders provided by the getClassLoaders() for
-   * the resources identified by name. Returns an union of all the found URLs.
+   * Searches through all the ClassLoaders provided by the getClassLoaders() for the resources identified by name.
+   * Returns a union of all the found URLs.
+   * 
+   * @param name The path to a resource (required).
+   * @return An enumeration of found URLs to given resource path.
+   * @throws IOException When a problem occurs accessing a class-path resource.
    */
   @SuppressWarnings("unchecked")
-  public static Enumeration<ClassLoader> findResources(final String name) throws IOException {
+  public static Enumeration<URL> findResources(final String name) throws IOException {
     Assert.notNullParam(name, "name");
     List<URL> list = new ArrayList<URL>();
     List<ClassLoader> loaders = getClassLoaders();
@@ -105,15 +118,16 @@ public abstract class ClassLoaderUtil {
       Enumeration<URL> resources = loader.getResources(name);
       list.addAll(EnumerationUtils.toList(resources));
     }
-    return Collections.enumeration(loaders);
+    return Collections.enumeration(list);
   }
 
   /**
-   * Returns a list of ClassLoaders in the order that Aranea searches for
-   * resources.
+   * Returns a list of ClassLoaders in the order that Aranea searches for resources.
+   * 
+   * @return A list of found class-loaders.
    */
   public static List<ClassLoader> getClassLoaders() {
-    List<ClassLoader> loaders = new ArrayList<ClassLoader>();
+    List<ClassLoader> loaders = new ArrayList<ClassLoader>(2);
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     if (classLoader != null) {
       loaders.add(classLoader);

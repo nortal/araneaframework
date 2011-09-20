@@ -29,55 +29,58 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardServiceContainerServiceTests extends TestCase {
+
   private StandardContainerService parent;
+
   private MockEventfulStandardService child;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   private Path path;
-  
+
   @Override
   public void setUp() throws Exception {
-    child = new MockEventfulStandardService();
-    parent = new StandardContainerService();
-    parent.setChildService(child);
-    MockLifeCycle.begin(parent);
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
-    
-    path = MockUtil.getPath();
+    this.child = new MockEventfulStandardService();
+    this.parent = new StandardContainerService();
+    this.parent.setChildService(this.child);
+    MockLifeCycle.begin(this.parent);
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
+
+    this.path = MockUtil.getPath();
   }
-  
+
   public void testActionGetsCalled() throws Exception {
     String pathStr = "i.am.a.path.who.are.you";
-    req.addParameter(StandardContainerService.ACTION_PATH_INPUT_DATA_PARAMETER, pathStr);
-    input = new StandardServletInputData(req);
-    
-    parent._getService().action(path, input, output);
-    assertTrue(child.getActionCalled());
-    assertTrue(pathStr.equals(child.getPath().toString()));
+    this.req.addParameter(StandardContainerService.ACTION_PATH_INPUT_DATA_PARAMETER, pathStr);
+    this.input = new StandardServletInputData(this.req);
+
+    this.parent._getService().action(this.path, this.input, this.output);
+    assertTrue(this.child.getActionCalled());
+    assertTrue(pathStr.equals(this.child.getPath().toString()));
   }
-  
+
   public void testActionDoesNotGetCalled() throws Exception {
-    input = new StandardServletInputData(req);
-    
-    parent._getService().action(path, input, output);
-    assertFalse(child.getActionCalled());
+    this.input = new StandardServletInputData(this.req);
+
+    this.parent._getService().action(this.path, this.input, this.output);
+    assertFalse(this.child.getActionCalled());
   }
-  
+
   public void testDestroyGetsCalled() throws Exception {
-    parent._getComponent().destroy();
-    assertTrue(child.getDestroyCalled());
+    this.parent._getComponent().destroy();
+    assertTrue(this.child.getDestroyCalled());
   }
 }

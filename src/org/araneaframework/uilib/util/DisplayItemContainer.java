@@ -23,6 +23,7 @@ import org.araneaframework.uilib.support.SelectGroup;
 /**
  * The base specification for containers that deal with display items.
  * 
+ * @param <T> The value type of display item container.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface DisplayItemContainer<T> {
@@ -105,17 +106,15 @@ public interface DisplayItemContainer<T> {
    * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve its label, the method returns
    * the property name. Otherwise, returns <code>null</code>.
    * 
-   * @return The property of a display item to resolve its label, or <code>null</code>.
-   * @return 2.0
+   * @return The property of a display item to resolve its label, or <code>null</code>. since 2.0
    */
   String getItemLabelProperty();
 
   /**
-   * When the underlying <code>DisplayItemContainer</code uses a bean property to resolve its value, the method
-   * returns the property name. Otherwise, returns <code>null</code>.
+   * When the underlying <code>DisplayItemContainer</code> uses a bean property to resolve its value, the method returns
+   * the property name. Otherwise, returns <code>null</code>.
    * 
-   * @return The property of a display item to resolve its value, or <code>null</code>.
-   * @return 2.0
+   * @return The property of a display item to resolve its value, or <code>null</code>. since 2.0
    */
   String getItemValueProperty();
 

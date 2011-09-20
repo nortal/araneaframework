@@ -18,6 +18,9 @@ package org.araneaframework.backend.list.memorybased.expression;
 
 /**
  * General interface for holding a Value.
+ * 
+ * @author Rein Raudjärv (rein@araneaframework.org)
+ * @param <T> The expected value type.
  */
 public interface Value<T> {
 

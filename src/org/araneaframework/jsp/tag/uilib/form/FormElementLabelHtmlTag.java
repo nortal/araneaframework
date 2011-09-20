@@ -23,11 +23,8 @@ import java.io.Writer;
  * and <code>&lt;label&gt;</code> tags.
  * 
  * @author Oleg Mürk
- * 
- * @jsp.tag
- *  name = "label"
- *  body-content = "JSP"
- *  description = "Represents localizable label that is bound to a form element."
+ * @jsp.tag name = "label" body-content = "JSP" description =
+ *          "Represents localizable label that is bound to a form element."
  */
 public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
 
@@ -35,9 +32,9 @@ public class FormElementLabelHtmlTag extends BaseFormElementLabelTag {
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
 
-    FormSimpleLabelHtmlTag.writeLabel(out, this.localizedLabel,
-        (this.formElementViewModel.isMandatory() && this.showMandatory), getStyleClass(), this.derivedId,
-        this.pageContext, this.showColon, this.accessKey, getStyle());
+    FormSimpleLabelHtmlTag.writeLabel(out, this.localizedLabel, this.formElementViewModel.isMandatory()
+        && this.showMandatory, getStyleClass(), this.derivedId, this.pageContext, this.showColon, this.accessKey,
+        getStyle());
 
     return EVAL_BODY_INCLUDE;
   }

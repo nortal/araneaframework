@@ -26,6 +26,8 @@ import org.araneaframework.uilib.form.FormWidget;
  * generic parameter K corresponds to the type of the key values, and the generic parameter R corresponds to the type of
  * the row values.
  * 
+ * @param <K> The type of the form row key value.
+ * @param <R> The type of the form row value.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface FormRowHandler<K, R> extends RowHandler<K, R> {
@@ -38,14 +40,14 @@ public interface FormRowHandler<K, R> extends RowHandler<K, R> {
    * @param formRow The editable row to initialize.
    * @param row The row data object that the editable row represents.
    */
-  public void initFormRow(FormRow<K, R> formRow, R row) throws Exception;
+  void initFormRow(FormRow<K, R> formRow, R row) throws Exception;
 
   /**
    * The underlying implementation should initialize the form that will be used to add new rows.
    * 
    * @param addForm An instance of form that will be used to add new rows to the list.
    */
-  public void initAddForm(FormWidget addForm) throws Exception;
+  void initAddForm(FormWidget addForm) throws Exception;
 
   /**
    * This method is called when a new row was ordered to be added. The row data should be read from the supplied form
@@ -53,21 +55,21 @@ public interface FormRowHandler<K, R> extends RowHandler<K, R> {
    * 
    * @param addForm The form that will be used to add new rows.
    */
-  public void addRow(FormWidget addForm) throws Exception;
+  void addRow(FormWidget addForm) throws Exception;
 
   /**
    * This method is called when the specified form rows were ordered to be saved to a file, database, etc.
    * 
    * @param formRows A map of row keys that correspond to appropriate {@link FormRow}s to be saved.
    */
-  public void saveRows(Map<K, FormRow<K, R>> formRows) throws Exception;
+  void saveRows(Map<K, FormRow<K, R>> formRows) throws Exception;
 
   /**
    * This method is called when the rows (specified by the keys in the supplied set) should be deleted.
    * 
    * @param keys A set of row keys that correspond to form rows that were ordered to be deleted.
    */
-  public void deleteRows(Set<K> keys) throws Exception;
+  void deleteRows(Set<K> keys) throws Exception;
 
   /**
    * This method is called when the supplied row has been opened or closed. You can check current status of
@@ -75,5 +77,5 @@ public interface FormRowHandler<K, R> extends RowHandler<K, R> {
    * 
    * @param formRow The editable form row that was opened or closed.
    */
-  public void openOrCloseRow(FormRow<K, R> formRow) throws Exception;
+  void openOrCloseRow(FormRow<K, R> formRow) throws Exception;
 }

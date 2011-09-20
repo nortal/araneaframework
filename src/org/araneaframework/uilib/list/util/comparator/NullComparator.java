@@ -27,9 +27,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 @SuppressWarnings("unchecked")
 public class NullComparator implements Comparator<Object>, Serializable {
 
-  private Comparator notNullComparator;
+  private final Comparator notNullComparator;
 
-  private boolean nullFirst;
+  private final boolean nullFirst;
 
   public NullComparator(Comparator notNullComparator, boolean nullFirst) {
     this.notNullComparator = notNullComparator;
@@ -52,7 +52,7 @@ public class NullComparator implements Comparator<Object>, Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof NullComparator == false) {
+    if (!(obj instanceof NullComparator)) {
       return false;
     } else if (this == obj) {
       return true;

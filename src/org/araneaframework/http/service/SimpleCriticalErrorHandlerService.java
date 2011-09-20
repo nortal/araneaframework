@@ -30,12 +30,13 @@ import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.util.ServletUtil;
 
 public class SimpleCriticalErrorHandlerService extends BaseService {
+
   protected Throwable exception;
-  
+
   public SimpleCriticalErrorHandlerService() {
-    //Factory constructor
+    // Factory constructor
   }
-  
+
   public SimpleCriticalErrorHandlerService(Throwable exception) {
     this.exception = exception;
   }
@@ -43,24 +44,26 @@ public class SimpleCriticalErrorHandlerService extends BaseService {
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     Writer out = ((HttpOutputData) output).getWriter();
-    
+
     ServletUtil.getResponse(output).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    
+
     ((HttpOutputData) output).setContentType("text/html; charset=UTF-8");
+
     out.write("<html><head><title>Critical error occured!</title></head><body>");
-    if (ExceptionUtils.getRootCause(exception) != null) {
-      out.write("<b>Root cause:</b><br/>");    
-      out.write("<pre>"+ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(exception))+"</pre>");
-    }        
-    out.write("<b>Stack trace:</b><br/>");
-    out.write("<pre>"+ExceptionUtils.getFullStackTrace(exception)+"</pre>");
-    out.write("</body></html>");
+    if (ExceptionUtils.getRootCause(this.exception) != null) {
+      out.write("<b>Root cause:</b><br/><pre>");
+      out.write(ExceptionUtils.getFullStackTrace(ExceptionUtils.getRootCause(this.exception)));
+      out.write("</pre>");
+    }
+    out.write("<b>Stack trace:</b><br/><pre>");
+    out.write(ExceptionUtils.getFullStackTrace(this.exception));
+    out.write("</pre></body></html>");
   }
 
-  
   public static class Factory implements ExceptionHandlerFactory {
+
     public Service buildExceptionHandler(Throwable e, Environment environment) {
       return new SimpleCriticalErrorHandlerService(e);
     }
-  }    
+  }
 }

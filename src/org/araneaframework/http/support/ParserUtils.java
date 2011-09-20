@@ -37,10 +37,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * XML parsing utilities for processing web application deployment descriptor and tag library
- * descriptor files.
- * 
- * FIXME - make these use a separate class loader for the parser to be used.
+ * XML parsing utilities for processing web application deployment descriptor and tag library descriptor files. FIXME -
+ * make these use a separate class loader for the parser to be used.
  * 
  * @author Craig R. McClanahan
  * @version $Revision$ $Date$
@@ -48,154 +46,142 @@ import org.xml.sax.SAXParseException;
 
 public class ParserUtils {
 
-    /**
-     * An error handler for use when parsing XML documents.
-     */
-    static ErrorHandler errorHandler = new MyErrorHandler();
+  /**
+   * An error handler for use when parsing XML documents.
+   */
+  static ErrorHandler errorHandler = new MyErrorHandler();
 
-    /**
-     * An entity resolver for use when parsing XML documents.
-     */
-    static EntityResolver entityResolver = CachingEntityResolver.getInstance();
+  /**
+   * An entity resolver for use when parsing XML documents.
+   */
+  static EntityResolver entityResolver = CachingEntityResolver.getInstance();
 
-    // Turn off for JSP 2.0 until switch over to using xschema.
-    public static boolean validating = false;
+  // Turn off for JSP 2.0 until switch over to using xschema.
+  public static boolean validating = false;
 
+  // --------------------------------------------------------- Public Methods
 
-    // --------------------------------------------------------- Public Methods
+  /**
+   * Parse the specified XML document, and return a <code>TreeNode</code> that corresponds to the root node of the
+   * document tree.
+   * 
+   * @param uri URI of the XML document being parsed
+   * @param is Input source containing the deployment descriptor
+   * @exception AraneaRuntimeException if an input/output error occurs
+   * @exception AraneaRuntimeException if a parsing error occurs
+   */
+  public TreeNode parseXMLDocument(String uri, InputSource is) throws AraneaRuntimeException {
 
-    /**
-     * Parse the specified XML document, and return a <code>TreeNode</code>
-     * that corresponds to the root node of the document tree.
-     *
-     * @param uri URI of the XML document being parsed
-     * @param is Input source containing the deployment descriptor
-     *
-     * @exception AraneaRuntimeException if an input/output error occurs
-     * @exception AraneaRuntimeException if a parsing error occurs
-     */
-    public TreeNode parseXMLDocument(String uri, InputSource is)
-        throws AraneaRuntimeException {
+    Document document = null;
 
-        Document document = null;
-
-        // Perform an XML parse of this document, via JAXP
-        try {
-            DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            factory.setValidating(validating);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setEntityResolver(entityResolver);
-            builder.setErrorHandler(errorHandler);
-            document = builder.parse(is);
-	} catch (ParserConfigurationException ex) {
-            throw new AraneaRuntimeException
-                ("jsp.error.parse.xml", ex);
-	} catch (SAXParseException ex) {
-            throw new AraneaRuntimeException
-                ("jsp.error.parse.xml.line", ex);
-	} catch (SAXException sx) {
-            throw new AraneaRuntimeException
-                ("jsp.error.parse.xml", sx);
-        } catch (IOException io) {
-            throw new AraneaRuntimeException
-                ("jsp.error.parse.xml", io);
-	}
-
-        // Convert the resulting document to a graph of TreeNodes
-        return (convert(null, document.getDocumentElement()));
+    // Perform an XML parse of this document, via JAXP
+    try {
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setNamespaceAware(true);
+      factory.setValidating(validating);
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      builder.setEntityResolver(entityResolver);
+      builder.setErrorHandler(errorHandler);
+      document = builder.parse(is);
+    } catch (ParserConfigurationException ex) {
+      throw new AraneaRuntimeException("jsp.error.parse.xml", ex);
+    } catch (SAXParseException ex) {
+      throw new AraneaRuntimeException("jsp.error.parse.xml.line", ex);
+    } catch (SAXException sx) {
+      throw new AraneaRuntimeException("jsp.error.parse.xml", sx);
+    } catch (IOException io) {
+      throw new AraneaRuntimeException("jsp.error.parse.xml", io);
     }
 
+    // Convert the resulting document to a graph of TreeNodes
+    return convert(null, document.getDocumentElement());
+  }
 
-    /**
-     * Parse the specified XML document, and return a <code>TreeNode</code>
-     * that corresponds to the root node of the document tree.
-     *
-     * @param uri URI of the XML document being parsed
-     * @param is Input stream containing the deployment descriptor
-     *
-     * @exception AraneaRuntimeException if an input/output error occurs
-     * @exception AraneaRuntimeException if a parsing error occurs
-     */
-    public TreeNode parseXMLDocument(String uri, InputStream is)
-            throws AraneaRuntimeException {
+  /**
+   * Parse the specified XML document, and return a <code>TreeNode</code> that corresponds to the root node of the
+   * document tree.
+   * 
+   * @param uri URI of the XML document being parsed
+   * @param is Input stream containing the deployment descriptor
+   * @exception AraneaRuntimeException if an input/output error occurs
+   * @exception AraneaRuntimeException if a parsing error occurs
+   */
+  public TreeNode parseXMLDocument(String uri, InputStream is) throws AraneaRuntimeException {
 
-        return (parseXMLDocument(uri, new InputSource(is)));
+    return parseXMLDocument(uri, new InputSource(is));
+  }
+
+  // ------------------------------------------------------ Protected Methods
+
+  /**
+   * Create and return a TreeNode that corresponds to the specified Node, including processing all of the attributes and
+   * children nodes.
+   * 
+   * @param parent The parent TreeNode (if any) for the new TreeNode
+   * @param node The XML document Node to be converted
+   */
+  protected TreeNode convert(TreeNode parent, Node node) {
+
+    // Construct a new TreeNode for this node
+    TreeNode treeNode = new TreeNode(node.getNodeName(), parent);
+
+    // Convert all attributes of this node
+    NamedNodeMap attributes = node.getAttributes();
+    if (attributes != null) {
+      int n = attributes.getLength();
+      for (int i = 0; i < n; i++) {
+        Node attribute = attributes.item(i);
+        treeNode.addAttribute(attribute.getNodeName(), attribute.getNodeValue());
+      }
     }
 
-
-    // ------------------------------------------------------ Protected Methods
-
-
-    /**
-     * Create and return a TreeNode that corresponds to the specified Node,
-     * including processing all of the attributes and children nodes.
-     *
-     * @param parent The parent TreeNode (if any) for the new TreeNode
-     * @param node The XML document Node to be converted
-     */
-    protected TreeNode convert(TreeNode parent, Node node) {
-
-        // Construct a new TreeNode for this node
-        TreeNode treeNode = new TreeNode(node.getNodeName(), parent);
-
-        // Convert all attributes of this node
-        NamedNodeMap attributes = node.getAttributes();
-        if (attributes != null) {
-            int n = attributes.getLength();
-            for (int i = 0; i < n; i++) {
-                Node attribute = attributes.item(i);
-                treeNode.addAttribute(attribute.getNodeName(),
-                                      attribute.getNodeValue());
-            }
+    // Create and attach all children of this node
+    NodeList children = node.getChildNodes();
+    if (children != null) {
+      int n = children.getLength();
+      for (int i = 0; i < n; i++) {
+        Node child = children.item(i);
+        if (child instanceof Comment) {
+          continue;
         }
-
-        // Create and attach all children of this node
-        NodeList children = node.getChildNodes();
-        if (children != null) {
-            int n = children.getLength();
-            for (int i = 0; i < n; i++) {
-                Node child = children.item(i);
-                if (child instanceof Comment)
-                    continue;
-                if (child instanceof Text) {
-                    String body = ((Text) child).getData();
-                    if (body != null) {
-                        body = body.trim();
-                        if (body.length() > 0)
-                            treeNode.setBody(body);
-                    }
-                } else {
-                    convert(treeNode, child);
-                }
+        if (child instanceof Text) {
+          String body = ((Text) child).getData();
+          if (body != null) {
+            body = body.trim();
+            if (body.length() > 0) {
+              treeNode.setBody(body);
             }
+          }
+        } else {
+          convert(treeNode, child);
         }
-        
-        // Return the completed TreeNode graph
-        return (treeNode);
+      }
     }
+
+    // Return the completed TreeNode graph
+    return treeNode;
+  }
 }
-
 
 // ------------------------------------------------------------ Private Classes
 
 class MyErrorHandler implements ErrorHandler {
 
-    // Logger
-    private static final Log log = LogFactory.getLog(MyErrorHandler.class);
+  // Logger
+  private static final Log log = LogFactory.getLog(MyErrorHandler.class);
 
-    public void warning(SAXParseException ex) throws SAXException {
-        if (log.isDebugEnabled())
-            log.debug("ParserUtils: warning ", ex);
-        // We ignore warnings
+  public void warning(SAXParseException ex) throws SAXException {
+    if (log.isDebugEnabled()) {
+      log.debug("ParserUtils: warning ", ex);
+      // We ignore warnings
     }
+  }
 
-    public void error(SAXParseException ex) throws SAXException {
-        throw ex;
-    }
+  public void error(SAXParseException ex) throws SAXException {
+    throw ex;
+  }
 
-    public void fatalError(SAXParseException ex) throws SAXException {
-        throw ex;
-    }
+  public void fatalError(SAXParseException ex) throws SAXException {
+    throw ex;
+  }
 }

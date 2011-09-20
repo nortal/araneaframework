@@ -28,45 +28,42 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardStatisticFilterServiceTests extends TestCase {
+
   private StandardStatisticFilterService service;
+
   private MockEventfulBaseService child;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   @Override
   public void setUp() throws Exception {
-    service = new StandardStatisticFilterService();
-    child = new MockEventfulBaseService();
-    service.setChildService(child);
-    MockLifeCycle.begin(service);
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
+    this.service = new StandardStatisticFilterService();
+    this.child = new MockEventfulBaseService();
+    this.service.setChildService(this.child);
+    MockLifeCycle.begin(this.service);
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
   }
-    
+
   public void testDestroyDestroysChild() throws Exception {
-    service._getComponent().destroy();
-    assertTrue(child.getDestroyCalled());
+    this.service._getComponent().destroy();
+    assertTrue(this.child.getDestroyCalled());
   }
-  
+
   public void testActionGetsRouted() throws Exception {
-    service._getService().action(MockUtil.getPath(), input, output);
-    assertTrue(child.getActionCalled());
-  }
-  
-  public void testGetSetNamespace() throws Exception {
-    String nameSpace = "unittests";
-    service.setMessage(nameSpace);
-    assertEquals(nameSpace, service.getMessage());
+    this.service._getService().action(MockUtil.getPath(), this.input, this.output);
+    assertTrue(this.child.getActionCalled());
   }
 }

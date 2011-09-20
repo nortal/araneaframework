@@ -74,9 +74,10 @@ public abstract class JspWidgetUtil {
       String token = tokenizer.nextToken();
 
       root = (ApplicationWidget) root._getComposite().getChildren().get(token);
-      if (root == null)
+      if (root == null) {
         throw new AraneaJspException("Failed to traverse widget with path '" + path + "' because widget '" + token
             + "' was not found");
+      }
     }
 
     // Complete

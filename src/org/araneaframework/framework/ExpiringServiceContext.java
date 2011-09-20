@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Router service that kills child services after specified period of inactivity
- * is over. BaseExpiringServiceRouterService implementation checks for child
- * services whose lifetime has expired only when servicing request.
+ * Router service that kills child services after specified period of inactivity is over.
+ * BaseExpiringServiceRouterService implementation checks for child services whose lifetime has expired only when
+ * servicing request.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @since 1.1
@@ -30,9 +30,12 @@ import java.util.Map;
 public interface ExpiringServiceContext extends Serializable {
 
   /**
-   * Returns all expiring services. Keys of the Map are services' keepalive id's
-   * (String). Values are services' time to live in milliseconds (Long).
+   * Provides expiring services map by the keep-alive IDs of the services and corresponding time-to-live values in
+   * milliseconds.
+   * 
+   * @return An unmodifiable map with services by their keep-alive IDs and corresponding time-to-live values in
+   *         milliseconds. <code>null</code> when no such service is registered.
    */
-  public Map<String, Long> getServiceTTLMap();
+  Map<String, Long> getServiceTTLMap();
 
 }

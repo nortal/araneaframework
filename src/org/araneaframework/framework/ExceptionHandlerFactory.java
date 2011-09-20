@@ -21,14 +21,19 @@ import org.araneaframework.Environment;
 import org.araneaframework.Service;
 
 /**
- * A factory class for creating exception handlers. An exception handler is a service
- * which knows about the exception and can be set an Environment. 
+ * A factory class for creating exception handlers. An exception handler is a service which knows about the exception
+ * and can be set an Environment.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public interface ExceptionHandlerFactory extends Serializable {
+
   /**
-   * Returns a Service for handling the Exception. 
+   * Returns a Service for handling the Exception.
    * 
-   * @param e is the Throwable that needs special handling.
+   * @param e The <tt>Throwable</tt> that needs special handling.
+   * @param environment The environment from the component asking for an exception handler.
+   * @return A new created service that will handle the <tt>Throwable</tt>.
    */
-  public Service buildExceptionHandler(Throwable e, Environment environment);
+  Service buildExceptionHandler(Throwable e, Environment environment);
 }

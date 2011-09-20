@@ -24,6 +24,8 @@ import org.araneaframework.uilib.form.formlist.FormRow;
 /**
  * A more precise form row handler that narrows row data adding and saving down to only valid rows.
  * 
+ * @param <K> The type of the form row key value.
+ * @param <R> The type of the form row value.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public abstract class ValidOnlyFormRowHandler<K, R> extends DefaultFormRowHandler<K, R> {
@@ -49,14 +51,16 @@ public abstract class ValidOnlyFormRowHandler<K, R> extends DefaultFormRowHandle
    * @param rowForm The row form data to add into a persistent data source.
    * @throws Exception Any exception that might occur during saving the data.
    */
-  public void addValidRow(FormWidget rowForm) throws Exception {}
+  public void addValidRow(FormWidget rowForm) throws Exception {
+  }
 
   /**
-   * This method is called by {@link #saveRows(Map)} to save only valid rows. The implementation of this method
-   * should save the row form data into a persistent data source.
+   * This method is called by {@link #saveRows(Map)} to save only valid rows. The implementation of this method should
+   * save the row form data into a persistent data source.
    * 
    * @param rowForms The forms data from rows to be save into a persistent data source.
    * @throws Exception Any exception that might occur during saving the data.
    */
-  public void saveValidRows(Map<K, FormRow<K, R>> rowForms) throws Exception {}
+  public void saveValidRows(Map<K, FormRow<K, R>> rowForms) throws Exception {
+  }
 }

@@ -27,99 +27,97 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardServletInputDataTests extends TestCase {
+
   private MockHttpServletRequest request;
+
   private StandardServletInputData input;
-  
+
   @Override
   public void setUp() {
-    request = new MockHttpServletRequest();
-    request.addParameter("foo","bar");
-    request.addParameter("a.foo","a bar");
-    request.addParameter("a.extra.foo","a extra bar");
-    request.addParameter("a.extra.foo2","a extra bar2");
-    input = new StandardServletInputData(request);
+    this.request = new MockHttpServletRequest();
+    this.request.addParameter("foo", "bar");
+    this.request.addParameter("a.foo", "a bar");
+    this.request.addParameter("a.extra.foo", "a extra bar");
+    this.request.addParameter("a.extra.foo2", "a extra bar2");
+    this.input = new StandardServletInputData(this.request);
   }
-  
-  public void testNormalGetScopedData() {
-    assertEquals("a extra bar", input.getScopedData(new StandardPath("a.extra")).get("foo"));
-  }
-  
-  public void testNormalGetScopedDataMultiple() {
-    request = new MockHttpServletRequest();
-    request.addParameter("foo","bar");
-    request.addParameter("a.foo","a bar");
-    request.addParameter("a.extra.foo","a extra bar");
-    request.addParameter("a.extra.foo2","a extra bar2");
 
-    assertEquals("a extra bar2", input.getScopedData(new StandardPath("a.extra")).get("foo2"));
+  public void testNormalGetScopedData() {
+    assertEquals("a extra bar", this.input.getScopedData(new StandardPath("a.extra")).get("foo"));
   }
-  
-  //empty path has to return empty scoped data
+
+  public void testNormalGetScopedDataMultiple() {
+    this.request = new MockHttpServletRequest();
+    this.request.addParameter("foo", "bar");
+    this.request.addParameter("a.foo", "a bar");
+    this.request.addParameter("a.extra.foo", "a extra bar");
+    this.request.addParameter("a.extra.foo2", "a extra bar2");
+
+    assertEquals("a extra bar2", this.input.getScopedData(new StandardPath("a.extra")).get("foo2"));
+  }
+
+  // empty path has to return empty scoped data
   public void testNoScopeGetScopedData() {
-    assertEquals(0,input.getScopedData(new StandardPath("")).size());
+    assertEquals(0, this.input.getScopedData(new StandardPath("")).size());
   }
-  
+
   public void testWrongPathGetScopedData() {
-    request = new MockHttpServletRequest();
-    request.setAttribute("a","b");
-    request.setAttribute("a.b","b");
-    request.setAttribute("a.b.c","b");
-    
-    input = new StandardServletInputData(request);
-    assertEquals(null ,input.getScopedData(new StandardPath("a.b.c.d")).get("c"));
+    this.request = new MockHttpServletRequest();
+    this.request.setAttribute("a", "b");
+    this.request.setAttribute("a.b", "b");
+    this.request.setAttribute("a.b.c", "b");
+
+    this.input = new StandardServletInputData(this.request);
+    assertEquals(null, this.input.getScopedData(new StandardPath("a.b.c.d")).get("c"));
   }
-  
+
   public void testNonValidPath() {
-    request = new MockHttpServletRequest();
-    request.addParameter("a" + Path.SEPARATOR + Path.SEPARATOR + Path.SEPARATOR + "foo", "b");
-    request.addParameter(Path.SEPARATOR, "c");
-    request.addParameter(Path.SEPARATOR, "c");
-    input = new StandardServletInputData(request);
-    assertEquals(null, input.getScopedData(new StandardPath("")).get(Path.SEPARATOR));
+    this.request = new MockHttpServletRequest();
+    this.request.addParameter("a" + Path.SEPARATOR + Path.SEPARATOR + Path.SEPARATOR + "foo", "b");
+    this.request.addParameter(Path.SEPARATOR, "c");
+    this.request.addParameter(Path.SEPARATOR, "c");
+    this.input = new StandardServletInputData(this.request);
+    assertEquals(null, this.input.getScopedData(new StandardPath("")).get(Path.SEPARATOR));
   }
-  
+
   public void testChangeGlobalData() {
     try {
-      input.getGlobalData().put("a","b");
+      this.input.getGlobalData().put("a", "b");
       fail("Was able to modify a unmodifiable map");
-    }
-    catch (UnsupportedOperationException e) {
-      //success
+    } catch (UnsupportedOperationException e) {
+      // success
     }
   }
-  
+
   public void testChangeScopedData() {
     try {
-      //valid scope
-      input.getScopedData(new StandardPath("a.extra")).put("a","b");
+      // valid scope
+      this.input.getScopedData(new StandardPath("a.extra")).put("a", "b");
       fail("Was able to modify a unmodifiable map");
-    }
-    catch (UnsupportedOperationException e) {
-      //success
+    } catch (UnsupportedOperationException e) {
+      // success
     }
   }
-  
+
   public void testChangeEmptyScopedData() {
     try {
-      //invalid scope
-      input.getScopedData(new StandardPath("nonexistent.scope.iam")).put("a","b");
+      // invalid scope
+      this.input.getScopedData(new StandardPath("nonexistent.scope.iam")).put("a", "b");
       fail("Was able to modify a unmodifiable map");
-    }
-    catch (UnsupportedOperationException e) {
-      //success
+    } catch (UnsupportedOperationException e) {
+      // success
     }
   }
-  
+
   public void testGetRequest() {
-    assertEquals(ServletUtil.getRequest(input), request);
+    assertEquals(ServletUtil.getRequest(this.input), this.request);
   }
-  
+
   public void testExtendNarrow() {
     Map<Object, Object> map = new HashMap<Object, Object>();
-    input.extend(Map.class, map);
-    assertEquals(map, input.narrow(Map.class));
+    this.input.extend(Map.class, map);
+    assertEquals(map, this.input.narrow(Map.class));
   }
 }

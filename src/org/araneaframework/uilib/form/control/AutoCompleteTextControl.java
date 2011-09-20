@@ -55,7 +55,8 @@ public class AutoCompleteTextControl extends TextControl {
    * user will not get any suggestions. The default minimum character count {@value #DEFAULT_MIN_INPUT_LENGTH} (before
    * suggestions are shown) will be used.
    */
-  public AutoCompleteTextControl() {}
+  public AutoCompleteTextControl() {
+  }
 
   /**
    * Constructor for creating autocomplete input with data that is sent to the client side when the control is rendered.
@@ -196,16 +197,29 @@ public class AutoCompleteTextControl extends TextControl {
     return resolveResponseBuilder();
   }
 
+  /**
+   * Contract interface for auto-complete input data providers.
+   * 
+   * @author Steven Jentson (steven@webmedia.ee)
+   * @author Taimo Peelo (taimo@araneaframework.org)
+   */
   public interface DataProvider extends Serializable {
 
-    public List<String> getSuggestions(String input);
+    /**
+     * Provides a list of suggestions for given user input to help user complete the input.
+     * 
+     * @param input The current user input.
+     * @return A list of suggestions to show to the user. Must not be <code>null</code>.
+     */
+    List<String> getSuggestions(String input);
   }
 
   private class AutoCompleteActionListener implements ActionListener {
 
     public void processAction(String actionId, InputData input, OutputData output) {
-      String str = innerData == null ? null : ((String[]) innerData)[0];
-      List<String> suggestions = dataProvider.getSuggestions(str);
+      String str = AutoCompleteTextControl.this.innerData == null ? null
+          : ((String[]) AutoCompleteTextControl.this.innerData)[0];
+      List<String> suggestions = AutoCompleteTextControl.this.dataProvider.getSuggestions(str);
 
       ResponseBuilder responseBuilder = resolveResponseBuilder();
 
@@ -227,12 +241,14 @@ public class AutoCompleteTextControl extends TextControl {
     ResponseBuilder result = this.responseBuilder;
     if (result == null) {
       ConfigurationContext confCtx = UilibEnvironmentUtil.getConfiguration(getEnvironment());
-      if (confCtx != null)
+      if (confCtx != null) {
         result = (ResponseBuilder) confCtx.getEntry(ConfigurationContext.AUTO_COMPLETE_RESPONSE_BUILDER);
+      }
     }
 
-    if (result == null)
+    if (result == null) {
       result = new DefaultResponseBuilder();
+    }
 
     return result;
   }
@@ -250,14 +266,14 @@ public class AutoCompleteTextControl extends TextControl {
      * @param suggestions suggested completions that should be included in response
      * @return appropriate response content
      */
-    public String getResponseContent(List<String> suggestions);
+    String getResponseContent(List<String> suggestions);
 
     /**
      * Returns response content type.
      * 
      * @return response content type
      */
-    public String getResponseContentType();
+    String getResponseContentType();
   }
 
   /**
@@ -302,11 +318,11 @@ public class AutoCompleteTextControl extends TextControl {
   // *********************************************************************
   public class ViewModel extends TextControl.ViewModel {
 
-    private int minCompletionLength;
+    private final int minCompletionLength;
 
-    private List<String> localData;
+    private final List<String> localData;
 
-    private boolean dataProviderExists;
+    private final boolean dataProviderExists;
 
     public ViewModel() {
       this.minCompletionLength = AutoCompleteTextControl.this.minCompletionLength;
@@ -315,7 +331,7 @@ public class AutoCompleteTextControl extends TextControl {
     }
 
     public long getMinCompletionLength() {
-      return minCompletionLength;
+      return this.minCompletionLength;
     }
 
     public List<String> getLocalData() {

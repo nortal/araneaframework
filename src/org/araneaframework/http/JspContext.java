@@ -28,21 +28,52 @@ import org.araneaframework.uilib.ConfigurationContext;
  */
 public interface JspContext extends Serializable {
 
-  public String getJspPath();
+  /**
+   * Provides the prefix path for resolving JSP file location.
+   * 
+   * @return The common prefix-path used for all JSP files. Empty string for no common prefix.
+   */
+  String getJspPath();
 
-  /** @since 1.0.1 */
-  public String getJspExtension();
+  /**
+   * Provides the JSP file extension for resolving JSP file location.
+   * 
+   * @return The common suffix used for all JSP files. Empty string for no common suffix.
+   * @since 1.0.1
+   */
+  String getJspExtension();
 
-  /** @since 1.1 */
-  public String getSubmitCharset();
+  /**
+   * The form submit character set. Used commonly when rendering a form.
+   * 
+   * @return The form submit character encoding. <code>null</code> when unspecified.
+   * @since 1.1
+   */
+  String getSubmitCharset();
 
-  /** @since 1.1 */
-  public String getFormAction();
+  /**
+   * The form action URL/path. Used commonly when rendering a form.
+   * 
+   * @return The form action path. <code>null</code> when unspecified.
+   * @since 1.1
+   */
+  String getFormAction();
 
-  /** @since 1.1 */
-  public Map<String, TagInfo> getTagMapping(String uri);
+  /**
+   * Provides a map of all tags by tag name that are registered in the servlet container with given URI.
+   * 
+   * @param uri The URI used for searching tags that are bound to this URI.
+   * @return A map of tags by tag name.
+   * @since 1.1
+   */
+  Map<String, TagInfo> getTagMapping(String uri);
 
-  /** @since 1.1 */
-  public ConfigurationContext getConfiguration();
+  /**
+   * Provides the configuration context used in this session.
+   * 
+   * @return Current configuration context.
+   * @since 1.1
+   */
+  ConfigurationContext getConfiguration();
 
 }

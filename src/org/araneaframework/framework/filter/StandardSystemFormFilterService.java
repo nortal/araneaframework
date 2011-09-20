@@ -41,7 +41,7 @@ import org.araneaframework.http.util.EnvironmentUtil;
  */
 public class StandardSystemFormFilterService extends BaseFilterService implements SystemFormContext {
 
-  private Map<String, String> fields = new HashMap<String, String>();
+  private final Map<String, String> fields = new HashMap<String, String>();
 
   @Override
   protected Environment getChildEnvironment() {
@@ -49,7 +49,9 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
   }
 
   /**
-   * Registers the <code>topServiceId</code> and <code>threadServiceId</code> fields from the <code>Envrionment</code>.
+   * Registers the <code>topServiceId</code> and <code>threadServiceId</code> fields from the <code>Environment</code>.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -76,6 +78,6 @@ public class StandardSystemFormFilterService extends BaseFilterService implement
   }
 
   public Map<String, String> getFields() {
-    return Collections.unmodifiableMap(fields);
+    return Collections.unmodifiableMap(this.fields);
   }
 }

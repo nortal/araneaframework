@@ -9,7 +9,7 @@
   History:
   Date       Who                What
   11Jun1998  dl               Create public version
-*/
+ */
 
 package org.araneaframework.core.util;
 
@@ -17,10 +17,11 @@ package org.araneaframework.core.util;
  * A ReadWriteLock that prefers waiting readers over waiting writers when there is contention. The range of
  * applicability of this class is very limited. In the majority of situations, writer preference locks provide more
  * reasonable semantics.
- * 
  * <p>
  * [<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html"> Introduction to this
  * package. </a>]
+ * 
+ * @author Doug Lea
  */
 public class ReaderPreferenceReadWriteLock extends WriterPreferenceReadWriteLock {
 

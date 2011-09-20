@@ -16,13 +16,13 @@
 
 package org.araneaframework.tests.servlet.filter;
 
-import org.araneaframework.http.util.ServletUtil;
 import java.util.HashMap;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.http.core.StandardServletOutputData;
 import org.araneaframework.http.filter.StandardHttpResponseFilterService;
+import org.araneaframework.http.util.ServletUtil;
 import org.araneaframework.mock.MockLifeCycle;
 import org.araneaframework.mock.MockUtil;
 import org.araneaframework.mock.core.MockEventfulStandardService;
@@ -31,112 +31,113 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardServletHttpResponseFilterServiceTests extends TestCase {
 
   private StandardHttpResponseFilterService parent;
+
   private MockEventfulStandardService child;
-  
+
   private StandardServletOutputData output;
 
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
 
   @Override
   public void setUp() throws Exception {
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
 
-    output = new StandardServletOutputData(req, res);
+    this.output = new StandardServletOutputData(this.req, this.res);
 
-    parent = new StandardHttpResponseFilterService();
-    child = new MockEventfulStandardService();
-    parent.setChildService(child);
-    MockLifeCycle.begin(parent);
+    this.parent = new StandardHttpResponseFilterService();
+    this.child = new MockEventfulStandardService();
+    this.parent.setChildService(this.child);
+    MockLifeCycle.begin(this.parent);
   }
 
   public void testNullContentType() throws Exception {
-   parent.setContentType(null);
-   try {
-     parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
-     fail("Was able to call action, with Content-Type being null");
-   } catch(AraneaRuntimeException e) {
-     //success
-   }
+    this.parent.setContentType(null);
+    try {
+      this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), MockUtil.getOutput());
+      fail("Was able to call action, with Content-Type being null");
+    } catch (AraneaRuntimeException e) {
+      // success
+    }
   }
 
   public void testContentType() throws Exception {
-    parent.setContentType("text/css");
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    assertTrue("text/css".equals(ServletUtil.getResponse(output).getContentType()));
+    this.parent.setContentType("text/css");
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+    assertTrue("text/css".equals(ServletUtil.getResponse(this.output).getContentType()));
   }
 
   public void testCacheable() throws Exception {
-    parent.setContentType("text/css");
-    parent.setCacheable(false);
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    assertTrue("no-cache".equals(res.getHeader("Pragma").toString().toLowerCase()));
+    this.parent.setContentType("text/css");
+    this.parent.setCacheable(false);
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+    assertTrue("no-cache".equals(this.res.getHeader("Pragma").toString().toLowerCase()));
   }
-  
+
   public void testCacheableTrue() throws Exception {
-    parent.setContentType("text/css");
-    parent.setCacheable(true);
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    assertTrue(res.getHeader("Cache-Control")!=null);
+    this.parent.setContentType("text/css");
+    this.parent.setCacheable(true);
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+    assertTrue(this.res.getHeader("Cache-Control") != null);
   }
 
   public void testAddCookies() throws Exception {
     Map<String, String> map = new HashMap<String, String>();
     map.put("theDaily", "Wtf");
     map.put("Paula", "Brillant");
-    
-    parent.setCookies(map);
-    parent.setContentType("text/css");
-    
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    
-    assertTrue(res.getCookies().length==2);
-    
-    assertTrue("Wtf".equals(res.getCookie("theDaily").getValue()));
-    assertTrue("Brillant".equals(res.getCookie("Paula").getValue()));
+
+    this.parent.setCookies(map);
+    this.parent.setContentType("text/css");
+
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+
+    assertTrue(this.res.getCookies().length == 2);
+
+    assertTrue("Wtf".equals(this.res.getCookie("theDaily").getValue()));
+    assertTrue("Brillant".equals(this.res.getCookie("Paula").getValue()));
   }
 
   public void testAddHeaders() throws Exception {
     Map<String, String> map = new HashMap<String, String>();
-    
+
     map.put("Transfer-Encoding", "chunked");
     map.put("Content-Encoding", "gzip");
-    
-    parent.setHeaders(map);
-    parent.setContentType("text/css");
-    
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    
-    assertTrue("chunked".equals(res.getHeader("Transfer-Encoding")));
-    assertTrue("gzip".equals(res.getHeader("Content-Encoding")));
+
+    this.parent.setHeaders(map);
+    this.parent.setContentType("text/css");
+
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+
+    assertTrue("chunked".equals(this.res.getHeader("Transfer-Encoding")));
+    assertTrue("gzip".equals(this.res.getHeader("Content-Encoding")));
   }
 
   public void testCacheHoldingTime() throws Exception {
-    parent.setContentType("text/css");
-    parent.setCacheable(true);
-    parent.setCacheHoldingTime(1000);
-    
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    assertTrue(res.getHeaders("Cache-Control").size() > 0);
-    assertTrue(res.getHeaders("Cache-Control").get(0) instanceof String);
-    String header = (String) res.getHeaders("Cache-Control").get(0);
+    this.parent.setContentType("text/css");
+    this.parent.setCacheable(true);
+    this.parent.setCacheHoldingTime(1000);
+
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+    assertTrue(this.res.getHeaders("Cache-Control").size() > 0);
+    assertTrue(this.res.getHeaders("Cache-Control").get(0) instanceof String);
+    String header = (String) this.res.getHeaders("Cache-Control").get(0);
     assertTrue(header.indexOf("max-age=1") != -1);
   }
 
   public void testActionGetsCalled() throws Exception {
-    parent.setContentType("text/css");
-    parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), output);
-    assertTrue(child.getActionCalled());
+    this.parent.setContentType("text/css");
+    this.parent._getService().action(MockUtil.getPath(), MockUtil.getInput(), this.output);
+    assertTrue(this.child.getActionCalled());
   }
 
   public void testDestroyDestroysChild() throws Exception {
-    parent._getComponent().destroy();
-    assertTrue(child.getDestroyCalled());
+    this.parent._getComponent().destroy();
+    assertTrue(this.child.getDestroyCalled());
   }
 }

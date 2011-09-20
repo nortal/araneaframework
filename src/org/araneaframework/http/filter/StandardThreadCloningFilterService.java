@@ -27,8 +27,8 @@ import org.araneaframework.Environment;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-import org.araneaframework.Service;
 import org.araneaframework.Relocatable.RelocatableService;
+import org.araneaframework.Service;
 import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.framework.ThreadContext;
@@ -108,8 +108,9 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
   }
 
   protected String cloningAction(Path path, InputData input, OutputData output) throws Exception {
-    if (LOG.isDebugEnabled())
+    if (LOG.isDebugEnabled()) {
       LOG.debug("Attempting to clone current thread ('" + getThreadServiceCtx().getCurrentId() + "').");
+    }
 
     RelocatableService clone = clone((RelocatableService) this.childService);
     String cloneServiceId = startClonedThread(clone);

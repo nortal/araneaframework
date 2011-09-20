@@ -17,8 +17,8 @@
 package org.araneaframework.uilib.core;
 
 /**
- * This interface declares the required methods for menu context that handles a
- * menu. Custom menu contexts should extend the <code>BaseMenuWidget</code>.
+ * This interface declares the required methods for menu context that handles a menu. Custom menu contexts should extend
+ * the <code>BaseMenuWidget</code>.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  * @see BaseMenuWidget
@@ -28,12 +28,12 @@ public interface MenuContext {
   /**
    * The <code>viewData</code> key that is used for the menu.
    */
-  public static final String MENU_VIEWDATA_KEY = "menu";
+  String MENU_VIEWDATA_KEY = "menu";
 
   /**
    * The event name for the menu selection listener.
    */
-  public static final String MENU_SELECT_EVENT_KEY = "menuSelect";
+  String MENU_SELECT_EVENT_KEY = "menuSelect";
 
   /**
    * Selects (activates) the requested menu item.
@@ -41,7 +41,7 @@ public interface MenuContext {
    * @param menuItemPath The full path of the menu item.
    * @exception Exception Any non-specific exception that may occur.
    */
-  public void selectMenuItem(String menuItemPath) throws Exception;
+  void selectMenuItem(String menuItemPath) throws Exception;
 
   /**
    * Provides access to the (full) menu.
@@ -49,12 +49,13 @@ public interface MenuContext {
    * @return the menu.
    * @throws Exception Any non-specific runtime exception.
    */
-  public MenuItem getMenu() throws Exception;
+  MenuItem getMenu() throws Exception;
 
   /**
    * Specifies the menu to use and show.
+   * 
    * @param menu the new menu
    * @throws Exception Any non-specific runtime exception.
    */
-  public void setMenu(MenuItem menu) throws Exception;
+  void setMenu(MenuItem menu) throws Exception;
 }

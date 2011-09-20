@@ -25,9 +25,9 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class SpringBeanInvocationHandler implements InvocationHandler, Serializable {
 
-  private Environment env;
+  private final Environment env;
 
-  private String id;
+  private final String id;
 
   public SpringBeanInvocationHandler(Environment env, String id) {
     this.env = env;
@@ -41,8 +41,9 @@ public class SpringBeanInvocationHandler implements InvocationHandler, Serializa
     // XXX: This is a bit evil, but otherwise Serialization debug fails
     // The check is done in the constructor to ensure that generally
     // BeanFactory is available
-    if (bf == null)
+    if (bf == null) {
       return null;
+    }
 
     Object bean = bf.getBean(this.id);
 

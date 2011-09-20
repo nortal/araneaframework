@@ -39,7 +39,7 @@ public interface OverlayContext extends Serializable {
   /**
    * The request parameter name identifying that the request comes from an overlay.
    */
-  public static final String OVERLAY_REQUEST_KEY = "araOverlay";
+  String OVERLAY_REQUEST_KEY = "araOverlay";
 
   /**
    * Specifies whether the overlay mode is currently running and visible to the user.
@@ -139,7 +139,6 @@ public interface OverlayContext extends Serializable {
    * Similar to {@link FlowContext#finish(Object)} but closes the entire OverlayContext not just the last flow widget.
    * 
    * @param result The result to return from the overlay context.
-   * 
    * @since 1.2
    */
   void finish(Object result);
@@ -151,6 +150,7 @@ public interface OverlayContext extends Serializable {
    * @author Alar Kvell (alar@araneaframework.org)
    * @since 1.1
    */
-  interface OverlayActivityMarkerContext extends Serializable {}
+  interface OverlayActivityMarkerContext extends Serializable {
+  }
 
 }

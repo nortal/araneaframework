@@ -21,32 +21,93 @@ import java.util.Set;
 import org.araneaframework.Environment;
 import org.araneaframework.framework.MessageContext.MessageData;
 
-public interface FormElementContext<C,D> extends Serializable {
+/**
+ * Interface that defines the context of a form element.
+ * 
+ * @param <C> The type of the inner value of form element control.
+ * @param <D> The type of the form element value.
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ */
+public interface FormElementContext<C, D> extends Serializable {
 
-	// TODO: isInitialized() ?
+  /**
+   * Provides whether the underlying form element is mandatory.
+   * 
+   * @return A Boolean that is <code>true</code> when the underlying form element is mandatory.
+   */
+  boolean isMandatory();
 
-	public boolean isValid();
+  /**
+   * Provides whether the underlying form element is disabled.
+   * 
+   * @return A Boolean that is <code>true</code> when the underlying form element is disabled.
+   */
+  boolean isDisabled();
 
-	public void addError(String error, Object... params);
+  /**
+   * Provides whether the underlying form element value is read from request during the current request.
+   * 
+   * @return A Boolean that is <code>true</code> when the underlying form element value is updated.
+   */
+  boolean isRead();
 
-	public void addErrors(Set<MessageData> errors);
+  /**
+   * Provides whether the underlying form element is valid.
+   * 
+   * @return A Boolean that is <code>true</code> when the underlying form element is valid.
+   */
+  boolean isValid();
 
-	public Environment getEnvironment();
+  /**
+   * Registers an error with given localizable message code and optional parameters to the message on the underlying
+   * form element.
+   * 
+   * @param error A localizable message code for error message (required)
+   * @param params Optional message parameters.
+   */
+  void addError(String error, Object... params);
 
-	public String getLabel();
+  /**
+   * Registers errors on the underlying form element.
+   * 
+   * @param errors Errors to be registered on the form element.
+   */
+  void addErrors(Set<MessageData> errors);
 
-	public boolean isMandatory();
+  /**
+   * The environment of the underlying form element.
+   * 
+   * @return The form element environment.
+   */
+  Environment getEnvironment();
 
-	public boolean isDisabled();
+  /**
+   * The label of the underlying form element.
+   * 
+   * @return The form element label.
+   */
+  String getLabel();
 
-	public boolean isRead();
+  /**
+   * Provides the current value of the underlying form element.
+   * 
+   * @return The current value of form element.
+   */
+  D getValue();
 
-	public D getValue();
+  /**
+   * Provides the control of the underlying form element.
+   * 
+   * @return The control of form element.
+   * @since 1.1
+   */
+  Control<C> getControl();
 
-	/** @since 1.1 */
-	public Control<C> getControl();
-
-	/** @since 1.1 */
-	public Converter<C,D> getConverter();
-
+  /**
+   * Provides the value converter of the underlying form element.
+   * 
+   * @return The value converter of form element.
+   * @since 1.1
+   */
+  Converter<C, D> getConverter();
 }

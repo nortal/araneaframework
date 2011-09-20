@@ -28,45 +28,46 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardServletOutputDataTests extends TestCase {
+
   private StandardServletOutputData out;
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse resp;
-  
-  
+
   @Override
   public void setUp() {
-    req = new MockHttpServletRequest();
-    StandardServletInputData inputData = new StandardServletInputData(req);
-    req.setAttribute(InputData.INPUT_DATA_KEY, inputData);
-    resp = new MockHttpServletResponse();
-    
-    out = new StandardServletOutputData(req, resp);
+    this.req = new MockHttpServletRequest();
+    StandardServletInputData inputData = new StandardServletInputData(this.req);
+    this.req.setAttribute(InputData.INPUT_DATA_KEY, inputData);
+    this.resp = new MockHttpServletResponse();
+
+    this.out = new StandardServletOutputData(this.req, this.resp);
   }
-  
+
   public void testGetRequest() {
-    assertEquals(req, ServletUtil.getRequest(out.getInputData()));
+    assertEquals(this.req, ServletUtil.getRequest(this.out.getInputData()));
   }
-  
+
   public void testGetResponse() {
-    assertEquals(resp, ServletUtil.getResponse(out));
+    assertEquals(this.resp, ServletUtil.getResponse(this.out));
   }
-  
+
   public void testExtendNarrow() {
     Map<Object, Object> map = new HashMap<Object, Object>();
-    out.extend(Map.class, map);
-    assertEquals(map, out.narrow(Map.class));
+    this.out.extend(Map.class, map);
+    assertEquals(map, this.out.narrow(Map.class));
   }
-  
+
   public void testSetMimeType() {
     String mime = "application/xhtml+xml";
-    out.setContentType(mime);
-    assertEquals(mime, resp.getContentType());
+    this.out.setContentType(mime);
+    assertEquals(mime, this.resp.getContentType());
   }
-  
+
   public void testGetOutputStream() throws Exception {
-    assertEquals(resp.getOutputStream(), out.getOutputStream());
+    assertEquals(this.resp.getOutputStream(), this.out.getOutputStream());
   }
 }

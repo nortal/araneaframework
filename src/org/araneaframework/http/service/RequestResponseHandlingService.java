@@ -16,21 +16,15 @@
 
 package org.araneaframework.http.service;
 
-import java.util.Map;
-
 import java.util.HashMap;
-
-import org.araneaframework.http.util.ServletUtil;
-
-import javax.servlet.http.HttpServletResponse;
-
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
 import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
-
 import org.araneaframework.core.BaseService;
+import org.araneaframework.http.util.ServletUtil;
 
 /**
  * The service that intercepts incoming request and can provide request response handling globally. Override this class
@@ -42,7 +36,7 @@ import org.araneaframework.core.BaseService;
 public class RequestResponseHandlingService extends BaseService {
 
   /**
-   * The headers that can be set through a setter (e.g. in Spring configuration file). 
+   * The headers that can be set through a setter (e.g. in Spring configuration file).
    */
   protected Map<String, String> defaultheaders = new HashMap<String, String>();
 
@@ -63,7 +57,8 @@ public class RequestResponseHandlingService extends BaseService {
    * @param request The incoming HTTP request.
    * @param response The outgoing HTTP response.
    */
-  protected void beforeRequestProcessing(HttpServletRequest request, HttpServletResponse response) {}
+  protected void beforeRequestProcessing(HttpServletRequest request, HttpServletResponse response) {
+  }
 
   /**
    * This method should be overridden to modify the request/response after request is processed. Override it to set
@@ -72,7 +67,8 @@ public class RequestResponseHandlingService extends BaseService {
    * @param request The incoming HTTP request.
    * @param response The outgoing HTTP response.
    */
-  protected void afterRequestProcessing(HttpServletRequest request, HttpServletResponse response) {}
+  protected void afterRequestProcessing(HttpServletRequest request, HttpServletResponse response) {
+  }
 
   /**
    * Sets a map of default headers. Useful for not having to extend or access this class, but just setting the default

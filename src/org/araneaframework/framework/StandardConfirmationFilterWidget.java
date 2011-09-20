@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.araneaframework.framework;
 
 import java.io.Serializable;
@@ -43,20 +44,20 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
     this.closure = onConfirmClosure;
     this.message = message;
   }
-  
-  // IMPLEMENTATION 
-  
+
+  // IMPLEMENTATION
+
   protected void removeConfirmation() {
     this.closure = null;
     this.message = null;
   }
 
   public String getConfirmationMessage() {
-    return message;
+    return this.message;
   }
 
   protected boolean isActive() {
-    return closure != null;
+    return this.closure != null;
   }
 
   @Override
@@ -65,7 +66,7 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
       String confirmationResult = input.getGlobalData().get(ConfirmationContext.CONFIRMATION_RESULT_KEY);
 
       if ("true".equalsIgnoreCase(confirmationResult)) {
-        closure.execute(null);
+        this.closure.execute(null);
         removeConfirmation();
       } else if ("false".equalsIgnoreCase(confirmationResult)) {
         removeConfirmation();

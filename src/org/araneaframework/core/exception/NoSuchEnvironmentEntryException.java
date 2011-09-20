@@ -16,13 +16,21 @@
 
 package org.araneaframework.core.exception;
 
-
 /**
+ * An exception thrown when a required environment entry was not found, i.e. environment returned <code>null</code> for
+ * given key.
+ * 
+ * @see org.araneaframework.Environment
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public class NoSuchEnvironmentEntryException extends AraneaRuntimeException {
 
-  public NoSuchEnvironmentEntryException(Object key) {
+  /**
+   * Creates a new exception for an environment entry with given <tt>key</tt> not being found.
+   * 
+   * @param key The used environment entry key that has no value.
+   */
+  public NoSuchEnvironmentEntryException(Class<?> key) {
     super("Environment entry with key '" + key + "' is missing!");
   }
 }

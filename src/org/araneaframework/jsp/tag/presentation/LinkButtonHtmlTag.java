@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.araneaframework.jsp.tag.presentation;     
+package org.araneaframework.jsp.tag.presentation;
 
 import java.io.Writer;
 import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
@@ -24,42 +24,41 @@ import org.araneaframework.jsp.util.JspUtil;
  * Standard button tag.
  * 
  * @author Oleg Mürk
- * 
- * @jsp.tag
- *   name = "basicLinkButton"
- *   body-content = "JSP"
- *   description = "Represents a HTML link with an onClick JavaScript action."
+ * @jsp.tag name = "basicLinkButton" body-content = "JSP" description =
+ *          "Represents a HTML link with an onClick JavaScript action."
  */
 public class LinkButtonHtmlTag extends BaseButtonTag {
+
   {
-    baseStyleClass = "aranea-link-button"; 
+    this.baseStyleClass = "aranea-link-button";
   }
-  
+
   @Override
   protected int doStartTag(Writer out) throws Exception {
     super.doStartTag(out);
-    
-    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, id);
+
+    addContextEntry(AttributedTagInterface.HTML_ELEMENT_KEY, this.id);
 
     JspUtil.writeOpenStartTag(out, "a");
-    JspUtil.writeAttribute(out, "id", id);
+    JspUtil.writeAttribute(out, "id", this.id);
     JspUtil.writeAttribute(out, "class", getStyleClass());
     JspUtil.writeAttribute(out, "style", getStyle());
     JspUtil.writeAttribute(out, "href", "javascript:");
-    JspUtil.writeAttribute(out, "onclick", onclick);
-    JspUtil.writeAttribute(out, "tabindex", tabindex);
+    JspUtil.writeAttribute(out, "onclick", this.onclick);
+    JspUtil.writeAttribute(out, "tabindex", this.tabindex);
     JspUtil.writeCloseStartTag_SS(out);
 
-    return EVAL_BODY_INCLUDE;    
+    return EVAL_BODY_INCLUDE;
   }
 
   @Override
-  protected int doEndTag(Writer out) throws Exception {  
-    if (labelId != null)            
-      JspUtil.writeEscaped(out, JspUtil.getResourceString(pageContext, labelId));
-    JspUtil.writeEndTag(out, "a"); 
+  protected int doEndTag(Writer out) throws Exception {
+    if (this.labelId != null) {
+      JspUtil.writeEscaped(out, JspUtil.getResourceString(this.pageContext, this.labelId));
+    }
+    JspUtil.writeEndTag(out, "a");
 
     super.doEndTag(out);
-    return EVAL_PAGE;      
+    return EVAL_PAGE;
   }
 }

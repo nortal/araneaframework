@@ -26,12 +26,10 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public abstract class ExceptionUtil {
 
   /**
-   * Unchecks the exception by rethrowing
-   * unchecked exceptions and wrapping checked exceptions inside 
+   * Unchecks the exception by rethrowing unchecked exceptions and wrapping checked exceptions inside
    * <code>NestableRuntimeException</code>.
    * 
    * @param e exception
-   * 
    * @return nothing really, just rethrows suitable <code>RuntimeException</code>
    */
   public static RuntimeException uncheckException(Exception e) {
@@ -45,17 +43,15 @@ public abstract class ExceptionUtil {
   }
 
   /**
-   * Unchecks the exception by rethrowing
-   * unchecked exceptions and wrapping checked exceptions inside 
+   * Unchecks the exception by rethrowing unchecked exceptions and wrapping checked exceptions inside
    * <code>NestableRuntimeException</code>.
-   * @param message
+   * 
+   * @param message Custom exception message for unchecked exception.
    * @param e exception
-   * 
    * @return nothing really, just rethrows suitable <code>RuntimeException</code>
-   * 
    * @since 1.0.11
    */
-  public static RuntimeException uncheckException(String message, Exception e) throws RuntimeException {
+  public static RuntimeException uncheckException(String message, Exception e) {
     Assert.notNullParam(e, "e");
     throw new NestableRuntimeException(message, e);
   }

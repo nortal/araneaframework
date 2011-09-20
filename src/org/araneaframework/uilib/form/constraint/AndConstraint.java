@@ -37,7 +37,8 @@ public class AndConstraint extends BaseCompositeConstraint {
    * <p>
    * Later all added constraints are expected to not fail, or this constraint fails also.
    */
-  public AndConstraint() {}
+  public AndConstraint() {
+  }
 
   /**
    * A constructor that requires a constraint to be provided immediately, and other constraints later. Use
@@ -83,12 +84,13 @@ public class AndConstraint extends BaseCompositeConstraint {
    */
   @Override
   public void validateConstraint() throws Exception {
-    for (Constraint constraint : constraints) {
+    for (Constraint constraint : this.constraints) {
       boolean valid = constraint.validate();
       addErrors(constraint.getErrors());
       constraint.clearErrors();
-      if (!valid && this.lazy)
+      if (!valid && this.lazy) {
         break;
+      }
     }
   }
 

@@ -22,17 +22,18 @@ import org.araneaframework.uilib.core.BaseUIWidget;
  * @author Jevgeni kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
  */
 public class HelloWidget extends BaseUIWidget {
-  private String name;
-  
+
+  private final String name;
+
   public HelloWidget(String name) {
     this.name = name;
   }
 
   @Override
-  protected void init() throws Exception {
-    setViewSelector("hello");        
-	}
-  
+  protected void init() {
+    setViewSelector("hello");
+  }
+
   public String getName() {
     return this.name;
   }

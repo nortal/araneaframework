@@ -33,7 +33,8 @@ public class OrConstraint extends BaseCompositeConstraint {
 
   private boolean lazy;
 
-  public OrConstraint() {}
+  public OrConstraint() {
+  }
 
   /**
    * Creates an <code>OrConstraint</code> for one constraint. Other constraints can be added later with
@@ -75,12 +76,13 @@ public class OrConstraint extends BaseCompositeConstraint {
   public void validateConstraint() throws Exception {
     boolean valid = false;
 
-    for (Constraint constraint : constraints) {
+    for (Constraint constraint : this.constraints) {
       valid = valid || constraint.validate();
       addErrors(constraint.getErrors());
       constraint.clearErrors();
-      if (valid && this.lazy)
+      if (valid && this.lazy) {
         break;
+      }
     }
 
     if (valid) {

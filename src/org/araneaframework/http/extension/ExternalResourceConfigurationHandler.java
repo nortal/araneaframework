@@ -22,66 +22,70 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * SAX handler for parsing external resources' configuration files.
- * See 'etc/aranea-resources.xml' for a sample configuration file.
+ * SAX handler for parsing external resources' configuration files. See 'etc/aranea-resources.xml' for a sample
+ * configuration file.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class ExternalResourceConfigurationHandler extends DefaultHandler {
-	private static final String TAG_FILES = "files";
-	private static final String TAG_FILE = "file";
-	
-	private static final String ATTRIB_CONTENT_TYPE = "content-type";
-	private static final String ATTRIB_GROUP = "group";
-	private static final String ATTRIB_PATH = "path";
-	
-	private ExternalResource result = new ExternalResource();
-	private FileGroup fileGroup;
-	
-	public ExternalResourceConfigurationHandler() {
-		this(new ExternalResource());
-	}
-	
-	public ExternalResourceConfigurationHandler(ExternalResource resource) {
-		super();
-		result = resource;
-	}
 
-	@Override
+  private static final String TAG_FILES = "files";
+
+  private static final String TAG_FILE = "file";
+
+  private static final String ATTRIB_CONTENT_TYPE = "content-type";
+
+  private static final String ATTRIB_GROUP = "group";
+
+  private static final String ATTRIB_PATH = "path";
+
+  private ExternalResource result = new ExternalResource();
+
+  private FileGroup fileGroup;
+
+  public ExternalResourceConfigurationHandler() {
+    this(new ExternalResource());
+  }
+
+  public ExternalResourceConfigurationHandler(ExternalResource resource) {
+    super();
+    this.result = resource;
+  }
+
+  @Override
   public void startElement(String uri, String localName, String qName, Attributes attributes) {
-		if (TAG_FILES.equalsIgnoreCase(qName)) {
-			fileGroup = new FileGroup();
-			boolean contentTypeSet = false;
-			
-			for (int i=0;i<attributes.getLength();i++) {
-				if (ATTRIB_CONTENT_TYPE.equalsIgnoreCase(attributes.getQName(i))) {
-					fileGroup.setContentType(attributes.getValue(i));
-					contentTypeSet = true;
-				}
-				else if (ATTRIB_GROUP.equalsIgnoreCase(attributes.getQName(i))) {
-					fileGroup.setName(attributes.getValue(i));
-				}
-			}
-			if (!contentTypeSet)
-				throw new AraneaRuntimeException("No content type set for files in resource configuration");
-		}
-		else if (TAG_FILE.equalsIgnoreCase(qName)) {
-			int i = attributes.getIndex(ATTRIB_PATH);
-			
-			if (i != -1) {				
-				fileGroup.addFile(attributes.getValue(i));
-			}
-		}
-	} 
+    if (TAG_FILES.equalsIgnoreCase(qName)) {
+      this.fileGroup = new FileGroup();
+      boolean contentTypeSet = false;
 
-	@Override
+      for (int i = 0; i < attributes.getLength(); i++) {
+        if (ATTRIB_CONTENT_TYPE.equalsIgnoreCase(attributes.getQName(i))) {
+          this.fileGroup.setContentType(attributes.getValue(i));
+          contentTypeSet = true;
+        } else if (ATTRIB_GROUP.equalsIgnoreCase(attributes.getQName(i))) {
+          this.fileGroup.setName(attributes.getValue(i));
+        }
+      }
+      if (!contentTypeSet) {
+        throw new AraneaRuntimeException("No content type set for files in resource configuration");
+      }
+    } else if (TAG_FILE.equalsIgnoreCase(qName)) {
+      int i = attributes.getIndex(ATTRIB_PATH);
+
+      if (i != -1) {
+        this.fileGroup.addFile(attributes.getValue(i));
+      }
+    }
+  }
+
+  @Override
   public void endElement(String uri, String localName, String qName) {
-		if (TAG_FILES.equalsIgnoreCase(qName)) {
-			result.addGroup(fileGroup);	
-		}
-	}
-	
-	public ExternalResource getResource() {
-		return result;
-	}	
+    if (TAG_FILES.equalsIgnoreCase(qName)) {
+      this.result.addGroup(this.fileGroup);
+    }
+  }
+
+  public ExternalResource getResource() {
+    return this.result;
+  }
 }

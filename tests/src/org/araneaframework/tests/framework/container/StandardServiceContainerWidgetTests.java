@@ -28,56 +28,59 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
- *
  */
 public class StandardServiceContainerWidgetTests extends TestCase {
+
   private StandardServiceAdapterWidget parent;
+
   private MockEventfulStandardService child;
-  
+
   private StandardServletInputData input;
+
   private StandardServletOutputData output;
-  
+
   private MockHttpServletRequest req;
+
   private MockHttpServletResponse res;
-  
+
   @Override
   public void setUp() throws Exception {
-    child = new MockEventfulStandardService();
-    parent = new StandardServiceAdapterWidget();
-    parent.setChildService(child);
-    MockLifeCycle.begin(parent);
-    
-    req = new MockHttpServletRequest();
-    res = new MockHttpServletResponse();
-    
-    input = new StandardServletInputData(req);
-    output = new StandardServletOutputData(req, res);
+    this.child = new MockEventfulStandardService();
+    this.parent = new StandardServiceAdapterWidget();
+    this.parent.setChildService(this.child);
+    MockLifeCycle.begin(this.parent);
+
+    this.req = new MockHttpServletRequest();
+    this.res = new MockHttpServletResponse();
+
+    this.input = new StandardServletInputData(this.req);
+    this.output = new StandardServletOutputData(this.req, this.res);
   }
-  
+
   public void testTranslatesRenderToAction() throws Exception {
     String pathStr = "i.am.a.path";
-    req.addParameter(StandardServiceAdapterWidget.ACTION_PATH_INPUT_DATA_PARAMETER, pathStr);
-    input = new StandardServletInputData(req);
-    
-    parent._getWidget().update(input);
-    parent._getWidget().event(MockUtil.getPath(), input);
-    parent._getWidget().render(output);
-    assertTrue(child.getActionCalled());
+    this.req.addParameter(StandardServiceAdapterWidget.ACTION_PATH_INPUT_DATA_PARAMETER, pathStr);
+    this.input = new StandardServletInputData(this.req);
+
+    this.parent._getWidget().update(this.input);
+    this.parent._getWidget().event(MockUtil.getPath(), this.input);
+    this.parent._getWidget().render(this.output);
+    assertTrue(this.child.getActionCalled());
   }
-  
-  //check how long the name is :)
+
+  // check how long the name is :)
   public void testDoesNotTranslateRenderToActionWithEmptyPath() throws Exception {
-    req.addParameter(StandardServiceAdapterWidget.ACTION_PATH_INPUT_DATA_PARAMETER, "");
-    input = new StandardServletInputData(req);
-    
-    parent._getWidget().update(input);
-    parent._getWidget().event(MockUtil.getPath(), input);
-    parent._getWidget().render(output);
-    assertTrue(child.getActionCalled());
+    this.req.addParameter(StandardServiceAdapterWidget.ACTION_PATH_INPUT_DATA_PARAMETER, "");
+    this.input = new StandardServletInputData(this.req);
+
+    this.parent._getWidget().update(this.input);
+    this.parent._getWidget().event(MockUtil.getPath(), this.input);
+    this.parent._getWidget().render(this.output);
+    assertTrue(this.child.getActionCalled());
   }
-  
+
   public void testDestroyGetsCalled() throws Exception {
-    parent._getComponent().destroy();
-    assertTrue(child.getDestroyCalled());
+    this.parent._getComponent().destroy();
+    assertTrue(this.child.getDestroyCalled());
   }
 }

@@ -22,344 +22,322 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
- * Simplified implementation of a Node from a Document Object Model (DOM)
- * parse of an XML document.  This class is used to represent a DOM tree
- * so that the XML parser's implementation of <code>org.w3c.dom</code> need
- * not be visible to the remainder of Jasper.
+ * Simplified implementation of a Node from a Document Object Model (DOM) parse of an XML document. This class is used
+ * to represent a DOM tree so that the XML parser's implementation of <code>org.w3c.dom</code> need not be visible to
+ * the remainder of Jasper.
  * <p>
- * <strong>WARNING</strong> - Construction of a new tree, or modifications
- * to an existing one, are not thread-safe and such accesses must be
- * synchronized.
- *
+ * <strong>WARNING</strong> - Construction of a new tree, or modifications to an existing one, are not thread-safe and
+ * such accesses must be synchronized.
+ * 
  * @author Craig R. McClanahan
  * @version $Revision$ $Date$
  */
 
 public class TreeNode {
 
+  // ----------------------------------------------------------- Constructors
 
-    // ----------------------------------------------------------- Constructors
+  /**
+   * Construct a new node with no parent.
+   * 
+   * @param name The name of this node
+   */
+  public TreeNode(String name) {
 
+    this(name, null);
 
-    /**
-     * Construct a new node with no parent.
-     *
-     * @param name The name of this node
-     */
-    public TreeNode(String name) {
+  }
 
-        this(name, null);
+  /**
+   * Construct a new node with the specified parent.
+   * 
+   * @param name The name of this node
+   * @param parent The node that is the parent of this node
+   */
+  public TreeNode(String name, TreeNode parent) {
 
+    super();
+    this.name = name;
+    this.parent = parent;
+    if (this.parent != null) {
+      this.parent.addChild(this);
     }
 
+  }
 
-    /**
-     * Construct a new node with the specified parent.
-     *
-     * @param name The name of this node
-     * @param parent The node that is the parent of this node
-     */
-    public TreeNode(String name, TreeNode parent) {
+  // ----------------------------------------------------- Instance Variables
 
-        super();
-        this.name = name;
-        this.parent = parent;
-        if (this.parent != null)
-            this.parent.addChild(this);
+  /**
+   * The attributes of this node, keyed by attribute name, Instantiated only if required.
+   */
+  protected HashMap<String, String> attributes = null;
 
+  /**
+   * The body text associated with this node (if any).
+   */
+  protected String body = null;
+
+  /**
+   * The children of this node, instantiated only if required.
+   */
+  protected ArrayList<TreeNode> children = null;
+
+  /**
+   * The name of this node.
+   */
+  protected String name = null;
+
+  /**
+   * The parent node of this node.
+   */
+  protected TreeNode parent = null;
+
+  // --------------------------------------------------------- Public Methods
+
+  /**
+   * Add an attribute to this node, replacing any existing attribute with the same name.
+   * 
+   * @param name The attribute name to add
+   * @param value The new attribute value
+   */
+  public void addAttribute(String name, String value) {
+
+    if (this.attributes == null) {
+      this.attributes = new HashMap<String, String>();
+    }
+    this.attributes.put(name, value);
+
+  }
+
+  /**
+   * Add a new child node to this node.
+   * 
+   * @param node The new child node
+   */
+  public void addChild(TreeNode node) {
+
+    if (this.children == null) {
+      this.children = new ArrayList<TreeNode>();
+    }
+    this.children.add(node);
+
+  }
+
+  /**
+   * Return the value of the specified node attribute if it exists, or <code>null</code> otherwise.
+   * 
+   * @param name Name of the requested attribute
+   */
+  public String findAttribute(String name) {
+
+    if (this.attributes == null) {
+      return null;
+    } else {
+      return this.attributes.get(name);
     }
 
+  }
 
-    // ----------------------------------------------------- Instance Variables
+  /**
+   * Return an Iterator of the attribute names of this node. If there are no attributes, an empty Iterator is returned.
+   */
+  public Iterator<String> findAttributes() {
 
-
-    /**
-     * The attributes of this node, keyed by attribute name,
-     * Instantiated only if required.
-     */
-    protected HashMap<String, String> attributes = null;
-
-
-    /**
-     * The body text associated with this node (if any).
-     */
-    protected String body = null;
-
-
-    /**
-     * The children of this node, instantiated only if required.
-     */
-    protected ArrayList<TreeNode> children = null;
-
-
-    /**
-     * The name of this node.
-     */
-    protected String name = null;
-
-
-    /**
-     * The parent node of this node.
-     */
-    protected TreeNode parent = null;
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    /**
-     * Add an attribute to this node, replacing any existing attribute
-     * with the same name.
-     *
-     * @param name The attribute name to add
-     * @param value The new attribute value
-     */
-    public void addAttribute(String name, String value) {
-
-        if (attributes == null)
-            attributes = new HashMap<String, String>();
-        attributes.put(name, value);
-
+    if (this.attributes == null) {
+      List<String> emptyList = Collections.emptyList();
+      return emptyList.iterator();
+    } else {
+      return this.attributes.keySet().iterator();
     }
 
+  }
 
-    /**
-     * Add a new child node to this node.
-     *
-     * @param node The new child node
-     */
-    public void addChild(TreeNode node) {
+  /**
+   * Return the first child node of this node with the specified name, if there is one; otherwise, return
+   * <code>null</code>.
+   * 
+   * @param name Name of the desired child element
+   */
+  public TreeNode findChild(String name) {
 
-        if (children == null)
-            children = new ArrayList<TreeNode>();
-        children.add(node);
+    if (this.children == null) {
+      return null;
+    }
+    Iterator<TreeNode> items = this.children.iterator();
+    while (items.hasNext()) {
+      TreeNode item = items.next();
+      if (name.equals(item.getName())) {
+        return item;
+      }
+    }
+    return null;
 
+  }
+
+  /**
+   * Return an Iterator of all children of this node. If there are no children, an empty Iterator is returned.
+   */
+  public Iterator<TreeNode> findChildren() {
+
+    if (this.children == null) {
+      List<TreeNode> emptyList = Collections.emptyList();
+      return emptyList.iterator();
+    } else {
+      return this.children.iterator();
     }
 
+  }
 
-    /**
-     * Return the value of the specified node attribute if it exists, or
-     * <code>null</code> otherwise.
-     *
-     * @param name Name of the requested attribute
-     */
-    public String findAttribute(String name) {
+  /**
+   * Return an Iterator over all children of this node that have the specified name. If there are no such children, an
+   * empty Iterator is returned.
+   * 
+   * @param name Name used to select children
+   */
+  public Iterator<TreeNode> findChildren(String name) {
 
-        if (attributes == null)
-            return (null);
-        else
-            return attributes.get(name);
-
+    if (this.children == null) {
+      List<TreeNode> emptyList = Collections.emptyList();
+      return emptyList.iterator();
     }
 
+    ArrayList<TreeNode> results = new ArrayList<TreeNode>();
+    Iterator<TreeNode> items = this.children.iterator();
+    while (items.hasNext()) {
+      TreeNode item = items.next();
+      if (name.equals(item.getName())) {
+        results.add(item);
+      }
+    }
+    return results.iterator();
 
-    /**
-     * Return an Iterator of the attribute names of this node.  If there are
-     * no attributes, an empty Iterator is returned.
-     */
-    public Iterator<String> findAttributes() {
+  }
 
-        if (attributes == null) {
-          List<String> emptyList = Collections.emptyList();
-          return (emptyList.iterator());
-        } else
-            return (attributes.keySet().iterator());
+  /**
+   * Return the body text associated with this node (if any).
+   */
+  public String getBody() {
 
+    return this.body;
+
+  }
+
+  /**
+   * Return the name of this node.
+   */
+  public String getName() {
+
+    return this.name;
+
+  }
+
+  /**
+   * Remove any existing value for the specified attribute name.
+   * 
+   * @param name The attribute name to remove
+   */
+  public void removeAttribute(String name) {
+
+    if (this.attributes != null) {
+      this.attributes.remove(name);
     }
 
+  }
 
-    /**
-     * Return the first child node of this node with the specified name,
-     * if there is one; otherwise, return <code>null</code>.
-     *
-     * @param name Name of the desired child element
-     */
-    public TreeNode findChild(String name) {
+  /**
+   * Remove a child node from this node, if it is one.
+   * 
+   * @param node The child node to remove
+   */
+  public void removeNode(TreeNode node) {
 
-        if (children == null)
-            return (null);
-        Iterator<TreeNode> items = children.iterator();
-        while (items.hasNext()) {
-            TreeNode item = items.next();
-            if (name.equals(item.getName()))
-                return (item);
-        }
-        return (null);
-
+    if (this.children != null) {
+      this.children.remove(node);
     }
 
+  }
 
-    /**
-     * Return an Iterator of all children of this node.  If there are no
-     * children, an empty Iterator is returned.
-     */
-    public Iterator<TreeNode> findChildren() {
+  /**
+   * Set the body text associated with this node (if any).
+   * 
+   * @param body The body text (if any)
+   */
+  public void setBody(String body) {
 
-        if (children == null) {
-          List<TreeNode> emptyList = Collections.emptyList();
-          return (emptyList.iterator());
-        } else
-            return (children.iterator());
+    this.body = body;
 
+  }
+
+  /**
+   * Return a String representation of this TreeNode.
+   */
+  @Override
+  public String toString() {
+
+    StringBuffer sb = new StringBuffer();
+    toString(sb, 0, this);
+    return sb.toString();
+
+  }
+
+  // ------------------------------------------------------ Protected Methods
+
+  /**
+   * Append to the specified StringBuffer a character representation of this node, with the specified amount of
+   * indentation.
+   * 
+   * @param sb The StringBuffer to append to
+   * @param indent Number of characters of indentation
+   * @param node The TreeNode to be printed
+   */
+  protected void toString(StringBuffer sb, int indent, TreeNode node) {
+
+    int indent2 = indent + 2;
+
+    // Reconstruct an opening node
+    for (int i = 0; i < indent; i++) {
+      sb.append(' ');
+    }
+    sb.append('<');
+    sb.append(node.getName());
+    Iterator<String> names = node.findAttributes();
+    while (names.hasNext()) {
+      sb.append(' ');
+      String name = names.next();
+      sb.append(name);
+      sb.append("=\"");
+      String value = node.findAttribute(name);
+      sb.append(value);
+      sb.append("\"");
+    }
+    sb.append(">\n");
+
+    // Reconstruct the body text of this node (if any)
+    String body = node.getBody();
+    if (body != null && body.length() > 0) {
+      for (int i = 0; i < indent2; i++) {
+        sb.append(' ');
+      }
+      sb.append(body);
+      sb.append("\n");
     }
 
-
-    /**
-     * Return an Iterator over all children of this node that have the
-     * specified name.  If there are no such children, an empty Iterator
-     * is returned.
-     *
-     * @param name Name used to select children
-     */
-    public Iterator<TreeNode> findChildren(String name) {
-
-        if (children == null) {
-          List<TreeNode> emptyList = Collections.emptyList();
-          return (emptyList.iterator());
-        }
-
-        ArrayList<TreeNode> results = new ArrayList<TreeNode>();
-        Iterator<TreeNode> items = children.iterator();
-        while (items.hasNext()) {
-            TreeNode item = items.next();
-            if (name.equals(item.getName()))
-                results.add(item);
-        }
-        return (results.iterator());
-
+    // Reconstruct child nodes with extra indentation
+    Iterator<TreeNode> children = node.findChildren();
+    while (children.hasNext()) {
+      TreeNode child = children.next();
+      toString(sb, indent2, child);
     }
 
-
-    /**
-     * Return the body text associated with this node (if any).
-     */
-    public String getBody() {
-
-        return (this.body);
-
+    // Reconstruct a closing node marker
+    for (int i = 0; i < indent; i++) {
+      sb.append(' ');
     }
+    sb.append("</");
+    sb.append(node.getName());
+    sb.append(">\n");
 
-
-    /**
-     * Return the name of this node.
-     */
-    public String getName() {
-
-        return (this.name);
-
-    }
-
-
-    /**
-     * Remove any existing value for the specified attribute name.
-     *
-     * @param name The attribute name to remove
-     */
-    public void removeAttribute(String name) {
-
-        if (attributes != null)
-            attributes.remove(name);
-
-    }
-
-
-    /**
-     * Remove a child node from this node, if it is one.
-     *
-     * @param node The child node to remove
-     */
-    public void removeNode(TreeNode node) {
-
-        if (children != null)
-            children.remove(node);
-
-    }
-
-
-    /**
-     * Set the body text associated with this node (if any).
-     *
-     * @param body The body text (if any)
-     */
-    public void setBody(String body) {
-
-        this.body = body;
-
-    }
-
-
-    /**
-     * Return a String representation of this TreeNode.
-     */
-    @Override
-    public String toString() {
-
-        StringBuffer sb = new StringBuffer();
-        toString(sb, 0, this);
-        return (sb.toString());
-
-    }
-
-
-    // ------------------------------------------------------ Protected Methods
-
-
-    /**
-     * Append to the specified StringBuffer a character representation of
-     * this node, with the specified amount of indentation.
-     *
-     * @param sb The StringBuffer to append to
-     * @param indent Number of characters of indentation
-     * @param node The TreeNode to be printed
-     */
-    protected void toString(StringBuffer sb, int indent,
-                            TreeNode node) {
-
-        int indent2 = indent + 2;
-
-        // Reconstruct an opening node
-        for (int i = 0; i < indent; i++)
-            sb.append(' ');
-        sb.append('<');
-        sb.append(node.getName());
-        Iterator<String> names = node.findAttributes();
-        while (names.hasNext()) {
-            sb.append(' ');
-            String name = names.next();
-            sb.append(name);
-            sb.append("=\"");
-            String value = node.findAttribute(name);
-            sb.append(value);
-            sb.append("\"");
-        }
-        sb.append(">\n");
-
-        // Reconstruct the body text of this node (if any)
-        String body = node.getBody();
-        if ((body != null) && (body.length() > 0)) {
-            for (int i = 0; i < indent2; i++)
-                sb.append(' ');
-            sb.append(body);
-            sb.append("\n");
-        }
-
-        // Reconstruct child nodes with extra indentation
-        Iterator<TreeNode> children = node.findChildren();
-        while (children.hasNext()) {
-            TreeNode child = children.next();
-            toString(sb, indent2, child);
-        }
-
-        // Reconstruct a closing node marker
-        for (int i = 0; i < indent; i++)
-            sb.append(' ');
-        sb.append("</");
-        sb.append(node.getName());
-        sb.append(">\n");
-
-    }
-
+  }
 
 }

@@ -19,22 +19,23 @@ package org.araneaframework.uilib.support;
 import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.araneaframework.uilib.form.converter.ConverterFactory;
 
 /**
- * A converter key that extends the base {@link ConverterKey} functionality to represent a list converter.
+ * A converter key that extends the base <tt>ConverterKey</tt> functionality to represent a list converter.
  * 
+ * @param <C> Indicates source object type.
+ * @param <D> Indicates target object type.
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 2.0
  * @see ConverterKey
- * @see ConverterFactory
+ * @see org.araneaframework.uilib.form.converter.ConverterFactory
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class ListConverterKey<C, D> extends ConverterKey<List, List> {
 
-  private Class<C> itemFromType;
+  private final Class<C> itemFromType;
 
-  private Class<D> itemToType;
+  private final Class<D> itemToType;
 
   /**
    * Constructs a new list converter where the source list items are of type <code>itemFromType</code> and the target
@@ -54,7 +55,7 @@ public class ListConverterKey<C, D> extends ConverterKey<List, List> {
    * 
    * @return The source list item type.
    */
-  public Class<C> getItemFromType() {
+  public final Class<C> getItemFromType() {
     return this.itemFromType;
   }
 
@@ -63,12 +64,12 @@ public class ListConverterKey<C, D> extends ConverterKey<List, List> {
    * 
    * @return The destination list item type.
    */
-  public Class<D> getItemToType() {
+  public final Class<D> getItemToType() {
     return this.itemToType;
   }
 
   @Override
-  public boolean equals(Object o) {
+  public final boolean equals(Object o) {
     boolean equal = super.equals(o);
     if (equal && o instanceof ListConverterKey) {
       ListConverterKey other = (ListConverterKey) o;

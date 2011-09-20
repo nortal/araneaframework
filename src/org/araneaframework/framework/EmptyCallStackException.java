@@ -24,6 +24,10 @@ import org.araneaframework.core.exception.AraneaRuntimeException;
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class EmptyCallStackException extends AraneaRuntimeException {
+
+  /**
+   * Creates a new instance of the exception with default message.
+   */
   public EmptyCallStackException() {
     super("Trying to cancel/end call with an empty call stack!");
   }

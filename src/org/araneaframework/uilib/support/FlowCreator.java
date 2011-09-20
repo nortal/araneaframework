@@ -22,8 +22,14 @@ import org.araneaframework.Widget;
 /**
  * Object with capability of creating new flow.
  * 
- * @author Taimo Peelo
+ * @author Taimo Peelo (taimo@araneaframework.org)
  */
 public interface FlowCreator extends Serializable {
-	public Widget createFlow() throws Exception;
+
+  /**
+   * Creates a new instance of a flow widget.
+   * 
+   * @return The created uninitialized widget.
+   */
+  Widget createFlow();
 }

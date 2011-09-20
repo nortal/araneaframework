@@ -52,6 +52,7 @@ public class StandardEnvironment extends BaseEnvironment {
    * Constructs an object with the parent Environment and adds an entry containing &lt;key, value&gt;. When environment
    * items are searched, custom entries will be searched first, and the parent environment will be used as a fall-back.
    * 
+   * @param <T> The type of the entry value, must be associated with the key.
    * @param env The parent environment (optional).
    * @param key A key for the value to be added to this environment (required).
    * @param value A value corresponding to given key (may be <code>null</code>).
@@ -72,6 +73,9 @@ public class StandardEnvironment extends BaseEnvironment {
     return this.entries;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @SuppressWarnings("unchecked")
   public <T> T getEntry(Class<T> key) {
     if (this.entries.containsKey(key)) {
@@ -82,6 +86,8 @@ public class StandardEnvironment extends BaseEnvironment {
 
   /**
    * Prints out the environment entries in as a tree.
+   * 
+   * @return A tree of environment values as text.
    */
   @Override
   public String toString() {

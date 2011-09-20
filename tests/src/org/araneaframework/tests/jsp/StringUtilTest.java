@@ -24,20 +24,20 @@ import org.araneaframework.jsp.util.JspStringUtil;
  */
 public class StringUtilTest extends TestCase {
 
-	public StringUtilTest(String name){
-		super(name);
-	}
-	
-	public void testStringUtils(){
-		// underlineAccessKey
-		assertEquals(JspStringUtil.underlineAccessKey("",""), "");
-		assertEquals(JspStringUtil.underlineAccessKey("aaa",""), "aaa");		
-		assertNull(JspStringUtil.underlineAccessKey(null, "a"));
-		assertEquals(JspStringUtil.underlineAccessKey("Some string", "So"), "Some string");
-		assertEquals(JspStringUtil.underlineAccessKey("Some string", null), "Some string");
-		assertEquals(JspStringUtil.underlineAccessKey("Some string", "s"), "<u>S</u>ome string");
-		assertEquals(JspStringUtil.underlineAccessKey("s", "s"), "<u>s</u>");
-		assertEquals(JspStringUtil.underlineAccessKey(" \n\tõüöä\n\t", "Õ"), " \n\t<u>õ</u>üöä\n\t");
-		assertEquals(JspStringUtil.underlineAccessKey("<u>this</u>","U"),"<<u>u</u>>this</u>");
-	}
+  public StringUtilTest(String name) {
+    super(name);
+  }
+
+  public void testStringUtils() {
+    // underlineAccessKey
+    assertEquals(JspStringUtil.underlineAccessKey("", ""), "");
+    assertEquals(JspStringUtil.underlineAccessKey("aaa", ""), "aaa");
+    assertNull(JspStringUtil.underlineAccessKey(null, "a"));
+    assertEquals(JspStringUtil.underlineAccessKey("Some string", "So"), "Some string");
+    assertEquals(JspStringUtil.underlineAccessKey("Some string", null), "Some string");
+    assertEquals(JspStringUtil.underlineAccessKey("Some string", "s"), "<u>S</u>ome string");
+    assertEquals(JspStringUtil.underlineAccessKey("s", "s"), "<u>s</u>");
+    assertEquals(JspStringUtil.underlineAccessKey(" \n\tõüöä\n\t", "Õ"), " \n\t<u>õ</u>üöä\n\t");
+    assertEquals(JspStringUtil.underlineAccessKey("<u>this</u>", "U"), "<<u>u</u>>this</u>");
+  }
 }

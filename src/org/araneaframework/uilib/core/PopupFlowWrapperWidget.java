@@ -43,9 +43,9 @@ import org.araneaframework.http.util.URLUtil;
 
 /**
  * Wrapper around the flow that is started from new session-thread. It pretends to be
- * {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies method calls to current
- * <emphasis>real</emphasis> {@link org.araneaframework.framework.FlowContext} and/or to
- * {@link org.araneaframework.framework.FlowContext} from which wrapped flow was started.
+ * {@link org.araneaframework.framework.FlowContext} for wrapped flows and proxies method calls to current <em>real</em>
+ * {@link org.araneaframework.framework.FlowContext} and/or to {@link org.araneaframework.framework.FlowContext} from
+ * which wrapped flow was started.
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */

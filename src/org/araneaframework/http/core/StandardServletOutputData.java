@@ -31,18 +31,18 @@ import org.araneaframework.core.util.Assert;
 import org.araneaframework.http.HttpOutputData;
 
 /**
- * A implementation of ServletOutputData, MimeOutputData and ServletOverridableOutputData using
- * StandardPath for scoping.
+ * A implementation of ServletOutputData, MimeOutputData and ServletOverridableOutputData using StandardPath for
+ * scoping.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServletOutputData implements HttpOutputData {
 
-  private HttpServletRequest req;
+  private final HttpServletRequest req;
 
   private HttpServletResponse res;
 
-  private Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
+  private final Map<Class<?>, Object> extensions = new HashMap<Class<?>, Object>();
 
   /**
    * Constructs a StandardServletOutputData with the request and response.
@@ -85,7 +85,7 @@ public class StandardServletOutputData implements HttpOutputData {
     InputData inputData = (InputData) this.req.getAttribute(InputData.INPUT_DATA_KEY);
 
     if (inputData == null) {
-      throw new NoCurrentInputDataSetException("No InputData set in the request.");
+      throw new NoCurrentInputDataSetException();
     }
 
     return inputData;

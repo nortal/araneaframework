@@ -34,6 +34,7 @@ import org.araneaframework.core.util.ExceptionUtil;
  * @since 1.2
  */
 public abstract class RelocatableUtil {
+
   /**
    * Serializes {@link RelocatableService} to byte array.
    */
@@ -48,11 +49,10 @@ public abstract class RelocatableUtil {
 
     return result;
   }
-  
+
   /**
-   * Serializes {@link RelocatableService} to byte array. If serialization fails,
-   * tries serializing it into XML with XStream (http://xstream.codehaus.org/),
-   * so that it is possible to debug the issue by looking at partial XML dump. 
+   * Serializes {@link RelocatableService} to byte array. If serialization fails, tries serializing it into XML with
+   * XStream (http://xstream.codehaus.org/), so that it is possible to debug the issue by looking at partial XML dump.
    */
   public static byte[] serializeRelocatable(RelocatableService service, String fileName) {
     Assert.notNullParam(service, "service");

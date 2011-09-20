@@ -20,28 +20,37 @@ import java.io.Serializable;
 import org.araneaframework.Service;
 
 /**
- * This context allows to abort the current execution flow and pass control to a provided continuation service. The continuation service will
- * be rendered on the current and subsequent request until it explicitly passes control back using {@link org.araneaframework.framework.ContinuationContext#finish()}. This
- * will end the continuation and restore control back.  
+ * This context allows to abort the current execution flow and pass control to a provided continuation service. The
+ * continuation service will be rendered on the current and subsequent request until it explicitly passes control back
+ * using {@link org.araneaframework.framework.ContinuationContext#finish()}. This will end the continuation and restore
+ * control back.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
 public interface ContinuationManagerContext extends Serializable {
+
   /**
-   * Returns whether a continuation is already registered during this request and is ready to run. In such a case it is unsafe
-   * to override the continuation using {@link #start(Service)}.
+   * Returns whether a continuation is already registered during this request and is ready to run. In such a case it is
+   * unsafe to override the continuation using {@link #start(Service)}.
+   * 
+   * @return A Boolean that is <code>true</code> when a running continuation is registered.
    */
-  public boolean isRunning();
-  
+  boolean isRunning();
+
   /**
-   * Starts the continuation (by registering it and then throwing and exception, thus passing control to the continuation manager). 
+   * Starts the continuation (by registering it and then throwing and exception, thus passing control to the
+   * continuation manager).
+   * 
+   * @param continuation A continuation to start.
    */
-  public void start(Service continuation);  
-  
+  void start(Service continuation);
+
   /**
-   * Does same as {@link #start(Service)}, however after the first request passes through the continuation will return control 
-   * back to the starting component. 
+   * Does same as {@link #start(Service)}, however after the first request passes through the continuation will return
+   * control back to the starting component.
+   * 
+   * @param continuation A continuation to run once.
    */
-  public void runOnce(Service continuation);
+  void runOnce(Service continuation);
 }

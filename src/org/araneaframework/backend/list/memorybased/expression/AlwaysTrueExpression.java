@@ -19,7 +19,7 @@ package org.araneaframework.backend.list.memorybased.expression;
 import org.araneaframework.backend.list.memorybased.Expression;
 
 /**
- * Expression that always evaluates to <code>Boolean.TRUE</code>
+ * Expression that always evaluates to <code>Boolean.TRUE</code>.
  */
 public class AlwaysTrueExpression implements Expression {
 

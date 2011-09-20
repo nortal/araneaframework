@@ -22,8 +22,8 @@ import org.araneaframework.uilib.list.structure.ListOrder;
 /**
  * Static list ordering information about one field.
  * 
- * @author Rein Raudjärv
+ * @author Rein Raudjärv (rein@araneaframework.org)
  */
 public interface FieldOrder extends ListOrder, FieldAware {
-	// no additional methods	
+  // no additional methods
 }

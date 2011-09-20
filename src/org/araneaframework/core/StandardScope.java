@@ -21,29 +21,51 @@ import java.util.Collections;
 import java.util.List;
 import org.araneaframework.Path;
 import org.araneaframework.Scope;
+import org.araneaframework.core.util.Assert;
 
 /**
+ * Default implementation of {@link Scope}.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
  * @since 1.1
  */
 public class StandardScope implements Scope {
 
-  private final Object id;
+  private final String id;
 
   private final Scope parent;
 
-  public StandardScope(Object id, Scope parent) {
+  /**
+   * Constructs a scope with given ID and with given parent scope.
+   * 
+   * @param id Scope ID (required).
+   * @param parent Parent scope.
+   */
+  public StandardScope(String id, Scope parent) {
+    Assert.notNullParam(id, "id");
+    Assert.isTrue(id.contains(Path.SEPARATOR), "The scope ID must not contain a separator.");
+
     this.id = id;
     this.parent = parent;
   }
 
-  public Object getId() {
-    return id;
+  /**
+   * {@inheritDoc}
+   */
+  public String getId() {
+    return this.id;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Scope getParent() {
-    return parent;
+    return this.parent;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Path toPath() {
     Scope cur = this;
     List<String> idlist = new ArrayList<String>();

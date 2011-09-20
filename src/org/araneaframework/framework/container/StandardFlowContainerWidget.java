@@ -38,6 +38,7 @@ import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.event.StandardEventListener;
+import org.araneaframework.core.exception.AraneaRuntimeException;
 import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
@@ -652,6 +653,8 @@ public class StandardFlowContainerWidget extends BaseApplicationWidget implement
         case RESET:
           scrollCtx.reset();
           break;
+        default:
+          throw new AraneaRuntimeException("Unsupported transition: " + transitionType);
         }
       }
     }

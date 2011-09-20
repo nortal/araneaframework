@@ -30,7 +30,6 @@ import org.araneaframework.core.ApplicationWidget;
  * {@link #cancel()}.
  * 
  * @see org.araneaframework.framework.container.StandardFlowContainerWidget
- * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -39,7 +38,7 @@ public interface FlowContext extends Serializable {
   /**
    * Transition types supported by the <code>FlowContext</code>.
    * 
-   * @since 1.1 (constants added), 2.0 (refactored infavor of enum)
+   * @since 1.1 (constants added), 2.0 (refactored in favor of enum)
    */
   enum Transition {
     START, FINISH, CANCEL, REPLACE, RESET
@@ -149,8 +148,8 @@ public interface FlowContext extends Serializable {
 
   /**
    * Returns currently active <code>FlowContext.TransitionHandler</code>. If the most current child is a
-   * {@link FlowContextWidget}, it will take its currently active <code>FlowContext.TransitionHandler</code>
-   * recursively (since 1.2.2).
+   * {@link FlowContextWidget}, it will take its currently active <code>FlowContext.TransitionHandler</code> recursively
+   * (since 1.2.2).
    * 
    * @since 1.1
    */

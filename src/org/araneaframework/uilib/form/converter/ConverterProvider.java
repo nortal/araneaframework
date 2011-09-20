@@ -28,7 +28,6 @@ import org.araneaframework.uilib.support.DataType;
  * Since 1.1 this interface extends <code>Serializable</code>.
  * 
  * @author Jevgeni Kabanov (ekabanov <i>at</i> araneaframework <i>dot</i> org)
- * 
  * @see Converter
  * @see ConverterFactory
  * @see FormElement#convert()
@@ -41,9 +40,8 @@ public interface ConverterProvider extends Serializable {
    * @param fromType from type.
    * @param toType to type.
    * @return {@link BaseConverter} corresponding to the types given.
-   * 
-   * @throws ConverterNotFoundException if {@link BaseConverter}is not found  
+   * @throws ConverterNotFoundException if {@link BaseConverter} is not found
    */
-  @SuppressWarnings("unchecked")
-  public Converter findConverter(DataType fromType, DataType toType) throws ConverterNotFoundException;
+  @SuppressWarnings("rawtypes")
+  Converter findConverter(DataType fromType, DataType toType) throws ConverterNotFoundException;
 }
