@@ -20,7 +20,6 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Widget;
 import org.araneaframework.core.util.Assert;
-import org.araneaframework.framework.MessageContext;
 import org.araneaframework.framework.container.ExceptionHandlingFlowContainerWidget;
 import org.araneaframework.http.WindowScrollPositionContext;
 import org.araneaframework.http.util.ServletUtil;
@@ -44,11 +43,10 @@ import org.araneaframework.http.util.ServletUtil;
  * Here's also a quick overview of "overlayRoot.jsp":
  * 
  * <pre>
- * &lt;ui:systemForm id=&quot;overlaySystemForm&quot; method=&quot;post&quot; styleClass=&quot;aranea-overlay-form&quot;&gt;
+ * &lt;ui:systemForm id=&quot;overlaySystemForm&quot; styleClass=&quot;aranea-overlay-form&quot;&gt;
  *     &lt;ui:widgetInclude id=&quot;c&quot;/&gt;
  * &lt;/ui:systemForm&gt;
  * </pre>
- * 
  * Note that the <code>id</code> and <code>styleClass</code> attributes must have the values as in the example above
  * because Aranea scripts depend on them. Also the the widget to include must have exactly the same name as in the
  * example above.
@@ -58,8 +56,8 @@ import org.araneaframework.http.util.ServletUtil;
  * <p>
  * Since Aranea 2.0, the provided overlay content widget will be initialized upon first request to it (overlay is opened
  * with two requests). Notice that the change was due to the problem that when opening overlay mode, messages that were
- * put into {@link MessageContext} in an overlay component's <code>init()</code> method would be rendered on the parent
- * page (because the second request had not even started yet!).
+ * put into {@link org.araneaframework.framework.MessageContext} in an overlay component's <code>init()</code> method
+ * would be rendered on the parent page (because the second request had not even started yet!).
  * <ol>
  * <li>A request (event) comes to a non-overlay widget that opens a widget in overlay. Overlay context is used only so
  * much that when rendering the response page, a JavaScript script is added that opens overlay mode visually and
@@ -78,12 +76,12 @@ public class OverlayRootWidget extends BaseUIWidget {
   /**
    * The default page to render this overlay root widget and its sub widgets.
    */
-  public static String DEFAULT_ROOT_PAGE = "overlayRoot";
+  public static final String DEFAULT_ROOT_PAGE = "overlayRoot";
 
   /**
    * The default page to render when an uncaught exception occurs.
    */
-  public static String DEFAULT_ERROR_PAGE = "/WEB-INF/jsp/error.jsp";
+  public static final String DEFAULT_ERROR_PAGE = "/WEB-INF/jsp/error.jsp";
 
   /**
    * The sub widget to render. This widget is required.
@@ -114,7 +112,6 @@ public class OverlayRootWidget extends BaseUIWidget {
    * also allows to specify custom view selector and error page for this root overlay widget. These values are also
    * required.
    * <p>
-   * 
    * 
    * @param child The sub widget (required) to render.
    * @param viewSelector The page to render this widget and its sub widgets.

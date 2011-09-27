@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,8 +39,6 @@ import org.araneaframework.core.RelocatableDecorator;
 import org.araneaframework.core.ServiceFactory;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.Assert;
-import org.araneaframework.core.util.ReadWriteLock;
-import org.araneaframework.core.util.ReaderPreferenceReadWriteLock;
 import org.araneaframework.framework.SynchronizedRequestRegistry;
 import org.araneaframework.http.util.ServletUtil;
 
@@ -79,17 +79,17 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
 
   private ServiceFactory serviceFactory;
 
-  private Map<HttpSession, ReadWriteLock> locks = Collections
-      .synchronizedMap(new HashMap<HttpSession, ReadWriteLock>());
+  private final Map<HttpSession, ReadWriteLock> locks = Collections
+      .synchronizedMap(new HashMap<HttpSession, ReadWriteLock>(0));
 
-  private Map<String, Object> attributes = Collections.synchronizedMap(new HashMap<String, Object>());
+  private final Map<String, Object> attributes = Collections.synchronizedMap(new HashMap<String, Object>());
 
   /**
    * A list of asynchronous actions by [target.name].
    * 
    * @since 2.0
    */
-  private List<String> synchronousActions = new LinkedList<String>();
+  private final List<String> synchronousActions = new LinkedList<String>();
 
   /**
    * Sets the factory which is used to build the service if one does not exist in the session.
@@ -98,12 +98,18 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
     this.serviceFactory = factory;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void registerSynchronizedAction(String parentScope, String actionId) {
     Assert.notNullParam(this, parentScope, "parentScope");
     Assert.notNullParam(this, actionId, "actionId");
     this.synchronousActions.add(parentScope + Path.SEPARATOR + actionId);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void unregisterSynchronizedAction(String parentScope, String actionId) {
     Assert.notNullParam(this, parentScope, "parentScope");
     Assert.notNullParam(this, actionId, "actionId");
@@ -112,6 +118,8 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
 
   /**
    * Routes an action to the service in the session. If the service does not exist, it is created.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -141,12 +149,16 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
     boolean result = isSynchronized(actionId, targetPath) || Boolean.parseBoolean(sync);
 
     if (result && LOG.isInfoEnabled()) {
-      LOG.info("The action '" + targetPath + Path.SEPARATOR + actionId + "' is to be processed in synchronized mode (blocking other requests)!");
+      LOG.info("The action '" + targetPath + Path.SEPARATOR + actionId
+          + "' is to be processed in synchronized mode (blocking other requests)!");
     }
 
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isSynchronized(String actionId, String targetPath) {
     final String defaultStr = "-";
     StringBuffer action = new StringBuffer(StringUtils.defaultIfEmpty(targetPath, defaultStr));
@@ -167,10 +179,10 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
     synchronized (sess) {
       ReadWriteLock lock = this.locks.get(sess);
       if (lock == null) {
-        lock = new ReaderPreferenceReadWriteLock();
+        lock = new ReentrantReadWriteLock(true);
         this.locks.put(sess, lock);
       }
-      lock.readLock().acquire();
+      lock.readLock().lock();
     }
 
     RelocatableService service = getOrCreateSessionService(sess);
@@ -179,12 +191,12 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
       service._getService().action(path, input, output);
     } finally {
       ReadWriteLock lock = this.locks.get(sess);
-      lock.readLock().release();
+      lock.readLock().unlock();
     }
 
     synchronized (sess) {
       ReadWriteLock lock = this.locks.get(sess);
-      if (lock.writeLock().attempt(0)) {
+      if (lock.writeLock().tryLock()) {
         try {
           LOG.debug("Propagating changes to session");
           service._getRelocatable().overrideEnvironment(null);
@@ -217,7 +229,7 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
 
     if (sess.getAttribute(SESSION_SERVICE_KEY) == null) {
       LOG.debug("HTTP session '" + sess.getId() + "' was started.");
-      result = new RelocatableDecorator(serviceFactory.buildService(getEnvironment()));
+      result = new RelocatableDecorator(this.serviceFactory.buildService(getEnvironment()));
       result._getComponent().init(getScope(), newEnv);
 
     } else {
@@ -236,6 +248,7 @@ public class StandardHttpSessionRouterService extends BaseService implements Syn
 
   // Objects of this class will be held in session. It is static so that it
   // would not depend on its parent as the latter might not serialize well.
-  private static class SessionSyncObject implements Serializable {}
+  private static class SessionSyncObject implements Serializable {
+  }
 
 }

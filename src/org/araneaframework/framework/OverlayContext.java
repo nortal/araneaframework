@@ -22,11 +22,10 @@ import org.araneaframework.EnvironmentAwareCallback;
 import org.araneaframework.Widget;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
-import org.araneaframework.http.PopupWindowContext;
 
 /**
- * Another context interface that, in contrast to {@link FlowContext} and {@link PopupWindowContext}, deals with flow
- * logic that is running in overlay mode.
+ * Another context interface that, in contrast to standard {@link FlowContext}, deals with flow logic that is running in
+ * overlay mode (a thread of logic running on top of the current page).
  * <p>
  * Using <code>OverlayContext</code> assumes that the visual part of the application also supports it. One must register
  * the <code>OverlayContext</code> in JSP with <code>&lt;ui:registerOverlay/&gt;</code> tag.

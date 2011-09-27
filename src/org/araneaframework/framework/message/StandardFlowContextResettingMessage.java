@@ -27,11 +27,11 @@ import org.araneaframework.framework.FlowContext;
 import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
- * Message that:
- * <ul>
- * <li>resets the first encountered {@link org.araneaframework.framework.FlowContext}</li>
+ * A message that resets a flow context and starts a flow in it. More specifically, it
+ * <ol>
+ * <li>resets the first encountered {@link FlowContext}</li>
  * <li>starts a specified flow in it</li>
- * </ul>
+ * </ol>
  * 
  * @author Taimo Peelo (taimo@araneaframework.org)
  */
@@ -39,26 +39,38 @@ public class StandardFlowContextResettingMessage implements Message {
 
   private final Widget flow;
 
+  /**
+   * Initializes a new flow context resetting message with given flow to start.
+   * 
+   * @param flow The flow to start (required, must not be initialized).
+   */
   public StandardFlowContextResettingMessage(Widget flow) {
     Assert.notNullParam(flow, "flow");
     this.flow = flow;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public final void send(Object id, Component component) {
     if (!(component instanceof FlowContext)) {
       component._getComponent().propagate(this);
     } else {
       try {
-        execute(component);
+        execute((FlowContext) component);
       } catch (Exception e) {
         throw ExceptionUtil.uncheckException(e);
       }
     }
   }
 
-  protected void execute(Component component) throws Exception {
-    final FlowContext fCtx = (FlowContext) component;
-    fCtx.reset(new EnvironmentAwareCallback() {
+  /**
+   * Executes flow context resetting and the designated flow starting.
+   * 
+   * @param flowContext The flow context to work with.
+   */
+  protected void execute(FlowContext flowContext) {
+    flowContext.reset(new EnvironmentAwareCallback() {
 
       public void call(Environment env) {
         FlowContext f = EnvironmentUtil.getFlowContext(env);

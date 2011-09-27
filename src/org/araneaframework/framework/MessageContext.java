@@ -213,6 +213,11 @@ public interface MessageContext extends UpdateRegionProvider {
   /**
    * Shows a permanent message <code>message</code> of type <code>type</code> to the user. The message will be shown
    * until hidden explicitly.
+   * 
+   * @param type The type of messages that the given message will be bound to. Can be one of, but is not limited to the
+   *          ones defined {@link MessageContext}.
+   * @param message The message text to show. Can be a label that will be localized before displaying.
+   * @param params Optional parameters for the message label.
    */
   void showPermanentMessage(String type, String message, Object... params);
 
@@ -284,8 +289,18 @@ public interface MessageContext extends UpdateRegionProvider {
    */
   interface MessageData extends Serializable {
 
+    /**
+     * Provides the message code as it was provided to the message context.
+     * 
+     * @return The message code.
+     */
     String getMessage();
 
+    /**
+     * Provides message parameters as they were provided to the message context.
+     * 
+     * @return The message parameters.
+     */
     Object[] getMessageParameters();
 
   }

@@ -50,7 +50,7 @@ public interface TransactionContext extends Serializable {
    * 
    * @return The current transaction ID.
    */
-  Object getTransactionId();
+  Long getTransactionId();
 
   /**
    * Provides the generated transaction ID that will be expected in the next request.

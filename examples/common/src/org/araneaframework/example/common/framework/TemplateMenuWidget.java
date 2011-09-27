@@ -81,7 +81,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
     String result = null;
 
     try {
-      result = this.callStack.getFirst().getWidget().getClass().getName();
+      result = getCallStack().getFirst().getWidget().getClass().getName();
     } catch (Exception e) {}
 
     return result;
@@ -92,7 +92,7 @@ public abstract class TemplateMenuWidget extends BaseMenuWidget {
   public String getFlowViewSelector() {
     String result = null;
     try {
-      result = ((ViewSelectorAware) this.callStack.getFirst().getWidget()).getViewSelector();
+      result = ((ViewSelectorAware) getCallStack().getFirst().getWidget()).getViewSelector();
     } catch (Exception e) {}
     return result;
   }

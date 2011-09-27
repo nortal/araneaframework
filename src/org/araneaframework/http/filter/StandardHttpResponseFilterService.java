@@ -148,7 +148,7 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
       response.addHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
       response.setDateHeader("Expires", 1);
     } else {
-      response.setHeader("Cache-Control", "private, max-age=" + (this.cacheHoldingTime / 1000));
+      response.setHeader("Cache-Control", "private, max-age=" + this.cacheHoldingTime / 1000);
       response.setDateHeader("Expires", System.currentTimeMillis() + this.cacheHoldingTime);
     }
 
@@ -160,6 +160,6 @@ public class StandardHttpResponseFilterService extends BaseFilterService {
       response.addCookie(new Cookie(entry.getKey(), entry.getValue()));
     }
 
-    this.childService._getService().action(path, input, output);
+    getChildService()._getService().action(path, input, output);
   }
 }

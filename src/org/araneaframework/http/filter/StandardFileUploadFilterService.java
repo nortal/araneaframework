@@ -133,7 +133,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
   }
 
   /**
-   * Sets the maximum size of the request that may be sent to the server
+   * Sets the maximum size of the request that may be sent to the server.
    * 
    * @param maximumRequestSize The maximum size of the request that may be sent to the server.
    */
@@ -336,7 +336,7 @@ public class StandardFileUploadFilterService extends BaseFilterService implement
    */
   protected void afterMultipartRequestParsing(boolean parsingSucceeded, InputData input, OutputData output,
       Map<String, List<String>> parameters, Map<String, ? extends FileItem> fileItems, Exception uploadException)
-      throws Exception {
+    throws Exception {
 
     if (parsingSucceeded) {
       input.extend(FileUploadInputExtension.class, new StandardFileUploadInputExtension(fileItems, uploadException));

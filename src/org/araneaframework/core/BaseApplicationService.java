@@ -39,7 +39,9 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A full featured Service with support for composite, EventListeners, ViewModel.
+ * A full featured Service with support for composite, ActionListeners, ViewModel.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public abstract class BaseApplicationService extends BaseService implements ApplicationService {
 
@@ -52,72 +54,6 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   private Map<String, List<ActionListener>> actionListeners;
 
   private Map<String, Object> viewData;
-
-  // *******************************************************************
-  // PROTECTED CLASSES
-  // *******************************************************************
-
-  protected class ViewableImpl implements Viewable.Interface {
-
-    public Object getViewModel() {
-      try {
-        return BaseApplicationService.this.getViewModel();
-      } catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
-    }
-  }
-
-  protected class CompositeImpl implements Composite.Interface {
-
-    public Map<String, Component> getChildren() {
-      return BaseApplicationService.this.getChildren();
-    }
-
-    public void attach(String key, Component comp) {
-      _getChildren().put(key, comp);
-    }
-
-    public Component detach(String key) {
-      return _getChildren().remove(key);
-    }
-  }
-
-  /**
-   * Extends the base functionality with registering asynchronous actions.
-   * 
-   * @author Martti Tamm (martti@araneaframework.org)
-   * @since 2.0
-   */
-  protected class ComponentImpl extends BaseComponent.ComponentImpl {
-
-    @Override
-    public synchronized void init(Scope scope, Environment env) {
-      super.init(scope, env);
-      ComponentUtil.registerActionListeners(getEnvironment(), getScope(), getActionListeners());
-    }
-  }
-
-  public class ViewModel implements ApplicationService.ServiceViewModel {
-
-    /**
-     * @since 1.1
-     */
-    public Scope getScope() {
-      return BaseApplicationService.this.getScope();
-    }
-
-    /**
-     * Returns the children of this StandardService.
-     */
-    public Map<String, Component> getChildren() {
-      return BaseApplicationService.this.getChildren();
-    }
-
-    public Map<String, Object> getData() {
-      return getViewData();
-    }
-  }
 
   // *******************************************************************
   // PRIVATE METHODS
@@ -143,10 +79,16 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   // PUBLIC METHODS
   // *******************************************************************
 
+  /**
+   * {@inheritDoc}
+   */
   public Composite.Interface _getComposite() {
     return new CompositeImpl();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Viewable.Interface _getViewable() {
     return new ViewableImpl();
   }
@@ -157,7 +99,11 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   /**
-   * Adds the ActionListener listener with the specified action id.
+   * Adds an action listener with the specified action ID. When a listener is already registered with same action ID, it
+   * will be replaced with the new listener.
+   * 
+   * @param actionId The action ID for which the listener will be bound.
+   * @param listener The listener to be bound to an action.
    */
   public void addActionListener(String actionId, ActionListener listener) {
     Assert.notNullParam(this, actionId, "actionId");
@@ -177,6 +123,8 @@ public abstract class BaseApplicationService extends BaseService implements Appl
 
   /**
    * Removes the ActionListener listener from this component.
+   * 
+   * @param listener A listener to remove from listening actions.
    */
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
@@ -204,6 +152,9 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   /**
    * Adds custom data to the widget view model (${widget.custom['key']}). This data will be available until explicitly
    * removed with {@link #removeViewData(String)}.
+   * 
+   * @param key The key for later accessing the view data item.
+   * @param customDataItem The value to add to view data.
    */
   public void putViewData(String key, Object customDataItem) {
     Assert.notNullParam(this, key, "key");
@@ -211,7 +162,9 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   /**
-   * Removes the custom data under key.
+   * Removes the custom data under key. Nothing happens when no view data item with given key exists.
+   * 
+   * @param key The key to identify the view data item to remove
    */
   public void removeViewData(String key) {
     Assert.notNullParam(this, key, "key");
@@ -220,23 +173,34 @@ public abstract class BaseApplicationService extends BaseService implements Appl
 
   /**
    * Returns an unmodifiable map of the children.
+   * 
+   * @return An unmodifiable map of child components.
    */
-  @SuppressWarnings("unchecked")
   public Map<String, Component> getChildren() {
-    return Collections.unmodifiableMap(new LinkedMap(_getChildren()));
+    return Collections.unmodifiableMap(_getChildren());
   }
 
   /**
-   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
-   * The child is initialized with the Environment env.
+   * Adds given service as a child service with the specified key. Already initialized service cannot be added. The
+   * child is initialized with the provided environment.
+   * 
+   * @param key A not empty string for service ID, may be already used for another child service (required).
+   * @param child Uninitialized service to be added to this component as a child (required).
+   * @param env The environment assigned to the component during initialization (required).
+   * @see #_addComponent(String, Component, Environment)
    */
   public void addService(String key, Service child, Environment env) {
     _addComponent(key, child, env);
   }
 
   /**
-   * Adds a service with the specified key. Already initialized services cannot be added. Duplicate keys not allowed.
-   * The child is initialized with the Environment from <code>getChildServiceEnvironment()</code>.
+   * Adds given service as a child service with the specified key. Already initialized service cannot be added. The
+   * child is initialized with the Environment from <code>getChildServiceEnvironment()</code>.
+   * 
+   * @param key A not empty string for service ID, may be already used for another child service (required).
+   * @param child Uninitialized service to be added to this service as a child (required).
+   * @see #_addComponent(String, Component, Environment)
+   * @see #getChildServiceEnvironment()
    */
   public void addService(String key, Service child) {
     try {
@@ -247,32 +211,28 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   /**
-   * Removes the service with the specified key.
-   */
-  public void removeService(Object key) {
-    _removeComponent(key);
-  }
-
-  /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment
-   * specified by newEnv.
+   * Relocates the child with <tt>keyFrom</tt> under provided <tt>parent</tt> to this service with a new key
+   * <tt>keyTo</tt>. The relocated child service will get the specified environment.
    * 
-   * @param parent is the current parent of the child to be relocated.
-   * @param newEnv the new Environment of the child.
-   * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this StandardService.
+   * @param parent The current parent of the child service to be relocated (required).
+   * @param newEnv The new environment for the relocated child service.
+   * @param keyFrom The current key of the child to be relocated (required).
+   * @param keyTo The new key with which the child will be added as a child of service (required).
+   * @see #_relocateComponent(Composite, Environment, String, String)
    */
   public void relocateService(Composite parent, Environment newEnv, String keyFrom, String keyTo) {
     _relocateComponent(parent, newEnv, keyFrom, keyTo);
   }
 
   /**
-   * Relocates parent's child with keyFrom to this service with a new key keyTo. The child will get the Environment of
-   * this StandardService.
+   * Relocates the child with <tt>keyFrom</tt> under provided <tt>parent</tt> to this service with a new key
+   * <tt>keyTo</tt>. The relocated child service will get the child-service environment from this service.
    * 
-   * @param parent is the current parent of the child to be relocated.
-   * @param keyFrom is the key of the child to be relocated.
-   * @param keyTo is the the key, with which the child will be added to this StandardService.
+   * @param parent The current parent of the child component to be relocated (required).
+   * @param keyFrom The current key of the child to be relocated (required).
+   * @param keyTo The new key with which the child will be added as a child of component (required).
+   * @see #_relocateComponent(Composite, Environment, String, String)
+   * @see #getChildServiceEnvironment()
    */
   public void relocateService(Composite parent, String keyFrom, String keyTo) {
     try {
@@ -283,18 +243,37 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   /**
-   * Enables the service with the specified key. Only a disabled service can be enabled.
+   * Enables a disabled child service with the specified key. If the key does not correspond to any kind of child
+   * component, a runtime exception will occur. When child service is already disabled, nothing will happen.
+   * 
+   * @param key The ID of the child service to enable (required).
+   * @see #_enableComponent(String)
    */
   public void enableService(String key) {
     _enableComponent(key);
   }
 
   /**
-   * Disables the service with the specified key. Only a enabled service can be disabled. A disabled service does not
-   * get any actions routed to them.
+   * Disables the child service with the specified key. If the key does not correspond to any kind of child service, a
+   * runtime exception will occur. A disabled child is a child that is removed from the active set of children to
+   * disabled set of children. When child service is already disabled, nothing will happen.
+   * 
+   * @param key The ID of the child service to disable (required).
+   * @see #_disableComponent(String)
    */
   public void disableService(String key) {
     _disableComponent(key);
+  }
+
+  /**
+   * Removes the child service with the specified key from the children and calls destroy on it. When no child component
+   * with given key is found, nothing will happen.
+   * 
+   * @param key The ID of the service to remove (required).
+   * @see #_removeComponent(Object)
+   */
+  public void removeService(Object key) {
+    _removeComponent(key);
   }
 
   @Override
@@ -302,40 +281,18 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     return super.getEnvironment();
   }
 
-  public Environment getChildEnvironment() {
-    try {
-      return getChildServiceEnvironment();
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
+  /**
+   * Delegates the child environment creation to {@link #getChildServiceEnvironment()}.
+   * <p>
+   * {@inheritDoc}
+   */
+  public final Environment getChildEnvironment() {
+    return getChildServiceEnvironment();
   }
 
   // *******************************************************************
   // PROTECTED METHODS
   // *******************************************************************
-
-  /**
-   * Returns the view model. Usually overridden.
-   */
-  protected Object getViewModel() throws Exception {
-    return new ViewModel();
-  }
-
-  /**
-   * Returns the the Environment of this Service by default. Usually overridden.
-   */
-  protected Environment getChildServiceEnvironment() throws Exception {
-    return getEnvironment();
-  }
-
-  /**
-   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key to extract it from InputData's
-   * global data.
-   */
-  protected String getActionId(InputData input) {
-    Assert.notNull(this, input, "Cannot extract action id from a null input!");
-    return input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
-  }
 
   @Override
   protected void propagate(Message message) throws Exception {
@@ -343,8 +300,37 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   /**
-   * If path hasNextStep() routes to the correct child, otherwise calls the appropriate listener.
+   * The viewable contract delegated method that creates the view model for current service on-demand. This is usually
+   * overridden when a service needs to provide a custom view model.
+   * 
+   * @return The view model of this service to be used in the view.
    */
+  protected ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  /**
+   * Provides the environment that is passed on to child services when they are initialized. Usually overridden in order
+   * to add new environment entries.
+   * 
+   * @return The environment from this service to its child-services.
+   */
+  protected Environment getChildServiceEnvironment() {
+    return getEnvironment();
+  }
+
+  /**
+   * Reads an action ID value from input data.
+   * 
+   * @param input The input data where action ID will be read from.
+   * @return The action ID value from input data.
+   * @see ApplicationService#ACTION_HANDLER_ID_KEY
+   */
+  protected static String getActionId(InputData input) {
+    Assert.notNull(input, "Cannot extract action ID from a null input!");
+    return input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
+  }
+
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (path != null && path.hasNext()) {
@@ -367,14 +353,18 @@ public abstract class BaseApplicationService extends BaseService implements Appl
   }
 
   /**
-   * Calls the appropriate listener.
+   * Handles the incoming action (that was sent to this specific service) by invoking registered listener by action ID.
+   * 
+   * @param input Input data for the service or for its child components.
+   * @param output Output data for the service or for its child components.
+   * @throws Exception Any runtime exception that may occur.
    */
   protected void handleAction(InputData input, OutputData output) throws Exception {
     String actionId = getActionId(input);
 
     if (actionId == null) {
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action ID!" + Assert.thisToString(this));
+        LOG.warn("Service '" + getScope() + "' can't deliver action for a null action ID!" + Assert.thisToString(this));
       }
       return;
     }
@@ -395,6 +385,102 @@ public abstract class BaseApplicationService extends BaseService implements Appl
     if (LOG.isWarnEnabled()) {
       LOG.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
           + "id '" + actionId + "'!" + Assert.thisToString(this));
+    }
+  }
+
+  // *******************************************************************
+  // PROTECTED CLASSES
+  // *******************************************************************
+
+  /**
+   * The base implementation for application service view models.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
+  public class ViewModel implements ApplicationService.ServiceViewModel {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Scope getScope() {
+      return BaseApplicationService.this.getScope();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Component> getChildren() {
+      return BaseApplicationService.this.getChildren();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Object> getData() {
+      return getViewData();
+    }
+  }
+
+  /**
+   * The viewable contract implementation.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
+  protected class ViewableImpl implements Viewable.Interface {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object getViewModel() {
+      try {
+        return BaseApplicationService.this.getViewModel();
+      } catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
+    }
+  }
+
+  /**
+   * The composite contract implementation.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
+  protected class CompositeImpl implements Composite.Interface {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Component> getChildren() {
+      return BaseApplicationService.this.getChildren();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void attach(String key, Component comp) {
+      _getChildren().put(key, comp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Component detach(String key) {
+      return _getChildren().remove(key);
+    }
+  }
+
+  /**
+   * Extends the base functionality with registering asynchronous actions.
+   * 
+   * @author Martti Tamm (martti@araneaframework.org)
+   * @since 2.0
+   */
+  protected class ComponentImpl extends BaseComponent.ComponentImpl {
+
+    @Override
+    public synchronized void init(Scope scope, Environment env) {
+      super.init(scope, env);
+      ComponentUtil.registerActionListeners(getEnvironment(), getScope(), getActionListeners());
     }
   }
 }

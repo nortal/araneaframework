@@ -17,7 +17,6 @@
 package org.araneaframework.framework;
 
 import java.io.Serializable;
-import org.araneaframework.core.action.SynchronizedActionListener;
 
 /**
  * A contract interface for components that take care of propagating actions synchronously and asynchronously (in the
@@ -30,9 +29,10 @@ import org.araneaframework.core.action.SynchronizedActionListener;
  * that action.
  * <p>
  * By the way, Aranea users should not use this interface directly to enable synchronized actions. An action is
- * registered automatically as synchronized when it implements {@link SynchronizedActionListener}.
+ * registered automatically as synchronized when it implements <tt>SynchronizedActionListener</tt>.
  * 
  * @author Martti Tamm (martti@araneaframework.org)
+ * @see org.araneaframework.core.action.SynchronizedActionListener
  * @since 2.0
  */
 public interface SynchronizedRequestRegistry extends Serializable {

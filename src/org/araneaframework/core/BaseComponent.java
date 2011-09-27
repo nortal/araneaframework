@@ -51,6 +51,8 @@ public class BaseComponent implements Component {
 
   private static final byte DEAD = 3;
 
+  private static final int SECOND_IN_MILLIS = 1000;
+
   private Environment environment;
 
   private Scope scope;
@@ -71,6 +73,9 @@ public class BaseComponent implements Component {
   // PUBLIC METHODS
   // *******************************************************************
 
+  /**
+   * {@inheritDoc}
+   */
   public Component.Interface _getComponent() {
     return new ComponentImpl();
   }
@@ -130,10 +135,16 @@ public class BaseComponent implements Component {
     throw e;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Environment getEnvironment() {
     return this.environment;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Scope getScope() {
     return this.scope;
   }
@@ -148,6 +159,9 @@ public class BaseComponent implements Component {
     return this.state != UNBORN;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public final boolean isAlive() {
     return this.state == ALIVE;
   }
@@ -185,12 +199,14 @@ public class BaseComponent implements Component {
    * <p>
    * When a call to the component is in progress, default implementation waits 1 second before trying again. It waits up
    * to 10 seconds in total before giving up.
+   * 
+   * @throws InterruptedException When the thread is interrupted.
    */
   protected synchronized void _waitNoCall() throws InterruptedException {
     long waitStart = System.currentTimeMillis();
 
     while (this.callCount != this.reentrantCallCount) {
-      this.wait(1000);
+      wait(SECOND_IN_MILLIS);
 
       if (this.callCount != this.reentrantCallCount) {
         if (LOG.isWarnEnabled()) {
@@ -198,10 +214,10 @@ public class BaseComponent implements Component {
               + this.reentrantCallCount + "'");
         }
 
-        if (waitStart < System.currentTimeMillis() - 10000) {
+        if (waitStart < System.currentTimeMillis() - SECOND_IN_MILLIS) {
+          Exception e = new AraneaRuntimeException("Deadlock or starvation suspected!");
           LOG.error("Deadlock or starvation not solved in 10s, call count '" + this.callCount
-              + "', reentrant call count '" + this.reentrantCallCount + "'", new AraneaRuntimeException(
-              "Deadlock or starvation suspected!"));
+              + "', reentrant call count '" + this.reentrantCallCount + "'", e);
           return;
         }
       }
@@ -216,7 +232,7 @@ public class BaseComponent implements Component {
    * @see #_strictStartCall()
    * @see #_checkCall()
    */
-  protected synchronized void _startCall() throws IllegalStateException {
+  protected synchronized void _startCall() {
     _checkCall();
     incCallCount();
   }
@@ -229,7 +245,7 @@ public class BaseComponent implements Component {
    * @see #_strictCheckCall()
    * @since 1.1
    */
-  protected synchronized void _strictStartCall() throws IllegalStateException {
+  protected synchronized void _strictStartCall() {
     _strictCheckCall();
     incCallCount();
   }
@@ -264,10 +280,8 @@ public class BaseComponent implements Component {
   /**
    * Checks if this component has been initialized. If not, throws <tt>IllegalStateException</tt>. This is relatively
    * loose check, allowing leftover calls to dead components.
-   * 
-   * @throws IllegalStateException when this component has never been initialized.
    */
-  protected void _checkCall() throws IllegalStateException {
+  protected void _checkCall() {
     if (!isInitialized()) {
       throw new IllegalStateException("Component '" + getClass().getName() + "' was never initialized!");
     }
@@ -276,10 +290,9 @@ public class BaseComponent implements Component {
   /**
    * Checks if this component is currently alive (initialized and not destroyed).
    * 
-   * @throws IllegalStateException when this component is not initialized or is destroyed.
    * @since 1.1
    */
-  protected void _strictCheckCall() throws IllegalStateException {
+  protected void _strictCheckCall() {
     if (!isAlive()) {
       throw new IllegalStateException("Component '" + getClass().getName() + "' is not alive!");
     }
@@ -499,10 +512,10 @@ public class BaseComponent implements Component {
       return;
     }
 
-    Map<String, Component> children = _getChildren();
+    Map<String, Component> activeChildren = _getChildren();
 
-    synchronized (children) {
-      for (Map.Entry<String, Component> entry : children.entrySet()) {
+    synchronized (activeChildren) {
+      for (Map.Entry<String, Component> entry : activeChildren.entrySet()) {
         // message has not destroyed by previously existing child
         if (entry.getValue() != null) {
           message.send(entry.getKey(), entry.getValue());
@@ -554,6 +567,8 @@ public class BaseComponent implements Component {
 
     /**
      * Before {@link BaseComponent#init()} method is called, environment entries will injected into component fields.
+     * <p>
+     * {@inheritDoc}
      * 
      * @see EnvironmentUtil#injectEnvironmentEntries(Environment, Object)
      */
@@ -576,6 +591,8 @@ public class BaseComponent implements Component {
     /**
      * Destroys all child components and then invokes the {@link BaseComponent#destroy()} method. The component state
      * will end up dead and cannot be reused.
+     * <p>
+     * {@inheritDoc}
      */
     public void destroy() {
       _startWaitingCall();
@@ -617,6 +634,9 @@ public class BaseComponent implements Component {
       }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void propagate(Message message) {
       _startCall();
       try {
@@ -628,6 +648,9 @@ public class BaseComponent implements Component {
       }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void enable() {
       _startCall();
       try {
@@ -639,6 +662,9 @@ public class BaseComponent implements Component {
       }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void disable() {
       _startCall();
       try {

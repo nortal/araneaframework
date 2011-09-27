@@ -28,8 +28,22 @@ import org.araneaframework.framework.ThreadContext;
  */
 public class StandardThreadServiceRouterService extends BaseExpiringServiceRouterService {
 
+  /**
+   * Creates a new thread-level expiring service router.
+   * 
+   * @see ThreadContext
+   */
+  public StandardThreadServiceRouterService() {
+    super(ThreadContext.THREAD_SERVICE_KEY, ThreadContext.KEEPALIVE_KEY);
+  }
+
+  /**
+   * Enhances the child service environment with the {@link ThreadContext} entry.
+   * <p>
+   * {@inheritDoc}
+   */
   @Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
+  protected Environment getChildEnvironment(String serviceId) {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), ThreadContext.class,
         new ServiceRouterContextImpl(serviceId));
   }
@@ -40,15 +54,5 @@ public class StandardThreadServiceRouterService extends BaseExpiringServiceRoute
     protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
-  }
-
-  @Override
-  protected String getServiceKey() throws Exception {
-    return ThreadContext.THREAD_SERVICE_KEY;
-  }
-
-  @Override
-  public String getKeepAliveKey() {
-    return ThreadContext.KEEPALIVE_KEY;
   }
 }

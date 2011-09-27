@@ -1081,7 +1081,7 @@ public class ListWidget<T> extends BaseUIWidget implements ListContext {
    * @return {@link ViewModel}- list widget view model.
    */
   @Override
-  public Object getViewModel() {
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 

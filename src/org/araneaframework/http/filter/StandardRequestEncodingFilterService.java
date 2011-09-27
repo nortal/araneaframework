@@ -45,6 +45,6 @@ public class StandardRequestEncodingFilterService extends BaseFilterService {
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     ((HttpInputData) input).setCharacterEncoding(this.requestEncoding);
-    this.childService._getService().action(path, input, output);
+    getChildService()._getService().action(path, input, output);
   }
 }

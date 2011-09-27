@@ -38,13 +38,8 @@ public class MockEventfulStandardService extends BaseApplicationService {
   private transient OutputData output;
 
   @Override
-  protected String getActionId(InputData input) {
-    return input.getScopedData(getScope().toPath()).get(ACTION_HANDLER_ID_KEY);
-  }
-
-  @Override
   public void action(Path path, InputData input, OutputData output) throws Exception {
-    actionCalled = true;
+    this.actionCalled = true;
     this.path = path;
     this.input = input;
     this.output = output;
@@ -52,7 +47,7 @@ public class MockEventfulStandardService extends BaseApplicationService {
 
   @Override
   public void destroy() {
-    destroyCalled = true;
+    this.destroyCalled = true;
   }
 
   public Environment getTheEnvironment() {
@@ -60,22 +55,22 @@ public class MockEventfulStandardService extends BaseApplicationService {
   }
 
   public InputData getInput() {
-    return input;
+    return this.input;
   }
 
   public OutputData getOutput() {
-    return output;
+    return this.output;
   }
 
   public Path getPath() {
-    return path;
+    return this.path;
   }
 
   public boolean getActionCalled() {
-    return actionCalled;
+    return this.actionCalled;
   }
 
   public boolean getDestroyCalled() {
-    return destroyCalled;
+    return this.destroyCalled;
   }
 }

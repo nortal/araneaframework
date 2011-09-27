@@ -33,8 +33,8 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.http.HttpOutputData;
 
 /**
- * A helper class for providing roll-back and commit functionality on an OutputData. If something has been written to the
- * OutputData, <code>commit()</code> will flush it, forcing any buffered output to be written out.
+ * A helper class for providing roll-back and commit functionality on an OutputData. If something has been written to
+ * the OutputData, <code>commit()</code> will flush it, forcing any buffered output to be written out.
  * <code>rollback()</code> will discard the contents of the buffer.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
@@ -42,9 +42,9 @@ import org.araneaframework.http.HttpOutputData;
  */
 public class AtomicResponseHelper {
 
-  private AtomicResponseWrapper atomicWrapper;
+  private final AtomicResponseWrapper atomicWrapper;
 
-  private OutputData output;
+  private final OutputData output;
 
   public AtomicResponseHelper(OutputData outputData) {
     Assert.isInstanceOfParam(HttpOutputData.class, outputData, "outputData");
@@ -58,14 +58,14 @@ public class AtomicResponseHelper {
   // PUBLIC METHODS
   // *******************************************************************
 
-  public void commit() throws Exception {
+  public void commit() {
     this.atomicWrapper.commit();
 
     // This helper cannot be used anymore. Let's restore the previous one:
     ServletUtil.setResponse(this.output, (HttpServletResponse) this.atomicWrapper.getResponse());
   }
 
-  public void rollback() throws Exception {
+  public void rollback() {
     this.atomicWrapper.rollback();
   }
 
@@ -79,13 +79,13 @@ public class AtomicResponseHelper {
   }
 
   /**
-     * Returns the data as string that is collected by this output stream at this moment. The encoding will be taken
-     * from {@link ServletResponse#getCharacterEncoding()}. When the latter is <code>null</code>, this method will fail
-     * with an exception.
-     * 
-     * @return The collected data as <code>String</code> that is encoded as
-     *         {@link ServletResponse#getCharacterEncoding()}.
-     * @since 2.0
+   * Returns the data as string that is collected by this output stream at this moment. The encoding will be taken from
+   * {@link ServletResponse#getCharacterEncoding()}. When the latter is <code>null</code>, this method will fail with an
+   * exception.
+   * 
+   * @return The collected data as <code>String</code> that is encoded as {@link ServletResponse#getCharacterEncoding()}
+   *         .
+   * @since 2.0
    */
   public String getStringData() {
     return this.atomicWrapper.getStringData();

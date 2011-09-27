@@ -18,7 +18,6 @@ package org.araneaframework.framework.router;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,7 +32,6 @@ import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.ExpiringServiceContext;
 import org.araneaframework.framework.ManagedServiceContext;
-import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * Router service that kills child services after specified period of inactivity is over. This implementation checks for
@@ -50,8 +48,35 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
   private Map<String, Long> serviceTTLMap;
 
+  private final String keepaliveKey;
+
+  /**
+   * Initializes the base expiring service router with given keys for child-service ID and keep-alive values lookup from
+   * input data.
+   * 
+   * @param serviceKey The key that is used for child-service key lookup from input data.
+   * @param keepaliveKey The key that is used for keep-alive marker lookup from input data.
+   */
+  public BaseExpiringServiceRouterService(String serviceKey, String keepaliveKey) {
+    super(serviceKey);
+    this.keepaliveKey = keepaliveKey;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public Map<String, Long> getServiceTTLMap() {
     return this.serviceTTLMap == null ? null : Collections.unmodifiableMap(this.serviceTTLMap);
+  }
+
+  /**
+   * Returns the key which presence in input data indicates that request is a keep-alive request for this expiring
+   * service router.
+   * 
+   * @return The keep-alive input data key for this expiring service router.
+   */
+  public final String getKeepAliveKey() {
+    return this.keepaliveKey;
   }
 
   @Override
@@ -66,7 +91,7 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     this.serviceTTLMap = null;
 
     if (capsule != null) {
-      ExpiringServiceContext esc = EnvironmentUtil.getExpiringServiceContext(getEnvironment());
+      ExpiringServiceContext esc = getEnvironment().getEntry(ExpiringServiceContext.class);
 
       if (esc != null) {
         this.serviceTTLMap = esc.getServiceTTLMap();
@@ -81,24 +106,21 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
     if (!isKeepAlive(input)) {
       super.action(path, input, output);
-    } else {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(Assert.thisToString(this) + " received keepalive for service '" + getServiceId(input).toString()
-            + "'");
-      }
+    } else if (LOG.isDebugEnabled()) {
+      LOG.debug(Assert.thisToString(this) + " received keep-alive for service '" + getServiceId(input) + "'.");
     }
 
     if (capsule != null) {
-      capsule.setLastActivity(System.currentTimeMillis());
+      capsule.setLastActivityNow();
     }
   }
 
   @Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
-    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
+  protected Environment getChildEnvironment(String serviceId) {
+    Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>(2);
     entries.put(ManagedServiceContext.class, new ServiceRouterContextImpl(serviceId));
     entries.put(ExpiringServiceContext.class, this);
-    return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);
+    return new StandardEnvironment(super.getEnvironment(), entries);
   }
 
   @Override
@@ -107,6 +129,11 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
     getTimeCapsules().remove(serviceId);
   }
 
+  /**
+   * Kills expired service based on the given time-stamp.
+   * 
+   * @param now The time-stamp in milliseconds used for determining whether services have expired.
+   */
   protected void killExpiredServices(long now) {
     synchronized (getTimeCapsules()) {
       for (Iterator<Map.Entry<String, TimeCapsule>> i = getTimeCapsules().entrySet().iterator(); i.hasNext();) {
@@ -114,9 +141,11 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
 
         if (entry.getValue().isExpired(now)) {
           super.closeService(entry.getKey());
+
           i.remove();
+
           if (LOG.isDebugEnabled()) {
-            LOG.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey().toString() + "'.");
+            LOG.debug(Assert.thisToString(this) + " killed expired service '" + entry.getKey() + "'.");
           }
         }
       }
@@ -124,50 +153,90 @@ public abstract class BaseExpiringServiceRouterService extends BaseServiceRouter
   }
 
   /**
-   * Returns the key which presence in {@link org.araneaframework.InputData} indicates that request is a keepalive
-   * request for this {@link BaseExpiringServiceRouterService}.
+   * Checks whether the input data contains a keep-alive parameter. Note that when there is a value for that parameter,
+   * it won't have any effect.
    * 
-   * @return The KeepAlive key for this {@link BaseExpiringServiceRouterService}
+   * @param input Input data for the service.
+   * @return A Boolean that is <code>true</code> when the input data contains a keep-alive parameter.
    */
-  public abstract String getKeepAliveKey();
-
-  protected boolean isKeepAlive(InputData input) {
-    return input.getGlobalData().get(getKeepAliveKey()) != null;
+  protected final boolean isKeepAlive(InputData input) {
+    return input.getGlobalData().containsKey(this.keepaliveKey);
   }
 
+  /**
+   * Returns <tt>TimeCapsule</tt>s as a not <code>null</code> unmodifiable map.
+   * 
+   * @return An unmodifiable map of <tt>TimeCapsule</tt>s.
+   */
   private synchronized Map<String, TimeCapsule> getTimeCapsules() {
     if (this.timeCapsules == null) {
-      this.timeCapsules = Collections.synchronizedMap(new HashMap<String, TimeCapsule>());
+      this.timeCapsules = Collections.synchronizedMap(new HashMap<String, TimeCapsule>(0));
     }
-    return timeCapsules;
+    return this.timeCapsules;
   }
 
+  /**
+   * Helper class for storing information about a time-to-live value of a service and to check whether the service has
+   * expired.
+   * 
+   * @author Taimo Peelo (taimo@araneaframework.org)
+   */
   public static class TimeCapsule implements Serializable {
 
-    private Long ttl;
+    private final long ttl;
 
-    private Long lastActivity;
+    private long lastActivity;
 
-    public TimeCapsule(Long timeToLive) {
+    /**
+     * Creates a new <tt>TimeCapsule</tt> with given time-to-live information.
+     * 
+     * @param timeToLive A time-to-live value in milliseconds (all integer values accepted).
+     */
+    public TimeCapsule(long timeToLive) {
       this.ttl = timeToLive;
-      this.lastActivity = new Date().getTime();
+      setLastActivityNow();
     }
 
-    public void setLastActivity(Long lastActivity) {
-      this.lastActivity = lastActivity;
+    /**
+     * Updates the last activity time-stamp to the current time-stamp.
+     */
+    public void setLastActivityNow() {
+      this.lastActivity = System.currentTimeMillis();
     }
 
-    public Long getTimeToLive() {
+    /**
+     * Provides the time-to-live value used by this helper.
+     * 
+     * @return A time-to-live value in milliseconds.
+     */
+    public long getTimeToLive() {
       return this.ttl;
     }
 
+    /**
+     * Checks whether this <tt>TimeCapsule</tt> is expired.
+     * 
+     * @param time The time-stamp in milliseconds against which this object is tested.
+     * @return A Boolean that is <code>true</code> when this <tt>TimeCapsule</tt> is expired in terms of the given
+     *         time-stamp.
+     */
     public boolean isExpired(long time) {
       return time > this.lastActivity + this.ttl;
     }
   }
 
+  /**
+   * Extends parent service router context with expiring service support.
+   * 
+   * @author Taimo Peelo (taimo@araneaframework.org)
+   */
   protected class ServiceRouterContextImpl extends BaseServiceRouterService.ServiceRouterContextImpl {
 
+    /**
+     * Creates a new service router context for given child service ID.
+     * 
+     * @param serviceId The child service ID.
+     */
     protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }

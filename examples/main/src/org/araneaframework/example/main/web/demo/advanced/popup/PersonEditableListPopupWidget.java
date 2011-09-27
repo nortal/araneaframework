@@ -31,7 +31,7 @@ import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
 import org.araneaframework.example.main.message.PopupMessageFactory;
 import org.araneaframework.example.main.web.demo.simple.NameWidget;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.context.DefaultHandler;
 import org.araneaframework.http.HttpOutputData;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
@@ -253,7 +253,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
     }
   }
 
-  private static class MyHandler implements FlowContext.Handler<String> {
+  private static class MyHandler extends DefaultHandler<String> {
 
     private final BeanFormWidget<PersonMO> form;
 
@@ -264,9 +264,7 @@ public class PersonEditableListPopupWidget extends TemplateBaseWidget {
       this.rowObject = rowObject;
     }
 
-    public void onCancel() throws Exception {
-    }
-
+    @Override
     public void onFinish(String returnValue) {
       this.rowObject.setName(returnValue);
       this.form.readFromBean(this.rowObject);

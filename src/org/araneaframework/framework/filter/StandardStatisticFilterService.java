@@ -112,7 +112,7 @@ public class StandardStatisticFilterService extends BaseFilterService {
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     long start = System.currentTimeMillis();
-    this.childService._getService().action(path, input, output);
+    getChildService()._getService().action(path, input, output);
     long duration = System.currentTimeMillis() - start;
 
     if (this.message != null && this.threshold < duration && LOG.isInfoEnabled()) {

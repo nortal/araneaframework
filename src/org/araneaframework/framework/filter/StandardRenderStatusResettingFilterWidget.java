@@ -33,7 +33,7 @@ public class StandardRenderStatusResettingFilterWidget extends BaseFilterWidget 
 
   @Override
   protected void render(OutputData output) throws Exception {
-    NotRenderedMessage.INSTANCE.send(null, this.childWidget);
+    NotRenderedMessage.INSTANCE.send(null, getChildWidget());
     super.render(output);
   }
 }

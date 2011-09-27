@@ -17,7 +17,6 @@
 package org.araneaframework.mock.servlet.filter;
 
 import org.araneaframework.Environment;
-import org.araneaframework.InputData;
 import org.araneaframework.framework.router.BaseServiceRouterService;
 import org.araneaframework.mock.MockUtil;
 
@@ -26,14 +25,8 @@ import org.araneaframework.mock.MockUtil;
  */
 public class MockBaseServiceRouterService extends BaseServiceRouterService {
 
-  @Override
-  protected String getServiceId(InputData input) throws Exception {
-    return input.getGlobalData().get("serviceId");
-  }
-
-  @Override
-  protected String getServiceKey() throws Exception {
-    return "serviceId";
+  public MockBaseServiceRouterService() {
+    super("serviceId");
   }
 
   protected Environment getChildEnvironment(@SuppressWarnings("unused") Object serviceId) throws Exception {

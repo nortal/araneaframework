@@ -50,7 +50,7 @@ import org.araneaframework.uilib.core.PopupFlowWrapperWidget;
  */
 public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget implements FlowContext {
 
-  private Widget widget;
+  private final Widget widget;
 
   private ClientSideReturnService<String> finishingService;
 
@@ -77,7 +77,7 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), FlowContext.class, this);
   }
 
@@ -131,8 +131,8 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
 
   private void sendRedirect(String rndThreadId) throws Exception {
     TopServiceContext topCtx = getTopServiceContext();
-    ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(
-        ((HttpInputData) getInputData()).getContainerURL(), topCtx.getCurrentId(), rndThreadId));
+    ((HttpOutputData) getOutputData()).sendRedirect(getResponseURL(((HttpInputData) getInputData()).getContainerURL(),
+        topCtx.getCurrentId(), rndThreadId));
   }
 
   protected TopServiceContext getTopServiceContext() {
@@ -155,7 +155,8 @@ public class StandalonePopupFlowWrapperWidget extends BaseApplicationWidget impl
     replace(flow, null);
   }
 
-  public void replace(Widget flow, Configurator configurator) {}
+  public void replace(Widget flow, Configurator configurator) {
+  }
 
   public void reset(EnvironmentAwareCallback callback) {
     throw new IllegalStateException();

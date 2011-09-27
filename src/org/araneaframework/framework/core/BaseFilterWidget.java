@@ -45,23 +45,44 @@ import org.araneaframework.framework.FilterWidget;
  */
 public class BaseFilterWidget extends BaseWidget implements FilterWidget {
 
-  protected Widget childWidget;
+  /**
+   * The child widget where the filter can forward requests.
+   */
+  private Widget childWidget;
 
-  public BaseFilterWidget() {}
+  /**
+   * Creates a new filter service with no child widget at first.
+   */
+  public BaseFilterWidget() {
+  }
 
+  /**
+   * Creates a new filter widget with given child widget.
+   * 
+   * @param childWidget The child widget where this filter can forward requests.
+   */
   public BaseFilterWidget(Widget childWidget) {
     setChildWidget(childWidget);
   }
 
   /**
-   * Sets the child to childWidget.
+   * Sets the child widget where this filter can forward requests. The child widget cannot be changed once a
+   * child-widget is initialized.
+   * 
+   * @param childWidget The child widget where this filter can forward requests.
    */
   public void setChildWidget(Widget childWidget) {
-    Assert.notNull(this, childWidget, "Filter cannot have a null child!");
+    Assert.isTrue(!isInitialized(), "Cannot specify a child service more than once or after filter is initialized.");
     this.childWidget = childWidget;
   }
 
-  public Widget getChildWidget() {
+  /**
+   * Provides access to the underlying child widget.
+   * 
+   * @return The child widget used by this filter.
+   * @since 2.0
+   */
+  protected Widget getChildWidget() {
     return this.childWidget;
   }
 
@@ -102,7 +123,10 @@ public class BaseFilterWidget extends BaseWidget implements FilterWidget {
   }
 
   /**
-   * By default returns the widget's Environment. The child is initilized with the return value of this method.
+   * Provides a custom environment that can be used for initializing child-widget. Returns the environment of this
+   * widget by default.
+   * 
+   * @return The environment to be passed on to the child-widget.
    */
   protected Environment getChildWidgetEnvironment() {
     return getEnvironment();

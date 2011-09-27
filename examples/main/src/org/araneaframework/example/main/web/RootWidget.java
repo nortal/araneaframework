@@ -33,7 +33,8 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
 
   private Widget topWidget;
 
-  public RootWidget() {}
+  public RootWidget() {
+  }
 
   public RootWidget(Widget topWidget) {
     this.topWidget = topWidget;
@@ -54,7 +55,7 @@ public class RootWidget extends BaseUIWidget implements SecurityContext {
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), SecurityContext.class, this);
   }
 

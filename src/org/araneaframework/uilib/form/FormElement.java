@@ -41,9 +41,11 @@ import org.araneaframework.uilib.util.Event;
 /**
  * Represents a simple "leaf" form element that holds a {@link Control} and its {@link Data}.
  * 
+ * @param <C> The internal data type for the control, also the value type the converter will convert from.
+ * @param <D> The destination data type for the form element, also the value type the converter will convert to.
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
-public class FormElement<C,D> extends GenericFormElement implements FormElementContext<C,D>, RenderStateAware {
+public class FormElement<C, D> extends GenericFormElement implements FormElementContext<C, D>, RenderStateAware {
 
   /**
    * The property key for custom {@link FormElementValidationErrorRenderer} that may be set for this {@link FormElement}
@@ -171,9 +173,10 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   }
 
   /**
-   * Finds a {@link BaseConverter}corresponding to current control and data item.
+   * Finds a {@link BaseConverter} corresponding to current control and data item. Throws {@link AraneaRuntimeException}
+   * if converter cannot be found.
    * 
-   * @throws AraneaRuntimeException if converter cannot be found.
+   * @return A converter that can be used with this form element.
    */
   @SuppressWarnings("unchecked")
   public Converter<C, D> findConverter() {
@@ -233,16 +236,32 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     return this.data != null ? this.data.getValue() : null;
   }
 
+  /**
+   * Sets the value for this form element. Value is assigned only when this form element has a {@link Data} defined.
+   * During value assigning, the form element won't be validated. Therefore, invalid (in terms of the constraints) can
+   * be assigned, too.
+   * 
+   * @param value The value to assign to this form element.
+   */
   public void setValue(D value) {
     if (this.data != null) {
       this.data.setValue(value);
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isMandatory() {
     return this.mandatory;
   }
 
+  /**
+   * Method for specifying whether the form element is mandatory (must have a not <code>null</code> value). By default,
+   * form elements are not mandatory.
+   * 
+   * @param mandatory A Boolean that is <code>true</code> when form element must have a value to be valid.
+   */
   public void setMandatory(boolean mandatory) {
     this.mandatory = mandatory;
   }
@@ -273,12 +292,16 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
   }
 
   /**
-   * @return {@link FormElementValidationErrorRenderer} which will take care of rendering validation error messages
-   *         produced by this {@link FormElement}.
+   * Resolves and returns the validation errors renderer for this form element. The renderer takes care of rendering
+   * validation error messages produced by this form element.
+   * 
+   * @return A validation errors renderer for this form element (never <code>null</code>).
+   * @see StandardFormElementValidationErrorRenderer
    * @since 1.1
    */
   public FormElementValidationErrorRenderer getFormElementValidationErrorRenderer() {
-    FormElementValidationErrorRenderer result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
+    FormElementValidationErrorRenderer result = null;
+    result = (FormElementValidationErrorRenderer) getProperty(ERROR_RENDERER_PROPERTY_KEY);
 
     if (result == null) {
       result = ConfigurationUtil.getFormElementErrorRenderer(getEnvironment());
@@ -291,7 +314,13 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
     return result;
   }
 
-  /** @since 1.1 */
+  /**
+   * Method for specifying custom validation errors renderer for this form element.
+   * 
+   * @param renderer A form element validation errors renderer.
+   * @see StandardFormElementValidationErrorRenderer
+   * @since 1.1
+   */
   public void setFormElementValidationErrorRenderer(FormElementValidationErrorRenderer renderer) {
     setProperty(ERROR_RENDERER_PROPERTY_KEY, renderer);
   }
@@ -352,7 +381,7 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    * @throws Exception
    */
   @Override
-  public Object getViewModel() {
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -524,15 +553,15 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
    */
   public class ViewModel extends GenericFormElement.ViewModel {
 
-    private Control.ViewModel control;
+    private final Control.ViewModel control;
 
-    private String label;
+    private final String label;
 
-    private boolean valid;
+    private final boolean valid;
 
-    private boolean disabled;
+    private final boolean disabled;
 
-    private Object value;
+    private final Object value;
 
     protected boolean mandatory;
 
@@ -579,6 +608,12 @@ public class FormElement<C,D> extends GenericFormElement implements FormElementC
       return FormElement.this.getFormElementValidationErrorRenderer();
     }
 
+    /**
+     * Provides the rendered error messages of this form element. It's a shortcut of
+     * <code>getFormElementValidationErrorRenderer()}.getClientRenderText(FormElement.this)</code>.
+     * 
+     * @return Rendered error messages of this form element, or <code>null</code> when element is valid.
+     */
     public String getRenderedErrorMessages() {
       return FormElement.this.getFormElementValidationErrorRenderer().getClientRenderText(FormElement.this);
     }

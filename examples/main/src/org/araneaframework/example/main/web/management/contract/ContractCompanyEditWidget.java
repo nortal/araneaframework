@@ -16,14 +16,13 @@
 
 package org.araneaframework.example.main.web.management.contract;
 
-import org.araneaframework.example.main.web.management.company.CompanyListWidget;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.core.event.ProxyEventListener;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.CompanyMO;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.example.main.web.management.company.CompanyListWidget;
+import org.araneaframework.framework.context.DefaultHandler;
 
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
@@ -35,7 +34,7 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
   private CompanyMO company = null;
 
   public CompanyMO getCompany() {
-    return company;
+    return this.company;
   }
 
   public void setCompany(CompanyMO company) {
@@ -49,14 +48,13 @@ public class ContractCompanyEditWidget extends TemplateBaseWidget {
   }
 
   public void handleEventChooseCompany() throws Exception {
-    getFlowCtx().start(new CompanyListWidget(false), new FlowContext.Handler<Long>() {
+    getFlowCtx().start(new CompanyListWidget(false), new DefaultHandler<Long>() {
 
-      public void onFinish(Long id) throws Exception {
+      @Override
+      public void onFinish(Long id) {
         setCompany(getGeneralDAO().getById(CompanyMO.class, id));
         LOG.debug("Company with id of " + id + " set to this contract");
       }
-
-      public void onCancel() throws Exception {}
     });
   }
 }

@@ -25,9 +25,9 @@ import org.araneaframework.core.ApplicationWidget;
 
 /**
  * This context provides support for flow navigation and nesting. A flow is started using
- * {@link #start(Widget, org.araneaframework.framework.FlowContext.Configurator, org.araneaframework.framework.FlowContext.Handler)}
- * and continues to be active until it explicitly returns control to the caller using {@link #finish(Object)} or
- * {@link #cancel()}.
+ * {@link #start(Widget, Configurator, Handler)} and continues to be active until it explicitly returns control to the
+ * caller using {@link #finish(Object)} or {@link #cancel()}. Another option is that all flows are cancelled using
+ * {@link #reset(EnvironmentAwareCallback)};
  * 
  * @see org.araneaframework.framework.container.StandardFlowContainerWidget
  * @author Toomas Römer (toomas@webmedia.ee)
@@ -41,7 +41,26 @@ public interface FlowContext extends Serializable {
    * @since 1.1 (constants added), 2.0 (refactored in favor of enum)
    */
   enum Transition {
-    START, FINISH, CANCEL, REPLACE, RESET
+    /**
+     * Marks a flow start transition.
+     */
+    START,
+    /**
+     * Marks a flow finish transition.
+     */
+    FINISH,
+    /**
+     * Marks a flow canceling transition.
+     */
+    CANCEL,
+    /**
+     * Marks a flow replace-with-another-flow transition.
+     */
+    REPLACE,
+    /**
+     * Marks a flow context reset transition.
+     */
+    RESET
   }
 
   /**
@@ -132,6 +151,7 @@ public interface FlowContext extends Serializable {
   /**
    * Adds an environment entry that is visible in all sub-flows under the given <code>scope</code>.
    * 
+   * @param <T> The type of environment entry value (ant thus environment entry key class type, too).
    * @param scope The widget that makes the environment entry visible to its all sub-flows.
    * @param entryId The environment entry key.
    * @param envEntry The environment entry value.
@@ -147,10 +167,10 @@ public interface FlowContext extends Serializable {
   void setTransitionHandler(TransitionHandler handler);
 
   /**
-   * Returns currently active <code>FlowContext.TransitionHandler</code>. If the most current child is a
-   * {@link FlowContextWidget}, it will take its currently active <code>FlowContext.TransitionHandler</code> recursively
-   * (since 1.2.2).
+   * Returns currently active transition handler. If the most current child is a {@link FlowContextWidget}, it will take
+   * its currently active transition handler recursively (since 1.2.2).
    * 
+   * @return Currently active transition handler (never <code>null</code>).
    * @since 1.1
    */
   TransitionHandler getTransitionHandler();
@@ -164,16 +184,13 @@ public interface FlowContext extends Serializable {
      * Callback method that will be called when the flow finishes by calling {@link FlowContext#finish(Object)}.
      * 
      * @param returnValue The value that was passed to {@link FlowContext#finish(Object)}.
-     * @throws Exception Any exception that may occur.
      */
-    void onFinish(T returnValue) throws Exception;
+    void onFinish(T returnValue);
 
     /**
      * Callback method that will be called when the flow finishes by calling {@link FlowContext#cancel()}.
-     * 
-     * @throws Exception Any exception that may occur.
      */
-    void onCancel() throws Exception;
+    void onCancel();
   }
 
   /**

@@ -73,7 +73,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
   }
 
   @Override
-  public BaseControl<T>.ViewModel getViewModel() {
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -101,9 +101,11 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
     validate();
   }
 
-  public void convert() {}
+  public void convert() {
+  }
 
-  public void validate() {}
+  public void validate() {
+  }
 
   /**
    * Sub controls should implement this method to store the value of this control. The <code>request</code> is provided
@@ -111,7 +113,8 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
    * 
    * @param request The HTTP request containing request data.
    */
-  protected void readFromRequest(HttpInputData request) {}
+  protected void readFromRequest(HttpInputData request) {
+  }
 
   // *********************************************************************
   // * INTERNAL METHODS
@@ -209,7 +212,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
 
     @Override
     public void update(InputData input) {
-      isReadFromRequest = false;
+      BaseControl.this.isReadFromRequest = false;
       super.update(input);
     }
   }
@@ -223,7 +226,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
    * 
    * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
    */
-  public class ViewModel implements Control.ViewModel {
+  public class ViewModel extends BaseApplicationWidget.ViewModel implements Control.ViewModel {
 
     protected String controlType;
 
@@ -250,6 +253,7 @@ public abstract class BaseControl<T> extends BaseApplicationWidget implements Se
       this.label = BaseControl.this.getLabel();
     }
 
+    @Override
     public Scope getScope() {
       return BaseControl.this.getScope();
     }

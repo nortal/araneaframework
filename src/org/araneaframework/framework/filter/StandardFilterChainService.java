@@ -46,8 +46,8 @@ public class StandardFilterChainService extends BaseFilterService {
       ListIterator<FilterService> i = this.filterChain.listIterator(this.filterChain.size());
       while (i.hasPrevious()) {
         FilterService filter = i.previous();
-        filter.setChildService(this.childService);
-        this.childService = filter;
+        filter.setChildService(getChildService());
+        setChildService(filter);
       }
     }
     this.filterChain = null;

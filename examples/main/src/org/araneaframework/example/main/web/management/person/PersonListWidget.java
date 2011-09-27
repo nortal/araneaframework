@@ -26,6 +26,7 @@ import org.araneaframework.backend.list.memorybased.Expression;
 import org.araneaframework.backend.list.memorybased.expression.compare.EqualsExpression;
 import org.araneaframework.backend.list.memorybased.expression.constant.ValueExpression;
 import org.araneaframework.backend.list.memorybased.expression.variable.VariableExpression;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.data.IContractDAO;
 import org.araneaframework.example.main.business.model.PersonMO;
@@ -53,7 +54,8 @@ public class PersonListWidget extends TemplateBaseWidget {
 
   private ListWidget<PersonMO> list;
 
-  public PersonListWidget() {}
+  public PersonListWidget() {
+  }
 
   /**
    * @param editMode whether to allow add or remove persons.
@@ -81,14 +83,16 @@ public class PersonListWidget extends TemplateBaseWidget {
     this.list.addField("salary", "persons.salary").range();
 
     this.list.addFilter(new ListFilter() {
-      
+
       public Expression buildExpression(Map<String, Object> data) {
         return new EqualsExpression(new VariableExpression("test"), new ValueExpression<Object>(data.get("test")));
       }
 
-      public void init(Environment env) {}
-      
-      public void destroy() {}
+      public void init(Environment env) {
+      }
+
+      public void destroy() {
+      }
     });
 
     this.list.setInitialOrder("name", true);
@@ -100,20 +104,25 @@ public class PersonListWidget extends TemplateBaseWidget {
     addWidget("personList", this.list);
   }
 
-  protected void refreshList() throws Exception {
-    this.list.getDataProvider().refreshData();
+  protected void refreshList() {
+    try {
+      this.list.getDataProvider().refreshData();
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 
   public void handleEventAdd() {
     getFlowCtx().start(new PersonAddEditWidget(), null, new FlowContext.Handler<Long>() {
 
-      public void onFinish(Long returnValue) throws Exception {
+      public void onFinish(Long returnValue) {
         LOG.debug("Person added with ID=" + returnValue + " sucessfully");
         refreshList();
       }
 
       // ignore call cancel
-      public void onCancel() throws Exception {}
+      public void onCancel() {
+      }
     });
   }
 
@@ -143,11 +152,12 @@ public class PersonListWidget extends TemplateBaseWidget {
     PersonAddEditWidget newFlow = new PersonAddEditWidget(id);
     getFlowCtx().start(newFlow, new FlowContext.Handler<Object>() {
 
-      public void onFinish(Object returnValue) throws Exception {
+      public void onFinish(Object returnValue) {
         refreshList();
       }
 
-      public void onCancel() throws Exception {}
+      public void onCancel() {
+      }
     });
   }
 
@@ -172,7 +182,7 @@ public class PersonListWidget extends TemplateBaseWidget {
     }
 
     @Override
-    public List<PersonMO> loadData() throws Exception {
+    public List<PersonMO> loadData() {
       return getGeneralDAO().getAll(PersonMO.class);
     }
   }

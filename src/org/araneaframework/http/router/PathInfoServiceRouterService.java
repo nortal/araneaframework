@@ -36,14 +36,13 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
 
   private String pathInfo;
 
-  @Override
-  protected Object getServiceIdFromInput(InputData input) throws Exception {
-    return getPathInfo(input)[0];
+  public PathInfoServiceRouterService() {
+    super("pathInfoServiceId");
   }
 
   @Override
-  protected String getServiceKey() throws Exception {
-    return "pathInfoServiceId";
+  protected String getServiceIdFromInput(InputData input) {
+    return getPathInfo(input)[0];
   }
 
   @Override
@@ -79,7 +78,7 @@ public class PathInfoServiceRouterService extends BaseServiceRouterService {
   }
 
   @Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
+  protected Environment getChildEnvironment(String serviceId) {
     Map<Class<?>, Object> entries = new HashMap<Class<?>, Object>();
     entries.put(PathInfoServiceContext.class, new ServiceRouterContextImpl(serviceId));
     return new StandardEnvironment(super.getChildEnvironment(serviceId), entries);

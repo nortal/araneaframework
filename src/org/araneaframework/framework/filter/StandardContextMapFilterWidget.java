@@ -44,7 +44,7 @@ public class StandardContextMapFilterWidget extends BaseFilterWidget {
 
   @Override
   protected void init() throws Exception {
-    this.childWidget._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), this.contexts));
+    getChildWidget()._getComponent().init(getScope(), new StandardEnvironment(getEnvironment(), this.contexts));
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Following contexts were added to environment: " + this.contexts);

@@ -45,7 +45,7 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
   /**
    * The child service that is made relocatable.
    */
-  protected Service child;
+  private Service child;
 
   // *******************************************************************
   // PUBLIC METHODS
@@ -54,9 +54,7 @@ public class RelocatableDecorator extends BaseService implements RelocatableWidg
   /**
    * Constructs a new <code>RelocatableDecorator</code> and sets its child service to child.
    * 
-   * @param child import org.araneaframework.Relocatable; import org.araneaframework.Relocatable; The service that
-   *          should be relocatable. i import org.araneaframework.Relocatable; import org.araneaframework.Relocatable;
-   *          mport org.araneaframework.Relocatable; import org.araneaframework.Relocatable;
+   * @param child The service that should be relocatable.
    */
   public RelocatableDecorator(Service child) {
     this.child = child;

@@ -99,7 +99,7 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
 
   @Override
   protected void init() throws Exception {
-    this.childService._getComponent().init(getScope(), getChildEnvironment());
+    getChildService()._getComponent().init(getScope(), getChildEnvironment());
   }
 
   /**

@@ -38,6 +38,9 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public class BaseWidget extends BaseService implements Widget {
 
+  /**
+   * {@inheritDoc}
+   */
   public Widget.Interface _getWidget() {
     return new WidgetImpl();
   }
@@ -123,11 +126,14 @@ public class BaseWidget extends BaseService implements Widget {
    */
   protected class WidgetImpl implements Widget.Interface {
 
+    /**
+     * {@inheritDoc}
+     */
     public void update(InputData input) {
       Assert.notNullParam(this, input, "input");
 
       _startCall();
-      BaseWidget.this.currentInputData = input;
+      setInputOutputData(input, null);
       try {
         BaseWidget.this.update(input);
       } catch (Exception e) {
@@ -137,16 +143,19 @@ public class BaseWidget extends BaseService implements Widget {
           ExceptionUtil.uncheckException(e2);
         }
       } finally {
-        BaseWidget.this.currentInputData = null;
+        setInputOutputData(null, null);
         _endCall();
       }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void event(Path path, InputData input) {
       Assert.notNullParam(this, input, "input");
 
       _startCall();
-      BaseWidget.this.currentInputData = input;
+      setInputOutputData(input, null);
 
       try {
         BaseWidget.this.event(path, input);
@@ -157,16 +166,19 @@ public class BaseWidget extends BaseService implements Widget {
           ExceptionUtil.uncheckException(e2);
         }
       } finally {
-        BaseWidget.this.currentInputData = null;
+        setInputOutputData(null, null);
         _endCall();
       }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void render(OutputData output) {
       Assert.notNullParam(this, output, "output");
 
       _startCall();
-      BaseWidget.this.currentOutputData = output;
+      setInputOutputData(null, output);
 
       try {
         BaseWidget.this.render(output);
@@ -177,7 +189,7 @@ public class BaseWidget extends BaseService implements Widget {
           ExceptionUtil.uncheckException(e2);
         }
       } finally {
-        BaseWidget.this.currentOutputData = null;
+        setInputOutputData(null, null);
         _endCall();
       }
     }

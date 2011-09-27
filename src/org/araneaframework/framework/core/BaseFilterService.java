@@ -27,36 +27,59 @@ import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.FilterService;
 
 /**
- * A filter service is a Service which filters requests to its child service. A filter overrides one of the methods:
+ * A filter service is a service, which filters requests to its child-service. A filter should override one of methods:
  * <ul>
  * <li><code>action(Path, InputData, OutputData)</code></li>
  * </ul>
  * and does the filtering by allowing the action to be invoked on the child or not. This class is a skeleton which lets
- * all the requests through, sets the child, handles the initilization and destroying of the child.
+ * all the requests through, sets the child, handles the initialization and destroying of the child.
  * <p>
- * The child is initilized with <code>getChildServiceEnvironment()</code> which by default returns this component's
+ * The child is initialized with <code>getChildServiceEnvironment()</code> which, by default, returns this component's
  * Environment. For alternate environments it should be overridden.
- * </p>
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class BaseFilterService extends BaseService implements FilterService {
 
-  protected Service childService;
+  /**
+   * The child service where the filter can forward requests.
+   */
+  private Service childService;
 
-  public BaseFilterService() {}
+  /**
+   * Creates a new filter service with no child service at first.
+   */
+  public BaseFilterService() {
+  }
 
+  /**
+   * Creates a new filter service with given child service.
+   * 
+   * @param childService The child service where this filter can forward requests.
+   */
   public BaseFilterService(Service childService) {
     setChildService(childService);
   }
 
   /**
-   * Sets the child service.
+   * Sets the child service where this filter can forward requests. The child service cannot be changed once a
+   * child-service is initialized.
    * 
-   * @param childService
+   * @param childService The child service where this filter can forward requests.
    */
   public void setChildService(Service childService) {
+    Assert.isTrue(!isInitialized(), "Cannot specify a child service more than once or after filter is initialized.");
     this.childService = childService;
+  }
+
+  /**
+   * Provides access to the underlying child service.
+   * 
+   * @return The child service used by this filter.
+   * @since 2.0
+   */
+  protected Service getChildService() {
+    return this.childService;
   }
 
   @Override
@@ -81,7 +104,10 @@ public class BaseFilterService extends BaseService implements FilterService {
   }
 
   /**
-   * Returns the Environment of this service by default. The child is initilized with this method. Meant for overriding.
+   * Provides a custom environment that can be used for initializing child-service. Returns the environment of this
+   * service by default.
+   * 
+   * @return The environment to be passed on to the child-service.
    */
   protected Environment getChildEnvironment() {
     return getEnvironment();

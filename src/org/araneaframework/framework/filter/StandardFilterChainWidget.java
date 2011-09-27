@@ -26,8 +26,8 @@ import org.araneaframework.framework.core.BaseFilterWidget;
  * of widgets needs to be specified so that requests/responses would go through them in the specified order. Therefore,
  * this widget takes (upon initialization) the specified list of widgets, takes the last one, makes it the parent of
  * current child widget, and updates the current child widget to the last widget, and so on until all widgets are
- * processed the same way. The result is a chain of widgets in the specified order. The list of widgets is released
- * when the chain is completed.
+ * processed the same way. The result is a chain of widgets in the specified order. The list of widgets is released when
+ * the chain is completed.
  * 
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
  */
@@ -46,8 +46,8 @@ public class StandardFilterChainWidget extends BaseFilterWidget {
       ListIterator<FilterWidget> i = this.filterChain.listIterator(this.filterChain.size());
       while (i.hasPrevious()) {
         FilterWidget filter = i.previous();
-        filter.setChildWidget(this.childWidget);
-        this.childWidget = filter;
+        filter.setChildWidget(getChildWidget());
+        setChildWidget(filter);
       }
     }
 

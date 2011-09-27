@@ -17,7 +17,6 @@
 package org.araneaframework;
 
 import java.io.Serializable;
-import org.araneaframework.core.exception.NoSuchEnvironmentEntryException;
 
 /**
  * A special data structure providing encapsulation of data needed by different components. Every Aranea component has
@@ -55,13 +54,13 @@ public interface Environment extends Serializable {
   <T> T getEntry(Class<T> key);
 
   /**
-   * Does the same as {@link #getEntry(Class)}, but throws a {@link NoSuchEnvironmentEntryException} if entry cannot be
+   * Does the same as {@link #getEntry(Class)}, but throws a <tt>NoSuchEnvironmentEntryException</tt> if entry cannot be
    * found.
    * 
    * @param <T> The type of the key class, also the type of the returned object instance.
    * @param key A class used as a key in the environment, must not be <code>null</code>.
    * @return An item found in the environment.
-   * @throws NoSuchEnvironmentEntryException If environment entry could not be found.
+   * @see org.araneaframework.core.exception.NoSuchEnvironmentEntryException
    */
-  <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException;
+  <T> T requireEntry(Class<T> key);
 }

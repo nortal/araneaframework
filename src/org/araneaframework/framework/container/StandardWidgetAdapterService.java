@@ -27,7 +27,8 @@ import org.araneaframework.core.StandardPath;
 import org.araneaframework.framework.core.BaseFilterWidget;
 
 /**
- * Service that contains a widget.
+ * Service that delegates requests to child widget. The incoming request is expected to be either action or event
+ * depending on the input data parameters. If action data is not present, the request will be treated as event.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
@@ -35,15 +36,6 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
 
   private static final Log LOG = LogFactory.getLog(StandardWidgetAdapterService.class);
 
-  /**
-   * If <code>propagateAsAction(InputData)</code> returns true then the action is propagated to the child. Otherwise if
-   * the request is the first one then:
-   * <ul>
-   * <li><code>update(input)</code></li>
-   * <li><code>event(path, input)</code></li>
-   * </ul>
-   * are called on the child, if not then just <code>render(output).</code>
-   */
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
     if (hasAction(input)) {
@@ -53,62 +45,74 @@ public class StandardWidgetAdapterService extends BaseFilterWidget {
         LOG.debug("Routing action to widget '" + actionPath + "'");
       }
 
-      this.childWidget._getService().action(actionPath, input, output);
+      getChildWidget()._getService().action(actionPath, input, output);
     } else {
 
       if (LOG.isDebugEnabled()) {
         LOG.debug("Translating action() call to widget update()/event()/render() calls.");
       }
 
-      this.childWidget._getWidget().update(input);
+      getChildWidget()._getWidget().update(input);
+
       if (hasEvent(input)) {
         Path eventPath = getEventPath(input);
+
         if (LOG.isDebugEnabled()) {
           LOG.debug("Routing event to widget '" + eventPath + "'");
         }
-        this.childWidget._getWidget().event(eventPath, input);
+
+        getChildWidget()._getWidget().event(eventPath, input);
       }
-      this.childWidget._getWidget().render(output);
+
+      getChildWidget()._getWidget().render(output);
     }
   }
 
   /**
-   * Extracts the path from the input and returns it. This implementation uses the
-   * {@link ApplicationWidget#EVENT_PATH_KEY} parameter in the request and expects the event path to be a dot-separated
-   * string.
+   * Extracts the event target path from the input and returns it. Throws a runtime exception when the input data does
+   * not contain event path data
    * 
+   * @param input Input data for the service.
+   * @return The event path form input data (never <code>null</code>).
+   * @see ApplicationWidget#EVENT_PATH_KEY
    * @since 1.1
    */
-  protected Path getEventPath(InputData input) {
+  protected static Path getEventPath(InputData input) {
     return new StandardPath(input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY));
   }
 
   /**
-   * Returns true if the request contains an event.
+   * Checks whether the input data contains event data.
    * 
+   * @param input Input data for the service.
+   * @return A Boolean that is <code>true</code> when the input data contains an event data to a widget.
    * @since 1.1
    */
-  protected boolean hasEvent(InputData input) {
+  protected static boolean hasEvent(InputData input) {
     return input.getGlobalData().get(ApplicationWidget.EVENT_PATH_KEY) != null;
   }
 
   /**
-   * Extracts the path from the input and returns it. This implementation uses the
-   * {@link ApplicationService#ACTION_PATH_KEY} parameter in the request and expects the action path to be a
-   * dot-separated string.
+   * Extracts the action target path from the input and returns it. Throws a runtime exception when the input data does
+   * not contain action path data
    * 
+   * @param input Input data for the service.
+   * @return The action path form input data (never <code>null</code>).
+   * @see ApplicationService#ACTION_PATH_KEY
    * @since 1.1
    */
-  protected Path getActionPath(InputData input) {
+  protected static Path getActionPath(InputData input) {
     return new StandardPath(input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY));
   }
 
   /**
-   * Returns true if the request contains an action.
+   * Checks whether the input data contains action data.
    * 
+   * @param input Input data for the service.
+   * @return A Boolean that is <code>true</code> when the input data contains an event data to a service/widget.
    * @since 1.1
    */
-  protected boolean hasAction(InputData input) {
+  protected static boolean hasAction(InputData input) {
     return input.getGlobalData().get(ApplicationService.ACTION_PATH_KEY) != null;
   }
 }

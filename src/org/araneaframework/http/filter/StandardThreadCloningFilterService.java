@@ -99,7 +99,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
       // Do nothing. Here used to be redirect, which caused problems. However, redirect is not necessary. It works
       // without it and the browser does not copy the old thread data to the new one.
     } else if (snapshotRequested(input)) {
-      this.threadSnapshot = takeSnapshot((RelocatableService) this.childService);
+      this.threadSnapshot = takeSnapshot((RelocatableService) getChildService());
       super.action(path, input, output);
     } else {
       super.action(path, input, output);
@@ -112,7 +112,7 @@ public class StandardThreadCloningFilterService extends BaseFilterService implem
       LOG.debug("Attempting to clone current thread ('" + getThreadServiceCtx().getCurrentId() + "').");
     }
 
-    RelocatableService clone = clone((RelocatableService) this.childService);
+    RelocatableService clone = clone((RelocatableService) getChildService());
     String cloneServiceId = startClonedThread(clone);
     clone._getService().action(path, input, output);
 

@@ -54,7 +54,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
   }
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), FormContext.class, this);
   }
 
@@ -534,7 +534,7 @@ public class FormWidget extends GenericFormElement implements FormContext {
    * @return {@link ViewModel}.
    */
   @Override
-  public Object getViewModel() {
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 

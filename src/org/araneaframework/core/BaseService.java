@@ -31,10 +31,23 @@ import org.araneaframework.core.util.ExceptionUtil;
  */
 public class BaseService extends BaseComponent implements Service {
 
-  protected transient InputData currentInputData;
+  /**
+   * Stores the current input data. This variable is given the current input data value before the
+   * {@link #action(Path, InputData, OutputData)} method is called on this service. On the other hand, the value is
+   * removed when the same method completes.
+   */
+  private transient InputData currentInputData;
 
-  protected transient OutputData currentOutputData;
+  /**
+   * Stores the current output data. This variable is given the current output data value before the
+   * {@link #action(Path, InputData, OutputData)} method is called on this service. On the other hand, the value is
+   * removed when the same method completes.
+   */
+  private transient OutputData currentOutputData;
 
+  /**
+   * {@inheritDoc}
+   */
   public Service.Interface _getService() {
     return new ServiceImpl();
   }
@@ -85,18 +98,33 @@ public class BaseService extends BaseComponent implements Service {
   }
 
   /**
+   * Internally used method for updating current input/output data.
+   * 
+   * @param inputData The new value to be used as current input data.
+   * @param outputData The new value to be used as current output data.
+   * @since 2.0
+   */
+  void setInputOutputData(InputData inputData, OutputData outputData) {
+    this.currentInputData = inputData;
+    this.currentOutputData = outputData;
+  }
+
+  /**
    * Base service implementation that uses synchronization to perform service actions to make sure no one else uses it
    * at the same time.
    */
   protected class ServiceImpl implements Service.Interface {
 
+    /**
+     * {@inheritDoc}
+     */
     public void action(Path path, InputData input, OutputData output) {
       Assert.notNullParam(this, input, "input");
       Assert.notNullParam(this, output, "output");
 
       _startCall();
 
-      BaseService.this.currentInputData = input;
+      setInputOutputData(input, output);
       BaseService.this.currentOutputData = output;
       try {
         if (isAlive()) {
@@ -109,8 +137,7 @@ public class BaseService extends BaseComponent implements Service {
           ExceptionUtil.uncheckException(e2);
         }
       } finally {
-        BaseService.this.currentInputData = null;
-        BaseService.this.currentOutputData = null;
+        setInputOutputData(null, null);
         _endCall();
       }
     }

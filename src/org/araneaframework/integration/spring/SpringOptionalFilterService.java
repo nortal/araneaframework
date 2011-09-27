@@ -60,8 +60,8 @@ public class SpringOptionalFilterService extends BaseFilterService {
       BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
       FilterService filter = (FilterService) bf.getBean(this.beanId);
 
-      filter.setChildService(this.childService);
-      this.childService = filter;
+      filter.setChildService(getChildService());
+      setChildService(filter);
 
       if (LOG.isDebugEnabled()) {
         LOG.debug("Found optional bean '" + this.beanId + "'");

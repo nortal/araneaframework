@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
+  <local-check-config name="Aranea Checkstyle rules" location="etc/checkstyle/conf.xml" type="project" description="">
+    <additional-data name="protect-config-file" value="true"/>
+  </local-check-config>
+  <fileset name="all" enabled="true" check-config-name="Aranea Checkstyle rules" local="true">
+    <file-match-pattern match-pattern="." include-pattern="true"/>
+  </fileset>
+  <filter name="FilesFromPackage" enabled="true">
+    <filter-data value="examples/blank/src"/>
+    <filter-data value="examples/common/src"/>
+    <filter-data value="examples/serviceHelloName/src"/>
+    <filter-data value="examples/serviceHelloWorld/src"/>
+    <filter-data value="examples/widgetHelloName/src"/>
+    <filter-data value="tests/src"/>
+  </filter>
+  <filter name="NonSrcDirs" enabled="true"/>
+</fileset-config>

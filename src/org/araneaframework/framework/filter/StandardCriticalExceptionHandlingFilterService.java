@@ -28,8 +28,8 @@ import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.AtomicResponseHelper;
 
 /**
- * A custom exception handling filter service. If the child service's action method throws an exception, then the response
- * stream is rolled back, an exception handler constructed, initiated and the request routed to the handler.
+ * A custom exception handling filter service. If the child service's action method throws an exception, then the
+ * response stream is rolled back, an exception handler constructed, initiated and the request routed to the handler.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
@@ -54,7 +54,7 @@ public class StandardCriticalExceptionHandlingFilterService extends BaseFilterSe
     AtomicResponseHelper arUtil = new AtomicResponseHelper(output);
 
     try {
-      this.childService._getService().action(path, input, output);
+      getChildService()._getService().action(path, input, output);
     } catch (Throwable e) {
       if (ExceptionUtils.getRootCause(e) != null) {
         LOG.error("Critical exception occured: ", ExceptionUtils.getRootCause(e));

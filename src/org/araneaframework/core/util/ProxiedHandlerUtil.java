@@ -179,7 +179,7 @@ public abstract class ProxiedHandlerUtil {
   }
 
   private static void invokeHandler(String handlerPrefix, String handlerId, String param, Widget eventTarget)
-      throws Exception {
+    throws Exception {
     String handlerName = getHandlerName(handlerPrefix, handlerId);
     String className = eventTarget.getClass().getName();
 

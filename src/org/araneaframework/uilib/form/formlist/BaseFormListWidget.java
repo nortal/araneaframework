@@ -444,7 +444,7 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
   // *********************************************************************
 
   @Override
-  public Object getViewModel() {
+  public ViewModel getViewModel() {
     return new ViewModel();
   }
 
@@ -462,7 +462,6 @@ public abstract class BaseFormListWidget<K, R> extends GenericFormElement {
     }
 
     /**
-     * 
      * Returns <code>Map&lt;Object key, EditableRow&gt;</code>.
      * 
      * @return <code>Map&lt;Object key, EditableRow&gt;</code>.

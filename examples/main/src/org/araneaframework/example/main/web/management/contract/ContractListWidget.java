@@ -19,9 +19,10 @@ package org.araneaframework.example.main.web.management.contract;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.ContractMO;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.framework.context.DefaultHandler;
 import org.araneaframework.uilib.list.ListWidget;
 import org.araneaframework.uilib.list.dataprovider.MemoryBasedListDataProvider;
 
@@ -37,7 +38,8 @@ public class ContractListWidget extends TemplateBaseWidget {
 
   private ListWidget<ContractMO> list;
 
-  public ContractListWidget() {}
+  public ContractListWidget() {
+  }
 
   @Override
   protected void init() throws Exception {
@@ -57,35 +59,38 @@ public class ContractListWidget extends TemplateBaseWidget {
     addWidget("contractList", this.list);
   }
 
-  private void refreshList() throws Exception {
-    this.list.getDataProvider().refreshData();
+  private void refreshList() {
+    try {
+      this.list.getDataProvider().refreshData();
+    } catch (Exception e) {
+      ExceptionUtil.uncheckException(e);
+    }
   }
 
-  public void handleEventAdd() throws Exception {
-    getFlowCtx().start(new ContractAddEditWidget(), new FlowContext.Handler<Long>() {
+  public void handleEventAdd() {
+    getFlowCtx().start(new ContractAddEditWidget(), new DefaultHandler<Long>() {
 
-      public void onFinish(Long id) throws Exception {
+      @Override
+      public void onFinish(Long id) {
         LOG.debug("Contract added with Id of " + id + " sucessfully");
         refreshList();
       }
-
-      public void onCancel() throws Exception {}
     });
   }
 
-  public void handleEventRemove(String eventParameter) throws Exception {
+  public void handleEventRemove(String eventParameter) {
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
     getGeneralDAO().remove(ContractMO.class, id);
     refreshList();
     LOG.debug("Contract with Id of " + id + " removed sucessfully");
   }
 
-  public void handleEventEdit(String eventParameter) throws Exception {
+  public void handleEventEdit(String eventParameter) {
     Long id = this.list.getRowFromRequestId(eventParameter).getId();
     getFlowCtx().start(new ContractAddEditWidget(id));
   }
 
-  public void handleEventCancel() throws Exception {
+  public void handleEventCancel() {
     getFlowCtx().cancel();
   }
 

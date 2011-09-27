@@ -43,12 +43,18 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
 
   private boolean consistent = true;
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isConsistent() {
     return this.consistent;
   }
 
-  public Object getTransactionId() {
-    return transHelper.getCurrentTransactionId();
+  /**
+   * {@inheritDoc}
+   */
+  public Long getTransactionId() {
+    return this.transHelper.getCurrentTransactionId();
   }
 
   @Override
@@ -72,7 +78,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   protected void update(InputData input) throws Exception {
     this.consistent = isConsistent(input);
     if (isConsistent()) {
-      this.childWidget._getWidget().update(input);
+      getChildWidget()._getWidget().update(input);
     } else {
       LOG.debug("Transaction id '" + getTransactionId(input) + "' not consistent for routing update().");
     }
@@ -81,7 +87,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   @Override
   protected void event(Path path, InputData input) throws Exception {
     if (isConsistent()) {
-      this.childWidget._getWidget().event(path, input);
+      getChildWidget()._getWidget().event(path, input);
     } else {
       LOG.debug("Transaction ID '" + getTransactionId(input) + "' not consistent for routing event().");
     }
@@ -90,6 +96,8 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
   /**
    * Generates a new transaction ID and pushes it as an attribute to the output. The children can access it via
    * {@link TransactionContext#TRANSACTION_ID_KEY} from their OutputData.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void render(OutputData output) throws Exception {
@@ -104,7 +112,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
 
     LOG.debug("New transaction ID '" + getTransactionId() + "'.");
 
-    this.childWidget._getWidget().render(output);
+    getChildWidget()._getWidget().render(output);
   }
 
   /**
@@ -114,7 +122,7 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    * @param input the request data.
    * @return <code>true</code>, if current request is consistent.
    */
-  protected boolean isConsistent(InputData input) throws Exception {
+  protected boolean isConsistent(InputData input) {
     return this.transHelper.isConsistent(getTransactionId(input));
   }
 
@@ -125,10 +133,13 @@ public class StandardTransactionFilterWidget extends BaseFilterWidget implements
    * @param input the request data.
    * @return the transaction ID from the request.
    */
-  protected Object getTransactionId(InputData input) throws Exception {
+  protected String getTransactionId(InputData input) {
     return input.getGlobalData().get(TransactionContext.TRANSACTION_ID_KEY);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public Long getNextTransactionId() {
     return this.transHelper.getNextTransactionId();
   }

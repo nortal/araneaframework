@@ -43,11 +43,17 @@ import org.araneaframework.core.util.ComponentUtil;
 import org.araneaframework.core.util.ExceptionUtil;
 
 /**
- * A full featured Widget with support for composite, event-listeners, view-model.
+ * A full featured Widget with support for composite, EventListeners, ViewModel.
+ * 
+ * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class BaseApplicationWidget extends BaseWidget implements ApplicationWidget {
 
   private static final Log LOG = LogFactory.getLog(BaseApplicationWidget.class);
+
+  // *******************************************************************
+  // FIELDS
+  // *******************************************************************
 
   private Map<String, List<EventListener>> eventListeners;
 
@@ -59,72 +65,9 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   private Map<String, Object> viewDataOnce;
 
-  protected class ViewableImpl implements Viewable.Interface {
-
-    public Object getViewModel() {
-      try {
-        return BaseApplicationWidget.this.getViewModel();
-      } catch (Exception e) {
-        throw ExceptionUtil.uncheckException(e);
-      }
-    }
-  }
-
-  protected class CompositeImpl implements Composite.Interface {
-
-    /**
-     * Returns a map of all the child components under this Composite.
-     * 
-     * @return a map of child components
-     */
-    public Map<String, Component> getChildren() {
-      return BaseApplicationWidget.this.getChildren();
-    }
-
-    /**
-     * @see org.araneaframework.Composite.Interface#attach(String, Component)
-     */
-    public void attach(String key, Component comp) {
-      _getChildren().put(key, comp);
-    }
-
-    /**
-     * @see org.araneaframework.Composite.Interface#detach(String)
-     */
-    public Component detach(String key) {
-      return _getChildren().remove(key);
-    }
-  }
-
-  public class ViewModel implements ApplicationWidget.WidgetViewModel {
-
-    private Map<String, Object> viewData;
-
-    public ViewModel() {
-      if (BaseApplicationWidget.this.viewData == null) {
-        this.viewData = new HashMap<String, Object>();
-      } else {
-        this.viewData = new HashMap<String, Object>(BaseApplicationWidget.this.viewData);
-      }
-
-      if (BaseApplicationWidget.this.viewDataOnce != null) {
-        this.viewData.putAll(BaseApplicationWidget.this.viewDataOnce);
-      }
-    }
-
-    /** @since 1.1 */
-    public Scope getScope() {
-      return BaseApplicationWidget.this.getScope();
-    }
-
-    public Map<String, Component> getChildren() {
-      return BaseApplicationWidget.this.getChildren();
-    }
-
-    public Map<String, Object> getData() {
-      return this.viewData;
-    }
-  }
+  // *******************************************************************
+  // PRIVATE METHODS
+  // *******************************************************************
 
   private Map<String, List<EventListener>> getEventListeners() {
     if (this.eventListeners == null) {
@@ -154,12 +97,9 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
     return this.viewDataOnce;
   }
 
-  /**
-   * Returns the widget's Environment by default. Usually overridden.
-   */
-  protected Environment getChildWidgetEnvironment() throws Exception {
-    return getEnvironment();
-  }
+  // *******************************************************************
+  // PROTECTED METHODS
+  // *******************************************************************
 
   @Override
   protected void propagate(Message message) throws Exception {
@@ -182,12 +122,110 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * If path hasNextStep() routes to the correct child, otherwise calls the appropriate listener.
+   * The viewable contract delegated method that creates the view model for current widget on-demand. This is usually
+   * overridden when a widget needs to provide a custom view model.
+   * 
+   * @return The view model of this widget to be used in the view.
    */
+  protected ViewModel getViewModel() {
+    return new ViewModel();
+  }
+
+  /**
+   * Provides the environment that is passed on to child widgets when they are initialized. Usually overridden in order
+   * to add new environment entries.
+   * 
+   * @return The environment from this widget to its child-widgets.
+   */
+  protected Environment getChildWidgetEnvironment() {
+    return getEnvironment();
+  }
+
+  /**
+   * Reads an action ID value from input data.
+   * 
+   * @param input The input data where action ID will be read from.
+   * @return The action ID value from input data.
+   * @see ApplicationService#ACTION_HANDLER_ID_KEY
+   */
+  protected static String getActionId(InputData input) {
+    Assert.notNull(input, "Cannot extract action ID from a null input!");
+    return input.getGlobalData().get(ACTION_HANDLER_ID_KEY);
+  }
+
+  /**
+   * Reads an event ID value from input data.
+   * 
+   * @param input The input data where event ID will be read from.
+   * @return The event ID value from input data.
+   * @see ApplicationWidget#EVENT_HANDLER_ID_KEY
+   */
+  protected static String getEventId(InputData input) {
+    Assert.notNull(input, "Cannot extract event ID from a null input!");
+    return input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
+  }
+
+  @Override
+  protected void action(Path path, InputData input, OutputData output) throws Exception {
+    if (path != null && path.hasNext()) {
+      String next = path.next();
+      Assert.notNull(this, next, "Cannot deliver action to child under null key!");
+
+      Service service = (Service) getChildren().get(next);
+      if (service == null) {
+        if (LOG.isWarnEnabled()) {
+          LOG.warn("Widget '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
+              + Assert.thisToString(this));
+        }
+        return;
+      }
+
+      service._getService().action(path, input, output);
+    } else {
+      handleAction(input, output);
+    }
+  }
+
+  /**
+   * Handles the incoming action (that was sent to this specific widget) by invoking registered listener by action ID.
+   * 
+   * @param input Input data for the widget or for its child components.
+   * @param output Output data for the widget or for its child components.
+   * @throws Exception Any runtime exception that may occur.
+   */
+  protected void handleAction(InputData input, OutputData output) throws Exception {
+    String actionId = getActionId(input);
+
+    if (actionId == null) {
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Widget '" + getScope() + "' cannot deliver action for a null action ID!" + Assert.thisToString(this));
+      }
+      return;
+    }
+
+    List<ActionListener> listeners = getActionListeners().get(actionId);
+
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Delivering action '" + actionId + "' to widget '" + getClass() + "'.");
+    }
+
+    if (listeners != null && !listeners.isEmpty()) {
+      for (ActionListener listener : listeners) {
+        listener.processAction(actionId, input, output);
+      }
+      return;
+    }
+
+    if (LOG.isWarnEnabled()) {
+      LOG.warn("Widget '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
+          + "id '" + actionId + "'!" + Assert.thisToString(this));
+    }
+  }
+
   @Override
   protected void event(Path path, InputData input) throws Exception {
     if (path != null && path.hasNext()) {
-      Object next = path.next();
+      String next = path.next();
 
       Assert.notNull(this, next, "Cannot deliver event to child under null key!");
 
@@ -208,15 +246,23 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * CallBack called when <code>update(InputData)</code> is invoked.
+   * A callback method that is called when {@link #update(InputData)} is invoked. Allows the current widget to update
+   * its state. Note that the child components of this widget are updated AFTER this method has been called.
+   * <p>
+   * Sub-classes are encouraged to override this method when needed instead of <code>update(InputData)</code> as in this
+   * case there's usually no need to call the overridden method.
    * 
-   * @param input The request data.
+   * @param input Input data for the widget or for its child components.
+   * @throws Exception Any runtime exception that may occur.
    */
   protected void handleUpdate(InputData input) throws Exception {
   }
 
   /**
-   * Calls the respective listeners.
+   * Handles the incoming event (that was sent to this specific widget) by invoking registered listener by event ID.
+   * 
+   * @param input Input data for the widget or for its child components.
+   * @throws Exception Any runtime exception that may occur.
    */
   protected void handleEvent(InputData input) throws Exception {
     String eventId = getEventId(input);
@@ -256,82 +302,14 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * If {@link Path#hasNext()} routes to the action to child, otherwise calls the appropriate
-   * {@link org.araneaframework.core.action.ActionListener}.
-   */
-  @Override
-  protected void action(Path path, InputData input, OutputData output) throws Exception {
-    if (path != null && path.hasNext()) {
-      Object next = path.next();
-
-      Assert.notNull(this, next, "Cannot deliver action to child under null key!");
-
-      Service service = (Service) getChildren().get(next);
-      if (service == null) {
-        LOG.warn("Service '" + getScope() + "' could not deliver action as child '" + next + "' was not found!"
-            + Assert.thisToString(this));
-        return;
-      }
-
-      service._getService().action(path, input, output);
-    } else {
-      handleAction(input, output);
-    }
-  }
-
-  /**
-   * Calls the appropriate listener
-   */
-  protected void handleAction(InputData input, OutputData output) throws Exception {
-    String actionId = getActionId(input);
-
-    if (actionId == null) {
-      if (LOG.isWarnEnabled()) {
-        LOG.warn("Service '" + getScope() + "' cannot deliver action for a null action id!" + Assert.thisToString(this));
-      }
-      return;
-    }
-
-    List<ActionListener> listeners = this.actionListeners == null ? null : this.actionListeners.get(actionId);
-
-    if (LOG.isTraceEnabled()) {
-      LOG.trace("Delivering action '" + actionId + "' to service '" + getScope() + "', type: '" + getClass().getName()
-          + "'");
-    }
-
-    if (listeners != null && !listeners.isEmpty()) {
-      for (ActionListener listener : listeners) {
-        listener.processAction(actionId, input, output);
-      }
-      return;
-    }
-
-    if (LOG.isWarnEnabled()) {
-      LOG.warn("Service '" + getScope() + "' cannot deliver action as no action listeners were registered for action "
-          + "id '" + actionId + "'!" + Assert.thisToString(this));
-    }
-  }
-
-  /**
-   * Renders the component to output, meant for overriding.
+   * Renders the component state/response to output. This method is meant to be overridden for implementing custom
+   * rendering support.
+   * 
+   * @param output Output data for the widget or for its child components.
+   * @throws Exception Any runtime exception that may occur.
    */
   @Override
   protected void render(OutputData output) throws Exception {
-  }
-
-  /**
-   * Returns the id of the event in InputData. By default returns EVENT_HANDLER_ID_KEY from the input's global data.
-   */
-  protected String getEventId(InputData input) {
-    return input.getGlobalData().get(ApplicationWidget.EVENT_HANDLER_ID_KEY);
-  }
-
-  /**
-   * Returns the id of the action based on the input. Uses the ACTION_HANDLER_ID_KEY key to extract it from InputData's
-   * global data.
-   */
-  protected String getActionId(InputData input) {
-    return input.getGlobalData().get(ApplicationService.ACTION_HANDLER_ID_KEY);
   }
 
   // *******************************************************************
@@ -339,58 +317,59 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   // *******************************************************************
 
   /**
-   * Returns the Viewable.Interface internal implementation.
-   * 
-   * @return the Viewable.Interface implementation
+   * {@inheritDoc}
    */
   public Viewable.Interface _getViewable() {
     return new ViewableImpl();
   }
 
   /**
-   * Returns the Composite.Interface internal implementation.
-   * 
-   * @return the Composite.Interface implementation
+   * {@inheritDoc}
    */
   public Composite.Interface _getComposite() {
     return new CompositeImpl();
   }
 
   /**
-   * Returns all the child-components of this component.
+   * Returns an unmodifiable map of the children.
    * 
-   * @return a map of the child-components under this component
+   * @return An unmodifiable map of child components.
    */
   public Map<String, Component> getChildren() {
-    return Collections.unmodifiableMap(new LinkedHashMap<String, Component>(_getChildren()));
+    return Collections.unmodifiableMap(_getChildren());
   }
 
   /**
    * Returns the widget with the specified key.
    * 
-   * @param key of the child being returned
-   * @return the Widget under the provided key
+   * @param key The ID of the child being returned.
+   * @return The Widget under the provided key, or <code>null</code> when no such widget is found.
    */
   public Widget getWidget(String key) {
     return (Widget) getChildren().get(key);
   }
 
   /**
-   * Adds a widget as a child widget with the key. The child is initialized with the environment provided.
+   * Adds given widget as a child widget with the specified key. Already initialized widget cannot be added. The child
+   * is initialized with the provided environment.
    * 
-   * @param key of the the child Widget
-   * @param child Widget being added
-   * @param env the Environment the child will be initialized with
+   * @param key A not empty string for widget ID, may be already used for another widget widget (required).
+   * @param child Uninitialized widget to be added to this component as a child (required).
+   * @param env The environment assigned to the component during initialization (required).
+   * @see #_addComponent(String, Component, Environment)
    */
   public void addWidget(String key, Widget child, Environment env) {
     _addComponent(key, child, env);
   }
 
   /**
-   * Adds a widget as a child widget with the key. The child is initialized with the Environment of this Widget
+   * Adds given widget as a child widget with the specified key. Already initialized widget cannot be added. The child
+   * is initialized with the Environment from <code>getChildServiceEnvironment()</code>.
    * 
-   * @param key of the the child Widget
-   * @param child Widget being added
+   * @param key A not empty string for widget ID, may be already used for another child widget (required).
+   * @param child Uninitialized widget to be added to this widget as a child (required).
+   * @see #_addComponent(String, Component, Environment)
+   * @see #getChildWidgetEnvironment()
    */
   public void addWidget(String key, Widget child) {
     try {
@@ -401,144 +380,58 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   }
 
   /**
-   * Removes component from the children and calls destroy on it.
+   * Enables a disabled child widget with the specified key. If the key does not correspond to any kind of child
+   * component, a runtime exception will occur. When child widget is already disabled, nothing will happen.
    * 
-   * @param key of the child being removed
-   */
-  public void removeWidget(Object key) {
-    _removeComponent(key);
-  }
-
-  /**
-   * Enables the widget with the specified key. Only a disabled widgets can be enabled.
+   * @param key The ID of the child widget to enable (required).
+   * @see #_enableComponent(String)
    */
   public void enableWidget(String key) {
     _enableComponent(key);
   }
 
   /**
-   * Disables the widget with the specified key. Only a enabled widgets can be disabled.
+   * Disables the child widget with the specified key. If the key does not correspond to any kind of child widget, a
+   * runtime exception will occur. A disabled child is a child that is removed from the active set of children to
+   * disabled set of children. When child widget is already disabled, nothing will happen.
+   * 
+   * @param key The ID of the child widget to disable (required).
+   * @see #_disableComponent(String)
    */
   public void disableWidget(String key) {
     _disableComponent(key);
   }
 
-  @Override
-  public Environment getEnvironment() {
-    return super.getEnvironment();
+  /**
+   * Removes the child widget with the specified key from the children and calls destroy on it. When no child component
+   * with given key is found, nothing will happen.
+   * 
+   * @param key The ID of the widget to remove (required).
+   * @see #_removeComponent(Object)
+   */
+  public void removeWidget(Object key) {
+    _removeComponent(key);
   }
 
+  /**
+   * Delegates the child environment creation to {@link #getChildWidgetEnvironment()}.
+   * <p>
+   * {@inheritDoc}
+   */
   public final Environment getChildEnvironment() {
-    try {
-      return getChildWidgetEnvironment();
-    } catch (Exception e) {
-      throw ExceptionUtil.uncheckException(e);
-    }
+    return getChildWidgetEnvironment();
   }
 
+  // *******************************************************************
+  // SUPPORT FOR ACTION LISTENERS
+  // *******************************************************************
+
   /**
-   * Adds a global event-listener to this Widget. A global event-listener gets all the events.
+   * Adds an action listener with the specified action ID. When a listener is already registered with same action ID, it
+   * will be replaced with the new listener.
    * 
-   * @param eventListener a EventListener added as the global event-listener.
-   */
-  public void setGlobalEventListener(EventListener eventListener) {
-    Assert.notNullParam(this, eventListener, "eventListener");
-    this.globalListener = eventListener;
-  }
-
-  /**
-   * Clears the global event-listener of this Widget.
-   */
-  public void clearGlobalEventListener() {
-    this.globalListener = null;
-  }
-
-  /**
-   * Adds an EventListener to this Widget with an eventId. Multiple listeners can be added under one eventId.
-   * 
-   * @param eventId the eventId of the listener
-   * @param listener the EventListener being added
-   * @see #removeEventListener
-   */
-  public void addEventListener(String eventId, EventListener listener) {
-    Assert.notNullParam(this, eventId, "eventId");
-    Assert.notNullParam(this, listener, "listener");
-    List<EventListener> list = getEventListeners().get(eventId);
-    if (list == null) {
-      list = new ArrayList<EventListener>(1);
-    }
-    list.add(listener);
-    getEventListeners().put(eventId, list);
-  }
-
-  /**
-   * Removes the listener from the Widget's event listeners.
-   * 
-   * @param listener the EventListener to remove
-   * @see #addEventListener
-   */
-  public void removeEventListener(EventListener listener) {
-    Assert.notNullParam(this, listener, "listener");
-    for (List<EventListener> listeners : getEventListeners().values()) {
-      listeners.remove(listener);
-    }
-  }
-
-  /**
-   * Clears all the EventListeners from this Widget with the specified eventId.
-   * 
-   * @param eventId the id of the EventListeners.
-   */
-  public void clearEventlisteners(String eventId) {
-    Assert.notNullParam(this, eventId, "eventId");
-    getEventListeners().remove(eventId);
-  }
-
-  /**
-   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will
-   * be available, until explicitly removed with {@link #removeViewData(String)}.
-   * 
-   * @param key The key under which <code>customDataItem</code> will be made available.
-   * @param customDataItem The data that will be made available.
-   */
-  public void putViewData(String key, Object customDataItem) {
-    Assert.notNullParam(this, key, "key");
-    getViewData().put(key, customDataItem);
-  }
-
-  /**
-   * Removes the custom data under <code>key</code>.
-   * 
-   * @param key The key, which will be removed from widget's view data.
-   */
-  public void removeViewData(String key) {
-    Assert.notNullParam(this, key, "key");
-    getViewData().remove(key);
-  }
-
-  /**
-   * Adds custom data to the widget view model (<code>${widget.custom['key']} == ${viewData.key}</code>). This data will
-   * be available during this request only. It will be discarded right before update() is called.
-   * 
-   * @param key The key under which <code>customDataItem</code> will be made available.
-   * @param customDataItem The data that will be made available.
-   */
-  public void putViewDataOnce(String key, Object customDataItem) {
-    Assert.notNullParam(this, key, "key");
-    getViewDataOnce().put(key, customDataItem);
-  }
-
-  /**
-   * Returns the view model of this control. The view model is used to retrieve data that MVC view layer can access.
-   * Note that returned view model and its type is entirely the sole responsibility of the control. However, the
-   * controls may change the return type to their implementation of view model.
-   */
-  public Object getViewModel() {
-    return new ViewModel();
-  }
-
-  /**
-   * Adds the ActionListener listener with the specified action id.
+   * @param actionId The action ID for which the listener will be bound.
+   * @param listener The listener to be bound to an action.
    */
   public void addActionListener(String actionId, ActionListener listener) {
     Assert.notNullParam(this, actionId, "actionId");
@@ -557,6 +450,8 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
 
   /**
    * Removes the ActionListener listener from this component.
+   * 
+   * @param listener A listener to remove from listening actions.
    */
   public void removeActionListener(ActionListener listener) {
     Assert.notNullParam(this, listener, "listener");
@@ -573,10 +468,210 @@ public class BaseApplicationWidget extends BaseWidget implements ApplicationWidg
   /**
    * Clears all the ActionListeners with the specified actionId.
    * 
-   * @param actionId the actionId
+   * @param actionId The ID of the ActionListeners.
    */
   public void clearActionListeners(String actionId) {
     Assert.notNullParam(this, actionId, "actionId");
     getActionListeners().remove(actionId);
+  }
+
+  // *******************************************************************
+  // SUPPORT FOR EVENT LISTENERS
+  // *******************************************************************
+
+  /**
+   * Defines a global event-listener to this widget. A global event-listener gets all the events.
+   * 
+   * @param eventListener A global event-listener for this widget (must not be <code>null</code>).
+   * @see #clearGlobalEventListener()
+   */
+  public void setGlobalEventListener(EventListener eventListener) {
+    Assert.notNullParam(this, eventListener, "eventListener");
+    this.globalListener = eventListener;
+  }
+
+  /**
+   * Clears the global event-listener of this widget.
+   */
+  public void clearGlobalEventListener() {
+    this.globalListener = null;
+  }
+
+  /**
+   * Registers an event-listener to this Widget with an event ID. Multiple listeners can be added under one event ID,
+   * and they will be processed in the same order as they were added.
+   * 
+   * @param eventId The event ID for the listener (required).
+   * @param listener The event-listener being added (required).
+   * @see #removeEventListener(EventListener)
+   */
+  public void addEventListener(String eventId, EventListener listener) {
+    Assert.notNullParam(this, eventId, "eventId");
+    Assert.notNullParam(this, listener, "listener");
+    List<EventListener> list = getEventListeners().get(eventId);
+    if (list == null) {
+      list = new ArrayList<EventListener>(1);
+    }
+    list.add(listener);
+    getEventListeners().put(eventId, list);
+  }
+
+  /**
+   * Unregisters given event-listener from all of the widget's event-listeners.
+   * 
+   * @param listener The event-listener to unregister (required).
+   * @see #addEventListener(String, EventListener)
+   */
+  public void removeEventListener(EventListener listener) {
+    Assert.notNullParam(this, listener, "listener");
+    for (List<EventListener> listeners : getEventListeners().values()) {
+      listeners.remove(listener);
+    }
+  }
+
+  /**
+   * Unregisters all event-listeners from this widget with the specified event ID.
+   * 
+   * @param eventId The event ID for which event-listeners will be removed.
+   */
+  public void clearEventlisteners(String eventId) {
+    Assert.notNullParam(this, eventId, "eventId");
+    getEventListeners().remove(eventId);
+  }
+
+  // *******************************************************************
+  // SUPPORT FOR VIEW-DATA
+  // *******************************************************************
+
+  /**
+   * Adds custom data to the widget view model by key. This data will remain to be available, until explicitly removed
+   * with {@link #removeViewData(String)}.
+   * 
+   * @param key The key under which <code>customDataItem</code> will be made available (required).
+   * @param customDataItem The data that will be made available (may be <code>null</code>).
+   */
+  public void putViewData(String key, Object customDataItem) {
+    Assert.notNullParam(this, key, "key");
+    getViewData().put(key, customDataItem);
+  }
+
+  /**
+   * Removes the custom data from widget view model under provided <code>key</code>.
+   * 
+   * @param key The key of view data item, which will be removed from widget's view data (required).
+   */
+  public void removeViewData(String key) {
+    Assert.notNullParam(this, key, "key");
+    getViewData().remove(key);
+  }
+
+  /**
+   * Adds custom data to the widget view model by key. This data will be available during the current request only. It
+   * will be discarded right before next {@link #update(InputData)} is called.
+   * 
+   * @param key The key under which <code>customDataItem</code> will be made available.
+   * @param customDataItem The data that will be made available.
+   */
+  public void putViewDataOnce(String key, Object customDataItem) {
+    Assert.notNullParam(this, key, "key");
+    getViewDataOnce().put(key, customDataItem);
+  }
+
+  // *******************************************************************
+  // PROTECTED CLASSES
+  // *******************************************************************
+
+  /**
+   * The base implementation for application widget view models.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
+  public class ViewModel implements ApplicationWidget.WidgetViewModel {
+
+    private Map<String, Object> viewData;
+
+    /**
+     * The base view model takes a snapshot of widget's view data at the moment of its creation.
+     */
+    public ViewModel() {
+      if (BaseApplicationWidget.this.viewData == null) {
+        this.viewData = new HashMap<String, Object>();
+      } else {
+        this.viewData = new HashMap<String, Object>(BaseApplicationWidget.this.viewData);
+      }
+
+      if (BaseApplicationWidget.this.viewDataOnce != null) {
+        this.viewData.putAll(BaseApplicationWidget.this.viewDataOnce);
+      }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Scope getScope() {
+      return BaseApplicationWidget.this.getScope();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Component> getChildren() {
+      return BaseApplicationWidget.this.getChildren();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Object> getData() {
+      return this.viewData;
+    }
+  }
+
+  /**
+   * The viewable contract implementation.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
+  protected class ViewableImpl implements Viewable.Interface {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object getViewModel() {
+      try {
+        return BaseApplicationWidget.this.getViewModel();
+      } catch (Exception e) {
+        throw ExceptionUtil.uncheckException(e);
+      }
+    }
+  }
+
+  /**
+   * The composite contract implementation.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
+  protected class CompositeImpl implements Composite.Interface {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Component> getChildren() {
+      return BaseApplicationWidget.this.getChildren();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void attach(String key, Component comp) {
+      _getChildren().put(key, comp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Component detach(String key) {
+      return _getChildren().remove(key);
+    }
   }
 }

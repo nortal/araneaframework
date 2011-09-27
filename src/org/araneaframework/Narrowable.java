@@ -29,12 +29,14 @@ public interface Narrowable {
   /**
    * Narrows down to the implementation of the interfaceClass and returns that object. Can be used after calling
    * <code>extend(Class, Object)</code> on this instance, if it implements {@link Extendable}.
+   * <p>
+   * Throws <tt>NoSuchNarrowableException</tt> when the <tt>interfaceClass</tt> has not been extended beforehand on this
+   * instance of implementation.
    * 
    * @param <T> The type of the interface class, also the type of the returned object instance.
    * @param interfaceClass The interface of the implementation that needs to be returned.
    * @return The implementation of the <tt>interfaceClass</tt>.
-   * @throws org.araneaframework.core.exception.NoSuchNarrowableException When the <tt>interfaceClass</tt> has not been
-   *           extended beforehand on this instance of implementation.
+   * @see org.araneaframework.core.exception.NoSuchNarrowableException
    */
   <T> T narrow(Class<T> interfaceClass);
 }

@@ -16,13 +16,12 @@
 
 package org.araneaframework.example.main.web.management.contract;
 
-import org.araneaframework.example.main.web.management.person.PersonListWidget;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.business.model.PersonMO;
-import org.araneaframework.framework.FlowContext;
+import org.araneaframework.example.main.web.management.person.PersonListWidget;
+import org.araneaframework.framework.context.DefaultHandler;
 
 /**
  * @author Rein Raudjärv <reinra@ut.ee>
@@ -43,21 +42,20 @@ public class ContractPersonEditWidget extends TemplateBaseWidget {
   }
 
   @Override
-  protected void init() throws Exception {
+  protected void init() {
     LOG.debug("TemplateContractPersonWidget init called");
     setViewSelector("management/contract/contractPersonEdit");
   }
 
-  public void handleEventChoosePerson() throws Exception {
+  public void handleEventChoosePerson() {
     PersonListWidget newFlow = new PersonListWidget(false);
     newFlow.setSelectOnly(true);
-    getFlowCtx().start(newFlow, new FlowContext.Handler<Long>() {
+    getFlowCtx().start(newFlow, new DefaultHandler<Long>() {
 
-      public void onFinish(Long id) throws Exception {
+      @Override
+      public void onFinish(Long id) {
         setPerson(getGeneralDAO().getById(PersonMO.class, id));
       }
-
-      public void onCancel() throws Exception {}
     });
   }
 }

@@ -71,7 +71,7 @@ public class StandardFileImportFilterService extends BaseFilterService {
       isInitialized = true;
     }
   }
-  
+
   public void setCacheHoldingTime(Long cacheHoldingTime) {
     Assert.notNullParam(this, cacheHoldingTime, "cacheHoldingTime");
     this.cacheHoldingTime = cacheHoldingTime;
@@ -85,7 +85,7 @@ public class StandardFileImportFilterService extends BaseFilterService {
     String uri = URLUtil.normalizeURI(input2.getPath());
 
     if (uri == null || !uri.startsWith(FILE_IMPORTER_NAME)) {
-      this.childService._getService().action(path, input2, output);
+      getChildService()._getService().action(path, input2, output);
       return;
     }
 
@@ -125,8 +125,8 @@ public class StandardFileImportFilterService extends BaseFilterService {
   }
 
   private void setHeaders(HttpServletResponse response, String contentType) {
-    response.setHeader("Cache-Control", "max-age=" + (cacheHoldingTime / 1000));
-    response.setDateHeader("Expires", System.currentTimeMillis() + cacheHoldingTime);
+    response.setHeader("Cache-Control", "max-age=" + this.cacheHoldingTime / 1000);
+    response.setDateHeader("Expires", System.currentTimeMillis() + this.cacheHoldingTime);
     response.setContentType(contentType);
   }
 

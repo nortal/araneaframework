@@ -27,7 +27,10 @@ import org.araneaframework.core.util.Assert;
  */
 public abstract class BaseEnvironment implements Environment {
 
-  public <T> T requireEntry(Class<T> key) throws NoSuchEnvironmentEntryException {
+  /**
+   * {@inheritDoc}
+   */
+  public <T> T requireEntry(Class<T> key) {
     Assert.notNullParam(this, key, "key");
 
     T result = getEntry(key);

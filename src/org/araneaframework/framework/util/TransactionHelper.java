@@ -21,9 +21,11 @@ import java.util.Random;
 import org.araneaframework.framework.TransactionContext;
 
 /**
- * Helper class for determining if transaction id is consistent. Transaction id is considered consistent when it equals
- * {@link TransactionContext#OVERRIDE_KEY} or current transaction id. If current transaction id is not yet set, any
- * transaction id is considered consistent.
+ * Helper class for determining if transaction ID is consistent. Transaction ID is considered consistent when it equals
+ * {@link TransactionContext#OVERRIDE_KEY} or current transaction ID. If current transaction ID is not yet set, any
+ * transaction ID is considered consistent.
+ * <p>
+ * This class can be used to filter out unexpected requests, such as double submits.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
@@ -35,12 +37,18 @@ public class TransactionHelper implements Serializable {
 
   private final Random random = new Random(System.currentTimeMillis());
 
+  /**
+   * Creates a new transaction helper, where previous transaction ID is <code>null</code> and the current transaction ID
+   * is initialized with a new random number.
+   */
   public TransactionHelper() {
     resetTransactionId();
   }
 
   /**
-   * Generates a new current transaction id.
+   * Generates and stores a new current transaction ID.
+   * 
+   * @see #getCurrentTransactionId()
    */
   public void resetTransactionId() {
     this.currentTransactionId = this.nextTransactionId;
@@ -48,34 +56,40 @@ public class TransactionHelper implements Serializable {
   }
 
   /**
-   * Returns the current transaction id.
+   * Returns the current transaction ID.
+   * 
+   * @return The current transaction ID, which is never <code>null</code>.
    */
-  public Object getCurrentTransactionId() {
+  public Long getCurrentTransactionId() {
     return this.currentTransactionId;
   }
 
+  /**
+   * Provides the transaction ID, which is expected from the following transaction.
+   * 
+   * @return The transaction ID for the following request.
+   */
   public Long getNextTransactionId() {
     return this.nextTransactionId;
   }
 
   /**
-   * Returns true if current transaction ID is <code>null</code> or transactionId equals the current transaction ID or
-   * transactionId has been overridden.
+   * Validates whether the provided transaction ID is consistent with the current transaction ID known to this helper.
+   * 
+   * @param transactionId The transaction ID value to check.
+   * @return A Boolean that is <code>true</code> when the provided transaction ID is consistent with this helper.
    */
-  public boolean isConsistent(Object transactionId) {
-    if (this.currentTransactionId == null) {
-      return true;
-    }
-
-    if (isOverride(transactionId)) {
-      return true;
-    }
-
-    return this.currentTransactionId.toString().equals(transactionId);
+  public boolean isConsistent(String transactionId) {
+    return this.currentTransactionId == null || isOverride(transactionId)
+        || this.currentTransactionId.toString().equals(transactionId);
   }
 
   /**
-   * Returns true if current transaction id is null or transactionId does not equal the current transaction id.
+   * Checks whether the provided transaction ID value matches the override key value.
+   * 
+   * @param transactionId The transaction ID value to check.
+   * @return A Boolean that is <code>true</code> when the provided transaction ID value corresponds to the override key.
+   * @see org.araneaframework.framework.TransactionContext#OVERRIDE_KEY
    */
   public boolean isOverride(Object transactionId) {
     return TransactionContext.OVERRIDE_KEY.equals(transactionId);

@@ -25,16 +25,15 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
-import org.araneaframework.core.util.Assert;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
+import org.araneaframework.core.util.Assert;
 import org.araneaframework.framework.FlowContext.Configurator;
 import org.araneaframework.framework.FlowContext.Handler;
 import org.araneaframework.framework.FlowContextWidget;
 import org.araneaframework.framework.OverlayContext;
 import org.araneaframework.framework.SystemFormContext;
 import org.araneaframework.http.UpdateRegionContext;
-import org.araneaframework.http.util.EnvironmentUtil;
 import org.araneaframework.http.util.ServletUtil;
 
 /**
@@ -73,9 +72,8 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    * <tr>
    * <td>maxHeight</td>
    * <td>0.9</td>
-   * <td>
-   * If content is very long, defines the maximum height of ModalBox. If value <= 1.0 then the value is a percentage of
-   * dialog height in contrast to browser window client area height. Otherwise it's in pixels.</td>
+   * <td>If content is very long, defines the maximum height of ModalBox. If value <= 1.0 then the value is a percentage
+   * of dialog height in contrast to browser window client area height. Otherwise it's in pixels.</td>
    * </tr>
    * <tr>
    * <td>overlayOpacity</td>
@@ -126,15 +124,27 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
    */
   public static final Map<String, Object> DEFAULT_PRESENTATION_OPTIONS = new LinkedHashMap<String, Object>();
 
-  public static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->";
+  /**
+   * The special response text that is sent, when overlay is closed and no more content can be rendered.
+   */
+  public static final String OVERLAY_SPECIAL_RESPONSE_ID = "<!-- araOverlaySpecialResponse -->\n";
 
+  /**
+   * The child widget ID for main widget context.
+   */
   protected static final String MAIN_CHILD_KEY = "m";
 
+  /**
+   * The child widget ID for overlay widget context.
+   */
   protected static final String OVERLAY_CHILD_KEY = "o";
 
-  protected Map<String, Object> presentationOptions = new LinkedHashMap<String, Object>();
+  /**
+   * The presentation options that are passed to the view.
+   */
+  private Map<String, Object> presentationOptions = new LinkedHashMap<String, Object>();
 
-  protected Widget main;
+  protected FlowContextWidget main;
 
   protected FlowContextWidget overlay;
 
@@ -149,35 +159,51 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     DEFAULT_PRESENTATION_OPTIONS.put("maxHeight", 0.9);
   }
 
+  /**
+   * Creates a new instance of overlay container widget, and initializes presentation options with default ones.
+   */
   public StandardOverlayContainerWidget() {
     this.presentationOptions.putAll(DEFAULT_PRESENTATION_OPTIONS);
   }
 
-  public void setMain(Widget main) {
+  /**
+   * Method for specifying the main flow context widget. The latter cannot be changed once this widget is initialized.
+   * 
+   * @param main The main flow context widget method.
+   */
+  public void setMain(FlowContextWidget main) {
+    Assert.isTrue(this.main == null || !isInitialized(),
+        "Cannot change the main flow context widget, once initialized!");
     this.main = main;
   }
 
+  /**
+   * Method for specifying the overlay flow context widget. The latter cannot be changed once this widget is
+   * initialized.
+   * 
+   * @param overlay The overlay flow context widget method.
+   */
   public void setOverlay(FlowContextWidget overlay) {
+    Assert.isTrue(this.main == null || !isInitialized(),
+        "Cannot change the overlay flow context widget, once initialized!");
     this.overlay = overlay;
   }
 
-  public boolean isOverlayActive() {
-    return this.overlay.isNested();
-  }
-
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     return new StandardEnvironment(super.getChildWidgetEnvironment(), OverlayContext.class, this);
   }
 
   @Override
   protected void init() throws Exception {
-    super.init();
     Assert.notNull(this.overlay);
     Assert.notNull(this.main);
+
     addWidget(OVERLAY_CHILD_KEY, this.overlay);
     this.overlay.addNestedEnvironmentEntry(this, OverlayActivityMarkerContext.class,
-        new OverlayActivityMarkerContext() {});
+        new OverlayActivityMarkerContext() {
+        });
+
     addWidget(MAIN_CHILD_KEY, this.main);
   }
 
@@ -202,6 +228,36 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     super.action(path, input, output);
   }
 
+  @Override
+  protected void render(OutputData output) throws Exception {
+    if (isOverlayActive()) {
+      // Add a field to system form that we can later check the request to contain it (in this method).
+      getEnvironment().requireEntry(SystemFormContext.class).addField(OVERLAY_REQUEST_KEY, Boolean.toString(true));
+    }
+
+    if (output.getInputData().getGlobalData().containsKey(OVERLAY_REQUEST_KEY)) {
+      this.overlay._getWidget().render(output);
+
+      if (!isOverlayActive()) {
+        // response should be empty as nothing was rendered when overlay did not contain an active flow
+        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
+        HttpServletResponse response = ServletUtil.getResponse(output);
+        response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID);
+      }
+    } else {
+      this.main._getWidget().render(output);
+
+      // Check whether overlay has become active for some reason
+      // (uncommon, but someone still can start overlay during render phase).
+      if (isOverlayActive()) {
+        UpdateRegionContext updateRegionCtx = getEnvironment().getEntry(UpdateRegionContext.class);
+        if (updateRegionCtx != null) {
+          updateRegionCtx.disableOnce();
+        }
+      }
+    }
+  }
+
   /**
    * Asserts that the current widget is in the active hierarchy. If not, the execution will fail with an exception.
    * 
@@ -215,72 +271,79 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
     }
   }
 
-  @Override
-  protected void render(OutputData output) throws Exception {
-    if (isOverlayActive()) {
-      // Add a field to system form that we can later check the request to contain it (in this method).
-      getEnvironment().requireEntry(SystemFormContext.class).addField(OVERLAY_REQUEST_KEY, Boolean.toString(true));
-    }
-
-    if (output.getInputData().getGlobalData().containsKey(OverlayContext.OVERLAY_REQUEST_KEY)) {
-      this.overlay._getWidget().render(output);
-
-      if (!isOverlayActive()) {
-        // response should be empty as nothing was rendered when overlay did not contain an active flow
-        // write out a hack of a response that should be interpreted by Aranea.ModalBox.afterLoad
-        HttpServletResponse response = ServletUtil.getResponse(output);
-        response.getWriter().write(OVERLAY_SPECIAL_RESPONSE_ID + "\n");
-      }
-    } else {
-      this.main._getWidget().render(output);
-
-      if (isOverlayActive()) { // overlay has become active for some reason
-        UpdateRegionContext updateRegionCtx = EnvironmentUtil.getUpdateRegionContext(getEnvironment());
-        if (updateRegionCtx != null) {
-          updateRegionCtx.disableOnce();
-        }
-      }
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isOverlayActive() {
+    return this.overlay.isNested();
   }
 
-  // FlowContext methods
+  /**
+   * {@inheritDoc}
+   */
   public void replace(Widget flow) {
     this.overlay.replace(flow);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void replace(Widget flow, Configurator configurator) {
     this.overlay.replace(flow, configurator);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void reset(EnvironmentAwareCallback callback) {
     this.overlay.reset(callback);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void start(Widget flow, Configurator configurator, Handler<?> handler) {
     this.overlay.start(flow, configurator, handler);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void start(Widget flow, Handler<?> handler) {
     this.overlay.start(flow, handler);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void start(Widget flow) {
     this.overlay.start(flow);
   }
 
-  /* The presentation options of this overlay. */
+  /**
+   * {@inheritDoc}
+   */
   public Map<String, Object> getOverlayOptions() {
     return this.presentationOptions;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void setOverlayOptions(Map<String, Object> presentationOptions) {
     this.presentationOptions = presentationOptions;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void finish(Object result) {
     this.overlay.finish(result);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void cancel() {
     this.overlay.cancel();
   }

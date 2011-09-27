@@ -16,7 +16,6 @@
 
 package org.araneaframework.framework.router;
 
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +34,9 @@ import org.araneaframework.core.util.ExceptionUtil;
 import org.araneaframework.framework.ManagedServiceContext;
 
 /**
- * A router service consists of multiple child services, they form a service map. One of the services is a default one.
+ * A router service has multiple child services, they form a service map. One of the services is a default one.
+ * <p>
+ * This class builds the base functionality for all router services.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
@@ -45,19 +46,35 @@ public abstract class BaseServiceRouterService extends BaseService {
 
   private Map<String, Service> serviceMap;
 
-  protected Object defaultServiceId;
+  private String defaultServiceId;
+
+  private final String serviceKey;
 
   /**
-   * Sets the service map. Key is the id of the service, value is the service.
+   * Initializes the base service router with given input data key.
+   * 
+   * @param serviceKey The key that is used for child-service key lookup from input data.
+   */
+  public BaseServiceRouterService(String serviceKey) {
+    this.serviceKey = serviceKey;
+    Assert.notNullParam(this, serviceKey, "serviceKey");
+  }
+
+  /**
+   * Method for specifying the map of service IDs and corresponding services.
+   * 
+   * @param serviceMap A map of services by their IDs.
    */
   public void setServiceMap(Map<String, Service> serviceMap) {
     this.serviceMap = serviceMap;
   }
 
   /**
-   * Sets the default service id. The id is used as a key in the service map.
+   * Method for specifying the ID of the default service to serve. The ID is used as a key in the service map.
+   * 
+   * @param defaultServiceId The ID of default service.
    */
-  public void setDefaultServiceId(Object defaultServiceId) {
+  public void setDefaultServiceId(String defaultServiceId) {
     this.defaultServiceId = defaultServiceId;
   }
 
@@ -68,18 +85,19 @@ public abstract class BaseServiceRouterService extends BaseService {
   @Override
   protected void init() throws Exception {
     // adds serviceMap entries as child services
-    for (Map.Entry<String, Service> entry : this.serviceMap.entrySet()) {
-      _addComponent(entry.getKey(), entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
+    if (this.serviceMap != null) {
+      for (Map.Entry<String, Service> entry : this.serviceMap.entrySet()) {
+        _addComponent(entry.getKey(), entry.getValue(), getScope(), getChildEnvironment(entry.getKey()));
+      }
+      // free extra references
+      this.serviceMap = null;
     }
-    // free extra references
-    this.serviceMap = null;
   }
 
   @Override
   protected void propagate(Message message) throws Exception {
-    Iterator<Component> ite = _getChildren().values().iterator();
-    while (ite.hasNext()) {
-      message.send(null, ite.next());
+    for (Component child : _getChildren().values()) {
+      message.send(null, child);
     }
   }
 
@@ -87,6 +105,8 @@ public abstract class BaseServiceRouterService extends BaseService {
    * Uses the map to route the request to the service under getServiceId(input). The id of the service is determined by
    * <code>getServiceId(input)</code>. If the service id cannot be determined then the default id is used set via
    * <code>setDefaultServiceId(Object)</code>.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
@@ -108,65 +128,96 @@ public abstract class BaseServiceRouterService extends BaseService {
   }
 
   // Callbacks
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
+
+  /**
+   * Creates an environment for the service with given ID.
+   * 
+   * @param serviceId The ID of the service for which the environment will be created.
+   * @return The created environment for the child service.
+   */
+  protected Environment getChildEnvironment(String serviceId) {
     return new StandardEnvironment(getEnvironment(), ManagedServiceContext.class, new ServiceRouterContextImpl(
         serviceId));
   }
 
   /**
-   * Returns the service id of the request. By default returns the parameter value of the request under the key
-   * <code>getServiceKey()</code>. Returns <code>defaultServiceId</code> when input has no service information
-   * specified.
+   * Resolves the service ID value from the input data, or returns the default service ID when no such ID is found.
+   * 
+   * @param input Input data for the service.
+   * @return The ID of service to serve.
    */
-  protected Object getServiceId(InputData input) throws Exception {
-    Object id = getServiceIdFromInput(input);
-    return id == null ? getDefaultServiceId() : id;
+  protected final String getServiceId(InputData input) {
+    String id = getServiceIdFromInput(input);
+    return id == null ? this.defaultServiceId : id;
   }
 
   /**
-   * Returns the service id read from input.
+   * Resolves the service ID value from the input data.
+   * 
+   * @param input Input data for the service.
+   * @return The ID of a service from input data.
    */
-  protected Object getServiceIdFromInput(InputData input) throws Exception {
-    return input.getGlobalData().get(getServiceKey());
+  protected String getServiceIdFromInput(InputData input) {
+    return input.getGlobalData().get(this.serviceKey);
   }
 
   /**
-   * Returns the default service id.
+   * Returns the ID of the default service to serve.
+   * 
+   * @return The default service ID.
    */
-  protected Object getDefaultServiceId() {
+  protected final String getDefaultServiceId() {
     return this.defaultServiceId;
   }
 
   /**
-   * Every service has its own key under which the service service id can be found in the request. This method returns
-   * that key.
+   * Closes and destroys the service with given ID. Nothing happens when the service does not exist.
+   * 
+   * @param serviceId The ID for looking up the service to destroy.
    */
-  protected abstract String getServiceKey() throws Exception;
-
   protected void closeService(String serviceId) {
     Service targetService = (Service) _getChildren().get(serviceId);
-    if (targetService != null) { //Make sure it exists!
+    if (targetService != null) { // Make sure it exists!
       targetService._getComponent().destroy();
       _getChildren().remove(serviceId);
     }
   }
 
+  /**
+   * A managed service context implementation for router service child services.
+   * 
+   * @author Toomas Römer (toomas@webmedia.ee)
+   */
   protected class ServiceRouterContextImpl implements ManagedServiceContext {
 
-    private String currentServiceId;
+    private final String currentServiceId;
 
+    /**
+     * Creates a new service router context for given child service ID.
+     * 
+     * @param serviceId The child service ID.
+     */
     protected ServiceRouterContextImpl(String serviceId) {
       this.currentServiceId = serviceId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getCurrentId() {
       return this.currentServiceId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Service getService(String id) {
       return (Service) _getChildren().get(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Service addService(String id, Service service) {
       try {
         _addComponent(id, service, null, getChildEnvironment(id));
@@ -176,15 +227,20 @@ public abstract class BaseServiceRouterService extends BaseService {
       return service;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Service addService(String id, Service service, Long timeToLive) {
-      Service result = addService(id, service);
       if (LOG.isWarnEnabled()) {
-        LOG.warn(getClass().getName() + ".addService(Object id, Service service, Long timeToLive) ignores timeToLive "
-            + "attribute. Just addService(Object id, Service service) should be used.");
+        LOG.warn(getClass().getName() + ".addService(String id, Service service, Long timeToLive) ignores timeToLive "
+            + "attribute. Just addService(String id, Service service) should be used.");
       }
-      return result;
+      return addService(id, service);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void close(String id) {
       closeService(id);
     }

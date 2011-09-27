@@ -23,14 +23,26 @@ import org.araneaframework.Path;
 import org.araneaframework.Service;
 import org.araneaframework.core.BaseWidget;
 import org.araneaframework.core.StandardPath;
+import org.araneaframework.core.util.Assert;
 
 /**
- * A widget that contains a child service. Calls the service's action only if it gets an event.
+ * Widget that delegates incoming event (to this widget) as an action request to child service.
+ * <p>
+ * More exactly, the {@link #update(InputData)} method resets the flag for monitoring whether
+ * {@link #event(Path, InputData)} is called. Then during {@link #render(OutputData)} method call, the flag is checked.
+ * When event was invoked on this widget, the <code>render()</code> method invokes the action method on child service.
+ * <p>
+ * The <code>render()</code> method is here used as a place for invoking action call because the service action method
+ * is a place for services generating the response. In widget life-cycle, it usually corresponds to the
+ * <code>render()</code> method.
  * 
  * @author Toomas Römer (toomas@webmedia.ee)
  */
 public class StandardServiceAdapterWidget extends BaseWidget {
 
+  /**
+   * The input data parameter that is used for child service action path construction, when present.
+   */
   public static final String ACTION_PATH_INPUT_DATA_PARAMETER = "widgetSubServiceActionId";
 
   private Service childService;
@@ -40,23 +52,39 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   private transient InputData input;
 
   /**
-   * Set the child service.
+   * Sets the child service where this filter can forward requests. The child service cannot be changed once a
+   * child-service is initialized.
+   * 
+   * @param service The child service where this filter can forward requests.
    */
-  public void setChildService(Service service) {
+  public final void setChildService(Service service) {
+    Assert.isTrue(this.childService == null || !isInitialized(),
+        "Cannot specify a child service more than once or after adapter is initialized.");
     this.childService = service;
   }
 
-  @Override
-  protected void init() throws Exception {
-    this.childService._getComponent().init(getScope(), getEnvironment());
+  /**
+   * Resolves the value for action path to be forwarded to the child service. When the child-service action path is
+   * provided in the input data, its value will be used. Otherwise defaults to <code>null</code>.
+   * 
+   * @param input The input data for the widget.
+   * @return The action path object or <code>null</code>.
+   * @see #ACTION_PATH_INPUT_DATA_PARAMETER
+   */
+  protected static Path getActionPath(InputData input) {
+    String actionPath = input.getGlobalData().get(ACTION_PATH_INPUT_DATA_PARAMETER);
+    return actionPath == null ? null : new StandardPath(actionPath);
   }
 
-  /**
-   * Returns the path of action from the InputData. Uses the
-   * {@link StandardServiceAdapterWidget#ACTION_PATH_INPUT_DATA_PARAMETER} to get the path.
-   */
-  protected Path getActionPath(InputData input) {
-    return new StandardPath(input.getGlobalData().get(StandardServiceAdapterWidget.ACTION_PATH_INPUT_DATA_PARAMETER));
+  @Override
+  protected void propagate(Message message) {
+    message.send(null, this.childService);
+  }
+
+  @Override
+  protected void init() {
+    Assert.notNull(this, this.childService, "Child service is missing!");
+    this.childService._getComponent().init(getScope(), getEnvironment());
   }
 
   @Override
@@ -66,31 +94,21 @@ public class StandardServiceAdapterWidget extends BaseWidget {
   }
 
   @Override
-  protected void propagate(Message message) throws Exception {
-    message.send(null, this.childService);
-  }
-
-  @Override
   public void event(Path path, InputData input) {
     if (!path.hasNext()) {
       this.eventReceived = true;
     }
   }
 
-  /**
-   * Calls child service's action only if an event was received. The action path is constructed via
-   * <code>getActionPath(InputData)</code>. The InputData is saved in the <code>update(InputData)</code> method. TODO:
-   * why is it in render and not in event() ?
-   */
   @Override
-  public void render(OutputData output) throws Exception {
+  public void render(OutputData output) {
     if (this.eventReceived) {
       this.childService._getService().action(getActionPath(this.input), this.input, output);
     }
   }
 
   @Override
-  protected void destroy() throws Exception {
+  protected void destroy() {
     this.childService._getComponent().destroy();
   }
 }

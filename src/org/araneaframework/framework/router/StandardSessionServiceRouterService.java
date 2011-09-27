@@ -28,8 +28,22 @@ import org.araneaframework.framework.SessionServiceContext;
  */
 public class StandardSessionServiceRouterService extends BaseServiceRouterService {
 
+  /**
+   * Creates a new session-level service router.
+   * 
+   * @see SessionServiceContext
+   */
+  public StandardSessionServiceRouterService() {
+    super(SessionServiceContext.SESSION_SERVICE_KEY);
+  }
+
+  /**
+   * Enhances the child service environment with the {@link SessionServiceContext} entry.
+   * <p>
+   * {@inheritDoc}
+   */
   @Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
+  protected Environment getChildEnvironment(String serviceId) {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), SessionServiceContext.class,
         new ServiceRouterContextImpl(serviceId));
   }
@@ -40,10 +54,5 @@ public class StandardSessionServiceRouterService extends BaseServiceRouterServic
     protected ServiceRouterContextImpl(String serviceId) {
       super(serviceId);
     }
-  }
-
-  @Override
-  protected String getServiceKey() throws Exception {
-    return SessionServiceContext.SESSION_SERVICE_KEY;
   }
 }

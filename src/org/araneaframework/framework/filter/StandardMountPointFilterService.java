@@ -42,7 +42,7 @@ public class StandardMountPointFilterService extends BaseFilterService {
     Message mountMsg = mountCtx.getMountedMessage(input);
 
     if (mountMsg != null) {
-      mountMsg.send(null, this.childService);
+      mountMsg.send(null, getChildService());
     }
 
     super.action(path, input, output);

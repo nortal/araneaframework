@@ -128,7 +128,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    */
   @Override
   public void setChildWidget(Widget childWidget) {
-    this.childWidget = new RelocatableDecorator(childWidget);
+    super.setChildWidget(new RelocatableDecorator(childWidget));
   }
 
   /**
@@ -143,7 +143,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   @Override
   protected void propagate(Message message) throws Exception {
     // Restore the state just in case it's not restored yet:
-    if (this.childWidget == null) {
+    if (getChildWidget() == null) {
       handleStateRestoration(false);
     }
 
@@ -162,12 +162,12 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
         // assume that list legal states does not change in action
         addStatesCookie(output);
-        this.childWidget._getService().action(path, input, output);
+        getChildWidget()._getService().action(path, input, output);
 
         saveState();
 
       } finally {
-        this.childWidget = null;
+        setChildWidget(null);
       }
     }
   }
@@ -211,7 +211,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
         // autonomy to decide whether to save and how to manage the states.
         saveState();
       } finally {
-        this.childWidget = null; // Release the child widget. We will use stored states to restore it the next time.
+        setChildWidget(null); // Release the child widget. We will use stored states to restore it the next time.
         this.expiredDuringRequest = false;
       }
     }
@@ -221,7 +221,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   protected void destroy() throws Exception {
     expire();
 
-    if (this.childWidget != null) {
+    if (getChildWidget() != null) {
       super.destroy();
     }
   }
@@ -451,8 +451,8 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   }
 
   protected synchronized void storeOriginalState() {
-    if (originalState == null && this.childWidget != null) {
-      originalState = RelocatableUtil.serializeRelocatable((RelocatableWidget) this.childWidget);
+    if (originalState == null && getChildWidget() != null) {
+      originalState = RelocatableUtil.serializeRelocatable((RelocatableWidget) getChildWidget());
     }
   }
 
@@ -498,7 +498,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
 
     RelocatableWidget widget = (RelocatableWidget) SerializationUtils.deserialize(serializedState);
     widget._getRelocatable().overrideEnvironment(getChildWidgetEnvironment());
-    this.childWidget = widget;
+    setChildWidget(widget);
   }
 
   /**
@@ -511,7 +511,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
   public synchronized State saveState() {
     if (this.stateSaved.get()) {
       return null;
-    } else if (this.childWidget == null) {
+    } else if (getChildWidget() == null) {
       if (LOG.isWarnEnabled()) {
         LOG.warn("Child-widget is null for some unknown reason. Cannot serialize it. Returning...");
       }
@@ -520,7 +520,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     }
 
     // Current state versioning work:
-    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) this.childWidget);
+    byte[] serializedChild = RelocatableUtil.serializeRelocatable((RelocatableWidget) getChildWidget());
     State state = new State(serializedChild, this.newStateId);
 
     if (containsState(this.newStateId)) {
@@ -697,7 +697,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * @since 2.0
    */
   protected synchronized void notifyUsualNavigation() {
-    new UsualNavigationNotifierMessage(this.lastStateId, this.newStateId).send(null, this.childWidget);
+    new UsualNavigationNotifierMessage(this.lastStateId, this.newStateId).send(null, getChildWidget());
   }
 
   /**
@@ -707,7 +707,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * @since 2.0
    */
   protected synchronized void notifyCurrentStateUpdate() {
-    new CurrentStateUpdateNotifierMessage(this.lastStateId).send(null, this.childWidget);
+    new CurrentStateUpdateNotifierMessage(this.lastStateId).send(null, getChildWidget());
   }
 
   /**
@@ -717,7 +717,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
    * @since 2.0
    */
   protected synchronized void notifyHistoryNavigation() {
-    new HistoryNavigationNotifierMessage(this.lastStateId, this.newStateId).send(null, this.childWidget);
+    new HistoryNavigationNotifierMessage(this.lastStateId, this.newStateId).send(null, getChildWidget());
   }
 
   /**
@@ -731,7 +731,7 @@ public class StandardStateVersioningFilterWidget extends BaseFilterWidget implem
     for (State state : this.versionedStates) {
       stateIds.add(state.getStateId());
     }
-    new StatesUpdatedMessage(stateIds).send(null, this.childWidget);
+    new StatesUpdatedMessage(stateIds).send(null, getChildWidget());
   }
 
   protected static class UsualNavigationNotifierMessage extends BroadcastMessage {

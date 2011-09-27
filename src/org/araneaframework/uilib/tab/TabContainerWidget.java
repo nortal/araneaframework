@@ -69,7 +69,7 @@ public class TabContainerWidget extends BaseApplicationWidget implements TabCont
   protected transient boolean dying = false;
 
   @Override
-  protected Environment getChildWidgetEnvironment() throws Exception {
+  protected Environment getChildWidgetEnvironment() {
     Map<Class<?>, Object> entries = new LinkedHashMap<Class<?>, Object>(2);
     entries.put(TabContainerContext.class, this);
     entries.put(TabRegistrationContext.class, this);

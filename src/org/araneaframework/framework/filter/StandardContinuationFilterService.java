@@ -16,7 +16,6 @@
 
 package org.araneaframework.framework.filter;
 
-import org.araneaframework.http.util.EnvironmentUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
@@ -32,6 +31,7 @@ import org.araneaframework.framework.ContinuationContext;
 import org.araneaframework.framework.ContinuationManagerContext;
 import org.araneaframework.framework.core.BaseFilterService;
 import org.araneaframework.http.util.AtomicResponseHelper;
+import org.araneaframework.http.util.EnvironmentUtil;
 
 /**
  * @author Toomas Römer (toomas@webmedia.ee)
@@ -65,7 +65,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
         try {
           LOG.debug("Routing action to child service");
-          this.childService._getService().action(path, input, output);
+          getChildService()._getService().action(path, input, output);
         } catch (Exception e) {
           if (this.continuation == null) {
             throw e;
@@ -102,7 +102,7 @@ public class StandardContinuationFilterService extends BaseFilterService impleme
 
       @Override
       protected void action(Path path, InputData input, OutputData output) throws Exception {
-        this.childService._getService().action(path, input, output);
+        getChildService()._getService().action(path, input, output);
         EnvironmentUtil.getContinuationContext(getEnvironment()).finish();
       }
     };

@@ -22,8 +22,8 @@ import org.araneaframework.OutputData;
 import org.araneaframework.example.main.TemplateBaseWidget;
 import org.araneaframework.example.main.message.LoginAndMenuSelectMessage;
 import org.araneaframework.example.main.message.PopupMessageFactory;
-import org.araneaframework.framework.FlowContext;
 import org.araneaframework.framework.MountContext;
+import org.araneaframework.framework.context.DefaultHandler;
 import org.araneaframework.http.support.PopupWindowProperties;
 import org.araneaframework.uilib.core.PopupFlowWidget;
 
@@ -34,7 +34,8 @@ public class SamplePopupWidget extends TemplateBaseWidget {
 
   private int count = 1;
 
-  public SamplePopupWidget() {}
+  public SamplePopupWidget() {
+  }
 
   protected SamplePopupWidget(int count) {
     this.count = count;
@@ -90,11 +91,10 @@ public class SamplePopupWidget extends TemplateBaseWidget {
     getFlowCtx().finish("Funky end for SamplePopupWidget!");
   }
 
-  class SampleHandler implements FlowContext.Handler<String> {
+  class SampleHandler extends DefaultHandler<String> {
 
-    public void onCancel() throws Exception {}
-
-    public void onFinish(String returnValue) throws Exception {
+    @Override
+    public void onFinish(String returnValue) {
       getFlowCtx().replace(new InvisibleElementFormWidget(returnValue), null);
     }
   }

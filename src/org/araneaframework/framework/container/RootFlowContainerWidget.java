@@ -19,8 +19,13 @@ package org.araneaframework.framework.container;
 import java.util.Map;
 import org.araneaframework.framework.RootFlowContext;
 
-public class RootFlowContainerWidget extends StandardFlowContainerWidget
-  implements RootFlowContext {
+/**
+ * A root flow container widget implementation. In component hierarchy the root flow container should be the top-most
+ * container that can be accessed through environment using {@link RootFlowContext} as the key.
+ * 
+ * @author Jevgeni Kabanov (ekabanov@araneaframework.org)
+ */
+public class RootFlowContainerWidget extends StandardFlowContainerWidget implements RootFlowContext {
 
   @Override
   protected void putLocalEnvironmentEntries(Map<Class<?>, Object> nestedEnvironmentEntries) {

@@ -22,6 +22,7 @@ import org.araneaframework.framework.FlowContext.Handler;
  * A default implementation of <code>Handler</code> that does not have any functionality. Instead it is more useful when
  * implementing <code>Handler</code> and (only) one of its methods.
  * 
+ * @param <T> The expected return value type of the flow context return handler.
  * @author Martti Tamm (martti@araneaframework.org)
  * @since 1.2.1
  */
@@ -29,11 +30,17 @@ public class DefaultHandler<T> implements Handler<T> {
 
   /**
    * An empty implementation for <code>onCancel</code> event.
+   * <p>
+   * {@inheritDoc}
    */
-  public void onCancel() throws Exception {}
+  public void onCancel() {
+  }
 
   /**
    * An empty implementation for <code>onFinish</code> event.
+   * <p>
+   * {@inheritDoc}
    */
-  public void onFinish(T returnValue) throws Exception {}
+  public void onFinish(T returnValue) {
+  }
 }

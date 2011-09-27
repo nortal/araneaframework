@@ -59,8 +59,8 @@ public class SpringOptionalFilterWidget extends BaseFilterWidget {
       BeanFactory bf = getEnvironment().getEntry(BeanFactory.class);
       FilterWidget filter = (FilterWidget) bf.getBean(this.beanId);
 
-      filter.setChildWidget(this.childWidget);
-      this.childWidget = filter;
+      filter.setChildWidget(getChildWidget());
+      setChildWidget(filter);
 
       if (LOG.isDebugEnabled()) {
         LOG.debug("Found optional bean '" + this.beanId + "'");

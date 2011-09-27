@@ -22,6 +22,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
@@ -32,8 +34,6 @@ import org.araneaframework.Path;
 import org.araneaframework.Relocatable;
 import org.araneaframework.Service;
 import org.araneaframework.core.RelocatableDecorator;
-import org.araneaframework.core.util.ReadWriteLock;
-import org.araneaframework.core.util.ReaderPreferenceReadWriteLock;
 import org.araneaframework.framework.core.BaseFilterService;
 
 /**
@@ -51,11 +51,11 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   private String testXmlSessionPath;
 
-  private final ReadWriteLock callRWLock = new ReaderPreferenceReadWriteLock();
+  private final ReadWriteLock callRWLock = new ReentrantReadWriteLock(true);
 
   @Override
   public void setChildService(Service child) {
-    this.childService = new RelocatableDecorator(child);
+    super.setChildService(new RelocatableDecorator(child));
   }
 
   /**
@@ -70,20 +70,20 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
   @Override
   protected void action(Path path, InputData input, OutputData output) throws Exception {
-    this.callRWLock.readLock().acquire();
+    this.callRWLock.readLock().lock();
 
     try {
       getRelocatable()._getRelocatable().overrideEnvironment(getChildEnvironment());
       super.action(path, input, output);
     } finally {
-      this.callRWLock.readLock().release();
+      this.callRWLock.readLock().unlock();
     }
 
-    if (this.callRWLock.writeLock().attempt(0)) {
+    if (this.callRWLock.writeLock().tryLock()) {
       try {
         getRelocatable()._getRelocatable().overrideEnvironment(null);
         HttpSession sess = getEnvironment().getEntry(HttpSession.class);
-        byte[] serialized = SerializationUtils.serialize(this.childService);
+        byte[] serialized = SerializationUtils.serialize(getChildService());
 
         if (LOG.isDebugEnabled()) {
           LOG.debug("Serialized session size: " + formatSize(serialized.length));
@@ -96,11 +96,11 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
 
           XStream xstream = new XStream(new DomDriver());
           Writer writer = new PrintWriter(new FileWriter(dumpPath));
-          xstream.toXML(this.childService, writer);
+          xstream.toXML(getChildService(), writer);
           writer.close();
         }
       } finally {
-        this.callRWLock.writeLock().release();
+        this.callRWLock.writeLock().unlock();
       }
     }
   }
@@ -112,7 +112,7 @@ public class StandardSerializingAuditFilterService extends BaseFilterService {
    * @return The child - a relocatable service.
    */
   protected Relocatable getRelocatable() {
-    return (Relocatable) this.childService;
+    return (Relocatable) getChildService();
   }
 
   /**

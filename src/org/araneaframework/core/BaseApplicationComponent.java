@@ -49,7 +49,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * {@inheritDoc}
    */
   public final Composite.Interface _getComposite() {
-    return new CompositeComponentImpl();
+    return new CompositeImpl();
   }
 
   /**
@@ -237,7 +237,7 @@ public abstract class BaseApplicationComponent extends BaseComponent implements 
    * 
    * @author Toomas Römer (toomas@webmedia.ee)
    */
-  protected class CompositeComponentImpl implements Composite.Interface {
+  protected class CompositeImpl implements Composite.Interface {
 
     /**
      * {@inheritDoc}

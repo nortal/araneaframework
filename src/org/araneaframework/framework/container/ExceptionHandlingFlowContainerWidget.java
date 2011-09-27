@@ -124,7 +124,7 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
   }
 
   /**
-   * A widget specific handling of an exception.
+   * {@inheritDoc}
    */
   @Override
   protected void handleWidgetException(Exception e) throws Exception {
@@ -141,6 +141,8 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
 
   /**
    * Overrides the <code>propagate()</code> functionality to catch and handle exceptions.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void propagate(Message message) throws Exception {
@@ -157,6 +159,8 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
 
   /**
    * Overrides the <code>update()</code> functionality to catch and handle exceptions.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void update(InputData input) throws Exception {
@@ -177,6 +181,8 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
 
   /**
    * Overrides the <code>event()</code> functionality to catch and handle exceptions.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void event(Path path, InputData input) throws Exception {
@@ -197,6 +203,8 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
 
   /**
    * Overrides the <code>render()</code> functionality to catch and handle exceptions.
+   * <p>
+   * {@inheritDoc}
    */
   @Override
   protected void render(OutputData output) throws Exception {
@@ -211,8 +219,13 @@ public abstract class ExceptionHandlingFlowContainerWidget extends StandardFlowC
       arUtil.rollback();
       arUtil.commit();
       LOG.error("Handling error:", e);
-      renderExceptionHandler(output, e);
-      this.exception = null;
+      try {
+        renderExceptionHandler(output, e);
+      } catch (Exception e2) {
+        ExceptionUtil.uncheckException(e2);
+      } finally {
+        this.exception = null;
+      }
     }
   }
 

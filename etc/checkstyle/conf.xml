@@ -155,6 +155,7 @@
       <property name="ignoreConstructorParameter" value="true"/>
       <property name="ignoreSetter" value="true"/>
       <property name="ignoreAbstractMethods" value="true"/>
+      <property name="tokens" value="VARIABLE_DEF"/>
     </module>
     <module name="IllegalInstantiation" />
     <module name="InnerAssignment" />
@@ -165,11 +166,6 @@
     <module name="SimplifyBooleanReturn" />
     <module name="SuperClone" />
     <module name="UnnecessaryParentheses" />
-
-    <module name="RequireThis">
-      <property name="checkMethods" value="false"/>
-      <property name="tokens" value="IDENT,PARAMETER_DEF,SLIST,VARIABLE_DEF"/>
-    </module>
 
     <module name="NestedIfDepth">
       <property name="max" value="2"/>

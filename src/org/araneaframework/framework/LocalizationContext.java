@@ -63,10 +63,12 @@ public interface LocalizationContext extends Serializable {
 
   /**
    * Returns a resource bundle corresponding to arbitrary locale.
+   * <p>
+   * Throws <tt>MissingResourceException</tt> when no resource bundle is found for the specified locale.
    * 
    * @param locale The locale for which a resource bundle will be returned.
    * @return The resource bundle for the specified locale.
-   * @throws java.util.MissingResourceException when no resource bundle is found for the specified locale.
+   * @see java.util.MissingResourceException
    */
   ResourceBundle getResourceBundle(Locale locale);
 

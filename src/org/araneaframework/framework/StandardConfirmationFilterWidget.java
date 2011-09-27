@@ -37,7 +37,9 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
 
   private String message;
 
-  // PUBLIC API
+  /**
+   * {@inheritDoc}
+   */
   public void confirm(Closure onConfirmClosure, String message) {
     Assert.isInstanceOfParam(Serializable.class, onConfirmClosure, "onConfirmClosure");
     Assert.notNullParam(this, message, "message");
@@ -47,15 +49,26 @@ public class StandardConfirmationFilterWidget extends BaseFilterWidget implement
 
   // IMPLEMENTATION
 
+  /**
+   * Resets confirmation context, removing the confirmation message an callback closure.
+   */
   protected void removeConfirmation() {
     this.closure = null;
     this.message = null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public String getConfirmationMessage() {
     return this.message;
   }
 
+  /**
+   * Provides whether the confirmation context is active, i.e. a confirmation message/question exists for the user.
+   * 
+   * @return A Boolean that is <code>true</code> when this confirmation context is active.
+   */
   protected boolean isActive() {
     return this.closure != null;
   }

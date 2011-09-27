@@ -28,18 +28,22 @@ import org.araneaframework.framework.TopServiceContext;
  */
 public class StandardTopServiceRouterService extends BaseExpiringServiceRouterService {
 
-  @Override
-  protected String getServiceKey() throws Exception {
-    return TopServiceContext.TOP_SERVICE_KEY;
+  /**
+   * Creates a new top-level expiring service router.
+   * 
+   * @see TopServiceContext
+   */
+  public StandardTopServiceRouterService() {
+    super(TopServiceContext.TOP_SERVICE_KEY, TopServiceContext.KEEPALIVE_KEY);
   }
 
+  /**
+   * Enhances the child service environment with the {@link TopServiceContext} entry.
+   * <p>
+   * {@inheritDoc}
+   */
   @Override
-  public String getKeepAliveKey() {
-    return TopServiceContext.KEEPALIVE_KEY;
-  }
-
-  @Override
-  protected Environment getChildEnvironment(String serviceId) throws Exception {
+  protected Environment getChildEnvironment(String serviceId) {
     return new StandardEnvironment(super.getChildEnvironment(serviceId), TopServiceContext.class,
         new ServiceRouterContextImpl(serviceId));
   }
