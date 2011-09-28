@@ -49,7 +49,7 @@ public abstract class Assert {
   /**
    * Instantiating this class is prohibited.
    */
-  protected Assert() {
+  private Assert() {
     throw new UnsupportedOperationException();
   }
 

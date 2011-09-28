@@ -26,6 +26,13 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public abstract class ExceptionUtil {
 
   /**
+   * Instantiating this class is prohibited.
+   */
+  private ExceptionUtil() {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * Unchecks the exception by rethrowing unchecked exceptions and wrapping checked exceptions inside
    * <code>NestableRuntimeException</code>.
    * 

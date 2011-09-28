@@ -34,6 +34,13 @@ import org.apache.commons.collections.EnumerationUtils;
 public abstract class ClassLoaderUtil {
 
   /**
+   * Instantiating this class is prohibited.
+   */
+  private ClassLoaderUtil() {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * Returns the thread context ClassLoader, if available. Otherwise falls back to the ClassLoader of ClassLoaderUtil.
    * 
    * @return The acquired class-loader.

@@ -400,14 +400,16 @@
 			<classpath refid="runtime.cp"/>
 			<classpath refid="build.cp"/>
 			<classpath refid="build.util.cp"/>
+
 			<link href="http://commons.apache.org/el/api/"/>
-			<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+			<link href="http://download.oracle.com/javase/1.5.0/docs/api/"/>
 			<link href="http://commons.apache.org/io/api-release/"/>
 			<link href="http://commons.apache.org/lang/api-release/"/>
 			<link href="http://commons.apache.org/fileupload/apidocs/"/>
 			<link href="http://commons.apache.org/collections/api-release/"/>
 			<link href="http://static.springsource.org/spring/docs/2.5.6/api/"/>
 			<link href="http://commons.apache.org/logging/commons-logging-1.1.1/apidocs/"/>
+
 			<tag name="jsp.tag" enabled="false" casesensitive="false"/>
 			<tag name="jsp.attribute" enabled="false" casesensitive="false"/>
 		</javadoc>

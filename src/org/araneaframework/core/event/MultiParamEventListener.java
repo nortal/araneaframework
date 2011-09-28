@@ -34,7 +34,7 @@ public abstract class MultiParamEventListener extends StandardEventListener {
   /**
    * Creates a multi-parameter event listener with default separator.
    * 
-   * @see ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR
+   * @see ProxiedHandlerUtil#DEFAULT_PARAMETER_SEPARTOR
    */
   public MultiParamEventListener() {
     this(ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR);

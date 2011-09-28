@@ -58,6 +58,13 @@ public abstract class ComponentUtil {
   public static final String LISTENER_KEY = "ComponentUtil_LISTENER";
 
   /**
+   * Instantiating this class is prohibited.
+   */
+  private ComponentUtil() {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * This method will attach the listener component to the target custom component, allowing it to receive all the
    * life-cycle events (which exactly depends on the target component type). The listener component may never get to do
    * something more than processing life-cycle events.

@@ -90,6 +90,13 @@ public abstract class ProxiedHandlerUtil {
   public static final String DEFAULT_PARAMETER_SEPARTOR = ";";
 
   /**
+   * Instantiating this class is prohibited.
+   */
+  private ProxiedHandlerUtil() {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * The general rule for constructing handler names: handlerPrefix + handlerId = handlerPrefixHandlerId. Using
    * <code>null</code> as a parameter value won't cause any exceptions, so do it at your own risk!
    * 

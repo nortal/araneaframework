@@ -36,7 +36,7 @@ public abstract class MultiParamActionListener extends StandardActionListener {
   /**
    * Creates a multi-parameter action listener with default separator.
    * 
-   * @see ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR
+   * @see ProxiedHandlerUtil#DEFAULT_PARAMETER_SEPARTOR
    */
   public MultiParamActionListener() {
     this(ProxiedHandlerUtil.DEFAULT_PARAMETER_SEPARTOR);
