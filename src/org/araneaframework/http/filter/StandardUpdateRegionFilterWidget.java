@@ -427,6 +427,7 @@ public class StandardUpdateRegionFilterWidget extends BaseFilterWidget implement
     public Map<String, String> getRegions() {
       return this.regions;
     }
+    
   }
 
 }
