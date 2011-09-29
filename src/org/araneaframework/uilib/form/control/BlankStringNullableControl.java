@@ -28,6 +28,6 @@ public abstract class BlankStringNullableControl<T> extends StringRequestControl
 
   @Override
   protected String preprocessRequestParameter(String parameterValue) {
-    return StringUtils.trimToNull(parameterValue);
+    return StringUtils.isBlank(parameterValue) ? null : parameterValue;
   }
 }

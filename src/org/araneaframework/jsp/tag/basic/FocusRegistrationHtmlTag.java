@@ -50,6 +50,7 @@ public class FocusRegistrationHtmlTag extends BaseTag {
     		"var elementToFocus = document.getElementById('");
     out.write(focusContext.getFocusedElement());
     out.write("');");
+//    out.write("alert('"+focusContext.getFocusedElement()+"');");
     out.write("if(elementToFocus) {elementToFocus.focus();}");
     out.write("</script>");
   }

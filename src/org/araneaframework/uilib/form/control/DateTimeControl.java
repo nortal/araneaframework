@@ -47,6 +47,13 @@ public class DateTimeControl extends BaseControl<Timestamp> {
    * The time control that handles the time part of the input.
    */
   protected TimeControl timeControl;
+  
+  /**
+   * Assume that the data has been read from request when converting. If
+   * isReadByDefault = true, then control value will be set to existing
+   * dateControl and timeControl raw values.
+   */
+  private boolean isReadByDefault = false;
 
   /**
    * Creates both {@link TimeControl}and {@link DateControl}with default parameters.
@@ -166,7 +173,7 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     this.timeControl.convert();
 
     // Reading control data
-    if (getFormElementCtx().isValid() && isRead()) {
+    if (getFormElementCtx().isValid() && (isRead() || isReadByDefault)) {
       this.value = addTimeToDate(this.dateControl.getRawValue(), this.timeControl.getRawValue());
     } else {
       this.value = null;
@@ -198,6 +205,10 @@ public class DateTimeControl extends BaseControl<Timestamp> {
     super.setFormElementCtx(formElementContext);
     this.dateControl.setFormElementCtx(formElementContext);
     this.timeControl.setFormElementCtx(formElementContext);
+  }
+  
+  public void setIsReadByDefault(boolean isReadByDefault) {
+    this.isReadByDefault = isReadByDefault;
   }
 
   /**
