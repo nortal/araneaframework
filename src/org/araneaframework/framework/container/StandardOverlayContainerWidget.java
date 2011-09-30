@@ -26,6 +26,7 @@ import org.araneaframework.InputData;
 import org.araneaframework.OutputData;
 import org.araneaframework.Path;
 import org.araneaframework.Widget;
+import org.araneaframework.core.ApplicationWidget;
 import org.araneaframework.core.BaseApplicationWidget;
 import org.araneaframework.core.StandardEnvironment;
 import org.araneaframework.core.util.Assert;
@@ -354,7 +355,36 @@ public class StandardOverlayContainerWidget extends BaseApplicationWidget implem
   /**
    * {@inheritDoc}
    */
+  public boolean isNested() {
+    return this.overlay.isNested();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public Collection<Widget> getNestedFlows() {
     return this.overlay.getNestedFlows();
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  public <T> void addNestedEnvironmentEntry(ApplicationWidget scope, Class<T> entryId, T envEntry) {
+    this.overlay.addNestedEnvironmentEntry(scope, entryId, envEntry);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public TransitionHandler getTransitionHandler() {
+    return this.overlay.getTransitionHandler();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setTransitionHandler(TransitionHandler handler) {
+    this.overlay.setTransitionHandler(handler);
+  }
+
 }

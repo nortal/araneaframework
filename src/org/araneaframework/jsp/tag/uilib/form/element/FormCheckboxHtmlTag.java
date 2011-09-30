@@ -21,7 +21,7 @@ import org.araneaframework.jsp.tag.basic.AttributedTagInterface;
 import org.araneaframework.jsp.tag.uilib.form.BaseFormElementHtmlTag;
 import org.araneaframework.jsp.util.JspUtil;
 import org.araneaframework.uilib.event.OnChangeEventListener;
-import org.araneaframework.uilib.form.control.StringArrayRequestControl;
+import org.araneaframework.uilib.form.control.StringArrayRequestControl.ViewModel;
 
 /**
  * Standard button form element tag.
@@ -54,8 +54,8 @@ public class FormCheckboxHtmlTag extends BaseFormElementHtmlTag {
     assertControlType("CheckboxControl");
 
     // Prepare
-    String name = this.getFullFieldId();
-    StringArrayRequestControl<?>.ViewModel viewModel = (StringArrayRequestControl.ViewModel) this.controlViewModel;
+    String name = getFullFieldId();
+    ViewModel viewModel = (ViewModel) this.controlViewModel;
 
     // Write input tag
     JspUtil.writeOpenStartTag(out, "input");
