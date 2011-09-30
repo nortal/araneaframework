@@ -183,7 +183,10 @@ public class StandardLocalizationFilterService extends BaseFilterService impleme
   }
 
   /**
-   * {@inheritDoc}
+   * Executes listener callback methods with given locale objects as to notify them about locale change.
+   * 
+   * @param oldLocale The previous locale value.
+   * @param newLocale The new locale value.
    */
   protected void notifyLocaleChangeListeners(Locale oldLocale, Locale newLocale) {
     if (this.localeChangeListeners != null) {

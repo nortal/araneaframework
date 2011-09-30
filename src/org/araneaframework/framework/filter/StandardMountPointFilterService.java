@@ -25,7 +25,7 @@ import org.araneaframework.framework.core.BaseFilterService;
 
 /**
  * Filter service that enforces <tt>MountContext</tt> mapping. If the current request is sent with mounting criteria, it
- * will send the mounting message produced by the mounting {@link MountContext.MessageFactory}.
+ * will send the mounting message produced by the mounting message ({@link MountContext#getMountedMessage(InputData)}).
  * <p>
  * This service doesn't require any configuration.
  * 
